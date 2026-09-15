@@ -9,7 +9,9 @@ from pathlib import Path
 __all__ = ["execution_record"]
 
 
-def execution_record(store, phase, output, workflow=None, *, inputs=None, native=None):
+def execution_record(
+    store, phase, output, workflow=None, *, inputs=None, native=None, outputs=None
+):
     """Use supplied real run files or clearly labelled lifecycle-only fixtures."""
     status = store.status()
     state = status.get("session", status)
@@ -58,7 +60,7 @@ def execution_record(store, phase, output, workflow=None, *, inputs=None, native
                 ).hexdigest(),
                 "inputs": records(inputs),
                 "native_records": records(native),
-                "outputs": records([output]),
+                "outputs": records(outputs if outputs is not None else [output]),
             }
         )
     )

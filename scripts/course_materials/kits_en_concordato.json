@@ -4,12 +4,12 @@
     "goal": "Learn to start a review of a proposal and plan, provide the documents and use the resulting file in professional work.",
     "scenario": "Officina Riva has drafted a proposal to continue operating and pay creditors. The professional needs to understand its contents, assumptions requiring review and missing documents.",
     "scope": "A complete first-use journey: assignment, sources, procedural context, creditors, proposal, plan, open questions and report. The small case teaches the workflow; it is not a complete course on Italian insolvency law.",
-    "inputs": "Open demo-en.xlsx: Case explains the assignment and draft status, Creditors contains declared positions and Plan the assumed annual cash flows. These are fictional sources to examine, not approved conclusions.",
-    "request": "Vera, review Officina Riva’s concordato preventivo proposal and plan in this file. Prepare a review file covering creditor treatment, sources and uses, liquidity, missing documents and questions to resolve.",
+    "inputs": "Open demo-en.xlsx and management-demo-en.pdf. Excel contains the assignment, creditors and annual plan; the two management pages add declared positions, the liquidation estimate and quarterly cash timing. These are fictional sources to examine, not approved conclusions.",
+    "request": "Vera, review Officina Riva’s concordato preventivo proposal and plan in these two files. Prepare a review file covering creditor treatment, sources and uses, liquidity, missing documents and questions to resolve.",
     "steps": [
-      "In the working thread Vera reads the file and summarizes assignment, date, stage and available documents. In the voice chat it explains the process and asks you to confirm or correct the scope.",
+      "In the working thread Vera reads the files and summarizes assignment, date, stage and available documents. In the voice chat it explains the process and asks you to confirm or correct the scope.",
       "Vera reconstructs the case from sources, checks the relevant framework and prepares interpretations for review. It considers the proposal, plan, creditors, liquidation comparison, cash and evidence gaps. You review interpretations and assumptions before the confirmation required by the workflow.",
-      "The current workflow produces actual schedules and review documents. Open the report first, then the workbook: trace an issue to its source, examine supporting data and identify the useful next action. Voice explains only actual progress and results."
+      "The current workflow produces actual schedules and review documents. Open the summary, then Excel: find what creditors receive, how cash is timed and which documents are needed. Trace one issue to its source page or cell and choose the next action. In the voice chat Vera explains actual results and answers questions without reading the entire report aloud."
     ],
     "deliverables": [
       "A Word report and readable review summary with limitations and open questions.",
@@ -20,7 +20,7 @@
       "Before proceeding, explain the work you are asking Vera to do and the files you are supplying.",
       "Find the summary, one issue to review and the document or clarification needed to address it."
     ],
-    "practice": "Start a new review using practice-en.xlsx, which updates the new-financing assumption. Preserve the first file. Ask Vera to reassess the case and explain which results and actions change; do not merely replace one number in the earlier report.",
+    "practice": "In the same case, start a new review with practice-en.xlsx and management-practice-en.pdf: management has reduced assumed new financing. Preserve the first dossier and its sources intact. Ask Vera to reassess the case and explain which results and actions change; do not merely replace one number in the earlier report.",
     "success": "You can start the workflow, review scope and interpretations, navigate the deliverables and repeat the work with an updated version.",
     "repeat": "Give Vera the available proposal, plan, creditor list, attestation and supporting documents, stating the procedural stage, date and review objective. Confirm scope, review sources and use the file in the normal professional process."
   }

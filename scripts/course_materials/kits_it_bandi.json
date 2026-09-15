@@ -9,7 +9,7 @@
     "steps": [
       "Nella finestra di lavoro Vera apre la pratica e registra i documenti. La conversazione vocale spiega incarico, fonti e risultato. Rivedi quali documenti governano l’esercizio e quali descrivono l’impresa.",
       "Vera propone requisiti e confronti con i fatti, esamina le spese e prepara elenco documenti e bozza. Segui un passaggio dalla fonte alla proposta e rivedi le decisioni richieste dal normale procedimento.",
-      "Apri il dossier e i controlli. Esamina esito proposto, documenti mancanti, spese e prossime azioni. Vera spiega il successivo percorso di revisione e preparazione della domanda; questa esercitazione non usa portali e non invia nulla."
+      "Apri review_dossier.html: parti dalla sintesi, poi rivedi spese, documenti e bozza del progetto. Apri una condizione per leggere valutazione e passaggio della fonte. Vera spiega la revisione ancora necessaria e i passi successivi; l’esercizio non usa portali e non invia nulla."
     ],
     "deliverables": [
       "Dossier locale con requisiti, evidenze, valutazioni proposte, spese, documenti e bozza.",

@@ -29,7 +29,7 @@
     "goal": "Lernen Sie, Ist und Budget zu vergleichen, die Berichtserstellung zu verfolgen und die Abweichungen bei der Monatsbesprechung zu nutzen.",
     "scenario": "Arco hat die Managementzahlen für Januar und Februar und das Budget derselben Monate vorbereitet. Die Leitung möchte das operative Ergebnis und die zu untersuchenden Kategorien vor der Monatsbesprechung verstehen.",
     "scope": "Der Fall umfasst Umsatz, Wareneinsatz und Betriebsaufwand in EUR. Clara wählt die Analyse anhand von Frage und Daten; diese erste Anwendung zeigt einen Budgetvergleich und bleibt lokal.",
-    "inputs": "Öffnen Sie actual-budget.xlsx und facts.md. GL enthält monatliche Bewegungen nach Konto und Kategorie, Budget den vergleichbaren Plan. Umsätze sind positiv, Kosten negativ. Die Kontrollsummen betragen 53.000 EUR im Ist und 47.000 EUR im Budget.",
+    "inputs": "Öffnen Sie actual-budget.xlsx und facts-de.md. GL enthält monatliche Bewegungen nach Konto und Kategorie, Budget den vergleichbaren Plan. Umsätze sind positiv, Kosten negativ. Die Kontrollsummen betragen 53.000 EUR im Ist und 47.000 EUR im Budget.",
     "request": "Clara, erstelle aus dieser Arbeitsmappe Arcos Ist-Budget-Bericht für Januar und Februar 2026. Zeige operatives Ergebnis, Abweichungen und Kategorien.",
     "steps": [
       "Clara untersucht die Tabellen und schlägt die Spalten für Datum, Kategorie und Betrag vor. Bestätigen Sie Januar–Februar und die Vorzeichen vor der Berechnung.",

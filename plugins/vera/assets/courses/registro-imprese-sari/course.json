@@ -35,7 +35,12 @@
     {
       "path": "modules/registro-imprese-sari/assets/registro-imprese-sari-review-widget.html",
       "repository_path": "plugins/registro-imprese-sari/assets/registro-imprese-sari-review-widget.html",
-      "sha256": "c99596bd9f989f3e2f61571b26ff62dd736900c7505f4f1ab70189f0aea51666"
+      "sha256": "c395f518f3196656dda1e76cb090ff23f0af4e660f4d2d487164a2fc5671022d"
+    },
+    {
+      "path": "modules/registro-imprese-sari/assets/registry-display.json",
+      "repository_path": "plugins/registro-imprese-sari/assets/registry-display.json",
+      "sha256": "d23f4e87734cd183f5aade35fd78130430c6d4e4c8299956310383dca3f28981"
     },
     {
       "path": "modules/registro-imprese-sari/references/official-sources.md",
@@ -75,7 +80,7 @@
     {
       "path": "modules/registro-imprese-sari/scripts/initialize_case.py",
       "repository_path": "plugins/registro-imprese-sari/scripts/initialize_case.py",
-      "sha256": "ff3f59db858d241a55046f848374247614f317c008cdf0c1fda9a265b14a09cd"
+      "sha256": "7ce4bb016964601e8355ff94541f878d9cfb7a87ae34748e2f724193d18aef83"
     },
     {
       "path": "modules/registro-imprese-sari/scripts/inventory_case.py",
@@ -85,12 +90,17 @@
     {
       "path": "modules/registro-imprese-sari/scripts/package_practice.py",
       "repository_path": "plugins/registro-imprese-sari/scripts/package_practice.py",
-      "sha256": "716584b45691ba8f86af8e0db1c9dc12098c5f5bbd85f88a02627f543b049bce"
+      "sha256": "a138ab668a1afa132a87df301c0a70301f887d744dc1bea85f78d642c6437300"
     },
     {
       "path": "modules/registro-imprese-sari/scripts/register_official_source.py",
       "repository_path": "plugins/registro-imprese-sari/scripts/register_official_source.py",
       "sha256": "c1d6ad1aaf686f542469625cc1f129e29c01c6e19fafa0833743a17a5edb34b6"
+    },
+    {
+      "path": "modules/registro-imprese-sari/scripts/registry_display.py",
+      "repository_path": "plugins/registro-imprese-sari/scripts/registry_display.py",
+      "sha256": "833a798fa2f72b3f5874cc81069857ec0fb7c2268e5d58a9d5655011e291a59c"
     },
     {
       "path": "modules/registro-imprese-sari/scripts/sari_connector.py",
@@ -125,7 +135,7 @@
     {
       "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
     },
     {
       "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/decisions.py",
@@ -195,7 +205,7 @@
     {
       "path": "vendor/modules/courseware/assets/languages.json",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
     },
     {
       "path": "vendor/modules/courseware/execution.py",
@@ -205,12 +215,17 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
     },
     {
       "path": "vendor/modules/reporting_table.py",
       "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
-      "sha256": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7"
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
     },
     {
       "path": "vendor/modules/vera_assurance/__init__.py",
@@ -220,7 +235,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

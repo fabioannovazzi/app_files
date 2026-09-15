@@ -105,6 +105,41 @@ def complete_onboarding(store):
         )
 
 
+@pytest.mark.parametrize(
+    "workflow", ["brand-fit", "hosted-interview", "research-video"]
+)
+@pytest.mark.parametrize("entry", ["onboarding", "repeat"])
+def test_hosted_clara_lesson_is_rejected_without_changing_local_progress(
+    tmp_path, workflow, entry
+):
+    store = onboarding.Store(tmp_path / "clara", plugin_root=ROOT / "plugins/clara")
+    if entry == "repeat":
+        complete_onboarding(store)
+        session = teaching.TeachingStore(store.root, plugin_root=store.plugin_root)
+    else:
+        store.begin()
+        change(store, "profile", profile=PROFILE, confirmed_by_user=True)
+    before = store.path.read_bytes()
+
+    with pytest.raises(onboarding.OnboardingError, match="requires hosted services"):
+        if entry == "repeat":
+            session.begin({"workflow_id": workflow, "title": "Try it", "goal": "Learn"})
+        else:
+            change(
+                store,
+                "plan",
+                lessons=[
+                    {"workflow_id": wf, "reason": "User request", "goal": "Learn"}
+                    for wf in [workflow, "html-deck", "deck-correction"]
+                ],
+            )
+
+    assert store.path.read_bytes() == before
+    assert not (store.root / "lessons" / workflow).exists()
+    if entry == "repeat":
+        assert not session.sessions.exists()
+
+
 def repeated(store, **extra):
     complete_onboarding(store)
     session = teaching.TeachingStore(store.root, plugin_root=store.plugin_root)

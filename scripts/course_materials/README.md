@@ -27,11 +27,12 @@ Never edit the generated ZIPs directly.
 
 `kits.json` explicitly lists exact owning-product workflow IDs. Match the current
 own-product catalogue and skill files; never resolve another installed plugin.
-Vera’s invoice XML, fiscal-field extraction and client email are supporting
+Vera’s received-XML checks, fiscal-field extraction and client email are supporting
 intake tasks under new-client work, and are labelled accordingly. They remain
 individually teachable when requested. Internal legal assurance and developer
 privacy governance are not main lessons. Shared functions exposed by multiple
 products remain bound to each owning product; translations are not workflows.
+Preparing a new invoice XML is a separate directly teachable workflow.
 
 Clara’s planning, case direction and deliverable review are teachable because
 their current specialist contracts accept direct professional requests. They
@@ -39,11 +40,30 @@ were omitted by the previous blanket exclusion of planners and validators.
 Cross-cutting claim-basis-map remains part of its parent workflow’s explanation.
 Studio Archive in Lucia is a supporting lifecycle adapter, not a separate
 legal matter-opening workflow. Vera’s explicitly registered archive function
-is directly teachable as its own client-workspace journey.
+is directly teachable through local document search: select one client, retrieve
+and open sources, answer the question, then refresh after a new document.
+Engagement creation and lifecycle steps are practiced within the workflows that
+use them; this archive lesson does not demonstrate every connector route.
+
+The approved local inventory is 45 kits / 205 locales: Vera 32 / 143,
+Clara 9 / 42 and Lucia 4 / 20. Clara Brand Fit, Hosted Interview and Research
+Video require hosted execution and are explicitly unavailable in local lessons.
+Their professional skills remain available through their normal workflows.
+The shared course policy enforces the exclusion in the compiler, catalogue,
+onboarding planner and repeat-teaching entrypoint.
 
 ## Concordato source workbook
 
 `concordato_sources.json` contains the localized fictional source narratives.
+`concordato_support.json` and `build_concordato_support.py` supply a two-page
+fictional management PDF alongside each workbook. It contains supplier
+positions, the management liquidation estimate, operating assumptions and a
+quarterly cash schedule. Referenced original invoices, lender commitments,
+attestation and other absent evidence are explicitly distinguished from these
+management schedules. The practice pack reduces assumed financing and is
+reviewed as a new run in the same Studio Archive case, preserving the first run.
+The native regression authors its case interpretation separately under tests;
+no approved answer or generated result is shipped as an input.
 `build_concordato_inputs.mjs` uses the spreadsheet authoring tool to create the
 three-sheet demonstration and updated-practice workbooks. Run a copy in the
 spreadsheet skill's temporary dependency workspace, passing the absolute
@@ -82,6 +102,22 @@ Hosted Interview and Research Video. The other kits localize conversation,
 case explanation and live narrative guidance; they do not promise translation of
 machine field names or a new country-specific professional method. Italian
 practice examples remain Italian practice in every language. Input field names retain the format expected by the actual pipeline.
+
+## Invoice XML preparation
+
+`invoice-xml` is distinct from checking received XML. Its prepared kit uses the
+current supported text-data intake, a complete fictional first invoice and an
+independent second invoice. Every locale teaches the whole request, preview,
+review, local export and repeat cycle. The source and native invoice labels
+remain Italian where the workflow keeps them; the lesson and model explanation
+follow the chosen language. The lesson does not claim to have extracted photos.
+
+The native regression exercises source capture, source-backed draft creation,
+rejection of the unapproved review request, schema-valid export with an explicitly
+synthetic review fixture, and complete local artifact declaration. That fixture
+never enters the lesson files. A live lesson requires the learner's actual
+approval of the exact displayed revision before export. No XML is signed or
+transmitted. Source identifiers and amounts are fictional exercise facts.
 
 ## Authoring and release checks
 

@@ -127,7 +127,8 @@ from pathlib import Path
 from typing import Any
 
 import openpyxl
-from check_entries_core import run_entry_checks  # noqa: E402
+import polars as pl
+from check_entries_core import run_entry_checks, write_result_workbook  # noqa: E402
 from implementation_contract import (  # noqa: E402
     implementation_artifact_roots,
     validate_implementation_contract,
@@ -137,7 +138,6 @@ from physical_output_set import (
     validate_review_successor_output_set,
     validate_review_transition_output_set,
 )
-from stable_ooxml import write_stable_xlsx
 from vera_assurance import (  # noqa: E402
     AssuranceContractError,
     artifact_receipt,
@@ -418,20 +418,12 @@ def _csv_rows(path: Path) -> tuple[list[str], list[list[str]]]:
 
 
 def _write_check_results_workbook(csv_path: Path, workbook_path: Path) -> int:
-    header, rows = _csv_rows(csv_path)
-
-    def writer(candidate: Path) -> None:
-        workbook = openpyxl.Workbook()
-        sheet = workbook.active
-        sheet.title = "Sheet1"
-        sheet.append(header)
-        for row in rows:
-            sheet.append([value if value != "" else None for value in row])
-        workbook.save(candidate)
+    _, rows = _csv_rows(csv_path)
+    frame = pl.read_csv(csv_path, infer_schema=False)
 
     with tempfile.TemporaryDirectory(prefix="check-entries-workbook-") as temp_name:
         staged_workbook = Path(temp_name) / workbook_path.name
-        write_stable_xlsx(staged_workbook, writer)
+        write_result_workbook(frame, staged_workbook)
         _atomic_write_bytes(workbook_path, staged_workbook.read_bytes())
     return len(rows)
 

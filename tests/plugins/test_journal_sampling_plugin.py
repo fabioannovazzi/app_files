@@ -353,6 +353,13 @@ def test_plugin_workflow_normalizes_excel_and_samples(tmp_path: Path) -> None:
     ]
     assert normalized.frame.get_column("source_row").to_list() == [2, 3, 4]
     assert sample.frame.height == 2
+    workbook = openpyxl.load_workbook(sample_dir / "journal_sample.xlsx")
+    sheet = workbook.worksheets[0]
+    assert sheet.freeze_panes == "D2"
+    assert sheet.column_dimensions["A"].width >= 11
+    assert sheet.row_dimensions[1].height >= 26
+    assert sheet.sheet_view.showGridLines is False
+    workbook.close()
     sample_rows = sample.frame.to_dicts()
     first_sample_row = sample_rows[0]
     second_sample_row = sample_rows[1]

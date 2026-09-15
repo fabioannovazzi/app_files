@@ -26,18 +26,18 @@
   },
   "vera/open-item-reconciliation": {
     "title": "Vérifier les postes ouverts avec Vera",
-    "goal": "Apprendre à vérifier une liste d’impayés et distinguer les factures soldées, partiellement soldées et encore ouvertes à une date donnée.",
+    "goal": "Apprendre à vérifier une liste d’impayés et distinguer les factures disposant d’une preuve de paiement de celles restant à clarifier à une date donnée.",
     "scenario": "Une ancienne liste fournisseurs d’Arco présente encore trois factures ouvertes. Les mouvements bancaires permettent de vérifier leur situation au 31 mars.",
     "scope": "Trois factures fournisseurs en EUR. La revue de mars exclut les paiements postérieurs à la date d’arrêté ; l’exercice actualise cette date.",
     "inputs": "Ouvrez open-items-fr.pdf et bank-march-fr.pdf. Le premier document est la population à vérifier ; le second présente les décaissements. Ces exports pédagogiques sont fictifs. Les montants suivent la convention italienne avec virgule décimale, les dates le format jour/mois/année.",
     "request": "Vera, vérifie ces postes fournisseurs au 31 mars 2026. Utilise les preuves de paiement bancaire pour montrer ce qui est payé, ce qui reste ouvert et ce qui demande une revue.",
     "steps": [
       "Vera importe les fichiers, identifie la population initiale et propose le rôle et le sens des montants de chaque source. Confirmez la date d’arrêté et le traitement des paiements ultérieurs.",
-      "La procédure actuelle relie factures et preuves de paiement, calcule les soldes et prépare le dossier de revue. La conversation vocale explique l’avancement et les justificatifs manquants.",
-      "Ouvrez la page locale de revue et les documents de travail. Suivez une facture depuis le montant déclaré ouvert jusqu’au paiement et au solde. Les décisions restent en attente tant qu’elles ne sont pas réellement prises."
+      "La procédure actuelle relie factures et preuves de paiement, distingue les postes soldés des postes non résolus et prépare le dossier de revue. La conversation vocale explique l’avancement et les justificatifs manquants.",
+      "Ouvrez la page locale de revue et les documents de travail. Suivez une facture depuis le montant déclaré ouvert jusqu’au justificatif de paiement et au résultat proposé. Les décisions restent en attente tant qu’elles ne sont pas réellement prises."
     ],
     "deliverables": [
-      "Documents Excel et fiche opérationnelle : présentent la population vérifiée, les paiements associés, les soldes et les exceptions.",
+      "Documents Excel et fiche opérationnelle : présentent les montants initiaux, les paiements associés, les résultats proposés et les exceptions.",
       "Rapport Word et page locale de revue : expliquent les conclusions et permettent au professionnel d’examiner les postes et de demander des documents."
     ],
     "review": "Vérifiez d’abord la population et la date. Les preuves de mars justifient le règlement des deux premières factures ; la troisième reste non résolue avec ces documents. Examinez dates et sources avant d’accepter une conclusion.",
@@ -47,7 +47,7 @@
     ],
     "practice": "Gardez open-items-fr.pdf et utilisez bank-april-fr.pdf pour demander une nouvelle revue au 30 avril. Le document bancaire cumulé comprend le troisième paiement. Conservez les documents de mars.",
     "success": "La nouvelle revue tient compte du troisième paiement. Expliquez pourquoi les conclusions diffèrent entre mars et avril et où enregistrer une décision de revue.",
-    "repeat": "Fournissez la liste des postes ouverts, la date d’arrêté et les justificatifs. Examinez les soldes et les points non résolus avant d’utiliser les conclusions."
+    "repeat": "Fournissez la liste des postes ouverts, la date d’arrêté et les justificatifs. Examinez les résultats proposés et les points non résolus avant d’utiliser les conclusions."
   },
   "vera/variance-analysis": {
     "title": "Comparer le réalisé au budget avec Vera",

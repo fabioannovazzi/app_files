@@ -13,6 +13,7 @@ from pathlib import Path
 import openpyxl
 import pytest
 
+from tests.plugins._teaching_release import record_native_check
 from tests.plugins.test_teaching_kit_execution import (
     ROOT,
     _bound_case,
@@ -102,15 +103,29 @@ WORDS = {
 
 
 def _model(inspection: Path, language: str, phase: str) -> dict:
-    """Author the bounded interpretation of this specific fictional workbook."""
+    """Author this fixed fictional case, separate from the shipped source pack."""
     t = _read(ROOT / "scripts/course_materials/concordato_sources.json")[language]
     w = WORDS[language]
     c, r, p = t["tabs"]
     model = _read(inspection / "suggested_concordato_case_model.json")
-    source = model["document_perimeter"]["documents"][0]["source_artifact_ref"]
+    documents = {
+        Path(row["relative_path"]).name: row
+        for row in model["document_perimeter"]["documents"]
+    }
+    workbook_source = documents[f"{phase}-{language}.xlsx"]
+    management_source = documents[f"management-{phase}-{language}.pdf"]
+    source = workbook_source["source_artifact_ref"]
+    support = management_source["source_artifact_ref"]
+    authored = _read(ROOT / "tests/fixtures/teaching_reviews/concordato.json")[language]
+    management = _read(ROOT / "scripts/course_materials/concordato_support.json")[
+        language
+    ]
 
     def evidence(locator):
         return [{"source_artifact_ref": source, "locator": locator}]
+
+    def support_evidence(page):
+        return [{"source_artifact_ref": support, "locator": f"p. {page}"}]
 
     # The official indexed statute was inspected during authoring. This fixed
     # fixture is not a new live legal review or an eligibility opinion.
@@ -140,7 +155,7 @@ def _model(inspection: Path, language: str, phase: str) -> dict:
     )
     perimeter = model["document_perimeter"]
     perimeter.update({"status": "partial", "judgment_basis": t["notes"][4]})
-    perimeter["documents"][0].update(
+    workbook_source.update(
         {
             "roles": [
                 "proposal",
@@ -152,6 +167,14 @@ def _model(inspection: Path, language: str, phase: str) -> dict:
             "authoritative_for": ["proposal", "plan", "creditor_schedule"],
             "version_date": "2026-09-14",
             "judgment_basis": t["notes"][3],
+        }
+    )
+    management_source.update(
+        {
+            "roles": ["other_support", "financial_model", "liquidation_analysis"],
+            "authoritative_for": ["financial_model", "liquidation_analysis"],
+            "version_date": "2026-09-14",
+            "judgment_basis": management["fiction"],
         }
     )
     model["creditor_population"].update(
@@ -175,7 +198,7 @@ def _model(inspection: Path, language: str, phase: str) -> dict:
                 "claim_amount": claim,
                 "claim_status": "asserted",
                 "priority": "unsecured",
-                "class_id": "company-proposed-single-class",
+                "class_id": "CL-1",
                 "treatment_form": "cash",
                 "proposed_cash_amount": proposed,
                 "proposed_non_cash_amount": "0",
@@ -183,7 +206,7 @@ def _model(inspection: Path, language: str, phase: str) -> dict:
                 "payment_start": "",
                 "payment_end": "2027-12-31",
                 "voting_treatment": "unclear",
-                "evidence_refs": evidence(f"{r}!A{i+7}:D{i+7}"),
+                "evidence_refs": evidence(f"{r}!A{i+7}:D{i+7}") + support_evidence(1),
                 "judgment_basis": t["notes"][2],
             }
         )
@@ -211,27 +234,33 @@ def _model(inspection: Path, language: str, phase: str) -> dict:
                 "judgment_basis": t["planNote"],
             }
         )
+    closing = (
+        ["5000", "80000", "105000", "0"]
+        if phase == "demo"
+        else ["5000", "60000", "85000", "-20000"]
+    )
     model["liquidity"].update(
         {
             "status": "partial",
-            "judgment_basis": t["planNote"],
+            "judgment_basis": authored["feasibility_liquidity"][0],
             "periods": [
                 {
-                    "period_id": "2027",
-                    "period": "2027",
-                    "opening_cash": "0",
-                    "operating_inflows": "300000",
+                    "period_id": f"2027-Q{i+1}",
+                    "period": f"2027-Q{i+1}",
+                    "opening_cash": opening,
+                    "operating_inflows": "75000",
                     "other_inflows": "0",
-                    "new_finance_inflows": funding,
-                    "operating_outflows": "200000",
-                    "procedure_costs": "20000",
-                    "creditor_distributions": "130000",
+                    "new_finance_inflows": funding if i == 1 else "0",
+                    "operating_outflows": "50000",
+                    "procedure_costs": "20000" if i == 0 else "0",
+                    "creditor_distributions": "130000" if i == 3 else "0",
                     "financing_outflows": "0",
                     "other_outflows": "0",
-                    "reported_closing_cash": "0" if phase == "demo" else "-20000",
-                    "evidence_refs": evidence(f"{p}!A6:B12"),
-                    "judgment_basis": t["planNote"],
+                    "reported_closing_cash": closing[i],
+                    "evidence_refs": support_evidence(2),
+                    "judgment_basis": management["operations"],
                 }
+                for i, opening in enumerate(["0", *closing[:3]])
             ],
         }
     )
@@ -245,29 +274,31 @@ def _model(inspection: Path, language: str, phase: str) -> dict:
             "judgment_basis": t["notes"][6],
         }
     ]
+    locators = {
+        "procedure_identity": evidence(f"{c}!B7:B8"),
+        "proposal_plan_consistency": evidence(f"{r}!A6:D9") + support_evidence(2),
+        "document_perimeter": support_evidence(2),
+        "creditor_perimeter": evidence(f"{r}!A6:D9") + support_evidence(1),
+        "creditor_treatment": support_evidence(1),
+        "voting_homologation": evidence(f"{c}!B8") + support_evidence(1),
+        "liquidation_alternative": support_evidence(1),
+        "feasibility_liquidity": support_evidence(2),
+        "attestation": support_evidence(2),
+        "accounting_consistency": evidence(f"{p}!B6:B7") + support_evidence(2),
+        "tax_social_security": support_evidence(2),
+    }
     for q in model["review_questions"]:
-        credit = q["area"] in {
-            "creditor_perimeter",
-            "creditor_treatment",
-            "voting_homologation",
-        }
-        finance = q["area"] == "feasibility_liquidity"
+        basis, follow_up = authored[q["area"]]
+        if q["area"] == "feasibility_liquidity" and phase == "practice":
+            basis = f"{w[5]} {basis}"
         q.update(
             {
-                "assessment": "gap",
-                "evidence_refs": evidence(f"{c}!B8:B12"),
-                "judgment_basis": t["notes"][
-                    (
-                        2
-                        if credit
-                        else (
-                            7
-                            if finance and phase == "practice"
-                            else 5 if finance else 4
-                        )
-                    )
-                ],
-                "follow_up": w[3 if credit else 2 if finance else 1],
+                "assessment": (
+                    "addressed" if q["area"] == "procedure_identity" else "gap"
+                ),
+                "evidence_refs": locators[q["area"]],
+                "judgment_basis": basis,
+                "follow_up": follow_up,
             }
         )
     model["assumptions"] = [
@@ -311,16 +342,71 @@ def _model(inspection: Path, language: str, phase: str) -> dict:
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 @pytest.mark.parametrize("phase", ["demo", "practice"])
 def test_concordato_kit_builds_current_review_from_fictional_plan(
-    tmp_path, monkeypatch, language, phase
+    tmp_path, monkeypatch, language, phase, record_property
 ):
     run = _bound_case(
         tmp_path,
         monkeypatch,
         "concordato-plan-review",
         "concordato-plan-review",
-        phase,
+        "demo",
         language=language,
     )
+    ledger = _execute_concordato_run(run, language, "demo", tmp_path / "case")
+    results = [{"phase": "demo", "run": run}]
+    if phase == "practice":
+        from courseware.library import CourseLibrary
+
+        original = {
+            path: path.read_bytes()
+            for path in Path(run["context"]["run_root"]).rglob("*")
+            if path.is_file()
+        }
+        context = run["context"]
+        kit = CourseLibrary(ROOT / "plugins/vera", {"concordato-plan-review"}).render(
+            "concordato-plan-review", language, tmp_path / "practice-kit"
+        )
+        imports = [
+            ledger.import_document(
+                tmp_path / "case",
+                context["client_id"],
+                context["engagement_id"],
+                Path(path),
+                "source",
+            )
+            for path in kit["practice_files"]
+        ]
+        version = _read(ROOT / "plugins/vera/.codex-plugin/plugin.json")["version"]
+        prepared = ledger.prepare_run(
+            tmp_path / "case",
+            context["client_id"],
+            context["engagement_id"],
+            "concordato-plan-review",
+            version,
+            input_ids=[item["receipt"]["input_id"] for item in imports],
+            purpose="Review the updated fictional plan in the same teaching case",
+        )
+        updated = ledger.start_run(
+            tmp_path / "case", context["engagement_id"], prepared["run"]["run_id"]
+        )
+        _execute_concordato_run(updated, language, "practice", tmp_path / "case")
+        assert updated["context"]["engagement_id"] == context["engagement_id"]
+        assert updated["context"]["run_id"] != context["run_id"]
+        assert all(path.read_bytes() == content for path, content in original.items())
+        results.append({"phase": "practice", "run": updated})
+    _write(tmp_path / "execution.json", {"language": language, "results": results})
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="concordato-plan-review",
+        language=language,
+        phase=phase,
+    )
+
+
+def _execute_concordato_run(run, language, phase, client_root):
+    """Execute and preserve one real native review from this authored test case."""
     output = Path(run["output_dir"])
     inputs = Path(run["context"]["run_root"]) / "inputs"
     inspection, result = output / "inspection", output / "review"
@@ -346,7 +432,10 @@ def test_concordato_kit_builds_current_review_from_fictional_plan(
         == "needs_semantic_review"
     )
     inventory = _read(inspection / "inventory.json")
-    assert len(inventory) == 1
+    assert len(inventory) == 2
+    assert all(
+        item["supported"] and item["capture_status"] == "captured" for item in inventory
+    )
     model = _model(inspection, language, phase)
     model_path, recipe = (
         output / "test_case_interpretation.json",
@@ -385,10 +474,16 @@ def test_concordato_kit_builds_current_review_from_fictional_plan(
     assert len(creditors) == 3
     with (result / "liquidity_schedule.csv").open() as handle:
         cash = list(csv.DictReader(handle))
-    assert Decimal(cash[0]["calculated_closing_cash"]) == (
+    assert len(cash) == 4
+    assert [Decimal(row["calculated_closing_cash"]) for row in cash] == (
+        [Decimal(value) for value in ("5000", "80000", "105000", "0")]
+        if phase == "demo"
+        else [Decimal(value) for value in ("5000", "60000", "85000", "-20000")]
+    )
+    assert Decimal(cash[-1]["calculated_closing_cash"]) == (
         Decimal("0") if phase == "demo" else Decimal("-20000")
     )
-    assert cash[0]["bridge_within_tolerance"] == "True"
+    assert all(row["bridge_within_tolerance"] == "True" for row in cash)
     assert (result / "concordato_preventivo_review_summary.docx").is_file()
     assert (
         WORDS[language][4 if phase == "demo" else 5]
@@ -397,6 +492,13 @@ def test_concordato_kit_builds_current_review_from_fictional_plan(
     workbook = openpyxl.load_workbook(
         result / "concordato_review_workpaper.xlsx", read_only=True, data_only=True
     )
-    assert {"Overview", "Creditors", "Liquidity"} <= set(workbook.sheetnames)
+    names = {
+        "it": {"Riepilogo", "Creditori", "Liquidità"},
+        "en": {"Overview", "Creditors", "Liquidity"},
+        "fr": {"Synthèse", "Créanciers", "Trésorerie"},
+        "de": {"Übersicht", "Gläubiger", "Liquidität"},
+        "es": {"Resumen", "Acreedores", "Liquidez"},
+    }
+    assert names[language] <= set(workbook.sheetnames)
     workbook.close()
-    _complete_teaching_case(run, tmp_path / "case")
+    return _complete_teaching_case(run, client_root)

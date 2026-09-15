@@ -9,7 +9,7 @@
     "steps": [
       "Dans la fenêtre de travail, Vera ouvre le dossier et enregistre les documents. La conversation vocale explique la mission, les sources et le résultat. Vérifiez quels documents gouvernent l’exercice et lesquels décrivent l’entreprise.",
       "Vera propose les exigences et leur rapprochement avec les faits, examine les dépenses et prépare la liste des pièces et le projet. Suivez un point de sa source à la proposition et effectuez les révisions prévues par le processus normal.",
-      "Ouvrez le dossier et ses contrôles. Examinez résultat proposé, pièces manquantes, dépenses et prochaines actions. Vera explique la suite de la révision et de la préparation de la demande ; l’exercice n’utilise aucun portail et n’envoie rien."
+      "Ouvrez review_dossier.html : commencez par la synthèse, puis examinez dépenses, documents et projet de texte. Développez une condition pour lire son évaluation et l’extrait de la source. Vera explique les examens encore nécessaires et les étapes suivantes ; cet exercice n’utilise aucun portail et n’envoie rien."
     ],
     "deliverables": [
       "Dossier local avec exigences, preuves, évaluations proposées, dépenses, pièces et rédaction préparatoire.",

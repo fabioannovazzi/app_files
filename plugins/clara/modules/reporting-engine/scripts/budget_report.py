@@ -99,6 +99,7 @@ def main(argv: list[str] | None = None) -> int:
                 inputs=args.input,
                 recipe_path=args.recipe,
                 output_dir=args.output_dir,
+                commentary_path=args.commentary,
             )
             return 2 if pack["status"] == "blocked" else 0
         elif args.pack is None or args.audience is None:

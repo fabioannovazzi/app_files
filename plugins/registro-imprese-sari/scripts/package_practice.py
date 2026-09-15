@@ -20,6 +20,7 @@ from case_core import (
     write_private_json,
     write_private_text,
 )
+from registry_display import handoff, status, text
 
 __all__ = ["package_practice", "main"]
 
@@ -27,9 +28,6 @@ LOGGER = logging.getLogger(__name__)
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 
 DISCLAIMER = "BOZZA PER REVISIONE PROFESSIONALE — NON PRONTA PER IL DEPOSITO"
-SPANISH_DISCLAIMER = (
-    "BORRADOR PARA REVISIÓN PROFESIONAL — NO ESTÁ LISTO PARA SU PRESENTACIÓN"
-)
 PLAN_SECTIONS = (
     ("classification_proposals", "Qualificazioni da confermare"),
     ("position_matrix", "Matrice delle posizioni e degli enti"),
@@ -38,15 +36,6 @@ PLAN_SECTIONS = (
     ("application_fields", "Campi da predisporre"),
     ("risks", "Rischi e controlli"),
     ("missing_information", "Informazioni mancanti"),
-)
-SPANISH_PLAN_SECTIONS = (
-    ("classification_proposals", "Calificaciones pendientes de confirmación"),
-    ("position_matrix", "Matriz de posiciones y organismos"),
-    ("dire_steps", "Itinerario propuesto en DIRE"),
-    ("required_documents", "Documentos y anexos"),
-    ("application_fields", "Campos que deben prepararse"),
-    ("risks", "Riesgos y controles"),
-    ("missing_information", "Información pendiente"),
 )
 ITEM_TYPES = {
     "classification_proposals": "case_fact",
@@ -132,28 +121,28 @@ def _case_scope_rows(intake: dict[str, Any], *, language: str) -> list[list[obje
 
     rows: list[list[object]] = [
         [
-            "Referencia interna" if language == "es" else "Riferimento interno",
+            text(language, "Riferimento interno"),
             intake["client_reference"],
-            "registrada" if language == "es" else "registrato",
+            text(language, "registrato"),
         ],
     ]
     identity = intake.get("client_identity")
     if not isinstance(identity, dict):
         return rows
     labels = (
-        ("name", "Cliente / sujeto" if language == "es" else "Cliente / soggetto"),
-        ("tax_code", "Código fiscal" if language == "es" else "Codice fiscale"),
-        ("vat_number", "Número de IVA" if language == "es" else "Partita IVA"),
-        ("email", "Correo electrónico" if language == "es" else "Email"),
+        ("name", text(language, "Cliente / soggetto")),
+        ("tax_code", text(language, "Codice fiscale")),
+        ("vat_number", text(language, "Partita IVA")),
+        ("email", text(language, "Email")),
         ("pec", "PEC"),
-        ("phone", "Teléfono" if language == "es" else "Telefono"),
-        ("address", "Dirección" if language == "es" else "Indirizzo"),
+        ("phone", text(language, "Telefono")),
+        ("address", text(language, "Indirizzo")),
     )
     rows.extend(
         [
             label,
             identity[field],
-            "dato del expediente" if language == "es" else "dato del fascicolo",
+            text(language, "dato del fascicolo"),
         ]
         for field, label in labels
         if identity.get(field)
@@ -171,104 +160,94 @@ def _checklist_markdown(
 ) -> str:
     chamber = intake["competent_chamber"]
     operation = intake["requested_operation"]
-    spanish = language == "es"
     lines = [
-        f"# {SPANISH_DISCLAIMER if spanish else DISCLAIMER}",
+        f"# {text(language, 'checklist_title')}",
         "",
-        "## Alcance del caso" if spanish else "## Perimetro del caso",
+        text(language, DISCLAIMER),
+        "",
+        plan["case_summary"],
+        "",
+        text(language, "## Perimetro del caso"),
         "",
         *_markdown_table(
-            ["Concepto", "Valor", "Estado"] if spanish else ["Voce", "Valore", "Stato"],
+            [text(language, "Voce"), text(language, "Valore"), text(language, "Stato")],
             [
                 *_case_scope_rows(intake, language=language),
                 [
-                    "Cámara competente" if spanish else "Camera competente",
+                    text(language, "Camera competente"),
                     chamber["name"],
-                    chamber["confirmation_status"],
+                    status(language, chamber["confirmation_status"]),
                 ],
-                ["Tenant SARI", chamber["tenant"], chamber["confirmation_status"]],
                 [
-                    "Forma jurídica" if spanish else "Forma giuridica",
+                    "SARI",
+                    status(language, chamber["tenant"]),
+                    status(language, chamber["confirmation_status"]),
+                ],
+                [
+                    text(language, "Forma giuridica"),
                     intake["subject"]["legal_form"],
-                    intake["subject"]["confirmation_status"],
+                    status(language, intake["subject"]["confirmation_status"]),
                 ],
                 [
-                    "Actividad" if spanish else "Attività",
+                    text(language, "Attività"),
                     intake["activity"]["description"],
-                    intake["activity"]["classification_status"],
+                    status(language, intake["activity"]["classification_status"]),
                 ],
                 [
-                    "Operación" if spanish else "Operazione",
+                    text(language, "Operazione"),
                     operation["description"],
-                    operation["confirmation_status"],
+                    status(language, operation["confirmation_status"]),
                 ],
                 [
-                    "Fecha de efecto" if spanish else "Data effetto",
+                    text(language, "Data effetto"),
                     operation["effective_date"],
-                    operation["confirmation_status"],
+                    status(language, operation["confirmation_status"]),
                 ],
                 [
-                    "Posiciones consideradas" if spanish else "Posizioni considerate",
+                    text(language, "Posizioni considerate"),
                     ", ".join(operation["position_types"]),
-                    operation["confirmation_status"],
+                    status(language, operation["confirmation_status"]),
                 ],
             ],
         ),
         "",
-        "## Cuestión profesional" if spanish else "## Quesito professionale",
+        text(language, "## Quesito professionale"),
         "",
         intake["professional_question"],
         "",
-        (
-            "## Fuentes oficiales seleccionadas"
-            if spanish
-            else "## Fonti ufficiali selezionate"
-        ),
+        (text(language, "## Fonti ufficiali selezionate")),
         "",
     ]
-    source_rows: list[list[object]] = []
     for source in sources["sources"]:
-        source_rows.append(
+        title = (
+            source.get("title") or source.get("chamber_title") or source["source_id"]
+        )
+        url = source.get("official_url") or source.get("source_url")
+        territory = (
+            source.get("territorial_applicability")
+            or source.get("chamber_title")
+            or "—"
+        )
+        source_date = (
+            source.get("updated_date")
+            or source.get("retrieved_at")
+            or source.get("registered_at")
+            or "—"
+        )
+        lines.extend(
             [
-                source.get("source_id"),
-                source.get("title") or source.get("chamber_title"),
-                source.get("territorial_applicability") or source.get("chamber_title"),
-                source.get("updated_date")
-                or source.get("retrieved_at")
-                or source.get("registered_at"),
-                source.get("official_url"),
+                f"- [{title}]({url})" if url else f"- {title}",
+                f"  {text(language, 'Territorio')}: {territory}; {text(language, 'Data fonte/acquisizione')}: {source_date}. ID: {source['source_id']}.",
+                "",
             ]
         )
-    lines.extend(
-        _markdown_table(
-            (
-                ["ID", "Título", "Territorio", "Fecha de la fuente/adquisición", "URL"]
-                if spanish
-                else ["ID", "Titolo", "Territorio", "Data fonte/acquisizione", "URL"]
-            ),
-            source_rows,
-        )
-    )
-    lines.extend(
-        [
-            "",
-            "## Resumen del caso" if spanish else "## Sintesi del caso",
-            "",
-            plan["case_summary"],
-            "",
-        ]
-    )
-    for key, title in (SPANISH_PLAN_SECTIONS if spanish else PLAN_SECTIONS):
+    for key, title in [(key, text(language, title)) for key, title in PLAN_SECTIONS]:
         lines.extend([f"## {title}", ""])
         items = plan.get(key) or []
         if not items:
             lines.extend(
                 [
-                    (
-                        "_No se ha propuesto ningún elemento._"
-                        if spanish
-                        else "_Nessuna voce proposta._"
-                    ),
+                    (text(language, "_Nessuna voce proposta._")),
                     "",
                 ]
             )
@@ -284,27 +263,40 @@ def _checklist_markdown(
         for item in ordered:
             lines.extend(
                 [
-                    f"### {item['id']} — {item['title']}",
+                    f"### {item['title']}",
                     "",
                     item["detail"],
                     "",
-                    f"- {'Sistema/área' if spanish else 'Sistema/area'}: "
-                    f"{item.get('system') or ('no indicado' if spanish else 'non indicato')}",
-                    f"- {'Estado de la revisión' if spanish else 'Stato revisione'}: "
-                    f"{item['review_status']}",
-                    f"- {'Fuentes' if spanish else 'Fonti'}: {_item_sources(item)}",
-                    f"- {'Hechos del caso' if spanish else 'Fatti del caso'}: "
-                    f"{', '.join(item.get('case_fact_ids') or []) or ('ninguno indicado' if spanish else 'nessuno indicato')}",
+                    *(
+                        [
+                            f"{text(language, 'proposed_value')}: {item['proposed_value']}",
+                            "",
+                        ]
+                        if item.get("proposed_value") is not None
+                        else []
+                    ),
+                    *(
+                        [f"- {text(language, 'Sistema/area')}: {item['system']}"]
+                        if item.get("system")
+                        else []
+                    ),
+                    f"- {text(language, 'Stato revisione')}: "
+                    f"{status(language, item['review_status'])}",
+                    f"- {text(language, 'Fonti')}: {_item_sources(item)}",
+                    "",
+                    f"<details><summary>{text(language, 'technical_evidence')}</summary>",
+                    "",
+                    f"- ID: {item['id']}",
+                    f"- {text(language, 'Fatti del caso')}: "
+                    f"{', '.join(item.get('case_fact_ids') or []) or (text(language, 'nessuno indicato'))}",
+                    "",
+                    "</details>",
                     "",
                 ]
             )
     lines.extend(
         [
-            (
-                "## Pregunta para el servicio de soporte SARI (borrador)"
-                if spanish
-                else "## Domanda da inviare al supporto SARI (bozza)"
-            ),
+            (text(language, "## Domanda da inviare al supporto SARI (bozza)")),
             "",
             plan["sari_question_draft"],
             "",
@@ -313,7 +305,7 @@ def _checklist_markdown(
     if plan["limitations"]:
         lines.extend(
             [
-                "## Limitaciones" if spanish else "## Limiti",
+                text(language, "## Limiti"),
                 "",
                 *(f"- {item}" for item in plan["limitations"]),
                 "",
@@ -321,19 +313,16 @@ def _checklist_markdown(
         )
     lines.extend(
         [
-            (
-                "## Resultado de los controles mecánicos"
-                if spanish
-                else "## Esito dei controlli meccanici"
-            ),
+            (text(language, "## Esito dei controlli meccanici")),
             "",
-            f"- {'Estado' if spanish else 'Stato'}: {audit['status']}",
-            f"- {'Errores' if spanish else 'Errori'}: {audit['error_count']}",
-            f"- {'Bloqueos' if spanish else 'Blocchi'}: {audit['blocker_count']}",
+            f"- {text(language, 'Stato')}: {status(language, audit['status'])}",
+            f"- {text(language, 'Errori')}: {audit['error_count']}",
+            f"- {text(language, 'Blocchi')}: {audit['blocker_count']}",
             (
-                "- Los scripts no han elegido ninguna clasificación jurídica."
-                if spanish
-                else "- Nessuna classificazione giuridica è stata scelta dagli script."
+                text(
+                    language,
+                    "- Nessuna classificazione giuridica è stata scelta dagli script.",
+                )
             ),
             "",
         ]
@@ -345,28 +334,23 @@ def _sari_question_markdown(
     intake: dict[str, Any], plan: dict[str, Any], *, language: str
 ) -> str:
     chamber = intake["competent_chamber"]
-    spanish = language == "es"
     return "\n".join(
         [
-            (
-                "# Pregunta para el servicio de soporte SARI — borrador"
-                if spanish
-                else "# Quesito per il supporto SARI — bozza"
-            ),
+            (text(language, "# Quesito per il supporto SARI — bozza")),
             "",
-            f"{'Destinatario propuesto' if spanish else 'Destinatario proposto'}: "
-            f"{chamber['name']}",
-            f"{'Referencia del caso' if spanish else 'Riferimento del caso'}: "
+            f"{text(language, 'Destinatario proposto')}: " f"{chamber['name']}",
+            f"{text(language, 'Riferimento del caso')}: "
             f"{intake['client_reference']}",
             "",
-            "## Pregunta" if spanish else "## Quesito",
+            text(language, "## Quesito"),
             "",
             plan["sari_question_draft"],
             "",
             (
-                "_El profesional debe aprobar el texto antes de cualquier envío manual. Vera no envía la pregunta._"
-                if spanish
-                else "_Far approvare il testo dal professionista prima di qualsiasi invio manuale. Vera non invia il quesito._"
+                text(
+                    language,
+                    "_Far approvare il testo dal professionista prima di qualsiasi invio manuale. Vera non invia il quesito._",
+                )
             ),
             "",
         ]
@@ -380,7 +364,6 @@ def _review_items(
     *,
     language: str,
 ) -> list[dict[str, Any]]:
-    spanish = language == "es"
     items: list[dict[str, Any]] = []
     for source in sources["sources"]:
         source_id = source["source_id"]
@@ -389,11 +372,7 @@ def _review_items(
                 "id": f"source-{source_id}",
                 "item_type": "official_source",
                 "title": source.get("title")
-                or (
-                    f"Fuente oficial {source_id}"
-                    if spanish
-                    else f"Fonte ufficiale {source_id}"
-                ),
+                or (f"{text(language, 'Fonte ufficiale')} {source_id}"),
                 "source_path": source.get("artifact_path"),
                 "output_path": "official_sources.json",
                 "allowed_actions": ALLOWED_ACTIONS,
@@ -462,11 +441,7 @@ def _review_items(
         {
             "id": "audit-practice-validation",
             "item_type": "audit_check",
-            "title": (
-                "Controles mecánicos de la práctica"
-                if spanish
-                else "Controlli meccanici della pratica"
-            ),
+            "title": (text(language, "Controlli meccanici della pratica")),
             "source_path": "practice_validation_audit.json",
             "output_path": None,
             "allowed_actions": ["accept", "mark_unclear", "skip"],
@@ -681,36 +656,7 @@ def package_practice(output_dir: Path) -> dict[str, Any]:
             "status": "pending_review",
         },
     )
-    handoff_lines = (
-        [
-            "# Entrega para revisión",
-            "<!-- Review Handoff -->",
-            "",
-            "Artefactos: review_payload.json → ui_decisions.json → applied_decisions.json → final_artifacts.json.",
-            "",
-            "1. Valide con `validate_registro_imprese_sari_review`.",
-            "2. Abra la revisión profesional en Codex con `render_registro_imprese_sari_review`.",
-            "3. Guarde las decisiones con `save_registro_imprese_sari_decisions`.",
-            "4. Aplique el manifiesto de decisiones con `apply_registro_imprese_sari_decisions`.",
-            "",
-            "La aplicación de decisiones nunca inicia sesión, firma, presenta ni marca la práctica como lista para su presentación.",
-            "",
-        ]
-        if language == "es"
-        else [
-            "# Review Handoff",
-            "",
-            "Artifacts: review_payload.json → ui_decisions.json → applied_decisions.json → final_artifacts.json.",
-            "",
-            "1. Validate with `validate_registro_imprese_sari_review`.",
-            "2. Open the professional review in Codex with `render_registro_imprese_sari_review`.",
-            "3. Persist choices with `save_registro_imprese_sari_decisions`.",
-            "4. Apply the decision manifest with `apply_registro_imprese_sari_decisions`.",
-            "",
-            "Applying decisions never logs in, signs, submits, or marks the practice ready to file.",
-            "",
-        ]
-    )
+    handoff_lines = handoff(language)
     handoff_path = write_private_text(
         output_dir / "review_handoff.md", "\n".join(handoff_lines)
     )
@@ -762,27 +708,29 @@ def package_practice(output_dir: Path) -> dict[str, Any]:
         "caveats": [
             *plan["limitations"],
             (
-                f"Estado de la validación mecánica: {audit['status']}."
-                if language == "es"
-                else f"Mechanical validation status: {audit['status']}."
+                f"{text(language, 'validation_status')}: {status(language, audit['status'])}."
             ),
             (
-                "Toda fuente SARI o institucional seleccionada requiere todavía que un profesional confirme su aplicabilidad."
-                if language == "es"
-                else "A selected SARI or institutional source still requires professional applicability review."
+                text(
+                    language,
+                    "A selected SARI or institutional source still requires professional applicability review.",
+                )
             ),
         ],
         "next_actions": (
             [
-                "Resuelva todos los bloqueos registrados y confirme visualmente cualquier texto obtenido mediante OCR.",
-                "Complete la secuencia profesional de validación, visualización, guardado y aplicación.",
-                "Mantenga el acceso al portal, la firma y la presentación dentro del proceso autorizado y separado del despacho.",
-            ]
-            if language == "es"
-            else [
-                "Resolve every recorded blocker and visually confirm any OCR-derived text.",
-                "Complete the validate/render/save/apply professional review handoff.",
-                "Keep portal access, signature, and submission in the studio's separate authorized process.",
+                text(
+                    language,
+                    "Resolve every recorded blocker and visually confirm any OCR-derived text.",
+                ),
+                text(
+                    language,
+                    "Complete the validate/render/save/apply professional review handoff.",
+                ),
+                text(
+                    language,
+                    "Keep portal access, signature, and submission in the studio's separate authorized process.",
+                ),
             ]
         ),
         "blockers": blockers,

@@ -1,0 +1,660 @@
+{
+  "channel_drafts": [
+    {
+      "audience_note": "Per amministrazione e servizio clienti delle piccole imprese in Italia. Questa iniziativa informativa dello studio aiuta a organizzare il primo passaggio di una richiesta; non annuncia una nuova legge e non decide un caso concreto.",
+      "body": "Esercitazione didattica: Studio Riva e l’incarico sono fittizi; la guida EDPB è una fonte pubblica autentica.\n\nPer amministrazione e servizio clienti delle piccole imprese in Italia. Questa iniziativa informativa dello studio aiuta a organizzare il primo passaggio di una richiesta; non annuncia una nuova legge e non decide un caso concreto.\n\n**Come riconoscerla?**\nUna persona vuole sapere se trattate dati che la riguardano, accedervi o riceverne una copia. Sono i contenuti del diritto di accesso descritti dalla guida EDPB. Se il significato della richiesta è dubbio, coinvolgete chi segue la privacy. [Comitato europeo per la protezione dei dati (EDPB)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_it)\n\n**Chi deve occuparsene?**\nIl titolare del trattamento deve rispondere e facilitare l’esercizio dei diritti; il responsabile del trattamento lo assiste. Come primo passaggio organizzativo, inoltrate la richiesta alla persona che segue la privacy, perché verifichi il ruolo dell’impresa e coordini la risposta. [Comitato europeo per la protezione dei dati (EDPB)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_it)\n\n**Che cosa registrare subito?**\nProposta operativa: conservate la richiesta e la data di ricezione, individuate chi la prende in carico e annotate il seguito. La guida raccomanda procedure interne, personale formato, conoscenza dei flussi di dati e tracciamento delle richieste e delle risposte. Questo promemoria non sostituisce la procedura aziendale. [Comitato europeo per la protezione dei dati (EDPB)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_it)\n\n**Quanto tempo c’è?**\nLa guida indica la risposta entro un mese. Se la complessità richiede più tempo, il termine può essere esteso di altri due mesi, informando la persona entro un mese dalla ricezione. Fate verificare il termine concreto e le condizioni di una proroga da chi coordina la risposta; non presumete di avere sempre tre mesi. [Comitato europeo per la protezione dei dati (EDPB)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_it)\n\n**Basta inviare un documento?**\nL’accesso comprende la conferma del trattamento e, se i dati sono trattati, l’accesso ai dati e informazioni quali finalità, categorie, destinatari e durata di conservazione. La guida elenca anche le ulteriori informazioni previste. Prima di fornire la copia, occorre verificare i diritti e le libertà altrui: per esempio, un documento può contenere dati di più persone. Fate esaminare il contenuto prima dell’invio. [Comitato europeo per la protezione dei dati (EDPB)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_it)\n\n**Si può chiedere un pagamento o rifiutare?**\nLa copia dei propri dati è di regola gratuita. La guida prevede condizioni particolari per copie aggiuntive o richieste manifestamente infondate o eccessive; queste ultime devono poter essere dimostrate. Una richiesta ripetuta non va respinta automaticamente. Se non si dà seguito, occorre comunicare entro un mese le ragioni e la possibilità di reclamo all’autorità nazionale e di ricorso giudiziario. Coinvolgete chi segue la privacy prima di decidere costi o rifiuti. [Comitato europeo per la protezione dei dati (EDPB)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_it)\n\nIndicazioni generali ricavate dall’estratto EDPB selezionato. Ruolo dell’impresa, dati da fornire, termine concreto, eventuali costi e motivi di rifiuto richiedono valutazione sul singolo caso. Non sono disponibili una richiesta reale o una procedura aziendale.",
+      "channel": "faq",
+      "claim_ids": [
+        "CLAIM-001",
+        "CLAIM-002",
+        "CLAIM-003",
+        "CLAIM-004",
+        "CLAIM-005",
+        "CLAIM-006",
+        "CLAIM-007",
+        "CLAIM-008",
+        "CLAIM-009",
+        "CLAIM-010"
+      ],
+      "public_source_notes": [
+        {
+          "public_url": "https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_it",
+          "source_ids": [
+            "SRC-EDPB"
+          ],
+          "text": "Comitato europeo per la protezione dei dati (EDPB), guida alla protezione dei dati per le piccole imprese, pagina sui diritti delle persone, sezioni sulla gestione delle richieste e sul diritto di accesso. Estratto acquisito il 14 settembre 2026; guida ufficiale, non un nuovo atto normativo. https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_it"
+        }
+      ],
+      "sections": [],
+      "title": "Richiesta di accesso ai dati: sei domande per chi la riceve"
+    }
+  ],
+  "claims": [
+    {
+      "id": "CLAIM-001",
+      "professional_judgment": "Le indicazioni organizzative sono proposte dello studio da adattare; non attestano una procedura approvata né risolvono un caso.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Il diritto di accesso comprende la conferma dell’eventuale trattamento dei dati personali della persona.",
+      "temporal_qualification": "Riferimento: 14 settembre 2026, data dell’estratto selezionato. Nessuna nuova entrata in vigore è annunciata.",
+      "uncertainty": "Indicazioni generali ricavate dall’estratto EDPB selezionato. Ruolo dell’impresa, dati da fornire, termine concreto, eventuali costi e motivi di rifiuto richiedono valutazione sul singolo caso. Non sono disponibili una richiesta reale o una procedura aziendale."
+    },
+    {
+      "id": "CLAIM-002",
+      "professional_judgment": "Le indicazioni organizzative sono proposte dello studio da adattare; non attestano una procedura approvata né risolvono un caso.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Il titolare del trattamento deve rispondere alle richieste di esercizio dei diritti e facilitarle; il responsabile del trattamento lo assiste.",
+      "temporal_qualification": "Riferimento: 14 settembre 2026, data dell’estratto selezionato. Nessuna nuova entrata in vigore è annunciata.",
+      "uncertainty": "Indicazioni generali ricavate dall’estratto EDPB selezionato. Ruolo dell’impresa, dati da fornire, termine concreto, eventuali costi e motivi di rifiuto richiedono valutazione sul singolo caso. Non sono disponibili una richiesta reale o una procedura aziendale."
+    },
+    {
+      "id": "CLAIM-003",
+      "professional_judgment": "Le indicazioni organizzative sono proposte dello studio da adattare; non attestano una procedura approvata né risolvono un caso.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "La guida raccomanda procedure interne, formazione del personale, conoscenza dei flussi di dati e tracciamento delle richieste e delle risposte.",
+      "temporal_qualification": "Riferimento: 14 settembre 2026, data dell’estratto selezionato. Nessuna nuova entrata in vigore è annunciata.",
+      "uncertainty": "Indicazioni generali ricavate dall’estratto EDPB selezionato. Ruolo dell’impresa, dati da fornire, termine concreto, eventuali costi e motivi di rifiuto richiedono valutazione sul singolo caso. Non sono disponibili una richiesta reale o una procedura aziendale."
+    },
+    {
+      "id": "CLAIM-004",
+      "professional_judgment": "Le indicazioni organizzative sono proposte dello studio da adattare; non attestano una procedura approvata né risolvono un caso.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "La guida indica un termine di risposta di un mese.",
+      "temporal_qualification": "Riferimento: 14 settembre 2026, data dell’estratto selezionato. Nessuna nuova entrata in vigore è annunciata.",
+      "uncertainty": "Indicazioni generali ricavate dall’estratto EDPB selezionato. Ruolo dell’impresa, dati da fornire, termine concreto, eventuali costi e motivi di rifiuto richiedono valutazione sul singolo caso. Non sono disponibili una richiesta reale o una procedura aziendale."
+    },
+    {
+      "id": "CLAIM-005",
+      "professional_judgment": "Le indicazioni organizzative sono proposte dello studio da adattare; non attestano una procedura approvata né risolvono un caso.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Se la complessità della richiesta richiede più tempo, la guida consente altri due mesi, purché la persona sia informata entro un mese dalla ricezione.",
+      "temporal_qualification": "Riferimento: 14 settembre 2026, data dell’estratto selezionato. Nessuna nuova entrata in vigore è annunciata.",
+      "uncertainty": "Indicazioni generali ricavate dall’estratto EDPB selezionato. Ruolo dell’impresa, dati da fornire, termine concreto, eventuali costi e motivi di rifiuto richiedono valutazione sul singolo caso. Non sono disponibili una richiesta reale o una procedura aziendale."
+    },
+    {
+      "id": "CLAIM-006",
+      "professional_judgment": "Le indicazioni organizzative sono proposte dello studio da adattare; non attestano una procedura approvata né risolvono un caso.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Se i dati sono trattati, l’accesso comprende i dati personali e informazioni sul trattamento, tra cui finalità, categorie, destinatari e conservazione; questi esempi non esauriscono l’elenco della guida.",
+      "temporal_qualification": "Riferimento: 14 settembre 2026, data dell’estratto selezionato. Nessuna nuova entrata in vigore è annunciata.",
+      "uncertainty": "Indicazioni generali ricavate dall’estratto EDPB selezionato. Ruolo dell’impresa, dati da fornire, termine concreto, eventuali costi e motivi di rifiuto richiedono valutazione sul singolo caso. Non sono disponibili una richiesta reale o una procedura aziendale."
+    },
+    {
+      "id": "CLAIM-007",
+      "professional_judgment": "Le indicazioni organizzative sono proposte dello studio da adattare; non attestano una procedura approvata né risolvono un caso.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Prima di fornire una copia dei dati personali occorre verificare che non siano pregiudicati diritti e libertà altrui.",
+      "temporal_qualification": "Riferimento: 14 settembre 2026, data dell’estratto selezionato. Nessuna nuova entrata in vigore è annunciata.",
+      "uncertainty": "Indicazioni generali ricavate dall’estratto EDPB selezionato. Ruolo dell’impresa, dati da fornire, termine concreto, eventuali costi e motivi di rifiuto richiedono valutazione sul singolo caso. Non sono disponibili una richiesta reale o una procedura aziendale."
+    },
+    {
+      "id": "CLAIM-008",
+      "professional_judgment": "Le indicazioni organizzative sono proposte dello studio da adattare; non attestano una procedura approvata né risolvono un caso.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "La persona ha diritto a una copia gratuita dei propri dati trattati; per copie aggiuntive la guida ammette un costo ragionevole basato sui costi amministrativi.",
+      "temporal_qualification": "Riferimento: 14 settembre 2026, data dell’estratto selezionato. Nessuna nuova entrata in vigore è annunciata.",
+      "uncertainty": "Indicazioni generali ricavate dall’estratto EDPB selezionato. Ruolo dell’impresa, dati da fornire, termine concreto, eventuali costi e motivi di rifiuto richiedono valutazione sul singolo caso. Non sono disponibili una richiesta reale o una procedura aziendale."
+    },
+    {
+      "id": "CLAIM-009",
+      "professional_judgment": "Le indicazioni organizzative sono proposte dello studio da adattare; non attestano una procedura approvata né risolvono un caso.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Per una richiesta dimostrabilmente manifestamente infondata o eccessiva la guida ammette un costo ragionevole o un rifiuto: la ripetizione da sola non rende automatica questa conclusione.",
+      "temporal_qualification": "Riferimento: 14 settembre 2026, data dell’estratto selezionato. Nessuna nuova entrata in vigore è annunciata.",
+      "uncertainty": "Indicazioni generali ricavate dall’estratto EDPB selezionato. Ruolo dell’impresa, dati da fornire, termine concreto, eventuali costi e motivi di rifiuto richiedono valutazione sul singolo caso. Non sono disponibili una richiesta reale o una procedura aziendale."
+    },
+    {
+      "id": "CLAIM-010",
+      "professional_judgment": "Le indicazioni organizzative sono proposte dello studio da adattare; non attestano una procedura approvata né risolvono un caso.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Se non si dà seguito alla richiesta, entro un mese dalla ricezione occorre comunicare le ragioni e informare della possibilità di reclamo all’autorità nazionale e di ricorso giudiziario.",
+      "temporal_qualification": "Riferimento: 14 settembre 2026, data dell’estratto selezionato. Nessuna nuova entrata in vigore è annunciata.",
+      "uncertainty": "Indicazioni generali ricavate dall’estratto EDPB selezionato. Ruolo dell’impresa, dati da fornire, termine concreto, eventuali costi e motivi di rifiuto richiedono valutazione sul singolo caso. Non sono disponibili una richiesta reale o una procedura aziendale."
+    }
+  ],
+  "editorial_value": {
+    "audience_value": "Chi riceve un messaggio può capire che cosa segnalare, a chi inoltrarlo e quali decisioni richiedono un approfondimento.",
+    "banality_check": "Il rischio di genericità esiste; le sei domande lo riducono collegando ruoli, registrazione, termini e controllo della copia a un compito concreto.",
+    "decision_enabled": "Consente di organizzare una richiesta e riconoscere i punti da portare a chi coordina la risposta, senza decidere da soli su proroghe, costi o rifiuti.",
+    "decision_limit": "Non determina la risposta da dare a una persona né costituisce una verifica della conformità dell’impresa.",
+    "distinct_angle": "La FAQ segue il lavoro di amministrazione e servizio clienti dal riconoscimento alla presa in carico.",
+    "practical_use": "Può essere usata come promemoria iniziale, insieme alla procedura aziendale e con chi segue la privacy.",
+    "publication_judgment": "Proposta utile da sottoporre a revisione interna. La raccomandazione editoriale non autorizza invio o pubblicazione.",
+    "reason_now": "L’iniziativa esplicita dello studio è preparare il personale alla ricezione delle richieste; non c’è un nuovo evento normativo.",
+    "repetition_check": "Nessuna comunicazione precedente è stata selezionata: ripetizione e abitudini dello studio non sono verificabili.",
+    "source_specific_information": "Il termine di un mese, la proroga condizionata, la distinzione titolare/responsabile e il controllo sui diritti altrui rendono il testo specifico della fonte."
+  },
+  "master_brief": {
+    "actions": [
+      "Proposta operativa: conservate la richiesta e la data di ricezione, individuate chi la prende in carico e annotate il seguito. La guida raccomanda procedure interne, personale formato, conoscenza dei flussi di dati e tracciamento delle richieste e delle risposte. Questo promemoria non sostituisce la procedura aziendale.",
+      "Le indicazioni organizzative sono proposte dello studio da adattare; non attestano una procedura approvata né risolvono un caso."
+    ],
+    "caveats": [
+      "Indicazioni generali ricavate dall’estratto EDPB selezionato. Ruolo dell’impresa, dati da fornire, termine concreto, eventuali costi e motivi di rifiuto richiedono valutazione sul singolo caso. Non sono disponibili una richiesta reale o una procedura aziendale.",
+      "Proposta utile da sottoporre a revisione interna. La raccomandazione editoriale non autorizza invio o pubblicazione.",
+      "Esercitazione didattica: Studio Riva e l’incarico sono fittizi; la guida EDPB è una fonte pubblica autentica."
+    ],
+    "effective_dates": [],
+    "practical_implications": [
+      "Il titolare del trattamento deve rispondere alle richieste di esercizio dei diritti e facilitarle; il responsabile del trattamento lo assiste.",
+      "La guida indica un termine di risposta di un mese.",
+      "Se la complessità della richiesta richiede più tempo, la guida consente altri due mesi, purché la persona sia informata entro un mese dalla ricezione.",
+      "Prima di fornire una copia dei dati personali occorre verificare che non siano pregiudicati diritti e libertà altrui."
+    ],
+    "what_changed": "Per amministrazione e servizio clienti delle piccole imprese in Italia. Questa iniziativa informativa dello studio aiuta a organizzare il primo passaggio di una richiesta; non annuncia una nuova legge e non decide un caso concreto.",
+    "who_may_be_affected": "Rivolgersi con chiarezza a personale non specialista. Per amministrazione e servizio clienti delle piccole imprese in Italia. Questa iniziativa informativa dello studio aiuta a organizzare il primo passaggio di una richiesta; non annuncia una nuova legge e non decide un caso concreto."
+  },
+  "recommendation": "publish",
+  "recommendation_reason": "Proposta utile da sottoporre a revisione interna. La raccomandazione editoriale non autorizza invio o pubblicazione. Chi riceve un messaggio può capire che cosa segnalare, a chi inoltrarlo e quali decisioni richiedono un approfondimento.",
+  "run_id": "lucia-it-demo",
+  "schema_version": 1,
+  "source_assessments": [
+    {
+      "authority_assessment": "Comitato europeo per la protezione dei dati (EDPB); guida alla protezione dei dati per le piccole imprese, pagina sui diritti delle persone, sezioni sulla gestione delle richieste e sul diritto di accesso. Estratto acquisito il 14 settembre 2026; guida ufficiale, non un nuovo atto normativo.",
+      "limitations": "Guida ufficiale selezionata, non testo integrale della normativa né parere su una pratica. La versione italiana usa una volta «responsabile» nel paragrafo sui tempi, mentre l’apertura attribuisce l’obbligo al titolare: il testo distingue i ruoli e non trasferisce quell’obbligo al responsabile.",
+      "semantic_role": "clarifying",
+      "source_id": "SRC-EDPB"
+    }
+  ],
+  "studio_profile_proposal": {
+    "derived_from_history_ids": [],
+    "document": {
+      "circular_label": "Nota informativa",
+      "closing": "Cordiali saluti",
+      "contact_rail_lines": [],
+      "date_pattern": "giorno mese anno",
+      "font_family": "Helvetica",
+      "footer_pattern": "Studio Riva | Informazioni generali",
+      "layout": {
+        "body_font_size_pt": 11,
+        "body_leading_pt": 15,
+        "bottom_margin_mm": 20,
+        "contact_rail_width_mm": 35,
+        "heading_font_size_pt": 12,
+        "left_margin_mm": 20,
+        "logo_height_mm": 12,
+        "logo_width_mm": 35,
+        "right_margin_mm": 20,
+        "rule_width_pt": 0.5,
+        "subject_font_size_pt": 16,
+        "top_margin_mm": 25
+      },
+      "numbering_pattern": "anno/numero progressivo, da assegnare dopo revisione",
+      "page_size": "A4",
+      "recipient_pattern": "Ai clienti interessati",
+      "section_style": "unnumbered",
+      "signature_lines": [
+        "Studio Riva — avvocati"
+      ],
+      "subject_prefix": "Oggetto",
+      "use_contact_rail": false
+    },
+    "email": {
+      "attachment_note": "Citare un allegato solo quando è effettivamente presente nel pacchetto.",
+      "closing": "Cordiali saluti",
+      "salutation": "Gentili clienti",
+      "signature_lines": [
+        "Studio Riva — avvocati"
+      ],
+      "subject_pattern": "Studio Riva | {subject}"
+    },
+    "field_provenance": [
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.audience_stance"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.rhythm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.technical_density"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.formality"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.openings"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.closings"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Dato o preferenza esplicitamente forniti nel brief dello studio; nessuna deduzione da comunicazioni precedenti.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "voice.formatting"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.avoid"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.page_size"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.font_family"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.left_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.right_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.top_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.bottom_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.logo_width_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.logo_height_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.contact_rail_width_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.body_font_size_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.body_leading_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.subject_font_size_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.heading_font_size_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.rule_width_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.recipient_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.circular_label"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.numbering_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.date_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.subject_prefix"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.section_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.use_contact_rail"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Dato o preferenza esplicitamente forniti nel brief dello studio; nessuna deduzione da comunicazioni precedenti.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "document.contact_rail_lines"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.footer_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.closing"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Dato o preferenza esplicitamente forniti nel brief dello studio; nessuna deduzione da comunicazioni precedenti.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "document.signature_lines"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.subject_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.salutation"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.closing"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Dato o preferenza esplicitamente forniti nel brief dello studio; nessuna deduzione da comunicazioni precedenti.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "email.signature_lines"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.attachment_note"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Dato o preferenza esplicitamente forniti nel brief dello studio; nessuna deduzione da comunicazioni precedenti.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "website.byline_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.date_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.heading_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.source_heading"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.cta"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.show_update_date"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.preferred_format"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.opening_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.closing_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.hashtags"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.show_source_note"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposta iniziale del modello, da rivedere dal professionista. Nessuno storico o formato approvato la documenta; le dimensioni di logo e colonna contatti sono solo riserve inutilizzate in assenza di elementi forniti.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.carousel_identity_placement"
+        ],
+        "history_ids": []
+      }
+    ],
+    "social": {
+      "carousel_identity_placement": "close_only",
+      "closing_style": "Un limite chiaro e un passo utile.",
+      "hashtags": [],
+      "opening_style": "Una domanda concreta del lettore.",
+      "preferred_format": "text",
+      "show_source_note": true
+    },
+    "voice": {
+      "audience_stance": "Rivolgersi con chiarezza a personale non specialista.",
+      "avoid": [
+        "Urgenza inventata",
+        "Promesse di conformità",
+        "Storie di clienti non fornite"
+      ],
+      "closings": "Chiudere con il limite di utilizzo e il passaggio alla persona competente.",
+      "formality": "Professionale e misurata.",
+      "formatting": "Formato sobrio blu e bianco, titoli chiari e fonti identificabili, come richiesto.",
+      "openings": "Aprire con il problema pratico del lettore.",
+      "rhythm": "Frasi brevi, una domanda per sezione.",
+      "technical_density": "Spiegare i termini necessari e rinviare alla fonte per l’approfondimento."
+    },
+    "website": {
+      "byline_pattern": "Studio Riva — avvocati",
+      "cta": "Per il caso concreto, coinvolgere chi segue la privacy.",
+      "date_pattern": "giorno mese anno",
+      "heading_style": "question_led",
+      "show_update_date": true,
+      "source_heading": "Fonti"
+    }
+  },
+  "visual_story": {
+    "decision": "omit",
+    "decision_reason": "Le domande e le risposte offrono già una sequenza breve e leggibile; un elemento visivo ripeterebbe il contenuto senza un’utilità aggiuntiva.",
+    "incremental_value": "",
+    "slides": [],
+    "title": ""
+  }
+}

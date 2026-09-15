@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 import sys
 from pathlib import Path
@@ -26,6 +27,41 @@ from apertura_pratica_core import (  # noqa: E402
     validate_run,
     write_json,
 )
+
+
+@pytest.mark.parametrize("prepared", [False, True])
+def test_validation_cli_keeps_the_delivered_manifest_current(
+    tmp_path, monkeypatch, prepared
+):
+    run_dir = initialize_workspace(
+        tmp_path / "validation-cli",
+        opening_mode="new_client_new_matter",
+        client_reference="client-validation",
+        matter_reference="matter-validation",
+        language="en",
+    )
+    if prepared:
+        prepare_review(run_dir)
+    spec = importlib.util.spec_from_file_location(
+        "matter_validate_cli", PLUGIN_ROOT / "scripts/validate_run.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    monkeypatch.setattr(sys, "argv", ["validate_run.py", str(run_dir)])
+
+    assert module.main() == 1
+
+    report = load_json(run_dir / "validation_report.json")
+    assert report["status"] == "blocked"
+    if prepared:
+        for artifact in load_json(run_dir / "artifact_manifest.json")["artifacts"]:
+            assert (
+                hashlib.sha256((run_dir / artifact["path"]).read_bytes()).hexdigest()
+                == artifact["sha256"]
+            )
+        assert load_json(run_dir / "final_artifacts.json")["status"] == report["status"]
+    else:
+        assert not (run_dir / "artifact_manifest.json").exists()
 
 
 def _confirmed(reviewer: str, timestamp: str) -> dict[str, str]:
@@ -153,6 +189,58 @@ def test_default_intake_is_blocked_and_does_not_touch_source_files(
     assert report["status"] == "blocked"
     assert source.read_text(encoding="utf-8") == "original"
     assert not any("cleared by software" in item.lower() for item in report["blockers"])
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_information_request_keeps_client_firm_and_unassigned_actions_separate(
+    tmp_path, language
+):
+    run_dir = _ready_run(tmp_path)
+    intake = load_json(run_dir / "matter_intake.json")
+    intake["language"] = language
+    intake["missing_items"] = [
+        {
+            "item_id": identity,
+            "kind": "decision",  # Kind alone must never select a recipient.
+            "description": description,
+            "blocking": identity != "unassigned",
+            "status": "open",
+            "evidence_ids": [],
+            **({"requested_from": recipient} if recipient else {}),
+        }
+        for identity, recipient, description in (
+            ("client", "client", "Client: choose the response to the proposal."),
+            ("firm", "firm", "Firm: review the complete conflict register."),
+            ("unassigned", None, "Unknown recipient: clarify responsibility."),
+        )
+    ]
+    write_json(run_dir / "matter_intake.json", intake)
+    prepare_review(run_dir)
+
+    request = (run_dir / "missing_information_request.md").read_text()
+    labels = core.display.labels(language)
+    client_section = request.split(f"## {labels['client_requests']}\n", 1)[1].split(
+        "\n## ", 1
+    )[0]
+    assert "choose the response" in client_section
+    assert "complete conflict register" not in client_section
+    assert "Unknown recipient" not in client_section
+    assert f"## {labels['firm_actions']}\n" in request
+    assert f"## {labels['unassigned_requests']}\n" in request
+    for item in intake["missing_items"]:
+        assert request.count(item["description"]) == 1
+    assert not any(
+        "schema" in blocker.lower()
+        for blocker in load_json(run_dir / "validation_report.json")["blockers"]
+    )
+
+    for item in intake["missing_items"]:
+        item["status"] = "resolved"
+    write_json(run_dir / "matter_intake.json", intake)
+    prepare_review(run_dir)
+    resolved = (run_dir / "missing_information_request.md").read_text()
+    assert labels["none"] in resolved
+    assert all(item["description"] not in resolved for item in intake["missing_items"])
 
 
 def test_evidence_intake_rejects_symbolic_links(tmp_path: Path) -> None:

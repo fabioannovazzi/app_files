@@ -3,6 +3,8 @@ account_code;account_description;opening_signed;period_debit;period_credit;closi
 110;Crediti verso clienti entro 12 mesi;0;25000;17000;8000
 200;Capitale sociale;0;0;10000;-10000
 210;Debiti verso fornitori entro 12 mesi;0;2000;5200;-3200
+220;Debiti per imposte correnti entro 12 mesi;0;0;3450;-3450
 400;Ricavi di servizi;0;0;25000;-25000
 500;Canoni di locazione;0;6000;0;6000
 510;Costi per servizi;0;5200;0;5200
+600;Imposte correnti;0;3450;0;3450

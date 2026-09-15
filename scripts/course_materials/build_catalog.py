@@ -21,6 +21,9 @@ from typing import Any
 __all__ = ["build", "main"]
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "plugins/_shared/vendor/modules"))
+from courseware.policy import unavailable_local_workflows  # noqa: E402
+
 AUTHORING = Path(__file__).parent
 LANGUAGES = ["it", "en", "fr", "de", "es"]
 EXCLUDED = {
@@ -70,6 +73,7 @@ def _eligible(product: str) -> set[str]:
             re.findall(r"^- `([a-z0-9-]+)`:", catalog.read_text(encoding="utf-8"), re.M)
         )
         - EXCLUDED
+        - unavailable_local_workflows(product)
     )
     if product != "vera":
         ids.discard("studio-archive")

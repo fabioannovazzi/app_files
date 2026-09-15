@@ -39,6 +39,11 @@
       "sha256": "8242353d7b5b73e94c302432ec362ea06a36a7acd1682e6b84c9d67bd292ae96"
     },
     {
+      "path": "modules/management-control-pack/assets/management-report-copy.json",
+      "repository_path": "plugins/management-control-pack/assets/management-report-copy.json",
+      "sha256": "1214b0fd2646a5a13db85ccebf1ef233f0cb2cb1f8ce3daf28cb681f4244db94"
+    },
+    {
       "path": "modules/management-control-pack/requirements.txt",
       "repository_path": "plugins/management-control-pack/requirements.txt",
       "sha256": "9bba605fd7b6ea23038de15e5a1ae6714b3d3fb14ed2d6e6bedbfb0665ca2122"
@@ -46,7 +51,7 @@
     {
       "path": "modules/management-control-pack/scripts/budget_presentation.py",
       "repository_path": "plugins/management-control-pack/scripts/budget_presentation.py",
-      "sha256": "084c6cdac3eb316702b8df5b1fc319299045483c8d3a473152edd6b863c24926"
+      "sha256": "643f526d3c6980fcefee72d3919c652da0b1016d6a0c9bfabff6de4b3a713706"
     },
     {
       "path": "modules/management-control-pack/scripts/check_dependencies.py",
@@ -66,12 +71,17 @@
     {
       "path": "modules/management-control-pack/scripts/management_control_core.py",
       "repository_path": "plugins/management-control-pack/scripts/management_control_core.py",
-      "sha256": "b69ed33b64f42c70b7bc7377071fb18575879cd2c82beea7fbc232b7048eb67e"
+      "sha256": "a3b7bbe0c4a155c59f09f962512d9aef96b0591d4752669b5ac9a930f1262174"
     },
     {
       "path": "modules/management-control-pack/scripts/management_delivery.py",
       "repository_path": "plugins/management-control-pack/scripts/management_delivery.py",
-      "sha256": "0b1349b15a5a3abbd21628fa51faf2a236f9ff269059366a311b9b604be27013"
+      "sha256": "4f0defc123841a3ed85d69b5dbdb7ea360363a7ef32aba0dac174bce707ce6ef"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/management_report_copy.py",
+      "repository_path": "plugins/management-control-pack/scripts/management_report_copy.py",
+      "sha256": "4d972ac51f9d101f954fa4b3aaff645747fa51b7bef9fac4e88fb44a678c7e63"
     },
     {
       "path": "modules/management-control-pack/scripts/management_site.py",
@@ -106,7 +116,7 @@
     {
       "path": "modules/management-control-pack/vendor/modules/reporting_table.py",
       "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
-      "sha256": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7"
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
     },
     {
       "path": "modules/management-control-pack/vendor/modules/vera_assurance/__init__.py",
@@ -116,7 +126,7 @@
     {
       "path": "modules/management-control-pack/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
     },
     {
       "path": "modules/management-control-pack/vendor/modules/vera_assurance/decisions.py",
@@ -186,7 +196,7 @@
     {
       "path": "vendor/modules/courseware/assets/languages.json",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
     },
     {
       "path": "vendor/modules/courseware/execution.py",
@@ -196,12 +206,17 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
     },
     {
       "path": "vendor/modules/reporting_table.py",
       "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
-      "sha256": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7"
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
     },
     {
       "path": "vendor/modules/vera_assurance/__init__.py",
@@ -211,7 +226,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -280,10 +295,17 @@
       "role": "source"
     },
     {
-      "path": "files/input/facts.md",
+      "path": "files/input/facts-it.md",
+      "sha256": "e6d453933c55d15d78115894ed39bb9f742f0903fcdd78a37d37746f15eb29eb",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/facts-en.md",
       "sha256": "86137c1a1ae2f0eac6736f1749f75d166d32b41aa2a412aa6e404cb0e9ded4cd",
       "languages": [
-        "it",
         "en"
       ],
       "role": "source"
@@ -298,10 +320,17 @@
       "role": "practice"
     },
     {
-      "path": "files/practice/facts.md",
+      "path": "files/practice/facts-it.md",
+      "sha256": "e6d453933c55d15d78115894ed39bb9f742f0903fcdd78a37d37746f15eb29eb",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/facts-en.md",
       "sha256": "86137c1a1ae2f0eac6736f1749f75d166d32b41aa2a412aa6e404cb0e9ded4cd",
       "languages": [
-        "it",
         "en"
       ],
       "role": "practice"
@@ -312,12 +341,12 @@
       "goal": "Impara a confrontare consuntivo e budget, seguire la preparazione del report e usare le differenze per la revisione mensile.",
       "scenario": "Arco ha preparato i dati economici di gennaio e febbraio e il budget degli stessi mesi. Il responsabile vuole capire il risultato operativo e quali categorie spiegano la differenza dal piano, prima della riunione mensile.",
       "scope": "Il caso comprende ricavi, costo del venduto e costi operativi in euro. Il report distingue i dati osservati dalle spiegazioni che richiedono informazioni dell’azienda.",
-      "inputs": "Apri actual-budget.xlsx e facts.md. Il foglio GL contiene movimenti mensili per conto e categoria; Budget contiene il piano comparabile. I ricavi sono positivi e i costi negativi. Il caso indica periodo, significati e totali di controllo: consuntivo EUR 53.000 e budget EUR 47.000.",
+      "inputs": "Apri actual-budget.xlsx e facts-it.md. Il foglio GL contiene movimenti mensili per conto e categoria; Budget contiene il piano comparabile. I ricavi sono positivi e i costi negativi. Il caso indica periodo, significati e totali di controllo: consuntivo EUR 53.000 e budget EUR 47.000.",
       "steps": [
         "Vera importa i dati nel caso didattico collegato al cliente. Il pacchetto di controllo di gestione può includere anche altri export; qui impariamo il percorso completo del confronto economico con il budget.",
         "L’assistente esamina i fogli e propone quali colonne rappresentano date, categorie e importi. Conferma il periodo gennaio–febbraio e la convenzione dei segni prima del calcolo.",
         "Il workflow applica la mappatura verificata, confronta consuntivo e budget e controlla i totali. La chat vocale spiega il passaggio effettivo e le eventuali informazioni richieste.",
-        "Apri il cruscotto e il workbook prodotti nella chat di lavoro. Parti dalla sintesi del periodo, passa al confronto mensile e poi al dettaglio delle categorie."
+        "Vera prepara un breve commento collegato ai numeri e una domanda da discutere in riunione. Apri report, cruscotto e workbook nella chat di lavoro: leggi la sintesi del periodo, passa al confronto mensile e trova il dettaglio delle categorie."
       ],
       "deliverables": [
         "Cruscotto: mostra risultato del periodo e scostamenti assoluti e percentuali dove significativi. Usalo per scegliere quali voci approfondire.",
@@ -338,12 +367,12 @@
       "goal": "Learn to compare actual performance with budget, follow report preparation and use the differences in a monthly review.",
       "scenario": "Arco has prepared January and February management accounts and a budget for the same months. The manager wants to understand operating performance and which categories explain the difference from plan before the monthly meeting.",
       "scope": "The case includes revenue, cost of goods sold and operating expenses in EUR. The report separates observed figures from explanations requiring company evidence.",
-      "inputs": "Open actual-budget.xlsx and facts.md. GL contains monthly movements by account and category; Budget contains the comparable plan. Revenue is positive and costs are negative. The case declares periods, meanings and control totals: actual EUR 53,000 and budget EUR 47,000.",
+      "inputs": "Open actual-budget.xlsx and facts-en.md. GL contains monthly movements by account and category; Budget contains the comparable plan. Revenue is positive and costs are negative. The case declares periods, meanings and control totals: actual EUR 53,000 and budget EUR 47,000.",
       "steps": [
         "Vera imports the data into the client-bound teaching case. The management-control pack also accepts other exports; here we learn the complete actual-versus-budget reporting journey.",
         "The assistant inspects the sheets and proposes which columns contain dates, categories and amounts. Confirm January–February and the sign convention before calculation.",
         "The workflow applies the reviewed mapping, compares actual with budget and checks totals. The voice chat explains the actual step and any requested information.",
-        "Open the dashboard and workbook produced in the working chat. Start with the period summary, then the monthly comparison and category detail."
+        "Vera prepares a short commentary tied to the figures and a question for the meeting. Open the report, dashboard and workbook in the working chat: read the period summary, switch to the monthly comparison and find the category detail."
       ],
       "deliverables": [
         "Dashboard: shows period performance and absolute and percentage variances where meaningful. Use it to decide which categories to investigate.",

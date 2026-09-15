@@ -1251,6 +1251,38 @@
         "languages": [
           "en"
         ]
+      },
+      {
+        "source": "bilancio/year-end-it.txt",
+        "path": "files/input/year-end-it.txt",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "bilancio/year-end-updated-it.txt",
+        "path": "files/practice/year-end-updated-it.txt",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "bilancio/year-end-en.txt",
+        "path": "files/input/year-end-en.txt",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "bilancio/year-end-updated-en.txt",
+        "path": "files/practice/year-end-updated-en.txt",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
       }
     ]
   },
@@ -1898,6 +1930,86 @@
       {
         "source": "concordato/practice-es.xlsx",
         "path": "files/practice/practice-es.xlsx",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "concordato/management-demo-it.pdf",
+        "path": "files/input/management-demo-it.pdf",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "concordato/management-practice-it.pdf",
+        "path": "files/practice/management-practice-it.pdf",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "concordato/management-demo-en.pdf",
+        "path": "files/input/management-demo-en.pdf",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "concordato/management-practice-en.pdf",
+        "path": "files/practice/management-practice-en.pdf",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "concordato/management-demo-fr.pdf",
+        "path": "files/input/management-demo-fr.pdf",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "concordato/management-practice-fr.pdf",
+        "path": "files/practice/management-practice-fr.pdf",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "concordato/management-demo-de.pdf",
+        "path": "files/input/management-demo-de.pdf",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "concordato/management-practice-de.pdf",
+        "path": "files/practice/management-practice-de.pdf",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "concordato/management-demo-es.pdf",
+        "path": "files/input/management-demo-es.pdf",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "concordato/management-practice-es.pdf",
+        "path": "files/practice/management-practice-es.pdf",
         "role": "practice",
         "languages": [
           "es"
@@ -2783,11 +2895,18 @@
         ]
       },
       {
-        "source": "budget/facts.md",
-        "path": "files/input/facts.md",
+        "source": "budget/facts-it.md",
+        "path": "files/input/facts-it.md",
         "role": "source",
         "languages": [
-          "it",
+          "it"
+        ]
+      },
+      {
+        "source": "budget/facts.md",
+        "path": "files/input/facts-en.md",
+        "role": "source",
+        "languages": [
           "en"
         ]
       },
@@ -2801,11 +2920,18 @@
         ]
       },
       {
-        "source": "budget/facts.md",
-        "path": "files/practice/facts.md",
+        "source": "budget/facts-it.md",
+        "path": "files/practice/facts-it.md",
         "role": "practice",
         "languages": [
-          "it",
+          "it"
+        ]
+      },
+      {
+        "source": "budget/facts.md",
+        "path": "files/practice/facts-en.md",
+        "role": "practice",
+        "languages": [
           "en"
         ]
       }
@@ -5309,14 +5435,6 @@
       }
     ]
   },
-  "clara/brand-fit": {
-    "group": "workflow",
-    "execution": {
-      "mode": "current_native_workflow",
-      "local_tutorial": true
-    },
-    "files": []
-  },
   "clara/business-planning": {
     "group": "workflow",
     "execution": {
@@ -5707,14 +5825,6 @@
       }
     ]
   },
-  "clara/hosted-interview": {
-    "group": "workflow",
-    "execution": {
-      "mode": "hosted_step_requires_explicit_choice",
-      "local_tutorial": true
-    },
-    "files": []
-  },
   "clara/html-deck": {
     "group": "workflow",
     "execution": {
@@ -5865,14 +5975,42 @@
         ]
       },
       {
-        "source": "budget/facts.md",
-        "path": "files/input/facts.md",
+        "source": "budget/facts-it.md",
+        "path": "files/input/facts-it.md",
         "role": "source",
         "languages": [
-          "it",
-          "en",
-          "fr",
-          "de",
+          "it"
+        ]
+      },
+      {
+        "source": "budget/facts.md",
+        "path": "files/input/facts-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "budget/facts-fr.md",
+        "path": "files/input/facts-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "budget/facts-de.md",
+        "path": "files/input/facts-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "budget/facts-es.md",
+        "path": "files/input/facts-es.md",
+        "role": "source",
+        "languages": [
           "es"
         ]
       },
@@ -5889,26 +6027,46 @@
         ]
       },
       {
-        "source": "budget/facts.md",
-        "path": "files/practice/facts.md",
+        "source": "budget/facts-it.md",
+        "path": "files/practice/facts-it.md",
         "role": "practice",
         "languages": [
-          "it",
-          "en",
-          "fr",
-          "de",
+          "it"
+        ]
+      },
+      {
+        "source": "budget/facts.md",
+        "path": "files/practice/facts-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "budget/facts-fr.md",
+        "path": "files/practice/facts-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "budget/facts-de.md",
+        "path": "files/practice/facts-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "budget/facts-es.md",
+        "path": "files/practice/facts-es.md",
+        "role": "practice",
+        "languages": [
           "es"
         ]
       }
     ]
-  },
-  "clara/research-video": {
-    "group": "workflow",
-    "execution": {
-      "mode": "hosted_step_requires_explicit_choice",
-      "local_tutorial": true
-    },
-    "files": []
   },
   "clara/transcribe": {
     "group": "workflow",
@@ -7869,6 +8027,40 @@
         "path": "files/practice/update-es.md",
         "role": "practice",
         "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/invoice-xml": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "prepare_invoice_preview_then_review_and_export"
+    },
+    "files": [
+      {
+        "source": "invoice-xml/invoice-data.txt",
+        "path": "files/input/invoice-data.txt",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "invoice-xml/practice-invoice-data.txt",
+        "path": "files/practice/practice-invoice-data.txt",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
           "es"
         ]
       }

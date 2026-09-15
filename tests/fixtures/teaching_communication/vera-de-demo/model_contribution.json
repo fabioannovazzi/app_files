@@ -1,0 +1,687 @@
+{
+  "channel_drafts": [
+    {
+      "audience_note": "Mitarbeitende in Verwaltung und Kundenbetreuung kleiner Unternehmen in Italien.",
+      "body": "Übungsmaterial: Studio Riva und der Auftrag sind fiktiv; der EDSA-Leitfaden ist eine echte öffentliche Quelle.\n\nDiese FAQ hilft, eine Auskunftsanfrage zu erkennen und ihre Bearbeitung mit der für Datenschutz zuständigen Person zu organisieren. Sie ist eine Informationsinitiative von Studio Riva auf Grundlage des allgemeinen EDSA-Leitfadens und kündigt kein neues Gesetz an.\n\n### Woran erkenne ich eine Auskunftsanfrage?\n\nEine Person möchte möglicherweise wissen, ob das Unternehmen personenbezogene Daten über sie verarbeitet, diese Daten einsehen oder eine Kopie erhalten. Das sind Bestandteile des im EDSA-Leitfaden beschriebenen Auskunftsrechts. Beziehen Sie bei einer solchen Anfrage Ihre interne Datenschutz-Ansprechperson zur Einordnung ein. [EDSA-Leitfaden: Rechte des Einzelnen](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_de)\n\n### Was ist beim Eingang zu tun?\n\nAls Vorschlag für die interne Organisation: Halten Sie Eingangsdatum, Kanal und Inhalt der Anfrage fest und leiten Sie sie zeitnah an die vom Unternehmen benannte Datenschutz-Ansprechperson weiter. Der Leitfaden empfiehlt interne Verfahren sowie die Dokumentation von Anfragen und Antworten. Antworten muss der für die Verarbeitung Verantwortliche; der Auftragsverarbeiter unterstützt ihn. Die interne Ansprechperson koordiniert die Arbeit, ohne diese Rollen zu ersetzen. [EDSA-Leitfaden: Rechte des Einzelnen](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_de)\n\n### Wie viel Zeit bleibt für die Antwort?\n\nDer Leitfaden nennt einen Monat. Ist die Anfrage zu komplex und wird mehr Zeit benötigt, kann die Frist um zwei weitere Monate verlängert werden, wenn die Person innerhalb eines Monats nach Eingang informiert wird. Die Verlängerung erfolgt nicht automatisch: Melden Sie Schwierigkeiten frühzeitig der Datenschutz-Ansprechperson zur Prüfung des Einzelfalls. [EDSA-Leitfaden: Rechte des Einzelnen](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_de)\n\n### Was muss vorbereitet werden?\n\nZur Antwort gehören die personenbezogenen Daten und Informationen zur Verarbeitung, etwa Zwecke, Datenkategorien, Empfänger und Speicherdauer oder deren Bestimmungskriterien. Das sind Beispiele, keine vollständige Liste. Die Datenschutz-Ansprechperson muss alle Punkte im Abschnitt zum Auskunftsrecht prüfen und die betreffenden Daten ermitteln. Diese FAQ ist keine vollständige Antwortvorlage. [EDSA-Leitfaden: Rechte des Einzelnen](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_de)\n\n### Darf ich einfach die ganze Akte verschicken?\n\nVor der Bereitstellung einer Datenkopie ist zu prüfen, ob Rechte und Freiheiten anderer beeinträchtigt werden, etwa wenn ein Dokument Informationen über mehrere Personen enthält. Weisen Sie die Datenschutz-Ansprechperson vor einer Weitergabe auf solche Dokumente hin. Der Leitfaden sieht eine kostenlose Kopie der personenbezogenen Daten vor; weitere Kopien sind gesondert zu prüfen. [EDSA-Leitfaden: Rechte des Einzelnen](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_de)\n\n### Wann braucht es eine Einzelfallprüfung?\n\nBeziehen Sie die Datenschutz-Ansprechperson ein, wenn die Anfrage unklar, die Bearbeitung komplex oder Daten Dritter betroffen sind oder wenn Gebühren oder eine Ablehnung erwogen werden. Der Leitfaden lässt angemessene Gebühren oder eine Ablehnung bei nachweislich offensichtlich unbegründeten oder unverhältnismäßigen Anfragen zu; bloßer Aufwand belegt dies nicht. Bei einer Ablehnung sind innerhalb eines Monats die Gründe sowie die Möglichkeiten einer Beschwerde bei der nationalen Aufsichtsbehörde und eines gerichtlichen Rechtsbehelfs mitzuteilen. Diese Entscheidungen erfordern eine Einzelfallprüfung. [EDSA-Leitfaden: Rechte des Einzelnen](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_de)\n\nAllgemeine Hinweise für Unternehmen in Italien. Diese FAQ entscheidet keine reale Anfrage und ersetzt keine betrieblichen Verfahren. Vor der Verwendung muss die Fachperson den Text prüfen und das Unternehmen seine Datenschutz-Ansprechperson bestimmen.",
+      "channel": "faq",
+      "claim_ids": [
+        "CLAIM-001",
+        "CLAIM-002",
+        "CLAIM-003",
+        "CLAIM-004",
+        "CLAIM-005",
+        "CLAIM-006",
+        "CLAIM-007",
+        "CLAIM-008",
+        "CLAIM-009",
+        "CLAIM-010",
+        "CLAIM-011",
+        "CLAIM-012"
+      ],
+      "public_source_notes": [
+        {
+          "public_url": "https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_de",
+          "source_ids": [
+            "SRC-EDPB"
+          ],
+          "text": "Europäischer Datenschutzausschuss (EDSA), Datenschutzleitfaden für kleine Unternehmen, „Rechte des Einzelnen respektieren“, Abschnitte zur Bearbeitung von Anfragen und zum Auskunftsrecht; Textauszug abgerufen am 14. September 2026. Offizieller Leitfaden, kein Gesetzestext."
+        }
+      ],
+      "sections": [],
+      "title": "Auskunft über personenbezogene Daten: erste Schritte im Unternehmen"
+    }
+  ],
+  "claims": [
+    {
+      "id": "CLAIM-001",
+      "professional_judgment": "Fachperson und Datenschutz-Ansprechperson müssen Rollen, Relevanz und Anwendung im Einzelfall prüfen.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Das Auskunftsrecht umfasst die Bestätigung, ob personenbezogene Daten verarbeitet werden, und gegebenenfalls den Zugang zu diesen Daten.",
+      "temporal_qualification": "Ausgewählter Leitfaden vom 14. September 2026; kein neues Inkrafttreten angekündigt.",
+      "uncertainty": "Die Anwendung hängt von nicht vorgelegten Tatsachen und der Rolle des Unternehmens ab."
+    },
+    {
+      "id": "CLAIM-002",
+      "professional_judgment": "Fachperson und Datenschutz-Ansprechperson müssen Rollen, Relevanz und Anwendung im Einzelfall prüfen.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Der Leitfaden empfiehlt interne Verfahren sowie die Dokumentation von Anfragen und Antworten.",
+      "temporal_qualification": "Ausgewählter Leitfaden vom 14. September 2026; kein neues Inkrafttreten angekündigt.",
+      "uncertainty": "Die Anwendung hängt von nicht vorgelegten Tatsachen und der Rolle des Unternehmens ab."
+    },
+    {
+      "id": "CLAIM-003",
+      "professional_judgment": "Fachperson und Datenschutz-Ansprechperson müssen Rollen, Relevanz und Anwendung im Einzelfall prüfen.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Der Verantwortliche muss Betroffenenanfragen beantworten; der Auftragsverarbeiter muss ihn unterstützen.",
+      "temporal_qualification": "Ausgewählter Leitfaden vom 14. September 2026; kein neues Inkrafttreten angekündigt.",
+      "uncertainty": "Die Anwendung hängt von nicht vorgelegten Tatsachen und der Rolle des Unternehmens ab."
+    },
+    {
+      "id": "CLAIM-004",
+      "professional_judgment": "Fachperson und Datenschutz-Ansprechperson müssen Rollen, Relevanz und Anwendung im Einzelfall prüfen.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Der Leitfaden nennt einen Monat zur Beantwortung einer Betroffenenanfrage.",
+      "temporal_qualification": "Ausgewählter Leitfaden vom 14. September 2026; kein neues Inkrafttreten angekündigt.",
+      "uncertainty": "Die Anwendung hängt von nicht vorgelegten Tatsachen und der Rolle des Unternehmens ab."
+    },
+    {
+      "id": "CLAIM-005",
+      "professional_judgment": "Fachperson und Datenschutz-Ansprechperson müssen Rollen, Relevanz und Anwendung im Einzelfall prüfen.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Ist die Anfrage zu komplex und wird mehr Zeit benötigt, kann die Frist um zwei weitere Monate verlängert werden, wenn die Person innerhalb eines Monats nach Eingang informiert wird.",
+      "temporal_qualification": "Ausgewählter Leitfaden vom 14. September 2026; kein neues Inkrafttreten angekündigt.",
+      "uncertainty": "Die Anwendung hängt von nicht vorgelegten Tatsachen und der Rolle des Unternehmens ab."
+    },
+    {
+      "id": "CLAIM-006",
+      "professional_judgment": "Fachperson und Datenschutz-Ansprechperson müssen Rollen, Relevanz und Anwendung im Einzelfall prüfen.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Zu den Auskunftsinformationen gehören Zwecke, Datenkategorien, Empfänger sowie Speicherdauer oder deren Bestimmungskriterien.",
+      "temporal_qualification": "Ausgewählter Leitfaden vom 14. September 2026; kein neues Inkrafttreten angekündigt.",
+      "uncertainty": "Die Anwendung hängt von nicht vorgelegten Tatsachen und der Rolle des Unternehmens ab."
+    },
+    {
+      "id": "CLAIM-007",
+      "professional_judgment": "Fachperson und Datenschutz-Ansprechperson müssen Rollen, Relevanz und Anwendung im Einzelfall prüfen.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Vor Bereitstellung einer Kopie personenbezogener Daten sind Rechte und Freiheiten anderer zu prüfen.",
+      "temporal_qualification": "Ausgewählter Leitfaden vom 14. September 2026; kein neues Inkrafttreten angekündigt.",
+      "uncertainty": "Die Anwendung hängt von nicht vorgelegten Tatsachen und der Rolle des Unternehmens ab."
+    },
+    {
+      "id": "CLAIM-008",
+      "professional_judgment": "Fachperson und Datenschutz-Ansprechperson müssen Rollen, Relevanz und Anwendung im Einzelfall prüfen.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Die Person hat Anspruch auf eine kostenlose Kopie ihrer verarbeiteten personenbezogenen Daten.",
+      "temporal_qualification": "Ausgewählter Leitfaden vom 14. September 2026; kein neues Inkrafttreten angekündigt.",
+      "uncertainty": "Die Anwendung hängt von nicht vorgelegten Tatsachen und der Rolle des Unternehmens ab."
+    },
+    {
+      "id": "CLAIM-009",
+      "professional_judgment": "Fachperson und Datenschutz-Ansprechperson müssen Rollen, Relevanz und Anwendung im Einzelfall prüfen.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Für zusätzliche Kopien sieht der Leitfaden eine angemessene Gebühr anhand der Verwaltungskosten ihrer Herstellung vor.",
+      "temporal_qualification": "Ausgewählter Leitfaden vom 14. September 2026; kein neues Inkrafttreten angekündigt.",
+      "uncertainty": "Die Anwendung hängt von nicht vorgelegten Tatsachen und der Rolle des Unternehmens ab."
+    },
+    {
+      "id": "CLAIM-010",
+      "professional_judgment": "Fachperson und Datenschutz-Ansprechperson müssen Rollen, Relevanz und Anwendung im Einzelfall prüfen.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Bei einer nachweislich offensichtlich unbegründeten oder unverhältnismäßigen Anfrage sieht der Leitfaden eine angemessene Gebühr oder Ablehnung vor.",
+      "temporal_qualification": "Ausgewählter Leitfaden vom 14. September 2026; kein neues Inkrafttreten angekündigt.",
+      "uncertainty": "Die Anwendung hängt von nicht vorgelegten Tatsachen und der Rolle des Unternehmens ab."
+    },
+    {
+      "id": "CLAIM-011",
+      "professional_judgment": "Fachperson und Datenschutz-Ansprechperson müssen Rollen, Relevanz und Anwendung im Einzelfall prüfen.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Bei einer Ablehnung sind binnen eines Monats nach Eingang die Gründe sowie Beschwerdemöglichkeit bei der nationalen Aufsichtsbehörde und gerichtlicher Rechtsbehelf mitzuteilen.",
+      "temporal_qualification": "Ausgewählter Leitfaden vom 14. September 2026; kein neues Inkrafttreten angekündigt.",
+      "uncertainty": "Die Anwendung hängt von nicht vorgelegten Tatsachen und der Rolle des Unternehmens ab."
+    },
+    {
+      "id": "CLAIM-012",
+      "professional_judgment": "Organisationsvorschlag aus den Hinweisen zu Verfahren und Dokumentation; keine neue Rechtspflicht und kein bereits eingeführtes betriebliches Verfahren.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Als Organisationsvorschlag hilft es, Eingangsdatum, Kanal und Inhalt festzuhalten und die Datenschutz-Ansprechperson zeitnah einzubeziehen, um die empfohlene interne Bearbeitung vorzubereiten.",
+      "temporal_qualification": "Ausgewählter Leitfaden vom 14. September 2026; kein neues Inkrafttreten angekündigt.",
+      "uncertainty": "Die Anwendung hängt von nicht vorgelegten Tatsachen und der Rolle des Unternehmens ab."
+    }
+  ],
+  "editorial_value": {
+    "audience_value": "Mitarbeitende können den Inhalt einer Anfrage erkennen und eine nützliche interne Übergabe vorbereiten.",
+    "banality_check": "Die FAQ geht über allgemeine Sorgfaltshinweise hinaus: Sie nennt zu erfassende Angaben, Fristen und konkrete Prüfpunkte. Der Organisationsvorschlag ist als solcher bezeichnet.",
+    "decision_enabled": "Ermöglicht den Beginn der internen Bearbeitung und zeigt, welche Fragen eine Datenschutzprüfung im Einzelfall benötigen.",
+    "decision_limit": "Allgemeine Hinweise für Unternehmen in Italien. Diese FAQ entscheidet keine reale Anfrage und ersetzt keine betrieblichen Verfahren. Vor der Verwendung muss die Fachperson den Text prüfen und das Unternehmen seine Datenschutz-Ansprechperson bestimmen.",
+    "distinct_angle": "Vom Erstkontakt zur Datenschutzprüfung: Angaben erfassen und weitergeben, bevor über die Antwort entschieden wird.",
+    "practical_use": "Eingang und Inhalt festhalten, Ansprechperson bestimmen und komplexe Fragen oder Daten Dritter vor der Antwort vorlegen.",
+    "publication_judgment": "Als kurzer Informationsentwurf nützlich, vorbehaltlich fachlicher Prüfung; keine Freigabe zur Verbreitung.",
+    "reason_now": "Ausdrückliche Informationsinitiative der Kanzlei; eine Gesetzesänderung oder besondere neue Frist wurde nicht vorgelegt.",
+    "repetition_check": "Keine früheren Mitteilungen ausgewählt; Wiederholungen gegenüber früheren Texten sind nicht beurteilbar.",
+    "source_specific_information": "Der Leitfaden verbindet interne Verfahren mit der Monatsfrist, einer bedingten Verlängerung und der Prüfung fremder Rechte vor einer Datenkopie."
+  },
+  "master_brief": {
+    "actions": [
+      "Als Organisationsvorschlag hilft es, Eingangsdatum, Kanal und Inhalt festzuhalten und die Datenschutz-Ansprechperson zeitnah einzubeziehen, um die empfohlene interne Bearbeitung vorzubereiten.",
+      "Der Leitfaden empfiehlt interne Verfahren sowie die Dokumentation von Anfragen und Antworten."
+    ],
+    "caveats": [
+      "Allgemeine Hinweise für Unternehmen in Italien. Diese FAQ entscheidet keine reale Anfrage und ersetzt keine betrieblichen Verfahren. Vor der Verwendung muss die Fachperson den Text prüfen und das Unternehmen seine Datenschutz-Ansprechperson bestimmen.",
+      "Organisationsvorschlag aus den Hinweisen zu Verfahren und Dokumentation; keine neue Rechtspflicht und kein bereits eingeführtes betriebliches Verfahren.",
+      "Übungsmaterial: Studio Riva und der Auftrag sind fiktiv; der EDSA-Leitfaden ist eine echte öffentliche Quelle."
+    ],
+    "effective_dates": [
+      "Kein neues Wirksamkeitsdatum; dokumentarischer Stand ist der 14. September 2026."
+    ],
+    "practical_implications": [
+      "Das Auskunftsrecht umfasst die Bestätigung, ob personenbezogene Daten verarbeitet werden, und gegebenenfalls den Zugang zu diesen Daten.",
+      "Der Leitfaden nennt einen Monat zur Beantwortung einer Betroffenenanfrage.",
+      "Ist die Anfrage zu komplex und wird mehr Zeit benötigt, kann die Frist um zwei weitere Monate verlängert werden, wenn die Person innerhalb eines Monats nach Eingang informiert wird.",
+      "Vor Bereitstellung einer Kopie personenbezogener Daten sind Rechte und Freiheiten anderer zu prüfen."
+    ],
+    "what_changed": "Keine Gesetzesänderung angekündigt. Die Kanzlei schlägt eine FAQ zu den allgemeinen EDSA-Hinweisen vor, um Auskunftsanfragen zu erkennen und zu organisieren.",
+    "who_may_be_affected": "Mitarbeitende in Verwaltung und Kundenbetreuung kleiner Unternehmen in Italien."
+  },
+  "recommendation": "publish",
+  "recommendation_reason": "Die ausdrücklich gewünschte Initiative rechtfertigt eine praktische FAQ: Mitarbeitende können Auskunftsanfragen erkennen und mit nützlichen Angaben intern weitergeben. Empfohlen wird ein Entwurf zur Prüfung, ohne Versand oder Veröffentlichung.",
+  "run_id": "vera-de-demo",
+  "schema_version": 1,
+  "source_assessments": [
+    {
+      "authority_assessment": "Einschlägiger offizieller EDSA-Leitfaden zu Betroffenenrechten und Auskunft. Allgemeine Orientierung, kein neuer Rechtsakt.",
+      "limitations": "Ausgewählter Textauszug vom 14. September 2026, ohne betriebliche Einzelfakten oder Prüfung aller verlinkten Rechtsquellen. Der deutsche Auszug enthält keinen gesonderten Absatz zu zusätzlichen Identitätsnachweisen; hierzu wird keine Regel aufgestellt.",
+      "semantic_role": "clarifying",
+      "source_id": "SRC-EDPB"
+    }
+  ],
+  "studio_profile_proposal": {
+    "derived_from_history_ids": [],
+    "document": {
+      "circular_label": "Rundschreiben",
+      "closing": "Mit freundlichen Grüßen",
+      "contact_rail_lines": [],
+      "date_pattern": "{date}",
+      "font_family": "Helvetica",
+      "footer_pattern": "Studio Riva",
+      "layout": {
+        "body_font_size_pt": 11,
+        "body_leading_pt": 15,
+        "bottom_margin_mm": 20,
+        "contact_rail_width_mm": 30,
+        "heading_font_size_pt": 12,
+        "left_margin_mm": 22,
+        "logo_height_mm": 12,
+        "logo_width_mm": 32,
+        "right_margin_mm": 22,
+        "rule_width_pt": 0.6,
+        "subject_font_size_pt": 15,
+        "top_margin_mm": 24
+      },
+      "numbering_pattern": "",
+      "page_size": "A4",
+      "recipient_pattern": "An interessierte kleine Unternehmen im Mandantenkreis",
+      "section_style": "unnumbered",
+      "signature_lines": [
+        "Studio Riva",
+        "Steuerberatung"
+      ],
+      "subject_prefix": "Betreff:",
+      "use_contact_rail": false
+    },
+    "email": {
+      "attachment_note": "Zugehörige FAQ, erst nach Prüfung des Pakets beizufügen.",
+      "closing": "Mit freundlichen Grüßen",
+      "salutation": "Sehr geehrte Mandantinnen und Mandanten,",
+      "signature_lines": [
+        "Studio Riva",
+        "Steuerberatung"
+      ],
+      "subject_pattern": "{subject}"
+    },
+    "field_provenance": [
+      {
+        "analysis": "Dieses Feld übernimmt Identität, Zielgruppe oder den ausdrücklichen Wunsch nach Klarheit und Zurückhaltung aus der Aufgabenstellung; frühere Mitteilungen sind keine Grundlage.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "voice.audience_stance"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.rhythm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.technical_density"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Dieses Feld übernimmt Identität, Zielgruppe oder den ausdrücklichen Wunsch nach Klarheit und Zurückhaltung aus der Aufgabenstellung; frühere Mitteilungen sind keine Grundlage.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "voice.formality"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.openings"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.closings"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Dieses Feld übernimmt Identität, Zielgruppe oder den ausdrücklichen Wunsch nach Klarheit und Zurückhaltung aus der Aufgabenstellung; frühere Mitteilungen sind keine Grundlage.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "voice.formatting"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.avoid"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.page_size"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.font_family"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.left_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.right_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.top_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.bottom_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.logo_width_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.logo_height_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.contact_rail_width_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.body_font_size_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.body_leading_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.subject_font_size_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.heading_font_size_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.rule_width_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.recipient_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.circular_label"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.numbering_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.date_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.subject_prefix"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.section_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.use_contact_rail"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Es wurden keine Kontaktdaten vorgelegt. Das Feld bleibt leer, ohne erfundene Adressen oder Kontakte hinzuzufügen.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "document.contact_rail_lines"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.footer_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.closing"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Dieses Feld übernimmt Identität, Zielgruppe oder den ausdrücklichen Wunsch nach Klarheit und Zurückhaltung aus der Aufgabenstellung; frühere Mitteilungen sind keine Grundlage.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "document.signature_lines"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.subject_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.salutation"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.closing"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Dieses Feld übernimmt Identität, Zielgruppe oder den ausdrücklichen Wunsch nach Klarheit und Zurückhaltung aus der Aufgabenstellung; frühere Mitteilungen sind keine Grundlage.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "email.signature_lines"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.attachment_note"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.byline_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.date_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.heading_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.source_heading"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.cta"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.show_update_date"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.preferred_format"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.opening_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.closing_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.hashtags"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.show_source_note"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Vorschlag von Vera für ein schlichtes und lesbares Format. Frühere Mitteilungen wurden nicht ausgewählt; die Konvention ist weder beobachtet noch freigegeben.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.carousel_identity_placement"
+        ],
+        "history_ids": []
+      }
+    ],
+    "social": {
+      "carousel_identity_placement": "close_only",
+      "closing_style": "Mit Verwendungszweck und Grenzen schließen.",
+      "hashtags": [],
+      "opening_style": "Mit dem praktischen Anliegen beginnen.",
+      "preferred_format": "text",
+      "show_source_note": true
+    },
+    "voice": {
+      "audience_stance": "Mitarbeitende in Verwaltung und Kundenbetreuung kleiner Unternehmen in Italien verständlich ansprechen.",
+      "avoid": [
+        "Erfundene Dringlichkeit",
+        "Garantien zur Rechtskonformität",
+        "Nicht bereitgestellte Mandantengeschichten",
+        "Werbesprache"
+      ],
+      "closings": "Mit Verwendungszweck und Grenzen schließen.",
+      "formality": "Sachlich und professionell.",
+      "formatting": "Klare Überschriften und erkennbare Quellen.",
+      "openings": "Mit dem praktischen Anliegen beginnen.",
+      "rhythm": "Kurze Sätze und jeweils eine praktische Frage.",
+      "technical_density": "Nötige Begriffe erklären; allgemeine Hinweise, Organisationsvorschläge und Einzelfallprüfung unterscheiden."
+    },
+    "website": {
+      "byline_pattern": "Studio Riva",
+      "cta": "Bestimmen Sie Ihre Datenschutz-Ansprechperson, bevor Sie diese Hinweise in Ihrem Verfahren einsetzen.",
+      "date_pattern": "Stand: {date}",
+      "heading_style": "question_led",
+      "show_update_date": true,
+      "source_heading": "Quellen"
+    }
+  },
+  "visual_story": {
+    "decision": "omit",
+    "decision_reason": "Die kurze FAQ führt bereits vom Eingang zur Prüfung. Eine Grafik würde die Inhalte wiederholen, ohne eine weitere nützliche Entscheidung zu ermöglichen.",
+    "incremental_value": "",
+    "slides": [],
+    "title": ""
+  }
+}

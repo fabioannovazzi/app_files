@@ -1,0 +1,35 @@
+{
+  "audience": "Small business clients in Italy; administration and customer service staff",
+  "contract_digest": "e9ae5c07fe4a84528c2a55a84e9744c3c3718a5c2f6d41b461abb1ab666e871a",
+  "correction_policy": "correct_when_supported",
+  "document_type": "professional_communication_package",
+  "evidence_display": "inline_citations",
+  "generation_instructions": {
+    "must_distinguish": [
+      "The fictional firm-led initiative from a legislative change; general guidance from a real case decision."
+    ],
+    "preserve": [
+      "Actor roles, conditions, uncertainty, qualifications and professional-review boundaries.",
+      "Selected fictional teaching context from this run's run_intake.json (SHA-256 0f227be12e48e658cb5501a92a95d0ce235dba393bee9d9c62f316c39ce3800b): the studio and assignment are invented lesson material. The studio brief and draft visual values below are supplied context, not selected communication history or professional approval.",
+      "Studio Riva — commercialisti. Non ci sono logo, recapiti, precedenti comunicazioni o un formato già approvato. Proponi un formato sobrio blu e bianco, con font leggibile, titoli chiari e fonti identificabili. Il professionista lo rivedrà prima dell’uso.",
+      "Run-selected fictional studio identity and draft visual values from brand_profile; not an approved house profile: {\"accent_color\": \"#197B9C\", \"background_color\": \"#FFFFFF\", \"primary_color\": \"#153855\", \"studio_name\": \"Studio Riva\", \"text_color\": \"#1C2935\"}"
+    ],
+    "prohibited": [
+      "Invented clients, facts, regulations, urgency, professional approvals, sending or publishing."
+    ],
+    "source_hierarchy": [
+      "Selected EDPB official guidance; identify it as guidance, not legislation. No missing legal authority may be invented."
+    ]
+  },
+  "generation_route": "codex_direct",
+  "judgment_policy": "flag_for_professional_review",
+  "jurisdiction": "Italy / EU GDPR; language does not change jurisdiction",
+  "jurisdiction_status": "confirmed",
+  "output_language": "it",
+  "purpose": "Lo studio vuole preparare una FAQ breve per le piccole imprese clienti in Italia: come riconoscere e organizzare una richiesta di accesso ai dati personali. È un’iniziativa informativa dello studio, non l’annuncio di una nuova legge né una risposta a una persona reale. I lettori gestiscono amministrazione e rapporti con i clienti e devono capire quando coinvolgere chi segue la privacy. Usa la guida ufficiale EDPB selezionata, distinguendo indicazioni generali e valutazioni sul singolo caso. Non sono forniti dati di clienti, richieste reali o una politica privacy aziendale. Prepara il pacchetto per la revisione interna; nessun invio o pubblicazione. Il testo finale deve essere in italiano.",
+  "question_domain": "compliance",
+  "run_id": "vera-it-demo",
+  "schema_version": 1,
+  "validation_profile": "source_identity_support_reasoning_and_judgment",
+  "validation_scope": "all_material_claims"
+}

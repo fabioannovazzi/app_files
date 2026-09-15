@@ -40,7 +40,7 @@
     {
       "path": "modules/presenza-digitale-studio/schemas/quality_assessment.schema.json",
       "repository_path": "plugins/presenza-digitale-studio/schemas/quality_assessment.schema.json",
-      "sha256": "6b65695211ae5e2c3c0e86450d4752514f2561ccd5a1e1f41657a901c1f44aa2"
+      "sha256": "470146a234449e2ff332fadc524ff3db8d2c4057e9dc78a80a63557c0fae059d"
     },
     {
       "path": "modules/presenza-digitale-studio/schemas/site_brief.schema.json",
@@ -50,7 +50,7 @@
     {
       "path": "modules/presenza-digitale-studio/schemas/sites_delivery.schema.json",
       "repository_path": "plugins/presenza-digitale-studio/schemas/sites_delivery.schema.json",
-      "sha256": "fd9c7b0f3a746b2ad70db68d0b8b4937104a673ae4f34d0564c96fda4e6758a2"
+      "sha256": "fa7e55c67e1138dd91d2f2c7a6656405c0c304affa963e889638c54b6a5c667c"
     },
     {
       "path": "modules/presenza-digitale-studio/schemas/website_intake.schema.json",
@@ -120,12 +120,12 @@
     {
       "path": "modules/presenza-digitale-studio/scripts/workflow_core.py",
       "repository_path": "plugins/presenza-digitale-studio/scripts/workflow_core.py",
-      "sha256": "a7b379c5c302d829183d49131466cc0719af03ec60df98096fd9399fec2bd962"
+      "sha256": "d3cef57e45011809f997da6903ff1fc04f2617f4682601f675d4e9662112b9d4"
     },
     {
       "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/SKILL.md",
       "repository_path": "plugins/presenza-digitale-studio/skills/presenza-digitale-studio/SKILL.md",
-      "sha256": "c845d01f486d355420ae1f7d24c9ef564563cc977b02da00a01c5d85457c3ad5"
+      "sha256": "5e9306b0fcdc19426c81b82780e8da8d5f289cb8858d82bd76dbecbc59977a11"
     },
     {
       "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/agents/openai.yaml",
@@ -140,7 +140,7 @@
     {
       "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/sites-handoff.md",
       "repository_path": "plugins/presenza-digitale-studio/skills/presenza-digitale-studio/references/sites-handoff.md",
-      "sha256": "02e5c05538e76ec00340553d19d8a4f41468a86ed8fcde4557c4ad1b0afac8da"
+      "sha256": "01adbe9337ff09b63c1036289f50cceca383140dca752dbc962eafc545e9b2b0"
     },
     {
       "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/skill-orchestration.md",
@@ -150,12 +150,12 @@
     {
       "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/website-quality-standard.md",
       "repository_path": "plugins/presenza-digitale-studio/skills/presenza-digitale-studio/references/website-quality-standard.md",
-      "sha256": "b9acf80662e3f00ebcd984e81143c3955cf90293150223bf09883578c960cb0c"
+      "sha256": "74f9c7a1b57619e7fca23d250efd368ccfb9df223dec2f9574c7f1e762c2f695"
     },
     {
       "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/workflow-method.md",
       "repository_path": "plugins/presenza-digitale-studio/skills/presenza-digitale-studio/references/workflow-method.md",
-      "sha256": "b97e7079360685cf6226f5cadfba42850ad3f4ae456739da6196acc495e7325a"
+      "sha256": "02030b31cad276105b981b7a3cdc96286c6c1dcc7c18986131a2efaabd15f79b"
     },
     {
       "path": "skills/presenza-digitale-studio/SKILL.md",
@@ -200,7 +200,7 @@
     {
       "path": "vendor/modules/courseware/assets/languages.json",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
     },
     {
       "path": "vendor/modules/courseware/execution.py",
@@ -210,7 +210,12 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
     },
     {
       "path": "vendor/modules/desktop_teaching/__init__.py",
@@ -225,12 +230,12 @@
     {
       "path": "vendor/modules/desktop_teaching/onboarding.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
-      "sha256": "3a230127225683b86ead89c6fd93101092b756f062b396d9be45e757dc530b14"
+      "sha256": "215244f8e595127743e7fd1c97febd489056ebcc9d7907dec7098a6b498fca8b"
     },
     {
       "path": "vendor/modules/desktop_teaching/teaching.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
-      "sha256": "9e672584218ce40d8a5e397d61f3198eacea4bdffdcb37fd813333799875a4d4"
+      "sha256": "8cfb8565b9a854c119e8a48e7bf068f2450786d21255da9b202a606226207a6e"
     }
   ],
   "files": [

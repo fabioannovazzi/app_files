@@ -9,7 +9,7 @@
     "steps": [
       "In the working window, Vera opens the case and registers the documents. The voice chat explains the assignment, sources and result. Review which documents govern the exercise and which describe the company.",
       "Vera proposes requirements and comparisons with the facts, examines costs and prepares the checklist and draft. Follow a step from source to proposal and review the decisions required by the normal process.",
-      "Open the dossier and checks. Examine the proposed outcome, missing documents, costs and next actions. Vera explains the later review and application-preparation steps; this exercise uses no portal and sends nothing."
+      "Open review_dossier.html: start with the summary, then review costs, documents and the project draft. Expand one condition to read its assessment and source excerpt. Vera explains the remaining review and next steps; this exercise uses no portal and sends nothing."
     ],
     "deliverables": [
       "A local dossier with requirements, evidence, proposed assessments, costs, documents and draft content.",

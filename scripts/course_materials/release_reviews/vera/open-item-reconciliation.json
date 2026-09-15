@@ -1,0 +1,270 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "open-item-reconciliation",
+  "course_sha256": "38a6afece594593f3db63f85a4e4b1cb03c6e063efa406c4c64678562be251dd",
+  "reviewer": "Codex: source, first-use outline and actual native document/workbook review",
+  "reviewed_at": "2026-09-14T17:59:18.652300+00:00",
+  "review_scope": "Prepared full-payment matching example and cumulative April practice. All 51 Word pages from native run 07 and 34 summary/request worksheet views were visually inspected. All three operational sheets were also checked through a native LibreOffice conversion, which disproved the excessive row heights in the secondary preview renderer. Run 08 re-executes the final corrected outlines with unchanged inputs and production method: full Word body XML and both operational/request workbook cell values and styles match run 07 after exact managed-source and run-metadata substitutions. The local HTML review page could not be opened because of browser URL security policy; visual browser interaction, learner understanding, native voice and two-window behavior are not attested. Row review remains pending; this is not professional case approval.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches checking a reported supplier open-item list at a cut-off. The learner supplies the population and bank payment evidence, reviews source roles, runs the current comparison and reads proposed item statuses. The course stays on that complete first-use task.",
+        "inputs_and_request": "Read the fifteen distinct fictional PDF masters and the five localized outlines. The population has three supplier invoices for EUR 1,220, EUR 732 and EUR 488. The March bank statement has the first two payments. Each natural request states the cut-off and asks what is paid and what needs review. Decimal-comma and day-first input conventions are explicitly explained in every locale.",
+        "execution_and_checkpoints": "The current owning raw-input workflow uses Studio Archive imports, qualified source decisions, actual PDF adapters and its normal output/assurance path. Synthetic source decisions in the execution test do not pre-approve a learner case. The first checkpoint distinguishes population from payment evidence; the second traces the unresolved invoice and needed evidence. Professional row decisions remain pending.",
+        "deliverable_and_next_action": "The native Word report begins with the amount/status summary and next action. Readable source references, split wide schedules and localized report captions retain the actual calculations. The 34 current summary/request worksheet views cover all ten exercises; the requested action for the remaining invoice is specific and supported. Operational workbook headers largely retain Italian, and audit fields retain canonical English; these are not claimed fully translated. Blank allocation/residual columns are not taught as calculated results. Native report assurance passes while the row-review-completion check correctly remains pending.",
+        "practice_and_repeat": "A new 30 April review uses the cumulative bank statement and the same invoice population. The 4 April payment for EUR 488 changes the third invoice from unresolved to supported closure, while March files remain preserved. The learner explains why the two dates produce different results and where a review decision belongs before repeating with real sources.",
+        "language_and_pacing": "Read the complete it outline, its updated instructions and both native reports. The outline and Word explanation follow this language. The requested-evidence workbook supplies localized guidance; technical operational/audit terms are explained by the teacher. Six stages total 390 seconds, with processing and questions allowed to extend the session. No measured learner duration or actual voice acceptance is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[it-demo-2]",
+        "result_review": "At 31 March, two invoices are closed against the EUR 1,220 and EUR 732 bank payments, totalling EUR 1,952; the EUR 488 invoice has no linked payment evidence and remains unresolved. The request workbook asks for its specific invoice/subledger reference or closing evidence. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
+        "reviewed_artifacts": [
+          {
+            "name": "relazione_riconciliazione_audit.docx",
+            "sha256": "c161946cb39bffe19bd66df4157fa00db32e561ebcc9e44133e5d7ef20ca7b49"
+          },
+          {
+            "name": "scheda_operativa_commercialista.xlsx",
+            "sha256": "7ea930c3357062c2d5795c2ffa7c93cdeac576596f67b22955ec5d1212e451a5"
+          },
+          {
+            "name": "richieste_mirate_evidenze.xlsx",
+            "sha256": "145ed8b05b9ad11ffaac069c091580f9453b8efff51273d43eddce21d8d0a420"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[it-practice-3]",
+        "result_review": "At 30 April, the cumulative statement adds the EUR 488 payment dated 4 April. All three invoices, totalling EUR 2,440, now have closure evidence; the unresolved-request sheet has no data rows. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
+        "reviewed_artifacts": [
+          {
+            "name": "relazione_riconciliazione_audit.docx",
+            "sha256": "3ab1f93c1148e979d083b660cae3e7cc5eb947e4ca61ce7daa688ff0a344efd9"
+          },
+          {
+            "name": "scheda_operativa_commercialista.xlsx",
+            "sha256": "2bb0a33fe9dfa08726e84abbdf786b6a1a65984261544a6e64552a80f2f4c574"
+          },
+          {
+            "name": "richieste_mirate_evidenze.xlsx",
+            "sha256": "bac83b313b8f3e2c57a145946cf83d035ea5a7217b1b156b3c3e1f1d8dcdc7b7"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches checking a reported supplier open-item list at a cut-off. The learner supplies the population and bank payment evidence, reviews source roles, runs the current comparison and reads proposed item statuses. The course stays on that complete first-use task.",
+        "inputs_and_request": "Read the fifteen distinct fictional PDF masters and the five localized outlines. The population has three supplier invoices for EUR 1,220, EUR 732 and EUR 488. The March bank statement has the first two payments. Each natural request states the cut-off and asks what is paid and what needs review. Decimal-comma and day-first input conventions are explicitly explained in every locale.",
+        "execution_and_checkpoints": "The current owning raw-input workflow uses Studio Archive imports, qualified source decisions, actual PDF adapters and its normal output/assurance path. Synthetic source decisions in the execution test do not pre-approve a learner case. The first checkpoint distinguishes population from payment evidence; the second traces the unresolved invoice and needed evidence. Professional row decisions remain pending.",
+        "deliverable_and_next_action": "The native Word report begins with the amount/status summary and next action. Readable source references, split wide schedules and localized report captions retain the actual calculations. The 34 current summary/request worksheet views cover all ten exercises; the requested action for the remaining invoice is specific and supported. Operational workbook headers largely retain Italian, and audit fields retain canonical English; these are not claimed fully translated. Blank allocation/residual columns are not taught as calculated results. Native report assurance passes while the row-review-completion check correctly remains pending.",
+        "practice_and_repeat": "A new 30 April review uses the cumulative bank statement and the same invoice population. The 4 April payment for EUR 488 changes the third invoice from unresolved to supported closure, while March files remain preserved. The learner explains why the two dates produce different results and where a review decision belongs before repeating with real sources.",
+        "language_and_pacing": "Read the complete en outline, its updated instructions and both native reports. The outline and Word explanation follow this language. The requested-evidence workbook supplies localized guidance; technical operational/audit terms are explained by the teacher. Six stages total 390 seconds, with processing and questions allowed to extend the session. No measured learner duration or actual voice acceptance is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[en-demo-2]",
+        "result_review": "At 31 March, two invoices are closed against the EUR 1,220 and EUR 732 bank payments, totalling EUR 1,952; the EUR 488 invoice has no linked payment evidence and remains unresolved. The request workbook asks for its specific invoice/subledger reference or closing evidence. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
+        "reviewed_artifacts": [
+          {
+            "name": "relazione_riconciliazione_audit.docx",
+            "sha256": "d5cfa24ae67a602343afdd0330a8d52bf1e2e43f302128e2fdd6e4342a5a44ea"
+          },
+          {
+            "name": "scheda_operativa_commercialista.xlsx",
+            "sha256": "24a341605799c4db830c69386c49319934cb6b8843345971ab4f076397a008b9"
+          },
+          {
+            "name": "richieste_mirate_evidenze.xlsx",
+            "sha256": "427cd2dd599608f867513797f1dc91ff0b3230c9c13810a5660c1f8ec6ae2678"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[en-practice-3]",
+        "result_review": "At 30 April, the cumulative statement adds the EUR 488 payment dated 4 April. All three invoices, totalling EUR 2,440, now have closure evidence; the unresolved-request sheet has no data rows. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
+        "reviewed_artifacts": [
+          {
+            "name": "relazione_riconciliazione_audit.docx",
+            "sha256": "59c64d9c5ac29a87e4b7cc545861ed1c7ca818010cf3b08a194e6f4bf27e8113"
+          },
+          {
+            "name": "scheda_operativa_commercialista.xlsx",
+            "sha256": "cef22aed11b32f0b6612579f1e44d41948fd809435de70f8b8ffcf8c37731f55"
+          },
+          {
+            "name": "richieste_mirate_evidenze.xlsx",
+            "sha256": "bfd4ce22f5a191d57ba21ea68d0d9df875786c1adbfeb987f8913df3a77a79c7"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches checking a reported supplier open-item list at a cut-off. The learner supplies the population and bank payment evidence, reviews source roles, runs the current comparison and reads proposed item statuses. The course stays on that complete first-use task.",
+        "inputs_and_request": "Read the fifteen distinct fictional PDF masters and the five localized outlines. The population has three supplier invoices for EUR 1,220, EUR 732 and EUR 488. The March bank statement has the first two payments. Each natural request states the cut-off and asks what is paid and what needs review. Decimal-comma and day-first input conventions are explicitly explained in every locale.",
+        "execution_and_checkpoints": "The current owning raw-input workflow uses Studio Archive imports, qualified source decisions, actual PDF adapters and its normal output/assurance path. Synthetic source decisions in the execution test do not pre-approve a learner case. The first checkpoint distinguishes population from payment evidence; the second traces the unresolved invoice and needed evidence. Professional row decisions remain pending.",
+        "deliverable_and_next_action": "The native Word report begins with the amount/status summary and next action. Readable source references, split wide schedules and localized report captions retain the actual calculations. The 34 current summary/request worksheet views cover all ten exercises; the requested action for the remaining invoice is specific and supported. Operational workbook headers largely retain Italian, and audit fields retain canonical English; these are not claimed fully translated. Blank allocation/residual columns are not taught as calculated results. Native report assurance passes while the row-review-completion check correctly remains pending.",
+        "practice_and_repeat": "A new 30 April review uses the cumulative bank statement and the same invoice population. The 4 April payment for EUR 488 changes the third invoice from unresolved to supported closure, while March files remain preserved. The learner explains why the two dates produce different results and where a review decision belongs before repeating with real sources.",
+        "language_and_pacing": "Read the complete fr outline, its updated instructions and both native reports. The outline and Word explanation follow this language. The requested-evidence workbook supplies localized guidance; technical operational/audit terms are explained by the teacher. Six stages total 390 seconds, with processing and questions allowed to extend the session. No measured learner duration or actual voice acceptance is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[fr-demo-2]",
+        "result_review": "At 31 March, two invoices are closed against the EUR 1,220 and EUR 732 bank payments, totalling EUR 1,952; the EUR 488 invoice has no linked payment evidence and remains unresolved. The request workbook asks for its specific invoice/subledger reference or closing evidence. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
+        "reviewed_artifacts": [
+          {
+            "name": "relazione_riconciliazione_audit.docx",
+            "sha256": "96c15832335d355964837b9c8dde9e43833ae2c61c4d6ae376b6b1d295997ede"
+          },
+          {
+            "name": "scheda_operativa_commercialista.xlsx",
+            "sha256": "4b537ed6a7628e32a1aca7953059fa8d97f6b5517f00c95fb82ce62a9e3751cb"
+          },
+          {
+            "name": "richieste_mirate_evidenze.xlsx",
+            "sha256": "a0e33858d2526dea8dfe9b38a61201443e3f25597084e30848e521f9594fe93f"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[fr-practice-3]",
+        "result_review": "At 30 April, the cumulative statement adds the EUR 488 payment dated 4 April. All three invoices, totalling EUR 2,440, now have closure evidence; the unresolved-request sheet has no data rows. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
+        "reviewed_artifacts": [
+          {
+            "name": "relazione_riconciliazione_audit.docx",
+            "sha256": "05f6bbac432dfed678cfa7f2e09f25340db52d4eedfe4936f842f38b3ef37da8"
+          },
+          {
+            "name": "scheda_operativa_commercialista.xlsx",
+            "sha256": "355789f20c65c492c4ea22c91ad3fef900eac71104d42536b9c4aa6eb6050036"
+          },
+          {
+            "name": "richieste_mirate_evidenze.xlsx",
+            "sha256": "bcda9ae2bb533808c1bbaf57fa9efe9841923ae0840d6b0e4b81176e42d0244b"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches checking a reported supplier open-item list at a cut-off. The learner supplies the population and bank payment evidence, reviews source roles, runs the current comparison and reads proposed item statuses. The course stays on that complete first-use task.",
+        "inputs_and_request": "Read the fifteen distinct fictional PDF masters and the five localized outlines. The population has three supplier invoices for EUR 1,220, EUR 732 and EUR 488. The March bank statement has the first two payments. Each natural request states the cut-off and asks what is paid and what needs review. Decimal-comma and day-first input conventions are explicitly explained in every locale.",
+        "execution_and_checkpoints": "The current owning raw-input workflow uses Studio Archive imports, qualified source decisions, actual PDF adapters and its normal output/assurance path. Synthetic source decisions in the execution test do not pre-approve a learner case. The first checkpoint distinguishes population from payment evidence; the second traces the unresolved invoice and needed evidence. Professional row decisions remain pending.",
+        "deliverable_and_next_action": "The native Word report begins with the amount/status summary and next action. Readable source references, split wide schedules and localized report captions retain the actual calculations. The 34 current summary/request worksheet views cover all ten exercises; the requested action for the remaining invoice is specific and supported. Operational workbook headers largely retain Italian, and audit fields retain canonical English; these are not claimed fully translated. Blank allocation/residual columns are not taught as calculated results. Native report assurance passes while the row-review-completion check correctly remains pending.",
+        "practice_and_repeat": "A new 30 April review uses the cumulative bank statement and the same invoice population. The 4 April payment for EUR 488 changes the third invoice from unresolved to supported closure, while March files remain preserved. The learner explains why the two dates produce different results and where a review decision belongs before repeating with real sources.",
+        "language_and_pacing": "Read the complete de outline, its updated instructions and both native reports. The outline and Word explanation follow this language. The requested-evidence workbook supplies localized guidance; technical operational/audit terms are explained by the teacher. Six stages total 390 seconds, with processing and questions allowed to extend the session. No measured learner duration or actual voice acceptance is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[de-demo-2]",
+        "result_review": "At 31 March, two invoices are closed against the EUR 1,220 and EUR 732 bank payments, totalling EUR 1,952; the EUR 488 invoice has no linked payment evidence and remains unresolved. The request workbook asks for its specific invoice/subledger reference or closing evidence. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
+        "reviewed_artifacts": [
+          {
+            "name": "relazione_riconciliazione_audit.docx",
+            "sha256": "89b4189158231ddff21d81aff8808a94e4e1d0ce4e376444a01f9cbe8b43310d"
+          },
+          {
+            "name": "scheda_operativa_commercialista.xlsx",
+            "sha256": "cee3ab2367858fd0bffb6703ef65e714c6d6144401e7e3d9c0f658ba8b3ea7ef"
+          },
+          {
+            "name": "richieste_mirate_evidenze.xlsx",
+            "sha256": "3b87827fdf5cdd7928a64d4d6f4ac95d82a25897e240ac0f78a61a2ea6265044"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[de-practice-3]",
+        "result_review": "At 30 April, the cumulative statement adds the EUR 488 payment dated 4 April. All three invoices, totalling EUR 2,440, now have closure evidence; the unresolved-request sheet has no data rows. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
+        "reviewed_artifacts": [
+          {
+            "name": "relazione_riconciliazione_audit.docx",
+            "sha256": "514b94e22c0aac21c17903fe7aee790634ddd863c6e6682c89e5ebcd145a84ac"
+          },
+          {
+            "name": "scheda_operativa_commercialista.xlsx",
+            "sha256": "c5e0bfcc8d527d0c9dabb2c1e7ba01dbe8681615cb24a382e6ee5a72e175ab8a"
+          },
+          {
+            "name": "richieste_mirate_evidenze.xlsx",
+            "sha256": "56e15e2311d73f729dbded2d8595975da2d11c6fd95b32572ddf373178459e75"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches checking a reported supplier open-item list at a cut-off. The learner supplies the population and bank payment evidence, reviews source roles, runs the current comparison and reads proposed item statuses. The course stays on that complete first-use task.",
+        "inputs_and_request": "Read the fifteen distinct fictional PDF masters and the five localized outlines. The population has three supplier invoices for EUR 1,220, EUR 732 and EUR 488. The March bank statement has the first two payments. Each natural request states the cut-off and asks what is paid and what needs review. Decimal-comma and day-first input conventions are explicitly explained in every locale.",
+        "execution_and_checkpoints": "The current owning raw-input workflow uses Studio Archive imports, qualified source decisions, actual PDF adapters and its normal output/assurance path. Synthetic source decisions in the execution test do not pre-approve a learner case. The first checkpoint distinguishes population from payment evidence; the second traces the unresolved invoice and needed evidence. Professional row decisions remain pending.",
+        "deliverable_and_next_action": "The native Word report begins with the amount/status summary and next action. Readable source references, split wide schedules and localized report captions retain the actual calculations. The 34 current summary/request worksheet views cover all ten exercises; the requested action for the remaining invoice is specific and supported. Operational workbook headers largely retain Italian, and audit fields retain canonical English; these are not claimed fully translated. Blank allocation/residual columns are not taught as calculated results. Native report assurance passes while the row-review-completion check correctly remains pending.",
+        "practice_and_repeat": "A new 30 April review uses the cumulative bank statement and the same invoice population. The 4 April payment for EUR 488 changes the third invoice from unresolved to supported closure, while March files remain preserved. The learner explains why the two dates produce different results and where a review decision belongs before repeating with real sources.",
+        "language_and_pacing": "Read the complete es outline, its updated instructions and both native reports. The outline and Word explanation follow this language. The requested-evidence workbook supplies localized guidance; technical operational/audit terms are explained by the teacher. Six stages total 390 seconds, with processing and questions allowed to extend the session. No measured learner duration or actual voice acceptance is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[es-demo-2]",
+        "result_review": "At 31 March, two invoices are closed against the EUR 1,220 and EUR 732 bank payments, totalling EUR 1,952; the EUR 488 invoice has no linked payment evidence and remains unresolved. The request workbook asks for its specific invoice/subledger reference or closing evidence. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
+        "reviewed_artifacts": [
+          {
+            "name": "relazione_riconciliazione_audit.docx",
+            "sha256": "fc232cb6f4c76539cbb594f6402c62093f3eac4ef4420b6ce348e74e21b80ef4"
+          },
+          {
+            "name": "scheda_operativa_commercialista.xlsx",
+            "sha256": "2b0175776c59a2efd89ccc296390e8e52ecedefa3f5e3f4275e5a310132fd513"
+          },
+          {
+            "name": "richieste_mirate_evidenze.xlsx",
+            "sha256": "7be388996afd857e339faf58b5b28a740f88b238a4714f00a1fa8f8886ed3aaf"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[es-practice-3]",
+        "result_review": "At 30 April, the cumulative statement adds the EUR 488 payment dated 4 April. All three invoices, totalling EUR 2,440, now have closure evidence; the unresolved-request sheet has no data rows. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
+        "reviewed_artifacts": [
+          {
+            "name": "relazione_riconciliazione_audit.docx",
+            "sha256": "07ca0e7fdc516a02b7d605817592d910ec795a846624d318ffe160bb6de32586"
+          },
+          {
+            "name": "scheda_operativa_commercialista.xlsx",
+            "sha256": "b45f77f83cc455fbe9c6ac763a8bbcb928ba1a09ad00a0385e35794d462aee38"
+          },
+          {
+            "name": "richieste_mirate_evidenze.xlsx",
+            "sha256": "a879fbbd56d7ac34c92db64cf1d1bb3df52bdf1d094c3f9c9ae6dc90f5d457fa"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.161979+00:00",
+    "previous_course_sha256": "5f50af8bfa5beed13375c4cb7b4aac7b63eef44da2cd307ac2bf911a297143c5",
+    "source_snapshot": "/private/tmp/open-item-teaching-final-07/test_open_item_kit_runs_curren5/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  }
+}

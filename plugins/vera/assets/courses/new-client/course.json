@@ -104,7 +104,7 @@
     {
       "path": "modules/client-file-preparation/scripts/review_session.py",
       "repository_path": "plugins/client-file-preparation/scripts/review_session.py",
-      "sha256": "78bea9a2e8127f364d3caea1d3b24cd33b4fa9fe388562fefe23c8c6b80cc286"
+      "sha256": "6b06c376237c2e1dfabfebda605ba1a6ac2030938fbbe8d298ff071b34232b7f"
     },
     {
       "path": "modules/client-file-preparation/scripts/scan_folder.py",
@@ -139,7 +139,7 @@
     {
       "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
     },
     {
       "path": "modules/client-file-preparation/vendor/modules/vera_assurance/decisions.py",
@@ -179,7 +179,7 @@
     {
       "path": "modules/new-client/assets/new-client-review-widget.html",
       "repository_path": "plugins/new-client/assets/new-client-review-widget.html",
-      "sha256": "0b4d77a9afe1e7daa78ba8999bbfa4f22ba555631af1e8b30c09e47b4e4e46be"
+      "sha256": "536fe79993ec77d75ac08f6b686f49dea00ab7158e0a2840dec3b5dd2e36b5bf"
     },
     {
       "path": "modules/new-client/assets/review-workbench-adapter.json",
@@ -190,6 +190,11 @@
       "path": "modules/new-client/references/research-provenance.json",
       "repository_path": "plugins/new-client/references/research-provenance.json",
       "sha256": "84f5a6ba412c72de20d04f8dd051538ce99f08807b55ce69def7a5724eb6f4c7"
+    },
+    {
+      "path": "modules/new-client/references/review-labels.json",
+      "repository_path": "plugins/new-client/references/review-labels.json",
+      "sha256": "691a05d7916d82f6f50a4fa11c2d3cc5621261f6f7e2d8ae9f186dbcd4eb63b4"
     },
     {
       "path": "modules/new-client/references/source-policy.md",
@@ -204,7 +209,7 @@
     {
       "path": "modules/new-client/references/workflow-reference.md",
       "repository_path": "plugins/new-client/references/workflow-reference.md",
-      "sha256": "afe34b1fd6f8dc4384651eca80b099a5ef17c7d771885a066d9c2c60c9e62e22"
+      "sha256": "ec0b4f536a2662288288c48d4192e6ed57d1c2ec9b3e43ef4c938a44b22f9e52"
     },
     {
       "path": "modules/new-client/requirements.txt",
@@ -214,7 +219,7 @@
     {
       "path": "modules/new-client/schemas/new_client_input.schema.json",
       "repository_path": "plugins/new-client/schemas/new_client_input.schema.json",
-      "sha256": "5c628701d5cfb1b765cd7e63d6b5d5187f3e904c6c7e36cf94cd9ea718844a70"
+      "sha256": "3455a07c30598769690358fc2429ca74176066c9c2c5db122d32c541348f81c1"
     },
     {
       "path": "modules/new-client/scripts/check_dependencies.py",
@@ -224,22 +229,22 @@
     {
       "path": "modules/new-client/scripts/delivery_manifest.py",
       "repository_path": "plugins/new-client/scripts/delivery_manifest.py",
-      "sha256": "09002cc2283baac2831ee000cc3020901d6d1787aef53f50d79b9fec086713b5"
+      "sha256": "ec2003d6e59eb06466f0d5d3a7d70bbd78ece63e6acdeb3d3353a22af7f6a036"
     },
     {
       "path": "modules/new-client/scripts/initialize_case.py",
       "repository_path": "plugins/new-client/scripts/initialize_case.py",
-      "sha256": "792df65068ecd8a35fb27d9412cb843d935ec8f7df4d7b240dbfeaf52ba7923b"
+      "sha256": "6f380f2c0eaab6375dc5e773d14783852a0f999d7f500391cdfdad7d613bed06"
     },
     {
       "path": "modules/new-client/scripts/new_client_core.py",
       "repository_path": "plugins/new-client/scripts/new_client_core.py",
-      "sha256": "037811b80c9c07d395d19340fb598e9f5ff589f30421edd8b3d2ff8e3a70fa45"
+      "sha256": "77e74fa875aca3327d86cd792d3209376c99525b983be299d95cdae64278c52e"
     },
     {
       "path": "modules/new-client/scripts/package_new_client.py",
       "repository_path": "plugins/new-client/scripts/package_new_client.py",
-      "sha256": "3f21713d2049a5367fd5b12894e8e423e5d663903f445e08cc297569780fd768"
+      "sha256": "bfb939007de1e370b6389ebd7e0081da2aff923e4606a37df7e67105a568f74e"
     },
     {
       "path": "modules/new-client/scripts/promote_client_file_preparation.py",
@@ -249,7 +254,7 @@
     {
       "path": "modules/new-client/skills/new-client/SKILL.md",
       "repository_path": "plugins/new-client/skills/new-client/SKILL.md",
-      "sha256": "f9822215291d21d110c70ae68ada2ac9d6405c5c2503d8e93e7acc824862a826"
+      "sha256": "4fe99e1e8bb2b1c1607a1f1b91e458fbff017073e1b57e720a3ff6a07d7f583c"
     },
     {
       "path": "modules/new-client/vendor/modules/__init__.py",
@@ -264,7 +269,7 @@
     {
       "path": "modules/new-client/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
     },
     {
       "path": "modules/new-client/vendor/modules/vera_assurance/decisions.py",
@@ -334,7 +339,7 @@
     {
       "path": "vendor/modules/courseware/assets/languages.json",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
     },
     {
       "path": "vendor/modules/courseware/execution.py",
@@ -344,12 +349,17 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
     },
     {
       "path": "vendor/modules/reporting_table.py",
       "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
-      "sha256": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7"
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
     },
     {
       "path": "vendor/modules/vera_assurance/__init__.py",
@@ -359,7 +369,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

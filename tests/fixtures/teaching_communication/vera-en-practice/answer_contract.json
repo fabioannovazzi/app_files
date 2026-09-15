@@ -1,0 +1,35 @@
+{
+  "audience": "Small business clients in Italy; administration and customer service staff",
+  "contract_digest": "c16561a232e82fba35004eab9f5a86a22f19f762cca53835a0f0b77fd36aab2e",
+  "correction_policy": "correct_when_supported",
+  "document_type": "professional_communication_package",
+  "evidence_display": "inline_citations",
+  "generation_instructions": {
+    "must_distinguish": [
+      "The fictional firm-led initiative from a legislative change; general guidance from a real case decision."
+    ],
+    "preserve": [
+      "Actor roles, conditions, uncertainty, qualifications and professional-review boundaries.",
+      "Selected fictional teaching context from this run's run_intake.json (SHA-256 daee5b3c5052f040dc36ebf467122b287842dca384c119bf9dbd068a46f2229b): the studio and assignment are invented lesson material. The studio brief and draft visual values below are supplied context, not selected communication history or professional approval.",
+      "Studio Riva — accountants. No logo, contact details, previous communications or approved house style are supplied. Propose a restrained blue and white format with readable type, clear headings and identifiable sources. The professional will review it before use.",
+      "Run-selected fictional studio identity and draft visual values from brand_profile; not an approved house profile: {\"accent_color\": \"#197B9C\", \"background_color\": \"#FFFFFF\", \"primary_color\": \"#153855\", \"studio_name\": \"Studio Riva\", \"text_color\": \"#1C2935\"}"
+    ],
+    "prohibited": [
+      "Invented clients, facts, regulations, urgency, professional approvals, sending or publishing."
+    ],
+    "source_hierarchy": [
+      "Selected EDPB official guidance; identify it as guidance, not legislation. No missing legal authority may be invented."
+    ]
+  },
+  "generation_route": "codex_direct",
+  "judgment_policy": "flag_for_professional_review",
+  "jurisdiction": "Italy / EU GDPR; language does not change jurisdiction",
+  "jurisdiction_status": "confirmed",
+  "output_language": "en",
+  "purpose": "The firm wants a short FAQ for its small business clients in Italy: how to recognise and organise a personal data access request. This is a firm-led information initiative, not news of a new law or a reply to a real person. Readers handle administration and customer relationships and need to know when to involve the person responsible for privacy. Use the selected official EDPB guide, distinguishing general guidance from individual case assessment. No client data, real requests or company privacy policy are supplied. Prepare the package for internal review; no sending or publishing. Write the final material in English.\nAfter reviewing the FAQ, prepare a new package version that also includes a short covering email to clients. Explain who the FAQ is for and how to use it. Preserve the sources, limitations and first version. Do not invent recipients, attachments already sent or a new obligation. Do not send anything.",
+  "question_domain": "compliance",
+  "run_id": "vera-en-practice",
+  "schema_version": 1,
+  "validation_profile": "source_identity_support_reasoning_and_judgment",
+  "validation_scope": "all_material_claims"
+}

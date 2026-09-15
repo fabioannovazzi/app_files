@@ -42,6 +42,12 @@ def main() -> int:
     parser.add_argument("package_dir", type=Path)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--author-agent-id", required=True)
+    parser.add_argument(
+        "--language",
+        choices=("en", "it", "fr", "de", "es"),
+        default="en",
+        help="Language for the report template, tables and fixed display labels.",
+    )
     parser.add_argument("--preview-rows", type=int, default=12)
     parser.add_argument(
         "--mapping-provenance-dir",
@@ -88,6 +94,7 @@ def main() -> int:
             args.package_dir,
             args.output_dir,
             author_agent_id=args.author_agent_id,
+            language=args.language,
             preview_rows=args.preview_rows,
             require_browser_qa=args.require_browser_qa,
             mapping_provenance_dir=args.mapping_provenance_dir,

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Lucia · Matter review</title>
+<style>
+__FONTS__
+:root{font-family:"Instrument Sans",sans-serif;color:#18202c;background:#fff;--navy:#002060;--blue:#087acc;--muted:#5f6876;--rule:#d9e0e7}
+*{box-sizing:border-box}body{margin:0}main{width:min(1040px,calc(100% - 40px));margin:36px auto 72px}header{border-top:4px solid var(--blue);padding:24px 0;border-bottom:1px solid var(--rule)}.brand{color:var(--blue);font-size:13px;font-weight:600}h1{font-size:36px;line-height:1.1;margin:12px 0;color:var(--navy)}p{line-height:1.6;white-space:pre-line}header p{max-width:780px;color:var(--muted)}h2{font-size:18px;margin:0}h3{font-size:16px;margin:0 0 14px}.toolbar{display:flex;gap:20px;align-items:end;flex-wrap:wrap;margin:26px 0}label{display:grid;gap:8px;font-size:14px;font-weight:600}input,select,textarea,button{font:inherit}input,select,textarea{padding:10px 12px;border:1px solid #aeb9c6;border-radius:3px;background:#fff;max-width:100%}input{width:300px}button{padding:12px 18px;border:0;border-radius:3px;background:var(--navy);color:#fff;cursor:pointer;font-weight:600}button:disabled{opacity:.5;cursor:not-allowed}.review-item{border-bottom:1px solid var(--rule)}.review-item>summary{display:flex;gap:20px;align-items:baseline;justify-content:space-between;padding:22px 0;cursor:pointer;list-style:none}.review-item>summary:after{content:"+";color:var(--blue);font-size:22px}.review-item[open]>summary:after{content:"−"}.review-item>summary h2{flex:1}.state{font-size:13px;color:var(--muted)}.content{padding:0 0 28px}.facts{display:grid;grid-template-columns:180px minmax(0,1fr);gap:13px 22px;margin:12px 0}.facts dt{font-size:13px;color:var(--muted);line-height:1.5}.facts dd{margin:0;line-height:1.55;white-space:pre-line;overflow-wrap:anywhere}.facts .facts{grid-template-columns:150px minmax(0,1fr)}.record{padding:10px 0;border-bottom:1px solid #edf0f3}.record:last-child{border-bottom:0}.technical{margin:18px 0;color:var(--muted);font-size:13px}.technical summary{cursor:pointer}code{font:12px/1.5 ui-monospace,monospace;overflow-wrap:anywhere}.decision-controls{display:grid;grid-template-columns:260px minmax(0,1fr);gap:22px;margin-top:26px;padding-top:20px;border-top:1px solid var(--rule)}textarea{width:100%;min-height:88px;resize:vertical}.evidence{font-size:13px;color:var(--muted);margin-top:18px}.notice{color:var(--muted)}#status{min-height:24px;line-height:1.5}.bad{color:#9b1c1c}.good{color:#087447}[hidden]{display:none!important}@media(max-width:700px){main{width:calc(100% - 28px);margin-top:20px}h1{font-size:29px}.facts,.facts .facts,.decision-controls{grid-template-columns:1fr;gap:7px}.facts dd{margin-bottom:12px}.review-item>summary{gap:10px;flex-wrap:wrap}.state{font-size:12px}}
+</style></head><body><main>
+<header><div class="brand">LUCIA</div><h1 id="title"></h1><p id="intro"></p></header>
+<div class="toolbar" id="toolbar"><label><span id="reviewer-label"></span><input id="reviewer" autocomplete="name" maxlength="160" required></label><button id="save" disabled></button></div>
+<p id="status" role="status"></p><div id="items"></div>
+</main><script>
+const VOCABULARY=__LABELS__;
+const EDITABLE=__EDITABLE__;
+const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let review=null,language='en',evidenceNames={},partyNames={};
+const base=location.pathname.replace(/\/$/,'');
+const words=()=>VOCABULARY[language]||VOCABULARY.en;
+const t=key=>words()[key]||String(key).replace(/_/g,' ');
+function caption(key){return words()[key]||String(key).replace(/_/g,' ');}
+function stateText(value){return words()[String(value)]||String(value);}
+const technicalFields=new Set(['party_id','scope_id','item_id','candidate_id','deadline_id','reference','register_snapshot_reference']);
+const codedFields=new Set(['status','identity_status','relationship_status','party_type','roles','opening_mode','urgency','register_scope','authority_status','fee_terms_status','engagement_document_status','classification','external_disclosure_status','applicability','separate_assessment_status','notice_status','kind']);
+function valueHtml(value,key){
+ if(value==null||value==='')return esc(t('missing'));
+ if(Array.isArray(value))return value.length?value.map(entry=>`<div class="record">${valueHtml(entry,key)}</div>`).join(''):esc(t('none'));
+ if(typeof value==='object'){
+  const priority=['display_name','title','objective','requested_work','summary','description','roles','identity_status'];
+  const rank=field=>priority.includes(field)?priority.indexOf(field):priority.length;
+  const entries=Object.entries(value).sort(([a],[b])=>rank(a)-rank(b)),regular=entries.filter(([field])=>!technicalFields.has(field)),technical=entries.filter(([field])=>technicalFields.has(field));
+  const fields=rows=>`<dl class="facts">${rows.map(([field,entry])=>`<dt>${esc(caption(field))}</dt><dd>${valueHtml(entry,field)}</dd>`).join('')}</dl>`;
+  return fields(regular)+(technical.length?`<details class="technical"><summary>${esc(t('technical'))}</summary>${fields(technical)}</details>`:'');
+ }
+ if(key==='evidence_ids'||key==='source_evidence_ids')return esc(evidenceNames[value]||value);
+ if(key==='searched_party_ids'||key==='party_ids')return esc(partyNames[value]||value);
+ if(typeof value==='boolean')return esc(t(String(value)));
+ if(codedFields.has(key))return esc(stateText(value));
+ if(['basis','handling_notes','search_method','description'].includes(key))return esc(words()[String(value)]||value);
+ return esc(value);
+}
+function render(value){
+ const payload=value?.review_payload||value?.review||value;
+ if(!payload||!Array.isArray(payload.items)){document.querySelector('#items').innerHTML=`<p>${esc(t('no_payload'))}</p>`;return;}
+ review=payload;language=VOCABULARY[payload.language]?payload.language:'en';document.documentElement.lang=language;
+ document.querySelector('#title').textContent=t('page_title');document.title=`Lucia · ${t('page_title')}`;
+ document.querySelector('#intro').textContent=t(EDITABLE?'review_intro':'read_only');
+ document.querySelector('#toolbar').hidden=!EDITABLE;
+ document.querySelector('#reviewer-label').textContent=t('reviewer');document.querySelector('#save').textContent=t('save');
+ evidenceNames=Object.fromEntries((payload.evidence_sources||[]).map(row=>[row.evidence_id,row.name]));
+ const parties=payload.items.find(item=>item.item_type==='party_map')?.data?.parties||[];
+ partyNames=Object.fromEntries(parties.map(p=>[p.party_id,p.display_name]));
+ const order=['matter_request','party_map','engagement','conflict_scope','conflict_candidate','deadline_posture','deadline_candidate','missing_item','confidentiality','aml_applicability','privacy_retention','folder_plan'];
+ const index=type=>order.includes(type)?order.indexOf(type):order.length;
+ const items=[...payload.items].sort((a,b)=>index(a.item_type)-index(b.item_type));
+ document.querySelector('#items').innerHTML=items.map((item,i)=>`<details class="review-item" data-id="${esc(item.id)}" ${i===0?'open':''}><summary><h2>${esc(item.title)}</h2><span class="state">${esc(stateText(item.status))}</span></summary><div class="content">${valueHtml(item.data||{},'')}${item.evidence_ids?.length?`<p class="evidence">${esc(t('sources'))}: ${item.evidence_ids.map(id=>esc(evidenceNames[id]||id)).join(' · ')}</p>`:''}${EDITABLE?`<div class="decision-controls"><label>${esc(t('decision'))}<select aria-label="${esc(t('decision'))}"><option value="">${esc(t('review_first'))}</option>${item.allowed_actions.map(action=>`<option value="${esc(action)}">${esc(stateText(action))}</option>`).join('')}</select><small class="notice">${esc(t('proposal'))}: ${esc(stateText(item.recommended_action))}</small></label><label>${esc(t('note'))}<textarea maxlength="5000"></textarea></label></div>`:''}</div></details>`).join('');
+ document.querySelector('#save').disabled=false;
+}
+async function load(){try{const response=await fetch(`${base}/api/review`,{cache:'no-store'});const value=await response.json();if(!response.ok)throw new Error(value.error);render(value);}catch(error){const status=document.querySelector('#status');status.className='bad';status.textContent=error.message;}}
+document.querySelector('#save').addEventListener('click',async()=>{
+ const reviewer=document.querySelector('#reviewer').value.trim();const status=document.querySelector('#status');
+ if(!reviewer){status.className='bad';status.textContent=t('reviewer_required');return;}
+ const decisions=[...document.querySelectorAll('.review-item')].map(item=>({item_id:item.dataset.id,action:item.querySelector('select').value,note:item.querySelector('textarea').value.trim()})).filter(item=>item.action);
+ try{const response=await fetch(`${base}/api/decisions`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({reviewer,decisions})});const value=await response.json();if(!response.ok)throw new Error(value.error);status.className='good';status.textContent=t('saved');}catch(error){status.className='bad';status.textContent=error.message;}
+});
+if(EDITABLE){load();}else{document.querySelector('#toolbar').hidden=true;render(window.openai?.toolOutput||window.openai?.structuredContent);window.addEventListener('openai:set_globals',event=>render(event.detail?.globals?.toolOutput||event.detail?.globals?.structuredContent));}
+</script></body></html>

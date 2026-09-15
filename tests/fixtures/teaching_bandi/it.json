@@ -1,0 +1,36 @@
+{
+  "question": "Preparare il dossier del progetto digitale dal bando fittizio e dai documenti forniti.",
+  "title": "Prenotazione digitale degli appuntamenti",
+  "site": "Milano",
+  "summary": "Arco Servizi propone software e formazione per quattro addetti. Il dossier collega le condizioni dell’avviso alle dichiarazioni e al preventivo. Le interpretazioni e i documenti restano da rivedere.",
+  "fictional": "Fonte interamente fittizia; nessun ente o finanziamento reale.",
+  "fixture": "Interpretazione sintetica per il test del workflow; non è una revisione professionale effettiva.",
+  "project": "Introduzione della prenotazione digitale degli appuntamenti e formazione del personale.",
+  "commitment": "Il preventivo non è accettato e non sono stati sottoscritti ordini o sostenuti costi.",
+  "requirement_evidence": "Documenti del progetto e del preventivo da rivedere per questa condizione.",
+  "clauses": [
+    "La dichiarazione indica una sede operativa a Milano; il requisito territoriale risulta coerente con quanto dichiarato, da confermare in revisione.",
+    "Sono dichiarati quattro addetti, meno del limite di dieci. Il dato proviene dalla dichiarazione e resta da rivedere.",
+    "Il progetto dichiarato comprende prenotazione digitale e formazione del personale, coerenti con l’oggetto indicato nell’avviso.",
+    "La voce Q-001 descrive una nuova licenza del software previsto: la sua inclusione tra le spese ammissibili è proposta sulla base del punto 4, da rivedere.",
+    "La voce Q-002 descrive la formazione del personale prevista dal progetto. La pertinenza è proposta per revisione.",
+    "La voce Q-003 è un computer: la proposta lo esclude dalla base agevolabile perché l’avviso esclude l’hardware. Può restare nel costo totale del progetto.",
+    "Applicando il 50% alla base proposta di {eligible} EUR si ottiene una richiesta ipotetica di {grant} EUR, soggetta alla revisione delle spese.",
+    "La richiesta ipotetica di {grant} EUR non supera il limite di 5.000 EUR. Non è una concessione di contributo.",
+    "Il documento di progetto contiene la descrizione richiesta; la sua presenza non ne conferma da sola il contenuto.",
+    "Il documento dell’impresa dichiara sede e quattro addetti; occorre rivedere la dichiarazione.",
+    "Il preventivo distingue software, formazione e computer con importi separati; le condizioni commerciali restano da rivedere.",
+    "La data del caso, 14 settembre 2026, rientra nella finestra immaginaria del 1–30 settembre. Questo confronto non attesta l’apertura di un bando reale.",
+    "L’impresa dichiara che il preventivo non è accettato e che non vi sono ordini o costi sostenuti. La condizione appare rispettata sulla base della dichiarazione, da rivedere."
+  ],
+  "documents": [
+    "Descrizione del progetto",
+    "Dichiarazione di sede e addetti",
+    "Preventivo per voce"
+  ],
+  "document_reason": "Il documento è fornito e collegato alla condizione indicata; contenuto e attendibilità restano da rivedere.",
+  "narrative": "Arco Servizi propone di introdurre la prenotazione digitale degli appuntamenti presso la sede dichiarata a Milano e di formare i quattro addetti. Il preventivo comprende una licenza software, formazione e un computer. Non sono stati accettati preventivi o sottoscritti ordini. La proposta di aiuto considera software e formazione; il computer resta escluso dalla base agevolabile. L’interpretazione dei costi e le dichiarazioni devono ancora essere riviste.",
+  "budget": "Costo totale proposto: {total} EUR; base agevolabile proposta: {eligible} EUR; hardware escluso: 3.000 EUR; contributo ipotetico: {grant} EUR. Calcolo riferito soltanto alle regole fittizie dei punti 7 e 8.",
+  "consistency": "Verificare la corrispondenza tra preventivo, base proposta e importo ipotetico.",
+  "issue": "Rivedere le dichiarazioni dell’impresa, la lettura delle condizioni e le classificazioni di spesa prima di confermare il dossier."
+}

@@ -145,7 +145,7 @@
     {
       "path": "modules/comunicazione-professionale/scripts/package_communications.py",
       "repository_path": "plugins/comunicazione-professionale/scripts/package_communications.py",
-      "sha256": "ca6e6eb5454d61babb1b47262ebb7ece9dd8bc7e4e61de4b04934253a42485f2"
+      "sha256": "15f877e32d62c99849d798dab0602014953a434d15950b4621e24cada117994a"
     },
     {
       "path": "modules/comunicazione-professionale/scripts/prepare_creative_direction_handoff.py",
@@ -220,7 +220,7 @@
     {
       "path": "modules/comunicazione-professionale/scripts/workflow_core.py",
       "repository_path": "plugins/comunicazione-professionale/scripts/workflow_core.py",
-      "sha256": "3c49f44bcd2fcdf88062a1052542e9763eeab29a3bae5622127cda70b1b13548"
+      "sha256": "e7fb34cd0b443b0fab6e4afd1cc0ccedb05d0c8dcb9e7befb157e732bede3831"
     },
     {
       "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
@@ -300,7 +300,7 @@
     {
       "path": "vendor/modules/courseware/assets/languages.json",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
     },
     {
       "path": "vendor/modules/courseware/execution.py",
@@ -310,7 +310,12 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
     },
     {
       "path": "vendor/modules/desktop_teaching/__init__.py",
@@ -325,12 +330,12 @@
     {
       "path": "vendor/modules/desktop_teaching/onboarding.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
-      "sha256": "3a230127225683b86ead89c6fd93101092b756f062b396d9be45e757dc530b14"
+      "sha256": "215244f8e595127743e7fd1c97febd489056ebcc9d7907dec7098a6b498fca8b"
     },
     {
       "path": "vendor/modules/desktop_teaching/teaching.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
-      "sha256": "9e672584218ce40d8a5e397d61f3198eacea4bdffdcb37fd813333799875a4d4"
+      "sha256": "8cfb8565b9a854c119e8a48e7bf068f2450786d21255da9b202a606226207a6e"
     }
   ],
   "files": [
@@ -629,7 +634,7 @@
         "Rivedi la comunicazione, le fonti e il formato. Dopo le conferme previste dal workflow, apri il pacchetto realmente generato e controlla come usarne i file. Un eventuale invio o pubblicazione è un’azione successiva, separata."
       ],
       "deliverables": [
-        "FAQ in Markdown e HTML, pronta da esaminare e riutilizzare dopo la revisione.",
+        "FAQ in Markdown, pronta da esaminare e riutilizzare dopo la revisione.",
         "Base tecnica, riferimenti alle fonti e registrazioni delle verifiche e delle decisioni."
       ],
       "review": "Leggi la FAQ come un cliente: destinatario e utilità devono essere chiari. Controlla che le affermazioni corrispondano alla fonte, che i limiti restino visibili e che il formato sia quello accettato. Il workflow può chiedere una correzione o motivare perché non comunicare.",
@@ -654,7 +659,7 @@
         "Review the communication, sources and format. After the confirmations required by the workflow, open the actual generated package and find out how to use its files. Sending or publishing is a separate subsequent action."
       ],
       "deliverables": [
-        "FAQ in Markdown and HTML, for inspection and reuse after review.",
+        "FAQ in Markdown, for inspection and reuse after review.",
         "Technical basis, source references and records of checks and decisions."
       ],
       "review": "Read the FAQ as a client: its audience and practical use should be clear. Check that claims match the source, limits remain visible and the format is the one accepted. The workflow may require revision or explain why no communication is warranted.",
@@ -679,7 +684,7 @@
         "Revois la communication, les sources et le format. Après les confirmations prévues, ouvre le dossier effectivement généré et repère comment utiliser ses fichiers. Un envoi ou une publication constitue une action ultérieure distincte."
       ],
       "deliverables": [
-        "FAQ en Markdown et HTML, à examiner et réutiliser après revue.",
+        "FAQ en Markdown, à examiner et réutiliser après revue.",
         "Base technique, références aux sources et traces des vérifications et décisions."
       ],
       "review": "Lis la FAQ comme un client : public et utilité doivent être clairs. Vérifie que les affirmations correspondent à la source, que les limites sont visibles et que le format est celui accepté. Le workflow peut demander une correction ou expliquer pourquoi ne pas communiquer.",
@@ -704,7 +709,7 @@
         "Prüfe Mitteilung, Quellen und Format. Öffne nach den vorgesehenen Bestätigungen das tatsächlich erzeugte Paket und orientiere dich in den verwendbaren Dateien. Versand oder Veröffentlichung sind spätere, separate Schritte."
       ],
       "deliverables": [
-        "FAQ als Markdown und HTML, zur Prüfung und anschließenden Verwendung.",
+        "FAQ als Markdown, zur Prüfung und anschließenden Verwendung.",
         "Fachliche Grundlage, Quellenverweise sowie Nachweise der Kontrollen und Entscheidungen."
       ],
       "review": "Lies die FAQ aus Kundensicht: Zielgruppe und Nutzen müssen klar sein. Prüfe Quellenbezug, sichtbare Grenzen und das bestätigte Format. Der Workflow kann eine Überarbeitung verlangen oder begründen, weshalb keine Mitteilung sinnvoll ist.",
@@ -729,7 +734,7 @@
         "Revisa comunicación, fuentes y formato. Tras las confirmaciones previstas, abre el paquete realmente generado y aprende a utilizar sus archivos. Enviarlo o publicarlo es una acción posterior independiente."
       ],
       "deliverables": [
-        "FAQ en Markdown y HTML, para revisar y reutilizar después de la revisión.",
+        "FAQ en Markdown, para revisar y reutilizar después de la revisión.",
         "Base técnica, referencias a las fuentes y registros de comprobaciones y decisiones."
       ],
       "review": "Lee la FAQ como un cliente: público y utilidad deben estar claros. Comprueba que las afirmaciones corresponden a la fuente, los límites siguen visibles y el formato es el aceptado. El workflow puede pedir cambios o explicar por qué no conviene comunicar.",

@@ -1,0 +1,66 @@
+{
+  "it": {
+    "entity": "Arco — caso didattico fittizio",
+    "demo": {
+      "observations": [
+        {"text": "Gennaio–febbraio: EBITDA di EUR 53.000 contro un budget di EUR 47.000, con uno scostamento favorevole di EUR 6.000 (+12,8%). I ricavi superano il budget di EUR 15.000; costo del venduto e costi operativi sono superiori al piano rispettivamente di EUR 6.000 e EUR 3.000 e assorbono parte del vantaggio.", "metric_ids": ["pnl.total.ebitda", "budget.total.ebitda_variance", "budget.total.revenue_variance", "budget.total.cogs_variance", "budget.total.operating_expense_variance"]},
+        {"text": "Il totale positivo comprende due mesi diversi: gennaio è sopra budget di EUR 12.000; febbraio è sotto di EUR 6.000 (−20,7%). In febbraio i ricavi sono inferiori al piano di EUR 5.000 e i costi operativi superiori di EUR 2.000, parzialmente compensati da EUR 1.000 di minor costo del venduto. Queste sono componenti contabili dello scostamento, non le sue cause commerciali.", "metric_ids": ["budget.2026-01.ebitda_variance", "budget.2026-02.ebitda_variance", "budget.2026-02.revenue_variance", "budget.2026-02.operating_expense_variance", "budget.2026-02.cogs_variance"]}
+      ],
+      "hypotheses": [],
+      "questions": [{"text": "Per la riunione mensile: quali ordini, quantità e prezzi spiegano i ricavi di febbraio sotto budget? Quali voci compongono i EUR 2.000 di maggiori costi operativi? Chiedere il dettaglio prima di proporre azioni correttive.", "metric_ids": ["budget.2026-02.revenue_variance", "budget.2026-02.operating_expense_variance"]}]
+    },
+    "practice": {
+      "observations": [
+        {"text": "Gennaio–marzo: EBITDA di EUR 85.000 contro EUR 77.000 di budget, favorevole di EUR 8.000 (+10,4%). I ricavi superano il piano di EUR 20.000, mentre costo del venduto e costi operativi sono superiori rispettivamente di EUR 8.000 e EUR 4.000.", "metric_ids": ["pnl.total.ebitda", "budget.total.ebitda_variance", "budget.total.revenue_variance", "budget.total.cogs_variance", "budget.total.operating_expense_variance"]},
+        {"text": "Marzo aggiunge EUR 32.000 di EBITDA contro EUR 30.000 di budget: EUR 2.000 favorevoli (+6,7%). Per questo lo scostamento cumulato passa da EUR 6.000 a EUR 8.000; il report precedente resta conservato. Il risultato di febbraio rimane EUR 6.000 sotto piano e richiede ancora spiegazioni.", "metric_ids": ["pnl.2026-03.ebitda", "budget.2026-03.ebitda_variance", "budget.total.ebitda_variance", "budget.2026-01.ebitda_variance", "budget.2026-02.ebitda_variance"]}
+      ],
+      "hypotheses": [],
+      "questions": [{"text": "Quali evidenze spiegano il divario di febbraio e i ricavi di marzo superiori al budget di EUR 5.000? Verificare quantità, prezzi e dettaglio dei costi: l'aggiunta del mese non dimostra che il problema di febbraio sia risolto.", "metric_ids": ["budget.2026-02.ebitda_variance", "budget.2026-03.revenue_variance"]}]
+    },
+    "limitations": [
+      {"text": "Il caso contiene solo ricavi, costo del venduto e costi operativi. L'EBITDA non è l'utile netto: gli zeri delle altre righe nel prospetto non documentano ammortamenti, interessi o imposte. Non sono forniti scadenziari, banca o vendite per cliente/prodotto; le relative sezioni non sono disponibili. Nessun forecast è stato fornito o calcolato.", "metric_ids": ["pnl.total.ebitda"]},
+      {"text": "I due totali di controllo coincidono con quelli dichiarati per i file fittizi. Ciò verifica il calcolo su queste fonti, non la completezza di una contabilità reale. La bozza richiede revisione professionale; non stabilisce cause né approva decisioni.", "metric_ids": []}
+    ],
+    "card_title": "Report consuntivo–budget di Arco",
+    "report": "Report con commento e domande per la riunione",
+    "dashboard": "Cruscotto: confronto per mese e cumulato",
+    "workbook": "Workbook: prospetti, controlli e dati di origine",
+    "prior": "Report precedente: gennaio–febbraio",
+    "review": "Revisione del risultato",
+    "data_report": "Dati usati in questa verifica locale",
+    "next": "Apri il cruscotto sul cumulato, passa a febbraio e confronta ricavi e costi con il budget. Poi leggi il commento. Per aggiornare il lavoro, indica il nuovo periodo e fornisci gli export comparabili.",
+    "review_note": "Bozza da rivedere. Periodo e segni sono coerenti con la nota del caso; i totali dichiarati coincidono. Le osservazioni sono collegate alle metriche calcolate. I numeri spiegano la composizione dello scostamento ma non la causa: la domanda sui ricavi e sui costi di febbraio resta aperta. Gli zeri sotto EBITDA non attestano un utile netto e le altre sezioni non sono disponibili. Nessuna risposta del discente o approvazione professionale è registrata."
+  },
+  "en": {
+    "entity": "Arco — fictional teaching case",
+    "demo": {
+      "observations": [
+        {"text": "January–February EBITDA is EUR 53,000 against a EUR 47,000 budget: EUR 6,000 favourable (+12.8%). Revenue exceeds budget by EUR 15,000, while cost of goods sold and operating expenses exceed plan by EUR 6,000 and EUR 3,000 respectively, absorbing part of that gain.", "metric_ids": ["pnl.total.ebitda", "budget.total.ebitda_variance", "budget.total.revenue_variance", "budget.total.cogs_variance", "budget.total.operating_expense_variance"]},
+        {"text": "The positive total contains two different months: January is EUR 12,000 above budget, while February is EUR 6,000 below (−20.7%). February revenue is EUR 5,000 below plan and operating expenses EUR 2,000 higher, partly offset by EUR 1,000 lower cost of goods sold. These are accounting components of the variance, not its commercial causes.", "metric_ids": ["budget.2026-01.ebitda_variance", "budget.2026-02.ebitda_variance", "budget.2026-02.revenue_variance", "budget.2026-02.operating_expense_variance", "budget.2026-02.cogs_variance"]}
+      ],
+      "hypotheses": [],
+      "questions": [{"text": "For the monthly meeting: which orders, quantities and prices explain February revenue below budget? Which items make up the EUR 2,000 extra operating expenses? Request the detail before proposing corrective action.", "metric_ids": ["budget.2026-02.revenue_variance", "budget.2026-02.operating_expense_variance"]}]
+    },
+    "practice": {
+      "observations": [
+        {"text": "January–March EBITDA is EUR 85,000 against a EUR 77,000 budget: EUR 8,000 favourable (+10.4%). Revenue exceeds plan by EUR 20,000, while cost of goods sold and operating expenses exceed plan by EUR 8,000 and EUR 4,000 respectively.", "metric_ids": ["pnl.total.ebitda", "budget.total.ebitda_variance", "budget.total.revenue_variance", "budget.total.cogs_variance", "budget.total.operating_expense_variance"]},
+        {"text": "March adds EUR 32,000 EBITDA against a EUR 30,000 budget: EUR 2,000 favourable (+6.7%). This takes the cumulative variance from EUR 6,000 to EUR 8,000; the preceding report is retained. February remains EUR 6,000 below plan and still needs an explanation.", "metric_ids": ["pnl.2026-03.ebitda", "budget.2026-03.ebitda_variance", "budget.total.ebitda_variance", "budget.2026-01.ebitda_variance", "budget.2026-02.ebitda_variance"]}
+      ],
+      "hypotheses": [],
+      "questions": [{"text": "What evidence explains the February gap and March revenue exceeding budget by EUR 5,000? Check quantities, prices and cost detail: adding the month does not establish that February's issue is resolved.", "metric_ids": ["budget.2026-02.ebitda_variance", "budget.2026-03.revenue_variance"]}]
+    },
+    "limitations": [
+      {"text": "The case contains only revenue, cost of goods sold and operating expenses. EBITDA is not net profit: zeros in the other statement rows do not establish depreciation, interest or tax. No open-item, bank or customer/product sales exports were supplied, so those sections are unavailable. No forecast was supplied or calculated.", "metric_ids": ["pnl.total.ebitda"]},
+      {"text": "Both control totals agree with the amounts declared for the fictional files. This checks the calculation on these sources, not the completeness of real accounts. The draft requires professional review; it neither establishes causes nor approves decisions.", "metric_ids": []}
+    ],
+    "card_title": "Arco actual-versus-budget report",
+    "report": "Report with commentary and questions for the meeting",
+    "dashboard": "Dashboard: monthly and cumulative comparisons",
+    "workbook": "Workbook: schedules, controls and source data",
+    "prior": "Preceding report: January–February",
+    "review": "Result review",
+    "data_report": "Data used in this local verification",
+    "next": "Open the cumulative dashboard, switch to February and compare revenue and costs with budget. Then read the commentary. To update the work, specify the new period and supply comparable exports.",
+    "review_note": "Draft for review. Period and signs match the case note; declared totals agree. Observations reference calculated metrics. The figures explain the composition of the variance, not its cause: February revenue and cost questions remain open. Zeros below EBITDA do not establish net profit, and other sections are unavailable. No learner response or professional approval is recorded."
+  }
+}

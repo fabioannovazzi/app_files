@@ -32,6 +32,7 @@ def _scripts() -> dict[str, ModuleType]:
         "schema_validation",
         "deterministic_rules",
         "opportunity_radar",
+        "dossier_report",
     )
     previous = {name: sys.modules.get(name) for name in dependency_names}
     core = _module_from_path("bandi_test_case_core", SCRIPTS_ROOT / "case_core.py")
@@ -59,6 +60,10 @@ def _scripts() -> dict[str, ModuleType]:
             "bandi_test_record_review", SCRIPTS_ROOT / "record_review.py"
         )
         sys.modules["record_review"] = review
+        report = _module_from_path(
+            "bandi_test_dossier_report", SCRIPTS_ROOT / "dossier_report.py"
+        )
+        sys.modules["dossier_report"] = report
         return {
             "core": core,
             "initialize": _module_from_path(
@@ -72,6 +77,7 @@ def _scripts() -> dict[str, ModuleType]:
                 "bandi_test_link", SCRIPTS_ROOT / "link_sources.py"
             ),
             "review": review,
+            "report": report,
             "intelligence_contract": intelligence_contract,
             "intelligence": _module_from_path(
                 "bandi_test_intelligence_workflow",
@@ -2003,6 +2009,10 @@ def test_package_manifest_hashes_rendered_artifacts(tmp_path: Path) -> None:
     manifest = _read(packaged["manifest"])
     by_id = {item["artifact_id"]: item for item in manifest["artifacts"]}
 
+    assert by_id["deliverable.review_report"]["sha256"] == scripts[
+        "package"
+    ].sha256_file(packaged["report"])
+    assert by_id["deliverable.review_report"]["media_type"] == "text/html"
     assert by_id["deliverable.review_dossier"]["sha256"] == scripts[
         "package"
     ].sha256_file(packaged["dossier"])

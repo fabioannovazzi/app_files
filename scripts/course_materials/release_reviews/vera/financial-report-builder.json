@@ -1,0 +1,190 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "financial-report-builder",
+  "course_sha256": "a632c9469eb8febb2bd4190af140764b1628a609ded45aeb3d81c52f9c665b04",
+  "reviewer": "Codex: five first-use guides, source context and all thirty rendered native report pages",
+  "reviewed_at": "2026-09-14T16:03:20.707382+00:00",
+  "review_scope": "Bounded management report from three fictional statements. Actual native Word reports in five languages and both phases were rendered and all thirty pages inspected. Fixed model-authored test commentary and synthetic mapping reviews are not packaged teaching results, professional approvals or learner actions. Live voice and beginner understanding remain unverified.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain report-preparation title introduces the full first-use task: provide statements, request a management report, review table assignments, open Word, trace a figure and repeat for a new period. It does not require the learner to write a recipe or focus on a specialised calculation.",
+        "inputs_and_request": "Read all five localized context notes and the outlines against the two authored source workbooks. The notes explain the statement signs, existing subtotals, currency and periods. Three English-labelled source sheets are shared across languages; their names remain literal source references in the output. The natural request identifies the company, period, desired report and review step.",
+        "execution_and_checkpoints": "The real current report pipeline inspects and reviews source mapping and numeric cells, builds Word/Markdown/Excel and closes the source-to-output ledger. Checkpoints ask what information will enter the report and where a displayed amount comes from. The explanation follows results in the working chat. Fixed regression interpretations are test fixtures, not approvals supplied by a learner.",
+        "deliverable_and_next_action": "The three-page Word output leads with a concise source-supported summary, then the income statement, balance sheet and cash flow with readable detail figures and comments. Excluded subtotal/control values are identified without being counted again. The appendix retains missing template sections and provenance. The learner can trace a displayed amount to the named source sheet and propose a correction; professional approval remains pending.",
+        "practice_and_repeat": "The second workbook extends January-February to January-March. Its generated report changes period, source filename and figures while retaining the same documented scope. The exercise preserves the first report, asks the learner to compare the updated tables and propose a correction, then explains the request needed for another client or reporting period.",
+        "language_and_pacing": "Read the it outline, context note and both three-page Word reports. Narrative follows the requested language; original English sheet/row labels and technical appendix identifiers remain source references. Some established French/German fixed headings retain ASCII spellings. Tables have visible light borders and no clipped or overlapping content. Six lesson stages target 390 seconds, excluding processing and learner questions."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_report_kit_builds_current_source_bound_document[demo-2026-02-28-53000-7000-it]",
+        "result_review": "Inspected all three pages of the actual native report. Operating profit is EUR 53000, the signed balance control is zero and net cash movement is EUR 7000. Detail figures are visible and commentary stays within the three source statements. The unchanged source-to-output check binds three sums and thirteen included detail cells across Word, Markdown and Excel. Unassigned template sections stay in the appendix, not empty body sections. No source workbook, output figure or professional state was altered for presentation.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.docx",
+            "sha256": "aaa15e700305fa868d574484684908109edd520eff3358bed9c33e497c671893"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_report_kit_builds_current_source_bound_document[practice-2026-03-31-85000-15000-it]",
+        "result_review": "Inspected all three pages of the actual native report. Operating profit is EUR 85000, the signed balance control is zero and net cash movement is EUR 15000. Detail figures are visible and commentary stays within the three source statements. The unchanged source-to-output check binds three sums and thirteen included detail cells across Word, Markdown and Excel. Unassigned template sections stay in the appendix, not empty body sections. No source workbook, output figure or professional state was altered for presentation.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.docx",
+            "sha256": "dc5405e4b2d9bb35dfd5d47b26269a2ab7cac205b11d8e87cc68371b54db1d27"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain report-preparation title introduces the full first-use task: provide statements, request a management report, review table assignments, open Word, trace a figure and repeat for a new period. It does not require the learner to write a recipe or focus on a specialised calculation.",
+        "inputs_and_request": "Read all five localized context notes and the outlines against the two authored source workbooks. The notes explain the statement signs, existing subtotals, currency and periods. Three English-labelled source sheets are shared across languages; their names remain literal source references in the output. The natural request identifies the company, period, desired report and review step.",
+        "execution_and_checkpoints": "The real current report pipeline inspects and reviews source mapping and numeric cells, builds Word/Markdown/Excel and closes the source-to-output ledger. Checkpoints ask what information will enter the report and where a displayed amount comes from. The explanation follows results in the working chat. Fixed regression interpretations are test fixtures, not approvals supplied by a learner.",
+        "deliverable_and_next_action": "The three-page Word output leads with a concise source-supported summary, then the income statement, balance sheet and cash flow with readable detail figures and comments. Excluded subtotal/control values are identified without being counted again. The appendix retains missing template sections and provenance. The learner can trace a displayed amount to the named source sheet and propose a correction; professional approval remains pending.",
+        "practice_and_repeat": "The second workbook extends January-February to January-March. Its generated report changes period, source filename and figures while retaining the same documented scope. The exercise preserves the first report, asks the learner to compare the updated tables and propose a correction, then explains the request needed for another client or reporting period.",
+        "language_and_pacing": "Read the en outline, context note and both three-page Word reports. Narrative follows the requested language; original English sheet/row labels and technical appendix identifiers remain source references. Some established French/German fixed headings retain ASCII spellings. Tables have visible light borders and no clipped or overlapping content. Six lesson stages target 390 seconds, excluding processing and learner questions."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_report_kit_builds_current_source_bound_document[demo-2026-02-28-53000-7000-en]",
+        "result_review": "Inspected all three pages of the actual native report. Operating profit is EUR 53000, the signed balance control is zero and net cash movement is EUR 7000. Detail figures are visible and commentary stays within the three source statements. The unchanged source-to-output check binds three sums and thirteen included detail cells across Word, Markdown and Excel. Unassigned template sections stay in the appendix, not empty body sections. No source workbook, output figure or professional state was altered for presentation.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.docx",
+            "sha256": "57b79c00bdf65a480d99920024cdf4b646b725d5df02877aa729f883ed141390"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_report_kit_builds_current_source_bound_document[practice-2026-03-31-85000-15000-en]",
+        "result_review": "Inspected all three pages of the actual native report. Operating profit is EUR 85000, the signed balance control is zero and net cash movement is EUR 15000. Detail figures are visible and commentary stays within the three source statements. The unchanged source-to-output check binds three sums and thirteen included detail cells across Word, Markdown and Excel. Unassigned template sections stay in the appendix, not empty body sections. No source workbook, output figure or professional state was altered for presentation.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.docx",
+            "sha256": "becee13585acce9a2b53e6c38ce309b624fd512402e297e13462cfddb3f0a9ea"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain report-preparation title introduces the full first-use task: provide statements, request a management report, review table assignments, open Word, trace a figure and repeat for a new period. It does not require the learner to write a recipe or focus on a specialised calculation.",
+        "inputs_and_request": "Read all five localized context notes and the outlines against the two authored source workbooks. The notes explain the statement signs, existing subtotals, currency and periods. Three English-labelled source sheets are shared across languages; their names remain literal source references in the output. The natural request identifies the company, period, desired report and review step.",
+        "execution_and_checkpoints": "The real current report pipeline inspects and reviews source mapping and numeric cells, builds Word/Markdown/Excel and closes the source-to-output ledger. Checkpoints ask what information will enter the report and where a displayed amount comes from. The explanation follows results in the working chat. Fixed regression interpretations are test fixtures, not approvals supplied by a learner.",
+        "deliverable_and_next_action": "The three-page Word output leads with a concise source-supported summary, then the income statement, balance sheet and cash flow with readable detail figures and comments. Excluded subtotal/control values are identified without being counted again. The appendix retains missing template sections and provenance. The learner can trace a displayed amount to the named source sheet and propose a correction; professional approval remains pending.",
+        "practice_and_repeat": "The second workbook extends January-February to January-March. Its generated report changes period, source filename and figures while retaining the same documented scope. The exercise preserves the first report, asks the learner to compare the updated tables and propose a correction, then explains the request needed for another client or reporting period.",
+        "language_and_pacing": "Read the fr outline, context note and both three-page Word reports. Narrative follows the requested language; original English sheet/row labels and technical appendix identifiers remain source references. Some established French/German fixed headings retain ASCII spellings. Tables have visible light borders and no clipped or overlapping content. Six lesson stages target 390 seconds, excluding processing and learner questions."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_report_kit_builds_current_source_bound_document[demo-2026-02-28-53000-7000-fr]",
+        "result_review": "Inspected all three pages of the actual native report. Operating profit is EUR 53000, the signed balance control is zero and net cash movement is EUR 7000. Detail figures are visible and commentary stays within the three source statements. The unchanged source-to-output check binds three sums and thirteen included detail cells across Word, Markdown and Excel. Unassigned template sections stay in the appendix, not empty body sections. No source workbook, output figure or professional state was altered for presentation.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.docx",
+            "sha256": "9c672fae7f2f5e9f44001767ea81d2496d8a5d8042c8cfc2a16cf3363976c171"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_report_kit_builds_current_source_bound_document[practice-2026-03-31-85000-15000-fr]",
+        "result_review": "Inspected all three pages of the actual native report. Operating profit is EUR 85000, the signed balance control is zero and net cash movement is EUR 15000. Detail figures are visible and commentary stays within the three source statements. The unchanged source-to-output check binds three sums and thirteen included detail cells across Word, Markdown and Excel. Unassigned template sections stay in the appendix, not empty body sections. No source workbook, output figure or professional state was altered for presentation.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.docx",
+            "sha256": "5c1ca91bfd5d04dd6056febdb1f26aad8ee6bbb5f6c88df5c4f6a3f4f746bb1d"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain report-preparation title introduces the full first-use task: provide statements, request a management report, review table assignments, open Word, trace a figure and repeat for a new period. It does not require the learner to write a recipe or focus on a specialised calculation.",
+        "inputs_and_request": "Read all five localized context notes and the outlines against the two authored source workbooks. The notes explain the statement signs, existing subtotals, currency and periods. Three English-labelled source sheets are shared across languages; their names remain literal source references in the output. The natural request identifies the company, period, desired report and review step.",
+        "execution_and_checkpoints": "The real current report pipeline inspects and reviews source mapping and numeric cells, builds Word/Markdown/Excel and closes the source-to-output ledger. Checkpoints ask what information will enter the report and where a displayed amount comes from. The explanation follows results in the working chat. Fixed regression interpretations are test fixtures, not approvals supplied by a learner.",
+        "deliverable_and_next_action": "The three-page Word output leads with a concise source-supported summary, then the income statement, balance sheet and cash flow with readable detail figures and comments. Excluded subtotal/control values are identified without being counted again. The appendix retains missing template sections and provenance. The learner can trace a displayed amount to the named source sheet and propose a correction; professional approval remains pending.",
+        "practice_and_repeat": "The second workbook extends January-February to January-March. Its generated report changes period, source filename and figures while retaining the same documented scope. The exercise preserves the first report, asks the learner to compare the updated tables and propose a correction, then explains the request needed for another client or reporting period.",
+        "language_and_pacing": "Read the de outline, context note and both three-page Word reports. Narrative follows the requested language; original English sheet/row labels and technical appendix identifiers remain source references. Some established French/German fixed headings retain ASCII spellings. Tables have visible light borders and no clipped or overlapping content. Six lesson stages target 390 seconds, excluding processing and learner questions."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_report_kit_builds_current_source_bound_document[demo-2026-02-28-53000-7000-de]",
+        "result_review": "Inspected all three pages of the actual native report. Operating profit is EUR 53000, the signed balance control is zero and net cash movement is EUR 7000. Detail figures are visible and commentary stays within the three source statements. The unchanged source-to-output check binds three sums and thirteen included detail cells across Word, Markdown and Excel. Unassigned template sections stay in the appendix, not empty body sections. No source workbook, output figure or professional state was altered for presentation.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.docx",
+            "sha256": "57625a22ff5bb4a1e50cc3402796626f303e8d564c373f81099af6fbd1340c1f"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_report_kit_builds_current_source_bound_document[practice-2026-03-31-85000-15000-de]",
+        "result_review": "Inspected all three pages of the actual native report. Operating profit is EUR 85000, the signed balance control is zero and net cash movement is EUR 15000. Detail figures are visible and commentary stays within the three source statements. The unchanged source-to-output check binds three sums and thirteen included detail cells across Word, Markdown and Excel. Unassigned template sections stay in the appendix, not empty body sections. No source workbook, output figure or professional state was altered for presentation.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.docx",
+            "sha256": "8d76fed969349f7b932d39c22b22b9c71fcefac26fbb132f6c2d7aa3d1b404fc"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain report-preparation title introduces the full first-use task: provide statements, request a management report, review table assignments, open Word, trace a figure and repeat for a new period. It does not require the learner to write a recipe or focus on a specialised calculation.",
+        "inputs_and_request": "Read all five localized context notes and the outlines against the two authored source workbooks. The notes explain the statement signs, existing subtotals, currency and periods. Three English-labelled source sheets are shared across languages; their names remain literal source references in the output. The natural request identifies the company, period, desired report and review step.",
+        "execution_and_checkpoints": "The real current report pipeline inspects and reviews source mapping and numeric cells, builds Word/Markdown/Excel and closes the source-to-output ledger. Checkpoints ask what information will enter the report and where a displayed amount comes from. The explanation follows results in the working chat. Fixed regression interpretations are test fixtures, not approvals supplied by a learner.",
+        "deliverable_and_next_action": "The three-page Word output leads with a concise source-supported summary, then the income statement, balance sheet and cash flow with readable detail figures and comments. Excluded subtotal/control values are identified without being counted again. The appendix retains missing template sections and provenance. The learner can trace a displayed amount to the named source sheet and propose a correction; professional approval remains pending.",
+        "practice_and_repeat": "The second workbook extends January-February to January-March. Its generated report changes period, source filename and figures while retaining the same documented scope. The exercise preserves the first report, asks the learner to compare the updated tables and propose a correction, then explains the request needed for another client or reporting period.",
+        "language_and_pacing": "Read the es outline, context note and both three-page Word reports. Narrative follows the requested language; original English sheet/row labels and technical appendix identifiers remain source references. Some established French/German fixed headings retain ASCII spellings. Tables have visible light borders and no clipped or overlapping content. Six lesson stages target 390 seconds, excluding processing and learner questions."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_report_kit_builds_current_source_bound_document[demo-2026-02-28-53000-7000-es]",
+        "result_review": "Inspected all three pages of the actual native report. Operating profit is EUR 53000, the signed balance control is zero and net cash movement is EUR 7000. Detail figures are visible and commentary stays within the three source statements. The unchanged source-to-output check binds three sums and thirteen included detail cells across Word, Markdown and Excel. Unassigned template sections stay in the appendix, not empty body sections. No source workbook, output figure or professional state was altered for presentation.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.docx",
+            "sha256": "b9e3f76b3dfd891ef66943a4646c01416ebbc0d171cf7377183429a7b6e7b89b"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_report_kit_builds_current_source_bound_document[practice-2026-03-31-85000-15000-es]",
+        "result_review": "Inspected all three pages of the actual native report. Operating profit is EUR 85000, the signed balance control is zero and net cash movement is EUR 15000. Detail figures are visible and commentary stays within the three source statements. The unchanged source-to-output check binds three sums and thirteen included detail cells across Word, Markdown and Excel. Unassigned template sections stay in the appendix, not empty body sections. No source workbook, output figure or professional state was altered for presentation.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.docx",
+            "sha256": "4928be6a532868d91a9ae2031d6fb4d48a893349d8993d533a150b7673dd4c6b"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.165559+00:00",
+    "previous_course_sha256": "aa1f2425304c1ac33deaca02b52158695995dcfd4c9cfef0f60fdbe344d5e0ba",
+    "source_snapshot": "/private/tmp/report-teaching-release-07/test_financial_report_kit_buil5/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  }
+}

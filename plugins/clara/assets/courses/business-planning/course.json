@@ -162,7 +162,7 @@
     {
       "path": "modules/business-planning/vendor/modules/reporting_table.py",
       "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
-      "sha256": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7"
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
     },
     {
       "path": "modules/business-planning/vendor/modules/vera_assurance/__init__.py",
@@ -172,7 +172,7 @@
     {
       "path": "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
     },
     {
       "path": "modules/business-planning/vendor/modules/vera_assurance/decisions.py",
@@ -242,7 +242,7 @@
     {
       "path": "vendor/modules/courseware/assets/languages.json",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
     },
     {
       "path": "vendor/modules/courseware/execution.py",
@@ -252,7 +252,12 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
     },
     {
       "path": "vendor/modules/desktop_teaching/__init__.py",
@@ -267,12 +272,12 @@
     {
       "path": "vendor/modules/desktop_teaching/onboarding.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
-      "sha256": "3a230127225683b86ead89c6fd93101092b756f062b396d9be45e757dc530b14"
+      "sha256": "215244f8e595127743e7fd1c97febd489056ebcc9d7907dec7098a6b498fca8b"
     },
     {
       "path": "vendor/modules/desktop_teaching/teaching.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
-      "sha256": "9e672584218ce40d8a5e397d61f3198eacea4bdffdcb37fd813333799875a4d4"
+      "sha256": "8cfb8565b9a854c119e8a48e7bf068f2450786d21255da9b202a606226207a6e"
     }
   ],
   "files": [

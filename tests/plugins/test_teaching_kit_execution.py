@@ -111,7 +111,7 @@ def _bound_case(
                 "currency": "EUR",
                 "as_of": "2026-03-31",
                 "horizon_end": "2026-05-31",
-                "coverage": "One bank account and the supplied outstanding and planned flows only; no unbilled future sales or tax calculation.",
+                "coverage": "Un conto bancario e le sole partite residue e uscite previste fornite; nessuna vendita futura non fatturata e nessun calcolo di imposte.",
                 "tables": tables,
                 "invoice_files": [],
                 "previous": None,
@@ -133,7 +133,7 @@ def _bound_case(
     return ledger.start_run(case, engagement, run["run"]["run_id"])
 
 
-def _complete_teaching_case(run, client_root):
+def _complete_teaching_case(run, client_root, *, artifact_ids=None):
     """Seal actual local test artifacts so a later run can import the result."""
     from tests.model_data_helpers import write_no_model_report
 
@@ -145,9 +145,12 @@ def _complete_teaching_case(run, client_root):
     spec.loader.exec_module(ledger)
     output = Path(run["output_dir"])
     context = run["context"]
+    artifact_ids = artifact_ids or {}
     declarations = [
         {
-            "artifact_id": f"internal.teaching.{index}",
+            "artifact_id": artifact_ids.get(
+                path.relative_to(output).as_posix(), f"internal.teaching.{index}"
+            ),
             "path": path.relative_to(output).as_posix(),
             "purpose": "Preserve actual fictional teaching verification output",
             "audience": "review",
@@ -171,9 +174,26 @@ def _complete_teaching_case(run, client_root):
     return ledger
 
 
+def _save_review_delivery(output, memo, record, prose, workflow, follow_up):
+    """Replay the reviewed fixture's ordinary source challenge and delivery step."""
+    note = prose["review_note"]
+    if workflow == "aml" or follow_up:
+        note += (
+            "\n\n"
+            + prose[workflow + ("_demo_correction" if not follow_up else "_correction")]
+        )
+    (output / "codex_run_review.md").write_text(note + "\n", encoding="utf-8")
+    (output / "artifact_card.md").write_text(
+        f"[Memo]({memo})\n\n[{prose['record']}]({record})\n\n"
+        f"[{prose['review_link']}]({output / 'codex_run_review.md'})\n",
+        encoding="utf-8",
+    )
+
+
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+@pytest.mark.parametrize("lesson_phase", ["demo", "practice"])
 def test_assetti_kit_runs_assessment_and_same_case_follow_up(
-    tmp_path, monkeypatch, language
+    tmp_path, monkeypatch, record_property, language, lesson_phase
 ):
     run = _bound_case(
         tmp_path,
@@ -183,6 +203,7 @@ def test_assetti_kit_runs_assessment_and_same_case_follow_up(
         "demo",
         language=language,
     )
+    prose = _read(ROOT / "tests/fixtures/teaching_reviews/narratives.json")[language]
     client_root = tmp_path / "case"
     words = {
         "it": [
@@ -285,20 +306,25 @@ def test_assetti_kit_runs_assessment_and_same_case_follow_up(
         }
         policy_citation = {
             "source_id": by_name[f"procedure-{language}.md"],
-            "locator": "Paragraph 1",
+            "locator": prose["paragraph"],
         }
         operation_citation = {
             "source_id": by_name[
                 f"{'update' if previous else 'operation'}-{language}.md"
             ],
-            "locator": "Paragraph 1",
+            "locator": prose["paragraph"],
         }
-        finding_citations = [policy_citation, operation_citation]
+        company_citation = {
+            "source_id": by_name[f"company-{language}.md"],
+            "locator": prose["paragraph"],
+        }
+        finding_citations = [policy_citation, operation_citation, company_citation]
         operation = words[5 if previous else 4]
         assessment = words[7 if previous else 6]
         review = {
             "schema_version": 1,
             "jurisdiction": "IT",
+            "language": language,
             "as_of": "2026-04-30" if previous else "2026-03-31",
             "scope": words[0],
             "company_context": words[1],
@@ -308,24 +334,24 @@ def test_assetti_kit_runs_assessment_and_same_case_follow_up(
                 {
                     "title": "CNDCEC — Assetti organizzativi, amministrativi e contabili: check-list operative",
                     "url": "https://commercialisti.it/documenti-studio/assetti-organizzativi-amministrativi-e-contabili-check-list-operative/",
-                    "locator": "Publication dated 25 July 2023",
+                    "locator": prose["assetti_locator"],
                     "checked_at": "2026-09-14",
-                    "applicability": "Official professional-source entry checked; mechanical fictional fixture, no article-level legal opinion.",
+                    "applicability": prose["source_basis"],
                 }
             ],
             "observations": [
                 {
                     "id": "O1",
-                    "area": "Monthly procedure",
+                    "area": prose["monthly"],
                     "description": words[3],
                     "proportionality": words[2],
                     "assessment": words[3],
                     "evidence_state": "documented",
-                    "citations": [policy_citation],
+                    "citations": [policy_citation, company_citation],
                 },
                 {
                     "id": "O2",
-                    "area": "Observed cycle",
+                    "area": prose["cycle"],
                     "description": operation,
                     "proportionality": words[2],
                     "assessment": assessment,
@@ -339,7 +365,9 @@ def test_assetti_kit_runs_assessment_and_same_case_follow_up(
                     "observation_ids": ["O1", "O2"],
                     "observation": words[3],
                     "interpretation": assessment,
-                    "alternatives": words[6],
+                    "alternatives": prose[
+                        "practice_alternative" if previous else "demo_alternative"
+                    ],
                     "follow_up": words[12],
                     "citations": finding_citations,
                 }
@@ -351,7 +379,7 @@ def test_assetti_kit_runs_assessment_and_same_case_follow_up(
                     "proposal": words[8],
                     "owner": words[9],
                     "timing": words[10],
-                    "priority_reason": assessment,
+                    "priority_reason": prose["risk"],
                     "completion_evidence_needed": words[11],
                     "status": "proposed",
                 }
@@ -364,14 +392,14 @@ def test_assetti_kit_runs_assessment_and_same_case_follow_up(
                 "coverage": [
                     {
                         "id": "C1",
-                        "area": "Responsibilities and monthly information",
+                        "area": prose["coverage"],
                         "status": "assessed",
                         "reason": words[0],
                         "observation_ids": ["O1", "O2"],
                     },
                     {
                         "id": "C2",
-                        "area": "Other processes and prospective cash",
+                        "area": prose["excluded"],
                         "status": "unresolved",
                         "reason": words[13],
                         "observation_ids": [],
@@ -381,10 +409,10 @@ def test_assetti_kit_runs_assessment_and_same_case_follow_up(
                     {
                         "id": "P1",
                         "process": words[0],
-                        "risk": assessment,
-                        "responsibility": words[1],
+                        "risk": prose["risk"],
+                        "responsibility": prose["responsibility"],
                         "control": words[3],
-                        "information_flow": operation,
+                        "information_flow": prose["flow"],
                         "operation": operation,
                         "gap": words[12],
                         "observation_ids": ["O1", "O2"],
@@ -394,29 +422,33 @@ def test_assetti_kit_runs_assessment_and_same_case_follow_up(
                     {
                         "id": "Q1",
                         "question": words[12],
-                        "why_it_matters": assessment,
+                        "why_it_matters": prose["risk"],
                         "evidence_needed": words[11],
-                        "status": words[10],
+                        "status": prose[
+                            "practice_answer" if previous else "unanswered"
+                        ],
                         "observation_ids": ["O1", "O2"],
                     }
                 ],
                 "chronology": [
                     {
                         "id": "T1",
-                        "event_date": "2026-04-28" if previous else "2026-03-24",
+                        "event_date": (
+                            "2026-04-28" if previous else "2026-03-24 / 2026-03-25"
+                        ),
                         "known_at": (
-                            "Report receipt dated 2026-04-28; individual delivery time not recorded"
-                            if previous
-                            else "2026-03-24"
+                            prose["received"] if previous else "2026-03-24 / 2026-03-25"
                         ),
                         "recipient": (
-                            "Company; individual recipient not recorded"
-                            if previous
-                            else "Elena Bianchi"
+                            prose["recipient"] if previous else "Elena Bianchi"
                         ),
                         "event": operation,
-                        "response": assessment,
-                        "uncertainty": words[13],
+                        "response": prose[
+                            "practice_response" if previous else "demo_response"
+                        ],
+                        "uncertainty": (
+                            prose["temporal_limit"] if previous else words[4]
+                        ),
                         "observation_ids": ["O2"],
                     }
                 ],
@@ -452,12 +484,22 @@ def test_assetti_kit_runs_assessment_and_same_case_follow_up(
         record = _read(path)
         assert record["status"] == "draft_for_review"
         assert next(output.glob("adeguati-assetti-*.md")).stat().st_size > 2000
+        memo_path = next(output.glob("adeguati-assetti-*.md"))
+        _save_review_delivery(
+            output, memo_path, path, prose, "assetti", previous is not None
+        )
+        memo_text = memo_path.read_text()
+        assert "../inputs/" in memo_text
+        assert "**observation:**" not in memo_text
+        assert "draft_for_review" not in memo_text
+        assert "Test-only" not in memo_text
+        assert record["review"]["language"] == language
         ledger = _complete_teaching_case(run, client_root)
         if previous:
             assert record["previous_record_sha256"] == previous[2]
             assert previous[0].read_bytes() == previous[1]
             assert record["review"]["prior_action_review"]["A1"]["status"] == "open"
-        else:
+        elif lesson_phase == "practice":
             previous = (path, path.read_bytes(), record["record_sha256"])
             client, engagement = (
                 run["context"]["client_id"],
@@ -477,16 +519,28 @@ def test_assetti_kit_runs_assessment_and_same_case_follow_up(
                 input_ids=[item["receipt"]["input_id"] for item in imports],
             )
             run = ledger.start_run(client_root, engagement, prepared["run"]["run_id"])
+        if phase == lesson_phase:
+            break
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="adeguati-assetti",
+        language=language,
+        phase=lesson_phase,
+    )
 
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+@pytest.mark.parametrize("lesson_phase", ["demo", "practice"])
 def test_aml_kit_saves_initial_and_linked_current_review(
-    tmp_path, monkeypatch, language
+    tmp_path, monkeypatch, record_property, language, lesson_phase
 ):
     """Create both real records; fixture prose never becomes learner approval."""
     run = _bound_case(
         tmp_path, monkeypatch, "aml-review", "aml-review", "demo", language=language
     )
+    prose = _read(ROOT / "tests/fixtures/teaching_reviews/narratives.json")[language]
     client_root = tmp_path / "case"
     texts = {
         "it": [
@@ -556,9 +610,11 @@ def test_aml_kit_saves_initial_and_linked_current_review(
             f"ownership{'-update' if phase == 'practice' else ''}-{language}.md"
         ]
         loan = by_name[f"loan-{language}.md"]
+        client_source = by_name[f"client-{language}.md"]
         review = {
             "schema_version": 1,
             "jurisdiction": "IT",
+            "language": language,
             "as_of": "2026-08-31" if phase == "demo" else "2026-09-10",
             "scope": texts[0],
             "sources": sources,
@@ -566,28 +622,41 @@ def test_aml_kit_saves_initial_and_linked_current_review(
                 {
                     "title": "CNDCEC — Antiriciclaggio",
                     "url": "https://commercialisti.it/norme-per-la-professione/norme-tecniche/antiriciclaggio/",
-                    "locator": "Regole tecniche and Strumenti operativi",
+                    "locator": prose["aml_locator"],
                     "checked_at": "2026-09-14",
-                    "applicability": "Official professional-source inventory checked for this Italian practice fixture; no article-level legal conclusion.",
+                    "applicability": prose["source_basis"],
                 }
             ],
             "findings": [
                 {
                     "id": "F1",
-                    "observation": texts[1],
+                    "observation": prose[f"aml_{phase}_ownership"],
                     "interpretation": texts[2],
                     "alternatives": texts[3],
-                    "follow_up": texts[4],
-                    "citations": [{"source_id": ownership, "locator": "Paragraph 1"}],
+                    "follow_up": prose[f"aml_{phase}_followup"],
+                    "citations": [
+                        {"source_id": ownership, "locator": prose["paragraph"]}
+                    ],
                 }
             ],
-            "assessment": texts[5],
+            "assessment": texts[5] + (" " + texts[6] if previous else ""),
             "assessment_citations": [
-                {"source_id": loan, "locator": "Paragraph 1"},
-                {"source_id": ownership, "locator": "Paragraph 1"},
+                {"source_id": client_source, "locator": prose["paragraph"]},
+                {"source_id": loan, "locator": prose["paragraph"]},
+                {"source_id": ownership, "locator": prose["paragraph"]},
             ],
-            "limitations": "Test-only authored interpretation; no live model, screening, legal-currentness certification or professional decision. Current sources must be checked during the actual lesson.",
+            "limitations": prose["aml_limit"],
         }
+        review["findings"].append(
+            {
+                "id": "F2",
+                "observation": prose["loan_observation"],
+                "interpretation": prose["loan_interpretation"],
+                "alternatives": prose["loan_alternative"],
+                "follow_up": prose["loan_followup"],
+                "citations": [{"source_id": loan, "locator": prose["paragraph"]}],
+            }
+        )
         if previous:
             review["previous"] = {
                 "source_id": by_name[previous[0].name],
@@ -608,12 +677,22 @@ def test_aml_kit_saves_initial_and_linked_current_review(
         assert record["status"] == "draft_for_review"
         assert record["calculation"] is None
         assert next(output.glob("aml-review-*.md")).stat().st_size > 1000
+        memo_path = next(output.glob("aml-review-*.md"))
+        _save_review_delivery(
+            output, memo_path, record_path, prose, "aml", previous is not None
+        )
+        memo_text = memo_path.read_text()
+        assert "../inputs/" in memo_text
+        assert "**observation:**" not in memo_text
+        assert "draft_for_review" not in memo_text
+        assert "Test-only" not in memo_text
+        assert record["review"]["language"] == language
         ledger = _complete_teaching_case(run, client_root)
         if previous:
             assert record["previous_record_sha256"] == previous[2]
             assert previous[0].read_bytes() == previous[1]
             assert "Marta Riva" in next(output.glob("aml-review-*.md")).read_text()
-        else:
+        elif lesson_phase == "practice":
             previous = (record_path, record_path.read_bytes(), record["record_sha256"])
             client = run["context"]["client_id"]
             engagement = run["context"]["engagement_id"]
@@ -631,6 +710,50 @@ def test_aml_kit_saves_initial_and_linked_current_review(
                 input_ids=[item["receipt"]["input_id"] for item in imports],
             )
             run = ledger.start_run(client_root, engagement, prepared["run"]["run_id"])
+        if phase == lesson_phase:
+            break
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="aml-review",
+        language=language,
+        phase=lesson_phase,
+    )
+
+
+REPORT_NARRATIVES = {
+    "it": [
+        "La relazione riassume i tre prospetti forniti per Officina Arco. Il risultato operativo e il flusso netto di cassa sono positivi; la situazione patrimoniale quadra. Il perimetro è gestionale: cause commerciali, imposte e altre sezioni non sono documentate.",
+        "I ricavi superano il costo del venduto e le spese operative. Il risultato riportato deriva dalle righe del prospetto, senza sommare nuovamente il subtotale già presente. Le cause commerciali richiedono informazioni ulteriori.",
+        "Le attività sono pareggiate da passività e patrimonio netto. Il controllo di quadratura non è una posta aggiuntiva e non prova da solo la completezza dei saldi.",
+        "Il flusso operativo supera le uscite nette per investimenti e finanziamenti. La variazione netta è coerente con la cassa iniziale indicata nel contesto e la cassa finale del prospetto.",
+    ],
+    "en": [
+        "This report summarises the three statements supplied for Officina Arco. Operating profit and net cash flow are positive, and the balance sheet balances. This is a management report: commercial causes, taxes and other sections are not documented.",
+        "Revenue exceeds cost of sales and operating expenses. The reported result comes from the statement rows, without adding the existing subtotal again. Explaining the commercial causes requires further information.",
+        "Assets balance against liabilities and equity. The balance check is not an additional item and does not by itself establish that all balances are complete.",
+        "Operating cash flow exceeds the net outflows for investment and financing. The net movement reconciles the opening cash supplied in the context to the closing cash in the statement.",
+    ],
+    "fr": [
+        "Ce rapport résume les trois états fournis pour Officina Arco. Le résultat opérationnel et le flux net de trésorerie sont positifs, et le bilan est équilibré. Le périmètre est celui d’un rapport de gestion : les causes commerciales, les impôts et les autres rubriques ne sont pas documentés.",
+        "Le chiffre d’affaires dépasse le coût des ventes et les charges opérationnelles. Le résultat découle des lignes de l’état, sans additionner à nouveau le sous-total existant. Les causes commerciales nécessitent des informations complémentaires.",
+        "Les actifs sont équilibrés par les passifs et les capitaux propres. Le contrôle d’équilibre n’est pas un poste supplémentaire et ne prouve pas à lui seul l’exhaustivité des soldes.",
+        "Le flux opérationnel dépasse les sorties nettes liées aux investissements et au financement. La variation nette rapproche la trésorerie initiale indiquée dans le contexte de la trésorerie finale de l’état.",
+    ],
+    "de": [
+        "Dieser Bericht fasst die drei bereitgestellten Aufstellungen für Officina Arco zusammen. Das operative Ergebnis und der Nettozahlungsstrom sind positiv; die Bilanz ist ausgeglichen. Der Bericht dient der internen Steuerung. Geschäftliche Ursachen, Steuern und weitere Bereiche sind nicht dokumentiert.",
+        "Die Umsatzerlöse übersteigen die Umsatzkosten und betrieblichen Aufwendungen. Das ausgewiesene Ergebnis ergibt sich aus den Positionen der Aufstellung, ohne die vorhandene Zwischensumme nochmals zu addieren. Zur Erklärung der geschäftlichen Ursachen sind weitere Informationen erforderlich.",
+        "Die Vermögenswerte entsprechen den Verbindlichkeiten und dem Eigenkapital. Die Kontrollsumme ist keine zusätzliche Position und belegt allein nicht die Vollständigkeit der Salden.",
+        "Der operative Zahlungsstrom übersteigt die Nettoabflüsse für Investitionen und Finanzierung. Die Nettoveränderung stimmt den im Kontext angegebenen Anfangsbestand mit dem Endbestand der liquiden Mittel ab.",
+    ],
+    "es": [
+        "Este informe resume los tres estados facilitados para Officina Arco. El resultado operativo y el flujo neto de caja son positivos, y el balance cuadra. El alcance es de gestión: no se documentan las causas comerciales, los impuestos ni las demás secciones.",
+        "Los ingresos superan el coste de ventas y los gastos operativos. El resultado procede de las líneas del estado, sin volver a sumar el subtotal existente. Explicar las causas comerciales requiere información adicional.",
+        "Los activos se equilibran con los pasivos y el patrimonio neto. El control de cuadre no es una partida adicional ni demuestra por sí solo que los saldos estén completos.",
+        "El flujo operativo supera las salidas netas por inversión y financiación. La variación neta concilia la caja inicial indicada en el contexto con la caja final del estado.",
+    ],
+}
 
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
@@ -642,7 +765,7 @@ def test_aml_kit_saves_initial_and_linked_current_review(
     ],
 )
 def test_financial_report_kit_builds_current_source_bound_document(
-    tmp_path, monkeypatch, language, phase, end, profit, cash_movement
+    tmp_path, monkeypatch, language, phase, end, profit, cash_movement, record_property
 ):
     """Review this known fixture in the test, then build the normal report."""
     monkeypatch.syspath_prepend(str(ROOT / "tests/plugins"))
@@ -675,6 +798,15 @@ def test_financial_report_kit_builds_current_source_bound_document(
     recipe = inspection.suggested_recipe
     recipe["entity"] = "Officina Arco"
     recipe["period"] = f"2026-01-01 to {end}"
+    # Model-authored readings of these exact fictional statements, replayed
+    # only as test inputs. The distributed kit contains no finished narrative.
+    recipe["executive_summary"] = REPORT_NARRATIVES[language][0]
+    for index, section in enumerate(
+        ("income_statement", "balance_sheet", "cash_flow"), start=1
+    ):
+        recipe["sections"][section]["codex_comment"] = REPORT_NARRATIVES[language][
+            index
+        ]
     # These are explicit interpretations of the authored fixture, not a
     # generic classifier, a saved learner decision or a shipped approval.
     assignments = {
@@ -718,12 +850,19 @@ def test_financial_report_kit_builds_current_source_bound_document(
         client_engagement=run["context"],
     )
     evidence = _read(output / "numeric_evidence_ledger.json")
-    assert {entry["value"] for entry in evidence["entries"]} == {
+    totals = [
+        entry for entry in evidence["entries"] if entry["evidence_id"].endswith(".sum")
+    ]
+    details = [
+        entry for entry in evidence["entries"] if ".row_" in entry["evidence_id"]
+    ]
+    assert {entry["value"] for entry in totals} == {
         profit,
         "0",
         cash_movement,
     }
-    assert len(evidence["entries"]) == 3
+    assert len(totals) == 3
+    assert len(details) == 13
     assert all(
         entry["source"]["value"] == entry["value"] for entry in evidence["entries"]
     )
@@ -741,19 +880,41 @@ def test_financial_report_kit_builds_current_source_bound_document(
     assert (output / "review_payload.json").is_file()
     assert (output / "final_artifacts.json").is_file()
     assert source.read_bytes() == original
+    markdown = (output / "report_draft.md").read_text(encoding="utf-8")
+    assert REPORT_NARRATIVES[language][0] in markdown
+    assert "[numeric source value withheld]" not in markdown
+    assert "[excluded from calculation]" not in markdown
+    assert {
+        "it": "Escluso dal totale",
+        "en": "Excluded from total",
+        "fr": "Exclu du total",
+        "de": "Von der Summe ausgeschlossen",
+        "es": "Excluido del total",
+    }[language] in markdown
+    _complete_teaching_case(run, tmp_path / "case")
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="financial-report-builder",
+        language=language,
+        phase=phase,
+    )
 
 
 @pytest.mark.parametrize("product", ["vera", "clara"])
 @pytest.mark.parametrize("language", ["it", "en"])
+@pytest.mark.parametrize("phase", ["demo", "practice"])
 def test_business_plan_kit_runs_and_revises_the_owning_product_case(
-    tmp_path, monkeypatch, product, language
+    tmp_path, monkeypatch, record_property, product, language, phase
 ):
-    from tests.plugins._business_teaching import planning_case
+    from tests.plugins._business_teaching import planning_case, write_delivery
 
     monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
     from courseware.library import CourseLibrary
 
     previous = None
+    earlier_outputs = {}
     if product == "vera":
         run = _bound_case(
             tmp_path,
@@ -764,24 +925,28 @@ def test_business_plan_kit_runs_and_revises_the_owning_product_case(
             language=language,
         )
     else:
-        from tests.plugins.test_business_planning import _clara_workspace
+        monkeypatch.syspath_prepend(str(ROOT / "plugins/clara/scripts"))
+        import advisor_case_core as clara
 
         kit = CourseLibrary(ROOT / "plugins/clara", {"business-planning"}).render(
             "business-planning", language, tmp_path / "kit"
         )
-        workspace, request, base_output = _clara_workspace(
-            tmp_path,
-            {
-                "entity_name": "Ciclo Arco",
-                "planning_objective": "Assess the fictional pilot",
-                "audience": "internal",
-            },
+        workspace = tmp_path / "clara-case"
+        clara.initialize_case(
+            workspace,
+            client="Ciclo Arco",
+            project="Business planning",
+            objective="Assess the fictional pilot",
+            audience="internal",
+            output_language=language,
         )
+        request = workspace / "business_plan_case.json"
+        base_output = workspace / "business-plan"
         (workspace / "inputs").mkdir()
         (workspace / ".clara-onboarding-local-only").write_text(
             "Fictional local lesson\n"
         )
-    for phase in ("demo", "practice"):
+    for current_phase in (("demo",) if phase == "demo" else ("demo", "practice")):
         if product == "vera":
             output = Path(run["output_dir"])
             source_root = Path(run["context"]["run_root"]) / "inputs"
@@ -793,15 +958,20 @@ def test_business_plan_kit_runs_and_revises_the_owning_product_case(
         else:
             source_root = workspace
             paths = []
-            for source in kit["source_files" if phase == "demo" else "practice_files"]:
+            for source in kit[
+                "source_files" if current_phase == "demo" else "practice_files"
+            ]:
                 path = workspace / "inputs" / Path(source).name
+                if path.exists():
+                    assert path.read_bytes() == Path(source).read_bytes()
                 path.write_bytes(Path(source).read_bytes())
                 paths.append(path)
             if previous:
                 parent = workspace / "inputs/prior-plan.json"
                 parent.write_bytes(previous[1])
                 paths.append(parent)
-            report = base_output / phase
+            report = base_output / current_phase
+            output = report
             args = ["--case-workspace", workspace]
             entry = "run_strategic_plan.py"
         case = planning_case(
@@ -809,16 +979,16 @@ def test_business_plan_kit_runs_and_revises_the_owning_product_case(
         )
         _write(request, case)
         if product == "clara":
-            _write(
-                workspace / "material_registry.json",
-                {
-                    "schema_version": 1,
-                    "materials": [
-                        {"path": s["path"], "sha256": s["sha256"], "role": s["role"]}
-                        for s in case["sources"]
-                    ],
-                },
-            )
+            for source in case["sources"]:
+                clara.register_material(
+                    workspace,
+                    source_root / source["path"],
+                    summary="Fictional local teaching input; not professionally reviewed.",
+                    source_metadata={
+                        "sha256": source["sha256"],
+                        "role": source["role"],
+                    },
+                )
         result = subprocess.run(
             [
                 sys.executable,
@@ -862,8 +1032,38 @@ def test_business_plan_kit_runs_and_revises_the_owning_product_case(
             else "Pilot economics assumptions"
         ) in html
         assert "-260" in html and "280" in html
+        assert _read(report / "validation.json")["canonical_replay"] == "passed"
+        receipt = _read(report / "execution_receipt.json")
+        assert receipt["status"] == "partial" and receipt["pdf_error"] is None
+        for artifact in receipt["outputs"]:
+            assert (
+                hashlib.sha256((report / artifact["path"]).read_bytes()).hexdigest()
+                == artifact["sha256"]
+            )
+        write_delivery(
+            output, report, plan, language, previous[0] if previous else None
+        )
         if product == "vera":
-            ledger = _complete_teaching_case(run, tmp_path / "case")
+            ledger = _complete_teaching_case(
+                run,
+                tmp_path / "case",
+                artifact_ids={
+                    "plan/business_plan_review.html": "business-planning.report"
+                },
+            )
+        else:
+            for path in (report / "business_plan_review.html", plan_path):
+                clara.register_material(
+                    workspace,
+                    path,
+                    summary="Actual compiled fictional plan; professional review pending.",
+                    source_metadata={
+                        "sha256": hashlib.sha256(path.read_bytes()).hexdigest()
+                    },
+                )
+            assert clara.validate_case_workspace(workspace) == []
+        for path, content in earlier_outputs.items():
+            assert path.read_bytes() == content
         if previous:
             assert previous[0].read_bytes() == previous[1]
             assert (
@@ -872,9 +1072,24 @@ def test_business_plan_kit_runs_and_revises_the_owning_product_case(
             )
             assert plan["planning_cycle"]["withheld_narrative_ids"] == []
             assert ("sabato" if language == "it" else "Saturday") in html
+            assert {
+                key: (row["value"], row["unit"])
+                for key, row in plan["calculations"].items()
+            } == {
+                key: (row["value"], row["unit"])
+                for key, row in previous[2]["calculations"].items()
+            }
+            assert plan["case"]["case_id"] == previous[2]["case"]["case_id"]
+            assert plan["case"]["cycle"]["id"] != previous[2]["case"]["cycle"]["id"]
+            assert set(plan["case"]["cycle"]["reassessed_ids"]) == {
+                n["id"] for n in plan["case"]["narrative"]
+            }
         else:
             previous = (plan_path, plan_path.read_bytes(), plan)
-            if product == "vera":
+            earlier_outputs = {
+                p: p.read_bytes() for p in output.rglob("*") if p.is_file()
+            }
+            if product == "vera" and phase == "practice":
                 client = run["context"]["client_id"]
                 engagement = run["context"]["engagement_id"]
                 parent = tmp_path / "prior-plan.json"
@@ -900,13 +1115,23 @@ def test_business_plan_kit_runs_and_revises_the_owning_product_case(
                 run = ledger.start_run(
                     tmp_path / "case", engagement, prepared["run"]["run_id"]
                 )
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product=product,
+        workflow="business-planning",
+        language=language,
+        phase=phase,
+    )
 
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 @pytest.mark.parametrize("phase,expected", [("demo", "38000"), ("practice", "31000")])
 def test_financial_analysis_kit_runs_current_net_debt_pack(
-    tmp_path, monkeypatch, language, phase, expected
+    tmp_path, monkeypatch, record_property, language, phase, expected
 ):
+    from tests.plugins._financial_teaching import write_financial_review
+
     monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
     from vera_financial_analysis import (
         build_data_package_manifest,
@@ -1085,16 +1310,36 @@ def test_financial_analysis_kit_runs_current_net_debt_pack(
     assert (prepared / "financial_analysis_contract_audit.json").is_file()
     assert (prepared / "model_use_manifest.json").is_file()
     assert source.read_bytes() == original
+    note = write_financial_review(output, language)
+    assert f"**{expected}**" in note.read_text(encoding="utf-8")
+    _complete_teaching_case(run, tmp_path / "case")
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="financial-analysis",
+        language=language,
+        phase=phase,
+    )
 
 
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 @pytest.mark.parametrize(
     "phase,baseline,actual", [("demo", 47000, 53000), ("practice", 77000, 85000)]
 )
 def test_variance_kit_runs_current_full_amount_comparison(
-    tmp_path, monkeypatch, phase, baseline, actual
+    tmp_path, monkeypatch, record_property, language, phase, baseline, actual
 ):
+    from tests.plugins._variance_teaching import review_context, write_variance_review
+
+    copy = review_context(language)
     run = _bound_case(
-        tmp_path, monkeypatch, "variance-analysis", "variance-analysis", phase
+        tmp_path,
+        monkeypatch,
+        "variance-analysis",
+        "variance-analysis",
+        phase,
+        language=language,
     )
     source = next(
         item["path"]
@@ -1109,7 +1354,7 @@ def test_variance_kit_runs_current_full_amount_comparison(
         "--output-dir",
         output / "inspection",
         "--language",
-        "it",
+        language,
         "--client-engagement",
         run["context_path"],
     )
@@ -1124,7 +1369,7 @@ def test_variance_kit_runs_current_full_amount_comparison(
     recipe["accounting_review"] = {
         "perimeter": {
             "status": "established",
-            "description": "Fictional Officina Arco only; identical supplied 2026 months.",
+            "description": copy["perimeter"],
         },
         "source_tie_out": {
             "baseline_source_total": baseline,
@@ -1133,9 +1378,9 @@ def test_variance_kit_runs_current_full_amount_comparison(
         },
         "favorable_adverse_convention": {
             "status": "established",
-            "description": "Positive revenue and negative costs; higher operating profit favorable.",
+            "description": copy["signs"],
         },
-        "materiality": {"status": "not_applied"},
+        "materiality": {"status": "not_applied", "basis": copy["materiality"]},
     }
     reviewed_recipe = output / "reviewed-recipe.json"
     _write(reviewed_recipe, recipe)
@@ -1149,7 +1394,7 @@ def test_variance_kit_runs_current_full_amount_comparison(
         "--currency",
         "EUR",
         "--language",
-        "it",
+        language,
         "--client-engagement",
         run["context_path"],
     )
@@ -1167,12 +1412,49 @@ def test_variance_kit_runs_current_full_amount_comparison(
         assert artifact.is_file() and artifact.stat().st_size > 0
     audit = _read(output / "variance/variance_audit.json")
     assert "approved_for_client_use" not in json.dumps(audit)
+    with (output / "variance/root_cause_total_bridge.csv").open() as stream:
+        bridge = list(csv.DictReader(stream))
+    assert sum(Decimal(row["variance_amount"]) for row in bridge) == actual - baseline
+    assert any(Decimal(row["amount_baseline"]) < 0 for row in bridge)
+    summary = _read(output / "variance/root_cause_sweep_summary.json")
+    for alternative in summary["alternatives"]:
+        selected = sum(
+            Decimal(value.strip())
+            for value in alternative["selected_amounts"].split("|")
+        )
+        assert (
+            selected + Decimal(str(alternative["other_residual"])) == actual - baseline
+        )
+
+    standard = _read(output / "variance/standard_variance_context.json")
+    assert standard["pvm_available"] is False
+    assert standard["dominant_component"] == {
+        "variance_type": "Total variance",
+        "variance_amount": actual - baseline,
+    }
+    assert all(row["variance_type"] == "Total variance" for row in bridge)
+    assert not (output / "variance/pvm_decomposition_ladder.png").exists()
+    with (output / "variance/total_by_dimension_bridge.csv").open() as stream:
+        category_rows = list(csv.DictReader(stream))
+    costs = [row for row in category_rows if Decimal(row["amount_baseline"]) < 0]
+    assert len(costs) == 2
+    assert all(row["percent_delta"] == "" for row in costs)
+    write_variance_review(output, language, phase)
+    _complete_teaching_case(run, tmp_path / "case")
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="variance-analysis",
+        language=language,
+        phase=phase,
+    )
 
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 @pytest.mark.parametrize("phase,population", [("demo", 13), ("practice", 15)])
 def test_journal_sampling_kit_normalizes_and_samples_current_bound_source(
-    tmp_path, monkeypatch, language, phase, population
+    tmp_path, monkeypatch, record_property, language, phase, population
 ):
     run = _bound_case(
         tmp_path,
@@ -1183,6 +1465,23 @@ def test_journal_sampling_kit_normalizes_and_samples_current_bound_source(
         language=language,
     )
     _sample_teaching_journal(run, monkeypatch, language, population=population)
+    _complete_teaching_case(
+        run,
+        tmp_path / "case",
+        artifact_ids={
+            "normalization/normalized_journal.csv": "prepared.normalized_journal",
+            "normalization/normalization_diagnostics.json": "internal.normalization_diagnostics",
+            "sample/journal_sample.csv": "prepared.journal_sample_csv",
+        },
+    )
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="journal-sampling",
+        language=language,
+        phase=phase,
+    )
 
 
 def _sample_teaching_journal(
@@ -1270,6 +1569,11 @@ def _sample_teaching_journal(
     assert len(sampled) == size
     assert all(row in normalized for row in sampled)
     assert source.read_bytes() == original
+    review = _read(output / "sample/model_review_context.json")["review"]
+    assert review["summary"]["seed"] == 42
+    assert review["summary"]["method"] == "random"
+    assert review["summary"]["population_size_before_filters"] == population
+    assert all(item["status"] == "needs_review" for item in review["items"])
     for filename in (
         "journal_sample.xlsx",
         "sampling_audit.json",
@@ -1324,15 +1628,8 @@ def test_purchase_invoice_kit_inputs_match_actual_bookings(
     assert all("invoice_number_exact" in item["match_evidence"] for item in items)
 
 
-@pytest.mark.parametrize(
-    "phase,total,row_count", [("demo", "119000", 9), ("practice", "117000", 12)]
-)
-def test_centrale_rischi_kit_runs_actual_inspection_analysis_and_delivery(
-    tmp_path, monkeypatch, phase, total, row_count
-):
-    run = _bound_case(
-        tmp_path, monkeypatch, "centrale-rischi-review", "centrale-rischi-review", phase
-    )
+def _run_centrale_rischi_teaching_case(run, phase, total, row_count):
+    """Replay the authored interpretation of the supplied fictional export."""
     source = next(
         item["path"]
         for item in run["context"]["input_bindings"]
@@ -1359,10 +1656,10 @@ def test_centrale_rischi_kit_runs_actual_inspection_analysis_and_delivery(
         "schema_version": "vera.centrale_rischi_recipe.v2",
         "workflow_id": "centrale-rischi-review",
         "inventory_sha256": inventory["inventory_sha256"],
-        "entity": "Officina Arco Srl — fictional kit",
+        "entity": "Officina Arco Srl — caso fittizio",
         "currency": "EUR",
         "analysis_mode": "trend",
-        "analysis_objective": "Explain current bank exposure and monthly movement.",
+        "analysis_objective": "Preparare l’incontro con il cliente: affidamenti, utilizzi e andamento mensile.",
         "audience": "professional",
         "source_kind": "tabular_export",
         "source_document_sha256": "",
@@ -1378,7 +1675,6 @@ def test_centrale_rischi_kit_runs_actual_inspection_analysis_and_delivery(
             "used": "Utilizzato",
             "guarantee_type": "Garanzia",
             "guaranteed_amount": "Garantito",
-            "prejudicial_event": "Pregiudizievole",
         },
         "value_mappings": {
             "original_term": {"Fino a 1 anno": "short", "Oltre 5 anni": "long"},
@@ -1396,7 +1692,7 @@ def test_centrale_rischi_kit_runs_actual_inspection_analysis_and_delivery(
         "control_tolerance": "0.01",
         "mapping_review": {
             "status": "reviewed",
-            "reviewer": "Declared fictional fixture meanings",
+            "reviewer": "Significati dichiarati nel caso didattico",
             "reviewed_at": "2026-09-14T07:00:00+02:00",
         },
     }
@@ -1423,12 +1719,65 @@ def test_centrale_rischi_kit_runs_actual_inspection_analysis_and_delivery(
     commentary = _read(output / "analysis/commentary_template.json")
     commentary["observations"] = [
         {
-            "text": f"The fictional current total is EUR {total}.",
-            "evidence_refs": ["metric:cr.total_used"],
-        }
+            "text": (
+                "A marzo l’utilizzato è 119.000 EUR su 170.000 EUR di accordato operativo. Il margine calcolato è 51.000 EUR; il totale coincide con il riscontro del caso."
+                if phase == "demo"
+                else "Ad aprile l’utilizzato è 117.000 EUR su 170.000 EUR di accordato operativo. Il margine calcolato sale a 53.000 EUR; il totale coincide con il riscontro del caso."
+            ),
+            "evidence_refs": [
+                "metric:cr.total_used",
+                "metric:cr.total_operational_granted",
+                "metric:cr.available_resources",
+            ],
+        },
+        {
+            "text": (
+                "La categoria A scadenza presso Banca Levante rappresenta 82.000 EUR, il 68,91% dell’utilizzato; i due rapporti presso Banca Aurora sommano 37.000 EUR. Questa distribuzione indica dove concentrare il confronto sugli affidamenti."
+                if phase == "demo"
+                else "La categoria A scadenza presso Banca Levante rappresenta 80.000 EUR, il 68,38% dell’utilizzato; i due rapporti presso Banca Aurora sommano ancora 37.000 EUR. La concentrazione cambia poco rispetto a marzo."
+            ),
+            "evidence_refs": [
+                "metric:cr.top_intermediary_share_pct",
+                "metric:cr.category.902be1e530.used",
+                "metric:cr.original_term.short_share_pct",
+            ],
+        },
+        {
+            "text": (
+                "L’utilizzato resta a 128.000 EUR tra gennaio e febbraio e scende di 9.000 EUR a marzo. Rispetto a febbraio: A revoca diminuisce di 6.000 EUR, A scadenza di 2.000 EUR e Autoliquidante di 1.000 EUR. L’export descrive i saldi, non le cause dei movimenti."
+                if phase == "demo"
+                else "Rispetto a marzo l’utilizzato scende di 2.000 EUR: A revoca e A scadenza diminuiscono ciascuna di 2.000 EUR, mentre Autoliquidante cresce di 2.000 EUR. L’aumento su quest’ultima categoria compensa in parte le altre riduzioni; la causa resta da verificare."
+            ),
+            "evidence_refs": [
+                "metric:cr.used_mom_change",
+                "metric:cr.category.565c6a7b77.used_change",
+                "metric:cr.category.902be1e530.used_change",
+                "metric:cr.category.c01763df9e.used_change",
+            ],
+        },
+        {
+            "text": (
+                "L’utilizzo per categoria è 56% per A revoca, 91,11% per A scadenza e 30% per Autoliquidante. La lettura va mantenuta distinta per categoria. Le durate originarie distinguono 37.000 EUR a breve e 82.000 EUR a lungo; la durata residua indica invece entro oppure oltre un anno."
+                if phase == "demo"
+                else "L’utilizzo per categoria è 52% per A revoca, 88,89% per A scadenza e 36,67% per Autoliquidante. Le durate originarie distinguono 37.000 EUR a breve e 80.000 EUR a lungo; la durata residua resta una lettura separata."
+            ),
+            "evidence_refs": [
+                "metric:cr.category.565c6a7b77.utilization_pct",
+                "metric:cr.category.902be1e530.utilization_pct",
+                "metric:cr.category.c01763df9e.utilization_pct",
+                "metric:cr.original_term.short_share_pct",
+                "metric:cr.original_term.long_share_pct",
+            ],
+        },
+    ]
+    commentary["questions"] = [
+        "Quali incassi, rimborsi o nuove operazioni spiegano le variazioni dei saldi? Per rispondere servono movimenti o documenti bancari, non soltanto i saldi mensili.",
+        "Gli affidamenti per categoria e le scadenze rispondono al fabbisogno previsto? Portare all’incontro condizioni contrattuali e previsioni di cassa, se disponibili.",
     ]
     commentary["limitations"] = [
-        "Mechanical kit regression only; native teaching and professional review are unverified."
+        "L’export didattico copre soltanto i rapporti e i mesi forniti; non è un report ufficiale della Banca d’Italia né una riconciliazione con documenti esterni.",
+        "Non sono state fornite informazioni pregiudizievoli: i campi vuoti non attestano assenza di eventi. Il margine calcolato non dimostra disponibilità immediata di nuova liquidità.",
+        "Mancano bilancio, EBITDA e flussi di cassa: PFN/EBITDA, Debt/Equity e DSCR restano non disponibili. Il commento è una bozza da rivedere con il professionista.",
     ]
     commentary_path = output / "analysis/commentary.json"
     _write(commentary_path, commentary)
@@ -1448,6 +1797,85 @@ def test_centrale_rischi_kit_runs_actual_inspection_analysis_and_delivery(
     assert (
         _read(output / "review/commentary_receipt.json")["status"]
         == "draft_pending_professional_review"
+    )
+    assert analysis["coverage"]["pregiudizievoli"] == "unavailable"
+    assert analysis["latest_reference_month"] == (
+        "2026-03" if phase == "demo" else "2026-04"
+    )
+    (output / "artifact_card.md").write_text(
+        f"# Analisi Centrale Rischi — {analysis['latest_reference_month']}\n\n"
+        f"[Cruscotto con commento]({output / 'review/centrale_rischi_dashboard_reviewed.html'})\n\n"
+        f"[Prospetto Excel]({output / 'analysis/centrale_rischi_analysis.xlsx'})\n\n"
+        f"[Sintesi e questioni da approfondire]({output / 'review/centrale_rischi_report.md'})\n\n"
+        "Calcolo completato e totale di controllo riscontrato; bozza in attesa di revisione professionale. "
+        "Apri il cruscotto sul mese corrente e usa Esposizioni, Serie mensile e Controlli per risalire ai dati.\n",
+        encoding="utf-8",
+    )
+    (output / "codex_run_review.md").write_text(
+        "# Riesame del commento\n\n"
+        "Confrontati export, caso didattico, indicatori, categorie e serie mensile. "
+        "I saldi e le variazioni sono separati dalle cause da verificare. "
+        "La copertura pregiudizievole è non disponibile perché il caso non fornisce tali informazioni. "
+        "Le durate originaria e residua rimangono distinte; nessun rating o indice basato su dati assenti è proposto. "
+        "Il commento resta una proposta, senza approvazione professionale.\n",
+        encoding="utf-8",
+    )
+
+
+@pytest.mark.parametrize("phase", ["demo", "practice"])
+def test_centrale_rischi_kit_runs_actual_inspection_analysis_and_delivery(
+    tmp_path, monkeypatch, record_property, phase
+):
+    run = _bound_case(
+        tmp_path,
+        monkeypatch,
+        "centrale-rischi-review",
+        "centrale-rischi-review",
+        "demo",
+    )
+    first_outputs = {}
+    for current_phase, total, row_count in [
+        ("demo", "119000", 9),
+        ("practice", "117000", 12),
+    ]:
+        _run_centrale_rischi_teaching_case(run, current_phase, total, row_count)
+        ledger = _complete_teaching_case(run, tmp_path / "case")
+        if current_phase == phase:
+            break
+        output = Path(run["output_dir"])
+        first_outputs = {p: p.read_bytes() for p in output.rglob("*") if p.is_file()}
+        context = run["context"]
+        imports = [
+            ledger.import_document(
+                tmp_path / "case",
+                context["client_id"],
+                context["engagement_id"],
+                p,
+                "source",
+            )
+            for p in (tmp_path / "kit/files/practice").iterdir()
+            if p.is_file()
+        ]
+        prepared = ledger.prepare_run(
+            tmp_path / "case",
+            context["client_id"],
+            context["engagement_id"],
+            "centrale-rischi-review",
+            context["workflow_version"],
+            input_ids=[i["receipt"]["input_id"] for i in imports],
+        )
+        run = ledger.start_run(
+            tmp_path / "case", context["engagement_id"], prepared["run"]["run_id"]
+        )
+    for p, original in first_outputs.items():
+        assert p.read_bytes() == original
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="centrale-rischi-review",
+        language="it",
+        phase=phase,
     )
     assert _read(tmp_path / "kit/course-provenance.json")["execution_receipt"] is False
 
@@ -1504,7 +1932,18 @@ def test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files(
     )
 
 
-@pytest.mark.parametrize("product", ["vera", "clara"])
+@pytest.mark.parametrize(
+    "product,language",
+    [
+        ("vera", "it"),
+        ("vera", "en"),
+        ("clara", "it"),
+        ("clara", "en"),
+        ("clara", "fr"),
+        ("clara", "de"),
+        ("clara", "es"),
+    ],
+)
 @pytest.mark.parametrize(
     "phase,end,actual,budget,variance",
     [
@@ -1513,7 +1952,16 @@ def test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files(
     ],
 )
 def test_budget_kits_run_the_owning_product_report_pipeline(
-    tmp_path, monkeypatch, product, phase, end, actual, budget, variance
+    tmp_path,
+    monkeypatch,
+    product,
+    language,
+    phase,
+    end,
+    actual,
+    budget,
+    variance,
+    record_property,
 ):
     if product == "vera":
         run = _bound_case(
@@ -1522,6 +1970,7 @@ def test_budget_kits_run_the_owning_product_report_pipeline(
             "management-control-pack",
             "management-control-pack",
             phase,
+            language=language,
         )
         source = next(
             item["path"]
@@ -1543,7 +1992,7 @@ def test_budget_kits_run_the_owning_product_report_pipeline(
         from courseware.library import CourseLibrary
 
         kit = CourseLibrary(ROOT / "plugins/clara", {"reporting-engine"}).render(
-            "reporting-engine", "it", tmp_path / "kit"
+            "reporting-engine", language, tmp_path / "kit"
         )
         source = next(
             p
@@ -1575,6 +2024,7 @@ def test_budget_kits_run_the_owning_product_report_pipeline(
         "schema_version": "vera.management_control_recipe.v1",
         "workflow_id": "management-control-pack",
         "inventory_sha256": inventory["inventory_sha256"],
+        "language": language,
         "entity": "Arco — fictional teaching data",
         "reporting_period": {"start": "2026-01-01", "end": end, "cutoff": end},
         "currency": "EUR",
@@ -1632,18 +2082,46 @@ def test_budget_kits_run_the_owning_product_report_pipeline(
         )
     else:
         assert module.main(["run", *args]) == 0
+    context = _read(output / "report/model_context.json")
+    assert context["status"] != "blocked"
     pack = _read(output / "report/management_control_pack.json")
-    assert pack["status"] != "blocked"
-    assert pack["metrics"]["budget.total.ebitda_variance"]["value"] == variance
-    assert (output / "report/management_control_pack.xlsx").stat().st_size > 0
-    assert (output / "report/management_control_dashboard.html").is_file()
+    assert pack["language"] == language
+    metrics = {item["metric_id"]: item["value"] for item in context["metrics"]}
+    assert metrics["budget.total.ebitda_variance"] == variance
+    assert metrics["pnl.total.ebitda"] == actual
+    from openpyxl import load_workbook
+
+    summary, report_title, comparison = {
+        "it": ("Sintesi", "Controllo di gestione", "Consuntivo e budget"),
+        "en": ("Summary", "Management Control Pack", "Actual and budget"),
+        "fr": ("Synthèse", "Rapport de gestion", "Réalisé et budget"),
+        "de": ("Zusammenfassung", "Controllingbericht", "Ist und Budget"),
+        "es": ("Resumen", "Informe de gestión", "Real y presupuesto"),
+    }[language]
+    workbook = load_workbook(output / "report/management_control_pack.xlsx")
+    assert workbook.sheetnames[0] == summary
+    workbook.close()
+    markdown = (output / "report/management_control_facts.md").read_text()
+    assert markdown.startswith(f"# {report_title}")
+    dashboard = (output / "report/management_control_dashboard.html").read_text()
+    assert f'<html lang="{language}">' in dashboard
+    assert comparison in dashboard
+    record_native_check(
+        record_property,
+        product=product,
+        workflow="management-control-pack" if product == "vera" else "reporting-engine",
+        language=language,
+        phase=phase,
+        root=ROOT,
+    )
 
 
+@pytest.mark.parametrize("phase", ["demo", "practice"])
 def test_treasury_kit_inputs_produce_real_reviewable_forecast_without_acceptance(
-    tmp_path, monkeypatch
+    tmp_path, monkeypatch, record_property, phase
 ):
     run = _bound_case(
-        tmp_path, monkeypatch, "treasury-forecast", "treasury-forecast", "demo"
+        tmp_path, monkeypatch, "treasury-forecast", "treasury-forecast", phase
     )
     manifest = next(
         item["path"]
@@ -1664,84 +2142,326 @@ def test_treasury_kit_inputs_produce_real_reviewable_forecast_without_acceptance
     assert forecast["company_name"] == "Officina Arco — caso fittizio"
     assert len(forecast["events"]) == 5
     assert not forecast["review"]
+    first_version = output / artifacts["forecast"]
+    first_bytes = first_version.read_bytes()
+    # These assumptions are stated in the fictional case, not learner decisions
+    # or a professional acceptance. Exercise the native versioned date review.
+    request = output / "date-review-request.json"
+    _write(
+        request,
+        {
+            "record_sha256": forecast["record_sha256"],
+            "decisions": {
+                "item:ar-01": {
+                    "expected_date": "2026-04-10",
+                    "basis": "caso.md: incasso di Aurora confermato nel caso fittizio.",
+                },
+                "item:ap-01": {
+                    "expected_date": "2026-04-15",
+                    "basis": "caso.md: pagamento a Levante previsto nel caso fittizio.",
+                },
+                "item:ar-02": {
+                    "expected_date": "2026-04-24",
+                    "basis": "caso.md: incasso di Borgo confermato nel caso fittizio.",
+                },
+            },
+        },
+    )
+    _run(
+        "plugins/treasury-forecast/scripts/run_treasury.py",
+        "review",
+        "--client-engagement",
+        run["context_path"],
+        "--request",
+        request,
+    )
+    artifacts = _read(output / "final_artifacts.json")
+    forecast = _read(output / artifacts["forecast"])
+    assert forecast["status"] == "draft_for_review"
+    assert forecast["calculation_complete"] is True
+    assert forecast["review"] is None
+    assert forecast["opening_cash"] == "25000.00"
+    assert forecast["minimum_daily_cash"] == "25000.00"
+    assert forecast["daily"][-1]["closing_cash"] == "29500.00"
+    assert first_version.read_bytes() == first_bytes
     assert (output / artifacts["report"]).is_file()
     assert (output / artifacts["workbook"]).stat().st_size > 0
+    note = [
+        "# Previsione di cassa di Officina Arco",
+        "",
+        "Il prospetto parte dal saldo effettivo del 31 marzo e mostra i cinque "
+        "flussi forniti fino al 31 maggio. Le date delle tre partite sono state "
+        "registrate con la motivazione indicata in caso.md; i due altri pagamenti "
+        "derivano dal prospetto della direzione fittizia.",
+        "",
+        "| Prospetto iniziale | EUR |",
+        "| --- | ---: |",
+        f"| Cassa iniziale | {forecast['opening_cash']} |",
+        f"| Minimo giornaliero | {forecast['minimum_daily_cash']} |",
+        f"| Cassa al 31 maggio | {forecast['daily'][-1]['closing_cash']} |",
+        "",
+    ]
+    if phase == "practice":
+        baseline_bytes = (output / artifacts["forecast"]).read_bytes()
+        scenario_request = output / "hypothetical-dates-request.json"
+        _write(scenario_request, {"item:ar-01": "2026-04-20"})
+        _run(
+            "plugins/treasury-forecast/scripts/run_treasury.py",
+            "scenario",
+            "--client-engagement",
+            run["context_path"],
+            "--request",
+            scenario_request,
+        )
+        scenario_path = next(output.glob("scenario-*.json"))
+        scenario = _read(scenario_path)
+        assert scenario["status"] == "hypothetical"
+        assert scenario["baseline_record_sha256"] == forecast["record_sha256"]
+        assert scenario["minimum_daily_cash"] == "16000.00"
+        assert scenario["daily"][-1]["closing_cash"] == "29500.00"
+        baseline_days = {row["date"]: row for row in forecast["daily"]}
+        scenario_days = {row["date"]: row for row in scenario["daily"]}
+        assert baseline_days["2026-04-15"]["closing_cash"] == "34000.00"
+        assert scenario_days["2026-04-15"]["closing_cash"] == "16000.00"
+        assert scenario_days["2026-04-20"]["closing_cash"] == "34000.00"
+        assert (output / artifacts["forecast"]).read_bytes() == baseline_bytes
+        assert _read(output / "final_artifacts.json") == artifacts
+        note.extend(
+            [
+                "## Ritardo dell’incasso di Aurora",
+                "",
+                "L’alternativa sposta solo i 18.000 EUR dal 10 al 20 aprile. "
+                "La cassa è più bassa dal 10 al 19 aprile; dal 20 aprile le "
+                "disponibilità tornano a coincidere. Il saldo finale uguale "
+                "non elimina la necessità di controllare quelle settimane.",
+                "",
+                "| Data | Previsione iniziale EUR | Alternativa EUR |",
+                "| --- | ---: | ---: |",
+            ]
+        )
+        for date in ("2026-04-10", "2026-04-15", "2026-04-20", "2026-05-31"):
+            note.append(
+                f"| {date} | {baseline_days[date]['closing_cash']} | "
+                f"{scenario_days[date]['closing_cash']} |"
+            )
+        note.extend(
+            [
+                "",
+                f"Minimo nell’alternativa: {scenario['minimum_daily_cash']} EUR. "
+                f"[Calcolo nativo dell’alternativa]({scenario_path.name}).",
+                "",
+                "La funzione conserva l’alternativa in un JSON separato; questa "
+                "tabella ne legge i risultati. Il report e il workbook originali "
+                "restano quelli della previsione iniziale.",
+                "",
+            ]
+        )
+    note.extend(
+        [
+            "## Cosa controllare e come ripetere",
+            "",
+            "Apri il report, segui i saldi settimanali e ritrova ogni evento "
+            "nel workbook. La copertura include soltanto i flussi dichiarati; "
+            "date e incassi restano ipotesi da rivedere. La bozza non è stata "
+            "professionalmente accettata e non esegue pagamenti.",
+            "",
+            "Per ripetere, fornisci saldi effettivi, partite residue e flussi "
+            "futuri con le relative date. Per un aggiornamento successivo servono "
+            "anche movimenti, regolamenti e la precedente versione accettata. "
+            "L’alternativa ipotetica non può sostituire quel precedente.",
+            "",
+            f"[Report]({artifacts['report']}) · "
+            f"[Workbook]({artifacts['workbook']}) · "
+            f"[Record corrente]({artifacts['forecast']})",
+            "",
+        ]
+    )
+    (output / "codex_run_review.md").write_text("\n".join(note), encoding="utf-8")
+    (output / "artifact_card.md").write_text(
+        "# Previsione di cassa di Officina Arco\n\n"
+        "Bozza da rivedere al 31 marzo 2026, con orizzonte al 31 maggio. "
+        "Il calcolo è completo per i cinque flussi forniti; restano da "
+        "valutare copertura, ipotesi sulle date e accettazione professionale.\n\n"
+        f"[Report corrente]({output / artifacts['report']})\n\n"
+        f"[Workbook corrente]({output / artifacts['workbook']})\n\n"
+        f"[Lettura dei risultati ed esercizio]({output / 'codex_run_review.md'})\n",
+        encoding="utf-8",
+    )
+    _complete_teaching_case(run, tmp_path / "case")
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="treasury-forecast",
+        language="it",
+        phase=phase,
+    )
 
 
-@pytest.mark.parametrize("phase,evidence_count", [("demo", 3), ("practice", 4)])
+@pytest.mark.parametrize("phase", ["demo", "practice"])
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 def test_lucia_kit_inputs_become_bound_evidence_in_the_actual_matter_package(
-    tmp_path, monkeypatch, phase, evidence_count
+    tmp_path, monkeypatch, phase, language, record_property
 ):
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/apertura-pratica/scripts"))
+    from tests.plugins._matter_teaching import prepare_intake, review_and_deliver
+
     run = _bound_case(
         tmp_path,
         monkeypatch,
         "apertura-pratica",
         "apertura-pratica",
-        phase,
+        "demo",
         product="lucia",
+        language=language,
     )
-    output = Path(run["output_dir"])
     scripts = "plugins/apertura-pratica/scripts/"
-    _run(
-        scripts + "initialize_workspace.py",
-        output,
-        "--opening-mode",
-        "new_client_new_matter",
-        "--client-reference",
-        "beta-fictional",
-        "--matter-reference",
-        "delivery-fictional",
-        "--language",
-        "it",
-    )
-    for item in run["context"]["input_bindings"]:
-        evidence_role = {
-            "register.csv": "firm_record",
-            "update-it.md": "correspondence",
-        }.get(Path(item["path"]).name, "client_supplied")
+    first_context = run["context"]
+    first_outputs = {}
+    previous_intake = None
+    previous_output = None
+    client_root = tmp_path / "case"
+    for current_phase in ("demo", "practice"):
+        output = Path(run["output_dir"])
         _run(
-            scripts + "add_evidence.py",
+            scripts + "initialize_workspace.py",
             output,
-            item["path"],
-            "--role",
-            evidence_role,
+            "--opening-mode",
+            "new_client_new_matter",
+            "--client-reference",
+            "beta-fictional",
+            "--matter-reference",
+            "delivery-fictional",
+            "--language",
+            language,
         )
-    intake_path = output / "matter_intake.json"
-    intake = _read(intake_path)
-    intake["client"]["display_name"] = "Beta Laboratorio Srl"
-    intake["client"]["identity_status"] = "reported"
-    intake["client"]["evidence_ids"] = [
-        item["evidence_id"]
-        for item in intake["evidence_register"]
-        if item["original_name"] == "request-it.md"
-    ]
-    intake["parties"][0].update(
-        display_name="Beta Laboratorio Srl",
-        identity_status="reported",
-        evidence_ids=intake["client"]["evidence_ids"],
-        assessment_basis="Client named in the supplied fictional request.",
+        for item in run["context"]["input_bindings"]:
+            name = Path(item["path"]).name
+            role = (
+                "firm_record"
+                if name == "register.csv"
+                else (
+                    "correspondence"
+                    if name.startswith("update-")
+                    else "client_supplied"
+                )
+            )
+            _run(scripts + "add_evidence.py", output, item["path"], "--role", role)
+        intake = prepare_intake(output, language, previous_intake)
+        _run(scripts + "prepare_review.py", output)
+        evidence = intake["evidence_register"]
+        assert len(evidence) == (3 if current_phase == "demo" else 4)
+        assert all(
+            hashlib.sha256((output / item["stored_path"]).read_bytes()).hexdigest()
+            == item["sha256"]
+            for item in evidence
+        )
+        assert [party["display_name"] for party in intake["parties"]] == [
+            "Beta Laboratorio Srl",
+            "Gamma Forniture Srl",
+            "Elena Esempio",
+        ]
+        assert intake["conflict_check"]["register_scope"] == "partial"
+        assert intake["conflict_check"]["professional_decision"]["status"] == "pending"
+        assert intake["deadline_review"]["status"] == "pending"
+        assert intake["confirmed_facts"] == []
+        review_and_deliver(output, language, _run, previous_output)
+        assert (
+            intake["matter"]["summary"]
+            in (output / "matter_opening_memo.md").read_text()
+        )
+        final = _read(output / "final_artifacts.json")
+        assert final["status"] == "blocked"
+        assert final["conflict_cleared_by_software"] is False
+        assert final["engagement_accepted_by_software"] is False
+        assert final["source_files_modified"] is False
+        for artifact in _read(output / "artifact_manifest.json")["artifacts"]:
+            assert (
+                hashlib.sha256((output / artifact["path"]).read_bytes()).hexdigest()
+                == artifact["sha256"]
+            )
+        ledger = _complete_teaching_case(run, client_root)
+        if current_phase == "practice":
+            assert intake["matter"]["summary"].startswith(
+                previous_intake["matter"]["summary"]
+            )
+            assert (
+                intake["matter"]["objective"] != previous_intake["matter"]["objective"]
+            )
+
+            def source_bound_value(record, field):
+                value = json.dumps(record[field], sort_keys=True)
+                for source in record["evidence_register"]:
+                    value = value.replace(
+                        json.dumps(source["evidence_id"]), json.dumps(source["sha256"])
+                    )
+                return value
+
+            assert source_bound_value(intake, "engagement") == source_bound_value(
+                previous_intake, "engagement"
+            )
+            assert source_bound_value(intake, "parties") == source_bound_value(
+                previous_intake, "parties"
+            )
+            assert run["context"]["engagement_id"] == first_context["engagement_id"]
+            assert run["context"]["run_id"] != first_context["run_id"]
+            assert all(
+                path.read_bytes() == content for path, content in first_outputs.items()
+            )
+            assert (
+                _read(output / "applied_decisions.json")["intake_sha256"]
+                != _read(previous_output / "applied_decisions.json")["intake_sha256"]
+            )
+        if phase == current_phase:
+            break
+        previous_intake = intake
+        previous_output = output
+        first_outputs = {
+            path: path.read_bytes() for path in output.rglob("*") if path.is_file()
+        }
+        sources = sorted((tmp_path / "kit/files/practice").glob("*"))
+        assert {path.name for path in sources} == {
+            f"request-{language}.md",
+            f"supply-{language}.md",
+            f"update-{language}.md",
+            "register.csv",
+        }
+        imports = [
+            ledger.import_document(
+                client_root,
+                first_context["client_id"],
+                first_context["engagement_id"],
+                source,
+                "source",
+            )
+            for source in sources
+        ]
+        prepared = ledger.prepare_run(
+            client_root,
+            first_context["client_id"],
+            first_context["engagement_id"],
+            "apertura-pratica",
+            first_context["workflow_version"],
+            input_ids=[item["receipt"]["input_id"] for item in imports],
+            purpose="Fictional delivery proposal; preserve initial dossier and unresolved professional review",
+        )
+        run = ledger.start_run(
+            client_root, first_context["engagement_id"], prepared["run"]["run_id"]
+        )
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="lucia",
+        workflow="apertura-pratica",
+        language=language,
+        phase=phase,
     )
-    intake["matter"].update(
-        title="Consegna di componenti — caso fittizio",
-        objective="Preparare il dossier per la revisione dell’avvocato",
-        requested_work="Organizzare la controversia di fornitura con Gamma Forniture",
-        summary="La richiesta fittizia descrive 100 componenti ordinati, 80 consegnati e un anticipo di EUR 3.000. Nessuna decisione professionale è stata fornita.",
-    )
-    _write(intake_path, intake)
-    _run(scripts + "prepare_review.py", output)
-    evidence = _read(intake_path)["evidence_register"]
-    assert len(evidence) == evidence_count
-    assert all((output / item["stored_path"]).is_file() for item in evidence)
-    assert "Beta Laboratorio" in (output / "matter_opening_memo.md").read_text(
-        encoding="utf-8"
-    )
-    assert _read(output / "validation_report.json")["status"] != "ready_to_open"
-    assert not (output / "applied_decisions.json").exists()
 
 
 @pytest.mark.parametrize("phase,expected", [("demo", 2), ("practice", 3)])
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 def test_bank_reconciliation_kit_runs_current_comparison(
-    tmp_path, monkeypatch, phase, expected
+    tmp_path, monkeypatch, phase, expected, language, record_property
 ):
     run = _bound_case(
         tmp_path,
@@ -1749,6 +2469,7 @@ def test_bank_reconciliation_kit_runs_current_comparison(
         "journal-bank-reconciliation",
         "journal-bank-reconciliation",
         phase,
+        language=language,
     )
     files = {
         Path(item["path"]).name: Path(item["path"])
@@ -1769,7 +2490,7 @@ def test_bank_reconciliation_kit_runs_current_comparison(
         "--output-dir",
         inspection,
         "--language",
-        "it",
+        language,
     )
     monkeypatch.syspath_prepend(str(ROOT / scripts))
     spec = importlib.util.spec_from_file_location(
@@ -1818,7 +2539,7 @@ def test_bank_reconciliation_kit_runs_current_comparison(
         "--recipe",
         recipe_path,
         "--language",
-        "it",
+        language,
         "--tolerance",
         "0",
         "--date-window-days",
@@ -1833,12 +2554,21 @@ def test_bank_reconciliation_kit_runs_current_comparison(
     assert (
         _read(result / "assurance_gates.json")["gates"]["source"]["status"] == "passed"
     )
+    _complete_teaching_case(run, tmp_path / "case")
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="journal-bank-reconciliation",
+        language=language,
+        phase=phase,
+    )
 
 
 @pytest.mark.parametrize("phase,closed", [("demo", 2), ("practice", 3)])
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 def test_open_item_kit_runs_current_pdf_ingestion_and_workpapers(
-    tmp_path, monkeypatch, phase, closed, language
+    tmp_path, monkeypatch, phase, closed, language, record_property
 ):
     run = _bound_case(
         tmp_path,
@@ -1907,12 +2637,21 @@ context = runner.load_client_engagement_context_file(
 runner.run_raw_input_reconciliation(
     input_dir=context['input_dir'], prepared_client_engagement=context,
     assumptions=json.loads(sys.argv[3]), language=sys.argv[4],
-    title='Officina Arco - fictional teaching case')
+    title=json.loads(sys.argv[5])[sys.argv[4]])
 """,
             str(ROOT / "plugins/open-item-reconciliation/scripts/raw_input_runner.py"),
             run["context_path"],
             json.dumps(assumptions),
             language,
+            json.dumps(
+                {
+                    "it": "Officina Arco — esercitazione di riconciliazione",
+                    "en": "Officina Arco — reconciliation exercise",
+                    "fr": "Officina Arco — exercice de rapprochement",
+                    "de": "Officina Arco — Abstimmungsübung",
+                    "es": "Officina Arco — ejercicio de conciliación",
+                }
+            ),
         ],
         capture_output=True,
         text=True,
@@ -1937,124 +2676,158 @@ runner.run_raw_input_reconciliation(
         assert third["supporting_bank_date"] == "2026-04-04"
     assert _read(output / "final_artifacts.json")["status"] != "final_ready"
 
+    # The first table is the learner's actual result, in the chosen language.
+    from docx import Document
+
+    report = Document(output / "relazione_riconciliazione_audit.docx")
+    amount_headers = {
+        "it": "Importo",
+        "en": "Amount",
+        "fr": "Montant",
+        "de": "Betrag",
+        "es": "Importe",
+    }
+    expected_amounts = {
+        "it": ("1.952,00", "2.440,00"),
+        "en": ("1,952.00", "2,440.00"),
+        "fr": ("1952,00", "2440,00"),
+        "de": ("1.952,00", "2.440,00"),
+        "es": ("1.952,00", "2.440,00"),
+    }
+    summary = report.tables[0]
+    assert summary.rows[0].cells[2].text == amount_headers[language]
+    assert summary.rows[1].cells[1].text == str(closed)
+    assert (
+        summary.rows[1].cells[2].text == expected_amounts[language][phase == "practice"]
+    )
+    assert len(summary.rows) == (3 if phase == "demo" else 2)
+
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="open-item-reconciliation",
+        language=language,
+        phase=phase,
+    )
+
 
 @pytest.mark.parametrize("phase", ["demo", "practice"])
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 def test_new_client_kit_runs_actual_dossier_from_reported_facts(
     tmp_path, monkeypatch, phase, language, record_property
 ):
+    from tests.plugins._new_client_teaching import (
+        case_input,
+        complete_case,
+        review_and_deliver,
+        words,
+    )
+
     run = _bound_case(
-        tmp_path, monkeypatch, "new-client", "new-client", phase, language=language
+        tmp_path, monkeypatch, "new-client", "new-client", "demo", language=language
     )
-    output = Path(run["output_dir"])
+    client_root = tmp_path / "case"
     scripts = "plugins/new-client/scripts/"
-    _run(
-        scripts + "initialize_case.py",
-        "--case-dir",
-        output,
-        "--client-engagement",
-        run["context_path"],
-        "--client-reference",
-        "ARCO-DEMO",
-        "--assessment-date",
-        "2026-09-14",
-        "--language",
-        language,
-    )
-    path = output / "new_client_input.json"
-    intake = _read(path)
-    evidence = []
-    for item in run["context"]["input_bindings"]:
-        source = Path(item["path"])
-        evidence.append(
-            {
-                "evidence_id": (
-                    "profile"
-                    if source.name.startswith("profile-")
-                    else "contact-update"
-                ),
-                "evidence_type": "fictional_interview_notes",
-                "status": "available",
-                "obtained_on": "2026-09-14",
-                "expires_on": None,
-                "local_path": str(source),
-                "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
-            }
-        )
-    intake["evidence_register"] = evidence
-    intake["client_file_preparation_binding"]["evidence_ids"] = [
-        row["evidence_id"] for row in evidence
-    ]
-    # These are declared teaching facts, not confirmed legal or identity findings.
-    facts = {
-        "registered_identity": "Officina Arco Srl",
-        "registered_address": "Via Esempio 10, Milano, Italia",
-        "business_activity": {
-            "it": "Officina meccanica - caso fittizio",
-            "en": "Mechanical workshop - fictional case",
-            "fr": "Atelier mécanique - cas fictif",
-            "de": "Mechanische Werkstatt - fiktiver Fall",
-            "es": "Taller mecánico - caso ficticio",
-        }[language],
-        "representative_reported": "Elena Esempio",
-        "shareholdings_reported": "Elena Esempio 60%; Paolo Prova 40%",
-    }
-    intake["party_facts"] = [
-        {
-            "fact_id": "party-fact-01" if index == 0 else f"party-fact-{index + 1:02}",
-            "fact_code": key,
-            "value": value,
-            "verification_status": "reported",
-            "evidence_ids": ["profile"],
-        }
-        for index, (key, value) in enumerate(facts.items())
-    ]
-    if phase == "practice":
-        intake["party_facts"].append(
-            {
-                "fact_id": "contact-fact",
-                "fact_code": "administrative_contact",
-                "value": "Sara Campione; sara@arco.example; document exchange only",
-                "verification_status": "reported",
-                "evidence_ids": ["contact-update"],
-            }
-        )
-    intake["engagement"]["services"][0]["description"] = {
-        "it": "Tenuta contabile mensile e preparazione del bilancio 2026.",
-        "en": "Monthly bookkeeping and preparation of the 2026 financial statements.",
-        "fr": "Tenue comptable mensuelle et préparation des comptes annuels 2026.",
-        "de": "Monatliche Buchführung und Vorbereitung des Jahresabschlusses 2026.",
-        "es": "Contabilidad mensual y preparación de las cuentas anuales de 2026.",
-    }[language]
-    _write(path, intake)
-    _run(
-        scripts + "package_new_client.py",
-        "--input",
-        path,
-        "--client-engagement",
-        run["context_path"],
-        "--output-dir",
-        output,
-    )
-    assert (output / "studio_new_client_memo.md").is_file()
-    assert (output / "client_missing_information_draft.md").is_file()
-    assert (output / "document_plan.json").is_file()
-    assert (output / "monitoring_plan.json").is_file()
-    saved = _read(output / "case_facts_validated.json")
-    assert "Officina Arco Srl" in json.dumps(saved)
-    assert ("Sara Campione" in json.dumps(saved)) == (phase == "practice")
-    final = _read(output / "final_artifacts.json")
-    assert final["professional_review_required"] is True
-    assert final["relationship_activation_performed"] is False
-    assert final["signature_performed"] is False
-    for action in ("seal", "validate"):
+    previous_intake = None
+    first_outputs = {}
+    first_context = run["context"]
+    for current_phase in ("demo", "practice"):
+        output = Path(run["output_dir"])
         _run(
-            scripts + "delivery_manifest.py",
-            action,
+            scripts + "initialize_case.py",
+            "--case-dir",
+            output,
+            "--client-engagement",
+            run["context_path"],
+            "--client-reference",
+            "ARCO-DEMO",
+            "--assessment-date",
+            "2026-09-14",
+            "--language",
+            language,
+        )
+        path = output / "new_client_input.json"
+        intake = case_input(_read(path), run, language, previous_intake)
+        _write(path, intake)
+        _run(
+            scripts + "package_new_client.py",
+            "--input",
+            path,
             "--client-engagement",
             run["context_path"],
             "--output-dir",
             output,
+        )
+        memo = (output / "studio_new_client_memo.md").read_text()
+        assert memo.index("Officina Arco Srl") < memo.index("RE =")
+        assert words(language)["service"] in memo
+        assert "`None`" not in memo
+        aml_audit = _read(output / "aml_calculation_audit.json")
+        assert aml_audit["status"] == "blocked_incomplete_scores"
+        assert aml_audit["calculated_band"] is None
+        assert aml_audit["effective_risk"] is None
+        assert len(aml_audit["missing_score_ids"]) == 11
+        assert _read(output / "monitoring_plan.json")["next_review_date"] is None
+        assert intake["engagement"]["start_date"] is None
+        saved = _read(output / "case_facts_validated.json")
+        assert "Officina Arco Srl" in json.dumps(saved)
+        assert ("Sara Campione" in json.dumps(saved)) == (current_phase == "practice")
+        review_and_deliver(run, language, follow_up=current_phase == "practice")
+        final = _read(output / "final_artifacts.json")
+        assert final["professional_review_required"] is True
+        assert final["relationship_activation_performed"] is False
+        assert final["signature_performed"] is False
+        assert final["client_communication_sent"] is False
+        assert final["export_gate"]["relationship_ready"] is False
+        questions = (output / "client_questions.md").read_text()
+        assert "Elena Esempio" in questions and "Paolo Prova" in questions
+        assert words(language)["questions"][3] in questions
+        ledger = complete_case(run, client_root, _run, language)
+        if current_phase == "practice":
+            assert run["context"]["client_id"] == first_context["client_id"]
+            assert run["context"]["engagement_id"] == first_context["engagement_id"]
+            assert run["context"]["run_id"] != first_context["run_id"]
+            assert intake["party_facts"][:-1] == previous_intake["party_facts"]
+            assert intake["engagement"] == previous_intake["engagement"]
+            contact = intake["party_facts"][-1]
+            assert contact["evidence_ids"] == ["contact-update"]
+            assert words(language)["contact_role"] in contact["value"]
+            assert all(
+                path.read_bytes() == content for path, content in first_outputs.items()
+            )
+        if current_phase == phase:
+            break
+        previous_intake = intake
+        first_outputs = {
+            path: path.read_bytes() for path in output.rglob("*") if path.is_file()
+        }
+        sources = sorted((tmp_path / "kit/files/practice").glob("*.md"))
+        assert {p.name for p in sources} == {
+            f"profile-{language}.md",
+            f"contact-update-{language}.md",
+        }
+        imports = [
+            ledger.import_document(
+                client_root,
+                first_context["client_id"],
+                first_context["engagement_id"],
+                source,
+                "source",
+            )
+            for source in sources
+        ]
+        prepared = ledger.prepare_run(
+            client_root,
+            first_context["client_id"],
+            first_context["engagement_id"],
+            "new-client",
+            first_context["workflow_version"],
+            input_ids=[item["receipt"]["input_id"] for item in imports],
+            purpose="Fictional contact update in the same engagement; no professional approval",
+        )
+        run = ledger.start_run(
+            client_root, first_context["engagement_id"], prepared["run"]["run_id"]
         )
     record_native_check(
         record_property,
@@ -2125,8 +2898,10 @@ def test_fiscal_data_kit_runs_actual_preparation_and_extraction(
 @pytest.mark.parametrize("phase,documents", [("demo", 1), ("practice", 2)])
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 def test_notice_kit_runs_actual_intake_and_keeps_source_dates(
-    tmp_path, monkeypatch, phase, documents, language
+    tmp_path, monkeypatch, phase, documents, language, record_property
 ):
+    from tests.plugins._notice_teaching import write_notice_review
+
     run = _bound_case(
         tmp_path,
         monkeypatch,
@@ -2164,6 +2939,33 @@ def test_notice_kit_runs_actual_intake_and_keeps_source_dates(
     assert (output / "avviso/avviso_intake_memo.md").is_file()
     assert (output / "model_handoff.json").is_file()
     assert _read(output / "final_artifacts.json")["status"] != "final_ready"
+    sources = [Path(item["path"]) for item in run["context"]["input_bindings"]]
+    # The native table is an extraction aid. The skill also calls for a Codex
+    # review note grounded in the actual readable sources. These fixed model
+    # interpretations are test-only, never a prepared learner answer.
+    notice = next(path for path in sources if path.name == "avviso.md")
+    assert "Non quantifica un debito" in notice.read_text(encoding="utf-8")
+    if phase == "practice":
+        reply = next(path for path in sources if path.name == "client-update.md")
+        assert "non una ricevuta di notifica" in reply.read_text(encoding="utf-8")
+        assert "non è allegata" in reply.read_text(encoding="utf-8")
+    note = write_notice_review(output, sources, language, phase)
+    reviewed = note.read_text(encoding="utf-8")
+    assert all(
+        value in reviewed
+        for value in ("DEMO-NOTICE-01", "02/04/2026", "30/04/2026", "2025", "F24")
+    )
+    assert ("06/04/2026" in reviewed) == (phase == "practice")
+    assert all(str(path) in reviewed for path in sources)
+    _complete_teaching_case(run, tmp_path / "case")
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="avviso-intake",
+        language=language,
+        phase=phase,
+    )
 
 
 EMAIL_REQUESTS = {
@@ -2278,7 +3080,7 @@ def _reviewed_email_requests(output):
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 @pytest.mark.parametrize("phase", ["demo", "practice"])
 def test_client_email_kit_runs_intake_review_and_sealed_draft_replacement(
-    tmp_path, monkeypatch, language, phase
+    tmp_path, monkeypatch, language, phase, record_property
 ):
     run = _bound_case(
         tmp_path,
@@ -2344,7 +3146,7 @@ def test_client_email_kit_runs_intake_review_and_sealed_draft_replacement(
     replacement = (
         f"# {title}\n\n{subject}\n\n{greeting}\n\n"
         + "\n".join("- " + item["request_text"] for item in requests)
-        + f"\n\n{closing}\n"
+        + f"\n\n{closing}"
     )
     before = (output / "04_bozza_email_cliente.md").read_bytes()
     for decision in decisions:
@@ -2369,22 +3171,27 @@ def test_client_email_kit_runs_intake_review_and_sealed_draft_replacement(
         if path.name != "04_bozza_email_cliente.md"
     )
     assert (EMAIL_REQUESTS[language][1] in replacement) == (phase == "demo")
-
-
-@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
-@pytest.mark.parametrize(
-    "phase,growth,net_sales,margin",
-    [
-        ("demo", "10", "95095", "35035"),
-        ("practice", "5", "90772.5", "33442.5"),
-    ],
-)
-def test_sales_plan_kit_runs_current_reviewed_assumptions(
-    tmp_path, monkeypatch, language, phase, growth, net_sales, margin
-):
-    run = _bound_case(
-        tmp_path, monkeypatch, "sales-plan", "sales-plan", phase, language=language
+    _complete_teaching_case(run, tmp_path / "case")
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="email-cliente",
+        language=language,
+        phase=phase,
     )
+
+
+def _execute_teaching_sales_plan(
+    run, client_root, growth, net_sales, margin, language, prior_plan=None
+):
+    """Execute the current scenario engine inside one explicitly prepared run."""
+    from tests.plugins._sales_plan_teaching import (
+        assumption_readback,
+        deliver_plan,
+        validate_links,
+    )
+
     output = Path(run["output_dir"])
     source = next(
         Path(item["path"])
@@ -2393,6 +3200,12 @@ def test_sales_plan_kit_runs_current_reviewed_assumptions(
     )
     original = source.read_bytes()
     (output / source.name).write_bytes(original)
+    assumption_source = next(
+        Path(item["path"])
+        for item in run["context"]["input_bindings"]
+        if Path(item["path"]).suffix == ".md"
+    )
+    readback = assumption_readback(output, source, assumption_source, language, growth)
     case = _read(ROOT / "plugins/sales-plan/evals/synthetic/case.json")
     case["case_id"] = "ciclo-arco-teaching"
     case["purpose"] = (
@@ -2411,7 +3224,10 @@ def test_sales_plan_kit_runs_current_reviewed_assumptions(
         "status": "reviewed",
         "reviewed_by": "reviewer.teaching_fixture",
         "reviewed_at": "2026-09-14",
-        "review_basis": "Test-only reading of the units-growth request; no learner approval.",
+        "review_basis": (
+            "Test-only confirmation fixture for the units-growth request; no learner approval. "
+            "Read-back SHA-256: " + hashlib.sha256(readback.read_bytes()).hexdigest()
+        ),
         "assumptions": [
             {
                 "assumption_id": "units-growth",
@@ -2458,5 +3274,120 @@ def test_sales_plan_kit_runs_current_reviewed_assumptions(
     assert {row["change_pct"] for row in applied} == {growth}
     assert {row["status"] for row in applied} == {"applied"}
     assert (plan / "model_use_manifest.json").is_file()
-    _complete_teaching_case(run, tmp_path / "case")
+    _run(
+        "plugins/sales-plan/scripts/model_use.py",
+        "--manifest",
+        plan / "model_use_manifest.json",
+        "--client-engagement",
+        run["context_path"],
+        "--reason",
+        "Trace the January urban-bicycle Plan back to its Actual row and units assumption.",
+        "--source-row-id",
+        "urban-jan",
+        "--column",
+        "period",
+        "--column",
+        "product",
+        "--column",
+        "units",
+        "--column",
+        "gross_sales_reporting",
+        "--column",
+        "discount_reporting",
+        "--column",
+        "net_sales_reporting",
+        "--column",
+        "cogs_reporting",
+        "--column",
+        "gross_margin_reporting",
+    )
+    drilldowns = list((plan / "model_drilldowns").glob("scenario_rows_*.json"))
+    assert len(drilldowns) == 1
+    detail = _read(drilldowns[0])
+    assert detail["matched_row_count"] == 2
+    assert detail["full_population_rows_scanned_locally"] == 8
+    traced = {row["scenario"]: row for row in detail["rows"]}
+    assert set(traced) == {"AC", "PL"}
+    assert traced["AC"]["period"] == "2026-01"
+    assert traced["PL"]["period"] == "2027-01"
+    assert {row["source_row_id"] for row in detail["rows"]} == {"urban-jan"}
+    assert {row["product"] for row in detail["rows"]} == {"Urban bicycle"}
+    assert Decimal(traced["AC"]["gross_sales_reporting"]) / Decimal(
+        traced["AC"]["units"]
+    ) == Decimal(traced["PL"]["gross_sales_reporting"]) / Decimal(traced["PL"]["units"])
+    deliver_plan(plan, language, growth, drilldowns[0], prior_plan)
+    ledger = _complete_teaching_case(run, client_root)
+    validate_links(output)
     assert source.read_bytes() == original
+    return ledger, plan
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+@pytest.mark.parametrize("phase", ["demo", "practice"])
+def test_sales_plan_kit_runs_current_reviewed_assumptions(
+    tmp_path, monkeypatch, record_property, language, phase
+):
+    initial = _bound_case(
+        tmp_path, monkeypatch, "sales-plan", "sales-plan", "demo", language=language
+    )
+    client_root = tmp_path / "case"
+    ledger, first_plan = _execute_teaching_sales_plan(
+        initial, client_root, "10", "95095", "35035", language
+    )
+    record_property("teaching_initial_output", str(first_plan))
+    preserved = {
+        path: path.read_bytes()
+        for path in Path(initial["output_dir"]).rglob("*")
+        if path.is_file()
+    }
+    if phase == "demo":
+        record_property("teaching_output", str(first_plan))
+        record_native_check(
+            record_property,
+            root=ROOT,
+            product="vera",
+            workflow="sales-plan",
+            language=language,
+            phase=phase,
+        )
+        return
+    context = initial["context"]
+    client, engagement = context["client_id"], context["engagement_id"]
+    # Practice imports its own changed request but uses the same Actual bytes.
+    practice_sources = sorted((tmp_path / "kit/files/practice").iterdir())
+    assert {path.name for path in practice_sources} == {
+        "actual-sales.csv",
+        f"assumptions-{language}.md",
+    }
+    imports = [
+        ledger.import_document(client_root, client, engagement, path, "source")
+        for path in practice_sources
+    ]
+    prepared = ledger.prepare_run(
+        client_root,
+        client,
+        engagement,
+        "sales-plan",
+        context["workflow_version"],
+        input_ids=[item["receipt"]["input_id"] for item in imports],
+        new_run=True,
+        purpose="Fictional alternative scenario requested by the practice exercise",
+    )
+    alternative = ledger.start_run(client_root, engagement, prepared["run"]["run_id"])
+    _, alternative_plan = _execute_teaching_sales_plan(
+        alternative, client_root, "5", "90772.5", "33442.5", language, first_plan
+    )
+    assert alternative["context"]["engagement_id"] == engagement
+    assert alternative["context"]["run_id"] != context["run_id"]
+    assert all(path.read_bytes() == data for path, data in preserved.items())
+    assert _read(first_plan / "plan_execution_receipt.json")["report_ready"] is False
+    assert alternative_plan != first_plan
+    record_property("teaching_output", str(alternative_plan))
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="sales-plan",
+        language=language,
+        phase=phase,
+    )

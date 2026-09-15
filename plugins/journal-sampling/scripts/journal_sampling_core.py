@@ -7002,7 +7002,21 @@ def _write_sample_xlsx(
     """Write the required native workbook or fail the whole sample stage."""
 
     try:
-        sample.write_excel(path, worksheet=workbook_sheet_name(language))
+        sample.write_excel(
+            path,
+            worksheet=workbook_sheet_name(language),
+            autofit=True,
+            freeze_panes=(1, 3),
+            hide_gridlines=True,
+            header_format={
+                "bold": True,
+                "font_color": "#FFFFFF",
+                "bg_color": "#183B56",
+                "text_wrap": True,
+                "valign": "vcenter",
+            },
+            row_heights={0: 36},
+        )
     except (ImportError, ModuleNotFoundError, RuntimeError, ValueError) as exc:
         raise RuntimeError("Required sample XLSX generation failed.") from exc
 

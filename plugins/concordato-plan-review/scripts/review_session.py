@@ -10,6 +10,9 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
+from concordato_labels import display_label
+from concordato_semantic import TEXT as SEMANTIC_TEXT
+
 SCRIPT_DIR = Path(__file__).resolve().parent
 
 
@@ -1142,33 +1145,10 @@ def _output_records(
             "## Deterministic numerical tie-out appendix",
         ],
     )
-    semantic_required_text = {
-        "it": [
-            "Revisione del concordato preventivo",
-            "Stato del modello semantico",
-            "Appendice di tie-out numerico",
-        ],
-        "en": [
-            "Concordato Preventivo Review",
-            "Semantic model status",
-            "Numerical tie-out appendix",
-        ],
-        "fr": [
-            "Revue du concordato preventivo",
-            "Statut du modèle sémantique",
-            "Annexe de rapprochement numérique",
-        ],
-        "de": [
-            "Prüfung des Concordato Preventivo",
-            "Status des semantischen Modells",
-            "Anhang zum Zahlenabgleich",
-        ],
-        "es": [
-            "Revisión del concordato preventivo",
-            "Estado del modelo semántico",
-            "Anexo de conciliación numérica",
-        ],
-    }[language_code]
+    semantic_required_text = [
+        SEMANTIC_TEXT[language_code][key]
+        for key in ("title", "status", "numeric_appendix")
+    ]
     required_text_by_path = {
         "review_packet.md": packet_required_text,
         "concordato_preventivo_review_summary.docx": semantic_required_text,
@@ -1254,6 +1234,7 @@ def _output_records(
                 "Classes",
                 "Sources Uses",
                 "Liquidity",
+                "Source Notes",
                 "Review Questions",
                 "Issues",
                 "Mechanical Checks",
@@ -1266,6 +1247,7 @@ def _output_records(
                 "Classes": ["class_id", "priority", "creditor_count"],
                 "Sources Uses": ["item_id", "side", "category"],
                 "Liquidity": ["period_id", "period", "opening_cash"],
+                "Source Notes": ["note_ref", "schedule", "record_id"],
                 "Review Questions": ["question_id", "area", "question"],
                 "Issues": ["issue_id", "area", "statement"],
                 "Mechanical Checks": ["check_id", "status", "observation"],
@@ -1282,6 +1264,22 @@ def _output_records(
                     "A2": "semantic_model_status",
                     "B2": semantic_status,
                 }
+            }
+            output["required_sheets"] = [
+                display_label(name, language_code) for name in output["required_sheets"]
+            ]
+            output["required_sheet_headers"] = {
+                display_label(name, language_code): [
+                    display_label(header, language_code) for header in headers
+                ]
+                for name, headers in output["required_sheet_headers"].items()
+            }
+            output["required_cells"] = {
+                display_label(name, language_code): {
+                    cell: display_label(value, language_code)
+                    for cell, value in cells.items()
+                }
+                for name, cells in output["required_cells"].items()
             }
             output["qa_checks"] = [
                 "office_zip",

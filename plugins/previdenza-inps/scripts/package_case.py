@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import logging
+import re
 import sys
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -25,7 +26,8 @@ from case_core import (
     write_private_text,
 )
 from docx import Document
-from docx.shared import Pt
+from docx.shared import Inches, Pt, RGBColor
+from memo_labels import MEMO_TEXT
 from privacy_guard import safe_identifier, safe_source_reference, session_url_issue
 
 __all__ = ["package_case", "main"]
@@ -1061,154 +1063,71 @@ def _memo_lines(
     *,
     language: str,
 ) -> list[str]:
-    if language == "es":
-        lines = [
-            f"# {SPANISH_DRAFT_HEADING}",
-            "",
-            "## Alcance",
-            "",
-            f"**Cuestión profesional:** {case_records.get('professional_question', '')}",
-            "",
-            "Este documento organiza evidencias, investigación y recálculos. No constituye un dictamen profesional. Puede incluir evidencias locales, exportaciones oficiales o, solo después de verificar por separado el permiso del servicio, una captura de solo lectura de una pestaña INPS ya autenticada; no gestiona credenciales, no activa delegaciones y no autoriza presentaciones ni trámites.",
-            "",
-            "## Hechos documentados",
-            "",
-        ]
-        for fact in _fact_rows(case_records):
-            lines.append(
-                f"- **{fact.get('fact_id', '')}** [{fact.get('review_status', '')}]: {fact.get('statement', '')}"
-            )
-        lines.extend(["", "## Cronología explícita", ""])
-        timeline = _timeline_rows(case_records)
-        if timeline:
-            for event in timeline:
-                lines.append(
-                    f"- **{event.get('date', '')}** — {event.get('description', '')} "
-                    f"(hechos: {', '.join(map(str, event.get('source_fact_ids', [])))})"
-                )
-        else:
-            lines.append("- No se ha registrado ningún evento cronológico explícito.")
-        lines.extend(["", "## Conclusiones sujetas a verificación de fuentes", ""])
-        for claim in claims:
-            lines.extend(
-                [
-                    f"### {claim['claim_id']} — {claim.get('verdict', '')}",
-                    "",
-                    str(claim.get("claim_text", "")),
-                    "",
-                    f"**Soporte:** {claim.get('source_support', '')}",
-                    "",
-                    f"**Revisión del razonamiento:** {claim.get('reasoning_review', '')}",
-                    "",
-                    f"**Incertidumbre/corrección:** {claim.get('proposed_fix') or claim.get('uncertainty') or 'No se ha indicado ninguna.'}",
-                    "",
-                    f"**Fuentes:** {', '.join(claim.get('source_refs', []))}",
-                    "",
-                    f"**Hechos de los que depende:** {', '.join(claim.get('evidence_dependencies', [])) or 'No se ha indicado ninguno.'}",
-                    "",
-                ]
-            )
-        lines.extend(["## Recálculos aprobados", ""])
-        if calculations:
-            for row in calculations:
-                lines.append(
-                    f"- **{row.get('recipe_id', '')}** [{row.get('status', '')}]: "
-                    f"{row.get('description', '')} — {row.get('result', 'no calculado')} {row.get('unit', '')}"
-                )
-        else:
-            lines.append("- No se ha incluido ningún recálculo aprobado.")
-        lines.extend(["", "## Evidencias o aclaraciones pendientes", ""])
-        if missing:
-            lines.extend(f"- {item}" for item in missing)
-        else:
-            lines.append(
-                "- No se ha registrado ninguna solicitud adicional; el profesional debe confirmar en todo caso que el expediente está completo."
-            )
-        lines.extend(
-            [
-                "",
-                "## Límites y responsabilidades",
-                "",
-                "- La selección del marco jurídico, de las fuentes y de las conclusiones se ha realizado con razonamiento guiado por el modelo y debe ser verificada por el profesional.",
-                "- Los scripts solo han comprobado la forma, la procedencia, las referencias y la aritmética aprobada de manera explícita.",
-                "- No se ha elegido automáticamente ninguna clasificación, tipo de cotización, plazo de prescripción o fecha límite.",
-                "- Estado del documento: **listo para revisión profesional**, sin firma y no apto para presentación.",
-            ]
-        )
-        return lines
-
+    text = MEMO_TEXT[language]
     lines = [
-        "# BOZZA PER REVISIONE PROFESSIONALE",
+        f"# {text['title']}",
         "",
-        "## Perimetro",
+        text["draft"],
         "",
-        f"**Quesito:** {case_records.get('professional_question', '')}",
+        f"## {text['scope']}",
         "",
-        "Il documento organizza evidenze, ricerca e ricalcoli. Non costituisce un parere professionale. Può includere evidenze locali, esportazioni ufficiali o, solo dopo separata verifica del permesso del servizio, una cattura in sola lettura di una scheda INPS già autenticata; non gestisce credenziali, non attiva deleghe e non autorizza invii o adempimenti.",
+        f"**{text['question']}:** {case_records.get('professional_question', '')}",
         "",
-        "## Fatti documentati",
+        text["introduction"],
+        "",
+        f"## {text['facts']}",
         "",
     ]
     for fact in _fact_rows(case_records):
+        state = str(fact.get("review_status", ""))
         lines.append(
-            f"- **{fact.get('fact_id', '')}** [{fact.get('review_status', '')}]: {fact.get('statement', '')}"
+            f"- **{fact.get('fact_id', '')}** [{text.get(state, state)}]: {fact.get('statement', '')}"
         )
-    lines.extend(["", "## Cronologia esplicita", ""])
+    lines.extend(["", f"## {text['timeline']}", ""])
     timeline = _timeline_rows(case_records)
-    if timeline:
-        for event in timeline:
-            lines.append(
-                f"- **{event.get('date', '')}** — {event.get('description', '')} "
-                f"(fatti: {', '.join(map(str, event.get('source_fact_ids', [])))})"
-            )
-    else:
-        lines.append("- Nessun evento cronologico esplicito registrato.")
-    lines.extend(["", "## Conclusioni sottoposte a verifica delle fonti", ""])
+    for event in timeline:
+        lines.append(
+            f"- **{event.get('date', '')}** — {event.get('description', '')} "
+            f"({text['fact_refs']}: {', '.join(map(str, event.get('source_fact_ids', [])))})"
+        )
+    if not timeline:
+        lines.append(f"- {text['no_events']}")
+    lines.extend(["", f"## {text['conclusions']}", ""])
     for claim in claims:
+        state = str(claim.get("verdict", ""))
         lines.extend(
             [
-                f"### {claim['claim_id']} — {claim.get('verdict', '')}",
+                f"### {claim['claim_id']} — {text.get(state, state)}",
                 "",
                 str(claim.get("claim_text", "")),
                 "",
-                f"**Supporto:** {claim.get('source_support', '')}",
+                f"**{text['support']}:** {claim.get('source_support', '')}",
                 "",
-                f"**Ragionamento:** {claim.get('reasoning_review', '')}",
+                f"**{text['reasoning']}:** {claim.get('reasoning_review', '')}",
                 "",
-                f"**Incertezza/correzione:** {claim.get('proposed_fix') or claim.get('uncertainty') or 'Nessuna indicata.'}",
+                f"**{text['uncertainty']}:** {claim.get('proposed_fix') or claim.get('uncertainty') or text['none']}",
                 "",
-                f"**Fonti:** {', '.join(claim.get('source_refs', []))}",
+                f"**{text['sources']}:** {', '.join(claim.get('source_refs', []))}",
                 "",
-                f"**Fatti dipendenti:** {', '.join(claim.get('evidence_dependencies', [])) or 'Nessuno indicato.'}",
+                f"**{text['dependencies']}:** {', '.join(claim.get('evidence_dependencies', [])) or text['none']}",
                 "",
             ]
         )
-    lines.extend(["## Ricalcoli approvati", ""])
-    if calculations:
-        for row in calculations:
-            lines.append(
-                f"- **{row.get('recipe_id', '')}** [{row.get('status', '')}]: "
-                f"{row.get('description', '')} — {row.get('result', 'non calcolato')} {row.get('unit', '')}"
-            )
-    else:
-        lines.append("- Nessun ricalcolo approvato incluso.")
-    lines.extend(["", "## Evidenze o chiarimenti mancanti", ""])
-    if missing:
-        lines.extend(f"- {item}" for item in missing)
-    else:
+    lines.extend([f"## {text['calculations']}", ""])
+    for row in calculations:
+        state = str(row.get("status", ""))
         lines.append(
-            "- Nessuna richiesta aggiuntiva registrata; il professionista deve comunque confermare la completezza del fascicolo."
+            f"- **{row.get('recipe_id', '')}** [{text.get(state, state)}]: "
+            f"{row.get('description', '')} — {row.get('result', text['not_calculated'])} {row.get('unit', '')}"
         )
+    if not calculations:
+        lines.append(f"- {text['no_calculations']}")
+    lines.extend(["", f"## {text['missing']}", ""])
+    lines.extend(f"- {item}" for item in (missing or [text["no_missing"]]))
+    lines.extend(["", f"## {text['limits']}", ""])
     lines.extend(
-        [
-            "",
-            "## Limiti e responsabilità",
-            "",
-            "- La selezione del quadro giuridico, delle fonti e delle conclusioni è stata svolta in modo model-led e deve essere verificata dal professionista.",
-            "- Gli script hanno controllato soltanto forma, provenienza, riferimenti e aritmetica esplicitamente approvata.",
-            "- Nessuna classificazione, aliquota, prescrizione o scadenza è stata scelta automaticamente.",
-            "- Stato del documento: **pronto per revisione professionale**, non firmato e non depositabile.",
-        ]
+        f"- {text[key]}"
+        for key in ("model_review", "mechanical_scope", "no_inference", "review_state")
     )
     return lines
 
@@ -1216,19 +1135,39 @@ def _memo_lines(
 def _write_docx(path: Path, lines: Iterable[str]) -> None:
     document = Document()
     styles = document.styles
-    styles["Normal"].font.name = "Aptos"
-    styles["Normal"].font.size = Pt(10.5)
+    styles["Normal"].font.name = "Arial"
+    styles["Normal"].font.size = Pt(11)
+    for name in ("Title", "Heading 1", "Heading 2", "Heading 3"):
+        styles[name].font.name = "Arial"
+        styles[name].font.color.rgb = RGBColor(0, 0, 0)
+        for border in styles[name].element.xpath("./w:pPr/w:pBdr"):
+            border.getparent().remove(border)
+    for section in document.sections:
+        section.top_margin = section.bottom_margin = Inches(0.7)
+        section.left_margin = section.right_margin = Inches(0.75)
     for line in lines:
         if line.startswith("# "):
-            document.add_heading(line[2:], level=1)
+            paragraph = document.add_paragraph(style="Title")
+            content = line[2:]
         elif line.startswith("## "):
-            document.add_heading(line[3:], level=2)
+            paragraph = document.add_heading(level=2)
+            content = line[3:]
         elif line.startswith("### "):
-            document.add_heading(line[4:], level=3)
+            paragraph = document.add_heading(level=3)
+            content = line[4:]
         elif line.startswith("- "):
-            document.add_paragraph(line[2:], style="List Bullet")
+            paragraph = document.add_paragraph(style="List Bullet")
+            content = line[2:]
         elif line.strip():
-            document.add_paragraph(line.replace("**", ""))
+            paragraph = document.add_paragraph()
+            content = line
+        else:
+            continue
+        for part in re.split(r"(\*\*[^*]+\*\*)", content):
+            if part.startswith("**") and part.endswith("**") and len(part) > 4:
+                paragraph.add_run(part[2:-2]).bold = True
+            else:
+                paragraph.add_run(part)
     document.save(path)
     mark_private_file(path)
 
@@ -1652,20 +1591,8 @@ def package_case(
         )
     write_private_text(
         output_dir / "document_requests.md",
-        (
-            "# Solicitudes de documentos y aclaraciones\n\n"
-            if language == "es"
-            else "# Document and clarification requests\n\n"
-        )
-        + (
-            "\n".join(f"- {item}" for item in missing)
-            if missing
-            else (
-                "- No se ha registrado ninguna."
-                if language == "es"
-                else "- None recorded."
-            )
-        )
+        f"# {MEMO_TEXT[language]['requests']}\n\n"
+        + "\n".join(f"- {item}" for item in (missing or [MEMO_TEXT[language]["none"]]))
         + "\n",
     )
 
@@ -1745,25 +1672,13 @@ def package_case(
                 "path": "studio_memo.md",
                 "kind": "md",
                 "status": "written",
-                "required_text": [
-                    (
-                        SPANISH_DRAFT_HEADING
-                        if language == "es"
-                        else "BOZZA PER REVISIONE PROFESSIONALE"
-                    )
-                ],
+                "required_text": [MEMO_TEXT[language]["draft"]],
             },
             {
                 "path": "studio_memo.docx",
                 "kind": "docx",
                 "status": "written",
-                "required_text": [
-                    (
-                        SPANISH_DRAFT_HEADING
-                        if language == "es"
-                        else "BOZZA PER REVISIONE PROFESSIONALE"
-                    )
-                ],
+                "required_text": [MEMO_TEXT[language]["draft"]],
             },
         ]
     else:

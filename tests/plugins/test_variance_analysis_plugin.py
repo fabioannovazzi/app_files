@@ -109,6 +109,37 @@ def load_legacy_adapter() -> Any:
     return module
 
 
+@pytest.mark.parametrize("as_lazy", [False, True])
+@pytest.mark.parametrize(
+    "allow_signed,expected",
+    [(False, ["revenue"]), (True, ["cost", "crossing", "revenue"])],
+)
+def test_amount_only_residual_filter_retains_signed_costs(
+    as_lazy: bool, allow_signed: bool, expected: list[str]
+) -> None:
+    adapter = load_legacy_adapter()
+    imports = adapter._legacy_imports()
+    names = imports["get_naming_params"]()
+    periods = imports["get_config_params"]()["periodsArray"]
+    prefix = names["monetaryLocalCurrencyName"] + names["separatorString"]
+    frame = pl.DataFrame(
+        {
+            "row": ["cost", "crossing", "zero", "revenue"],
+            prefix + periods[0]: [-10.0, -5.0, 0.0, 10.0],
+            prefix + periods[1]: [-12.0, 7.0, 0.0, 12.0],
+        }
+    )
+    native = sys.modules["modules.variance.variance_decomposition"]
+
+    result = native.check_rows_for_negative(
+        frame.lazy() if as_lazy else frame, allow_signed_amounts=allow_signed
+    )
+
+    if as_lazy:
+        result = result.collect()
+    assert result.get_column("row").to_list() == expected
+
+
 def load_root_cause_bridge_chart() -> Any:
     if str(SCRIPT_DIR) not in sys.path:
         sys.path.insert(0, str(SCRIPT_DIR))
@@ -1120,10 +1151,18 @@ def test_variance_plugin_records_waterfall_export_failure(
 
 
 @pytest.mark.parametrize(
-    "change_label", ["Price & units & mix", "Price & volume & mix", "Other"]
+    "change_label,display_label",
+    [
+        ("Price & units & mix", "Total variance"),
+        ("Price & volume & mix", "Total variance"),
+        ("Other", "Other"),
+    ],
 )
 def test_small_multiples_keep_changes_between_budget_and_actual_without_units(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, change_label: str
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    change_label: str,
+    display_label: str,
 ) -> None:
     import plotly.graph_objects as go
 
@@ -1181,7 +1220,7 @@ def test_small_multiples_keep_changes_between_budget_and_actual_without_units(
     assert len(captured) == 1
     traces = [trace for trace in captured[0].data if trace.type == "waterfall"]
     assert len(traces) == 2
-    assert list(traces[0].y) == ["01||Budget", f"02||{change_label}", "03||Actual"]
+    assert list(traces[0].y) == ["01||Budget", f"02||{display_label}", "03||Actual"]
     assert list(traces[1].y) == list(traces[0].y)
     assert list(traces[0].measure) == ["absolute", "relative", "total"]
     assert list(traces[1].measure) == list(traces[0].measure)

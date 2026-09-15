@@ -89,9 +89,14 @@ storage does not mean the model or voice operates offline.
 Then read `workflow-catalog.md` in full and select **three or four distinct
 operational workflows** using model judgment. Explain each through an outcome
 relevant to this professional and ask what they want to try first. They should
-not need to know the word “pipeline” or select internal skill IDs. A planner,
-validator, adversarial review or onboarding itself is not a standalone lesson.
+not need to know the word “pipeline” or select internal skill IDs. Clara's
+registered assignment planner, case director and deliverable reviewer can each
+be taught when that is the requested task. Internal assurance stages and
+onboarding itself are not additional standalone lessons.
 Use the `plan` command to save the agreed sequence with the reason and goal.
+Select from the local course catalogue. Brand Fit, Hosted Interview and Research
+Video remain unavailable in local teaching because their execution requires
+hosted services; do not offer or dispatch them as onboarding lessons.
 Do not replace started lessons merely because the app resumed.
 
 ## Each onboarding lesson

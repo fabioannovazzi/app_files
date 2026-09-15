@@ -39,7 +39,7 @@
     {
       "path": "modules/reporting-engine/scripts/budget_report.py",
       "repository_path": "plugins/clara/modules/reporting-engine/scripts/budget_report.py",
-      "sha256": "41fdfb0830e3e25fab15abc2cccbc9e2ec9d94a36a30953d89e358dcee3c875a"
+      "sha256": "fe69859b4b64c212b2ee4672dcabb73802e8840bc9f5cc312c13542ad7c837dc"
     },
     {
       "path": "modules/reporting-engine/scripts/check_compatibility.py",
@@ -99,7 +99,12 @@
     {
       "path": "scripts/advisory_evidence_lineage.py",
       "repository_path": "plugins/clara/scripts/advisory_evidence_lineage.py",
-      "sha256": "4051364542fc6c8f518b609bb76c2412b9728366a467453855e0af2a9b02e290"
+      "sha256": "908e8740f18b5763b79de157cbaa6621f5758e6f432780e4b279a4245f765a73"
+    },
+    {
+      "path": "scripts/advisory_lineage_labels.py",
+      "repository_path": "plugins/clara/scripts/advisory_lineage_labels.py",
+      "sha256": "2ad7c96dee1bd61d76f578bfef1dac2f90d3b7ab8d72e0a355dce4ebed44d934"
     },
     {
       "path": "scripts/check_dependencies.py",
@@ -129,7 +134,7 @@
     {
       "path": "skills/reporting-engine/SKILL.md",
       "repository_path": "plugins/clara/skills/reporting-engine/SKILL.md",
-      "sha256": "99dd75ddf0ccc90b0f9aae5e0ca987765f6fdb86108ac9896a00959d300ec3af"
+      "sha256": "cabc0412c0e00e22e3b773c9e2d18a710652ab679b1de7d451bf6bcfb8dc56e3"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -164,7 +169,7 @@
     {
       "path": "vendor/modules/courseware/assets/languages.json",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
     },
     {
       "path": "vendor/modules/courseware/execution.py",
@@ -174,7 +179,12 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
     },
     {
       "path": "vendor/modules/desktop_teaching/__init__.py",
@@ -189,12 +199,12 @@
     {
       "path": "vendor/modules/desktop_teaching/onboarding.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
-      "sha256": "3a230127225683b86ead89c6fd93101092b756f062b396d9be45e757dc530b14"
+      "sha256": "215244f8e595127743e7fd1c97febd489056ebcc9d7907dec7098a6b498fca8b"
     },
     {
       "path": "vendor/modules/desktop_teaching/teaching.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
-      "sha256": "9e672584218ce40d8a5e397d61f3198eacea4bdffdcb37fd813333799875a4d4"
+      "sha256": "8cfb8565b9a854c119e8a48e7bf068f2450786d21255da9b202a606226207a6e"
     }
   ],
   "files": [
@@ -211,13 +221,41 @@
       "role": "source"
     },
     {
-      "path": "files/input/facts.md",
+      "path": "files/input/facts-it.md",
+      "sha256": "e6d453933c55d15d78115894ed39bb9f742f0903fcdd78a37d37746f15eb29eb",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/facts-en.md",
       "sha256": "86137c1a1ae2f0eac6736f1749f75d166d32b41aa2a412aa6e404cb0e9ded4cd",
       "languages": [
-        "it",
-        "en",
-        "fr",
-        "de",
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/facts-fr.md",
+      "sha256": "5a7ca46664211fff5cc0cb2b3688b0c0a18d05bbd197dbd1df5b071d7b337783",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/facts-de.md",
+      "sha256": "709a7b6d3af2e093fc805cf5f1fe11143200cd199038f1fe7d20b84392b855a6",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/facts-es.md",
+      "sha256": "1f6654330b5ea977ec4e0ff68feedd3c3b48b57998e979a2d1d43417301ebde6",
+      "languages": [
         "es"
       ],
       "role": "source"
@@ -235,13 +273,41 @@
       "role": "practice"
     },
     {
-      "path": "files/practice/facts.md",
+      "path": "files/practice/facts-it.md",
+      "sha256": "e6d453933c55d15d78115894ed39bb9f742f0903fcdd78a37d37746f15eb29eb",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/facts-en.md",
       "sha256": "86137c1a1ae2f0eac6736f1749f75d166d32b41aa2a412aa6e404cb0e9ded4cd",
       "languages": [
-        "it",
-        "en",
-        "fr",
-        "de",
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/facts-fr.md",
+      "sha256": "5a7ca46664211fff5cc0cb2b3688b0c0a18d05bbd197dbd1df5b071d7b337783",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/facts-de.md",
+      "sha256": "709a7b6d3af2e093fc805cf5f1fe11143200cd199038f1fe7d20b84392b855a6",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/facts-es.md",
+      "sha256": "1f6654330b5ea977ec4e0ff68feedd3c3b48b57998e979a2d1d43417301ebde6",
+      "languages": [
         "es"
       ],
       "role": "practice"
@@ -252,7 +318,7 @@
       "goal": "Impara a confrontare consuntivo e budget, seguire la preparazione del report e usare le differenze per la revisione mensile.",
       "scenario": "Arco ha preparato i dati economici di gennaio e febbraio e il budget degli stessi mesi. Il responsabile vuole capire il risultato operativo e quali categorie spiegano la differenza dal piano, prima della riunione mensile.",
       "scope": "Il caso comprende ricavi, costo del venduto e costi operativi in euro. Il report distingue i dati osservati dalle spiegazioni che richiedono informazioni dell’azienda. Clara sceglie l’analisi in base alla domanda e ai dati; questo primo utilizzo segue il confronto con il budget. Il report della lezione resta locale.",
-      "inputs": "Apri actual-budget.xlsx e facts.md. Il foglio GL contiene movimenti mensili per conto e categoria; Budget contiene il piano comparabile. I ricavi sono positivi e i costi negativi. Il caso indica periodo, significati e totali di controllo: consuntivo EUR 53.000 e budget EUR 47.000.",
+      "inputs": "Apri actual-budget.xlsx e facts-it.md. Il foglio GL contiene movimenti mensili per conto e categoria; Budget contiene il piano comparabile. I ricavi sono positivi e i costi negativi. Il caso indica periodo, significati e totali di controllo: consuntivo EUR 53.000 e budget EUR 47.000.",
       "steps": [
         "L’assistente esamina i fogli e propone quali colonne rappresentano date, categorie e importi. Conferma il periodo gennaio–febbraio e la convenzione dei segni prima del calcolo.",
         "Il workflow applica la mappatura verificata, confronta consuntivo e budget e controlla i totali. La chat vocale spiega il passaggio effettivo e le eventuali informazioni richieste.",
@@ -277,7 +343,7 @@
       "goal": "Learn to compare actual performance with budget, follow report preparation and use the differences in a monthly review.",
       "scenario": "Arco has prepared January and February management accounts and a budget for the same months. The manager wants to understand operating performance and which categories explain the difference from plan before the monthly meeting.",
       "scope": "The case includes revenue, cost of goods sold and operating expenses in EUR. The report separates observed figures from explanations requiring company evidence. Clara selects the analysis from the question and data; this first use follows a budget comparison. The teaching report stays local.",
-      "inputs": "Open actual-budget.xlsx and facts.md. GL contains monthly movements by account and category; Budget contains the comparable plan. Revenue is positive and costs are negative. The case declares periods, meanings and control totals: actual EUR 53,000 and budget EUR 47,000.",
+      "inputs": "Open actual-budget.xlsx and facts-en.md. GL contains monthly movements by account and category; Budget contains the comparable plan. Revenue is positive and costs are negative. The case declares periods, meanings and control totals: actual EUR 53,000 and budget EUR 47,000.",
       "steps": [
         "The assistant inspects the sheets and proposes which columns contain dates, categories and amounts. Confirm January–February and the sign convention before calculation.",
         "The workflow applies the reviewed mapping, compares actual with budget and checks totals. The voice chat explains the actual step and any requested information.",
@@ -303,7 +369,7 @@
       "goal": "Apprenez à comparer les résultats au budget, suivre la préparation du rapport et utiliser les écarts lors d’une revue mensuelle.",
       "scenario": "Arco a préparé ses comptes de gestion de janvier et février et le budget des mêmes mois. Le responsable veut comprendre le résultat opérationnel et les catégories à approfondir avant la réunion mensuelle.",
       "scope": "Le cas comprend chiffre d’affaires, coût des ventes et charges opérationnelles en EUR. Clara choisit l’analyse selon la question et les données ; ce premier parcours utilise une comparaison au budget et reste local.",
-      "inputs": "Ouvrez actual-budget.xlsx et facts.md. GL contient les mouvements mensuels par compte et catégorie ; Budget contient le plan comparable. Les revenus sont positifs, les charges négatives. Les totaux de contrôle sont 53 000 EUR au réel et 47 000 EUR au budget.",
+      "inputs": "Ouvrez actual-budget.xlsx et facts-fr.md. GL contient les mouvements mensuels par compte et catégorie ; Budget contient le plan comparable. Les revenus sont positifs, les charges négatives. Les totaux de contrôle sont 53 000 EUR au réel et 47 000 EUR au budget.",
       "request": "Clara, prépare le rapport réel–budget d’Arco pour janvier et février 2026 avec ce classeur. Montre le résultat opérationnel, les écarts et le détail par catégorie.",
       "steps": [
         "Clara examine les feuilles et propose les colonnes de dates, catégories et montants. Confirmez janvier–février et le sens des signes avant le calcul.",
@@ -328,7 +394,7 @@
       "goal": "Lernen Sie, Ist und Budget zu vergleichen, die Berichtserstellung zu verfolgen und die Abweichungen bei der Monatsbesprechung zu nutzen.",
       "scenario": "Arco hat die Managementzahlen für Januar und Februar und das Budget derselben Monate vorbereitet. Die Leitung möchte das operative Ergebnis und die zu untersuchenden Kategorien vor der Monatsbesprechung verstehen.",
       "scope": "Der Fall umfasst Umsatz, Wareneinsatz und Betriebsaufwand in EUR. Clara wählt die Analyse anhand von Frage und Daten; diese erste Anwendung zeigt einen Budgetvergleich und bleibt lokal.",
-      "inputs": "Öffnen Sie actual-budget.xlsx und facts.md. GL enthält monatliche Bewegungen nach Konto und Kategorie, Budget den vergleichbaren Plan. Umsätze sind positiv, Kosten negativ. Die Kontrollsummen betragen 53.000 EUR im Ist und 47.000 EUR im Budget.",
+      "inputs": "Öffnen Sie actual-budget.xlsx und facts-de.md. GL enthält monatliche Bewegungen nach Konto und Kategorie, Budget den vergleichbaren Plan. Umsätze sind positiv, Kosten negativ. Die Kontrollsummen betragen 53.000 EUR im Ist und 47.000 EUR im Budget.",
       "request": "Clara, erstelle aus dieser Arbeitsmappe Arcos Ist-Budget-Bericht für Januar und Februar 2026. Zeige operatives Ergebnis, Abweichungen und Kategorien.",
       "steps": [
         "Clara untersucht die Tabellen und schlägt die Spalten für Datum, Kategorie und Betrag vor. Bestätigen Sie Januar–Februar und die Vorzeichen vor der Berechnung.",
@@ -353,7 +419,7 @@
       "goal": "Aprende a comparar resultados y presupuesto, seguir la preparación del informe y utilizar las diferencias en la revisión mensual.",
       "scenario": "Arco ha preparado sus datos de gestión de enero y febrero y el presupuesto de esos meses. El responsable quiere entender el resultado operativo y las categorías que debe investigar antes de la reunión mensual.",
       "scope": "El caso incluye ingresos, coste de ventas y gastos operativos en EUR. Clara elige el análisis según la pregunta y los datos; este primer uso sigue una comparación presupuestaria y permanece local.",
-      "inputs": "Abre actual-budget.xlsx y facts.md. GL contiene movimientos mensuales por cuenta y categoría; Budget contiene el plan comparable. Los ingresos son positivos y los costes negativos. Los totales de control son 53.000 EUR reales y 47.000 EUR presupuestados.",
+      "inputs": "Abre actual-budget.xlsx y facts-es.md. GL contiene movimientos mensuales por cuenta y categoría; Budget contiene el plan comparable. Los ingresos son positivos y los costes negativos. Los totales de control son 53.000 EUR reales y 47.000 EUR presupuestados.",
       "request": "Clara, prepara el informe real–presupuesto de Arco para enero y febrero de 2026 con este libro. Muestra resultado operativo, desviaciones y detalle por categoría.",
       "steps": [
         "Clara examina las hojas y propone las columnas de fechas, categorías e importes. Confirma enero–febrero y el criterio de signos antes de calcular.",

@@ -1,0 +1,36 @@
+{
+  "question": "Die Akte zum digitalen Projekt anhand der fiktiven Ausschreibung und der vorgelegten Unterlagen vorbereiten.",
+  "title": "Digitale Terminbuchung",
+  "site": "Mailand",
+  "summary": "Arco Servizi plant Software und Schulungen für vier Beschäftigte. Die Akte verknüpft die Ausschreibungsbedingungen mit den Erklärungen und dem Angebot. Auslegung und Unterlagen sind noch zu prüfen.",
+  "fictional": "Vollständig fiktive Quelle; keine reale Behörde oder Förderung.",
+  "fixture": "Synthetische Auslegung für einen Workflow-Test; keine tatsächliche fachliche Prüfung.",
+  "project": "Digitale Terminbuchung einführen und das Personal schulen.",
+  "commitment": "Das Angebot ist nicht angenommen; keine Bestellung wurde unterzeichnet und keine Ausgabe getätigt.",
+  "requirement_evidence": "Projektunterlagen und Angebot sind für diese Bedingung zu prüfen.",
+  "clauses": [
+    "Die Erklärung nennt eine Betriebsstätte in Mailand. Die erklärte Lage entspricht der territorialen Bedingung, vorbehaltlich der Prüfung.",
+    "Erklärt werden vier Beschäftigte und damit weniger als zehn. Die Angabe stammt aus der Unternehmenserklärung und ist noch zu prüfen.",
+    "Das erklärte Projekt umfasst digitale Terminbuchung und Mitarbeiterschulungen und entspricht damit dem genannten Zweck der Ausschreibung.",
+    "Q-001 beschreibt eine neue Lizenz für die geplante Software. Ihre Aufnahme in die förderfähigen Ausgaben wird gemäß Bedingung 4 vorgeschlagen und ist noch zu prüfen.",
+    "Q-002 beschreibt die projektbezogene Mitarbeiterschulung. Die Zuordnung wird zur Prüfung vorgeschlagen.",
+    "Q-003 ist ein Computer. Er wird wegen des Hardwareausschlusses nicht in die förderfähige Bemessungsgrundlage aufgenommen, kann aber Teil der gesamten Projektkosten bleiben.",
+    "50 % der vorgeschlagenen förderfähigen Ausgaben von {eligible} EUR ergeben einen hypothetischen Antrag über {grant} EUR, vorbehaltlich der Kostenprüfung.",
+    "Der hypothetische Betrag von {grant} EUR überschreitet die Obergrenze von 5.000 EUR nicht. Dies ist keine Förderzusage.",
+    "Die Projektunterlage enthält die verlangte Beschreibung. Ihr Vorliegen bestätigt noch nicht ihren Inhalt.",
+    "Die Unternehmenserklärung nennt die Betriebsstätte und vier Beschäftigte; diese Angaben sind noch zu prüfen.",
+    "Das Angebot weist Software, Schulung und Computer mit Einzelbeträgen aus. Die Vertragsbedingungen sind noch zu prüfen.",
+    "Das Bezugsdatum, der 14. September 2026, liegt im fiktiven Zeitraum vom 1. bis 30. September. Daraus folgt nicht, dass eine reale Ausschreibung geöffnet ist.",
+    "Das Unternehmen erklärt, das Angebot nicht angenommen und keine Bestellung oder Ausgabe veranlasst zu haben. Danach scheint die Bedingung erfüllt; die Erklärung ist noch zu prüfen."
+  ],
+  "documents": [
+    "Projektbeschreibung",
+    "Erklärung zu Betriebsstätte und Beschäftigten",
+    "Aufgeschlüsseltes Angebot"
+  ],
+  "document_reason": "Die vorgelegte Unterlage ist mit der genannten Bedingung verknüpft; Inhalt und Verlässlichkeit sind noch zu prüfen.",
+  "narrative": "Arco Servizi plant digitale Terminbuchung in der erklärten Betriebsstätte in Mailand und Schulungen für vier Beschäftigte. Das Angebot umfasst eine Softwarelizenz, Schulung und einen Computer. Es wurde weder ein Angebot angenommen noch eine Bestellung unterzeichnet. Die vorgeschlagene Förderbasis umfasst Software und Schulung, nicht den Computer. Die Kostenauslegung und die Unternehmenserklärungen sind noch zu prüfen.",
+  "budget": "Vorgeschlagene Projektgesamtkosten: {total} EUR; vorgeschlagene förderfähige Ausgaben: {eligible} EUR; ausgeschlossene Hardware: 3.000 EUR; hypothetischer Zuschuss: {grant} EUR. Die Berechnung folgt ausschließlich den fiktiven Bedingungen 7 und 8.",
+  "consistency": "Angebot, vorgeschlagene Förderbasis und hypothetischen Antrag abgleichen.",
+  "issue": "Unternehmenserklärungen, Auslegung der Bedingungen und Kostenzuordnungen vor der Bestätigung der Akte prüfen."
+}

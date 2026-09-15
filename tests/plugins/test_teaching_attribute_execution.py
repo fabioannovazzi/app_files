@@ -7,12 +7,15 @@ Live output review, voice interaction and learner understanding are separate.
 
 from __future__ import annotations
 
+import csv
 import importlib.util
 import json
 import sys
 from pathlib import Path
 
 import pytest
+
+from tests.plugins._teaching_release import record_native_check
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT / "plugins/attribute-reporting/scripts"
@@ -70,6 +73,40 @@ TEXT = {
 }
 
 
+DISPLAY = {
+    "it": (
+        "Stampa rapporto",
+        "Confronto delle combinazioni di attributi",
+        "Prodotti nel gruppo",
+        "Non determinabile",
+    ),
+    "en": (
+        "Print report",
+        "Attribute combination comparison",
+        "Products in group",
+        "Unable to determine",
+    ),
+    "fr": (
+        "Imprimer le rapport",
+        "Comparaison des combinaisons d’attributs",
+        "Produits du groupe",
+        "Impossible à déterminer",
+    ),
+    "de": (
+        "Bericht drucken",
+        "Vergleich der Attributkombinationen",
+        "Produkte der Gruppe",
+        "Nicht feststellbar",
+    ),
+    "es": (
+        "Imprimir informe",
+        "Comparación de combinaciones de atributos",
+        "Productos del grupo",
+        "No se puede determinar",
+    ),
+}
+
+
 def _load(path, name, monkeypatch):
     spec = importlib.util.spec_from_file_location(name, path)
     module = importlib.util.module_from_spec(spec)
@@ -81,7 +118,7 @@ def _load(path, name, monkeypatch):
 @pytest.mark.parametrize("language", TEXT)
 @pytest.mark.parametrize("phase", ["demo", "practice"])
 def test_assortment_kit_renders_native_comparisons_and_requires_independent_review(
-    tmp_path, monkeypatch, language, phase
+    tmp_path, monkeypatch, language, phase, record_property
 ):
     monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
     monkeypatch.syspath_prepend(str(SCRIPTS))
@@ -93,18 +130,9 @@ def test_assortment_kit_renders_native_comparisons_and_requires_independent_revi
     bridge = _load(
         SCRIPTS / "server_bridge_client.py", "teaching_attribute_bridge", monkeypatch
     )
-    # Load the exact packaged table implementation directly, avoiding the app's
-    # unrelated modules.pdp package initializer in this focused source test.
-    tables = _load(
-        ROOT / "modules/pdp/attribute_table_templates.py",
-        "teaching_attribute_tables",
-        monkeypatch,
-    )
-    monkeypatch.setattr(
-        native,
-        "_load_attribute_table_builder",
-        lambda: tables.build_attribute_tables_from_package,
-    )
+    # The component must work without the development app's scraping package.
+    # Exercise the real table loader; no replacement builder is injected.
+    monkeypatch.setitem(sys.modules, "modules.pdp", None)
     kit = CourseLibrary(ROOT / "plugins/clara", {"attribute-reporting"}).render(
         "attribute-reporting", language, tmp_path / "kit"
     )
@@ -119,6 +147,7 @@ def test_assortment_kit_renders_native_comparisons_and_requires_independent_revi
         package,
         output,
         author_agent_id="synthetic-regression-author",
+        language=language,
         require_browser_qa=True,
     )
     model_path = output / "report_model.json"
@@ -205,6 +234,17 @@ def test_assortment_kit_renders_native_comparisons_and_requires_independent_revi
 
     html = (output / "report.html").read_text()
     assert title in html and introduction in html
+    assert f'<html lang="{language}">' in html
+    button, table_title, count_column, verdict_label = DISPLAY[language]
+    assert f">{button}</button>" in html
+    assert table_title in html and f">{count_column}</th>" in html
+    assert f"<strong>{verdict_label}</strong>" in html
+    assert 'data-correctness-verdict="pending"' not in html
+    table_html = (
+        output / "evidence/attribute_tables/attribute_bundle_comparison_table.html"
+    ).read_text()
+    assert f'<html lang="{language}">' in table_html
+    assert table_title in table_html and f">{count_column}</th>" in table_html
     assert ("75.0%" if phase == "demo" else "100.0%") in html
     assert ("6.2%" if phase == "demo" else "12.5%") in html
     assert verdict["basis"]["mechanical_claims"] == "pass"
@@ -217,3 +257,35 @@ def test_assortment_kit_renders_native_comparisons_and_requires_independent_revi
     assert not (output / "browser_qa.json").is_file()
     assert not (output / "mapping_submission_receipt.json").is_file()
     assert (output / "claim_ledger.json").is_file()
+    with (
+        output / "evidence/attribute_tables/product_signal_evidence_table.csv"
+    ).open() as source:
+        products = list(csv.DictReader(source))
+    assert products[0]["attributes"] == "black | cardigan"
+    assert "Sparse resolved attributes" not in products[0]["caveat"]
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="clara",
+        workflow="attribute-reporting",
+        language=language,
+        phase=phase,
+    )
+
+
+@pytest.mark.parametrize("language", ["pt", "", "<script>", None])
+def test_prepare_rejects_unsupported_language_before_writing(
+    tmp_path, monkeypatch, language
+):
+    monkeypatch.syspath_prepend(str(SCRIPTS))
+    native = _load(
+        SCRIPTS / "attribute_reporting.py", "attribute_invalid_language", monkeypatch
+    )
+    with pytest.raises(native.ContractError, match="Report language must"):
+        native.prepare_run(
+            tmp_path / "missing-input",
+            tmp_path / "report",
+            author_agent_id="synthetic",
+            language=language,
+        )
+    assert not (tmp_path / "report").exists()

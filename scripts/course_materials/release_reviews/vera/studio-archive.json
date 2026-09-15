@@ -1,0 +1,230 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "studio-archive",
+  "course_sha256": "9d09c3773104a2455712c0ae247094a891eab60a257971ee0d5762d4cec23a1f",
+  "reviewer": "Codex: five-language local archive lesson and delivered answer review",
+  "reviewed_at": "2026-09-14T21:43:59.684693+00:00",
+  "review_scope": "Prepared material and native local document-search review. Read all five complete outlines, all fifteen fictional input documents and all ten final answer captures. Nineteen checks pass, including ten distinct phase/language exercises through the real staging, archive configuration, refresh, exact-scope search and source opening functions. Semantic answers are authored regression fixtures outside the shipped kits and do not replace live host reasoning. Native voice, GUI presentation, actual elapsed lesson time and learner comprehension remain unverified. Gmail, WhatsApp, Drive and the separate engagement lifecycle are not exercised by this local-search lesson.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain lesson title teaches finding a client document and answering a concrete question from it. The learner sees the folder structure, selects Ciclo Arco, asks which maintenance service was agreed and until when, opens a citation, then repeats after adding a document. The outline explains when to use and how to repeat the complete local-search path.",
+        "inputs_and_request": "Read each localized agreement, separate Delta agreement and practice update. Ciclo Arco has monthly equipment inspections and written visit reports, further repairs require a separate proposal, the original stated period is calendar 2026 and Elena Esempio is the contact. Delta has a different quarterly agreement with an earlier end date. A later fictional note extends Ciclo Arco service to 30 June 2027. All input files identify themselves as fictional.",
+        "execution_and_checkpoints": "The actual teaching adapter stages only the prepared client-folder tree and creates a separate private index/session. Current archive code configures, refreshes, searches the exact Ciclo Arco scope and re-verifies every source before use. Search and opened-source records show no reading issues in that scope. The learner identifies the client before searching and locates a stated fact in an opened source at delivery.",
+        "deliverable_and_next_action": "Read all ten final answer captures. Each starts with service, stated period and contact, cites the native returned source locator, quotes the relevant extracted passages and provides working local source links. The final section states scope, index refresh time, reading limitations and how to repeat. It describes document content without claiming service performance, archive completeness or legal validity. Technical index and search records remain supporting evidence.",
+        "practice_and_repeat": "Practice adds the update to the same teaching archive, refreshes and opens both documents. The new answer distinguishes the original 31 December 2026 date from the extension to 30 June 2027, retaining services and contact. The original agreement and kit sources are unchanged. The first answer and its source records are byte-preserved and linked from the updated answer. The learner explains why a refresh is needed after new documents arrive.",
+        "language_and_pacing": "Language it. The full outline, source documents, answer narrative and excerpts are in this language; native technical source locators retain their standard labels. Six planned stages total 390 seconds. The short request, one initial document and one update keep the explanation and practice focused. Native voice delivery, human timing and comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[demo-it]",
+        "result_review": "The actual current search returns one Ciclo Arco agreement, opens and verifies it, and supports the localized answer about monthly inspection, written reports, calendar 2026 and the named contact. Delta is absent from the answer and selected evidence.",
+        "reviewed_artifacts": [
+          {
+            "name": "answer.md",
+            "sha256": "071b222a217c0dac01a2b3e134c848f4864e730e13ecc6fdb998dd655dcf9487"
+          },
+          {
+            "name": "search_evidence.json",
+            "sha256": "f268180babb77b1d8876adfeca723907ea2497086a2b7bff247c4cb58ed0ae0f"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[practice-it]",
+        "result_review": "The same archive adds the prepared update, refreshes and returns both Ciclo Arco documents. The source-backed answer describes the 30 June 2027 extension and preserves the original reference and first answer. All linked files resolve and original kit bytes remain unchanged.",
+        "reviewed_artifacts": [
+          {
+            "name": "answer.md",
+            "sha256": "f22e67273cda080b5dfa95f29d71b9518a191b287e5a76717cce4e1541e87d86"
+          },
+          {
+            "name": "search_evidence.json",
+            "sha256": "740cb5e9fb74b8a22e8d086aad199cba97160def5471f219697f2f40ade5fd28"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain lesson title teaches finding a client document and answering a concrete question from it. The learner sees the folder structure, selects Ciclo Arco, asks which maintenance service was agreed and until when, opens a citation, then repeats after adding a document. The outline explains when to use and how to repeat the complete local-search path.",
+        "inputs_and_request": "Read each localized agreement, separate Delta agreement and practice update. Ciclo Arco has monthly equipment inspections and written visit reports, further repairs require a separate proposal, the original stated period is calendar 2026 and Elena Esempio is the contact. Delta has a different quarterly agreement with an earlier end date. A later fictional note extends Ciclo Arco service to 30 June 2027. All input files identify themselves as fictional.",
+        "execution_and_checkpoints": "The actual teaching adapter stages only the prepared client-folder tree and creates a separate private index/session. Current archive code configures, refreshes, searches the exact Ciclo Arco scope and re-verifies every source before use. Search and opened-source records show no reading issues in that scope. The learner identifies the client before searching and locates a stated fact in an opened source at delivery.",
+        "deliverable_and_next_action": "Read all ten final answer captures. Each starts with service, stated period and contact, cites the native returned source locator, quotes the relevant extracted passages and provides working local source links. The final section states scope, index refresh time, reading limitations and how to repeat. It describes document content without claiming service performance, archive completeness or legal validity. Technical index and search records remain supporting evidence.",
+        "practice_and_repeat": "Practice adds the update to the same teaching archive, refreshes and opens both documents. The new answer distinguishes the original 31 December 2026 date from the extension to 30 June 2027, retaining services and contact. The original agreement and kit sources are unchanged. The first answer and its source records are byte-preserved and linked from the updated answer. The learner explains why a refresh is needed after new documents arrive.",
+        "language_and_pacing": "Language en. The full outline, source documents, answer narrative and excerpts are in this language; native technical source locators retain their standard labels. Six planned stages total 390 seconds. The short request, one initial document and one update keep the explanation and practice focused. Native voice delivery, human timing and comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[demo-en]",
+        "result_review": "The actual current search returns one Ciclo Arco agreement, opens and verifies it, and supports the localized answer about monthly inspection, written reports, calendar 2026 and the named contact. Delta is absent from the answer and selected evidence.",
+        "reviewed_artifacts": [
+          {
+            "name": "answer.md",
+            "sha256": "ee5ad966748f609eddcb193b6e19a0742810eeba53440085fe8eb55809cfdfd3"
+          },
+          {
+            "name": "search_evidence.json",
+            "sha256": "aeee8ab14a154b09ac0f4d1f5eb337bd8ca3e66c5aa50a9fb09eaa6cfb78fe9e"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[practice-en]",
+        "result_review": "The same archive adds the prepared update, refreshes and returns both Ciclo Arco documents. The source-backed answer describes the 30 June 2027 extension and preserves the original reference and first answer. All linked files resolve and original kit bytes remain unchanged.",
+        "reviewed_artifacts": [
+          {
+            "name": "answer.md",
+            "sha256": "b483be2db37ee66315eb603f838512bf4ab901a96372116d5b9434be219d6282"
+          },
+          {
+            "name": "search_evidence.json",
+            "sha256": "aababcf8e77be25ea441c7603e650f1556316a946fd5530a45048685528bbbbd"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain lesson title teaches finding a client document and answering a concrete question from it. The learner sees the folder structure, selects Ciclo Arco, asks which maintenance service was agreed and until when, opens a citation, then repeats after adding a document. The outline explains when to use and how to repeat the complete local-search path.",
+        "inputs_and_request": "Read each localized agreement, separate Delta agreement and practice update. Ciclo Arco has monthly equipment inspections and written visit reports, further repairs require a separate proposal, the original stated period is calendar 2026 and Elena Esempio is the contact. Delta has a different quarterly agreement with an earlier end date. A later fictional note extends Ciclo Arco service to 30 June 2027. All input files identify themselves as fictional.",
+        "execution_and_checkpoints": "The actual teaching adapter stages only the prepared client-folder tree and creates a separate private index/session. Current archive code configures, refreshes, searches the exact Ciclo Arco scope and re-verifies every source before use. Search and opened-source records show no reading issues in that scope. The learner identifies the client before searching and locates a stated fact in an opened source at delivery.",
+        "deliverable_and_next_action": "Read all ten final answer captures. Each starts with service, stated period and contact, cites the native returned source locator, quotes the relevant extracted passages and provides working local source links. The final section states scope, index refresh time, reading limitations and how to repeat. It describes document content without claiming service performance, archive completeness or legal validity. Technical index and search records remain supporting evidence.",
+        "practice_and_repeat": "Practice adds the update to the same teaching archive, refreshes and opens both documents. The new answer distinguishes the original 31 December 2026 date from the extension to 30 June 2027, retaining services and contact. The original agreement and kit sources are unchanged. The first answer and its source records are byte-preserved and linked from the updated answer. The learner explains why a refresh is needed after new documents arrive.",
+        "language_and_pacing": "Language fr. The full outline, source documents, answer narrative and excerpts are in this language; native technical source locators retain their standard labels. Six planned stages total 390 seconds. The short request, one initial document and one update keep the explanation and practice focused. Native voice delivery, human timing and comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[demo-fr]",
+        "result_review": "The actual current search returns one Ciclo Arco agreement, opens and verifies it, and supports the localized answer about monthly inspection, written reports, calendar 2026 and the named contact. Delta is absent from the answer and selected evidence.",
+        "reviewed_artifacts": [
+          {
+            "name": "answer.md",
+            "sha256": "af901a46052f98b056b6c64b321abc3ce6b5ac19b783883a765a721af59901bb"
+          },
+          {
+            "name": "search_evidence.json",
+            "sha256": "469106aede6232cb284095376ec51f5e64e5817868eb146576b2e02a3d768694"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[practice-fr]",
+        "result_review": "The same archive adds the prepared update, refreshes and returns both Ciclo Arco documents. The source-backed answer describes the 30 June 2027 extension and preserves the original reference and first answer. All linked files resolve and original kit bytes remain unchanged.",
+        "reviewed_artifacts": [
+          {
+            "name": "answer.md",
+            "sha256": "ecde34dff3e42399e1892881ade7ee3f95128430bb2d2499d5cb9f4479b9ded5"
+          },
+          {
+            "name": "search_evidence.json",
+            "sha256": "a99b8791cd30106b123d6f641ebeac61d357ba37a2b3882c140d1d13e600422b"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain lesson title teaches finding a client document and answering a concrete question from it. The learner sees the folder structure, selects Ciclo Arco, asks which maintenance service was agreed and until when, opens a citation, then repeats after adding a document. The outline explains when to use and how to repeat the complete local-search path.",
+        "inputs_and_request": "Read each localized agreement, separate Delta agreement and practice update. Ciclo Arco has monthly equipment inspections and written visit reports, further repairs require a separate proposal, the original stated period is calendar 2026 and Elena Esempio is the contact. Delta has a different quarterly agreement with an earlier end date. A later fictional note extends Ciclo Arco service to 30 June 2027. All input files identify themselves as fictional.",
+        "execution_and_checkpoints": "The actual teaching adapter stages only the prepared client-folder tree and creates a separate private index/session. Current archive code configures, refreshes, searches the exact Ciclo Arco scope and re-verifies every source before use. Search and opened-source records show no reading issues in that scope. The learner identifies the client before searching and locates a stated fact in an opened source at delivery.",
+        "deliverable_and_next_action": "Read all ten final answer captures. Each starts with service, stated period and contact, cites the native returned source locator, quotes the relevant extracted passages and provides working local source links. The final section states scope, index refresh time, reading limitations and how to repeat. It describes document content without claiming service performance, archive completeness or legal validity. Technical index and search records remain supporting evidence.",
+        "practice_and_repeat": "Practice adds the update to the same teaching archive, refreshes and opens both documents. The new answer distinguishes the original 31 December 2026 date from the extension to 30 June 2027, retaining services and contact. The original agreement and kit sources are unchanged. The first answer and its source records are byte-preserved and linked from the updated answer. The learner explains why a refresh is needed after new documents arrive.",
+        "language_and_pacing": "Language de. The full outline, source documents, answer narrative and excerpts are in this language; native technical source locators retain their standard labels. Six planned stages total 390 seconds. The short request, one initial document and one update keep the explanation and practice focused. Native voice delivery, human timing and comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[demo-de]",
+        "result_review": "The actual current search returns one Ciclo Arco agreement, opens and verifies it, and supports the localized answer about monthly inspection, written reports, calendar 2026 and the named contact. Delta is absent from the answer and selected evidence.",
+        "reviewed_artifacts": [
+          {
+            "name": "answer.md",
+            "sha256": "4634dbcee38f843933cfba7f55256121c033a8184afd0a80a7b6178b48314567"
+          },
+          {
+            "name": "search_evidence.json",
+            "sha256": "90efa01121496e097ee4da95afe99a7df43ff104e8dcb98d9fbce29600708b29"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[practice-de]",
+        "result_review": "The same archive adds the prepared update, refreshes and returns both Ciclo Arco documents. The source-backed answer describes the 30 June 2027 extension and preserves the original reference and first answer. All linked files resolve and original kit bytes remain unchanged.",
+        "reviewed_artifacts": [
+          {
+            "name": "answer.md",
+            "sha256": "5ca413e49b4d5744343acf8e7bb5fd740a0e340aee3bb108e13919e77161e1c0"
+          },
+          {
+            "name": "search_evidence.json",
+            "sha256": "5eecb7a39468e6d650626e680178a386c088e58fe4334dad2873f1a2ebd6138f"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain lesson title teaches finding a client document and answering a concrete question from it. The learner sees the folder structure, selects Ciclo Arco, asks which maintenance service was agreed and until when, opens a citation, then repeats after adding a document. The outline explains when to use and how to repeat the complete local-search path.",
+        "inputs_and_request": "Read each localized agreement, separate Delta agreement and practice update. Ciclo Arco has monthly equipment inspections and written visit reports, further repairs require a separate proposal, the original stated period is calendar 2026 and Elena Esempio is the contact. Delta has a different quarterly agreement with an earlier end date. A later fictional note extends Ciclo Arco service to 30 June 2027. All input files identify themselves as fictional.",
+        "execution_and_checkpoints": "The actual teaching adapter stages only the prepared client-folder tree and creates a separate private index/session. Current archive code configures, refreshes, searches the exact Ciclo Arco scope and re-verifies every source before use. Search and opened-source records show no reading issues in that scope. The learner identifies the client before searching and locates a stated fact in an opened source at delivery.",
+        "deliverable_and_next_action": "Read all ten final answer captures. Each starts with service, stated period and contact, cites the native returned source locator, quotes the relevant extracted passages and provides working local source links. The final section states scope, index refresh time, reading limitations and how to repeat. It describes document content without claiming service performance, archive completeness or legal validity. Technical index and search records remain supporting evidence.",
+        "practice_and_repeat": "Practice adds the update to the same teaching archive, refreshes and opens both documents. The new answer distinguishes the original 31 December 2026 date from the extension to 30 June 2027, retaining services and contact. The original agreement and kit sources are unchanged. The first answer and its source records are byte-preserved and linked from the updated answer. The learner explains why a refresh is needed after new documents arrive.",
+        "language_and_pacing": "Language es. The full outline, source documents, answer narrative and excerpts are in this language; native technical source locators retain their standard labels. Six planned stages total 390 seconds. The short request, one initial document and one update keep the explanation and practice focused. Native voice delivery, human timing and comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[demo-es]",
+        "result_review": "The actual current search returns one Ciclo Arco agreement, opens and verifies it, and supports the localized answer about monthly inspection, written reports, calendar 2026 and the named contact. Delta is absent from the answer and selected evidence.",
+        "reviewed_artifacts": [
+          {
+            "name": "answer.md",
+            "sha256": "8cb0de0676465c4e85bae9e7630d3fb6b1d4e567768eeb325c982eb39d0ca614"
+          },
+          {
+            "name": "search_evidence.json",
+            "sha256": "281554e2a9d754440cd84564fccb001e14780c36c5ac319d70e7e8a3323c4a85"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[practice-es]",
+        "result_review": "The same archive adds the prepared update, refreshes and returns both Ciclo Arco documents. The source-backed answer describes the 30 June 2027 extension and preserves the original reference and first answer. All linked files resolve and original kit bytes remain unchanged.",
+        "reviewed_artifacts": [
+          {
+            "name": "answer.md",
+            "sha256": "9be5a77cf92a0e867af2da0a2cf8600c65ce6822a51f449332f93b375c3d4317"
+          },
+          {
+            "name": "search_evidence.json",
+            "sha256": "9a3762c59f98cf207d7327e9b9ad68303da4ff66b122d8e43579515ec3f2fd9d"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.146194+00:00",
+    "previous_course_sha256": "75ac60a9c021835d3de838707acbd59558ce717f17bf8be449cd96ad26825304",
+    "source_snapshot": "/private/tmp/archive-teaching-release-01/test_archive_teaching_kit_runs8/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  }
+}

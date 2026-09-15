@@ -59,12 +59,12 @@
     {
       "path": "modules/variance-analysis/scripts/exploded_variance_bridge_chart.py",
       "repository_path": "plugins/variance-analysis/scripts/exploded_variance_bridge_chart.py",
-      "sha256": "7ad7de5390349fc32e120412450b3b7b3ae0337459db24df592f07b0a6c87c86"
+      "sha256": "4d02401b7e442bc5f158c4ba18e2897ecf7c12689db0d6389296fe632f72dd5b"
     },
     {
       "path": "modules/variance-analysis/scripts/ibcs_titles.py",
       "repository_path": "plugins/variance-analysis/scripts/ibcs_titles.py",
-      "sha256": "5cae9824ac3d8d5453507a3fcf6ab36c66565e9a284d59dd79599e48074413e8"
+      "sha256": "975437bb11fc7b1fe874a06fbf33500c85bb19b8ac3825820235e3cea5a997cd"
     },
     {
       "path": "modules/variance-analysis/scripts/inspect_column_values.py",
@@ -79,17 +79,22 @@
     {
       "path": "modules/variance-analysis/scripts/legacy_adapter.py",
       "repository_path": "plugins/variance-analysis/scripts/legacy_adapter.py",
-      "sha256": "31cc0d6cea29c65309438bdb7aaa302d9561134afa0332d785874757b68a6905"
+      "sha256": "d12efcce5b761365324103f2e076fac0cccb8d33d39a17b09efeb6a97d1b6aee"
     },
     {
       "path": "modules/variance-analysis/scripts/legacy_plotting.py",
       "repository_path": "plugins/variance-analysis/scripts/legacy_plotting.py",
-      "sha256": "11e497c3c2c14e8a5505a7d87962311be16b2add77a0f0d7df3661a1669b1cb0"
+      "sha256": "4c27f81a9510131d96c90b468bb7e783361fc24069713946375462144334879e"
     },
     {
       "path": "modules/variance-analysis/scripts/model_use.py",
       "repository_path": "plugins/variance-analysis/scripts/model_use.py",
       "sha256": "7a80f663ca259c02cb87de06faee36484627216ef6153c43ae9d56e4c6db3ba6"
+    },
+    {
+      "path": "modules/variance-analysis/scripts/report_locales.py",
+      "repository_path": "plugins/variance-analysis/scripts/report_locales.py",
+      "sha256": "d2fe7b6bab9ea0c3dcf35ecf7a28bc4c02bc3b51d862f35be63f95eed37fd071"
     },
     {
       "path": "modules/variance-analysis/scripts/review_preflight.py",
@@ -104,12 +109,12 @@
     {
       "path": "modules/variance-analysis/scripts/root_cause_bridge_chart.py",
       "repository_path": "plugins/variance-analysis/scripts/root_cause_bridge_chart.py",
-      "sha256": "f9d04fec0fba95406d85ab30d49ee5f04d64c59e17a33c8cf4490d0b8638b5d4"
+      "sha256": "bc9c536a0d95a6fd000d3e00a5d9710c60deb5544a87a1cfae4c082a6250c518"
     },
     {
       "path": "modules/variance-analysis/scripts/root_cause_client_report.py",
       "repository_path": "plugins/variance-analysis/scripts/root_cause_client_report.py",
-      "sha256": "e2d18653caf0bd0418ee09ad1b93716e8538215946c25b9df39af6777bd98aee"
+      "sha256": "22b4149655ed20129c68857009e2dbc7cb82a87fe97ac7884ccf3812b2b2f234"
     },
     {
       "path": "modules/variance-analysis/scripts/run_variance.py",
@@ -119,12 +124,12 @@
     {
       "path": "modules/variance-analysis/scripts/total_by_dimension_bridge_chart.py",
       "repository_path": "plugins/variance-analysis/scripts/total_by_dimension_bridge_chart.py",
-      "sha256": "d507f19b5710d9d7e9d4f19f980b5ae44b66c90dc6a1775e7b6dd3982432dfa2"
+      "sha256": "46f2e755a0ae1e26bfd39fb050afffa9c4d610df994eb4571b98ab7ec950aafe"
     },
     {
       "path": "modules/variance-analysis/scripts/variance_core.py",
       "repository_path": "plugins/variance-analysis/scripts/variance_core.py",
-      "sha256": "5d1b08ea130a2dd1f3e44580a9ad4e96dab3cf7ad6409b255007210e9f6b827b"
+      "sha256": "f11fb496b17f827621a030ef4832930173c22ec35a20eff4f2ced325c57c54ef"
     },
     {
       "path": "modules/variance-analysis/skills/variance-analysis/SKILL.md",
@@ -239,7 +244,7 @@
     {
       "path": "modules/variance-analysis/vendor/modules/charting/draw_waterfall.py",
       "repository_path": "plugins/_shared/variance/vendor/modules/charting/draw_waterfall.py",
-      "sha256": "cc502a8093d0241a8a2c0b5a3fc5bee6f8eed5b51532c1ead6b5f01be71db1f2"
+      "sha256": "367d2a8c798abe5b40470acd5cd59702ab3576dc743213455bca8e12d411e370"
     },
     {
       "path": "modules/variance-analysis/vendor/modules/charting/legacy_draw_waterfall.py",
@@ -444,7 +449,7 @@
     {
       "path": "modules/variance-analysis/vendor/modules/variance/variance_decomposition.py",
       "repository_path": "plugins/_shared/variance/vendor/modules/variance/variance_decomposition.py",
-      "sha256": "769cbf8b2096398fa1d9df6ad045f26085b3b0e331cc71f77d2ddde3ded373fe"
+      "sha256": "6791a44d9f8ef9574701a4309f5b7a55d1bcc0a1330fc26d51d5bcc192d22c4a"
     },
     {
       "path": "modules/variance-analysis/vendor/modules/variance/variance_formulas.py",
@@ -469,7 +474,7 @@
     {
       "path": "modules/variance-analysis/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
     },
     {
       "path": "modules/variance-analysis/vendor/modules/vera_assurance/decisions.py",
@@ -549,7 +554,7 @@
     {
       "path": "vendor/modules/courseware/assets/languages.json",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
     },
     {
       "path": "vendor/modules/courseware/execution.py",
@@ -559,12 +564,17 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
     },
     {
       "path": "vendor/modules/reporting_table.py",
       "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
-      "sha256": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7"
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
     },
     {
       "path": "vendor/modules/vera_assurance/__init__.py",
@@ -574,7 +584,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

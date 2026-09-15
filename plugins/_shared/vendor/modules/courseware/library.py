@@ -14,6 +14,8 @@ import shutil
 from pathlib import Path
 from typing import Any
 
+from .policy import local_unavailability, unavailable_local_workflows
+
 __all__ = ["CourseError", "CourseLibrary", "main"]
 
 
@@ -58,7 +60,7 @@ class CourseLibrary:
         self.product = _read(self.root / ".codex-plugin/plugin.json")["name"]
         self.assets = self.root / "assets/courses"
         self.index = _read(self.assets / "index.json")
-        self.eligible = eligible
+        self.eligible = eligible - unavailable_local_workflows(self.product)
         if self.index.get("product") != self.product:
             raise CourseError("The course catalog belongs to another product")
 
@@ -72,6 +74,8 @@ class CourseLibrary:
 
     def load(self, workflow: str, language: str) -> dict[str, Any]:
         """Fail closed on foreign, unavailable, altered or stale course content."""
+        if reason := local_unavailability(self.product, workflow):
+            raise CourseError(reason)
         if workflow not in self.eligible or workflow not in self.index["courses"]:
             raise CourseError("Choose a course from this product's installed catalog")
         entry = self.index["courses"][workflow]

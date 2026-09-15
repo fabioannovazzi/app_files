@@ -24,12 +24,16 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 try:
-    from .locale_support import output_labels
+    from .locale_support import canonical_word_label, output_labels, word_output_label
 except ImportError:  # pragma: no cover - retained top-level loader support
     scripts_dir = Path(__file__).resolve().parent
     if str(scripts_dir) not in sys.path:
         sys.path.insert(0, str(scripts_dir))
-    from locale_support import output_labels  # type: ignore
+    from locale_support import (  # type: ignore
+        canonical_word_label,
+        output_labels,
+        word_output_label,
+    )
 
 
 NAVY = "17365D"
@@ -285,11 +289,11 @@ REPORT_TEXT: dict[str, dict[str, str]] = {
             "interpret the categories. It does not replace row-level review: the Excel "
             "workbook remains the main audit workpaper for sources, rules, amounts and notes."
         ),
-        "status_closed": "closed: the row is cleared by qualified evidence under the stated rules and assumptions.",
-        "status_probable_payment": "probable_payment: a likely bank movement is linked to the row, but row/document allocation still needs confirmation before treating it as definitively closed.",
-        "status_open_supported": "open_supported: the open position remains supported by the available documents.",
-        "status_needs_evidence": "needs_evidence: a possible explanation exists, but required evidence is still missing.",
-        "status_unresolved": "unresolved: no sufficient link was found; manual review or additional documents are required.",
+        "status_closed": "Cleared by evidence: the row is cleared by qualified evidence under the stated rules and assumptions.",
+        "status_probable_payment": "Probable payment to verify: a likely bank movement is linked to the row, but row/document allocation still needs confirmation before treating it as definitively closed.",
+        "status_open_supported": "Open with supporting evidence: the open position remains supported by the available documents.",
+        "status_needs_evidence": "Additional evidence needed: a possible explanation exists, but required evidence is still missing.",
+        "status_unresolved": "Unresolved: no sufficient link was found; manual review or additional documents are required.",
         "external_copy": (
             "This section summarizes external evidence such as bank, factor, payment "
             "operators, payment batches or documented set-offs. Aggregates help explain "
@@ -334,6 +338,157 @@ REPORT_TEXT: dict[str, dict[str, str]] = {
         "no_rows": "No rows available for this section.",
         "rows": "rows",
         "amount": "amount",
+    },
+    "fr": {
+        "executive_summary": "Résultat du rapprochement",
+        "scope_method": "Périmètre et méthode",
+        "how_to_read": "Comment lire les résultats",
+        "external_evidence": "Justificatifs externes pris en compte",
+        "rollforward": "Contrôle de reconstitution du solde",
+        "account_rollforward": "Contrôle des soldes du grand livre et du journal",
+        "post_cutoff": "Justificatifs postérieurs à la date de référence",
+        "post_cutoff_detail": "Principaux rapprochements à examiner",
+        "additional_analyses": "Contrôles complémentaires",
+        "aging": "Ancienneté des postes ouverts",
+        "evidence_concentration": "Répartition par type de justificatif",
+        "review_signals": "Lignes à examiner en priorité",
+        "document_source_map": "Correspondance entre documents et sources",
+        "reversal_candidates": "Annulations, transferts ou compensations possibles",
+        "cutoff_window": "Mouvements proches de la date de référence",
+        "checks": "Contrôles automatiques",
+        "review": "Revue des lignes avec Codex",
+        "limitations": "Limites de la procédure",
+        "excel_reference": "Détail dans le fichier Excel",
+        "scope_copy": "La procédure rapproche les postes ouverts des pièces comptables, bancaires "
+        "et documentaires disponibles. Un poste est soldé selon les règles "
+        "appliquées uniquement si une règle reproductible et une référence au "
+        "justificatif sont conservées dans le classeur.",
+        "executive_copy": "Ce rapport résume les résultats et explique les catégories. Le classeur "
+        "Excel contient le détail des sources, des règles, des montants et des "
+        "notes à vérifier ligne par ligne.",
+        "status_closed": "Soldée sur justificatif : la ligne est rapprochée selon les règles et "
+        "hypothèses indiquées.",
+        "status_probable_payment": "Paiement probable à vérifier : un mouvement bancaire semble "
+        "correspondre, mais son affectation à la ligne ou au document "
+        "doit encore être confirmée.",
+        "status_open_supported": "Ouverte avec justificatif : la position reste étayée par les "
+        "documents disponibles, sans preuve spécifique permettant de la "
+        "solder.",
+        "status_needs_evidence": "Justificatif complémentaire requis : une explication est "
+        "possible, mais une pièce nécessaire manque encore.",
+        "status_unresolved": "Non résolue : aucun lien suffisant n’a été trouvé ; une revue ou des "
+        "documents complémentaires sont nécessaires.",
+        "external_copy": "Cette section regroupe les justificatifs externes : banque, factor, "
+        "opérateurs de paiement, lots de paiements ou compensations documentées. "
+        "Ces totaux donnent une vue d’ensemble ; la conclusion reste justifiée "
+        "ligne par ligne dans le classeur.",
+        "rollforward_copy": "Les mouvements comptables disponibles sont comparés au solde "
+        "reconstitué. Ce contrôle global de cohérence ne remplace pas le "
+        "rapprochement de chaque ligne.",
+        "account_rollforward_copy": "Pour chaque compte significatif, les soldes d’ouverture et de "
+        "clôture du grand livre sont comparés aux mouvements du "
+        "journal. Un écart indique que les mouvements retenus "
+        "n’expliquent pas entièrement le solde et doit être examiné "
+        "avant de conclure.",
+        "post_cutoff_copy": "Ces justificatifs sont postérieurs à la date de référence et portent "
+        "une référence commune avec un poste ouvert. Ils peuvent expliquer un "
+        "règlement ultérieur, mais ne soldent pas à eux seuls la position à la "
+        "date de référence.",
+        "additional_analyses_copy": "Ces contrôles font apparaître les concentrations, exceptions "
+        "et liens entre sources. Ils ne modifient pas à eux seuls le "
+        "résultat du rapprochement des lignes.",
+        "checks_copy": "Les contrôles automatiques vérifient la complétude technique, la cohérence "
+        "des lignes et la présence du dossier de revue. Les avertissements et "
+        "échecs doivent être résolus ou expliqués avant de s’appuyer sur le "
+        "résultat.",
+        "review_copy": "Le dossier de revue sélectionne les montants importants, les lignes "
+        "incertaines et un échantillon reproductible. Les lignes à compléter "
+        "nécessitent une confirmation ou une note avant que la revue soit terminée.",
+        "limitations_copy": "Une ligne non rapprochée ne prouve pas une erreur ou une "
+        "irrégularité. Les pièces disponibles et les règles appliquées n’ont "
+        "pas fourni un justificatif suffisant. Des documents sources, preuves "
+        "bancaires, relevés de factor, accords de compensation ou détails "
+        "d’affectation peuvent être nécessaires.",
+        "excel_copy": "Chaque ligne du classeur conserve sa source, la règle appliquée, le "
+        "résultat, le montant, les justificatifs et la raison du traitement.",
+        "no_rows": "Aucune ligne disponible pour cette section.",
+        "rows": "Lignes",
+        "amount": "Montant",
+    },
+    "de": {
+        "executive_summary": "Ergebnis der Abstimmung",
+        "scope_method": "Umfang und Methode",
+        "how_to_read": "Ergebnisse verstehen",
+        "external_evidence": "Berücksichtigte externe Belege",
+        "rollforward": "Kontrolle der Saldenfortschreibung",
+        "account_rollforward": "Saldenkontrolle für Sachkonten und Buchungsjournal",
+        "post_cutoff": "Belege nach dem Stichtag",
+        "post_cutoff_detail": "Wesentliche zu prüfende Zuordnungen",
+        "additional_analyses": "Ergänzende Kontrollen",
+        "aging": "Altersstruktur der offenen Posten",
+        "evidence_concentration": "Verteilung nach Belegart",
+        "review_signals": "Vorrangig zu prüfende Zeilen",
+        "document_source_map": "Zuordnung von Belegen und Quellen",
+        "reversal_candidates": "Mögliche Stornos, Umbuchungen oder Aufrechnungen",
+        "cutoff_window": "Bewegungen nahe dem Stichtag",
+        "checks": "Automatische Kontrollen",
+        "review": "Zeilenprüfung mit Codex",
+        "limitations": "Grenzen des Verfahrens",
+        "excel_reference": "Einzelheiten in der Excel-Datei",
+        "scope_copy": "Das Verfahren stimmt offene Posten mit den verfügbaren Buchungs-, Bank- und "
+        "sonstigen Belegen ab. Ein Posten wird nach den angewandten Regeln nur "
+        "ausgeglichen, wenn eine nachvollziehbare Regel und ein Quellenverweis in "
+        "der Arbeitsmappe erhalten bleiben.",
+        "executive_copy": "Dieser Bericht fasst die Ergebnisse zusammen und erläutert die "
+        "Kategorien. Die Excel-Arbeitsmappe enthält die Quellen, Regeln, Beträge "
+        "und Prüfnotizen für jede einzelne Zeile.",
+        "status_closed": "Durch Beleg ausgeglichen: Die Zeile ist nach den angegebenen Regeln und "
+        "Annahmen abgestimmt.",
+        "status_probable_payment": "Vermutete Zahlung prüfen: Eine Bankbewegung passt "
+        "wahrscheinlich zur Zeile. Die Zuordnung zur Zeile oder zum "
+        "Beleg muss vor einem endgültigen Ausgleich noch bestätigt "
+        "werden.",
+        "status_open_supported": "Offen mit Beleg: Die verfügbaren Unterlagen stützen die offene "
+        "Position; ein konkreter Ausgleichsbeleg wurde nicht gefunden.",
+        "status_needs_evidence": "Zusätzlicher Beleg erforderlich: Eine mögliche Erklärung liegt "
+        "vor, ein notwendiger Beleg fehlt jedoch noch.",
+        "status_unresolved": "Ungeklärt: Es wurde keine ausreichende Zuordnung gefunden. Eine "
+        "Prüfung oder weitere Unterlagen sind erforderlich.",
+        "external_copy": "Diese Übersicht fasst externe Belege zusammen, etwa Bankbewegungen, "
+        "Factor-Abrechnungen, Zahlungsdienstleister, Zahlungsläufe oder "
+        "dokumentierte Aufrechnungen. Die Summen geben einen Überblick; die "
+        "Schlussfolgerung wird weiterhin je Zeile in der Arbeitsmappe belegt.",
+        "rollforward_copy": "Die verfügbaren Buchungsbewegungen werden mit dem fortgeschriebenen "
+        "Saldo verglichen. Diese Gesamtkontrolle ersetzt keine Abstimmung der "
+        "einzelnen Zeilen.",
+        "account_rollforward_copy": "Für jedes wesentliche Konto werden Anfangs- und Endsalden des "
+        "Sachkontos mit den Journalbewegungen verglichen. Eine "
+        "Abweichung bedeutet, dass die berücksichtigten Bewegungen den "
+        "Buchungssaldo nicht vollständig erklären. Sie muss vor einer "
+        "Schlussfolgerung untersucht werden.",
+        "post_cutoff_copy": "Diese Belege stammen aus der Zeit nach dem Stichtag und enthalten "
+        "eine gemeinsame Belegreferenz mit einem offenen Posten. Sie können "
+        "spätere Zahlungen oder Ausgleiche erklären, gleichen den Posten am "
+        "Stichtag aber nicht allein aus.",
+        "additional_analyses_copy": "Diese Kontrollen zeigen Konzentrationen, Ausnahmen und "
+        "Verbindungen zwischen Quellen. Sie ändern für sich genommen "
+        "kein Abstimmungsergebnis einer Zeile.",
+        "checks_copy": "Automatische Kontrollen prüfen technische Vollständigkeit, "
+        "Zeilenkonsistenz und das Vorliegen der Prüfunterlagen. Warnungen und "
+        "Fehler sind vor der Nutzung des Ergebnisses zu beheben oder zu erläutern.",
+        "review_copy": "Die Prüfung umfasst hohe Beträge, unklare Zeilen und eine reproduzierbare "
+        "Stichprobe. Ausstehende Zeilen erfordern eine Bestätigung oder Notiz, "
+        "bevor die Prüfung abgeschlossen ist.",
+        "limitations_copy": "Eine nicht abgestimmte Zeile beweist weder einen Fehler noch eine "
+        "Unregelmäßigkeit. Die verfügbaren Unterlagen und angewandten Regeln "
+        "lieferten keinen ausreichenden Nachweis. Weitere Quelldokumente, "
+        "Bank- oder Factor-Belege, Aufrechnungsvereinbarungen oder "
+        "Zuordnungsdetails können erforderlich sein.",
+        "excel_copy": "Die Arbeitsmappe enthält für jede Zeile Quelle, Regel, Ergebnis, Betrag, "
+        "Belege und die Begründung der Behandlung.",
+        "no_rows": "Für diesen Abschnitt sind keine Zeilen verfügbar.",
+        "rows": "Zeilen",
+        "amount": "Betrag",
     },
 }
 
@@ -868,11 +1023,13 @@ def _review_status_label(review_status: object, language: str) -> str:
 
 
 def _review_signal_label(signal: object, language: str) -> str:
+    if str(signal).lower() == "evidence_none":
+        return str(word_output_label(signal, _language_code(language)))
     labels = _locale_catalog(
         language, ITALIAN_REVIEW_SIGNAL_LABELS, SPANISH_REVIEW_SIGNAL_LABELS
     )
     if not labels:
-        return str(signal or "")
+        return str(word_output_label(signal or "", _language_code(language)))
     return _mapped_label(signal, labels)
 
 
@@ -887,7 +1044,7 @@ def _cutoff_timing_label(timing: object, language: str) -> str:
 
 def _localized_semicolon_list(value: object, language: str, labeler: Any) -> str:
     text = str(value or "").strip()
-    if not text or not _is_localized(language):
+    if not text:
         return text
     parts = [part.strip() for part in text.split(";") if part.strip()]
     if not parts:
@@ -1147,8 +1304,14 @@ def _column_widths(headers: list[str]) -> list[float]:
         return [6.4]
     weights = []
     for header in headers:
-        lower = str(header).lower()
-        if any(
+        lower = str(canonical_word_label(header)).lower()
+        if lower.endswith("date"):
+            weights.append(1.25)
+        elif lower == "record refs":
+            # The Italian caption contains "righe", but these are long source
+            # addresses, not a row-count column.
+            weights.append(3.0)
+        elif any(
             token in lower
             for token in ("rows", "righe", "líneas", "files", "archivos", "checks")
         ):
@@ -1184,6 +1347,10 @@ def _column_widths(headers: list[str]) -> list[float]:
 def _set_table_geometry(table: Any, widths: list[float]) -> None:
     table.alignment = WD_TABLE_ALIGNMENT.LEFT
     table.autofit = False
+    # Word and LibreOffice also consult the table grid. Setting only cell widths
+    # leaves the original equal-width grid active in some document viewers.
+    for column, width in zip(table.columns, widths):
+        column.width = Inches(width)
     for row in table.rows:
         for idx, width in enumerate(widths):
             if idx >= len(row.cells):
@@ -1196,7 +1363,7 @@ def _set_table_geometry(table: Any, widths: list[float]) -> None:
                 tc_w = OxmlElement("w:tcW")
                 tc_pr.append(tc_w)
             tc_w.set(qn("w:type"), "dxa")
-            tc_w.set(qn("w:w"), str(int(width * 1440)))
+            tc_w.set(qn("w:w"), str(Inches(width).twips))
 
 
 def _format_table(
@@ -1204,16 +1371,24 @@ def _format_table(
 ) -> None:
     _set_table_geometry(table, _column_widths(headers))
     for row_idx, row in enumerate(table.rows):
+        properties = row._tr.get_or_add_trPr()
+        if row_idx == 0:
+            properties.append(OxmlElement("w:tblHeader"))
+        properties.append(OxmlElement("w:cantSplit"))
         for cell in row.cells:
             _set_cell_margins(cell)
             cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
             for paragraph in cell.paragraphs:
                 _set_paragraph_spacing(paragraph, before=0, after=0, line_spacing=1.1)
+                if row_idx == 0:
+                    paragraph.paragraph_format.keep_with_next = True
+                for run in paragraph.runs:
+                    _set_run_font(run, size=9.5, color=INK)
             if row_idx == 0:
                 _cell_shading(cell, header_fill)
                 for paragraph in cell.paragraphs:
                     for run in paragraph.runs:
-                        _set_run_font(run, bold=True, color=INK)
+                        _set_run_font(run, size=9.5, bold=True, color=INK)
 
 
 def _add_callout(
@@ -1221,6 +1396,7 @@ def _add_callout(
 ) -> None:
     table = doc.add_table(rows=1, cols=1)
     table.style = "Table Grid"
+    table.rows[0]._tr.get_or_add_trPr().append(OxmlElement("w:cantSplit"))
     cell = table.rows[0].cells[0]
     _cell_shading(cell, fill)
     _set_cell_margins(cell, top=120, bottom=120, start=160, end=160)
@@ -1265,21 +1441,70 @@ def _add_table(
 ) -> None:
     if not rows:
         return
+    language = doc.core_properties.language or "en"
     visible_rows = rows[:limit] if limit is not None else rows
-    headers = _headers(visible_rows, preferred)
+    headers = _headers(visible_rows, preferred or list(visible_rows[0]))
+    if len(headers) > 6:
+        # Keep the row identity and source references beside every group of
+        # figures. Wide source schemas remain complete without tiny columns.
+        anchors = [headers[0]]
+        if "Record refs" in headers and "Record refs" not in anchors:
+            anchors.append("Record refs")
+        remaining = [header for header in headers if header not in anchors]
+        maximum = 6 - len(anchors)
+        groups = (len(remaining) + maximum - 1) // maximum
+        width = (len(remaining) + groups - 1) // groups
+        for start in range(0, len(remaining), width):
+            group = anchors + remaining[start : start + width]
+            _add_table(
+                doc,
+                [
+                    {header: row.get(header, "") for header in group}
+                    for row in visible_rows
+                ],
+                preferred=group,
+            )
+        return
     table = doc.add_table(rows=1, cols=len(headers))
     table.style = "Table Grid"
     for idx, header in enumerate(headers):
         cell = table.rows[0].cells[idx]
-        cell.text = str(header)
+        cell.text = str(word_output_label(header, language))
         for paragraph in cell.paragraphs:
             for run in paragraph.runs:
                 run.font.bold = True
     for row in visible_rows:
         cells = table.add_row().cells
         for idx, header in enumerate(headers):
-            cells[idx].text = str(row.get(header, ""))
-    _format_table(table, headers)
+            cells[idx].text = _word_cell_value(header, row.get(header, ""), language)
+    _format_table(table, [cell.text for cell in table.rows[0].cells])
+    # Adjacent tables otherwise merge in LibreOffice, causing a later block to
+    # repeat the first block's unrelated headings after a page break.
+    separator = doc.add_paragraph()
+    _set_paragraph_spacing(separator, before=0, after=3, line_spacing=1)
+    separator.paragraph_format.line_spacing = Pt(2)
+
+
+def _word_cell_value(header: str, value: object, language: str) -> str:
+    """Localize known captions and monetary cells, preserving evidence identifiers."""
+    key = str(canonical_word_label(header))
+    if any(
+        token in key
+        for token in ("amount", "cash_flow", "settlement_effect", "percent")
+    ):
+        try:
+            number = Decimal(str(value).replace(",", ""))
+        except InvalidOperation:
+            pass
+        else:
+            if number.is_finite():
+                formatted = f"{number:,.2f}"
+                if language in {"it", "de", "es"}:
+                    return formatted.translate(str.maketrans({",": ".", ".": ","}))
+                if language == "fr":
+                    return formatted.replace(",", "").replace(".", ",")
+                return formatted
+    return str(word_output_label(value, language))
 
 
 def _summary_by_status(
@@ -2066,6 +2291,13 @@ def write_excel_workpaper(
                 width = 16
             if any(token in lower for token in ["date", "fecha"]):
                 width = 14
+            # Fit the rendered column, including localized captions. Header-only
+            # defaults made even the sheet index wrap over several lines.
+            content_width = max(
+                (len(str(cell.value or "")) for cell in ws[get_column_letter(idx)]),
+                default=0,
+            )
+            width = min(56, max(width, content_width + 2))
             ws.column_dimensions[get_column_letter(idx)].width = width
             for cell in ws[get_column_letter(idx)]:
                 cell.alignment = Alignment(wrap_text=True, vertical="top")
@@ -2130,9 +2362,11 @@ def write_word_report(
     """Write an explanatory Word report; detailed row evidence belongs in Excel."""
 
     path = Path(output_path)
+    language = _language_code(language)
     labels = _labels(language)
     text = _report_text(language)
     doc = Document()
+    doc.core_properties.language = _language_code(language)
     _configure_word_styles(doc)
 
     section = doc.sections[0]
@@ -2163,18 +2397,35 @@ def write_word_report(
         else (
             "Papel de trabajo de conciliación determinista"
             if _is_spanish(language)
-            else "Deterministic reconciliation workpaper"
+            else str(
+                word_output_label("Deterministic reconciliation workpaper", language)
+            )
         )
     )
     _set_paragraph_spacing(subtitle, after=10)
     for run in subtitle.runs:
         _set_run_font(run, size=11, color=MUTED)
 
+    scope_details = []
+    for field in ("cutoff_date", "currency"):
+        if assumptions.get(field):
+            scope_details.append(
+                f"{word_output_label(field, language)}: {assumptions[field]}"
+            )
+    if scope_details:
+        paragraph = doc.add_paragraph(" | ".join(scope_details))
+        _set_paragraph_spacing(paragraph, after=4)
+
     rule = doc.add_paragraph()
     _paragraph_border_bottom(rule)
     _set_paragraph_spacing(rule, after=12)
 
     doc.add_heading(text["executive_summary"], level=1)
+    status_summary = _summary_by_status(summary_rows, language)
+    if status_summary:
+        _add_table(doc, status_summary)
+    else:
+        doc.add_paragraph(text["no_rows"])
     _add_callout(
         doc,
         labels["conclusion"],
@@ -2182,28 +2433,10 @@ def write_word_report(
         fill=LIGHT_BLUE,
     )
 
-    if metadata:
-        doc.add_heading(
-            (
-                "Metadati run"
-                if _is_italian(language)
-                else (
-                    "Metadatos de la ejecución"
-                    if _is_spanish(language)
-                    else "Run Metadata"
-                )
-            ),
-            level=1,
-        )
-        table = doc.add_table(rows=1, cols=2)
-        table.style = "Table Grid"
-        table.rows[0].cells[0].text = labels["metadata_field"]
-        table.rows[0].cells[1].text = labels["metadata_value"]
-        for key, value in metadata.items():
-            cells = table.add_row().cells
-            cells[0].text = _field_label(key, language)
-            cells[1].text = str(_localize_value(key, value, language))
-        _format_table(table, [labels["metadata_field"], labels["metadata_value"]])
+    doc.add_heading(labels["next_steps"], level=1)
+    for step in next_steps:
+        paragraph = doc.add_paragraph(step, style="List Bullet")
+        _set_paragraph_spacing(paragraph, after=4, line_spacing=1.167)
 
     doc.add_heading(text["scope_method"], level=1)
     scope = doc.add_paragraph(text["scope_copy"])
@@ -2265,18 +2498,16 @@ def write_word_report(
             ],
         )
 
-    doc.add_heading(labels["summary"], level=1)
-    status_summary = _summary_by_status(summary_rows, language)
-    if status_summary:
-        _add_table(doc, status_summary)
-    else:
-        doc.add_paragraph(text["no_rows"])
     if summary_rows:
         doc.add_heading(
             (
                 "Dettaglio regole"
                 if _is_italian(language)
-                else ("Detalle de reglas" if _is_spanish(language) else "Rule Detail")
+                else (
+                    "Detalle de reglas"
+                    if _is_spanish(language)
+                    else str(word_output_label("Rule Detail", language))
+                )
             ),
             level=2,
         )
@@ -2295,7 +2526,11 @@ def write_word_report(
                 else (
                     "Pagos parciales y saldos pendientes"
                     if _is_spanish(language)
-                    else "Partial payments and outstanding balances"
+                    else str(
+                        word_output_label(
+                            "Partial payments and outstanding balances", language
+                        )
+                    )
                 )
             ),
             level=2,
@@ -2338,7 +2573,19 @@ def write_word_report(
         doc.add_heading(text["external_evidence"], level=1)
         external = doc.add_paragraph(text["external_copy"])
         _set_paragraph_spacing(external)
-        _add_table(doc, _localize_rows(external_evidence_summary, language))
+        # This report summarizes available evidence. Signed cash/settlement
+        # schedules stay in the workbook with their direction qualifications;
+        # their unclassified zero values are not a statement of actual cash flow.
+        evidence_fields = ("external_category", "rows", "amount_total")
+        external_report_rows = [
+            (
+                {field: row[field] for field in evidence_fields}
+                if all(field in row for field in evidence_fields)
+                else row
+            )
+            for row in external_evidence_summary
+        ]
+        _add_table(doc, _localize_rows(external_report_rows, language))
 
     if account_rollforward_check:
         doc.add_heading(text["account_rollforward"], level=1)
@@ -2452,7 +2699,8 @@ def write_word_report(
     doc.add_heading(labels["assumptions"], level=1)
     for key, value in _report_assumptions(assumptions).items():
         paragraph = doc.add_paragraph(
-            f"{_field_label(key, language)}: {_localize_value(key, value, language)}",
+            f"{word_output_label(_field_label(key, language), language)}: "
+            f"{word_output_label(_localize_value(key, value, language), language)}",
             style="List Bullet",
         )
         _set_paragraph_spacing(paragraph, after=4, line_spacing=1.167)
@@ -2460,17 +2708,39 @@ def write_word_report(
     doc.add_heading(text["limitations"], level=1)
     _add_callout(doc, text["limitations"], text["limitations_copy"], fill=AMBER_FILL)
 
-    doc.add_heading(labels["next_steps"], level=1)
-    for step in next_steps:
-        paragraph = doc.add_paragraph(step, style="List Bullet")
-        _set_paragraph_spacing(paragraph, after=4, line_spacing=1.167)
-
     doc.add_heading(text["excel_reference"], level=1)
     excel_copy = doc.add_paragraph(text["excel_copy"])
     _set_paragraph_spacing(excel_copy)
     authority = doc.add_paragraph()
     authority.add_run(labels["excel_authority"]).bold = True
     _set_paragraph_spacing(authority, before=8, after=0)
+    if metadata:
+        doc.add_heading(
+            (
+                "Metadati run"
+                if _is_italian(language)
+                else (
+                    "Metadatos de la ejecución"
+                    if _is_spanish(language)
+                    else str(word_output_label("Run Metadata", language))
+                )
+            ),
+            level=1,
+        )
+        table = doc.add_table(rows=1, cols=2)
+        table.style = "Table Grid"
+        table.rows[0].cells[0].text = labels["metadata_field"]
+        table.rows[0].cells[1].text = labels["metadata_value"]
+        for key, value in metadata.items():
+            cells = table.add_row().cells
+            cells[0].text = str(
+                word_output_label(_field_label(key, language), language)
+            )
+            cells[1].text = str(
+                word_output_label(_localize_value(key, value, language), language)
+            )
+        _format_table(table, [labels["metadata_field"], labels["metadata_value"]])
+
     path.parent.mkdir(parents=True, exist_ok=True)
     doc.save(path)
     return path

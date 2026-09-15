@@ -12,7 +12,7 @@
       "Revois la communication, les sources et le format. Après les confirmations prévues, ouvre le dossier effectivement généré et repère comment utiliser ses fichiers. Un envoi ou une publication constitue une action ultérieure distincte."
     ],
     "deliverables": [
-      "FAQ en Markdown et HTML, à examiner et réutiliser après revue.",
+      "FAQ en Markdown, à examiner et réutiliser après revue.",
       "Base technique, références aux sources et traces des vérifications et décisions."
     ],
     "review": "Lis la FAQ comme un client : public et utilité doivent être clairs. Vérifie que les affirmations correspondent à la source, que les limites sont visibles et que le format est celui accepté. Le workflow peut demander une correction ou expliquer pourquoi ne pas communiquer.",
@@ -37,7 +37,7 @@
       "Revois la communication, les sources et le format. Après les confirmations prévues, ouvre le dossier effectivement généré et repère comment utiliser ses fichiers. Un envoi ou une publication constitue une action ultérieure distincte."
     ],
     "deliverables": [
-      "FAQ en Markdown et HTML, à examiner et réutiliser après revue.",
+      "FAQ en Markdown, à examiner et réutiliser après revue.",
       "Base technique, références aux sources et traces des vérifications et décisions."
     ],
     "review": "Lis la FAQ comme un client : public et utilité doivent être clairs. Vérifie que les affirmations correspondent à la source, que les limites sont visibles et que le format est celui accepté. Le workflow peut demander une correction ou expliquer pourquoi ne pas communiquer.",

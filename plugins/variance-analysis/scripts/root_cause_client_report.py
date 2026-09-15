@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 from typing import Any
 
@@ -15,6 +16,7 @@ from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor
 from ibcs_titles import build_ibcs_title, measure_line_segments
 from PIL import Image, ImageDraw, ImageFont
+from report_locales import CONTROL_FIELDS, CONTROL_STATUS, OVERVIEW_TEXT, REPORT_TEXT
 
 __all__ = ["write_root_cause_client_report"]
 
@@ -73,6 +75,12 @@ def _comparison_metadata(recipe: dict[str, Any], language: str) -> dict[str, str
                 if mode in {"rolling_period", "year_to_date"}
                 else "periodo anterior"
             )
+        elif language == "fr":
+            comparison_name = "période courante"
+            baseline_name = "période comparable précédente"
+        elif language == "de":
+            comparison_name = "aktuellem Zeitraum"
+            baseline_name = "vergleichbarem Vorzeitraum"
         else:
             comparison_name = "current period"
             baseline_name = (
@@ -81,8 +89,15 @@ def _comparison_metadata(recipe: dict[str, Any], language: str) -> dict[str, str
                 else "prior period"
             )
     elif baseline_upper in {"PL", "PLAN"} and comparison_upper in {"AC", "ACTUAL"}:
-        baseline_name = "Plan"
-        comparison_name = "Real" if language == "es" else "Actual"
+        baseline_name = {"it": "budget", "fr": "budget", "de": "Budget"}.get(
+            language, "Plan"
+        )
+        comparison_name = {
+            "it": "consuntivo",
+            "es": "Real",
+            "fr": "réalisé",
+            "de": "Ist",
+        }.get(language, "Actual")
     else:
         baseline_name = baseline
         comparison_name = comparison
@@ -100,6 +115,8 @@ def _comparison_metadata(recipe: dict[str, Any], language: str) -> dict[str, str
 
 
 def _text(language: str) -> dict[str, str]:
+    if language in REPORT_TEXT:
+        return dict(REPORT_TEXT[language])
     if language == "it":
         return {
             "title": "Analisi delle cause della varianza vendite",
@@ -120,7 +137,7 @@ def _text(language: str) -> dict[str, str]:
             "mixed_deep_dive": "Approfondimento misto",
             "chart_1": "Fonte 1 - Bridge di riferimento",
             "chart_2": "Fonte 2 - Dettaglio della prima riga",
-            "chart_3": "Fonte 3 - Approfondimento per area e linea di prodotto",
+            "chart_3": "Sequenza alternativa dei contributi",
             "chart_small_multiples": "Bridge standard per {dimension}",
             "chart_pvm_ladder": "Bridge Prezzo / Unità / Mix",
             "drilldown_findings": "Cosa emerge dai drilldown selezionati",
@@ -209,7 +226,7 @@ def _text(language: str) -> dict[str, str]:
             ),
             "chart_2_reading": (
                 "Il dettaglio della prima riga include {top_label} e gli altri "
-                "contributi calcolati per linea prodotto."
+                "contributi della riga selezionata."
             ),
             "chart_3_reading": (
                 "La sequenza alternativa a dimensioni miste include {items}."
@@ -239,8 +256,7 @@ def _text(language: str) -> dict[str, str]:
                 "successive sono al netto delle righe precedenti."
             ),
             "chart_small_multiples_caption": (
-                "Ogni pannello ripete il bridge compatto Prezzo / "
-                "Unità e Mix / Saldo; la dimensione separa i pannelli."
+                "Ogni pannello mostra le componenti calcolate per un elemento della dimensione."
             ),
             "chart_pvm_ladder_caption": (
                 "La scala e i totali sono gli stessi in ogni pannello: cambia "
@@ -300,11 +316,11 @@ def _text(language: str) -> dict[str, str]:
             "source_data": "Datos de soporte principales",
             "reading_notes": "Notas de lectura",
             "bridge_summary": "Puente de resumen",
-            "product_line_drilldown": "Desglose por línea de producto",
+            "product_line_drilldown": "Detalle de la primera contribución",
             "mixed_deep_dive": "Análisis detallado multidimensional",
             "chart_1": "Fuente 1 - Puente de referencia",
             "chart_2": "Fuente 2 - Detalle de la primera fila",
-            "chart_3": "Fuente 3 - Detalle por área y línea de producto",
+            "chart_3": "Secuencia alternativa de contribuciones",
             "chart_small_multiples": "Puente estándar por {dimension}",
             "chart_pvm_ladder": "Puente de Precio / Unidades / Mix",
             "drilldown_findings": "Hallazgos de los desgloses seleccionados",
@@ -395,7 +411,7 @@ def _text(language: str) -> dict[str, str]:
             ),
             "chart_2_reading": (
                 "El detalle de la primera fila incluye {top_label} y las demás "
-                "contribuciones calculadas por línea de producto."
+                "contribuciones de la fila seleccionada."
             ),
             "chart_3_reading": (
                 "La secuencia alternativa de dimensiones mixtas incluye {items}."
@@ -425,8 +441,7 @@ def _text(language: str) -> dict[str, str]:
                 "posteriores son netas de las anteriores."
             ),
             "chart_small_multiples_caption": (
-                "Cada panel repite el puente compacto de Precio / Unidades y Mix / "
-                "Saldo; la dimensión separa los paneles."
+                "Cada panel muestra los componentes calculados para un miembro de la dimensión."
             ),
             "chart_pvm_ladder_caption": (
                 "La escala y los totales son iguales en todos los paneles: solo "
@@ -485,11 +500,11 @@ def _text(language: str) -> dict[str, str]:
         "source_data": "Key Source Data",
         "reading_notes": "Reading Notes",
         "bridge_summary": "Summary bridge",
-        "product_line_drilldown": "Product-line drilldown",
+        "product_line_drilldown": "First contribution detail",
         "mixed_deep_dive": "Mixed-dimension deep dive",
         "chart_1": "Source 1 - Reference Bridge",
         "chart_2": "Source 2 - First-row Detail",
-        "chart_3": "Source 3 - Area And Product-Line Detail",
+        "chart_3": "Alternative contribution sequence",
         "chart_small_multiples": "Standard bridge by {dimension}",
         "chart_pvm_ladder": "Price / Units / Mix bridge",
         "drilldown_findings": "Selected Drilldown Findings",
@@ -569,8 +584,8 @@ def _text(language: str) -> dict[str, str]:
             "movement with final residual {residual}."
         ),
         "chart_2_reading": (
-            "The first-row detail includes {top_label} and the other calculated "
-            "product-line contributions."
+            "The first-row detail includes {top_label} and the other "
+            "contributions within that selected row."
         ),
         "chart_3_reading": (
             "The alternative mixed-dimension sequence includes {items}."
@@ -600,8 +615,7 @@ def _text(language: str) -> dict[str, str]:
             "net of prior rows."
         ),
         "chart_small_multiples_caption": (
-            "Each panel repeats the compact Price / Units & Mix / "
-            "Balance bridge; the dimension separates the panels."
+            "Each panel shows the calculated components for one member of the dimension."
         ),
         "chart_pvm_ladder_caption": (
             "Scale and totals are the same in every panel: only the variance "
@@ -641,6 +655,7 @@ def _variance_type_label(value: Any, labels: dict[str, str]) -> str:
         "units & mix": "variance_type_units_and_mix",
         "price & units & mix": "variance_type_price_and_units_and_mix",
         "price & volume & mix": "variance_type_price_and_volume_and_mix",
+        "total variance": "variance_type_total",
     }
     label_key = label_keys.get(raw_value.casefold())
     return labels.get(label_key, raw_value) if label_key else raw_value
@@ -1200,6 +1215,7 @@ def _add_docx_table(
     table = document.add_table(rows=1, cols=len(headers))
     table.style = "Table Grid"
     table.autofit = False
+    table.rows[0]._tr.get_or_add_trPr().append(OxmlElement("w:tblHeader"))
     for idx, header in enumerate(headers):
         cell = table.rows[0].cells[idx]
         cell.text = header
@@ -1213,15 +1229,24 @@ def _add_docx_table(
         for idx, value in enumerate(row):
             cells[idx].text = value
             cells[idx].vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
+            if len(headers) == 5 and idx > 0:
+                for paragraph in cells[idx].paragraphs:
+                    paragraph.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+                    for run in paragraph.runs:
+                        run.font.size = Pt(9)
     if len(headers) == 2:
         widths = [2700, 6660]
     elif len(headers) == 3:
         widths = [2000, 3000, 4360]
+    elif len(headers) == 5:
+        widths = [2400, 1900, 1900, 1900, 1260]
     else:
         base_width = 9360 // max(len(headers), 1)
         widths = [base_width] * len(headers)
         widths[-1] += 9360 - sum(widths)
     _set_table_geometry(table, widths)
+    for row in table.rows:
+        row._tr.get_or_add_trPr().append(OxmlElement("w:cantSplit"))
 
 
 def _set_table_geometry(table: Any, widths: list[int]) -> None:
@@ -1294,9 +1319,11 @@ def _add_docx_chart(
     paragraph = document.add_paragraph()
     paragraph.add_run(f"{reading_label}: ").bold = True
     paragraph.add_run(reading)
+    paragraph.paragraph_format.keep_with_next = True
     if image_path is not None and image_path.exists():
         document.add_picture(str(image_path), width=Inches(width_inches))
         document.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+        document.paragraphs[-1].paragraph_format.keep_with_next = True
     _add_docx_caption(document, caption)
 
 
@@ -1370,6 +1397,7 @@ def _accounting_rows(
             "rationale": "rationale",
         },
     }.get(language, {})
+    fields.update(CONTROL_FIELDS.get(language, {}))
     if not fields:
         fields = {
             "perimeter": "Perimeter",
@@ -1429,6 +1457,7 @@ def _accounting_rows(
             "approved": "aprobada",
         },
     }.get(language, {})
+    status_labels.update(CONTROL_STATUS.get(language, {}))
 
     def status(value: Any, default: str) -> str:
         raw = str(value or default)
@@ -1566,6 +1595,13 @@ def _write_docx(
     title_run.font.color.rgb = RGBColor(36, 48, 38)
     subtitle = document.add_paragraph(payload["subtitle"])
     subtitle.runs[0].font.color.rgb = RGBColor(91, 101, 94)
+    overview = payload.get("comparison_overview")
+    if overview:
+        document.add_heading(overview["heading"], level=1)
+        document.add_paragraph(overview["intro"])
+        _add_docx_table(document, overview["headers"], overview["rows"])
+        note = document.add_paragraph(overview["note"])
+        note.paragraph_format.space_before = Pt(6)
     document.add_heading(labels["summary"], level=1)
     for paragraph in payload["summary_paragraphs"]:
         document.add_paragraph(paragraph)
@@ -1581,8 +1617,6 @@ def _write_docx(
     document.add_heading(labels["reading_notes"], level=2)
     for note in payload["notes"]:
         document.add_paragraph(note, style="List Bullet")
-    if payload["chart_sections"]:
-        document.add_page_break()
     for index, chart_section in enumerate(payload["chart_sections"]):
         if index > 0 and chart_section["page_break_before"]:
             document.add_page_break()
@@ -1656,6 +1690,20 @@ def _write_markdown(
         f"| {' | '.join(payload['source_headers'])} |",
         f"| {' | '.join(['---'] * len(payload['source_headers']))} |",
     ]
+    overview = payload.get("comparison_overview")
+    if overview:
+        lines[4:4] = [
+            f"## {overview['heading']}",
+            "",
+            overview["intro"],
+            "",
+            f"| {' | '.join(overview['headers'])} |",
+            "| --- | ---: | ---: | ---: | ---: |",
+            *(f"| {' | '.join(row)} |" for row in overview["rows"]),
+            "",
+            overview["note"],
+            "",
+        ]
     lines.extend(f"| {' | '.join(row)} |" for row in payload["source_rows"])
     lines.extend(["", f"## {labels['reading_notes']}", ""])
     lines.extend(f"- {note}" for note in payload["notes"])
@@ -1677,6 +1725,77 @@ def _write_markdown(
     output_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def _comparison_overview(
+    recipe: dict[str, Any], output_dir: Path, language: str
+) -> dict[str, Any] | None:
+    """Display current calculated totals and the existing category bridge."""
+
+    tie_out = (recipe.get("accounting_readiness") or {}).get("source_tie_out") or {}
+    baseline = tie_out.get("baseline_calculated_total")
+    actual = tie_out.get("comparison_calculated_total")
+    if any(
+        not isinstance(v, (int, float)) or not math.isfinite(v)
+        for v in (baseline, actual)
+    ):
+        return None
+    copy = OVERVIEW_TEXT.get(language, OVERVIEW_TEXT["en"])
+    currency = str((recipe.get("options") or {}).get("currency") or "EUR")
+
+    def number(value: float, *, signed: bool = False) -> str:
+        text = format(value, "+,.2f" if signed else ",.2f")
+        if language == "fr":
+            return text.replace(",", "\u202f").replace(".", ",")
+        if language in {"it", "de", "es"}:
+            return text.replace(",", "_").replace(".", ",").replace("_", ".")
+        return text
+
+    def percent(start: float, end: float) -> str:
+        if start <= 0:
+            return "—"
+        text = f"{(end - start) / start * 100:+.1f} %"
+        return text.replace(".", ",") if language != "en" else text
+
+    def row(label: str, start: float, end: float) -> list[str]:
+        return [
+            label,
+            number(start),
+            number(end),
+            number(end - start, signed=True),
+            percent(start, end),
+        ]
+
+    categories = _read_csv(output_dir / "total_by_dimension_bridge.csv")
+    rows = [
+        row(
+            str(item["dimension_value"]),
+            float(item["amount_baseline"]),
+            float(item["amount_comparison"]),
+        )
+        for item in categories.to_dicts()
+    ]
+    rows.append(row(copy["total"], baseline, actual))
+    mappings = recipe.get("mappings") or {}
+    return {
+        "heading": copy["heading"],
+        "intro": copy["intro"].format(
+            baseline=number(baseline),
+            actual=number(actual),
+            delta=number(actual - baseline, signed=True),
+            currency=currency,
+            percent=percent(baseline, actual),
+        ),
+        "headers": [
+            copy["line"],
+            f"{mappings.get('baseline_period')} ({currency})",
+            f"{mappings.get('comparison_period')} ({currency})",
+            f"Δ {currency}",
+            "Δ %",
+        ],
+        "rows": rows,
+        "note": copy["note"],
+    }
+
+
 def _build_payload(
     summary_rows: list[dict[str, Any]],
     recipe: dict[str, Any],
@@ -1684,6 +1803,15 @@ def _build_payload(
 ) -> dict[str, Any] | None:
     language = _language(recipe)
     labels = _text(language)
+    overview_copy = OVERVIEW_TEXT.get(language, OVERVIEW_TEXT["en"])
+    labels["variance_type_total"] = overview_copy["variance_type_total"]
+    amounts_only = (
+        "units_column" in recipe.get("mappings", {})
+        and not recipe["mappings"]["units_column"]
+    )
+    if amounts_only:
+        labels["title"] = overview_copy["title"]
+        labels["draft_title"] = overview_copy["draft_title"]
     comparison = _comparison_metadata(recipe, language)
     summary_row, selection_method = _select_summary(summary_rows, recipe)
     if summary_row is None:
@@ -1833,6 +1961,18 @@ def _build_payload(
             ]
         )
     chart_sections = []
+    overview_chart = output_dir / "total_by_dimension_bridge.png"
+    if overview_chart.exists():
+        chart_sections.append(
+            {
+                "title": overview_copy["heading"],
+                "reading": overview_copy["note"],
+                "image_path": overview_chart,
+                "caption": labels["source_caption"],
+                "page_break_before": False,
+                "width_inches": 6.2,
+            }
+        )
     if pvm_ladder is not None:
         chart_sections.append(
             {
@@ -1901,6 +2041,8 @@ def _build_payload(
     if component_note:
         notes.append(component_note)
     notes.append(labels["residual_note"])
+    if amounts_only:
+        notes.insert(0, overview_copy["amount_note"])
     payload = {
         "labels": labels,
         "title": (
@@ -1908,6 +2050,7 @@ def _build_payload(
         ),
         "subtitle": subtitle,
         "summary_paragraphs": summary_paragraphs,
+        "comparison_overview": _comparison_overview(recipe, output_dir, language),
         "accounting_rows": _accounting_rows(recipe, language),
         "source_headers": [
             labels["source_col"],

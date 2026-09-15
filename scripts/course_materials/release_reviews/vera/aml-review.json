@@ -1,0 +1,310 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "aml-review",
+  "course_sha256": "e518f3d28c8dfccbeb41b2cab9230a3da380f70fdf7cb7a9d7f36c218e596014",
+  "reviewer": "Codex: localized teaching materials and actual native draft/follow-up evidence review",
+  "reviewed_at": "2026-09-14T20:09:40.719846+00:00",
+  "review_scope": "All five lesson outlines and original fictional documents were read. Reviewed all unique semantic content of the twenty native memos across these two workflows and both phases, actual output structure, local source links, saved record identity/status/predecessor and delivery/source-challenge companions. Final output comparison confirms only the intended empty-evidence-label removal after the semantic review; exact current artifact hashes are recorded. The 113 focused tests have no failures or skips. These are Markdown/JSON outputs; no browser, native GUI rendering, live voice, learner comprehension or independent professional acceptance is claimed. CNDCEC source indices were checked as research starting points, without claiming article-level legal analysis. Fixture narratives exercise the normal Codex-authored stage and are not shipped as predetermined lesson answers.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches requesting a client-file AML review, providing the client and transaction records, reading facts and unanswered questions, and updating the same file. It does not teach an invented screening, risk score or filing function.",
+        "inputs_and_request": "Read the localized client, ownership and loan records and the September update. The initial declarations give Elena 60% and Paolo 40%; the agreement and bank row show a EUR 20000 shareholder loan. Identity, powers, independent register corroboration, screening and further fund-origin/purchase evidence are absent. The ordinary request names the client and review date without requiring the learner to populate JSON.",
+        "deliverable_and_next_action": "Both actual native memos retain a proposed assessment, attributed ownership, two case-specific findings, corroborating loan details, proportionate follow-up questions, sources and limitations. Missing evidence does not become a negative screening result or suspicion decision. The source links resolve, and the delivery card names the exact memo, immutable record and Codex evidence-review note. No calculation score, professional decision, external contact or report is manufactured.",
+        "practice_and_repeat": "The native practice links its completed first record and reads the 10 September declaration: Elena remains 60%, Paolo falls to 10%, Marta enters with 30%. The questions change to transfer, register and Marta evidence; the unchanged loan remains documented and earlier unknowns remain open. The prior record is preserved. The outline explains how to ask for a later review when new client information arrives.",
+        "execution_and_checkpoints": "Separate native demonstration and practice checks start the current workflow in an isolated tutorial archive. Codex-authored interpretation is saved by the ordinary helper; source bytes and predecessor records are bound to the same engagement. The lesson checkpoints precede analysis and ask the learner to trace a finding to a source. Script execution is verified; a live learner and native voice/window behavior are not certified by these checks.",
+        "language_and_pacing": "Language it. Read the complete localized outline and fictional inputs and the unique content of both actual native memos. Headings, statuses, interpretation and delivery notes use the selected language; filenames and record keys remain technical references. Six stages total 390 seconds. The teacher reads the assessment and one linked finding/action, leaving the full supporting memo available. Questions and processing may extend elapsed time; no measured learner duration is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_aml_kit_saves_initial_and_linked_current_review[demo-it]",
+        "result_review": "The current native helper writes a proposed assessment with two findings: declared 60/40 ownership and missing identity/control corroboration, and the EUR 20000 agreement/payment match with limited fund-origin and purchase evidence. The memo retains the attributed statements and focused evidence requests. Calculation is None, status is draft_for_review, and no professional decision or sending occurs.",
+        "reviewed_artifacts": [
+          {
+            "name": "aml-review-4dccb8d0fb1d03b93ef7a5a8bb7a40e1512c014926fde61f7122da77892ca152.md",
+            "sha256": "afb4bd959a6356114cf95dcb2e85207b1358fdf9552a2cdabd865ba761dff43a"
+          },
+          {
+            "name": "aml-review-4dccb8d0fb1d03b93ef7a5a8bb7a40e1512c014926fde61f7122da77892ca152.json",
+            "sha256": "9571cbb1fc096463b2e8b4eb1c5b132064f99d6913b55fdf6ca437c767c5564e"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "5ad3a1b57165bc4d35c2b7c272560828d37d13c56db73db0483b5f1b582ec210"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "b1d7addd9ce7d62c1a95a6ec3291d476801b0c5eb6e033b01e777ff641def6bd"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_aml_kit_saves_initial_and_linked_current_review[practice-it]",
+        "result_review": "The current native follow-up imports and links the finalized first review in the same engagement. The record and memo show the new declared 60/10/30 ownership, retain the unchanged loan and ask for the transfer and Marta evidence. Existing unresolved checks remain unresolved. The initial record is byte-identical; the new memo, record and delivery/review companions were inspected.",
+        "reviewed_artifacts": [
+          {
+            "name": "aml-review-8823f391a63ee3d179acdabfbad23c09afe5474a4177ae954b93eac30a6099a9.md",
+            "sha256": "337b18c04250729e07348558657efab799200599178ba8db2c81cffdd6d4488b"
+          },
+          {
+            "name": "aml-review-8823f391a63ee3d179acdabfbad23c09afe5474a4177ae954b93eac30a6099a9.json",
+            "sha256": "e35d3d721e9ad5c88232cbedd9fbb2412b33ad9216d832836c9e2c345164d9e7"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "e172b67a56ea49c33c0f2c572edb278c8d50b3d66df4b3b856e64577045f3ee3"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "44957096c324d9240979ab4cc807a5018dea732fcce6713c6f2c1f521d7a4405"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches requesting a client-file AML review, providing the client and transaction records, reading facts and unanswered questions, and updating the same file. It does not teach an invented screening, risk score or filing function.",
+        "inputs_and_request": "Read the localized client, ownership and loan records and the September update. The initial declarations give Elena 60% and Paolo 40%; the agreement and bank row show a EUR 20000 shareholder loan. Identity, powers, independent register corroboration, screening and further fund-origin/purchase evidence are absent. The ordinary request names the client and review date without requiring the learner to populate JSON.",
+        "deliverable_and_next_action": "Both actual native memos retain a proposed assessment, attributed ownership, two case-specific findings, corroborating loan details, proportionate follow-up questions, sources and limitations. Missing evidence does not become a negative screening result or suspicion decision. The source links resolve, and the delivery card names the exact memo, immutable record and Codex evidence-review note. No calculation score, professional decision, external contact or report is manufactured.",
+        "practice_and_repeat": "The native practice links its completed first record and reads the 10 September declaration: Elena remains 60%, Paolo falls to 10%, Marta enters with 30%. The questions change to transfer, register and Marta evidence; the unchanged loan remains documented and earlier unknowns remain open. The prior record is preserved. The outline explains how to ask for a later review when new client information arrives.",
+        "execution_and_checkpoints": "Separate native demonstration and practice checks start the current workflow in an isolated tutorial archive. Codex-authored interpretation is saved by the ordinary helper; source bytes and predecessor records are bound to the same engagement. The lesson checkpoints precede analysis and ask the learner to trace a finding to a source. Script execution is verified; a live learner and native voice/window behavior are not certified by these checks.",
+        "language_and_pacing": "Language en. Read the complete localized outline and fictional inputs and the unique content of both actual native memos. Headings, statuses, interpretation and delivery notes use the selected language; filenames and record keys remain technical references. Six stages total 390 seconds. The teacher reads the assessment and one linked finding/action, leaving the full supporting memo available. Questions and processing may extend elapsed time; no measured learner duration is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_aml_kit_saves_initial_and_linked_current_review[demo-en]",
+        "result_review": "The current native helper writes a proposed assessment with two findings: declared 60/40 ownership and missing identity/control corroboration, and the EUR 20000 agreement/payment match with limited fund-origin and purchase evidence. The memo retains the attributed statements and focused evidence requests. Calculation is None, status is draft_for_review, and no professional decision or sending occurs.",
+        "reviewed_artifacts": [
+          {
+            "name": "aml-review-3133b84b3bc7423fcbafa74d288d60a9c6dfbc96a41fa81874e3e93b868a4791.md",
+            "sha256": "28d25686912046ff04ea333bdcabf57b576c6be19165844a981eab84f62112ef"
+          },
+          {
+            "name": "aml-review-3133b84b3bc7423fcbafa74d288d60a9c6dfbc96a41fa81874e3e93b868a4791.json",
+            "sha256": "b609cf574be6057adf9dc59f2632bd3764b8744811d95e5b1a4302229d53aaca"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "51bc25dddad5800043a8151c55b3b51afe9775e470a4c2c02d2d66fd472122ea"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "89b1d4ff75d701bac800472361f3e605adbc9b120fb65b644308dc853f9a900f"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_aml_kit_saves_initial_and_linked_current_review[practice-en]",
+        "result_review": "The current native follow-up imports and links the finalized first review in the same engagement. The record and memo show the new declared 60/10/30 ownership, retain the unchanged loan and ask for the transfer and Marta evidence. Existing unresolved checks remain unresolved. The initial record is byte-identical; the new memo, record and delivery/review companions were inspected.",
+        "reviewed_artifacts": [
+          {
+            "name": "aml-review-97f3f1d3bbdcbd09896ba5fbd2b76341748c16ded4091bc389c10e20cce14256.md",
+            "sha256": "f154de28a49cf3b647d61d6a8113a08989f9ee18fe1d5c996cddf53633a50729"
+          },
+          {
+            "name": "aml-review-97f3f1d3bbdcbd09896ba5fbd2b76341748c16ded4091bc389c10e20cce14256.json",
+            "sha256": "0f7f633e4b6b78e7048937bd330c7da8b4a8d7925165aa9b540efedbfa6f20eb"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "449ecd4fd8e3fcc180fbc13594582b111670efb04e2784e8239759aa2de08220"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "9b3f2ec6a23268accd779970e7da445701a523272e6800131d566eeca2aacb70"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches requesting a client-file AML review, providing the client and transaction records, reading facts and unanswered questions, and updating the same file. It does not teach an invented screening, risk score or filing function.",
+        "inputs_and_request": "Read the localized client, ownership and loan records and the September update. The initial declarations give Elena 60% and Paolo 40%; the agreement and bank row show a EUR 20000 shareholder loan. Identity, powers, independent register corroboration, screening and further fund-origin/purchase evidence are absent. The ordinary request names the client and review date without requiring the learner to populate JSON.",
+        "deliverable_and_next_action": "Both actual native memos retain a proposed assessment, attributed ownership, two case-specific findings, corroborating loan details, proportionate follow-up questions, sources and limitations. Missing evidence does not become a negative screening result or suspicion decision. The source links resolve, and the delivery card names the exact memo, immutable record and Codex evidence-review note. No calculation score, professional decision, external contact or report is manufactured.",
+        "practice_and_repeat": "The native practice links its completed first record and reads the 10 September declaration: Elena remains 60%, Paolo falls to 10%, Marta enters with 30%. The questions change to transfer, register and Marta evidence; the unchanged loan remains documented and earlier unknowns remain open. The prior record is preserved. The outline explains how to ask for a later review when new client information arrives.",
+        "execution_and_checkpoints": "Separate native demonstration and practice checks start the current workflow in an isolated tutorial archive. Codex-authored interpretation is saved by the ordinary helper; source bytes and predecessor records are bound to the same engagement. The lesson checkpoints precede analysis and ask the learner to trace a finding to a source. Script execution is verified; a live learner and native voice/window behavior are not certified by these checks.",
+        "language_and_pacing": "Language fr. Read the complete localized outline and fictional inputs and the unique content of both actual native memos. Headings, statuses, interpretation and delivery notes use the selected language; filenames and record keys remain technical references. Six stages total 390 seconds. The teacher reads the assessment and one linked finding/action, leaving the full supporting memo available. Questions and processing may extend elapsed time; no measured learner duration is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_aml_kit_saves_initial_and_linked_current_review[demo-fr]",
+        "result_review": "The current native helper writes a proposed assessment with two findings: declared 60/40 ownership and missing identity/control corroboration, and the EUR 20000 agreement/payment match with limited fund-origin and purchase evidence. The memo retains the attributed statements and focused evidence requests. Calculation is None, status is draft_for_review, and no professional decision or sending occurs.",
+        "reviewed_artifacts": [
+          {
+            "name": "aml-review-67b8ddf60306c45a3e8bbb748416bb2786520dfce12e7cc5c08138abe32dc05a.md",
+            "sha256": "6f14de28ac51d57cbf86fd73c481533ef94825d51e7dd4832f0a6b8a150ce06a"
+          },
+          {
+            "name": "aml-review-67b8ddf60306c45a3e8bbb748416bb2786520dfce12e7cc5c08138abe32dc05a.json",
+            "sha256": "a930a21c12e0aeb6687e6e2238ec8d5f36a99593042ab11c3e16acd3d22ec38a"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "793e1be8017a7fd00bad3bb68ee1317f55e3e2bfc9d6e5019f6397313315f2c8"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "efab7bc313989a1caf7cb41efd0a9d0ee42f91c635dcd760cc1bde7a93f3d7d1"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_aml_kit_saves_initial_and_linked_current_review[practice-fr]",
+        "result_review": "The current native follow-up imports and links the finalized first review in the same engagement. The record and memo show the new declared 60/10/30 ownership, retain the unchanged loan and ask for the transfer and Marta evidence. Existing unresolved checks remain unresolved. The initial record is byte-identical; the new memo, record and delivery/review companions were inspected.",
+        "reviewed_artifacts": [
+          {
+            "name": "aml-review-34c521a9e9a70a8381a6772aabb62b93d63bb4b76ed2824c897bac3f88bb65a1.md",
+            "sha256": "93b61bffbc8e63c01b662bdf9de48059cce828bd272d9da0bb856abb608ef264"
+          },
+          {
+            "name": "aml-review-34c521a9e9a70a8381a6772aabb62b93d63bb4b76ed2824c897bac3f88bb65a1.json",
+            "sha256": "4af9267742c745ee5e27871df8c87a85c0d411dc151ed98cc67fc665ea724f73"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "a61c1e0a2b2eaa0e08744763269b1d596880f4430813be7abab5121e7d14bab4"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "8ff011d1cf28e95a3e968b361ea959ece5c81999b25fbc94ad7fc1c70937007c"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches requesting a client-file AML review, providing the client and transaction records, reading facts and unanswered questions, and updating the same file. It does not teach an invented screening, risk score or filing function.",
+        "inputs_and_request": "Read the localized client, ownership and loan records and the September update. The initial declarations give Elena 60% and Paolo 40%; the agreement and bank row show a EUR 20000 shareholder loan. Identity, powers, independent register corroboration, screening and further fund-origin/purchase evidence are absent. The ordinary request names the client and review date without requiring the learner to populate JSON.",
+        "deliverable_and_next_action": "Both actual native memos retain a proposed assessment, attributed ownership, two case-specific findings, corroborating loan details, proportionate follow-up questions, sources and limitations. Missing evidence does not become a negative screening result or suspicion decision. The source links resolve, and the delivery card names the exact memo, immutable record and Codex evidence-review note. No calculation score, professional decision, external contact or report is manufactured.",
+        "practice_and_repeat": "The native practice links its completed first record and reads the 10 September declaration: Elena remains 60%, Paolo falls to 10%, Marta enters with 30%. The questions change to transfer, register and Marta evidence; the unchanged loan remains documented and earlier unknowns remain open. The prior record is preserved. The outline explains how to ask for a later review when new client information arrives.",
+        "execution_and_checkpoints": "Separate native demonstration and practice checks start the current workflow in an isolated tutorial archive. Codex-authored interpretation is saved by the ordinary helper; source bytes and predecessor records are bound to the same engagement. The lesson checkpoints precede analysis and ask the learner to trace a finding to a source. Script execution is verified; a live learner and native voice/window behavior are not certified by these checks.",
+        "language_and_pacing": "Language de. Read the complete localized outline and fictional inputs and the unique content of both actual native memos. Headings, statuses, interpretation and delivery notes use the selected language; filenames and record keys remain technical references. Six stages total 390 seconds. The teacher reads the assessment and one linked finding/action, leaving the full supporting memo available. Questions and processing may extend elapsed time; no measured learner duration is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_aml_kit_saves_initial_and_linked_current_review[demo-de]",
+        "result_review": "The current native helper writes a proposed assessment with two findings: declared 60/40 ownership and missing identity/control corroboration, and the EUR 20000 agreement/payment match with limited fund-origin and purchase evidence. The memo retains the attributed statements and focused evidence requests. Calculation is None, status is draft_for_review, and no professional decision or sending occurs.",
+        "reviewed_artifacts": [
+          {
+            "name": "aml-review-9fd637d1b64fbef43be15711deb400ae2c3141c20b35f5f0fb5f483b2d9e9e10.md",
+            "sha256": "d99ce1bdf019da7fb07c70e58b349b3178a88282cfe949461ae8d9f44ce46bde"
+          },
+          {
+            "name": "aml-review-9fd637d1b64fbef43be15711deb400ae2c3141c20b35f5f0fb5f483b2d9e9e10.json",
+            "sha256": "e584b7e624ee91a456c550b76b4d2a8cd467a184d89c2c9561e78ddc6d7ee0a1"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "3b1bfc86db06219c52be990c3c21960f240df3d513aa59b0972410ba3e154cb2"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "162573e5c7d624498b3de8bbc5222eb30abbd224318061a2341e162cc8f4accb"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_aml_kit_saves_initial_and_linked_current_review[practice-de]",
+        "result_review": "The current native follow-up imports and links the finalized first review in the same engagement. The record and memo show the new declared 60/10/30 ownership, retain the unchanged loan and ask for the transfer and Marta evidence. Existing unresolved checks remain unresolved. The initial record is byte-identical; the new memo, record and delivery/review companions were inspected.",
+        "reviewed_artifacts": [
+          {
+            "name": "aml-review-a65f4d6629b64486d7a77e7e622854ecfbfb20695a1173e9b218a204e91bbe53.md",
+            "sha256": "e4580bd2a0d532758258ece33f56d286302e6d3a88b960a233f9fdc2a19c5df0"
+          },
+          {
+            "name": "aml-review-a65f4d6629b64486d7a77e7e622854ecfbfb20695a1173e9b218a204e91bbe53.json",
+            "sha256": "c6b7d66d8d04ce750bc7ba63c39d7bccae934630940948c8063588ab0bd29b21"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "4b8c1ec41bb5315152bf6e39143fe97fd182ceb93a5cd32701941f25db3459d7"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "87c84a8aa8cecf00e65023f3eac3f634cd211b2f1a57db7458fd5c925f935290"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches requesting a client-file AML review, providing the client and transaction records, reading facts and unanswered questions, and updating the same file. It does not teach an invented screening, risk score or filing function.",
+        "inputs_and_request": "Read the localized client, ownership and loan records and the September update. The initial declarations give Elena 60% and Paolo 40%; the agreement and bank row show a EUR 20000 shareholder loan. Identity, powers, independent register corroboration, screening and further fund-origin/purchase evidence are absent. The ordinary request names the client and review date without requiring the learner to populate JSON.",
+        "deliverable_and_next_action": "Both actual native memos retain a proposed assessment, attributed ownership, two case-specific findings, corroborating loan details, proportionate follow-up questions, sources and limitations. Missing evidence does not become a negative screening result or suspicion decision. The source links resolve, and the delivery card names the exact memo, immutable record and Codex evidence-review note. No calculation score, professional decision, external contact or report is manufactured.",
+        "practice_and_repeat": "The native practice links its completed first record and reads the 10 September declaration: Elena remains 60%, Paolo falls to 10%, Marta enters with 30%. The questions change to transfer, register and Marta evidence; the unchanged loan remains documented and earlier unknowns remain open. The prior record is preserved. The outline explains how to ask for a later review when new client information arrives.",
+        "execution_and_checkpoints": "Separate native demonstration and practice checks start the current workflow in an isolated tutorial archive. Codex-authored interpretation is saved by the ordinary helper; source bytes and predecessor records are bound to the same engagement. The lesson checkpoints precede analysis and ask the learner to trace a finding to a source. Script execution is verified; a live learner and native voice/window behavior are not certified by these checks.",
+        "language_and_pacing": "Language es. Read the complete localized outline and fictional inputs and the unique content of both actual native memos. Headings, statuses, interpretation and delivery notes use the selected language; filenames and record keys remain technical references. Six stages total 390 seconds. The teacher reads the assessment and one linked finding/action, leaving the full supporting memo available. Questions and processing may extend elapsed time; no measured learner duration is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_aml_kit_saves_initial_and_linked_current_review[demo-es]",
+        "result_review": "The current native helper writes a proposed assessment with two findings: declared 60/40 ownership and missing identity/control corroboration, and the EUR 20000 agreement/payment match with limited fund-origin and purchase evidence. The memo retains the attributed statements and focused evidence requests. Calculation is None, status is draft_for_review, and no professional decision or sending occurs.",
+        "reviewed_artifacts": [
+          {
+            "name": "aml-review-170c2eaabaa211c6ffc2fcbefa9f7add647d444de17b48f689eb798d35b1fa9e.md",
+            "sha256": "64ccd34831dfc4584d28cf16b6387cff1a2cbb633f586d3cddcc15ab087a58c6"
+          },
+          {
+            "name": "aml-review-170c2eaabaa211c6ffc2fcbefa9f7add647d444de17b48f689eb798d35b1fa9e.json",
+            "sha256": "b7ef0a8cde6f465b4fead184f30e0e4cefb29d619b5231f270bba1d1286d5f3d"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "22d35d70b691ea0ca932af851da44aaacfa132798f032fcd2845a6ceff134b1f"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "ab7fa896e267eb293bf0c36548ab03df8ecf2772636bbe1a3374808fd41aa6d1"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_aml_kit_saves_initial_and_linked_current_review[practice-es]",
+        "result_review": "The current native follow-up imports and links the finalized first review in the same engagement. The record and memo show the new declared 60/10/30 ownership, retain the unchanged loan and ask for the transfer and Marta evidence. Existing unresolved checks remain unresolved. The initial record is byte-identical; the new memo, record and delivery/review companions were inspected.",
+        "reviewed_artifacts": [
+          {
+            "name": "aml-review-95684d5f84f6b34e04f23dafca39bde39ae5fb7273ca443c12047a223d2d3616.md",
+            "sha256": "0fc6cbd80031a4d4ce08ec7b970c9fd766c6b9e45d4bf367e38f51979ca2f308"
+          },
+          {
+            "name": "aml-review-95684d5f84f6b34e04f23dafca39bde39ae5fb7273ca443c12047a223d2d3616.json",
+            "sha256": "68ecba9055c21ee48bf19f1768fd379925ecf80b5b4c6e84d420f884478b6f39"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "76076d474e13cea8a5aa9da93a5a322170be3d1e29ddf8d19e1b3f99e4129f21"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "5aa006c897c53365707efc16aaffaf2d970b31c27f55a23670f8556079cf42bc"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.147103+00:00",
+    "previous_course_sha256": "04af467e94479237e44b0853599d3f260b2a76fcbb5ede08cf23451d0901c341",
+    "source_snapshot": "/private/tmp/assetti-aml-teaching-release-02/test_aml_kit_saves_initial_and5/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  }
+}

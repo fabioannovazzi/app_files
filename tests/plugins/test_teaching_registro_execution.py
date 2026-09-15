@@ -12,6 +12,7 @@ from pathlib import Path
 
 import pytest
 
+from tests.plugins._teaching_release import record_native_check
 from tests.plugins.test_teaching_kit_execution import (
     _bound_case,
     _complete_teaching_case,
@@ -78,11 +79,11 @@ TEXT = {
     "es": {
         "summary": "Preparar el cambio de PEC de la sociedad ficticia Officina Riva S.r.l. a partir del encargo aportado. No se ha presentado ningún trámite.",
         "request": "Cambio de PEC empresarial; no se declara otra modificación.",
-        "fact": "Sociedad de responsabilidad limitada con sede en Milán; datos declarados que verificar.",
+        "fact": "Sociedad de responsabilidad limitada con sede en Milán; datos declarados que deben verificarse.",
         "position": "Examinar el cambio del domicilio digital de la sociedad en el Registro Imprese.",
         "route": "Preparar el recorrido tras comprobar indicaciones actuales y encargo, sin rellenar ni enviar en el portal. Modelos y campos DIRE exactos siguen pendientes de comprobación.",
         "documents": "Obtener extracto registral actual, prueba de activación y titularidad de la PEC y documentación del encargo. Las notas didácticas no los sustituyen.",
-        "field": "PEC y fecha declaradas por el cliente, que verificar antes de rellenar.",
+        "field": "Dirección PEC y fecha declaradas por el cliente; deben verificarse antes de rellenar el formulario.",
         "risk": "No se documenta la disponibilidad efectiva de la nueva dirección; el encargo solo no basta para presentar el trámite.",
         "missing": "Falta la prueba de activación de la nueva dirección.",
         "question": "Para cambiar únicamente la PEC empresarial de una S.r.l. con sede en el territorio, ¿qué indicaciones actuales deben verificarse antes de preparar el trámite?",
@@ -145,21 +146,95 @@ ACTIVITY = {
     "de": "Maschinenwartung laut fiktivem Auftrag",
     "es": "Mantenimiento de maquinaria, según el encargo ficticio",
 }
+FIELD_TITLES = {
+    "it": {
+        "PEC": "Nuovo indirizzo PEC",
+        "EFFECTIVE-DATE": "Data richiesta dal cliente",
+    },
+    "en": {"PEC": "New PEC address", "EFFECTIVE-DATE": "Date requested by the client"},
+    "fr": {
+        "PEC": "Nouvelle adresse PEC",
+        "EFFECTIVE-DATE": "Date demandée par le client",
+    },
+    "de": {
+        "PEC": "Neue PEC-Adresse",
+        "EFFECTIVE-DATE": "Vom Mandanten gewünschtes Datum",
+    },
+    "es": {
+        "PEC": "Nueva dirección PEC",
+        "EFFECTIVE-DATE": "Fecha solicitada por el cliente",
+    },
+}
 
 
 @pytest.mark.parametrize("language", TEXT)
 @pytest.mark.parametrize("phase", ["demo", "practice"])
 def test_registro_kit_uses_current_plan_package_and_preserves_pending_review(
-    tmp_path, monkeypatch, language, phase
+    tmp_path, monkeypatch, language, phase, record_property
 ):
     run = _bound_case(
         tmp_path,
         monkeypatch,
         "registro-imprese-sari",
         "registro-imprese-sari",
-        phase,
+        "demo",
         language=language,
     )
+    ledger = _execute_registry_run(run, language, "demo", tmp_path / "case")
+    results = [{"phase": "demo", "run": run}]
+    if phase == "practice":
+        from courseware.library import CourseLibrary
+
+        original = {
+            path: path.read_bytes()
+            for path in Path(run["context"]["run_root"]).rglob("*")
+            if path.is_file()
+        }
+        context = run["context"]
+        kit = CourseLibrary(ROOT / "plugins/vera", {"registro-imprese-sari"}).render(
+            "registro-imprese-sari", language, tmp_path / "practice-kit"
+        )
+        imports = [
+            ledger.import_document(
+                tmp_path / "case",
+                context["client_id"],
+                context["engagement_id"],
+                Path(path),
+                "source",
+            )
+            for path in kit["practice_files"]
+        ]
+        version = _read(ROOT / "plugins/vera/.codex-plugin/plugin.json")["version"]
+        prepared = ledger.prepare_run(
+            tmp_path / "case",
+            context["client_id"],
+            context["engagement_id"],
+            "registro-imprese-sari",
+            version,
+            input_ids=[item["receipt"]["input_id"] for item in imports],
+            purpose="Fictional follow-up request in the same teaching engagement",
+        )
+        updated = ledger.start_run(
+            tmp_path / "case", context["engagement_id"], prepared["run"]["run_id"]
+        )
+        _execute_registry_run(updated, language, "practice", tmp_path / "case")
+        assert updated["context"]["engagement_id"] == context["engagement_id"]
+        assert updated["context"]["run_id"] != context["run_id"]
+        assert all(path.read_bytes() == content for path, content in original.items())
+        results.append({"phase": "practice", "run": updated})
+    _write(tmp_path / "execution.json", {"language": language, "results": results})
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="registro-imprese-sari",
+        language=language,
+        phase=phase,
+    )
+
+
+def _execute_registry_run(run, language, phase, client_root):
+    """Exercise the normal native package and review path for one authored case."""
     output = Path(run["output_dir"])
     inputs = Path(run["context"]["run_root"]) / "inputs"
     args = ["--client-engagement", run["context_path"], "--output-dir", output]
@@ -289,6 +364,8 @@ def test_registro_kit_uses_current_plan_package_and_preserves_pending_review(
             "professional_review": {"status": "pending"},
         }
     )
+    for field in plan["application_fields"]:
+        field["title"] = FIELD_TITLES[language][field["id"]]
     _write(output / "practice_plan_draft.json", plan)
     _run(
         SCRIPTS + "validate_practice_case.py",
@@ -317,7 +394,7 @@ def test_registro_kit_uses_current_plan_package_and_preserves_pending_review(
     assert _read(output / "ui_decisions.json")["status"] == "pending_review"
     assert _read(output / "official_sources.json")["source_count"] == 2
     _exercise_review(run, output)
-    _complete_teaching_case(run, tmp_path / "case")
+    return _complete_teaching_case(run, client_root)
 
 
 def _exercise_review(run, output):
@@ -373,6 +450,7 @@ def _exercise_review(run, output):
             "render_registro_imprese_sari_review", {"persistence_token": token}
         )
         assert rendered["persistence_available"] is True
+        _write(output / "rendered_review.json", rendered)
         decision = {
             "item_id": "plan-MISSING",
             "action": "request_more_documents",

@@ -1,0 +1,310 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "adeguati-assetti",
+  "course_sha256": "e3e28f78b72e29b984a87b6f00dc2315e1d752d206e6e77b5b317144f1e35c93",
+  "reviewer": "Codex: localized teaching materials and actual native draft/follow-up evidence review",
+  "reviewed_at": "2026-09-14T20:09:40.718058+00:00",
+  "review_scope": "All five lesson outlines and original fictional documents were read. Reviewed all unique semantic content of the twenty native memos across these two workflows and both phases, actual output structure, local source links, saved record identity/status/predecessor and delivery/source-challenge companions. Final output comparison confirms only the intended empty-evidence-label removal after the semantic review; exact current artifact hashes are recorded. The 113 focused tests have no failures or skips. These are Markdown/JSON outputs; no browser, native GUI rendering, live voice, learner comprehension or independent professional acceptance is claimed. CNDCEC source indices were checked as research starting points, without claiming article-level legal analysis. Fixture narratives exercise the normal Codex-authored stage and are not shipped as predetermined lesson answers.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces requesting an assessment of company arrangements, supplying both procedures and operating examples, reading the reasoned assessment and improvement plan, then requesting a follow-up. The absence example follows the complete first-use sequence rather than replacing it.",
+        "inputs_and_request": "Read company, procedure and February-cycle evidence in all five languages and the April update. Officina Arco has one site and twelve staff, with distinct management, document and external-accounting roles. The natural-language request fixes the Italian company, responsibilities, monthly close and collection-information scope at 31 March; other processes remain unassessed.",
+        "deliverable_and_next_action": "The actual Markdown memo starts with scope, company context, assessment and decisions to discuss. It retains coverage, process responsibilities, questions, dated operation, finding F1 and proposed action A1 with owner, timing and completion evidence. Local source links resolve to the exact imported files. The material review preserves the successful February cycle without inferring continuous operation or payment from a customer promise. The native output is a memo and versioned JSON, not a fabricated Word/PDF preview.",
+        "practice_and_repeat": "The separate practice executes the initial review, imports its finalized record in the same engagement and adds the April evidence. The new memo identifies actual late dispatch/delivery, recognizes Paolo’s limited invoice collection, and keeps A1 open. Elena’s review is unrecorded at 30 April but the five-day period from 28 April is still open. The previous record stays byte-identical. The lesson ends by explaining how to repeat with a real scoped engagement and dated evidence.",
+        "execution_and_checkpoints": "Separate native demonstration and practice checks start the current workflow in an isolated tutorial archive. Codex-authored interpretation is saved by the ordinary helper; source bytes and predecessor records are bound to the same engagement. The lesson checkpoints precede analysis and ask the learner to trace a finding to a source. Script execution is verified; a live learner and native voice/window behavior are not certified by these checks.",
+        "language_and_pacing": "Language it. Read the complete localized outline and fictional inputs and the unique content of both actual native memos. Headings, statuses, interpretation and delivery notes use the selected language; filenames and record keys remain technical references. Six stages total 390 seconds. The teacher reads the assessment and one linked finding/action, leaving the full supporting memo available. Questions and processing may extend elapsed time; no measured learner duration is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[demo-it]",
+        "result_review": "The current native helper writes a draft memo and versioned record for the 31 March review. The procedure and dated February cycle support the stated roles and successful dispatch/review in that cycle, but no named substitute or payment proof. The assessment links F1 to proposed A1, with ownership/timing explicitly subject to agreement. The detailed source challenge corrects chronology and preserves limitations; no professional approval is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "adeguati-assetti-b9e15bcc6be08fc44d117ab2f857a0c6d46675edeae6d08af8f4bfb91f705b36.md",
+            "sha256": "50aa6e2707f489695e8e9523058a3ce8147bf3c763e70fac994f4afd55e8abd7"
+          },
+          {
+            "name": "adeguati-assetti-b9e15bcc6be08fc44d117ab2f857a0c6d46675edeae6d08af8f4bfb91f705b36.json",
+            "sha256": "0d33f8bf4a77876cf8d00706cd0ec53e9301159c06a51b20a283e065efec8554"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "19caa2da9781a79a25029ff859ce441002d3f4b2d8a6b9b6e73f49074c9e3151"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "c7d6ddca78388bae4ef5384b62c477823020d1a29a4707861bb4cb30028df32b"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[practice-it]",
+        "result_review": "A finalized initial record is imported into the same engagement before the 30 April native run. The new record links its exact hash and leaves its bytes unchanged. It distinguishes missed document/report deadlines from Elena’s still-open review period, recognizes Paolo’s partial contribution and keeps A1 open. The full memo, changed assessment and local delivery/review companions were checked against the source update.",
+        "reviewed_artifacts": [
+          {
+            "name": "adeguati-assetti-628a2363405d265c6e9ad794150ada763a5c517a3b6a7c9147bb1f0b98095188.md",
+            "sha256": "e66d057de520de42205998400dda488bac75485185189def633b282dc690f262"
+          },
+          {
+            "name": "adeguati-assetti-628a2363405d265c6e9ad794150ada763a5c517a3b6a7c9147bb1f0b98095188.json",
+            "sha256": "9fe345919e70e745473591b8e7b8d5cfe627320aec15e4b6971236d832430f9f"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "fff057ce1337ae857a803fdbbfbf8ba5a303811f2cf7404a602cd3bba2145541"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "4aacc757ef17b9d0f9b00ecbc1d79ec3a0d42c764caff5b253ee99a7afd98ae8"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces requesting an assessment of company arrangements, supplying both procedures and operating examples, reading the reasoned assessment and improvement plan, then requesting a follow-up. The absence example follows the complete first-use sequence rather than replacing it.",
+        "inputs_and_request": "Read company, procedure and February-cycle evidence in all five languages and the April update. Officina Arco has one site and twelve staff, with distinct management, document and external-accounting roles. The natural-language request fixes the Italian company, responsibilities, monthly close and collection-information scope at 31 March; other processes remain unassessed.",
+        "deliverable_and_next_action": "The actual Markdown memo starts with scope, company context, assessment and decisions to discuss. It retains coverage, process responsibilities, questions, dated operation, finding F1 and proposed action A1 with owner, timing and completion evidence. Local source links resolve to the exact imported files. The material review preserves the successful February cycle without inferring continuous operation or payment from a customer promise. The native output is a memo and versioned JSON, not a fabricated Word/PDF preview.",
+        "practice_and_repeat": "The separate practice executes the initial review, imports its finalized record in the same engagement and adds the April evidence. The new memo identifies actual late dispatch/delivery, recognizes Paolo’s limited invoice collection, and keeps A1 open. Elena’s review is unrecorded at 30 April but the five-day period from 28 April is still open. The previous record stays byte-identical. The lesson ends by explaining how to repeat with a real scoped engagement and dated evidence.",
+        "execution_and_checkpoints": "Separate native demonstration and practice checks start the current workflow in an isolated tutorial archive. Codex-authored interpretation is saved by the ordinary helper; source bytes and predecessor records are bound to the same engagement. The lesson checkpoints precede analysis and ask the learner to trace a finding to a source. Script execution is verified; a live learner and native voice/window behavior are not certified by these checks.",
+        "language_and_pacing": "Language en. Read the complete localized outline and fictional inputs and the unique content of both actual native memos. Headings, statuses, interpretation and delivery notes use the selected language; filenames and record keys remain technical references. Six stages total 390 seconds. The teacher reads the assessment and one linked finding/action, leaving the full supporting memo available. Questions and processing may extend elapsed time; no measured learner duration is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[demo-en]",
+        "result_review": "The current native helper writes a draft memo and versioned record for the 31 March review. The procedure and dated February cycle support the stated roles and successful dispatch/review in that cycle, but no named substitute or payment proof. The assessment links F1 to proposed A1, with ownership/timing explicitly subject to agreement. The detailed source challenge corrects chronology and preserves limitations; no professional approval is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "adeguati-assetti-7674d38a1b9bd4c8b430cd07bb6fffad793219cc5e28f1874a6b93460bea1fe6.md",
+            "sha256": "68285d30c45a8857fd77077c52128c2f6366a243249bcffd128c4a4c2f39bda9"
+          },
+          {
+            "name": "adeguati-assetti-7674d38a1b9bd4c8b430cd07bb6fffad793219cc5e28f1874a6b93460bea1fe6.json",
+            "sha256": "a92e61e158a3579540f36400265bea193ccbb89f3597a9073de5a738ae73ebf3"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "d3e0041a3f74a23bcdbc626484ef9b7455591d4acd91623b369fda0d303170a6"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "46bc1a799cd67a0adf30e52e17a06c0f1418584e33842fcf91116fcc5dd70605"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[practice-en]",
+        "result_review": "A finalized initial record is imported into the same engagement before the 30 April native run. The new record links its exact hash and leaves its bytes unchanged. It distinguishes missed document/report deadlines from Elena’s still-open review period, recognizes Paolo’s partial contribution and keeps A1 open. The full memo, changed assessment and local delivery/review companions were checked against the source update.",
+        "reviewed_artifacts": [
+          {
+            "name": "adeguati-assetti-6628f3933ac9cb7f995ee175bacd8570f6a53976f0d59ccb717d7643e0aaf7c3.md",
+            "sha256": "ae7153011089f3bb45e89b3b123bbd7b68ef5a421ddbdf8bb96a519dfd5ab1f9"
+          },
+          {
+            "name": "adeguati-assetti-6628f3933ac9cb7f995ee175bacd8570f6a53976f0d59ccb717d7643e0aaf7c3.json",
+            "sha256": "42590d0b9ddc35c4841bdd72f4ce6ef78c5548685c17e636879dd4acb855837c"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "85f1c2e12c78fe25d7aa44c92001e428da9c824abfbaf4eae83aca4a6727f739"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "1a511a7060d84d794107d4f0e7c2bbd72d264e6ffcd504b8de66240291f96994"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces requesting an assessment of company arrangements, supplying both procedures and operating examples, reading the reasoned assessment and improvement plan, then requesting a follow-up. The absence example follows the complete first-use sequence rather than replacing it.",
+        "inputs_and_request": "Read company, procedure and February-cycle evidence in all five languages and the April update. Officina Arco has one site and twelve staff, with distinct management, document and external-accounting roles. The natural-language request fixes the Italian company, responsibilities, monthly close and collection-information scope at 31 March; other processes remain unassessed.",
+        "deliverable_and_next_action": "The actual Markdown memo starts with scope, company context, assessment and decisions to discuss. It retains coverage, process responsibilities, questions, dated operation, finding F1 and proposed action A1 with owner, timing and completion evidence. Local source links resolve to the exact imported files. The material review preserves the successful February cycle without inferring continuous operation or payment from a customer promise. The native output is a memo and versioned JSON, not a fabricated Word/PDF preview.",
+        "practice_and_repeat": "The separate practice executes the initial review, imports its finalized record in the same engagement and adds the April evidence. The new memo identifies actual late dispatch/delivery, recognizes Paolo’s limited invoice collection, and keeps A1 open. Elena’s review is unrecorded at 30 April but the five-day period from 28 April is still open. The previous record stays byte-identical. The lesson ends by explaining how to repeat with a real scoped engagement and dated evidence.",
+        "execution_and_checkpoints": "Separate native demonstration and practice checks start the current workflow in an isolated tutorial archive. Codex-authored interpretation is saved by the ordinary helper; source bytes and predecessor records are bound to the same engagement. The lesson checkpoints precede analysis and ask the learner to trace a finding to a source. Script execution is verified; a live learner and native voice/window behavior are not certified by these checks.",
+        "language_and_pacing": "Language fr. Read the complete localized outline and fictional inputs and the unique content of both actual native memos. Headings, statuses, interpretation and delivery notes use the selected language; filenames and record keys remain technical references. Six stages total 390 seconds. The teacher reads the assessment and one linked finding/action, leaving the full supporting memo available. Questions and processing may extend elapsed time; no measured learner duration is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[demo-fr]",
+        "result_review": "The current native helper writes a draft memo and versioned record for the 31 March review. The procedure and dated February cycle support the stated roles and successful dispatch/review in that cycle, but no named substitute or payment proof. The assessment links F1 to proposed A1, with ownership/timing explicitly subject to agreement. The detailed source challenge corrects chronology and preserves limitations; no professional approval is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "adeguati-assetti-ed37cf38aa9efa0c620fec52c102b1994fffcc72781a66c3792c625dca436a9d.md",
+            "sha256": "558545015f0011ea4f710aaa2bad7b08aa8ac6e1049ae81a66c50217d368ffaa"
+          },
+          {
+            "name": "adeguati-assetti-ed37cf38aa9efa0c620fec52c102b1994fffcc72781a66c3792c625dca436a9d.json",
+            "sha256": "dfabea63e808425c9f610bcb6ed4e4d0c81cd8df730a86ad2eb83a4f7b1db887"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "ca33fabf13fdb31b1c4ac7099d78a1059360624ffa07ff024db4b895bf1291cb"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "2930560e0ec3f4e8ee291344e96c6a84b1d299949fcc6c8079e393333b588319"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[practice-fr]",
+        "result_review": "A finalized initial record is imported into the same engagement before the 30 April native run. The new record links its exact hash and leaves its bytes unchanged. It distinguishes missed document/report deadlines from Elena’s still-open review period, recognizes Paolo’s partial contribution and keeps A1 open. The full memo, changed assessment and local delivery/review companions were checked against the source update.",
+        "reviewed_artifacts": [
+          {
+            "name": "adeguati-assetti-bb306f545a40572782d678b6c7fad14bdf3d755403d909ee90cfb32932213bed.md",
+            "sha256": "ad1a010fd253d29a8e543bef3faa161094624d057e1ec3398ec81ec46dbd6872"
+          },
+          {
+            "name": "adeguati-assetti-bb306f545a40572782d678b6c7fad14bdf3d755403d909ee90cfb32932213bed.json",
+            "sha256": "76290aaf2d69f20ef77900864e0d13c82953f95225965d73b36acec174556ede"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "b80642e271c4af8e4b933c97c53a1ba64af174be22bc8f6c83f06b01bff84c81"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "53f659418271c63df8394b31df727532ce1ed551061331a0ad442442c7130ea2"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces requesting an assessment of company arrangements, supplying both procedures and operating examples, reading the reasoned assessment and improvement plan, then requesting a follow-up. The absence example follows the complete first-use sequence rather than replacing it.",
+        "inputs_and_request": "Read company, procedure and February-cycle evidence in all five languages and the April update. Officina Arco has one site and twelve staff, with distinct management, document and external-accounting roles. The natural-language request fixes the Italian company, responsibilities, monthly close and collection-information scope at 31 March; other processes remain unassessed.",
+        "deliverable_and_next_action": "The actual Markdown memo starts with scope, company context, assessment and decisions to discuss. It retains coverage, process responsibilities, questions, dated operation, finding F1 and proposed action A1 with owner, timing and completion evidence. Local source links resolve to the exact imported files. The material review preserves the successful February cycle without inferring continuous operation or payment from a customer promise. The native output is a memo and versioned JSON, not a fabricated Word/PDF preview.",
+        "practice_and_repeat": "The separate practice executes the initial review, imports its finalized record in the same engagement and adds the April evidence. The new memo identifies actual late dispatch/delivery, recognizes Paolo’s limited invoice collection, and keeps A1 open. Elena’s review is unrecorded at 30 April but the five-day period from 28 April is still open. The previous record stays byte-identical. The lesson ends by explaining how to repeat with a real scoped engagement and dated evidence.",
+        "execution_and_checkpoints": "Separate native demonstration and practice checks start the current workflow in an isolated tutorial archive. Codex-authored interpretation is saved by the ordinary helper; source bytes and predecessor records are bound to the same engagement. The lesson checkpoints precede analysis and ask the learner to trace a finding to a source. Script execution is verified; a live learner and native voice/window behavior are not certified by these checks.",
+        "language_and_pacing": "Language de. Read the complete localized outline and fictional inputs and the unique content of both actual native memos. Headings, statuses, interpretation and delivery notes use the selected language; filenames and record keys remain technical references. Six stages total 390 seconds. The teacher reads the assessment and one linked finding/action, leaving the full supporting memo available. Questions and processing may extend elapsed time; no measured learner duration is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[demo-de]",
+        "result_review": "The current native helper writes a draft memo and versioned record for the 31 March review. The procedure and dated February cycle support the stated roles and successful dispatch/review in that cycle, but no named substitute or payment proof. The assessment links F1 to proposed A1, with ownership/timing explicitly subject to agreement. The detailed source challenge corrects chronology and preserves limitations; no professional approval is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "adeguati-assetti-6b635239c509598db5298a72686b9383255aef5e8b99f1e097111510ccbb92ec.md",
+            "sha256": "b154faf0dff78ee5ea15d33b036a322db542463dede17ea541000ac6dddbce0e"
+          },
+          {
+            "name": "adeguati-assetti-6b635239c509598db5298a72686b9383255aef5e8b99f1e097111510ccbb92ec.json",
+            "sha256": "8c09564867c0c7f9cf4ba9018d0557086283c2464d308848ecc43a522e99bf56"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "950a7f606d250165469b4cd94fb7d70cca5831e98a4c163cbd24d0947dafd12c"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "4321063fdfea2ff6f9ddf5319c8b414e1aeb60b27edef672f44be22e312a80c1"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[practice-de]",
+        "result_review": "A finalized initial record is imported into the same engagement before the 30 April native run. The new record links its exact hash and leaves its bytes unchanged. It distinguishes missed document/report deadlines from Elena’s still-open review period, recognizes Paolo’s partial contribution and keeps A1 open. The full memo, changed assessment and local delivery/review companions were checked against the source update.",
+        "reviewed_artifacts": [
+          {
+            "name": "adeguati-assetti-4f469cd57e6637bcbb5191416bcc54bb990205c34f565baa20a1965e9740ff99.md",
+            "sha256": "142d66c533e1fa5f0948db8c14e4afc898423dc5e700da98fcc1dba87137b9ee"
+          },
+          {
+            "name": "adeguati-assetti-4f469cd57e6637bcbb5191416bcc54bb990205c34f565baa20a1965e9740ff99.json",
+            "sha256": "48646f214ca1570cd805004e8e1ef3c85db6cca46e89c2178137ba5303179ccb"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "34e8ad0b85570958ce8658a655c3d4e4fa5e3825c64cc3802727cfc1694fe382"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "7aba0d022850459bbc892cd1e61800e91a643d62387467b5ccf510360466ab5c"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces requesting an assessment of company arrangements, supplying both procedures and operating examples, reading the reasoned assessment and improvement plan, then requesting a follow-up. The absence example follows the complete first-use sequence rather than replacing it.",
+        "inputs_and_request": "Read company, procedure and February-cycle evidence in all five languages and the April update. Officina Arco has one site and twelve staff, with distinct management, document and external-accounting roles. The natural-language request fixes the Italian company, responsibilities, monthly close and collection-information scope at 31 March; other processes remain unassessed.",
+        "deliverable_and_next_action": "The actual Markdown memo starts with scope, company context, assessment and decisions to discuss. It retains coverage, process responsibilities, questions, dated operation, finding F1 and proposed action A1 with owner, timing and completion evidence. Local source links resolve to the exact imported files. The material review preserves the successful February cycle without inferring continuous operation or payment from a customer promise. The native output is a memo and versioned JSON, not a fabricated Word/PDF preview.",
+        "practice_and_repeat": "The separate practice executes the initial review, imports its finalized record in the same engagement and adds the April evidence. The new memo identifies actual late dispatch/delivery, recognizes Paolo’s limited invoice collection, and keeps A1 open. Elena’s review is unrecorded at 30 April but the five-day period from 28 April is still open. The previous record stays byte-identical. The lesson ends by explaining how to repeat with a real scoped engagement and dated evidence.",
+        "execution_and_checkpoints": "Separate native demonstration and practice checks start the current workflow in an isolated tutorial archive. Codex-authored interpretation is saved by the ordinary helper; source bytes and predecessor records are bound to the same engagement. The lesson checkpoints precede analysis and ask the learner to trace a finding to a source. Script execution is verified; a live learner and native voice/window behavior are not certified by these checks.",
+        "language_and_pacing": "Language es. Read the complete localized outline and fictional inputs and the unique content of both actual native memos. Headings, statuses, interpretation and delivery notes use the selected language; filenames and record keys remain technical references. Six stages total 390 seconds. The teacher reads the assessment and one linked finding/action, leaving the full supporting memo available. Questions and processing may extend elapsed time; no measured learner duration is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[demo-es]",
+        "result_review": "The current native helper writes a draft memo and versioned record for the 31 March review. The procedure and dated February cycle support the stated roles and successful dispatch/review in that cycle, but no named substitute or payment proof. The assessment links F1 to proposed A1, with ownership/timing explicitly subject to agreement. The detailed source challenge corrects chronology and preserves limitations; no professional approval is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "adeguati-assetti-3e47fbf6c328bd8c7bcce908dbed1b22dfe57c241fd9bfeef46104d0d799b00b.md",
+            "sha256": "7d2a1ad3f11bef8ce2ec68f90026003b80311116bc572a8e9ce4ab9a1f46b788"
+          },
+          {
+            "name": "adeguati-assetti-3e47fbf6c328bd8c7bcce908dbed1b22dfe57c241fd9bfeef46104d0d799b00b.json",
+            "sha256": "de5bda55b86c5ebb1c210fd06be93134c2d7233dfc429e616cb208299cac9804"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "a73aba3680c7b9e8788d5b92ab41c14da7a50794e31cc4e32ac427e301d7fcb4"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "441a384f92c2a2ddfe7662c33ab3e3d6f62c40bb7eb4e864301f75753b5cc34d"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[practice-es]",
+        "result_review": "A finalized initial record is imported into the same engagement before the 30 April native run. The new record links its exact hash and leaves its bytes unchanged. It distinguishes missed document/report deadlines from Elena’s still-open review period, recognizes Paolo’s partial contribution and keeps A1 open. The full memo, changed assessment and local delivery/review companions were checked against the source update.",
+        "reviewed_artifacts": [
+          {
+            "name": "adeguati-assetti-0bf32fd0dc36455e3575ee6c05bf3f00d3d3de9ebe4227c9b1bd729cc21d8121.md",
+            "sha256": "2283d2fa95322a80fecec8a14dae9edcc058c23f4e82b3cea8e593cb28dfcadf"
+          },
+          {
+            "name": "adeguati-assetti-0bf32fd0dc36455e3575ee6c05bf3f00d3d3de9ebe4227c9b1bd729cc21d8121.json",
+            "sha256": "9cf3e1cefe539b62f4d738a22d0cf37fd016214f7eb9b21b10c38a8fa151387b"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "c9584659bc65b25153fd1cc80450271e41ba6c6dc24be156efebefd0819a103e"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "8754335198aa6c2798233468707786f4398da200b640af51d951b1158fa12a88"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.148205+00:00",
+    "previous_course_sha256": "3500a49c218193b73c87cea9e9b9fcfad6eaa64633a659ec17b19c0a64634f89",
+    "source_snapshot": "/private/tmp/assetti-aml-teaching-release-05/test_assetti_kit_runs_assessme8/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  }
+}

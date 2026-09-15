@@ -17,6 +17,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from courseware.policy import local_unavailability
+
 from .onboarding import (
     MARKER,
     OnboardingError,
@@ -190,6 +192,8 @@ class TeachingStore(Store):
                     "Resume or pause the active teaching session first"
                 )
             workflow = data.get("workflow_id")
+            if reason := local_unavailability(self.product, workflow):
+                raise OnboardingError(reason)
             if workflow not in eligible_workflows(self.plugin_root):
                 raise OnboardingError("Choose a supported operational workflow")
             previous = data.get("example_id")

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "run_id": "lucia-de-demo",
+  "reference_date": "2026-09-14",
+  "language": "de",
+  "jurisdiction": "Italy / EU GDPR; language does not change jurisdiction",
+  "objective": "Die Kanzlei möchte eine kurze FAQ für ihre kleinen Unternehmenskunden in Italien erstellen: Wie erkennt und organisiert man eine Auskunftsanfrage zu personenbezogenen Daten? Dies ist eine Informationsinitiative der Kanzlei, keine Meldung über ein neues Gesetz und keine Antwort an eine reale Person. Die Leser arbeiten in Verwaltung und Kundenbetreuung und sollen erkennen, wann sie die für Datenschutz zuständige Person einbeziehen müssen. Nutze den ausgewählten offiziellen EDSA-Leitfaden und trenne allgemeine Hinweise von der Bewertung eines Einzelfalls. Kundendaten, echte Anfragen und eine betriebliche Datenschutzrichtlinie liegen nicht vor. Erstelle das Paket zur internen Prüfung, ohne Versand oder Veröffentlichung. Die fertigen Texte sollen auf Deutsch sein.",
+  "audience": "Small business clients in Italy; administration and customer service staff",
+  "studio_format_brief": "Studio Riva — Rechtsberatung. Logo, Kontaktdaten, frühere Mitteilungen und ein freigegebener Hausstil liegen nicht vor. Schlage ein schlichtes blau-weißes Format mit lesbarer Schrift, klaren Überschriften und erkennbaren Quellen vor. Die verantwortliche Fachperson prüft es vor der Verwendung.",
+  "channels": [
+    "faq"
+  ],
+  "visual_requested": false,
+  "source_inputs": [
+    {
+      "id": "SRC-EDPB",
+      "path": "plugins/lucia/assets/courses/comunicazione-professionale/files/input/source-de.md",
+      "title": "EDPB guide for small business: rights, handling requests and access",
+      "authority_role": "official_guidance",
+      "public_url": "https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_de"
+    }
+  ],
+  "history_inputs": [],
+  "brand_profile": {
+    "studio_name": "Studio Riva",
+    "primary_color": "#153855",
+    "accent_color": "#197B9C",
+    "background_color": "#FFFFFF",
+    "text_color": "#1C2935"
+  },
+  "external_routes": {
+    "public_research": {
+      "selected": false
+    },
+    "history_connector": {
+      "selected": false
+    },
+    "creative_production": {
+      "selected": false
+    },
+    "send_or_publish": {
+      "selected": false
+    }
+  }
+}

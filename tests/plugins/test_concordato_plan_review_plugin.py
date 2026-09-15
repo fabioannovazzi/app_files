@@ -668,6 +668,7 @@ def test_calculation_receipt_binds_formula_sign_period_sources_and_candidates(
         ("implementation", "mcp/server.cjs"),
         ("implementation", "scripts/apply_review_edits.py"),
         ("implementation", "scripts/check_dependencies.py"),
+        ("implementation", "scripts/concordato_labels.py"),
         ("implementation", "scripts/concordato_plan_core.py"),
         ("implementation", "scripts/concordato_semantic.py"),
         ("implementation", "scripts/finalize_output_closure.py"),

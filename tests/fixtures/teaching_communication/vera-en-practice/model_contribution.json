@@ -1,0 +1,709 @@
+{
+  "channel_drafts": [
+    {
+      "audience_note": "Administration and customer service staff in small businesses in Italy.",
+      "body": "Teaching exercise: Studio Riva and the assignment are fictional; the EDPB guide is an authentic public source.\n\nThis FAQ helps you recognise an access request and organise its handling with the person responsible for privacy. It is a Studio Riva information initiative based on the general guidance in the EDPB guide; it does not announce a new law.\n\n### How do I recognise an access request?\n\nA person may want to know whether the business processes personal data about them, access that data or receive a copy. These are elements of the right of access described by the EDPB guide. If a request has this content, involve your privacy contact to assess it. [EDPB guide: individuals’ rights](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en)\n\n### What should I do when it arrives?\n\nAs a suggested internal arrangement, record the date received, the channel and the content of the request, then promptly pass it to the privacy contact identified by your business. The guide recommends internal procedures and records of requests and responses. The data controller must respond; the data processor assists it. An internal contact coordinates the work without replacing these roles. [EDPB guide: individuals’ rights](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en)\n\n### How long is there to respond?\n\nThe guide sets out a one-month response period. If a request is too complex and more time is needed, the period may be extended by two further months, provided the person is informed within one month of receipt. The extension is not automatic: raise difficulties promptly with the person responsible for privacy for assessment in the particular case. [EDPB guide: individuals’ rights](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en)\n\n### What needs to be prepared?\n\nThe response includes personal data and information about processing, such as its purposes, the categories of data, recipients, and the retention period or criteria used to determine it. These are examples, not a complete list. Your privacy contact should check all the items in the guide’s access section and identify the relevant data; this FAQ is not a complete response template. [EDPB guide: individuals’ rights](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en)\n\n### Can I simply send the whole file?\n\nBefore providing a copy of personal data, check that doing so will not affect other people’s rights and freedoms, for example where one document contains information about several people. Flag such documents to your privacy contact before sharing them. The guide provides for a free copy of the personal data; any additional copies need separate consideration. [EDPB guide: individuals’ rights](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en)\n\n### When is a specific assessment needed?\n\nInvolve the person responsible for privacy if the request is unclear, the work is complex, other people’s data is involved, or a fee or refusal is being considered. The guide allows a reasonable fee or refusal for requests demonstrably manifestly unfounded or excessive; inconvenience alone does not establish this. If a request will not be granted, the reasons and the options of a complaint to the national authority and a judicial remedy must be communicated within one month. These decisions require an individual assessment. [EDPB guide: individuals’ rights](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en)\n\nGeneral guidance for businesses in Italy. This FAQ does not determine the response to a real request or replace company procedures. Before use, the professional should review the text and the business should identify its privacy contact.",
+      "channel": "faq",
+      "claim_ids": [
+        "CLAIM-001",
+        "CLAIM-002",
+        "CLAIM-003",
+        "CLAIM-004",
+        "CLAIM-005",
+        "CLAIM-006",
+        "CLAIM-007",
+        "CLAIM-008",
+        "CLAIM-009",
+        "CLAIM-010",
+        "CLAIM-011",
+        "CLAIM-012"
+      ],
+      "public_source_notes": [
+        {
+          "public_url": "https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en",
+          "source_ids": [
+            "SRC-EDPB"
+          ],
+          "text": "European Data Protection Board (EDPB), Data protection guide for small business, “Respect individuals’ rights”, sections on handling requests and the right of access; extract captured on 14 September 2026. Official guidance, not legislation."
+        }
+      ],
+      "sections": [],
+      "title": "Personal data access requests: first steps for your business"
+    },
+    {
+      "audience_note": "Administration and customer service staff in small businesses in Italy.",
+      "body": "Teaching exercise: Studio Riva and the assignment are fictional; the EDPB guide is an authentic public source.\n\nThe FAQ “Personal data access requests: first steps for your business” is intended for administration and customer service staff in small businesses in Italy. Use it to recognise the content of a request, record its arrival and involve your privacy contact.\n\nThe EDPB guide recommends internal procedures and records of requests. The FAQ helps prepare that handoff; it does not decide which data to disclose or whether exceptions apply. This is a firm-led information initiative, with no new obligation announced. Real requests need individual assessment.\n\n[EDPB guide: individuals’ rights](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en)",
+      "channel": "client_email",
+      "claim_ids": [
+        "CLAIM-001",
+        "CLAIM-002",
+        "CLAIM-012"
+      ],
+      "public_source_notes": [
+        {
+          "public_url": "https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en",
+          "source_ids": [
+            "SRC-EDPB"
+          ],
+          "text": "European Data Protection Board (EDPB), Data protection guide for small business, “Respect individuals’ rights”, sections on handling requests and the right of access; extract captured on 14 September 2026. Official guidance, not legislation."
+        }
+      ],
+      "sections": [],
+      "subject": "Personal data access: using the FAQ in your business",
+      "title": "Covering email for the FAQ"
+    }
+  ],
+  "claims": [
+    {
+      "id": "CLAIM-001",
+      "professional_judgment": "The professional and privacy contact must check roles, relevance and application to the particular case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "The right of access includes confirmation of whether personal data is being processed and, if so, access to that data.",
+      "temporal_qualification": "Selected guide captured on 14 September 2026; no new effective date is announced.",
+      "uncertainty": "Application depends on the facts and the business’s role, which were not supplied."
+    },
+    {
+      "id": "CLAIM-002",
+      "professional_judgment": "The professional and privacy contact must check roles, relevance and application to the particular case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "The guide recommends internal procedures and records of requests and responses.",
+      "temporal_qualification": "Selected guide captured on 14 September 2026; no new effective date is announced.",
+      "uncertainty": "Application depends on the facts and the business’s role, which were not supplied."
+    },
+    {
+      "id": "CLAIM-003",
+      "professional_judgment": "The professional and privacy contact must check roles, relevance and application to the particular case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "The controller must respond to rights requests; the processor must assist it.",
+      "temporal_qualification": "Selected guide captured on 14 September 2026; no new effective date is announced.",
+      "uncertainty": "Application depends on the facts and the business’s role, which were not supplied."
+    },
+    {
+      "id": "CLAIM-004",
+      "professional_judgment": "The professional and privacy contact must check roles, relevance and application to the particular case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "The guide specifies a one-month period to respond to a rights request.",
+      "temporal_qualification": "Selected guide captured on 14 September 2026; no new effective date is announced.",
+      "uncertainty": "Application depends on the facts and the business’s role, which were not supplied."
+    },
+    {
+      "id": "CLAIM-005",
+      "professional_judgment": "The professional and privacy contact must check roles, relevance and application to the particular case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "If a request is too complex and more time is needed, the period may be extended by two further months if the person is informed within one month of receipt.",
+      "temporal_qualification": "Selected guide captured on 14 September 2026; no new effective date is announced.",
+      "uncertainty": "Application depends on the facts and the business’s role, which were not supplied."
+    },
+    {
+      "id": "CLAIM-006",
+      "professional_judgment": "The professional and privacy contact must check roles, relevance and application to the particular case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Information to be provided under access includes processing purposes, data categories, recipients and the retention period or the criteria used to determine it.",
+      "temporal_qualification": "Selected guide captured on 14 September 2026; no new effective date is announced.",
+      "uncertainty": "Application depends on the facts and the business’s role, which were not supplied."
+    },
+    {
+      "id": "CLAIM-007",
+      "professional_judgment": "The professional and privacy contact must check roles, relevance and application to the particular case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Before providing a copy of personal data, the rights and freedoms of others must be checked.",
+      "temporal_qualification": "Selected guide captured on 14 September 2026; no new effective date is announced.",
+      "uncertainty": "Application depends on the facts and the business’s role, which were not supplied."
+    },
+    {
+      "id": "CLAIM-008",
+      "professional_judgment": "The professional and privacy contact must check roles, relevance and application to the particular case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "The person has a right to receive a free copy of their personal data being processed.",
+      "temporal_qualification": "Selected guide captured on 14 September 2026; no new effective date is announced.",
+      "uncertainty": "Application depends on the facts and the business’s role, which were not supplied."
+    },
+    {
+      "id": "CLAIM-009",
+      "professional_judgment": "The professional and privacy contact must check roles, relevance and application to the particular case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "For additional copies, the guide allows a reasonable fee based on the administrative cost of making them.",
+      "temporal_qualification": "Selected guide captured on 14 September 2026; no new effective date is announced.",
+      "uncertainty": "Application depends on the facts and the business’s role, which were not supplied."
+    },
+    {
+      "id": "CLAIM-010",
+      "professional_judgment": "The professional and privacy contact must check roles, relevance and application to the particular case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "For a demonstrably manifestly unfounded or excessive request, the guide allows a reasonable fee or refusal to act.",
+      "temporal_qualification": "Selected guide captured on 14 September 2026; no new effective date is announced.",
+      "uncertainty": "Application depends on the facts and the business’s role, which were not supplied."
+    },
+    {
+      "id": "CLAIM-011",
+      "professional_judgment": "The professional and privacy contact must check roles, relevance and application to the particular case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Where a request will not be granted, reasons and information about a complaint to the national authority and a judicial remedy must be given within one month of receipt.",
+      "temporal_qualification": "Selected guide captured on 14 September 2026; no new effective date is announced.",
+      "uncertainty": "Application depends on the facts and the business’s role, which were not supplied."
+    },
+    {
+      "id": "CLAIM-012",
+      "professional_judgment": "This is a suggested internal arrangement derived from the guide’s procedure and documentation guidance, not a new legal requirement or an adopted company procedure.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "As a suggested arrangement, recording the date, channel and content of a request and promptly involving the privacy contact helps prepare the internal handling recommended by the guide.",
+      "temporal_qualification": "Selected guide captured on 14 September 2026; no new effective date is announced.",
+      "uncertainty": "Application depends on the facts and the business’s role, which were not supplied."
+    }
+  ],
+  "editorial_value": {
+    "audience_value": "Staff can recognise the content of a request and prepare a useful internal handoff.",
+    "banality_check": "The FAQ goes beyond a general request to be careful: it identifies receipt information, time limits and review decisions. The proposed internal arrangement is explicitly labelled as a proposal.",
+    "decision_enabled": "It enables staff to start internal handling and recognise which issues need their privacy contact’s assessment.",
+    "decision_limit": "General guidance for businesses in Italy. This FAQ does not determine the response to a real request or replace company procedures. Before use, the professional should review the text and the business should identify its privacy contact.",
+    "distinct_angle": "From initial contact to privacy assessment, separating collection and routing from decisions about the response.",
+    "practical_use": "Record receipt and content, identify the contact, and flag complexity or other people’s data before responding.",
+    "publication_judgment": "Useful as a short information draft, subject to professional review; this is not authorisation to distribute it.",
+    "reason_now": "A firm-led information initiative was requested; no legislative development or exceptional deadline was supplied.",
+    "repetition_check": "No history was selected, so repetition against prior communications cannot be assessed.",
+    "source_specific_information": "The guide connects internal procedures with a one-month response period, a conditional extension and a check of others’ rights before supplying a copy."
+  },
+  "master_brief": {
+    "actions": [
+      "As a suggested arrangement, recording the date, channel and content of a request and promptly involving the privacy contact helps prepare the internal handling recommended by the guide.",
+      "The guide recommends internal procedures and records of requests and responses."
+    ],
+    "caveats": [
+      "General guidance for businesses in Italy. This FAQ does not determine the response to a real request or replace company procedures. Before use, the professional should review the text and the business should identify its privacy contact.",
+      "This is a suggested internal arrangement derived from the guide’s procedure and documentation guidance, not a new legal requirement or an adopted company procedure.",
+      "Teaching exercise: Studio Riva and the assignment are fictional; the EDPB guide is an authentic public source."
+    ],
+    "effective_dates": [
+      "No new effective date; the documentary reference date is 14 September 2026."
+    ],
+    "practical_implications": [
+      "The right of access includes confirmation of whether personal data is being processed and, if so, access to that data.",
+      "The guide specifies a one-month period to respond to a rights request.",
+      "If a request is too complex and more time is needed, the period may be extended by two further months if the person is informed within one month of receipt.",
+      "Before providing a copy of personal data, the rights and freedoms of others must be checked."
+    ],
+    "what_changed": "No legislative change is announced. The firm proposes a FAQ on the EDPB guide’s general guidance for recognising and organising an access request.",
+    "who_may_be_affected": "Administration and customer service staff in small businesses in Italy."
+  },
+  "recommendation": "publish",
+  "recommendation_reason": "The firm’s explicit initiative supports a practical FAQ: staff can recognise an access request and hand it to their privacy contact with useful information. This recommendation concerns a draft for review and does not authorise sending or publication.",
+  "run_id": "vera-en-practice",
+  "schema_version": 1,
+  "source_assessments": [
+    {
+      "authority_assessment": "Relevant official EDPB guidance on exercising rights and access. It supplies general orientation rather than a new legislative instrument.",
+      "limitations": "Selected extract captured on 14 September 2026. It does not establish company facts or replace examination of all applicable sources in a real case. Linked legal instruments were not supplied as inspected evidence.",
+      "semantic_role": "clarifying",
+      "source_id": "SRC-EDPB"
+    }
+  ],
+  "studio_profile_proposal": {
+    "derived_from_history_ids": [],
+    "document": {
+      "circular_label": "Client circular",
+      "closing": "Kind regards,",
+      "contact_rail_lines": [],
+      "date_pattern": "{date}",
+      "font_family": "Helvetica",
+      "footer_pattern": "Studio Riva",
+      "layout": {
+        "body_font_size_pt": 11,
+        "body_leading_pt": 15,
+        "bottom_margin_mm": 20,
+        "contact_rail_width_mm": 30,
+        "heading_font_size_pt": 12,
+        "left_margin_mm": 22,
+        "logo_height_mm": 12,
+        "logo_width_mm": 32,
+        "right_margin_mm": 22,
+        "rule_width_pt": 0.6,
+        "subject_font_size_pt": 15,
+        "top_margin_mm": 24
+      },
+      "numbering_pattern": "",
+      "page_size": "A4",
+      "recipient_pattern": "To interested small business clients",
+      "section_style": "unnumbered",
+      "signature_lines": [
+        "Studio Riva",
+        "accountants"
+      ],
+      "subject_prefix": "Subject:",
+      "use_contact_rail": false
+    },
+    "email": {
+      "attachment_note": "Reference FAQ, to be included only after the package has been reviewed.",
+      "closing": "Kind regards,",
+      "salutation": "Dear clients,",
+      "signature_lines": [
+        "Studio Riva",
+        "accountants"
+      ],
+      "subject_pattern": "{subject}"
+    },
+    "field_provenance": [
+      {
+        "analysis": "This field reflects the identity, audience or preference for clarity and restraint explicitly supplied in the intake; it is not derived from previous communications.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "voice.audience_stance"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.rhythm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.technical_density"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "This field reflects the identity, audience or preference for clarity and restraint explicitly supplied in the intake; it is not derived from previous communications.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "voice.formality"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.openings"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.closings"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "This field reflects the identity, audience or preference for clarity and restraint explicitly supplied in the intake; it is not derived from previous communications.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "voice.formatting"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.avoid"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.page_size"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.font_family"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.left_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.right_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.top_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.bottom_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.logo_width_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.logo_height_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.contact_rail_width_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.body_font_size_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.body_leading_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.subject_font_size_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.heading_font_size_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.rule_width_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.recipient_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.circular_label"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.numbering_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.date_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.subject_prefix"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.section_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.use_contact_rail"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "No contact details were supplied in the intake. This field stays empty without adding invented addresses or contacts.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "document.contact_rail_lines"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.footer_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.closing"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "This field reflects the identity, audience or preference for clarity and restraint explicitly supplied in the intake; it is not derived from previous communications.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "document.signature_lines"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.subject_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.salutation"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.closing"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "This field reflects the identity, audience or preference for clarity and restraint explicitly supplied in the intake; it is not derived from previous communications.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "email.signature_lines"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.attachment_note"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.byline_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.date_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.heading_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.source_heading"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.cta"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.show_update_date"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.preferred_format"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.opening_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.closing_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.hashtags"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.show_source_note"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "An initial Vera proposal for a restrained, readable format. No previous communications were selected; this convention is neither observed history nor approved practice.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.carousel_identity_placement"
+        ],
+        "history_ids": []
+      }
+    ],
+    "social": {
+      "carousel_identity_placement": "close_only",
+      "closing_style": "Close with the document’s intended use and its limits.",
+      "hashtags": [],
+      "opening_style": "Open with the reader’s practical problem.",
+      "preferred_format": "text",
+      "show_source_note": true
+    },
+    "voice": {
+      "audience_stance": "Address administration and customer service staff in small businesses in Italy clearly.",
+      "avoid": [
+        "Invented urgency",
+        "Compliance guarantees",
+        "Unsupplied client stories",
+        "Promotional language"
+      ],
+      "closings": "Close with the document’s intended use and its limits.",
+      "formality": "Restrained and professional.",
+      "formatting": "Clear headings and identifiable sources.",
+      "openings": "Open with the reader’s practical problem.",
+      "rhythm": "Short sentences, one practical question at a time.",
+      "technical_density": "Explain necessary terms and distinguish general guidance, suggested arrangements and individual assessment."
+    },
+    "website": {
+      "byline_pattern": "Studio Riva",
+      "cta": "Identify your privacy contact before using this guide within your company procedure.",
+      "date_pattern": "Updated on {date}",
+      "heading_style": "question_led",
+      "show_update_date": true,
+      "source_heading": "Sources"
+    }
+  },
+  "visual_story": {
+    "decision": "omit",
+    "decision_reason": "The short text FAQ already supports the sequence from receipt to assessment. A visual would repeat its content without adding a useful decision.",
+    "incremental_value": "",
+    "slides": [],
+    "title": ""
+  }
+}

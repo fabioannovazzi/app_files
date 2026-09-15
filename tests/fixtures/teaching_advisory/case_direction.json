@@ -1,0 +1,257 @@
+{
+  "en": {
+    "client": "Ciclo Arco — fictional exercise",
+    "project": "Assess bicycle collection",
+    "title": "Bicycle collection: current assessment",
+    "locator": "Complete supplied note",
+    "scope": "The supplied fictional documents and the owner's decision only.",
+    "limit": "These are attributed teaching notes, without independent verification of business conditions.",
+    "verification": "Read the selected file and retained its exact identity and contents.",
+    "question": "What should the owner do next with the evidence currently available?",
+    "question_demo": "What route, capacity, price, costs and actual booking interest would make a limited trial feasible?",
+    "question_practice": "Which vehicle could be available for the trial, on what terms and at what cost?",
+    "why": "Resolve these conditions before scheduling collections or committing resources.",
+    "uncertainty": "Bookings, route, capacity, price and costs remain unverified. The notes provide no basis for a daily service or financial forecast.",
+    "implication_demo": "Investigate a limited trial by appointment; do not launch a daily service from these notes.",
+    "implication_practice": "Resolve transport first. The previous Wednesday-vehicle assumption cannot support scheduling the trial.",
+    "reasoning_demo": "Conditional customer interest and limited operating availability support testing feasibility, not immediate daily launch.",
+    "reasoning_practice": "Retain the assignment and customer evidence, replace the unavailable-vehicle assumption with the latest note, and prioritize transport feasibility.",
+    "change_demo": "Initial conditional assessment from the assignment and customer/operating notes.",
+    "change_practice": "The vehicle is unavailable: clarify transport before scheduling a trial; retain the earlier assessment in history.",
+    "sources_heading": "Sources and supporting reasoning",
+    "map_label": "Open the sources and conclusions map",
+    "question_heading": "Next question to resolve",
+    "prior_label": "Open the preserved earlier assessment",
+    "review_title": "Review of this working assessment",
+    "evidence": {
+      "assignment": {
+        "observation": "The owner requests a comparison of an appointment-based pilot and an immediate daily service, using only the supplied notes and without contact, spending or a financial forecast.",
+        "analysis": "This fixes the decision, intended reader and permitted scope of the assessment.",
+        "proves": "The requested comparison and restrictions on the work.",
+        "does_not_prove": "Customer demand, feasibility or authority to launch a service.",
+        "bias": "Reliable for the stated assignment; it is a request, not independent commercial evidence."
+      },
+      "notes": {
+        "observation": "Anna and Carla express conditional interest; Bruno prefers self-delivery. There are no bookings or agreed prices. Initially the shop vehicle is available Wednesday evenings and the owner can handle first deliveries; there is no dedicated daily driver.",
+        "analysis": "The limited customer signals and operating capacity justify checking a small trial before considering daily service.",
+        "analysis_update": "Customer statements and the missing daily driver remain relevant. The new vehicle note overrides the earlier Wednesday availability for the planned trial period.",
+        "proves": "What the informal conversations and the owner's initial operating note report.",
+        "does_not_prove": "Representative demand, willingness to pay, actual capacity, costs or confirmed readiness.",
+        "bias": "One supplied account of informal existing-customer conversations; no representative sample or independent corroboration."
+      },
+      "update": {
+        "observation": "The shop vehicle will be unavailable during the planned trial. A neighbouring workshop will discuss a loan, but terms, availability and costs are not agreed.",
+        "analysis": "The earlier transport condition no longer holds. A possible loan requires clarification before any trial can be scheduled.",
+        "proves": "The owner's revised availability statement and the unconfirmed status of a loan.",
+        "does_not_prove": "That another vehicle is available or that a loan is affordable or agreed.",
+        "bias": "The owner's supplied update is the latest case evidence, without confirmation from the neighbouring workshop."
+      }
+    },
+    "review_practice": "Compared the recommendation with the complete assignment and supplied notes. Conditional interest is not a booking, and a possible vehicle loan is not an agreement. The current assessment and its retained sources are working advice; the owner still decides whether to proceed. No contact, booking or spending was performed.",
+    "review_demo": "Compared the recommendation with the complete assignment and supplied notes. Conditional interest is not a booking. Wednesday availability does not establish capacity for daily service. The current assessment and its retained sources are working advice; the owner still decides whether to proceed. No contact, booking or spending was performed."
+  },
+  "it": {
+    "client": "Ciclo Arco — esercizio fittizio",
+    "project": "Valutare il ritiro biciclette",
+    "title": "Ritiro biciclette: valutazione attuale",
+    "locator": "Nota fornita, letta integralmente",
+    "scope": "Soltanto i documenti fittizi forniti e la decisione della titolare.",
+    "limit": "Le note didattiche riportano dichiarazioni attribuite, senza verifica indipendente delle condizioni aziendali.",
+    "verification": "Letto il file selezionato e conservati identità e contenuto esatti.",
+    "question": "Qual è il prossimo passo utile alla titolare con le evidenze attualmente disponibili?",
+    "question_demo": "Quali percorso, capacità, prezzo, costi e disponibilità effettiva a prenotare renderebbero fattibile una prova limitata?",
+    "question_practice": "Quale mezzo sarebbe disponibile per la prova, a quali condizioni e con quali costi?",
+    "why": "Chiarire queste condizioni prima di programmare ritiri o impegnare risorse.",
+    "uncertainty": "Prenotazioni, percorso, capacità, prezzo e costi restano da verificare. Le note non giustificano un servizio quotidiano né una previsione economica.",
+    "implication_demo": "Approfondire una prova limitata su prenotazione; queste note non giustificano l'avvio quotidiano.",
+    "implication_practice": "Risolvere prima il trasporto. La precedente disponibilità del mezzo il mercoledì non consente di programmare la prova.",
+    "reasoning_demo": "Interesse condizionato e disponibilità operativa limitata giustificano la verifica di fattibilità, non l'avvio quotidiano immediato.",
+    "reasoning_practice": "Conservare incarico ed evidenze sui clienti, sostituire l'ipotesi sul mezzo con la nuova nota e dare priorità alla fattibilità del trasporto.",
+    "change_demo": "Prima valutazione condizionata basata sull'incarico e sulle note clienti e operative.",
+    "change_practice": "Il mezzo non è disponibile: chiarire il trasporto prima di programmare la prova e conservare la valutazione precedente nello storico.",
+    "sources_heading": "Fonti e ragionamento a supporto",
+    "map_label": "Apri la mappa delle fonti e delle conclusioni",
+    "question_heading": "Prossima domanda da risolvere",
+    "prior_label": "Apri la valutazione precedente conservata",
+    "review_title": "Revisione della valutazione di lavoro",
+    "evidence": {
+      "assignment": {
+        "observation": "La titolare chiede di confrontare un pilota su prenotazione e un servizio quotidiano immediato, usando solo le note fornite, senza contatti, spese o previsioni economiche.",
+        "analysis": "Definisce decisione, destinataria e perimetro consentito della valutazione.",
+        "proves": "Il confronto richiesto e i limiti dell'incarico.",
+        "does_not_prove": "Domanda, fattibilità o autorizzazione ad avviare il servizio.",
+        "bias": "Attendibile per l'incarico dichiarato; è una richiesta, non un'evidenza commerciale indipendente."
+      },
+      "notes": {
+        "observation": "Anna e Carla esprimono interesse condizionato; Bruno preferisce la consegna in negozio. Non vi sono prenotazioni né prezzi accettati. Inizialmente il mezzo è disponibile il mercoledì sera e la titolare può gestire le prime consegne; manca un autista quotidiano dedicato.",
+        "analysis": "I segnali limitati dei clienti e la capacità operativa suggeriscono di verificare una piccola prova prima del servizio quotidiano.",
+        "analysis_update": "Restano rilevanti le dichiarazioni dei clienti e l'assenza di un autista quotidiano. La nuova nota supera la disponibilità del mercoledì nel periodo previsto per la prova.",
+        "proves": "Quanto riportato nelle conversazioni informali e nella nota operativa iniziale della titolare.",
+        "does_not_prove": "Domanda rappresentativa, disponibilità a pagare, capacità effettiva, costi o prontezza operativa confermata.",
+        "bias": "Un solo resoconto di conversazioni informali con clienti abituali, senza campione rappresentativo o riscontri indipendenti."
+      },
+      "update": {
+        "observation": "Il mezzo del negozio non sarà disponibile nel periodo della prova. Un'officina vicina può discutere un prestito, ma condizioni, disponibilità e costi non sono concordati.",
+        "analysis": "La precedente condizione sul trasporto viene meno. Il possibile prestito deve essere chiarito prima di programmare la prova.",
+        "proves": "La nuova dichiarazione della titolare sulla disponibilità e lo stato non confermato del prestito.",
+        "does_not_prove": "Disponibilità di un mezzo alternativo, sostenibilità del costo o accordo sul prestito.",
+        "bias": "È l'ultima informazione fornita dalla titolare, senza conferma dell'officina vicina."
+      }
+    },
+    "review_practice": "Confrontata la raccomandazione con l'incarico completo e le note fornite. L'interesse condizionato non è una prenotazione e un possibile prestito del mezzo non è un accordo. Valutazione e fonti conservate costituiscono un parere di lavoro; la titolare deve ancora decidere se procedere. Non sono stati effettuati contatti, prenotazioni o spese.",
+    "review_demo": "Confrontata la raccomandazione con l'incarico completo e le note fornite. L'interesse condizionato non è una prenotazione. La disponibilità del mercoledì non dimostra capacità per un servizio quotidiano. Valutazione e fonti conservate costituiscono un parere di lavoro; la titolare deve ancora decidere se procedere. Non sono stati effettuati contatti, prenotazioni o spese."
+  },
+  "fr": {
+    "client": "Ciclo Arco — exercice fictif",
+    "project": "Évaluer la collecte de vélos",
+    "title": "Collecte de vélos : analyse actuelle",
+    "locator": "Note fournie, lue intégralement",
+    "scope": "Uniquement les documents fictifs fournis et la décision de la dirigeante.",
+    "limit": "Ces notes pédagogiques rapportent des déclarations attribuées, sans vérification indépendante des conditions réelles.",
+    "verification": "Lecture du fichier sélectionné et conservation de son identité et de son contenu exacts.",
+    "question": "Quelle prochaine étape serait utile à la dirigeante au vu des éléments disponibles ?",
+    "question_demo": "Quels itinéraire, capacité, prix, coûts et intentions réelles de réservation rendraient un essai limité faisable ?",
+    "question_practice": "Quel véhicule serait disponible pour l'essai, à quelles conditions et à quel coût ?",
+    "why": "Clarifier ces conditions avant de programmer des collectes ou d'engager des ressources.",
+    "uncertainty": "Réservations, itinéraire, capacité, prix et coûts restent à vérifier. Les notes ne justifient ni service quotidien ni prévision financière.",
+    "implication_demo": "Étudier un essai limité sur rendez-vous ; ces notes ne justifient pas un lancement quotidien.",
+    "implication_practice": "Résoudre d'abord le transport. L'ancienne disponibilité du mercredi ne permet plus de programmer l'essai.",
+    "reasoning_demo": "Un intérêt conditionnel et des moyens limités justifient d'étudier la faisabilité, pas de lancer immédiatement un service quotidien.",
+    "reasoning_practice": "Conserver la mission et les éléments clients, remplacer l'hypothèse sur le véhicule par la nouvelle note et traiter en priorité la faisabilité du transport.",
+    "change_demo": "Première analyse conditionnelle fondée sur la mission et les notes clients et opérationnelles.",
+    "change_practice": "Le véhicule est indisponible : clarifier le transport avant de programmer l'essai et conserver l'analyse antérieure dans l'historique.",
+    "sources_heading": "Sources et raisonnement à l'appui",
+    "map_label": "Ouvrir la carte des sources et des conclusions",
+    "question_heading": "Prochaine question à résoudre",
+    "prior_label": "Ouvrir l'analyse précédente conservée",
+    "review_title": "Revue de cette analyse de travail",
+    "evidence": {
+      "assignment": {
+        "observation": "La dirigeante demande de comparer un pilote sur rendez-vous et un service quotidien immédiat, avec les seules notes fournies, sans contact, dépense ni prévision financière.",
+        "analysis": "La mission fixe la décision, la destinataire et le périmètre autorisé de l'analyse.",
+        "proves": "La comparaison demandée et les limites de la mission.",
+        "does_not_prove": "La demande, la faisabilité ou l'autorisation de lancer le service.",
+        "bias": "Fiable pour la mission déclarée ; c'est une demande, pas une preuve commerciale indépendante."
+      },
+      "notes": {
+        "observation": "Anna et Carla expriment un intérêt conditionnel ; Bruno préfère apporter son vélo. Aucune réservation ni aucun prix ne sont acceptés. Initialement, le véhicule est disponible le mercredi soir et la dirigeante peut assurer les premières livraisons ; aucun chauffeur quotidien n'est dédié.",
+        "analysis": "Les signaux clients limités et les moyens opérationnels invitent à vérifier un petit essai avant d'envisager le service quotidien.",
+        "analysis_update": "Les déclarations clients et l'absence de chauffeur quotidien restent pertinentes. La nouvelle note remplace la disponibilité du mercredi pour la période d'essai prévue.",
+        "proves": "Ce que rapportent les échanges informels et la note opérationnelle initiale de la dirigeante.",
+        "does_not_prove": "Une demande représentative, une disposition à payer, la capacité réelle, les coûts ou une préparation confirmée.",
+        "bias": "Un seul compte rendu d'échanges informels avec des clients habituels, sans échantillon représentatif ni corroboration indépendante."
+      },
+      "update": {
+        "observation": "Le véhicule du magasin sera indisponible pendant l'essai prévu. Un atelier voisin peut discuter d'un prêt, mais conditions, disponibilité et coûts ne sont pas convenus.",
+        "analysis": "La condition antérieure de transport ne tient plus. Le prêt éventuel doit être clarifié avant de programmer l'essai.",
+        "proves": "La disponibilité révisée déclarée par la dirigeante et le caractère non confirmé du prêt.",
+        "does_not_prove": "La disponibilité d'un autre véhicule, un coût acceptable ou un prêt convenu.",
+        "bias": "C'est l'information la plus récente fournie par la dirigeante, sans confirmation de l'atelier voisin."
+      }
+    },
+    "review_practice": "La recommandation a été comparée à la mission complète et aux notes fournies. Un intérêt conditionnel n'est pas une réservation et un prêt éventuel n'est pas un accord. L'analyse et ses sources conservées constituent un avis de travail ; la dirigeante doit encore décider de la suite. Aucun contact, aucune réservation ni dépense n'ont été effectués.",
+    "review_demo": "La recommandation a été comparée à la mission complète et aux notes fournies. Un intérêt conditionnel n'est pas une réservation. La disponibilité du mercredi ne démontre pas une capacité de service quotidien. L'analyse et ses sources conservées constituent un avis de travail ; la dirigeante doit encore décider de la suite. Aucun contact, aucune réservation ni dépense n'ont été effectués."
+  },
+  "de": {
+    "client": "Ciclo Arco — fiktive Übung",
+    "project": "Fahrrad-Abholung beurteilen",
+    "title": "Fahrrad-Abholung: aktuelle Einschätzung",
+    "locator": "Vollständig gelesene bereitgestellte Notiz",
+    "scope": "Nur die bereitgestellten fiktiven Dokumente und die Entscheidung der Inhaberin.",
+    "limit": "Die Übungsnotizen enthalten zugeordnete Aussagen, ohne unabhängige Prüfung der betrieblichen Bedingungen.",
+    "verification": "Ausgewählte Datei gelesen und ihre genaue Identität sowie ihren Inhalt erhalten.",
+    "question": "Was ist anhand der aktuellen Belege der nächste sinnvolle Schritt für die Inhaberin?",
+    "question_demo": "Welche Route, Kapazität, Preise, Kosten und tatsächliche Buchungsbereitschaft würden einen begrenzten Versuch ermöglichen?",
+    "question_practice": "Welches Fahrzeug wäre für den Versuch zu welchen Bedingungen und Kosten verfügbar?",
+    "why": "Diese Voraussetzungen klären, bevor Abholungen geplant oder Ressourcen zugesagt werden.",
+    "uncertainty": "Buchungen, Route, Kapazität, Preis und Kosten bleiben ungeprüft. Die Notizen rechtfertigen weder täglichen Service noch Finanzprognose.",
+    "implication_demo": "Einen begrenzten Versuch nach Terminvereinbarung prüfen; diese Notizen rechtfertigen keinen täglichen Start.",
+    "implication_practice": "Zuerst den Transport klären. Die frühere Fahrzeugverfügbarkeit am Mittwoch trägt die Versuchsplanung nicht mehr.",
+    "reasoning_demo": "Bedingtes Kundeninteresse und begrenzte betriebliche Verfügbarkeit rechtfertigen eine Machbarkeitsprüfung, keinen sofortigen täglichen Start.",
+    "reasoning_practice": "Auftrag und Kundenbelege beibehalten, die Fahrzeugannahme durch die neue Notiz ersetzen und die Transportmachbarkeit vorrangig prüfen.",
+    "change_demo": "Erste bedingte Einschätzung anhand des Auftrags und der Kunden- und Betriebsnotizen.",
+    "change_practice": "Das Fahrzeug ist nicht verfügbar: vor der Versuchsplanung den Transport klären und die frühere Einschätzung in der Historie erhalten.",
+    "sources_heading": "Quellen und zugrunde liegende Begründung",
+    "map_label": "Quellen- und Aussagenübersicht öffnen",
+    "question_heading": "Nächste zu klärende Frage",
+    "prior_label": "Aufbewahrte frühere Einschätzung öffnen",
+    "review_title": "Prüfung dieser Arbeitseinschätzung",
+    "evidence": {
+      "assignment": {
+        "observation": "Die Inhaberin verlangt den Vergleich eines Pilotversuchs nach Termin und eines sofortigen täglichen Services anhand der Notizen, ohne Kontakte, Ausgaben oder Finanzprognose.",
+        "analysis": "Der Auftrag legt Entscheidung, Adressatin und zulässigen Umfang der Einschätzung fest.",
+        "proves": "Den gewünschten Vergleich und die Auftragsgrenzen.",
+        "does_not_prove": "Nachfrage, Machbarkeit oder eine Freigabe zum Start.",
+        "bias": "Verlässlich für den erklärten Auftrag; eine Anforderung, kein unabhängiger Marktbeleg."
+      },
+      "notes": {
+        "observation": "Anna und Carla äußern bedingtes Interesse; Bruno bringt sein Fahrrad lieber selbst. Es gibt keine Buchungen oder vereinbarten Preise. Ursprünglich ist das Fahrzeug mittwochabends verfügbar und die Inhaberin kann erste Fahrten übernehmen; ein eigener Fahrer für täglichen Betrieb fehlt.",
+        "analysis": "Begrenzte Kundensignale und betriebliche Kapazität sprechen dafür, vor täglichem Betrieb einen kleinen Versuch zu prüfen.",
+        "analysis_update": "Kundenaussagen und fehlender täglicher Fahrer bleiben relevant. Die neue Fahrzeugnotiz ersetzt die frühere Mittwochsverfügbarkeit für den geplanten Zeitraum.",
+        "proves": "Den Inhalt der informellen Gespräche und der ursprünglichen Betriebsnotiz der Inhaberin.",
+        "does_not_prove": "Repräsentative Nachfrage, Zahlungsbereitschaft, tatsächliche Kapazität, Kosten oder bestätigte Einsatzbereitschaft.",
+        "bias": "Ein einzelner Bericht informeller Stammkundengespräche, ohne repräsentative Stichprobe oder unabhängige Bestätigung."
+      },
+      "update": {
+        "observation": "Das Geschäftsfahrzeug ist im geplanten Versuchszeitraum nicht verfügbar. Eine benachbarte Werkstatt würde eine Ausleihe besprechen; Bedingungen, Verfügbarkeit und Kosten sind nicht vereinbart.",
+        "analysis": "Die frühere Transportvoraussetzung entfällt. Die mögliche Ausleihe muss vor einer Terminierung geklärt werden.",
+        "proves": "Die geänderte Verfügbarkeitsaussage der Inhaberin und den unbestätigten Stand der Ausleihe.",
+        "does_not_prove": "Ein verfügbares Ersatzfahrzeug, tragbare Kosten oder eine vereinbarte Ausleihe.",
+        "bias": "Neueste bereitgestellte Information der Inhaberin, ohne Bestätigung der benachbarten Werkstatt."
+      }
+    },
+    "review_practice": "Die Empfehlung wurde mit dem vollständigen Auftrag und den bereitgestellten Notizen verglichen. Bedingtes Interesse ist keine Buchung und eine mögliche Fahrzeugausleihe keine Vereinbarung. Einschätzung und erhaltene Quellen bilden einen Arbeitsstand; die Inhaberin entscheidet weiterhin über das Vorgehen. Es wurden keine Kontakte, Buchungen oder Ausgaben vorgenommen.",
+    "review_demo": "Die Empfehlung wurde mit dem vollständigen Auftrag und den bereitgestellten Notizen verglichen. Bedingtes Interesse ist keine Buchung. Die Verfügbarkeit am Mittwoch belegt keine Kapazität für täglichen Betrieb. Einschätzung und erhaltene Quellen bilden einen Arbeitsstand; die Inhaberin entscheidet weiterhin über das Vorgehen. Es wurden keine Kontakte, Buchungen oder Ausgaben vorgenommen."
+  },
+  "es": {
+    "client": "Ciclo Arco — ejercicio ficticio",
+    "project": "Evaluar la recogida de bicicletas",
+    "title": "Recogida de bicicletas: valoración actual",
+    "locator": "Nota suministrada, leída íntegramente",
+    "scope": "Solo los documentos ficticios suministrados y la decisión de la propietaria.",
+    "limit": "Las notas didácticas recogen declaraciones atribuidas, sin comprobación independiente de las condiciones del negocio.",
+    "verification": "Lectura del archivo seleccionado y conservación de su identidad y contenido exactos.",
+    "question": "¿Cuál es el siguiente paso útil para la propietaria con las evidencias actuales?",
+    "question_demo": "¿Qué ruta, capacidad, precio, costes e interés real en reservar harían viable una prueba limitada?",
+    "question_practice": "¿Qué vehículo estaría disponible para la prueba, con qué condiciones y a qué coste?",
+    "why": "Aclarar estas condiciones antes de programar recogidas o comprometer recursos.",
+    "uncertainty": "Reservas, ruta, capacidad, precio y costes siguen sin comprobarse. Las notas no justifican un servicio diario ni una previsión financiera.",
+    "implication_demo": "Estudiar una prueba limitada con cita previa; estas notas no justifican un lanzamiento diario.",
+    "implication_practice": "Resolver primero el transporte. La disponibilidad anterior del miércoles ya no permite programar la prueba.",
+    "reasoning_demo": "El interés condicionado y la disponibilidad operativa limitada justifican comprobar la viabilidad, no iniciar un servicio diario inmediato.",
+    "reasoning_practice": "Conservar el encargo y las evidencias de clientes, sustituir la hipótesis del vehículo por la nueva nota y priorizar la viabilidad del transporte.",
+    "change_demo": "Primera valoración condicionada basada en el encargo y las notas de clientes y operaciones.",
+    "change_practice": "El vehículo no está disponible: aclarar el transporte antes de programar la prueba y conservar la valoración anterior en el historial.",
+    "sources_heading": "Fuentes y razonamiento de apoyo",
+    "map_label": "Abrir el mapa de fuentes y conclusiones",
+    "question_heading": "Próxima pregunta por resolver",
+    "prior_label": "Abrir la valoración anterior conservada",
+    "review_title": "Revisión de esta valoración de trabajo",
+    "evidence": {
+      "assignment": {
+        "observation": "La propietaria pide comparar un piloto con cita previa y un servicio diario inmediato usando solo las notas, sin contactos, gastos ni previsión financiera.",
+        "analysis": "El encargo fija la decisión, la destinataria y el alcance permitido de la valoración.",
+        "proves": "La comparación solicitada y las restricciones del trabajo.",
+        "does_not_prove": "Demanda, viabilidad o autorización para lanzar el servicio.",
+        "bias": "Fiable respecto al encargo declarado; es una solicitud, no una evidencia comercial independiente."
+      },
+      "notes": {
+        "observation": "Anna y Carla expresan interés condicionado; Bruno prefiere llevar su bicicleta. No hay reservas ni precios aceptados. Inicialmente el vehículo está disponible los miércoles por la tarde y la propietaria puede hacer las primeras entregas; falta un conductor diario dedicado.",
+        "analysis": "Las señales limitadas de clientes y la capacidad operativa aconsejan comprobar una pequeña prueba antes del servicio diario.",
+        "analysis_update": "Las declaraciones de clientes y la falta de conductor diario siguen siendo relevantes. La nueva nota sustituye la disponibilidad del miércoles para el periodo previsto.",
+        "proves": "Lo recogido en las conversaciones informales y en la nota operativa inicial de la propietaria.",
+        "does_not_prove": "Demanda representativa, disposición a pagar, capacidad real, costes o preparación confirmada.",
+        "bias": "Un único relato de conversaciones informales con clientes habituales, sin muestra representativa ni corroboración independiente."
+      },
+      "update": {
+        "observation": "El vehículo de la tienda no estará disponible durante la prueba prevista. Un taller vecino puede hablar de un préstamo, pero condiciones, disponibilidad y costes no están acordados.",
+        "analysis": "La condición anterior de transporte deja de cumplirse. El posible préstamo debe aclararse antes de programar la prueba.",
+        "proves": "La declaración revisada de la propietaria sobre disponibilidad y el carácter no confirmado del préstamo.",
+        "does_not_prove": "La disponibilidad de otro vehículo, un coste asumible o un préstamo acordado.",
+        "bias": "Es la última información aportada por la propietaria, sin confirmación del taller vecino."
+      }
+    },
+    "review_practice": "La recomendación se comparó con el encargo completo y las notas suministradas. El interés condicionado no es una reserva y un posible préstamo de vehículo no es un acuerdo. La valoración y sus fuentes conservadas son una opinión de trabajo; la propietaria aún debe decidir cómo proceder. No se realizaron contactos, reservas ni gastos.",
+    "review_demo": "La recomendación se comparó con el encargo completo y las notas suministradas. El interés condicionado no es una reserva. La disponibilidad del miércoles no demuestra capacidad para un servicio diario. La valoración y sus fuentes conservadas son una opinión de trabajo; la propietaria aún debe decidir cómo proceder. No se realizaron contactos, reservas ni gastos."
+  }
+}

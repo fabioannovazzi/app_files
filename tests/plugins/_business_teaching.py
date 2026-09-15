@@ -10,6 +10,8 @@ import csv
 import hashlib
 from pathlib import Path
 
+__all__ = ["planning_case", "write_delivery"]
+
 
 def planning_case(paths: list[Path], root: Path, language: str, previous=None):
     """Bind the actual source files and leave every professional review pending."""
@@ -112,9 +114,23 @@ def planning_case(paths: list[Path], root: Path, language: str, previous=None):
             else "Ciclo Arco proposes bicycle collection and return for repairs. Customers would pay to avoid transporting their bicycle to the workshop; repairs are billed separately and fall outside this service."
         ),
         "market": (
-            "L'interesse informale riportato nella proposta suggerisce un problema da esplorare. Mancano ordini, accettazione del prezzo e ricerca di mercato: l'interesse non è una previsione di domanda."
+            (
+                "L'interesse informale riportato nella proposta suggerisce un problema da esplorare. Mancano ordini, accettazione del prezzo e ricerca di mercato: l'interesse non è una previsione di domanda."
+                + (
+                    " L'interesse riguardava i giorni lavorativi; non sappiamo ancora se i clienti accetterebbero il sabato."
+                    if previous
+                    else ""
+                )
+            )
             if it
-            else "The informal interest reported in the proposal suggests a need to explore. Orders, price acceptance and market research are missing; interest is not a demand forecast."
+            else (
+                "The informal interest reported in the proposal suggests a need to explore. Orders, price acceptance and market research are missing; interest is not a demand forecast."
+                + (
+                    " That interest concerned weekdays; customer acceptance of Saturday is still unknown."
+                    if previous
+                    else ""
+                )
+            )
         ),
         "operations": (
             (
@@ -133,7 +149,7 @@ def planning_case(paths: list[Path], root: Path, language: str, previous=None):
             (
                 "La tabella applica le ipotesi di volume, prezzo e costo ricevute. Mostra il risultato entro quel perimetro, senza confermare la domanda o includere costi ancora sconosciuti."
                 + (
-                    " La revisione degli orari richiede nuovi riscontri prima di cambiare i numeri."
+                    " I numeri restano quelli della prima ipotesi, come riferimento: non costituiscono una previsione del servizio al sabato. Servono riscontri su domanda, capacità e preventivo prima di aggiornarli."
                     if previous
                     else ""
                 )
@@ -142,7 +158,7 @@ def planning_case(paths: list[Path], root: Path, language: str, previous=None):
             else (
                 "The table applies the supplied volume, price and cost assumptions. It shows the result within that scope, without validating demand or including unknown costs."
                 + (
-                    " Revised operating windows require new evidence before changing the figures."
+                    " These are the original assumptions retained for reference, not a forecast for Saturday operations. Demand, capacity and an updated quote are needed before revising them."
                     if previous
                     else ""
                 )
@@ -169,9 +185,9 @@ def planning_case(paths: list[Path], root: Path, language: str, previous=None):
         "depends": [proposal, *operating_basis, *economics],
         "change": [proposal, *operating_basis],
         "business": [proposal],
-        "market": [proposal],
+        "market": [proposal] + ([updated] if updated else []),
         "operations": operating_basis,
-        "economics": economics,
+        "economics": economics + ([updated] if updated else []),
         "cash": economics,
         "alternatives": [proposal, operations],
         "next_actions": [proposal, *operating_basis],
@@ -307,12 +323,18 @@ def planning_case(paths: list[Path], root: Path, language: str, previous=None):
                         )
                     ),
                     locator=(
-                        "CSV rows 2–4"
+                        ("CSV, righe 2–4" if it else "CSV rows 2–4")
                         if p.suffix == ".csv"
                         else (
-                            "Planning snapshot: case and planning_cycle"
+                            (
+                                "Piano precedente: case e planning_cycle"
+                                if it
+                                else "Planning snapshot: case and planning_cycle"
+                            )
                             if p.name == "prior-plan.json"
-                            else "Complete short note"
+                            else p.read_text(encoding="utf-8")
+                            .splitlines()[0]
+                            .lstrip("# ")
                         )
                     ),
                 )
@@ -334,3 +356,47 @@ def planning_case(paths: list[Path], root: Path, language: str, previous=None):
             ],
         },
     )
+
+
+def write_delivery(
+    output: Path, report: Path, plan: dict, language: str, prior: Path | None
+):
+    """Replay the ordinary report handoff, keeping the compiler's report authoritative."""
+    it = language == "it"
+    narratives = {row["id"]: row["text"] for row in plan["accepted_narrative"]}
+    report_path = report / "business_plan_review.html"
+    card = [
+        f"[{'Apri il business plan' if it else 'Open the business plan'}]({report_path})",
+        narratives["recommendation"],
+        narratives["next-actions"],
+        (
+            "Caso fittizio. Piano preliminare: domanda, costi e cassa richiedono ancora verifiche."
+            if it
+            else "Fictional case. Preliminary plan: demand, costs and cash still need verification."
+        ),
+    ]
+    if prior:
+        previous_report = prior.with_name("business_plan_review.html")
+        assert previous_report.is_file()
+        card.append(
+            f"[{'Piano precedente conservato' if it else 'Preserved previous plan'}]({previous_report})"
+        )
+    (output / "artifact_card.md").write_text("\n\n".join(card) + "\n", encoding="utf-8")
+    review = (
+        "Il report apre con la decisione e copre servizio, clienti, operatività, economia, cassa, alternative e prossimi passi. "
+        "La prima riga del CSV fornisce 20 ordini, prezzo 45 EUR, costo variabile 18 EUR e costi fissi 800 EUR: "
+        "20 × (45 − 18) − 800 = −260 EUR nel perimetro dichiarato. I dati mancanti non sono trattati come zero. "
+        "La compilazione e la riconciliazione sono verificate; la revisione professionale resta da acquisire."
+        if it
+        else "The report opens with the decision and covers the service, customers, operations, economics, cash, alternatives and next actions. "
+        "The first CSV row supplies 20 orders, EUR 45 price, EUR 18 variable cost and EUR 800 fixed cost: "
+        "20 × (45 − 18) − 800 = EUR −260 within the disclosed scope. Missing inputs are not treated as zero. "
+        "Compilation and arithmetic are checked; professional review remains pending."
+    )
+    if prior:
+        review += (
+            " La disponibilità solo al sabato cambia il test da proporre. Gli importi originari restano un riferimento e non una nuova previsione. Il primo report è conservato."
+            if it
+            else " Saturday-only availability changes the proposed test. Original amounts remain a reference, not a new forecast. The first report is preserved."
+        )
+    (output / "codex_run_review.md").write_text(review + "\n", encoding="utf-8")

@@ -26,18 +26,18 @@
   },
   "vera/open-item-reconciliation": {
     "title": "Verificare le partite aperte con Vera",
-    "goal": "Imparare a verificare un elenco di insoluti e distinguere fatture chiuse, parzialmente chiuse e ancora aperte a una data.",
+    "goal": "Imparare a verificare un elenco di insoluti e distinguere le fatture con prova di pagamento da quelle ancora da chiarire a una data.",
     "scenario": "Un precedente elenco fornitori di Arco riporta ancora tre fatture aperte. I movimenti bancari permettono di verificarne la situazione al 31 marzo.",
     "scope": "Tre fatture fornitori in EUR. La verifica di marzo esclude i pagamenti successivi alla data di riferimento; l’esercizio aggiorna la data.",
     "inputs": "Apri open-items-it.pdf e bank-march-it.pdf. Il primo documento è la popolazione da verificare; il secondo riporta i pagamenti in uscita. Sono export didattici fittizi, con virgola decimale e date giorno/mese/anno.",
     "request": "Vera, verifica queste partite fornitori al 31 marzo 2026. Usa le prove di pagamento bancario per mostrare cosa risulta pagato, cosa resta aperto e cosa devo rivedere.",
     "steps": [
       "Vera importa i file, identifica la popolazione iniziale e propone ruolo e significato degli importi di ciascuna fonte. Conferma data di riferimento e trattamento dei pagamenti successivi.",
-      "La procedura corrente collega fatture e prove di pagamento, calcola i residui e prepara il pacchetto di revisione. La chat vocale spiega l’avanzamento e gli eventuali documenti mancanti.",
-      "Apri la pagina locale di revisione e le carte di lavoro. Segui una fattura dall’importo segnalato come aperto alle prove di pagamento e al residuo. Le decisioni restano da prendere finché non vengono espresse."
+      "La procedura corrente collega fatture e prove di pagamento, distingue le partite chiuse da quelle irrisolte e prepara il pacchetto di revisione. La chat vocale spiega l’avanzamento e gli eventuali documenti mancanti.",
+      "Apri la pagina locale di revisione e le carte di lavoro. Segui una fattura dall’importo segnalato come aperto alla prova di pagamento e all’esito proposto. Le decisioni restano da prendere finché non vengono espresse."
     ],
     "deliverables": [
-      "Carte di lavoro Excel e scheda operativa: mostrano popolazione verificata, collegamenti ai pagamenti, residui ed eccezioni.",
+      "Carte di lavoro Excel e scheda operativa: mostrano importi iniziali, collegamenti ai pagamenti, esiti proposti ed eccezioni.",
       "Relazione Word e pagina locale di revisione: spiegano le conclusioni e permettono al professionista di rivedere le voci e richiedere documenti."
     ],
     "review": "Controlla prima popolazione e data. Le prove di marzo sostengono la chiusura delle prime due fatture; la terza resta irrisolta con questi documenti. Verifica date e fonti prima di accettare una conclusione.",
@@ -47,7 +47,7 @@
     ],
     "practice": "Mantieni open-items-it.pdf e usa bank-april-it.pdf per chiedere una nuova verifica al 30 aprile. Il documento bancario cumulativo comprende il terzo pagamento. Conserva le carte di marzo.",
     "success": "La nuova verifica considera il terzo pagamento. Spiega perché le conclusioni di marzo e aprile cambiano e dove registreresti una decisione di revisione.",
-    "repeat": "Fornisci elenco delle partite, data di riferimento e prove a supporto. Rivedi residui e punti irrisolti nel pacchetto generato prima di usare le conclusioni."
+    "repeat": "Fornisci elenco delle partite, data di riferimento e prove a supporto. Rivedi esiti e punti irrisolti nel pacchetto generato prima di usare le conclusioni."
   },
   "vera/variance-analysis": {
     "title": "Confrontare consuntivo e budget con Vera",

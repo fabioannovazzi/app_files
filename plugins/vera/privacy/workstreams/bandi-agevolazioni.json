@@ -6,7 +6,8 @@
   "governed_paths": [
     "skills",
     "scripts",
-    "schemas"
+    "schemas",
+    "assets"
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance"
@@ -56,6 +57,15 @@
         "id": "approved-portal-preparation",
         "purpose": "Prepare and verify an approved application draft",
         "content": "Available host browser tools expose the selected application screens, applicant identity, approved field values, project details, attachment names and visible validation or save results to the selected model runtime. The workflow does not request or record authentication secrets. It writes approved values and approved attachment files to the official portal after the user chooses this route. There is no automatic anonymization.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "dossier-output-review",
+        "purpose": "Explain or review the actual generated dossier and its linked records",
+        "content": "The locally generated HTML report contains the company name, call and project metadata, requested amount, case summary, recorded expenses, document checklist, requirement assessments and exact source excerpts, project drafts, consistency checks, issues and local source paths. Its collapsed details retain structured source records, fact values, application field proposals and authority-simulation records in the same file; they are presentation controls rather than a model-context filter. Opening linked Markdown and JSON working records may expose the complete recorded intake, including exact tax/VAT identifiers where present, workbench content, model contributions and asserted reviewer metadata. These complete output-review surfaces are distinct from the bounded semantic-contribution packets. Rendering makes no network or model call. Reading the output through the selected runtime may put its contents in that model context, with no automatic anonymization.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -154,12 +164,16 @@
     {
       "id": "chatgpt-public-discovery-boundary",
       "control": "The shared institutional-discovery method also governs ChatGPT public research. Public source text, generic scope, registry metadata and issue evidence may enter the selected OpenAI ChatGPT account model context; Vera is not a separate recipient and does not enforce account retention or training controls. Without execution or storage, the response discloses that local schema validation, hash-bound review, workspace isolation and durable persistence did not run. Without browsing, current coverage remains partial. No private client profiles or identifiers enter public retrieval queries. The named runtime profiles in this register describe the local Codex and Cowork paths; they do not certify ChatGPT runtime controls."
+    },
+    {
+      "id": "escaped-local-report",
+      "control": "The native HTML renderer escapes every recorded value, uses internal source anchors and fixed sibling artifact links, includes no scripts or remote assets, and embeds a Content Security Policy blocking network resource loading, forms and document base changes. The report is written under the bound run output and its byte hash is sealed in the dossier manifest."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-12",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "164a1748d80f749182c09129531e84753b4e4756c07136403ea8f0bf84d7e4ca"
+    "source_fingerprint": "831e6723ee6b13e1c95d377ae8bc7dd8167f47088ef15cabd251ae0251ed54cb"
   }
 }

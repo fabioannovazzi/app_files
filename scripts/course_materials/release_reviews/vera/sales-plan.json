@@ -1,0 +1,550 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "sales-plan",
+  "course_sha256": "878c0684eff02abd6264fd6636fa8fe0a22ad286b7c6a7676309768c4d2c6307",
+  "reviewer": "Codex: five-language sales-plan lesson and actual scenario delivery review",
+  "reviewed_at": "2026-09-14T21:58:58.519111+00:00",
+  "review_scope": "Prepared material and native local workflow review. Read all five complete outlines, all ten assumption source notes, the four-row Actual CSV, all ten delivered cards, assumption read-backs and run-review notes. The final Italian/English cards match the reviewed text outside their separately read final trace tables. All thirty native scenario/summary/ledger CSV files match the inspected phase-specific values across languages. Thirty-nine relevant native checks pass, including ten phase/language lesson identities, exact-row retrieval, same-engagement alternative runs and first-output preservation. Host-authored regression interpretations and delivery formatting live outside the shipped kits. Native voice, window rendering, elapsed lesson time, learner comprehension, learner confirmation and professional approval remain separate unverified steps.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches preparing a sales plan from Actual data and commercial assumptions. The learner identifies source fields, states target months and quantity growth, reviews the interpretation, runs the current workflow, reads the plan and checks, traces one product and compares an alternative. The focus remains the whole first use rather than an isolated calculation detail.",
+        "inputs_and_request": "Read the four-row source for two bicycle products in January and February 2026, in EUR, plus the five localized demonstration and practice notes. The request maps those same months to 2027, increases units by 10% initially and 5% in practice, keeps unit prices unchanged and makes discounts and COGS proportional to sales. No FX conversion, missing-month estimates or overlapping assumptions are requested. The source notes require a real confirmation during a lesson; they do not pre-approve it.",
+        "execution_and_checkpoints": "Each exercise prepares an actual bound client run. A localized assumption read-back precedes the explicitly synthetic test receipt, which binds its SHA-256. The current Plan engine writes its normal scenario, summary, assumption ledger, reconciliation and evidence records. The checkpoint uses the native purpose-bound model-use helper to retrieve only the selected urban-jan source row in Actual and Plan and its needed columns. All four applications and period mapping are verified; the learner explains quantity versus price before calculation.",
+        "deliverable_and_next_action": "The delivered card shows the 2026 base and 2027 Plan together with amount and percentage changes, consistent number formatting, units and month labels. A selected-product table follows quantity, sales, discounts, COGS and margin and links the applied assumption. The card links all seven normal engine outputs, the selected-row record, assumption read-back, review and local data report. The arithmetic and reconciliation pass; report_ready remains false pending normal professional review. No invented chart renderer replaces the workflow CSV outputs.",
+        "practice_and_repeat": "The 5% practice imports the changed request, uses the same Actual data and creates a separate run in the same client engagement. Every initial output remains byte-identical and linked. The comparison shows net sales EUR 95,095 versus EUR 90,772.50 and gross margin EUR 35,035 versus EUR 33,442.50; it also displays absolute and percentage differences. The learner can explain that the change comes from the quantity assumption and can repeat with new Actuals, target months and a confirmed commercial assumption.",
+        "language_and_pacing": "Language it. The outline, source note, read-back, result explanation, metric labels, review note and file purposes are localized. Native column names and exact source product members remain stable for traceability. Six planned stages total 390 seconds. One assumption, four source rows and one selected product keep the first-use path focused, with the full result files available for review. Human timing and comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_sales_plan_kit_runs_current_reviewed_assumptions[demo-it]",
+        "result_review": "The current 10% quantity scenario produces net sales EUR 95,095 and gross margin EUR 35,035 from the EUR 86,450 / EUR 31,850 base. The exact January urban-bicycle trace changes 50 to 55 units and retains EUR 500 gross sales per unit. The normal outputs and localized delivery are bound to the reviewed case.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "b8995da5992b462f24ac6df3579494512671ba0db48d16ec3814d883896de27f"
+          },
+          {
+            "name": "assumption_readback.md",
+            "sha256": "7046247a2ad9c96fd59299d778a26439b8ab2892cfe80eb7553503f5a1bda60f"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "9768ead54f142c13d143ab51d78dad6cdb01f29bf8b0b50166d5b252b267b54c"
+          },
+          {
+            "name": "scenario_summary.csv",
+            "sha256": "cddac798fb0fa2b61735731b4c480dd2d1fa6f603fde5a8afeacd0e66728ad03"
+          },
+          {
+            "name": "sales_plan_scenario.csv",
+            "sha256": "495e4e31cc7cb41662d3421588a284e38b5dd74d6cadccf84cd5f4cf2d61e61e"
+          },
+          {
+            "name": "assumption_application_ledger.csv",
+            "sha256": "35f20efed063644ff8d029aa97a84aaea4210d776e4196f77d39df8929d5464c"
+          },
+          {
+            "name": "reconciliation.json",
+            "sha256": "890044fbc73ca306631236ce5c5473351f7759774f32cdc6bea531662af0e302"
+          },
+          {
+            "name": "plan_execution_receipt.json",
+            "sha256": "0f25ded671d3c246e93c029669a6b205aefa05218f61aecaef315fbeef76afcd"
+          },
+          {
+            "name": "model_use_manifest.json",
+            "sha256": "43a9ced6b91a2d4fc353c8c8dd35b2a93298fd35666d2b5630d7d28bc058808f"
+          },
+          {
+            "name": "scenario_rows_a93cf1fd1982d2a9ebaeb5b9.json",
+            "sha256": "ecf612db019b7fe14dfd9d34f2f7c4f43e5c41cfe8fb9f9d975bfaa6f0926e2d"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_sales_plan_kit_runs_current_reviewed_assumptions[practice-it]",
+        "result_review": "The separate 5% scenario in the same engagement produces net sales EUR 90,772.50 and gross margin EUR 33,442.50. The exact urban-jan trace changes 50 to 52.5 units at unchanged gross sales per unit. Every first-run output remains unchanged, with a working prior-plan link and readable scenario comparison. Professional readiness remains pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "42890781d3955c25e6a71d173c0d2355769c61847ef0745f2529550f60e1aff3"
+          },
+          {
+            "name": "assumption_readback.md",
+            "sha256": "9e3a4d41945f3d98efa71135196b43ea0980d4cb94498f8714bd6e87e612e2be"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "9e80309895d1d71c2cb53d6fca720ed239a6de4d3208809bd9e51e998e592021"
+          },
+          {
+            "name": "scenario_summary.csv",
+            "sha256": "df330614eb30aa719b28e0d63b9e0a5dd7b817bfd83c7a5503ddb2001f25c121"
+          },
+          {
+            "name": "sales_plan_scenario.csv",
+            "sha256": "95502a368b69c2db20e5c63d6ae1b361ef383e4a44903ab152ae109b79d36181"
+          },
+          {
+            "name": "assumption_application_ledger.csv",
+            "sha256": "bb7b95d9537e47d75fa0d58a07aa7a553ddc74e56ed72e016f1ce5d6d6154061"
+          },
+          {
+            "name": "reconciliation.json",
+            "sha256": "13d56da5b8b18ba1976277cd9bc94cb02eacee5091d3a8c6942bf984eec6a625"
+          },
+          {
+            "name": "plan_execution_receipt.json",
+            "sha256": "5af0cb383a43524f4893fab5ba07f7a03d9b6b811ffd5e0c89fe4659338eaf90"
+          },
+          {
+            "name": "model_use_manifest.json",
+            "sha256": "ac73063d0ca0fd488de5cab47a344c1251c6860248a471b8ac6295a6e965bb5f"
+          },
+          {
+            "name": "scenario_rows_d967b6dba17a4ffbc87ae22f.json",
+            "sha256": "558d4487be52df57e95feee61f04132fe97e47f934a7d7f1bb1a49dc0f9c7677"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches preparing a sales plan from Actual data and commercial assumptions. The learner identifies source fields, states target months and quantity growth, reviews the interpretation, runs the current workflow, reads the plan and checks, traces one product and compares an alternative. The focus remains the whole first use rather than an isolated calculation detail.",
+        "inputs_and_request": "Read the four-row source for two bicycle products in January and February 2026, in EUR, plus the five localized demonstration and practice notes. The request maps those same months to 2027, increases units by 10% initially and 5% in practice, keeps unit prices unchanged and makes discounts and COGS proportional to sales. No FX conversion, missing-month estimates or overlapping assumptions are requested. The source notes require a real confirmation during a lesson; they do not pre-approve it.",
+        "execution_and_checkpoints": "Each exercise prepares an actual bound client run. A localized assumption read-back precedes the explicitly synthetic test receipt, which binds its SHA-256. The current Plan engine writes its normal scenario, summary, assumption ledger, reconciliation and evidence records. The checkpoint uses the native purpose-bound model-use helper to retrieve only the selected urban-jan source row in Actual and Plan and its needed columns. All four applications and period mapping are verified; the learner explains quantity versus price before calculation.",
+        "deliverable_and_next_action": "The delivered card shows the 2026 base and 2027 Plan together with amount and percentage changes, consistent number formatting, units and month labels. A selected-product table follows quantity, sales, discounts, COGS and margin and links the applied assumption. The card links all seven normal engine outputs, the selected-row record, assumption read-back, review and local data report. The arithmetic and reconciliation pass; report_ready remains false pending normal professional review. No invented chart renderer replaces the workflow CSV outputs.",
+        "practice_and_repeat": "The 5% practice imports the changed request, uses the same Actual data and creates a separate run in the same client engagement. Every initial output remains byte-identical and linked. The comparison shows net sales EUR 95,095 versus EUR 90,772.50 and gross margin EUR 35,035 versus EUR 33,442.50; it also displays absolute and percentage differences. The learner can explain that the change comes from the quantity assumption and can repeat with new Actuals, target months and a confirmed commercial assumption.",
+        "language_and_pacing": "Language en. The outline, source note, read-back, result explanation, metric labels, review note and file purposes are localized. Native column names and exact source product members remain stable for traceability. Six planned stages total 390 seconds. One assumption, four source rows and one selected product keep the first-use path focused, with the full result files available for review. Human timing and comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_sales_plan_kit_runs_current_reviewed_assumptions[demo-en]",
+        "result_review": "The current 10% quantity scenario produces net sales EUR 95,095 and gross margin EUR 35,035 from the EUR 86,450 / EUR 31,850 base. The exact January urban-bicycle trace changes 50 to 55 units and retains EUR 500 gross sales per unit. The normal outputs and localized delivery are bound to the reviewed case.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "974d2a1af5396a3ec2cf7407308d60c1e861e4dd3355e81039f7663d2e8db97b"
+          },
+          {
+            "name": "assumption_readback.md",
+            "sha256": "9e8dae3b42cb6d03004e2bf90e430e61fb9e0026724293653dd5887a82eaddc7"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "01bab84eee7b239ba4abfdc06907329f558158674949d78604ef77c1dc77fb67"
+          },
+          {
+            "name": "scenario_summary.csv",
+            "sha256": "cddac798fb0fa2b61735731b4c480dd2d1fa6f603fde5a8afeacd0e66728ad03"
+          },
+          {
+            "name": "sales_plan_scenario.csv",
+            "sha256": "495e4e31cc7cb41662d3421588a284e38b5dd74d6cadccf84cd5f4cf2d61e61e"
+          },
+          {
+            "name": "assumption_application_ledger.csv",
+            "sha256": "35f20efed063644ff8d029aa97a84aaea4210d776e4196f77d39df8929d5464c"
+          },
+          {
+            "name": "reconciliation.json",
+            "sha256": "890044fbc73ca306631236ce5c5473351f7759774f32cdc6bea531662af0e302"
+          },
+          {
+            "name": "plan_execution_receipt.json",
+            "sha256": "0f45901c235b6586a5e937c062567bca264931a73d1c7c83fe73f39a86c8b2db"
+          },
+          {
+            "name": "model_use_manifest.json",
+            "sha256": "241b592c5258ae830ece58afcd31417d06d57ccd581c69d5dae1e5c6b2de6518"
+          },
+          {
+            "name": "scenario_rows_0ab986e5ce1f7be831000aaa.json",
+            "sha256": "8c3e9c171b1580f5eae346a26dc5467348a2cf7bbf80adb1964da8db37ccfef5"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_sales_plan_kit_runs_current_reviewed_assumptions[practice-en]",
+        "result_review": "The separate 5% scenario in the same engagement produces net sales EUR 90,772.50 and gross margin EUR 33,442.50. The exact urban-jan trace changes 50 to 52.5 units at unchanged gross sales per unit. Every first-run output remains unchanged, with a working prior-plan link and readable scenario comparison. Professional readiness remains pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "ae797a5f6fd81b3b6093c11afa7eab1501a961f315bd8f67c3eafaf09f559456"
+          },
+          {
+            "name": "assumption_readback.md",
+            "sha256": "e75825791fdbdd6df91765c3cbc45f823a6ff47ffcdc85adb89ef81facdf24c7"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "60ef4a66b7b535e619a0ef4a041952b161d27cb3ab083791ae3cdd7ca62b1983"
+          },
+          {
+            "name": "scenario_summary.csv",
+            "sha256": "df330614eb30aa719b28e0d63b9e0a5dd7b817bfd83c7a5503ddb2001f25c121"
+          },
+          {
+            "name": "sales_plan_scenario.csv",
+            "sha256": "95502a368b69c2db20e5c63d6ae1b361ef383e4a44903ab152ae109b79d36181"
+          },
+          {
+            "name": "assumption_application_ledger.csv",
+            "sha256": "bb7b95d9537e47d75fa0d58a07aa7a553ddc74e56ed72e016f1ce5d6d6154061"
+          },
+          {
+            "name": "reconciliation.json",
+            "sha256": "13d56da5b8b18ba1976277cd9bc94cb02eacee5091d3a8c6942bf984eec6a625"
+          },
+          {
+            "name": "plan_execution_receipt.json",
+            "sha256": "521a732f527eabf66f31098d578f3f4f343deb9735c003f5a140b1c930c77435"
+          },
+          {
+            "name": "model_use_manifest.json",
+            "sha256": "8657f718a92b629c8c4f46705a3d8e6f64b6f89bc5b86e0426dd0c9c3b8098a9"
+          },
+          {
+            "name": "scenario_rows_d2f2483d333abb2cbfa9d46e.json",
+            "sha256": "6419eb5fcf4eeda63591a67b50e42c43bedab623d3325dc4661bdca37a77fbfd"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches preparing a sales plan from Actual data and commercial assumptions. The learner identifies source fields, states target months and quantity growth, reviews the interpretation, runs the current workflow, reads the plan and checks, traces one product and compares an alternative. The focus remains the whole first use rather than an isolated calculation detail.",
+        "inputs_and_request": "Read the four-row source for two bicycle products in January and February 2026, in EUR, plus the five localized demonstration and practice notes. The request maps those same months to 2027, increases units by 10% initially and 5% in practice, keeps unit prices unchanged and makes discounts and COGS proportional to sales. No FX conversion, missing-month estimates or overlapping assumptions are requested. The source notes require a real confirmation during a lesson; they do not pre-approve it.",
+        "execution_and_checkpoints": "Each exercise prepares an actual bound client run. A localized assumption read-back precedes the explicitly synthetic test receipt, which binds its SHA-256. The current Plan engine writes its normal scenario, summary, assumption ledger, reconciliation and evidence records. The checkpoint uses the native purpose-bound model-use helper to retrieve only the selected urban-jan source row in Actual and Plan and its needed columns. All four applications and period mapping are verified; the learner explains quantity versus price before calculation.",
+        "deliverable_and_next_action": "The delivered card shows the 2026 base and 2027 Plan together with amount and percentage changes, consistent number formatting, units and month labels. A selected-product table follows quantity, sales, discounts, COGS and margin and links the applied assumption. The card links all seven normal engine outputs, the selected-row record, assumption read-back, review and local data report. The arithmetic and reconciliation pass; report_ready remains false pending normal professional review. No invented chart renderer replaces the workflow CSV outputs.",
+        "practice_and_repeat": "The 5% practice imports the changed request, uses the same Actual data and creates a separate run in the same client engagement. Every initial output remains byte-identical and linked. The comparison shows net sales EUR 95,095 versus EUR 90,772.50 and gross margin EUR 35,035 versus EUR 33,442.50; it also displays absolute and percentage differences. The learner can explain that the change comes from the quantity assumption and can repeat with new Actuals, target months and a confirmed commercial assumption.",
+        "language_and_pacing": "Language fr. The outline, source note, read-back, result explanation, metric labels, review note and file purposes are localized. Native column names and exact source product members remain stable for traceability. Six planned stages total 390 seconds. One assumption, four source rows and one selected product keep the first-use path focused, with the full result files available for review. Human timing and comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_sales_plan_kit_runs_current_reviewed_assumptions[demo-fr]",
+        "result_review": "The current 10% quantity scenario produces net sales EUR 95,095 and gross margin EUR 35,035 from the EUR 86,450 / EUR 31,850 base. The exact January urban-bicycle trace changes 50 to 55 units and retains EUR 500 gross sales per unit. The normal outputs and localized delivery are bound to the reviewed case.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "f604f17a6d19251714459c07473380402203645696a343dc643cddabb0278c22"
+          },
+          {
+            "name": "assumption_readback.md",
+            "sha256": "b86f4529b89110f86f00f82da408cf7b6a3d28726e351273a779d17608a25bf5"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "5819a5b0e592d22557e5cd44d5b35c21f5beef7d779e34a185f1b5f2c92d64d9"
+          },
+          {
+            "name": "scenario_summary.csv",
+            "sha256": "cddac798fb0fa2b61735731b4c480dd2d1fa6f603fde5a8afeacd0e66728ad03"
+          },
+          {
+            "name": "sales_plan_scenario.csv",
+            "sha256": "495e4e31cc7cb41662d3421588a284e38b5dd74d6cadccf84cd5f4cf2d61e61e"
+          },
+          {
+            "name": "assumption_application_ledger.csv",
+            "sha256": "35f20efed063644ff8d029aa97a84aaea4210d776e4196f77d39df8929d5464c"
+          },
+          {
+            "name": "reconciliation.json",
+            "sha256": "890044fbc73ca306631236ce5c5473351f7759774f32cdc6bea531662af0e302"
+          },
+          {
+            "name": "plan_execution_receipt.json",
+            "sha256": "218965bdf620dcfa0156121f6bbbfd6e50bfab764860850c06aab07b767b14b5"
+          },
+          {
+            "name": "model_use_manifest.json",
+            "sha256": "de3baeace1479d49fb269b4adc929c9f2d6e53033a49d1d3e2745fe364aefec4"
+          },
+          {
+            "name": "scenario_rows_2985e1e67622dfbac5918ae7.json",
+            "sha256": "2c2c38ee5ed0c4306f7e6c3eb521deef44d7d9cff0870df6833bbd1017e1bd4a"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_sales_plan_kit_runs_current_reviewed_assumptions[practice-fr]",
+        "result_review": "The separate 5% scenario in the same engagement produces net sales EUR 90,772.50 and gross margin EUR 33,442.50. The exact urban-jan trace changes 50 to 52.5 units at unchanged gross sales per unit. Every first-run output remains unchanged, with a working prior-plan link and readable scenario comparison. Professional readiness remains pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "10c8d8b892cfd51e18d3ee2cbd0ba1fc86bce004358fb5e0c579eaf293eaad26"
+          },
+          {
+            "name": "assumption_readback.md",
+            "sha256": "b73b3c6ab6a887b3d7df2e97cb5560c888379bede42b0f637da724df048c9671"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "6b6a7b07bec242780dc7fe0f982d02d94a5360d241ac0b41319689b19b35d398"
+          },
+          {
+            "name": "scenario_summary.csv",
+            "sha256": "df330614eb30aa719b28e0d63b9e0a5dd7b817bfd83c7a5503ddb2001f25c121"
+          },
+          {
+            "name": "sales_plan_scenario.csv",
+            "sha256": "95502a368b69c2db20e5c63d6ae1b361ef383e4a44903ab152ae109b79d36181"
+          },
+          {
+            "name": "assumption_application_ledger.csv",
+            "sha256": "bb7b95d9537e47d75fa0d58a07aa7a553ddc74e56ed72e016f1ce5d6d6154061"
+          },
+          {
+            "name": "reconciliation.json",
+            "sha256": "13d56da5b8b18ba1976277cd9bc94cb02eacee5091d3a8c6942bf984eec6a625"
+          },
+          {
+            "name": "plan_execution_receipt.json",
+            "sha256": "10e4f1ba847151db183e3824e1fd891b605b0f47ebf8ea2bd73e2b611c845dfe"
+          },
+          {
+            "name": "model_use_manifest.json",
+            "sha256": "48138609bd84e5622ee396bfc78682ad6b7f4df6d995cda37a506089da1719b0"
+          },
+          {
+            "name": "scenario_rows_9f3dc87ef6dae467437ff626.json",
+            "sha256": "e4f22ed48a894154f6c04779d6619c7086508c330462378c137b862e4bf9bb38"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches preparing a sales plan from Actual data and commercial assumptions. The learner identifies source fields, states target months and quantity growth, reviews the interpretation, runs the current workflow, reads the plan and checks, traces one product and compares an alternative. The focus remains the whole first use rather than an isolated calculation detail.",
+        "inputs_and_request": "Read the four-row source for two bicycle products in January and February 2026, in EUR, plus the five localized demonstration and practice notes. The request maps those same months to 2027, increases units by 10% initially and 5% in practice, keeps unit prices unchanged and makes discounts and COGS proportional to sales. No FX conversion, missing-month estimates or overlapping assumptions are requested. The source notes require a real confirmation during a lesson; they do not pre-approve it.",
+        "execution_and_checkpoints": "Each exercise prepares an actual bound client run. A localized assumption read-back precedes the explicitly synthetic test receipt, which binds its SHA-256. The current Plan engine writes its normal scenario, summary, assumption ledger, reconciliation and evidence records. The checkpoint uses the native purpose-bound model-use helper to retrieve only the selected urban-jan source row in Actual and Plan and its needed columns. All four applications and period mapping are verified; the learner explains quantity versus price before calculation.",
+        "deliverable_and_next_action": "The delivered card shows the 2026 base and 2027 Plan together with amount and percentage changes, consistent number formatting, units and month labels. A selected-product table follows quantity, sales, discounts, COGS and margin and links the applied assumption. The card links all seven normal engine outputs, the selected-row record, assumption read-back, review and local data report. The arithmetic and reconciliation pass; report_ready remains false pending normal professional review. No invented chart renderer replaces the workflow CSV outputs.",
+        "practice_and_repeat": "The 5% practice imports the changed request, uses the same Actual data and creates a separate run in the same client engagement. Every initial output remains byte-identical and linked. The comparison shows net sales EUR 95,095 versus EUR 90,772.50 and gross margin EUR 35,035 versus EUR 33,442.50; it also displays absolute and percentage differences. The learner can explain that the change comes from the quantity assumption and can repeat with new Actuals, target months and a confirmed commercial assumption.",
+        "language_and_pacing": "Language de. The outline, source note, read-back, result explanation, metric labels, review note and file purposes are localized. Native column names and exact source product members remain stable for traceability. Six planned stages total 390 seconds. One assumption, four source rows and one selected product keep the first-use path focused, with the full result files available for review. Human timing and comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_sales_plan_kit_runs_current_reviewed_assumptions[demo-de]",
+        "result_review": "The current 10% quantity scenario produces net sales EUR 95,095 and gross margin EUR 35,035 from the EUR 86,450 / EUR 31,850 base. The exact January urban-bicycle trace changes 50 to 55 units and retains EUR 500 gross sales per unit. The normal outputs and localized delivery are bound to the reviewed case.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "358cdc82aebed58f188bb1250635a3019ae8865181cf237e59ce16633d3feec1"
+          },
+          {
+            "name": "assumption_readback.md",
+            "sha256": "d891aa768959eccebf43baa82ba9ae788d8b9694d1579a06779b372748a2a8f0"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "d64b0fe12c539adaea00ba250a68382780aa8476a6dd005ca60e32a87e396711"
+          },
+          {
+            "name": "scenario_summary.csv",
+            "sha256": "cddac798fb0fa2b61735731b4c480dd2d1fa6f603fde5a8afeacd0e66728ad03"
+          },
+          {
+            "name": "sales_plan_scenario.csv",
+            "sha256": "495e4e31cc7cb41662d3421588a284e38b5dd74d6cadccf84cd5f4cf2d61e61e"
+          },
+          {
+            "name": "assumption_application_ledger.csv",
+            "sha256": "35f20efed063644ff8d029aa97a84aaea4210d776e4196f77d39df8929d5464c"
+          },
+          {
+            "name": "reconciliation.json",
+            "sha256": "890044fbc73ca306631236ce5c5473351f7759774f32cdc6bea531662af0e302"
+          },
+          {
+            "name": "plan_execution_receipt.json",
+            "sha256": "0b299fc499750a5d9795ba812f515b98dccb41b91e65fb9707d2fa6b1c849a58"
+          },
+          {
+            "name": "model_use_manifest.json",
+            "sha256": "ef122593ba1fa7345b81d893a3e294da3e0b1c96e823d81d5498f1b18473a54a"
+          },
+          {
+            "name": "scenario_rows_0300acf1cae8fef1966ce377.json",
+            "sha256": "09c97e758ed37e28ecfea32c3d055205bc6eaa63e6e4e5a231dda884ddb05999"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_sales_plan_kit_runs_current_reviewed_assumptions[practice-de]",
+        "result_review": "The separate 5% scenario in the same engagement produces net sales EUR 90,772.50 and gross margin EUR 33,442.50. The exact urban-jan trace changes 50 to 52.5 units at unchanged gross sales per unit. Every first-run output remains unchanged, with a working prior-plan link and readable scenario comparison. Professional readiness remains pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "46bce57d71168249b94ccac5ac3ecf3cdd89676b68dd4dab8e91870ef695f96c"
+          },
+          {
+            "name": "assumption_readback.md",
+            "sha256": "ba8a8c93fa4943a6b51e776f20f0676dee1fa4038edffd1b2be8e6b8c9ae5344"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "a5f2874fcd6363c791c4e42bdb2bd947bf7e9022b57507c42fd3967bc20535a3"
+          },
+          {
+            "name": "scenario_summary.csv",
+            "sha256": "df330614eb30aa719b28e0d63b9e0a5dd7b817bfd83c7a5503ddb2001f25c121"
+          },
+          {
+            "name": "sales_plan_scenario.csv",
+            "sha256": "95502a368b69c2db20e5c63d6ae1b361ef383e4a44903ab152ae109b79d36181"
+          },
+          {
+            "name": "assumption_application_ledger.csv",
+            "sha256": "bb7b95d9537e47d75fa0d58a07aa7a553ddc74e56ed72e016f1ce5d6d6154061"
+          },
+          {
+            "name": "reconciliation.json",
+            "sha256": "13d56da5b8b18ba1976277cd9bc94cb02eacee5091d3a8c6942bf984eec6a625"
+          },
+          {
+            "name": "plan_execution_receipt.json",
+            "sha256": "d10aacc4b5d4f96bbe26e10d8b855ecbdb75213ec1952f958f81b2035bbb51dd"
+          },
+          {
+            "name": "model_use_manifest.json",
+            "sha256": "4894fcbbc46018606b357675553aa8df146ff395d9717d0e55f2a00281c6555a"
+          },
+          {
+            "name": "scenario_rows_986b2f4d10d2cf9acf8435ac.json",
+            "sha256": "059c7242e218b2810dbd7ce415979b52387e311b94b8b46cdf3a32eddad8ae8c"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches preparing a sales plan from Actual data and commercial assumptions. The learner identifies source fields, states target months and quantity growth, reviews the interpretation, runs the current workflow, reads the plan and checks, traces one product and compares an alternative. The focus remains the whole first use rather than an isolated calculation detail.",
+        "inputs_and_request": "Read the four-row source for two bicycle products in January and February 2026, in EUR, plus the five localized demonstration and practice notes. The request maps those same months to 2027, increases units by 10% initially and 5% in practice, keeps unit prices unchanged and makes discounts and COGS proportional to sales. No FX conversion, missing-month estimates or overlapping assumptions are requested. The source notes require a real confirmation during a lesson; they do not pre-approve it.",
+        "execution_and_checkpoints": "Each exercise prepares an actual bound client run. A localized assumption read-back precedes the explicitly synthetic test receipt, which binds its SHA-256. The current Plan engine writes its normal scenario, summary, assumption ledger, reconciliation and evidence records. The checkpoint uses the native purpose-bound model-use helper to retrieve only the selected urban-jan source row in Actual and Plan and its needed columns. All four applications and period mapping are verified; the learner explains quantity versus price before calculation.",
+        "deliverable_and_next_action": "The delivered card shows the 2026 base and 2027 Plan together with amount and percentage changes, consistent number formatting, units and month labels. A selected-product table follows quantity, sales, discounts, COGS and margin and links the applied assumption. The card links all seven normal engine outputs, the selected-row record, assumption read-back, review and local data report. The arithmetic and reconciliation pass; report_ready remains false pending normal professional review. No invented chart renderer replaces the workflow CSV outputs.",
+        "practice_and_repeat": "The 5% practice imports the changed request, uses the same Actual data and creates a separate run in the same client engagement. Every initial output remains byte-identical and linked. The comparison shows net sales EUR 95,095 versus EUR 90,772.50 and gross margin EUR 35,035 versus EUR 33,442.50; it also displays absolute and percentage differences. The learner can explain that the change comes from the quantity assumption and can repeat with new Actuals, target months and a confirmed commercial assumption.",
+        "language_and_pacing": "Language es. The outline, source note, read-back, result explanation, metric labels, review note and file purposes are localized. Native column names and exact source product members remain stable for traceability. Six planned stages total 390 seconds. One assumption, four source rows and one selected product keep the first-use path focused, with the full result files available for review. Human timing and comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_sales_plan_kit_runs_current_reviewed_assumptions[demo-es]",
+        "result_review": "The current 10% quantity scenario produces net sales EUR 95,095 and gross margin EUR 35,035 from the EUR 86,450 / EUR 31,850 base. The exact January urban-bicycle trace changes 50 to 55 units and retains EUR 500 gross sales per unit. The normal outputs and localized delivery are bound to the reviewed case.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "35980879e430564ebb10cb1d6698fbc9d5a63e77c2d1a25933d765428313f620"
+          },
+          {
+            "name": "assumption_readback.md",
+            "sha256": "861f45fc8371ac8513b01f3311f7faf2ad3296b321329ff02f745d9aecdbe7bb"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "f1993df1ddf27575a95dfbec5ca7f62a273a1c651200c9e925caa693bf643479"
+          },
+          {
+            "name": "scenario_summary.csv",
+            "sha256": "cddac798fb0fa2b61735731b4c480dd2d1fa6f603fde5a8afeacd0e66728ad03"
+          },
+          {
+            "name": "sales_plan_scenario.csv",
+            "sha256": "495e4e31cc7cb41662d3421588a284e38b5dd74d6cadccf84cd5f4cf2d61e61e"
+          },
+          {
+            "name": "assumption_application_ledger.csv",
+            "sha256": "35f20efed063644ff8d029aa97a84aaea4210d776e4196f77d39df8929d5464c"
+          },
+          {
+            "name": "reconciliation.json",
+            "sha256": "890044fbc73ca306631236ce5c5473351f7759774f32cdc6bea531662af0e302"
+          },
+          {
+            "name": "plan_execution_receipt.json",
+            "sha256": "49d9a1b2f3ab45756a20f746e384a74f2542c23a68ca01e93ecc2330f7744ad4"
+          },
+          {
+            "name": "model_use_manifest.json",
+            "sha256": "d84c366f7918c3cf775b5077700e83128cafa6a0eecffa1a806fd0aeacd4a262"
+          },
+          {
+            "name": "scenario_rows_c6140ecaa507167fde31fca6.json",
+            "sha256": "47e5bee1eba067403a9d296a762c167e9fb4345313187842b9d866b01cfa394a"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_sales_plan_kit_runs_current_reviewed_assumptions[practice-es]",
+        "result_review": "The separate 5% scenario in the same engagement produces net sales EUR 90,772.50 and gross margin EUR 33,442.50. The exact urban-jan trace changes 50 to 52.5 units at unchanged gross sales per unit. Every first-run output remains unchanged, with a working prior-plan link and readable scenario comparison. Professional readiness remains pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "d3c638a34c935bdaab454ca6a3fc26ee083c46ed5fc4d33ebcee1d0c85f2e84e"
+          },
+          {
+            "name": "assumption_readback.md",
+            "sha256": "6b285337b9125e3e9722a85a2d6fe317591f750ab7c3c5d130c5221aac1727e3"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "48f6084b1df96e0c90f5ff81ef35455ea963bff1a45a653a85d6dbc3d25215c1"
+          },
+          {
+            "name": "scenario_summary.csv",
+            "sha256": "df330614eb30aa719b28e0d63b9e0a5dd7b817bfd83c7a5503ddb2001f25c121"
+          },
+          {
+            "name": "sales_plan_scenario.csv",
+            "sha256": "95502a368b69c2db20e5c63d6ae1b361ef383e4a44903ab152ae109b79d36181"
+          },
+          {
+            "name": "assumption_application_ledger.csv",
+            "sha256": "bb7b95d9537e47d75fa0d58a07aa7a553ddc74e56ed72e016f1ce5d6d6154061"
+          },
+          {
+            "name": "reconciliation.json",
+            "sha256": "13d56da5b8b18ba1976277cd9bc94cb02eacee5091d3a8c6942bf984eec6a625"
+          },
+          {
+            "name": "plan_execution_receipt.json",
+            "sha256": "71df81da301ca7c3ee9cfdfc4252f558c6d1caf5f8ad4a979460936d7ab46b07"
+          },
+          {
+            "name": "model_use_manifest.json",
+            "sha256": "80ec890b8ae50aa1272d7ebba59fa9e6ca21fd2903641bdfd7fa41ed3366b6bd"
+          },
+          {
+            "name": "scenario_rows_5e85e191d6c66d58f7cc860f.json",
+            "sha256": "2dc526e0c9f0623e065a6d4d9684af9419023d1cd7696976fc3b61f6413910cc"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.166509+00:00",
+    "previous_course_sha256": "fbd75d9496540ff3a348d4604f0857e569cda3174afd8b252ce67ea3bccdb781",
+    "source_snapshot": "/private/tmp/sales-plan-teaching-release-01/test_sales_plan_kit_runs_curre7/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  }
+}

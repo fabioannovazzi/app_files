@@ -1,0 +1,385 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "clara",
+  "workflow": "advisory-case-director",
+  "course_sha256": "98817e68dcbc6601b72f361062beccf96c2551f7b376ad6248b52c6c9563bc87",
+  "reviewer": "Codex: five-language case lesson and actual native document review",
+  "reviewed_at": "2026-09-14T21:09:24.765818+00:00",
+  "review_scope": "Prepared material and native local execution review. Read the complete five-language outlines and fictional sources; reviewed all ten workpapers and delivery notes and the five updated evidence maps showing initial and revised conclusions. The final map bytes match those inspected; final workpaper prose is unchanged except corrected local links. The revised initial review notes were read separately. Fifty-four advisory/lineage tests pass, including ten phase-specific case exercises. Native voice, window presentation, human timing, learner comprehension and professional approval remain separate unverified acceptance steps. Model-authored regression interpretations live outside shipped teaching kits.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain lesson title introduces developing and resuming one advisory case. The learner starts with a natural request, watches the actual local case be created, reads the current recommendation, follows one conclusion to its sources and supplies an update. The focus is the complete usable workflow, not a technical feature demonstration.",
+        "inputs_and_request": "Read all five localized assignment, customer/operating-note and vehicle-update sets. Ciclo Arco compares a small appointment-based collection pilot with immediate daily service. Anna and Carla express conditional interest, Bruno prefers self-delivery, nobody has booked or accepted a price, Wednesday vehicle availability is limited and there is no dedicated daily driver. The assignment excludes external research, contact, spending and an invented forecast.",
+        "execution_and_checkpoints": "Ten distinct native demonstrations and practices create actual cases, retain exact selected files, record authored source observations and reasoning, and commit the working document. The checkpoint follows a conclusion to its retained file and asks what new evidence would change the advice. Fixed map labels are localized; support, limits, reliability, corroboration, implications and next questions are explicitly authored for the fictional notes. Mechanical checks do not certify the judgement.",
+        "deliverable_and_next_action": "Read the ten delivered workpapers and covering links, all localized review notes, and the five practice evidence maps containing both assessments and their support. Current workpapers are 108–142 words including source links and an explicit next question. They prioritize checking a limited trial and its conditions; the updated assessment resolves transport before scheduling. Actual documents, evidence maps, sources and preserved-history links resolve. No professional approval or implementation is claimed.",
+        "practice_and_repeat": "The practice adds the vehicle update to the same case. The latest note overrides Wednesday availability during the proposed trial; the neighbouring workshop has not agreed to a loan. The revised conclusion supersedes the earlier one and binds the assignment, original notes and update directly. Prior evidence and the original workpaper are preserved unchanged, with working links from the archived document. The learner is asked to explain the changed advice and can resume the case with new evidence.",
+        "language_and_pacing": "Language it. The whole outline and source set, current workpaper, authored evidence reasoning and review notes are in this language; fixed map navigation and statuses are also localized. Six planned stages total 390 seconds. The short workpaper and one selected source chain support a first-use lesson and practice within the intended range; actual elapsed time and learner understanding have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_case_director_kit_updates_actual_case_and_preserves_workpaper_history[demo-it]",
+        "result_review": "The actual case retains the assignment and original notes, records a conditional comparison and its source limitations, saves the current workpaper and identifies missing feasibility evidence. There is one active initial conclusion. The initial review contains no premature reference to the practice-only vehicle loan.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_workpaper.md",
+            "sha256": "b7e04bf512294004c1407151494d8a4fd04b110c8cb8684110b36cdedb83f571"
+          },
+          {
+            "name": "advisory_evidence_map.md",
+            "sha256": "d03db66adc53a8d291784fd43d14487d30df191f6915b286f013111e1ff512b0"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "f2baac6d4a9c90809e3e67760d2fbe8ab29a0ee89abdb7c534146b1c0d344820"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "891a221eedc30da835fa4e77cf0e09d812e2f3d532a0e0dcb3310dbf242f26d5"
+          },
+          {
+            "name": "advisory_claim_register.json",
+            "sha256": "dac27a69729686b0512d0dd32f53ae2ec1b261b1098b53e728d2160b3ebb98da"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "96c4e34eb7bb4d22dd014973c6c3c4fb2c400cd63c7e09243c4c9986dcb8f87e"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_case_director_kit_updates_actual_case_and_preserves_workpaper_history[practice-it]",
+        "result_review": "The same case imports the vehicle update, replaces the initial conclusion with a transport-first assessment and retains both the old source receipts and workpaper bytes. The current conclusion links all three source receipts, while the prior claim is superseded rather than used as a still-current premise. All current and archived document links resolve; no contact, reservation or spending is performed.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_workpaper.md",
+            "sha256": "21b69c43f6fee7742c395e687556426c31aa2bf46739e4adaca4bf0e70b911e8"
+          },
+          {
+            "name": "advisory_evidence_map.md",
+            "sha256": "c86809869d73bf45a21c338c16fc59346705f8876413bfd09e5be69aa9a8b86c"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "55604d4ef1d2b78ee21d080b5b344d3fa1052f70cab1c22be0f82505df53d135"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "f32677db8f7147b95aa15f010e350a7e20388cd9745b731b3250a95db8a04540"
+          },
+          {
+            "name": "advisory_claim_register.json",
+            "sha256": "b128e9e44b15cf480ff4fab416be1930c071adf6d91a93bf4e9806d646110f37"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "13862d423f343c140ed9ac585701404d8d17e738f0aed9e04ce29e4ca3a2fb79"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain lesson title introduces developing and resuming one advisory case. The learner starts with a natural request, watches the actual local case be created, reads the current recommendation, follows one conclusion to its sources and supplies an update. The focus is the complete usable workflow, not a technical feature demonstration.",
+        "inputs_and_request": "Read all five localized assignment, customer/operating-note and vehicle-update sets. Ciclo Arco compares a small appointment-based collection pilot with immediate daily service. Anna and Carla express conditional interest, Bruno prefers self-delivery, nobody has booked or accepted a price, Wednesday vehicle availability is limited and there is no dedicated daily driver. The assignment excludes external research, contact, spending and an invented forecast.",
+        "execution_and_checkpoints": "Ten distinct native demonstrations and practices create actual cases, retain exact selected files, record authored source observations and reasoning, and commit the working document. The checkpoint follows a conclusion to its retained file and asks what new evidence would change the advice. Fixed map labels are localized; support, limits, reliability, corroboration, implications and next questions are explicitly authored for the fictional notes. Mechanical checks do not certify the judgement.",
+        "deliverable_and_next_action": "Read the ten delivered workpapers and covering links, all localized review notes, and the five practice evidence maps containing both assessments and their support. Current workpapers are 108–142 words including source links and an explicit next question. They prioritize checking a limited trial and its conditions; the updated assessment resolves transport before scheduling. Actual documents, evidence maps, sources and preserved-history links resolve. No professional approval or implementation is claimed.",
+        "practice_and_repeat": "The practice adds the vehicle update to the same case. The latest note overrides Wednesday availability during the proposed trial; the neighbouring workshop has not agreed to a loan. The revised conclusion supersedes the earlier one and binds the assignment, original notes and update directly. Prior evidence and the original workpaper are preserved unchanged, with working links from the archived document. The learner is asked to explain the changed advice and can resume the case with new evidence.",
+        "language_and_pacing": "Language en. The whole outline and source set, current workpaper, authored evidence reasoning and review notes are in this language; fixed map navigation and statuses are also localized. Six planned stages total 390 seconds. The short workpaper and one selected source chain support a first-use lesson and practice within the intended range; actual elapsed time and learner understanding have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_case_director_kit_updates_actual_case_and_preserves_workpaper_history[demo-en]",
+        "result_review": "The actual case retains the assignment and original notes, records a conditional comparison and its source limitations, saves the current workpaper and identifies missing feasibility evidence. There is one active initial conclusion. The initial review contains no premature reference to the practice-only vehicle loan.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_workpaper.md",
+            "sha256": "1e8ee6081e2fe254000e3b90f08d2fbc75ff6316afe83667000cb8db17c07306"
+          },
+          {
+            "name": "advisory_evidence_map.md",
+            "sha256": "7f8806e08a2df93266a7dcb7801c2aacc3e169b87400f30de365641321145bb9"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "d3ac65527e0c27b95b8bd14bd6be3831aa73b5e33895cd50ecff8c0347be1ed6"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "2d36efd1fa3d7fb2ea22276f29708caec36e335d754e256aa3df7ff0b6f875ec"
+          },
+          {
+            "name": "advisory_claim_register.json",
+            "sha256": "9ae0c5a557d1bc7d9dead40f6bf1192dc8a70b2023804828c62b90166866bccc"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "ad356ad9e48f5121b865121517635105455452bbc0c6e21f65515fbcf45bc0bc"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_case_director_kit_updates_actual_case_and_preserves_workpaper_history[practice-en]",
+        "result_review": "The same case imports the vehicle update, replaces the initial conclusion with a transport-first assessment and retains both the old source receipts and workpaper bytes. The current conclusion links all three source receipts, while the prior claim is superseded rather than used as a still-current premise. All current and archived document links resolve; no contact, reservation or spending is performed.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_workpaper.md",
+            "sha256": "93627d9e01f541809ae2fb75516d404b1abf2d6e2cd9157223e6c96a721e915a"
+          },
+          {
+            "name": "advisory_evidence_map.md",
+            "sha256": "b01cb68b2770ae4b25eefb995f592f28d23abfc956ed59e9d1618d0fc84e7dd7"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "6d1df4df9fdca79fa71e7efca4de511236a7c687c05efc56fc4e8c9583a69d7f"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "f06688b4376734582db02c7dd682e4d5bc3c6efa3a5f4e40925db765a6eb3d9f"
+          },
+          {
+            "name": "advisory_claim_register.json",
+            "sha256": "bea535d34fb3f2acaab1a80e30fefebebef36432dd53efd97acd6477d044634c"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "7c9fcc9aac008de2f80af32d35addc2242666242b04c24538b27d49bd044d9ee"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain lesson title introduces developing and resuming one advisory case. The learner starts with a natural request, watches the actual local case be created, reads the current recommendation, follows one conclusion to its sources and supplies an update. The focus is the complete usable workflow, not a technical feature demonstration.",
+        "inputs_and_request": "Read all five localized assignment, customer/operating-note and vehicle-update sets. Ciclo Arco compares a small appointment-based collection pilot with immediate daily service. Anna and Carla express conditional interest, Bruno prefers self-delivery, nobody has booked or accepted a price, Wednesday vehicle availability is limited and there is no dedicated daily driver. The assignment excludes external research, contact, spending and an invented forecast.",
+        "execution_and_checkpoints": "Ten distinct native demonstrations and practices create actual cases, retain exact selected files, record authored source observations and reasoning, and commit the working document. The checkpoint follows a conclusion to its retained file and asks what new evidence would change the advice. Fixed map labels are localized; support, limits, reliability, corroboration, implications and next questions are explicitly authored for the fictional notes. Mechanical checks do not certify the judgement.",
+        "deliverable_and_next_action": "Read the ten delivered workpapers and covering links, all localized review notes, and the five practice evidence maps containing both assessments and their support. Current workpapers are 108–142 words including source links and an explicit next question. They prioritize checking a limited trial and its conditions; the updated assessment resolves transport before scheduling. Actual documents, evidence maps, sources and preserved-history links resolve. No professional approval or implementation is claimed.",
+        "practice_and_repeat": "The practice adds the vehicle update to the same case. The latest note overrides Wednesday availability during the proposed trial; the neighbouring workshop has not agreed to a loan. The revised conclusion supersedes the earlier one and binds the assignment, original notes and update directly. Prior evidence and the original workpaper are preserved unchanged, with working links from the archived document. The learner is asked to explain the changed advice and can resume the case with new evidence.",
+        "language_and_pacing": "Language fr. The whole outline and source set, current workpaper, authored evidence reasoning and review notes are in this language; fixed map navigation and statuses are also localized. Six planned stages total 390 seconds. The short workpaper and one selected source chain support a first-use lesson and practice within the intended range; actual elapsed time and learner understanding have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_case_director_kit_updates_actual_case_and_preserves_workpaper_history[demo-fr]",
+        "result_review": "The actual case retains the assignment and original notes, records a conditional comparison and its source limitations, saves the current workpaper and identifies missing feasibility evidence. There is one active initial conclusion. The initial review contains no premature reference to the practice-only vehicle loan.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_workpaper.md",
+            "sha256": "3f2ecaf709e7d615d00289edd8f83c5346123838c6cb3b69fe8431839b0de69b"
+          },
+          {
+            "name": "advisory_evidence_map.md",
+            "sha256": "15d9db58d5ad74c693aeffc23c28dbdca0e4980b9609f1cd78c6e10f9c4d6f70"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "292a8819260f449b7c96a50d134e88ddb7d842a0a261d592f28b73c5329dbcf6"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "b21662858fc00c8c147919a75b32ee675e1a6297ac635bff16499ec5ac54be16"
+          },
+          {
+            "name": "advisory_claim_register.json",
+            "sha256": "966c456c429d23d5bc11801ee1d0cd8b5b22590eba210dfae03971abe37dae99"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "a66d0fd01772a58e8a67abe3538d689b34808f4bbe19d376bc92d1ccc6307420"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_case_director_kit_updates_actual_case_and_preserves_workpaper_history[practice-fr]",
+        "result_review": "The same case imports the vehicle update, replaces the initial conclusion with a transport-first assessment and retains both the old source receipts and workpaper bytes. The current conclusion links all three source receipts, while the prior claim is superseded rather than used as a still-current premise. All current and archived document links resolve; no contact, reservation or spending is performed.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_workpaper.md",
+            "sha256": "1438db7bc710589744bde3f6f65d14fa86b80e8f731aae5d4d211ebd4de9da9a"
+          },
+          {
+            "name": "advisory_evidence_map.md",
+            "sha256": "1f39367bdcfcf090dc7f3da3d0825299578bda6edcf7898749acc2d9ff85d1c2"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "8571726830f67d21e4da56fa7aa6c1a5dfd9fa463e7ee2295efbf4d12a43f5d3"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "ab471d9eb230b1c3a08d6678af677f861ac63064f00cad9c088d2646349cbdf6"
+          },
+          {
+            "name": "advisory_claim_register.json",
+            "sha256": "a732eb21c43baba97e0ac56a1f715e0c5afb7761847e0f704b287f66ee102b38"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "7c7005d0e7f578c2bd04dd1de458b64caaaf97b235144539b8ab8ebcfefedd2d"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain lesson title introduces developing and resuming one advisory case. The learner starts with a natural request, watches the actual local case be created, reads the current recommendation, follows one conclusion to its sources and supplies an update. The focus is the complete usable workflow, not a technical feature demonstration.",
+        "inputs_and_request": "Read all five localized assignment, customer/operating-note and vehicle-update sets. Ciclo Arco compares a small appointment-based collection pilot with immediate daily service. Anna and Carla express conditional interest, Bruno prefers self-delivery, nobody has booked or accepted a price, Wednesday vehicle availability is limited and there is no dedicated daily driver. The assignment excludes external research, contact, spending and an invented forecast.",
+        "execution_and_checkpoints": "Ten distinct native demonstrations and practices create actual cases, retain exact selected files, record authored source observations and reasoning, and commit the working document. The checkpoint follows a conclusion to its retained file and asks what new evidence would change the advice. Fixed map labels are localized; support, limits, reliability, corroboration, implications and next questions are explicitly authored for the fictional notes. Mechanical checks do not certify the judgement.",
+        "deliverable_and_next_action": "Read the ten delivered workpapers and covering links, all localized review notes, and the five practice evidence maps containing both assessments and their support. Current workpapers are 108–142 words including source links and an explicit next question. They prioritize checking a limited trial and its conditions; the updated assessment resolves transport before scheduling. Actual documents, evidence maps, sources and preserved-history links resolve. No professional approval or implementation is claimed.",
+        "practice_and_repeat": "The practice adds the vehicle update to the same case. The latest note overrides Wednesday availability during the proposed trial; the neighbouring workshop has not agreed to a loan. The revised conclusion supersedes the earlier one and binds the assignment, original notes and update directly. Prior evidence and the original workpaper are preserved unchanged, with working links from the archived document. The learner is asked to explain the changed advice and can resume the case with new evidence.",
+        "language_and_pacing": "Language de. The whole outline and source set, current workpaper, authored evidence reasoning and review notes are in this language; fixed map navigation and statuses are also localized. Six planned stages total 390 seconds. The short workpaper and one selected source chain support a first-use lesson and practice within the intended range; actual elapsed time and learner understanding have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_case_director_kit_updates_actual_case_and_preserves_workpaper_history[demo-de]",
+        "result_review": "The actual case retains the assignment and original notes, records a conditional comparison and its source limitations, saves the current workpaper and identifies missing feasibility evidence. There is one active initial conclusion. The initial review contains no premature reference to the practice-only vehicle loan.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_workpaper.md",
+            "sha256": "bbbfb3ee943706cb1da2f557804f42a9932a23a9d6bccd8e52a27f7311ded293"
+          },
+          {
+            "name": "advisory_evidence_map.md",
+            "sha256": "bbe46e0cbac5b96703096dbf49af2455941599399db80acc57bc3a807e8157c6"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "e0b8fb6381f213d1556f0524aa00e58272d732f488a373434851481946a87147"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "2d83c74ee0fe955a9445b31dfe85ca644c381b8cd832d04e19c2c4b4df6839e0"
+          },
+          {
+            "name": "advisory_claim_register.json",
+            "sha256": "2847fa5e104a1d3be5197494646f66722997edb506eb914e63779c356f9bfd4b"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "e31749c8e5eb5a24a516bced4876ad081708f543cd981feac59e9ed11f328cc8"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_case_director_kit_updates_actual_case_and_preserves_workpaper_history[practice-de]",
+        "result_review": "The same case imports the vehicle update, replaces the initial conclusion with a transport-first assessment and retains both the old source receipts and workpaper bytes. The current conclusion links all three source receipts, while the prior claim is superseded rather than used as a still-current premise. All current and archived document links resolve; no contact, reservation or spending is performed.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_workpaper.md",
+            "sha256": "2a36e0556620037c7f511d2929d82f5731584d8abbf44fb01cd17929873ee050"
+          },
+          {
+            "name": "advisory_evidence_map.md",
+            "sha256": "05111617ea669f93a428721c0c8a7ad92a4f0a9e368d8e9ebd6e2567a7213d8e"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "965387fa66c3f7f869a4be98c48a089aea4dfc20931f944e6349267b15491cf8"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "0e2e494bf1ccc7e10ba280b42cbacc64d569c3d064eb18296bfb8b75a70d8607"
+          },
+          {
+            "name": "advisory_claim_register.json",
+            "sha256": "c737a05f0aa0b6a76be84630f314a28ff1f6e446f68cc975889c4a40a3011c90"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "735a2f3ddc73457dad463a79ed1d6fd03783f7c489d4e79d38f119a1b911822a"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain lesson title introduces developing and resuming one advisory case. The learner starts with a natural request, watches the actual local case be created, reads the current recommendation, follows one conclusion to its sources and supplies an update. The focus is the complete usable workflow, not a technical feature demonstration.",
+        "inputs_and_request": "Read all five localized assignment, customer/operating-note and vehicle-update sets. Ciclo Arco compares a small appointment-based collection pilot with immediate daily service. Anna and Carla express conditional interest, Bruno prefers self-delivery, nobody has booked or accepted a price, Wednesday vehicle availability is limited and there is no dedicated daily driver. The assignment excludes external research, contact, spending and an invented forecast.",
+        "execution_and_checkpoints": "Ten distinct native demonstrations and practices create actual cases, retain exact selected files, record authored source observations and reasoning, and commit the working document. The checkpoint follows a conclusion to its retained file and asks what new evidence would change the advice. Fixed map labels are localized; support, limits, reliability, corroboration, implications and next questions are explicitly authored for the fictional notes. Mechanical checks do not certify the judgement.",
+        "deliverable_and_next_action": "Read the ten delivered workpapers and covering links, all localized review notes, and the five practice evidence maps containing both assessments and their support. Current workpapers are 108–142 words including source links and an explicit next question. They prioritize checking a limited trial and its conditions; the updated assessment resolves transport before scheduling. Actual documents, evidence maps, sources and preserved-history links resolve. No professional approval or implementation is claimed.",
+        "practice_and_repeat": "The practice adds the vehicle update to the same case. The latest note overrides Wednesday availability during the proposed trial; the neighbouring workshop has not agreed to a loan. The revised conclusion supersedes the earlier one and binds the assignment, original notes and update directly. Prior evidence and the original workpaper are preserved unchanged, with working links from the archived document. The learner is asked to explain the changed advice and can resume the case with new evidence.",
+        "language_and_pacing": "Language es. The whole outline and source set, current workpaper, authored evidence reasoning and review notes are in this language; fixed map navigation and statuses are also localized. Six planned stages total 390 seconds. The short workpaper and one selected source chain support a first-use lesson and practice within the intended range; actual elapsed time and learner understanding have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_case_director_kit_updates_actual_case_and_preserves_workpaper_history[demo-es]",
+        "result_review": "The actual case retains the assignment and original notes, records a conditional comparison and its source limitations, saves the current workpaper and identifies missing feasibility evidence. There is one active initial conclusion. The initial review contains no premature reference to the practice-only vehicle loan.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_workpaper.md",
+            "sha256": "c6258d656b59fdefa048eede8770072772c4297536dde17cda99df6c8c5f92d6"
+          },
+          {
+            "name": "advisory_evidence_map.md",
+            "sha256": "067fa7a8b51534fa25fd81958e3440ab9731c4326dc0ae461bb1e7bee917b2f2"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "80453a44ef9de2d301bfabce238837e2639f8442282660fbda89423a4cd8a1c5"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "64162dc165fde0c0b0b5e41c122496f47441652a1c02dac04fc85803b5df3935"
+          },
+          {
+            "name": "advisory_claim_register.json",
+            "sha256": "5616cb288462a5aa3b5467edb69285a8452253abc7e05e23475f54e2d2fef6a1"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "c39eba86431481145ac9852da5fd9828c553fd87296cd99ab245024d750d4a1c"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_case_director_kit_updates_actual_case_and_preserves_workpaper_history[practice-es]",
+        "result_review": "The same case imports the vehicle update, replaces the initial conclusion with a transport-first assessment and retains both the old source receipts and workpaper bytes. The current conclusion links all three source receipts, while the prior claim is superseded rather than used as a still-current premise. All current and archived document links resolve; no contact, reservation or spending is performed.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_workpaper.md",
+            "sha256": "5af60b4d03759f8b4b91eb3a654fab12c9ac07f8378f0d3aaa93900386cbd684"
+          },
+          {
+            "name": "advisory_evidence_map.md",
+            "sha256": "28538ef4ba004ebe5f12690e8ea64b50af6efd7276fa9e82be4ee2d6ae193005"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "95710c20d82367cb15511806c10f655680bea8460a0cf19ff574dfe2fbdeb2a4"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "7e89ec4a013d0f21d26b8591f1333321be490bb97925c5ac5c0c06e136c05b5a"
+          },
+          {
+            "name": "advisory_claim_register.json",
+            "sha256": "3eefe9bebb5155b8553d9f99e0e06935aceaffbd1b57c705e0d83d3995bc7459"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "17ee52e5edb756ce0798f52bfac14f04129b07e02a4c84a11ef67e0d317210cb"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.143336+00:00",
+    "previous_course_sha256": "e35fa59ed0d47864dd84cc9ec6f86680b3fe756bc0d82e3c8481d6704b25a2b1",
+    "source_snapshot": "/private/tmp/advisory-teaching-release-04/test_case_director_kit_updates1/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  }
+}

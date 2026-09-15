@@ -3,14 +3,17 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import re
 import subprocess
 import sys
 import types
 from pathlib import Path
+from urllib.parse import quote, unquote
 
 import pytest
 
 from tests.plugins._teaching_execution import execution_record
+from tests.plugins._teaching_release import record_native_check
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT / "plugins/vera/scripts"
@@ -477,9 +480,9 @@ def test_built_codex_and_local_work_load_the_same_profile_and_cowork_omits_featu
                 prefix + "skills/vera/references/local-onboarding.md"
                 in archive.namelist()
             )
-            script = tmp_path / surface / "local_onboarding.py"
-            script.parent.mkdir()
-            script.write_bytes(script_bytes)
+            installed = tmp_path / surface
+            archive.extractall(installed)
+            script = installed / prefix / "scripts/local_onboarding.py"
         result = subprocess.run(
             [sys.executable, str(script), "--state-root", str(store.root), "status"],
             cwd=script.parent,
@@ -691,9 +694,84 @@ def test_cli_preserves_unicode_profile_on_a_non_unicode_console(module, store):
     assert json.loads(store.path.read_text(encoding="utf-8"))["profile"] == multilingual
 
 
+def _archive_answer_capture(output, archive, opened, search, refresh, language, phase):
+    """Capture this fixture's host-authored chat answer after native retrieval."""
+    prose = json.loads(
+        (ROOT / "tests/fixtures/teaching_archive/search_answers.json").read_text(
+            encoding="utf-8"
+        )
+    )[language]
+    output.mkdir(parents=True)
+    by_name = {Path(row["relative_path"]).name: row for row in opened}
+    agreement = by_name[f"maintenance-{language}.md"]
+
+    def link(source):
+        target = quote(str(archive / source["relative_path"]), safe="/:")
+        return f"[{source['citation']}]({target})"
+
+    period_source = (
+        by_name[f"update-{language}.md"] if phase == "practice" else agreement
+    )
+    body = [
+        f"# {prose['title']}",
+        f"{prose['service']} {link(agreement)}",
+        f"{prose[phase + '_period']} {link(period_source)}",
+        f"{prose['contact']} {link(agreement)}",
+        f"## {prose['source_title']}",
+    ]
+    # Passage selection belongs to this tiny, fully reviewed fictional case.
+    # It is not a production relevance selector or answer generator.
+    for name, lines in [
+        (f"maintenance-{language}.md", (3, 4)),
+        (f"update-{language}.md", (1,)),
+    ]:
+        if name not in by_name:
+            continue
+        source = by_name[name]
+        assert source["source_verified"] is True
+        content = "\n".join(part["text"] for part in source["fragments"])
+        parts = content.splitlines()
+        body.append(link(source))
+        body.append("\n>\n".join(f"> {parts[index]}" for index in lines))
+    body.extend(
+        [
+            f"## {prose['scope_title']}",
+            prose["scope"],
+            f"{prose['refresh_label']}: {refresh['last_refresh_at']}",
+            prose["limits"],
+            prose["next"],
+            f"[{prose['trail']}](search_evidence.json)",
+        ]
+    )
+    if phase == "practice":
+        body.append(f"[{prose['prior']}](../demo/answer.md)")
+    evidence = {
+        "schema": "mparanza.teaching_archive_capture.v1",
+        "scope": "Ciclo Arco",
+        "query": "Tecnica Esempio",
+        "phase": phase,
+        "refresh": refresh,
+        "search": search,
+        "opened": opened,
+        "interpretation": "Host-authored fictional regression answer; not a shipped answer template.",
+    }
+    (output / "search_evidence.json").write_text(
+        json.dumps(evidence, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    document = output / "answer.md"
+    document.write_text("\n\n".join(body) + "\n", encoding="utf-8")
+    targets = re.findall(r"\]\(([^)]+)\)", document.read_text(encoding="utf-8"))
+    assert all((output / unquote(target)).is_file() for target in targets)
+    assert "Delta" not in document.read_text(encoding="utf-8")
+    assert not search["scan_issues"]
+    assert not search["document_issues"]
+    return document
+
+
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+@pytest.mark.parametrize("phase", ["demo", "practice"])
 def test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy(
-    store, module, tmp_path, monkeypatch, language
+    store, module, tmp_path, monkeypatch, record_property, language, phase
 ):
     import shutil
 
@@ -759,7 +837,7 @@ def test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy(
         for item in status["scopes"]
         if item["display_name"] == "Ciclo Arco"
     )
-    archive_core.refresh_archive(state_dir=state_dir)
+    initial_refresh = archive_core.refresh_archive(state_dir=state_dir)
     initial = archive_core.search_archive(
         "Tecnica Esempio", scope_id=scope, state_dir=state_dir
     )
@@ -769,6 +847,23 @@ def test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy(
     )
     assert opened["source_verified"] is True
     assert "Ciclo Arco" in opened["relative_path"]
+    output = tmp_path / "chat-capture"
+    _archive_answer_capture(
+        output / "demo", archive, [opened], initial, initial_refresh, language, "demo"
+    )
+    preserved = {path: path.read_bytes() for path in (output / "demo").iterdir()}
+    if phase == "demo":
+        assert {str(path): path.read_bytes() for path in sources} == original_bytes
+        record_property("teaching_output", str(output / "demo"))
+        record_native_check(
+            record_property,
+            root=ROOT,
+            product="vera",
+            workflow="studio-archive",
+            language=language,
+            phase=phase,
+        )
+        return
     update = next(
         Path(path)
         for path in kit["practice_files"]
@@ -776,7 +871,7 @@ def test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy(
     )
     store.worker("native-worker", "studio-archive", token)
     shutil.copyfile(update, archive / "Ciclo Arco" / update.name)
-    archive_core.refresh_archive(state_dir=state_dir)
+    practice_refresh = archive_core.refresh_archive(state_dir=state_dir)
     refreshed = archive_core.search_archive(
         "Tecnica Esempio", scope_id=scope, state_dir=state_dir
     )
@@ -788,19 +883,356 @@ def test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy(
     assert all(row["source_verified"] for row in verified)
     assert all("Ciclo Arco" in row["relative_path"] for row in verified)
     assert any("2027" in json.dumps(row["fragments"]) for row in verified)
+    _archive_answer_capture(
+        output / "practice",
+        archive,
+        verified,
+        refreshed,
+        practice_refresh,
+        language,
+        phase,
+    )
+    assert all(path.read_bytes() == before for path, before in preserved.items())
+    assert (archive / "Ciclo Arco" / f"maintenance-{language}.md").read_bytes() == (
+        next(path for path in sources if path.parent.name == "Ciclo Arco")
+    ).read_bytes()
     assert {str(path): path.read_bytes() for path in sources} == original_bytes
     assert not (tmp_path / "studio-archive").exists()
+    record_property("teaching_output", str(output / "practice"))
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="studio-archive",
+        language=language,
+        phase=phase,
+    )
+
+
+def _organization_mcp_review(context_path, payload, decisions, output):
+    from tests.plugins.test_archive_organization_plugin import (
+        _node_executable,
+        _rpc_call,
+    )
+
+    process = subprocess.Popen(
+        [_node_executable(), str(ROOT / "plugins/archive-organization/mcp/server.cjs")],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        env={**os.environ, "VIRTUAL_ENV": str(Path(sys.executable).parent.parent)},
+    )
+    try:
+        validated = _rpc_call(
+            process,
+            1,
+            "validate_archive_organization_review",
+            {
+                "client_engagement": str(context_path),
+                "review_payload": payload,
+            },
+        )
+        assert not validated.get("isError"), validated
+        reference = validated["structuredContent"]["review_reference"]["reference"]
+        rendered = _rpc_call(
+            process,
+            2,
+            "render_archive_organization_review",
+            {
+                "review_reference": reference,
+            },
+        )
+        assert rendered["structuredContent"]["review_payload"] == payload
+        widget_run = subprocess.run(
+            [
+                _node_executable(),
+                str(ROOT / "tests/fixtures/teaching_archive/review_widget.cjs"),
+            ],
+            input=json.dumps(
+                {
+                    "widget": str(
+                        ROOT
+                        / "plugins/archive-organization/assets/archive-organization-review-widget.html"
+                    ),
+                    "payload": rendered["structuredContent"],
+                    "decisions": decisions,
+                }
+            ),
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        assert widget_run.returncode == 0, widget_run.stdout + widget_run.stderr
+        widget = json.loads(widget_run.stdout)
+        assert widget["language"] == payload["language"]
+        assert widget["missingReviewer"] and widget["unsafeReviewer"]
+        assert widget["save"]["review_reference"] == reference
+        assert widget["save"]["decisions"] == widget["apply"]["decisions"]
+        assert "review_payload" not in widget["save"]
+        (output / "widget_execution.json").write_text(
+            json.dumps(widget, ensure_ascii=False), encoding="utf-8"
+        )
+        saved = _rpc_call(
+            process, 3, "save_archive_organization_decisions", widget["save"]
+        )
+        assert saved["structuredContent"]["status"] == "reviewed", saved
+        approved = _rpc_call(
+            process, 4, "apply_archive_organization_decisions", widget["apply"]
+        )
+        assert approved["structuredContent"]["status"] == "ready_to_apply", approved
+        assert (
+            approved["structuredContent"][
+                "execution_requires_separate_explicit_approval"
+            ]
+            is True
+        )
+        (output / "review_execution.json").write_text(
+            json.dumps(
+                {
+                    "synthetic_regression_reviewer": True,
+                    "native_widget_visually_verified": False,
+                    "validated": validated,
+                    "rendered": rendered,
+                    "saved": saved,
+                    "approved": approved,
+                },
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+    finally:
+        process.terminate()
+        process.wait(timeout=10)
+
+
+def _run_organization_teaching_case(
+    store, tmp_path, monkeypatch, language, kit, kit_root, started, phase, previous=None
+):
+    from tests.plugins.test_teaching_kit_execution import _complete_teaching_case
+
+    dataset = "source_files" if phase == "demo" else "practice_files"
+    expected_count = 3 if phase == "demo" else 4
+    words = json.loads(
+        (ROOT / "tests/fixtures/teaching_archive/organization.json").read_text()
+    )[language]
+    sources = [Path(path) for path in kit[dataset]]
+    source_root = kit_root / (
+        "files/input/client" if dataset == "source_files" else "files/practice/client"
+    )
+    original = {
+        path.relative_to(source_root).as_posix(): path.read_bytes() for path in sources
+    }
+    adapter = load("local_onboarding_case")
+    # Execute only the explicitly marked fictional local teaching copy.
+    run = adapter.prepare_case(
+        store,
+        thread_id="native-worker",
+        workflow="archive-organization",
+        token=started["lessons"][0]["worker_token"],
+        sources=sources,
+        source_root=source_root,
+        phase=phase,
+    )
+    case = Path(run["client_root"])
+    context_path = Path(run["context_path"])
+    context = run["context"]
+    output = Path(run["output_dir"])
+    assert len(context["input_bindings"]) == 1
+    snapshot = json.loads(Path(context["input_bindings"][0]["path"]).read_text())
+    assert snapshot["file_count"] == expected_count
+    assert all(
+        not row["relative_path"].startswith("Vera/") for row in snapshot["files"]
+    )
+    assert Path(run["tutorial_case_path"]).parent == case / "Vera"
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/studio-archive/scripts"))
+    import archive_core
+
+    state_dir = tmp_path / "organization-index"
+    archive_core.configure_archive(case.parent, state_dir=state_dir)
+    snapshot_id = context["input_bindings"][0]["binding_id"]
+    inventory = archive_core.get_studio_archive_organization_inventory(
+        context["client_id"], context["engagement_id"], snapshot_id, state_dir=state_dir
+    )["model_inventory"]
+    proposals = []
+    meanings = {
+        f"maintenance-{language}.md": (
+            "contratti",
+            "accordo-manutenzione",
+            None,
+            words["agreement"],
+        ),
+        f"maintenance-copy-{language}.md": (
+            "contratti",
+            "accordo-manutenzione",
+            None,
+            words["copy"],
+        ),
+        f"meeting-{language}.md": (
+            "documenti-societari",
+            "verbale-interno",
+            "2026-03-10",
+            words["meeting"],
+        ),
+        f"update-{language}.md": (
+            "contratti",
+            "aggiornamento-accordo",
+            "2026-12-15",
+            words["update"],
+        ),
+    }
+    for item in inventory["files"]:
+        evidence = archive_core.open_studio_archive_organization_item(
+            context["client_id"],
+            context["engagement_id"],
+            snapshot_id,
+            item["item_ref"],
+            state_dir=state_dir,
+        )
+        assert evidence["source_identity_revalidated"] is True
+        assert evidence["google_drive_api_called"] is False
+        # Explicit model-authored meanings of these exact fictional documents;
+        # this lookup is not a runtime filename classification rule.
+        category, doc_type, doc_date, reason = meanings[item["name"]]
+        proposals.append(
+            {
+                "item_ref": item["item_ref"],
+                "category_id": category,
+                "document_type": doc_type,
+                "document_date": doc_date,
+                "entity": "Ciclo-Arco",
+                "reference": None,
+                "practice": None,
+                "confidence": "high",
+                "reason": reason,
+                "probable_duplicate_of": None,
+                "anomalies": [],
+            }
+        )
+    proposed = output / "semantic-proposals-input.json"
+    proposed.write_text(
+        json.dumps(
+            {
+                "schema_version": "vera.archive_organization_model_proposals.v1",
+                "inventory_ref": inventory["inventory_ref"],
+                "proposals": proposals,
+            }
+        ),
+        encoding="utf-8",
+    )
+    spec = importlib.util.spec_from_file_location(
+        "kit_archive_organizer",
+        ROOT / "plugins/archive-organization/scripts/archive_organization.py",
+    )
+    organizer = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = organizer
+    spec.loader.exec_module(organizer)
+    review = organizer.build_review_package(context_path, proposed, language=language)
+    assert review["source_archive_mutated"] is False
+    assert {
+        relative: (case / relative).read_bytes() for relative in original
+    } == original
+    payload = json.loads(Path(review["review_payload_path"]).read_text())
+    assert payload["language"] == language
+    assert json.loads((output / "run_intake.json").read_text())["language"] == language
+    edited_target = (
+        "Documenti societari/2026/Riunioni/2026-03-10_verbale-interno_Ciclo-Arco.md"
+    )
+    decisions = []
+    for item in payload["items"]:
+        decision = {"item_id": item["id"], "action": "accept"}
+        if item["source_path"] == f"Download/meeting-{language}.md":
+            decision.update(
+                action="edit", edit_value=edited_target, reviewer_note=words["edit"]
+            )
+        decisions.append(decision)
+    # Actual current MCP validation, rendering payload and persistent decisions.
+    # The reviewer is a regression fixture, not a real learner or permission.
+    _organization_mcp_review(context_path, payload, decisions, output)
+    approved = {"approved_plan_path": str(output / "approved_plan.json")}
+    assert {
+        relative: (case / relative).read_bytes() for relative in original
+    } == original
+    with pytest.raises(
+        organizer.ArchiveOrganizationError, match="Explicit apply approval"
+    ):
+        organizer.apply_approved_plan(
+            context_path, Path(approved["approved_plan_path"]), explicit_approval=False
+        )
+    applied = organizer.apply_approved_plan(
+        context_path, Path(approved["approved_plan_path"]), explicit_approval=True
+    )
+    assert applied["applied_count"] == expected_count
+    quarantine = list((case / "Da_verificare/Duplicati_esatti").rglob("*.md"))
+    assert len(quarantine) == 1
+    assert (
+        quarantine[0].read_bytes()
+        == original[f"Download/maintenance-copy-{language}.md"]
+    )
+    approved_plan = json.loads((output / "approved_plan.json").read_text())
+    assert (case / f"Contratti/maintenance-{language}.md").read_bytes() == original[
+        f"Da archiviare/maintenance-{language}.md"
+    ]
+    for item in approved_plan["items"]:
+        source = item["source_relative_path"]
+        target = case / item["approved_target_relative_path"]
+        assert target.read_bytes() == original[source]
+        assert not (case / source).exists()
+    assert (case / edited_target).read_bytes() == original[
+        f"Download/meeting-{language}.md"
+    ]
+    if phase == "practice":
+        update = case / "Contratti/2026/2026-12-15_aggiornamento-accordo_Ciclo-Arco.md"
+        assert update.read_bytes() == original[f"Download/update-{language}.md"]
+    assert {
+        path.relative_to(source_root).as_posix(): path.read_bytes() for path in sources
+    } == original
+    note = words["result"] + "\n\n"
+    if phase == "practice":
+        note += words["practice"] + "\n\n"
+    note += words["repeat"] + "\n\n" + words["review"] + "\n"
+    (output / "codex_run_review.md").write_text(note, encoding="utf-8")
+    card = (
+        f"# {words['title']}\n\n{note}\n"
+        f"[{words['folder']}](<{case}>)\n\n"
+        f"[{words['journal']}](<{output / 'apply_journal.json'}>)\n\n"
+        f"[{words['review_link']}](<{output / 'review_handoff.md'}>)\n"
+    )
+    if previous is not None:
+        card += f"\n[{words['previous']}](<{previous / 'artifact_card.md'}>)\n"
+    (output / "artifact_card.md").write_text(card, encoding="utf-8")
+    _complete_teaching_case(run, case)
+    change(
+        store,
+        phase,
+        workflow_id="archive-organization",
+        artifacts=[
+            str(
+                (output / "artifact_card.md").relative_to(
+                    store.lesson_root(started["lessons"][0])
+                )
+            )
+        ],
+        execution_record=execution_record(
+            store,
+            phase,
+            output / "artifact_card.md",
+            "archive-organization",
+            inputs=[Path(context["input_bindings"][0]["path"])],
+            native=[output / "archive_plan.json", output / "apply_journal.json"],
+        ),
+        prompt="Execute the prepared fictional archive lesson",
+        review="Native regression evidence; learner approval and comprehension unverified",
+    )
+    return run
 
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
-@pytest.mark.parametrize(
-    "dataset,expected_count", [("source_files", 3), ("practice_files", 4)]
-)
-def test_organization_kit_runs_real_snapshot_review_apply_and_rollback(
-    store, module, tmp_path, monkeypatch, language, dataset, expected_count
+@pytest.mark.parametrize("phase", ["demo", "practice"])
+def test_organization_kit_keeps_result_and_runs_reviewed_practice_copy(
+    store, module, tmp_path, monkeypatch, record_property, language, phase
 ):
-    import hashlib
-
     monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
     from courseware.library import CourseLibrary
 
@@ -838,164 +1270,37 @@ def test_organization_kit_runs_real_snapshot_review_apply_and_rollback(
     kit = CourseLibrary(ROOT / "plugins/vera", {"archive-organization"}).render(
         "archive-organization", language, kit_root
     )
-    sources = [Path(path) for path in kit[dataset]]
-    source_root = kit_root / (
-        "files/input/client" if dataset == "source_files" else "files/practice/client"
+    demo = _run_organization_teaching_case(
+        store, tmp_path, monkeypatch, language, kit, kit_root, started, "demo"
     )
-    original = {
-        path.relative_to(source_root).as_posix(): path.read_bytes() for path in sources
-    }
-    adapter = load("local_onboarding_case")
-    # Independent compatibility runs for both input sets; this does not record
-    # learner demonstration, practice, understanding or professional approval.
-    run = adapter.prepare_case(
-        store,
-        thread_id="native-worker",
+    run = demo
+    if phase == "practice":
+        demo_root = Path(demo["client_root"])
+        prior = {
+            path: path.read_bytes() for path in demo_root.rglob("*") if path.is_file()
+        }
+        run = _run_organization_teaching_case(
+            store,
+            tmp_path,
+            monkeypatch,
+            language,
+            kit,
+            kit_root,
+            started,
+            "practice",
+            Path(demo["output_dir"]),
+        )
+        assert run["client_root"] != demo["client_root"]
+        assert {path: path.read_bytes() for path in prior} == prior
+    record_property("teaching_output", run["output_dir"])
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
         workflow="archive-organization",
-        token=started["lessons"][0]["worker_token"],
-        sources=sources,
-        source_root=source_root,
-        phase="demo",
+        language=language,
+        phase=phase,
     )
-    case = Path(run["client_root"])
-    context_path = Path(run["context_path"])
-    context = run["context"]
-    assert len(context["input_bindings"]) == 1
-    snapshot = json.loads(Path(context["input_bindings"][0]["path"]).read_text())
-    assert snapshot["file_count"] == expected_count
-    assert all(
-        not row["relative_path"].startswith("Vera/") for row in snapshot["files"]
-    )
-    assert Path(run["tutorial_case_path"]).parent == case / "Vera"
-    monkeypatch.syspath_prepend(str(ROOT / "plugins/studio-archive/scripts"))
-    import archive_core
-
-    state_dir = tmp_path / "organization-index"
-    archive_core.configure_archive(case.parent, state_dir=state_dir)
-    snapshot_id = context["input_bindings"][0]["binding_id"]
-    inventory = archive_core.get_studio_archive_organization_inventory(
-        context["client_id"], context["engagement_id"], snapshot_id, state_dir=state_dir
-    )["model_inventory"]
-    proposals = []
-    meanings = {
-        f"maintenance-{language}.md": (
-            "contratti",
-            "accordo-manutenzione",
-            None,
-            "The supplied agreement describes this client’s monthly maintenance service.",
-        ),
-        f"maintenance-copy-{language}.md": (
-            "contratti",
-            "accordo-manutenzione",
-            None,
-            "This is the same maintenance agreement; exact duplication is determined by the source snapshot.",
-        ),
-        f"meeting-{language}.md": (
-            "documenti-societari",
-            "verbale-interno",
-            "2026-03-10",
-            "The internal dated meeting note names this client and an administrative contact.",
-        ),
-        f"update-{language}.md": (
-            "contratti",
-            "aggiornamento-accordo",
-            "2026-12-15",
-            "The supplied dated update extends the same maintenance agreement.",
-        ),
-    }
-    for item in inventory["files"]:
-        evidence = archive_core.open_studio_archive_organization_item(
-            context["client_id"],
-            context["engagement_id"],
-            snapshot_id,
-            item["item_ref"],
-            state_dir=state_dir,
-        )
-        assert evidence["source_identity_revalidated"] is True
-        assert evidence["google_drive_api_called"] is False
-        # Explicit model-authored meanings of these exact fictional documents;
-        # this lookup is not a runtime filename classification rule.
-        category, doc_type, doc_date, reason = meanings[item["name"]]
-        proposals.append(
-            {
-                "item_ref": item["item_ref"],
-                "category_id": category,
-                "document_type": doc_type,
-                "document_date": doc_date,
-                "entity": "Ciclo-Arco",
-                "reference": None,
-                "practice": None,
-                "confidence": "high",
-                "reason": reason,
-                "probable_duplicate_of": None,
-                "anomalies": [],
-            }
-        )
-    proposed = tmp_path / "semantic-proposals.json"
-    proposed.write_text(
-        json.dumps(
-            {
-                "schema_version": "vera.archive_organization_model_proposals.v1",
-                "inventory_ref": inventory["inventory_ref"],
-                "proposals": proposals,
-            }
-        ),
-        encoding="utf-8",
-    )
-    spec = importlib.util.spec_from_file_location(
-        "kit_archive_organizer",
-        ROOT / "plugins/archive-organization/scripts/archive_organization.py",
-    )
-    organizer = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = organizer
-    spec.loader.exec_module(organizer)
-    review = organizer.build_review_package(context_path, proposed)
-    assert review["source_archive_mutated"] is False
-    assert {
-        relative: (case / relative).read_bytes() for relative in original
-    } == original
-    payload = json.loads(Path(review["review_payload_path"]).read_text())
-    decisions_path = tmp_path / "fixture-decisions.json"
-    decisions_path.write_text(
-        json.dumps(
-            {
-                "reviewer": "fictional-regression-reviewer",
-                "decision_source": "pytest",
-                "decisions": [
-                    {"item_id": item["id"], "action": "accept"}
-                    for item in payload["items"]
-                ],
-            }
-        ),
-        encoding="utf-8",
-    )
-    saved = organizer.persist_review_decisions(context_path, decisions_path)
-    approved = organizer.compile_approved_plan(
-        context_path, Path(saved["ui_decisions_path"])
-    )
-    with pytest.raises(
-        organizer.ArchiveOrganizationError, match="Explicit apply approval"
-    ):
-        organizer.apply_approved_plan(
-            context_path, Path(approved["approved_plan_path"]), explicit_approval=False
-        )
-    applied = organizer.apply_approved_plan(
-        context_path, Path(approved["approved_plan_path"]), explicit_approval=True
-    )
-    assert applied["applied_count"] == expected_count
-    quarantine = list((case / "Da_verificare/Duplicati_esatti").rglob("*.md"))
-    assert len(quarantine) == 1
-    assert (
-        quarantine[0].read_bytes()
-        == original[f"Download/maintenance-copy-{language}.md"]
-    )
-    assert organizer.rollback_applied_plan(context_path)["status"] == "rolled_back"
-    assert {
-        relative: (case / relative).read_bytes() for relative in original
-    } == original
-    assert {
-        path.relative_to(source_root).as_posix(): path.read_bytes() for path in sources
-    } == original
 
 
 def test_website_teaching_prepares_private_project_for_current_specialist(
@@ -1067,8 +1372,9 @@ def test_sampling_teaching_binds_one_journal_and_separate_context_note(
 
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+@pytest.mark.parametrize("phase", ["demo", "practice"])
 def test_vouching_kit_runs_live_sample_handoff_and_current_checks(
-    store, module, tmp_path, monkeypatch, language
+    store, module, tmp_path, monkeypatch, record_property, language, phase
 ):
     import csv
     import mimetypes
@@ -1118,17 +1424,18 @@ def test_vouching_kit_runs_live_sample_handoff_and_current_checks(
             phase="demo",
         )
     first_result = None
-    for phase, size, selected in (
+    exercises = (
         ("demo", 2, kit["source_files"]),
         ("practice", 3, kit["practice_files"]),
-    ):
+    )
+    for active_phase, size, selected in exercises[: 1 if phase == "demo" else 2]:
         prepared = adapter.prepare_case(
             store,
             thread_id="worker",
             workflow="vouching",
             token=token,
             sources=[Path(p) for p in selected],
-            phase=phase,
+            phase=active_phase,
         )
         assert prepared["prerequisite_workflow"] == "journal-sampling"
         assert prepared["run"]["workflow_id"] == "journal-sampling"
@@ -1240,6 +1547,12 @@ def test_vouching_kit_runs_live_sample_handoff_and_current_checks(
         )
         assert (check_output / "checks/check_results.xlsx").is_file()
         assert (check_output / "checks/review_notes.md").is_file()
+        notes = (check_output / "checks/review_notes.md").read_text(encoding="utf-8")
+        for row in checked:
+            assert f"{row['movement_number']} / {row['line_number']}" in notes
+            assert f"{row['source_file']}, {row['source_row']}" in notes
+            assert Path(row["matched_support"]).name in notes
+            assert row["review_notes"] in notes
         audit = json.loads((check_output / "checks/check_audit.json").read_text())
         assert audit["invoice_count"] == 3
         assert audit["invoice_error_count"] == 0
@@ -1274,12 +1587,12 @@ def test_vouching_kit_runs_live_sample_handoff_and_current_checks(
         # Persist actual generated evidence, without claiming learner approval.
         change(
             store,
-            phase,
+            active_phase,
             workflow_id="vouching",
             artifacts=[str(result_path.relative_to(store.root / "lessons/vouching"))],
             execution_record=execution_record(
                 store,
-                phase,
+                active_phase,
                 result_path,
                 "vouching",
                 inputs=[Path(item["path"]) for item in check_context["input_bindings"]],
@@ -1288,3 +1601,11 @@ def test_vouching_kit_runs_live_sample_handoff_and_current_checks(
             prompt="Run the prepared fictional document check",
             review="Mechanical regression evidence only; native learner review unverified",
         )
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="vouching",
+        language=language,
+        phase=phase,
+    )

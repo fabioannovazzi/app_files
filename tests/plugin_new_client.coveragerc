@@ -1,0 +1,7 @@
+[run]
+include = */plugins/new-client/scripts/*.py
+patch = subprocess
+
+[report]
+fail_under = 80
+show_missing = True

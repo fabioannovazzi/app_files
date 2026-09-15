@@ -9,7 +9,7 @@
     "steps": [
       "Im Arbeitsfenster eröffnet Vera den Fall und registriert die Unterlagen. Im Sprachchat erklärt sie Auftrag, Quellen und Ergebnis. Prüfen Sie, welche Dokumente das Übungsszenario regeln und welche das Unternehmen beschreiben.",
       "Vera schlägt Anforderungen und Faktenabgleiche vor, prüft die Kosten und erstellt Dokumentenliste und Entwurf. Verfolgen Sie einen Punkt von der Quelle zum Vorschlag und führen Sie die vorgesehenen Prüfentscheidungen durch.",
-      "Öffnen Sie Dossier und Prüfungen. Betrachten Sie vorgeschlagenes Ergebnis, fehlende Unterlagen, Kosten und nächste Schritte. Vera erklärt die weitere Prüfung und Antragsvorbereitung; diese Übung nutzt kein Portal und versendet nichts."
+      "Öffnen Sie review_dossier.html: Beginnen Sie mit der Zusammenfassung und prüfen Sie anschließend Kosten, Unterlagen und Projektentwurf. Klappen Sie eine Bedingung auf, um Bewertung und Quellenauszug zu lesen. Vera erklärt die noch erforderlichen Prüfungen und nächsten Schritte; die Übung nutzt kein Portal und sendet nichts."
     ],
     "deliverables": [
       "Lokales Dossier mit Anforderungen, Belegen, vorgeschlagenen Bewertungen, Kosten, Unterlagen und Entwurf.",

@@ -4,12 +4,12 @@
     "goal": "Imparare ad avviare la revisione di una proposta e di un piano, fornire i documenti e usare il dossier prodotto per il lavoro professionale.",
     "scenario": "Officina Riva ha preparato una prima bozza per proseguire l’attività e pagare i creditori. Il professionista deve capire che cosa contiene, quali ipotesi richiedono verifica e quali documenti mancano.",
     "scope": "Una prima revisione completa nel suo percorso: incarico, fonti, quadro della procedura, creditori, proposta, piano, questioni aperte e relazione. Il caso piccolo serve a imparare il workflow, non a esaurire la disciplina del concordato.",
-    "inputs": "Apri demo-it.xlsx: Caso spiega la richiesta e lo stato della bozza, Creditori contiene le posizioni dichiarate e Piano i flussi annuali ipotizzati. Nella lezione sono tutte fonti fittizie da esaminare, non conclusioni già approvate.",
-    "request": "Vera, rivedi la proposta e il piano di concordato di Officina Riva contenuti in questo file. Prepara il dossier di revisione, con trattamento dei creditori, fonti e impieghi, liquidità, documenti mancanti e questioni da chiarire.",
+    "inputs": "Apri demo-it.xlsx e management-demo-it.pdf. Excel presenta incarico, creditori e piano annuale; le due pagine della direzione aggiungono posizioni dichiarate, stima di liquidazione e calendario trimestrale. Sono fonti fittizie da esaminare, non conclusioni approvate.",
+    "request": "Vera, rivedi la proposta e il piano di concordato preventivo di Officina Riva in questi due file. Prepara un dossier con trattamento dei creditori, fonti e impieghi, liquidità, documenti mancanti e questioni da risolvere.",
     "steps": [
-      "Nel thread di lavoro Vera legge il file e riassume incarico, data, fase e documenti disponibili. Nella chat vocale spiega il percorso e ti chiede di confermare o correggere il perimetro.",
+      "Nel thread di lavoro Vera legge i file e riassume incarico, data, fase e documenti disponibili. Nella chat vocale spiega il percorso e ti chiede di confermare o correggere il perimetro.",
       "Vera ricostruisce il caso dalle fonti, verifica il quadro pertinente e prepara le valutazioni da rivedere. Passa in rassegna proposta, piano, creditori, confronto con liquidazione, cassa e lacune. Tu rivedi le interpretazioni e le ipotesi prima della conferma richiesta dal workflow.",
-      "Il workflow corrente produce i prospetti e il dossier effettivi. Apri prima la relazione, poi il foglio di lavoro: collega una questione alla fonte, osserva i dati che la sostengono e individua l’azione utile. La voce spiega solo ciò che è stato realmente prodotto."
+      "Il workflow corrente produce i prospetti e i documenti reali. Apri il riepilogo e poi Excel: individua cosa ricevono i creditori, come è distribuita la cassa e quali documenti servono. Segui una questione fino alla pagina o cella di origine e scegli la prossima azione. Nella chat vocale Vera spiega i risultati effettivi e risponde alle domande senza leggere tutto il rapporto."
     ],
     "deliverables": [
       "Relazione Word e riepilogo leggibile della revisione, con limiti e questioni aperte.",
@@ -20,7 +20,7 @@
       "Prima di procedere, spiega quale lavoro stai chiedendo a Vera e quali file stai fornendo.",
       "Nel dossier, trova la sintesi, una questione da rivedere e il documento o chiarimento necessario per affrontarla."
     ],
-    "practice": "Avvia una nuova revisione con practice-it.xlsx, che aggiorna l’ipotesi di nuova finanza. Conserva il primo dossier. Chiedi a Vera di riesaminare il caso e spiega quali risultati e azioni cambiano; non limitarti a sostituire un numero nella vecchia relazione.",
+    "practice": "Nella stessa pratica, avvia una nuova revisione con practice-it.xlsx e management-practice-it.pdf: la direzione ha ridotto la nuova finanza ipotizzata. Conserva intatti il primo dossier e le sue fonti. Chiedi a Vera di riesaminare il caso e spiegare quali risultati e azioni cambiano; non basta sostituire un numero nel rapporto precedente.",
     "success": "Sai avviare il workflow, rivedere il perimetro e le interpretazioni, orientarti nei risultati e ripetere il lavoro con una versione aggiornata.",
     "repeat": "Fornisci a Vera proposta, piano, elenco creditori, attestazione e supporti disponibili, indicando fase, data e obiettivo della revisione. Conferma il perimetro, rivedi le fonti e usa il dossier nel normale percorso professionale."
   }

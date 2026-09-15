@@ -64,7 +64,7 @@ as ordinary informational-site content.
 ## 6. Review exact bytes
 
 Run mechanical validation, then inspect the rendered site at desktop and phone
-widths. Preserve a full-page PNG whose pixel width matches each claimed viewport
+widths. Preserve a full-page PNG or JPEG whose pixel width matches each claimed viewport
 and bind its path and hash to the assessment. Review identity and claims,
 responsive behavior and destination separately. Bind every decision to the
 current evidence, brief, site, validation and quality-assessment digests; any
@@ -82,4 +82,4 @@ When Sites is selected, also bind the exact Vera package to the Sites source
 commit, deployment archive, saved version and succeeded deployment. The archive
 must contain both the current Vera binding and a re-verifiable ZIP of the exact
 approved site files. Treat the deployed URL as proof only after desktop and
-phone PNG evidence covers that exact succeeded deployment.
+phone PNG or JPEG evidence covers that exact succeeded deployment.

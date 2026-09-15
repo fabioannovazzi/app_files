@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "dati-fiscali-strutturati",
-  "course_sha256": "a5534f67f58c47307fb4c6c2ed3e7f16208868b50ca1d54f3dc6119294413104",
+  "course_sha256": "085236dff7ed6b57cd32c8d7469b920de67ba7300f32474e363f022be3b92fdd",
   "reviewer": "Codex: first-use teaching-kit editorial and native-output review",
-  "reviewed_at": "2026-09-14T13:57:46.268007+00:00",
+  "reviewed_at": "2026-09-14T16:28:02.654435+00:00",
   "review_scope": "Prepared lesson, fictional sources, actual native extraction outputs and closed local execution records. This does not approve a professional case or establish human learner, native voice or two-window acceptance.",
   "languages": {
     "it": {
@@ -23,8 +23,10 @@
         "reviewed_artifacts": [
           {
             "name": "08_dati_fiscali_strutturati.md",
-            "sha256": "09a1b4540f5a8afd75cbf042c5ae47c5c81defa1f4671e67fd20a27b3ee3a0ec"
-          },
+            "sha256": "5a75cd64958383e1d1c3a2f30a3c7dc87d60ce4df2a2a305e5f5b1248dc21dd4"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
           {
             "name": "structured_fiscal_fields.csv",
             "sha256": "4d4d209faed0acd87c6f734fc3e4a3fb97c9884200861ec613d4a76799fb0182"
@@ -45,8 +47,10 @@
         "reviewed_artifacts": [
           {
             "name": "08_dati_fiscali_strutturati.md",
-            "sha256": "798c1606629539b9f0023db53dffa8988ca5ecd0fbd0ebcb10b0d4cffb894240"
-          },
+            "sha256": "7023d727574a11519c947d2e0ad56be0c87b7c5c095e3ad214caca81a71694a6"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
           {
             "name": "structured_fiscal_fields.csv",
             "sha256": "ce08afbb838b5d631ebc0785335b9bb9004c3dc5aa070dfa4cf501c709b5cfd6"
@@ -78,8 +82,10 @@
         "reviewed_artifacts": [
           {
             "name": "08_dati_fiscali_strutturati.md",
-            "sha256": "eb7ad2690871eaa145dcd977702ffc904c65163b92325b825435ec17e74ffab1"
-          },
+            "sha256": "321a318a2646467c564b90c90556a5920e3aceb3806dfb840482b02fbc72eabe"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
           {
             "name": "structured_fiscal_fields.csv",
             "sha256": "bc5657e1bc69a0be410d4a3d7a8ec6533f77ba47a626203cf2cefdc778f4bbc7"
@@ -100,8 +106,10 @@
         "reviewed_artifacts": [
           {
             "name": "08_dati_fiscali_strutturati.md",
-            "sha256": "584622adaa32d3241e8d02ceaa4133b3e7ac2b7ee08322cc6dc4405c0b3eba29"
-          },
+            "sha256": "e75c4721fe6e4987eb83406ae1f0594be9b5bd66de51bdc927fe6b38b88bc23e"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
           {
             "name": "structured_fiscal_fields.csv",
             "sha256": "8ec2afbafddf092d58f4633060ee048989a817deeaa08fe822dde4a55466c122"
@@ -133,8 +141,10 @@
         "reviewed_artifacts": [
           {
             "name": "08_dati_fiscali_strutturati.md",
-            "sha256": "1840cb3b520f91b93d3c42cb2a809c4038b238d9f927581a60510f70eec7be0d"
-          },
+            "sha256": "dde36514d2df1e319f05f5f4e6f4d24f4cf4a09c226984d30c602e80f31a1f5b"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
           {
             "name": "structured_fiscal_fields.csv",
             "sha256": "e4aca759cc575281c833f914dfc32c482520e21cb6ca7de915826a7299cd89c2"
@@ -155,8 +165,10 @@
         "reviewed_artifacts": [
           {
             "name": "08_dati_fiscali_strutturati.md",
-            "sha256": "8778b64669e0a7391dffa4b29ef7c39addf9e3d2e45faaefe809519418ca3270"
-          },
+            "sha256": "261558ff552fe01d6fc8fecebf87a8c9a7c9bef1edebb4445aa82726e00db4f9"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
           {
             "name": "structured_fiscal_fields.csv",
             "sha256": "e4149f6250084643cfcc5edb9478a1ae1912c03dd0c50b415036ab568d82c918"
@@ -188,8 +200,10 @@
         "reviewed_artifacts": [
           {
             "name": "08_dati_fiscali_strutturati.md",
-            "sha256": "24295b2544d2c0734d8a2e91fdf93dd739499fa1b824aea19d4d8264433555d4"
-          },
+            "sha256": "0f73f6c631c75cb871b4413458668b1d3ef15531d3205fde0e778c0300dc7cba"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
           {
             "name": "structured_fiscal_fields.csv",
             "sha256": "af6b888c13e71a95ce1e9c1b0a51f0e6bf02d81e352a1368c303c9fbbc2a1cb0"
@@ -210,8 +224,10 @@
         "reviewed_artifacts": [
           {
             "name": "08_dati_fiscali_strutturati.md",
-            "sha256": "ab929fcd8c74d6aed5d6a42f39798260252e673d19336cc069524d447d8980a4"
-          },
+            "sha256": "02e8c2e1ae0104ccfefe8eaaa3112c0b4e72a3b0d2c47480045887528b9ecfd6"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
           {
             "name": "structured_fiscal_fields.csv",
             "sha256": "23e725233c4163f9401fc679a6a39039d90435d1c2c17ae20e375a01ed5de7fa"
@@ -243,8 +259,10 @@
         "reviewed_artifacts": [
           {
             "name": "08_dati_fiscali_strutturati.md",
-            "sha256": "a88ffad5a7887f22fe7f836d0f7ca7725e9c828132a5ead03582b2fd1f8c6ca7"
-          },
+            "sha256": "3b5acfa31cdd7419e6e1721f830cffc167b799a21be2556aec6871465e45acb2"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
           {
             "name": "structured_fiscal_fields.csv",
             "sha256": "4e49e750355b4385135cc1d1a0ceb4a845ef00c3a3811fe2a547e3c29c069c46"
@@ -265,8 +283,10 @@
         "reviewed_artifacts": [
           {
             "name": "08_dati_fiscali_strutturati.md",
-            "sha256": "65684a2765e0054bb2b16fcfcf4b8bdc39f48a6f119347e332431734841d87d7"
-          },
+            "sha256": "938f0da3e2bfc6c3b313896460517c46e93952dccda92b78a4a358b98901ae9f"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
           {
             "name": "structured_fiscal_fields.csv",
             "sha256": "1f34081d44dc8c0d3f97b9a995edbea041763d7af86d2b13b46b0dfd1f5a9d01"
@@ -282,5 +302,36 @@
         ]
       }
     }
+  },
+  "source_refresh": "After integration of the released invoice workflow, the only changed bound execution source adds invoice-xml to the permitted workflow IDs. Lesson prose, prepared input bytes and extraction engines are unchanged. Twenty fresh extraction runs passed with the new registry. The previously inspected exact artifacts remain the output review evidence.",
+  "refresh_review": {
+    "native_evidence": "accepted-kit-refresh-01.xml: 60 distinct passing native demo/practice checks",
+    "source_review": "Inspected the local-hosted-workflow exclusion changes in CourseLibrary and desktop teaching, plus the Spanish client-file required-heading repair. Fictional inputs and lesson text are preserved. This refresh changes no professional approvals.",
+    "output_comparison": "Primary output bytes match the previously reviewed files, except managed import IDs, source-block ordering and the displayed invoice proposal hash. Compared the exact old and new files to verify those bounded differences. The complete invoice preview HTML otherwise matches, including its layout. Primary artifact hashes here are from the current native runs.",
+    "retained_evidence": "Prior supporting validation, registry and browser-QA artifacts are retained separately where they contain older run paths or timestamps. Existing visual review is reused for identical slides/transcript text and the otherwise identical invoice preview. No fresh browser or voice acceptance is claimed."
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.171158+00:00",
+    "previous_course_sha256": "5e0a53c050c086c97f1ef4bdc98d92d8e16f3033c85e002a15d8a00a8859c93a",
+    "source_snapshot": "/private/tmp/teaching-library-refresh-02/test_fiscal_data_kit_runs_actu2/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
   }
 }

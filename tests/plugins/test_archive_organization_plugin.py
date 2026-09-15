@@ -90,13 +90,16 @@ def test_generated_archive_organization_review_contract(tmp_path: Path) -> None:
     assert report.ok, report.errors
 
 
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 def test_mcp_uses_hash_bound_review_reference_after_single_payload_exposure(
     tmp_path: Path,
+    language: str,
 ) -> None:
     context_path, snapshot, _ = scenario._prepared_run(tmp_path)
     prepared = core.build_review_package(
         context_path,
         scenario._proposals(tmp_path, snapshot),
+        language=language,
     )
     review_payload = json.loads(Path(prepared["review_payload_path"]).read_text())
     process = subprocess.Popen(
@@ -160,6 +163,17 @@ def test_mcp_uses_hash_bound_review_reference_after_single_payload_exposure(
         validated["structuredContent"]["review_reference"]["expires_in_seconds"]
         == 14_400
     )
+    assert review_payload["language"] == language
+    labels = json.loads((PLUGIN_ROOT / "references/review-labels.json").read_text())[
+        language
+    ]
+    output = Path(prepared["output_dir"])
+    assert json.loads((output / "run_intake.json").read_text())["language"] == language
+    assert (output / "review_handoff.md").read_text().startswith("# " + labels["title"])
+    assert all(
+        item["data"]["edit_hint"] == labels["edit_hint"]
+        for item in review_payload["items"]
+    )
     assert rendered["structuredContent"]["review_payload"] == review_payload
     assert rendered["structuredContent"]["review_reference"] == reference
     assert saved["structuredContent"]["status"] == "reviewed"
@@ -220,3 +234,29 @@ def test_mcp_unbound_supplied_plan_reference_remains_review_only(
     )
     assert rendered["structuredContent"]["review_payload"] == review_payload
     assert rendered["structuredContent"]["persistence_enabled"] is False
+
+
+def test_review_rejects_unsupported_language_before_writing(tmp_path: Path) -> None:
+    context_path, snapshot, _ = scenario._prepared_run(tmp_path)
+    proposals = scenario._proposals(tmp_path, snapshot)
+    before = {p: p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
+    with pytest.raises(
+        core.ArchiveOrganizationError, match="Unsupported review language"
+    ):
+        core.build_review_package(context_path, proposals, language="nl")
+    assert {p: p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()} == before
+
+
+def test_archive_widget_matches_generator_and_includes_reviewer_control() -> None:
+    from scripts import generate_non_plotting_review_widgets as widgets
+
+    target = next(
+        row for row in widgets.TARGETS if row["plugin"] == "archive-organization"
+    )
+    generated = widgets.render_target(target)
+    actual = (
+        PLUGIN_ROOT / "assets/archive-organization-review-widget.html"
+    ).read_text()
+    assert actual == generated
+    assert 'id="reviewer-alias"' in actual
+    assert "function reviewerAliasValue()" in actual

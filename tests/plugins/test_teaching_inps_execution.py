@@ -5,8 +5,11 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from docx import Document
 
+from tests.plugins._teaching_release import record_native_check
 from tests.plugins.test_teaching_kit_execution import (
+    ROOT,
     _bound_case,
     _complete_teaching_case,
     _read,
@@ -121,7 +124,7 @@ SUPPORT = {
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 @pytest.mark.parametrize("phase", ["demo", "practice"])
 def test_inps_kit_runs_inventory_evidence_and_professional_draft(
-    tmp_path, monkeypatch, language, phase
+    tmp_path, monkeypatch, language, phase, record_property
 ):
     run = _bound_case(
         tmp_path,
@@ -291,6 +294,18 @@ def test_inps_kit_runs_inventory_evidence_and_professional_draft(
     assert final["run_id"] == run["context"]["run_id"]
     assert final["status"] == "ready_for_professional_review"
     assert (output / "studio_memo.docx").is_file()
+    word_text = "\n".join(
+        paragraph.text for paragraph in Document(output / "studio_memo.docx").paragraphs
+    )
+    assert "**" not in word_text
+    expected_heading = {
+        "it": "Fatti documentati",
+        "en": "Documented facts",
+        "fr": "Faits documentés",
+        "de": "Dokumentierte Tatsachen",
+        "es": "Hechos documentados",
+    }[language]
+    assert expected_heading in word_text
     memo = (output / "studio_memo.md").read_text(encoding="utf-8")
     assert w[7 if phase == "demo" else 8] in memo
     assert (
@@ -302,3 +317,11 @@ def test_inps_kit_runs_inventory_evidence_and_professional_draft(
     assert not (output / "calculation_results.json").exists()
     assert all(c["professional_review_status"] == "pending" for c in claims["claims"])
     _complete_teaching_case(run, tmp_path / "case")
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="previdenza-inps",
+        language=language,
+        phase=phase,
+    )

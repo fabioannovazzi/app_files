@@ -4,12 +4,12 @@
     "goal": "Lernen Sie, die Prüfung von Vorschlag und Plan zu starten, Unterlagen bereitzustellen und die erzeugte Akte fachlich zu nutzen.",
     "scenario": "Officina Riva hat einen ersten Entwurf zur Betriebsfortführung und Gläubigerzahlung vorgelegt. Die Fachperson muss Inhalt, zu prüfende Annahmen und fehlende Unterlagen verstehen.",
     "scope": "Ein vollständiger erster Ablauf: Auftrag, Quellen, Verfahrensrahmen, Gläubiger, Vorschlag, Plan, offene Fragen und Bericht. Der kleine Fall erklärt den Workflow, nicht das gesamte italienische Insolvenzrecht.",
-    "inputs": "Öffnen Sie demo-de.xlsx: Fall erklärt Auftrag und Entwurfsstand, Gläubiger enthält erklärte Positionen und Plan angenommene Jahreszahlungsströme. Dies sind fiktive Prüfungsquellen, keine genehmigten Schlussfolgerungen.",
-    "request": "Vera, prüfe den Vorschlag und Concordato-preventivo-Plan von Officina Riva in dieser Datei. Erstelle die Prüfungsakte mit Gläubigerbehandlung, Mittelherkunft und -verwendung, Liquidität, fehlenden Unterlagen und offenen Fragen.",
+    "inputs": "Öffnen Sie demo-de.xlsx und management-demo-de.pdf. Excel enthält Auftrag, Gläubiger und Jahresplan; die zwei Seiten der Geschäftsführung ergänzen angegebene Positionen, Liquidationsschätzung und Quartalsliquidität. Dies sind fiktive Prüfungsquellen, keine freigegebenen Schlussfolgerungen.",
+    "request": "Vera, prüfe den Concordato-preventivo-Vorschlag und Plan von Officina Riva in diesen beiden Dateien. Erstelle eine Prüfungsakte zu Gläubigerbehandlung, Mittelherkunft und -verwendung, Liquidität, fehlenden Unterlagen und offenen Fragen.",
     "steps": [
-      "Im Arbeitschat liest Vera die Datei und fasst Auftrag, Datum, Phase und Unterlagen zusammen. Im Sprachchat erklärt sie den Ablauf und bittet um Bestätigung oder Korrektur des Umfangs.",
+      "Im Arbeitschat liest Vera die Dateien und fasst Auftrag, Datum, Phase und Unterlagen zusammen. Im Sprachchat erklärt sie den Ablauf und bittet um Bestätigung oder Korrektur des Umfangs.",
       "Vera rekonstruiert den Fall anhand der Quellen, prüft den passenden Rahmen und bereitet Interpretationen zur Prüfung vor. Sie betrachtet Vorschlag, Plan, Gläubiger, Liquidationsvergleich, Liquidität und Beleglücken. Sie prüfen Interpretationen und Annahmen vor der vom Workflow verlangten Bestätigung.",
-      "Der aktuelle Workflow erzeugt die tatsächlichen Tabellen und Dokumente. Öffnen Sie erst den Bericht, dann die Arbeitsmappe: Verfolgen Sie eine offene Frage zur Quelle, prüfen Sie die Daten und bestimmen Sie den nächsten sinnvollen Schritt. Die Stimme erklärt nur tatsächlichen Fortschritt und Ergebnisse."
+      "Der aktuelle Workflow erstellt echte Aufstellungen und Prüfungsdokumente. Öffnen Sie Zusammenfassung und Excel: Finden Sie Gläubigerzahlungen, Liquiditätsverlauf und benötigte Unterlagen. Verfolgen Sie eine offene Frage bis zur Quellseite oder Zelle und wählen Sie die nächste Handlung. Im Sprachchat erklärt Vera tatsächliche Ergebnisse und beantwortet Fragen, ohne den gesamten Bericht vorzulesen."
     ],
     "deliverables": [
       "Word-Bericht und lesbare Prüfungszusammenfassung mit Grenzen und offenen Fragen.",
@@ -20,7 +20,7 @@
       "Erklären Sie vor dem Start den Auftrag an Vera und die gelieferten Dateien.",
       "Finden Sie Zusammenfassung, eine zu prüfende Frage und den dafür benötigten Beleg oder die Rückfrage."
     ],
-    "practice": "Starten Sie mit practice-de.xlsx eine neue Prüfung der geänderten Finanzierungsannahme. Bewahren Sie die erste Akte auf. Lassen Sie den Fall neu beurteilen und erklären Sie veränderte Ergebnisse und Maßnahmen; ersetzen Sie nicht nur eine Zahl im alten Bericht.",
+    "practice": "Starten Sie im selben Fall eine neue Prüfung mit practice-de.xlsx und management-practice-de.pdf: Die Geschäftsführung hat die angenommene neue Finanzierung reduziert. Bewahren Sie die erste Prüfungsakte und ihre Quellen unverändert auf. Bitten Sie Vera um erneute Prüfung und Erklärung der geänderten Ergebnisse und Maßnahmen; ersetzen Sie nicht nur eine Zahl im alten Bericht.",
     "success": "Sie können den Workflow starten, Umfang und Interpretationen prüfen, Ergebnisse nutzen und die Arbeit mit einer aktualisierten Fassung wiederholen.",
     "repeat": "Geben Sie Vera Vorschlag, Plan, Gläubigerliste, Attestierung und verfügbare Belege mit Phase, Datum und Prüfungsziel. Bestätigen Sie den Umfang, prüfen Sie Quellen und nutzen Sie die Akte im normalen fachlichen Verfahren."
   }

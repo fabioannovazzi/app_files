@@ -26,18 +26,18 @@
   },
   "vera/open-item-reconciliation": {
     "title": "Revisar partidas abiertas con Vera",
-    "goal": "Aprender a comprobar una lista de impagados e identificar facturas saldadas, parcialmente saldadas y pendientes en una fecha concreta.",
+    "goal": "Aprender a comprobar una lista de impagados y distinguir las facturas con prueba de pago de las que siguen pendientes de aclaración en una fecha concreta.",
     "scenario": "Una lista anterior de proveedores de Arco todavía muestra tres facturas abiertas. Los movimientos bancarios permiten comprobar su situación a 31 de marzo.",
     "scope": "Tres facturas de proveedores en EUR. La revisión de marzo excluye pagos posteriores a la fecha de corte; el ejercicio actualiza esa fecha.",
     "inputs": "Abre open-items-es.pdf y bank-march-es.pdf. El primer documento es la población que se comprueba; el segundo recoge los pagos de salida. Son exportaciones didácticas ficticias. Los importes siguen la convención italiana con coma decimal y las fechas tienen formato día/mes/año.",
     "request": "Vera, revisa estas partidas de proveedores a 31 de marzo de 2026. Usa las pruebas de pago bancario para mostrar qué está pagado, qué sigue abierto y qué debo revisar.",
     "steps": [
       "Vera importa los archivos, identifica la población inicial y propone el papel y el significado monetario de cada fuente. Confirma la fecha de corte y el tratamiento de pagos posteriores.",
-      "El procedimiento actual relaciona facturas y pruebas de pago, calcula saldos y prepara el paquete de revisión. El chat de voz explica el avance y la documentación que falta.",
-      "Abre la página local de revisión y los papeles de trabajo. Sigue una factura desde el importe declarado abierto hasta el pago y el saldo. Las decisiones permanecen pendientes hasta que realmente se toman."
+      "El procedimiento actual relaciona facturas y pruebas de pago, distingue partidas saldadas de partidas sin resolver y prepara el paquete de revisión. El chat de voz explica el avance y la documentación que falta.",
+      "Abre la página local de revisión y los papeles de trabajo. Sigue una factura desde el importe declarado abierto hasta la prueba de pago y el resultado propuesto. Las decisiones permanecen pendientes hasta que realmente se toman."
     ],
     "deliverables": [
-      "Papeles Excel y ficha operativa: muestran población comprobada, pagos vinculados, saldos y excepciones.",
+      "Papeles Excel y ficha operativa: muestran importes iniciales, pagos vinculados, resultados propuestos y excepciones.",
       "Informe Word y página local de revisión: explican las conclusiones y permiten al profesional revisar partidas y solicitar documentos."
     ],
     "review": "Comprueba primero población y fecha. Las pruebas de marzo respaldan el cierre de las dos primeras facturas; la tercera queda sin resolver con estos documentos. Revisa fechas y fuentes antes de aceptar una conclusión.",
@@ -47,7 +47,7 @@
     ],
     "practice": "Mantén open-items-es.pdf y usa bank-april-es.pdf para pedir una nueva revisión a 30 de abril. El documento bancario acumulado incluye el tercer pago. Conserva los documentos de marzo.",
     "success": "La revisión actualizada considera el tercer pago. Explica por qué cambian las conclusiones entre marzo y abril y dónde registrarías una decisión de revisión.",
-    "repeat": "Facilita la población de partidas abiertas, la fecha de corte y los justificantes. Revisa los saldos y los puntos pendientes antes de utilizar las conclusiones."
+    "repeat": "Facilita la población de partidas abiertas, la fecha de corte y los justificantes. Revisa los resultados propuestos y los puntos pendientes antes de utilizar las conclusiones."
   },
   "vera/variance-analysis": {
     "title": "Comparar resultados reales y presupuesto con Vera",

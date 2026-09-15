@@ -29,7 +29,7 @@
     "goal": "Aprende a comparar resultados y presupuesto, seguir la preparación del informe y utilizar las diferencias en la revisión mensual.",
     "scenario": "Arco ha preparado sus datos de gestión de enero y febrero y el presupuesto de esos meses. El responsable quiere entender el resultado operativo y las categorías que debe investigar antes de la reunión mensual.",
     "scope": "El caso incluye ingresos, coste de ventas y gastos operativos en EUR. Clara elige el análisis según la pregunta y los datos; este primer uso sigue una comparación presupuestaria y permanece local.",
-    "inputs": "Abre actual-budget.xlsx y facts.md. GL contiene movimientos mensuales por cuenta y categoría; Budget contiene el plan comparable. Los ingresos son positivos y los costes negativos. Los totales de control son 53.000 EUR reales y 47.000 EUR presupuestados.",
+    "inputs": "Abre actual-budget.xlsx y facts-es.md. GL contiene movimientos mensuales por cuenta y categoría; Budget contiene el plan comparable. Los ingresos son positivos y los costes negativos. Los totales de control son 53.000 EUR reales y 47.000 EUR presupuestados.",
     "request": "Clara, prepara el informe real–presupuesto de Arco para enero y febrero de 2026 con este libro. Muestra resultado operativo, desviaciones y detalle por categoría.",
     "steps": [
       "Clara examina las hojas y propone las columnas de fechas, categorías e importes. Confirma enero–febrero y el criterio de signos antes de calcular.",

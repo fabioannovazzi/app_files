@@ -1,3 +1,3 @@
-# Actualización para la práctica
+# Correspondencia del 16 de marzo — caso ficticio
 
-El 16 de marzo de 2026 Gamma escribe que entregará los 20 componentes restantes el 20 de marzo. Beta pide al despacho considerar la propuesta sin comunicar todavía una aceptación. Añade la correspondencia y actualiza objetivo, documentos y puntos de revisión. No supongas que se ha realizado la entrega ni que el cliente ha aceptado.
+El 16 de marzo de 2026 Gamma Forniture escribe que entregará los 20 componentes restantes el 20 de marzo. Beta Laboratorio pide al despacho valorar la propuesta antes de responder. No se dispone de una respuesta de aceptación ni de confirmación de la entrega.

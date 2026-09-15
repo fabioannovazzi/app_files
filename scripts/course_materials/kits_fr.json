@@ -29,7 +29,7 @@
     "goal": "Apprenez à comparer les résultats au budget, suivre la préparation du rapport et utiliser les écarts lors d’une revue mensuelle.",
     "scenario": "Arco a préparé ses comptes de gestion de janvier et février et le budget des mêmes mois. Le responsable veut comprendre le résultat opérationnel et les catégories à approfondir avant la réunion mensuelle.",
     "scope": "Le cas comprend chiffre d’affaires, coût des ventes et charges opérationnelles en EUR. Clara choisit l’analyse selon la question et les données ; ce premier parcours utilise une comparaison au budget et reste local.",
-    "inputs": "Ouvrez actual-budget.xlsx et facts.md. GL contient les mouvements mensuels par compte et catégorie ; Budget contient le plan comparable. Les revenus sont positifs, les charges négatives. Les totaux de contrôle sont 53 000 EUR au réel et 47 000 EUR au budget.",
+    "inputs": "Ouvrez actual-budget.xlsx et facts-fr.md. GL contient les mouvements mensuels par compte et catégorie ; Budget contient le plan comparable. Les revenus sont positifs, les charges négatives. Les totaux de contrôle sont 53 000 EUR au réel et 47 000 EUR au budget.",
     "request": "Clara, prépare le rapport réel–budget d’Arco pour janvier et février 2026 avec ce classeur. Montre le résultat opérationnel, les écarts et le détail par catégorie.",
     "steps": [
       "Clara examine les feuilles et propose les colonnes de dates, catégories et montants. Confirmez janvier–février et le sens des signes avant le calcul.",

@@ -15,6 +15,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.plugins._teaching_release import record_native_check
+
 ROOT = Path(__file__).resolve().parents[2]
 COMPONENT = ROOT / "plugins/presenza-digitale-studio"
 LABELS = {
@@ -107,7 +109,7 @@ def _core():
     return module
 
 
-def execute_website_fixture(base, product, language, kit):
+def execute_website_fixture(base, product, language, kit, *, stop_after="practice"):
     """Use actual kit inputs and current helpers; leave rendered review pending."""
     base.mkdir(parents=True, exist_ok=True)
     core = _core()
@@ -119,6 +121,7 @@ def execute_website_fixture(base, product, language, kit):
         retention_owner="Fixture operator",
     )
     results = []
+    predecessor = {}
     for phase in ("demo", "practice"):
         sources = [
             Path(path)
@@ -282,6 +285,9 @@ def execute_website_fixture(base, product, language, kit):
         report = json.loads(core.validate_site(run).read_text())
         assert report["status"] == "ready", report["errors"]
         assert core.validate_run(run)["status"] != "published"
+        assert all(
+            path.read_bytes() == content for path, content in predecessor.items()
+        )
         results.append(
             {
                 "run": str(run),
@@ -290,6 +296,11 @@ def execute_website_fixture(base, product, language, kit):
                 "phase": phase,
             }
         )
+        if phase == stop_after:
+            break
+        predecessor = {
+            path: path.read_bytes() for path in run.rglob("*") if path.is_file()
+        }
     _write(
         base / "execution.json",
         {
@@ -306,8 +317,9 @@ def execute_website_fixture(base, product, language, kit):
 
 @pytest.mark.parametrize("product", ["vera", "lucia"])
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+@pytest.mark.parametrize("phase", ["demo", "practice"])
 def test_website_kit_builds_bound_local_page_and_preserves_predecessor(
-    tmp_path, monkeypatch, product, language
+    tmp_path, monkeypatch, product, language, phase, record_property
 ):
     monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
     from courseware.library import CourseLibrary
@@ -320,17 +332,30 @@ def test_website_kit_builds_bound_local_page_and_preserves_predecessor(
         for key in ("source_files", "practice_files")
         for path in kit[key]
     }
-    results = execute_website_fixture(tmp_path / "run", product, language, kit)
-    first, second = [Path(item["site"]).read_text() for item in results]
-    assert "14:00–16:00" not in first and "14:00–16:00" in second
+    results = execute_website_fixture(
+        tmp_path / "run", product, language, kit, stop_after=phase
+    )
+    first = Path(results[0]["site"]).read_text()
+    assert "14:00–16:00" not in first
+    if phase == "practice":
+        second = Path(results[1]["site"]).read_text()
+        assert "14:00–16:00" in second
+        assert results[0]["site_digest"] != results[1]["site_digest"]
     assert all(
         "09:00–12:00" in text and "segreteria@studio-arco.example" in text
-        for text in (first, second)
+        for text in (Path(item["site"]).read_text() for item in results)
     )
-    assert results[0]["site_digest"] != results[1]["site_digest"]
     for path, digest in original.items():
         assert hashlib.sha256(Path(path).read_bytes()).hexdigest() == digest
     for result in results:
         state = json.loads((Path(result["run"]) / "run_state.json").read_text())
         assert state["packages"] == {} and state["deliveries"] == []
         assert state["quality_assessment_digest"] is None
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product=product,
+        workflow="presenza-digitale-studio",
+        language=language,
+        phase=phase,
+    )

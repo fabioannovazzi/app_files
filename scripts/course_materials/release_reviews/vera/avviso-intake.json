@@ -1,0 +1,230 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "avviso-intake",
+  "course_sha256": "85f41d63162edbfeb7a7d9e2ed11f1b54be7e0fec60c1a64e645a832a98611ae",
+  "reviewer": "Codex: original fictional notice/update, five first-use outlines, native extraction tables and all ten source-bound Codex review notes",
+  "reviewed_at": "2026-09-14T16:57:28.170830+00:00",
+  "review_scope": "The current native pipeline imports and extracts the notice. Fixed model-authored test interpretations exercise the existing skill instruction to create codex_run_review.md in the actual run output; they are not native-code legal determinations or fresh model execution in CI, and are never shipped as learner results. The native ledger declares and seals those real output files. The wider client-file package and lexical fiscal classifications remain unapproved. No legal deadline, professional approval, sending, voice or learner understanding is attested.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces first intake of a tax communication. The learner supplies the actual notice, asks for a short operational reading, opens the resulting note and identifies what to obtain before deciding the next action. The lesson stays with the whole first-use task rather than teaching one incidental deadline detail.",
+        "inputs_and_request": "Read the complete Italian fictional notice and client update, and every localized outline. The source explicitly identifies invented people, authority representation and dates. It asks for the 2025 return and F24 receipts without quantifying debt. The natural request asks for the request, references, missing evidence and next checks. Non-Italian editions correctly identify the source as an Italian transcription.",
+        "execution_and_checkpoints": "The current client-file command reads the managed source and produces the native reference/date table. The skill also permits a source-based Codex review note; the integration check now performs that stage in the actual output directory and seals its files through the native case ledger. Checkpoints identify the supplied communication and then the requested documents and missing evidence. Fiscal lexical candidates are not accepted or used as document meaning.",
+        "deliverable_and_next_action": "Read every actual note and each practice difference. The note leads with the document request, names the addressee and reference, separates stated dates from missing receipt evidence, identifies outstanding documents and gives concrete next steps. Direct local source links and the native date table allow checking. Headings and short paragraphs keep the Markdown note usable; no claim of a designed PDF or independently verified legal deadline is made.",
+        "practice_and_repeat": "A new run with the client update records the 6 April message and the reported 3 April discovery. It explicitly retains that this is a client statement, not evidence of service. Recovering the return is not treated as delivery to the practice; the return and F24 receipts are still to obtain. The closing instruction explains what to supply for another real notice.",
+        "language_and_pacing": "Read the it outline, actual initial note and actual practice revision. The explanatory note is in the selected language while original Italian authority and form names remain source facts. Five localized versions preserve the same bounded task. The six teaching stages total 390 seconds; processing and questions can extend the session. No measured learner time or live voice test is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_notice_kit_runs_actual_intake_and_keeps_source_dates[it-demo-1]",
+        "result_review": "The actual note identifies the return and F24 receipts requested, DEMO-NOTICE-01, the 2 April letter date and stated 30 April response date. It states that receipt evidence and the documents are not supplied. The current extraction table contains the same two notice dates and protocol. The model-authored note is a separate ordinary skill output linked to exact local sources; the starter extraction memo remains an aid. No fiscal candidate, debt, deadline or professional response is approved.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "bde307ccb839a75a5e4f732a46ceb1173ed8a9530201f7c412d30f2e9c512401"
+          },
+          {
+            "name": "deadlines_and_amounts.csv",
+            "sha256": "8de86e8a86cd8f12511a24d35d913a2249e8d876b7a2566cc1d2c3ddd41b111c"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_notice_kit_runs_actual_intake_and_keeps_source_dates[it-practice-2]",
+        "result_review": "The actual note adds the 6 April client message, reports the 3 April discovery as the client statement and keeps notification evidence unverified. It records the return as recovered by the client, not attached or received by the practice, and the F24 receipts as still missing. The current extraction table contains the same two notice dates and protocol. The model-authored note is a separate ordinary skill output linked to exact local sources; the starter extraction memo remains an aid. No fiscal candidate, debt, deadline or professional response is approved.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "11ed68988ed537bb4a846bdbddc56a8cad1c67b052dfdadf6abba39daf9f46f6"
+          },
+          {
+            "name": "deadlines_and_amounts.csv",
+            "sha256": "b4c9a168ef5f24423de5931726cd4f52b0d87222e73bff14d6ef77d665e83d34"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces first intake of a tax communication. The learner supplies the actual notice, asks for a short operational reading, opens the resulting note and identifies what to obtain before deciding the next action. The lesson stays with the whole first-use task rather than teaching one incidental deadline detail.",
+        "inputs_and_request": "Read the complete Italian fictional notice and client update, and every localized outline. The source explicitly identifies invented people, authority representation and dates. It asks for the 2025 return and F24 receipts without quantifying debt. The natural request asks for the request, references, missing evidence and next checks. Non-Italian editions correctly identify the source as an Italian transcription.",
+        "execution_and_checkpoints": "The current client-file command reads the managed source and produces the native reference/date table. The skill also permits a source-based Codex review note; the integration check now performs that stage in the actual output directory and seals its files through the native case ledger. Checkpoints identify the supplied communication and then the requested documents and missing evidence. Fiscal lexical candidates are not accepted or used as document meaning.",
+        "deliverable_and_next_action": "Read every actual note and each practice difference. The note leads with the document request, names the addressee and reference, separates stated dates from missing receipt evidence, identifies outstanding documents and gives concrete next steps. Direct local source links and the native date table allow checking. Headings and short paragraphs keep the Markdown note usable; no claim of a designed PDF or independently verified legal deadline is made.",
+        "practice_and_repeat": "A new run with the client update records the 6 April message and the reported 3 April discovery. It explicitly retains that this is a client statement, not evidence of service. Recovering the return is not treated as delivery to the practice; the return and F24 receipts are still to obtain. The closing instruction explains what to supply for another real notice.",
+        "language_and_pacing": "Read the en outline, actual initial note and actual practice revision. The explanatory note is in the selected language while original Italian authority and form names remain source facts. Five localized versions preserve the same bounded task. The six teaching stages total 390 seconds; processing and questions can extend the session. No measured learner time or live voice test is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_notice_kit_runs_actual_intake_and_keeps_source_dates[en-demo-1]",
+        "result_review": "The actual note identifies the return and F24 receipts requested, DEMO-NOTICE-01, the 2 April letter date and stated 30 April response date. It states that receipt evidence and the documents are not supplied. The current extraction table contains the same two notice dates and protocol. The model-authored note is a separate ordinary skill output linked to exact local sources; the starter extraction memo remains an aid. No fiscal candidate, debt, deadline or professional response is approved.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "40db66278ea79deed1c9c59d1824bb05e2aef32f04522772e907a744780a782c"
+          },
+          {
+            "name": "deadlines_and_amounts.csv",
+            "sha256": "90b12fce74b943698ff718487cadea223a1d89b7bc4f640b0eed3b8eb18d01d8"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_notice_kit_runs_actual_intake_and_keeps_source_dates[en-practice-2]",
+        "result_review": "The actual note adds the 6 April client message, reports the 3 April discovery as the client statement and keeps notification evidence unverified. It records the return as recovered by the client, not attached or received by the practice, and the F24 receipts as still missing. The current extraction table contains the same two notice dates and protocol. The model-authored note is a separate ordinary skill output linked to exact local sources; the starter extraction memo remains an aid. No fiscal candidate, debt, deadline or professional response is approved.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "6bda47661e0859e72bf2a13a11dd031359b598a6e88adbb6ec89fdb32ff82458"
+          },
+          {
+            "name": "deadlines_and_amounts.csv",
+            "sha256": "7011ddd91fb887db7d1c4879e888abed4f3e0edf7c25d902e0e378eb0bdf8b64"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces first intake of a tax communication. The learner supplies the actual notice, asks for a short operational reading, opens the resulting note and identifies what to obtain before deciding the next action. The lesson stays with the whole first-use task rather than teaching one incidental deadline detail.",
+        "inputs_and_request": "Read the complete Italian fictional notice and client update, and every localized outline. The source explicitly identifies invented people, authority representation and dates. It asks for the 2025 return and F24 receipts without quantifying debt. The natural request asks for the request, references, missing evidence and next checks. Non-Italian editions correctly identify the source as an Italian transcription.",
+        "execution_and_checkpoints": "The current client-file command reads the managed source and produces the native reference/date table. The skill also permits a source-based Codex review note; the integration check now performs that stage in the actual output directory and seals its files through the native case ledger. Checkpoints identify the supplied communication and then the requested documents and missing evidence. Fiscal lexical candidates are not accepted or used as document meaning.",
+        "deliverable_and_next_action": "Read every actual note and each practice difference. The note leads with the document request, names the addressee and reference, separates stated dates from missing receipt evidence, identifies outstanding documents and gives concrete next steps. Direct local source links and the native date table allow checking. Headings and short paragraphs keep the Markdown note usable; no claim of a designed PDF or independently verified legal deadline is made.",
+        "practice_and_repeat": "A new run with the client update records the 6 April message and the reported 3 April discovery. It explicitly retains that this is a client statement, not evidence of service. Recovering the return is not treated as delivery to the practice; the return and F24 receipts are still to obtain. The closing instruction explains what to supply for another real notice.",
+        "language_and_pacing": "Read the fr outline, actual initial note and actual practice revision. The explanatory note is in the selected language while original Italian authority and form names remain source facts. Five localized versions preserve the same bounded task. The six teaching stages total 390 seconds; processing and questions can extend the session. No measured learner time or live voice test is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_notice_kit_runs_actual_intake_and_keeps_source_dates[fr-demo-1]",
+        "result_review": "The actual note identifies the return and F24 receipts requested, DEMO-NOTICE-01, the 2 April letter date and stated 30 April response date. It states that receipt evidence and the documents are not supplied. The current extraction table contains the same two notice dates and protocol. The model-authored note is a separate ordinary skill output linked to exact local sources; the starter extraction memo remains an aid. No fiscal candidate, debt, deadline or professional response is approved.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "9b8a7c73f56f65b373e3a83cafeb9367fc662db69a8a657caf06de01f46e3ad5"
+          },
+          {
+            "name": "deadlines_and_amounts.csv",
+            "sha256": "f32d6a084c16d440e2ba165fd816acdb59553319a7dab68dec00b9ee9025f113"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_notice_kit_runs_actual_intake_and_keeps_source_dates[fr-practice-2]",
+        "result_review": "The actual note adds the 6 April client message, reports the 3 April discovery as the client statement and keeps notification evidence unverified. It records the return as recovered by the client, not attached or received by the practice, and the F24 receipts as still missing. The current extraction table contains the same two notice dates and protocol. The model-authored note is a separate ordinary skill output linked to exact local sources; the starter extraction memo remains an aid. No fiscal candidate, debt, deadline or professional response is approved.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "651c85864edaca620fdad3d5fe84c538c7916d49b511a081efc5df71a941a31b"
+          },
+          {
+            "name": "deadlines_and_amounts.csv",
+            "sha256": "bcaec2552a13b3fb990cd6cea0af745ca695c3a67a5672941b42f74d44c66459"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces first intake of a tax communication. The learner supplies the actual notice, asks for a short operational reading, opens the resulting note and identifies what to obtain before deciding the next action. The lesson stays with the whole first-use task rather than teaching one incidental deadline detail.",
+        "inputs_and_request": "Read the complete Italian fictional notice and client update, and every localized outline. The source explicitly identifies invented people, authority representation and dates. It asks for the 2025 return and F24 receipts without quantifying debt. The natural request asks for the request, references, missing evidence and next checks. Non-Italian editions correctly identify the source as an Italian transcription.",
+        "execution_and_checkpoints": "The current client-file command reads the managed source and produces the native reference/date table. The skill also permits a source-based Codex review note; the integration check now performs that stage in the actual output directory and seals its files through the native case ledger. Checkpoints identify the supplied communication and then the requested documents and missing evidence. Fiscal lexical candidates are not accepted or used as document meaning.",
+        "deliverable_and_next_action": "Read every actual note and each practice difference. The note leads with the document request, names the addressee and reference, separates stated dates from missing receipt evidence, identifies outstanding documents and gives concrete next steps. Direct local source links and the native date table allow checking. Headings and short paragraphs keep the Markdown note usable; no claim of a designed PDF or independently verified legal deadline is made.",
+        "practice_and_repeat": "A new run with the client update records the 6 April message and the reported 3 April discovery. It explicitly retains that this is a client statement, not evidence of service. Recovering the return is not treated as delivery to the practice; the return and F24 receipts are still to obtain. The closing instruction explains what to supply for another real notice.",
+        "language_and_pacing": "Read the de outline, actual initial note and actual practice revision. The explanatory note is in the selected language while original Italian authority and form names remain source facts. Five localized versions preserve the same bounded task. The six teaching stages total 390 seconds; processing and questions can extend the session. No measured learner time or live voice test is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_notice_kit_runs_actual_intake_and_keeps_source_dates[de-demo-1]",
+        "result_review": "The actual note identifies the return and F24 receipts requested, DEMO-NOTICE-01, the 2 April letter date and stated 30 April response date. It states that receipt evidence and the documents are not supplied. The current extraction table contains the same two notice dates and protocol. The model-authored note is a separate ordinary skill output linked to exact local sources; the starter extraction memo remains an aid. No fiscal candidate, debt, deadline or professional response is approved.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "e9b4ae80d68a17b744f14cd2ff0164529f0f566500dd4b1cb850b26111e9ee8a"
+          },
+          {
+            "name": "deadlines_and_amounts.csv",
+            "sha256": "cdbde1f7761860c25f98d45457cf157ae05784e0c4177f3e60485c6431876356"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_notice_kit_runs_actual_intake_and_keeps_source_dates[de-practice-2]",
+        "result_review": "The actual note adds the 6 April client message, reports the 3 April discovery as the client statement and keeps notification evidence unverified. It records the return as recovered by the client, not attached or received by the practice, and the F24 receipts as still missing. The current extraction table contains the same two notice dates and protocol. The model-authored note is a separate ordinary skill output linked to exact local sources; the starter extraction memo remains an aid. No fiscal candidate, debt, deadline or professional response is approved.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "9d3cd4867511015f233ea80129d4087361c873da6af9c6f8cc8240857d7df6f7"
+          },
+          {
+            "name": "deadlines_and_amounts.csv",
+            "sha256": "fe29c5cca693371293c610e936c407ba7218813cd7fe8ab7e418b58e2bd43238"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces first intake of a tax communication. The learner supplies the actual notice, asks for a short operational reading, opens the resulting note and identifies what to obtain before deciding the next action. The lesson stays with the whole first-use task rather than teaching one incidental deadline detail.",
+        "inputs_and_request": "Read the complete Italian fictional notice and client update, and every localized outline. The source explicitly identifies invented people, authority representation and dates. It asks for the 2025 return and F24 receipts without quantifying debt. The natural request asks for the request, references, missing evidence and next checks. Non-Italian editions correctly identify the source as an Italian transcription.",
+        "execution_and_checkpoints": "The current client-file command reads the managed source and produces the native reference/date table. The skill also permits a source-based Codex review note; the integration check now performs that stage in the actual output directory and seals its files through the native case ledger. Checkpoints identify the supplied communication and then the requested documents and missing evidence. Fiscal lexical candidates are not accepted or used as document meaning.",
+        "deliverable_and_next_action": "Read every actual note and each practice difference. The note leads with the document request, names the addressee and reference, separates stated dates from missing receipt evidence, identifies outstanding documents and gives concrete next steps. Direct local source links and the native date table allow checking. Headings and short paragraphs keep the Markdown note usable; no claim of a designed PDF or independently verified legal deadline is made.",
+        "practice_and_repeat": "A new run with the client update records the 6 April message and the reported 3 April discovery. It explicitly retains that this is a client statement, not evidence of service. Recovering the return is not treated as delivery to the practice; the return and F24 receipts are still to obtain. The closing instruction explains what to supply for another real notice.",
+        "language_and_pacing": "Read the es outline, actual initial note and actual practice revision. The explanatory note is in the selected language while original Italian authority and form names remain source facts. Five localized versions preserve the same bounded task. The six teaching stages total 390 seconds; processing and questions can extend the session. No measured learner time or live voice test is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_notice_kit_runs_actual_intake_and_keeps_source_dates[es-demo-1]",
+        "result_review": "The actual note identifies the return and F24 receipts requested, DEMO-NOTICE-01, the 2 April letter date and stated 30 April response date. It states that receipt evidence and the documents are not supplied. The current extraction table contains the same two notice dates and protocol. The model-authored note is a separate ordinary skill output linked to exact local sources; the starter extraction memo remains an aid. No fiscal candidate, debt, deadline or professional response is approved.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "b18e87318b06a6a1488666dfa0b71bd0199bac8884a5630d5f14d49682ba0c02"
+          },
+          {
+            "name": "deadlines_and_amounts.csv",
+            "sha256": "a0ef2b418ca9cca8706906eefcb5406281469fb890717b29b4d64e5707d7b8f0"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_notice_kit_runs_actual_intake_and_keeps_source_dates[es-practice-2]",
+        "result_review": "The actual note adds the 6 April client message, reports the 3 April discovery as the client statement and keeps notification evidence unverified. It records the return as recovered by the client, not attached or received by the practice, and the F24 receipts as still missing. The current extraction table contains the same two notice dates and protocol. The model-authored note is a separate ordinary skill output linked to exact local sources; the starter extraction memo remains an aid. No fiscal candidate, debt, deadline or professional response is approved.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "1b5fd3d84d9da68a22395088a3ea0bf28ce817cadb31e41da47d16157c860f2a"
+          },
+          {
+            "name": "deadlines_and_amounts.csv",
+            "sha256": "7a934c3b23bd03e3770ceeae1bb8931342c8b2760de860ec072e99513df312e2"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.161054+00:00",
+    "previous_course_sha256": "e04a451bec9ee6ece4dd8a55957010d97c6fa552ed20e26693ac100f69a95f3d",
+    "source_snapshot": "/private/tmp/notice-teaching-review-01/test_notice_kit_runs_actual_in5/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  }
+}

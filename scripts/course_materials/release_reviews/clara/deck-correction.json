@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "deck-correction",
-  "course_sha256": "cdc2280a0b2e4f6bac94bf36c5f678f0f7012a7909205a0c06ad75d90f98f4d4",
+  "course_sha256": "05f142ea694fd02092187f2712ad3bbba87a16b669226c4f67c9088ed9e4af3c",
   "reviewer": "Codex: first-use teaching-kit editorial review",
-  "reviewed_at": "2026-09-14T13:50:52.310832+00:00",
-  "review_scope": "Prepared lesson, fictional inputs and actual outputs from source-bound regression cases, including visual review. Fixed model contributions are test-only. This is not human learner acceptance, native voice/two-window acceptance, or professional approval.",
+  "reviewed_at": "2026-09-14T21:09:24.778028+00:00",
+  "review_scope": "Prepared lesson, fictional inputs and actual outputs from source-bound regression cases, including visual review. Fixed model contributions are test-only. This is not human learner acceptance, native voice/two-window acceptance, or professional approval. Source dependency refresh after the localized advisory evidence-map repair: 35 current presentation/transcript checks pass in clara-teaching-source-refresh-02. All 60 recorded primary/supporting artifacts across these three kits are byte-identical to the previously inspected versions; the parity manifest retains actual paths. Existing editorial and visual judgments are preserved for unchanged material. No new voice, learner or GUI acceptance is asserted.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -26,12 +26,14 @@
             "sha256": "9a80afc97c2e12ed3e8e339a826bcd3278f86d0aa34dc58c5da1023ed3c1c15b"
           },
           {
-            "name": "corrected-built-validation.json",
-            "sha256": "69d2d7dac1b3c98485b46a3a4663c7a7f82dc51afe61947212abe26273c50852"
-          },
-          {
             "name": "content-ledger.json",
             "sha256": "c00f2bb8af256bbfe3209789e751948ca348b93f86f04cf7bd37d28bf22a6f1c"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "corrected-built-validation.json",
+            "sha256": "69d2d7dac1b3c98485b46a3a4663c7a7f82dc51afe61947212abe26273c50852"
           },
           {
             "name": "browser-qa-final.json",
@@ -52,12 +54,14 @@
             "sha256": "61cad92aebdd616d1265f655c26873a768f6f9e0ca5c074722637313af59f392"
           },
           {
-            "name": "corrected-built-validation.json",
-            "sha256": "79539932354976bb4a893eeb4fed909a7eca0ca196a46f523b21aaee4de2dbcc"
-          },
-          {
             "name": "content-ledger.json",
             "sha256": "ff0194dba97486f571bd5bc1a26146f2beb9007cad7fdc0e50531226cf71cfb4"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "corrected-built-validation.json",
+            "sha256": "79539932354976bb4a893eeb4fed909a7eca0ca196a46f523b21aaee4de2dbcc"
           },
           {
             "name": "browser-qa-final.json",
@@ -89,12 +93,14 @@
             "sha256": "871d798c82b35237e7c93b482cbbdd91e2ed0740bed5ff653a0ab5f380ded6b3"
           },
           {
-            "name": "corrected-built-validation.json",
-            "sha256": "92527e854ab20faa0ad9c4599f3241c8f12fe6f867c6290b14b3bd4544f9fe2e"
-          },
-          {
             "name": "content-ledger.json",
             "sha256": "a01e57bd4b0c37f81efb864daa92f9bd662fe4dfead81152bf8d1cefd8da6b79"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "corrected-built-validation.json",
+            "sha256": "92527e854ab20faa0ad9c4599f3241c8f12fe6f867c6290b14b3bd4544f9fe2e"
           },
           {
             "name": "browser-qa-final.json",
@@ -115,12 +121,14 @@
             "sha256": "52cdb118f6a68e4710bb5dab2068acee9592904244464a81c934bd036cb60807"
           },
           {
-            "name": "corrected-built-validation.json",
-            "sha256": "1445e7a788c7cf5362f50e501aeef1aeaebcaeaa9e7c2505482a7d20cf81764e"
-          },
-          {
             "name": "content-ledger.json",
             "sha256": "aaa67784b74ac1520b626e9a0d297793012179c34e65547831b2a74eb4657836"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "corrected-built-validation.json",
+            "sha256": "1445e7a788c7cf5362f50e501aeef1aeaebcaeaa9e7c2505482a7d20cf81764e"
           },
           {
             "name": "browser-qa-final.json",
@@ -152,12 +160,14 @@
             "sha256": "96833b4d222fae59ea17f18f85f7ea2c57728e049321d1b212335c9e1f87d103"
           },
           {
-            "name": "corrected-built-validation.json",
-            "sha256": "91f005856951cd299913614247f50af11ac93a399c159b93994556c72662e644"
-          },
-          {
             "name": "content-ledger.json",
             "sha256": "0cd7b9bed1eecb410fbc57c4cacc01b1bbda14d7fc7cbc608aca9fcc933b5361"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "corrected-built-validation.json",
+            "sha256": "91f005856951cd299913614247f50af11ac93a399c159b93994556c72662e644"
           },
           {
             "name": "browser-qa-final.json",
@@ -178,12 +188,14 @@
             "sha256": "cec45bcbb3f6c817b0ec8cbab83b9f637823b073b7878fce6eb93ccfaafe8112"
           },
           {
-            "name": "corrected-built-validation.json",
-            "sha256": "23588565981b14a18667b89947dadb3a48711b45ed4f6c3339850f41d83f947e"
-          },
-          {
             "name": "content-ledger.json",
             "sha256": "2e1dfaba1ca2dbc1412587b4966fcad1d280ed4475d010062e84ef0bd4608495"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "corrected-built-validation.json",
+            "sha256": "23588565981b14a18667b89947dadb3a48711b45ed4f6c3339850f41d83f947e"
           },
           {
             "name": "browser-qa-final.json",
@@ -215,12 +227,14 @@
             "sha256": "31ed898fbb4d6f6cd353d0ddb7de665d5cbee22c0a0c2332318d7aff9eabd354"
           },
           {
-            "name": "corrected-built-validation.json",
-            "sha256": "3dbe82a855459ec75a3c92d4cc29eb38decb1ab1c60beeecf29f0c87cf2f6297"
-          },
-          {
             "name": "content-ledger.json",
             "sha256": "dff9ec982a7488094de4a6fac9eeac7568c95c1b4b1cef31c44caff1764afc4a"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "corrected-built-validation.json",
+            "sha256": "3dbe82a855459ec75a3c92d4cc29eb38decb1ab1c60beeecf29f0c87cf2f6297"
           },
           {
             "name": "browser-qa-final.json",
@@ -241,12 +255,14 @@
             "sha256": "5b7d1007da2eda0d959f528b2626ac595441f2061f97f30d8bfa72e65b27bd2c"
           },
           {
-            "name": "corrected-built-validation.json",
-            "sha256": "5630e5abb9d338bcce21cab6bd9b60f344a0439bcebad7c3c0400de2f5101441"
-          },
-          {
             "name": "content-ledger.json",
             "sha256": "8fd577c451ab2f9b45c9922abae813a893985aef6dda199b84bc70a90d3058da"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "corrected-built-validation.json",
+            "sha256": "5630e5abb9d338bcce21cab6bd9b60f344a0439bcebad7c3c0400de2f5101441"
           },
           {
             "name": "browser-qa-final.json",
@@ -278,12 +294,14 @@
             "sha256": "690035bb913310dbabe1f2b2dfb95a3ecace17c57febcead4a57397973025c9f"
           },
           {
-            "name": "corrected-built-validation.json",
-            "sha256": "505fc1b6f43fe402c15555cafd99a5d7441783f500d670d7039cb0972af3d81c"
-          },
-          {
             "name": "content-ledger.json",
             "sha256": "7896894288518bc8cf8c51296af277faba55246e2b9b0b391869a849c392f062"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "corrected-built-validation.json",
+            "sha256": "505fc1b6f43fe402c15555cafd99a5d7441783f500d670d7039cb0972af3d81c"
           },
           {
             "name": "browser-qa-final.json",
@@ -304,12 +322,14 @@
             "sha256": "3dcab0cf23a3143515a991a1a8f57bf4ad9da9136bc5f4b296d967ba94f12573"
           },
           {
-            "name": "corrected-built-validation.json",
-            "sha256": "c062be24c2d109fe4dbd02d45851b4038eabe26b4ee97d2c938a04d768030946"
-          },
-          {
             "name": "content-ledger.json",
             "sha256": "e6b952402e80b0c8ad8d087b99589ade64155d7f465a9530f161bc1a05b591aa"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "corrected-built-validation.json",
+            "sha256": "c062be24c2d109fe4dbd02d45851b4038eabe26b4ee97d2c938a04d768030946"
           },
           {
             "name": "browser-qa-final.json",
@@ -322,5 +342,30 @@
         ]
       }
     }
+  },
+  "refresh_review": {
+    "native_evidence": "accepted-kit-refresh-01.xml: 60 distinct passing native demo/practice checks",
+    "source_review": "Inspected the local-hosted-workflow exclusion changes in CourseLibrary and desktop teaching, plus the Spanish client-file required-heading repair. Fictional inputs and lesson text are preserved. This refresh changes no professional approvals.",
+    "output_comparison": "Primary output bytes match the previously reviewed files, except managed import IDs, source-block ordering and the displayed invoice proposal hash. Compared the exact old and new files to verify those bounded differences. The complete invoice preview HTML otherwise matches, including its layout. Primary artifact hashes here are from the current native runs.",
+    "retained_evidence": "Prior supporting validation, registry and browser-QA artifacts are retained separately where they contain older run paths or timestamps. Existing visual review is reused for identical slides/transcript text and the otherwise identical invoice preview. No fresh browser or voice acceptance is claimed."
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.151827+00:00",
+    "previous_course_sha256": "86ac2c90b1ea83d3efb85e1b792dc475769b4b53d44755b307b4a277db525a02",
+    "source_snapshot": "/private/tmp/clara-teaching-source-refresh-02/test_correction_kit_changes_on9/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
   }
 }

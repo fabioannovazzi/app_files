@@ -29,17 +29,22 @@
     {
       "path": "modules/apertura-pratica/assets/apertura-pratica-review-widget.html",
       "repository_path": "plugins/apertura-pratica/assets/apertura-pratica-review-widget.html",
-      "sha256": "a14af4dce7dfe83c1ad6f9b21090204b9ee6de89ecb09487b3d1d91e52d8ec12"
+      "sha256": "28054d711ef9227453716efa50e3b9320b3ed9b1671e73e2f97b1fac1c54c6fa"
     },
     {
       "path": "modules/apertura-pratica/assets/apertura-pratica-review.html",
       "repository_path": "plugins/apertura-pratica/assets/apertura-pratica-review.html",
-      "sha256": "0dda9782a4a27a64337f856877311b9295a93f38fa830e8501e6a44d670a037d"
+      "sha256": "ea92ff609eb34bf1ee3d64100b1ef0e5aec53e6a1225890dc3158728b07be540"
     },
     {
       "path": "modules/apertura-pratica/assets/icon.svg",
       "repository_path": "plugins/apertura-pratica/assets/icon.svg",
       "sha256": "651be91e3062d9f910c1cd70dc8d484a861525266a25742bdb3001b318a1d114"
+    },
+    {
+      "path": "modules/apertura-pratica/references/display-labels.json",
+      "repository_path": "plugins/apertura-pratica/references/display-labels.json",
+      "sha256": "fdd1de77bb31ccb37889b7a2d6aaceb1075c0f7bbea5109e1002a25f6e093f1a"
     },
     {
       "path": "modules/apertura-pratica/references/source-registry.json",
@@ -54,7 +59,7 @@
     {
       "path": "modules/apertura-pratica/schemas/matter_intake.schema.json",
       "repository_path": "plugins/apertura-pratica/schemas/matter_intake.schema.json",
-      "sha256": "de8495ebbc8800d91fb8b5e88572f68d71f57b3920d31f0987f7712de6998ee9"
+      "sha256": "06243a8205d4831b240c421c5c2b13d9c57ab1d35047d64a110b1fe75d32664a"
     },
     {
       "path": "modules/apertura-pratica/schemas/ui_decisions.schema.json",
@@ -69,7 +74,12 @@
     {
       "path": "modules/apertura-pratica/scripts/apertura_pratica_core.py",
       "repository_path": "plugins/apertura-pratica/scripts/apertura_pratica_core.py",
-      "sha256": "f2d3ad887330e8fa59d6350672d933cef35c8df0df6c8e024df15caa03b9e2a2"
+      "sha256": "313680fad95ede5d2cb8a2df35edaeeaf71bc5a5220048be31e5194db2263d3e"
+    },
+    {
+      "path": "modules/apertura-pratica/scripts/apertura_pratica_display.py",
+      "repository_path": "plugins/apertura-pratica/scripts/apertura_pratica_display.py",
+      "sha256": "3fc9a78bf1a1212b2be86e0c021d06bbf04d6ec529ef9bacd8d8ce7fb41180f5"
     },
     {
       "path": "modules/apertura-pratica/scripts/apply_review.py",
@@ -99,12 +109,12 @@
     {
       "path": "modules/apertura-pratica/scripts/validate_run.py",
       "repository_path": "plugins/apertura-pratica/scripts/validate_run.py",
-      "sha256": "a2c83e96dae0250eab3297a647d673bf5930d4ada52b48efa919b52cd6844729"
+      "sha256": "0bc0b15ddbddd9902e39177797e8bbf6d428f0f5d736eca2e1b9bde068b83235"
     },
     {
       "path": "modules/apertura-pratica/skills/apertura-pratica/SKILL.md",
       "repository_path": "plugins/apertura-pratica/skills/apertura-pratica/SKILL.md",
-      "sha256": "8e7e39faa96543a66b6cc3fb39550486dd6648446af8a4d095dbdd2159a10383"
+      "sha256": "97b6c0d327fa0a426ec158f7f674d912a3d967c1d587ea9798559eac2d1f9b81"
     },
     {
       "path": "modules/apertura-pratica/skills/apertura-pratica/agents/openai.yaml",
@@ -159,7 +169,7 @@
     {
       "path": "vendor/modules/courseware/assets/languages.json",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
     },
     {
       "path": "vendor/modules/courseware/execution.py",
@@ -169,7 +179,12 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
     },
     {
       "path": "vendor/modules/desktop_teaching/__init__.py",
@@ -184,12 +199,12 @@
     {
       "path": "vendor/modules/desktop_teaching/onboarding.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
-      "sha256": "3a230127225683b86ead89c6fd93101092b756f062b396d9be45e757dc530b14"
+      "sha256": "215244f8e595127743e7fd1c97febd489056ebcc9d7907dec7098a6b498fca8b"
     },
     {
       "path": "vendor/modules/desktop_teaching/teaching.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
-      "sha256": "9e672584218ce40d8a5e397d61f3198eacea4bdffdcb37fd813333799875a4d4"
+      "sha256": "8cfb8565b9a854c119e8a48e7bf068f2450786d21255da9b202a606226207a6e"
     }
   ],
   "files": [
@@ -227,7 +242,7 @@
     },
     {
       "path": "files/practice/update-it.md",
-      "sha256": "10b1c50707a555792640e18ba7d2e10e3a459a2aa60a8de5e8b0689271ddc97b",
+      "sha256": "1289e19415eb939b2dafe7b9b0889fdd554bf3873d8b1c12ab209d5f99d4751f",
       "languages": [
         "it"
       ],
@@ -267,7 +282,7 @@
     },
     {
       "path": "files/practice/update-en.md",
-      "sha256": "780f4f39fe98ead6736d0b99c9759114e47c6ac88328ab04272496d3660dbf2c",
+      "sha256": "f4766c684c9dc0dbe543d4180fceb402809cce222a25d244d37decb0f5b48382",
       "languages": [
         "en"
       ],
@@ -307,7 +322,7 @@
     },
     {
       "path": "files/practice/update-fr.md",
-      "sha256": "eb467214a767b46b661be7c6269563b2855add33fa10eacef3949490c2e1629c",
+      "sha256": "eab6ecb5c331abe854e025bb67e96ba62f1b058f1bd641753a13460d8ef1f53d",
       "languages": [
         "fr"
       ],
@@ -347,7 +362,7 @@
     },
     {
       "path": "files/practice/update-de.md",
-      "sha256": "c747562371c903d168f55cc85dafc6b0e019742b243b070df20628a442443a34",
+      "sha256": "2bfe3da6a5fe935e758999920ac4e26b6d615c0269146ce23f1dc06035f076e2",
       "languages": [
         "de"
       ],
@@ -387,7 +402,7 @@
     },
     {
       "path": "files/practice/update-es.md",
-      "sha256": "2d834937b03de6c5bf9384c31fe49ebe5f3c09d0855c5b647205fbdcabd54ab3",
+      "sha256": "affa2ec712001a0e8c21de1a74f4bceb4e8dea276a781717cdcfdc6ab2bba32d",
       "languages": [
         "es"
       ],

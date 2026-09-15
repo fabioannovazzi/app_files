@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "run_id": "lucia-it-practice",
+  "question_domain": "compliance",
+  "document_type": "professional_communication_package",
+  "purpose": "Lo studio vuole preparare una FAQ breve per le piccole imprese clienti in Italia: come riconoscere e organizzare una richiesta di accesso ai dati personali. È un’iniziativa informativa dello studio, non l’annuncio di una nuova legge né una risposta a una persona reale. I lettori gestiscono amministrazione e rapporti con i clienti e devono capire quando coinvolgere chi segue la privacy. Usa la guida ufficiale EDPB selezionata, distinguendo indicazioni generali e valutazioni sul singolo caso. Non sono forniti dati di clienti, richieste reali o una politica privacy aziendale. Prepara il pacchetto per la revisione interna; nessun invio o pubblicazione. Il testo finale deve essere in italiano.\nDopo aver esaminato la FAQ, prepara una nuova versione del pacchetto che comprenda anche una breve email di accompagnamento ai clienti. L’email deve spiegare a chi serve la FAQ e come usarla. Conserva fonti, limiti e prima versione. Non inventare destinatari, allegati già spediti o un nuovo obbligo. Nessun invio.",
+  "audience": "Small business clients in Italy; administration and customer service staff",
+  "output_language": "it",
+  "jurisdiction": "Italy / EU GDPR; language does not change jurisdiction",
+  "jurisdiction_status": "confirmed",
+  "generation_route": "codex_direct",
+  "evidence_display": "inline_citations",
+  "validation_profile": "source_identity_support_reasoning_and_judgment",
+  "validation_scope": "all_material_claims",
+  "correction_policy": "correct_when_supported",
+  "judgment_policy": "flag_for_professional_review",
+  "generation_instructions": {
+    "source_hierarchy": [
+      "Selected EDPB official guidance; identify it as guidance, not legislation. No missing legal authority may be invented."
+    ],
+    "preserve": [
+      "Actor roles, conditions, uncertainty, qualifications and professional-review boundaries.",
+      "Materiale fittizio per la lezione. Lo studio e l’incarico sono inventati. La guida EDPB allegata è una fonte pubblica autentica, acquisita il 14 settembre 2026, non una norma inventata.",
+      "Studio Riva — avvocati. Non ci sono logo, recapiti, precedenti comunicazioni o un formato già approvato. Proponi un formato sobrio blu e bianco, con font leggibile, titoli chiari e fonti identificabili. Il professionista lo rivedrà prima dell’uso.",
+      "Run-selected draft visual values, not an approved house profile: {\"accent_color\": \"#197B9C\", \"background_color\": \"#FFFFFF\", \"primary_color\": \"#153855\", \"studio_name\": \"Studio Riva\", \"text_color\": \"#1C2935\"}"
+    ],
+    "must_distinguish": [
+      "The fictional firm-led initiative from a legislative change; general guidance from a real case decision.",
+      "Preserving factual conditions and qualifications in the candidate is an answer-contract check. Physical retention of the earlier package is a separate run/file check; never claim that such retention or professional approval has already been verified by claim assurance."
+    ],
+    "prohibited": [
+      "Invented clients, facts, regulations, urgency, professional approvals, sending or publishing."
+    ]
+  },
+  "contract_digest": "86dec63e413638642cbb827dbfa6e3dc24388b75b0712cfce5fc1f88d4916557"
+}

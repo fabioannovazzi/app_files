@@ -1,0 +1,310 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "journal-sampling",
+  "course_sha256": "e2083d8d5c1a5ed5ba753a3cb0ade8ec5f0ce41c137a2d596963da327e7ee999",
+  "reviewer": "Codex: first-use lesson, fictional inputs and current native sample review",
+  "reviewed_at": "2026-09-14T18:13:05.890693+00:00",
+  "review_scope": "Read all five localized outlines and context notes and both source journals. Current native inspection, normalization, random sampling and Studio Archive finalization pass in ten locale/phase checks within a 186-case regression. Visually inspected both complete unique sample worksheets in two horizontal views each; compared every cell value, type, style, column width, row height and freeze setting across the other eight locale workbooks. The worksheet name varies by locale; canonical column names intentionally remain English. No learner comprehension, voice, browser widget or two-window acceptance is claimed. Professional review decisions remain pending.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches providing a journal, checking how Vera reads it, selecting the requested rows and finding the sample for later examination. The six stages follow the complete first use rather than an isolated sampling feature.",
+        "inputs_and_request": "Read both fictional journals and this localized context. March has thirteen posting lines from three invoices and two payments, with EUR 4,392 debit and credit totals. The cumulative March-April input has fifteen lines and EUR 4,880 on each side. The natural request specifies five random rows and seed 42. The context explains source headings, row identity and decimal notation.",
+        "execution_and_checkpoints": "The current source-bound workflow inspects and normalizes the actual imported journal before sampling. The regression records an exact reviewed mapping for the fictional source; no approved mapping is shipped to the learner. Checkpoints ask which population is selected and require tracing one selected row back to the source. Native preparation and sample closure pass; all review decisions remain pending.",
+        "deliverable_and_next_action": "The workflow produces the actual Excel and CSV sample, normalized population, preparation checks and reproducibility record. The repaired native Excel export fits dates, descriptions, headers and source references and freezes posting identifiers for horizontal scrolling. Every selected row matches the preserved source. Finalized declarations retain the three semantic artifact IDs needed by the ordinary Vouching handoff. Canonical Excel headers remain English, as required by this workflow, with the lesson and review summary in the selected language.",
+        "practice_and_repeat": "Practice reruns selection against the cumulative fifteen-line file while keeping the same five-row size and seed. It teaches checking the changed population and tracing a new sample row; it does not promise that every period must appear in a random sample. The repeat instruction names the real client, journal, period, filters and audit-plan choices, then offers the owning document-verification workflow.",
+        "language_and_pacing": "Read the complete it outline and context and its localized native sampling summary. All five versions retain the same first-use sequence and two useful checkpoints. The planned six stages total 390 seconds; processing and questions may extend that target. Technical canonical headers are explained rather than claimed translated."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_journal_sampling_kit_normalizes_and_samples_current_bound_source[demo-13-it]",
+        "result_review": "Native random selection uses seed 42 and selects five rows from 13. Selected rows: INV-3/2 (source row 9), INV-2/1 (source row 5), PAY-2/2 (source row 14), INV-3/3 (source row 10), PAY-1/2 (source row 12). The original journal is preserved, all selected fields close through CSV and Excel, and sample review remains pending. The complete workbook was visually reviewed for its phase; matching cell values and styles were verified for each locale.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_sample.xlsx",
+            "sha256": "674b1fde99b667ba1e1fda20152a6bc9a3c28ab84a48917532a7f4e4a08d4a6e"
+          },
+          {
+            "name": "journal_sample.csv",
+            "sha256": "0fe42d6401ef8a5466c3bac26372130f2b9b782b6d20941ba3ebe756e04a783f"
+          },
+          {
+            "name": "sampling_audit.json",
+            "sha256": "53636eb5743496e97289f0b162ca9008c5dcdef7b3b7ebafe74ed4170625cda7"
+          },
+          {
+            "name": "model_review_context.json",
+            "sha256": "05720a72d9bb242f9d138ba17c1c9333df5662a9ae31389219fb5e3c48c0e769"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_journal_sampling_kit_normalizes_and_samples_current_bound_source[practice-15-it]",
+        "result_review": "Native random selection uses seed 42 and selects five rows from 15. Selected rows: INV-3/3 (source row 10), INV-2/1 (source row 5), PAY-2/2 (source row 14), PAY-1/1 (source row 11), PAY-2/1 (source row 13). The original journal is preserved, all selected fields close through CSV and Excel, and sample review remains pending. The complete workbook was visually reviewed for its phase; matching cell values and styles were verified for each locale.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_sample.xlsx",
+            "sha256": "26d616ff3fd3548d447d0971637766f78d4486a00fb2d501a97b301ec8d6e68b"
+          },
+          {
+            "name": "journal_sample.csv",
+            "sha256": "ffaf495d9a4a9bd1325c81395ad83db716242fb3deaca5a327986d19bb4d96f0"
+          },
+          {
+            "name": "sampling_audit.json",
+            "sha256": "40a11445965e2f2a6ddd5d660474074c47e5b93a21736b85680f0573d88b68a0"
+          },
+          {
+            "name": "model_review_context.json",
+            "sha256": "c57968710dab97f5d5c0358eceff2f6ac084ff7c251c752c9d018b9d2244c794"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches providing a journal, checking how Vera reads it, selecting the requested rows and finding the sample for later examination. The six stages follow the complete first use rather than an isolated sampling feature.",
+        "inputs_and_request": "Read both fictional journals and this localized context. March has thirteen posting lines from three invoices and two payments, with EUR 4,392 debit and credit totals. The cumulative March-April input has fifteen lines and EUR 4,880 on each side. The natural request specifies five random rows and seed 42. The context explains source headings, row identity and decimal notation.",
+        "execution_and_checkpoints": "The current source-bound workflow inspects and normalizes the actual imported journal before sampling. The regression records an exact reviewed mapping for the fictional source; no approved mapping is shipped to the learner. Checkpoints ask which population is selected and require tracing one selected row back to the source. Native preparation and sample closure pass; all review decisions remain pending.",
+        "deliverable_and_next_action": "The workflow produces the actual Excel and CSV sample, normalized population, preparation checks and reproducibility record. The repaired native Excel export fits dates, descriptions, headers and source references and freezes posting identifiers for horizontal scrolling. Every selected row matches the preserved source. Finalized declarations retain the three semantic artifact IDs needed by the ordinary Vouching handoff. Canonical Excel headers remain English, as required by this workflow, with the lesson and review summary in the selected language.",
+        "practice_and_repeat": "Practice reruns selection against the cumulative fifteen-line file while keeping the same five-row size and seed. It teaches checking the changed population and tracing a new sample row; it does not promise that every period must appear in a random sample. The repeat instruction names the real client, journal, period, filters and audit-plan choices, then offers the owning document-verification workflow.",
+        "language_and_pacing": "Read the complete en outline and context and its localized native sampling summary. All five versions retain the same first-use sequence and two useful checkpoints. The planned six stages total 390 seconds; processing and questions may extend that target. Technical canonical headers are explained rather than claimed translated."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_journal_sampling_kit_normalizes_and_samples_current_bound_source[demo-13-en]",
+        "result_review": "Native random selection uses seed 42 and selects five rows from 13. Selected rows: INV-3/2 (source row 9), INV-2/1 (source row 5), PAY-2/2 (source row 14), INV-3/3 (source row 10), PAY-1/2 (source row 12). The original journal is preserved, all selected fields close through CSV and Excel, and sample review remains pending. The complete workbook was visually reviewed for its phase; matching cell values and styles were verified for each locale.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_sample.xlsx",
+            "sha256": "95c023275a5e05171ed8b7ba1b9c080d78e7ef6f73ea60462246e6bb70fd0acc"
+          },
+          {
+            "name": "journal_sample.csv",
+            "sha256": "0fe42d6401ef8a5466c3bac26372130f2b9b782b6d20941ba3ebe756e04a783f"
+          },
+          {
+            "name": "sampling_audit.json",
+            "sha256": "21899b2fd37fb48d17c9b7669c5aadf8e41083e6111abe18c9ca02a89c41e49f"
+          },
+          {
+            "name": "model_review_context.json",
+            "sha256": "bc074cf912e603051a92464d4325f5c69a40f9a1928506402cbce4f713cc5bae"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_journal_sampling_kit_normalizes_and_samples_current_bound_source[practice-15-en]",
+        "result_review": "Native random selection uses seed 42 and selects five rows from 15. Selected rows: INV-3/3 (source row 10), INV-2/1 (source row 5), PAY-2/2 (source row 14), PAY-1/1 (source row 11), PAY-2/1 (source row 13). The original journal is preserved, all selected fields close through CSV and Excel, and sample review remains pending. The complete workbook was visually reviewed for its phase; matching cell values and styles were verified for each locale.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_sample.xlsx",
+            "sha256": "3ed6fc9926c8c80c171d8a735f00836655b730c6476aa08edab3962d4c276adc"
+          },
+          {
+            "name": "journal_sample.csv",
+            "sha256": "ffaf495d9a4a9bd1325c81395ad83db716242fb3deaca5a327986d19bb4d96f0"
+          },
+          {
+            "name": "sampling_audit.json",
+            "sha256": "adfc1d295d8d9ff22aacf9bfd5917a6db00c31c3cef42fecc7f7fd31b0d4a37c"
+          },
+          {
+            "name": "model_review_context.json",
+            "sha256": "1a7a5e4d3ce5aa835ee46395eb6e01a7c31bd60780ea334505e50d3e4d07d861"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches providing a journal, checking how Vera reads it, selecting the requested rows and finding the sample for later examination. The six stages follow the complete first use rather than an isolated sampling feature.",
+        "inputs_and_request": "Read both fictional journals and this localized context. March has thirteen posting lines from three invoices and two payments, with EUR 4,392 debit and credit totals. The cumulative March-April input has fifteen lines and EUR 4,880 on each side. The natural request specifies five random rows and seed 42. The context explains source headings, row identity and decimal notation.",
+        "execution_and_checkpoints": "The current source-bound workflow inspects and normalizes the actual imported journal before sampling. The regression records an exact reviewed mapping for the fictional source; no approved mapping is shipped to the learner. Checkpoints ask which population is selected and require tracing one selected row back to the source. Native preparation and sample closure pass; all review decisions remain pending.",
+        "deliverable_and_next_action": "The workflow produces the actual Excel and CSV sample, normalized population, preparation checks and reproducibility record. The repaired native Excel export fits dates, descriptions, headers and source references and freezes posting identifiers for horizontal scrolling. Every selected row matches the preserved source. Finalized declarations retain the three semantic artifact IDs needed by the ordinary Vouching handoff. Canonical Excel headers remain English, as required by this workflow, with the lesson and review summary in the selected language.",
+        "practice_and_repeat": "Practice reruns selection against the cumulative fifteen-line file while keeping the same five-row size and seed. It teaches checking the changed population and tracing a new sample row; it does not promise that every period must appear in a random sample. The repeat instruction names the real client, journal, period, filters and audit-plan choices, then offers the owning document-verification workflow.",
+        "language_and_pacing": "Read the complete fr outline and context and its localized native sampling summary. All five versions retain the same first-use sequence and two useful checkpoints. The planned six stages total 390 seconds; processing and questions may extend that target. Technical canonical headers are explained rather than claimed translated."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_journal_sampling_kit_normalizes_and_samples_current_bound_source[demo-13-fr]",
+        "result_review": "Native random selection uses seed 42 and selects five rows from 13. Selected rows: INV-3/2 (source row 9), INV-2/1 (source row 5), PAY-2/2 (source row 14), INV-3/3 (source row 10), PAY-1/2 (source row 12). The original journal is preserved, all selected fields close through CSV and Excel, and sample review remains pending. The complete workbook was visually reviewed for its phase; matching cell values and styles were verified for each locale.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_sample.xlsx",
+            "sha256": "9bbd43126cd8f0c517a2f3f02dfbf29c9e4627913a08d40c578d29a8592279d2"
+          },
+          {
+            "name": "journal_sample.csv",
+            "sha256": "0fe42d6401ef8a5466c3bac26372130f2b9b782b6d20941ba3ebe756e04a783f"
+          },
+          {
+            "name": "sampling_audit.json",
+            "sha256": "f9b86a9cb505a3de68c07a978bae12f915d1301f2698179704686fa1a2ae8ebb"
+          },
+          {
+            "name": "model_review_context.json",
+            "sha256": "757e1e691f8f18db00a4fcc13790dca04a1602c5817b86ef3375658660caddaf"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_journal_sampling_kit_normalizes_and_samples_current_bound_source[practice-15-fr]",
+        "result_review": "Native random selection uses seed 42 and selects five rows from 15. Selected rows: INV-3/3 (source row 10), INV-2/1 (source row 5), PAY-2/2 (source row 14), PAY-1/1 (source row 11), PAY-2/1 (source row 13). The original journal is preserved, all selected fields close through CSV and Excel, and sample review remains pending. The complete workbook was visually reviewed for its phase; matching cell values and styles were verified for each locale.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_sample.xlsx",
+            "sha256": "a7c9038866b0ead81d4907e8e2dbfb151da511ddf28f9874bb7716c71d6e46fe"
+          },
+          {
+            "name": "journal_sample.csv",
+            "sha256": "ffaf495d9a4a9bd1325c81395ad83db716242fb3deaca5a327986d19bb4d96f0"
+          },
+          {
+            "name": "sampling_audit.json",
+            "sha256": "78767e76c570939e0559810bc020b9653240a5fd2fd230b8c413125202a8f1d1"
+          },
+          {
+            "name": "model_review_context.json",
+            "sha256": "70600e301fde2b6a9dd47df52825e1a24099cccd22b87e6f808414d60edd2fa0"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches providing a journal, checking how Vera reads it, selecting the requested rows and finding the sample for later examination. The six stages follow the complete first use rather than an isolated sampling feature.",
+        "inputs_and_request": "Read both fictional journals and this localized context. March has thirteen posting lines from three invoices and two payments, with EUR 4,392 debit and credit totals. The cumulative March-April input has fifteen lines and EUR 4,880 on each side. The natural request specifies five random rows and seed 42. The context explains source headings, row identity and decimal notation.",
+        "execution_and_checkpoints": "The current source-bound workflow inspects and normalizes the actual imported journal before sampling. The regression records an exact reviewed mapping for the fictional source; no approved mapping is shipped to the learner. Checkpoints ask which population is selected and require tracing one selected row back to the source. Native preparation and sample closure pass; all review decisions remain pending.",
+        "deliverable_and_next_action": "The workflow produces the actual Excel and CSV sample, normalized population, preparation checks and reproducibility record. The repaired native Excel export fits dates, descriptions, headers and source references and freezes posting identifiers for horizontal scrolling. Every selected row matches the preserved source. Finalized declarations retain the three semantic artifact IDs needed by the ordinary Vouching handoff. Canonical Excel headers remain English, as required by this workflow, with the lesson and review summary in the selected language.",
+        "practice_and_repeat": "Practice reruns selection against the cumulative fifteen-line file while keeping the same five-row size and seed. It teaches checking the changed population and tracing a new sample row; it does not promise that every period must appear in a random sample. The repeat instruction names the real client, journal, period, filters and audit-plan choices, then offers the owning document-verification workflow.",
+        "language_and_pacing": "Read the complete de outline and context and its localized native sampling summary. All five versions retain the same first-use sequence and two useful checkpoints. The planned six stages total 390 seconds; processing and questions may extend that target. Technical canonical headers are explained rather than claimed translated."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_journal_sampling_kit_normalizes_and_samples_current_bound_source[demo-13-de]",
+        "result_review": "Native random selection uses seed 42 and selects five rows from 13. Selected rows: INV-3/2 (source row 9), INV-2/1 (source row 5), PAY-2/2 (source row 14), INV-3/3 (source row 10), PAY-1/2 (source row 12). The original journal is preserved, all selected fields close through CSV and Excel, and sample review remains pending. The complete workbook was visually reviewed for its phase; matching cell values and styles were verified for each locale.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_sample.xlsx",
+            "sha256": "9751807aaa6b932518827e726b00e7ebdeb38846905506ecc30cb227a66e5edf"
+          },
+          {
+            "name": "journal_sample.csv",
+            "sha256": "0fe42d6401ef8a5466c3bac26372130f2b9b782b6d20941ba3ebe756e04a783f"
+          },
+          {
+            "name": "sampling_audit.json",
+            "sha256": "736742b10df6cb6f917af5c38270d5abc8b537c7409f15024c86355ed3a62e49"
+          },
+          {
+            "name": "model_review_context.json",
+            "sha256": "0cd5430691d95d831ee95d031687b9f2d8ec0546c4393d57f9b6d699d302cf2a"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_journal_sampling_kit_normalizes_and_samples_current_bound_source[practice-15-de]",
+        "result_review": "Native random selection uses seed 42 and selects five rows from 15. Selected rows: INV-3/3 (source row 10), INV-2/1 (source row 5), PAY-2/2 (source row 14), PAY-1/1 (source row 11), PAY-2/1 (source row 13). The original journal is preserved, all selected fields close through CSV and Excel, and sample review remains pending. The complete workbook was visually reviewed for its phase; matching cell values and styles were verified for each locale.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_sample.xlsx",
+            "sha256": "d3eda77c619f39c047b0693b80dee468a3b151be455d79ecf1dd35738b27043d"
+          },
+          {
+            "name": "journal_sample.csv",
+            "sha256": "ffaf495d9a4a9bd1325c81395ad83db716242fb3deaca5a327986d19bb4d96f0"
+          },
+          {
+            "name": "sampling_audit.json",
+            "sha256": "25b784e8f50c20cf80fbb159b10697ea310a64f3c3122fef7519812ef3179048"
+          },
+          {
+            "name": "model_review_context.json",
+            "sha256": "9edadd8b6068de043e2aeaa6754359653e38569b091b6dff2da9e084063cafef"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches providing a journal, checking how Vera reads it, selecting the requested rows and finding the sample for later examination. The six stages follow the complete first use rather than an isolated sampling feature.",
+        "inputs_and_request": "Read both fictional journals and this localized context. March has thirteen posting lines from three invoices and two payments, with EUR 4,392 debit and credit totals. The cumulative March-April input has fifteen lines and EUR 4,880 on each side. The natural request specifies five random rows and seed 42. The context explains source headings, row identity and decimal notation.",
+        "execution_and_checkpoints": "The current source-bound workflow inspects and normalizes the actual imported journal before sampling. The regression records an exact reviewed mapping for the fictional source; no approved mapping is shipped to the learner. Checkpoints ask which population is selected and require tracing one selected row back to the source. Native preparation and sample closure pass; all review decisions remain pending.",
+        "deliverable_and_next_action": "The workflow produces the actual Excel and CSV sample, normalized population, preparation checks and reproducibility record. The repaired native Excel export fits dates, descriptions, headers and source references and freezes posting identifiers for horizontal scrolling. Every selected row matches the preserved source. Finalized declarations retain the three semantic artifact IDs needed by the ordinary Vouching handoff. Canonical Excel headers remain English, as required by this workflow, with the lesson and review summary in the selected language.",
+        "practice_and_repeat": "Practice reruns selection against the cumulative fifteen-line file while keeping the same five-row size and seed. It teaches checking the changed population and tracing a new sample row; it does not promise that every period must appear in a random sample. The repeat instruction names the real client, journal, period, filters and audit-plan choices, then offers the owning document-verification workflow.",
+        "language_and_pacing": "Read the complete es outline and context and its localized native sampling summary. All five versions retain the same first-use sequence and two useful checkpoints. The planned six stages total 390 seconds; processing and questions may extend that target. Technical canonical headers are explained rather than claimed translated."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_journal_sampling_kit_normalizes_and_samples_current_bound_source[demo-13-es]",
+        "result_review": "Native random selection uses seed 42 and selects five rows from 13. Selected rows: INV-3/2 (source row 9), INV-2/1 (source row 5), PAY-2/2 (source row 14), INV-3/3 (source row 10), PAY-1/2 (source row 12). The original journal is preserved, all selected fields close through CSV and Excel, and sample review remains pending. The complete workbook was visually reviewed for its phase; matching cell values and styles were verified for each locale.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_sample.xlsx",
+            "sha256": "a7f132c08b7af122118cdb0ed48abd55fd428b3799f4158b53b6e7064196eacc"
+          },
+          {
+            "name": "journal_sample.csv",
+            "sha256": "0fe42d6401ef8a5466c3bac26372130f2b9b782b6d20941ba3ebe756e04a783f"
+          },
+          {
+            "name": "sampling_audit.json",
+            "sha256": "f0f67104fbb0127cb2696dc3dcd226cd048a036aa1a7d7e234546af1ef4a3140"
+          },
+          {
+            "name": "model_review_context.json",
+            "sha256": "e9227d43ee1d02c58ca2724be3dbfd448fa1dfb5260a412511e8d1143769a8c0"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_journal_sampling_kit_normalizes_and_samples_current_bound_source[practice-15-es]",
+        "result_review": "Native random selection uses seed 42 and selects five rows from 15. Selected rows: INV-3/3 (source row 10), INV-2/1 (source row 5), PAY-2/2 (source row 14), PAY-1/1 (source row 11), PAY-2/1 (source row 13). The original journal is preserved, all selected fields close through CSV and Excel, and sample review remains pending. The complete workbook was visually reviewed for its phase; matching cell values and styles were verified for each locale.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_sample.xlsx",
+            "sha256": "1397cbf53871d7ce027986887ee11ef20327d6b2d4629f56c108ba3448275781"
+          },
+          {
+            "name": "journal_sample.csv",
+            "sha256": "ffaf495d9a4a9bd1325c81395ad83db716242fb3deaca5a327986d19bb4d96f0"
+          },
+          {
+            "name": "sampling_audit.json",
+            "sha256": "d5926e7403e2e0d0739e5f30ddc63f78c50b84c91eb4fcf8448d4bba30992769"
+          },
+          {
+            "name": "model_review_context.json",
+            "sha256": "18c88006ef0b10b43b7f717bc566c0519e919eddc337cbc645dc7af510f0dc1b"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.157910+00:00",
+    "previous_course_sha256": "a329cf359db2efab25e9613994c014420681f5882abe003c44846feff3c2078e",
+    "source_snapshot": "/private/tmp/journal-sampling-teaching-release-02/test_journal_sampling_kit_norm9/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  }
+}

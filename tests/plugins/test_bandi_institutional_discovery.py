@@ -213,6 +213,10 @@ def test_codex_and_chatgpt_packages_preserve_the_same_discovery_contract() -> No
     reference = "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/institutional-discovery.md"
     matching = [value for name, value in codex.items() if name.endswith(reference)]
     assert matching == [chatgpt[reference]]
+    for filename in ("scripts/dossier_report.py", "assets/dossier-labels.json"):
+        path = f"modules/bandi-agevolazioni/{filename}"
+        packaged = [value for name, value in codex.items() if name.endswith(path)]
+        assert packaged == [chatgpt[path]]
     card = chatgpt["skills/bandi-agevolazioni/SKILL.md"].decode()
     assert "../../modules/bandi-agevolazioni" in card
     assert "references/institutional-discovery.md" in card

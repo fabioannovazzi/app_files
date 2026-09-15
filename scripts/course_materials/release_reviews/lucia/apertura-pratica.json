@@ -1,0 +1,385 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "lucia",
+  "workflow": "apertura-pratica",
+  "course_sha256": "8bcc09a4ef3d8e7ebcb9617695bb3ab8cf383aad0671e12f15056e28a32d8431",
+  "reviewer": "Codex: five-language first-use matter-opening material and native output review",
+  "reviewed_at": "2026-09-15T00:53:48.479006+00:00",
+  "review_scope": "Reviewed the complete five-language outlines, fictional requests, supply summaries, three-row register and practice correspondence. Reviewed native memos, grouped information requests, handoffs, final cards and the practice changes. Actual MCP rendering, saved synthetic return decisions, native Apply/Validate, manifest consistency and normal archive completion are exercised in ten successful runs. This accepts the prepared lesson material and its native execution, not a real lawyer or learner decision. The local workbench layout was inspected in five languages under matter-visual-11, including French conflict review; a synthetic Italian save was exercised under matter-visual-10. The current generated widget passes all five whole-script rendering tests. Those views do not attest native voice, actual paired-window learner interaction, human comprehension or measured lesson timing.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches preparing a new matter from a client request and documents. The learner starts by stating the requested outcome, watches the current workflow prepare the dossier, reviews it, saves and applies a return decision, then adds correspondence in a second version. The lesson explains how to use the function; the delivery discrepancy is a simple case context.",
+        "inputs_and_request": "Read request-it.md, supply-it.md, update-it.md and every register row. Beta orders 100 components for EUR 6,000, pays an advance of EUR 3,000 and receives 80. The request identifies Gamma and Elena and reports an Italian pre-litigation context. The small register expressly covers only DEMO-A, DEMO-B and DEMO-C. The files supply facts without professional approvals. Practice correspondence now contains case information rather than exercise instructions.",
+        "execution_and_checkpoints": "The native run imports exact source bytes and retains the client, counterpart and reported representative. The first checkpoint asks the learner to locate those parties and the requested outcome. The workbench starts with that request and sources, then exposes conflict, engagement, deadline and opening review. The real native path renders through MCP, saves and applies clearly labelled synthetic return decisions for regression verification, and validates the current package. It neither invents a real user decision nor clears the incomplete matter.",
+        "deliverable_and_next_action": "Read the native memo with its actual case narrative, unresolved review points and evidence links. The information request separates three specific client requests from internal firm checks; the next step is collecting the missing order/terms, correspondence and identity/authority evidence and completing professional review. The final card uses readable localized links to the memo, questions, next action, proposed folders and actual review records. All local links resolve and native manifest hashes remain current after Validate. The archive completes the produced dossier while the matter itself remains blocked for opening.",
+        "practice_and_repeat": "The second run in the same engagement adds the 16 March proposal to deliver the remaining 20 components on 20 March. Its objective and narrative change, and its client request asks for the original proposal, desired response and later developments. It assumes neither acceptance nor completed delivery. The first-run files remain byte-identical and existing party/engagement values remain unchanged after rebinding source IDs to the same source hashes. The learner must locate the new source and explain what needs review before repeating this on a real request.",
+        "language_and_pacing": "Read the complete it outline and native demonstration/practice prose, including request recipients, review states and handoffs. The supported language changes the explanation and display vocabulary, while the fictional legal matter remains Italian. Six planned stages total 390 seconds. The prepared case is three short inputs plus one update, with two useful checkpoints. Processing and questions can extend that target; human timing, understanding and live voice were not measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_lucia_kit_inputs_become_bound_evidence_in_the_actual_matter_package[it-demo]",
+        "result_review": "The actual workflow imports the three fictional sources, creates the matter package, renders through MCP, applies synthetic return decisions, validates fresh artifact hashes and completes archive delivery. Client requests and firm review actions are distinct; the matter is not opened.",
+        "reviewed_artifacts": [
+          {
+            "name": "matter_opening_memo.md",
+            "sha256": "44b2b536820758802dd0dd8aad2655f7e4f1f8709f41b1e229f428a44ddc2117"
+          },
+          {
+            "name": "missing_information_request.md",
+            "sha256": "79e6f263b4f8802dd9f64bfaf41060d3122cc00a078561b9037b2a519e620e1e"
+          },
+          {
+            "name": "teaching_review.md",
+            "sha256": "548c5cb9095a81eafa9073b4d005b8f55ac867ec5c6fe733be4dd7ed60f69bb6"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "5076a0c6cf2030bea76eb421f0200823297c0e362fd74d804d258a862e587ff8"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "2c9a6d621c157f4d18e9fac369fe3a0549d0533581f3225ce8ba9a71509bece4"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "140f44bbdc70cfb9dbc18b307f83899b007e483d75311c9ae051c49c7596eed7"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_lucia_kit_inputs_become_bound_evidence_in_the_actual_matter_package[it-practice]",
+        "result_review": "A distinct native run in the same engagement imports the proposal, updates its source-linked objective and narrative, requests the desired response, applies fresh synthetic return receipts and completes archive delivery while preserving every first-run output byte. No delivery or acceptance is inferred.",
+        "reviewed_artifacts": [
+          {
+            "name": "matter_opening_memo.md",
+            "sha256": "3d3f90efe3f6d46c2a57992c54ef3f4afab3386cd74f6e7fe0cff68faa96f777"
+          },
+          {
+            "name": "missing_information_request.md",
+            "sha256": "1d4ebca2923287a960ef62ce4203a03c27092e8dcd9e491457050c9acb211a6b"
+          },
+          {
+            "name": "teaching_review.md",
+            "sha256": "202e1f7cf4b99f752066f6417e37df13c8e720a22de03a5335fd22e4898dd076"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "9add94f79a8bf12febfc1960dd68c5af1b11f59ebdb7a6cb931edc0a24ba4314"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "2c9a6d621c157f4d18e9fac369fe3a0549d0533581f3225ce8ba9a71509bece4"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "140f44bbdc70cfb9dbc18b307f83899b007e483d75311c9ae051c49c7596eed7"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches preparing a new matter from a client request and documents. The learner starts by stating the requested outcome, watches the current workflow prepare the dossier, reviews it, saves and applies a return decision, then adds correspondence in a second version. The lesson explains how to use the function; the delivery discrepancy is a simple case context.",
+        "inputs_and_request": "Read request-en.md, supply-en.md, update-en.md and every register row. Beta orders 100 components for EUR 6,000, pays an advance of EUR 3,000 and receives 80. The request identifies Gamma and Elena and reports an Italian pre-litigation context. The small register expressly covers only DEMO-A, DEMO-B and DEMO-C. The files supply facts without professional approvals. Practice correspondence now contains case information rather than exercise instructions.",
+        "execution_and_checkpoints": "The native run imports exact source bytes and retains the client, counterpart and reported representative. The first checkpoint asks the learner to locate those parties and the requested outcome. The workbench starts with that request and sources, then exposes conflict, engagement, deadline and opening review. The real native path renders through MCP, saves and applies clearly labelled synthetic return decisions for regression verification, and validates the current package. It neither invents a real user decision nor clears the incomplete matter.",
+        "deliverable_and_next_action": "Read the native memo with its actual case narrative, unresolved review points and evidence links. The information request separates three specific client requests from internal firm checks; the next step is collecting the missing order/terms, correspondence and identity/authority evidence and completing professional review. The final card uses readable localized links to the memo, questions, next action, proposed folders and actual review records. All local links resolve and native manifest hashes remain current after Validate. The archive completes the produced dossier while the matter itself remains blocked for opening.",
+        "practice_and_repeat": "The second run in the same engagement adds the 16 March proposal to deliver the remaining 20 components on 20 March. Its objective and narrative change, and its client request asks for the original proposal, desired response and later developments. It assumes neither acceptance nor completed delivery. The first-run files remain byte-identical and existing party/engagement values remain unchanged after rebinding source IDs to the same source hashes. The learner must locate the new source and explain what needs review before repeating this on a real request.",
+        "language_and_pacing": "Read the complete en outline and native demonstration/practice prose, including request recipients, review states and handoffs. The supported language changes the explanation and display vocabulary, while the fictional legal matter remains Italian. Six planned stages total 390 seconds. The prepared case is three short inputs plus one update, with two useful checkpoints. Processing and questions can extend that target; human timing, understanding and live voice were not measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_lucia_kit_inputs_become_bound_evidence_in_the_actual_matter_package[en-demo]",
+        "result_review": "The actual workflow imports the three fictional sources, creates the matter package, renders through MCP, applies synthetic return decisions, validates fresh artifact hashes and completes archive delivery. Client requests and firm review actions are distinct; the matter is not opened.",
+        "reviewed_artifacts": [
+          {
+            "name": "matter_opening_memo.md",
+            "sha256": "e934996e18930cb4d5c0a460ccd2c1efe476fb2772a9b96dcdc5bdc3a40b1f5a"
+          },
+          {
+            "name": "missing_information_request.md",
+            "sha256": "1e65e6d44d4ac989b3ac4de2cf197ef8ed8d53247751da430e29b51fee2a5de4"
+          },
+          {
+            "name": "teaching_review.md",
+            "sha256": "6492a591d07b26e2002706f3ad225167df2913096681fba70816c8fc6d0feea6"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "35b623006dafd97e3c153d80fc70e557d97625d05e302a2093aac3f63f409fc5"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "6329a9c6c6293223a1893a0f68a717be16e2141a3d0bc0f83380848c5b78c33c"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "29f174276540aa384c2070f06ed8e14c106d77c110cdfb4a3f5ade7c992db98c"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_lucia_kit_inputs_become_bound_evidence_in_the_actual_matter_package[en-practice]",
+        "result_review": "A distinct native run in the same engagement imports the proposal, updates its source-linked objective and narrative, requests the desired response, applies fresh synthetic return receipts and completes archive delivery while preserving every first-run output byte. No delivery or acceptance is inferred.",
+        "reviewed_artifacts": [
+          {
+            "name": "matter_opening_memo.md",
+            "sha256": "e7a041c1e297368d50c54af9a4e01e9a984ef594104ce68be92c0a7c43a32bee"
+          },
+          {
+            "name": "missing_information_request.md",
+            "sha256": "a29ac7f84da8d69cb9591234eabcff16bcb6a49b95c49422c9be7b3d1d238109"
+          },
+          {
+            "name": "teaching_review.md",
+            "sha256": "85529a7b378522be5e38985ba7255e1316f580cd0bc7024657577bd4dd33b5ca"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "d3abd8a302eb97e99583918f96a965d9ca53d0366d58c2507ecfb682527973e8"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "6329a9c6c6293223a1893a0f68a717be16e2141a3d0bc0f83380848c5b78c33c"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "29f174276540aa384c2070f06ed8e14c106d77c110cdfb4a3f5ade7c992db98c"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches preparing a new matter from a client request and documents. The learner starts by stating the requested outcome, watches the current workflow prepare the dossier, reviews it, saves and applies a return decision, then adds correspondence in a second version. The lesson explains how to use the function; the delivery discrepancy is a simple case context.",
+        "inputs_and_request": "Read request-fr.md, supply-fr.md, update-fr.md and every register row. Beta orders 100 components for EUR 6,000, pays an advance of EUR 3,000 and receives 80. The request identifies Gamma and Elena and reports an Italian pre-litigation context. The small register expressly covers only DEMO-A, DEMO-B and DEMO-C. The files supply facts without professional approvals. Practice correspondence now contains case information rather than exercise instructions.",
+        "execution_and_checkpoints": "The native run imports exact source bytes and retains the client, counterpart and reported representative. The first checkpoint asks the learner to locate those parties and the requested outcome. The workbench starts with that request and sources, then exposes conflict, engagement, deadline and opening review. The real native path renders through MCP, saves and applies clearly labelled synthetic return decisions for regression verification, and validates the current package. It neither invents a real user decision nor clears the incomplete matter.",
+        "deliverable_and_next_action": "Read the native memo with its actual case narrative, unresolved review points and evidence links. The information request separates three specific client requests from internal firm checks; the next step is collecting the missing order/terms, correspondence and identity/authority evidence and completing professional review. The final card uses readable localized links to the memo, questions, next action, proposed folders and actual review records. All local links resolve and native manifest hashes remain current after Validate. The archive completes the produced dossier while the matter itself remains blocked for opening.",
+        "practice_and_repeat": "The second run in the same engagement adds the 16 March proposal to deliver the remaining 20 components on 20 March. Its objective and narrative change, and its client request asks for the original proposal, desired response and later developments. It assumes neither acceptance nor completed delivery. The first-run files remain byte-identical and existing party/engagement values remain unchanged after rebinding source IDs to the same source hashes. The learner must locate the new source and explain what needs review before repeating this on a real request.",
+        "language_and_pacing": "Read the complete fr outline and native demonstration/practice prose, including request recipients, review states and handoffs. The supported language changes the explanation and display vocabulary, while the fictional legal matter remains Italian. Six planned stages total 390 seconds. The prepared case is three short inputs plus one update, with two useful checkpoints. Processing and questions can extend that target; human timing, understanding and live voice were not measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_lucia_kit_inputs_become_bound_evidence_in_the_actual_matter_package[fr-demo]",
+        "result_review": "The actual workflow imports the three fictional sources, creates the matter package, renders through MCP, applies synthetic return decisions, validates fresh artifact hashes and completes archive delivery. Client requests and firm review actions are distinct; the matter is not opened.",
+        "reviewed_artifacts": [
+          {
+            "name": "matter_opening_memo.md",
+            "sha256": "00ef14109947ca7db5aa948d25718ea9a947144a3f40cec12b0993e6f9ea5349"
+          },
+          {
+            "name": "missing_information_request.md",
+            "sha256": "523cdb992b3ae8ef58623bbd1ad08bc590d7b8a167aca0e0fda0d87fb871d156"
+          },
+          {
+            "name": "teaching_review.md",
+            "sha256": "7510668682cf50b7d9282b3cec3942ad20b63441b1a4da915116b3dd9101eaea"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "6eedb34223c2b9bcc1036c1519bbe50e3258227b6911df4d539aa1e6c706aca9"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "d6458777dc9eeb13a120cf213beb6a910b345e807e1f29c000befee4702afd58"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "56ef63a789dc3d2e2be933e354d1131f7def68301eed4b831530ab12dfcb586e"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_lucia_kit_inputs_become_bound_evidence_in_the_actual_matter_package[fr-practice]",
+        "result_review": "A distinct native run in the same engagement imports the proposal, updates its source-linked objective and narrative, requests the desired response, applies fresh synthetic return receipts and completes archive delivery while preserving every first-run output byte. No delivery or acceptance is inferred.",
+        "reviewed_artifacts": [
+          {
+            "name": "matter_opening_memo.md",
+            "sha256": "8293b29d7ed661ef33fc400daefb7d122c8a26c6ee45996f032883704cca56dc"
+          },
+          {
+            "name": "missing_information_request.md",
+            "sha256": "c0d02fed6ac1355c597ba226d7293535fe3480518e101ec3978898b3cba8a2cd"
+          },
+          {
+            "name": "teaching_review.md",
+            "sha256": "99315c9886e9710a1a91473aa3d0d688bcfb9b047e3d3cd6ca7a7ffa71c077c6"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "cb8da19d900e3eb9d17f1e986f10c8da42d854f0a75175a97f3e02aedcd2478c"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "d6458777dc9eeb13a120cf213beb6a910b345e807e1f29c000befee4702afd58"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "56ef63a789dc3d2e2be933e354d1131f7def68301eed4b831530ab12dfcb586e"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches preparing a new matter from a client request and documents. The learner starts by stating the requested outcome, watches the current workflow prepare the dossier, reviews it, saves and applies a return decision, then adds correspondence in a second version. The lesson explains how to use the function; the delivery discrepancy is a simple case context.",
+        "inputs_and_request": "Read request-de.md, supply-de.md, update-de.md and every register row. Beta orders 100 components for EUR 6,000, pays an advance of EUR 3,000 and receives 80. The request identifies Gamma and Elena and reports an Italian pre-litigation context. The small register expressly covers only DEMO-A, DEMO-B and DEMO-C. The files supply facts without professional approvals. Practice correspondence now contains case information rather than exercise instructions.",
+        "execution_and_checkpoints": "The native run imports exact source bytes and retains the client, counterpart and reported representative. The first checkpoint asks the learner to locate those parties and the requested outcome. The workbench starts with that request and sources, then exposes conflict, engagement, deadline and opening review. The real native path renders through MCP, saves and applies clearly labelled synthetic return decisions for regression verification, and validates the current package. It neither invents a real user decision nor clears the incomplete matter.",
+        "deliverable_and_next_action": "Read the native memo with its actual case narrative, unresolved review points and evidence links. The information request separates three specific client requests from internal firm checks; the next step is collecting the missing order/terms, correspondence and identity/authority evidence and completing professional review. The final card uses readable localized links to the memo, questions, next action, proposed folders and actual review records. All local links resolve and native manifest hashes remain current after Validate. The archive completes the produced dossier while the matter itself remains blocked for opening.",
+        "practice_and_repeat": "The second run in the same engagement adds the 16 March proposal to deliver the remaining 20 components on 20 March. Its objective and narrative change, and its client request asks for the original proposal, desired response and later developments. It assumes neither acceptance nor completed delivery. The first-run files remain byte-identical and existing party/engagement values remain unchanged after rebinding source IDs to the same source hashes. The learner must locate the new source and explain what needs review before repeating this on a real request.",
+        "language_and_pacing": "Read the complete de outline and native demonstration/practice prose, including request recipients, review states and handoffs. The supported language changes the explanation and display vocabulary, while the fictional legal matter remains Italian. Six planned stages total 390 seconds. The prepared case is three short inputs plus one update, with two useful checkpoints. Processing and questions can extend that target; human timing, understanding and live voice were not measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_lucia_kit_inputs_become_bound_evidence_in_the_actual_matter_package[de-demo]",
+        "result_review": "The actual workflow imports the three fictional sources, creates the matter package, renders through MCP, applies synthetic return decisions, validates fresh artifact hashes and completes archive delivery. Client requests and firm review actions are distinct; the matter is not opened.",
+        "reviewed_artifacts": [
+          {
+            "name": "matter_opening_memo.md",
+            "sha256": "99a2d97500a4f7d9b09bdbb45776cd1d3d4b4a7abdf610dcff7a4b40d5c6ee38"
+          },
+          {
+            "name": "missing_information_request.md",
+            "sha256": "142f5d0acb95883ac81b2a526e462e08dc6b1d5e4ce46fe7c781812e791e06a1"
+          },
+          {
+            "name": "teaching_review.md",
+            "sha256": "ca264158055ff1fb76c70fe538010a9112dd7a6e5a32cee3a4727b28d4b6233b"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "fb75215822a03b1d21cd1a3b5ab2b3f54118bdc05242fee7c34cf6f89ef8b1e9"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "2fb1b954176e56da0bc398b994f5817fd84c92eb2386327d1b149f35aa6e0ac9"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "7b3fb1e6dc7fac92409afb339da0df5a09e08f8542d3ec95d1816c35b29d7da3"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_lucia_kit_inputs_become_bound_evidence_in_the_actual_matter_package[de-practice]",
+        "result_review": "A distinct native run in the same engagement imports the proposal, updates its source-linked objective and narrative, requests the desired response, applies fresh synthetic return receipts and completes archive delivery while preserving every first-run output byte. No delivery or acceptance is inferred.",
+        "reviewed_artifacts": [
+          {
+            "name": "matter_opening_memo.md",
+            "sha256": "909524eacdd8cbd28ad356278c8dadc97185f3f7cdc5f6f5ca531dfcbb363fc9"
+          },
+          {
+            "name": "missing_information_request.md",
+            "sha256": "b9d8b20acd8407242acf5bbcef2b53accc2e023344261e1a55dc2b1ac84b6cdf"
+          },
+          {
+            "name": "teaching_review.md",
+            "sha256": "7fdabbcbcba07753945e47ac862456aea88741600fd2e74ad6c6158f53f8e243"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "4f179fe20e4c23d0dc1660fb70ec8c44e385218fab538f02ace64f3465d832d4"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "2fb1b954176e56da0bc398b994f5817fd84c92eb2386327d1b149f35aa6e0ac9"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "7b3fb1e6dc7fac92409afb339da0df5a09e08f8542d3ec95d1816c35b29d7da3"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches preparing a new matter from a client request and documents. The learner starts by stating the requested outcome, watches the current workflow prepare the dossier, reviews it, saves and applies a return decision, then adds correspondence in a second version. The lesson explains how to use the function; the delivery discrepancy is a simple case context.",
+        "inputs_and_request": "Read request-es.md, supply-es.md, update-es.md and every register row. Beta orders 100 components for EUR 6,000, pays an advance of EUR 3,000 and receives 80. The request identifies Gamma and Elena and reports an Italian pre-litigation context. The small register expressly covers only DEMO-A, DEMO-B and DEMO-C. The files supply facts without professional approvals. Practice correspondence now contains case information rather than exercise instructions.",
+        "execution_and_checkpoints": "The native run imports exact source bytes and retains the client, counterpart and reported representative. The first checkpoint asks the learner to locate those parties and the requested outcome. The workbench starts with that request and sources, then exposes conflict, engagement, deadline and opening review. The real native path renders through MCP, saves and applies clearly labelled synthetic return decisions for regression verification, and validates the current package. It neither invents a real user decision nor clears the incomplete matter.",
+        "deliverable_and_next_action": "Read the native memo with its actual case narrative, unresolved review points and evidence links. The information request separates three specific client requests from internal firm checks; the next step is collecting the missing order/terms, correspondence and identity/authority evidence and completing professional review. The final card uses readable localized links to the memo, questions, next action, proposed folders and actual review records. All local links resolve and native manifest hashes remain current after Validate. The archive completes the produced dossier while the matter itself remains blocked for opening.",
+        "practice_and_repeat": "The second run in the same engagement adds the 16 March proposal to deliver the remaining 20 components on 20 March. Its objective and narrative change, and its client request asks for the original proposal, desired response and later developments. It assumes neither acceptance nor completed delivery. The first-run files remain byte-identical and existing party/engagement values remain unchanged after rebinding source IDs to the same source hashes. The learner must locate the new source and explain what needs review before repeating this on a real request.",
+        "language_and_pacing": "Read the complete es outline and native demonstration/practice prose, including request recipients, review states and handoffs. The supported language changes the explanation and display vocabulary, while the fictional legal matter remains Italian. Six planned stages total 390 seconds. The prepared case is three short inputs plus one update, with two useful checkpoints. Processing and questions can extend that target; human timing, understanding and live voice were not measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_lucia_kit_inputs_become_bound_evidence_in_the_actual_matter_package[es-demo]",
+        "result_review": "The actual workflow imports the three fictional sources, creates the matter package, renders through MCP, applies synthetic return decisions, validates fresh artifact hashes and completes archive delivery. Client requests and firm review actions are distinct; the matter is not opened.",
+        "reviewed_artifacts": [
+          {
+            "name": "matter_opening_memo.md",
+            "sha256": "30c4b534f00287329f7b48b83094f1b5abc6dfbf0a238b06d1e10c41350757d5"
+          },
+          {
+            "name": "missing_information_request.md",
+            "sha256": "eb75d41b3e5c6375c04810642734b709537bd5c253896580792db1e2f5264772"
+          },
+          {
+            "name": "teaching_review.md",
+            "sha256": "1cbc8fdf36176b255257539de398b9a25319b423de5cb8488f35a0ada8151ae4"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "eb874d54d60fd1a55ed77b3c39b8c999fae822517be4ecd68aeab1bb2d92175c"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "63e53b8b0644ac8e2fabe34245e19465bb5c7709353d4c532ce03ee734b14405"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "e2dbb64969a25a0e89cb2ad0242cc494a6c6e4c693bc29371b689922db1b2106"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_lucia_kit_inputs_become_bound_evidence_in_the_actual_matter_package[es-practice]",
+        "result_review": "A distinct native run in the same engagement imports the proposal, updates its source-linked objective and narrative, requests the desired response, applies fresh synthetic return receipts and completes archive delivery while preserving every first-run output byte. No delivery or acceptance is inferred.",
+        "reviewed_artifacts": [
+          {
+            "name": "matter_opening_memo.md",
+            "sha256": "ce0a1633b5a629dcaffb6f21e038826beb4301f0cf22e4aa58d0df0a79a764c2"
+          },
+          {
+            "name": "missing_information_request.md",
+            "sha256": "4ec15e9bcae1b2002ac94b94b5c4c34986107bfdfbdfcc91c06e52e7660e016b"
+          },
+          {
+            "name": "teaching_review.md",
+            "sha256": "e3f9ae935b286b5e1fec2c80c0d475e8581004c17d4eb967f73e6e9017fc1e27"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "543fde10fd6213acd471ac3736c4add7e57bbeee0ae9100c289c77ac4a4a81be"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "63e53b8b0644ac8e2fabe34245e19465bb5c7709353d4c532ce03ee734b14405"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "e2dbb64969a25a0e89cb2ad0242cc494a6c6e4c693bc29371b689922db1b2106"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.158725+00:00",
+    "previous_course_sha256": "0d371d2eed63a05e8f933c319f2e4901134f9adeaf2ee1f5cb994deebb0b3fea",
+    "source_snapshot": "/private/tmp/matter-teaching-release-17/test_lucia_kit_inputs_become_b4/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  }
+}

@@ -13,6 +13,7 @@ from build_catalog import ROOT, _eligible, build
 
 sys.path.insert(0, str(ROOT / "plugins/_shared/vendor/modules"))
 from courseware.library import CourseLibrary  # noqa: E402
+from courseware.policy import unavailable_local_workflows  # noqa: E402
 
 __all__ = ["render", "main"]
 
@@ -78,6 +79,13 @@ def render(destination: Path, *, preview: bool = False) -> Path:
                     "<th>Che cosa impari a fare</th><th>Obiettivo</th><th>Apri la lezione</th>"
                     f'</tr></thead><tbody>{"".join(groups[group])}</tbody></table></div>'
                 )
+        if unavailable_local_workflows(product):
+            content.append(
+                "<h3>Non disponibili nelle lezioni locali</h3>"
+                "<p>Brand Fit, interviste ospitate e video di ricerca richiedono "
+                "servizi ospitati. Restano funzioni di Clara, ma non sono incluse "
+                "nelle lezioni locali e non vengono eseguite durante l’onboarding.</p>"
+            )
         content.append("</section>")
         sections.append("".join(content))
     notice = (

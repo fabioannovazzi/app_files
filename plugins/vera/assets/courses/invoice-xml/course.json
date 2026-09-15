@@ -1,15 +1,15 @@
 {
-  "schema": "mparanza.course.v1",
+  "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "invoice-xml",
-  "revision": "2026-09-14.1",
+  "revision": "2026-09-14.2",
   "seconds": [
     45,
     60,
+    105,
     75,
-    90,
-    75,
-    45
+    45,
+    60
   ],
   "supported_languages": [
     "it",
@@ -19,7 +19,19 @@
     "es"
   ],
   "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "prepare_invoice_preview_then_review_and_export"
+  },
   "sources": [
+    {
+      "path": "modules/invoice-xml/assets/icon.svg",
+      "repository_path": "plugins/invoice-xml/assets/icon.svg",
+      "sha256": "fcfd81e72c5e5d958e4273f58139b85798b1f2beba20785efb1edc0aaa3eb87c"
+    },
     {
       "path": "modules/invoice-xml/references/foreign-invoices.md",
       "repository_path": "plugins/invoice-xml/references/foreign-invoices.md",
@@ -31,9 +43,24 @@
       "sha256": "06eaec533ad6b42d027ce8ace455c57632ff932945ce34eae526c15d6ed98ff8"
     },
     {
+      "path": "modules/invoice-xml/references/xsd/Schema_VFPR12_v1.2.3.xsd",
+      "repository_path": "plugins/invoice-xml/references/xsd/Schema_VFPR12_v1.2.3.xsd",
+      "sha256": "152944f6eef9f5d69ef6e955ee173b32142b00a8c1c5222fc97dfab5910e8a8c"
+    },
+    {
       "path": "modules/invoice-xml/references/xsd/sources.json",
       "repository_path": "plugins/invoice-xml/references/xsd/sources.json",
       "sha256": "f2fb39a4a383638de10149a2395db3f1224834ff1c55e8a28c192faf0c343e26"
+    },
+    {
+      "path": "modules/invoice-xml/references/xsd/xmldsig-core-schema.xsd",
+      "repository_path": "plugins/invoice-xml/references/xsd/xmldsig-core-schema.xsd",
+      "sha256": "35cf8197da812c85e40d57891b35c94187569ed474a2dac813ce5090dafcd35c"
+    },
+    {
+      "path": "modules/invoice-xml/requirements.txt",
+      "repository_path": "plugins/invoice-xml/requirements.txt",
+      "sha256": "765576aad3075bc303976169ee81009287d2cfc1dbf85719816b45ea917ff49b"
     },
     {
       "path": "modules/invoice-xml/scripts/check_dependencies.py",
@@ -66,333 +93,327 @@
       "sha256": "709ccbf228357a20429d012d40a7435166259b54825e87fc9699bd889234e5e5"
     },
     {
+      "path": "modules/invoice-xml/vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/invoice-xml/vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/invoice-xml/vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/invoice-xml/vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/invoice-xml/vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/invoice-xml/vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/invoice-xml/vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/invoice-xml/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/invoice-xml/vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
       "path": "skills/invoice-xml/SKILL.md",
       "repository_path": "plugins/vera/skills/invoice-xml/SKILL.md",
       "sha256": "4862168719d6b1d9c4b544159c76603c23b2cddbfac1425ad649418cc5d2c306"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     }
   ],
-  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
-  "files": [],
+  "files": [
+    {
+      "path": "files/input/invoice-data.txt",
+      "sha256": "e9a88442c50b5e84994328010180447e69fd931c233929f4e5a9c55518dc7816",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/practice-invoice-data.txt",
+      "sha256": "fcce84e3b9faf32ccc5ec94f842ac1dcb889410458356cc46daedbac717025b5",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
   "locales": {
     "it": {
-      "title": "Preparare XML da due foto della stessa fattura",
-      "goal": "Rivedere i dati estratti, correggere un campo mancante e distinguere la bozza dall'XML esportato dopo approvazione.",
-      "scenario": "La società fittizia Arco riceve due foto della stessa fattura italiana A17 del 14 settembre 2026. Il servizio vale 100 EUR, l'IVA indicata è 22 EUR e il totale è 122 EUR. La partita IVA del fornitore è illeggibile; una scheda anagrafica verificata è disponibile separatamente.",
-      "request": "Vera, prepara la fattura XML da queste due foto e mostrami cosa devo confermare prima dell'esportazione.",
-      "scope": "Una fattura ordinaria FPR12 in EUR. Il caso illustra la preparazione italiana; le integrazioni estere TD17/18/19 richiedono una revisione separata. Non include firma o invio a SdI.",
-      "input_columns": [
-        "Fonte fittizia",
-        "Evidenza",
-        "Stato"
+      "title": "Preparare una fattura XML con Vera",
+      "goal": "Imparare a fornire i dati della fattura, rivedere la bozza e ottenere il file XML locale dopo aver approvato la versione esatta.",
+      "scenario": "Officina Arco deve preparare il file di una fattura italiana ordinaria. Usiamo una breve scheda fittizia per seguire tutto il percorso: richiesta, anteprima, revisione ed esportazione locale.",
+      "scope": "Una fattura italiana fittizia in EUR. La lezione parte da dati già forniti; lo stesso workflow accetta anche PDF e fotografie leggibili. Non firma né trasmette il file a SdI.",
+      "inputs": "Fornisci invoice-data.txt. La scheda contiene fornitore, cliente, prestazione, numero, data, importi e dati di recapito del file, tutti fittizi. Indica anche che si tratta di una nuova bozza e che nel caso didattico non esistono emissioni o esportazioni precedenti.",
+      "request": "Vera, prepara una bozza di fattura XML da questa scheda fittizia. Mostrami anteprima, fonti e controlli. Fammi rivedere la versione esatta prima di esportare il file sul computer.",
+      "steps": [
+        "Nella chat di lavoro Vera legge la fonte scelta, registra lo scopo e individua i dati della fattura. La chat vocale mostra quali informazioni occorre fornire e risponde alle domande durante la lettura.",
+        "Il workflow corrente prepara la bozza e apre la sua anteprima effettiva. Confronta fornitore, cliente, numero, data, prestazione, IVA e totale con la scheda. Chiedi di correggere ciò che non corrisponde: una correzione produce una nuova versione.",
+        "Rivedi la versione mostrata. Solo dopo la tua approvazione esplicita di quella versione Vera esegue i controlli di esportazione e crea l’XML locale. Apri il rapporto di esportazione e trova il file XML. Se non approvi, la bozza resta disponibile senza esportazione."
       ],
-      "input_rows": [
-        [
-          "F1 · foto superiore",
-          "A17 · 14/09/2026 · partita IVA illeggibile",
-          "Dato mancante"
-        ],
-        [
-          "F2 · foto inferiore",
-          "100 EUR + 22 EUR = 122 EUR",
-          "Stessa fattura di F1"
-        ],
-        [
-          "A1 · scheda anagrafica",
-          "Identità fiscale verificata separatamente",
-          "Da collegare al campo"
-        ]
+      "deliverables": [
+        "Anteprima della bozza effettiva, con campi collegati alle fonti e controlli per la revisione.",
+        "Dopo approvazione e controlli superati, file XML e rapporto di esportazione, accanto alla versione rivista."
       ],
-      "basis": "F1 e F2 sono viste dello stesso documento, non due fatture. Ogni campo conserva il riferimento alla fonte; questo esempio editoriale non contiene identificativi fiscali utilizzabili né una ricevuta di esecuzione.",
-      "method": [
-        "Registra le fonti nella pratica, raggruppa le due foto e interpreta i campi visibili senza completare la partita IVA per supposizione.",
-        "Salva la bozza con anteprima e domanda sul dato mancante. Collega la scheda verificata e rivedi anagrafiche, numero, data, trattamento IVA, destinatario e stato di emissione.",
-        "Presenta la nuova revisione. Solo dopo l'approvazione effettiva del professionista, ricontrolla fonti, schema e importi ed esporta XML, revisione e rapporto."
+      "review": "Confronta dati, scopo e trattamento fiscale con le informazioni fornite. Anteprima leggibile e controllo dello schema non dimostrano correttezza fiscale o accettazione SdI. Identificativi e importi dell’esercizio non vanno riutilizzati in una fattura reale.",
+      "checkpoints": [
+        "Prima di partire, indica la fonte e chiarisci se prepari una nuova bozza o ricostruisci una fattura esistente.",
+        "Nell’anteprima trova prestazione e totale, poi spiega che cosa stai approvando e dove verrà salvato l’XML."
       ],
-      "result_title": "Una bozza bloccata, poi una revisione da approvare",
-      "conclusion": "La prima bozza conserva 122 EUR e segnala la partita IVA mancante. Il dato verificato produce una nuova revisione; la correzione da sola non autorizza l'esportazione.",
-      "output_columns": [
-        "Passaggio",
-        "Risultato",
-        "XML"
-      ],
-      "output_rows": [
-        [
-          "Due foto",
-          "Una fattura, totale 122 EUR, identità incompleta",
-          "Assente"
-        ],
-        [
-          "Anagrafica collegata",
-          "Nuova revisione da approvare",
-          "Assente"
-        ],
-        [
-          "Approvazione e controlli superati",
-          "XML e rapporto di esportazione",
-          "File locale, non inviato"
-        ]
-      ],
-      "check": "Il professionista verifica anche che non si stia duplicando una fattura già emessa. Schema valido e quadratura non dimostrano correttezza fiscale o accettazione SdI. Un cambio di fonte invalida la revisione precedente.",
-      "question": "La partita IVA è stata corretta: Vera può esportare usando l'approvazione della vecchia bozza?",
-      "answer": "No. La correzione cambia la revisione: occorre mostrare i nuovi dati e ottenere l'approvazione effettiva del professionista per quella specifica versione.",
-      "practice": "Nel caso sintetico, cambia il totale da 122 a 121 EUR e individua il controllo che blocca l'esportazione; poi ripristina il dato documentato.",
-      "next": "Fornisci i documenti selezionati e le anagrafiche verificate. Vera prepara l'anteprima; il professionista risolve i dati incerti e approva la revisione da esportare."
+      "practice": "Fornisci practice-invoice-data.txt e chiedi una seconda fattura con lo stesso percorso. Ha numero, data e quantità propri. Conserva il primo risultato, rivedi la nuova anteprima e decidi separatamente se esportarla.",
+      "success": "Sai avviare il workflow, controllare l’anteprima, approvare o sospendere l’esportazione e ripetere il lavoro su una seconda fattura senza perdere la prima.",
+      "repeat": "Fornisci i documenti della fattura o i dati confermati, spiegando lo scopo e l’eventuale emissione precedente. Vera prepara la bozza, chiarisce i fatti mancanti ed esporta soltanto la versione approvata. Invio e contabilizzazione seguono il percorso distinto dello studio."
     },
     "en": {
-      "title": "Prepare XML from two photographs of one invoice",
-      "goal": "Review extracted fields, resolve missing evidence and distinguish a draft from XML exported after approval.",
-      "scenario": "Fictional company Arco receives two photographs of the same Italian invoice A17 dated 14 September 2026. The service is EUR 100, the stated VAT is EUR 22 and the total is EUR 122. The supplier's VAT identifier is unreadable; a separately verified party record is available.",
-      "request": "Vera, prepare invoice XML from these two photographs and show me what I must confirm before export.",
-      "scope": "One ordinary FPR12 invoice in EUR. This case illustrates Italian preparation; foreign TD17/18/19 integrations require a separate review. Signing and SdI submission are excluded.",
-      "input_columns": [
-        "Fictional source",
-        "Evidence",
-        "Status"
+      "title": "Prepare an invoice XML file with Vera",
+      "goal": "Learn to provide invoice data, review the draft and obtain a local XML file after approving the exact version.",
+      "scenario": "Officina Arco needs an ordinary Italian invoice file. We use a short fictional data sheet to follow the whole process, from the request to the preview, review and local export.",
+      "scope": "One fictional domestic invoice in EUR. The source data and native preview use Italian invoice terms; Vera explains them in English. This lesson starts from supplied data. The same workflow also accepts readable PDFs and photographs. It does not sign or submit the file to SdI.",
+      "inputs": "Provide invoice-data.txt. It contains the fictional supplier, customer, service, number, date, amounts and file-routing data. It also states that this is a new draft and that no previous issue or export exists in the fictional case.",
+      "request": "Vera, prepare a draft invoice XML from this fictional data sheet. Show me the preview, sources and checks. Let me review the exact version before exporting the file locally.",
+      "steps": [
+        "In the working chat Vera reads the selected source, records the preparation purpose and identifies the invoice fields. The voice chat shows what information you need to provide and answers questions while the source is checked.",
+        "The current workflow prepares the draft and opens its actual preview. Compare supplier, customer, number, date, service, VAT and total with the data sheet. Ask Vera to correct anything that does not match; corrections produce a new version.",
+        "Review the version on screen. Only after your explicit approval of that version does Vera run the export checks and create the local XML. Open the export report and find the XML file. If you do not approve, the draft remains available and no XML is exported."
       ],
-      "input_rows": [
-        [
-          "F1 · upper photograph",
-          "A17 · 14/09/2026 · unreadable VAT identifier",
-          "Missing field"
-        ],
-        [
-          "F2 · lower photograph",
-          "EUR 100 + EUR 22 = EUR 122",
-          "Same invoice as F1"
-        ],
-        [
-          "A1 · party record",
-          "Tax identity verified separately",
-          "Link to the field"
-        ]
+      "deliverables": [
+        "The actual draft preview, with source-linked fields and checks to support your review.",
+        "After approval and successful checks, the XML file and export report, alongside the reviewed version."
       ],
-      "basis": "F1 and F2 are views of one document, not two invoices. Each field retains its source reference; this authored specimen contains no usable tax identifiers or execution receipt.",
-      "method": [
-        "Register the selected sources in the engagement, group the two photographs and interpret visible fields without guessing the VAT identifier.",
-        "Save a draft, preview and missing-field question. Link the verified record and review parties, number, date, VAT treatment, recipient routing and issue status.",
-        "Present the new revision. Only after actual professional approval, recheck source bytes, schema and amounts, then export XML, the review record and the report."
+      "review": "Check the invoice fields, purpose and tax treatment against the supplied facts. A readable preview and successful schema check do not establish tax correctness or SdI acceptance. The exercise's identifiers and amounts must never be reused in a real invoice.",
+      "checkpoints": [
+        "Before starting, identify the source and explain whether you are preparing a new draft or reconstructing an existing invoice.",
+        "In the preview, find the service and total, then explain what you are approving and where the exported file will be saved."
       ],
-      "result_title": "A blocked draft followed by a revision awaiting approval",
-      "conclusion": "The first draft retains EUR 122 and identifies the missing VAT identifier. Verified evidence produces a new revision; correcting the field alone does not authorize export.",
-      "output_columns": [
-        "Stage",
-        "Result",
-        "XML"
-      ],
-      "output_rows": [
-        [
-          "Two photographs",
-          "One invoice, EUR 122 total, incomplete identity",
-          "Absent"
-        ],
-        [
-          "Party record linked",
-          "New revision awaiting approval",
-          "Absent"
-        ],
-        [
-          "Approval and successful checks",
-          "XML and export report",
-          "Local file, not submitted"
-        ]
-      ],
-      "check": "The professional also checks whether the invoice has already been issued. Schema validity and reconciled amounts do not establish tax correctness or SdI acceptance. Changed source bytes invalidate the previous review.",
-      "question": "The VAT identifier has been corrected. Can Vera export using approval of the old draft?",
-      "answer": "No. The correction changes the revision: the updated fields must be shown and the professional must actually approve that specific version before export.",
-      "practice": "In the synthetic case, change the total from EUR 122 to EUR 121 and identify the control blocking export; then restore the documented amount.",
-      "next": "Provide the selected documents and verified party records. Vera prepares the preview; the professional resolves uncertain fields and approves the revision for export."
+      "practice": "Provide practice-invoice-data.txt and ask for a second invoice through the same process. It has its own number, date and quantity. Preserve the first result, review the new preview and make a separate decision about this export.",
+      "success": "You can start the workflow, check its preview, approve or pause the export and repeat it for another invoice while keeping the earlier result.",
+      "repeat": "Provide the invoice documents or confirmed data and explain the preparation purpose and any prior issue. Vera prepares a reviewable draft, asks about missing material facts and exports only the approved version. Sending or bookkeeping follows the practice's separate process."
     },
     "fr": {
-      "title": "Préparer le XML à partir de deux photos d'une facture",
-      "goal": "Revoir les champs extraits, résoudre une donnée manquante et distinguer le brouillon du XML exporté après approbation.",
-      "scenario": "La société fictive Arco reçoit deux photos de la même facture italienne A17 du 14 septembre 2026. La prestation vaut 100 EUR, la TVA indiquée est de 22 EUR et le total de 122 EUR. L'identifiant TVA du fournisseur est illisible ; une fiche d'identité vérifiée est disponible séparément.",
-      "request": "Vera, prépare le XML de cette facture à partir des deux photos et montre-moi les points à confirmer avant l'export.",
-      "scope": "Une facture ordinaire italienne FPR12 en EUR. Les intégrations étrangères TD17/18/19 nécessitent une revue distincte. Le cas ne comprend ni signature ni transmission à SdI.",
-      "input_columns": [
-        "Source fictive",
-        "Éléments probants",
-        "État"
+      "title": "Préparer un fichier XML de facture avec Vera",
+      "goal": "Apprendre à fournir les données d’une facture, revoir le brouillon et obtenir le fichier XML local après avoir approuvé la version exacte.",
+      "scenario": "Officina Arco doit préparer le fichier d’une facture italienne ordinaire. Une courte fiche fictive permet de suivre tout le parcours : demande, aperçu, revue et export local.",
+      "scope": "Une facture nationale italienne fictive en EUR. Les données et l’aperçu natif emploient les termes italiens de facturation ; Vera les explique en français. Cette leçon part de données fournies. Le même workflow accepte aussi des PDF et photographies lisibles. Il ne signe ni ne transmet à SdI.",
+      "inputs": "Fournissez invoice-data.txt. La fiche contient fournisseur, client, prestation, numéro, date, montants et données d’acheminement fictifs. Elle précise qu’il s’agit d’un nouveau brouillon et qu’aucune émission ni exportation antérieure n’existe dans le cas pédagogique.",
+      "request": "Vera, prépare un brouillon de facture XML à partir de cette fiche fictive. Montre l’aperçu, les sources et les contrôles. Laisse-moi revoir la version exacte avant d’exporter le fichier sur l’ordinateur.",
+      "steps": [
+        "Dans le fil de travail, Vera lit la source, précise le but de la préparation et identifie les données. Le fil vocal montre les informations à fournir et répond aux questions pendant la lecture.",
+        "Le workflow courant prépare le brouillon et ouvre son aperçu réel. Comparez fournisseur, client, numéro, date, prestation, TVA et total à la fiche. Demandez les corrections nécessaires ; chacune produit une nouvelle version.",
+        "Revoyez la version affichée. Vera n’effectue les contrôles d’export et ne crée le XML local qu’après votre approbation explicite de cette version. Ouvrez le rapport d’export et retrouvez le fichier XML. Sans approbation, le brouillon reste disponible sans export."
       ],
-      "input_rows": [
-        [
-          "F1 · photo du haut",
-          "A17 · 14/09/2026 · identifiant TVA illisible",
-          "Champ manquant"
-        ],
-        [
-          "F2 · photo du bas",
-          "100 EUR + 22 EUR = 122 EUR",
-          "Même facture que F1"
-        ],
-        [
-          "A1 · fiche d'identité",
-          "Identité fiscale vérifiée séparément",
-          "À relier au champ"
-        ]
+      "deliverables": [
+        "L’aperçu du brouillon réel, avec champs reliés aux sources et contrôles pour la revue.",
+        "Après approbation et contrôles réussis, le fichier XML et le rapport d’export, avec la version revue."
       ],
-      "basis": "F1 et F2 représentent un seul document, pas deux factures. Chaque champ conserve sa référence de source ; cet exemple rédigé ne contient ni identifiant fiscal utilisable ni preuve d'exécution.",
-      "method": [
-        "Enregistre les sources sélectionnées dans le dossier, regroupe les deux photos et interprète les champs visibles sans deviner l'identifiant TVA.",
-        "Enregistre le brouillon, l'aperçu et la question sur le champ manquant. Relie la fiche vérifiée et revois les parties, le numéro, la date, la TVA, le destinataire et l'état d'émission.",
-        "Présente la nouvelle version. Après l'approbation effective du professionnel, revérifie les sources, le schéma et les montants, puis exporte le XML, la trace de revue et le rapport."
+      "review": "Comparez données, finalité et traitement fiscal aux faits fournis. Un aperçu lisible et un schéma valide ne prouvent ni justesse fiscale ni acceptation SdI. Ne réutilisez jamais les identifiants ou montants pédagogiques dans une facture réelle.",
+      "checkpoints": [
+        "Avant de commencer, indiquez la source et précisez s’il s’agit d’un nouveau brouillon ou de la reconstruction d’une facture existante.",
+        "Dans l’aperçu, trouvez prestation et total, puis expliquez ce que vous approuvez et où le fichier exporté sera enregistré."
       ],
-      "result_title": "Un brouillon bloqué, puis une version à approuver",
-      "conclusion": "Le premier brouillon conserve 122 EUR et signale l'identifiant TVA manquant. La donnée vérifiée produit une nouvelle version ; la correction seule n'autorise pas l'export.",
-      "output_columns": [
-        "Étape",
-        "Résultat",
-        "XML"
-      ],
-      "output_rows": [
-        [
-          "Deux photos",
-          "Une facture, total de 122 EUR, identité incomplète",
-          "Absent"
-        ],
-        [
-          "Fiche reliée",
-          "Nouvelle version à approuver",
-          "Absent"
-        ],
-        [
-          "Approbation et contrôles réussis",
-          "XML et rapport d'export",
-          "Fichier local, non transmis"
-        ]
-      ],
-      "check": "Le professionnel vérifie aussi que la facture n'a pas déjà été émise. La validité du schéma et la concordance des montants ne prouvent ni la justesse fiscale ni l'acceptation par SdI. Une modification des sources invalide la revue précédente.",
-      "question": "L'identifiant TVA est corrigé : Vera peut-elle exporter avec l'approbation de l'ancien brouillon ?",
-      "answer": "Non. La correction change la version : il faut présenter les nouvelles données et obtenir l'approbation effective du professionnel pour cette version précise.",
-      "practice": "Dans le cas synthétique, remplace le total de 122 EUR par 121 EUR et repère le contrôle bloquant l'export ; rétablis ensuite le montant documenté.",
-      "next": "Fournis les documents sélectionnés et les fiches d'identité vérifiées. Vera prépare l'aperçu ; le professionnel résout les incertitudes et approuve la version à exporter."
+      "practice": "Fournissez practice-invoice-data.txt et demandez une deuxième facture avec le même parcours. Elle possède ses propres numéro, date et quantité. Conservez le premier résultat, revoyez le nouvel aperçu et décidez séparément de son export.",
+      "success": "Vous savez lancer le workflow, vérifier l’aperçu, approuver ou suspendre l’export et recommencer pour une autre facture en conservant la première.",
+      "repeat": "Fournissez les documents ou données confirmées et précisez la finalité et toute émission antérieure. Vera prépare un brouillon vérifiable, clarifie les faits manquants et exporte seulement la version approuvée. Envoi et comptabilisation suivent le processus distinct du cabinet."
     },
     "de": {
-      "title": "XML aus zwei Fotos einer Rechnung vorbereiten",
-      "goal": "Extrahierte Felder prüfen, fehlende Angaben klären und einen Entwurf vom nach Freigabe exportierten XML unterscheiden.",
-      "scenario": "Das fiktive Unternehmen Arco erhält zwei Fotos derselben italienischen Rechnung A17 vom 14. September 2026. Die Leistung beträgt 100 EUR, die ausgewiesene Umsatzsteuer 22 EUR und der Gesamtbetrag 122 EUR. Die Umsatzsteuerkennung des Lieferanten ist unleserlich; separat geprüfte Stammdaten liegen vor.",
-      "request": "Vera, bereite aus diesen beiden Fotos die XML-Rechnung vor und zeige mir, was ich vor dem Export bestätigen muss.",
-      "scope": "Eine gewöhnliche italienische FPR12-Rechnung in EUR. Ausländische Belege für TD17/18/19 erfordern eine gesonderte Prüfung. Signatur und Übermittlung an SdI sind nicht enthalten.",
-      "input_columns": [
-        "Fiktive Quelle",
-        "Belegangabe",
-        "Status"
+      "title": "Eine Rechnungs-XML mit Vera vorbereiten",
+      "goal": "Lernen Sie, Rechnungsdaten bereitzustellen, den Entwurf zu prüfen und nach Freigabe der genauen Fassung eine lokale XML-Datei zu erhalten.",
+      "scenario": "Officina Arco benötigt eine gewöhnliche italienische Rechnungsdatei. Ein kurzes fiktives Datenblatt führt durch den gesamten Ablauf: Anfrage, Vorschau, Prüfung und lokaler Export.",
+      "scope": "Eine fiktive italienische Inlandsrechnung in EUR. Quelldaten und native Vorschau verwenden italienische Rechnungsbegriffe; Vera erklärt sie auf Deutsch. Diese Lektion beginnt mit bereitgestellten Daten. Der Workflow akzeptiert auch lesbare PDFs und Fotos. Er signiert nicht und übermittelt nichts an SdI.",
+      "inputs": "Stellen Sie invoice-data.txt bereit. Das Blatt enthält fiktive Lieferanten- und Kundendaten, Leistung, Nummer, Datum, Beträge und Empfängerdaten für die Datei. Es nennt einen neuen Entwurf ohne vorherige Ausstellung oder Export im Übungsfall.",
+      "request": "Vera, bereite aus diesem fiktiven Datenblatt einen Rechnungs-XML-Entwurf vor. Zeige Vorschau, Quellen und Prüfungen. Lass mich die genaue Fassung prüfen, bevor du die Datei lokal exportierst.",
+      "steps": [
+        "Im Arbeitschat liest Vera die Quelle, hält den Vorbereitungszweck fest und ermittelt die Rechnungsfelder. Der Sprachchat zeigt die benötigten Angaben und beantwortet Fragen während der Prüfung.",
+        "Der aktuelle Workflow erstellt den Entwurf und öffnet seine tatsächliche Vorschau. Vergleichen Sie Lieferant, Kunde, Nummer, Datum, Leistung, Umsatzsteuer und Gesamtbetrag mit dem Blatt. Lassen Sie Abweichungen korrigieren; eine Korrektur erzeugt eine neue Fassung.",
+        "Prüfen Sie die angezeigte Fassung. Erst nach Ihrer ausdrücklichen Freigabe dieser Fassung führt Vera die Exportprüfungen aus und erstellt die lokale XML-Datei. Öffnen Sie den Exportbericht und finden Sie die XML-Datei. Ohne Freigabe bleibt der Entwurf ohne Export erhalten."
       ],
-      "input_rows": [
-        [
-          "F1 · oberes Foto",
-          "A17 · 14/09/2026 · unleserliche Umsatzsteuerkennung",
-          "Fehlendes Feld"
-        ],
-        [
-          "F2 · unteres Foto",
-          "100 EUR + 22 EUR = 122 EUR",
-          "Dieselbe Rechnung wie F1"
-        ],
-        [
-          "A1 · Stammdatenblatt",
-          "Steuerliche Identität separat geprüft",
-          "Mit dem Feld verknüpfen"
-        ]
+      "deliverables": [
+        "Die tatsächliche Entwurfsvorschau mit Quellenbezug der Felder und Prüfungen zur Durchsicht.",
+        "Nach Freigabe und erfolgreichen Prüfungen die XML-Datei und der Exportbericht neben der geprüften Fassung."
       ],
-      "basis": "F1 und F2 zeigen ein Dokument, keine zwei Rechnungen. Jedes Feld behält seinen Quellenverweis. Dieses redaktionelle Beispiel enthält weder nutzbare Steuerkennungen noch einen Ausführungsnachweis.",
-      "method": [
-        "Registriere die ausgewählten Quellen in der Akte, gruppiere die beiden Fotos und interpretiere sichtbare Felder, ohne die Umsatzsteuerkennung zu erraten.",
-        "Speichere Entwurf, Vorschau und Rückfrage zum fehlenden Feld. Verknüpfe die geprüften Stammdaten und prüfe Parteien, Nummer, Datum, Umsatzsteuer, Empfänger und Ausstellungsstatus.",
-        "Zeige die neue Fassung. Prüfe erst nach tatsächlicher fachlicher Freigabe erneut Quellen, Schema und Beträge und exportiere XML, Freigabenachweis und Bericht."
+      "review": "Vergleichen Sie Daten, Zweck und steuerliche Behandlung mit den vorliegenden Angaben. Eine lesbare Vorschau und ein gültiges Schema beweisen weder steuerliche Richtigkeit noch SdI-Annahme. Verwenden Sie Übungskennungen und Beträge niemals in einer echten Rechnung.",
+      "checkpoints": [
+        "Benennen Sie vor dem Start die Quelle und klären Sie, ob ein neuer Entwurf oder eine bestehende Rechnung vorbereitet wird.",
+        "Finden Sie Leistung und Gesamtbetrag in der Vorschau und erklären Sie, was Sie freigeben und wo die exportierte Datei gespeichert wird."
       ],
-      "result_title": "Ein gesperrter Entwurf, danach eine Fassung zur Freigabe",
-      "conclusion": "Der erste Entwurf enthält 122 EUR und weist auf die fehlende Umsatzsteuerkennung hin. Die geprüfte Angabe erzeugt eine neue Fassung; die Korrektur allein erlaubt keinen Export.",
-      "output_columns": [
-        "Schritt",
-        "Ergebnis",
-        "XML"
-      ],
-      "output_rows": [
-        [
-          "Zwei Fotos",
-          "Eine Rechnung, 122 EUR gesamt, Identität unvollständig",
-          "Nicht vorhanden"
-        ],
-        [
-          "Stammdaten verknüpft",
-          "Neue Fassung wartet auf Freigabe",
-          "Nicht vorhanden"
-        ],
-        [
-          "Freigabe und erfolgreiche Prüfungen",
-          "XML und Exportbericht",
-          "Lokale Datei, nicht übermittelt"
-        ]
-      ],
-      "check": "Die Fachperson prüft auch, ob die Rechnung bereits ausgestellt wurde. Ein gültiges Schema und stimmige Beträge beweisen weder steuerliche Richtigkeit noch SdI-Annahme. Geänderte Quelldaten machen die vorherige Prüfung ungültig.",
-      "question": "Die Umsatzsteuerkennung wurde korrigiert. Darf Vera mit der Freigabe des alten Entwurfs exportieren?",
-      "answer": "Nein. Die Korrektur ändert die Fassung. Die neuen Angaben müssen gezeigt werden, und die Fachperson muss genau diese Version tatsächlich für den Export freigeben.",
-      "practice": "Ändere im synthetischen Fall den Gesamtbetrag von 122 auf 121 EUR und erkenne die Prüfung, die den Export sperrt. Stelle dann den belegten Betrag wieder her.",
-      "next": "Stelle ausgewählte Dokumente und geprüfte Stammdaten bereit. Vera erstellt die Vorschau; die Fachperson klärt unsichere Angaben und gibt die konkrete Fassung für den Export frei."
+      "practice": "Stellen Sie practice-invoice-data.txt bereit und bitten Sie um eine zweite Rechnung im gleichen Ablauf. Sie hat eigene Nummer, Datum und Menge. Bewahren Sie das erste Ergebnis auf, prüfen Sie die neue Vorschau und entscheiden Sie separat über deren Export.",
+      "success": "Sie können den Workflow starten, die Vorschau prüfen, den Export freigeben oder anhalten und ihn für eine weitere Rechnung wiederholen, ohne die erste zu verlieren.",
+      "repeat": "Liefern Sie Rechnungsunterlagen oder bestätigte Daten und nennen Sie Zweck und eine mögliche frühere Ausstellung. Vera bereitet den Entwurf vor, klärt fehlende Tatsachen und exportiert nur die freigegebene Fassung. Versand und Buchung folgen dem separaten Kanzleiprozess."
     },
     "es": {
-      "title": "Preparar XML a partir de dos fotos de una factura",
-      "goal": "Revisar los campos extraídos, resolver un dato ausente y distinguir el borrador del XML exportado después de la aprobación.",
-      "scenario": "La empresa ficticia Arco recibe dos fotos de la misma factura italiana A17 del 14 de septiembre de 2026. El servicio cuesta 100 EUR, el IVA indicado es de 22 EUR y el total es de 122 EUR. El identificador fiscal del proveedor es ilegible; existe una ficha de datos verificada por separado.",
-      "request": "Vera, prepara el XML de la factura con estas dos fotos y muéstrame qué debo confirmar antes de exportar.",
-      "scope": "Una factura ordinaria italiana FPR12 en EUR. Las integraciones extranjeras TD17/18/19 requieren una revisión separada. El caso no incluye firma ni envío a SdI.",
-      "input_columns": [
-        "Fuente ficticia",
-        "Evidencia",
-        "Estado"
+      "title": "Preparar un archivo XML de factura con Vera",
+      "goal": "Aprender a proporcionar datos de una factura, revisar el borrador y obtener el XML local tras aprobar la versión exacta.",
+      "scenario": "Officina Arco necesita el archivo de una factura italiana ordinaria. Una ficha ficticia breve permite seguir todo el recorrido: petición, vista previa, revisión y exportación local.",
+      "scope": "Una factura nacional italiana ficticia en EUR. Los datos y la vista previa nativa usan términos italianos de facturación; Vera los explica en español. La lección parte de datos proporcionados. El mismo workflow admite también PDF y fotografías legibles. No firma ni transmite a SdI.",
+      "inputs": "Proporciona invoice-data.txt. Contiene proveedor, cliente, servicio, número, fecha, importes y datos de encaminamiento ficticios. Indica que es un nuevo borrador y que no existe emisión ni exportación previa en el caso didáctico.",
+      "request": "Vera, prepara un borrador de factura XML con esta ficha ficticia. Muéstrame vista previa, fuentes y controles. Déjame revisar la versión exacta antes de exportar el archivo al ordenador.",
+      "steps": [
+        "En el hilo de trabajo Vera lee la fuente, registra el propósito e identifica los datos de la factura. El hilo de voz muestra qué información aportar y responde durante la lectura.",
+        "El workflow actual prepara el borrador y abre su vista previa real. Compara proveedor, cliente, número, fecha, servicio, IVA y total con la ficha. Pide corregir las diferencias; cada corrección genera una nueva versión.",
+        "Revisa la versión mostrada. Solo después de tu aprobación explícita de esa versión Vera ejecuta los controles de exportación y crea el XML local. Abre el informe de exportación y localiza el archivo XML. Sin aprobación, el borrador sigue disponible sin exportar."
       ],
-      "input_rows": [
-        [
-          "F1 · foto superior",
-          "A17 · 14/09/2026 · identificador de IVA ilegible",
-          "Campo ausente"
-        ],
-        [
-          "F2 · foto inferior",
-          "100 EUR + 22 EUR = 122 EUR",
-          "Misma factura que F1"
-        ],
-        [
-          "A1 · ficha de datos",
-          "Identidad fiscal verificada por separado",
-          "Vincular al campo"
-        ]
+      "deliverables": [
+        "Vista previa del borrador real, con campos vinculados a fuentes y controles para la revisión.",
+        "Tras la aprobación y los controles superados, el archivo XML y el informe de exportación junto a la versión revisada."
       ],
-      "basis": "F1 y F2 son vistas de un documento, no dos facturas. Cada campo conserva su referencia de origen; este ejemplo editorial no contiene identificadores fiscales utilizables ni un comprobante de ejecución.",
-      "method": [
-        "Registra las fuentes seleccionadas en el expediente, agrupa las dos fotos e interpreta los campos visibles sin adivinar el identificador de IVA.",
-        "Guarda el borrador, la vista previa y la pregunta sobre el dato ausente. Vincula la ficha verificada y revisa partes, número, fecha, IVA, destinatario y estado de emisión.",
-        "Presenta la nueva versión. Solo después de la aprobación efectiva del profesional, vuelve a comprobar fuentes, esquema e importes y exporta el XML, el registro de revisión y el informe."
+      "review": "Compara datos, propósito y tratamiento fiscal con la información aportada. Una vista previa legible y un esquema válido no demuestran corrección fiscal ni aceptación SdI. Nunca reutilices identificadores o importes didácticos en una factura real.",
+      "checkpoints": [
+        "Antes de empezar, identifica la fuente y aclara si preparas un nuevo borrador o reconstruyes una factura existente.",
+        "En la vista previa, encuentra servicio y total y explica qué apruebas y dónde se guardará el archivo exportado."
       ],
-      "result_title": "Un borrador bloqueado y después una versión pendiente de aprobación",
-      "conclusion": "El primer borrador conserva 122 EUR y señala el identificador de IVA ausente. El dato verificado produce una nueva versión; corregirlo no autoriza por sí solo la exportación.",
-      "output_columns": [
-        "Paso",
-        "Resultado",
-        "XML"
-      ],
-      "output_rows": [
-        [
-          "Dos fotos",
-          "Una factura, total de 122 EUR, identidad incompleta",
-          "Ausente"
-        ],
-        [
-          "Ficha vinculada",
-          "Nueva versión pendiente de aprobación",
-          "Ausente"
-        ],
-        [
-          "Aprobación y controles superados",
-          "XML e informe de exportación",
-          "Archivo local, no enviado"
-        ]
-      ],
-      "check": "El profesional también comprueba si la factura ya se ha emitido. Un esquema válido y unos importes conciliados no demuestran corrección fiscal ni aceptación por SdI. Modificar las fuentes invalida la revisión anterior.",
-      "question": "Se ha corregido el identificador de IVA: ¿puede Vera exportar con la aprobación del borrador anterior?",
-      "answer": "No. La corrección cambia la versión: hay que mostrar los nuevos datos y obtener la aprobación efectiva del profesional para esa versión concreta antes de exportar.",
-      "practice": "En el caso sintético, cambia el total de 122 a 121 EUR e identifica el control que bloquea la exportación; después restablece el importe documentado.",
-      "next": "Aporta los documentos seleccionados y las fichas verificadas. Vera prepara la vista previa; el profesional resuelve los datos inciertos y aprueba la versión que se exportará."
+      "practice": "Proporciona practice-invoice-data.txt y pide una segunda factura con el mismo recorrido. Tiene número, fecha y cantidad propios. Conserva el primer resultado, revisa la nueva vista previa y decide por separado si exportarla.",
+      "success": "Sabes iniciar el workflow, comprobar la vista previa, aprobar o detener la exportación y repetirlo para otra factura conservando la primera.",
+      "repeat": "Aporta documentos o datos confirmados y explica el propósito y cualquier emisión anterior. Vera prepara un borrador revisable, aclara los datos que faltan y exporta solo la versión aprobada. Envío y contabilización siguen el proceso separado del despacho."
     }
   }
 }

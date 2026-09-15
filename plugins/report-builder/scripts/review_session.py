@@ -833,6 +833,10 @@ def _section_titles(analysis: dict[str, Any], limit: int = 6) -> list[str]:
     for section in analysis.get("sections", []):
         if not isinstance(section, dict):
             continue
+        if section.get("status") != "assigned" and not analysis.get(
+            "include_unassigned_tables", False
+        ):
+            continue
         title = _clean_text(section.get("title"))
         if title:
             titles.append(title)

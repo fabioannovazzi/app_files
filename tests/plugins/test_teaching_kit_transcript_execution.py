@@ -15,6 +15,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.plugins._teaching_release import record_native_check
+
 ROOT = Path(__file__).resolve().parents[2]
 CLARA = ROOT / "plugins/clara"
 
@@ -48,8 +50,9 @@ def _bundle(kit, phase):
 
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
-def test_transcript_kit_imports_reviews_and_registers_two_actual_case_sources(
-    tmp_path, monkeypatch, language
+@pytest.mark.parametrize("phase", ["demo", "practice"])
+def test_transcript_kit_imports_reviews_and_registers_actual_case_sources(
+    tmp_path, monkeypatch, language, phase, record_property
 ):
     kit = _kit(tmp_path, monkeypatch, language)
     core = _load("advisor_case_core")
@@ -66,8 +69,9 @@ def test_transcript_kit_imports_reviews_and_registers_two_actual_case_sources(
     )
     earlier = {}
     receipts = []
-    for phase in ("demo", "practice"):
-        source = _bundle(kit, phase)
+    phases = ("demo",) if phase == "demo" else ("demo", "practice")
+    for current_phase in phases:
+        source = _bundle(kit, current_phase)
         original = source.read_bytes()
         payload = json.loads(original)
         assert payload["capture_source"] == "fictional_teaching_fixture"
@@ -82,7 +86,7 @@ def test_transcript_kit_imports_reviews_and_registers_two_actual_case_sources(
         # identifies herself in the first input; the other voices stay unnamed.
         reviewed.write_text(
             "# Ciclo Arco\n\n"
-            + ("Sara Campione\n\n" if phase == "demo" else "")
+            + ("Sara Campione\n\n" if current_phase == "demo" else "")
             + payload["user_transcript"]
             + "\n",
             encoding="utf-8",
@@ -94,7 +98,7 @@ def test_transcript_kit_imports_reviews_and_registers_two_actual_case_sources(
             raw_transcript_path=result.raw_transcript_path,
             speaker_attribution_note=(
                 "Fictional source self-identifies Sara Campione."
-                if phase == "demo"
+                if current_phase == "demo"
                 else "Preserve the two source speaker labels: names are undocumented."
             ),
             summary="Fictional written teaching source; no audio was captured or transcribed.",
@@ -108,11 +112,22 @@ def test_transcript_kit_imports_reviews_and_registers_two_actual_case_sources(
         )
         assert receipt["evidence_type"] == "interview_transcript"
         assert (
+            payload["user_transcript"]
+            in finished.attributed_transcript_path.read_text()
+        )
+        assert (
             receipt["source"]["artifact_refs"][0]["sha256"]
             == hashlib.sha256(
                 finished.attributed_transcript_path.read_bytes()
             ).hexdigest()
         )
+        materials = json.loads((case / "material_registry.json").read_text())[
+            "materials"
+        ]
+        material = next(row for row in materials if row["id"] == finished.material_id)
+        assert Path(material["path"]) == finished.attributed_transcript_path.resolve()
+        assert material["status"] == "indexed"
+        assert material["source_metadata"]["speaker_attribution"]
         receipts.append(receipt["id"])
         assert source.read_bytes() == original
         for path, content in earlier.items():
@@ -121,9 +136,17 @@ def test_transcript_kit_imports_reviews_and_registers_two_actual_case_sources(
         earlier[finished.attributed_transcript_path] = (
             finished.attributed_transcript_path.read_bytes()
         )
-    assert len(set(receipts)) == 2
+    assert len(set(receipts)) == len(phases)
     assert core.validate_case_workspace(case) == []
     assert json.loads((case / "judgement_log.json").read_text())["entries"] == []
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="clara",
+        workflow="transcribe",
+        language=language,
+        phase=phase,
+    )
 
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "run_id": "lucia-es-demo",
+  "question_domain": "compliance",
+  "document_type": "professional_communication_package",
+  "purpose": "El despacho quiere una FAQ breve para sus pequeñas empresas clientes en Italia: cómo reconocer y organizar una solicitud de acceso a datos personales. Es una iniciativa informativa del despacho, no el anuncio de una nueva ley ni la respuesta a una persona real. Los lectores gestionan administración y relaciones con clientes y necesitan saber cuándo implicar a la persona responsable de privacidad. Utiliza la guía oficial seleccionada del CEPD, distinguiendo orientaciones generales y valoración del caso particular. No se aportan datos de clientes, solicitudes reales ni una política de privacidad empresarial. Prepara el paquete para revisión interna, sin enviarlo ni publicarlo. Redacta los documentos finales en español.",
+  "audience": "Small business clients in Italy; administration and customer service staff",
+  "output_language": "es",
+  "jurisdiction": "Italy / EU GDPR; language does not change jurisdiction",
+  "jurisdiction_status": "confirmed",
+  "generation_route": "codex_direct",
+  "evidence_display": "inline_citations",
+  "validation_profile": "source_identity_support_reasoning_and_judgment",
+  "validation_scope": "all_material_claims",
+  "correction_policy": "correct_when_supported",
+  "judgment_policy": "flag_for_professional_review",
+  "generation_instructions": {
+    "source_hierarchy": [
+      "Selected EDPB official guidance; identify it as guidance, not legislation. No missing legal authority may be invented."
+    ],
+    "preserve": [
+      "Actor roles, conditions, uncertainty, qualifications and professional-review boundaries.",
+      "Material ficticio para la lección. El despacho y el encargo son inventados. La guía adjunta del CEPD es una fuente pública auténtica, obtenida el 14 de septiembre de 2026, no una norma inventada.",
+      "Studio Riva — abogados. No se proporcionan logotipo, datos de contacto, comunicaciones anteriores ni un formato aprobado. Propón un formato sobrio azul y blanco, con letra legible, títulos claros y fuentes identificables. El profesional lo revisará antes de usarlo.",
+      "Run-selected draft visual values, not an approved house profile: {\"accent_color\": \"#197B9C\", \"background_color\": \"#FFFFFF\", \"primary_color\": \"#153855\", \"studio_name\": \"Studio Riva\", \"text_color\": \"#1C2935\"}"
+    ],
+    "must_distinguish": [
+      "The fictional firm-led initiative from a legislative change; general guidance from a real case decision.",
+      "Preserving factual conditions and qualifications in the candidate is an answer-contract check. Physical retention of the earlier package is a separate run/file check; never claim that such retention or professional approval has already been verified by claim assurance."
+    ],
+    "prohibited": [
+      "Invented clients, facts, regulations, urgency, professional approvals, sending or publishing."
+    ]
+  },
+  "contract_digest": "4525d2477d1507d787cc66e63e08f8beefbd3e1a4b58ec56558de82213ce7ed0"
+}

@@ -1,0 +1,114 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "centrale-rischi-review",
+  "course_sha256": "4c05d643ce648f79f4c57e0c2298bf3c59401b09aedd15e35040c1d6c93ef0ca",
+  "reviewer": "Codex: Italian first-use lesson, native analysis and workbook/report material review",
+  "reviewed_at": "2026-09-14T20:31:40.844503+00:00",
+  "review_scope": "Read the Italian lesson and all four fictional sources. The demonstration and practice execute native inspection, reviewed column mapping, analysis and commentary finalization. The practice preserves a completed March run in the same engagement before producing April. The final 36 component, native teaching and bound-workflow checks pass without failures or skips. All 18 workbook sheets were rendered in 23 demonstration views; two additional practice views were inspected. Workbook values, styles and dimensions in the final run match those rendered files. Read the actual Markdown report, HTML content, source-bound metrics, commentary and exact delivery links. Browser URL policy blocked opening the local dashboard, so browser visual quality and interaction are not certified. No native voice, human comprehension, elapsed lesson duration or professional approval is claimed.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces analysing a Centrale Rischi for a client meeting. The lesson covers supplying files, confirming company, period and meanings, running the current workflow, reading its main outputs and requesting a subsequent update. No narrow exception replaces the complete first-use sequence.",
+        "inputs_and_request": "The fictional Officina Arco export contains nine bank/category/month rows for January through March, with declared column meanings, two banks and EUR. The request asks for March, a comparison with the previous months, a dashboard, workbook and meeting summary. The kit explicitly uses a normalized export; it explains original digital PDF intake without claiming the lesson executed that route.",
+        "execution_and_checkpoints": "The actual native workflow checks the selected inputs and reviewed mapping, calculates all supplied periods, reconciles the latest total and validates the commentary evidence references. The checkpoints ask the learner to confirm files and current month, open the generated result, trace a bank to the input rows and identify what to supply next time. The authoring fixtures exercise the normal Codex interpretation stage; they are not shipped lesson answers or recorded professional approvals.",
+        "deliverable_and_next_action": "The native dashboard and report contain the current totals, category comparison, duration breakdown, specific observations and two useful follow-up questions. The workbook has Italian headers and fixed statuses, typed numeric values, source-row traceability and separate coverage messages for missing evidence versus no reported events. All sheets were visually reviewed through the native workbook import. The delivery card links the actual report and workbook; it no longer presents an empty issue template as completed work. The report remains a draft for professional review.",
+        "practice_and_repeat": "The learner asks for April using the supplied twelve-row update. A separate native run in the same engagement reports April and its March comparison, leaving all March output bytes unchanged. The lesson finishes by explaining how to repeat for a client with a digital original or verified export, a period and an objective.",
+        "language_and_pacing": "Italian is the supported output language of this workflow. The complete lesson, fictional contexts, primary workbook labels and authored commentary use Italian. Six stages total 390 seconds. The guided reading focuses on the headline result, one traced bank and the questions while the full detail remains available. Processing and user questions may extend elapsed time; the duration has not been measured with a learner."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_centrale_rischi_kit_runs_actual_inspection_analysis_and_delivery[demo]",
+        "result_review": "March used exposure is EUR 119000 against EUR 170000 operational facilities, with EUR 51000 calculated margin. Monthly totals are 128000, 128000 and 119000; the EUR 9000 fall splits into 6000, 2000 and 1000 by category. Levante accounts for 68.91 percent and EUR 82000. The source supports the described balances, not their business causes. Missing prejudicial and financial evidence remains unavailable; no rating, DSCR or readily drawable liquidity is inferred.",
+        "reviewed_artifacts": [
+          {
+            "name": "centrale_rischi_analysis.json",
+            "sha256": "df168bb33d1aa12590dce2768d319cbdccca52b41e13c14a70687e5661a720e4"
+          },
+          {
+            "name": "centrale_rischi_analysis.xlsx",
+            "sha256": "e98a955077d84a7d21049fd9a9fea095007f04c61c23ce5daff6cfa96a9e7fb0"
+          },
+          {
+            "name": "centrale_rischi_dashboard_reviewed.html",
+            "sha256": "3d0879bd56fb38275f188990501418c7d7171410823c9e64aefdd7ddb7ef6cf7"
+          },
+          {
+            "name": "centrale_rischi_report.md",
+            "sha256": "132aa0401284fc64a191253b38783745cfe1ef1bbb2ac14b3f16372111db61bf"
+          },
+          {
+            "name": "commentary_receipt.json",
+            "sha256": "eba8a57d43bd218db0ff7d1dd95db3b0afed48a10c741c5484c648fbb079781f"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "0fe23d2f2919d79f55fe72427ceba1a7084620ee6f6bae9917aa097633ddee46"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "da4366cf76ae61786b4ae44dd94a8a52af0abe16b1b53d10901ad400b9fdc16a"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_centrale_rischi_kit_runs_actual_inspection_analysis_and_delivery[practice]",
+        "result_review": "The new April run shows EUR 117000 used, EUR 53000 calculated margin and a EUR 2000 monthly decline. Revoca and scadenza each fall by 2000 while autoliquidante increases by 2000. Levante remains EUR 80000, 68.38 percent. The earlier March run remains byte-identical. The actual April commentary, report, workbook and delivery note preserve review status and source limits.",
+        "reviewed_artifacts": [
+          {
+            "name": "centrale_rischi_analysis.json",
+            "sha256": "988f50e1607c4de3a68c06f8f3bb9d73c09bdca3106ae52c451a0df3e85570dc"
+          },
+          {
+            "name": "centrale_rischi_analysis.xlsx",
+            "sha256": "a254297ba82ddcbc6adbf35d357aea16fcbb5267d98d81fca07155b63b60f806"
+          },
+          {
+            "name": "centrale_rischi_dashboard_reviewed.html",
+            "sha256": "6fdc2e14023ac9e987345a7b3595d8e188d582157b84677513244b205c037907"
+          },
+          {
+            "name": "centrale_rischi_report.md",
+            "sha256": "3d0701cd307b004bf38aaac1eb9d0135cb8bede772a9cb5a77848074eba92c49"
+          },
+          {
+            "name": "commentary_receipt.json",
+            "sha256": "11967e3280c6ab9a4cf6ad7964fccd065adffa97ff2b89bff5eaa06030e8ff6a"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "ac4ff26f83ca2901f1a73503294a1d3ceefdafacb34826c0051dfba9c96906b5"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "da4366cf76ae61786b4ae44dd94a8a52af0abe16b1b53d10901ad400b9fdc16a"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.154989+00:00",
+    "previous_course_sha256": "223465bc2de65ba6b6e31f36ca26a7ffeceb5baceaf54676a20614227425517c",
+    "source_snapshot": "/private/tmp/cr-teaching-release-03/test_centrale_rischi_kit_runs_1/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  }
+}

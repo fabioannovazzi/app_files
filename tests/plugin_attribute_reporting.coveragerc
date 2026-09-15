@@ -1,0 +1,6 @@
+[run]
+include = */plugins/attribute-reporting/scripts/attribute_reporting.py
+
+[report]
+show_missing = True
+fail_under = 80

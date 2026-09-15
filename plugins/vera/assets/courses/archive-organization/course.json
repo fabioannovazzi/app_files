@@ -30,7 +30,7 @@
     {
       "path": "modules/archive-organization/assets/archive-organization-review-widget.html",
       "repository_path": "plugins/archive-organization/assets/archive-organization-review-widget.html",
-      "sha256": "26425716a96a31f57f9fbb477d4c351a5178beab30db0974884dbb970bc9b32d"
+      "sha256": "9a13d527e93d12b3bc8a3804198508cc6f3af8e7310b92f11545877f7843b0fd"
     },
     {
       "path": "modules/archive-organization/assets/icon.svg",
@@ -58,6 +58,11 @@
       "sha256": "ce1d2bf3eb180f619e866b909b11b47d6ebd410c49e1bcba41f36010e7a5a30e"
     },
     {
+      "path": "modules/archive-organization/references/review-labels.json",
+      "repository_path": "plugins/archive-organization/references/review-labels.json",
+      "sha256": "ce1464a869f5823b9260336bc28e4c2f0d3cfba982650cb2c92e9a31feff776a"
+    },
+    {
       "path": "modules/archive-organization/requirements.txt",
       "repository_path": "plugins/archive-organization/requirements.txt",
       "sha256": "92d149988edc1c9aa15a3db3942db281f906d7af04f714abf90ebad12b90304e"
@@ -65,7 +70,7 @@
     {
       "path": "modules/archive-organization/scripts/archive_organization.py",
       "repository_path": "plugins/archive-organization/scripts/archive_organization.py",
-      "sha256": "068700d5f80701e39ca12dae346ae3d6c0983755e12626683a0e83e9819615d0"
+      "sha256": "d822d3b54d79ba08b3afe45ca10c43d1a2bddb80abac7369f2d6666f150f0f45"
     },
     {
       "path": "modules/archive-organization/scripts/check_dependencies.py",
@@ -75,7 +80,7 @@
     {
       "path": "modules/archive-organization/skills/archive-organization/SKILL.md",
       "repository_path": "plugins/archive-organization/skills/archive-organization/SKILL.md",
-      "sha256": "0f0662cfa7da30fe0c2b77726c836c4652ff82f2cb18c664078f9ff96e0edf46"
+      "sha256": "fc5f82995bd87abadb9ccf9ccdab19adad62bd2d0b8a924246c036a76fb1dcea"
     },
     {
       "path": "modules/archive-organization/skills/archive-organization/agents/openai.yaml",
@@ -95,7 +100,7 @@
     {
       "path": "modules/archive-organization/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
     },
     {
       "path": "modules/archive-organization/vendor/modules/vera_assurance/decisions.py",
@@ -165,7 +170,7 @@
     {
       "path": "vendor/modules/courseware/assets/languages.json",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
     },
     {
       "path": "vendor/modules/courseware/execution.py",
@@ -175,12 +180,17 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
     },
     {
       "path": "vendor/modules/reporting_table.py",
       "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
-      "sha256": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7"
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
     },
     {
       "path": "vendor/modules/vera_assurance/__init__.py",
@@ -190,7 +200,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

@@ -26,18 +26,18 @@
   },
   "vera/open-item-reconciliation": {
     "title": "Offene Posten mit Vera prüfen",
-    "goal": "Lernen, eine Liste gemeldeter offener Posten zu prüfen und vollständig, teilweise oder noch nicht ausgeglichene Rechnungen zum Stichtag zu erkennen.",
+    "goal": "Lernen, eine Liste gemeldeter offener Posten zu prüfen und Rechnungen mit Zahlungsnachweis von noch zu klärenden Rechnungen zum Stichtag zu unterscheiden.",
     "scenario": "Eine ältere Lieferantenliste von Arco führt noch drei Rechnungen als offen. Die Bankbewegungen ermöglichen die Prüfung zum 31. März.",
     "scope": "Drei Lieferantenrechnungen in EUR. Die März-Prüfung berücksichtigt keine Zahlungen nach dem Stichtag; die Übung aktualisiert diesen Stichtag.",
     "inputs": "Öffnen Sie open-items-de.pdf und bank-march-de.pdf. Das erste Dokument enthält den zu prüfenden Bestand, das zweite die Auszahlungen. Beide sind fiktive Übungsexporte. Beträge verwenden das italienische Dezimalkomma, Datumswerte Tag/Monat/Jahr.",
     "request": "Vera, prüfe diese offenen Lieferantenposten zum 31. März 2026. Zeige anhand der Bankzahlungsnachweise, was bezahlt ist, was offen bleibt und was geprüft werden muss.",
     "steps": [
       "Vera importiert die Dateien, bestimmt den Ausgangsbestand und schlägt Rolle und Betragsbedeutung jeder Quelle vor. Bestätigen Sie Stichtag und Umgang mit späteren Zahlungen.",
-      "Der aktuelle Ablauf verknüpft Rechnungen mit Zahlungsnachweisen, berechnet Restbeträge und erstellt das Prüfungspaket. Der Sprachchat erklärt Fortschritt und fehlende Unterlagen.",
-      "Öffnen Sie die lokale Prüfseite und die Arbeitspapiere. Verfolgen Sie eine Rechnung vom gemeldeten offenen Betrag über den Zahlungsnachweis zum Restbetrag. Prüfentscheidungen bleiben ausstehend, bis sie tatsächlich getroffen werden."
+      "Der aktuelle Ablauf verknüpft Rechnungen mit Zahlungsnachweisen, unterscheidet ausgeglichene von ungeklärten Posten und erstellt das Prüfungspaket. Der Sprachchat erklärt Fortschritt und fehlende Unterlagen.",
+      "Öffnen Sie die lokale Prüfseite und die Arbeitspapiere. Verfolgen Sie eine Rechnung vom gemeldeten offenen Betrag über den Zahlungsnachweis zum vorgeschlagenen Ergebnis. Prüfentscheidungen bleiben ausstehend, bis sie tatsächlich getroffen werden."
     ],
     "deliverables": [
-      "Excel-Arbeitspapiere und Arbeitsübersicht: zeigen geprüften Bestand, Zahlungszuordnungen, Restbeträge und Ausnahmen.",
+      "Excel-Arbeitspapiere und Arbeitsübersicht: zeigen Ausgangsbeträge, Zahlungszuordnungen, vorgeschlagene Ergebnisse und Ausnahmen.",
       "Word-Bericht und lokale Prüfseite: erläutern die Ergebnisse und ermöglichen die fachliche Prüfung sowie Dokumentenanforderungen."
     ],
     "review": "Prüfen Sie zuerst Bestand und Stichtag. Die März-Belege stützen den Ausgleich der ersten beiden Rechnungen; die dritte bleibt mit diesen Unterlagen ungeklärt. Prüfen Sie Datum und Quellen vor einer Entscheidung.",
@@ -47,7 +47,7 @@
     ],
     "practice": "Behalten Sie open-items-de.pdf bei und fordern Sie mit bank-april-de.pdf eine neue Prüfung zum 30. April an. Der kumulierte Bankbeleg enthält die dritte Zahlung. Bewahren Sie die März-Unterlagen auf.",
     "success": "Die neue Prüfung berücksichtigt die dritte Zahlung. Erklären Sie den Unterschied zwischen März und April und zeigen Sie, wo eine Prüfentscheidung gespeichert wird.",
-    "repeat": "Stellen Sie die Liste offener Posten, den Stichtag und die Belege bereit. Prüfen Sie Restbeträge und ungeklärte Punkte im erzeugten Paket, bevor Sie das Ergebnis verwenden."
+    "repeat": "Stellen Sie die Liste offener Posten, den Stichtag und die Belege bereit. Prüfen Sie die vorgeschlagenen Ergebnisse und ungeklärten Punkte im erzeugten Paket, bevor Sie das Ergebnis verwenden."
   },
   "vera/variance-analysis": {
     "title": "Ist und Budget mit Vera vergleichen",

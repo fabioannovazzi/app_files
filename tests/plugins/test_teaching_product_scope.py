@@ -10,8 +10,10 @@ from pathlib import Path
 from zipfile import ZipFile
 
 import pytest
-from test_desktop_teaching import PROFILE, WORKFLOWS, onboarding, teaching
-from test_vera_local_onboarding import ROOT, load
+
+from tests.plugins._teaching_execution import execution_record
+from tests.plugins.test_desktop_teaching import PROFILE, WORKFLOWS, onboarding, teaching
+from tests.plugins.test_vera_local_onboarding import ROOT, load
 
 OWN_WORKFLOWS = {
     **WORKFLOWS,
@@ -102,7 +104,10 @@ def complete(scoped_store):
                 store.status()["revision"],
                 {
                     "workflow_id": workflow,
-                    "artifacts": [artifact.name],
+                    "artifacts": [str(artifact)],
+                    "execution_record": execution_record(
+                        store, phase, artifact, workflow
+                    ),
                     "prompt": "Try it",
                     "review": "Synthetic test evidence",
                 },

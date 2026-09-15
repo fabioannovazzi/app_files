@@ -74,7 +74,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "59db55247a166264a72bbd65d324e4944b3e571fe14f41dcc8a0a4438f0acbc7"
+      "sha256": "4a5652bc44b43f4a6e96acc83e681cbbd4f762e4ad985647ba56bc2baf88db68"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -109,12 +109,12 @@
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/accountant_report.source",
       "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/accountant_report.source",
-      "sha256": "a5f42ca1ccf39967af9779e0d4fba13f6b425bfbed001b330fbf49d11e0d19ff"
+      "sha256": "44a45471e7d90c68e912e871f3aa7f635614249afe66027c508a23370a5408a5"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/locale_support.source",
       "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/locale_support.source",
-      "sha256": "a22e43284b49b8e8c999ddbcc5e104a0b0a199a56f92eb49e01b92baecb8d503"
+      "sha256": "b1ab9125675abd27a30e4e7daa5546ae45bd386567f27730f5cae40a53826553"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/reconciliation_helpers.source",
@@ -129,7 +129,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
       "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
-      "sha256": "650c488d19c7f3d961a043d550259048b0b42045e7944a94fc6e9ad75b5731a3"
+      "sha256": "03c1fe0549d0bee7740d79ce3b94bfc8904e6e65660cdfad4c739afabee56ba3"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/review_server.py",
@@ -154,7 +154,7 @@
     {
       "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
     },
     {
       "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/decisions.py",
@@ -224,7 +224,7 @@
     {
       "path": "vendor/modules/courseware/assets/languages.json",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
     },
     {
       "path": "vendor/modules/courseware/execution.py",
@@ -234,12 +234,17 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
     },
     {
       "path": "vendor/modules/reporting_table.py",
       "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
-      "sha256": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7"
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
     },
     {
       "path": "vendor/modules/vera_assurance/__init__.py",
@@ -249,7 +254,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -472,18 +477,18 @@
   "locales": {
     "it": {
       "title": "Verificare le partite aperte con Vera",
-      "goal": "Imparare a verificare un elenco di insoluti e distinguere fatture chiuse, parzialmente chiuse e ancora aperte a una data.",
+      "goal": "Imparare a verificare un elenco di insoluti e distinguere le fatture con prova di pagamento da quelle ancora da chiarire a una data.",
       "scenario": "Un precedente elenco fornitori di Arco riporta ancora tre fatture aperte. I movimenti bancari permettono di verificarne la situazione al 31 marzo.",
       "scope": "Tre fatture fornitori in EUR. La verifica di marzo esclude i pagamenti successivi alla data di riferimento; l’esercizio aggiorna la data.",
       "inputs": "Apri open-items-it.pdf e bank-march-it.pdf. Il primo documento è la popolazione da verificare; il secondo riporta i pagamenti in uscita. Sono export didattici fittizi, con virgola decimale e date giorno/mese/anno.",
       "request": "Vera, verifica queste partite fornitori al 31 marzo 2026. Usa le prove di pagamento bancario per mostrare cosa risulta pagato, cosa resta aperto e cosa devo rivedere.",
       "steps": [
         "Vera importa i file, identifica la popolazione iniziale e propone ruolo e significato degli importi di ciascuna fonte. Conferma data di riferimento e trattamento dei pagamenti successivi.",
-        "La procedura corrente collega fatture e prove di pagamento, calcola i residui e prepara il pacchetto di revisione. La chat vocale spiega l’avanzamento e gli eventuali documenti mancanti.",
-        "Apri la pagina locale di revisione e le carte di lavoro. Segui una fattura dall’importo segnalato come aperto alle prove di pagamento e al residuo. Le decisioni restano da prendere finché non vengono espresse."
+        "La procedura corrente collega fatture e prove di pagamento, distingue le partite chiuse da quelle irrisolte e prepara il pacchetto di revisione. La chat vocale spiega l’avanzamento e gli eventuali documenti mancanti.",
+        "Apri la pagina locale di revisione e le carte di lavoro. Segui una fattura dall’importo segnalato come aperto alla prova di pagamento e all’esito proposto. Le decisioni restano da prendere finché non vengono espresse."
       ],
       "deliverables": [
-        "Carte di lavoro Excel e scheda operativa: mostrano popolazione verificata, collegamenti ai pagamenti, residui ed eccezioni.",
+        "Carte di lavoro Excel e scheda operativa: mostrano importi iniziali, collegamenti ai pagamenti, esiti proposti ed eccezioni.",
         "Relazione Word e pagina locale di revisione: spiegano le conclusioni e permettono al professionista di rivedere le voci e richiedere documenti."
       ],
       "review": "Controlla prima popolazione e data. Le prove di marzo sostengono la chiusura delle prime due fatture; la terza resta irrisolta con questi documenti. Verifica date e fonti prima di accettare una conclusione.",
@@ -493,22 +498,22 @@
       ],
       "practice": "Mantieni open-items-it.pdf e usa bank-april-it.pdf per chiedere una nuova verifica al 30 aprile. Il documento bancario cumulativo comprende il terzo pagamento. Conserva le carte di marzo.",
       "success": "La nuova verifica considera il terzo pagamento. Spiega perché le conclusioni di marzo e aprile cambiano e dove registreresti una decisione di revisione.",
-      "repeat": "Fornisci elenco delle partite, data di riferimento e prove a supporto. Rivedi residui e punti irrisolti nel pacchetto generato prima di usare le conclusioni."
+      "repeat": "Fornisci elenco delle partite, data di riferimento e prove a supporto. Rivedi esiti e punti irrisolti nel pacchetto generato prima di usare le conclusioni."
     },
     "en": {
       "title": "Review open items with Vera",
-      "goal": "Learn to test a list reported as unpaid and identify which invoices are closed, partly closed or still open at a chosen date.",
+      "goal": "Learn to test a list reported as unpaid and distinguish invoices with payment evidence from those still needing clarification at a chosen date.",
       "scenario": "An earlier supplier list for Arco still shows three invoices as open. The bank payment records let us check their position at 31 March.",
       "scope": "Three supplier invoices in EUR. The March review excludes payments after the cut-off; the practice updates that date.",
       "inputs": "Open open-items-en.pdf and bank-march-en.pdf. The first document is the population being tested; the second records its outgoing payments. Both are fictional teaching exports. Amounts use an Italian decimal comma and dates use day/month/year; the guide is in English.",
       "request": "Vera, review these reported supplier open items at 31 March 2026. Use the bank payment evidence to show what is paid, what remains open and what needs review.",
       "steps": [
         "Vera imports the files, identifies the starting population and proposes the role and monetary meaning of each source. Confirm the cut-off and the treatment of later payments.",
-        "The current workflow links invoices and payment evidence, calculates residuals and prepares the review package. The voice chat explains progress and any missing evidence.",
-        "Open the local review page and workpapers. Follow an invoice from its reported open amount to the payment evidence and remaining balance. Review decisions stay pending until actually made."
+        "The current workflow links invoices and payment evidence, distinguishes closed from unresolved items and prepares the review package. The voice chat explains progress and any missing evidence.",
+        "Open the local review page and workpapers. Follow an invoice from its reported open amount to the payment evidence and proposed status. Review decisions stay pending until actually made."
       ],
       "deliverables": [
-        "Excel workpapers and operational schedule: show the tested population, payment links, residuals and exceptions.",
+        "Excel workpapers and operational schedule: show original amounts, payment links, proposed statuses and exceptions.",
         "Word report and local review page: explain the conclusion and let the professional review items and request missing documents."
       ],
       "review": "Check the population and cut-off first. March evidence supports closure of the first two invoices; the third remains unresolved with these documents. Inspect dates and source links before accepting a conclusion.",
@@ -518,22 +523,22 @@
       ],
       "practice": "Keep open-items-en.pdf and use bank-april-en.pdf to request a fresh review at 30 April. The cumulative bank document includes the third payment. Preserve the March workpapers.",
       "success": "The updated review accounts for the third payment. Explain why the March and April conclusions differ and where you would record a review decision.",
-      "repeat": "Provide the reported open-item population, cut-off and supporting evidence. Review residuals and unresolved items in the generated package before using the conclusion."
+      "repeat": "Provide the reported open-item population, cut-off and supporting evidence. Review the proposed statuses and unresolved items in the generated package before using the conclusion."
     },
     "fr": {
       "title": "Vérifier les postes ouverts avec Vera",
-      "goal": "Apprendre à vérifier une liste d’impayés et distinguer les factures soldées, partiellement soldées et encore ouvertes à une date donnée.",
+      "goal": "Apprendre à vérifier une liste d’impayés et distinguer les factures disposant d’une preuve de paiement de celles restant à clarifier à une date donnée.",
       "scenario": "Une ancienne liste fournisseurs d’Arco présente encore trois factures ouvertes. Les mouvements bancaires permettent de vérifier leur situation au 31 mars.",
       "scope": "Trois factures fournisseurs en EUR. La revue de mars exclut les paiements postérieurs à la date d’arrêté ; l’exercice actualise cette date.",
       "inputs": "Ouvrez open-items-fr.pdf et bank-march-fr.pdf. Le premier document est la population à vérifier ; le second présente les décaissements. Ces exports pédagogiques sont fictifs. Les montants suivent la convention italienne avec virgule décimale, les dates le format jour/mois/année.",
       "request": "Vera, vérifie ces postes fournisseurs au 31 mars 2026. Utilise les preuves de paiement bancaire pour montrer ce qui est payé, ce qui reste ouvert et ce qui demande une revue.",
       "steps": [
         "Vera importe les fichiers, identifie la population initiale et propose le rôle et le sens des montants de chaque source. Confirmez la date d’arrêté et le traitement des paiements ultérieurs.",
-        "La procédure actuelle relie factures et preuves de paiement, calcule les soldes et prépare le dossier de revue. La conversation vocale explique l’avancement et les justificatifs manquants.",
-        "Ouvrez la page locale de revue et les documents de travail. Suivez une facture depuis le montant déclaré ouvert jusqu’au paiement et au solde. Les décisions restent en attente tant qu’elles ne sont pas réellement prises."
+        "La procédure actuelle relie factures et preuves de paiement, distingue les postes soldés des postes non résolus et prépare le dossier de revue. La conversation vocale explique l’avancement et les justificatifs manquants.",
+        "Ouvrez la page locale de revue et les documents de travail. Suivez une facture depuis le montant déclaré ouvert jusqu’au justificatif de paiement et au résultat proposé. Les décisions restent en attente tant qu’elles ne sont pas réellement prises."
       ],
       "deliverables": [
-        "Documents Excel et fiche opérationnelle : présentent la population vérifiée, les paiements associés, les soldes et les exceptions.",
+        "Documents Excel et fiche opérationnelle : présentent les montants initiaux, les paiements associés, les résultats proposés et les exceptions.",
         "Rapport Word et page locale de revue : expliquent les conclusions et permettent au professionnel d’examiner les postes et de demander des documents."
       ],
       "review": "Vérifiez d’abord la population et la date. Les preuves de mars justifient le règlement des deux premières factures ; la troisième reste non résolue avec ces documents. Examinez dates et sources avant d’accepter une conclusion.",
@@ -543,22 +548,22 @@
       ],
       "practice": "Gardez open-items-fr.pdf et utilisez bank-april-fr.pdf pour demander une nouvelle revue au 30 avril. Le document bancaire cumulé comprend le troisième paiement. Conservez les documents de mars.",
       "success": "La nouvelle revue tient compte du troisième paiement. Expliquez pourquoi les conclusions diffèrent entre mars et avril et où enregistrer une décision de revue.",
-      "repeat": "Fournissez la liste des postes ouverts, la date d’arrêté et les justificatifs. Examinez les soldes et les points non résolus avant d’utiliser les conclusions."
+      "repeat": "Fournissez la liste des postes ouverts, la date d’arrêté et les justificatifs. Examinez les résultats proposés et les points non résolus avant d’utiliser les conclusions."
     },
     "de": {
       "title": "Offene Posten mit Vera prüfen",
-      "goal": "Lernen, eine Liste gemeldeter offener Posten zu prüfen und vollständig, teilweise oder noch nicht ausgeglichene Rechnungen zum Stichtag zu erkennen.",
+      "goal": "Lernen, eine Liste gemeldeter offener Posten zu prüfen und Rechnungen mit Zahlungsnachweis von noch zu klärenden Rechnungen zum Stichtag zu unterscheiden.",
       "scenario": "Eine ältere Lieferantenliste von Arco führt noch drei Rechnungen als offen. Die Bankbewegungen ermöglichen die Prüfung zum 31. März.",
       "scope": "Drei Lieferantenrechnungen in EUR. Die März-Prüfung berücksichtigt keine Zahlungen nach dem Stichtag; die Übung aktualisiert diesen Stichtag.",
       "inputs": "Öffnen Sie open-items-de.pdf und bank-march-de.pdf. Das erste Dokument enthält den zu prüfenden Bestand, das zweite die Auszahlungen. Beide sind fiktive Übungsexporte. Beträge verwenden das italienische Dezimalkomma, Datumswerte Tag/Monat/Jahr.",
       "request": "Vera, prüfe diese offenen Lieferantenposten zum 31. März 2026. Zeige anhand der Bankzahlungsnachweise, was bezahlt ist, was offen bleibt und was geprüft werden muss.",
       "steps": [
         "Vera importiert die Dateien, bestimmt den Ausgangsbestand und schlägt Rolle und Betragsbedeutung jeder Quelle vor. Bestätigen Sie Stichtag und Umgang mit späteren Zahlungen.",
-        "Der aktuelle Ablauf verknüpft Rechnungen mit Zahlungsnachweisen, berechnet Restbeträge und erstellt das Prüfungspaket. Der Sprachchat erklärt Fortschritt und fehlende Unterlagen.",
-        "Öffnen Sie die lokale Prüfseite und die Arbeitspapiere. Verfolgen Sie eine Rechnung vom gemeldeten offenen Betrag über den Zahlungsnachweis zum Restbetrag. Prüfentscheidungen bleiben ausstehend, bis sie tatsächlich getroffen werden."
+        "Der aktuelle Ablauf verknüpft Rechnungen mit Zahlungsnachweisen, unterscheidet ausgeglichene von ungeklärten Posten und erstellt das Prüfungspaket. Der Sprachchat erklärt Fortschritt und fehlende Unterlagen.",
+        "Öffnen Sie die lokale Prüfseite und die Arbeitspapiere. Verfolgen Sie eine Rechnung vom gemeldeten offenen Betrag über den Zahlungsnachweis zum vorgeschlagenen Ergebnis. Prüfentscheidungen bleiben ausstehend, bis sie tatsächlich getroffen werden."
       ],
       "deliverables": [
-        "Excel-Arbeitspapiere und Arbeitsübersicht: zeigen geprüften Bestand, Zahlungszuordnungen, Restbeträge und Ausnahmen.",
+        "Excel-Arbeitspapiere und Arbeitsübersicht: zeigen Ausgangsbeträge, Zahlungszuordnungen, vorgeschlagene Ergebnisse und Ausnahmen.",
         "Word-Bericht und lokale Prüfseite: erläutern die Ergebnisse und ermöglichen die fachliche Prüfung sowie Dokumentenanforderungen."
       ],
       "review": "Prüfen Sie zuerst Bestand und Stichtag. Die März-Belege stützen den Ausgleich der ersten beiden Rechnungen; die dritte bleibt mit diesen Unterlagen ungeklärt. Prüfen Sie Datum und Quellen vor einer Entscheidung.",
@@ -568,22 +573,22 @@
       ],
       "practice": "Behalten Sie open-items-de.pdf bei und fordern Sie mit bank-april-de.pdf eine neue Prüfung zum 30. April an. Der kumulierte Bankbeleg enthält die dritte Zahlung. Bewahren Sie die März-Unterlagen auf.",
       "success": "Die neue Prüfung berücksichtigt die dritte Zahlung. Erklären Sie den Unterschied zwischen März und April und zeigen Sie, wo eine Prüfentscheidung gespeichert wird.",
-      "repeat": "Stellen Sie die Liste offener Posten, den Stichtag und die Belege bereit. Prüfen Sie Restbeträge und ungeklärte Punkte im erzeugten Paket, bevor Sie das Ergebnis verwenden."
+      "repeat": "Stellen Sie die Liste offener Posten, den Stichtag und die Belege bereit. Prüfen Sie die vorgeschlagenen Ergebnisse und ungeklärten Punkte im erzeugten Paket, bevor Sie das Ergebnis verwenden."
     },
     "es": {
       "title": "Revisar partidas abiertas con Vera",
-      "goal": "Aprender a comprobar una lista de impagados e identificar facturas saldadas, parcialmente saldadas y pendientes en una fecha concreta.",
+      "goal": "Aprender a comprobar una lista de impagados y distinguir las facturas con prueba de pago de las que siguen pendientes de aclaración en una fecha concreta.",
       "scenario": "Una lista anterior de proveedores de Arco todavía muestra tres facturas abiertas. Los movimientos bancarios permiten comprobar su situación a 31 de marzo.",
       "scope": "Tres facturas de proveedores en EUR. La revisión de marzo excluye pagos posteriores a la fecha de corte; el ejercicio actualiza esa fecha.",
       "inputs": "Abre open-items-es.pdf y bank-march-es.pdf. El primer documento es la población que se comprueba; el segundo recoge los pagos de salida. Son exportaciones didácticas ficticias. Los importes siguen la convención italiana con coma decimal y las fechas tienen formato día/mes/año.",
       "request": "Vera, revisa estas partidas de proveedores a 31 de marzo de 2026. Usa las pruebas de pago bancario para mostrar qué está pagado, qué sigue abierto y qué debo revisar.",
       "steps": [
         "Vera importa los archivos, identifica la población inicial y propone el papel y el significado monetario de cada fuente. Confirma la fecha de corte y el tratamiento de pagos posteriores.",
-        "El procedimiento actual relaciona facturas y pruebas de pago, calcula saldos y prepara el paquete de revisión. El chat de voz explica el avance y la documentación que falta.",
-        "Abre la página local de revisión y los papeles de trabajo. Sigue una factura desde el importe declarado abierto hasta el pago y el saldo. Las decisiones permanecen pendientes hasta que realmente se toman."
+        "El procedimiento actual relaciona facturas y pruebas de pago, distingue partidas saldadas de partidas sin resolver y prepara el paquete de revisión. El chat de voz explica el avance y la documentación que falta.",
+        "Abre la página local de revisión y los papeles de trabajo. Sigue una factura desde el importe declarado abierto hasta la prueba de pago y el resultado propuesto. Las decisiones permanecen pendientes hasta que realmente se toman."
       ],
       "deliverables": [
-        "Papeles Excel y ficha operativa: muestran población comprobada, pagos vinculados, saldos y excepciones.",
+        "Papeles Excel y ficha operativa: muestran importes iniciales, pagos vinculados, resultados propuestos y excepciones.",
         "Informe Word y página local de revisión: explican las conclusiones y permiten al profesional revisar partidas y solicitar documentos."
       ],
       "review": "Comprueba primero población y fecha. Las pruebas de marzo respaldan el cierre de las dos primeras facturas; la tercera queda sin resolver con estos documentos. Revisa fechas y fuentes antes de aceptar una conclusión.",
@@ -593,7 +598,7 @@
       ],
       "practice": "Mantén open-items-es.pdf y usa bank-april-es.pdf para pedir una nueva revisión a 30 de abril. El documento bancario acumulado incluye el tercer pago. Conserva los documentos de marzo.",
       "success": "La revisión actualizada considera el tercer pago. Explica por qué cambian las conclusiones entre marzo y abril y dónde registrarías una decisión de revisión.",
-      "repeat": "Facilita la población de partidas abiertas, la fecha de corte y los justificantes. Revisa los saldos y los puntos pendientes antes de utilizar las conclusiones."
+      "repeat": "Facilita la población de partidas abiertas, la fecha de corte y los justificantes. Revisa los resultados propuestos y los puntos pendientes antes de utilizar las conclusiones."
     }
   }
 }

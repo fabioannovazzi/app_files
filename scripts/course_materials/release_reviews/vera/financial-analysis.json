@@ -1,0 +1,310 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "financial-analysis",
+  "course_sha256": "f02f5b144d46468f592cd15d106fffb42d5858acc41a9198056d084d454e12aa",
+  "reviewer": "Codex: first-use material, native financial result and localized delivery-note review",
+  "reviewed_at": "2026-09-14T18:31:25.025430+00:00",
+  "review_scope": "Read both fictional four-balance statements and all five localized contexts and lesson outlines. Ten current registered net-debt executions pass and finalize their source-bound runs. Reviewed the actual prepared result, metrics and line items; those native files are byte-identical across languages within each phase. Read all five February delivery notes and verified that every March note differs only in the actual date, loan, cash, excluded payable and result values. The notes exercise the skill's ordinary Codex delivery stage through a test-only authored interpretation; they are not shipped answers or a deterministic engine report. No browser presentation, learner understanding, voice or two-window acceptance is claimed.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain first-use lesson explains requesting a specific Financial Analysis task, providing dated balances, reviewing classification choices, running the calculation and reading its result and detail. It introduces the wider workflow without pretending this net-debt example teaches all eight registered engines.",
+        "inputs_and_request": "Read this localized context and both four-row source statements. February contains a 65,000 EUR loan, 27,000 available cash, 5,000 restricted deposit and 52,000 ordinary trade payables. The authored request defines loan less available cash and excludes the other two items. It explicitly limits coverage and does not prefill professional approval or ask the learner to write technical contracts.",
+        "execution_and_checkpoints": "The test imports the actual source, records its exact hash and the test-only interpretation of the requested definition in current case contracts, then runs the registered net-debt engine and normal contract audit. The lesson checkpoints ask what is measured and why a balance is included or excluded. No model arithmetic or generated calculation code substitutes for the native result.",
+        "deliverable_and_next_action": "The actual prepared metrics and four line items support a concise localized Codex delivery note with separate included-result and excluded-item tables. The note links the native result, detailed rows and contract audit. This is the ordinary delivery stage described by the skill, exercised with authored test prose, rather than a new engine-generated report. It explains the supplied definition and the need to check source completeness and conclusions. Source tie-out remains not_assessed and report_ready remains false.",
+        "practice_and_repeat": "March runs independently at 31 March with the same definition and new balances: loan 66,000, available cash 35,000, restricted deposit 5,000 and trade payables 53,000 EUR. Native net debt is 31,000 EUR. The learner compares dates and balances with the preserved February result and repeats by describing a financial question and reviewing the proposed analysis and assumptions.",
+        "language_and_pacing": "Read the it outline, context and delivery wording. The JSON calculation contract retains canonical English field names; the explanation and result tables use the selected working language. Six stages total 390 seconds, with time for processing and questions allowed to extend the lesson. Native learner and voice behavior are not attested."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_analysis_kit_runs_current_net_debt_pack[demo-38000-it]",
+        "result_review": "The registered engine calculates 65000 EUR debt less 27000 EUR available cash, giving 38000 EUR net debt under the stated exercise definition. The restricted deposit and trade payables remain explicitly excluded. Calculation and case-contract checks pass; source tie-out and professional conclusions remain not_assessed, with report_ready false. The localized note reproduces these current native values and links their detail. The original source bytes are unchanged and the run is finalized.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "da81e0503a5873e006f2a7ddda24dac6568eb3049ef22647562ae2fbd907782a"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "08ff858cba8fded3e4cb6d2ec275182aeffad332ff538b440455dbe8ddda220f"
+          },
+          {
+            "name": "fdd_line_items.json",
+            "sha256": "a7406599ea84a883fe1dd7efd2b390584409f0625f50c36b0091a4cb2bf25eeb"
+          },
+          {
+            "name": "fdd_metrics.json",
+            "sha256": "167f69d7b304a82eabbea341be16e497e7dcd4246a5cf0b54718744f8e051369"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_analysis_kit_runs_current_net_debt_pack[practice-31000-it]",
+        "result_review": "The registered engine calculates 66000 EUR debt less 35000 EUR available cash, giving 31000 EUR net debt under the stated exercise definition. The restricted deposit and trade payables remain explicitly excluded. Calculation and case-contract checks pass; source tie-out and professional conclusions remain not_assessed, with report_ready false. The localized note reproduces these current native values and links their detail. The original source bytes are unchanged and the run is finalized.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "09ef9bb6f170f8894cabf40e03c6ed11271787a2c4fcb27396445c0f1c234964"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "d7aada2e7a7086d5082a5b8686acf5b9ee5a9bd106a48a08482c7a6bd521df06"
+          },
+          {
+            "name": "fdd_line_items.json",
+            "sha256": "e6e2217fee18900b5675baa551bcd7d3f7fba4b96cf8691fe8526aa6a9b8a599"
+          },
+          {
+            "name": "fdd_metrics.json",
+            "sha256": "cf36540c741a6d4b95cce140e6535ab835b3a86b339c6a6ec06e98737d2565b2"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain first-use lesson explains requesting a specific Financial Analysis task, providing dated balances, reviewing classification choices, running the calculation and reading its result and detail. It introduces the wider workflow without pretending this net-debt example teaches all eight registered engines.",
+        "inputs_and_request": "Read this localized context and both four-row source statements. February contains a 65,000 EUR loan, 27,000 available cash, 5,000 restricted deposit and 52,000 ordinary trade payables. The authored request defines loan less available cash and excludes the other two items. It explicitly limits coverage and does not prefill professional approval or ask the learner to write technical contracts.",
+        "execution_and_checkpoints": "The test imports the actual source, records its exact hash and the test-only interpretation of the requested definition in current case contracts, then runs the registered net-debt engine and normal contract audit. The lesson checkpoints ask what is measured and why a balance is included or excluded. No model arithmetic or generated calculation code substitutes for the native result.",
+        "deliverable_and_next_action": "The actual prepared metrics and four line items support a concise localized Codex delivery note with separate included-result and excluded-item tables. The note links the native result, detailed rows and contract audit. This is the ordinary delivery stage described by the skill, exercised with authored test prose, rather than a new engine-generated report. It explains the supplied definition and the need to check source completeness and conclusions. Source tie-out remains not_assessed and report_ready remains false.",
+        "practice_and_repeat": "March runs independently at 31 March with the same definition and new balances: loan 66,000, available cash 35,000, restricted deposit 5,000 and trade payables 53,000 EUR. Native net debt is 31,000 EUR. The learner compares dates and balances with the preserved February result and repeats by describing a financial question and reviewing the proposed analysis and assumptions.",
+        "language_and_pacing": "Read the en outline, context and delivery wording. The JSON calculation contract retains canonical English field names; the explanation and result tables use the selected working language. Six stages total 390 seconds, with time for processing and questions allowed to extend the lesson. Native learner and voice behavior are not attested."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_analysis_kit_runs_current_net_debt_pack[demo-38000-en]",
+        "result_review": "The registered engine calculates 65000 EUR debt less 27000 EUR available cash, giving 38000 EUR net debt under the stated exercise definition. The restricted deposit and trade payables remain explicitly excluded. Calculation and case-contract checks pass; source tie-out and professional conclusions remain not_assessed, with report_ready false. The localized note reproduces these current native values and links their detail. The original source bytes are unchanged and the run is finalized.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "74a93282ca0c6d1a32a3da9de6f7526c82ee88d83d751d978a944e111e0b5ecc"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "08ff858cba8fded3e4cb6d2ec275182aeffad332ff538b440455dbe8ddda220f"
+          },
+          {
+            "name": "fdd_line_items.json",
+            "sha256": "a7406599ea84a883fe1dd7efd2b390584409f0625f50c36b0091a4cb2bf25eeb"
+          },
+          {
+            "name": "fdd_metrics.json",
+            "sha256": "167f69d7b304a82eabbea341be16e497e7dcd4246a5cf0b54718744f8e051369"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_analysis_kit_runs_current_net_debt_pack[practice-31000-en]",
+        "result_review": "The registered engine calculates 66000 EUR debt less 35000 EUR available cash, giving 31000 EUR net debt under the stated exercise definition. The restricted deposit and trade payables remain explicitly excluded. Calculation and case-contract checks pass; source tie-out and professional conclusions remain not_assessed, with report_ready false. The localized note reproduces these current native values and links their detail. The original source bytes are unchanged and the run is finalized.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "fc3dbd734899a4f2780fe5d931ed5e0bfdb9cf6926a62ecbd2588ae2b577a77c"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "d7aada2e7a7086d5082a5b8686acf5b9ee5a9bd106a48a08482c7a6bd521df06"
+          },
+          {
+            "name": "fdd_line_items.json",
+            "sha256": "e6e2217fee18900b5675baa551bcd7d3f7fba4b96cf8691fe8526aa6a9b8a599"
+          },
+          {
+            "name": "fdd_metrics.json",
+            "sha256": "cf36540c741a6d4b95cce140e6535ab835b3a86b339c6a6ec06e98737d2565b2"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain first-use lesson explains requesting a specific Financial Analysis task, providing dated balances, reviewing classification choices, running the calculation and reading its result and detail. It introduces the wider workflow without pretending this net-debt example teaches all eight registered engines.",
+        "inputs_and_request": "Read this localized context and both four-row source statements. February contains a 65,000 EUR loan, 27,000 available cash, 5,000 restricted deposit and 52,000 ordinary trade payables. The authored request defines loan less available cash and excludes the other two items. It explicitly limits coverage and does not prefill professional approval or ask the learner to write technical contracts.",
+        "execution_and_checkpoints": "The test imports the actual source, records its exact hash and the test-only interpretation of the requested definition in current case contracts, then runs the registered net-debt engine and normal contract audit. The lesson checkpoints ask what is measured and why a balance is included or excluded. No model arithmetic or generated calculation code substitutes for the native result.",
+        "deliverable_and_next_action": "The actual prepared metrics and four line items support a concise localized Codex delivery note with separate included-result and excluded-item tables. The note links the native result, detailed rows and contract audit. This is the ordinary delivery stage described by the skill, exercised with authored test prose, rather than a new engine-generated report. It explains the supplied definition and the need to check source completeness and conclusions. Source tie-out remains not_assessed and report_ready remains false.",
+        "practice_and_repeat": "March runs independently at 31 March with the same definition and new balances: loan 66,000, available cash 35,000, restricted deposit 5,000 and trade payables 53,000 EUR. Native net debt is 31,000 EUR. The learner compares dates and balances with the preserved February result and repeats by describing a financial question and reviewing the proposed analysis and assumptions.",
+        "language_and_pacing": "Read the fr outline, context and delivery wording. The JSON calculation contract retains canonical English field names; the explanation and result tables use the selected working language. Six stages total 390 seconds, with time for processing and questions allowed to extend the lesson. Native learner and voice behavior are not attested."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_analysis_kit_runs_current_net_debt_pack[demo-38000-fr]",
+        "result_review": "The registered engine calculates 65000 EUR debt less 27000 EUR available cash, giving 38000 EUR net debt under the stated exercise definition. The restricted deposit and trade payables remain explicitly excluded. Calculation and case-contract checks pass; source tie-out and professional conclusions remain not_assessed, with report_ready false. The localized note reproduces these current native values and links their detail. The original source bytes are unchanged and the run is finalized.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "93974cd712dc11ba4b057675b2d159c8da8b1a08edc1b6c8e1c216f792a02d7f"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "08ff858cba8fded3e4cb6d2ec275182aeffad332ff538b440455dbe8ddda220f"
+          },
+          {
+            "name": "fdd_line_items.json",
+            "sha256": "a7406599ea84a883fe1dd7efd2b390584409f0625f50c36b0091a4cb2bf25eeb"
+          },
+          {
+            "name": "fdd_metrics.json",
+            "sha256": "167f69d7b304a82eabbea341be16e497e7dcd4246a5cf0b54718744f8e051369"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_analysis_kit_runs_current_net_debt_pack[practice-31000-fr]",
+        "result_review": "The registered engine calculates 66000 EUR debt less 35000 EUR available cash, giving 31000 EUR net debt under the stated exercise definition. The restricted deposit and trade payables remain explicitly excluded. Calculation and case-contract checks pass; source tie-out and professional conclusions remain not_assessed, with report_ready false. The localized note reproduces these current native values and links their detail. The original source bytes are unchanged and the run is finalized.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "0d4e3b2b1bd220c89d7036bbcc4b1953332fba367f279fdf2572fdaf51cbd1a9"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "d7aada2e7a7086d5082a5b8686acf5b9ee5a9bd106a48a08482c7a6bd521df06"
+          },
+          {
+            "name": "fdd_line_items.json",
+            "sha256": "e6e2217fee18900b5675baa551bcd7d3f7fba4b96cf8691fe8526aa6a9b8a599"
+          },
+          {
+            "name": "fdd_metrics.json",
+            "sha256": "cf36540c741a6d4b95cce140e6535ab835b3a86b339c6a6ec06e98737d2565b2"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain first-use lesson explains requesting a specific Financial Analysis task, providing dated balances, reviewing classification choices, running the calculation and reading its result and detail. It introduces the wider workflow without pretending this net-debt example teaches all eight registered engines.",
+        "inputs_and_request": "Read this localized context and both four-row source statements. February contains a 65,000 EUR loan, 27,000 available cash, 5,000 restricted deposit and 52,000 ordinary trade payables. The authored request defines loan less available cash and excludes the other two items. It explicitly limits coverage and does not prefill professional approval or ask the learner to write technical contracts.",
+        "execution_and_checkpoints": "The test imports the actual source, records its exact hash and the test-only interpretation of the requested definition in current case contracts, then runs the registered net-debt engine and normal contract audit. The lesson checkpoints ask what is measured and why a balance is included or excluded. No model arithmetic or generated calculation code substitutes for the native result.",
+        "deliverable_and_next_action": "The actual prepared metrics and four line items support a concise localized Codex delivery note with separate included-result and excluded-item tables. The note links the native result, detailed rows and contract audit. This is the ordinary delivery stage described by the skill, exercised with authored test prose, rather than a new engine-generated report. It explains the supplied definition and the need to check source completeness and conclusions. Source tie-out remains not_assessed and report_ready remains false.",
+        "practice_and_repeat": "March runs independently at 31 March with the same definition and new balances: loan 66,000, available cash 35,000, restricted deposit 5,000 and trade payables 53,000 EUR. Native net debt is 31,000 EUR. The learner compares dates and balances with the preserved February result and repeats by describing a financial question and reviewing the proposed analysis and assumptions.",
+        "language_and_pacing": "Read the de outline, context and delivery wording. The JSON calculation contract retains canonical English field names; the explanation and result tables use the selected working language. Six stages total 390 seconds, with time for processing and questions allowed to extend the lesson. Native learner and voice behavior are not attested."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_analysis_kit_runs_current_net_debt_pack[demo-38000-de]",
+        "result_review": "The registered engine calculates 65000 EUR debt less 27000 EUR available cash, giving 38000 EUR net debt under the stated exercise definition. The restricted deposit and trade payables remain explicitly excluded. Calculation and case-contract checks pass; source tie-out and professional conclusions remain not_assessed, with report_ready false. The localized note reproduces these current native values and links their detail. The original source bytes are unchanged and the run is finalized.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "112c658faff130f937e0c99034eeda4d67e2506b9a256f666785d38e2d2d017a"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "08ff858cba8fded3e4cb6d2ec275182aeffad332ff538b440455dbe8ddda220f"
+          },
+          {
+            "name": "fdd_line_items.json",
+            "sha256": "a7406599ea84a883fe1dd7efd2b390584409f0625f50c36b0091a4cb2bf25eeb"
+          },
+          {
+            "name": "fdd_metrics.json",
+            "sha256": "167f69d7b304a82eabbea341be16e497e7dcd4246a5cf0b54718744f8e051369"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_analysis_kit_runs_current_net_debt_pack[practice-31000-de]",
+        "result_review": "The registered engine calculates 66000 EUR debt less 35000 EUR available cash, giving 31000 EUR net debt under the stated exercise definition. The restricted deposit and trade payables remain explicitly excluded. Calculation and case-contract checks pass; source tie-out and professional conclusions remain not_assessed, with report_ready false. The localized note reproduces these current native values and links their detail. The original source bytes are unchanged and the run is finalized.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "863f2f170b161a50724b95ed384232bbaaa8b6004ba69ba5678feaf382c156c9"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "d7aada2e7a7086d5082a5b8686acf5b9ee5a9bd106a48a08482c7a6bd521df06"
+          },
+          {
+            "name": "fdd_line_items.json",
+            "sha256": "e6e2217fee18900b5675baa551bcd7d3f7fba4b96cf8691fe8526aa6a9b8a599"
+          },
+          {
+            "name": "fdd_metrics.json",
+            "sha256": "cf36540c741a6d4b95cce140e6535ab835b3a86b339c6a6ec06e98737d2565b2"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain first-use lesson explains requesting a specific Financial Analysis task, providing dated balances, reviewing classification choices, running the calculation and reading its result and detail. It introduces the wider workflow without pretending this net-debt example teaches all eight registered engines.",
+        "inputs_and_request": "Read this localized context and both four-row source statements. February contains a 65,000 EUR loan, 27,000 available cash, 5,000 restricted deposit and 52,000 ordinary trade payables. The authored request defines loan less available cash and excludes the other two items. It explicitly limits coverage and does not prefill professional approval or ask the learner to write technical contracts.",
+        "execution_and_checkpoints": "The test imports the actual source, records its exact hash and the test-only interpretation of the requested definition in current case contracts, then runs the registered net-debt engine and normal contract audit. The lesson checkpoints ask what is measured and why a balance is included or excluded. No model arithmetic or generated calculation code substitutes for the native result.",
+        "deliverable_and_next_action": "The actual prepared metrics and four line items support a concise localized Codex delivery note with separate included-result and excluded-item tables. The note links the native result, detailed rows and contract audit. This is the ordinary delivery stage described by the skill, exercised with authored test prose, rather than a new engine-generated report. It explains the supplied definition and the need to check source completeness and conclusions. Source tie-out remains not_assessed and report_ready remains false.",
+        "practice_and_repeat": "March runs independently at 31 March with the same definition and new balances: loan 66,000, available cash 35,000, restricted deposit 5,000 and trade payables 53,000 EUR. Native net debt is 31,000 EUR. The learner compares dates and balances with the preserved February result and repeats by describing a financial question and reviewing the proposed analysis and assumptions.",
+        "language_and_pacing": "Read the es outline, context and delivery wording. The JSON calculation contract retains canonical English field names; the explanation and result tables use the selected working language. Six stages total 390 seconds, with time for processing and questions allowed to extend the lesson. Native learner and voice behavior are not attested."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_analysis_kit_runs_current_net_debt_pack[demo-38000-es]",
+        "result_review": "The registered engine calculates 65000 EUR debt less 27000 EUR available cash, giving 38000 EUR net debt under the stated exercise definition. The restricted deposit and trade payables remain explicitly excluded. Calculation and case-contract checks pass; source tie-out and professional conclusions remain not_assessed, with report_ready false. The localized note reproduces these current native values and links their detail. The original source bytes are unchanged and the run is finalized.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "d2aa1b275728cb447dadebf326c2de7ee906df470c2da3f6d99393afa239133d"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "08ff858cba8fded3e4cb6d2ec275182aeffad332ff538b440455dbe8ddda220f"
+          },
+          {
+            "name": "fdd_line_items.json",
+            "sha256": "a7406599ea84a883fe1dd7efd2b390584409f0625f50c36b0091a4cb2bf25eeb"
+          },
+          {
+            "name": "fdd_metrics.json",
+            "sha256": "167f69d7b304a82eabbea341be16e497e7dcd4246a5cf0b54718744f8e051369"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_financial_analysis_kit_runs_current_net_debt_pack[practice-31000-es]",
+        "result_review": "The registered engine calculates 66000 EUR debt less 35000 EUR available cash, giving 31000 EUR net debt under the stated exercise definition. The restricted deposit and trade payables remain explicitly excluded. Calculation and case-contract checks pass; source tie-out and professional conclusions remain not_assessed, with report_ready false. The localized note reproduces these current native values and links their detail. The original source bytes are unchanged and the run is finalized.",
+        "reviewed_artifacts": [
+          {
+            "name": "codex_run_review.md",
+            "sha256": "ece2e01a7fd422f139198d4ac9ee2aa1ad1d755e569dcad3ac0c9acf5344321b"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "d7aada2e7a7086d5082a5b8686acf5b9ee5a9bd106a48a08482c7a6bd521df06"
+          },
+          {
+            "name": "fdd_line_items.json",
+            "sha256": "e6e2217fee18900b5675baa551bcd7d3f7fba4b96cf8691fe8526aa6a9b8a599"
+          },
+          {
+            "name": "fdd_metrics.json",
+            "sha256": "cf36540c741a6d4b95cce140e6535ab835b3a86b339c6a6ec06e98737d2565b2"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.156945+00:00",
+    "previous_course_sha256": "1c818ca02d7ae8535fceba11365bee0aa39ee6ec1da58c5059a9c31c4f885b18",
+    "source_snapshot": "/private/tmp/financial-analysis-teaching-release-01/test_financial_analysis_kit_ru7/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  }
+}

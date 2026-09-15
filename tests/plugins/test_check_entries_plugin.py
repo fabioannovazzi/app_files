@@ -1985,9 +1985,9 @@ def test_plugin_inspects_entries_and_runs_deterministic_checks(
         if output["path"] == "review_notes.md"
     )
     assert review_notes_output["required_text"] == [
-        "# Vouching Review Notes",
-        "## Status Counts",
-        "## Review Policy",
+        "# Note di verifica documentale",
+        "## Riepilogo degli esiti",
+        "## Come rivedere il risultato",
     ]
     check_results_output = next(
         output
@@ -2386,6 +2386,13 @@ def test_review_edit_reseals_assurance_envelope(
     audit = json.loads((output_dir / "check_audit.json").read_text())
     final_artifacts = json.loads(final_artifacts_path.read_text())
     assert result["application_status"] == "blocked"
+    workbook = openpyxl.load_workbook(output_dir / "check_results.xlsx")
+    sheet = workbook["Sheet1"]
+    assert sheet.freeze_panes == "E2"
+    assert sheet.column_dimensions["A"].hidden
+    assert sheet.column_dimensions["E"].width >= 11
+    assert sheet.sheet_view.showGridLines is False
+    workbook.close()
     assert resealed["content_sha256"] != prior_envelope["content_sha256"]
     assert resealed["gate_register"]["report_ready"] is False
     review_decision = next(
@@ -6248,8 +6255,10 @@ def test_late_run_failure_restores_exact_prior_tree(
         tmp_path / "recipe.json",
     )
 
-    def fail_after_envelope(path: Path, audit: dict[str, Any]) -> None:
-        del audit
+    def fail_after_envelope(
+        path: Path, audit: dict[str, Any], results: pl.DataFrame
+    ) -> None:
+        del audit, results
         path.write_text("partial", encoding="utf-8")
         raise RuntimeError("injected late run failure")
 

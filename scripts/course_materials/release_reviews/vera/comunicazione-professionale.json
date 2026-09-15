@@ -1,0 +1,250 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "comunicazione-professionale",
+  "course_sha256": "e7f09cdf64c24daee9e248d20918ca4222a719f3b71cf3adae4ff6563d2b9e33",
+  "reviewer": "Codex: first-use/source/output inspection; independent claim session 01a0a0b8-d623-7cd0-870c-ec3921855b09 and independent editorial session /root/communication_editorial_isolated_07",
+  "reviewed_at": "2026-09-14T17:03:02.450310+00:00",
+  "review_scope": "Actual current local native packaging with explicitly synthetic professional-review transitions. Exact revised contributions and all 220 claims across both products were independently assessed, followed by a fresh editorial session separate from generation, source assurance and benchmark qualification. The final FAQs preserve the exact reviewed bodies once; root inspected the native packaging and all ten practice emails. Host identities are operator attestations, not API receipts. The outputs are Markdown FAQs and text emails; no HTML, rendered palette, professional approval, sending, real learner, or voice/two-window acceptance is claimed.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches the complete communication workflow: state the audience and objective, supply a brief and selected source, review the proposed communication and format, follow claim/editorial checks, open the real package and request another channel. The outline explicitly keeps the legal example subordinate to learning the workflow.",
+        "inputs_and_request": "Read every localized assignment and practice request. The fictional firm has no communication history, logo or real recipients. The attributed official guide is an authentic captured source, distinct from the fictional assignment. Source snapshots and complete kit inputs are hash-bound in the native replay. The ordinary-language request names the reader, FAQ, selected source and local-only delivery.",
+        "execution_and_checkpoints": "Twenty local native regressions across the two products initialize the workspace, replay actual blind qualification, prepare exact source packets, record separately assessed contributions, reject packaging before approval, then exercise explicitly synthetic review/profile/packaging transitions. The two checkpoints ask for the intended audience/content/format and then locate usable copy and a supporting source. Model artifacts are test-only inputs, not precomputed teaching outputs or evidence of fresh CI model execution.",
+        "deliverable_and_next_action": "The current output is a six-question Markdown FAQ with a plain title, short introduction, visible fictional label, source links and professional limits. Native packaging preserves the independently reviewed body exactly once; question-level assertions catch the previous duplicate-body/sections defect. Localized source footers remain readable. The style profile is a reviewable proposal; a rendered blue/white visual is not claimed for this text-only exercise. The learner finds the text, checks a source and reviews the package before use.",
+        "practice_and_repeat": "The practice produces a separate package with the same FAQ bytes plus a short covering email naming its audience and use. All ten native emails across both products were read; each uses its resolved subject, one greeting and one signature, with no invented recipient or attachment already sent. The separate demo package remains intact. The lesson explains how to repeat the workflow with another topic, source or channel.",
+        "language_and_pacing": "Read the it outline and brief, and compare it with the current native drafts. The separate fresh editorial assessor reviewed this exact language pair and retained this weakness: Quando serve una valutazione specifica? is less fluent than the preceding questions because it stacks two adverbs before the exceptional-request threshold and combines several referral triggers. The plain explanation about inconvenience and the clear referral prevent a material reader misunderstanding. Smoothing that phrase is optional copy-editing, not a content correction required to progress. The limitation is recorded rather than hidden. Six lesson stages target 390 seconds of explanation and guided interaction; independent processing and questions may extend elapsed time. Native voice and learner comprehension are not measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_communication_execution::test_native_communication_package_with_synthetic_review_transitions[vera-it-demo]",
+        "result_review": "Current native packaging produces the exact independently reviewed six-question FAQ once, with the fictional assignment label and localized public-source footer. The native record reaches final_ready only after explicit synthetic semantic and packaged-output test decisions. These are test transitions, not real professional approval, learner understanding or permission to transmit. The exact current output hashes are recorded below.",
+        "reviewed_artifacts": [
+          {
+            "name": "faq.md",
+            "sha256": "44cc97ab5e8260fa291096256cef35bc749445e00c3b6d5d42f2fc14a4e90e68"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "ad1f92c116ce8e4cb10df7fcd01464b6b2d973bfd45702ee6fb1d13e75b98e70"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_communication_execution::test_native_communication_package_with_synthetic_review_transitions[vera-it-practice]",
+        "result_review": "Current native packaging preserves the demonstration FAQ bytes and adds the independently reviewed covering email. Its resolved subject, single greeting/signature, selected-language body and source notes were inspected. The native record reaches final_ready only after explicit synthetic semantic and packaged-output test decisions. These are test transitions, not real professional approval, learner understanding or permission to transmit. The exact current output hashes are recorded below.",
+        "reviewed_artifacts": [
+          {
+            "name": "faq.md",
+            "sha256": "44cc97ab5e8260fa291096256cef35bc749445e00c3b6d5d42f2fc14a4e90e68"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "993924ce1865c37548395e5c7088934470045b2a62ffd2293cf76713f1ec5464"
+          },
+          {
+            "name": "client_email.txt",
+            "sha256": "20b39a91a3510567ca6bfbc8668bdfada15346aa95b3a126e5a6edab5bf0d651"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches the complete communication workflow: state the audience and objective, supply a brief and selected source, review the proposed communication and format, follow claim/editorial checks, open the real package and request another channel. The outline explicitly keeps the legal example subordinate to learning the workflow.",
+        "inputs_and_request": "Read every localized assignment and practice request. The fictional firm has no communication history, logo or real recipients. The attributed official guide is an authentic captured source, distinct from the fictional assignment. Source snapshots and complete kit inputs are hash-bound in the native replay. The ordinary-language request names the reader, FAQ, selected source and local-only delivery.",
+        "execution_and_checkpoints": "Twenty local native regressions across the two products initialize the workspace, replay actual blind qualification, prepare exact source packets, record separately assessed contributions, reject packaging before approval, then exercise explicitly synthetic review/profile/packaging transitions. The two checkpoints ask for the intended audience/content/format and then locate usable copy and a supporting source. Model artifacts are test-only inputs, not precomputed teaching outputs or evidence of fresh CI model execution.",
+        "deliverable_and_next_action": "The current output is a six-question Markdown FAQ with a plain title, short introduction, visible fictional label, source links and professional limits. Native packaging preserves the independently reviewed body exactly once; question-level assertions catch the previous duplicate-body/sections defect. Localized source footers remain readable. The style profile is a reviewable proposal; a rendered blue/white visual is not claimed for this text-only exercise. The learner finds the text, checks a source and reviews the package before use.",
+        "practice_and_repeat": "The practice produces a separate package with the same FAQ bytes plus a short covering email naming its audience and use. All ten native emails across both products were read; each uses its resolved subject, one greeting and one signature, with no invented recipient or attachment already sent. The separate demo package remains intact. The lesson explains how to repeat the workflow with another topic, source or channel.",
+        "language_and_pacing": "Read the en outline and brief, and compare it with the current native drafts. The separate fresh editorial assessor reviewed this exact language pair and retained this weakness: When is a specific assessment needed? partly repeats earlier referral advice and carries the densest wording. It still earns its place by collecting escalation triggers and adding the evidence threshold plus reasons-and-remedies notice. It is not a redundant seventh summary disguised as another deliverable. The limitation is recorded rather than hidden. Six lesson stages target 390 seconds of explanation and guided interaction; independent processing and questions may extend elapsed time. Native voice and learner comprehension are not measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_communication_execution::test_native_communication_package_with_synthetic_review_transitions[vera-en-demo]",
+        "result_review": "Current native packaging produces the exact independently reviewed six-question FAQ once, with the fictional assignment label and localized public-source footer. The native record reaches final_ready only after explicit synthetic semantic and packaged-output test decisions. These are test transitions, not real professional approval, learner understanding or permission to transmit. The exact current output hashes are recorded below.",
+        "reviewed_artifacts": [
+          {
+            "name": "faq.md",
+            "sha256": "ffb9d7f0f1e918ffe61a39b425fe8b3b984bead3279a8b9e3ac966299be106e6"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "72b176c5ffd4a5327238c487b1f64c898821cba20997a47243cc0600530daf2d"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_communication_execution::test_native_communication_package_with_synthetic_review_transitions[vera-en-practice]",
+        "result_review": "Current native packaging preserves the demonstration FAQ bytes and adds the independently reviewed covering email. Its resolved subject, single greeting/signature, selected-language body and source notes were inspected. The native record reaches final_ready only after explicit synthetic semantic and packaged-output test decisions. These are test transitions, not real professional approval, learner understanding or permission to transmit. The exact current output hashes are recorded below.",
+        "reviewed_artifacts": [
+          {
+            "name": "faq.md",
+            "sha256": "ffb9d7f0f1e918ffe61a39b425fe8b3b984bead3279a8b9e3ac966299be106e6"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "61eba8a551ec74ecbc71c0ad6d69b0265d377d4616d003f1fa14b38450889049"
+          },
+          {
+            "name": "client_email.txt",
+            "sha256": "b5608094329e3b258f79c859fd856623839ad1ec073cca3b38f997a0ab0ca079"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches the complete communication workflow: state the audience and objective, supply a brief and selected source, review the proposed communication and format, follow claim/editorial checks, open the real package and request another channel. The outline explicitly keeps the legal example subordinate to learning the workflow.",
+        "inputs_and_request": "Read every localized assignment and practice request. The fictional firm has no communication history, logo or real recipients. The attributed official guide is an authentic captured source, distinct from the fictional assignment. Source snapshots and complete kit inputs are hash-bound in the native replay. The ordinary-language request names the reader, FAQ, selected source and local-only delivery.",
+        "execution_and_checkpoints": "Twenty local native regressions across the two products initialize the workspace, replay actual blind qualification, prepare exact source packets, record separately assessed contributions, reject packaging before approval, then exercise explicitly synthetic review/profile/packaging transitions. The two checkpoints ask for the intended audience/content/format and then locate usable copy and a supporting source. Model artifacts are test-only inputs, not precomputed teaching outputs or evidence of fresh CI model execution.",
+        "deliverable_and_next_action": "The current output is a six-question Markdown FAQ with a plain title, short introduction, visible fictional label, source links and professional limits. Native packaging preserves the independently reviewed body exactly once; question-level assertions catch the previous duplicate-body/sections defect. Localized source footers remain readable. The style profile is a reviewable proposal; a rendered blue/white visual is not claimed for this text-only exercise. The learner finds the text, checks a source and reviews the package before use.",
+        "practice_and_repeat": "The practice produces a separate package with the same FAQ bytes plus a short covering email naming its audience and use. All ten native emails across both products were read; each uses its resolved subject, one greeting and one signature, with no invented recipient or attachment already sent. The separate demo package remains intact. The lesson explains how to repeat the workflow with another topic, source or channel.",
+        "language_and_pacing": "Read the fr outline and brief, and compare it with the current native drafts. The separate fresh editorial assessor reviewed this exact language pair and retained this weakness: The last paragraph is the heaviest, particularly the compressed list demande ambiguë, travail complexe, données de tiers concernées. It remains readable as a referral checklist and adds the exceptional fee/refusal threshold plus remedy notice. The stiff opening to the recording proposal is polish, not a blocking ambiguity. The limitation is recorded rather than hidden. Six lesson stages target 390 seconds of explanation and guided interaction; independent processing and questions may extend elapsed time. Native voice and learner comprehension are not measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_communication_execution::test_native_communication_package_with_synthetic_review_transitions[vera-fr-demo]",
+        "result_review": "Current native packaging produces the exact independently reviewed six-question FAQ once, with the fictional assignment label and localized public-source footer. The native record reaches final_ready only after explicit synthetic semantic and packaged-output test decisions. These are test transitions, not real professional approval, learner understanding or permission to transmit. The exact current output hashes are recorded below.",
+        "reviewed_artifacts": [
+          {
+            "name": "faq.md",
+            "sha256": "fede5bec925d3ad941dba414d0a7d9d67d8d6cfd086a6186f505cb2550e40237"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "8303f77a9a04b95819d914a7a3df3bf0e6573ef463e8bd7c413e84c496878b1d"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_communication_execution::test_native_communication_package_with_synthetic_review_transitions[vera-fr-practice]",
+        "result_review": "Current native packaging preserves the demonstration FAQ bytes and adds the independently reviewed covering email. Its resolved subject, single greeting/signature, selected-language body and source notes were inspected. The native record reaches final_ready only after explicit synthetic semantic and packaged-output test decisions. These are test transitions, not real professional approval, learner understanding or permission to transmit. The exact current output hashes are recorded below.",
+        "reviewed_artifacts": [
+          {
+            "name": "faq.md",
+            "sha256": "fede5bec925d3ad941dba414d0a7d9d67d8d6cfd086a6186f505cb2550e40237"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "bd36db093da7c33d2bc13b9f7dadd564f5ce585c1cc28cca1590beb06c55c0fd"
+          },
+          {
+            "name": "client_email.txt",
+            "sha256": "9ed188faad2da8265a89a15484dfbb2078caa882d17646ad329bea1ef94445fa"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches the complete communication workflow: state the audience and objective, supply a brief and selected source, review the proposed communication and format, follow claim/editorial checks, open the real package and request another channel. The outline explicitly keeps the legal example subordinate to learning the workflow.",
+        "inputs_and_request": "Read every localized assignment and practice request. The fictional firm has no communication history, logo or real recipients. The attributed official guide is an authentic captured source, distinct from the fictional assignment. Source snapshots and complete kit inputs are hash-bound in the native replay. The ordinary-language request names the reader, FAQ, selected source and local-only delivery.",
+        "execution_and_checkpoints": "Twenty local native regressions across the two products initialize the workspace, replay actual blind qualification, prepare exact source packets, record separately assessed contributions, reject packaging before approval, then exercise explicitly synthetic review/profile/packaging transitions. The two checkpoints ask for the intended audience/content/format and then locate usable copy and a supporting source. Model artifacts are test-only inputs, not precomputed teaching outputs or evidence of fresh CI model execution.",
+        "deliverable_and_next_action": "The current output is a six-question Markdown FAQ with a plain title, short introduction, visible fictional label, source links and professional limits. Native packaging preserves the independently reviewed body exactly once; question-level assertions catch the previous duplicate-body/sections defect. Localized source footers remain readable. The style profile is a reviewable proposal; a rendered blue/white visual is not claimed for this text-only exercise. The learner finds the text, checks a source and reviews the package before use.",
+        "practice_and_repeat": "The practice produces a separate package with the same FAQ bytes plus a short covering email naming its audience and use. All ten native emails across both products were read; each uses its resolved subject, one greeting and one signature, with no invented recipient or attachment already sent. The separate demo package remains intact. The lesson explains how to repeat the workflow with another topic, source or channel.",
+        "language_and_pacing": "Read the de outline and brief, and compare it with the current native drafts. The separate fresh editorial assessor reviewed this exact language pair and retained this weakness: The final question covers ambiguity, complexity, third-party data, charges, refusal and remedies in one paragraph. This is the least easily scanned part, but its leading referral instruction and the express threshold make it useful as an escalation reminder rather than a decision algorithm. The limitation is recorded rather than hidden. Six lesson stages target 390 seconds of explanation and guided interaction; independent processing and questions may extend elapsed time. Native voice and learner comprehension are not measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_communication_execution::test_native_communication_package_with_synthetic_review_transitions[vera-de-demo]",
+        "result_review": "Current native packaging produces the exact independently reviewed six-question FAQ once, with the fictional assignment label and localized public-source footer. The native record reaches final_ready only after explicit synthetic semantic and packaged-output test decisions. These are test transitions, not real professional approval, learner understanding or permission to transmit. The exact current output hashes are recorded below.",
+        "reviewed_artifacts": [
+          {
+            "name": "faq.md",
+            "sha256": "162aab7192221108ae3e88bfa886cf56044150ceb85dd3683cfd875face959c3"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "28411786bb376cbd2c4e98e8c5fe8ee625161b21cafed2f9f0755351a085d91b"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_communication_execution::test_native_communication_package_with_synthetic_review_transitions[vera-de-practice]",
+        "result_review": "Current native packaging preserves the demonstration FAQ bytes and adds the independently reviewed covering email. Its resolved subject, single greeting/signature, selected-language body and source notes were inspected. The native record reaches final_ready only after explicit synthetic semantic and packaged-output test decisions. These are test transitions, not real professional approval, learner understanding or permission to transmit. The exact current output hashes are recorded below.",
+        "reviewed_artifacts": [
+          {
+            "name": "faq.md",
+            "sha256": "162aab7192221108ae3e88bfa886cf56044150ceb85dd3683cfd875face959c3"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "ad2d556004bbdce83f60223250bbe69b81ada62cd5d2ce657108753e77a8cfe5"
+          },
+          {
+            "name": "client_email.txt",
+            "sha256": "f1ff4a9ced191e58c4a3e10dcf5f562d47529248dd7271007bb2e9a345c62315"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches the complete communication workflow: state the audience and objective, supply a brief and selected source, review the proposed communication and format, follow claim/editorial checks, open the real package and request another channel. The outline explicitly keeps the legal example subordinate to learning the workflow.",
+        "inputs_and_request": "Read every localized assignment and practice request. The fictional firm has no communication history, logo or real recipients. The attributed official guide is an authentic captured source, distinct from the fictional assignment. Source snapshots and complete kit inputs are hash-bound in the native replay. The ordinary-language request names the reader, FAQ, selected source and local-only delivery.",
+        "execution_and_checkpoints": "Twenty local native regressions across the two products initialize the workspace, replay actual blind qualification, prepare exact source packets, record separately assessed contributions, reject packaging before approval, then exercise explicitly synthetic review/profile/packaging transitions. The two checkpoints ask for the intended audience/content/format and then locate usable copy and a supporting source. Model artifacts are test-only inputs, not precomputed teaching outputs or evidence of fresh CI model execution.",
+        "deliverable_and_next_action": "The current output is a six-question Markdown FAQ with a plain title, short introduction, visible fictional label, source links and professional limits. Native packaging preserves the independently reviewed body exactly once; question-level assertions catch the previous duplicate-body/sections defect. Localized source footers remain readable. The style profile is a reviewable proposal; a rendered blue/white visual is not claimed for this text-only exercise. The learner finds the text, checks a source and reviews the package before use.",
+        "practice_and_repeat": "The practice produces a separate package with the same FAQ bytes plus a short covering email naming its audience and use. All ten native emails across both products were read; each uses its resolved subject, one greeting and one signature, with no invented recipient or attachment already sent. The separate demo package remains intact. The lesson explains how to repeat the workflow with another topic, source or channel.",
+        "language_and_pacing": "Read the es outline and brief, and compare it with the current native drafts. The separate fresh editorial assessor reviewed this exact language pair and retained this weakness: The last answer is dense, with canon razonable and a reasons/remedies requirement alongside several escalation triggers. The word partidas in the preparation answer is an optional language improvement. The actions remain intelligible and neither issue warrants withholding this bounded teaching draft from professional review. The limitation is recorded rather than hidden. Six lesson stages target 390 seconds of explanation and guided interaction; independent processing and questions may extend elapsed time. Native voice and learner comprehension are not measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_communication_execution::test_native_communication_package_with_synthetic_review_transitions[vera-es-demo]",
+        "result_review": "Current native packaging produces the exact independently reviewed six-question FAQ once, with the fictional assignment label and localized public-source footer. The native record reaches final_ready only after explicit synthetic semantic and packaged-output test decisions. These are test transitions, not real professional approval, learner understanding or permission to transmit. The exact current output hashes are recorded below.",
+        "reviewed_artifacts": [
+          {
+            "name": "faq.md",
+            "sha256": "5578c9039d237d63fd7d9c7c6183e08c7007e706816616536f632b6840d3da0e"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "67bffb69aed9c8b9beb38fdbed74c30361561e55b21de7af56cc1a08380f14bb"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_communication_execution::test_native_communication_package_with_synthetic_review_transitions[vera-es-practice]",
+        "result_review": "Current native packaging preserves the demonstration FAQ bytes and adds the independently reviewed covering email. Its resolved subject, single greeting/signature, selected-language body and source notes were inspected. The native record reaches final_ready only after explicit synthetic semantic and packaged-output test decisions. These are test transitions, not real professional approval, learner understanding or permission to transmit. The exact current output hashes are recorded below.",
+        "reviewed_artifacts": [
+          {
+            "name": "faq.md",
+            "sha256": "5578c9039d237d63fd7d9c7c6183e08c7007e706816616536f632b6840d3da0e"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "cdc759090c29780755fd9596fe275a93142a90d55f0350ee29aec7bd32f33710"
+          },
+          {
+            "name": "client_email.txt",
+            "sha256": "93be79b41d15f1888b7d20529e9c3c1d5d9185dd2b10fca078c5f7b1a8e42af6"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.172121+00:00",
+    "previous_course_sha256": "17ca8a49e34c6d2b1fd1db21e8a0b23a1648558f726c708f94d8f3d54aeb6c03",
+    "source_snapshot": "/private/tmp/teaching-library-refresh-02/test_every_supported_locale_ha35/lesson/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  }
+}

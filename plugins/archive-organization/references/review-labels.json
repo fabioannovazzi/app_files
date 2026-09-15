@@ -1,0 +1,362 @@
+{
+  "it": {
+    "title": "Revisione del riordino archivio",
+    "lead": "Esamina i file, le destinazioni proposte e i motivi nella pagina di revisione. Puoi accettare, correggere, rifiutare o lasciare in sospeso ogni proposta.",
+    "execution": "Salvare e applicare le decisioni prepara il piano approvato: non sposta ancora i file. Prima degli spostamenti, rivedi il riepilogo e autorizza separatamente l'esecuzione. Le copie esatte vengono conservate nell'area di verifica dei duplicati.",
+    "files": "File per riprendere la revisione",
+    "payload": "Proposte e prove",
+    "decisions": "Decisioni salvate",
+    "applied": "Decisioni applicate al piano",
+    "artifacts": "Elenco dei risultati",
+    "technical": "Riferimenti per riprendere il flusso",
+    "edit_hint": "Indica una destinazione relativa alla cartella del cliente. Sono esclusi percorsi assoluti, Vera/, uscite dalla cartella, collegamenti simbolici e sovrascritture.",
+    "widget": {
+      "fields": {
+        "archive_file_proposal": "Proposta di riordino",
+        "exact_duplicate_proposal": "Copia identica",
+        "source_path": "File attuale",
+        "proposed_action": "Azione proposta",
+        "category": "Categoria",
+        "confidence": "Confidenza",
+        "target_path": "Destinazione",
+        "blocked_reasons": "Motivi di blocco",
+        "edit_hint": "Come correggere",
+        "exact_duplicate_of": "Copia identica di",
+        "probable_duplicate_of": "Possibile duplicato di",
+        "anomalies": "Anomalie",
+        "semantic_classification": "Classificazione del documento",
+        "local_integrity_control": "Controllo di integrità locale",
+        "reason": "Motivo",
+        "kind": "Tipo di prova",
+        "raw_identity_returned": "Identificativi tecnici esposti",
+        "status": "Stato"
+      },
+      "groups": {
+        "Current File": "File attuale",
+        "Proposed Destination": "Destinazione proposta",
+        "Duplicate and Anomaly Evidence": "Duplicati e anomalie",
+        "No source-file fields.": "Nessun dato sul file di origine.",
+        "No proposed destination.": "Nessuna destinazione proposta.",
+        "No duplicate or anomaly evidence.": "Nessun duplicato o anomalia rilevato."
+      },
+      "values": {
+        "proposed_action": {
+          "move": "Spostare",
+          "keep": "Conservare nella posizione attuale",
+          "quarantine_exact_duplicate": "Conservare nella verifica duplicati",
+          "blocked": "Bloccato"
+        },
+        "confidence": {
+          "high": "Alta",
+          "medium": "Media",
+          "low": "Bassa"
+        },
+        "kind": {
+          "semantic_classification": "Classificazione del documento",
+          "local_integrity_control": "Controllo di integrità locale"
+        },
+        "status": {
+          "verified_before_review": "Verificato prima della revisione"
+        }
+      },
+      "reviewerRequired": "Indica il revisore prima di salvare le decisioni.",
+      "links": {
+        "copy": "Copia percorso",
+        "download": "Scarica documento",
+        "copied": "Percorso copiato.",
+        "downloaded": "Documento scaricato."
+      }
+    },
+    "review_next": "Rivedi tutte le proposte e salva le decisioni.",
+    "prepare_caveat": "Salvare e applicare le decisioni prepara il piano approvato: non sposta ancora i file. Prima degli spostamenti, rivedi il riepilogo e autorizza separatamente l'esecuzione. Le copie esatte vengono conservate nell'area di verifica dei duplicati.",
+    "approve_next": "Salvare e applicare le decisioni prepara il piano approvato: non sposta ancora i file. Prima degli spostamenti, rivedi il riepilogo e autorizza separatamente l'esecuzione. Le copie esatte vengono conservate nell'area di verifica dei duplicati."
+  },
+  "en": {
+    "title": "Review the archive organisation plan",
+    "lead": "Review the files, proposed destinations and reasons on the review page. You can accept, edit, reject or leave each proposal unresolved.",
+    "execution": "Saving and applying decisions prepares the approved plan; it does not move files yet. Before any moves, review the summary and separately authorise execution. Exact copies are retained in the duplicate-review area.",
+    "files": "Files for resuming the review",
+    "payload": "Proposals and evidence",
+    "decisions": "Saved decisions",
+    "applied": "Decisions applied to the plan",
+    "artifacts": "Output inventory",
+    "technical": "Workflow resumption references",
+    "edit_hint": "Use a destination relative to the client folder. Absolute paths, Vera/, paths outside the folder, symbolic links and overwrites are rejected.",
+    "widget": {
+      "fields": {
+        "archive_file_proposal": "File organisation proposal",
+        "exact_duplicate_proposal": "Identical copy",
+        "source_path": "Current file",
+        "proposed_action": "Proposed action",
+        "category": "Category",
+        "confidence": "Confidence",
+        "target_path": "Destination",
+        "blocked_reasons": "Blocking reasons",
+        "edit_hint": "How to edit",
+        "exact_duplicate_of": "Identical copy of",
+        "probable_duplicate_of": "Possible duplicate of",
+        "anomalies": "Anomalies",
+        "semantic_classification": "Document classification",
+        "local_integrity_control": "Local integrity check",
+        "reason": "Reason",
+        "kind": "Evidence type",
+        "raw_identity_returned": "Technical identifiers exposed",
+        "status": "Status"
+      },
+      "groups": {
+        "Current File": "Current file",
+        "Proposed Destination": "Proposed destination",
+        "Duplicate and Anomaly Evidence": "Duplicates and anomalies",
+        "No source-file fields.": "No source-file information.",
+        "No proposed destination.": "No proposed destination.",
+        "No duplicate or anomaly evidence.": "No duplicate or anomaly found."
+      },
+      "values": {
+        "proposed_action": {
+          "move": "Move",
+          "keep": "Keep in current location",
+          "quarantine_exact_duplicate": "Retain in duplicate-review area",
+          "blocked": "Blocked"
+        },
+        "confidence": {
+          "high": "High",
+          "medium": "Medium",
+          "low": "Low"
+        },
+        "kind": {
+          "semantic_classification": "Document classification",
+          "local_integrity_control": "Local integrity check"
+        },
+        "status": {
+          "verified_before_review": "Verified before review"
+        }
+      },
+      "reviewerRequired": "Enter the reviewer before saving decisions.",
+      "links": {
+        "copy": "Copy path",
+        "download": "Download file",
+        "copied": "Path copied.",
+        "downloaded": "File downloaded."
+      }
+    },
+    "review_next": "Review every proposal and save the decisions.",
+    "prepare_caveat": "Saving and applying decisions prepares the approved plan; it does not move files yet. Before any moves, review the summary and separately authorise execution. Exact copies are retained in the duplicate-review area.",
+    "approve_next": "Saving and applying decisions prepares the approved plan; it does not move files yet. Before any moves, review the summary and separately authorise execution. Exact copies are retained in the duplicate-review area."
+  },
+  "fr": {
+    "title": "Revoir le plan de classement",
+    "lead": "Examinez les fichiers, les destinations proposées et les motifs sur la page de revue. Vous pouvez accepter, modifier, refuser ou laisser chaque proposition en suspens.",
+    "execution": "Enregistrer et appliquer les décisions prépare le plan approuvé, sans déplacer les fichiers. Avant tout déplacement, revoyez le récapitulatif et autorisez séparément l'exécution. Les copies exactes sont conservées dans la zone de revue des doublons.",
+    "files": "Fichiers pour reprendre la revue",
+    "payload": "Propositions et preuves",
+    "decisions": "Décisions enregistrées",
+    "applied": "Décisions appliquées au plan",
+    "artifacts": "Liste des résultats",
+    "technical": "Références pour reprendre le flux",
+    "edit_hint": "Indiquez une destination relative au dossier client. Les chemins absolus, Vera/, les sorties du dossier, les liens symboliques et les écrasements sont refusés.",
+    "widget": {
+      "fields": {
+        "archive_file_proposal": "Proposition de classement",
+        "exact_duplicate_proposal": "Copie identique",
+        "source_path": "Fichier actuel",
+        "proposed_action": "Action proposée",
+        "category": "Catégorie",
+        "confidence": "Confiance",
+        "target_path": "Destination",
+        "blocked_reasons": "Motifs de blocage",
+        "edit_hint": "Comment modifier",
+        "exact_duplicate_of": "Copie identique de",
+        "probable_duplicate_of": "Doublon possible de",
+        "anomalies": "Anomalies",
+        "semantic_classification": "Classement du document",
+        "local_integrity_control": "Contrôle local d’intégrité",
+        "reason": "Motif",
+        "kind": "Type de preuve",
+        "raw_identity_returned": "Identifiants techniques exposés",
+        "status": "État"
+      },
+      "groups": {
+        "Current File": "Fichier actuel",
+        "Proposed Destination": "Destination proposée",
+        "Duplicate and Anomaly Evidence": "Doublons et anomalies",
+        "No source-file fields.": "Aucune information sur le fichier source.",
+        "No proposed destination.": "Aucune destination proposée.",
+        "No duplicate or anomaly evidence.": "Aucun doublon ni anomalie détecté."
+      },
+      "values": {
+        "proposed_action": {
+          "move": "Déplacer",
+          "keep": "Conserver à l’emplacement actuel",
+          "quarantine_exact_duplicate": "Conserver dans la zone de revue des doublons",
+          "blocked": "Bloqué"
+        },
+        "confidence": {
+          "high": "Élevée",
+          "medium": "Moyenne",
+          "low": "Faible"
+        },
+        "kind": {
+          "semantic_classification": "Classement du document",
+          "local_integrity_control": "Contrôle local d’intégrité"
+        },
+        "status": {
+          "verified_before_review": "Vérifié avant la revue"
+        }
+      },
+      "reviewerRequired": "Indiquez le réviseur avant d’enregistrer les décisions.",
+      "links": {
+        "copy": "Copier le chemin",
+        "download": "Télécharger le fichier",
+        "copied": "Chemin copié.",
+        "downloaded": "Fichier téléchargé."
+      }
+    },
+    "review_next": "Examinez toutes les propositions et enregistrez les décisions.",
+    "prepare_caveat": "Enregistrer et appliquer les décisions prépare le plan approuvé, sans déplacer les fichiers. Avant tout déplacement, revoyez le récapitulatif et autorisez séparément l'exécution. Les copies exactes sont conservées dans la zone de revue des doublons.",
+    "approve_next": "Enregistrer et appliquer les décisions prépare le plan approuvé, sans déplacer les fichiers. Avant tout déplacement, revoyez le récapitulatif et autorisez séparément l'exécution. Les copies exactes sont conservées dans la zone de revue des doublons."
+  },
+  "de": {
+    "title": "Den Ordnungsplan prüfen",
+    "lead": "Prüfen Sie Dateien, vorgeschlagene Zielorte und Begründungen auf der Prüfseite. Sie können jeden Vorschlag annehmen, ändern, ablehnen oder offenlassen.",
+    "execution": "Das Speichern und Anwenden der Entscheidungen erstellt den genehmigten Plan, verschiebt aber noch keine Dateien. Prüfen Sie vor den Verschiebungen die Zusammenfassung und genehmigen Sie die Ausführung gesondert. Identische Kopien bleiben im Prüfbereich für Duplikate erhalten.",
+    "files": "Dateien zur Fortsetzung der Prüfung",
+    "payload": "Vorschläge und Belege",
+    "decisions": "Gespeicherte Entscheidungen",
+    "applied": "Auf den Plan angewandte Entscheidungen",
+    "artifacts": "Ergebnisverzeichnis",
+    "technical": "Referenzen zur Fortsetzung des Ablaufs",
+    "edit_hint": "Geben Sie einen Zielpfad relativ zum Kundenordner an. Absolute Pfade, Vera/, Pfade außerhalb des Ordners, symbolische Links und Überschreiben werden abgelehnt.",
+    "widget": {
+      "fields": {
+        "archive_file_proposal": "Ordnungsvorschlag",
+        "exact_duplicate_proposal": "Identische Kopie",
+        "source_path": "Aktuelle Datei",
+        "proposed_action": "Vorgeschlagene Aktion",
+        "category": "Kategorie",
+        "confidence": "Konfidenz",
+        "target_path": "Zielort",
+        "blocked_reasons": "Blockierungsgründe",
+        "edit_hint": "Ziel ändern",
+        "exact_duplicate_of": "Identische Kopie von",
+        "probable_duplicate_of": "Mögliches Duplikat von",
+        "anomalies": "Auffälligkeiten",
+        "semantic_classification": "Dokumentklassifizierung",
+        "local_integrity_control": "Lokale Integritätsprüfung",
+        "reason": "Begründung",
+        "kind": "Belegart",
+        "raw_identity_returned": "Offengelegte technische Kennungen",
+        "status": "Status"
+      },
+      "groups": {
+        "Current File": "Aktuelle Datei",
+        "Proposed Destination": "Vorgeschlagener Zielort",
+        "Duplicate and Anomaly Evidence": "Duplikate und Auffälligkeiten",
+        "No source-file fields.": "Keine Angaben zur Quelldatei.",
+        "No proposed destination.": "Kein Zielort vorgeschlagen.",
+        "No duplicate or anomaly evidence.": "Keine Duplikate oder Auffälligkeiten festgestellt."
+      },
+      "values": {
+        "proposed_action": {
+          "move": "Verschieben",
+          "keep": "Am aktuellen Ort behalten",
+          "quarantine_exact_duplicate": "Im Prüfbereich für Duplikate behalten",
+          "blocked": "Blockiert"
+        },
+        "confidence": {
+          "high": "Hoch",
+          "medium": "Mittel",
+          "low": "Niedrig"
+        },
+        "kind": {
+          "semantic_classification": "Dokumentklassifizierung",
+          "local_integrity_control": "Lokale Integritätsprüfung"
+        },
+        "status": {
+          "verified_before_review": "Vor der Prüfung verifiziert"
+        }
+      },
+      "reviewerRequired": "Geben Sie vor dem Speichern den Prüfer an.",
+      "links": {
+        "copy": "Pfad kopieren",
+        "download": "Datei herunterladen",
+        "copied": "Pfad kopiert.",
+        "downloaded": "Datei heruntergeladen."
+      }
+    },
+    "review_next": "Prüfen Sie alle Vorschläge und speichern Sie die Entscheidungen.",
+    "prepare_caveat": "Das Speichern und Anwenden der Entscheidungen erstellt den genehmigten Plan, verschiebt aber noch keine Dateien. Prüfen Sie vor den Verschiebungen die Zusammenfassung und genehmigen Sie die Ausführung gesondert. Identische Kopien bleiben im Prüfbereich für Duplikate erhalten.",
+    "approve_next": "Das Speichern und Anwenden der Entscheidungen erstellt den genehmigten Plan, verschiebt aber noch keine Dateien. Prüfen Sie vor den Verschiebungen die Zusammenfassung und genehmigen Sie die Ausführung gesondert. Identische Kopien bleiben im Prüfbereich für Duplikate erhalten."
+  },
+  "es": {
+    "title": "Revisar el plan de organización",
+    "lead": "Revisa los archivos, los destinos propuestos y los motivos en la página de revisión. Puedes aceptar, modificar, rechazar o dejar pendiente cada propuesta.",
+    "execution": "Guardar y aplicar las decisiones prepara el plan aprobado; todavía no mueve archivos. Antes de los movimientos, revisa el resumen y autoriza la ejecución por separado. Las copias exactas se conservan en la zona de revisión de duplicados.",
+    "files": "Archivos para reanudar la revisión",
+    "payload": "Propuestas y pruebas",
+    "decisions": "Decisiones guardadas",
+    "applied": "Decisiones aplicadas al plan",
+    "artifacts": "Lista de resultados",
+    "technical": "Referencias para reanudar el flujo",
+    "edit_hint": "Indica un destino relativo a la carpeta del cliente. Se rechazan rutas absolutas, Vera/, rutas fuera de la carpeta, enlaces simbólicos y sobrescrituras.",
+    "widget": {
+      "fields": {
+        "archive_file_proposal": "Propuesta de organización",
+        "exact_duplicate_proposal": "Copia idéntica",
+        "source_path": "Archivo actual",
+        "proposed_action": "Acción propuesta",
+        "category": "Categoría",
+        "confidence": "Confianza",
+        "target_path": "Destino",
+        "blocked_reasons": "Motivos de bloqueo",
+        "edit_hint": "Cómo modificar",
+        "exact_duplicate_of": "Copia idéntica de",
+        "probable_duplicate_of": "Posible duplicado de",
+        "anomalies": "Anomalías",
+        "semantic_classification": "Clasificación del documento",
+        "local_integrity_control": "Control local de integridad",
+        "reason": "Motivo",
+        "kind": "Tipo de prueba",
+        "raw_identity_returned": "Identificadores técnicos expuestos",
+        "status": "Estado"
+      },
+      "groups": {
+        "Current File": "Archivo actual",
+        "Proposed Destination": "Destino propuesto",
+        "Duplicate and Anomaly Evidence": "Duplicados y anomalías",
+        "No source-file fields.": "Sin información del archivo de origen.",
+        "No proposed destination.": "Ningún destino propuesto.",
+        "No duplicate or anomaly evidence.": "No se han detectado duplicados ni anomalías."
+      },
+      "values": {
+        "proposed_action": {
+          "move": "Mover",
+          "keep": "Conservar en la ubicación actual",
+          "quarantine_exact_duplicate": "Conservar en la zona de revisión de duplicados",
+          "blocked": "Bloqueado"
+        },
+        "confidence": {
+          "high": "Alta",
+          "medium": "Media",
+          "low": "Baja"
+        },
+        "kind": {
+          "semantic_classification": "Clasificación del documento",
+          "local_integrity_control": "Control local de integridad"
+        },
+        "status": {
+          "verified_before_review": "Verificado antes de la revisión"
+        }
+      },
+      "reviewerRequired": "Indica el revisor antes de guardar las decisiones.",
+      "links": {
+        "copy": "Copiar ruta",
+        "download": "Descargar archivo",
+        "copied": "Ruta copiada.",
+        "downloaded": "Archivo descargado."
+      }
+    },
+    "review_next": "Revisa todas las propuestas y guarda las decisiones.",
+    "prepare_caveat": "Guardar y aplicar las decisiones prepara el plan aprobado; todavía no mueve archivos. Antes de los movimientos, revisa el resumen y autoriza la ejecución por separado. Las copias exactas se conservan en la zona de revisión de duplicados.",
+    "approve_next": "Guardar y aplicar las decisiones prepara el plan aprobado; todavía no mueve archivos. Antes de los movimientos, revisa el resumen y autoriza la ejecución por separado. Las copias exactas se conservan en la zona de revisión de duplicados."
+  }
+}

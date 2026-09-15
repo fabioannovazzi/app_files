@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import importlib.util
+import io
 import json
 import struct
 import tarfile
@@ -12,6 +13,7 @@ from pathlib import Path
 from types import ModuleType
 
 import pytest
+from PIL import Image
 
 PLUGIN_ROOT = Path("plugins/presenza-digitale-studio")
 WORKFLOW_CORE_PATH = PLUGIN_ROOT / "scripts/workflow_core.py"
@@ -1209,6 +1211,83 @@ def test_quality_assessment_rejects_wrong_screenshot_dimensions(tmp_path: Path) 
         workflow.record_quality_assessment(
             run_dir,
             _write_json(tmp_path / "wrong-dimensions.json", assessment),
+            provider="test-provider",
+            model="test-model",
+            recorded_by="test-operator",
+        )
+
+
+@pytest.mark.parametrize("extension,progressive", [("jpg", False), ("jpeg", True)])
+def test_quality_assessment_accepts_original_jpeg_evidence(
+    tmp_path: Path, extension: str, progressive: bool
+) -> None:
+    """Synthetic image fixtures exercise binding, not a real browser review."""
+    workflow, run_dir = _prepare_run(tmp_path)
+    validation = json.loads((run_dir / "site_validation.json").read_text())
+    assessment = _quality_assessment(validation, run_dir)
+    phone = assessment["viewports"][1]
+    phone["screenshot_path"] = f"reviews/browser/phone.{extension}"
+    image_path = run_dir / phone["screenshot_path"]
+    Image.new("RGB", (390, 1000), "white").save(
+        image_path, format="JPEG", progressive=progressive
+    )
+    original_bytes = image_path.read_bytes()
+    phone["screenshot_sha256"] = hashlib.sha256(original_bytes).hexdigest()
+
+    record = workflow.record_quality_assessment(
+        run_dir,
+        _write_json(tmp_path / "jpeg-review.json", assessment),
+        provider="test-provider",
+        model="test-model",
+        recorded_by="test-operator",
+    )
+
+    assert json.loads(record.read_text())["assessment"] == assessment
+    assert image_path.read_bytes() == original_bytes
+    assert workflow.validate_run(run_dir)["valid"] is True
+
+
+@pytest.mark.parametrize(
+    "fault,message",
+    [
+        ("wrong_width", "dimensions do not cover"),
+        ("short_height", "dimensions do not cover"),
+        ("wrong_extension", "must match its PNG or JPEG extension"),
+        ("truncated", "invalid JPEG frame header"),
+        ("invalid_length", "invalid JPEG frame header"),
+        ("zero_width", "invalid dimensions"),
+    ],
+)
+def test_quality_assessment_rejects_invalid_jpeg_evidence(
+    tmp_path: Path, fault: str, message: str
+) -> None:
+    workflow, run_dir = _prepare_run(tmp_path)
+    validation = json.loads((run_dir / "site_validation.json").read_text())
+    assessment = _quality_assessment(validation, run_dir)
+    phone = assessment["viewports"][1]
+    phone["screenshot_path"] = "reviews/browser/phone.jpg"
+    size = {"wrong_width": (320, 1000), "short_height": (390, 500)}.get(
+        fault, (390, 1000)
+    )
+    buffer = io.BytesIO()
+    Image.new("RGB", size, "white").save(buffer, format="JPEG")
+    content = buffer.getvalue()
+    if fault == "wrong_extension":
+        phone["screenshot_path"] = "reviews/browser/phone.png"
+    elif fault == "truncated":
+        content = content[:30]
+    elif fault == "invalid_length":
+        content = b"\xff\xd8\xff\xe0\x00\x01"
+    elif fault == "zero_width":
+        frame = content.index(b"\xff\xc0")
+        content = content[: frame + 7] + b"\x00\x00" + content[frame + 9 :]
+    (run_dir / phone["screenshot_path"]).write_bytes(content)
+    phone["screenshot_sha256"] = hashlib.sha256(content).hexdigest()
+
+    with pytest.raises(ValueError, match=message):
+        workflow.record_quality_assessment(
+            run_dir,
+            _write_json(tmp_path / "invalid-jpeg-review.json", assessment),
             provider="test-provider",
             model="test-model",
             recorded_by="test-operator",

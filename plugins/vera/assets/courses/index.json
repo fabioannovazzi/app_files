@@ -4,7 +4,7 @@
   "courses": {
     "adeguati-assetti": {
       "path": "adeguati-assetti/course.json",
-      "sha256": "ff18c90f6018932dbd926bcea5bbc36f12b693596b253964578613714fe96198",
+      "sha256": "e3e28f78b72e29b984a87b6f00dc2315e1d752d206e6e77b5b317144f1e35c93",
       "languages": [
         "it",
         "en",
@@ -32,7 +32,7 @@
     },
     "aml-review": {
       "path": "aml-review/course.json",
-      "sha256": "8cbe3cb22060b794f877511d2c4c2d72b062629681b21c9059b4c3a85d6f0141",
+      "sha256": "e518f3d28c8dfccbeb41b2cab9230a3da380f70fdf7cb7a9d7f36c218e596014",
       "languages": [
         "it",
         "en",
@@ -60,7 +60,7 @@
     },
     "archive-organization": {
       "path": "archive-organization/course.json",
-      "sha256": "9a85cf9d15a4a101d8fd20bc49eadc6628368e146829d6dd6a826904e62a0d43",
+      "sha256": "f5b81d6b8cf222cb72af360a9f5fdec0c83a83ee5355d35e8ce26cf6831aeed8",
       "languages": [
         "it",
         "en",
@@ -88,7 +88,7 @@
     },
     "avviso-intake": {
       "path": "avviso-intake/course.json",
-      "sha256": "e4c58df485d2319128a3af86a0a34aa318469224a0ce34443c7321e12133f52d",
+      "sha256": "85f41d63162edbfeb7a7d9e2ed11f1b54be7e0fec60c1a64e645a832a98611ae",
       "languages": [
         "it",
         "en",
@@ -116,7 +116,7 @@
     },
     "bandi-agevolazioni": {
       "path": "bandi-agevolazioni/course.json",
-      "sha256": "94230fb6df1bacbd818cde2e044596f027533cbc8aa0733111b66579caecb1bc",
+      "sha256": "eae91e897ec3ceac5946fafe1d7d3e9630288316fbbb7b231cfe3559f3eb4b79",
       "languages": [
         "it",
         "en",
@@ -144,7 +144,7 @@
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "3e6084fbd0a2707aede923572eb5f55eac44f77273ba2183a9d7927b04c3b80c",
+      "sha256": "b10a224e9b294f93f99077006967581d370cad935ab8d85b0716c6ea8fd8a164",
       "languages": [
         "it",
         "en"
@@ -157,13 +157,13 @@
         "en": "Prepare draft annual accounts with Vera"
       },
       "goals": {
-        "it": "Imparare a partire dalla situazione contabile, rivedere le classificazioni e leggere la bozza di bilancio con i documenti ancora necessari.",
-        "en": "Learn to start from accounting records, review classifications and read draft annual accounts together with the evidence still needed."
+        "it": "Imparare a fornire i documenti, rivedere le proposte di Vera e leggere una bozza di bilancio con prospetti, informazioni di supporto e controlli.",
+        "en": "Learn to supply the documents, review Vera’s proposals and read draft annual accounts with statements, supporting information and checks."
       }
     },
     "browser-automation": {
       "path": "browser-automation/course.json",
-      "sha256": "598fa7921a0675920ae745eb24ccc35f327e5e79655f9362c3caee560028a536",
+      "sha256": "a52a7e381666a8c9a344f317fd7883fcf662282e1ee7313ee1bddf1408318035",
       "languages": [
         "it",
         "en",
@@ -191,7 +191,7 @@
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "fcecf729a06e5be79930783c8af1829efd1d7899b5f94034245d6ce62bb2f5f2",
+      "sha256": "cfe49ab8f19af108c1cfcde10a14268347135d17e1ea283f53b713e10a65c1cf",
       "languages": [
         "it",
         "en"
@@ -210,7 +210,7 @@
     },
     "centrale-rischi-review": {
       "path": "centrale-rischi-review/course.json",
-      "sha256": "7ac34359a73661f8ecb8b94e54ad09636e168b236b7434056ced2f978a5d6b4f",
+      "sha256": "4c05d643ce648f79f4c57e0c2298bf3c59401b09aedd15e35040c1d6c93ef0ca",
       "languages": [
         "it"
       ],
@@ -226,7 +226,7 @@
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
-      "sha256": "1e3a395ab98ae38d97910320ff1931fa86a4a081c93c1986d7b8df02507c638d",
+      "sha256": "e7f09cdf64c24daee9e248d20918ca4222a719f3b71cf3adae4ff6563d2b9e33",
       "languages": [
         "it",
         "en",
@@ -254,7 +254,7 @@
     },
     "concordato-plan-review": {
       "path": "concordato-plan-review/course.json",
-      "sha256": "0381e0065858d2718f98d95b7f60a5e6ea844d110aa1612806debc4cefc9579a",
+      "sha256": "204a947e32c198a1f349e785c26b32017f2c5f2a86e0d548016c8f04e8529987",
       "languages": [
         "it",
         "en",
@@ -282,7 +282,7 @@
     },
     "dati-fiscali-strutturati": {
       "path": "dati-fiscali-strutturati/course.json",
-      "sha256": "a5534f67f58c47307fb4c6c2ed3e7f16208868b50ca1d54f3dc6119294413104",
+      "sha256": "085236dff7ed6b57cd32c8d7469b920de67ba7300f32474e363f022be3b92fdd",
       "languages": [
         "it",
         "en",
@@ -310,7 +310,7 @@
     },
     "email-cliente": {
       "path": "email-cliente/course.json",
-      "sha256": "4abd4bf3e7066eae3401a7867ec6ce118b43ebb18f29b13f8db1501a4aebb2ad",
+      "sha256": "b3a2c13966fe21a90cbb02284a87cc32cc1c5626fe6613927d37c9de5a5a94fd",
       "languages": [
         "it",
         "en",
@@ -338,7 +338,7 @@
     },
     "fatture-xml-check": {
       "path": "fatture-xml-check/course.json",
-      "sha256": "7ea732d04479103c6018762a2c0e8fa2d1d4bbb1280f4ac52ef0894bab782b31",
+      "sha256": "ce537d66eb0f672e8152b8b248b071c698dc32017a0d2903e4b99ed69b69ba63",
       "languages": [
         "it",
         "en",
@@ -366,7 +366,7 @@
     },
     "financial-analysis": {
       "path": "financial-analysis/course.json",
-      "sha256": "81ebe931d596abcc1bb1ad9613b6ae67b8f8a7f8073af30b54095270bdc58e74",
+      "sha256": "f02f5b144d46468f592cd15d106fffb42d5858acc41a9198056d084d454e12aa",
       "languages": [
         "it",
         "en",
@@ -394,7 +394,7 @@
     },
     "financial-report-builder": {
       "path": "financial-report-builder/course.json",
-      "sha256": "ad9a965c5b7cdba98283be53e65497f71bbd46e81b02b08f114b4d3107e246b1",
+      "sha256": "a632c9469eb8febb2bd4190af140764b1628a609ded45aeb3d81c52f9c665b04",
       "languages": [
         "it",
         "en",
@@ -422,7 +422,7 @@
     },
     "invoice-xml": {
       "path": "invoice-xml/course.json",
-      "sha256": "685cc41e111e559a4e60d134abc983b81a3c1297c58ece77e2e1bd9511aa5a3e",
+      "sha256": "23bc0f7b084fb893477c7ea9f67da084014a217a4e378b2f731aa5692fd8a2c2",
       "languages": [
         "it",
         "en",
@@ -431,17 +431,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Preparare XML da due foto della stessa fattura",
-        "en": "Prepare XML from two photographs of one invoice",
-        "fr": "Préparer le XML à partir de deux photos d'une facture",
-        "de": "XML aus zwei Fotos einer Rechnung vorbereiten",
-        "es": "Preparar XML a partir de dos fotos de una factura"
+        "it": "Preparare una fattura XML con Vera",
+        "en": "Prepare an invoice XML file with Vera",
+        "fr": "Préparer un fichier XML de facture avec Vera",
+        "de": "Eine Rechnungs-XML mit Vera vorbereiten",
+        "es": "Preparar un archivo XML de factura con Vera"
+      },
+      "goals": {
+        "it": "Imparare a fornire i dati della fattura, rivedere la bozza e ottenere il file XML locale dopo aver approvato la versione esatta.",
+        "en": "Learn to provide invoice data, review the draft and obtain a local XML file after approving the exact version.",
+        "fr": "Apprendre à fournir les données d’une facture, revoir le brouillon et obtenir le fichier XML local après avoir approuvé la version exacte.",
+        "de": "Lernen Sie, Rechnungsdaten bereitzustellen, den Entwurf zu prüfen und nach Freigabe der genauen Fassung eine lokale XML-Datei zu erhalten.",
+        "es": "Aprender a proporcionar datos de una factura, revisar el borrador y obtener el XML local tras aprobar la versión exacta."
       }
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "65f8df438f6a71222da5566315125698a67ba9a86a544886e2ee3086d87ac616",
+      "sha256": "817c5cf742c9a425e9b65bcf6c5e87448f096d7d74fe719648a92aed666b281c",
       "languages": [
         "it",
         "en",
@@ -469,7 +478,7 @@
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
-      "sha256": "6abff41c07d52d7da1b4a0999745cd96f424acf0acec12676e0d06f103d247d6",
+      "sha256": "e2083d8d5c1a5ed5ba753a3cb0ade8ec5f0ce41c137a2d596963da327e7ee999",
       "languages": [
         "it",
         "en",
@@ -497,7 +506,7 @@
     },
     "management-control-pack": {
       "path": "management-control-pack/course.json",
-      "sha256": "d84b75239c3f0fb34f5766333d89fc5543733a044a5d3fa367325cefb3fd9d5d",
+      "sha256": "c5f55caf615af6a6bfd34b396fc58ab56f9603084c14abe1041ce2a77a5f7a7e",
       "languages": [
         "it",
         "en"
@@ -516,7 +525,7 @@
     },
     "new-client": {
       "path": "new-client/course.json",
-      "sha256": "51b69bb540379031bd5408af5d6367d1e51875c1072106d7afbbca6f2b9abbde",
+      "sha256": "73652da0cc2fb28ffdc154815fbd77e0393dd7a0284d600d98d4109e3130de26",
       "languages": [
         "it",
         "en",
@@ -544,7 +553,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "6318a5a230b83784d499405b65e1f81df6f8f1801f8b96ced490fee9b0641181",
+      "sha256": "38a6afece594593f3db63f85a4e4b1cb03c6e063efa406c4c64678562be251dd",
       "languages": [
         "it",
         "en",
@@ -563,16 +572,16 @@
         "es": "Revisar partidas abiertas con Vera"
       },
       "goals": {
-        "it": "Imparare a verificare un elenco di insoluti e distinguere fatture chiuse, parzialmente chiuse e ancora aperte a una data.",
-        "en": "Learn to test a list reported as unpaid and identify which invoices are closed, partly closed or still open at a chosen date.",
-        "fr": "Apprendre à vérifier une liste d’impayés et distinguer les factures soldées, partiellement soldées et encore ouvertes à une date donnée.",
-        "de": "Lernen, eine Liste gemeldeter offener Posten zu prüfen und vollständig, teilweise oder noch nicht ausgeglichene Rechnungen zum Stichtag zu erkennen.",
-        "es": "Aprender a comprobar una lista de impagados e identificar facturas saldadas, parcialmente saldadas y pendientes en una fecha concreta."
+        "it": "Imparare a verificare un elenco di insoluti e distinguere le fatture con prova di pagamento da quelle ancora da chiarire a una data.",
+        "en": "Learn to test a list reported as unpaid and distinguish invoices with payment evidence from those still needing clarification at a chosen date.",
+        "fr": "Apprendre à vérifier une liste d’impayés et distinguer les factures disposant d’une preuve de paiement de celles restant à clarifier à une date donnée.",
+        "de": "Lernen, eine Liste gemeldeter offener Posten zu prüfen und Rechnungen mit Zahlungsnachweis von noch zu klärenden Rechnungen zum Stichtag zu unterscheiden.",
+        "es": "Aprender a comprobar una lista de impagados y distinguir las facturas con prueba de pago de las que siguen pendientes de aclaración en una fecha concreta."
       }
     },
     "presenza-digitale-studio": {
       "path": "presenza-digitale-studio/course.json",
-      "sha256": "1723b9855de8ad4185c29a349f7dab7fdfa49c1a25af812d79bc6e21ca445618",
+      "sha256": "5306f1f2d842b790aa309fd01671709272136c0c6750c78f49d4d2117e060d87",
       "languages": [
         "it",
         "en",
@@ -600,7 +609,7 @@
     },
     "previdenza-inps": {
       "path": "previdenza-inps/course.json",
-      "sha256": "7b6f1e250c1f1e5566bcd3fe87a2542418eadec0c54d067d0a9b81612d608a94",
+      "sha256": "990408e63fe8cf342e917d9cccc806188740ae109aad22ff878ab3683b135f0d",
       "languages": [
         "it",
         "en",
@@ -628,7 +637,7 @@
     },
     "purchase-invoice-review": {
       "path": "purchase-invoice-review/course.json",
-      "sha256": "c32e5330c268d81e0b26736dedcee4f0ffaecfca562983d2973b6445ec056710",
+      "sha256": "36b2feaab2ee100b146231008a642d0a2cd167e33ddaef1c854f40092da4a065",
       "languages": [
         "it",
         "en",
@@ -656,7 +665,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "06ba6a388c6195eeeed9c0cdb6138dbcc178d68cbfe8b8874e82bd97773fdc96",
+      "sha256": "1b8195f2f4cc2d8025c7a158682afeafd1d53ed2fe1dbefa91b3c8e86a54dd8a",
       "languages": [
         "it",
         "en",
@@ -684,7 +693,7 @@
     },
     "registro-imprese-sari": {
       "path": "registro-imprese-sari/course.json",
-      "sha256": "1cc622dfedfea73f2846aa45bc76068b3184214b96b623edd45ccd6abe3876e5",
+      "sha256": "3f6e145eaae3c614fbc1eaf3bdf556f39c1acb5c415ee5241b4d9a7867208bc0",
       "languages": [
         "it",
         "en",
@@ -712,7 +721,7 @@
     },
     "sales-plan": {
       "path": "sales-plan/course.json",
-      "sha256": "642447c523b68d5cc5525715c4fe46695b7deb323550b9ed6846e90285678090",
+      "sha256": "878c0684eff02abd6264fd6636fa8fe0a22ad286b7c6a7676309768c4d2c6307",
       "languages": [
         "it",
         "en",
@@ -740,7 +749,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "53f23717a7653a9854d0a56b420f6d9f7b3dbfa8ae22e3279a670e206daa89da",
+      "sha256": "9d09c3773104a2455712c0ae247094a891eab60a257971ee0d5762d4cec23a1f",
       "languages": [
         "it",
         "en",
@@ -768,7 +777,7 @@
     },
     "treasury-forecast": {
       "path": "treasury-forecast/course.json",
-      "sha256": "3a385085874bb7361b2d9ecce0353c263df9ad96c11370730a3db59ba0433a45",
+      "sha256": "6ebcf97027c1ff9a689f49e6cfd3ca14077403afe7ec573ab34cb2b09923a858",
       "languages": [
         "it"
       ],
@@ -784,7 +793,7 @@
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "c8994023c1f81b07664a114aa84658f3046b588a663bdc0193dc2b54e5e48644",
+      "sha256": "b0a85074c3a44cd143b6134087fc0e79e38a9d84ce996859ba8e79d74d4852a9",
       "languages": [
         "it",
         "en",
@@ -812,7 +821,7 @@
     },
     "vouching": {
       "path": "vouching/course.json",
-      "sha256": "5bbf4d8c115e64f70f73fb763c668a92833b2a5923e8696f2448d5bb5827814b",
+      "sha256": "bd9e233a9500028f5f893283caf741e4850b7ebc9498311e7abaddc9b3ce02d6",
       "languages": [
         "it",
         "en",

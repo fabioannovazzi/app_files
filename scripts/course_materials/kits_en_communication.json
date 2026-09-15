@@ -12,7 +12,7 @@
       "Review the communication, sources and format. After the confirmations required by the workflow, open the actual generated package and find out how to use its files. Sending or publishing is a separate subsequent action."
     ],
     "deliverables": [
-      "FAQ in Markdown and HTML, for inspection and reuse after review.",
+      "FAQ in Markdown, for inspection and reuse after review.",
       "Technical basis, source references and records of checks and decisions."
     ],
     "review": "Read the FAQ as a client: its audience and practical use should be clear. Check that claims match the source, limits remain visible and the format is the one accepted. The workflow may require revision or explain why no communication is warranted.",
@@ -37,7 +37,7 @@
       "Review the communication, sources and format. After the confirmations required by the workflow, open the actual generated package and find out how to use its files. Sending or publishing is a separate subsequent action."
     ],
     "deliverables": [
-      "FAQ in Markdown and HTML, for inspection and reuse after review.",
+      "FAQ in Markdown, for inspection and reuse after review.",
       "Technical basis, source references and records of checks and decisions."
     ],
     "review": "Read the FAQ as a client: its audience and practical use should be clear. Check that claims match the source, limits remain visible and the format is the one accepted. The workflow may require revision or explain why no communication is warranted.",

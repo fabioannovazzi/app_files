@@ -24,7 +24,7 @@
       {
         "id": "client-file-evidence",
         "purpose": "Classify the incoming file, interpret evidence, and prepare the studio intake",
-        "content": "Default model_handoff pages contain one metadata record for every inventoried file with candidate lexical category status, PDF embedded-text coverage (total, processed, text-bearing, text-missing and unprocessed page indexes), and fiscal extraction disposition (including unreadable, unsupported and recognized-without-fields outcomes), exception-only document excerpts up to 600 characters, every mapped fiscal field with its exact value, candidate or reviewed document-kind status, and a citation up to 600 characters, missing-request candidates for professional review, reviewed email requests with the generic CLIENT-001 reference, generic duplicate groups, and XML anomaly or opaque duplicate-group references without invoice party fields. Exact local documents, extracted text, drafts, identifiers, review state, and package state may still enter when selected for professional review or required by the task.",
+        "content": "Default model_handoff pages contain one metadata record for every inventoried file with candidate lexical category status, PDF embedded-text coverage (total, processed, text-bearing, text-missing and unprocessed page indexes), and fiscal extraction disposition (including unreadable, unsupported and recognized-without-fields outcomes), exception-only document excerpts up to 600 characters, every mapped fiscal field with its exact value, candidate or reviewed document-kind status, and a citation up to 600 characters, missing-request candidates for professional review, reviewed email requests with the generic CLIENT-001 reference, generic duplicate groups, and XML anomaly or opaque duplicate-group references without invoice party fields. Exact local documents, extracted text, drafts, identifiers, review state, and package state may still enter when selected for professional review or required by the task. Applying a complete reviewed client-email replacement returns the full replacement text in applied decisions and final-artifact required_text QA metadata; path sanitization does not remove this text or its identifiers.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -83,9 +83,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-07",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "15102f35c2aaf98d402129a5bbf538fe0cbe1b4ef5eb9db233aada5e3a5c7fcf"
+    "source_fingerprint": "7e004421299d9d4235c2e1eca0fab4e0a57e7144015576253cd0a70ca8cd0d0e"
   }
 }

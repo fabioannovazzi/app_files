@@ -132,6 +132,31 @@ def test_catalog_exactly_covers_current_product_and_no_retired_ids(product):
 
 
 @pytest.mark.parametrize(
+    "workflow", ["brand-fit", "hosted-interview", "research-video"]
+)
+def test_hosted_clara_workflows_remain_installed_but_have_no_local_lesson(
+    workflow, monkeypatch
+):
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
+    from desktop_teaching.onboarding import (
+        OnboardingError,
+        eligible_workflows,
+        teaching_contract,
+    )
+
+    root = ROOT / "plugins/clara"
+    assert (root / "skills" / workflow / "SKILL.md").is_file()
+    assert workflow not in builder._eligible("clara")
+    assert workflow not in eligible_workflows(root)
+    library = CourseLibrary(root, {workflow})
+    assert library.catalog() == []
+    with pytest.raises(CourseError, match="requires hosted services"):
+        library.load(workflow, "it")
+    with pytest.raises(OnboardingError, match="requires hosted services"):
+        teaching_contract(root, workflow)
+
+
+@pytest.mark.parametrize(
     "foreign", ["reporting-engine", "hosted-interview", "../clara/reporting-engine"]
 )
 def test_foreign_workflow_never_resolves_from_course_catalog(isolated, foreign):

@@ -37,6 +37,7 @@ def review_for(path: Path, root: Path) -> dict:
     return {
         "schema_version": 1,
         "jurisdiction": "IT",
+        "language": "en",
         "as_of": "2026-09-07",
         "scope": "Reporting arrangements; payment controls not assessed.",
         "company_context": "Small owner-managed service company, one site.",
@@ -675,4 +676,12 @@ def test_incomplete_intelligent_records_rejected(
     review = intelligent_case(tmp_path)
     review["intelligent_review"][field] = value
     with pytest.raises(ValueError):
+        build(review, tmp_path)
+
+
+@pytest.mark.parametrize("language", ["pt", ["it"]])
+def test_unsupported_memo_language_is_rejected(tmp_path: Path, language) -> None:
+    review = case(tmp_path)
+    review["language"] = language
+    with pytest.raises(ValueError, match="memo language"):
         build(review, tmp_path)

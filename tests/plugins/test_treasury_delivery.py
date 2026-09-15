@@ -18,7 +18,9 @@ sys.path.insert(
     0, str(Path(__file__).resolve().parents[2] / "plugins/treasury-forecast/scripts")
 )
 
-from treasury_core import TreasuryError
+import run_treasury
+import treasury_session
+from treasury_core import TreasuryError, build_forecast
 from treasury_inputs import HEADERS, load_inputs, read_json, safe_path, write_templates
 from treasury_report import write_artifacts
 from treasury_server import make_server
@@ -280,7 +282,7 @@ def test_failed_render_keeps_previous_version_current(tmp_path, monkeypatch):
     def fail(*args):
         raise OSError("Synthetic disk failure")
 
-    monkeypatch.setattr("treasury_session.write_artifacts", fail)
+    monkeypatch.setattr(treasury_session, "write_artifacts", fail)
     with pytest.raises(OSError, match="disk failure"):
         review_session(
             output,
@@ -315,6 +317,43 @@ def test_report_escapes_supplied_markup_and_excel_formula_text(tmp_path):
     assert "<script>" not in (tmp_path / "version/report.html").read_text()
     assert workbook["Flussi"]["B5"].data_type == "s"
     assert workbook["Flussi"]["B5"].value.startswith("=HYPERLINK")
+    workbook.close()
+
+
+def test_delivery_exposes_weekly_cash_and_readable_date_assumptions(tmp_path):
+    data = first()
+    basis = (
+        "Prospetto della direzione: pagamento delle retribuzioni previsto "
+        "il 30 settembre, inclusi i conguagli indicati nella distinta allegata."
+    )
+    data["planned_flows"][0]["basis"] = basis
+    record = build_forecast(data)
+
+    write_artifacts(tmp_path / "version", record)
+
+    html = (tmp_path / "version/report.html").read_text()
+    assert "Bozza da rivedere" in html
+    assert "<h2>Saldi settimanali</h2>" in html
+    assert "<td>2026-09-28</td>" in html
+    assert "<td>€ 15.000,00</td>" in html
+    assert basis in html
+    assert "<pre" not in html
+    assert read_json(tmp_path / "version/forecast.json") == record
+    workbook = load_workbook(tmp_path / "version/tesoreria.xlsx")
+    assert workbook["Sintesi"]["B2"].value == "Bozza da rivedere"
+    assert workbook["Settimane"]["C1"].value == "Cassa finale EUR"
+    assert workbook["Settimane"]["C5"].value == 15000
+    flows = workbook["Flussi"]
+    assert flows["F5"].value == basis
+    assert flows["F5"].alignment.wrap_text
+    assert flows.row_dimensions[5].height > 30
+    assert flows.freeze_panes == "B2"
+    assert (
+        (tmp_path / "version/flussi.csv")
+        .read_text()
+        .splitlines()[0]
+        .endswith(",basis,decision_origin")
+    )
     workbook.close()
 
 
@@ -468,14 +507,10 @@ def test_reused_bank_evidence_id_is_rejected_across_updates():
     data["as_of"] = "2026-09-19"
     data["bank_movements"][0]["date"] = "2026-09-19"
     with pytest.raises(TreasuryError, match="Previously consumed"):
-        from treasury_core import build_forecast
-
         build_forecast(data, previous=previous)
 
 
 def test_cli_review_context_scenario_and_templates_use_bound_outputs(tmp_path):
-    import run_treasury
-
     workspace = archived_case(tmp_path)
     context = workspace["context"]
     bound = ["--client-engagement", str(workspace["context_path"])]
@@ -530,8 +565,6 @@ def test_dependency_check_reports_supported_and_incompatible_versions(monkeypatc
 
 
 def test_report_writes_explained_update_and_incomplete_status(tmp_path):
-    from treasury_core import build_forecast
-
     updated = accept(
         second(),
         previous=accept(first()),

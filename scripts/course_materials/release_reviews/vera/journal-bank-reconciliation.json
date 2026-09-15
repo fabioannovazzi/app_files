@@ -1,0 +1,230 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "journal-bank-reconciliation",
+  "course_sha256": "817c5cf742c9a425e9b65bcf6c5e87448f096d7d74fe719648a92aed666b281c",
+  "reviewer": "Codex: source, first-use lesson, native workbook and localized review-note inspection",
+  "reviewed_at": "2026-09-14T16:32:17.532432+00:00",
+  "review_scope": "Prepared fictional month-end comparison only. Current CLI runs and source/value replay are verified. Worksheet headers and selected rows were visually inspected in all seven sheets of both unique workbooks; the five locale editions are byte-identical per phase. No learner, live voice, tax or professional approval is attested.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces a normal month-end bank reconciliation: supply the bank statement and bank ledger, name the account and period, review the proposed interpretation and use the resulting workpapers. The lesson explains the complete first-use task without turning an allocation feature into the subject.",
+        "inputs_and_request": "Read the localized case note and all five outlines. The current bounded native inspection identifies the two March exports, ISO dates, negative outgoing amounts and distinct transaction references. The natural request is usable without naming a script or schema. The same one-account fictional scope is explicit in every language.",
+        "execution_and_checkpoints": "The owning current inspection and reconciliation commands read the managed sources and create their normal workbook, detailed files and review notes. The two checkpoints identify the source roles and trace a matched payment. Exact individual matching is an explicit synthetic test review, not a stored learner approval. The real case ledger completes with its declared output files.",
+        "deliverable_and_next_action": "The workbook makes the bank and journal dates, amounts, zero difference and shared reference readable. Header shading, fitted widths, wrapped text and frozen identifiers preserve the actual tables. All seven worksheet views were inspected for both unique phase files; no reviewed field is clipped. Localized review notes state counts and tell the reader to check scope, trace a match and investigate any unmatched items. Canonical worksheet/field names and the reference stage identifier remain English technical labels.",
+        "practice_and_repeat": "The cumulative April files add the 4 April payment of EUR 488 with TRN-003 on physical source row 4 in both exports. A fresh run matches three rather than two payments and preserves the March files. The exercise asks how to investigate a bank movement absent from the ledger; the closing instruction tells the learner what to supply for another real account and period.",
+        "language_and_pacing": "Read the it lesson and case note and the actual demo/practice review notes. The explanations follow the chosen language, with the same scope and task in all editions. Six stages total 390 seconds. Detailed exploration, questions and processing may take longer; no measured learner duration or native voice behavior is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[it-demo-2]",
+        "result_review": "March produces two exact-reference matches of EUR 1,220 and EUR 732, with no unmatched movements. The selected workbook row shows matching bank/journal dates and amounts and a zero difference. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_bank_reconciliation.xlsx",
+            "sha256": "374254cc75af6076d0d90a18459b4003895ef57f4aa0c7aec76bba3fcd0eb413"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "d9dfd680c30bae7ee7d0d9ee1698ae5d635650c17d74e931ed79ebdd162e1a70"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[it-practice-3]",
+        "result_review": "The cumulative April comparison adds the EUR 488 payment dated 4 April and produces three matches with no unmatched movements. The new payment date, amount, reference and physical source row were checked in the native inspection preview. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_bank_reconciliation.xlsx",
+            "sha256": "08469edb05b5242286ae4d9f82fc2dc4d5bc43ca77eeea6cbd4aebdf2c968294"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "2eea0d54e8818c2e53ea739d60753afd3bbada3f0562f92df6a4e161687d8c91"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces a normal month-end bank reconciliation: supply the bank statement and bank ledger, name the account and period, review the proposed interpretation and use the resulting workpapers. The lesson explains the complete first-use task without turning an allocation feature into the subject.",
+        "inputs_and_request": "Read the localized case note and all five outlines. The current bounded native inspection identifies the two March exports, ISO dates, negative outgoing amounts and distinct transaction references. The natural request is usable without naming a script or schema. The same one-account fictional scope is explicit in every language.",
+        "execution_and_checkpoints": "The owning current inspection and reconciliation commands read the managed sources and create their normal workbook, detailed files and review notes. The two checkpoints identify the source roles and trace a matched payment. Exact individual matching is an explicit synthetic test review, not a stored learner approval. The real case ledger completes with its declared output files.",
+        "deliverable_and_next_action": "The workbook makes the bank and journal dates, amounts, zero difference and shared reference readable. Header shading, fitted widths, wrapped text and frozen identifiers preserve the actual tables. All seven worksheet views were inspected for both unique phase files; no reviewed field is clipped. Localized review notes state counts and tell the reader to check scope, trace a match and investigate any unmatched items. Canonical worksheet/field names and the reference stage identifier remain English technical labels.",
+        "practice_and_repeat": "The cumulative April files add the 4 April payment of EUR 488 with TRN-003 on physical source row 4 in both exports. A fresh run matches three rather than two payments and preserves the March files. The exercise asks how to investigate a bank movement absent from the ledger; the closing instruction tells the learner what to supply for another real account and period.",
+        "language_and_pacing": "Read the en lesson and case note and the actual demo/practice review notes. The explanations follow the chosen language, with the same scope and task in all editions. Six stages total 390 seconds. Detailed exploration, questions and processing may take longer; no measured learner duration or native voice behavior is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[en-demo-2]",
+        "result_review": "March produces two exact-reference matches of EUR 1,220 and EUR 732, with no unmatched movements. The selected workbook row shows matching bank/journal dates and amounts and a zero difference. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_bank_reconciliation.xlsx",
+            "sha256": "374254cc75af6076d0d90a18459b4003895ef57f4aa0c7aec76bba3fcd0eb413"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "ef43a7f76a2311cff3ec8ba0feed5969dbce763dcf45eb215f0840f3bfadc177"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[en-practice-3]",
+        "result_review": "The cumulative April comparison adds the EUR 488 payment dated 4 April and produces three matches with no unmatched movements. The new payment date, amount, reference and physical source row were checked in the native inspection preview. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_bank_reconciliation.xlsx",
+            "sha256": "08469edb05b5242286ae4d9f82fc2dc4d5bc43ca77eeea6cbd4aebdf2c968294"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "e2cb53f1727c49eee854e89d6417044f9c4153020457005eeeacd454b474fe0e"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces a normal month-end bank reconciliation: supply the bank statement and bank ledger, name the account and period, review the proposed interpretation and use the resulting workpapers. The lesson explains the complete first-use task without turning an allocation feature into the subject.",
+        "inputs_and_request": "Read the localized case note and all five outlines. The current bounded native inspection identifies the two March exports, ISO dates, negative outgoing amounts and distinct transaction references. The natural request is usable without naming a script or schema. The same one-account fictional scope is explicit in every language.",
+        "execution_and_checkpoints": "The owning current inspection and reconciliation commands read the managed sources and create their normal workbook, detailed files and review notes. The two checkpoints identify the source roles and trace a matched payment. Exact individual matching is an explicit synthetic test review, not a stored learner approval. The real case ledger completes with its declared output files.",
+        "deliverable_and_next_action": "The workbook makes the bank and journal dates, amounts, zero difference and shared reference readable. Header shading, fitted widths, wrapped text and frozen identifiers preserve the actual tables. All seven worksheet views were inspected for both unique phase files; no reviewed field is clipped. Localized review notes state counts and tell the reader to check scope, trace a match and investigate any unmatched items. Canonical worksheet/field names and the reference stage identifier remain English technical labels.",
+        "practice_and_repeat": "The cumulative April files add the 4 April payment of EUR 488 with TRN-003 on physical source row 4 in both exports. A fresh run matches three rather than two payments and preserves the March files. The exercise asks how to investigate a bank movement absent from the ledger; the closing instruction tells the learner what to supply for another real account and period.",
+        "language_and_pacing": "Read the fr lesson and case note and the actual demo/practice review notes. The explanations follow the chosen language, with the same scope and task in all editions. Six stages total 390 seconds. Detailed exploration, questions and processing may take longer; no measured learner duration or native voice behavior is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[fr-demo-2]",
+        "result_review": "March produces two exact-reference matches of EUR 1,220 and EUR 732, with no unmatched movements. The selected workbook row shows matching bank/journal dates and amounts and a zero difference. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_bank_reconciliation.xlsx",
+            "sha256": "374254cc75af6076d0d90a18459b4003895ef57f4aa0c7aec76bba3fcd0eb413"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "c08af70275e38729afa7185cd81a5b2a8fe093f1bf47e886e464f1fcbea8fc69"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[fr-practice-3]",
+        "result_review": "The cumulative April comparison adds the EUR 488 payment dated 4 April and produces three matches with no unmatched movements. The new payment date, amount, reference and physical source row were checked in the native inspection preview. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_bank_reconciliation.xlsx",
+            "sha256": "08469edb05b5242286ae4d9f82fc2dc4d5bc43ca77eeea6cbd4aebdf2c968294"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "435c4dedc0063a843277228a65e7284a500cd13050b1fb50dd14908478352aaf"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces a normal month-end bank reconciliation: supply the bank statement and bank ledger, name the account and period, review the proposed interpretation and use the resulting workpapers. The lesson explains the complete first-use task without turning an allocation feature into the subject.",
+        "inputs_and_request": "Read the localized case note and all five outlines. The current bounded native inspection identifies the two March exports, ISO dates, negative outgoing amounts and distinct transaction references. The natural request is usable without naming a script or schema. The same one-account fictional scope is explicit in every language.",
+        "execution_and_checkpoints": "The owning current inspection and reconciliation commands read the managed sources and create their normal workbook, detailed files and review notes. The two checkpoints identify the source roles and trace a matched payment. Exact individual matching is an explicit synthetic test review, not a stored learner approval. The real case ledger completes with its declared output files.",
+        "deliverable_and_next_action": "The workbook makes the bank and journal dates, amounts, zero difference and shared reference readable. Header shading, fitted widths, wrapped text and frozen identifiers preserve the actual tables. All seven worksheet views were inspected for both unique phase files; no reviewed field is clipped. Localized review notes state counts and tell the reader to check scope, trace a match and investigate any unmatched items. Canonical worksheet/field names and the reference stage identifier remain English technical labels.",
+        "practice_and_repeat": "The cumulative April files add the 4 April payment of EUR 488 with TRN-003 on physical source row 4 in both exports. A fresh run matches three rather than two payments and preserves the March files. The exercise asks how to investigate a bank movement absent from the ledger; the closing instruction tells the learner what to supply for another real account and period.",
+        "language_and_pacing": "Read the de lesson and case note and the actual demo/practice review notes. The explanations follow the chosen language, with the same scope and task in all editions. Six stages total 390 seconds. Detailed exploration, questions and processing may take longer; no measured learner duration or native voice behavior is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[de-demo-2]",
+        "result_review": "March produces two exact-reference matches of EUR 1,220 and EUR 732, with no unmatched movements. The selected workbook row shows matching bank/journal dates and amounts and a zero difference. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_bank_reconciliation.xlsx",
+            "sha256": "374254cc75af6076d0d90a18459b4003895ef57f4aa0c7aec76bba3fcd0eb413"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "26591b823d78f191ad76c042be4e2c12fe563a65baea0a930f0f60a288240b6c"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[de-practice-3]",
+        "result_review": "The cumulative April comparison adds the EUR 488 payment dated 4 April and produces three matches with no unmatched movements. The new payment date, amount, reference and physical source row were checked in the native inspection preview. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_bank_reconciliation.xlsx",
+            "sha256": "08469edb05b5242286ae4d9f82fc2dc4d5bc43ca77eeea6cbd4aebdf2c968294"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "0e0055f1b38433be11be6beb23c408a53fd62f4aeff96766c80a0f43e805c413"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces a normal month-end bank reconciliation: supply the bank statement and bank ledger, name the account and period, review the proposed interpretation and use the resulting workpapers. The lesson explains the complete first-use task without turning an allocation feature into the subject.",
+        "inputs_and_request": "Read the localized case note and all five outlines. The current bounded native inspection identifies the two March exports, ISO dates, negative outgoing amounts and distinct transaction references. The natural request is usable without naming a script or schema. The same one-account fictional scope is explicit in every language.",
+        "execution_and_checkpoints": "The owning current inspection and reconciliation commands read the managed sources and create their normal workbook, detailed files and review notes. The two checkpoints identify the source roles and trace a matched payment. Exact individual matching is an explicit synthetic test review, not a stored learner approval. The real case ledger completes with its declared output files.",
+        "deliverable_and_next_action": "The workbook makes the bank and journal dates, amounts, zero difference and shared reference readable. Header shading, fitted widths, wrapped text and frozen identifiers preserve the actual tables. All seven worksheet views were inspected for both unique phase files; no reviewed field is clipped. Localized review notes state counts and tell the reader to check scope, trace a match and investigate any unmatched items. Canonical worksheet/field names and the reference stage identifier remain English technical labels.",
+        "practice_and_repeat": "The cumulative April files add the 4 April payment of EUR 488 with TRN-003 on physical source row 4 in both exports. A fresh run matches three rather than two payments and preserves the March files. The exercise asks how to investigate a bank movement absent from the ledger; the closing instruction tells the learner what to supply for another real account and period.",
+        "language_and_pacing": "Read the es lesson and case note and the actual demo/practice review notes. The explanations follow the chosen language, with the same scope and task in all editions. Six stages total 390 seconds. Detailed exploration, questions and processing may take longer; no measured learner duration or native voice behavior is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[es-demo-2]",
+        "result_review": "March produces two exact-reference matches of EUR 1,220 and EUR 732, with no unmatched movements. The selected workbook row shows matching bank/journal dates and amounts and a zero difference. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_bank_reconciliation.xlsx",
+            "sha256": "374254cc75af6076d0d90a18459b4003895ef57f4aa0c7aec76bba3fcd0eb413"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "d167a1df9eba8fa7760eb6ae6ddd1b07eaf6ce77562c324ed6e66aedf191e1fe"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[es-practice-3]",
+        "result_review": "The cumulative April comparison adds the EUR 488 payment dated 4 April and produces three matches with no unmatched movements. The new payment date, amount, reference and physical source row were checked in the native inspection preview. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
+        "reviewed_artifacts": [
+          {
+            "name": "journal_bank_reconciliation.xlsx",
+            "sha256": "08469edb05b5242286ae4d9f82fc2dc4d5bc43ca77eeea6cbd4aebdf2c968294"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "e1c5b773e247a2885b2dd6317562961b7ae89652a6571309f9d5adf0dacd5605"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.149259+00:00",
+    "previous_course_sha256": "e9df8b76399fc802f3e6ead4b80dab6aa4d87ded57c370370f26456c0c997fe3",
+    "source_snapshot": "/private/tmp/bank-teaching-release-03/test_bank_reconciliation_kit_r4/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  }
+}

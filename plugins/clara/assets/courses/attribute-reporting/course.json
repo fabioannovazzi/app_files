@@ -45,7 +45,7 @@
     {
       "path": "modules/attribute-reporting/scripts/attribute_reporting.py",
       "repository_path": "plugins/attribute-reporting/scripts/attribute_reporting.py",
-      "sha256": "e722c1bd91d0f802b02851d24b6b98083a8592cc8512110db97646e635a2eef1"
+      "sha256": "55f7bcb35ccef716be75b77dcea282dda3ddb582919667485ad3f2693dc592ba"
     },
     {
       "path": "modules/attribute-reporting/scripts/bind_mapping_images.py",
@@ -105,7 +105,7 @@
     {
       "path": "modules/attribute-reporting/scripts/prepare_run.py",
       "repository_path": "plugins/attribute-reporting/scripts/prepare_run.py",
-      "sha256": "e39a6d64b15886f90542b534419849ba4353e966344763868e4e24a5dade37e9"
+      "sha256": "86d2c52270dcc5eeebb4412e94fcf94e542182f7163fb996ed741d932d68204a"
     },
     {
       "path": "modules/attribute-reporting/scripts/project_pipeline.py",
@@ -155,12 +155,17 @@
     {
       "path": "modules/attribute-reporting/skills/attribute-reporting/references/workflow-reference.md",
       "repository_path": "plugins/attribute-reporting/skills/attribute-reporting/references/workflow-reference.md",
-      "sha256": "04a25c1781d5afe40ff08d922d6faef27abc8774d79a7dcc2fd54a479629ae7e"
+      "sha256": "765e0a37288e20c148c8dd3f699b53a5fb4239156e0a5592f4da8ef1fd85e8f4"
     },
     {
       "path": "modules/attribute-reporting/vendor/modules/__init__.py",
       "repository_path": "modules/__init__.py",
       "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": "modules/attribute-reporting/vendor/modules/pdp/attribute_report_copy.json",
+      "repository_path": "modules/pdp/attribute_report_copy.json",
+      "sha256": "aad97b9f8e642f9d88f65f1bbb4d91e0fee24aa2752098282be3b8424f63f228"
     },
     {
       "path": "modules/attribute-reporting/vendor/modules/pdp/attribute_table_catalog.json",
@@ -175,7 +180,7 @@
     {
       "path": "modules/attribute-reporting/vendor/modules/pdp/attribute_table_templates.py",
       "repository_path": "modules/pdp/attribute_table_templates.py",
-      "sha256": "b8211d0c9c6f11fbd26eeb00bdd04ecd933e4a4696f352863de4d890d5780d2e"
+      "sha256": "67841b9eb078c7fd3dd648c10cc81831837422128393be815dd4c80a4504c21b"
     },
     {
       "path": "modules/attribute-reporting/vendor/modules/utilities/utils.py",
@@ -235,7 +240,7 @@
     {
       "path": "vendor/modules/courseware/assets/languages.json",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
     },
     {
       "path": "vendor/modules/courseware/execution.py",
@@ -245,7 +250,12 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
     },
     {
       "path": "vendor/modules/desktop_teaching/__init__.py",
@@ -260,12 +270,12 @@
     {
       "path": "vendor/modules/desktop_teaching/onboarding.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
-      "sha256": "3a230127225683b86ead89c6fd93101092b756f062b396d9be45e757dc530b14"
+      "sha256": "215244f8e595127743e7fd1c97febd489056ebcc9d7907dec7098a6b498fca8b"
     },
     {
       "path": "vendor/modules/desktop_teaching/teaching.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
-      "sha256": "9e672584218ce40d8a5e397d61f3198eacea4bdffdcb37fd813333799875a4d4"
+      "sha256": "8cfb8565b9a854c119e8a48e7bf068f2450786d21255da9b202a606226207a6e"
     }
   ],
   "files": [
