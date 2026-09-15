@@ -356,28 +356,33 @@ def test_teaching_worker_executes_real_managed_xml_pipeline(teaching):
     assert complete(store)["phase"] == "complete"
 
 
-def test_hook_suppresses_optional_network_for_active_or_corrupt_teaching(
+def test_hook_keeps_version_notices_but_suppresses_crs_for_active_or_corrupt_teaching(
     teaching, monkeypatch, capsys
 ):
     _, store, profile = teaching
     onboarding = sys.modules["local_onboarding"]
     monkeypatch.setattr(onboarding, "default_root", lambda: profile.root)
     calls = []
+
+    def check(*, include_change_requests):
+        calls.append(include_change_requests)
+        return {"hookSpecificOutput": {"additionalContext": "Public version checked."}}
+
     monkeypatch.setitem(
         sys.modules,
         "check_for_update",
-        types.SimpleNamespace(main=lambda: calls.append("update") or 0),
+        types.SimpleNamespace(session_start_output=check),
     )
     hook = load("onboarding_session_start")
     assert hook.main() == 0
-    assert calls == ["update"]
+    assert calls == [True]
     begin(store)
     assert hook.main() == 0
-    assert calls == ["update"]
+    assert calls == [True, False]
     path = store.sessions / store.session_id / "session.json"
     path.write_text("broken")
     assert hook.main() == 0
-    assert calls == ["update"]
+    assert calls == [True, False, False]
     assert "profile" not in json.loads(capsys.readouterr().out.splitlines()[-1])
 
 

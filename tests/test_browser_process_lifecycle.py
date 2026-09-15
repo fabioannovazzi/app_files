@@ -923,6 +923,9 @@ def test_named_skill_runs_its_exact_process_among_same_site_jobs(lifecycle, tmp_
     assert executed["result"] == "passed"
     assert executed["summary"]["outputs"][0]["record_count"] == 2
     assert store.resume(other_id)["attempts"] == []
+    report = Path(executed["report_path"]).read_text(encoding="utf-8")
+    assert f"${skill.name}" in report
+    assert "catalogo" not in report
 
 
 def test_named_skill_does_not_use_newer_unreleased_local_version(lifecycle, tmp_path):
@@ -980,6 +983,9 @@ def test_named_skill_fresh_install_keeps_qualification_local(lifecycle, tmp_path
     assert attempt["blocked_reason"] == "qualification_required"
     assert recipient.resume(process)["qualification"] is None
     assert Path(attempt["report_path"]).is_file()
+    report = Path(attempt["report_path"]).read_text(encoding="utf-8")
+    assert f"${skill.name}" in report
+    assert "catalogo" not in report
 
 
 def test_named_skill_export_cannot_overwrite_existing_operation(lifecycle, tmp_path):
@@ -997,8 +1003,9 @@ def test_named_skill_export_cannot_overwrite_existing_operation(lifecycle, tmp_p
     assert (directory / "SKILL.md").read_bytes() == original
 
 
-def test_named_skill_is_discoverable_and_bound_in_chatgpt_package(
-    lifecycle, tmp_path, monkeypatch
+@pytest.mark.parametrize("package_format", ["chatgpt", "cowork"])
+def test_named_skill_is_discoverable_and_bound_in_package(
+    lifecycle, tmp_path, monkeypatch, package_format
 ):
     store, process = registered(lifecycle, tmp_path)
     skills = importlib.import_module("process_skills")
@@ -1021,7 +1028,17 @@ def test_named_skill_is_discoverable_and_bound_in_chatgpt_package(
             ] = path.read_bytes()
     monkeypatch.setattr(builder, "expected_zip_entries", lambda _target: entries)
 
-    packaged = builder.chatgpt_upload_entries(target)
+    if package_format == "chatgpt":
+        package_builder = lambda: builder.chatgpt_upload_entries(target)
+        root_route = f"../../skills/{skill.name}/SKILL.md"
+    else:
+        cowork = importlib.import_module("build_claude_plugin_zip")
+        package = next(p for p in cowork.load_configuration()[1] if p.plugin == "vera")
+        monkeypatch.setattr(cowork, "_load_codex_builder", lambda: builder)
+        package_builder = lambda: cowork.claude_package_entries(package)
+        root_route = "read the named skill"
+
+    packaged = package_builder()
 
     entry = f"skills/{skill.name}/"
     assert json.loads(packaged[entry + "process.json"])["process_id"] == process
@@ -1029,10 +1046,7 @@ def test_named_skill_is_discoverable_and_bound_in_chatgpt_package(
         packaged[entry + "capability.json"] == (skill / "capability.json").read_bytes()
     )
     assert f"${skill.name}" in packaged[entry + "agents/openai.yaml"].decode()
-    assert (
-        f"../../skills/{skill.name}/SKILL.md"
-        in packaged["skills/vera/SKILL.md"].decode()
-    )
+    assert root_route in packaged["skills/vera/SKILL.md"].decode()
     assert "process_skills.py begin" in packaged[entry + "SKILL.md"].decode()
 
 

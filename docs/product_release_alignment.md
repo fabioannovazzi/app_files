@@ -34,3 +34,20 @@ This aligns release artifacts. It does not claim that an installed copy updated
 itself or that a Marketplace submission is published. Keep the public update
 notice tied to confirmed Marketplace publication. Native agent acceptance, when
 performed, is recorded separately from these mechanical package checks.
+
+For user acceptance, inspect the enabled installation with `codex plugin list
+--json`, then run `scripts/check_installed_product.py` with the expected
+published version and the exact skill path supplied by the current host catalog.
+The command must pass in the conversation used for the behavioral test. It
+rejects obsolete local marketplace installations, duplicates and a stale exposed
+skill even when a newer package exists on disk. A repaired installation with an
+old conversation is incomplete acceptance until a fresh conversation is checked.
+
+Vera and Clara's OpenAI startup hooks check the public version manifest even when
+optional onboarding is missing, unfinished or inaccessible. A stale-version
+notice remains visible on subsequent sessions; only the public download is
+cached. CR polling still excludes incomplete or active tutorials. The hook emits
+one JSON response containing package identity, user-facing notices and optional
+tutorial context. Their main skills provide a version-only fallback when startup
+context is absent. These checks notify; they do not install updates, grant hook
+trust, force a host reload, or verify professional output delivery.

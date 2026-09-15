@@ -134,6 +134,7 @@ Do not redirect the user to another product or an ordinary chat surface.
 
 # Vera
 
+
 ## Show the privacy report
 
 A request to see, reopen, or explain the privacy report ("report privacy",
@@ -346,6 +347,12 @@ them without changing the capability catalog:
   parents, capabilities, and available checksums. It never overwrites or automatically deletes files; exact
   duplicates are quarantine candidates and every applied move has a journal
   and rollback path;
+- Named browser operation skills installed beside this skill own ordinary work.
+  Select their specific descriptions and read the named skill, which binds one
+  exact procedure. Explicit invocation selects that operation; do not reroute to
+  the generic browser skill or look through development records. If the work is
+  ambiguous between installed operations, clarify the intended business outcome.
+  A local tested procedure is not an installed public skill.
 - `browser-automation`: a Claude Desktop capability factory that reuses the
   authorized operator's connected Chrome profile in guided, autonomous, or
   hybrid mode. Requests to learn, remember how a procedure is done, or make

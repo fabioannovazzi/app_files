@@ -582,10 +582,15 @@ class ProcessStore:
         *,
         version: str | None = None,
         pinned_version: bool = False,
+        skill_name: str | None = None,
     ) -> dict[str, Any]:
         """Create the durable report before browser or teaching work can fail."""
         process = self.process(process_id)
         _host(host)
+        if skill_name is not None and not re.fullmatch(
+            r"[a-z0-9]+(?:-[a-z0-9]+)*", skill_name
+        ):
+            raise ValueError("invalid operation skill name")
         if kind not in {"teaching", "test", "use"}:
             raise ValueError("attempt kind must be teaching, test or use")
         implementations = self._rows(process_id, "version")
@@ -621,6 +626,8 @@ class ProcessStore:
             "implementation": implementation,
             "blocked_reason": blocked,
         }
+        if skill_name is not None:
+            plan["skill_name"] = skill_name
         _write(directory / "attempt.json", plan)
         self._put(attempt_id, process_id, "attempt", plan)
         report = self.report(attempt_id)
@@ -854,7 +861,11 @@ class ProcessStore:
             "I documenti, i valori degli output e le credenziali restano fuori dal feedback tecnico.",
             "",
             "## Prossimo passo",
-            "Riprendere questo processo dal catalogo locale in una nuova conversazione. Verificare il risultato; se incompleto, conservare le prove e preparare la segnalazione revisionata.",
+            (
+                f"Riprendere ${plan['skill_name']} anche in una nuova conversazione. Verificare il risultato; se incompleto, conservare le prove per questa stessa operazione."
+                if plan.get("skill_name")
+                else "Riprendere questo processo dal catalogo locale in una nuova conversazione. Verificare il risultato; se incompleto, conservare le prove e preparare la segnalazione revisionata."
+            ),
             "I test simulati non qualificano l’automazione sul sito reale.",
         ]
         measurement_lines = []

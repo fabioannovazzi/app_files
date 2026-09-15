@@ -1,7 +1,7 @@
 {
   "name": "browser-automation",
-  "version": "0.5.22",
-  "description": "Insegna, sviluppa, verifica e usa processi web con tentativi, prove e versioni collegati anche in nuove conversazioni.",
+  "version": "0.5.23",
+  "description": "Insegna, sviluppa e verifica procedure web; prepara skill nominative con esecuzione condivisa e prove collegate.",
   "author": {
     "name": "Mparanza",
     "email": "fabio@mparanza.com",

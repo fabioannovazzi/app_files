@@ -8,7 +8,8 @@
     "scripts/check_for_update.py",
     "scripts/onboarding_session_start.py",
     "scripts/local_onboarding.py",
-    "scripts/local_teaching.py"
+    "scripts/local_teaching.py",
+    "skills/vera/SKILL.md"
   ],
   "runtime_profiles": [
     "openai-codex"
@@ -30,15 +31,15 @@
       "controls": [
         "The trusted SessionStart hook starts from one fixed HTTPS manifest URL and uses a three-second timeout; a 24-hour local cache is used only when Codex supplies a plugin-data directory.",
         "The request has no query string or request body and is not built from case or conversation content.",
-        "The local onboarding SessionStart wrapper invokes this checker only after a completed local profile. Pending, missing or inaccessible onboarding suppresses both the version request and CR polling. No interview/profile field is passed to this service."
+        "The local startup wrapper checks the public version independently of optional onboarding status, emits one JSON response with package identity and a visible update notice, and does not suppress stale-version notices in later sessions. A version-only skill fallback can make the same public GET without CR polling. No tutorial/profile/lesson field, installed version or local path is sent. CR polling remains suppressed for incomplete, inaccessible or active tutorials."
       ]
     }
   ],
   "security_controls": [],
   "review": {
-    "reviewed_at": "2026-09-13",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "eb37b0fa598b5e0ac3736f24ef8c73bf9ddd70f7cf49399f787c375e50bb8a04"
+    "source_fingerprint": "c7bab2869f704dfbeaf1d3e08da05df9fcde42a6364962c4cff6c049df5a7b8a"
   }
 }

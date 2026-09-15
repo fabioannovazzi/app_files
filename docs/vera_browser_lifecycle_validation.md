@@ -1,16 +1,19 @@
 # Vera browser lifecycle: implementation and validation
 
-Candidate: Vera **0.1.259**, browser-automation **0.5.22**.
+Candidate: Vera **0.1.261**, browser-automation **0.5.23**.
 Initial base: `07689c38`; integrated the subsequently merged course release
-`306101b5`. Implementation plan: [vera_browser_lifecycle_plan.md](vera_browser_lifecycle_plan.md).
+`306101b5` and current main `58759c04` (including the installed-version guard). Implementation plan: [vera_browser_lifecycle_plan.md](vera_browser_lifecycle_plan.md).
 
 ## Result
 
 An exact professional process now has a stable local identity across teaching,
 development requests, source versions, test attempts, qualification and ordinary
-use. The current model selects work semantically from the local register. The
-accountant supplies business inputs and demonstrations; Vera handles internal
-identifiers, paths, contracts and request assembly.
+use. For ordinary work, the user selects a named installed skill or asks for its
+described operation. That skill loads its own exact procedure and calls the
+shared browser executor. The accountant supplies business inputs; Vera handles
+internal identifiers, paths and request assembly. The developer authors and
+releases the skill after the development loop; local qualification does not
+automatically create or publish it.
 
 The new coordinator wraps the existing teaching checkpoints, capability runtime,
 receipt finalizer, reviewed development handoff and durable CR client. It does
@@ -27,7 +30,7 @@ they are not automatically promoted into qualified generic capabilities.
 | CR delivery | The exact reviewed structured body reaches the real API through an in-process HTTP test transport and SQLite store. A lost reply after server commit retries the same submission and returns the original actual CR. No ZIP upload is claimed. |
 | Development and release | Reviewed handoff import, the existing CR administration export, immutable revisions, package bindings and actual returned CR status preserve process/attempt lineage across separate operator/developer contexts. The developer can ship the CR-linked revision without the operator's private register. A fixed or published version does not qualify a local process. |
 | Qualification | Two distinct clean exact-contract runs need checked correct outputs, unchanged environment and an accepted measured time bound. Simulation, missing reviews, recovery, changed source, missing receipts and unaccepted performance fail. |
-| Ordinary use | A fresh context recovers the qualified process and typed inputs; a later incomplete, failed, incorrect, recovered or slow run suspends use and returns evidence to the same development loop. |
+| Ordinary use | A fresh context invokes the named skill and loads its exact procedure and typed inputs. Other jobs on the same site and newer local drafts cannot substitute for it. A later incomplete, failed, incorrect, recovered or slow run suspends that version and returns evidence to the same development loop. |
 | Reports and privacy | Reports contain output/receipt links, counts/hashes, actual available measurements and explicit missing reasons. The reviewed external projection excludes input/output values, local paths and status tokens. Tutorial markers prevent submission. |
 
 Positive qualification tests use clearly labelled temporary live-schema test
@@ -35,7 +38,51 @@ doubles to exercise the gate. Separate simulated-mode tests prove those runs
 cannot qualify a real process. No test result is a claim that an actual customer
 site, account, population or UI variant works.
 
-## Local validation
+## Named-operation follow-up
+
+`process_skills.py export` produces a complete source skill with an authored
+name, trigger description, result checks, data boundary, UI card and exact
+procedure binding. The normal builders preserve it in Codex, ChatGPT and Cowork;
+ChatGPT adds its authored card and root route. Broken bindings fail packaging.
+`begin` imports only this binding and preserves local qualification boundaries.
+A newer unpublished local draft cannot replace or invalidate a qualified released
+version. Both blocked and execution reports point back to the named operation.
+
+The positive use test runs a generated named skill in a fresh Python process,
+with another operation on the same site present, and checks the actual synthetic
+browser output. Substitution, absent recipient qualification, overwrite and broken
+package-binding tests cover the failure paths. Qualification evidence in these
+tests remains synthetic live-schema data, not real-site acceptance.
+
+An independent fresh-context agent invoked a generated synthetic skill with
+browser support explicitly unavailable. It saved and surfaced a blocked attempt;
+it did not claim execution or success. This review found the old development
+catalog continuation in reports, now corrected. Shared technical reports retain
+the existing Italian template; their locale field does not translate the report.
+
+No new Agenzia or TeamSystem operation is advertised as production-ready. The
+existing generic examples are scaffolds and the specialized drivers retain their
+current acceptance limits. This change implements the explicit skill-authoring,
+package and ordinary-use handoff for operations developed through the loop.
+
+## Final-candidate local validation
+
+The connected lifecycle and named-operation suite passes **38 tests**, with
+**87.41%** combined coordinator/exporter coverage. The strict type checks and
+medium/high security scan pass. The current source builds Vera **0.1.261** and
+Clara **0.1.209**; the all-product source/parity/version checks pass, including
+packaged MCP initialization. Both privacy registers are current.
+
+Package, privacy, routing, installed-version and course regression checks ran
+**524 cases**. The development-catalog routing assertion was updated to the
+intended named-skill contract; the uncommitted-source version check is repeated
+on the committed candidate. The unavailable Marketplace-cache test is skipped;
+it provides no publication evidence. Exact final results are recorded in the PR.
+
+## Prior-stage local validation
+
+These counts record the earlier lifecycle implementation. They are not CI results
+for the final named-operation commit. See the pull request for current-head checks.
 
 - Connected lifecycle, API integration and existing pipeline/development-request
   regressions: **112 passed**. The final report-delivery refinement also passed
@@ -64,7 +111,7 @@ site, account, population or UI variant works.
   client still requires complete diagnostics. Its privacy suite passes (13 tests),
   and its packages were regenerated at the existing version for source parity.
 - The standard product builders produced Codex, ChatGPT-upload and Cowork
-  packages at 0.1.259; source drift, manifest versions, public Cowork ZIP parity
+  packages at the earlier candidate 0.1.259; source drift, manifest versions, public Cowork ZIP parity
   and packaged MCP initialization checks pass.
 
 CI adds the connected lifecycle and report tests on Linux and Windows, the
@@ -93,6 +140,6 @@ tests verify their persisted contract and instructions; they do not measure
 model routing accuracy across arbitrary natural-language requests. Browser
 timing is measured locally; unavailable token/model telemetry is never estimated.
 
-The active first-use-courses and installed-version-guard worktrees were left
-untouched. Reconcile concurrent release candidates against current main before
-merge; do not deploy one task's generated package over another task's source.
+The merged course and installed-version-guard changes are retained. Reconcile
+any subsequent releases before publication; do not deploy an older candidate
+over newer source.

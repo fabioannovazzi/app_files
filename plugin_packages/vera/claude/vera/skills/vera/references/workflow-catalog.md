@@ -59,15 +59,12 @@ skill to imitate a missing operational workflow.
 - `bilancio-oic`: understand accounting evidence and prepare, update,
   reconcile, review, validate, or export an individual Italian OIC civil-law
   annual financial statement; XBRL is an output, not the workflow identity.
-- `browser-automation`: develop/test or use an exact professional browser
-  process. For learning, interpret one real demonstration and persist its
-  decisions, outcomes and exceptions. For ordinary work, use the module's
-  separate `ordinary-use.md` workflow: semantically select a supported process
-  from the local catalog, obtain missing business parameters and execute within
-  its qualification. New conversations recover the same process, attempts,
-  reviewed feedback, actual CR receipts, versions and retest status. Users do
-  not supply old chats, CR numbers or capability paths. Later failures return
-  evidence to the same development loop; authentication remains with the user.
+- `browser-automation`: teach, develop, test or repair an exact professional browser
+  process, keeping demonstrations, attempts and CRs linked across conversations.
+  Ordinary work uses a separately installed named operation skill, with its own
+  scope, inputs, result checks and adjacent process binding. Do not use the local
+  development catalog as the ordinary-use menu. No matching released skill means
+  the operation is unavailable; do not improvise a substitute.
 - `vouching`: compare a qualified Journal Sampling population with
   FatturaPA XML or supporting PDFs using exact evidence bindings.
 - `concordato-plan-review`: review an Italian concordato preventivo across the

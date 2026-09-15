@@ -231,12 +231,16 @@
     {
       "id": "persistent-attempt-and-reviewed-cr-lineage",
       "control": "The local register uses owner-only paths, parameterized SQLite writes, immutable records with hashes and explicit attempt IDs. Runtime attempts have an exclusive execution-start marker, exact registered contract hash checks, current host capability checks and a local machine fingerprint. Missing or corrupt linked output evidence remains an unverified partial report and cannot qualify. Qualification reuses the existing full two-clean-live-receipt finalizer, requires exact result reviews and an accepted elapsed-time bound, and is suspended by later unfinished/failed/recovered/incorrect or slow results. These checks establish record consistency, not cryptographic browser/account attestation. External feedback reuses the existing exact reviewed archive and client, transmits only the frozen structured body, records the actual returned CR, keeps tokens in the CR client store, and deduplicates uncertain retries across client version updates. It does not upload ZIPs, fiscal documents, customer identifiers, input values or output values. Written findings still require semantic sanitization and actual transmission authorization."
+    },
+    {
+      "id": "named-operation-exact-procedure-binding",
+      "control": "A source-owned named skill carries its process description, exact executable contract and hash, authored result checks and model-data boundary. The public skill invokes only its adjacent binding; it never selects from the development catalog. Local drafts cannot silently replace or invalidate the released version. Package checks reject an altered procedure binding. Export creates reviewable source and does not publish, attest to professional correctness or import another machine qualification. The shared executor and reviewed technical-feedback boundary are unchanged."
     }
   ],
   "review": {
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "2cc8ad7e0c52b9edd4283a7febb5a2ee4fab542aac9df0d20aa19eff842736d8"
+    "source_fingerprint": "2a02b951dcabb4b120af741ef8f9405a5550e2427af3ef901e6ba078f14e47ff"
   }
 }

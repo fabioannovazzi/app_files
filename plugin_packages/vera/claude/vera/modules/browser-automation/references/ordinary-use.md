@@ -14,21 +14,23 @@ Use this route when the operator asks for professional work to be done using a
 supported saved process. Teaching, recording and development are separate intents.
 Read `process-lifecycle.md` for the register and executable entry points.
 
-1. In every new conversation, sync the installed process bindings and read the
-   local catalog. The current model selects by the requested work, system,
-   objective and exclusions. The operator does not name a capability or supply
-   an internal path. For ambiguity, ask a professional question; do not rank
-   processes by substring matches or run a similar process speculatively.
-2. Recover its actual qualification, current version, unresolved attempts and
-   CR/retest status. Keep installed ECONS setup/review/processing and the Agenzia
-   prototype routes explicit: they are not automatically qualified generic
-   capabilities. An unsupported route cannot be made qualified by this catalog.
+1. Enter through the named operation skill selected by the user or Vera's
+   normal skill router. Read that skill's exact scope and adjacent `process.json`
+   and `capability.json`. Do not select from the local development catalog.
+   If several installed named skills fit, ask which business outcome is intended;
+   never substitute an approximate procedure or an unpublished local draft.
+2. Call `process_skills.py begin --skill <selected-skill-folder> --input <host>`.
+   This imports only that skill's bound process and pins its procedure version.
+   It returns the ordinary-use attempt, declared inputs and runtime path, or a
+   report explaining the missing verification/support. Publishing the named skill
+   does not import another machine's qualification. Existing ECONS/Agenzia
+   specialist routes retain their own protections and prototype limitations.
 3. Obtain only missing business inputs from the typed declarations and context,
    such as selected client, period and destination. Do not put those values in
    the process description or external feedback. Use the operator's current
    authorization and authentication handoff. Ask at action time for consequential
    actions when required; routine navigation has no repeated consent gate.
-4. Observe the current callable browser/local runtime, then `begin --kind use`.
+4. Observe the current callable browser/local runtime before the bound `begin` call.
    If it reports a block, open its report and explain the exact missing support
    or required retest. Do not silently relabel ordinary use as a test or switch
    to an improvised action sequence. Continue independently useful evidence or
@@ -56,8 +58,8 @@ Read `process-lifecycle.md` for the register and executable entry points.
 7. A failure, recovery, incomplete or incorrect result suspends ordinary use for
    that contract/environment. Preserve the attempt, prepare reviewed sanitized
    feedback and reuse the same process identity through CR, repair, release and
-   retest. Transmit only within the existing authorization. The next conversation
-   recovers this state automatically; never ask the operator to resume an old chat.
+   retest. Transmit only within the existing authorization. The same named skill recovers this state in a new conversation; never ask the
+   operator to resume an old chat.
 
 Example final result: "Ho salvato 24 XML e verificato il conteggio rispetto alle
 24 fatture selezionate. Il report contiene le verifiche e gli eventuali scarti.

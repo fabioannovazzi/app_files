@@ -37,6 +37,8 @@ REQUIRED_COMPONENT_PATHS = (
     "scripts/development_request.py",
     "scripts/process_lifecycle.py",
     "scripts/process_runtime.mjs",
+    "scripts/process_skills.py",
+    "references/production-skills.md",
     "references/process-lifecycle.md",
     "references/ordinary-use.md",
     "references/development-request.md",

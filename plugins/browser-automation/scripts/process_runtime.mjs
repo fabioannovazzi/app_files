@@ -122,7 +122,8 @@ export async function executeProcess({ attemptDirectory, tab, inputs = {}, curre
     "", "## Prossimo passo",
     "Verificare gli output e salvare la revisione. Un risultato incompleto conserva le prove per lo stesso processo.",
     "Nessun CR è stato inviato da questo esecutore. Vera prepara e trasmette il riepilogo tecnico solo entro l’autorizzazione ricevuta.",
-    "I test simulati non qualificano l’automazione sul sito reale. Riprendere dal catalogo locale anche in una nuova conversazione.",
+    "I test simulati non qualificano l’automazione sul sito reale.",
+    plan.skill_name ? `Riprendere $${plan.skill_name} anche in una nuova conversazione.` : "Riprendere dal catalogo locale anche in una nuova conversazione.",
   ];
   const temporaryReport = join(directory, "REPORT.execution.tmp");
   await writeExclusive(temporaryReport, `${lines.join("\n")}\n`);

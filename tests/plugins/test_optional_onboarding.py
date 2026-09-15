@@ -52,7 +52,13 @@ def test_startup_allows_normal_work_for_every_onboarding_state(
         ),
     )
     monkeypatch.setitem(
-        sys.modules, "check_for_update", types.SimpleNamespace(main=lambda: 0)
+        sys.modules,
+        "check_for_update",
+        types.SimpleNamespace(
+            session_start_output=lambda **_kwargs: {
+                "hookSpecificOutput": {"additionalContext": ""}
+            }
+        ),
     )
     spec = importlib.util.spec_from_file_location(
         f"{product}_optional_startup",

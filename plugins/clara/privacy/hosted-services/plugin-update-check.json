@@ -6,7 +6,8 @@
     "Mparanza public static-site infrastructure"
   ],
   "workflows": [
-    "clara"
+    "clara",
+    "learn-with-clara"
   ],
   "governed_paths": [
     ".codex-plugin/plugin.json",
@@ -14,9 +15,11 @@
     "scripts/check_for_update.py",
     "repository/modules/hosted_services/api.py",
     "repository/modules/pdp/legal_content.py",
-    "repository/static/shared/codex-plugin-versions.json"
+    "repository/static/shared/codex-plugin-versions.json",
+    "scripts/onboarding_session_start.py",
+    "skills/clara/SKILL.md"
   ],
-  "trigger": "The SessionStart hook runs on startup or resume. A local 24-hour cache normally suppresses repeated manifest downloads.",
+  "trigger": "The trusted SessionStart hook runs on startup or resume independently of optional onboarding completion. A version-only main-skill fallback runs once when startup context is absent. The public manifest download is cached for 24 hours; stale-version notices are repeated across sessions. Incomplete, inaccessible and active tutorials still suppress CR polling.",
   "automatic": true,
   "data_sent": [
     {
@@ -62,6 +65,6 @@
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "dd86fd9b3b995d1565f89edf59e6697f180f2430e368f0866714b652bddb9eb6"
+    "source_fingerprint": "658210ab44ba9ac762fc04733cda728b2cc076f06f953f155a5fb4c5adcaf0a3"
   }
 }

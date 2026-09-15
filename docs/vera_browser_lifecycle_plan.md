@@ -37,11 +37,14 @@ Existing ECONS startup and action-time permissions remain in force.
    existing two-clean-live-run finalizer and adds explicit result review and a
    measured performance bound. Simulation never qualifies a real process. A
    changed contract, environment, recovery or later failure requires retesting.
-5. Add distinct teaching/development and ordinary-use instructions. The current
-   model selects an exact supported process semantically from the scoped register,
-   asks only for missing professional parameters, and prepares the selected run.
-   Code enforces identity, types, qualification and host capabilities; it does not
-   classify intent using keywords. Keep installed specialist routes explicit.
+5. Release a finished operation as a separately named user-facing skill. The
+   developer authors its scope, inputs, output checks and data handling, then
+   exports reviewable source bound to the exact developed procedure. Ordinary
+   routing selects installed skills; the selected skill loads only its own binding
+   and calls the shared browser engine. Newer unpublished local drafts cannot
+   replace or block its qualified released version. The browser-automation skill
+   retains teaching, development, testing and repair. Local qualification neither
+   creates nor publishes skills. Keep existing specialist routes explicit.
 6. Exercise the connected journey with synthetic browser fixtures and a mocked
    CR service, including restart, partial evidence, server receipt persistence,
    retry, revised release, qualification guards, fresh-context use and regression
