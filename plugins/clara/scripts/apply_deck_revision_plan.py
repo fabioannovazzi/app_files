@@ -35,13 +35,18 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from advisor_case_core import CaseWorkspaceError, validate_case_workspace
+from case_store import transaction
 from deck_revision_execution_contract import PATCH_EXECUTION_STRATEGY
 from deck_revision_text_match import target_text_matches
-from verify_deck_revision_output import verify_deck_revision_output
+from verify_deck_revision_output import (
+    verification_ready_for_output_review,
+    verify_deck_revision_output,
+)
 
 __all__ = [
     "DeckRevisionApplyResult",
     "apply_deck_revision_plan",
+    "register_external_deck_revision",
     "main",
 ]
 
@@ -146,6 +151,8 @@ def _write_output_review(
     plan_path: Path,
     verification_status: str,
     presentation: Any,
+    execution_inputs: dict[str, Path | None],
+    approved_execution: bool,
     now: datetime | None = None,
 ) -> tuple[Path, Path]:
     payload: dict[str, Any] = {
@@ -156,6 +163,12 @@ def _write_output_review(
         "plan_path": _relative_path(case_dir, plan_path),
         "corrected_deck_path": _relative_path(case_dir, corrected_deck_path),
         "verification_status": verification_status,
+        "approved_execution": approved_execution,
+        "execution_inputs": {
+            role: {"path": _relative_path(case_dir, path), "sha256": _sha256(path)}
+            for role, path in execution_inputs.items()
+            if path is not None
+        },
         "summary": {
             "status": "requires_clara_codex_review",
             "complete": False,
@@ -690,6 +703,15 @@ def apply_deck_revision_plan(
         plan_path=resolved_plan_path,
         verification_status=str(verification_status),
         presentation=presentation,
+        approved_execution=approval is not None,
+        execution_inputs={
+            "corrected_deck": corrected_deck_path,
+            "plan": resolved_plan_path,
+            "source_deck": source_deck_path,
+            "verification": verification.report_path,
+            "approval": resolved_approval_path,
+            "understanding": reviewed_understanding_path,
+        },
         now=now,
     )
     status = (
@@ -765,11 +787,89 @@ def apply_deck_revision_plan(
     )
 
 
+def register_external_deck_revision(
+    case_dir: Path,
+    corrected_deck_path: Path,
+    *,
+    voice_session: Path | None = None,
+    plan_path: Path | None = None,
+    approval_path: Path | None = None,
+) -> Path:
+    """Bind an approved external edit without rewriting it; review remains required."""
+    from pptx import Presentation
+
+    case_dir = case_dir.resolve()
+    errors = validate_case_workspace(case_dir)
+    if errors:
+        raise CaseWorkspaceError("; ".join(errors))
+    session = _resolve_voice_session_dir(case_dir, voice_session)
+    with transaction(case_dir):
+        plan, _ = _load_plan(session, plan_path, case_dir)
+        approval, _, understanding = _load_approval(
+            case_dir, session, plan, approval_path
+        )
+        source = _resolve_case_path(
+            case_dir,
+            _load_workbench(session)["source_paths"]["deck_path"],
+            label="source deck",
+        )
+        corrected = _resolve_case_path(
+            case_dir, corrected_deck_path, label="external deck"
+        )
+        if corrected == source or corrected.samefile(source):
+            raise CaseWorkspaceError(
+                "External output must be distinct from the source deck"
+            )
+        inputs = {
+            "corrected_deck": corrected,
+            "plan": plan,
+            "source_deck": source,
+            "approval": approval,
+            "understanding": understanding,
+        }
+        # Exact byte stability is mechanical; it does not establish semantic quality.
+        before = {role: _sha256(path) for role, path in inputs.items()}
+        verification = verify_deck_revision_output(
+            case_dir, corrected, voice_session=session, plan_path=plan
+        )
+        report = _read_json(verification.report_path)
+        status = report["summary"]["status"]
+        if not verification_ready_for_output_review(report):
+            raise CaseWorkspaceError(
+                f"External deck mechanical verification is {status}"
+            )
+        presentation = Presentation(str(corrected))
+        if before != {role: _sha256(path) for role, path in inputs.items()}:
+            raise CaseWorkspaceError(
+                "External execution inputs changed during verification"
+            )
+        inputs["verification"] = verification.report_path
+        review, _ = _write_output_review(
+            case_dir=case_dir,
+            session_dir=session,
+            corrected_deck_path=corrected,
+            plan_path=plan,
+            verification_status=status,
+            presentation=presentation,
+            execution_inputs=inputs,
+            approved_execution=True,
+        )
+        packet = _read_json(review)
+        packet["execution_mode"] = "registered_external_output"
+        _write_json(review, packet)
+        return review
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Apply supported Clara deck-revision patches to a copied PPTX.",
     )
     parser.add_argument("case_dir", type=Path)
+    parser.add_argument(
+        "--register-external",
+        type=Path,
+        help="Verify and register an approved external PPTX without rewriting it.",
+    )
     parser.add_argument(
         "--voice-session",
         type=Path,
@@ -802,6 +902,20 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
+    if args.register_external is not None:
+        if args.allow_unapproved or args.output is not None:
+            parser.error(
+                "--register-external cannot use --allow-unapproved or --output"
+            )
+        review = register_external_deck_revision(
+            args.case_dir,
+            args.register_external,
+            voice_session=args.voice_session,
+            plan_path=args.plan,
+            approval_path=args.approval,
+        )
+        LOGGER.info("wrote external deck review packet to %s", review)
+        return 0
     result = apply_deck_revision_plan(
         args.case_dir,
         voice_session=args.voice_session,

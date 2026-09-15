@@ -6,11 +6,11 @@
   "inputs": {
     "manifest": {
       "path": "catalog/selection_manifest.json",
-      "sha256": "f80be1b0db1dd18a2de53054e47a45096e48f14b2c9f09361d797eeed3a386cb"
+      "sha256": "934a06b31811f2aee51863b668070b3b0dcef2f28f4739d3730e9c5b03bfd374"
     },
     "semantic_schema": {
       "path": "catalog/semantic_layer.schema.json",
-      "sha256": "5b327671d4759aab7eecedbee02a79b06c2804bb13b10a02038f8383e7490f83"
+      "sha256": "b4d23bd51fcf9298e68926b995976f31125c5e17d35f200dc82bd4920c34dccb"
     },
     "dataset": {
       "path": "fixtures/semantic_layer/retail_monthly.csv",
@@ -18,7 +18,7 @@
     },
     "semantic_layer": {
       "path": "fixtures/semantic_layer/retail_monthly.semantic.json",
-      "sha256": "94c43ebf419b91008034fdd15c1f3a401105daeeec31965e530bcc655fe67458"
+      "sha256": "50f4f3082a216e790ca85593023961d4a790195c814927806b4bfdeacbfac1fb"
     },
     "semantic_sources": [
       {
@@ -90,9 +90,9 @@
     "analysis_coverage": {
       "manifest_selection_emphasis_count": 48,
       "assessed_selection_emphases": [
+        "compact_side_by_side_period_comparison",
         "composition_change_over_periods",
         "frequency_shape",
-        "period_by_period_gap",
         "pvm_decomposition_comparison",
         "ranked_single_metric_comparison",
         "relationship_between_two_metrics",
@@ -104,7 +104,6 @@
       "unassessed_selection_emphases": [
         "additive_reconciliation",
         "bundle_share_and_index_evidence",
-        "compact_side_by_side_period_comparison",
         "component_level_root_cause",
         "composition_within_ranked_totals",
         "concentration_with_component_breakdown",
@@ -119,6 +118,7 @@
         "lost_cohort_contribution",
         "many_set_intersections",
         "parent_bridge_with_child_drilldowns",
+        "period_by_period_gap",
         "primary_rank_plus_secondary_marker",
         "product_level_grounding",
         "rank_weighted_visibility",
@@ -160,7 +160,7 @@
       "analysis_id": "analysis.sales_current_vs_prior_by_month",
       "validity": "valid",
       "candidate_capability_ids": [
-        "period_comparison.by_period"
+        "period_comparison.multitier_column"
       ],
       "has_complete_manifest_role_set": true,
       "data_preparation_requirements": []

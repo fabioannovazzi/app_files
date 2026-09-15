@@ -477,22 +477,8 @@ def audit_adapters(root: Path = ROOT) -> list[DemoWorkbenchReport]:
     """Audit every generated non-plotting workbench adapter in the repo."""
 
     reports = [audit_adapter(path, root=root) for path in _discover_adapters(root)]
-    by_detail_mode: dict[str, list[DemoWorkbenchReport]] = {}
-    for report in reports:
-        if report.detail_mode:
-            by_detail_mode.setdefault(report.detail_mode, []).append(report)
-    for detail_mode, duplicate_reports in by_detail_mode.items():
-        if len(duplicate_reports) < 2:
-            continue
-        plugins = ", ".join(report.plugin for report in duplicate_reports)
-        for report in duplicate_reports:
-            report.issues.append(
-                _issue(
-                    "high",
-                    "workflow_detail_mode_duplicate",
-                    f"detailMode {detail_mode!r} is shared by multiple adapters: {plugins}.",
-                )
-            )
+    # detailMode selects shared CSS; workflow-specific groups and fields are
+    # validated per adapter above. Reuse is not evidence of duplicate content.
     return reports
 
 

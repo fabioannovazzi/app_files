@@ -120,6 +120,32 @@ def test_single_package_build_refreshes_complete_catalog_without_other_rebuilds(
     assert catalog["plugins"][0]["version"] == "0.1.211"
 
 
+@pytest.mark.parametrize("plugin", ["vera", "clara", "lucia"])
+def test_cowork_distribution_keeps_canonical_names_without_sync_suffixes(
+    plugin: str,
+) -> None:
+    """Keep installer generation names out of our distributable packages."""
+    builder = load_builder()
+    _, packages = builder.load_configuration()
+    package = next(item for item in packages if item.plugin == plugin)
+
+    with ZipFile(package.output_zip) as archive:
+        names = archive.namelist()
+        manifest = json.loads(archive.read(".claude-plugin/plugin.json"))
+
+    assert (
+        package.output_directory
+        == ROOT / "plugin_packages" / plugin / "claude" / plugin
+    )
+    assert package.output_zip.name == f"{plugin}-claude-plugin.zip"
+    assert manifest["name"] == plugin
+    canonical = json.loads(
+        (ROOT / "plugins" / plugin / ".codex-plugin" / "plugin.json").read_text()
+    )
+    assert manifest["version"] == canonical["version"]
+    assert not any(re.search(r"~g\d+(?:/|$)", name) for name in names)
+
+
 @pytest.fixture(scope="module")
 def configured():
     builder = load_builder()

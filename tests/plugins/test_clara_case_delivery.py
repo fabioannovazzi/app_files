@@ -338,3 +338,117 @@ def test_case_html_delivery_receipt_rejects_semantic_lineage_after_checkpoint(
         in receipt["errors"]
     )
     assert "The claim register changed after advisory validation." in receipt["errors"]
+
+
+def _document_delivery_fixture(
+    core: Any, tmp_path: Path, suffix: str, *, visual: bool = True
+) -> tuple[Any, Path, Path, Path]:
+    case_dir, _, audit_path = _delivery_fixture(core, tmp_path)
+    artifact = tmp_path / f"decision{suffix}"
+    if suffix == ".docx":
+        from docx import Document
+
+        document = Document()
+        document.add_paragraph("Continue bounded diligence.")
+        document.save(artifact)
+    else:
+        artifact.write_text(
+            "# Decision\n\nContinue bounded diligence.\n", encoding="utf-8"
+        )
+    lineage = _load_module(
+        "clara_document_delivery_lineage", SCRIPTS / "advisory_evidence_lineage.py"
+    )
+    lineage.bind_claim_appearances(
+        case_dir,
+        artifact,
+        [{"claim_id": "cl-proceed-0001", "locator": "Decision paragraph"}],
+    )
+    audit = json.loads(audit_path.read_text())
+    audit["deliverable"] = {
+        "path": str(artifact.resolve()),
+        "sha256": _sha256(artifact),
+        "byte_count": artifact.stat().st_size,
+    }
+    audit["lineage"]["claim_register"]["sha256"] = _sha256(
+        case_dir / "advisory_claim_register.json"
+    )
+    audit["format_check_artifacts"] = []
+    if suffix == ".docx" and visual:
+        review = tmp_path / "visual-review.json"
+        _write_json(
+            review,
+            {
+                "result": "pass",
+                "reviewed_by": "synthetic-reviewer",
+                "input": {"sha256": _sha256(artifact)},
+            },
+        )
+        audit["format_check_artifacts"] = [
+            {
+                "workflow": "clara:document-visual-review",
+                "path": str(review),
+                "sha256": _sha256(review),
+                "byte_count": review.stat().st_size,
+            }
+        ]
+    _write_json(audit_path, audit)
+    gate = _load_module(
+        "clara_document_delivery_gate", SCRIPTS / "advisory_delivery.py"
+    )
+    return gate, case_dir, artifact, audit_path
+
+
+@pytest.mark.parametrize("suffix", [".md", ".docx"])
+def test_shared_delivery_accepts_current_document_without_browser_requirement(
+    core: Any, tmp_path: Path, suffix: str
+) -> None:
+    gate, case_dir, artifact, audit = _document_delivery_fixture(core, tmp_path, suffix)
+
+    receipt = gate.verify_advisory_delivery(case_dir, artifact, audit)
+
+    assert receipt["status"] == "ready"
+    assert receipt["errors"] == []
+    assert receipt["artifact"]["sha256"] == _sha256(artifact)
+
+
+def test_shared_delivery_requires_word_visual_review(core: Any, tmp_path: Path) -> None:
+    gate, case_dir, artifact, audit = _document_delivery_fixture(
+        core, tmp_path, ".docx", visual=False
+    )
+
+    receipt = gate.verify_advisory_delivery(case_dir, artifact, audit)
+
+    assert receipt["status"] == "blocked"
+    assert "DOCX requires a recorded visual review" in " ".join(receipt["errors"])
+
+
+@pytest.mark.parametrize("suffix", [".md", ".docx"])
+def test_shared_delivery_rejects_stale_workpaper_for_documents(
+    core: Any, tmp_path: Path, suffix: str
+) -> None:
+    gate, case_dir, artifact, audit = _document_delivery_fixture(core, tmp_path, suffix)
+    (case_dir / "advisory_workpaper.md").write_text(
+        "Changed recommendation", encoding="utf-8"
+    )
+
+    receipt = gate.verify_advisory_delivery(case_dir, artifact, audit)
+
+    assert receipt["status"] == "blocked"
+    assert any(
+        check["code"] == "workpaper.exact_bytes" and check["status"] == "fail"
+        for check in receipt["checks"]
+    )
+
+
+def test_shared_delivery_rejects_changed_visual_review(
+    core: Any, tmp_path: Path
+) -> None:
+    gate, case_dir, artifact, audit = _document_delivery_fixture(
+        core, tmp_path, ".docx"
+    )
+    (tmp_path / "visual-review.json").write_text("Changed", encoding="utf-8")
+
+    receipt = gate.verify_advisory_delivery(case_dir, artifact, audit)
+
+    assert receipt["status"] == "blocked"
+    assert "Format evidence changed or is missing." in receipt["errors"]

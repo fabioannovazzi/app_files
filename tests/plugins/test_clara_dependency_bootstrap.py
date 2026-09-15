@@ -116,7 +116,9 @@ def test_bootstrap_installs_validates_and_exposes_dependencies(
         "pip",
         "--python",
         runtime_python,
-        "--version",
+        "--disable-pip-version-check",
+        "list",
+        "--format=json",
     ]
     assert commands[2][:6] == [
         sys.executable,

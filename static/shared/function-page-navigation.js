@@ -166,6 +166,7 @@
     "riconciliazione-partite": [["vera", "area-accounting"]],
     "sales-plan": [["vera", "area-analysis"]],
     "studio-archive": [["vera", "area-clients"]],
+    "treasury-forecast": [["vera", "area-analysis"]],
     "variance-analysis": [["vera", "area-analysis"]],
   };
 

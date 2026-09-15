@@ -27,10 +27,15 @@ if __name__ == "__main__":
 import argparse
 import hashlib
 import json
+import os
+import re
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
+import uuid
+from contextlib import contextmanager
 from copy import deepcopy
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -40,6 +45,13 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
+CLARA_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(CLARA_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(CLARA_SCRIPTS))
+
+from artifact_publication import publish_snapshot, verify_snapshot
+from bounded_process import run_process
+from dataset_snapshot import prepare_dataset_input
 from reporting_adapters import (
     load_manifest,
     prepare_invocation_plan,
@@ -55,6 +67,9 @@ __all__ = [
     "capability_chart_options",
     "capability_option_overrides",
     "render_capability",
+    "verify_render_generation",
+    "write_json_receipt",
+    "output_lock",
     "main",
 ]
 
@@ -133,6 +148,8 @@ class RenderRequest:
     currency: str | None = None
     artifact_mode: str = ARTIFACT_MODE_DATA_AND_RENDER
     include_variants: bool = False
+    timeout_seconds: int = 600
+    parser_settings: dict[str, Any] | None = None
 
 
 RENDERED_ARTIFACT_SUFFIXES = {".html", ".pdf", ".png", ".svg"}
@@ -145,9 +162,18 @@ def _load_json(path: Path) -> dict[str, Any]:
     return payload
 
 
-def _write_json(path: Path, payload: dict[str, Any]) -> None:
+def write_json_receipt(path: Path, payload: dict[str, Any]) -> None:
+    """Publish one JSON receipt atomically after flushing its file bytes."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
+    temporary = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
+    try:
+        with temporary.open("x", encoding="utf-8", newline="\n") as handle:
+            handle.write(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        temporary.replace(path)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def _canonical_json_sha256(payload: Any) -> str:
@@ -236,6 +262,7 @@ def _render_request_evidence(request: RenderRequest) -> dict[str, Any]:
         "currency": request.currency,
         "artifact_mode": request.artifact_mode,
         "include_variants": request.include_variants,
+        "parser_settings": request.parser_settings,
     }
     return {
         "contract": payload,
@@ -862,7 +889,7 @@ def build_render_recipe(
             ),
         }
     generated_recipe_path = request.output_dir / "render_request_recipe.json"
-    _write_json(generated_recipe_path, recipe)
+    write_json_receipt(generated_recipe_path, recipe)
     return generated_recipe_path, {
         "status": "written",
         "path": str(generated_recipe_path),
@@ -989,14 +1016,22 @@ def _runner_command(
 
 
 def artifact_files(output_dir: Path) -> list[str]:
-    """Return files written under an output directory."""
+    """Return deliverables, excluding reserved runtime state and retained generations."""
 
     if not output_dir.exists():
         return []
     return sorted(
-        str(path.relative_to(output_dir))
+        path.relative_to(output_dir).as_posix()
         for path in output_dir.rglob("*")
         if path.is_file()
+        and path.relative_to(output_dir).parts[0]
+        not in {".reporting-generations", ".logs"}
+        and path.relative_to(output_dir).as_posix()
+        not in {".render.lock", "current_reporting.json"}
+        and not re.fullmatch(
+            r"render_manifest\.[0-9a-f]{32}\.previous\.json",
+            path.relative_to(output_dir).as_posix(),
+        )
     )
 
 
@@ -1010,8 +1045,22 @@ def _publish_run_artifacts(
     resolved_run_dir = run_dir.resolve()
     resolved_output_dir = output_dir.resolve()
     for relative in artifacts:
-        source = (resolved_run_dir / relative).resolve()
-        target = (resolved_output_dir / relative).resolve()
+        source = resolved_run_dir / relative
+        target = resolved_output_dir / relative
+        if any(
+            part.is_symlink()
+            for part in (source, *source.parents)
+            if part != resolved_run_dir.parent
+        ):
+            raise ValueError(f"Rendered artifact may not contain a symlink: {relative}")
+        if any(
+            part.is_symlink()
+            for part in (target, *target.parents)
+            if part != resolved_output_dir.parent
+        ):
+            raise ValueError(
+                f"Rendered artifact target may not contain a symlink: {relative}"
+            )
         try:
             source.relative_to(resolved_run_dir)
             target.relative_to(resolved_output_dir)
@@ -1026,7 +1075,20 @@ def _publish_run_artifacts(
                 f"Rendered artifact target may not be a symlink: {relative}"
             )
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, target)
+        with tempfile.NamedTemporaryFile(dir=target.parent, delete=False) as staged:
+            staged_path = Path(staged.name)
+            try:
+                with source.open("rb") as original:
+                    shutil.copyfileobj(original, staged)
+                staged.flush()
+                os.fsync(staged.fileno())
+            except BaseException:
+                staged_path.unlink(missing_ok=True)
+                raise
+        try:
+            os.replace(staged_path, target)
+        finally:
+            staged_path.unlink(missing_ok=True)
 
 
 def _published_recipe_audit(
@@ -1147,7 +1209,139 @@ def capability_render_proof(
     }
 
 
+@contextmanager
+def _run_directory(parent: Path):
+    """Retain complete staging evidence if a runner or publication is interrupted."""
+    directory = Path(tempfile.mkdtemp(prefix=".clara-reporting-run-", dir=parent))
+    completed = False
+    try:
+        yield str(directory)
+        completed = True
+    finally:
+        if completed:
+            shutil.rmtree(directory)
+
+
+@contextmanager
+def output_lock(directory: Path, *, name: str = ".render.lock"):
+    """Serialize attempts so one run cannot overwrite another run's receipt."""
+    directory.mkdir(parents=True, exist_ok=True)
+    if Path(name).name != name:
+        raise ValueError("Output lock name must be one filename")
+    lock = directory / name
+    fd = os.open(lock, os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0), 0o600)
+    try:
+        info = os.fstat(fd)
+        if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1 or lock.is_symlink():
+            raise ValueError("Render lock must be an ordinary single-link file")
+        if os.name == "nt":
+            import msvcrt
+
+            if info.st_size == 0:
+                os.write(fd, b"0")
+            os.lseek(fd, 0, os.SEEK_SET)
+            msvcrt.locking(fd, msvcrt.LK_LOCK, 1)
+        else:
+            import fcntl
+
+            fcntl.flock(fd, fcntl.LOCK_EX)
+        yield
+    finally:
+        os.close(fd)
+
+
 def render_capability(
+    request: RenderRequest, *, root: Path | None = None
+) -> dict[str, Any]:
+    """Execute one serialized, receipt-bound reporting attempt."""
+    with output_lock(request.output_dir):
+        return _render_attempt(request, root=root)
+
+
+def _render_attempt(
+    request: RenderRequest, *, root: Path | None = None
+) -> dict[str, Any]:
+    """Invalidate stale success before a new attempt and retain terminal failures."""
+    if request.timeout_seconds <= 0:
+        raise ValueError("timeout_seconds must be positive")
+    request.output_dir.mkdir(parents=True, exist_ok=True)
+    receipt = request.output_dir / "render_manifest.json"
+    attempt_id = uuid.uuid4().hex
+    previous = request.output_dir / f"render_manifest.{attempt_id}.previous.json"
+    if receipt.is_file():
+        shutil.copy2(receipt, previous)
+    state = {
+        "schema_version": "0.2",
+        "capability_id": request.capability_id,
+        "attempt_id": attempt_id,
+        "status": "running",
+        "runner": {"status": "running", "returncode": None},
+    }
+    write_json_receipt(receipt, state)
+    write_json_receipt(request.output_dir / "current_reporting.json", state)
+    complete = False
+    try:
+        result = _render_capability(request, root=root)
+        result["attempt_id"] = attempt_id
+        result["status"] = "completed"
+        generation_root = request.output_dir / ".reporting-generations"
+        if generation_root.is_symlink():
+            raise ValueError(
+                "Reporting generations directory must not be a symbolic link"
+            )
+        generation_root.mkdir(exist_ok=True)
+        generation = generation_root / attempt_id
+        generation.mkdir()
+        snapshot_records = list(result["evidence"]["outputs"])
+        recipe = result["evidence"]["recipe"]
+        if recipe.get("kind") == "file":
+            recipe_relative = (
+                Path(recipe["path"])
+                .resolve()
+                .relative_to(request.output_dir.resolve())
+                .as_posix()
+            )
+            if recipe_relative not in {item["path"] for item in snapshot_records}:
+                snapshot_records.append({**recipe, "path": recipe_relative})
+        result["evidence"]["snapshot_outputs"] = snapshot_records
+        publish_snapshot(
+            request.output_dir,
+            generation,
+            manifest=result,
+            records=snapshot_records,
+            manifest_name="render_manifest.json",
+            pointer_name="current_reporting.json",
+            status="completed",
+        )
+        write_json_receipt(receipt, result)
+        complete = True
+        return result
+    finally:
+        if not complete:
+            current = _load_json(receipt)
+            current["status"] = "failed_or_interrupted"
+            error = sys.exc_info()[1]
+            current["failure"] = {
+                "type": type(error).__name__,
+                "message": str(error)[:4000],
+                "logs": str(request.output_dir / ".logs"),
+            }
+            current.setdefault("runner", {})["status"] = "failed"
+            write_json_receipt(receipt, current)
+            write_json_receipt(request.output_dir / "current_reporting.json", current)
+
+
+def verify_render_generation(output_dir: Path) -> dict[str, Any]:
+    """Verify the complete published reporting generation."""
+    return verify_snapshot(
+        output_dir,
+        pointer_name="current_reporting.json",
+        status="completed",
+        output_field=("evidence", "snapshot_outputs"),
+    )
+
+
+def _render_capability(
     request: RenderRequest,
     *,
     root: Path | None = None,
@@ -1162,18 +1356,27 @@ def render_capability(
         dataset_profile=request.dataset_profile,
         root=resolved_root,
     )
-    with tempfile.TemporaryDirectory(
-        prefix=".clara-reporting-run-",
-        dir=request.output_dir.parent,
-    ) as temporary_dir:
+    with (
+        tempfile.TemporaryDirectory(prefix="clara-parsed-input-") as input_directory,
+        _run_directory(request.output_dir.parent) as temporary_dir,
+    ):
         run_dir = Path(temporary_dir)
-        run_request = replace(request, output_dir=run_dir)
+        input_evidence = _portable_input_evidence(request.input_file)
+        input_path = request.input_file
+        parser_evidence: dict[str, Any] = {
+            "status": "component_parser",
+            "boundary": "No explicit parser contract supplied.",
+        }
+        if request.parser_settings is not None:
+            input_path, parser_evidence = prepare_dataset_input(
+                request.input_file, Path(input_directory), request.parser_settings
+            )
+        run_request = replace(request, output_dir=run_dir, input_file=input_path)
         recipe_path, run_recipe_audit = build_render_recipe(
             run_request,
             root=resolved_root,
         )
         _enforce_render_preflight(run_recipe_audit)
-        input_evidence = _portable_input_evidence(request.input_file)
         request_evidence = _render_request_evidence(request)
         if adapter["component_name"] == "attribute-reporting":
             runner_result = _render_attribute_table(run_request, adapter)
@@ -1185,40 +1388,41 @@ def render_capability(
                 component_root=component_root,
                 recipe_path=recipe_path or run_request.recipe_path,
             )
-            completed = subprocess.run(
-                command,
-                cwd=component_root,
-                text=True,
-                capture_output=True,
-                check=False,
-            )
+            logs = request.output_dir / ".logs"
+            logs.mkdir(exist_ok=True)
+            stdout_path = logs / f"{run_dir.name}.stdout.log"
+            stderr_path = logs / f"{run_dir.name}.stderr.log"
+            with stdout_path.open("x") as stdout, stderr_path.open("x") as stderr:
+                completed = run_process(
+                    command,
+                    cwd=component_root,
+                    text=True,
+                    stdout=stdout,
+                    stderr=stderr,
+                    check=False,
+                    timeout=request.timeout_seconds,
+                )
+            with stdout_path.open() as stdout, stderr_path.open() as stderr:
+                output_excerpt = stdout.read(65536)
+                error_excerpt = stderr.read(65536)
             runner_result = {
                 "status": "ok" if completed.returncode == 0 else "failed",
                 "runner_type": "component_cli",
                 "returncode": completed.returncode,
-                "stdout": completed.stdout,
-                "stderr": completed.stderr,
+                "stdout": output_excerpt,
+                "stderr": error_excerpt,
+                "stdout_log": str(stdout_path),
+                "stderr_log": str(stderr_path),
+                "log_excerpt_limit": 65536,
             }
 
+        if _portable_input_evidence(request.input_file) != input_evidence:
+            raise ValueError("Reporting input changed while the component was running")
         run_artifacts = artifact_files(run_dir)
         if "render_manifest.json" in run_artifacts:
             raise ValueError(
                 "Reporting component may not write reserved render_manifest.json"
             )
-        _publish_run_artifacts(run_dir, request.output_dir, run_artifacts)
-        recipe_audit, published_recipe_path = _published_recipe_audit(
-            run_recipe_audit,
-            run_dir=run_dir,
-            output_dir=request.output_dir,
-        )
-        recipe_evidence = (
-            _portable_input_evidence(published_recipe_path)
-            if published_recipe_path is not None
-            else {
-                "kind": "none",
-                "reason": "No external or generated recipe was required.",
-            }
-        )
         recipe_relative = (
             recipe_path.resolve().relative_to(run_dir.resolve()).as_posix()
             if recipe_path is not None
@@ -1234,6 +1438,50 @@ def render_capability(
             include_variants=request.include_variants,
             role_bindings=request.role_bindings,
             root=resolved_root,
+        )
+        if runner_result.get("returncode") != 0 or render_proof.get("status") in {
+            "missing_expected_render",
+            "unexpected_rendered_artifacts",
+        }:
+            failure = _load_json(request.output_dir / "render_manifest.json")
+            failure.update(
+                {
+                    "runner": runner_result,
+                    "render_proof": render_proof,
+                    "staging_directory": str(run_dir),
+                    "evidence": {
+                        "input": input_evidence,
+                        "request": request_evidence,
+                        "outputs": [],
+                    },
+                }
+            )
+            write_json_receipt(request.output_dir / "render_manifest.json", failure)
+            raise RuntimeError(
+                f"Reporting render failed for {request.capability_id}: "
+                f"{render_proof.get('status')}; {runner_result.get('stderr', '')}"
+            )
+        protected_inputs = {request.input_file.resolve()}
+        if request.recipe_path is not None:
+            protected_inputs.add(request.recipe_path.resolve())
+        if any(
+            (request.output_dir / relative).resolve() in protected_inputs
+            for relative in run_artifacts
+        ):
+            raise ValueError("Rendered artifact would overwrite a reporting input")
+        _publish_run_artifacts(run_dir, request.output_dir, run_artifacts)
+        recipe_audit, published_recipe_path = _published_recipe_audit(
+            run_recipe_audit,
+            run_dir=run_dir,
+            output_dir=request.output_dir,
+        )
+        recipe_evidence = (
+            _portable_input_evidence(published_recipe_path)
+            if published_recipe_path is not None
+            else {
+                "kind": "none",
+                "reason": "No external or generated recipe was required.",
+            }
         )
         output_records = _output_evidence(
             request.output_dir,
@@ -1260,6 +1508,7 @@ def render_capability(
         "render_proof": render_proof,
         "evidence": {
             "input": input_evidence,
+            "parsing": parser_evidence,
             "request": request_evidence,
             "recipe": recipe_evidence,
             "outputs": output_records,
@@ -1271,22 +1520,9 @@ def render_capability(
             "and interpretation are outside this layer."
         ),
     }
-    _write_json(request.output_dir / "render_manifest.json", manifest)
+    write_json_receipt(request.output_dir / "render_manifest.json", manifest)
     manifest["artifacts"] = artifact_files(request.output_dir)
-    _write_json(request.output_dir / "render_manifest.json", manifest)
-    if runner_result.get("returncode") != 0:
-        raise RuntimeError(
-            "Reporting render failed for "
-            f"{request.capability_id}: {str(runner_result.get('stderr', '')).strip()}"
-        )
-    if render_proof.get("status") in {
-        "missing_expected_render",
-        "unexpected_rendered_artifacts",
-    }:
-        raise RuntimeError(
-            "Reporting render proof failed for "
-            f"{request.capability_id}: {render_proof.get('status')}"
-        )
+    write_json_receipt(request.output_dir / "render_manifest.json", manifest)
     return manifest
 
 
@@ -1322,6 +1558,9 @@ def main(argv: list[str] | None = None) -> int:
         default=ARTIFACT_MODE_DATA_AND_RENDER,
     )
     parser.add_argument("--include-variants", action="store_true")
+    parser.add_argument(
+        "--parser-settings-json", help="Explicit sheet_name and/or csv_options JSON."
+    )
     args = parser.parse_args(argv)
     request = RenderRequest(
         capability_id=args.capability_id,
@@ -1337,6 +1576,9 @@ def main(argv: list[str] | None = None) -> int:
         currency=args.currency,
         artifact_mode=args.artifact_mode,
         include_variants=args.include_variants,
+        parser_settings=(
+            _json_arg(args.parser_settings_json) if args.parser_settings_json else None
+        ),
     )
     result = render_capability(request)
     sys.stdout.write(json.dumps(result, indent=2, ensure_ascii=False) + "\n")

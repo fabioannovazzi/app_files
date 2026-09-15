@@ -15,7 +15,10 @@
     "plugins/studio-archive/scripts/archive_core.py",
     "plugins/studio-archive/scripts/studio_archive.py",
     "plugins/studio-archive/scripts/client_ledger.py",
-    "plugins/studio-archive/mcp/server.cjs"
+    "plugins/studio-archive/mcp/server.cjs",
+    "plugins/vera/scripts/model_data_report.py",
+    "plugins/vera/skills/vera/references/model-data-report-contract.md",
+    "plugins/studio-archive/scripts/build_model_data_report.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -27,7 +30,7 @@
       {
         "id": "legal-matter-opening-material",
         "purpose": "Prepare a new client matter or a new matter for an existing client for lawyer review",
-        "content": "Selected identity and contact material; client, assisted-party, counterparty and other relevant party names, aliases and identifiers; requested work, facts, jurisdiction and procedural posture; engagement scope, exclusions, authority and fee status; conflict-register search references and candidate matches; possible deadline triggers and source references; confidentiality restrictions; conditional AML applicability material; privacy and retention posture; missing items; evidence names, bytes and SHA-256 receipts; model provenance; proposed folder plan; lawyer review decisions and final package status. The workflow does not promise automatic anonymization, automatic conflict clearance, binding deadline calculation, engagement acceptance or local-only model processing.",
+        "content": "Selected identity and contact material; client, assisted-party, counterparty and other relevant party names, aliases and identifiers; requested work, facts, jurisdiction and procedural posture; engagement scope, exclusions, authority and fee status; conflict-register search references and candidate matches; possible deadline triggers and source references; confidentiality restrictions; conditional AML applicability material; privacy and retention posture; missing items; original imported filenames (including aliases for identical bytes), evidence names, bytes and SHA-256 receipts; model provenance; proposed folder plan; lawyer review decisions and final package status. The workflow does not promise automatic anonymization, automatic conflict clearance, binding deadline calculation, engagement acceptance or local-only model processing.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -75,12 +78,20 @@
     {
       "id": "conditional-aml-boundary",
       "control": "AML applicability is represented as a separate professional assessment with applicable, not-applicable or uncertain status; the workflow does not infer applicability merely because a client or matter is new."
+    },
+    {
+      "id": "local-model-data-report-finalization",
+      "control": "Durable Studio Archive finalization requires run-bound, hash-consistent model-data JSON and Markdown reports. The shared local helper validates supplied phase evidence and writes these artifacts without contacting a model or requesting a server attestation; it does not independently prove provider transmission or infer zero transmission from missing telemetry."
+    },
+    {
+      "id": "session-bound-archive-configuration",
+      "control": "Studio Archive separates default configuration by host session identity, holds a process lock on configured state and rejects configuration changes during an operation. These controls do not anonymize case data or prove provider transmission."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-13",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "613da35692641a3714b2382f19df9f70b7f46d0ef3cafa37a486ea8ab0d54db8"
+    "source_fingerprint": "2935b6178ff4fe6b0b298195b4ed84a9012f7a1ac09dca54adad3bd4df3b35e1"
   }
 }

@@ -32,7 +32,8 @@
     "requirements-shared-core.txt",
     "requirements-shared-ocr.txt",
     "constraints-shared-macos-py312.txt",
-    "scripts/_python_bootstrap.py"
+    "scripts/_python_bootstrap.py",
+    "skills/clara/references/case-operations.md"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -51,6 +52,11 @@
         "id": "human-visible-outputs",
         "purpose": "Draft and review workpapers, briefs, decks, memos, decision packs, and narrated videos",
         "content": "Narrative, charts, claims, citations, speaker notes, narration scripts, hash-bound Mparanza voice requests and returned OpenAI audio artifacts, localized AI-voice disclosures, accepted Vera handoff references, review findings, approved content, and final deliverables"
+      },
+      {
+        "id": "recovery-narrative-and-execution-artifacts",
+        "purpose": "Recover interrupted local work and verify that the current output matches reviewed case evidence",
+        "content": "Transaction preimages can temporarily retain prior case bytes; immutable capture notes and case history retain source content. Model-authored decision paragraphs, approved claim IDs, reviewer attestations, workpaper bindings and per-format readiness records may enter context. Reporting and media attempts retain staging outputs, stdout/stderr logs, rendered snapshots, source/output hashes, paths and failure details. Local normalization can include full tabular data; reduced previews do not prove complete source review. No cleanup of these files establishes deletion of other case copies, browser downloads or provider data."
       }
     ]
   },
@@ -166,7 +172,10 @@
         "One fixed environment outside plugin source and client folders is reused across products and modules. Explicitly approved OCR is retained in the same environment.",
         "A reader lease prevents setup from modifying packages while managed workflows run. Setup validates dependencies before writing the readiness receipt. Failed updates leave execution unavailable until repair.",
         "Older plugin policies cannot downgrade an environment created by a newer shared policy revision.",
-        "Readiness probes the managed interpreter locally with isolated Python and site loading disabled. CPython 3.12 and its platform must match receipt and policy independently of the initial launcher; this probe transmits no data."
+        "Readiness probes the managed interpreter locally with isolated Python and site loading disabled. CPython 3.12 and its platform must match receipt and policy independently of the initial launcher; this probe transmits no data.",
+        "Documented direct CLIs select the published dependency contract before importing workflow modules. No case path, prompt, or source content is used to construct the package request.",
+        "An OS lock serializes setup. Validated immutable generations are published by an atomic active pointer; previous generations remain locally available for existing readers until the local cache is removed. Failed unpublished generations are removed, and symlink pointers or targets are rejected.",
+        "The direct launcher preserves CLI arguments and working directory in a local managed Python child and propagates its exit status. Arguments are not part of pip installation requests; local argument forwarding is not redaction."
       ]
     },
     {
@@ -182,7 +191,9 @@
         "One fixed environment outside plugin source and client folders is reused across products and modules. Explicitly approved OCR is retained in the same environment.",
         "A reader lease prevents setup from modifying packages while managed workflows run. Setup validates dependencies before writing the readiness receipt. Failed updates leave execution unavailable until repair.",
         "Older plugin policies cannot downgrade an environment created by a newer shared policy revision.",
-        "Readiness probes the managed interpreter locally with isolated Python and site loading disabled. CPython 3.12 and its platform must match receipt and policy independently of the initial launcher; this probe transmits no data."
+        "Readiness probes the managed interpreter locally with isolated Python and site loading disabled. CPython 3.12 and its platform must match receipt and policy independently of the initial launcher; this probe transmits no data.",
+        "An OS lock serializes setup. Validated immutable generations are published by an atomic active pointer; previous generations remain locally available for existing readers until the local cache is removed. Failed unpublished generations are removed, and symlink pointers or targets are rejected.",
+        "Direct module CLIs select their registered component requirements; Reporting Engine execution/render entrypoints also select the declared render requirements. The setup request does not contain workflow CLI arguments."
       ]
     },
     {
@@ -216,18 +227,14 @@
   ],
   "security_controls": [
     {
-      "id": "m6-linkable-receipt-boundary",
-      "control": "M6 receipts and sanitized summaries are treated as confidential, pseudonymous, linkable metadata; they remain outside the plugin and source repository by default, and any retention exception requires review of the exact metadata, access, and retention boundary."
-    },
-    {
       "id": "m6-exact-local-source-boundary",
       "control": "M6 raw workbooks and row- or account-level prepared outputs remain in an owner-only private pilot root at a fixed opaque source locator; group/other permission bits and macOS extended ACLs are rejected at audit validation. They are not committed, packaged, or published. Ordinary model processing remains within the user-selected Codex account and this workflow adds no separate external recipient."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-13",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "392fcb020e43670588c2b402a5b1826c9841dfabf87fb5e7c03ae6202af5d9d0"
+    "source_fingerprint": "5f26b0c22bc252e997977da014127e488a377f09ef858e3271003b798dc44513"
   }
 }

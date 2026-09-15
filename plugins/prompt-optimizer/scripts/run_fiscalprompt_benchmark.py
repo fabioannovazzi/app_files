@@ -67,7 +67,8 @@ CODEX_DISABLED_FEATURES = (
     "remote_plugin",
 )
 PROMPT_OPTIMIZER_PATH_COMPONENT = re.compile(
-    r"(?:^|[/\\])prompt[-_]optimizer(?:[/\\]|$)", re.IGNORECASE
+    r"(?:^|[/\\])(?:prompt[-_]optimizer|legal[-_]tax[-_]answer[-_]planner)(?:[/\\]|$)",
+    re.IGNORECASE,
 )
 
 

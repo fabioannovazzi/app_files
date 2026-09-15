@@ -4,7 +4,12 @@
   "display_name": "Claim Basis Map",
   "governed_paths": [
     "skills/claim-basis-map/SKILL.md",
-    "skills/claim-basis-map/scripts"
+    "skills/claim-basis-map/scripts",
+    "scripts/self_relaunch.py",
+    "scripts/managed_python_runtime.py",
+    "scripts/_managed_python_runtime.py",
+    "requirements.txt",
+    "components.json"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -18,6 +23,11 @@
         "id": "drift-review",
         "purpose": "Identify changed, missing, moved, untracked, or unsupported claims",
         "content": "Generation-time claim snapshots, current-deck text, matched support, drift statuses, ungrounded items, shared-register appearance bindings, and required semantic refresh decisions"
+      },
+      {
+        "id": "complete-current-text-navigation",
+        "purpose": "Expose text omitted by untracked-claim heuristics for active-model review",
+        "content": "The current-deck audit retains every supplied extracted text item, including short headlines, numeric labels and footnotes, with source slide/shape metadata. Explicit coverage metadata states that semantic review has not been performed and non-text visual meaning requires separate inspection. This expands review visibility, not automatic materiality classification or anonymisation."
       }
     ]
   },
@@ -41,12 +51,27 @@
     "per_case_record_required": false
   },
   "hosted_service_ids": [],
-  "boundaries_beyond_codex": [],
+  "boundaries_beyond_codex": [
+    {
+      "id": "direct-cli-python-dependency-setup",
+      "kind": "public_research",
+      "destination": "Python Package Index (PyPI) or the index selected by the user's Python configuration",
+      "purpose": "Prepare the declared Python dependencies before running a documented workflow CLI",
+      "content": "Published package requirements and ordinary package-index request metadata. Existing workflow arguments are forwarded to a local Python child; they are not included in the pip install command.",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "The direct CLI selects published core or registered component requirements before importing workflow modules.",
+        "The launcher preserves the working directory and arguments in the local child process; this does not redact arguments or change the workflow data boundary.",
+        "An existing matching runtime is reused. Setup installs into a fingerprinted user-scoped environment and propagates failure; it does not install into the case folder."
+      ]
+    }
+  ],
   "security_controls": [],
   "review": {
-    "reviewed_at": "2026-07-22",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "2dcee6cae83f052fe00c7b9493673b920e72ec28319a2e3ea3fc381055be7178"
+    "source_fingerprint": "2b1613947e1eb8365a499f6053e9da6fa0dfa19665fcc2c50cf5aff3164604d2"
   }
 }

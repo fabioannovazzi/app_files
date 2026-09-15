@@ -89,6 +89,51 @@ def sample_distribution_frame() -> pl.DataFrame:
     return pl.DataFrame(rows)
 
 
+def test_explicit_all_data_preserves_old_and_current_dated_observations() -> None:
+    core = load_plugin_module("distribution_all_records_test", "distribution_core.py")
+    frame = pl.DataFrame(
+        {
+            "Date": [date(2020, 1, 1), date(2023, 6, 1), date(2026, 3, 1)],
+            "LatencyMs": [25.0, 50.0, 125.0],
+        }
+    )
+    recipe = core.build_recipe(
+        Path("latency.csv"),
+        frame,
+        existing_recipe={
+            "mappings": {"metric_column": "LatencyMs"},
+            "options": {"selected_periods": ["all_data"]},
+        },
+    )
+
+    result = core.prepare_canonical_frame(frame, recipe)
+
+    assert result.get_column("LatencyMs").to_list() == [25.0, 50.0, 125.0]
+    assert result.get_column("Date").to_list() == [
+        date(2020, 1, 1),
+        date(2023, 6, 1),
+        date(2026, 3, 1),
+    ]
+    assert recipe["options"]["period_bucketing_audit"]["status"] == "explicit_all_data"
+
+
+def test_all_data_rejects_a_contradictory_selected_period() -> None:
+    core = load_plugin_module(
+        "distribution_conflicting_scope_test", "distribution_core.py"
+    )
+    frame = pl.DataFrame({"LatencyMs": [25.0, 50.0, 75.0]})
+
+    with pytest.raises(ValueError, match="cannot be combined"):
+        core.build_recipe(
+            Path("latency.csv"),
+            frame,
+            existing_recipe={
+                "mappings": {"metric_column": "LatencyMs"},
+                "options": {"selected_periods": ["all_data", "2026"]},
+            },
+        )
+
+
 def sample_date_only_distribution_frame() -> pl.DataFrame:
     """Return data with dates but no explicit period/scenario column."""
 
@@ -1061,3 +1106,126 @@ def test_recipe_preserves_unstated_or_explicit_currency(currency: str) -> None:
     )
 
     assert recipe["options"]["currency"] == currency
+
+
+@pytest.mark.parametrize("cumulative", [False, True])
+def test_histogram_exports_one_density_measure_and_preserves_observations(
+    tmp_path: Path, monkeypatch: Any, cumulative: bool
+) -> None:
+    legacy = load_plugin_module(
+        "legacy_density_review", "legacy_distribution_charting.py"
+    )
+    core = load_plugin_module("distribution_density_review", "distribution_core.py")
+    captured = []
+
+    def capture(figure: Any, path: Path) -> tuple[list[Path], dict[str, Any]]:
+        captured.append(figure)
+        return fake_legacy_figure_writer(figure, path)
+
+    monkeypatch.setattr(legacy, "_write_legacy_figure", capture)
+    frame = pl.DataFrame(
+        {
+            "Period": ["PY", "PY", "PY", "AC", "AC", "AC"],
+            "Sales": [10.0, 10.0, 30.0, 10.0, 30.0, 30.0],
+        }
+    )
+    recipe = core.build_recipe(
+        Path("sales.csv"),
+        frame,
+        existing_recipe={
+            "mappings": {
+                "metric_column": "Sales",
+                "period_column": "Period",
+                "distribution_dimension": None,
+                "small_multiples_dimension": None,
+                "dimensions": [],
+            },
+            "options": {
+                "charts": ["histogram"],
+                "selected_periods": ["PY", "AC"],
+                "small_multiples": False,
+                "cumulative_histogram": cumulative,
+            },
+        },
+    )
+    canonical = core.prepare_canonical_frame(frame, recipe)
+    spec = next(s for s in core.build_chart_specs(recipe) if s["name"] == "histogram")
+
+    export = legacy.write_legacy_distribution_chart(canonical, recipe, tmp_path, spec)
+
+    assert export.audit["status"] == "written_legacy"
+    assert len(captured) == 1
+    figure = captured[0]
+    assert figure.layout.barnorm == ""
+    assert figure.layout.yaxis.visible is True
+    assert figure.layout.yaxis.showticklabels is True
+    assert figure.layout.yaxis.title.text == (
+        "Cumulative probability" if cumulative else "Probability density"
+    )
+    assert figure.layout.yaxis.title.font.size == figure.layout.font.size
+    assert {
+        trace["name"]: trace["x"]
+        for trace in export.chart_context["plotly_figures"][0]["traces"]
+    } == {
+        "PY": [10.0, 10.0, 30.0],
+        "AC": [10.0, 30.0, 30.0],
+    }
+    assert {trace.histnorm for trace in figure.data} == {"probability density"}
+    assert {trace.cumulative.enabled for trace in figure.data} == {cumulative}
+
+
+@pytest.mark.parametrize(
+    "mapping", ["weight_column", "frequency_column", "metric_colum"]
+)
+def test_distribution_rejects_unsupported_binding_without_artifacts(tmp_path, mapping):
+    core = load_plugin_module(
+        "distribution_binding_rejection_test", "distribution_core.py"
+    )
+    source = tmp_path / "observations.csv"
+    source.write_text("Value,Weight,Period\n0,1,Now\n100,4,Now\n100,5,Now\n")
+    recipe = tmp_path / "recipe.json"
+    recipe.write_text(
+        json.dumps({"mappings": {"metric_column": "Value", mapping: "Weight"}})
+    )
+    output = tmp_path / "output"
+
+    with pytest.raises(
+        ValueError, match=f"Unsupported distribution mappings: {mapping}"
+    ):
+        core.run_distribution(source, output, recipe, artifact_mode="data_only")
+
+    assert not list(output.rglob("*"))
+    assert source.read_text() == "Value,Weight,Period\n0,1,Now\n100,4,Now\n100,5,Now\n"
+
+
+def test_distribution_unbound_weight_column_keeps_unweighted_observations(
+    tmp_path,
+):
+    core = load_plugin_module(
+        "distribution_unweighted_observations_test", "distribution_core.py"
+    )
+    source = tmp_path / "observations.csv"
+    source.write_text("Value,Weight,Period\n0,1,Now\n100,4,Now\n100,5,Now\n")
+    recipe = tmp_path / "recipe.json"
+    recipe.write_text(
+        json.dumps(
+            {
+                "mappings": {
+                    "metric_column": "Value",
+                    "period_column": "Period",
+                },
+                "options": {
+                    "charts": ["histogram"],
+                    "selected_periods": ["Now"],
+                    "small_multiples": False,
+                },
+            }
+        )
+    )
+    output = tmp_path / "output"
+
+    core.run_distribution(source, output, recipe, artifact_mode="data_only")
+
+    summary = pl.read_csv(output / "distribution_summary.csv")
+    assert summary["mean"].to_list() == pytest.approx([66.66666666666667])
+    assert summary["rows"].to_list() == [3]

@@ -6,7 +6,6 @@ import hashlib
 import json
 import shutil
 import subprocess
-import sys
 from copy import deepcopy
 from pathlib import Path
 
@@ -17,6 +16,7 @@ from tests.plugins.test_business_planning_shared import (
     SCRIPT_ROOT,
     PlanningError,
     _clara_workspace,
+    _runner_contract_command,
     bind_plugin_imports,
     build_plan,
     case_data,
@@ -306,8 +306,7 @@ def test_clara_registered_cli_preserves_three_successive_cycles(tmp_path: Path) 
         case_path.write_text(json.dumps(case))
         result = subprocess.run(
             [
-                sys.executable,
-                str(SCRIPT_ROOT / "run_strategic_plan.py"),
+                *_runner_contract_command("run_strategic_plan"),
                 "--case",
                 str(case_path),
                 "--case-workspace",

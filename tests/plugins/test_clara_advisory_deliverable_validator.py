@@ -14,6 +14,8 @@ import pytest
 from docx import Document
 from pptx import Presentation
 
+from tests._plugin_cli import workflow_cli
+
 ROOT = Path(__file__).resolve().parents[2]
 CLARA_ROOT = ROOT / "plugins" / "clara"
 SKILL_ROOT = CLARA_ROOT / "skills" / "advisory-deliverable-validator"
@@ -1356,7 +1358,9 @@ def test_skill_and_public_page_keep_format_checks_and_model_data_explicit() -> N
 
 def test_generation_time_lineage_walks_all_dependencies_before_ready(
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    monkeypatch.syspath_prepend(str(CLARA_ROOT / "scripts"))
     validator = _validator_module()
     case_dir = tmp_path / "case"
     lineage = validator._lineage_module()
@@ -1383,8 +1387,7 @@ def test_generation_time_lineage_walks_all_dependencies_before_ready(
     )
     subprocess.run(
         [
-            sys.executable,
-            str(CLARA_ROOT / "scripts" / "advisory_evidence_lineage.py"),
+            *workflow_cli(CLARA_ROOT / "scripts" / "advisory_evidence_lineage.py"),
             "bind-output",
             str(case_dir),
             str(deliverable),
@@ -1754,3 +1757,35 @@ def test_two_hundred_page_scale_uses_bounded_coverage_units(tmp_path: Path) -> N
         coverage_inventory=coverage,
     )
     assert any("does not account for units" in error for error in errors)
+
+
+@pytest.mark.parametrize("suffix", [".docx", ".pptx"])
+def test_full_preparation_preserves_material_text_beyond_basic_preview(
+    tmp_path: Path, suffix: str
+) -> None:
+    validator = _validator_module()
+    deliverable = tmp_path / f"source{suffix}"
+    if suffix == ".docx":
+        document = Document()
+        for _ in range(13):
+            document.add_paragraph("Background context")
+        table = document.add_table(rows=1, cols=1)
+        table.cell(0, 0).text = "NO DEMAND\n12\nSource: appendix B"
+        document.save(deliverable)
+    else:
+        presentation = Presentation()
+        for _ in range(13):
+            slide = presentation.slides.add_slide(presentation.slide_layouts[1])
+            slide.shapes.title.text = "Background"
+        slide.placeholders[1].text = "NO DEMAND\n12\nSource: appendix B"
+        presentation.save(deliverable)
+    contract = tmp_path / "advisory_contract.json"
+    contract.write_text(json.dumps(_contract()))
+
+    paths = validator.prepare_validation(deliverable, contract, tmp_path / "review")
+
+    extracted = (tmp_path / "review/extracted_deliverable.md").read_text()
+    assert "NO DEMAND" in extracted
+    assert "12" in extracted
+    assert "Source: appendix B" in extracted
+    assert paths["coverage_inventory"].is_file()

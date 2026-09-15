@@ -8910,3 +8910,249 @@ def test_recipe_preserves_unstated_or_explicit_currency(currency: str) -> None:
     )
 
     assert recipe["options"]["currency"] == currency
+
+
+@pytest.mark.parametrize(
+    ("amount", "expected"),
+    [
+        (100.0, "100.00"),
+        (-20.0, "-20.00"),
+        (0.0, "0.00"),
+        (0.0001, "0.0001"),
+        (-0.0001, "-0.0001"),
+        (1200000.0, "1,200,000.00"),
+    ],
+)
+def test_client_report_preserves_amounts(
+    tmp_path: Path, amount: float, expected: str
+) -> None:
+    from docx import Document
+
+    core = load_core()
+    recipe = {"language": "en"}
+    contribution = {
+        "metric": "Sales",
+        "total": amount,
+        "top_items": [{"item": "Example", "value": amount}],
+    }
+    core.write_client_report(recipe, contribution, [], tmp_path)
+    markdown = (tmp_path / "mix_contribution_client_report.md").read_text()
+    document = Document(tmp_path / "mix_contribution_client_report.docx")
+    text = "\n".join(p.text for p in document.paragraphs)
+    assert f"Total Sales is {expected}." in markdown
+    assert f"Example: {expected}" in markdown
+    assert f"Total Sales is {expected}." in text
+    assert f"Example: {expected}" in text
+
+
+@pytest.mark.parametrize(
+    ("show_average", "category", "expected_share"),
+    [
+        (True, "Positive", "120%"),
+        (True, "Returns", "-20%"),
+        (False, "Positive", "120%"),
+        (False, "Returns", "-20%"),
+    ],
+)
+def test_stacked_bar_shares_exclude_synthetic_average(
+    show_average: bool, category: str, expected_share: str
+) -> None:
+    legacy = load_legacy_charting()
+    legacy._ensure_legacy_import_path()
+    from plotly.subplots import make_subplots
+
+    from modules.charting.draw_charts_utils import add_total_annotations_for_stacked_bar
+    from modules.utilities.config import get_naming_params
+
+    names = get_naming_params()
+    chart = legacy._legacy_chart_dict(
+        names,
+        {
+            "legacy_chart_key": "stackedBarChart",
+            "dimensions": ["Company"],
+            "x_dimension": "Company",
+            "y_dimension": None,
+            "metrics": ["Sales"],
+            "selected_periods": ["AC"],
+            "show_average_value": show_average,
+        },
+        metric="Sales",
+        currency="EUR",
+    )
+    width = pl.DataFrame(
+        {
+            "Company": [None, "Average", None, "Positive", "Returns"],
+            names["valueName"]: [None, 50.0, None, 120.0, -20.0],
+        }
+    )
+    if not show_average:
+        width = width.slice(3)
+    half = pl.DataFrame({"Company": [category], "halfColumn": [0.5]})
+
+    figure = add_total_annotations_for_stacked_bar(
+        make_subplots(rows=1, cols=1), category, half.lazy(), width.lazy(), chart, 1, 1
+    )
+
+    assert figure.layout.annotations[0].text.endswith(f"({expected_share})")
+
+
+def test_horizontal_bar_context_export_keeps_category_and_signed_value(
+    tmp_path: Path,
+) -> None:
+    legacy = load_legacy_charting()
+    core = load_core()
+    import plotly.graph_objects as go
+
+    figure = go.Figure(
+        go.Bar(
+            orientation="h",
+            name="by Sales",
+            x=[None, 120.0, -20.0, 0.0],
+            y=[None, "Positive", "Returns", "0"],
+            text=[None, "120", "-20", "0"],
+        )
+    )
+    context = {
+        "series_by_dimension": legacy._series_rows_by_dimension([figure], ["Company"])
+    }
+
+    _, audit = core.write_chart_context_artifacts("bar", context, tmp_path)
+
+    written = pl.read_csv(tmp_path / "bar_chart_data.csv")
+    assert audit["table_status"] == "written"
+    assert written.select("dimension", "value").to_dicts() == [
+        {"dimension": "Positive", "value": 120.0},
+        {"dimension": "Returns", "value": -20.0},
+        {"dimension": "0", "value": 0.0},
+    ]
+    assert written.get_column("source_dimension").to_list() == [
+        "Company",
+        "Company",
+        "Company",
+    ]
+
+
+def test_plain_bar_preparation_retains_zero_and_small_signed_amounts() -> None:
+    legacy = load_legacy_charting()
+    legacy._ensure_legacy_import_path()
+    from modules.data.multidimensional_charts_prep import (
+        prepare_data_for_stacked_bar_one_dimension,
+    )
+    from modules.utilities.config import get_naming_params
+
+    names = get_naming_params()
+    chart = legacy._legacy_chart_dict(
+        names,
+        {
+            "legacy_chart_key": "stackedBarChart",
+            "dimensions": ["Company"],
+            "x_dimension": "Company",
+            "y_dimension": None,
+            "metrics": ["Sales"],
+            "selected_periods": ["AC"],
+            "max_items": 12,
+            "show_average_value": True,
+        },
+        metric="Sales",
+        currency="EUR",
+    )
+    frame = pl.DataFrame(
+        {
+            "Period": ["AC"] * 5,
+            "Company": [
+                "Positive",
+                "Returns",
+                "Zero",
+                "Tiny positive",
+                "Tiny negative",
+            ],
+            "Sales": [120.0, -20.0, 0.0, 0.0005, -0.0005],
+        }
+    )
+
+    prepared, _, _, _, _ = prepare_data_for_stacked_bar_one_dimension(
+        frame,
+        names["totalName"],
+        ["Sales"],
+        chart,
+        {},
+        {},
+        [],
+        names["stackedBarChart"],
+    )
+
+    values = prepared.collect().filter(pl.col("Company").is_not_null())
+    assert values.filter(pl.col("Company") == "Average").get_column(
+        "Sales"
+    ).item() == pytest.approx(20.0)
+    assert values.filter(pl.col("Company") == "Zero").get_column("Sales").item() == 0.0
+    assert (
+        values.filter(pl.col("Company") == "Tiny positive").get_column("Sales").item()
+        == 0.0005
+    )
+    assert (
+        values.filter(pl.col("Company") == "Tiny negative").get_column("Sales").item()
+        == -0.0005
+    )
+
+
+@pytest.mark.parametrize("leading_spacer", [False, True])
+def test_plain_bar_total_excludes_average_and_layout_spacers(
+    leading_spacer: bool,
+) -> None:
+    legacy = load_legacy_charting()
+    legacy._ensure_legacy_import_path()
+    from modules.charting.draw_charts_utils import get_y_axis_total
+    from modules.utilities.config import get_naming_params
+
+    names = get_naming_params()
+    frame = pl.DataFrame(
+        {
+            "Company": [None, "Average", None, "Positive", "Returns", "Zero"],
+            names["valueName"]: [None, 100.0 / 3, None, 120.0, -20.0, 0.0],
+        }
+    )
+    if not leading_spacer:
+        frame = frame.slice(1)
+
+    _, numeric_total = get_y_axis_total(
+        frame, {names["showAverageValueName"]: True}, ["Sales"], None
+    )
+
+    assert numeric_total == 100
+
+
+def test_two_dimension_chart_keeps_small_signed_cells_and_zero(tmp_path: Path) -> None:
+    core = load_core()
+    source = tmp_path / "input.csv"
+    source.write_text(
+        "Date,Period,Company,Channel,Sales\n2026-01-31,AC,A,Direct,0.0005\n2026-01-31,AC,A,Partner,0.0004\n2026-01-31,AC,B,Direct,-0.0002\n2026-01-31,AC,B,Partner,0\n"
+    )
+    recipe = tmp_path / "recipe.json"
+    recipe.write_text(
+        json.dumps(
+            {
+                "mappings": {
+                    "date_column": "Date",
+                    "period_column": "Period",
+                    "amount_column": "Sales",
+                    "dimensions": ["Company", "Channel"],
+                },
+                "options": {
+                    "charts": ["stacked_bar"],
+                    "small_multiples": False,
+                    "current_period_label": "AC",
+                    "currency": "EUR",
+                },
+            }
+        )
+    )
+    output = tmp_path / "output"
+
+    core.run_mix_contribution(source, output, recipe, artifact_mode="data_only")
+
+    context = json.loads((output / "stacked_bar_chart_context.json").read_text())
+    assert context["data_frame"]["rows"] == [
+        {"Company": "B", "Partner": 0.0, "Direct": -0.0002, "Value": -0.0002},
+        {"Company": "A", "Partner": 0.0004, "Direct": 0.0005, "Value": 0.0009},
+    ]

@@ -3359,10 +3359,14 @@ def build_contribution_summary(
     )
 
 
-def _format_millions(value: float | None) -> str:
+def _format_amount(value: float | None) -> str:
     if value is None:
         return "n/a"
-    return f"{value / 1_000_000:,.1f}m"
+    if value == 0:
+        return "0.00"
+    if abs(value) < 0.01:
+        return f"{value:.6g}"
+    return f"{value:,.2f}"
 
 
 def total_context(canonical: pl.DataFrame, recipe: dict[str, Any]) -> dict[str, Any]:
@@ -3454,9 +3458,7 @@ def build_summary_markdown(
             if isinstance(share, float)
             else "no disponible" if spanish else "n/a"
         )
-        lines.append(
-            f"- {row['item']}: {_format_millions(row['value'])} ({share_label})"
-        )
+        lines.append(f"- {row['item']}: {_format_amount(row['value'])} ({share_label})")
     lines.extend(
         [
             "",
@@ -3496,9 +3498,9 @@ def write_client_report(
         "Análisis de mix y contribución" if spanish else "Mix & Contribution Analysis"
     )
     total_text = (
-        f"El total de {contribution['metric']} es {_format_millions(contribution['total'])}."
+        f"El total de {contribution['metric']} es {_format_amount(contribution['total'])}."
         if spanish
-        else f"Total {contribution['metric']} is {_format_millions(contribution['total'])}."
+        else f"Total {contribution['metric']} is {_format_amount(contribution['total'])}."
     )
     main_items_heading = (
         "Principales contribuciones" if spanish else "Main Contribution Items"
@@ -3512,7 +3514,7 @@ def write_client_report(
         "",
         f"## {main_items_heading}",
         "",
-        *[f"- {item['item']}: {_format_millions(item['value'])}" for item in top_items],
+        *[f"- {item['item']}: {_format_amount(item['value'])}" for item in top_items],
         "",
         f"## {source_files_heading}",
         "",
@@ -3535,7 +3537,7 @@ def write_client_report(
             document.add_heading(main_items_heading, level=2)
             for item in top_items:
                 document.add_paragraph(
-                    f"{item['item']}: {_format_millions(item['value'])}",
+                    f"{item['item']}: {_format_amount(item['value'])}",
                     style="List Bullet",
                 )
         document.add_heading(charts_heading, level=2)

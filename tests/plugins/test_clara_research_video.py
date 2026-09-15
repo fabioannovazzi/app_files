@@ -522,3 +522,347 @@ def test_skill_and_router_expose_the_research_video_contract() -> None:
     assert "https://mparanza.com/case-notes/research-video/voice" in skill
     assert "- `research-video`:" in catalog
     assert set(routed) == {"narrated-research-video"}
+
+
+def _small_render_fixture(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> tuple[Any, Path]:
+    pytest.importorskip("imageio_ffmpeg")
+    renderer, run_dir, *_ = _prepare_fixture(tmp_path, layered=True, language="it")
+    renderer.approve_run(run_dir, confirmed_by_user=True)
+    _attach_fixture_voice(renderer, run_dir, tmp_path)
+    for name, value in {
+        "FRAME_WIDTH": 320,
+        "FRAME_HEIGHT": 180,
+        "FRAME_RATE": 10,
+        "LEAD_SECONDS": 0.1,
+        "TAIL_SECONDS": 0.1,
+        "INTER_SCENE_PAUSE_SECONDS": 0.2,
+        "TRANSITION_SECONDS": 0.1,
+    }.items():
+        monkeypatch.setattr(renderer, name, value)
+    return renderer, run_dir
+
+
+@pytest.mark.parametrize("frame_rate", ["25/1", "60/1"])
+def test_render_rejects_wrong_measured_frame_rate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, frame_rate: str
+) -> None:
+    from types import SimpleNamespace
+
+    renderer, run_dir = _small_render_fixture(tmp_path, monkeypatch)
+    original_which = renderer.shutil.which
+    original_run = renderer._run_media
+    monkeypatch.setattr(
+        renderer.shutil,
+        "which",
+        lambda name: (
+            "/synthetic/ffprobe" if name == "ffprobe" else original_which(name)
+        ),
+    )
+    stream_json = json.dumps(
+        {
+            "streams": [
+                {
+                    "codec_type": "video",
+                    "codec_name": "h264",
+                    "width": 320,
+                    "height": 180,
+                    "avg_frame_rate": frame_rate,
+                },
+                {"codec_type": "audio", "codec_name": "aac"},
+            ],
+            "format": {"duration": "2"},
+        }
+    )
+
+    def media(command: list[str], **kwargs: Any) -> Any:
+        if command[0] == "/synthetic/ffprobe":
+            return SimpleNamespace(stdout=stream_json, stderr="")
+        return original_run(command, **kwargs)
+
+    monkeypatch.setattr(renderer, "_run_media", media)
+
+    with pytest.raises(ValueError, match="frame rate"):
+        renderer.render_run(run_dir)
+
+    assert not (run_dir / "research_video.mp4").exists()
+
+
+def test_render_measures_media_with_bundled_ffmpeg_without_ffprobe(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    renderer, run_dir = _small_render_fixture(tmp_path, monkeypatch)
+    original_which = renderer.shutil.which
+    monkeypatch.setattr(
+        renderer.shutil,
+        "which",
+        lambda name: None if name == "ffprobe" else original_which(name),
+    )
+
+    result = renderer.render_run(run_dir)
+
+    assert result["media"]["duration_seconds"] > 0
+    assert result["media"]["frame_rate"] == 10
+    assert result["media"]["audio_duration_seconds"] > 0
+    assert result["media"]["tool_versions"]["ffmpeg"].startswith("ffmpeg version")
+    assert result["caption_validation"]["cue_count"] == result["scene_count"]
+    assert (
+        result["caption_validation"]["timing_verified_against_measured_streams"] is True
+    )
+    assert result["caption_validation"]["semantic_review_performed"] is False
+    assert (
+        result["media"]["measurement_method"]
+        == "ffmpeg_stream_metadata_and_complete_decode"
+    )
+
+
+def test_failed_media_attempt_preserves_stage_and_can_retry(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import subprocess
+
+    renderer, run_dir = _small_render_fixture(tmp_path, monkeypatch)
+    original = renderer._render_scene_clip
+
+    def timeout_clip(**kwargs: Any) -> None:
+        kwargs["output"].write_bytes(b"partial diagnostic clip")
+        raise subprocess.TimeoutExpired(["synthetic-renderer"], 1)
+
+    monkeypatch.setattr(renderer, "_render_scene_clip", timeout_clip)
+    with pytest.raises(subprocess.TimeoutExpired):
+        renderer.render_run(run_dir)
+    failed = json.loads((run_dir / "render_attempt.json").read_text())
+    assert failed["status"] == "failed_or_interrupted"
+    assert (
+        Path(failed["stage_directory"]) / "scene-01.mp4"
+    ).read_bytes() == b"partial diagnostic clip"
+    assert json.loads((run_dir / "final_artifacts.json").read_text())["outputs"] == []
+    monkeypatch.setattr(renderer, "_render_scene_clip", original)
+
+    result = renderer.render_run(run_dir)
+
+    assert result["status"] == "ready_for_review"
+    assert (
+        json.loads((run_dir / "render_attempt.json").read_text())["status"]
+        == "completed"
+    )
+    assert (Path(failed["stage_directory"]) / "attempt.json").exists()
+
+
+def test_failed_revalidation_invalidates_old_media_success(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    renderer, run_dir = _small_render_fixture(tmp_path, monkeypatch)
+    renderer.render_run(run_dir)
+    previous_report = (run_dir / "render_report.json").read_bytes()
+    (run_dir / "narration_script.md").write_text("Changed narration", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="stale"):
+        renderer.render_run(run_dir)
+
+    receipt = json.loads((run_dir / "render_attempt.json").read_text())
+    assert (
+        json.loads((run_dir / "render_report.json").read_text())["status"]
+        == "failed_or_interrupted"
+    )
+    assert (
+        Path(receipt["stage_directory"]) / "previous-render_report.json"
+    ).read_bytes() == previous_report
+
+
+def test_media_changed_input_during_execution_is_not_published(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    renderer, run_dir = _small_render_fixture(tmp_path, monkeypatch)
+    original = renderer._validate_media
+
+    def change_approval(ffmpeg: str, path: Path) -> dict[str, Any]:
+        result = original(ffmpeg, path)
+        (run_dir / "narration_script.md").write_text(
+            "Changed during render", encoding="utf-8"
+        )
+        return result
+
+    monkeypatch.setattr(renderer, "_validate_media", change_approval)
+
+    with pytest.raises(ValueError, match="stale"):
+        renderer.render_run(run_dir)
+
+    assert not (run_dir / "research_video.mp4").exists()
+    assert (
+        json.loads((run_dir / "render_attempt.json").read_text())["status"]
+        == "failed_or_interrupted"
+    )
+
+
+def test_failed_media_subprocess_retains_streamed_diagnostics(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import subprocess
+    import sys
+
+    renderer, run_dir = _small_render_fixture(tmp_path, monkeypatch)
+
+    def failed_clip(**kwargs: Any) -> None:
+        renderer._run_media(
+            [
+                sys.executable,
+                "-c",
+                "import sys; sys.stderr.write('synthetic codec failure'); sys.exit(3)",
+            ],
+            capture_output=True,
+        )
+
+    monkeypatch.setattr(renderer, "_render_scene_clip", failed_clip)
+
+    with pytest.raises(subprocess.CalledProcessError):
+        renderer.render_run(run_dir)
+
+    receipt = json.loads((run_dir / "render_attempt.json").read_text())
+    logs = list(Path(receipt["stage_directory"]).glob("*.stderr.log"))
+    assert len(logs) == 1
+    assert logs[0].read_text() == "synthetic codec failure"
+
+
+def test_media_publishes_complete_snapshot_and_verifies_current_inputs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    renderer, run_dir = _small_render_fixture(tmp_path, monkeypatch)
+    renderer.render_run(run_dir)
+
+    publication = renderer.verify_render_run(run_dir)
+
+    assert publication["identity_verified"] is True
+    assert publication["requires_semantic_and_visual_review"] is True
+    assert (Path(publication["generation_directory"]) / "research_video.mp4").is_file()
+    assert (
+        Path(publication["generation_directory"]).parent.parent.name
+        == ".render-attempts"
+    )
+
+
+def test_media_partial_publication_never_has_successful_pointer(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    renderer, run_dir = _small_render_fixture(tmp_path, monkeypatch)
+    original = renderer.publish_media_generation
+
+    def partial(root: Path, work: Path) -> dict[str, Any]:
+        def broken_copy(source: Any, target: Any, **kwargs: Any) -> None:
+            target.write(source.read(16))
+            raise OSError("Synthetic publication interruption")
+
+        with monkeypatch.context() as patch:
+            patch.setattr(renderer.shutil, "copyfileobj", broken_copy)
+            return original(root, work)
+
+    monkeypatch.setattr(renderer, "publish_media_generation", partial)
+
+    with pytest.raises(OSError, match="publication interruption"):
+        renderer.render_run(run_dir)
+
+    assert (
+        json.loads((run_dir / "current_render.json").read_text())["status"]
+        == "failed_or_interrupted"
+    )
+    with pytest.raises(ValueError, match="No completed"):
+        renderer.verify_render_run(run_dir)
+
+
+def test_published_media_tampering_is_rejected(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    renderer, run_dir = _small_render_fixture(tmp_path, monkeypatch)
+    renderer.render_run(run_dir)
+    publication = renderer.verify_render_run(run_dir)
+    (Path(publication["generation_directory"]) / "captions.vtt").write_text(
+        "Changed", encoding="utf-8"
+    )
+
+    with pytest.raises(ValueError, match="output changed"):
+        renderer.verify_render_run(run_dir)
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        ("missing_audio", "audio|codec"),
+        ("dimensions", "dimensions"),
+        ("frame_rate", "frame rate"),
+        ("duration", "duration"),
+        ("short_audio", "audio duration"),
+    ],
+)
+def test_render_rejects_real_media_with_invalid_stream_properties(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    mutation: str,
+    message: str,
+) -> None:
+    renderer, run_dir = _small_render_fixture(tmp_path, monkeypatch)
+    original_mux = renderer._mux
+
+    def altered_mux(ffmpeg: str, visual: Path, audio: Path, output: Path) -> None:
+        original_mux(ffmpeg, visual, audio, output)
+        changed = output.with_name("altered.mp4")
+        options = {
+            "missing_audio": ["-an", "-c:v", "copy"],
+            "dimensions": ["-vf", "scale=160:90", "-c:v", "libx264", "-c:a", "copy"],
+            "frame_rate": ["-r", "5", "-c:v", "libx264", "-c:a", "copy"],
+            "duration": ["-t", "0.2", "-c", "copy"],
+            "short_audio": ["-af", "atrim=duration=0.1", "-c:v", "copy", "-c:a", "aac"],
+        }[mutation]
+        renderer._run_media(
+            [ffmpeg, "-y", "-v", "error", "-i", str(output), *options, str(changed)]
+        )
+        changed.replace(output)
+
+    monkeypatch.setattr(renderer, "_mux", altered_mux)
+
+    with pytest.raises(ValueError, match=message):
+        renderer.render_run(run_dir)
+
+    assert not (run_dir / "research_video.mp4").exists()
+
+
+def test_render_rejects_corrupted_encoded_file_before_publication(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import subprocess
+
+    renderer, run_dir = _small_render_fixture(tmp_path, monkeypatch)
+
+    def corrupt_mux(ffmpeg: str, visual: Path, audio: Path, output: Path) -> None:
+        output.write_bytes(b"not an MP4")
+
+    monkeypatch.setattr(renderer, "_mux", corrupt_mux)
+
+    with pytest.raises(subprocess.CalledProcessError):
+        renderer.render_run(run_dir)
+
+    assert not (run_dir / "research_video.mp4").exists()
+
+
+def test_render_rejects_caption_outside_measured_media_before_publication(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    renderer, run_dir = _small_render_fixture(tmp_path, monkeypatch)
+    original_write = renderer._write_captions
+
+    def altered_captions(output: Path, scenes: Any, durations: Any) -> None:
+        original_write(output, scenes, durations)
+        import re
+
+        output.write_text(
+            re.sub(r"--> [0-9:.]+", "--> 00:59:59.000", output.read_text())
+        )
+
+    monkeypatch.setattr(renderer, "_write_captions", altered_captions)
+
+    with pytest.raises(ValueError, match="Caption timing"):
+        renderer.render_run(run_dir)
+
+    assert not (run_dir / "research_video.mp4").exists()

@@ -54,6 +54,8 @@ def installed_fixture(tmp_path, product, monkeypatch):
     child = root / "modules" / component
     (child / "scripts").mkdir(parents=True)
     (child / "requirements.txt").write_text("# no dependencies\n")
+    if product == "clara":
+        (child / "requirements-render.txt").write_text("# no optional dependencies\n")
     (child / "scripts/check_dependencies.py").write_text(
         "import json,sys\nprint(json.dumps({'version':list(sys.version_info[:2]), 'prefix':sys.prefix}))\n"
     )

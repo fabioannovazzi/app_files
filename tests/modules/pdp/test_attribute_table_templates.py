@@ -197,7 +197,7 @@ def test_build_attribute_table_frames_creates_four_deterministic_tables() -> Non
     assert bundle_table.get_column("baseline_share").to_list() == ["25.0%", "20.0%"]
     assert bundle_table.get_column("index").to_list() == ["2.00x", "2.00x"]
     bridge_table = tables["attribute_bridge_table"]
-    assert bridge_table.item(0, "alignment") == "Bridge"
+    assert bridge_table.item(0, "alignment") == "Both comparisons"
     assert bridge_table.item(0, "current_share") == "50.0%"
     assert bridge_table.item(0, "emerging_share") == "40.0%"
     visibility_table = tables["rank_weighted_visibility_table"]
@@ -337,17 +337,17 @@ def test_build_attribute_tables_from_package_localizes_spanish_html_and_manifest
     table = result["tables"][0]
     assert result["table_keys"] == ["attribute_bridge_table"]
     assert table["table_key"] == "attribute_bridge_table"
-    assert table["title"] == "Puente entre señales ganadoras y emergentes"
+    assert table["title"] == "Coincidencia entre más vendidos y productos recientes"
     assert table["columns"][:2] == ["signal_bundle", "alignment"]
     assert manifest["tables"][0]["table_key"] == "attribute_bridge_table"
     assert manifest["tables"][0]["columns"] == table["columns"]
     assert '<html lang="es">' in html_text
-    assert "Puente entre señales ganadoras y emergentes" in html_text
+    assert "Coincidencia entre más vendidos y productos recientes" in html_text
     assert "Se muestran hasta 5 filas." in html_text
     assert "Conjunto de señales" in html_text
     assert "Alineación" in html_text
     assert "No hay filas que cumplan los criterios." in html_text
-    assert "Winner and Emerging Signal Bridge" not in html_text
+    assert "Top-seller and recent-product overlap" not in html_text
     assert "Showing up to" not in html_text
     assert "No qualifying rows" not in html_text
 
@@ -377,17 +377,17 @@ def test_spanish_attribute_html_localizes_populated_values_and_numbers(
         encoding="utf-8"
     )
     bridge_csv = (table_dir / "attribute_bridge_table.csv").read_text(encoding="utf-8")
-    assert "Ganadores actuales" in bundle_html
+    assert "Comparación de más vendidos" in bundle_html
     assert "Más vendidos frente al resto" in bundle_html
-    assert "Señal emergente" in bundle_html
+    assert "Comparación de productos recientes" in bundle_html
     assert "Recientes frente al resto" in bundle_html
-    assert "Puente" in bridge_html
+    assert "Ambas comparaciones" in bridge_html
     assert "50,0%" in bridge_html
     assert "40,0%" in bridge_html
-    assert "Winning now" not in bundle_html
+    assert "Top-seller comparison" not in bundle_html
     assert "Top sellers vs others" not in bundle_html
-    assert "Bridge" not in bridge_html
-    assert "Bridge" in bridge_csv
+    assert "Both comparisons" not in bridge_html
+    assert "Both comparisons" in bridge_csv
     assert "50.0%" in bridge_csv
 
 

@@ -518,6 +518,8 @@ def test_render_capability_blocks_missing_required_period_scope(
         artifact_mode="data_only",
     )
 
+    request.input_file.write_text("Month,Sales,Product,Retailer\n2026-06,1,A,B\n")
+
     with pytest.raises(ValueError, match="bounded scope"):
         renderer.render_capability(request, root=PLUGIN_ROOT)
 
@@ -555,6 +557,8 @@ def test_render_capability_blocks_non_bounding_period_controls(
         artifact_mode="data_only",
     )
 
+    request.input_file.write_text("Month,Sales,Product,Retailer\n2026-06,1,A,B\n")
+
     with pytest.raises(ValueError, match="bounded scope"):
         renderer.render_capability(request, root=PLUGIN_ROOT)
 
@@ -588,6 +592,8 @@ def test_render_capability_blocks_missing_required_role_binding(
         artifact_mode="data_only",
     )
 
+    request.input_file.write_text("Month,Sales,Product,Retailer\n2026-06,1,A,B\n")
+
     with pytest.raises(ValueError, match="comparison_metric"):
         renderer.render_capability(request, root=PLUGIN_ROOT)
 
@@ -620,6 +626,8 @@ def test_render_capability_blocks_scalar_compound_role_binding(
         },
         artifact_mode="data_only",
     )
+
+    request.input_file.write_text("Month,Sales,Product,Retailer\n2026-06,1,A,B\n")
 
     with pytest.raises(ValueError, match="set_membership_fields"):
         renderer.render_capability(request, root=PLUGIN_ROOT)
@@ -861,10 +869,12 @@ def test_render_capability_dispatches_embedded_component_runner(
         *,
         cwd: Path,
         text: bool,
-        capture_output: bool,
+        stdout: Any,
+        stderr: Any,
         check: bool,
+        timeout: int,
     ) -> SimpleNamespace:
-        calls.append((command, cwd, capture_output))
+        calls.append((command, cwd, stdout is not None and stderr is not None))
         output_dir = Path(command[command.index("--output-dir") + 1])
         output_dir.mkdir(parents=True, exist_ok=True)
         (output_dir / "year_over_year_line_chart_data.csv").write_text(
@@ -873,7 +883,7 @@ def test_render_capability_dispatches_embedded_component_runner(
         )
         return SimpleNamespace(returncode=0, stdout="ok", stderr="")
 
-    monkeypatch.setattr(renderer.subprocess, "run", fake_run)
+    monkeypatch.setattr(renderer, "run_process", fake_run)
     input_path = tmp_path / "sales.csv"
     input_path.write_text("Month,Sales\n2026-01,10\n", encoding="utf-8")
     request = renderer.RenderRequest(
@@ -955,7 +965,7 @@ def test_render_capability_passes_spanish_to_attribute_table_builder(
     assert manifest["render_proof"]["status"] == "rendered"
     assert table_manifest["tables"][0]["table_key"] == "attribute_bridge_table"
     assert table_manifest["tables"][0]["title"] == (
-        "Puente entre señales ganadoras y emergentes"
+        "Coincidencia entre más vendidos y productos recientes"
     )
     assert '<html lang="es">' in html_text
     assert "Conjunto de señales" in html_text
@@ -975,12 +985,14 @@ def test_render_capability_fails_when_expected_render_is_missing(
         *,
         cwd: Path,
         text: bool,
-        capture_output: bool,
+        stdout: Any,
+        stderr: Any,
         check: bool,
+        timeout: int,
     ) -> SimpleNamespace:
         return SimpleNamespace(returncode=0, stdout="ok", stderr="")
 
-    monkeypatch.setattr(renderer.subprocess, "run", fake_run)
+    monkeypatch.setattr(renderer, "run_process", fake_run)
     input_path = tmp_path / "memberships.csv"
     input_path.write_text(
         "Month,Product,Retailer\n2026-06,Product A,Retailer A\n",
@@ -1086,7 +1098,7 @@ def test_render_capability_does_not_accept_touched_stale_expected_render(
         )
         return SimpleNamespace(returncode=0, stdout="ok", stderr="")
 
-    monkeypatch.setattr(renderer.subprocess, "run", fake_run)
+    monkeypatch.setattr(renderer, "run_process", fake_run)
     input_path = tmp_path / "memberships.csv"
     input_path.write_text(
         "Month,Product,Retailer\n2026-06,Product A,Retailer A\n",
@@ -1136,7 +1148,7 @@ def test_render_capability_accepts_identical_bytes_from_isolated_current_run(
         (run_dir / "upset.html").write_bytes(expected_bytes)
         return SimpleNamespace(returncode=0, stdout="ok", stderr="")
 
-    monkeypatch.setattr(renderer.subprocess, "run", fake_run)
+    monkeypatch.setattr(renderer, "run_process", fake_run)
     input_path = tmp_path / "memberships.csv"
     input_path.write_text(
         "Month,Product,Retailer\n2026-06,Product A,Retailer A\n",
@@ -1322,6 +1334,278 @@ def test_reporting_engine_cli_writes_dataset_profile(tmp_path: Path) -> None:
     assert result == 0
     assert payload["dataset_id"] == "cli_sales"
     assert payload["role_candidate_columns"]["period_axis"] == ["month"]
+
+
+@pytest.mark.parametrize("currency", [None, "USD"])
+def test_mechanical_acceptance_cli_preserves_currency(tmp_path, monkeypatch, currency):
+    module = _load_module(
+        "reporting_engine_acceptance_currency_test",
+        PLUGIN_ROOT / "scripts" / "mechanical_acceptance.py",
+    )
+    requests = []
+
+    def capture_render(request, **kwargs):
+        requests.append(request)
+        return {"render_proof": {"status": "rendered"}}
+
+    monkeypatch.setattr(module, "render_capability", capture_render)
+    arguments = [
+        "--suite",
+        "--execute",
+        "--capability",
+        "distribution.histogram",
+        "--output-dir",
+        str(tmp_path / "acceptance"),
+    ]
+    if currency is not None:
+        arguments.extend(["--currency", currency])
+
+    result = module.main(arguments)
+
+    assert result == 0
+    assert len(requests) == 1
+    assert requests[0].currency == currency
+    recipe = json.loads(
+        (
+            tmp_path
+            / "acceptance/capabilities/distribution.histogram/render_request_recipe.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert recipe["options"].get("currency") == currency
+
+
+@pytest.mark.parametrize(
+    "component", ["distribution-analysis", "scatter-bubble-analysis"]
+)
+def test_dependency_checker_maps_python_dateutil_distribution(component):
+    module = _load_module(
+        f"{component}_dependency_alias_test",
+        ROOT / "plugins" / component / "scripts/check_dependencies.py",
+    )
+
+    module_name = module.import_name("python-dateutil")
+
+    assert module_name == "dateutil"
+
+
+def _failure_render_request(renderer: Any, tmp_path: Path) -> Any:
+    input_path = tmp_path / "memberships.csv"
+    input_path.write_text("Month,Product,Retailer\n2026-06,A,B\n", encoding="utf-8")
+    return renderer.RenderRequest(
+        capability_id="set_overlap.upset",
+        input_file=input_path,
+        output_dir=tmp_path / "render",
+        timeout_seconds=1,
+        role_bindings={
+            "set_membership_fields": {
+                "item_column": "Product",
+                "set_column": "Retailer",
+            },
+            "period_filter": {"period_column": "Month", "selected_period": "2026-06"},
+        },
+        artifact_mode="data_and_render",
+    )
+
+
+def test_render_timeout_invalidates_old_success_and_preserves_logs(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import subprocess
+
+    renderer = _load_module(
+        "reporting_timeout_test", PLUGIN_ROOT / "scripts" / "render_capability.py"
+    )
+    request = _failure_render_request(renderer, tmp_path)
+    request.output_dir.mkdir()
+    receipt = request.output_dir / "render_manifest.json"
+    receipt.write_text(json.dumps({"status": "completed", "attempt_id": "old"}))
+
+    def timeout(command: list[str], **kwargs: Any) -> None:
+        kwargs["stderr"].write("diagnostic before timeout")
+        raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+
+    monkeypatch.setattr(renderer, "run_process", timeout)
+
+    with pytest.raises(subprocess.TimeoutExpired):
+        renderer.render_capability(request, root=PLUGIN_ROOT)
+
+    failure = json.loads(receipt.read_text())
+    assert failure["status"] == "failed_or_interrupted"
+    assert failure["failure"]["type"] == "TimeoutExpired"
+    assert failure["attempt_id"] != "old"
+    assert (
+        next((request.output_dir / ".logs").glob("*.stderr.log")).read_text()
+        == "diagnostic before timeout"
+    )
+    assert len(list(tmp_path.glob(".clara-reporting-run-*"))) == 1
+
+
+def test_failed_runner_does_not_publish_partial_artifact(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    renderer = _load_module(
+        "reporting_partial_test", PLUGIN_ROOT / "scripts" / "render_capability.py"
+    )
+    request = _failure_render_request(renderer, tmp_path)
+    request.output_dir.mkdir()
+    target = request.output_dir / "upset.html"
+    target.write_text("previous reviewed output")
+
+    def fail(command: list[str], **kwargs: Any) -> SimpleNamespace:
+        staging = Path(command[command.index("--output-dir") + 1])
+        (staging / "upset.html").write_text("incomplete new output")
+        kwargs["stderr"].write("component failed")
+        return SimpleNamespace(returncode=1)
+
+    monkeypatch.setattr(renderer, "run_process", fail)
+
+    with pytest.raises(RuntimeError, match="component failed"):
+        renderer.render_capability(request, root=PLUGIN_ROOT)
+
+    assert target.read_text() == "previous reviewed output"
+    failure = json.loads((request.output_dir / "render_manifest.json").read_text())
+    assert failure["status"] == "failed_or_interrupted"
+    assert (
+        Path(failure["staging_directory"]) / "upset.html"
+    ).read_text() == "incomplete new output"
+
+
+@pytest.mark.parametrize("source_format", ["xlsx", "csv"])
+def test_render_uses_explicit_sheet_or_dialect_before_component_execution(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    source_format: str,
+) -> None:
+    from dataclasses import replace
+
+    from openpyxl import Workbook
+
+    renderer = _load_module(
+        "reporting_parser_handoff_test",
+        PLUGIN_ROOT / "scripts" / "render_capability.py",
+    )
+    request = _failure_render_request(renderer, tmp_path)
+    source = tmp_path / f"source.{source_format}"
+    if source_format == "xlsx":
+        workbook = Workbook()
+        workbook.active.append(["Wrong", "Table"])
+        selected = workbook.create_sheet("Reviewed")
+        selected.append(["Month", "Product", "Retailer"])
+        selected.append(["2026-06", "Correct product", "Correct retailer"])
+        workbook.save(source)
+        settings = {"sheet_name": "Reviewed"}
+    else:
+        source.write_text(
+            "Month;Product;Retailer\n2026-06;Correct product;Correct retailer\n"
+        )
+        settings = {"csv_options": {"separator": ";"}}
+    source_bytes = source.read_bytes()
+    observed = []
+
+    def render(command: list[str], **kwargs: Any) -> SimpleNamespace:
+        input_path = Path(command[command.index("--output-dir") - 1])
+        observed.extend(list(csv.reader(input_path.read_text().splitlines())))
+        output = Path(command[command.index("--output-dir") + 1])
+        (output / "upset.html").write_text("<html>rendered</html>")
+        return SimpleNamespace(returncode=0)
+
+    monkeypatch.setattr(renderer, "run_process", render)
+
+    result = renderer.render_capability(
+        replace(request, input_file=source, parser_settings=settings), root=PLUGIN_ROOT
+    )
+
+    assert observed == [
+        ["Month", "Product", "Retailer"],
+        ["2026-06", "Correct product", "Correct retailer"],
+    ]
+    assert result["evidence"]["parsing"]["parser_settings"] == settings
+    assert (
+        result["evidence"]["input"]["sha256"]
+        == hashlib.sha256(source_bytes).hexdigest()
+    )
+    assert not (request.output_dir / "parsed-input.csv").exists()
+    assert source.read_bytes() == source_bytes
+
+
+def _publication_request(tmp_path: Path, monkeypatch: Any) -> tuple[Any, Any]:
+    from dataclasses import replace
+
+    renderer = _load_module(
+        "reporting_publication_regression",
+        PLUGIN_ROOT / "scripts" / "render_capability.py",
+    )
+    request = replace(
+        _failure_render_request(renderer, tmp_path),
+        artifact_mode="data_only",
+        language="it",
+        options={"reporting_entity_label": "Caffè"},
+    )
+
+    def fake_run(command: list[str], **kwargs: Any) -> SimpleNamespace:
+        directory = Path(command[command.index("--output-dir") + 1])
+        (directory / "dati.csv").write_text(
+            "Categoria,Valore\nCaffè,12\n", encoding="utf-8"
+        )
+        return SimpleNamespace(returncode=0)
+
+    monkeypatch.setattr(renderer, "run_process", fake_run)
+    return renderer, request
+
+
+def test_reporting_generation_contains_exact_manifest_and_recipe(
+    tmp_path: Path, monkeypatch: Any
+) -> None:
+    renderer, request = _publication_request(tmp_path, monkeypatch)
+    renderer.render_capability(request, root=PLUGIN_ROOT)
+
+    publication = renderer.verify_render_generation(request.output_dir)
+
+    generation = Path(publication["generation_directory"])
+    assert (generation / "render_manifest.json").read_bytes() == (
+        request.output_dir / "render_manifest.json"
+    ).read_bytes()
+    assert (generation / "dati.csv").read_text(
+        encoding="utf-8"
+    ) == "Categoria,Valore\nCaffè,12\n"
+    assert "Caffè" in (generation / "render_manifest.json").read_text()
+    manifest = json.loads((generation / "render_manifest.json").read_text())
+    assert len(manifest["evidence"]["snapshot_outputs"]) > len(
+        manifest["evidence"]["outputs"]
+    )
+
+
+def test_reporting_partial_snapshot_does_not_publish_success(
+    tmp_path: Path, monkeypatch: Any
+) -> None:
+    renderer, request = _publication_request(tmp_path, monkeypatch)
+    original = renderer.publish_snapshot
+
+    def interrupted(*args: Any, **kwargs: Any) -> Any:
+        def partial_copy(source: Any, destination: Any, **copy_kwargs: Any) -> None:
+            destination.write(source.read(8))
+            raise OSError("Snapshot interrupted")
+
+        with monkeypatch.context() as patch:
+            patch.setattr(renderer.shutil, "copyfileobj", partial_copy)
+            return original(*args, **kwargs)
+
+    monkeypatch.setattr(renderer, "publish_snapshot", interrupted)
+
+    with pytest.raises(OSError, match="Snapshot interrupted"):
+        renderer.render_capability(request, root=PLUGIN_ROOT)
+
+    assert (
+        json.loads((request.output_dir / "current_reporting.json").read_text())[
+            "status"
+        ]
+        == "failed_or_interrupted"
+    )
+    with pytest.raises(ValueError, match="No completed"):
+        renderer.verify_render_generation(request.output_dir)
+    assert list((request.output_dir / ".reporting-generations").rglob("dati.csv"))
 
 
 @pytest.mark.parametrize("currency", [None, "USD"])

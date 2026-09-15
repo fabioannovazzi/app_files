@@ -68,6 +68,38 @@ def test_runtime_install_timeout_does_not_publish_generation(tmp_path: Path) -> 
     assert list((tmp_path / "data").rglob("*.active.json")) == []
 
 
+@pytest.mark.parametrize("payload", [[], None, {}, {"generation": "../outside"}])
+def test_invalid_generation_pointer_reports_runtime_unavailable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, payload: object
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+    target = tmp_path / "runtime"
+    monkeypatch.setattr(runtime, "dependency_target", lambda *args: target)
+    target.with_name(target.name + ".active.json").write_text(json.dumps(payload))
+
+    assert runtime.activate_runtime(plugin_root, "studio-archive") is None
+
+
+def test_runtime_install_timeout_does_not_publish_generation(tmp_path: Path) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+
+    def runner(command: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+
+    ready, target, detail = runtime.ensure_runtime(
+        plugin_root, "studio-archive", data_dir=tmp_path / "data", runner=runner
+    )
+
+    assert ready is False
+    assert not target.exists()
+    assert "timed out" in detail
+    assert list((tmp_path / "data").rglob("*.active.json")) == []
+
+
 def make_packaged_component(root: Path) -> Path:
     scripts = root / "scripts"
     scripts.mkdir(parents=True)
@@ -156,8 +188,8 @@ def test_missing_target_is_installed_before_dependency_validation(
         "--python",
         str(runtime.runtime_python(target)),
     ]
-    assert commands[1][-1] == "--version"
-    assert commands[2][:6] == [*commands[1][:-1], "install"]
+    assert commands[1][-3:] == ["--disable-pip-version-check", "list", "--format=json"]
+    assert commands[2][:6] == [*commands[1][:5], "install"]
     assert commands[3][1].endswith("scripts/check_dependencies.py")
     assert json.loads((target / runtime.READY_FILENAME).read_text())["scope"] == (
         "modules/studio-archive"
@@ -350,7 +382,12 @@ def test_windows_runtime_avoids_ensurepip_when_base_pip_is_available(
     target_python = target / "Scripts" / "python.exe"
     assert ready is True, detail
     assert "--without-pip" in commands[0]
-    assert commands[1][-2:] == [str(target_python), "--version"]
+    assert commands[1][4:] == [
+        str(target_python),
+        "--disable-pip-version-check",
+        "list",
+        "--format=json",
+    ]
     assert commands[2][:5] == [
         sys.executable,
         "-m",
@@ -395,6 +432,39 @@ def test_base_pip_unavailable_falls_back_to_direct_ensurepip(tmp_path: Path) -> 
         "--default-pip",
     ]
     assert commands[3][:3] == [target_python, "-m", "pip"]
+
+
+def test_base_pip_with_broken_target_metadata_uses_target_ensurepip(
+    tmp_path: Path,
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+    commands: list[list[str]] = []
+
+    def incompatible_runner(
+        command: list[str], **_: object
+    ) -> subprocess.CompletedProcess[str]:
+        commands.append(command)
+        if command[1:3] == ["-m", "venv"]:
+            create_fake_virtualenv(Path(command[-1]))
+        if "--python" in command and "--version" not in command:
+            return subprocess.CompletedProcess(
+                command, 1, "", "AttributeError: pkgutil has no attribute ImpImporter"
+            )
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    ready, target, detail = runtime.ensure_runtime(
+        plugin_root,
+        "studio-archive",
+        data_dir=tmp_path / "data",
+        runner=incompatible_runner,
+    )
+
+    assert ready is True, detail
+    assert commands[2][1:3] == ["-m", "ensurepip"]
+    assert commands[3][:3] == [str(runtime.runtime_python(target)), "-m", "pip"]
+    assert "--python" not in commands[3]
 
 
 def test_ensurepip_failure_returns_complete_windows_diagnostics(
@@ -517,7 +587,7 @@ def test_network_resolution_failure_requests_codex_host_approval(
         if command[1:3] == ["-m", "venv"]:
             create_fake_virtualenv(Path(command[-1]))
             return subprocess.CompletedProcess(command, 0, "", "")
-        if "--version" in command:
+        if "list" in command:
             return subprocess.CompletedProcess(command, 0, "pip ready", "")
         return subprocess.CompletedProcess(
             command,
@@ -552,7 +622,7 @@ def test_invalid_distribution_is_not_mislabeled_as_network_denial(
         if command[1:3] == ["-m", "venv"]:
             create_fake_virtualenv(Path(command[-1]))
             return subprocess.CompletedProcess(command, 0, "", "")
-        if "--version" in command:
+        if "list" in command:
             return subprocess.CompletedProcess(command, 0, "pip ready", "")
         return subprocess.CompletedProcess(command, 1, "", package_error)
 

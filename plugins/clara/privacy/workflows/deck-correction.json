@@ -26,7 +26,20 @@
     "requirements-shared-core.txt",
     "requirements-shared-ocr.txt",
     "constraints-shared-macos-py312.txt",
-    "scripts/_python_bootstrap.py"
+    "scripts/_python_bootstrap.py",
+    "scripts/advisor_case_core.py",
+    "scripts/case_store.py",
+    "scripts/case_exchange_safety.py",
+    "scripts/launch_hosted_voice.py",
+    "scripts/import_hosted_voice_bundle.py",
+    "scripts/import_latest_hosted_voice_bundle.py",
+    "scripts/match_feedback_frames_to_deck_slides.py",
+    "scripts/build_deck_revision_quote_candidate_matrix.py",
+    "scripts/advisory_delivery.py",
+    "skills/html-deck/SKILL.md",
+    "scripts/run_deck_revision.py",
+    "scripts/build_voice_feedback_timeline.py",
+    "scripts/bounded_process.py"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -39,7 +52,22 @@
       {
         "id": "revision-plan-and-output",
         "purpose": "Plan, apply, and verify only the understood changes",
-        "content": "Interpretation packets, requested changes, uncertainty, targets, success criteria, approval state, patches, corrected deck, rendered slides, verification findings, corrected-output hashes, claim and evidence bindings, correction and recheck succession, and the required second audience-facing advisory validation of the corrected artifact"
+        "content": "Interpretation packets, requested changes, uncertainty, targets, success criteria, approval state, patches, corrected deck, rendered slides, verification findings, corrected-output hashes, claim and evidence bindings, correction and recheck succession, and the required second audience-facing advisory validation of the corrected artifact When frame candidates conflict or remain uncertain, the interpretation packet retains all available deck slide records and every supplied frame summary instead of narrowing to the strongest frame. This broadens the local evidence presented to Codex for that unit; it does not infer a requested edit or create an external recipient."
+      },
+      {
+        "id": "retained-review-and-render-workfiles",
+        "purpose": "Locate requested changes and inspect the corrected audience-facing output",
+        "content": "Local deck and style snapshots, downloaded and imported voice bundles, feedback frames and timelines, quote candidates, slide-match candidates, LibreOffice-generated PDF and slide-image caches, interpretation/execution packets and diagnostics may contain source text, participant statements, identities, business figures and local paths. Approval and final-review files record reviewer names, notes, timestamps, supplied confirmation flags and exact plan/understanding/output hashes. The helpers check these declared records, not reviewer identity or whether visual inspection actually occurred. Local files remain until separately removed; selected stale render-cache cleanup is not a general case deletion policy. Slide-render identity receipts now retain the exact deck hash and each cached image filename, slide number and hash; these verify cache identity only, not visual or semantic correctness. Output-review packets also retain paths and hashes for the exact source deck, corrected deck, normalized plan, approval, understanding and verification report; completion rejects drift in those inputs. These are local provenance records, not proof of actual semantic or visual review. The preparation runner retains local stage input/output file paths and hashes, current workflow status, next action and per-change missing-material summaries; these do not attest model interpretation or approval."
+      },
+      {
+        "id": "retained-converter-attempts",
+        "purpose": "Inspect frame extraction and document conversion results or failures",
+        "content": "Local conversion attempts retain generated PDFs, normalized decks, extracted feedback frames and converter stdout/stderr logs in attempt directories, including after failure or cancellation. These files may contain source content, participant statements, document metadata and local paths. Their contents enter model context when read; generating or retaining them does not itself send them to Hosted Voice. They remain until separately removed."
+      },
+      {
+        "id": "external-output-registration",
+        "purpose": "Verify an approved externally edited PPTX and preserve exact review identity",
+        "content": "The external deck, original deck, approved normalized plan, understanding, approval metadata, mechanical verification report, execution-mode marker and exact file hashes remain local and can enter Codex context when inspected. Registration does not rewrite the external PPTX; final semantic and visual review remains separate. Stale registration preserves the submitted file."
       }
     ]
   },
@@ -111,11 +139,16 @@
       ]
     }
   ],
-  "security_controls": [],
+  "security_controls": [
+    {
+      "id": "pptx-metadata-entity-rejection",
+      "control": "The content-type and visible-slide metadata parsers reject XML entity declarations before using those metadata. This control is scoped to those local PPTX parsing helpers."
+    }
+  ],
   "review": {
-    "reviewed_at": "2026-07-22",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "e791982c896f774b693c730b8d42a69ab17cd4d6db073dca632597db455d3ab6"
+    "source_fingerprint": "3a4af9d2770aa42713b0eac07562f874f7201fff1ae98eb027d97f76c829451c"
   }
 }

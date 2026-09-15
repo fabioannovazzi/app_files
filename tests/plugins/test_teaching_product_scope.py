@@ -10,8 +10,9 @@ from pathlib import Path
 from zipfile import ZipFile
 
 import pytest
-from test_desktop_teaching import PROFILE, WORKFLOWS, onboarding, teaching
-from test_vera_local_onboarding import ROOT, load
+
+from tests.plugins.test_desktop_teaching import PROFILE, WORKFLOWS, onboarding, teaching
+from tests.plugins.test_vera_local_onboarding import ROOT, load
 
 OWN_WORKFLOWS = {
     **WORKFLOWS,

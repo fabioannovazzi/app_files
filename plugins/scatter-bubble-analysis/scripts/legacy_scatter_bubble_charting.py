@@ -926,7 +926,10 @@ def _write_legacy_figure(
     export_fig, normalization_audit = normalize_plotly_figure_for_static_export(fig)
     export_width, export_height = _legacy_export_size(export_fig)
     title_lines = plotly_title_lines(getattr(export_fig.layout.title, "text", ""))
+    # Reserve visible space above the three title rows at the final export size.
+    font_size = getattr(export_fig.layout.font, "size", None) or 12
     export_fig.update_layout(
+        title={"y": 1 - 24 / export_height, "font": {"size": font_size}},
         width=export_width,
         height=export_height,
         paper_bgcolor="white",
@@ -998,16 +1001,20 @@ def _legacy_visible_title_lines(fig: Any, subject: str) -> list[str]:
     return [line for line in candidates if plain_plotly_title_text(line)]
 
 
-def _apply_scatter_title_contract(fig: Any, recipe: dict[str, Any]) -> list[str]:
+def _apply_scatter_title_contract(
+    fig: Any, recipe: dict[str, Any], selected_periods: list[str]
+) -> list[str]:
     """Normalize scatter/bubble figures to the three-row title contract."""
 
     subject = reporting_entity_label_from_recipe(recipe) or "Scatter analysis"
     legacy_lines = _legacy_visible_title_lines(fig, subject)
     what = legacy_lines[1] if len(legacy_lines) >= 2 else "Relationship view"
+    if not selected_periods:
+        raise ValueError("Scatter title requires the rendered chart period scope")
     when = reporting_period_line_from_recipe(
         recipe,
-        current_label=CURRENT_PERIOD,
-        previous_label="PY",
+        current_label=selected_periods[-1],
+        previous_label=selected_periods[-2] if len(selected_periods) > 1 else None,
     )
     return apply_three_row_plotly_title(
         fig,
@@ -1020,6 +1027,7 @@ def _write_captured_figures(
     output_dir: Path,
     artifact_name: str,
     recipe: dict[str, Any],
+    selected_periods: list[str],
 ) -> tuple[list[str], list[dict[str, Any]]]:
     if not figures:
         return [], []
@@ -1032,7 +1040,28 @@ def _write_captured_figures(
         export_fig, capture_normalization_audit = (
             normalize_plotly_figure_for_static_export(fig)
         )
-        _apply_scatter_title_contract(export_fig, recipe)
+        _apply_scatter_title_contract(export_fig, recipe, selected_periods)
+        color_dimension = recipe["mappings"].get("color_dimension")
+        if color_dimension:
+            export_fig.layout.annotations = tuple(
+                annotation
+                for annotation in export_fig.layout.annotations
+                if not (
+                    annotation.text == color_dimension
+                    and annotation.xref == "paper"
+                    and annotation.yref == "paper"
+                    and annotation.x is not None
+                    and annotation.x > 1
+                )
+            )
+            export_fig.update_layout(
+                legend={
+                    "title": {"text": color_dimension},
+                    "x": 1.02,
+                    "xanchor": "left",
+                },
+                margin={"r": max(160, export_fig.layout.margin.r or 0)},
+            )
         written_paths, export = _write_legacy_figure(export_fig, path)
         export["captured_figure_normalization"] = capture_normalization_audit
         paths.extend(str(written_path) for written_path in written_paths)
@@ -1585,6 +1614,9 @@ def write_legacy_scatter_bubble_chart(
                         "error": str(exc),
                         "error_traceback": traceback.format_exc(),
                         "events": notifier.events,
+                        "legacy_messages": _json_safe(
+                            param.get(names["appMessageArray"], [])
+                        ),
                         "source_functions": source_functions,
                     },
                 )
@@ -1616,6 +1648,9 @@ def write_legacy_scatter_bubble_chart(
                     **_cache_audit(),
                     "error_events": error_events,
                     "events": notifier.events,
+                    "legacy_messages": _json_safe(
+                        param.get(names["appMessageArray"], [])
+                    ),
                     "source_functions": source_functions,
                 },
             )
@@ -1636,6 +1671,7 @@ def write_legacy_scatter_bubble_chart(
                 output_dir,
                 str(spec["artifact_name"]),
                 recipe,
+                [str(period) for period in spec["selected_periods"]],
             )
         if render and not paths:
             return LegacyScatterBubbleChartExport(
@@ -1660,6 +1696,9 @@ def write_legacy_scatter_bubble_chart(
                     "color_dimension": chart[names["yAxisDimension"]],
                     **_cache_audit(),
                     "events": notifier.events,
+                    "legacy_messages": _json_safe(
+                        param.get(names["appMessageArray"], [])
+                    ),
                     "source_functions": source_functions,
                 },
             )
@@ -1672,6 +1711,10 @@ def write_legacy_scatter_bubble_chart(
         source_functions=source_functions,
         draw_invocations=draw_invocations,
     )
+    if chart_context is not None:
+        chart_context["legacy_messages"] = _json_safe(
+            param.get(names["appMessageArray"], [])
+        )
     return LegacyScatterBubbleChartExport(
         paths=paths,
         audit={
@@ -1699,6 +1742,7 @@ def write_legacy_scatter_bubble_chart(
             "dimension_selection": spec.get("dimension_selection"),
             "rendered": render,
             "events": notifier.events,
+            "legacy_messages": _json_safe(param.get(names["appMessageArray"], [])),
             "source_functions": source_functions,
         },
         chart_context=chart_context,

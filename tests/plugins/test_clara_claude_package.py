@@ -211,6 +211,28 @@ def test_clara_cowork_vendors_every_registered_analysis_component(
         ), component
 
 
+def test_cowork_research_video_preserves_local_bundle_path_without_hosted_action(
+    clara_entries,
+) -> None:
+    skill = clara_entries["skills/research-video/SKILL.md"].decode()
+    catalog = clara_entries["skills/clara/references/workflow-catalog.md"].decode()
+
+    assert "https://mparanza.com/case-notes/research-video/voice" not in skill
+    assert "Hosted voice generation is unavailable in Cowork" in catalog
+    assert "research_video.py attach-voice" in skill
+    assert "research_video.py render" in skill
+    assert "research_video.py verify" in skill
+    assert "changed request/approval hashes" in skill
+    assert "rendering is blocked by the missing bundle" in skill
+
+
+def test_full_research_video_source_keeps_authorized_hosted_generation() -> None:
+    skill = (ROOT / "plugins/clara/skills/research-video/SKILL.md").read_text()
+
+    assert "Open `https://mparanza.com/case-notes/research-video/voice`" in skill
+    assert "research_video.py attach-voice" in skill
+
+
 def test_clara_cowork_instructions_are_host_neutral(clara_entries) -> None:
     instruction_docs = {
         name: content.decode("utf-8")

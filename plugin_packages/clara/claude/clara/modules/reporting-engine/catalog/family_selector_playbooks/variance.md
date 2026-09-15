@@ -14,17 +14,16 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 | Capability | Selection emphasis | Period | Metrics | Dimensions | Primary cue |
 | --- | --- | --- | --- | --- | --- |
 | `variance.exploded_variance_bridge` | `parent_bridge_with_child_drilldowns` | `filter` | `variance_metric` | required `parent_driver`, `child_driver` | Question asks for one fixed parent dimension variance bridge plus child drilldowns for selected rows. |
-| `variance.price_volume_mix` | `pvm_decomposition_comparison` | `filter` | `value_metric`, `volume_metric`, `price_or_rate_metric` | required `period_or_scenario_pair` | Question explicitly asks how movement decomposes into price, volume, and mix effects. |
-| `variance.root_cause_component_bridge` | `component_level_root_cause` | `filter` | `variance_metric` | required `variance_component`, `component_root_cause_driver` | Question asks which drivers explain a selected component-level variance. |
-| `variance.root_cause_exploded_bridge` | `root_cause_path_with_nested_drilldowns` | `filter` | `variance_metric` | required `root_cause_driver_sequence`; optional `optional_nested_root_cause_driver_sequence` | Question asks for ordered root-cause path plus nested drilldown for selected drivers. |
+| `variance.price_volume_mix` | `pvm_decomposition_comparison` | `filter` | `value_metric`, `volume_metric` | required `period_or_scenario_pair` | Question explicitly asks how movement decomposes into price, volume, and mix effects. |
+| `variance.root_cause_component_bridge` | `component_level_root_cause` | `filter` | `value_metric`, `volume_metric` | required `component_root_cause_driver_sequence` | Question asks which dimension-and-component combinations explain movement through price, units, and mix effects. |
+| `variance.root_cause_exploded_bridge` | `root_cause_path_with_nested_drilldowns` | `filter` | `variance_metric` | required `root_cause_driver_sequence`, `drilldown_selection` | Question asks for ordered root-cause path plus nested drilldown for selected drivers. |
 | `variance.root_cause_total_bridge` | `root_cause_total_movement` | `filter` | `variance_metric` | required `root_cause_driver_sequence` | Question asks for ordered root-cause path explaining total movement. |
 | `variance.scenario_bridge` | `scenario_reconciliation` | `filter` | `variance_metric` | required `variance_step` | Question asks for a plain reconciliation from baseline or scenario to current total. |
 | `variance.total_by_dimension_bridge` | `total_delta_split_by_dimension` | `filter` | `variance_metric` | required `dimension_member` | Question asks which members of one selected dimension account for total variance. |
 
 ## High-Overlap Pairs
 
-- `variance.root_cause_exploded_bridge` <> `variance.root_cause_total_bridge`: `resolved` (`0` errors, `0` warnings)
-- `variance.exploded_variance_bridge` <> `variance.root_cause_component_bridge`: `resolved` (`0` errors, `0` warnings)
+- None
 
 ## Capability Details
 
@@ -47,8 +46,6 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 - Ambiguous question: Explain the sales variance.
 - Ambiguous candidates: `variance.exploded_variance_bridge`, `variance.root_cause_exploded_bridge`, `variance.root_cause_component_bridge`, `variance.total_by_dimension_bridge`, `period_comparison.horizontal_waterfall`
 - Disambiguation: Clarify whether the intended focus is `parent_bridge_with_child_drilldowns`, `root_cause_path_with_nested_drilldowns`, `component_level_root_cause`, `total_delta_split_by_dimension`, `additive_reconciliation`.
-- High-overlap pair evidence:
-  - `variance.root_cause_component_bridge`: `resolved`; evidence `explicit_competitor_link`, `ambiguous_example_link`, `negative_example_link`
 
 ### `variance.price_volume_mix`
 
@@ -62,7 +59,7 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 - Reject decision cues: `asks for generic variance bridge`, `asks for dimension split`, `asks for root-cause ordering`
 - Forbidden question focus: `scenario_bridge`, `dimension_variance`, `root_cause_sequence`
 - Period role: `filter`
-- Metric roles: `value_metric`, `volume_metric`, `price_or_rate_metric`
+- Metric roles: `value_metric`, `volume_metric`
 - Dimension roles: required `period_or_scenario_pair`
 - Close competitors: `variance.scenario_bridge`, `variance.root_cause_total_bridge`, `variance.total_by_dimension_bridge`
 - Positive question: How much of the sales movement is due to price, units, and mix?
@@ -75,22 +72,20 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 - Selection emphasis: `component_level_root_cause`
 - Visual grammar: `root_cause_component_bridge`
 - Analysis tasks: `variance_and_bridge`
-- Best when: Use when the question asks why one variance component changed, not why the overall total changed; the chart drills into the drivers of that component-level variance.
-- Avoid when: Avoid when the report needs the total movement root-cause sequence, a simple dimension split, the plain total bridge, or PVM mechanics.
-- Primary decision cue: Question asks which drivers explain a selected component-level variance.
-- Requires question focus: `component_root_cause`, `selected_variance_component`
+- Best when: Use when the question asks which price, units, and mix component-by-dimension combinations explain movement, rather than which dimensions explain the total variance.
+- Avoid when: Avoid when units/volume is unavailable, when fewer than two candidate driver dimensions exist, when the report needs the total-variance root-cause sequence, or when a simple PVM ladder is sufficient.
+- Primary decision cue: Question asks which dimension-and-component combinations explain movement through price, units, and mix effects.
+- Requires question focus: `component_root_cause`, `price_units_mix_components`
 - Reject decision cues: `asks for total root-cause path`, `asks for plain bridge`, `asks for PVM mechanics`
 - Forbidden question focus: `total_root_cause`, `scenario_bridge`, `pvm_decomposition`
 - Period role: `filter`
-- Metric roles: `variance_metric`
-- Dimension roles: required `variance_component`, `component_root_cause_driver`
+- Metric roles: `value_metric`, `volume_metric`
+- Dimension roles: required `component_root_cause_driver_sequence`
 - Close competitors: `variance.root_cause_total_bridge`, `variance.total_by_dimension_bridge`, `variance.exploded_variance_bridge`, `variance.root_cause_exploded_bridge`
-- Positive question: Which drivers explain the selected root-cause component of sales movement?
+- Positive question: Which dimension combinations explain the price component of sales movement?
 - Ambiguous question: Explain the sales variance.
 - Ambiguous candidates: `variance.root_cause_component_bridge`, `variance.root_cause_total_bridge`, `variance.total_by_dimension_bridge`, `variance.exploded_variance_bridge`, `variance.root_cause_exploded_bridge`
 - Disambiguation: Clarify whether the intended focus is `component_level_root_cause`, `root_cause_total_movement`, `total_delta_split_by_dimension`, `parent_bridge_with_child_drilldowns`, `root_cause_path_with_nested_drilldowns`.
-- High-overlap pair evidence:
-  - `variance.exploded_variance_bridge`: `resolved`; evidence `explicit_competitor_link`, `ambiguous_example_link`, `negative_example_link`
 
 ### `variance.root_cause_exploded_bridge`
 
@@ -105,14 +100,12 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 - Forbidden question focus: `fixed_parent_child_drilldown`, `total_root_cause_only`, `pvm_decomposition`
 - Period role: `filter`
 - Metric roles: `variance_metric`
-- Dimension roles: required `root_cause_driver_sequence`; optional `optional_nested_root_cause_driver_sequence`
+- Dimension roles: required `root_cause_driver_sequence`, `drilldown_selection`
 - Close competitors: `variance.root_cause_total_bridge`, `variance.exploded_variance_bridge`, `variance.root_cause_component_bridge`
 - Positive question: Which ordered root-cause path explains the total sales movement, and what explains the selected root-cause driver?
 - Ambiguous question: Explain the sales variance.
 - Ambiguous candidates: `variance.root_cause_exploded_bridge`, `variance.root_cause_total_bridge`, `variance.exploded_variance_bridge`, `variance.root_cause_component_bridge`, `period_comparison.horizontal_waterfall`
 - Disambiguation: Clarify whether the intended focus is `root_cause_path_with_nested_drilldowns`, `root_cause_total_movement`, `parent_bridge_with_child_drilldowns`, `component_level_root_cause`, `additive_reconciliation`.
-- High-overlap pair evidence:
-  - `variance.root_cause_total_bridge`: `resolved`; evidence `explicit_competitor_link`, `ambiguous_example_link`, `negative_example_link`
 
 ### `variance.root_cause_total_bridge`
 
@@ -133,8 +126,6 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 - Ambiguous question: Explain the sales variance.
 - Ambiguous candidates: `variance.root_cause_total_bridge`, `variance.root_cause_exploded_bridge`, `variance.total_by_dimension_bridge`, `variance.root_cause_component_bridge`, `variance.scenario_bridge`
 - Disambiguation: Clarify whether the intended focus is `root_cause_total_movement`, `root_cause_path_with_nested_drilldowns`, `total_delta_split_by_dimension`, `component_level_root_cause`, `scenario_reconciliation`.
-- High-overlap pair evidence:
-  - `variance.root_cause_exploded_bridge`: `resolved`; evidence `explicit_competitor_link`, `ambiguous_example_link`, `negative_example_link`
 
 ### `variance.scenario_bridge`
 

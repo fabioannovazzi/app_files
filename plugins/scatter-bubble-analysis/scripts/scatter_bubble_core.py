@@ -1422,6 +1422,24 @@ def write_client_report(
     docx_path = output_dir / "scatter_bubble_client_report.docx"
     dot_dimension = str(recipe["mappings"]["dot_dimension"])
     size_metric = str(recipe["mappings"]["bubble_size_metric_column"])
+    bubble_note = (
+        (
+            "Los gráficos de burbujas omiten tamaños cero o negativos; esos valores "
+            "se conservan en los datos de origen. La lista siguiente resume valores "
+            "de origen, no solo puntos dibujados."
+            if _output_language(recipe) == "es"
+            else "Bubble charts omit zero or negative sizes; those values remain in "
+            "the source data. The list below summarizes source values, not only "
+            "plotted points."
+        )
+        if any("bubble" in str(chart) for chart in recipe["options"]["charts"])
+        else ""
+    )
+    source_heading = (
+        "Valores de origen principales"
+        if _output_language(recipe) == "es"
+        else "Largest Source Values"
+    )
     lines = [
         f"# {copy['report_title']}",
         "",
@@ -1430,9 +1448,11 @@ def write_client_report(
             y=recipe["mappings"]["y_metric_column"],
         ),
         "",
-        f"## {copy['largest_dots']}",
+        f"## {source_heading}",
         "",
     ]
+    if bubble_note:
+        lines.extend([bubble_note, ""])
     for row in summary_table.head(5).to_dicts():
         lines.append(
             f"- {row[dot_dimension]}: {_format_value(row[size_metric])} {size_metric}"
@@ -1463,7 +1483,9 @@ def write_client_report(
                 y=recipe["mappings"]["y_metric_column"],
             )
         )
-        document.add_heading(copy["largest_dots"], level=2)
+        if bubble_note:
+            document.add_paragraph(bubble_note)
+        document.add_heading(source_heading, level=2)
         for row in summary_table.head(5).to_dicts():
             document.add_paragraph(
                 f"{row[dot_dimension]}: {_format_value(row[size_metric])} {size_metric}",

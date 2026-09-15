@@ -457,8 +457,8 @@
           "capability_ids": [
             "period_comparison.by_period"
           ],
-          "best_when": "The reader needs to compare current and baseline period values across each month or week and see where gaps are largest.",
-          "avoid_when": "Avoid when the story is only the smooth trajectory shape or a single reconciled total movement."
+          "best_when": "The reader needs weekly-average current and baseline values across overlapping 52-, 26-, 13- and 4-week recency windows.",
+          "avoid_when": "Do not use for individual calendar-month totals or monthly gaps; use multitier_column for side-by-side monthly values or trend for their trajectory. Recency windows overlap and are not additive."
         },
         "gap_between_two_values": {
           "selection_emphasis": "gap_between_two_values",
@@ -15934,11 +15934,11 @@
         "period_gap_scan"
       ],
       "selection_emphasis": "period_by_period_gap",
-      "best_when": "The reader needs to compare current and baseline period values across each month or week and see where gaps are largest.",
-      "avoid_when": "Avoid when the story is only the smooth trajectory shape or a single reconciled total movement.",
+      "best_when": "The reader needs weekly-average current and baseline values across overlapping 52-, 26-, 13- and 4-week recency windows.",
+      "avoid_when": "Do not use for individual calendar-month totals or monthly gaps; use multitier_column for side-by-side monthly values or trend for their trajectory. Recency windows overlap and are not additive.",
       "axis_roles": {
-        "x": "ordered_period",
-        "y": "metric",
+        "x": "overlapping_recency_window",
+        "y": "weekly_average_metric",
         "series": "scenario_or_comparison_period"
       },
       "period_semantics": {
@@ -16038,12 +16038,13 @@
         "period / year_over_year_by_recency_window_small_multiples"
       ],
       "example_count": 2,
-      "primary_decision_cue": "Question asks which individual periods have the largest current-vs-baseline gaps.",
+      "primary_decision_cue": "Question asks for weekly-average current-vs-baseline gaps across overlapping recency windows, not individual calendar months.",
       "requires_question_focus": [
         "period_gap",
         "current_vs_baseline_by_period"
       ],
       "reject_decision_cues": [
+        "asks for individual calendar-month totals",
         "asks for smooth trajectory",
         "asks for additive reconciliation",
         "asks for exact table"
@@ -16249,8 +16250,8 @@
             "scope": "rendered_analysis_scope"
           },
           "visual_role_bindings": {
-            "x": "ordered_period",
-            "y": "metric",
+            "x": "overlapping_recency_window",
+            "y": "weekly_average_metric",
             "series": "scenario_or_comparison_period"
           }
         },
@@ -16260,12 +16261,12 @@
           "present_in_generated_manifest": true,
           "evidence_status": "gallery_image_reviewed"
         },
-        "accept_when": "The reader needs to compare current and baseline period values across each month or week and see where gaps are largest.",
-        "reject_when": "Avoid when the story is only the smooth trajectory shape or a single reconciled total movement.",
+        "accept_when": "The reader needs weekly-average current and baseline values across overlapping 52-, 26-, 13- and 4-week recency windows.",
+        "reject_when": "Do not use for individual calendar-month totals or monthly gaps; use multitier_column for side-by-side monthly values or trend for their trajectory. Recency windows overlap and are not additive.",
         "tie_breakers": [
           {
             "against": "period_comparison.trend",
-            "choose_this_when": "The reader needs to compare current and baseline period values across each month or week and see where gaps are largest.",
+            "choose_this_when": "The reader needs weekly-average current and baseline values across overlapping 52-, 26-, 13- and 4-week recency windows.",
             "choose_other_when": "The reader needs to see the ordered period path: acceleration, reversal, narrowing, widening, or seasonality.",
             "distinguishing_emphasis": {
               "this": "period_by_period_gap",
@@ -16274,7 +16275,7 @@
           },
           {
             "against": "period_comparison.multitier_column",
-            "choose_this_when": "The reader needs to compare current and baseline period values across each month or week and see where gaps are largest.",
+            "choose_this_when": "The reader needs weekly-average current and baseline values across overlapping 52-, 26-, 13- and 4-week recency windows.",
             "choose_other_when": "The reader needs a compact executive AC/PY period comparison with clear column contrast.",
             "distinguishing_emphasis": {
               "this": "period_by_period_gap",
@@ -16283,7 +16284,7 @@
           },
           {
             "against": "period_comparison.time_series_table",
-            "choose_this_when": "The reader needs to compare current and baseline period values across each month or week and see where gaps are largest.",
+            "choose_this_when": "The reader needs weekly-average current and baseline values across overlapping 52-, 26-, 13- and 4-week recency windows.",
             "choose_other_when": "The report needs citeable period values, deltas, and percent deltas rather than a primarily visual reading.",
             "distinguishing_emphasis": {
               "this": "period_by_period_gap",
@@ -16292,7 +16293,7 @@
           },
           {
             "against": "period_comparison.horizontal_waterfall",
-            "choose_this_when": "The reader needs to compare current and baseline period values across each month or week and see where gaps are largest.",
+            "choose_this_when": "The reader needs weekly-average current and baseline values across overlapping 52-, 26-, 13- and 4-week recency windows.",
             "choose_other_when": "The reader needs to see how period variances add from previous total to current total.",
             "distinguishing_emphasis": {
               "this": "period_by_period_gap",
@@ -16301,7 +16302,7 @@
           },
           {
             "against": "period_comparison.dot",
-            "choose_this_when": "The reader needs to compare current and baseline period values across each month or week and see where gaps are largest.",
+            "choose_this_when": "The reader needs weekly-average current and baseline values across overlapping 52-, 26-, 13- and 4-week recency windows.",
             "choose_other_when": "The reader needs a low-clutter comparison of two values across categories, panels, or periods.",
             "distinguishing_emphasis": {
               "this": "period_by_period_gap",
@@ -16561,7 +16562,7 @@
       },
       "selection_examples": {
         "positive_questions": [
-          "Which months explain the AC/PY sales gap?"
+          "How do weekly-average AC/PY sales gaps differ across overlapping 52-, 26-, 13- and 4-week recency windows?"
         ],
         "negative_questions": [
           {
@@ -17574,7 +17575,7 @@
           {
             "against": "period_comparison.by_period",
             "choose_this_when": "The reader needs a low-clutter comparison of two values across categories, panels, or periods.",
-            "choose_other_when": "The reader needs to compare current and baseline period values across each month or week and see where gaps are largest.",
+            "choose_other_when": "The reader needs weekly-average current and baseline values across overlapping 52-, 26-, 13- and 4-week recency windows.",
             "distinguishing_emphasis": {
               "this": "gap_between_two_values",
               "other": "period_by_period_gap"
@@ -17869,7 +17870,7 @@
             "better_capability_id": "period_comparison.slope"
           },
           {
-            "question": "Which months explain the AC/PY sales gap?",
+            "question": "How do weekly-average AC/PY sales gaps differ across overlapping 52-, 26-, 13- and 4-week recency windows?",
             "why_not": "This asks for `period_by_period_gap`, not `gap_between_two_values`.",
             "better_capability_id": "period_comparison.by_period"
           },
@@ -18246,7 +18247,7 @@
           {
             "against": "period_comparison.by_period",
             "choose_this_when": "The reader needs to see how period variances add from previous total to current total.",
-            "choose_other_when": "The reader needs to compare current and baseline period values across each month or week and see where gaps are largest.",
+            "choose_other_when": "The reader needs weekly-average current and baseline values across overlapping 52-, 26-, 13- and 4-week recency windows.",
             "distinguishing_emphasis": {
               "this": "additive_reconciliation",
               "other": "period_by_period_gap"
@@ -18532,7 +18533,7 @@
             "better_capability_id": "period_comparison.trend"
           },
           {
-            "question": "Which months explain the AC/PY sales gap?",
+            "question": "How do weekly-average AC/PY sales gaps differ across overlapping 52-, 26-, 13- and 4-week recency windows?",
             "why_not": "This asks for `period_by_period_gap`, not `additive_reconciliation`.",
             "better_capability_id": "period_comparison.by_period"
           },
@@ -18919,7 +18920,7 @@
           {
             "against": "period_comparison.by_period",
             "choose_this_when": "The reader needs a compact executive AC/PY period comparison with clear column contrast.",
-            "choose_other_when": "The reader needs to compare current and baseline period values across each month or week and see where gaps are largest.",
+            "choose_other_when": "The reader needs weekly-average current and baseline values across overlapping 52-, 26-, 13- and 4-week recency windows.",
             "distinguishing_emphasis": {
               "this": "compact_side_by_side_period_comparison",
               "other": "period_by_period_gap"
@@ -19205,7 +19206,7 @@
             "better_capability_id": "period_comparison.trend"
           },
           {
-            "question": "Which months explain the AC/PY sales gap?",
+            "question": "How do weekly-average AC/PY sales gaps differ across overlapping 52-, 26-, 13- and 4-week recency windows?",
             "why_not": "This asks for `period_by_period_gap`, not `compact_side_by_side_period_comparison`.",
             "better_capability_id": "period_comparison.by_period"
           },
@@ -20261,7 +20262,7 @@
           {
             "against": "period_comparison.by_period",
             "choose_this_when": "The report needs citeable period values, deltas, and percent deltas rather than a primarily visual reading.",
-            "choose_other_when": "The reader needs to compare current and baseline period values across each month or week and see where gaps are largest.",
+            "choose_other_when": "The reader needs weekly-average current and baseline values across overlapping 52-, 26-, 13- and 4-week recency windows.",
             "distinguishing_emphasis": {
               "this": "exact_values",
               "other": "period_by_period_gap"
@@ -20469,7 +20470,7 @@
             "better_capability_id": "period_comparison.trend"
           },
           {
-            "question": "Which months explain the AC/PY sales gap?",
+            "question": "How do weekly-average AC/PY sales gaps differ across overlapping 52-, 26-, 13- and 4-week recency windows?",
             "why_not": "This asks for `period_by_period_gap`, not `exact_values`.",
             "better_capability_id": "period_comparison.by_period"
           },
@@ -20850,7 +20851,7 @@
           {
             "against": "period_comparison.by_period",
             "choose_this_when": "The reader needs to see the ordered period path: acceleration, reversal, narrowing, widening, or seasonality.",
-            "choose_other_when": "The reader needs to compare current and baseline period values across each month or week and see where gaps are largest.",
+            "choose_other_when": "The reader needs weekly-average current and baseline values across overlapping 52-, 26-, 13- and 4-week recency windows.",
             "distinguishing_emphasis": {
               "this": "trajectory_shape",
               "other": "period_by_period_gap"
@@ -21185,7 +21186,7 @@
         ],
         "negative_questions": [
           {
-            "question": "Which months explain the AC/PY sales gap?",
+            "question": "How do weekly-average AC/PY sales gaps differ across overlapping 52-, 26-, 13- and 4-week recency windows?",
             "why_not": "This asks for `period_by_period_gap`, not `trajectory_shape`.",
             "better_capability_id": "period_comparison.by_period"
           },
@@ -38219,7 +38220,7 @@
           },
           "structured_decision_cues": {
             "period_comparison.by_period": {
-              "primary_decision_cue": "Question asks which individual periods have the largest current-vs-baseline gaps.",
+              "primary_decision_cue": "Question asks for weekly-average current-vs-baseline gaps across overlapping recency windows, not individual calendar months.",
               "requires_question_focus": [
                 "period_gap",
                 "current_vs_baseline_by_period"
@@ -38285,7 +38286,7 @@
           },
           "structured_decision_cues": {
             "period_comparison.by_period": {
-              "primary_decision_cue": "Question asks which individual periods have the largest current-vs-baseline gaps.",
+              "primary_decision_cue": "Question asks for weekly-average current-vs-baseline gaps across overlapping recency windows, not individual calendar months.",
               "requires_question_focus": [
                 "period_gap",
                 "current_vs_baseline_by_period"

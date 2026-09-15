@@ -225,3 +225,139 @@ def test_intake_refuses_to_overwrite_existing_run_artifacts(tmp_path: Path) -> N
         )
 
     assert receipt_path.read_text(encoding="utf-8") == original_content
+
+
+@pytest.mark.parametrize(
+    "cell_value, error",
+    [("=1+2", "Uncached Excel formula"), ("#DIV/0!", "Excel cell error")],
+)
+def test_intake_rejects_unresolved_excel_values(
+    tmp_path: Path, cell_value: str, error: str
+) -> None:
+    intake = _intake_module()
+    workbook = Workbook()
+    workbook.active.append(["Customer", "Revenue"])
+    workbook.active.append(["Synthetic", cell_value])
+    dataset = tmp_path / "unresolved.xlsx"
+    workbook.save(dataset)
+    output = tmp_path / "intake"
+
+    with pytest.raises(ValueError, match=error):
+        intake.run_dataset_intake(
+            dataset, dataset_contract_id="synthetic", output_dir=output
+        )
+
+    assert not (output / "dataset_profile.json").exists()
+
+
+def test_csv_intake_retains_explicit_delimiter_and_decimal_contract(
+    tmp_path: Path,
+) -> None:
+    dataset = tmp_path / "regional.csv"
+    dataset.write_text("Month;Revenue\n2026-01-01;12,50\n", encoding="utf-8")
+    intake = _intake_module()
+    output = tmp_path / "intake"
+
+    intake.run_dataset_intake(
+        dataset,
+        dataset_contract_id="regional",
+        output_dir=output,
+        csv_options={"separator": ";", "decimal_comma": True},
+    )
+
+    profile = _read_json(output / "dataset_profile.json")
+    assert profile["source"]["parser_options"]["separator"] == ";"
+    assert profile["source"]["parser_options"]["decimal_comma"] is True
+    assert profile["columns"]["Revenue"]["sample_values"] == [12.5]
+
+
+def test_excel_blank_is_retained_and_duplicate_headers_have_explicit_names(
+    tmp_path: Path,
+) -> None:
+    profile = _load_module(
+        "clara_profile_blank_test", PLUGIN_ROOT / "scripts/profile_dataset.py"
+    )
+    workbook = Workbook()
+    workbook.active.append(["Revenue", "Revenue", "Label"])
+    workbook.active.append([None, 12, "Synthetic"])
+    dataset = tmp_path / "blank.xlsx"
+    workbook.save(dataset)
+
+    frame, source = profile.load_dataset_frame(dataset, sheet_name=None)
+
+    assert frame.to_dicts() == [
+        {"Revenue": None, "Revenue_2": 12, "Label": "Synthetic"}
+    ]
+    assert source["formula_count"] == 0
+    assert source["formula_cache"] == "no_formulas"
+
+
+def test_empty_excel_sheet_rejects_and_closes_both_workbooks(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    profile = _load_module(
+        "clara_profile_close_test", PLUGIN_ROOT / "scripts/profile_dataset.py"
+    )
+    dataset = tmp_path / "empty.xlsx"
+    Workbook().save(dataset)
+    original = profile.load_workbook
+    closed = []
+
+    def tracked_load(*args, **kwargs):
+        workbook = original(*args, **kwargs)
+        close = workbook.close
+
+        def tracked_close():
+            closed.append(kwargs["data_only"])
+            close()
+
+        workbook.close = tracked_close
+        return workbook
+
+    monkeypatch.setattr(profile, "load_workbook", tracked_load)
+
+    with pytest.raises(ValueError, match="no header row"):
+        profile.load_dataset_frame(dataset, sheet_name=None)
+
+    assert closed == [True, False]
+
+
+def test_late_csv_type_conflict_fails_without_silent_null_substitution(
+    tmp_path: Path,
+) -> None:
+    profile = _load_module(
+        "clara_profile_late_csv_test", PLUGIN_ROOT / "scripts/profile_dataset.py"
+    )
+    dataset = tmp_path / "late.csv"
+    dataset.write_text("Revenue\n" + "12\n" * 10000 + "not-a-number\n")
+
+    with pytest.raises(pl.exceptions.ComputeError, match="not-a-number"):
+        profile.load_dataset_frame(dataset, sheet_name=None)
+
+
+def test_excel_cached_formula_is_reported_without_claiming_recalculation(
+    tmp_path: Path,
+) -> None:
+    from zipfile import ZipFile
+
+    profile = _load_module(
+        "clara_profile_cached_formula_test", PLUGIN_ROOT / "scripts/profile_dataset.py"
+    )
+    workbook = Workbook()
+    workbook.active.append(["Revenue"])
+    workbook.active.append(["=1+2"])
+    original = tmp_path / "original.xlsx"
+    workbook.save(original)
+    dataset = tmp_path / "cached.xlsx"
+    with ZipFile(original) as source, ZipFile(dataset, "w") as target:
+        for info in source.infolist():
+            content = source.read(info.filename)
+            if info.filename == "xl/worksheets/sheet1.xml":
+                content = content.replace(b"<f>1+2</f><v></v>", b"<f>1+2</f><v>3</v>")
+            target.writestr(info, content)
+
+    frame, source = profile.load_dataset_frame(dataset, sheet_name=None)
+
+    assert frame.to_dicts() == [{"Revenue": 3}]
+    assert source["formula_count"] == 1
+    assert source["formula_cache"] == "present_not_recalculated"

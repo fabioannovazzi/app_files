@@ -41,6 +41,11 @@ EXPECTED_M2_NUMERIC_BOUNDS = {
 
 
 def _load_module(name: str, path: Path) -> Any:
+    # Other test modules already import the kernel through production helpers.
+    # Replacing it creates a second exception class with the same module/name.
+    existing = sys.modules.get(name)
+    if existing is not None and Path(existing.__file__).resolve() == path.resolve():
+        return existing
     scripts_path = str(SCRIPTS_ROOT)
     inserted = scripts_path not in sys.path
     if inserted:

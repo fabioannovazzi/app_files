@@ -36,7 +36,13 @@ from typing import Any
 import polars as pl
 from openpyxl import load_workbook
 
-__all__ = ["build_dataset_profile", "profile_dataset", "main"]
+__all__ = [
+    "build_dataset_profile",
+    "profile_dataset",
+    "load_dataset_frame",
+    "parse_period_value",
+    "main",
+]
 
 
 def get_schema_and_column_names(
@@ -191,27 +197,86 @@ def _clean_headers(headers: list[Any]) -> list[str]:
     return cleaned
 
 
-def _load_frame(
-    path: Path, *, sheet_name: str | None
+def load_dataset_frame(
+    path: Path, *, sheet_name: str | None, csv_options: dict[str, Any] | None = None
 ) -> tuple[pl.DataFrame, dict[str, Any]]:
+    """Read the selected table under explicit mechanical parser settings."""
     suffix = path.suffix.casefold()
+    if sheet_name is not None and suffix not in {".xlsx", ".xlsm"}:
+        raise ValueError("Worksheet selection requires an Excel input")
+    if csv_options is not None and suffix != ".csv":
+        raise ValueError("CSV parser options require a CSV input")
     if suffix in {".parquet", ".pq"}:
         return pl.read_parquet(path), {"format": "parquet", "sheet_name": None}
     if suffix == ".csv":
-        return pl.read_csv(path, infer_schema_length=10000), {
-            "format": "csv",
-            "sheet_name": None,
+        options = dict(csv_options or {})
+        allowed = {
+            "separator",
+            "quote_char",
+            "encoding",
+            "decimal_comma",
+            "null_values",
         }
+        if set(options) - allowed:
+            raise ValueError(
+                "Unsupported CSV parser options: "
+                + ", ".join(sorted(set(options) - allowed))
+            )
+        if "lossy" in str(options.get("encoding", "utf8")):
+            raise ValueError("Lossy CSV decoding is not suitable for evidence intake")
+        source = {"format": "csv", "sheet_name": None}
+        if csv_options is not None:
+            source["parser_options"] = {
+                "separator": ",",
+                "quote_char": '"',
+                "encoding": "utf8",
+                "decimal_comma": False,
+                **options,
+            }
+        return pl.read_csv(path, infer_schema_length=10000, **options), source
     if suffix in {".xlsx", ".xlsm"}:
         workbook = load_workbook(path, read_only=True, data_only=True)
-        worksheet = workbook[sheet_name] if sheet_name else workbook.active
-        rows = worksheet.iter_rows(values_only=True)
-        headers = _clean_headers(list(next(rows)))
-        values = [tuple(row) for row in rows]
-        frame = pl.DataFrame(
-            values, schema=headers, orient="row", infer_schema_length=None
-        )
-        return frame, {"format": suffix.lstrip("."), "sheet_name": worksheet.title}
+        formulas = None
+        try:
+            formulas = load_workbook(path, read_only=True, data_only=False)
+            worksheet = workbook[sheet_name] if sheet_name else workbook.active
+            formula_sheet = formulas[worksheet.title]
+            formula_count = 0
+            values = []
+            for cached_row, formula_row in zip(
+                worksheet.iter_rows(), formula_sheet.iter_rows(), strict=True
+            ):
+                for cached, original in zip(cached_row, formula_row, strict=True):
+                    if original.data_type == "f":
+                        formula_count += 1
+                        if cached.value is None:
+                            raise ValueError(
+                                f"Uncached Excel formula at {worksheet.title}!{original.coordinate}; "
+                                "recalculate and save a copy in Excel before intake."
+                            )
+                    if cached.data_type == "e":
+                        raise ValueError(
+                            f"Excel cell error at {worksheet.title}!{cached.coordinate}: {cached.value}"
+                        )
+                values.append(tuple(cell.value for cell in cached_row))
+            if not values or not any(value is not None for value in values[0]):
+                raise ValueError(f"Worksheet {worksheet.title} has no header row")
+            headers = _clean_headers(list(values[0]))
+            frame = pl.DataFrame(
+                values[1:], schema=headers, orient="row", infer_schema_length=None
+            )
+            return frame, {
+                "format": suffix.lstrip("."),
+                "sheet_name": worksheet.title,
+                "formula_count": formula_count,
+                "formula_cache": (
+                    "present_not_recalculated" if formula_count else "no_formulas"
+                ),
+            }
+        finally:
+            workbook.close()
+            if formulas is not None:
+                formulas.close()
     raise ValueError(f"Unsupported dataset format for {path}")
 
 
@@ -220,7 +285,7 @@ def _sample_values(series: pl.Series, limit: int = 8) -> list[Any]:
     return [_json_safe(value) for value in values]
 
 
-def _parse_period_value(value: Any) -> date | None:
+def parse_period_value(value: Any) -> date | None:
     """Parse common machine-readable period labels for mechanical profiling."""
 
     if isinstance(value, datetime):
@@ -289,7 +354,7 @@ def _parse_period_value(value: Any) -> date | None:
 def _parse_sample_dates(values: list[Any]) -> list[date]:
     parsed: list[date] = []
     for value in values:
-        parsed_value = _parse_period_value(value)
+        parsed_value = parse_period_value(value)
         if parsed_value is not None:
             parsed.append(parsed_value)
     return parsed
@@ -1191,9 +1256,12 @@ def build_dataset_profile(
     *,
     dataset_id: str,
     sheet_name: str | None = None,
+    csv_options: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     resolved_path = path.expanduser().resolve()
-    frame, source = _load_frame(resolved_path, sheet_name=sheet_name)
+    frame, source = load_dataset_frame(
+        resolved_path, sheet_name=sheet_name, csv_options=csv_options
+    )
     source["path"] = str(resolved_path)
     return _profile_frame(frame, dataset_id=dataset_id, source=source)
 
@@ -1203,6 +1271,7 @@ def profile_dataset(
     *,
     dataset_id: str | None = None,
     sheet_name: str | None = None,
+    csv_options: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Return the standalone Reporting Engine dataset profile."""
 
@@ -1210,6 +1279,7 @@ def profile_dataset(
         path,
         dataset_id=dataset_id or path.stem,
         sheet_name=sheet_name,
+        csv_options=csv_options,
     )
 
 
@@ -1237,6 +1307,9 @@ def main(argv: list[str] | None = None) -> int:
         ),
     )
     parser.add_argument("--sheet-name", help="Excel sheet name for xlsx/xlsm inputs.")
+    parser.add_argument(
+        "--csv-options-json", help="Explicit CSV parser settings as a JSON object."
+    )
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
 
@@ -1244,6 +1317,9 @@ def main(argv: list[str] | None = None) -> int:
         args.dataset,
         dataset_id=args.dataset_id,
         sheet_name=args.sheet_name,
+        csv_options=(
+            json.loads(args.csv_options_json) if args.csv_options_json else None
+        ),
     )
     _write_profile(args.output, profile)
     return 0

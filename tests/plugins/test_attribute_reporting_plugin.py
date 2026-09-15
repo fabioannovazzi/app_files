@@ -2422,7 +2422,9 @@ def test_apply_validated_mappings_rejects_invalid_receipt_before_database_write(
     apply_module = _load_apply_module(reporting)
     store_paths: list[Path] = []
     atomic_calls: list[tuple[list[Any], list[Any]]] = []
-    invalid_receipt_path = ROOT / "tests" / f".{tmp_path.name}-mapping-receipt.json"
+    git_workspace = tmp_path / "git-workspace"
+    (git_workspace / ".git").mkdir(parents=True)
+    invalid_receipt_path = git_workspace / "mapping-receipt.json"
     _install_fake_apply_modules(
         monkeypatch,
         taxonomy=case["taxonomy"],

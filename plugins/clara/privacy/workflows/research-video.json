@@ -17,7 +17,12 @@
     "requirements-shared-core.txt",
     "requirements-shared-ocr.txt",
     "constraints-shared-macos-py312.txt",
-    "scripts/_python_bootstrap.py"
+    "scripts/_python_bootstrap.py",
+    "scripts/bounded_process.py",
+    "scripts/artifact_publication.py",
+    "scripts/case_store.py",
+    "scripts/media_publication.py",
+    "scripts/render_attempt.py"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -31,6 +36,11 @@
         "id": "video-plan-and-review",
         "purpose": "Prepare, review and validate the narrated research video",
         "content": "Scene plan, narration, language, hash-bound Mparanza voice request and returned OpenAI audio artifacts, hosted bundle manifest, localized AI-voice disclosure, visual fingerprints, motion choices, approval record, captions, timing, render report, media QA, caveats and final review findings"
+      },
+      {
+        "id": "local-render-attempt-evidence",
+        "purpose": "Inspect failed renders, verify the complete published generation and preserve review evidence",
+        "content": "Retained local attempt directories and published snapshots can contain copies of scene images, intermediate/final video, normalized narration audio, captions, narration and approval records, source references, filenames/local paths, process stdout/stderr and prior reports. These copies remain until separately removed; retry does not automatically delete them. Any of this material explicitly opened by Codex can enter model context. It is not part of the hosted narration request."
       }
     ]
   },
@@ -110,20 +120,12 @@
     {
       "id": "hosted-voice-artifact-binding",
       "control": "The local attachment step requires the Mparanza hosted source, fixed provider policy, exact request, approval, language and scene order; rejects unsafe or undeclared ZIP entries; converts returned WAV files to normalized PCM; and binds their SHA-256, metadata and duration to the run."
-    },
-    {
-      "id": "local-media-rendering",
-      "control": "After Mparanza returns the voice artifacts, scene images, optional foreground layers, audio normalization, captions and MP4 assembly are handled by the local renderer without a user API key."
-    },
-    {
-      "id": "visible-ai-voice-disclosure",
-      "control": "The local renderer places the localized AI-generated-voice disclosure on every scene and records its text and placement in the run artifacts."
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-14",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d8af1fe32655531ce24716fca6e496411001ea7a16732d880d1121d80738338b"
+    "source_fingerprint": "d7a0b17b4f6662b50a28a514d1be3e6304ef73d3e2c4c2b9d909948bab07b3b1"
   }
 }

@@ -875,7 +875,14 @@
           "minLength": 1
         },
         "period_id": {
-          "$ref": "#/$defs/id"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "rule_type": {
           "enum": [
@@ -896,7 +903,15 @@
           ]
         },
         "parameters": {
-          "$ref": "#/$defs/periodRuleParameters"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/periodRuleParameters"
+            },
+            {
+              "type": "object",
+              "maxProperties": 0
+            }
+          ]
         },
         "status": {
           "$ref": "#/$defs/conceptStatus"
@@ -917,7 +932,38 @@
         "caveats": {
           "$ref": "#/$defs/stringArray"
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "period_id": {
+                "type": "null"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "rule_type": {
+                "const": "all_available"
+              },
+              "scope_type": {
+                "const": "all_available"
+              },
+              "parameters": {
+                "const": {}
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "parameters": {
+                "$ref": "#/$defs/periodRuleParameters"
+              }
+            }
+          }
+        }
+      ]
     },
     "roleBinding": {
       "type": "object",

@@ -4,7 +4,7 @@
   "boundary": "Mechanical acceptance only. Dataset selection and fixture bindings exercise explicit contracts and do not endorse a business analysis.",
   "manifest": {
     "file_name": "selection_manifest.json",
-    "sha256": "f80be1b0db1dd18a2de53054e47a45096e48f14b2c9f09361d797eeed3a386cb"
+    "sha256": "934a06b31811f2aee51863b668070b3b0dcef2f28f4739d3730e9c5b03bfd374"
   },
   "fixture_datasets": [
     {

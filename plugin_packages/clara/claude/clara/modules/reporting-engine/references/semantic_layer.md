@@ -90,6 +90,15 @@ Save the reviewed semantic layer as persistent project data outside the plugin
 and repository. The run directory keeps only the draft and per-snapshot
 artifacts.
 
+When the reviewed question concerns every supplied observation and no period
+column is needed, use an `all_available` rule with `scope_type: all_available`,
+`period_id: null`, and `parameters: {}`. Keep its evidence, rationale and review
+status explicit. This is an all-records instruction, not permission to infer a
+calendar, a comparison window, or financial roles. The selected capability must
+allow explicit all-data scope without a period column. Time-axis and comparison
+capabilities still require their period bindings. Distribution execution records
+unmapped legacy Date/Period placeholders separately from source time coverage.
+
 Validate the reviewed document:
 
 ```bash

@@ -22,7 +22,15 @@
     "repository/modules/case_notes_voice/api.py",
     "repository/modules/pdp/legal_content.py",
     "repository/static/js/case-notes-voice.js",
-    "repository/templates/case_notes_voice.html"
+    "repository/templates/case_notes_voice.html",
+    "repository/modules/case_notes_voice/transcription_service.py",
+    "repository/modules/case_notes_voice/transcription_transport.py",
+    "repository/modules/case_notes_voice/__init__.py",
+    "scripts/self_relaunch.py",
+    "scripts/managed_python_runtime.py",
+    "scripts/_managed_python_runtime.py",
+    "requirements.txt",
+    "components.json"
   ],
   "trigger": "The user chooses live Voice Capture, hosted audio upload, or live deck-feedback capture. Importing an already downloaded bundle does not trigger this service.",
   "automatic": false,
@@ -66,12 +74,12 @@
       "Remote launch and upload routes are intended for HTTPS mparanza.com; authentication material is not written into transcript or advisory artifacts.",
       "Plugin command-line entry points read magic links and session cookies from owner-only files or an interactive prompt rather than command arguments; they do not offer a launch-token-only upload path.",
       "The launch, realtime, upload, and job routes require the authenticated Mparanza session; voice operations additionally require a returned user-bound launch token or job identifier.",
-      "Local import preserves the raw bundle and records fingerprints before advisory interpretation."
+      "Direct local launch/upload CLIs may prepare published Python dependencies before invoking the existing authenticated service client. Package-index setup is separate from the Hosted Voice request and does not include the workflow CLI arguments in its pip command; see the transcribe workflow boundary."
     ]
   },
   "retention": {
     "status": "documented",
-    "statement": "Live screen video remains in the browser and is not uploaded. Context-bearing launch metadata is bound to the authenticated user behind an opaque token; token access expires after eight hours, and expired metadata is removed by startup or periodic cleanup rather than at a guaranteed exact instant. Hosted audio, upload chunks, and transcription work files must be deleted before a completed package is available. On terminal package retrieval, transcript and job state are scrubbed before the response; a scrub failure blocks retrieval. Cleanup also removes stale chunks, terminal jobs, and abandoned processing state. Ordinary technical logs follow the separate service logging arrangements."
+    "statement": "Live screen video remains in the browser and is not uploaded. Context-bearing launch metadata is bound to the authenticated user behind an opaque token; token access expires after eight hours, and expired metadata is removed by startup or periodic cleanup rather than at a guaranteed exact instant. Hosted audio, upload chunks, and transcription work files must be deleted before a completed package is available. On terminal package retrieval, transcript and job state are scrubbed before the response; a scrub failure blocks retrieval. Cleanup also removes stale chunks, terminal jobs, and abandoned processing state. Ordinary technical logs follow the separate service logging arrangements. This service cleanup does not delete browser downloads, local imported bundles or case artifacts. Provider-side retention and deletion are not established by the inspected application source. Transcription transport errors expose classified status metadata rather than the raw provider error body; this is not a claim that all application logs are content-free."
   },
   "security_controls": [
     {
@@ -88,9 +96,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-12",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "e9cd79e8c2830fc45bd4702251890992f80cd6d1c7a2930cead8ece719e26cb0"
+    "source_fingerprint": "0cabe87b0f03a70dd7fc1bd1fe2a1e37c71d484dbbe1fa860639dcd4de6f68d2"
   }
 }

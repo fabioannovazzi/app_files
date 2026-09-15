@@ -438,6 +438,12 @@ def compare_current_deck_snapshot(
         "issues": issues,
         "moved": moved,
         "untracked_current_text": untracked,
+        "current_text_inventory": items,
+        "coverage": {
+            "semantic_review_performed": False,
+            "scope": "All text items supplied by the current-deck extractor; visual chart meaning and non-text content require separate review.",
+            "limitation": "Untracked-text heuristics are navigation aids. An empty issue list does not establish that short headlines, numeric labels, footnotes or other material claims were reviewed.",
+        },
     }
 
 

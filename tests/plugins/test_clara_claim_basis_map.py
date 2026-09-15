@@ -369,3 +369,43 @@ def test_extract_current_deck_snapshot_reads_hidden_claim_shape_name(
     assert snapshot["slides"][0]["texts"] == [
         {"text": "The market grew 12% in 2025.", "claim_key": "s01-c01"}
     ]
+
+
+def test_current_text_inventory_keeps_short_headlines_and_numeric_labels() -> None:
+    renderer = _load_renderer()
+    payload = {
+        "slides": [
+            {
+                "slide_number": 1,
+                "slide_title": "Decision",
+                "claims": [
+                    {
+                        "claim": "Proceed only after demand is verified.",
+                        "source_refs": [{"title": "Synthetic"}],
+                    }
+                ],
+            }
+        ]
+    }
+    snapshot = {
+        "slides": [
+            {
+                "slide_number": 1,
+                "texts": [
+                    "Decision",
+                    "Proceed only after demand is verified.",
+                    "NO DEMAND",
+                    "12",
+                    "Source: appendix B",
+                ],
+            }
+        ]
+    }
+
+    audit = renderer.compare_current_deck_snapshot(payload, snapshot)
+
+    assert [item["text"] for item in audit["current_text_inventory"]] == snapshot[
+        "slides"
+    ][0]["texts"]
+    assert audit["coverage"]["semantic_review_performed"] is False
+    assert "empty issue list" in audit["coverage"]["limitation"]

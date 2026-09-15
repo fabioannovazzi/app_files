@@ -29,7 +29,11 @@
     "repository/plugins/business-planning/scripts/prepare_report_site.py",
     "repository/plugins/business-planning/assets/report-interaction.js",
     "repository/plugins/business-planning/assets/report-interaction.css",
-    "repository/plugins/business-planning/references/sites-delivery.md"
+    "repository/plugins/business-planning/references/sites-delivery.md",
+    "scripts/self_relaunch.py",
+    "scripts/managed_python_runtime.py",
+    "scripts/_managed_python_runtime.py",
+    "requirements.txt"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -42,12 +46,22 @@
       {
         "id": "business-planning-analysis-and-report",
         "purpose": "Prepare one business analysis using the shared financial model and report compiler",
-        "content": "Both entry points consume one shared reviewed case and locally run the shared Decimal financial engine. Every selected file is hashed and registered with version, role, review status, audience and confidentiality restrictions. The shared report structure, HTML, JSON and CSV preserve selected file names/relative paths, evidence descriptions, confirmed assumptions and hypotheses, source-figure conflicts and professional decisions, complete calculated figures and IDs, chart lineage, limitations and unresolved matters. This full local audit package is not an automatically bounded model-context projection. The workflow instructs the model to use only the reviewed excerpts, assumptions and calculation records needed for the mandate and allowed for the audience; it does not automatically anonymize content or enforce which local artifacts Codex reads. The compiler itself calls no model or external service. Optional PDF uses a provisioned local Chromium renderer with network requests disabled and only validated HTML. Independent contribution files and legacy cases cannot finalize reports. Missing inputs in one scenario do not suppress independently complete scenarios; unavailable scenario calculations and dependent claims remain explicit in the report. The model also authors the business recommendation, alternatives, next actions and chart selection. User idea snapshots, provisional interpretations, source-backed external numerical facts and optional commercial price/volume drivers can enter this same context. Pending professional review remains explicit and does not silently discard ordinary interpretation. Supporting workpapers are accessible in a collapsed report appendix; this does not remove them from the HTML file. Authored comparison groups bind period and scenario labels to existing checked tables. Browser controls only select visibility; all figures and interpretations stay in the report. Shared scales remain fixed across group views. An explicitly requested Sites export retains the same complete HTML and embedded workpapers, and records its exact hash before host-managed publication."
+        "content": "Both entry points consume one shared reviewed case and locally run the shared Decimal financial engine. Every selected file is hashed and registered with version, role, review status, audience and confidentiality restrictions. The shared report structure, HTML, JSON and CSV preserve selected file names/relative paths, evidence descriptions, confirmed assumptions and hypotheses, source-figure conflicts and professional decisions, complete calculated figures and IDs, chart lineage, limitations and unresolved matters. This full local audit package is not an automatically bounded model-context projection. The workflow instructs the model to use only the reviewed excerpts, assumptions and calculation records needed for the mandate and allowed for the audience; it does not automatically anonymize content or enforce which local artifacts Codex reads. The compiler itself calls no model or external service. Optional PDF uses a provisioned local Chromium renderer with network requests disabled and only validated HTML. Independent contribution files and legacy cases cannot finalize reports. The model also authors the business recommendation, alternatives, next actions and chart selection. User idea snapshots, provisional interpretations, source-backed external numerical facts and optional commercial price/volume drivers can enter this same context. Pending professional review remains explicit and does not silently discard ordinary interpretation. Supporting workpapers are accessible in a collapsed report appendix; this does not remove them from the HTML file. Explicit presentation data includes report language, source-bound comparison tables, captions, proposed responsible roles and timing, decision criteria, source filenames and versions, page or cell locators, and reference URLs. These fields may enter the selected model context when it authors or reviews the case. URLs are rendered as reader-visible links; the compiler does not fetch them, and PDF rendering blocks network requests. The PDF contains reader-facing source references but hides the technical appendix and expandable workpapers that remain in the HTML. An explicit draft-PDF request can render a partial assessment with a draft label; this does not establish professional approval or remove audience restrictions. Authored comparison groups bind period and scenario labels to existing checked tables. Browser controls only select visibility; all figures and interpretations stay in the report. Shared scales remain fixed across group views. An explicitly requested Sites export retains the same complete HTML and embedded workpapers, and records its exact hash before host-managed publication. Missing inputs in one scenario do not suppress independently complete scenarios; unavailable scenario calculations and dependent claims remain explicit in the report."
       },
       {
         "id": "business-planning-iteration-and-financing",
         "purpose": "Continue the same business case and assess its proposed financing",
         "content": "The selected model may also read the previous registered planning snapshot, the current question, new customer or competitor evidence, changed assumptions, exact input differences, reconsidered conclusions, proposed tests and reopening conditions. Financing assessments may include borrower and existing-debt evidence, proposed lender or investor identity and terms, funding purpose, bank repayment scenarios or equity milestones, cash runway and ownership/return discussion. These are case data, not automatically anonymized. The prior snapshot is hashed and case-bound, and its embedded source restrictions are checked for the new audience. Old case approval cannot silently approve changed inputs. Earlier report folders are preserved; Clara permits revision folders beneath business-plan. The current report contains the cycle and financing reasoning; internal workpapers contain history and exact differences. No lender or investor application is sent by the compiler."
+      },
+      {
+        "id": "review-attestations-and-local-retention",
+        "purpose": "Assess the provenance and limits of source release and professional review records",
+        "content": "Declared reviewer identities, timezone-aware review timestamps, rationale, audience-release decisions and exact source hashes can enter model context and are retained in the local case/report package. These are operator-supplied assertions, not authenticated proof of the reviewer or semantic correctness. The compiler does not automatically delete the case, HTML, JSON, CSV or completed PDF. On a caught PDF failure it removes the incomplete PDF while retaining validated non-PDF outputs and an error receipt. Collapsing HTML appendices or hiding them in print does not redact their contents from the HTML."
+      },
+      {
+        "id": "blocked-assessment-retention",
+        "purpose": "Explain a blocked plan without presenting rejected interpretation as a conclusion",
+        "content": "When calculation contradictions block the plan, submitted narrative and assessment remain in the case record for diagnosis, while accepted narrative is empty and the report withholds the assessment conclusion. Retained source/case contents can still enter Codex context when read; report suppression is not deletion or anonymisation."
       }
     ]
   },
@@ -100,6 +114,20 @@
         "Only the configured dist output is published. All embedded report data remains included; no automatic anonymization or redaction.",
         "Verify deployment status and intended visitor access. Invitations and messages require authorized recipients; recurring updates require a separate user request."
       ]
+    },
+    {
+      "id": "direct-cli-python-dependency-setup",
+      "kind": "public_research",
+      "destination": "Python Package Index (PyPI) or the index selected by the user's Python configuration",
+      "purpose": "Prepare the declared Python dependencies before running a documented workflow CLI",
+      "content": "Published package requirements and ordinary package-index request metadata. Existing workflow arguments are forwarded to a local Python child; they are not included in the pip install command.",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "The direct CLI selects published core or registered component requirements before importing workflow modules.",
+        "The launcher preserves the working directory and arguments in the local child process; this does not redact arguments or change the workflow data boundary.",
+        "An existing matching runtime is reused. Setup installs into a fingerprinted user-scoped environment and propagates failure; it does not install into the case folder."
+      ]
     }
   ],
   "security_controls": [
@@ -113,17 +141,21 @@
     },
     {
       "id": "audience-bound-report-export",
-      "control": "Every selected source must allow the report audience in intended_audience and confidentiality.allowed_audiences, or have an explicit reviewed audience-release decision bound to its exact SHA-256. Otherwise the compiler rejects all report-package writes."
+      "control": "Every selected source must allow the report audience in intended_audience and confidentiality.allowed_audiences, or have an explicit reviewed audience-release decision bound to its exact SHA-256. Otherwise the compiler rejects all report-package writes. This enforces the declared source restrictions; it does not authenticate the named reviewer or establish that a release was actually authorized."
     },
     {
       "id": "authoritative-narrative-figures",
       "control": "Calculated financial claims require canonical calculation IDs and exact values. External numerical facts can bind to source-backed evidence IDs with exact values and units. Disagreement blocks readiness; missing inputs or material reviews/conflicts withhold capital recommendations. Ordinary provisional interpretation remains visible. Numeric literals in narrative are rejected. Semantic classification and conclusions remain model-led and subject to professional review."
+    },
+    {
+      "id": "pdf-network-interception",
+      "control": "The optional local Chromium PDF renderer installs a request-abort route before loading the validated generated HTML. Reference URLs remain links; the compiler does not fetch them. This control is limited to that rendering page and does not restrict independent host browsing or connectors."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-11",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "56800e52305e5d05deddc9b2ac37075cddf3a1997073e98b6de737748e321b89"
+    "source_fingerprint": "b2c5735d855647aee4a7385a1c76dc5816a3e94813cff3532cb7fcaf2adc95af"
   }
 }

@@ -28,6 +28,13 @@ Use host-neutral artifact names such as `clara-review/` and `run_review.md`.
 Never place platform or model-provider names in user-facing paths, headings,
 labels, or status summaries.
 
+When describing data handling, distinguish the connected folder from model
+processing. Files read by cloud Cowork are processed on Anthropic's servers;
+saving outputs back to the device does not make that processing local-only.
+Do not say that nothing left the device. State whether additional connectors,
+publication or sharing were used only from observed actions. Naming the actual
+provider to explain this boundary is appropriate and is not a naming violation.
+
 ## Output Location Rule
 
 Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
@@ -37,6 +44,12 @@ Never write run outputs inside this Git workspace, `static/shared`, `protected_d
 Use this skill when a dataset needs distribution charting: histograms,
 boxplots, stripplots, ECDF plots, kernel-density plots, period comparisons, and
 small multiples where the legacy chart supports them.
+
+This workflow uses unweighted observations. Weighted distributions are not
+supported; keep a requested weighting requirement visible and report the
+capability gap. Do not drop weights or relabel an unweighted output as weighted.
+Recipes reject unsupported mapping keys, including `weight_column`. A source
+column that is not bound is not automatically used as a weight.
 
 ## Cowork-native Run UX
 

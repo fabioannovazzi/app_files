@@ -20,7 +20,9 @@
     "requirements-shared-core.txt",
     "requirements-shared-ocr.txt",
     "constraints-shared-macos-py312.txt",
-    "scripts/_python_bootstrap.py"
+    "scripts/_python_bootstrap.py",
+    "scripts/build_voice_feedback_timeline.py",
+    "scripts/bounded_process.py"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -34,6 +36,11 @@
         "id": "transcript-and-review",
         "purpose": "Attribute speakers, review evidence, and integrate the transcript",
         "content": "Raw and reviewed transcripts, speaker identities or labels, timing and media metadata, uncertainty notes, transcription corrections, review findings, exact transcript artifact hashes, quotation evidence receipts, stable claims and dependency edges, judgement proposals bound to their direct evidence, questions, issues, and shared evidence- and claim-register updates"
+      },
+      {
+        "id": "retained-converter-attempts",
+        "purpose": "Inspect frame extraction and document conversion results or failures",
+        "content": "Local feedback-frame extraction retains images and per-frame converter stdout/stderr logs in attempt directories, including after failure or cancellation. These files may contain screen-recorded professional content, media metadata and local paths. Their contents enter model context when read; generating or retaining them does not itself send them to Hosted Voice. They remain until separately removed."
       }
     ]
   },
@@ -107,9 +114,9 @@
   ],
   "security_controls": [],
   "review": {
-    "reviewed_at": "2026-07-22",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "e5e45f90fd9361618551260f64fc986403b158789991e97b867349a8dff0b33b"
+    "source_fingerprint": "a445c23e7cc4c139ecbdb7169ea05ebf959091015f9f85845b9ed07e08ede82f"
   }
 }

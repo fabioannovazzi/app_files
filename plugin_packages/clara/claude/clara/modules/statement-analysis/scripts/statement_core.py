@@ -314,9 +314,13 @@ def _read_values(
                 raise ValueError(
                     f"Blank row_key, period, or scenario at line {line_number}."
                 )
-            values[(row_key, period, scenario)] = _parse_number(
-                row.get(columns["value_column"])
-            )
+            coordinate = (row_key, period, scenario)
+            if coordinate in values:
+                raise ValueError(
+                    f"Duplicate statement value for {coordinate!r} at line {line_number}; "
+                    "reconcile or explicitly aggregate source rows before running the statement."
+                )
+            values[coordinate] = _parse_number(row.get(columns["value_column"]))
     return values
 
 

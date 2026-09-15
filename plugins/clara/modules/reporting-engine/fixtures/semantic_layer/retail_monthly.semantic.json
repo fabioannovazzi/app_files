@@ -693,7 +693,7 @@
         "time_and_period_movement"
       ],
       "selection_emphases": [
-        "period_by_period_gap"
+        "compact_side_by_side_period_comparison"
       ],
       "validity": "valid",
       "business_purpose": "Compare January and February sales with the same months in the prior year.",

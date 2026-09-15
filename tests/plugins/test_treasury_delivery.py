@@ -18,7 +18,8 @@ sys.path.insert(
     0, str(Path(__file__).resolve().parents[2] / "plugins/treasury-forecast/scripts")
 )
 
-from treasury_core import TreasuryError
+import treasury_session as treasury_session_module
+from treasury_core import TreasuryError, build_forecast
 from treasury_inputs import HEADERS, load_inputs, read_json, safe_path, write_templates
 from treasury_report import write_artifacts
 from treasury_server import make_server
@@ -280,7 +281,7 @@ def test_failed_render_keeps_previous_version_current(tmp_path, monkeypatch):
     def fail(*args):
         raise OSError("Synthetic disk failure")
 
-    monkeypatch.setattr("treasury_session.write_artifacts", fail)
+    monkeypatch.setattr(treasury_session_module, "write_artifacts", fail)
     with pytest.raises(OSError, match="disk failure"):
         review_session(
             output,
@@ -468,12 +469,13 @@ def test_reused_bank_evidence_id_is_rejected_across_updates():
     data["as_of"] = "2026-09-19"
     data["bank_movements"][0]["date"] = "2026-09-19"
     with pytest.raises(TreasuryError, match="Previously consumed"):
-        from treasury_core import build_forecast
-
         build_forecast(data, previous=previous)
 
 
-def test_cli_review_context_scenario_and_templates_use_bound_outputs(tmp_path):
+def test_cli_review_context_scenario_and_templates_use_bound_outputs(
+    tmp_path, monkeypatch
+):
+    monkeypatch.syspath_prepend(str(SCRIPTS))
     import run_treasury
 
     workspace = archived_case(tmp_path)
@@ -530,8 +532,6 @@ def test_dependency_check_reports_supported_and_incompatible_versions(monkeypatc
 
 
 def test_report_writes_explained_update_and_incomplete_status(tmp_path):
-    from treasury_core import build_forecast
-
     updated = accept(
         second(),
         previous=accept(first()),

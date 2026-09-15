@@ -12,8 +12,6 @@ import shutil
 import sys
 import tempfile
 import threading
-import urllib.error
-import urllib.request
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -39,19 +37,43 @@ from modules.auth.dependencies import (
     require_site_permission_for_request,
 )
 from modules.auth.session import AuthenticatedUser
-from modules.case_notes_voice.api import (
+from modules.case_notes_voice.transcription_service import (
     DEFAULT_UPLOAD_TRANSCRIPTION_MODEL,
 )
-from modules.case_notes_voice.api import VoiceSessionError as AudioTranscriptionError
-from modules.case_notes_voice.api import (
+from modules.case_notes_voice.transcription_service import (
+    VoiceSessionError as AudioTranscriptionError,
+)
+from modules.case_notes_voice.transcription_service import (
     create_audio_transcription,
 )
+from modules.hosted_interviews import job_state
 from modules.hosted_interviews.campaigns import (
     LEGACY_UNCLASSIFIED_CAMPAIGN_ID,
     UnknownInterviewCampaignError,
     build_campaign_interview_payload,
     get_interview_campaign,
     list_interview_campaigns,
+)
+from modules.hosted_interviews.review_service import (
+    MAX_PARTNER_WHISPER_CHARS,
+    MAX_PREPARED_TEXT_CHARS,
+    SUPPORTED_LANGUAGES,
+    VoiceSessionError,
+    _clean_language,
+    _clean_partner_whisper,
+    _clean_text,
+    _default_partner_model,
+    _default_review_model,
+    _iso,
+    _json_object_from_text,
+    _now,
+    _public_safety_identifier,
+    _response_output_text,
+    _text_word_count,
+    create_partner_whisper,
+)
+from modules.hosted_interviews.review_service import (
+    generate_interview_quality_review as _generate_interview_quality_review,
 )
 from modules.notifications.resend_client import send_plain_text_email
 from modules.openai_realtime import (
@@ -82,22 +104,20 @@ DEFAULT_TRANSCRIPTION_MODEL = DEFAULT_REALTIME_TRANSCRIPTION_MODEL
 POST_CALL_INTERVIEWEE_TRANSCRIPTION_MODEL = DEFAULT_UPLOAD_TRANSCRIPTION_MODEL
 DEFAULT_TOKEN_TTL_HOURS = 7 * 24
 DEFAULT_INTERVIEW_DURATION_SECONDS = 15 * 60
-DEFAULT_INTERVIEW_REVIEW_TIMEOUT_SECONDS = 120
 DEFAULT_INTERVIEW_REVIEW_RETRY_TIMEOUT_SECONDS = 180
 PUBLIC_URL_TOKEN_PLACEHOLDER = "TOKEN"
-MAX_PREPARED_TEXT_CHARS = 12_000
 MAX_PREPARED_LIST_ITEMS = 24
 MAX_EVENT_PAYLOAD_CHARS = 20_000
 MAX_AUDIO_CHUNK_BYTES = 20 * 1024 * 1024
 MAX_VIDEO_CHUNK_BYTES = 75 * 1024 * 1024
 MAX_SIDEBAND_TURNS = 18
 MAX_TRANSCRIPT_TAIL_CHARS = 5_000
-MAX_PARTNER_WHISPER_CHARS = 240
 STARTED_ATTEMPT_STALE_GRACE_SECONDS = 60
 INTERVIEW_SAFETY_OVERRUN_SECONDS = 5 * 60
-SUPPORTED_LANGUAGES = {"it", "en", "fr", "de", "es"}
 HOSTED_INTERVIEW_OUTPUT_COPY = {
     "en": {
+        "post_processing_pending": "Post-call processing is in progress. The saved transcript is available below; refresh this page to check for results.",
+        "post_processing_interrupted": "Post-call processing stopped before completion. Review the saved transcript and any available results before requesting another run; no automatic retry was made.",
         "page_title": "Hosted interview output",
         "hosted_interview": "Hosted interview",
         "output_unavailable": "Output unavailable",
@@ -145,6 +165,8 @@ HOSTED_INTERVIEW_OUTPUT_COPY = {
         "not_completed_yet": "This interview has not been completed yet.",
     },
     "es": {
+        "post_processing_pending": "El procesamiento posterior a la llamada está en curso. La transcripción guardada está disponible a continuación; actualiza esta página para consultar los resultados.",
+        "post_processing_interrupted": "El procesamiento posterior a la llamada se detuvo antes de completarse. Revisa la transcripción guardada y los resultados disponibles antes de solicitar otra ejecución; no se realizó ningún reintento automático.",
         "page_title": "Resultado de la entrevista alojada",
         "hosted_interview": "Entrevista alojada",
         "output_unavailable": "Resultado no disponible",
@@ -337,100 +359,6 @@ INTERVIEW_MODE_CASE = "case_interview"
 INTERVIEW_MODE_PLUGIN_IMPROVEMENT = "plugin_improvement_interview"
 INTERVIEW_MODE_RESEARCH = "research_interview"
 PLUGIN_IMPROVEMENT_CAMPAIGN_ID = "plugin-improvement-v1"
-INTERVIEW_REVIEW_RESPONSE_FORMAT = {
-    "type": "json_schema",
-    "name": "hosted_interview_quality_review",
-    "strict": True,
-    "schema": {
-        "type": "object",
-        "additionalProperties": False,
-        "required": [
-            "summary",
-            "overall_quality",
-            "key_findings",
-            "missed_opportunities",
-            "evidence_backed_claims",
-            "uncertainties",
-            "contradictions",
-            "follow_up_questions",
-            "pipeline_improvements",
-            "do_not_change",
-        ],
-        "properties": {
-            "summary": {"type": "string"},
-            "overall_quality": {
-                "type": "string",
-                "enum": ["strong", "usable", "weak", "failed"],
-            },
-            "key_findings": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "additionalProperties": False,
-                    "required": [
-                        "severity",
-                        "category",
-                        "evidence",
-                        "diagnosis",
-                        "suggested_improvement",
-                        "confidence",
-                    ],
-                    "properties": {
-                        "severity": {
-                            "type": "string",
-                            "enum": ["high", "medium", "low"],
-                        },
-                        "category": {"type": "string"},
-                        "evidence": {"type": "string"},
-                        "diagnosis": {"type": "string"},
-                        "suggested_improvement": {"type": "string"},
-                        "confidence": {
-                            "type": "string",
-                            "enum": ["high", "medium", "low"],
-                        },
-                    },
-                },
-            },
-            "missed_opportunities": {"type": "array", "items": {"type": "string"}},
-            "evidence_backed_claims": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "additionalProperties": False,
-                    "required": ["claim", "supporting_quote", "confidence"],
-                    "properties": {
-                        "claim": {"type": "string"},
-                        "supporting_quote": {"type": "string"},
-                        "confidence": {
-                            "type": "string",
-                            "enum": ["high", "medium", "low"],
-                        },
-                    },
-                },
-            },
-            "uncertainties": {"type": "array", "items": {"type": "string"}},
-            "contradictions": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "additionalProperties": False,
-                    "required": ["description", "evidence", "confidence"],
-                    "properties": {
-                        "description": {"type": "string"},
-                        "evidence": {"type": "string"},
-                        "confidence": {
-                            "type": "string",
-                            "enum": ["high", "medium", "low"],
-                        },
-                    },
-                },
-            },
-            "follow_up_questions": {"type": "array", "items": {"type": "string"}},
-            "pipeline_improvements": {"type": "array", "items": {"type": "string"}},
-            "do_not_change": {"type": "array", "items": {"type": "string"}},
-        },
-    },
-}
 
 LOGGER = logging.getLogger(__name__)
 
@@ -452,10 +380,6 @@ def _notification_email() -> str:
 
 class HostedInterviewError(RuntimeError):
     """Raised when a hosted interview cannot be prepared or used."""
-
-
-class VoiceSessionError(RuntimeError):
-    """Raised when hosted-interview external model work fails."""
 
 
 class PreparedInterviewRequest(BaseModel):
@@ -558,14 +482,6 @@ class CompleteInterviewRequest(BaseModel):
     telemetry: dict[str, Any] = Field(default_factory=dict)
 
 
-def _now() -> datetime:
-    return datetime.now(timezone.utc).replace(microsecond=0)
-
-
-def _iso(timestamp: datetime) -> str:
-    return timestamp.astimezone(timezone.utc).replace(microsecond=0).isoformat()
-
-
 def _parse_iso_timestamp(value: str) -> datetime:
     try:
         parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
@@ -623,6 +539,7 @@ def _archive_retryable_attempt_files(session_dir: Path) -> None:
         _completion_path(session_dir),
         _review_path(session_dir),
         _review_error_path(session_dir),
+        session_dir / job_state.JOB_FILENAME,
     ]
     audio_dir = session_dir / "audio"
     video_dir = session_dir / "video"
@@ -668,10 +585,6 @@ def _read_json(path: Path) -> dict[str, Any]:
     return payload
 
 
-def _clean_text(value: str, *, max_chars: int = MAX_PREPARED_TEXT_CHARS) -> str:
-    return " ".join((value or "").replace("\x00", " ").split())[:max_chars]
-
-
 def _clean_list(values: list[str]) -> list[str]:
     cleaned: list[str] = []
     for raw_value in values[:MAX_PREPARED_LIST_ITEMS]:
@@ -679,11 +592,6 @@ def _clean_list(values: list[str]) -> list[str]:
         if value:
             cleaned.append(value)
     return cleaned
-
-
-def _clean_language(value: str) -> str:
-    language = (value or "it").strip().lower()
-    return language if language in SUPPORTED_LANGUAGES else "it"
 
 
 def _hosted_interview_output_language(record: Mapping[str, Any]) -> str:
@@ -779,68 +687,6 @@ def _load_simple_env_file(path: Path) -> None:
             os.environ.setdefault(clean_key, clean_value)
 
 
-def _default_partner_model() -> str:
-    naming_params = utilities_config.get_naming_params()
-    return naming_params["gpt55Thinking"]
-
-
-def _clean_partner_whisper(value: str) -> str:
-    clean = " ".join(value.split())
-    if len(clean) > MAX_PARTNER_WHISPER_CHARS:
-        return clean[:MAX_PARTNER_WHISPER_CHARS].rstrip()
-    return clean
-
-
-def create_partner_whisper(
-    *,
-    api_key: str,
-    prompt: str,
-    model: str | None = None,
-    endpoint: str = "https://api.openai.com/v1/responses",
-    safety_identifier: str = "hosted-interview-partner",
-    timeout_seconds: float = 8,
-) -> str:
-    """Ask the hosted-interview silent partner for one optional steering note."""
-
-    body = json.dumps(
-        {
-            "model": model or _default_partner_model(),
-            "input": prompt,
-        }
-    ).encode("utf-8")
-    request = urllib.request.Request(
-        endpoint,
-        data=body,
-        method="POST",
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-            "OpenAI-Safety-Identifier": safety_identifier,
-        },
-    )
-    try:
-        with urllib.request.urlopen(request, timeout=timeout_seconds) as response:
-            response_payload = json.loads(response.read().decode("utf-8"))
-    except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace")
-        raise VoiceSessionError(
-            f"Partner whisper failed: HTTP {exc.code}: {detail}"
-        ) from exc
-    except (urllib.error.URLError, json.JSONDecodeError) as exc:
-        raise VoiceSessionError(f"Partner whisper failed: {exc}") from exc
-    payload = _json_object_from_text(_response_output_text(response_payload))
-    whisper = payload.get("whisper")
-    return _clean_partner_whisper(whisper if isinstance(whisper, str) else "")
-
-
-def _default_review_model() -> str:
-    model = os.getenv("HOSTED_INTERVIEW_REVIEW_MODEL", "").strip()
-    if model:
-        return model
-    naming_params = utilities_config.get_naming_params()
-    return naming_params["gpt55Thinking"]
-
-
 def _output_url_for_record(record: Mapping[str, Any]) -> str:
     public_url = str(record.get("public_url", "")).strip().rstrip("/")
     return f"{public_url}/output" if public_url else ""
@@ -868,48 +714,6 @@ def _review_url_for_record(record: Mapping[str, Any]) -> str:
     return (
         public_url.replace(marker, "/case-notes/api/voice/interviews/", 1) + "/review"
     )
-
-
-def _response_output_text(response_payload: Mapping[str, Any]) -> str:
-    chunks: list[str] = []
-    output = response_payload.get("output")
-    if isinstance(output, list):
-        for item in output:
-            if not isinstance(item, Mapping):
-                continue
-            content = item.get("content")
-            if not isinstance(content, list):
-                continue
-            for part in content:
-                if not isinstance(part, Mapping):
-                    continue
-                text = part.get("text")
-                if isinstance(text, str):
-                    chunks.append(text)
-    output_text = response_payload.get("output_text")
-    if isinstance(output_text, str):
-        chunks.append(output_text)
-    return "".join(chunks).strip()
-
-
-def _json_object_from_text(value: str) -> dict[str, Any]:
-    clean = value.strip()
-    try:
-        parsed = json.loads(clean)
-    except json.JSONDecodeError:
-        start = clean.find("{")
-        end = clean.rfind("}")
-        if start < 0 or end <= start:
-            return {}
-        try:
-            parsed = json.loads(clean[start : end + 1])
-        except json.JSONDecodeError:
-            return {}
-    return parsed if isinstance(parsed, dict) else {}
-
-
-def _public_safety_identifier(token_hash: str) -> str:
-    return "hosted-interview-" + token_hash[:32]
 
 
 def _prepared_payload(
@@ -1850,10 +1654,6 @@ def _dialog_turns_for_session(
     return dialogue or _dialog_turns_from_completion(completion)
 
 
-def _text_word_count(value: str) -> int:
-    return len([part for part in str(value or "").split() if part.strip()])
-
-
 def _interviewee_word_count(
     dialog_turns: list[dict[str, str]], completion: Mapping[str, Any]
 ) -> int:
@@ -2043,7 +1843,13 @@ def _transcribe_interviewee_audio_chunks(
     session_dir: Path,
 ) -> dict[str, Any]:
     audio_files = _audio_files_for_session(session_dir)
-    with tempfile.TemporaryDirectory(prefix="hosted-interview-audio-") as temp_dir_name:
+    workspace = session_dir / job_state.AUDIO_WORK_DIRECTORY
+    if workspace.is_symlink():
+        raise OSError("Interview audio workspace must not be a symbolic link")
+    workspace.mkdir(mode=0o700, exist_ok=True)
+    with tempfile.TemporaryDirectory(
+        prefix="assembly-", dir=workspace
+    ) as temp_dir_name:
         audio_path, content_type = _assemble_interviewee_audio_chunks(
             session_dir=session_dir,
             audio_files=audio_files,
@@ -2207,182 +2013,6 @@ def _apply_post_call_interviewee_transcription(
     return completion
 
 
-def _review_transcript_payload(dialog_turns: list[dict[str, str]]) -> str:
-    lines = []
-    for turn in dialog_turns:
-        speaker = str(turn.get("speaker", "")).strip() or "Unknown"
-        text = _clean_text(str(turn.get("text", "")), max_chars=6_000)
-        if text:
-            lines.append(f"{speaker}: {text}")
-    return "\n".join(lines)[:80_000]
-
-
-def _review_text_excerpt(value: Any, *, max_chars: int) -> str:
-    return _clean_text(str(value or ""), max_chars=max_chars)
-
-
-def _review_transcript_provenance(completion: Mapping[str, Any]) -> dict[str, Any]:
-    post_call_metadata = completion.get("interviewee_audio_transcription", {})
-    if not isinstance(post_call_metadata, Mapping):
-        post_call_metadata = {}
-    live_transcript = str(completion.get("live_user_transcript", ""))
-    final_transcript = str(completion.get("user_transcript", ""))
-    provenance: dict[str, Any] = {
-        "source": completion.get("transcript_source", ""),
-        "final_interviewee_transcript_words": _text_word_count(final_transcript),
-        "live_interviewee_transcript_words": _text_word_count(live_transcript),
-        "post_call_interviewee_transcription": {
-            key: value
-            for key, value in post_call_metadata.items()
-            if key not in {"audio_files", "transcription_metadata"}
-        },
-        "post_call_transcription_metadata": post_call_metadata.get(
-            "transcription_metadata", {}
-        ),
-        "post_call_audio_files": post_call_metadata.get("audio_files", []),
-        "final_interviewee_transcript": _review_text_excerpt(
-            final_transcript,
-            max_chars=80_000,
-        ),
-    }
-    if live_transcript and live_transcript != final_transcript:
-        provenance["live_interviewee_transcript"] = _review_text_excerpt(
-            live_transcript,
-            max_chars=30_000,
-        )
-    return provenance
-
-
-def _interview_review_prompt(
-    record: Mapping[str, Any],
-    completion: Mapping[str, Any],
-    events: list[dict[str, Any]],
-    dialog_turns: list[dict[str, str]],
-) -> str:
-    event_summary: dict[str, int] = {}
-    for event in events:
-        event_type = str(event.get("event_type", "")).strip() or "unknown"
-        event_summary[event_type] = event_summary.get(event_type, 0) + 1
-    payload = {
-        "record": {
-            "interview_campaign_id": record.get(
-                "interview_campaign_id", LEGACY_UNCLASSIFIED_CAMPAIGN_ID
-            ),
-            "case_id": record.get("case_id", ""),
-            "case_name": record.get("case_name", ""),
-            "client_project": record.get("client_project", ""),
-            "interview_title": record.get("interview_title", ""),
-            "interviewee_role": record.get("interviewee_role", ""),
-            "interview_mode": record.get("interview_mode", ""),
-            "language": record.get("language", ""),
-            "purpose": record.get("purpose", ""),
-            "background_context": record.get("background_context", ""),
-            "hypotheses_to_test": record.get("hypotheses_to_test", []),
-            "priority_topics": record.get("priority_topics", []),
-            "questions": record.get("questions", []),
-            "red_flags": record.get("red_flags", []),
-            "boundaries": record.get("boundaries", []),
-        },
-        "completion": {
-            "completed_at": completion.get("completed_at", ""),
-            "elapsed_seconds": completion.get("elapsed_seconds"),
-            "transcript_words": completion.get("transcript_words", 0),
-            "client_transcript_words": completion.get("client_transcript_words", 0),
-            "audio_chunks": completion.get("audio_chunks", 0),
-            "video_chunks": completion.get("video_chunks", 0),
-            "screen_capture_metadata": completion.get("screen_capture_metadata", {}),
-            "telemetry": completion.get("telemetry", {}),
-        },
-        "transcript_provenance": _review_transcript_provenance(completion),
-        "event_summary": event_summary,
-        "dialog_transcript": _review_transcript_payload(dialog_turns),
-    }
-    return json.dumps(payload, ensure_ascii=False, indent=2)
-
-
-def _interview_review_system_prompt(record: Mapping[str, Any]) -> str:
-    """Return review instructions aligned with the interview language."""
-
-    lines = [
-        "You are an interview quality auditor for Clara hosted interviews.",
-        "Your job is to diagnose the interview process and resulting transcript, not to repair the transcript.",
-        "Separate observed evidence from inference. Every key finding must cite a short transcript or event evidence snippet.",
-        "Assess whether the interview asked useful follow-ups, detected evasive answers, separated facts from opinions, grounded claims, preserved uncertainty, avoided language drift, and produced material usable by a consultant, analyst, researcher, or operator.",
-        "Suggest pipeline improvements only when supported by the supplied evidence. Also identify what should not be changed.",
-        "Do not invent facts, names, dates, metrics, quotes, or contradictions that are not present in the transcript.",
-    ]
-    if _clean_language(str(record.get("language", "it"))) == "es":
-        lines.append(
-            "Write every human-readable narrative field in Spanish. Preserve short "
-            "evidence quotes in their source language, and keep schema keys and "
-            "enumerated values exactly as defined."
-        )
-    return "\n".join(lines)
-
-
-def _generate_interview_quality_review(
-    *,
-    api_key: str,
-    record: Mapping[str, Any],
-    completion: Mapping[str, Any],
-    events: list[dict[str, Any]],
-    dialog_turns: list[dict[str, str]],
-    model: str | None = None,
-    endpoint: str = "https://api.openai.com/v1/responses",
-    timeout_seconds: float = DEFAULT_INTERVIEW_REVIEW_TIMEOUT_SECONDS,
-) -> dict[str, Any]:
-    """Generate an evidence-first diagnostic review of a completed interview."""
-
-    system_prompt = _interview_review_system_prompt(record)
-    body = json.dumps(
-        {
-            "model": model or _default_review_model(),
-            "reasoning": {"effort": "medium"},
-            "store": False,
-            "input": [
-                {"role": "system", "content": system_prompt},
-                {
-                    "role": "user",
-                    "content": _interview_review_prompt(
-                        record, completion, events, dialog_turns
-                    ),
-                },
-            ],
-            "text": {"format": INTERVIEW_REVIEW_RESPONSE_FORMAT},
-        },
-        ensure_ascii=False,
-    ).encode("utf-8")
-    request = urllib.request.Request(
-        endpoint,
-        data=body,
-        method="POST",
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-            "OpenAI-Safety-Identifier": _public_safety_identifier(
-                str(record["token_hash"])
-            ),
-        },
-    )
-    try:
-        with urllib.request.urlopen(request, timeout=timeout_seconds) as response:
-            response_payload = json.loads(response.read().decode("utf-8"))
-    except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace")
-        raise VoiceSessionError(
-            f"Interview quality review failed: HTTP {exc.code}: {detail}"
-        ) from exc
-    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
-        raise VoiceSessionError(f"Interview quality review failed: {exc}") from exc
-    review = _json_object_from_text(_response_output_text(response_payload))
-    if not review:
-        raise VoiceSessionError("Interview quality review returned no JSON object.")
-    review["schema_version"] = 1
-    review["generated_at"] = _iso(_now())
-    review["model"] = model or _default_review_model()
-    return review
-
-
 def _write_interview_quality_review(
     *,
     token: str,
@@ -2444,6 +2074,14 @@ def _write_interview_quality_review(
 
 
 def _run_interview_quality_review_task(token: str) -> None:
+    job_state.run_job(
+        _session_dir(token),
+        lambda: _run_interview_quality_review_task_locked(token),
+        lock=_try_post_completion_task_lock,
+    )
+
+
+def _run_interview_quality_review_task_locked(token: str) -> None:
     try:
         record = _load_record_for_token(token)
     except HostedInterviewError as exc:
@@ -2579,13 +2217,11 @@ def _run_interview_post_completion_task(token: str) -> None:
         LOGGER.info("Hosted interview post-completion task skipped: %s", exc)
         return
     session_dir = _session_dir(token)
-    with _try_post_completion_task_lock(session_dir) as acquired:
-        if not acquired:
-            LOGGER.info(
-                "Hosted interview post-completion task skipped: already running"
-            )
-            return
-        _run_interview_post_completion_task_locked(token, session_dir, record)
+    job_state.run_job(
+        session_dir,
+        lambda: _run_interview_post_completion_task_locked(token, session_dir, record),
+        lock=_try_post_completion_task_lock,
+    )
 
 
 def _run_interview_post_completion_task_locked(
@@ -2619,7 +2255,7 @@ def _run_interview_post_completion_task_locked(
         ):
             _send_completion_notification(record, completion)
         else:
-            _run_interview_quality_review_task(token)
+            _run_interview_quality_review_task_locked(token)
         return
     _send_completion_notification(record, completion)
 
@@ -2745,6 +2381,7 @@ def export_interview_bundle(
     return JSONResponse(
         {
             "record": record,
+            "post_completion": _post_completion_progress(session_dir),
             "events": events,
             "completion": completion,
             "review": review,
@@ -2808,8 +2445,10 @@ def hosted_interview_output_page(
         dialog_turns = _dialog_turns_for_session(events, completion)
         event_count = len(events)
         audio_chunk_count = _audio_chunk_count_for_session(session_dir)
+        post_completion = _post_completion_progress(session_dir)
         error_message = ""
     except HostedInterviewError as exc:
+        post_completion = {}
         record = {}
         completion = {}
         review = {}
@@ -2830,6 +2469,7 @@ def hosted_interview_output_page(
             "completion": completion,
             "review": review,
             "review_error": review_error,
+            "post_completion": post_completion,
             "dialog_turns": dialog_turns,
             "event_count": event_count,
             "audio_chunk_count": audio_chunk_count,
@@ -2950,6 +2590,15 @@ def hosted_interview_page(token: str, request: Request):
     return response
 
 
+def _post_completion_progress(session_dir: Path) -> dict[str, Any]:
+    state = job_state.inspect_job(session_dir, lock=_try_post_completion_task_lock)
+    return {
+        key: state[key]
+        for key in ("status", "stage", "updated_at", "message")
+        if key in state
+    }
+
+
 @public_router.get("/{token}/status")
 def public_interview_status(token: str) -> JSONResponse:
     """Return a minimal status for the public page."""
@@ -2965,6 +2614,7 @@ def public_interview_status(token: str) -> JSONResponse:
             "status": record.get("status", ""),
             "interview_title": record.get("interview_title", ""),
             "case_name": record.get("case_name", ""),
+            "post_completion": _post_completion_progress(_session_dir(token)),
         }
     )
 
@@ -3271,6 +2921,18 @@ def _public_interview_complete_locked(
             ]["status"],
         },
     )
+    if should_run_post_call_task or (
+        final_status == INTERVIEW_STATUS_COMPLETED and not is_plugin_improvement
+    ):
+        job_state.queue_job(
+            session_dir,
+            attempt_id=payload.attempt_id,
+            stage=(
+                "transcription_then_review"
+                if should_run_post_call_task
+                else "quality_review"
+            ),
+        )
     if should_run_post_call_task:
         background_tasks.add_task(_run_interview_post_completion_task, token)
         notification_sent = False

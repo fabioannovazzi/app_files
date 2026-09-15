@@ -722,6 +722,8 @@ def _legacy_export_size(fig: Any, artifact_name: str | None = None) -> tuple[int
     layout_width = int(getattr(layout, "width", 0) or 0)
     layout_height = int(getattr(layout, "height", 0) or 0)
     columns, rows = _subplot_grid_size(fig)
+    if artifact_name == "year_over_year_line.png" and columns == rows == 1:
+        return max(layout_width, 1400), max(layout_height, 540)
     if artifact_name and artifact_name.startswith("year_over_year_slope"):
         if columns > 1:
             width = (
@@ -743,12 +745,15 @@ def _legacy_export_size(fig: Any, artifact_name: str | None = None) -> tuple[int
 
 def _write_plotly_html(fig: Any, path: Path, width: int, height: int) -> Path:
     html_path = path.with_suffix(".html")
-    fig.write_html(
+    interactive = copy.deepcopy(fig)
+    interactive.update_layout(width=None, height=None, autosize=True)
+    interactive.write_html(
         str(html_path),
         include_plotlyjs=True,
         full_html=True,
-        default_width=f"{width}px",
-        default_height=f"{height}px",
+        default_width="100%",
+        default_height=f"min({height}px, 95vh)",
+        config={"responsive": True},
     )
     return html_path
 
@@ -800,6 +805,19 @@ def _write_legacy_figure(
     export_fig, normalization_audit = normalize_plotly_figure_for_static_export(fig)
     export_width, export_height = _legacy_export_size(export_fig, path.name)
     title_lines = plotly_title_lines(getattr(export_fig.layout.title, "text", ""))
+    if path.name == "year_over_year_column.png" or (
+        path.name == "year_over_year_line.png"
+        and _subplot_grid_size(export_fig) == (1, 1)
+    ):
+        # Keep the title and period labels inside the static canvas. The legacy
+        # zero-anchored value scale and all analytical marks remain unchanged.
+        font_size = getattr(export_fig.layout.font, "size", None) or 12
+        margin = export_fig.layout.margin.to_plotly_json()
+        margin["b"] = max(int(margin.get("b") or 0), 40)
+        export_fig.update_layout(
+            title={"y": 1 - 24 / export_height, "font": {"size": font_size}},
+            margin=margin,
+        )
     try:
         export_fig.update_layout(
             width=export_width,

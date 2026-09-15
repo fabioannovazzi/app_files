@@ -1,0 +1,237 @@
+{
+  "schema_version": "0.3",
+  "semantic_layer_id": "response_times.reporting_semantics",
+  "semantic_version": 1,
+  "dataset_contract": {
+    "dataset_contract_id": "response_times",
+    "contract_version": 1,
+    "identity": {
+      "method": "caller_assigned",
+      "value": "response_times"
+    },
+    "origin_snapshot": {
+      "profile_schema_version": "0.4",
+      "snapshot_fingerprint": "9350d9852d2e651bebf6976de1c2f9b1d9baab2b86ddb4eebc04ca4c6cbdf00b"
+    },
+    "unknown_column_policy": "allow_as_unclassified_extension"
+  },
+  "scope": {
+    "title": "Synthetic request response times",
+    "business_area": "Service performance",
+    "purpose": "Inspect request-duration distribution",
+    "coverage_level": "strong",
+    "included_subjects": [
+      "Observed request durations"
+    ],
+    "excluded_subjects": [
+      "Sales",
+      "Costs",
+      "Production performance conclusions"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "source.dataset_profile",
+      "source_type": "dataset_profile",
+      "locator": "Generated profile for response_times.csv",
+      "authority": "mechanical",
+      "supports": [
+        "physical columns",
+        "types and cardinality",
+        "mechanical metric, dimension, and period candidates"
+      ],
+      "caveats": [
+        "The profile does not establish business meaning or analysis validity."
+      ],
+      "last_checked": null
+    },
+    {
+      "source_id": "source.specification",
+      "source_type": "data_dictionary",
+      "locator": "source.md",
+      "authority": "canonical",
+      "supports": [
+        "Synthetic row grain",
+        "Milliseconds",
+        "Absence of financial measures"
+      ],
+      "caveats": [
+        "Synthetic test only"
+      ],
+      "last_checked": "2026-09-06"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "evidence.dataset_profile",
+      "source_id": "source.dataset_profile",
+      "locator": "dataset profile root",
+      "claim": "The referenced fields and profiler candidates exist mechanically; their business interpretation remains unreviewed.",
+      "confidence": "high",
+      "status": "supported",
+      "notes": []
+    },
+    {
+      "evidence_id": "evidence.specification",
+      "source_id": "source.specification",
+      "locator": "Complete synthetic specification",
+      "claim": "LatencyMs is one request duration in milliseconds; no financial measures are supplied.",
+      "confidence": "high",
+      "status": "supported",
+      "notes": [
+        "Authored synthetic acceptance case"
+      ]
+    }
+  ],
+  "business_metric_mappings": {
+    "sales": {
+      "state": "absent",
+      "metric_id": null,
+      "candidate_metric_ids": [],
+      "confidence": "high",
+      "rationale": "The synthetic specification contains only durations.",
+      "evidence_ids": [
+        "evidence.specification"
+      ],
+      "caveats": []
+    },
+    "discount": {
+      "state": "absent",
+      "metric_id": null,
+      "candidate_metric_ids": [],
+      "confidence": "high",
+      "rationale": "The synthetic specification contains only durations.",
+      "evidence_ids": [
+        "evidence.specification"
+      ],
+      "caveats": []
+    },
+    "cogs": {
+      "state": "absent",
+      "metric_id": null,
+      "candidate_metric_ids": [],
+      "confidence": "high",
+      "rationale": "The synthetic specification contains only durations.",
+      "evidence_ids": [
+        "evidence.specification"
+      ],
+      "caveats": []
+    }
+  },
+  "metrics": [
+    {
+      "metric_id": "metric.latencyms",
+      "label": "LatencyMs",
+      "binding": {
+        "binding_type": "column",
+        "column": "LatencyMs",
+        "expression": null,
+        "input_metric_ids": []
+      },
+      "definition": "One request duration in milliseconds",
+      "metric_class": "numeric_observation",
+      "aggregation": {
+        "default": "none",
+        "allowed": [
+          "none"
+        ],
+        "forbidden": [
+          "sum"
+        ],
+        "weight_metric_id": null
+      },
+      "unit": {
+        "kind": "duration",
+        "currency": null,
+        "symbol": "ms"
+      },
+      "directionality": "lower_is_better",
+      "valid_period_grains": [],
+      "compatible_dimension_ids": [],
+      "forbidden_dimension_ids": [],
+      "status": "defined",
+      "confidence": "high",
+      "rationale": "Explicit synthetic source specification.",
+      "evidence_ids": [
+        "evidence.specification"
+      ],
+      "caveats": [],
+      "origin_profile_observation": {
+        "source_role": "metric",
+        "metric_class": "numeric_observation",
+        "aggregation": "semantic_layer_defined",
+        "confidence": "medium",
+        "inference_reasons": [
+          "numeric column without a strong metric-class hint"
+        ]
+      }
+    }
+  ],
+  "dimensions": [],
+  "periods": [],
+  "period_rules": [
+    {
+      "period_rule_id": "scope.all_records",
+      "label": "Every supplied observation",
+      "period_id": null,
+      "rule_type": "all_available",
+      "scope_type": "all_available",
+      "parameters": {},
+      "status": "defined",
+      "confidence": "high",
+      "rationale": "The complete synthetic sample is the reviewed population; there is no date field.",
+      "evidence_ids": [
+        "evidence.specification"
+      ],
+      "caveats": [
+        "Not a period comparison."
+      ]
+    }
+  ],
+  "analysis_policies": [
+    {
+      "analysis_id": "analysis.response_time_distribution",
+      "label": "Response-time distribution",
+      "question_family": "How are the five request durations distributed?",
+      "analysis_task_ids": [
+        "distribution"
+      ],
+      "selection_emphases": [
+        "frequency_shape"
+      ],
+      "validity": "valid",
+      "business_purpose": "Inspect the observed durations.",
+      "role_bindings": {
+        "distribution_metric": {
+          "binding_type": "concept",
+          "concept_id": "metric.latencyms"
+        }
+      },
+      "period_rule_id": "scope.all_records",
+      "conditions": [],
+      "rationale": "Observation-level numeric durations are explicitly defined in the source.",
+      "evidence_ids": [
+        "evidence.specification"
+      ],
+      "confidence": "high",
+      "caveats": [
+        "Five synthetic observations are not a production performance estimate."
+      ]
+    }
+  ],
+  "open_questions": [],
+  "review": {
+    "status": "model_reviewed",
+    "reviewed_by": "Current remediation assistant",
+    "reviewed_at": "2026-09-06",
+    "notes": [
+      "Reviewed against the complete synthetic source specification, not an independent model evaluation."
+    ]
+  },
+  "boundaries": {
+    "semantic_judgment_owner": "model_or_human_review",
+    "deterministic_validation_scope": "Schema, identifiers, evidence references, stable dataset identity, snapshot compatibility, period-rule resolution, manifest intent references, and required role coverage only.",
+    "chart_selection_included": false,
+    "rendering_included": false
+  }
+}

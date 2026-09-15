@@ -17,7 +17,10 @@
     "repository/modules/change_requests/api.py",
     "repository/modules/change_requests/store.py",
     "repository/modules/hosted_services/api.py",
-    "repository/modules/pdp/legal_content.py"
+    "repository/modules/pdp/legal_content.py",
+    "repository/modules/hosted_interviews/api.py",
+    "repository/modules/hosted_interviews/job_state.py",
+    "repository/modules/hosted_interviews/review_service.py"
   ],
   "trigger": "In either the OpenAI or Claude Cowork Clara package, a sufficiently evidenced problem or a suggestion is submitted only after the user sees and approves the exact sanitized request. An incomplete problem is never created. After a receipt exists, SessionStart may automatically poll its opaque status token for a fixed-version or needs-information notification. Follow-up evidence is transmitted only after the user sees and separately approves it.",
   "automatic": true,
@@ -40,12 +43,12 @@
     {
       "id": "optional-suggestion-interview",
       "when": "After the user separately chooses the short hosted voice route for a general improvement suggestion",
-      "content": "Plugin name and version, generic client-free opportunity text, language, and submission identifier; the participant's later hosted explanation is outside the text-submission payload"
+      "content": "Plugin name and version, generic client-free opportunity text, language, and submission identifier; the participant's later hosted explanation is outside the text-submission payload. The service creates a prepared Hosted Interviews session for the plugin-improvement campaign; subsequent microphone audio, transcript, events and review use that service, with its separately recorded retained-session boundary."
     },
     {
       "id": "automatic-status-poll",
-      "when": "On SessionStart after a prior request has returned a pending receipt",
-      "content": "Change-request identifier and opaque status token for each locally pending request; no original case or request text is resent by this poll"
+      "when": "On SessionStart when stored request receipts exist",
+      "content": "Change-request identifier and opaque status token for every locally stored receipt selected by the checker, including resolved requests; no original case or request text is resent by this poll."
     }
   ],
   "data_returned": [
@@ -66,20 +69,19 @@
     }
   ],
   "access": {
-    "arrangement": "The client submits to fixed Mparanza HTTPS endpoints and stores the returned opaque status token locally. In Claude Cowork that state is stored under CLAUDE_PLUGIN_DATA; in the OpenAI package it uses the plugin's existing private local state. Plugin source does not establish who inside Mparanza can access request content. Optional suggestion interviews exist only in the OpenAI package and use a returned Mparanza browser URL.",
+    "arrangement": "The client submits to fixed Mparanza HTTPS endpoints and stores the returned opaque status token locally. In Claude Cowork that state is stored under CLAUDE_PLUGIN_DATA; in the OpenAI package it uses the plugin's existing private local state. Plugin source does not establish who inside Mparanza can access request content. Optional suggestion interviews exist only in the OpenAI package and use a returned Mparanza browser URL. Exact-text consent and sanitization are workflow obligations; the CLI does not authenticate consent or detect identifying information. Status tokens authorize status and evidence operations and must be treated as credentials. The default HTTP transport can retry a specific certificate error using a normal verified TLS context with X.509 strict-mode validation disabled; hostname and certificate verification remain enabled. Base-URL validation is not DNS pinning or a general redirect sandbox.",
     "controls": [
       "Remote requests are restricted to HTTPS mparanza.com or www.mparanza.com outside local tests.",
       "Payload and response sizes are bounded.",
       "A durable idempotency record prevents a network retry from creating a second request.",
       "Problem files without the required bounded diagnostic shape are rejected before transmission.",
       "Claude Cowork does not package the hosted voice interview or custom version-update client.",
-      "Follow-up evidence requires the locally stored opaque status token and a separate idempotent update identifier.",
-      "The skill requires separate consent for a problem report and a suggestion."
+      "Follow-up evidence requires the locally stored opaque status token and a separate idempotent update identifier."
     ]
   },
   "retention": {
     "status": "documented",
-    "statement": "Submitted feedback remains a Mparanza support record until administrative deletion. The plugin also stores local pending payloads, receipts, and status tokens for retry and status notification until local plugin state is removed."
+    "statement": "Submitted feedback remains a Mparanza support record until administrative deletion. The plugin also stores local pending payloads, receipts, and status tokens for retry and status notification until local plugin state is removed. Hosted suggestion interview sessions have their own retained records/media under Hosted Interviews; finishing or expiring the link does not delete them. Local state writes use mode 0600 where supported and retain retry payloads, receipts and tokens; this does not erase separately saved approved request files or establish provider/log retention. Hosted interview temporary audio assembly is session-owned and removed on normal worker exit or the next lock-protected inspection/dispatch after interruption; active work is preserved and cleanup failure propagates. This does not delete the original retained interview media or establish a timed cleanup guarantee."
   },
   "security_controls": [
     {
@@ -87,18 +89,14 @@
       "control": "The helper restricts remote requests to the Mparanza HTTPS origin and bounds request and response sizes before storing a receipt."
     },
     {
-      "id": "idempotent-submission",
-      "control": "A durable idempotency identifier and local receipt prevent a network retry from creating a second feedback request."
-    },
-    {
       "id": "bounded-diagnostic-contract",
       "control": "The client and service reject problem reports missing the versioned diagnostic shape, and token-authorized follow-up evidence is bounded and idempotent."
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-12",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "9554192dbddd4bcfbb3575d802ca34dc155f876949f4354edcc7b28e7f19f550"
+    "source_fingerprint": "dfb455f8fcdc9e152e445fe804a7241a99f5613108a20780dcd88c769ab8d9d3"
   }
 }

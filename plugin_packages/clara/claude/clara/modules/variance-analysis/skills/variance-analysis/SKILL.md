@@ -28,6 +28,13 @@ Use host-neutral artifact names such as `clara-review/` and `run_review.md`.
 Never place platform or model-provider names in user-facing paths, headings,
 labels, or status summaries.
 
+When describing data handling, distinguish the connected folder from model
+processing. Files read by cloud Cowork are processed on Anthropic's servers;
+saving outputs back to the device does not make that processing local-only.
+Do not say that nothing left the device. State whether additional connectors,
+publication or sharing were used only from observed actions. Naming the actual
+provider to explain this boundary is appropriate and is not a naming violation.
+
 ## Output Location Rule
 
 Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For a managed host workflow, write only below the exact host-provided run output directory. For other user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.

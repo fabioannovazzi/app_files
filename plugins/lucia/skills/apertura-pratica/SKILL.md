@@ -31,3 +31,9 @@ This is Lucia's native legal-matter-opening contract. It reuses Studio Archive
 only for private client, engagement, input and run lifecycle. It does not use
 Legal/Tax Answer Review as its completion gate and does not inherit Vera's
 accounting intake semantics.
+
+Before finalizing a durable Studio Archive run, follow that component's model-data
+report contract. Its `scripts/build_model_data_report.py` builds and validates
+local disclosure artifacts without requesting a server attestation. Record the
+actual model-context evidence or its limits; local report generation does not
+mean that the matter's professional analysis ran without a model.

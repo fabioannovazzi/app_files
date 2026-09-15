@@ -46,7 +46,7 @@ def check_if_two_periods_in_distribution_chart(periodsArray):
 def check_if_negative_bubble_size_values(
     df: pl.DataFrame | pl.LazyFrame, chartDict: dict, paramDict: dict
 ) -> tuple[pl.DataFrame | pl.LazyFrame, dict]:
-    """Remove rows with negative bubble size values.
+    """Exclude nonpositive bubble areas while retaining a plotting warning.
 
     Supports both eager and lazy Polars data structures without collecting.
     """
@@ -58,13 +58,13 @@ def check_if_negative_bubble_size_values(
     bubbleSizeDimension = chartDict[bubbleSizeKey]
 
     lf = df.lazy() if isinstance(df, pl.DataFrame) else df
-    has_negative = lf.select((pl.col(bubbleSizeDimension) < 0).any()).collect(
+    has_nonpositive = lf.select((pl.col(bubbleSizeDimension) <= 0).any()).collect(
         engine="streaming"
     )[0, 0]
 
-    if has_negative:
+    if has_nonpositive:
         message = (
-            f"{bubbleSizeDimension} bubble size column contains negative values."
+            f"{bubbleSizeDimension} bubble size column contains zero or negative values."
             " Correspondent rows have been excluded for plotting."
         )
         paramDict = add_app_message_to_paramdict(

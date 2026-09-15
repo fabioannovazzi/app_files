@@ -23,7 +23,7 @@
     {
       "path": "modules/reporting-engine/references/semantic_layer.md",
       "repository_path": "plugins/clara/modules/reporting-engine/references/semantic_layer.md",
-      "sha256": "c103dc12178030c525ba03157cc7f1780e7b2bca289f94f2e78f1a108106791d"
+      "sha256": "00b83c9edc09c8428717ed0047b72726f1e1d077d99061e2dc8c83998fe1d84a"
     },
     {
       "path": "modules/reporting-engine/scripts/budget_report.py",
@@ -41,9 +41,19 @@
       "sha256": "e35544e87537ac9afeb033745946471505477ad99c705ca679fa1e924c3c3078"
     },
     {
+      "path": "modules/reporting-engine/scripts/compile_execution.py",
+      "repository_path": "plugins/clara/modules/reporting-engine/scripts/compile_execution.py",
+      "sha256": "a4917e9b8b6c6cf2b7aa42d2b181b91e3d497b6aac8f9476709cf76a42d62d4b"
+    },
+    {
       "path": "modules/reporting-engine/scripts/dataset_intake.py",
       "repository_path": "plugins/clara/modules/reporting-engine/scripts/dataset_intake.py",
-      "sha256": "5eadc9503f9663b719078cb2a26a898ddcc47105f1c635546031f395142157d5"
+      "sha256": "b712213f606b9aa7dd4f5e0aeb1551f0a64f62accc84f01c6b53959e9922154c"
+    },
+    {
+      "path": "modules/reporting-engine/scripts/dataset_snapshot.py",
+      "repository_path": "plugins/clara/modules/reporting-engine/scripts/dataset_snapshot.py",
+      "sha256": "1befb4b705f976bd19b81a32cf3abb31faf559823f7b9515a92693d214bc0e91"
     },
     {
       "path": "modules/reporting-engine/scripts/mechanical_acceptance.py",
@@ -53,12 +63,12 @@
     {
       "path": "modules/reporting-engine/scripts/profile_dataset.py",
       "repository_path": "plugins/clara/modules/reporting-engine/scripts/profile_dataset.py",
-      "sha256": "e13f877e22eb7426e8b2dfaf8b3fa86e47ea41e2ffe4675eb084fa6ffddd00fc"
+      "sha256": "54e58c3a9ddac1c59d7b123ea3065d1d8f3b813cb16b74174828bbe5c292f0c4"
     },
     {
       "path": "modules/reporting-engine/scripts/render_capability.py",
       "repository_path": "plugins/clara/modules/reporting-engine/scripts/render_capability.py",
-      "sha256": "334f4dc73f38f0f42733947e2383c01c0eb17f7ef0fab7efc2559fb3c9ae7faa"
+      "sha256": "51caedd3ab4d86906abb267d94952403def39a4500c83c82b8f7ec67b6970fab"
     },
     {
       "path": "modules/reporting-engine/scripts/render_contract_registry.py",
@@ -76,14 +86,29 @@
       "sha256": "00aa88c9c4b531deab0db7d4312d6c8657982a468c48d090f3819ec7825a323d"
     },
     {
+      "path": "modules/reporting-engine/scripts/reporting_delivery.py",
+      "repository_path": "plugins/clara/modules/reporting-engine/scripts/reporting_delivery.py",
+      "sha256": "15ba136a9582249b5f55618144fee660fdaeefaaf6d8b5973c248629e9c4ff01"
+    },
+    {
+      "path": "modules/reporting-engine/scripts/run_capability.py",
+      "repository_path": "plugins/clara/modules/reporting-engine/scripts/run_capability.py",
+      "sha256": "dce589a03af3b5c568ce86b0c531a4b89354c00abc73067fafc06aac2b77f1a3"
+    },
+    {
+      "path": "modules/reporting-engine/scripts/semantic_execution.py",
+      "repository_path": "plugins/clara/modules/reporting-engine/scripts/semantic_execution.py",
+      "sha256": "b8e5094012bcd29be708933abf220b3d195a33d19e5526ffa5c210a81cd42453"
+    },
+    {
       "path": "modules/reporting-engine/scripts/semantic_layer.py",
       "repository_path": "plugins/clara/modules/reporting-engine/scripts/semantic_layer.py",
-      "sha256": "6c0c3da6518c55ead30e9b23ee152bb1f5904ca2bb16990a6ee549b242ae4e1c"
+      "sha256": "e993b1bf66d46054ef7a29406721f8c410ef183352ee7bc4c4bfc94caadfd73e"
     },
     {
       "path": "skills/reporting-engine/SKILL.md",
       "repository_path": "plugins/clara/skills/reporting-engine/SKILL.md",
-      "sha256": "a03da342f9ff4832ce89d038cc1cdad642e76b9a2db168da007b4d803d06c1d2"
+      "sha256": "4fe83d5b4f71460822fa3593518dfb7813849eb231fb7996c137578898bf9683"
     }
   ],
   "example_kind": "authored_synthetic_specimen_not_execution_receipt",
