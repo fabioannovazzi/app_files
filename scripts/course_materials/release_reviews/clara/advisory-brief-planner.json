@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "advisory-brief-planner",
-  "course_sha256": "043ae2a9a8c60b71e079080fb05194ff650909bbc48c534ee2ce0e7f00357bfa",
+  "course_sha256": "e062b561fcce392ad696e3e2a2c92ec476062d85a8d163dc45389c36d422d9f5",
   "reviewer": "Codex: five-language first-use planning material and actual native contract review",
   "reviewed_at": "2026-09-14T20:43:47.929955+00:00",
   "review_scope": "Read every localized lesson outline and the fictional assignment, customer/operating notes, revised assignment and vehicle update. Read all ten delivered readable plans and reviewed their source statements, constraints and changed objectives against those inputs. Verified all local source, canonical contract, validation and review-note links. The current native packager checks the actual contracts and exact source anchors. All 25 advisory regression cases pass; ten distinct planner cases bind this kit and its five languages. Each practice retains the initial plan and creates a separate revised plan. These are Markdown and JSON material checks, not proof of live voice, learner understanding, native GUI presentation or professional approval. The authored regression interpretations are outside the shipped kits.",
@@ -348,5 +348,18 @@
     "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
     "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
     "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+  },
+  "portability_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T10:08:05.030413+00:00",
+    "previous_course_sha256": "043ae2a9a8c60b71e079080fb05194ff650909bbc48c534ee2ce0e7f00357bfa",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+        "before": "215244f8e595127743e7fd1c97febd489056ebcc9d7907dec7098a6b498fca8b",
+        "after": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+      }
+    ],
+    "scope": "Authored lesson and input bytes are unchanged. Saved relative evidence paths use the same POSIX representation as the execution receipt. Journal Sampling uses os.lstat for real link counts because Windows DirEntry.stat reports zero; rejection of links and foreign implementation files remains required. No model input, output meaning or network route changes. Original editorial and artifact reviews are preserved; this source inspection is not a new independent or visual review. Current native execution is established separately by verify_release.py against its supplied JUnit file."
   }
 }

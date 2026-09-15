@@ -2226,8 +2226,8 @@ def _append_sheet(
                 )
         # Size the displayed label and formatted numbers, not the internal key.
         values = [str(worksheet.cell(row=1, column=index).value)]
-        for row in range(2, min(worksheet.max_row, 100) + 1):
-            value = worksheet.cell(row=row, column=index).value
+        for display_row in range(2, min(worksheet.max_row, 100) + 1):
+            value = worksheet.cell(row=display_row, column=index).value
             values.append(
                 f"{value:,.5f}" if isinstance(value, (int, float)) else str(value or "")
             )

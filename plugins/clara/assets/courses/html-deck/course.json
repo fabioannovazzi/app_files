@@ -240,7 +240,7 @@
     {
       "path": "vendor/modules/desktop_teaching/onboarding.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
-      "sha256": "215244f8e595127743e7fd1c97febd489056ebcc9d7907dec7098a6b498fca8b"
+      "sha256": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
     },
     {
       "path": "vendor/modules/desktop_teaching/teaching.py",

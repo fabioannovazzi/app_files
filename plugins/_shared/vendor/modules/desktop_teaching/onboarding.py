@@ -330,7 +330,9 @@ class Store:
                 for chunk in iter(lambda: stream.read(1024 * 1024), b""):
                     digestor.update(chunk)
             digest = digestor.hexdigest()
-            records.append({"path": str(path.relative_to(root)), "sha256": digest})
+            records.append(
+                {"path": path.relative_to(root).as_posix(), "sha256": digest}
+            )
         return {
             "artifacts": records,
             "prompt": _text(data.get("prompt"), "the user's natural request"),

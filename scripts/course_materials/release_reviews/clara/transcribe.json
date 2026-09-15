@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "transcribe",
-  "course_sha256": "5c7f5a3cc2490d4a533b2cda223e5c86ae2c0b84efa8a899d31257b1a1c75dbe",
+  "course_sha256": "25c0cbd772c5e82aa23601fe9d79c9233271159ef239ea64b2d4f975701e311a",
   "reviewer": "Codex: first-use outline, source and native transcript-output review",
   "reviewed_at": "2026-09-14T21:09:24.778646+00:00",
   "review_scope": "Local bundle import, text-only speaker review, source preservation and case registration only. Fixed regression interpretation is not a learner action, live voice test, recorded audio or hosted transcription. No advisory claims or approvals are created. Source dependency refresh after the localized advisory evidence-map repair: 35 current presentation/transcript checks pass in clara-teaching-source-refresh-02. All 60 recorded primary/supporting artifacts across these three kits are byte-identical to the previously inspected versions; the parity manifest retains actual paths. Existing editorial and visual judgments are preserved for unchanged material. No new voice, learner or GUI acceptance is asserted.",
@@ -424,5 +424,18 @@
     "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
     "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
     "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+  },
+  "portability_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T10:08:05.101344+00:00",
+    "previous_course_sha256": "5c7f5a3cc2490d4a533b2cda223e5c86ae2c0b84efa8a899d31257b1a1c75dbe",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+        "before": "215244f8e595127743e7fd1c97febd489056ebcc9d7907dec7098a6b498fca8b",
+        "after": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+      }
+    ],
+    "scope": "Authored lesson and input bytes are unchanged. Saved relative evidence paths use the same POSIX representation as the execution receipt. Journal Sampling uses os.lstat for real link counts because Windows DirEntry.stat reports zero; rejection of links and foreign implementation files remains required. No model input, output meaning or network route changes. Original editorial and artifact reviews are preserved; this source inspection is not a new independent or visual review. Current native execution is established separately by verify_release.py against its supplied JUnit file."
   }
 }

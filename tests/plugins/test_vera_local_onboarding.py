@@ -921,7 +921,10 @@ def _organization_mcp_review(context_path, payload, decisions, output):
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
-        env={**os.environ, "VIRTUAL_ENV": str(Path(sys.executable).parent.parent)},
+        env={
+            **os.environ,
+            "VIRTUAL_ENV": sys.prefix if sys.prefix != sys.base_prefix else "",
+        },
     )
     try:
         validated = _rpc_call(

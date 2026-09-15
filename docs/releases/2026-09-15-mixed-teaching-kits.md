@@ -36,6 +36,17 @@ from current main is preserved; ordinary work never waits for a tutorial.
 - Browser policy blocked catalogue preview. Visual inspection of that catalogue,
   native voice and a live learner using paired windows remain unverified.
 
+Final portability validation: all 324 required native cases passed again in
+`teaching-mixed-native-64.xml` (365 successful tests, 32 deferred skips). A single
+package/source comparison ran while the package was rebuilding and was rerun
+successfully in `teaching-package-retest-66.xml`. The explicitly combined receipt
+`teaching-mixed-native-66-composite.xml` retains those native results and replaces
+only that one package check; the release gate passes 34 kits/162 locales.
+Additional state checks passed (94 tests). Windows CI prompted real link-count
+inspection with `os.lstat`, consistent stored path separators, a portable test
+interpreter selection, and a local report typing correction. No authored lesson
+content changed during those fixes. The final release must pass Windows CI too.
+
 ## Source and privacy review
 
 Current main through `07689c38` was integrated, retaining its runtime, optional

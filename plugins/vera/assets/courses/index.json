@@ -482,7 +482,7 @@
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
-      "sha256": "43f2cb93eacbe5688778a54b9c53ea55d63e6ce8fe86132dcb34311e82d5ac78",
+      "sha256": "9bf44123d6e01fb97cbfa5912eb514e16b21615119e55cf9f4c7f89cac654f9a",
       "languages": [
         "it",
         "en",
@@ -510,7 +510,7 @@
     },
     "management-control-pack": {
       "path": "management-control-pack/course.json",
-      "sha256": "78bc4da6c314d34338608812b0fc35a77b80fbb122a4c6a488ef8d959165b112",
+      "sha256": "fc3dfd99f6860683b0d7601c9d157cd1f53dddfc8f4762d76a00e498d36cf3c8",
       "languages": [
         "it",
         "en"

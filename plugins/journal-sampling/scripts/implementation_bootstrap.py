@@ -135,7 +135,9 @@ def _scan_tree(
             entries = sorted(iterator, key=lambda entry: entry.name)
         for entry in entries:
             relative = _os.path.relpath(entry.path, root).replace(_os.sep, "/")
-            observed = entry.stat(follow_symlinks=False)
+            # DirEntry.stat reports st_nlink=0 on Windows; lstat obtains the
+            # actual link count while preserving the no-symlink boundary.
+            observed = _os.lstat(entry.path)
             entry_type = observed.st_mode & _TYPE_MASK
             if entry.is_symlink():
                 raise RuntimeError("implementation entries must not be symlinks")

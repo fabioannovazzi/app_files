@@ -169,6 +169,8 @@ jobs:
           tests/plugins/test_vera_local_onboarding.py
           --cov=plugins/_shared/vendor/modules/courseware --cov-fail-under=80
           --junitxml=${{ runner.temp }}/teaching-native.xml -o junit_family=legacy
+      - name: Install repository assortment-test dependencies
+        run: python -m pip install -r tests/plugin_attribute_hosted_requirements.txt
       - name: Verify assortment runtime and report evidence
         run: |
           python -m pytest --noconftest -q -o addopts='' tests/plugins/test_attribute_reporting_*.py tests/plugins/test_clara_attribute_reporting_component.py tests/plugins/test_teaching_attribute_execution.py --cov --cov-config=tests/plugin_attribute_reporting.coveragerc --cov-report=term-missing --cov-fail-under=80

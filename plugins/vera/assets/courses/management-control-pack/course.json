@@ -65,7 +65,7 @@
     {
       "path": "modules/management-control-pack/scripts/management_control_core.py",
       "repository_path": "plugins/management-control-pack/scripts/management_control_core.py",
-      "sha256": "a3b7bbe0c4a155c59f09f962512d9aef96b0591d4752669b5ac9a930f1262174"
+      "sha256": "0068ff898813ada9f1dc8bb5bacbbc88a7a0ae7c866408a72619e26a5992561f"
     },
     {
       "path": "modules/management-control-pack/scripts/management_delivery.py",

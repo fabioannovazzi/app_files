@@ -59,7 +59,7 @@
     {
       "path": "modules/journal-sampling/scripts/implementation_bootstrap.py",
       "repository_path": "plugins/journal-sampling/scripts/implementation_bootstrap.py",
-      "sha256": "073441c88612966aeda552fdd45972163cb9c3f255e56f778b4153405bcbcbb7"
+      "sha256": "5af27ddddfa06e6b5e6cc3a8db99dcb4edbe021277aa2728f2819650c4cfc68f"
     },
     {
       "path": "modules/journal-sampling/scripts/inspect_journal.py",
