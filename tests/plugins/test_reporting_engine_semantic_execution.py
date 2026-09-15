@@ -9,8 +9,33 @@ from typing import Any
 
 import pytest
 
+from tests._plugin_cli import workflow_cli
+
 ROOT = Path(__file__).resolve().parents[2] / "plugins/clara/modules/reporting-engine"
 FIXTURES = ROOT / "fixtures/semantic_layer"
+
+
+def _use_test_dependencies(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Exercise workflow subprocesses; fresh-package CI covers runtime setup."""
+    import render_capability
+
+    runner_command = render_capability._runner_command
+
+    def run_with_test_dependencies(request, *, component_root, recipe_path):
+        command = runner_command(
+            request, component_root=component_root, recipe_path=recipe_path
+        )
+        runner = (
+            component_root / render_capability.RUNNER_BY_COMPONENT[component_root.name]
+        )
+        argument_start = (
+            6 if Path(command[1]).name == "managed_python_runtime.py" else 2
+        )
+        return [*workflow_cli(runner), *command[argument_start:]]
+
+    monkeypatch.setattr(
+        render_capability, "_runner_command", run_with_test_dependencies
+    )
 
 
 @pytest.mark.parametrize("deliver", [False, True])
@@ -146,6 +171,7 @@ def nonfinancial_reviewed(
 ) -> dict[str, Any]:
     """Bind the authored duration-only fixture to its exact current source files."""
     monkeypatch.syspath_prepend(str(ROOT / "scripts"))
+    _use_test_dependencies(monkeypatch)
     import profile_dataset
     import semantic_layer
 
@@ -242,6 +268,7 @@ def reviewed(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> tuple[Any, dict[str, Any]]:
     monkeypatch.syspath_prepend(str(ROOT / "scripts"))
+    _use_test_dependencies(monkeypatch)
     import profile_dataset
     import semantic_layer
 

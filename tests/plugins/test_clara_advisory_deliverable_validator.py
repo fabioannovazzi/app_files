@@ -14,6 +14,8 @@ import pytest
 from docx import Document
 from pptx import Presentation
 
+from tests._plugin_cli import workflow_cli
+
 ROOT = Path(__file__).resolve().parents[2]
 CLARA_ROOT = ROOT / "plugins" / "clara"
 SKILL_ROOT = CLARA_ROOT / "skills" / "advisory-deliverable-validator"
@@ -1385,8 +1387,7 @@ def test_generation_time_lineage_walks_all_dependencies_before_ready(
     )
     subprocess.run(
         [
-            sys.executable,
-            str(CLARA_ROOT / "scripts" / "advisory_evidence_lineage.py"),
+            *workflow_cli(CLARA_ROOT / "scripts" / "advisory_evidence_lineage.py"),
             "bind-output",
             str(case_dir),
             str(deliverable),

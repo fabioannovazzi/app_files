@@ -16,6 +16,7 @@ import pytest
 from scripts.validate_plugin_review_contract import (
     validate_contract as validate_shared_contract,
 )
+from tests._plugin_cli import workflow_cli
 
 ROOT = Path(__file__).resolve().parents[2]
 PLUGIN_ROOT = ROOT / "plugins" / "new-client"
@@ -391,10 +392,13 @@ def test_packaged_vera_runs_new_client_through_dispatcher(
 
     dependencies = subprocess.run(
         [
-            sys.executable,
-            str(vera_root / "scripts" / "check_dependencies.py"),
-            "--module",
-            "new-client",
+            *workflow_cli(
+                vera_root
+                / "modules"
+                / "new-client"
+                / "scripts"
+                / "check_dependencies.py"
+            ),
         ],
         cwd=vera_root,
         capture_output=True,
