@@ -77,6 +77,48 @@ before completing the release.
 - tests run;
 - whether the ZIP matches repo source.
 
+## Installed-version acceptance
+
+Source tests, ZIP parity, server deployment and Marketplace publication never
+prove that a user's enabled plugin or already-open conversation updated.
+Before reporting a fix as working for a user:
+
+1. Use `codex plugin list --json` to inspect the actual enabled installation.
+   Do not infer it from cache directories. A local `mp-vera`/`mp-clara` copy is
+   a separate installation; publishing an official version does not replace it.
+2. Compare the exact version with the release being accepted. Use the exact
+   skill path exposed in the current host catalog, not a newer path discovered
+   on disk:
+
+   ```sh
+   python scripts/check_installed_product.py vera \
+     --expected-version <published-version> \
+     --skill-path <currently-exposed-SKILL.md>
+   ```
+
+   This command rejects missing, disabled, duplicate, local or wrong-version
+   installations and missing or stale exposed skills. Run its unit regressions
+   in CI; run the live command on the acceptance host after installation.
+3. After replacing an obsolete installation, use a fresh conversation and
+   repeat the check there. Never substitute the new cache path into an old
+   conversation to manufacture a pass. If fresh-session inspection is unavailable,
+   report installation repaired and active-session acceptance outstanding.
+4. Exercise the user's actual acceptance case. For privacy-report delivery,
+   an ordinary synthetic analysis must show its readable privacy report without
+   prompting; a later request must reopen that saved report without rerunning
+   the analysis. Backend receipts and saved file paths do not prove delivery.
+
+When repairing an authorized stale local installation, install the official
+plugin first, verify it is enabled at the expected version, and only then remove
+the obsolete local plugin registration and marketplace entry. Preserve user
+case files and tutorial data. Use supported plugin-management commands; never
+edit a generated cache or approve hook trust on the user's behalf.
+
+The release is not accepted on every user's computer merely because it passed
+on one host. Older copies, declined updates, disabled hooks and already-open
+conversations remain explicit rollout limits. Do not promise that a plugin can
+force the host to update or replace instructions in an existing conversation.
+
 ## Post-publish update notification
 
 Clara and Vera include a `SessionStart` hook that checks the public manifest at

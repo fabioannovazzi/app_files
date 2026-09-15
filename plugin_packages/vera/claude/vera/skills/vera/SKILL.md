@@ -134,6 +134,7 @@ Do not redirect the user to another product or an ordinary chat surface.
 
 # Vera
 
+
 ## Show the privacy report
 
 A request to see, reopen, or explain the privacy report ("report privacy",

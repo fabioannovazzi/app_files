@@ -168,7 +168,7 @@ def test_check_for_update_fails_open_when_network_is_unavailable(
     assert cache == {"checked_at": 1_000.0, "manifest": {}}
 
 
-def test_check_for_update_suppresses_repeat_notification_within_one_day(
+def test_stale_notice_repeats_in_a_new_session_without_another_download(
     tmp_path: Path,
 ) -> None:
     checker = load_update_checker()
@@ -198,7 +198,8 @@ def test_check_for_update_suppresses_repeat_notification_within_one_day(
         opener=fail_if_called,
     )
 
-    assert result is None
+    assert result is not None
+    assert "installed 1.0.0, published 1.1.0" in result
 
 
 @pytest.mark.parametrize("plugin_root", [CLARA_ROOT, VERA_ROOT])
@@ -242,10 +243,14 @@ def test_session_start_prioritizes_exact_fixed_request_message(
         lambda *_args: fixed_message,
     )
 
-    result = checker.main()
+    monkeypatch.setattr(checker, "check_for_update", lambda *_args: None)
+
+    result = checker.main([])
 
     assert result == 0
-    assert json.loads(capsys.readouterr().out) == {"systemMessage": fixed_message}
+    output = json.loads(capsys.readouterr().out)
+    assert output["systemMessage"] == fixed_message
+    assert "clara 1.0.0" in output["hookSpecificOutput"]["additionalContext"]
 
 
 def test_plugin_update_scripts_stay_identical() -> None:
@@ -257,6 +262,39 @@ def test_plugin_update_scripts_stay_identical() -> None:
     )
 
     assert clara_script == vera_script
+
+
+def test_version_only_fallback_emits_one_json_without_polling_crs(
+    tmp_path, monkeypatch, capsys
+):
+    checker = load_update_checker()
+    write_plugin_manifest(tmp_path, "vera", "0.1.219")
+    monkeypatch.setenv("PLUGIN_ROOT", str(tmp_path))
+
+    def unexpected(*_args):
+        pytest.fail("Version-only fallback must not contact CR services")
+
+    monkeypatch.setattr(checker, "_check_fixed_change_requests", unexpected)
+    monkeypatch.setattr(checker, "check_for_update", lambda *_args: "Update Vera now")
+
+    assert checker.main(["--version-only"]) == 0
+
+    output = json.loads(capsys.readouterr().out)
+    assert output["systemMessage"] == "Update Vera now"
+    assert "vera 0.1.219" in output["hookSpecificOutput"]["additionalContext"]
+    assert "Tell the user" in output["hookSpecificOutput"]["additionalContext"]
+
+
+def test_fixed_cr_notice_does_not_mask_a_stale_version(monkeypatch):
+    checker = load_update_checker()
+    monkeypatch.setattr(
+        checker, "_check_fixed_change_requests", lambda *_args: "CR fixed"
+    )
+    monkeypatch.setattr(checker, "check_for_update", lambda *_args: "Version outdated")
+
+    result = checker.session_start_output()
+
+    assert result["systemMessage"] == "CR fixed\nVersion outdated"
 
 
 @pytest.mark.parametrize("plugin_root", [CLARA_ROOT, VERA_ROOT])

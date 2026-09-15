@@ -45,6 +45,24 @@ Never write run outputs inside this Git workspace, `static/shared`, `protected_d
 
 # Clara
 
+<!-- CLARA_OPENAI_VERSION_BEGIN -->
+## Installed version check
+
+For Codex with local tools, once per conversation run the **currently exposed
+installed plugin's** `scripts/check_for_update.py --version-only` before ordinary
+work if startup did not already provide its installed-version context. Resolve
+that script from this skill's own plugin root; never substitute a repository,
+download or another cache. Show any update notice in the user's language.
+A local marketplace package does not update merely because a new version was
+published: use the official listing in the notice to update, then verify the
+plugin exposed in a fresh conversation. Do not edit generated cache files.
+If the script is missing or the version cannot be checked, say the active version
+is unverified when discussing a fix; never infer it from a successful build.
+This check sends no case or tutorial content and does not start CR polling.
+It does not require onboarding and does not block the requested work.
+<!-- CLARA_OPENAI_VERSION_END -->
+
+
 ## Invocation and scope contract
 
 An explicit host invocation of Clara, including `@clara`, always activates this

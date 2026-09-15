@@ -558,28 +558,38 @@ def test_startup_suppresses_network_while_pending_active_or_corrupt(
             )
         ),
     )
+
+    def check(*, include_change_requests):
+        calls.append(include_change_requests)
+        return {"hookSpecificOutput": {"additionalContext": "Public version checked."}}
+
     monkeypatch.setitem(
         sys.modules,
         "check_for_update",
-        types.SimpleNamespace(main=lambda: calls.append("update") or 0),
+        types.SimpleNamespace(session_start_output=check),
     )
     spec = importlib.util.spec_from_file_location(
         "tested_startup", store.plugin_root / "scripts/onboarding_session_start.py"
     )
     hook = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(hook)
-    assert hook.main() == 0 and calls == []
+    assert hook.main() == 0
+    assert calls == ([False] if store.product == "clara" else [])
     complete_onboarding(store)
     assert hook.main() == 0
-    expected = ["update"] if store.product == "clara" else []
+    expected = [False, True] if store.product == "clara" else []
     assert calls == expected
     session = teaching.TeachingStore(store.root, plugin_root=store.plugin_root)
     session.begin(
         {"workflow_id": WORKFLOWS[store.product][0], "title": "Tutorial", "goal": "Try"}
     )
-    assert hook.main() == 0 and calls == expected
+    assert hook.main() == 0
+    expected = [False, True, False] if store.product == "clara" else []
+    assert calls == expected
     (session.sessions / session.session_id / "session.json").write_text("broken")
-    assert hook.main() == 0 and calls == expected
+    assert hook.main() == 0
+    expected = [False, True, False, False] if store.product == "clara" else []
+    assert calls == expected
     assert "Consulenza" not in capsys.readouterr().out
 
 

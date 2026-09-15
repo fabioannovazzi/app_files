@@ -22,7 +22,25 @@
   "runtime_profiles": [
     "openai-codex"
   ],
-  "external_boundaries": [],
+  "external_boundaries": [
+    {
+      "id": "public-version-check",
+      "kind": "hosted_service",
+      "destination": "Mparanza's fixed HTTPS plugin-version manifest",
+      "purpose": "Show published version updates independently of tutorial completion",
+      "content": "Fixed public GET with ordinary connection metadata; no tutorial, profile, lesson, case, plugin-version or local-path content. Details are governed by plugin-update-check.",
+      "retention": "Only the downloaded public manifest and check time are cached locally when plugin data storage is available. Hosted access-log retention is outside this helper.",
+      "activation": "automatic_session_start",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
+      "controls": [
+        "Profile, lesson and feedback fields are never arguments to the version checker. CR polling and tutorial receipt stamping remain suppressed."
+      ]
+    }
+  ],
   "security_controls": [
     {
       "id": "local-state-only",
@@ -37,7 +55,7 @@
     },
     {
       "id": "onboarding-transmission-suppression",
-      "control": "Pending onboarding suppresses the normal version request and CR polling. Tutorial artifacts below the local-only marker suppress receipt stamping, including direct retry calls. The teaching instructions prohibit hosted feedback, interview and change-request calls. Ordinary host model/voice processing is not offline and is not a separate Vera API. Active repeated teaching also suppresses the optional startup version/CR check; pause/rebind/resume revoke worker tokens for future bounded steps, without claiming to cancel a running host command.",
+      "control": "Tutorial profiles, lesson artifacts and feedback remain local. Incomplete, inaccessible or active tutorials suppress CR polling; their receipts suppress stamping, including direct retries. Independently, startup may GET the fixed public version manifest with ordinary connection metadata and no tutorial content, installed version or local path, as recorded under plugin-update-check. It does not require a completed profile. Pause/rebind/resume revoke worker tokens for future bounded steps without claiming to cancel a running host command.",
       "implemented_by": [
         "scripts/onboarding_session_start.py",
         "scripts/notarized_run_receipt.py",
@@ -66,10 +84,10 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-14",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "69c71a3571201b530cf50a5a53407f5e3e10476da933c3b98ebb95ecfe2d7f85"
+    "source_fingerprint": "22c079e1588433a7be7525998a0aff4dac57db32d17470cce16710ae3af5261d"
   },
   "governed_repository_paths": [
     "static/shared/learn-with-vera/index.html",

@@ -28,32 +28,22 @@ def main() -> int:
         "native lesson worker handoffs. Do not run onboarding for other plugins. "
         "Do not transmit onboarding/profile/lesson feedback to Mparanza."
     )
-    sys.stdout.write(
-        json.dumps(
-            {
-                "hookSpecificOutput": {
-                    "hookEventName": "SessionStart",
-                    "additionalContext": message,
-                }
-            }
-        )
-        + "\n"
-    )
+    # A public version GET carries no tutorial data. Skipping optional onboarding
+    # must not suppress updates; only an active/recovering tutorial suppresses CRs.
+    from check_for_update import session_start_output
+
+    allow_change_requests = False
     if phase == "complete":
         from local_teaching import TeachingStore
 
         try:
             teaching = TeachingStore().status()
+            allow_change_requests = not teaching["active_session"]
         except (OnboardingError, OSError):
-            return (
-                0  # Preserve an inaccessible local teaching record, with no call-home.
-            )
-        if teaching["active_session"]:
-            return 0  # No optional update/CR request while a tutorial is active.
-        from check_for_update import main as check_updates
-
-        return check_updates()
-    # No version request or CR polling while onboarding is pending or inaccessible.
+            pass  # Preserve inaccessible teaching state; do not poll its CRs.
+    output = session_start_output(include_change_requests=allow_change_requests)
+    output["hookSpecificOutput"]["additionalContext"] += " " + message
+    sys.stdout.write(json.dumps(output) + "\n")
     return 0
 
 

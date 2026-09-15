@@ -344,19 +344,20 @@ def test_symlinked_profile_root_is_not_silently_followed(module, tmp_path):
         module.Store(link)
 
 
-def test_pending_hook_has_no_update_or_feedback_network_and_no_private_summary(
+def test_pending_hook_checks_public_version_without_feedback_or_private_summary(
     module, store, monkeypatch, capsys
 ):
     prepare(store)
     monkeypatch.setattr(module, "default_root", lambda: store.root)
 
-    def unexpected():
-        pytest.fail(
-            "Pending onboarding must not call hosted update or feedback services"
-        )
+    def version_only(*, include_change_requests):
+        assert include_change_requests is False
+        return {"hookSpecificOutput": {"additionalContext": "Public version checked."}}
 
     monkeypatch.setitem(
-        sys.modules, "check_for_update", types.SimpleNamespace(main=unexpected)
+        sys.modules,
+        "check_for_update",
+        types.SimpleNamespace(session_start_output=version_only),
     )
     hook = load("onboarding_session_start")
     assert hook.main() == 0
@@ -608,30 +609,35 @@ def test_cli_saves_and_loads_profile_and_reports_recoverable_errors(
     assert store.status() == saved
 
 
-def test_hook_recovers_without_network_then_restores_normal_updates_after_completion(
+def test_hook_checks_version_during_recovery_but_only_polls_crs_after_completion(
     module, store, monkeypatch, capsys
 ):
     prepare(store)
     monkeypatch.setattr(module, "default_root", lambda: store.root)
     updates = []
+
+    def check(*, include_change_requests):
+        updates.append(include_change_requests)
+        return {"hookSpecificOutput": {"additionalContext": "Public version checked."}}
+
     monkeypatch.setitem(
         sys.modules,
         "check_for_update",
-        types.SimpleNamespace(main=lambda: updates.append("checked") or 0),
+        types.SimpleNamespace(session_start_output=check),
     )
     hook = load("onboarding_session_start")
     before = store.path.read_bytes()
     store.path.write_text("invalid")
     assert hook.main() == 0
     assert "recovery_required" in capsys.readouterr().out
-    assert updates == []
+    assert updates == [False]
     store.path.write_bytes(before)
     finish(store, "fatture-xml-check")
     finish(store, "journal-sampling")
     finish(store, "variance-analysis")
     assert hook.main() == 0
     assert "complete" in capsys.readouterr().out
-    assert updates == ["checked"]
+    assert updates == [False, True]
 
 
 def test_tutorial_case_requires_the_local_marker_and_actual_source(

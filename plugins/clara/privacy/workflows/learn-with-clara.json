@@ -51,12 +51,30 @@
     ],
     "per_case_record_required": false
   },
-  "hosted_service_ids": [],
-  "boundaries_beyond_codex": [],
+  "hosted_service_ids": [
+    "plugin-update-check"
+  ],
+  "boundaries_beyond_codex": [
+    {
+      "id": "automatic-plugin-update-check",
+      "kind": "hosted_service",
+      "hosted_service_id": "plugin-update-check",
+      "destination": "Mparanza public plugin-version manifest",
+      "purpose": "Notify the user when a newer Clara version is published",
+      "content": "A GET request with a fixed update-check User-Agent; no case files, prompts, transcripts, or client content are included by the plugin",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "The request uses a fixed HTTPS manifest URL and a three-second timeout.",
+        "The check is rate-limited locally and fails open without blocking Clara.",
+        "This custom update check is included only in the OpenAI package, not the Claude Cowork package."
+      ]
+    }
+  ],
   "security_controls": [
     {
       "id": "local-teaching-state",
-      "control": "The stdlib helpers have no network client; profile, progress, examples and feedback remain local. Exact product identity prevents cross-product profile loading. Current request outranks stored preferences. Hosted interviews, Mparanza feedback and receipt stamping are excluded for tutorials; optional startup checks are suppressed while pending or active. Lesson planning and dispatch require an own-catalog workflow and a skill inside the same installed Clara root; worker responses bind the product and exact skill path. The native teacher and worker follow only that product's lesson contract."
+      "control": "The stdlib helpers have no network client; profile, progress, examples and feedback remain local. Exact product identity prevents cross-product profile loading. Current request outranks stored preferences. Hosted interviews, Mparanza feedback and receipt stamping are excluded for tutorials; CR polling is suppressed while pending, inaccessible or active. The independent public-version GET sends only ordinary connection metadata, never tutorial/profile/lesson content, the installed version or local paths, and does not depend on onboarding completion. Lesson planning and dispatch require an own-catalog workflow and a skill inside the same installed Clara root; worker responses bind the product and exact skill path. The native teacher and worker follow only that product's lesson contract."
     },
     {
       "id": "prepared-course-integrity",
@@ -67,6 +85,6 @@
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "6887ee0ca1857d311e6bf867f803e0f8c7865da8e332f005f17366ad13aa85b8"
+    "source_fingerprint": "aaa4ed72b08ca0df3dfcf48dd6643375c299a72ac1bdec6755f316f57008ffe5"
   }
 }
