@@ -90,6 +90,31 @@ count; do not guess that a missing grid is empty.
 
 ## Run and reuse
 
+### A bounded trial or an explicitly selected client
+
+For a request such as "try three invoices" or "review these invoices for this
+client", reuse the saved profile and read the authorized company/invoice list to
+resolve exact identities. Pass `invoiceSelection`, an object mapping observed
+company codes to arrays of observed invoice IDs. The operator's request and the
+model's interpretation select the invoices; the helper only checks exact IDs.
+Do not ask the operator to write this object or repeat the professional teaching.
+
+`maxInvoices` and `maxCompanies` are fail-safe limits, not sample selectors.
+Setting `maxInvoices: 3` alone rejects a client list containing four invoices
+before any detail is acquired. For three selected invoices, pass their identities
+in `invoiceSelection` and set the capacity to at least three. Do not invent IDs,
+raise the capacity to process the whole list, or silently substitute an invoice
+which is no longer present. An explicit client may be non-nightly; studio
+exclusions still apply. Without a selection, the existing nightly batch applies.
+
+The executor rechecks the complete displayed list and its independent count,
+then opens only the selected details. Its report identifies the selected scope;
+it does not claim to cover the full population. The same selection can accompany
+explicitly authorized `processing`; posting still requires its existing review
+and authorization. A request to register invoices must not be silently routed to
+read-only review: state the actual operation before starting. If the required
+processing profile is absent, identify that missing setup before expanding work.
+
 Run installation/dependency preflights with Vera's managed interpreter. Import
 the collector beside the existing Chrome tab in the host Node runtime:
 
@@ -103,6 +128,7 @@ const result = await collectEconsReview({
   pythonExecutable,           // absolute managed Python path, never a new environment
   maxCompanies: 50,
   maxInvoices: 200,
+  invoiceSelection: null,     // or { [observedCompanyCode]: observedInvoiceIds } for a bounded trial
   environment: { locale: "it-IT" }
 });
 ```
@@ -116,7 +142,9 @@ red-skip rules do not hide invoices from the acquisition report.
 
 The collector saves the profile, selection, per-phase outputs/receipts/locks,
 private phase summaries (including a bounded recovery request when available),
-and the existing `batch_review.py` JSON/HTML history after each invoice. It uses
+and the existing `batch_review.py` JSON/HTML history after each invoice. Explicit
+selection is retained in `selection.json`; `acquisition.json` distinguishes the
+source population count from each client's selected count. It uses
 the supplied interpreter for fixed local scripts without a shell, installation,
 new model service or additional upload.
 

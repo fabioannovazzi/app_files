@@ -190,6 +190,11 @@ mappings, checks identities and population counts, and saves the existing batch
 review after each invoice. This route has no posting or account-editing action.
 Complete the model-led review from those acquired values; do not endorse a
 mapping merely because it exists. Synthetic tests are not live ECONS validation.
+For a bounded trial, follow the reference's `invoiceSelection` route: select the
+requested exact invoices from observed identities. `maxInvoices` is a capacity
+check, not a sample size. Reuse the saved profile, state whether the run acquires
+a review or performs authorized processing, and expose missing processing setup
+before starting a review in response to a request to register invoices.
 
 ### Discover or change a process
 

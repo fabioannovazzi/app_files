@@ -203,6 +203,79 @@ test("batch limit stops before collecting invoice details and preserves a partia
   assert.deepEqual(tab.opened, ["companies", "invoices-A"]);
 });
 
+test("an explicit three-invoice trial reads three from a larger verified list", async () => {
+  const tab = new EconsTab();
+  const original = tab.output.bind(tab);
+  const items = ["1", "2", "3", "4"].map((id) => ({
+    "invoice-id": id, "invoice-number": `N${id}`, supplier: "Synthetic supplier", status: "green",
+  }));
+  tab.output = (key) => {
+    if (key === "invoices") return new Locator(items, tab);
+    if (key === "invoice-count") return new Locator([{ text: "4" }], tab);
+    if (key === "invoice") return new Locator([{ "company-code": "A", ...items.find((item) => `detail-${item["invoice-id"]}` === tab.phase) }], tab);
+    return original(key);
+  };
+
+  const result = await run(tab, { maxInvoices: 3, invoiceSelection: { A: ["1", "2", "3"] } });
+
+  assert.equal(result.status, "acquired");
+  assert.equal(result.acquired_invoices, 3);
+  assert.equal(result.expected_items, 3);
+  assert.equal(result.selection_mode, "explicit_invoices");
+  assert.deepEqual(tab.opened, ["companies", "invoices-A", "detail-1", "detail-2", "detail-3"]);
+  const report = await readFile(result.review_path, "utf8");
+  assert.match(report, /Selezione esplicita di 3 fatture/);
+  assert.doesNotMatch(report, /A · N4/);
+});
+
+test("an explicit client selection visits only that client, including a non-nightly client", async () => {
+  const tab = new EconsTab();
+
+  const result = await run(tab, { maxCompanies: 1, maxInvoices: 1, invoiceSelection: { DAY: ["1"] } });
+
+  assert.equal(result.status, "acquired");
+  assert.equal(result.acquired_invoices, 1);
+  assert.deepEqual(tab.opened, ["companies", "invoices-DAY", "detail-1"]);
+  assert.match(await readFile(result.review_path, "utf8"), /DAY · N1/);
+});
+
+for (const [name, selection, code] of [
+  ["duplicate invoice IDs", { A: ["1", "1"] }, "invalid_invoice_selection"],
+  ["an excluded company", { EXCLUDED: ["1"] }, "invalid_invoice_selection"],
+  ["a selection above the limit", { A: ["1", "2"] }, "selection_exceeds_batch_limits"],
+]) test(`${name} is rejected before any browser action`, async () => {
+  const tab = new EconsTab();
+
+  await assert.rejects(run(tab, { maxInvoices: 1, invoiceSelection: selection }), { message: code });
+
+  assert.deepEqual(tab.opened, []);
+});
+
+for (const [name, selection, code, opened] of [
+  ["missing company", { MISSING: ["1"] }, "selected_company_missing", ["companies"]],
+  ["missing invoice", { A: ["missing"] }, "selected_invoice_missing", ["companies", "invoices-A"]],
+]) test(`a ${name} preserves a partial report without substituting another invoice`, async () => {
+  const tab = new EconsTab();
+
+  const result = await run(tab, { invoiceSelection: selection });
+
+  assert.equal(result.status, "partial");
+  assert.equal(result.error.reason_code, code);
+  assert.equal(result.acquired_invoices, 0);
+  assert.deepEqual(tab.opened, opened);
+  assert.match(await readFile(result.review_path, "utf8"), /Selezione esplicita/);
+});
+
+test("an explicit trial still rejects an incomplete source invoice list", async () => {
+  const tab = new EconsTab({ countMismatch: true });
+
+  const result = await run(tab, { maxInvoices: 1, invoiceSelection: { A: ["1"] } });
+
+  assert.equal(result.error.reason_code, "incomplete_population");
+  assert.equal(result.acquired_invoices, 0);
+  assert.deepEqual(tab.opened, ["companies", "invoices-A"]);
+});
+
 test("duplicate invoice identities stop before opening an ambiguous detail", async () => {
   const tab = new EconsTab();
   const original = tab.output.bind(tab);
@@ -351,6 +424,26 @@ test('unapproved posting never dispatches registration', async () => {
   const result = await run(tab, { processing: processing({ approvePosting: async () => false }) });
   assert.equal(tab.postCount, 0);
   assert.equal(result.completed, 0);
+});
+
+for (const approved of [false, true]) test(`a selected invoice posts only with current approval (${approved})`, async () => {
+  const tab = new ProcessingTab();
+  const options = processing({
+    classifyInvoices: async ({ company, invoices }) => {
+      assert.equal(company['company-code'], 'A');
+      assert.deepEqual(invoices.map((item) => item['invoice-id']), ['1']);
+      return { company_code: 'A', red_invoice_ids: [], reason: 'Selected synthetic invoice is green' };
+    },
+    approvePosting: async () => approved,
+  });
+
+  const result = await run(tab, { maxInvoices: 1, invoiceSelection: { A: ['1'] }, processing: options });
+
+  assert.equal(result.status, 'processed');
+  assert.equal(result.completed, approved ? 1 : 0);
+  assert.equal(tab.postCount, approved ? 1 : 0);
+  assert.equal(tab.opened.includes('detail-2'), false);
+  assert.match(await readFile(result.client_reviews[0], 'utf8'), /Selezione esplicita di 1 fattura/);
 });
 
 test('Italian money retains thousands and cents and rejects decimal-dot ambiguity', () => {

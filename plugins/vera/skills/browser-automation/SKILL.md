@@ -122,6 +122,11 @@ For automatic ECONS review preparation, use the module's
 reviewed Playwright profile; on first use Vera fills only missing live screen
 bindings. Collect full invoice lines and existing account/VAT mappings into the
 populated local review, then add model-led proposals. This route does not post.
+For a small trial or selected client, use the reference's `invoiceSelection`
+argument with observed company/invoice IDs. `maxInvoices` is a safety limit on
+the selected work, not a request to take the first few invoices. State whether
+Vera will acquire a review or perform authorized registration before starting;
+do not substitute a read-only review for a request to register invoices.
 
 When asked to prepare the saved work for Fabio or a developer, follow the module’s
 `references/development-request.md`. Vera locates saved evidence in the known run,
