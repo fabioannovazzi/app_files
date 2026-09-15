@@ -15,6 +15,9 @@ documentati dall'host corrente. Non è un esecutore DATEV unattended.
 
 ## Evidenza e limite di piattaforma
 
+- Versione candidata DATEV: 0.1.256. La 0.1.255 appartiene al rilascio di
+  recupero della PR #635; prima della pubblicazione DATEV occorre integrare
+  quel rilascio, ricostruire e verificare i pacchetti combinati.
 - Base sorgente ispezionata: `8d555b00`, coincidente con `origin/main` il
   15 settembre 2026; Vera sorgente e Marketplace Published 0.1.254. Il registro
   pubblico del sito era ancora 0.1.253. Questi sono gli stati iniziali osservati,
