@@ -10,6 +10,7 @@ import re
 import shutil
 import subprocess
 import tempfile
+import uuid
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -29,6 +30,17 @@ from advisory_evidence_lineage import (
     validate_lineage,
     validate_lineage_payloads,
 )
+from bounded_process import run_process
+from case_exchange_safety import load_exchange, validate_destinations
+from case_store import (
+    atomic_bytes,
+    atomic_stream,
+    atomic_text,
+    case_operation,
+    case_reader,
+    track_write,
+)
+from decision_narrative import NARRATIVE_FILENAME, commit_narrative, load_narrative
 from html_deck_runtime import (
     apply_fixed_16_9_deck_runtime,
     assert_fixed_16_9_deck_runtime,
@@ -80,6 +92,8 @@ __all__ = [
     "build_inclusion_review",
     "copy_case_file",
     "commit_advisory_workpaper",
+    "commit_decision_narrative",
+    "verify_decision_pack",
     "delete_materials",
     "discover_material_paths",
     "export_case_update",
@@ -209,6 +223,7 @@ INCLUSION_REVIEW_FILENAME = "inclusion_review.md"
 INCLUSION_BUNDLES_FILENAME = "inclusion_bundles.json"
 SUPPORT_REQUEST_FILENAME = "support_request.md"
 SHARE_EXCLUDED_DIR_NAMES = {
+    ".clara-transaction",
     ".cache",
     ".git",
     ".mypy_cache",
@@ -224,6 +239,7 @@ SHARE_EXCLUDED_DIR_NAMES = {
     "venv",
 }
 SHARE_EXCLUDED_FILE_NAMES = {
+    ".clara.lock",
     ".DS_Store",
 }
 
@@ -233,7 +249,7 @@ SHARE_EXCLUDED_FILE_NAMES = {
 # documents. Provenance workpapers are the explicit exception.
 HUMAN_VISIBLE_DOCUMENT_BANNED_PATTERNS: tuple[tuple[str, str], ...] = (
     ("visible judgement/source id", r"\bjud-\d{4,}\b"),
-    ("page-number scaffolding", r"\b(?:pagina|pagine|page|pages)\s+\d+"),
+    ("page-number scaffolding", r"(?m)^\s*(?:pagina|pagine|page|pages)\s+\d+\s*$"),
     ("page-count scaffolding", r"\b\d+\s*[-/]\s*\d+\s+pagine\b"),
     ("placeholder label", r"\betichetta da confermare\b"),
     ("working-pack jargon", r"\bworking\s+(?:review\s+)?pack\b"),
@@ -493,13 +509,16 @@ def _case_path(case_dir: Path, key: str) -> Path:
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
+    atomic_text(
+        path,
         json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=True) + "\n",
         encoding="utf-8",
     )
 
 
 def _snapshot_files(paths: Sequence[Path]) -> dict[Path, bytes | None]:
+    for path in paths:
+        track_write(path)
     return {path: path.read_bytes() if path.exists() else None for path in paths}
 
 
@@ -509,30 +528,7 @@ def _restore_files(snapshot: Mapping[Path, bytes | None]) -> None:
             path.unlink(missing_ok=True)
             continue
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes(content)
-
-
-def _snapshot_tree(root: Path) -> dict[Path, bytes]:
-    """Capture regular files below one exchange root for rollback."""
-
-    if not root.exists():
-        return {}
-    return {
-        path.relative_to(root): path.read_bytes()
-        for path in root.rglob("*")
-        if path.is_file()
-    }
-
-
-def _restore_tree(root: Path, snapshot: Mapping[Path, bytes]) -> None:
-    """Replace one exchange root with its pre-mutation regular files."""
-
-    if root.exists():
-        shutil.rmtree(root)
-    for relative_path, content in snapshot.items():
-        path = root / relative_path
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes(content)
+        atomic_bytes(path, content)
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -625,6 +621,7 @@ def _empty_clara_mandate() -> dict[str, Any]:
     }
 
 
+@case_operation
 def initialize_case(
     case_dir: Path,
     *,
@@ -695,6 +692,7 @@ def initialize_case(
     return manifest
 
 
+@case_reader
 def load_case_file(case_dir: Path, key: str) -> dict[str, Any]:
     """Load one canonical workspace JSON file by logical key."""
 
@@ -787,6 +785,7 @@ def _validate_audio_pointer_links(
     return errors
 
 
+@case_reader
 def validate_case_workspace(case_dir: Path) -> list[str]:
     """Validate mechanical JSON schemas without making semantic judgments."""
 
@@ -1092,6 +1091,7 @@ def discover_material_paths(paths: Sequence[Path]) -> list[Path]:
     return sorted({path.resolve() for path in discovered})
 
 
+@case_operation
 def register_material(
     case_dir: Path,
     path: Path,
@@ -1118,6 +1118,18 @@ def register_material(
     existing_ids = [item["id"] for item in materials]
     material_summary = summary if summary is not None else _summarize_file(path)
     metadata = dict(source_metadata or {})
+    if summary is None:
+        metadata["preview_coverage"] = {
+            "kind": "mechanical_excerpt",
+            "semantic_review_performed": False,
+            "text_character_limit": 420,
+            "scope": {
+                ".docx": "first 12 body paragraphs; tables, headers and footnotes omitted",
+                ".pptx": "text from first 12 slides; charts, images and notes omitted",
+                ".pdf": "no document content extracted by this indexer",
+            }.get(path.suffix.lower(), "leading readable text only"),
+            "next_action": "Read the full source with its document tool before drawing conclusions.",
+        }
 
     for item in materials:
         if item["path"] == resolved_path:
@@ -1236,6 +1248,7 @@ def _filter_material_ids(
     return _dedupe_preserve_order(after), _dedupe_preserve_order(removed)
 
 
+@case_operation
 def delete_materials(
     case_dir: Path,
     material_ids: Sequence[str],
@@ -1468,6 +1481,7 @@ def delete_materials(
     )
 
 
+@case_operation
 def ingest_note_text(
     case_dir: Path,
     *,
@@ -1483,14 +1497,21 @@ def ingest_note_text(
     compact_timestamp = timestamp.replace("-", "").replace(":", "")[:15] + "Z"
     notes_dir = case_dir / "notes"
     notes_dir.mkdir(parents=True, exist_ok=True)
-    note_path = notes_dir / f"{compact_timestamp}-{_slugify(title)}.md"
+    # Captures are distinct evidence, even when title and second are identical.
+    note_path = (
+        notes_dir / f"{compact_timestamp}-{_slugify(title)}-{uuid.uuid4().hex}.md"
+    )
     note_body = (
         f"# {title}\n\n"
         f"Captured: {timestamp}\n"
         "Source: pasted consultant note\n\n"
         f"{text.strip()}\n"
     )
-    note_path.write_text(note_body, encoding="utf-8")
+    track_write(note_path)
+    with note_path.open("x", encoding="utf-8") as handle:
+        handle.write(note_body)
+        handle.flush()
+        os.fsync(handle.fileno())
     return register_material(
         case_dir,
         note_path,
@@ -1516,6 +1537,7 @@ def _owned_note_path(
     return notes_dir / f"{compact_timestamp}-{_slugify(title)}{clean_suffix}"
 
 
+@case_operation
 def ingest_note_file(
     case_dir: Path,
     *,
@@ -1538,6 +1560,7 @@ def ingest_note_file(
         suffix = notes_file.suffix or ".md"
         note_path = _owned_note_path(case_dir, title=title, suffix=suffix, now=now)
         if note_path.resolve() != resolved_source:
+            track_write(note_path)
             shutil.copy2(resolved_source, note_path)
 
     return register_material(
@@ -1629,6 +1652,7 @@ def _default_normalized_pptx_path(path: Path) -> Path:
     return path.with_name(f"{path.stem}_normalized_for_merge{path.suffix}")
 
 
+@case_operation
 def copy_case_file(
     case_dir: Path,
     source_file: Path,
@@ -1658,6 +1682,7 @@ def copy_case_file(
         overwrite=overwrite,
     )
     if should_copy:
+        track_write(destination_path)
         shutil.copy2(resolved_source, destination_path)
 
     legacy_pptx_normalization: LegacyPptxNormalizationResult | None = None
@@ -1787,17 +1812,33 @@ def _run_soffice_pptx_roundtrip(
             str(output_dir),
             str(source_path.resolve()),
         ]
-        completed = subprocess.run(
-            command,
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+        stdout_path = output_dir / "soffice.stdout.log"
+        stderr_path = output_dir / "soffice.stderr.log"
+        try:
+            with (
+                stdout_path.open("w", encoding="utf-8") as stdout,
+                stderr_path.open("w", encoding="utf-8") as stderr,
+            ):
+                completed = run_process(
+                    command,
+                    check=False,
+                    text=True,
+                    timeout=90,
+                    stdout=stdout,
+                    stderr=stderr,
+                )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            raise CaseWorkspaceError(
+                f"LibreOffice normalization failed; logs retained in {output_dir}: {exc}"
+            ) from exc
     output_path = output_dir / source_path.name
     if completed.returncode != 0 or not output_path.exists():
-        message = (
-            completed.stderr.strip() or completed.stdout.strip() or "unknown error"
-        )
+        with stderr_path.open(encoding="utf-8", errors="replace") as stream:
+            message = stream.read(800).strip()
+        if not message:
+            with stdout_path.open(encoding="utf-8", errors="replace") as stream:
+                message = stream.read(800).strip()
+        message = message or "unknown error"
         raise CaseWorkspaceError(
             f"LibreOffice failed to normalize PPTX for editable merge: {message}"
         )
@@ -1910,13 +1951,15 @@ def normalize_legacy_pptx_for_editable_merge(
     normalized = bool(before) or force
     if normalized:
         used_soffice = resolve_soffice_binary(soffice_binary)
-        with tempfile.TemporaryDirectory(prefix="clara_pptx_normalize_") as temp_dir:
-            roundtrip_path = _run_soffice_pptx_roundtrip(
-                resolved_source,
-                output_dir=Path(temp_dir),
-                soffice_binary=used_soffice,
-            )
-            shutil.copy2(roundtrip_path, resolved_output)
+        attempts_dir = resolved_output.parent / ".normalization-attempts"
+        attempts_dir.mkdir(parents=True, exist_ok=True)
+        attempt_dir = Path(tempfile.mkdtemp(prefix="attempt-", dir=attempts_dir))
+        roundtrip_path = _run_soffice_pptx_roundtrip(
+            resolved_source,
+            output_dir=attempt_dir,
+            soffice_binary=used_soffice,
+        )
+        shutil.copy2(roundtrip_path, resolved_output)
         custom_properties_preserved = _preserve_custom_properties(
             resolved_source, resolved_output
         )
@@ -2140,6 +2183,7 @@ def _known_open_question_ids(case_dir: Path) -> set[str]:
     return {str(item["id"]) for item in payload["questions"]}
 
 
+@case_operation
 def add_judgement_entries(
     case_dir: Path,
     entries: Sequence[Mapping[str, Any]],
@@ -2222,6 +2266,7 @@ def add_judgement_entries(
     return added
 
 
+@case_operation
 def record_analysis_contribution(
     case_dir: Path,
     *,
@@ -2605,6 +2650,7 @@ def _apply_case_direction_question_changes(
     return applied_updates, added_questions
 
 
+@case_operation
 def record_case_direction_return(
     case_dir: Path,
     declared_return: Mapping[str, Any],
@@ -2809,6 +2855,7 @@ def record_case_direction_return(
     return {**receipt, "receipt_path": str(receipt_path), "replayed": False}
 
 
+@case_operation
 def commit_advisory_workpaper(
     case_dir: Path,
     authored_workpaper: Path,
@@ -2905,12 +2952,9 @@ def commit_advisory_workpaper(
                 raise CaseWorkspaceError(
                     f"refusing to overwrite different workpaper history: {history_path}"
                 )
-            history_path.write_bytes(prior_bytes or b"")
+            atomic_bytes(history_path, prior_bytes or b"")
         target.parent.mkdir(parents=True, exist_ok=True)
-        with tempfile.NamedTemporaryFile(dir=target.parent, delete=False) as handle:
-            temporary_path = Path(handle.name)
-            handle.write(new_bytes)
-        os.replace(temporary_path, target)
+        atomic_bytes(target, new_bytes)
         checkpoint = {
             "schema_version": "clara.advisory_workpaper_checkpoint.v1",
             "committed_at": timestamp,
@@ -2951,6 +2995,7 @@ def commit_advisory_workpaper(
     return checkpoint
 
 
+@case_operation
 def set_judgement_status(
     case_dir: Path,
     entry_id: str,
@@ -2973,6 +3018,7 @@ def set_judgement_status(
     return updated_entries[0]
 
 
+@case_operation
 def set_judgement_statuses(
     case_dir: Path,
     entry_ids: Sequence[str],
@@ -3030,6 +3076,7 @@ def set_judgement_statuses(
     )
 
 
+@case_operation
 def add_open_question(
     case_dir: Path,
     *,
@@ -3082,6 +3129,7 @@ def _clean_issue_id(issue_id: str) -> str:
     return cleaned
 
 
+@case_operation
 def upsert_case_issues(
     case_dir: Path,
     issues: Sequence[Mapping[str, Any]],
@@ -3451,6 +3499,7 @@ def _render_clara_kickoff_preparation_markdown(
     return "\n".join(lines)
 
 
+@case_operation
 def prepare_clara_kickoff(
     case_dir: Path,
     *,
@@ -3516,7 +3565,8 @@ def prepare_clara_kickoff(
     _touch_manifest(case_dir, timestamp)
 
     preparation_path = case_dir / CLARA_KICKOFF_PREPARATION_FILENAME
-    preparation_path.write_text(
+    atomic_text(
+        preparation_path,
         _render_clara_kickoff_preparation_markdown(
             manifest=manifest,
             material_anchors=material_items,
@@ -3541,6 +3591,7 @@ def _merge_clean_strings(existing: Sequence[str], incoming: Any) -> list[str]:
     return _dedupe_preserve_order([*existing, *_clean_string_list(incoming)])
 
 
+@case_operation
 def update_clara_mandate_from_kickoff(
     case_dir: Path,
     kickoff_payload: Mapping[str, Any],
@@ -4174,6 +4225,7 @@ def _indexed_industry_context_items(
     return _dedupe_preserve_order(items)[:5]
 
 
+@case_operation
 def render_clara_kickoff_deck(
     case_dir: Path,
     *,
@@ -4348,7 +4400,7 @@ def render_clara_kickoff_deck(
     except ValueError as exc:
         raise CaseWorkspaceError(str(exc)) from exc
     _assert_human_visible_document_quality(html_text, label=CLARA_KICKOFF_DECK_FILENAME)
-    target_path.write_text(html_text, encoding="utf-8")
+    atomic_text(target_path, html_text, encoding="utf-8")
     return ClaraKickoffDeckResult(
         html_path=target_path,
         hypothesis_count=len(hypotheses),
@@ -4356,6 +4408,7 @@ def render_clara_kickoff_deck(
     )
 
 
+@case_operation
 def render_clara_partner_brief(
     case_dir: Path,
     *,
@@ -4562,7 +4615,7 @@ def render_clara_partner_brief(
     _assert_human_visible_document_quality(
         html_text, label=CLARA_PARTNER_BRIEF_FILENAME
     )
-    target_path.write_text(html_text, encoding="utf-8")
+    atomic_text(target_path, html_text, encoding="utf-8")
     return ClaraPartnerBriefResult(
         html_path=target_path,
         open_clarification_count=len(clarification_items),
@@ -4709,6 +4762,7 @@ def _iter_share_archive_files(
     return sorted(included_files), excluded_file_count, excluded_bytes
 
 
+@case_reader
 def export_case_workspace_archive(
     case_dir: Path,
     *,
@@ -4904,6 +4958,7 @@ def _render_support_request_markdown(
     )
 
 
+@case_reader
 def prepare_support_package(
     case_dir: Path,
     *,
@@ -4971,6 +5026,7 @@ def prepare_support_package(
     )
 
 
+@case_reader
 def export_case_update(
     case_dir: Path,
     *,
@@ -5176,16 +5232,10 @@ def export_case_update(
 
 
 def _load_case_update(package_path: Path) -> dict[str, Any]:
-    with ZipFile(package_path) as archive:
-        try:
-            raw = archive.read("case_update.json")
-        except KeyError as exc:
-            raise CaseWorkspaceError(
-                "case update package is missing case_update.json"
-            ) from exc
-    payload = json.loads(raw.decode("utf-8"))
-    if not isinstance(payload, dict):
-        raise CaseWorkspaceError("case update package must contain a JSON object")
+    try:
+        payload = load_exchange(package_path)
+    except ValueError as exc:
+        raise CaseWorkspaceError(str(exc)) from exc
     if payload.get("schema_version") != EXCHANGE_SCHEMA_VERSION:
         raise CaseWorkspaceError("unsupported case update schema_version")
     if payload.get("source") != EXCHANGE_SOURCE:
@@ -5361,7 +5411,8 @@ def _safe_extract_archive_file(
     if archive_target.is_absolute() or ".." in archive_target.parts:
         raise CaseWorkspaceError(f"unsafe archive path: {archive_path}")
     target_path.parent.mkdir(parents=True, exist_ok=True)
-    target_path.write_bytes(archive.read(archive_path))
+    with archive.open(archive_path) as source:
+        atomic_stream(target_path, source)
 
 
 def _append_exchange_log(
@@ -5431,6 +5482,7 @@ def _import_case_update_unprotected(
     package_path: Path,
     *,
     now: datetime | None = None,
+    source_package_path: Path | None = None,
 ) -> CaseExchangeImportResult:
     """Import a case update by appending records and logging conflicts."""
 
@@ -6034,7 +6086,7 @@ def _import_case_update_unprotected(
         case_dir,
         exchange_id=exchange_id,
         source_case_id=source_case_id,
-        package_path=package_path,
+        package_path=source_package_path or package_path,
         timestamp=timestamp,
         counts=counts,
     )
@@ -6058,6 +6110,7 @@ def _import_case_update_unprotected(
     )
 
 
+@case_operation
 def import_case_update(
     case_dir: Path,
     package_path: Path,
@@ -6066,11 +6119,34 @@ def import_case_update(
 ) -> CaseExchangeImportResult:
     """Import a case update atomically across JSON records and extracted files."""
 
+    # Copy once so replacing the caller's ZIP cannot change bytes after preflight.
+    with tempfile.TemporaryDirectory(prefix="clara-exchange-") as temporary_dir:
+        stable_path = Path(temporary_dir) / "case-update.zip"
+        with package_path.open("rb") as source, stable_path.open("xb") as destination:
+            total = 0
+            while block := source.read(1024 * 1024):
+                total += len(block)
+                if total > 1024 * 1024 * 1024:
+                    raise CaseWorkspaceError("case exchange exceeds archive size limit")
+                destination.write(block)
+        return _import_stable_case_update(
+            case_dir, stable_path, source_package_path=package_path, now=now
+        )
+
+
+def _import_stable_case_update(
+    case_dir: Path,
+    package_path: Path,
+    *,
+    source_package_path: Path,
+    now: datetime | None = None,
+) -> CaseExchangeImportResult:
     update_payload = _load_case_update(package_path)
-    exchange_id = str(update_payload["exchange_id"])
-    exchange_root = case_dir / "exchange_imports" / exchange_id
+    try:
+        exchange_root = validate_destinations(case_dir, update_payload)
+    except ValueError as exc:
+        raise CaseWorkspaceError(str(exc)) from exc
     exchange_root_existed = exchange_root.exists()
-    exchange_root_snapshot = _snapshot_tree(exchange_root)
     mutation_paths = [
         *(_case_path(case_dir, key) for key in CASE_FILES),
         case_dir / EVIDENCE_REGISTER_FILENAME,
@@ -6085,6 +6161,7 @@ def import_case_update(
         result = _import_case_update_unprotected(
             case_dir,
             package_path,
+            source_package_path=source_package_path,
             now=now,
         )
         completed = True
@@ -6092,9 +6169,7 @@ def import_case_update(
     finally:
         if not completed:
             _restore_files(snapshot)
-            if exchange_root_existed:
-                _restore_tree(exchange_root, exchange_root_snapshot)
-            elif exchange_root.exists():
+            if not exchange_root_existed and exchange_root.exists():
                 shutil.rmtree(exchange_root)
 
 
@@ -6526,6 +6601,7 @@ def _render_case_brief(
     return "\n".join(lines)
 
 
+@case_operation
 def refresh_case_brief(
     case_dir: Path,
     *,
@@ -6558,7 +6634,7 @@ def refresh_case_brief(
         clara_mandate=clara_mandate,
         generated_at=generated_at,
     )
-    brief_path.write_text(brief_text, encoding="utf-8")
+    atomic_text(brief_path, brief_text, encoding="utf-8")
 
     return CaseBriefResult(
         brief_path=brief_path,
@@ -6620,6 +6696,7 @@ def _read_inclusion_bundles(case_dir: Path) -> list[dict[str, Any]]:
     return [bundle for bundle in bundles if isinstance(bundle, dict)]
 
 
+@case_operation
 def apply_inclusion_bundles(
     case_dir: Path,
     bundles: Sequence[Mapping[str, Any]],
@@ -7122,6 +7199,7 @@ def _render_inclusion_review(
     return "\n".join(lines)
 
 
+@case_operation
 def build_inclusion_review(
     case_dir: Path,
     *,
@@ -7151,7 +7229,7 @@ def build_inclusion_review(
         generated_at=_now_iso(now),
     )
     _assert_human_visible_document_quality(review_text, label=INCLUSION_REVIEW_FILENAME)
-    review_path.write_text(review_text, encoding="utf-8")
+    atomic_text(review_path, review_text, encoding="utf-8")
 
     return InclusionReviewResult(
         review_path=review_path,
@@ -7400,90 +7478,13 @@ def _client_section(
     return lines
 
 
-def _entry_text_values(entries: Sequence[Mapping[str, Any]], limit: int) -> list[str]:
-    values: list[str] = []
-    for entry in entries[:limit]:
-        text = str(entry.get("text", "")).strip()
-        if text:
-            values.append(text)
-    return values
-
-
-def _join_story_sentences(values: Sequence[str]) -> str:
-    text = " ".join(value.rstrip(".") + "." for value in values if value.strip())
-    return " ".join(text.split())
-
-
-def _storyline_paragraphs(
-    manifest: Mapping[str, Any],
-    grouped: Mapping[str, Sequence[Mapping[str, Any]]],
-    open_questions: Sequence[Mapping[str, Any]],
-) -> list[str]:
-    fact_text = _join_story_sentences(_entry_text_values(grouped["fact"], 2))
-    advisor_text = _join_story_sentences(
-        _entry_text_values(grouped["advisor_judgement"], 2)
-    )
-    decision_text = _join_story_sentences(
-        [
-            *_entry_text_values(grouped["decision_implication"], 1),
-            *_entry_text_values(grouped["codex_inference"], 1),
-        ]
-    )
-    open_items = [item for item in open_questions if item["status"] == "open"]
-    first_open_question = str(open_items[0]["question"]).strip() if open_items else ""
-    if not any((fact_text, advisor_text, decision_text)):
-        return []
-
-    language = _ui_language(manifest)
-    if language == "it":
-        paragraphs: list[str] = []
-        if fact_text:
-            paragraphs.append(f"Punto di partenza. {fact_text}")
-        if advisor_text:
-            paragraphs.append(f"Lettura del caso. {advisor_text}")
-        if decision_text:
-            paragraphs.append(f"Percorso consigliato. {decision_text}")
-        if first_open_question:
-            paragraphs.append(
-                "Prima di finalizzare la raccomandazione, resta da chiudere "
-                f"questo punto: {first_open_question}"
-            )
-        return paragraphs
-    if language == "es":
-        paragraphs = []
-        if fact_text:
-            paragraphs.append(f"Punto de partida. {fact_text}")
-        if advisor_text:
-            paragraphs.append(f"Lectura del caso. {advisor_text}")
-        if decision_text:
-            paragraphs.append(f"Ruta recomendada. {decision_text}")
-        if first_open_question:
-            paragraphs.append(
-                "Antes de cerrar la recomendación, queda por resolver este punto: "
-                f"{first_open_question}"
-            )
-        return paragraphs
-
-    paragraphs = []
-    if fact_text:
-        paragraphs.append(f"Starting point. {fact_text}")
-    if advisor_text:
-        paragraphs.append(f"Case readout. {advisor_text}")
-    if decision_text:
-        paragraphs.append(f"Recommended path. {decision_text}")
-    if first_open_question:
-        paragraphs.append(
-            "Before finalizing the recommendation, this point remains open: "
-            f"{first_open_question}"
-        )
-    return paragraphs
-
-
 def _render_markdown(
     manifest: Mapping[str, Any],
     materials: Sequence[Mapping[str, Any]],
     entries: Sequence[Mapping[str, Any]],
     open_questions: Sequence[Mapping[str, Any]],
+    *,
+    narrative: Sequence[str] = (),
 ) -> str:
     grouped = _group_approved_entries(entries)
     material_labels = _material_label_by_id(materials)
@@ -7506,7 +7507,7 @@ def _render_markdown(
     if approved_count == 0:
         lines.extend([_copy(manifest, "not_ready"), ""])
 
-    storyline = _storyline_paragraphs(manifest, grouped, open_questions)
+    storyline = narrative
     if storyline:
         lines.extend([f"## {_copy(manifest, 'storyline')}", ""])
         for paragraph in storyline:
@@ -7633,6 +7634,8 @@ def _render_docx(
     materials: Sequence[Mapping[str, Any]],
     entries: Sequence[Mapping[str, Any]],
     open_questions: Sequence[Mapping[str, Any]],
+    *,
+    narrative: Sequence[str] = (),
 ) -> None:
     try:
         from docx import Document
@@ -7672,7 +7675,7 @@ def _render_docx(
     if approved_count == 0:
         document.add_paragraph(_copy(manifest, "not_ready"))
 
-    storyline = _storyline_paragraphs(manifest, grouped, open_questions)
+    storyline = narrative
     if storyline:
         document.add_heading(_copy(manifest, "storyline"), level=1)
         for paragraph_text in storyline:
@@ -7814,6 +7817,68 @@ def _render_workpaper_docx(
     document.save(path)
 
 
+def _decision_narrative_basis(
+    case_dir: Path, approved_claim_ids: set[str]
+) -> dict[str, Any] | None:
+    checkpoint_path = case_dir / ADVISORY_WORKPAPER_CHECKPOINT_FILENAME
+    workpaper = case_dir / ADVISORY_WORKPAPER_FILENAME
+    if not checkpoint_path.is_file() or not workpaper.is_file():
+        return None
+    checkpoint = _read_json(checkpoint_path)
+    workpaper_hash = _file_sha256(workpaper)
+    semantic_hash = _semantic_claim_register_sha256(
+        _read_json(case_dir / CLAIM_REGISTER_FILENAME)
+    )
+    evidence_hash = _file_sha256(case_dir / EVIDENCE_REGISTER_FILENAME)
+    if (
+        checkpoint["workpaper"]["sha256"] != workpaper_hash
+        or checkpoint["lineage"]["claim_semantic_sha256"] != semantic_hash
+        or checkpoint["lineage"]["evidence_register_sha256"] != evidence_hash
+    ):
+        return None
+    return {
+        "workpaper_sha256": workpaper_hash,
+        "claim_semantic_sha256": semantic_hash,
+        "evidence_register_sha256": evidence_hash,
+        "approved_claim_ids": sorted(approved_claim_ids),
+        "materials_sha256": _file_sha256(_case_path(case_dir, "materials")),
+        "questions_sha256": _file_sha256(_case_path(case_dir, "open_questions")),
+        "judgements_sha256": sha256(
+            json.dumps(
+                sorted(
+                    _read_json(_case_path(case_dir, "judgement"))["entries"],
+                    key=lambda entry: entry["id"],
+                ),
+                sort_keys=True,
+                ensure_ascii=False,
+            ).encode("utf-8")
+        ).hexdigest(),
+    }
+
+
+@case_operation
+def commit_decision_narrative(case_dir: Path, authored_narrative: Path) -> Path:
+    """Commit reviewed, model-authored lead paragraphs against current approved claims."""
+    entries = _read_json(_case_path(case_dir, "judgement"))["entries"]
+    approved = {
+        str(entry["advisory_claim_id"])
+        for entry in entries
+        if entry["status"] == "approved"
+    }
+    basis = _decision_narrative_basis(case_dir, approved)
+    if basis is None:
+        raise CaseWorkspaceError(
+            "Commit the current advisory workpaper before its decision narrative"
+        )
+    try:
+        return commit_narrative(
+            case_dir, authored_narrative, basis=basis, approved_claim_ids=approved
+        )
+    except ValueError as exc:
+        raise CaseWorkspaceError(str(exc)) from exc
+
+
+@case_operation
 def build_decision_pack(
     case_dir: Path,
     *,
@@ -7845,6 +7910,15 @@ def build_decision_pack(
             evidence_receipt_ids=entry.get("evidence_receipt_ids", []),
         )
 
+    approved_claim_ids = {str(entry["advisory_claim_id"]) for entry in approved_entries}
+    narrative_basis = _decision_narrative_basis(case_dir, approved_claim_ids)
+    try:
+        narrative = load_narrative(
+            case_dir, basis=narrative_basis, approved_claim_ids=approved_claim_ids
+        )
+    except ValueError as exc:
+        raise CaseWorkspaceError(str(exc)) from exc
+
     markdown_path = target_dir / "decision_pack.md"
     docx_path = target_dir / "decision_pack.docx"
     workpaper_markdown_path = target_dir / "decision_pack_workpaper.md"
@@ -7855,8 +7929,10 @@ def build_decision_pack(
         workpaper_markdown_path,
         workpaper_docx_path,
     )
+    readiness_path = target_dir / "decision_pack_readiness.json"
     snapshot = _snapshot_files(
         [
+            readiness_path,
             *output_paths,
             case_dir / CLAIM_REGISTER_FILENAME,
             case_dir / "advisory_evidence_map.md",
@@ -7864,14 +7940,19 @@ def build_decision_pack(
     )
     completed = False
     try:
-        markdown_text = _render_markdown(manifest, materials, entries, questions)
+        markdown_text = _render_markdown(
+            manifest, materials, entries, questions, narrative=narrative
+        )
         _assert_human_visible_document_quality(markdown_text, label="decision_pack.md")
-        markdown_path.write_text(markdown_text, encoding="utf-8")
-        workpaper_markdown_path.write_text(
+        atomic_text(markdown_path, markdown_text, encoding="utf-8")
+        atomic_text(
+            workpaper_markdown_path,
             _render_workpaper_markdown(manifest, materials, entries, questions),
             encoding="utf-8",
         )
-        _render_docx(docx_path, manifest, materials, entries, questions)
+        _render_docx(
+            docx_path, manifest, materials, entries, questions, narrative=narrative
+        )
         _render_workpaper_docx(
             workpaper_docx_path,
             manifest,
@@ -7886,9 +7967,49 @@ def build_decision_pack(
             }
             for entry in approved_entries
         ]
+        narrative_locations = []
+        if narrative:
+            authored = _read_json(case_dir / NARRATIVE_FILENAME)
+            narrative_locations = [
+                {
+                    "claim_id": claim,
+                    "locator": f"Executive narrative: {paragraph['text']}",
+                }
+                for paragraph in authored["paragraphs"]
+                for claim in paragraph["claim_ids"]
+            ]
         for artifact_path in output_paths:
-            if claim_locations:
-                bind_claim_appearances(case_dir, artifact_path, claim_locations)
+            locations = claim_locations + (
+                narrative_locations
+                if artifact_path in (markdown_path, docx_path)
+                else []
+            )
+            if locations:
+                bind_claim_appearances(case_dir, artifact_path, locations)
+        atomic_text(
+            readiness_path,
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "status": (
+                        "requires_final_deliverable_review"
+                        if narrative
+                        else "missing_reviewed_narrative"
+                    ),
+                    "ready_for_delivery": False,
+                    "basis": narrative_basis,
+                    "narrative_sha256": (
+                        _file_sha256(case_dir / NARRATIVE_FILENAME)
+                        if narrative
+                        else None
+                    ),
+                    "outputs": {path.name: _file_sha256(path) for path in output_paths},
+                    "boundary": "Identity and approved references checked; final semantic and visual validation remains required.",
+                },
+                indent=2,
+            )
+            + "\n",
+        )
         completed = True
     finally:
         if not completed:
@@ -7903,3 +8024,47 @@ def build_decision_pack(
         pending_count=sum(1 for entry in entries if entry["status"] == "pending"),
         rejected_count=sum(1 for entry in entries if entry["status"] == "rejected"),
     )
+
+
+@case_reader
+def verify_decision_pack(case_dir: Path, *, output_dir: Path) -> dict[str, Any]:
+    """Check current source/output identity without asserting semantic readiness."""
+    receipt = _read_json(output_dir / "decision_pack_readiness.json")
+    entries = _read_json(_case_path(case_dir, "judgement"))["entries"]
+    approved = {
+        str(entry["advisory_claim_id"])
+        for entry in entries
+        if entry["status"] == "approved"
+    }
+    basis = _decision_narrative_basis(case_dir, approved)
+    if basis is None or receipt.get("basis") != basis:
+        raise CaseWorkspaceError("Decision pack is stale against current case evidence")
+    try:
+        narrative = load_narrative(case_dir, basis=basis, approved_claim_ids=approved)
+    except ValueError as exc:
+        raise CaseWorkspaceError(str(exc)) from exc
+    if not narrative or receipt.get("narrative_sha256") != _file_sha256(
+        case_dir / NARRATIVE_FILENAME
+    ):
+        raise CaseWorkspaceError("Decision pack narrative is missing or changed")
+    expected = {
+        "decision_pack.md",
+        "decision_pack.docx",
+        "decision_pack_workpaper.md",
+        "decision_pack_workpaper.docx",
+    }
+    outputs = receipt.get("outputs")
+    if not isinstance(outputs, dict) or set(outputs) != expected:
+        raise CaseWorkspaceError("Decision pack receipt has an incomplete output set")
+    for name, digest in outputs.items():
+        path = output_dir / name
+        if not path.is_file() or path.is_symlink() or _file_sha256(path) != digest:
+            raise CaseWorkspaceError(
+                f"Decision pack output is missing or changed: {name}"
+            )
+    return {
+        **receipt,
+        "status": "requires_final_deliverable_review",
+        "ready_for_delivery": False,
+        "current_identity_verified": True,
+    }

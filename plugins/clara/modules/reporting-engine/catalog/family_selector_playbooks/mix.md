@@ -15,7 +15,7 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 | --- | --- | --- | --- | --- | --- |
 | `mix.area` | `trend_with_cumulative_or_share_area` | `axis` | `primary_metric` | optional `optional_component_dimension` | Question asks for contribution or share as an area trend across ordered periods. |
 | `mix.bar` | `ranked_single_metric_comparison` | `filter` | `primary_metric` | required `category` | Question asks to rank categories by one selected metric in a scope. |
-| `mix.barmekko` | `width_metric_times_height_metric` | `filter` | `width_metric`, `height_metric` | required `width_category`, `height_category` | Question asks for variable-width composition where width and height are separate metrics. |
+| `mix.barmekko` | `width_metric_times_height_metric` | `filter` | `area_metric`, `width_metric` | required `width_category`, `height_category` | Question asks for variable-width composition where width and height are separate metrics. |
 | `mix.cohort_lost_stacked_column` | `lost_cohort_contribution` | `axis` | `primary_metric` | required `lost_or_last_active_cohort` | Question asks how much contribution comes from entities by last active or lost cohort. |
 | `mix.cohort_since_stacked_column` | `since_cohort_contribution` | `axis` | `primary_metric` | required `first_active_cohort` | Question asks how much contribution comes from entities by first active or since cohort. |
 | `mix.column` | `total_metric_by_period_or_scope` | `axis` | `primary_metric` | `none` | Question asks for total metric columns by period or selected scope without composition. |
@@ -37,6 +37,9 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 - `mix.cohort_lost_stacked_column` <> `mix.like_for_like_column`: `resolved` (`0` errors, `0` warnings)
 - `mix.cohort_since_stacked_column` <> `mix.like_for_like_column`: `resolved` (`0` errors, `0` warnings)
 - `mix.marimekko` <> `mix.stacked_bar`: `resolved` (`0` errors, `0` warnings)
+- `mix.marimekko` <> `mix.stacked_pareto`: `resolved` (`0` errors, `0` warnings)
+- `mix.stacked_bar` <> `mix.stacked_pareto`: `resolved` (`0` errors, `0` warnings)
+- `mix.bar` <> `mix.pareto`: `resolved` (`0` errors, `0` warnings)
 - `mix.column` <> `mix.timeline`: `resolved` (`0` errors, `0` warnings)
 
 ## Capability Details
@@ -80,20 +83,22 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 - Ambiguous question: Compare categories by sales.
 - Ambiguous candidates: `mix.bar`, `mix.stacked_bar`, `mix.stacked_bar_overlay`, `mix.multitier_bar`, `mix.pareto`
 - Disambiguation: Clarify whether the intended focus is `ranked_single_metric_comparison`, `composition_within_ranked_totals`, `primary_rank_plus_secondary_marker`, `dimension_period_values_and_delta`, `ranked_contribution_and_cumulative_share`.
+- High-overlap pair evidence:
+  - `mix.pareto`: `resolved`; evidence `explicit_competitor_link`, `ambiguous_example_link`, `negative_example_link`
 
 ### `mix.barmekko`
 
 - Selection emphasis: `width_metric_times_height_metric`
 - Visual grammar: `barmekko`
 - Analysis tasks: `composition_and_mix`
-- Best when: The reader needs a variable-width composition where width and height represent different metrics.
-- Avoid when: Avoid without a meaningful width metric or when the area encoding would be hard to read.
+- Best when: The reader needs variable-width categories where width is an additive quantity, area is an additive value, and height is their derived ratio.
+- Avoid when: Avoid without a meaningful additive width denominator, when area is not additive, or when the derived ratio encoding would be hard to read.
 - Primary decision cue: Question asks for variable-width composition where width and height are separate metrics.
 - Requires question focus: `variable_width_composition`, `width_and_height_metrics`
 - Reject decision cues: `asks for two-dimension share only`, `asks for bubble relationship`, `asks for simple ranked bars`
 - Forbidden question focus: `two_dimension_share`, `metric_relationship`, `single_metric_rank`
 - Period role: `filter`
-- Metric roles: `width_metric`, `height_metric`
+- Metric roles: `area_metric`, `width_metric`
 - Dimension roles: required `width_category`, `height_category`
 - Close competitors: `mix.marimekko`, `scatter.bubble`, `mix.stacked_bar_overlay`
 - Positive question: Show category width and retailer height as a variable-width composition.
@@ -246,13 +251,14 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 - Period role: `filter`
 - Metric roles: `primary_metric`
 - Dimension roles: required `width_category`, `stack_category`; optional `optional_panel`
-- Close competitors: `mix.barmekko`, `mix.stacked_bar`, `mix.multitier_bar`
+- Close competitors: `mix.barmekko`, `mix.stacked_bar`, `mix.stacked_pareto`, `mix.multitier_bar`
 - Positive question: Show sales composition across category and retailer.
 - Ambiguous question: Show sales mix and composition.
-- Ambiguous candidates: `mix.marimekko`, `mix.barmekko`, `mix.stacked_bar`, `mix.multitier_bar`, `mix.area`
-- Disambiguation: Clarify whether the intended focus is `two_dimension_share_and_size`, `width_metric_times_height_metric`, `composition_within_ranked_totals`, `dimension_period_values_and_delta`, `trend_with_cumulative_or_share_area`.
+- Ambiguous candidates: `mix.marimekko`, `mix.barmekko`, `mix.stacked_bar`, `mix.stacked_pareto`, `mix.multitier_bar`
+- Disambiguation: Clarify whether the intended focus is `two_dimension_share_and_size`, `width_metric_times_height_metric`, `composition_within_ranked_totals`, `concentration_with_component_breakdown`, `dimension_period_values_and_delta`.
 - High-overlap pair evidence:
   - `mix.stacked_bar`: `resolved`; evidence `explicit_competitor_link`, `ambiguous_example_link`, `negative_example_link`
+  - `mix.stacked_pareto`: `resolved`; evidence `explicit_competitor_link`, `ambiguous_example_link`, `negative_example_link`
 
 ### `mix.multitier_bar`
 
@@ -293,6 +299,8 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 - Ambiguous question: Compare categories by sales.
 - Ambiguous candidates: `mix.pareto`, `mix.bar`, `mix.stacked_pareto`, `mix.multitier_bar`, `period_comparison.comparison_table`
 - Disambiguation: Clarify whether the intended focus is `ranked_contribution_and_cumulative_share`, `ranked_single_metric_comparison`, `concentration_with_component_breakdown`, `dimension_period_values_and_delta`, `summary_exact_values`.
+- High-overlap pair evidence:
+  - `mix.bar`: `resolved`; evidence `explicit_competitor_link`, `ambiguous_example_link`, `negative_example_link`
 
 ### `mix.stacked_bar`
 
@@ -315,6 +323,7 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 - Disambiguation: Clarify whether the intended focus is `composition_within_ranked_totals`, `ranked_single_metric_comparison`, `dimension_period_values_and_delta`, `primary_rank_plus_secondary_marker`, `two_dimension_share_and_size`.
 - High-overlap pair evidence:
   - `mix.marimekko`: `resolved`; evidence `explicit_competitor_link`, `ambiguous_example_link`, `negative_example_link`
+  - `mix.stacked_pareto`: `resolved`; evidence `explicit_competitor_link`, `ambiguous_example_link`, `negative_example_link`
 
 ### `mix.stacked_bar_overlay`
 
@@ -370,11 +379,14 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 - Period role: `filter`
 - Metric roles: `primary_metric`
 - Dimension roles: required `category`, `component_dimension`
-- Close competitors: `mix.pareto`, `mix.stacked_bar`
+- Close competitors: `mix.pareto`, `mix.stacked_bar`, `mix.marimekko`
 - Positive question: Show concentration and component composition together.
 - Ambiguous question: Show sales mix and composition.
-- Ambiguous candidates: `mix.stacked_pareto`, `mix.pareto`, `mix.stacked_bar`, `mix.area`, `mix.barmekko`
-- Disambiguation: Clarify whether the intended focus is `concentration_with_component_breakdown`, `ranked_contribution_and_cumulative_share`, `composition_within_ranked_totals`, `trend_with_cumulative_or_share_area`, `width_metric_times_height_metric`.
+- Ambiguous candidates: `mix.stacked_pareto`, `mix.pareto`, `mix.stacked_bar`, `mix.marimekko`, `mix.area`
+- Disambiguation: Clarify whether the intended focus is `concentration_with_component_breakdown`, `ranked_contribution_and_cumulative_share`, `composition_within_ranked_totals`, `two_dimension_share_and_size`, `trend_with_cumulative_or_share_area`.
+- High-overlap pair evidence:
+  - `mix.marimekko`: `resolved`; evidence `explicit_competitor_link`, `ambiguous_example_link`, `negative_example_link`
+  - `mix.stacked_bar`: `resolved`; evidence `explicit_competitor_link`, `ambiguous_example_link`, `negative_example_link`
 
 ### `mix.timeline`
 

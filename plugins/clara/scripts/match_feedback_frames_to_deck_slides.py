@@ -3,16 +3,20 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import logging
 import shutil
 import subprocess
+import tempfile
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 from xml.etree import ElementTree
 from zipfile import BadZipFile, ZipFile
+
+from bounded_process import run_process
 
 __all__ = [
     "SlideFrameMatchError",
@@ -231,16 +235,21 @@ def _render_deck_slides(
     soffice_path: str | None = None,
     expected_slide_numbers: set[int] | None = None,
 ) -> list[_SlideRender]:
+    deck_sha256 = hashlib.sha256(deck_path.read_bytes()).hexdigest()
+    receipt_path = render_dir / "render_identity.json"
     visible_slide_numbers = _pptx_visible_slide_numbers(deck_path)
     expected_numbers = set(expected_slide_numbers or [])
     if expected_numbers and visible_slide_numbers:
         expected_numbers = expected_numbers & set(visible_slide_numbers)
     existing = _load_slide_renders(render_dir)
     if existing:
-        if not expected_numbers:
-            return existing
         existing_numbers = {slide.slide_number for slide in existing}
-        if expected_numbers.issubset(existing_numbers):
+        try:
+            receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            receipt = None
+        identity = _render_identity(deck_sha256, existing)
+        if receipt == identity and expected_numbers.issubset(existing_numbers):
             return existing
         LOGGER.info(
             "Ignoring stale slide render cache in %s: found %s of %s expected slides",
@@ -250,7 +259,7 @@ def _render_deck_slides(
         )
         for path in render_dir.glob("slide-*.png"):
             path.unlink(missing_ok=True)
-        shutil.rmtree(render_dir / "_pdf", ignore_errors=True)
+    receipt_path.unlink(missing_ok=True)
     if deck_path.suffix.lower() != ".pptx":
         raise SlideFrameMatchError(
             f"deck slide rendering requires a .pptx: {deck_path}"
@@ -261,10 +270,13 @@ def _render_deck_slides(
             "LibreOffice/soffice is required to render PPTX slides"
         )
     render_dir.mkdir(parents=True, exist_ok=True)
-    pdf_dir = render_dir / "_pdf"
-    pdf_dir.mkdir(parents=True, exist_ok=True)
+    pdf_parent = render_dir / "_pdf"
+    pdf_parent.mkdir(parents=True, exist_ok=True)
+    pdf_dir = Path(tempfile.mkdtemp(prefix="attempt-", dir=pdf_parent))
+    profile_dir = pdf_dir / "soffice-profile"
     command = [
         executable,
+        f"-env:UserInstallation={profile_dir.resolve().as_uri()}",
         "--headless",
         "--convert-to",
         "pdf",
@@ -272,24 +284,41 @@ def _render_deck_slides(
         str(pdf_dir),
         str(deck_path),
     ]
-    result = subprocess.run(
-        command,
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=90,
-    )
+    stdout_path = pdf_dir / "stdout.log"
+    stderr_path = pdf_dir / "stderr.log"
+    try:
+        with (
+            stdout_path.open("w", encoding="utf-8") as stdout,
+            stderr_path.open("w", encoding="utf-8") as stderr,
+        ):
+            result = run_process(
+                command,
+                check=False,
+                text=True,
+                timeout=90,
+                stdout=stdout,
+                stderr=stderr,
+            )
+    except InterruptedError:
+        raise
+    except (OSError, subprocess.TimeoutExpired) as error:
+        raise SlideFrameMatchError(
+            f"Slide conversion failed; logs in {pdf_dir}: {error}"
+        ) from error
     if result.returncode != 0:
-        detail = (
-            result.stderr or result.stdout or "LibreOffice conversion failed"
-        ).strip()
-        raise SlideFrameMatchError(detail[:800])
+        with stderr_path.open(encoding="utf-8", errors="replace") as stream:
+            detail = stream.read(800).strip()
+        if not detail:
+            with stdout_path.open(encoding="utf-8", errors="replace") as stream:
+                detail = stream.read(800).strip()
+        raise SlideFrameMatchError(
+            detail or f"LibreOffice conversion failed; logs in {pdf_dir}"
+        )
     pdf_path = pdf_dir / f"{deck_path.stem}.pdf"
     if not pdf_path.is_file():
-        pdf_candidates = sorted(pdf_dir.glob("*.pdf"))
-        if not pdf_candidates:
-            raise SlideFrameMatchError("LibreOffice did not produce a PDF")
-        pdf_path = pdf_candidates[0]
+        raise SlideFrameMatchError(
+            "LibreOffice did not produce the expected PDF for this attempt"
+        )
     renders = _render_pdf_pages(
         pdf_path,
         render_dir,
@@ -297,7 +326,30 @@ def _render_deck_slides(
     )
     if not renders:
         raise SlideFrameMatchError("deck rendering produced no slide images")
+    if hashlib.sha256(deck_path.read_bytes()).hexdigest() != deck_sha256:
+        raise SlideFrameMatchError(
+            "deck changed during slide rendering; retry from current input"
+        )
+    _write_json(receipt_path, _render_identity(deck_sha256, renders))
     return renders
+
+
+def _render_identity(
+    deck_sha256: str, renders: Sequence[_SlideRender]
+) -> dict[str, Any]:
+    """Bind cached previews to exact source and image bytes, not slide count."""
+    return {
+        "schema_version": 1,
+        "deck_sha256": deck_sha256,
+        "images": [
+            {
+                "slide_number": slide.slide_number,
+                "filename": slide.path.name,
+                "sha256": hashlib.sha256(slide.path.read_bytes()).hexdigest(),
+            }
+            for slide in sorted(renders, key=lambda value: value.slide_number)
+        ],
+    }
 
 
 def _load_slide_renders(render_dir: Path) -> list[_SlideRender]:

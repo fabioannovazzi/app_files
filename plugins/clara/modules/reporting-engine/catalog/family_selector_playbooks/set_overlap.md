@@ -13,9 +13,9 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 
 | Capability | Selection emphasis | Period | Metrics | Dimensions | Primary cue |
 | --- | --- | --- | --- | --- | --- |
-| `set_overlap.upset` | `many_set_intersections` | `none` | `none` | required `set_membership_fields` | Question asks for intersection patterns across several sets. |
-| `set_overlap.upset_small_multiples` | `intersection_patterns_across_panels` | `none` | `none` | required `set_membership_fields`, `panel_or_segment` | Question asks how set intersection patterns differ across panels or segments. |
-| `set_overlap.venn` | `simple_two_or_three_set_overlap` | `none` | `none` | required `two_or_three_set_membership_fields` | Question asks for simple overlap among two or three sets. |
+| `set_overlap.upset` | `many_set_intersections` | `filter` | `none` | required `set_membership_fields` | Question asks for intersection patterns across several sets. |
+| `set_overlap.upset_small_multiples` | `intersection_patterns_across_panels` | `filter` | `none` | required `set_membership_fields`, `panel_or_segment` | Question asks how set intersection patterns differ across panels or segments. |
+| `set_overlap.venn` | `simple_two_or_three_set_overlap` | `filter` | `none` | required `two_or_three_set_membership_fields` | Question asks for simple overlap among two or three sets. |
 
 ## High-Overlap Pairs
 
@@ -34,7 +34,7 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 - Requires question focus: `many_set_intersections`, `set_membership`
 - Reject decision cues: `asks for only two or three sets`, `asks for panel comparison`, `asks for metric distribution`
 - Forbidden question focus: `simple_set_overlap`, `set_overlap_panels`, `distribution_shape`
-- Period role: `none`
+- Period role: `filter`
 - Metric roles: `none`
 - Dimension roles: required `set_membership_fields`
 - Close competitors: `set_overlap.venn`, `set_overlap.upset_small_multiples`
@@ -56,7 +56,7 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 - Requires question focus: `set_overlap_panels`, `many_set_intersections`
 - Reject decision cues: `asks for one global upset plot`, `asks for simple Venn`, `asks for ranking`
 - Forbidden question focus: `global_set_overlap`, `simple_set_overlap`, `single_metric_rank`
-- Period role: `none`
+- Period role: `filter`
 - Metric roles: `none`
 - Dimension roles: required `set_membership_fields`, `panel_or_segment`
 - Close competitors: `set_overlap.upset`
@@ -76,7 +76,7 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 - Requires question focus: `simple_set_overlap`, `two_or_three_sets`
 - Reject decision cues: `asks for many-set intersections`, `asks for panels`, `asks for metric relationship`
 - Forbidden question focus: `many_set_intersections`, `set_overlap_panels`, `metric_relationship`
-- Period role: `none`
+- Period role: `filter`
 - Metric roles: `none`
 - Dimension roles: required `two_or_three_set_membership_fields`
 - Close competitors: `set_overlap.upset`

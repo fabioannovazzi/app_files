@@ -250,12 +250,14 @@ def test_inspect_run_rejects_truncated_stage_contract(tmp_path: Path) -> None:
         run_state.inspect_run(run_dir)
 
 
-def test_initialize_run_rejects_git_workspace_output() -> None:
+def test_initialize_run_rejects_git_workspace_output(tmp_path: Path) -> None:
+    git_workspace = tmp_path / "git-workspace"
+    (git_workspace / ".git").mkdir(parents=True)
     with pytest.raises(
         run_state.RunStateError, match="cannot be inside a Git workspace"
     ):
         run_state.initialize_run(
-            ROOT / "out" / "unsafe-run",
+            git_workspace / "out" / "unsafe-run",
             retailer="example-retailer",
             category="cashmere",
             author_agent_id="author-agent",

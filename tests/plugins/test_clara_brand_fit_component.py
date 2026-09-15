@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -74,6 +75,7 @@ def test_clara_routes_brand_fit_separately_from_retailer_signals_and_charts() ->
         if item.get("expected_skill") == "clara:brand-fit"
     }
 
+    assert re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", manifest["version"])
     assert manifest["name"] == "clara"
     assert manifest["interface"]["displayName"] == "Clara"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")

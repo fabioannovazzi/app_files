@@ -137,6 +137,7 @@ def run_dataset_intake(
     output_dir: Path,
     semantic_layer_path: Path | None = None,
     sheet_name: str | None = None,
+    csv_options: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Prepare first-upload semantic review or reuse one reviewed contract."""
 
@@ -182,6 +183,7 @@ def run_dataset_intake(
         dataset,
         dataset_id=contract_id,
         sheet_name=sheet_name,
+        csv_options=csv_options,
     )
     _write_json(paths["dataset_profile"], profile)
 
@@ -344,6 +346,9 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--semantic-layer", type=Path)
     parser.add_argument("--sheet-name")
+    parser.add_argument(
+        "--csv-options-json", help="Explicit CSV parser settings as a JSON object."
+    )
     return parser
 
 
@@ -358,6 +363,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             output_dir=args.output_dir,
             semantic_layer_path=args.semantic_layer,
             sheet_name=args.sheet_name,
+            csv_options=(
+                json.loads(args.csv_options_json) if args.csv_options_json else None
+            ),
         )
     except (FileNotFoundError, FileExistsError, OSError, ValueError) as error:
         LOGGER.error("%s", error)

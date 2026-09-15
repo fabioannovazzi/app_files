@@ -28,25 +28,37 @@
     "repository/plugins/management-control-pack/scripts",
     "repository/plugins/management-control-pack/assets/budget-report.css",
     "repository/plugins/management-control-pack/assets/budget-report.js",
-    "repository/plugins/_shared/vendor/modules/reporting_table.py"
+    "repository/plugins/_shared/vendor/modules/reporting_table.py",
+    "scripts/bounded_process.py",
+    "scripts/artifact_publication.py",
+    "scripts/case_store.py",
+    "modules/reporting-engine/catalog",
+    "repository/plugins/distribution-analysis/scripts/distribution_core.py",
+    "repository/plugins/distribution-analysis/skills/distribution-analysis/SKILL.md",
+    "repository/plugins/distribution-analysis/.codex-plugin/plugin.json"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
     "classes": [
       {
         "id": "business-dataset",
-        "purpose": "Profile, interpret, validate, and visualize the user's business data",
-        "content": "CSV, XLSX, or Parquet fields and values; dataset identity; metrics, dimensions, periods, identifiers, members, source notes, and compatibility evidence"
+        "purpose": "Summarize, profile, interpret, validate, and visualize the user's business data",
+        "content": "CSV, XLSX, or Parquet fields and values; dataset identity; metrics, dimensions, periods, identifiers, members, source notes, and compatibility evidence A short descriptive summary can use already available local tools without a semantic project or reporting run; the supplied values and calculated summary may still enter Codex context. This does not create a reviewed execution or downstream calculation receipt."
       },
       {
         "id": "semantic-and-reporting-artifacts",
         "purpose": "Author reusable dataset semantics and choose a source-backed analysis",
-        "content": "Dataset profiles, intake receipts, semantic layers, evidence, reviewed Sales/Discount/COGS mapping states, role bindings, snapshot attachments, analysis policies, chart plans, exact input and output byte hashes, effective recipe records, rendered charts, authoritative calculation and report validation results, model-authored interpretations, and calculation evidence receipts with stable claim identifiers, dependency edges, verification runs, and shared case-register bindings"
+        "content": "Dataset profiles, intake receipts, semantic layers, evidence, reviewed Sales/Discount/COGS mapping states, role bindings, snapshot attachments, analysis policies, chart plans, exact input and output byte hashes, effective recipe records, rendered charts, authoritative calculation and report validation results, model-authored interpretations, and calculation evidence receipts with stable claim identifiers, dependency edges, verification runs, and shared case-register bindings Explicitly reviewed whole-population scope may have no period column. Nonfinancial metric definitions and units, all-records scope receipts and disclosed legacy Date/Period adapter placeholders can enter model context; those placeholders do not establish source time coverage. These changes add no hosted request."
       },
       {
         "id": "budget-report-context",
         "purpose": "Prepare and interpret a reviewed Actual/Budget/Forecast report",
         "content": "Source-role inspection includes filenames, columns/types and up to 10 preview rows per table. The model/professional authors mappings, audience and forecast assumptions. After local calculations, model_context.json includes all metric IDs and values, controls and coverage, source hashes, up to 60 calculated rows per section and 60 budget comparison rows with total counts. Raw export populations, original filenames and full pack JSON are excluded from this default post-calculation projection. Directly opening source files adds their read content to model context. The report contains all compiled views and optionally customer, supplier or service names. Clara reuses the management-control core through Reporting Engine with its ordinary project/output scope; it does not require Vera Studio Archive. No automatic redaction is applied."
+      },
+      {
+        "id": "parser-and-attempt-evidence",
+        "purpose": "Verify reviewed parsing/execution and inspect failed or published analytical results",
+        "content": "Explicit sheet/CSV parser settings, source hashes, reviewed execution context, generated recipes, output tables/charts, current-generation pointer, retained prior output snapshots, failed staging files and process logs (which may include local paths and business values) can be read by Codex. Normalized temporary CSV input is removed by the managed temporary-directory scope; failed stages, logs and published generations persist until separately removed. No automatic anonymisation is applied. Unsupported distribution mapping names are returned in a local validation error before report artifacts are written; the requested binding names may enter Codex context. The rejection introduces no external destination or additional retained source content. Explicit reporting delivery export creates an additional local copy of the complete reviewed source dataset and source notes, profile, semantic layer, acceptance receipt, current published generation and generated outputs. Its portable descriptor retains relative input paths and receipt hashes; the original execution receipt retains original absolute paths. These copies persist at the selected delivery location. The export itself performs no upload; a separately chosen Cowork or sharing route processes or transfers the selected bundle under that route."
       }
     ]
   },
@@ -133,9 +145,9 @@
   ],
   "security_controls": [],
   "review": {
-    "reviewed_at": "2026-07-28",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "2d4a647116e3ed5416ee0ac318a2435f94dd354795f4bcabe045a821ef479231"
+    "source_fingerprint": "85953852a7a41866c8b568d958752177a67713b7470904ed9b0811a9eceb6c06"
   }
 }

@@ -14,6 +14,10 @@ from pathlib import Path
 __all__ = ["main"]
 
 REQUIRED_MODULES = (
+    "xlsxwriter",
+    "numpy",
+    "psutil",
+    "dateutil",
     "polars",
     "plotly",
     "kaleido",

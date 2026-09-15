@@ -68,6 +68,38 @@ def test_runtime_install_timeout_does_not_publish_generation(tmp_path: Path) -> 
     assert list((tmp_path / "data").rglob("*.active.json")) == []
 
 
+@pytest.mark.parametrize("payload", [[], None, {}, {"generation": "../outside"}])
+def test_invalid_generation_pointer_reports_runtime_unavailable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, payload: object
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+    target = tmp_path / "runtime"
+    monkeypatch.setattr(runtime, "dependency_target", lambda *args: target)
+    target.with_name(target.name + ".active.json").write_text(json.dumps(payload))
+
+    assert runtime.activate_runtime(plugin_root, "studio-archive") is None
+
+
+def test_runtime_install_timeout_does_not_publish_generation(tmp_path: Path) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+
+    def runner(command: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+
+    ready, target, detail = runtime.ensure_runtime(
+        plugin_root, "studio-archive", data_dir=tmp_path / "data", runner=runner
+    )
+
+    assert ready is False
+    assert not target.exists()
+    assert "timed out" in detail
+    assert list((tmp_path / "data").rglob("*.active.json")) == []
+
+
 def make_packaged_component(root: Path) -> Path:
     scripts = root / "scripts"
     scripts.mkdir(parents=True)

@@ -232,12 +232,13 @@ def _managed_fixture_output_dir(tmp_path: Path) -> Path:
     return output_dir
 
 
-def test_vera_review_server_workflows_match_the_vera_registry() -> None:
+def test_vera_review_server_routes_are_registered_vera_workflows() -> None:
     server = load_server_module()
     components = json.loads(
         (ROOT / "plugins" / "vera" / "components.json").read_text(encoding="utf-8")
     )
 
+    assert server.VERA_REVIEW_WORKFLOW_IDS
     assert server.VERA_REVIEW_WORKFLOW_IDS <= frozenset(components["plugins"]) - {
         "studio-archive"
     }

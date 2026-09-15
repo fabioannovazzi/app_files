@@ -59,6 +59,46 @@ def load_dependency_checker() -> Any:
     return module
 
 
+@pytest.mark.parametrize(
+    "previous,current,expected",
+    [
+        (360000.0, 405000.0, 12.5),
+        (379500.0, 426000.0, 12.25296442687747),
+        (0.0, 100.0, None),
+        (-100.0, -87.5, 12.5),
+    ],
+)
+def test_monthly_export_retains_unrounded_percentages(
+    previous: float,
+    current: float,
+    expected: float | None,
+) -> None:
+    core = load_core()
+    canonical = pl.DataFrame(
+        {
+            "Date": [date(2025, 1, 1), date(2026, 1, 1)],
+            "Period": ["PY", "AC"],
+            "Sales": [previous, current],
+        }
+    )
+    recipe = {
+        "mappings": {"amount_column": "Sales"},
+        "options": {
+            "period_window": {
+                "current": {"year": 2026, "month_cutoff": 1},
+                "previous": {"year": 2025},
+            },
+        },
+    }
+
+    monthly, audit = core.legacy_period_monthly_table(canonical, recipe)
+
+    assert monthly["difference in %"].to_list() == [
+        None if expected is None else pytest.approx(expected)
+    ]
+    assert audit["percentage_precision"].startswith("unrounded")
+
+
 def load_legacy_charting() -> Any:
     if str(SCRIPT_DIR) not in sys.path:
         sys.path.insert(0, str(SCRIPT_DIR))
@@ -534,6 +574,27 @@ def test_legacy_column_chart_uses_consistent_metric_prefix(
     assert "+0.05" in list(delta_trace.text)
     assert not any(
         name == "matplotlib" or name.startswith("matplotlib.") for name in sys.modules
+    )
+
+
+def test_legacy_column_chart_preserves_calendar_month_totals(
+    tmp_path: Path, monkeypatch: Any
+) -> None:
+    legacy = load_legacy_charting()
+    canonical, recipe = _legacy_metric_fixture()
+    captured = _capture_legacy_figure(legacy, monkeypatch)
+
+    legacy.write_legacy_multitier_column_chart(canonical, recipe, tmp_path)
+
+    fig = captured["fig"]
+    ac_trace = next(trace for trace in fig.data if trace.name == "AC")
+    py_trace = next(trace for trace in fig.data if trace.name == "PY")
+    assert tuple(ac_trace.x)[:4] == ("  Jan", "  Feb", "  Mar", "  Apr")
+    assert _plotly_numeric_trace_values(ac_trace.y)[:4] == pytest.approx(
+        (720_000, 730_000, 810_000, 1_020_000)
+    )
+    assert _plotly_numeric_trace_values(py_trace.y)[:4] == pytest.approx(
+        (670_000, 700_000, 750_000, 800_000)
     )
 
 
@@ -1695,3 +1756,56 @@ def test_recipe_preserves_unstated_or_explicit_currency(currency: str) -> None:
     )
 
     assert recipe["options"]["currency"] == currency
+
+
+@pytest.mark.parametrize(
+    ("current_end", "previous_end", "excluded_previous"),
+    [
+        ("2025-03-15", "2024-03-15", "2024-03-16"),
+        ("2024-02-29", "2023-02-28", "2023-03-01"),
+        ("2025-02-28", "2024-02-28", "2024-02-29"),
+    ],
+)
+def test_public_to_date_comparison_respects_declared_day_cutoff(
+    tmp_path: Path, current_end: str, previous_end: str, excluded_previous: str
+) -> None:
+    core = load_core()
+    source = tmp_path / "sales.csv"
+    recipe_path = tmp_path / "recipe.json"
+    pl.DataFrame(
+        {
+            "Date": [previous_end, excluded_previous, current_end],
+            "Sales": [30.0, 900.0, 40.0],
+            "Company": ["A", "A", "A"],
+        }
+    ).write_csv(source)
+    recipe_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0",
+                "mappings": {
+                    "date_column": "Date",
+                    "amount_column": "Sales",
+                    "dimensions": ["Company"],
+                },
+                "options": {
+                    "period_type": "to_date",
+                    "period_grain": "month",
+                    "charts": ["table"],
+                    "small_multiples": False,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    output = tmp_path / "output"
+
+    core.run_period_comparison(source, output, recipe_path, artifact_mode="data_only")
+
+    context = json.loads((output / "period_comparison_context.json").read_text())
+    assert context["comparison"]["previous"]["end_date"] == previous_end
+    assert context["totals"]["current"] == 40.0
+    assert context["totals"]["previous"] == 30.0
+    assert context["totals"]["delta"] == 10.0
+    dates = pl.read_csv(output / "period_comparison_canonical.csv")["Date"].to_list()
+    assert excluded_previous not in dates

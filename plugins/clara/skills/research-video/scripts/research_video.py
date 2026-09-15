@@ -34,12 +34,16 @@ import re
 import shutil
 import stat
 import subprocess  # nosec B404
+import sys
 import tempfile
 import textwrap
+import uuid
 import wave
 import zipfile
 from collections.abc import Mapping, Sequence
+from contextvars import ContextVar
 from datetime import datetime, timezone
+from fractions import Fraction
 from pathlib import Path
 from typing import Any
 
@@ -51,11 +55,23 @@ __all__ = [
     "main",
     "prepare_run",
     "render_run",
+    "verify_render_run",
 ]
 
 LOGGER = logging.getLogger(__name__)
+_MEDIA_LOG_DIRECTORY: ContextVar[Path | None] = ContextVar(
+    "media_log_directory", default=None
+)
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[3]
+if str(PLUGIN_ROOT / "scripts") not in sys.path:
+    sys.path.insert(0, str(PLUGIN_ROOT / "scripts"))
+
+from bounded_process import run_process
+from case_store import atomic_text
+from media_publication import publish_media_generation, verify_media_generation
+from render_attempt import media_attempt
+
 HOSTED_VOICE_SOURCE = "mparanza_hosted_openai_voice"
 HOSTED_VOICE_PROVIDER = "OpenAI"
 HOSTED_VOICE_MODEL = "gpt-4o-mini-tts"
@@ -140,7 +156,8 @@ def _json_sha256(value: object) -> str:
 def _write_json(path: Path, value: object) -> None:
     """Write readable UTF-8 JSON with a final newline."""
 
-    path.write_text(
+    atomic_text(
+        path,
         json.dumps(value, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
@@ -653,12 +670,40 @@ def _run_media(
 ) -> subprocess.CompletedProcess[str]:
     """Run one fixed local media command without a shell."""
 
-    return subprocess.run(  # nosec B603
-        list(command),
-        check=check,
-        capture_output=capture_output,
-        text=True,
-    )
+    log_directory = _MEDIA_LOG_DIRECTORY.get()
+    if log_directory is None:
+        return run_process(
+            list(command),
+            check=check,
+            capture_output=capture_output,
+            text=True,
+            timeout=600,
+        )
+    log_id = uuid.uuid4().hex
+    stdout_path = log_directory / f"{log_id}.stdout.log"
+    stderr_path = log_directory / f"{log_id}.stderr.log"
+    with stdout_path.open("x") as stdout, stderr_path.open("x") as stderr:
+        result = run_process(
+            list(command),
+            stdout=stdout,
+            stderr=stderr,
+            check=False,
+            text=True,
+            timeout=600,
+        )
+    with (
+        stdout_path.open(errors="replace") as stdout,
+        stderr_path.open(errors="replace") as stderr,
+    ):
+        completed = subprocess.CompletedProcess(
+            list(command),
+            result.returncode,
+            stdout.read(65536) if capture_output else None,
+            stderr.read(65536) if capture_output else None,
+        )
+    if check:
+        completed.check_returncode()
+    return completed
 
 
 def _safe_voice_bundle(bundle_path: Path) -> tuple[zipfile.ZipFile, dict[str, Any]]:
@@ -1335,31 +1380,169 @@ def _write_captions(
 
 
 def _validate_media(ffmpeg: str, video: Path) -> dict[str, Any]:
-    """Decode the complete MP4 and verify the required stream contract."""
-
-    _run_media([ffmpeg, "-v", "error", "-i", str(video), "-f", "null", "-"])
-    probe = _run_media(
-        [ffmpeg, "-hide_banner", "-i", str(video), "-f", "null", "-"],
+    """Decode the complete MP4 and report measured stream properties."""
+    _run_media(
+        [
+            ffmpeg,
+            "-v",
+            "error",
+            "-xerror",
+            "-err_detect",
+            "explode",
+            "-i",
+            str(video),
+            "-f",
+            "null",
+            "-",
+        ]
+    )
+    ffprobe = shutil.which("ffprobe")
+    if ffprobe:
+        probe = _run_media(
+            [
+                ffprobe,
+                "-v",
+                "error",
+                "-show_streams",
+                "-show_format",
+                "-of",
+                "json",
+                str(video),
+            ],
+            capture_output=True,
+        )
+        payload = json.loads(probe.stdout)
+        videos = [item for item in payload["streams"] if item["codec_type"] == "video"]
+        audios = [item for item in payload["streams"] if item["codec_type"] == "audio"]
+        if len(videos) != 1 or len(audios) != 1:
+            raise ValueError("Rendered MP4 must have one video and one audio stream")
+        stream = videos[0]
+        rate = float(Fraction(stream["avg_frame_rate"]))
+        width, height = int(stream["width"]), int(stream["height"])
+        video_codec, audio_codec = stream["codec_name"], audios[0]["codec_name"]
+        duration = float(payload["format"]["duration"])
+        method = "ffprobe_json_and_complete_ffmpeg_decode"
+    else:
+        # imageio-ffmpeg supplies ffmpeg but not ffprobe. Preserve that declared
+        # runtime and read observed metadata instead of reporting assumed constants.
+        probe = _run_media(
+            [ffmpeg, "-hide_banner", "-i", str(video), "-f", "null", "-"],
+            capture_output=True,
+        )
+        video_line = next(
+            (line for line in probe.stderr.splitlines() if "Video:" in line), ""
+        )
+        audio_line = next(
+            (line for line in probe.stderr.splitlines() if "Audio:" in line), ""
+        )
+        size = re.search(r"\b(\d{2,5})x(\d{2,5})\b", video_line)
+        fps = re.search(r"([0-9.]+) fps", video_line)
+        elapsed = re.search(r"Duration: (\d+):(\d+):([0-9.]+)", probe.stderr)
+        if not size or not fps or not elapsed:
+            raise ValueError(
+                "FFmpeg did not report measurable stream dimensions, frame rate and duration"
+            )
+        width, height = map(int, size.groups())
+        rate = float(fps.group(1))
+        hours, minutes, seconds = map(float, elapsed.groups())
+        duration = hours * 3600 + minutes * 60 + seconds
+        video_codec = "h264" if "Video: h264" in video_line else "unknown"
+        audio_codec = "aac" if "Audio: aac" in audio_line else "unknown"
+        method = "ffmpeg_stream_metadata_and_complete_decode"
+    if (
+        video_codec != "h264"
+        or audio_codec != "aac"
+        or (width, height) != (FRAME_WIDTH, FRAME_HEIGHT)
+        or not math.isfinite(rate)
+        or abs(rate - FRAME_RATE) > 0.01
+        or not math.isfinite(duration)
+        or duration <= 0
+    ):
+        raise ValueError(
+            "Rendered MP4 does not satisfy codec, dimensions, frame rate or duration requirements"
+        )
+    # Decode the selected audio stream independently: container duration can
+    # conceal a truncated audio track. FFmpeg progress reports observed time.
+    audio_decode = _run_media(
+        [
+            ffmpeg,
+            "-v",
+            "error",
+            "-xerror",
+            "-i",
+            str(video),
+            "-map",
+            "0:a:0",
+            "-progress",
+            "pipe:1",
+            "-nostats",
+            "-f",
+            "null",
+            "-",
+        ],
         capture_output=True,
-        check=False,
     )
-    detail = probe.stderr
-    required = (
-        ("Video: h264", "H.264 video stream"),
-        ("Audio: aac", "AAC audio stream"),
-        (f"{FRAME_WIDTH}x{FRAME_HEIGHT}", "16:9 frame dimensions"),
+    elapsed_audio = re.findall(
+        r"^out_time_us=(\d+)$", audio_decode.stdout, re.MULTILINE
     )
-    missing = [label for marker, label in required if marker not in detail]
-    if missing:
-        raise ValueError(f"Rendered MP4 is missing: {', '.join(missing)}")
+    if not elapsed_audio or "progress=end" not in audio_decode.stdout:
+        raise ValueError("FFmpeg did not report a complete measured audio duration")
+    audio_duration = int(elapsed_audio[-1]) / 1_000_000
+    if audio_duration <= 0 or abs(audio_duration - duration) > 0.25:
+        raise ValueError("Rendered audio duration does not match video duration")
+    versions = {}
+    for name, executable in (("ffmpeg", ffmpeg), ("ffprobe", ffprobe)):
+        if executable:
+            version = _run_media([executable, "-version"], capture_output=True)
+            versions[name] = version.stdout.splitlines()[0]
     return {
         "container": "video/mp4",
-        "video_codec": "h264",
-        "audio_codec": "aac",
-        "width": FRAME_WIDTH,
-        "height": FRAME_HEIGHT,
-        "frame_rate": FRAME_RATE,
+        "video_codec": video_codec,
+        "audio_codec": audio_codec,
+        "width": width,
+        "height": height,
+        "frame_rate": rate,
+        "duration_seconds": duration,
+        "audio_duration_seconds": audio_duration,
+        "tool_versions": versions,
+        "measurement_method": method,
         "decoded_without_error": True,
+    }
+
+
+def _validate_captions(
+    path: Path, speech_durations: Sequence[float], media: Mapping[str, Any]
+) -> dict[str, Any]:
+    """Check generated cue timings against the narration and measured streams."""
+    pattern = r"(\d{2,}):(\d{2}):(\d{2})\.(\d{3})"
+    cues = re.findall(
+        rf"^{pattern} --> {pattern}$", path.read_text(encoding="utf-8"), re.MULTILINE
+    )
+    if len(cues) != len(speech_durations):
+        raise ValueError("Caption cue count differs from approved narration")
+    expected_start = LEAD_SECONDS
+    last_end = 0.0
+    for cue, speech_duration in zip(cues, speech_durations, strict=True):
+        start = int(cue[0]) * 3600 + int(cue[1]) * 60 + int(cue[2]) + int(cue[3]) / 1000
+        end = int(cue[4]) * 3600 + int(cue[5]) * 60 + int(cue[6]) + int(cue[7]) / 1000
+        if (
+            start < last_end
+            or end <= start
+            or abs(start - expected_start) > 0.001
+            or abs(end - (expected_start + speech_duration)) > 0.001
+            or end
+            > min(media["duration_seconds"], media["audio_duration_seconds"]) + 0.001
+        ):
+            raise ValueError(
+                "Caption timing exceeds measured media or differs from narration"
+            )
+        last_end = end
+        expected_start += speech_duration + INTER_SCENE_PAUSE_SECONDS
+    return {
+        "cue_count": len(cues),
+        "last_cue_end_seconds": last_end,
+        "timing_verified_against_measured_streams": True,
+        "semantic_review_performed": False,
     }
 
 
@@ -1400,9 +1583,23 @@ def _verify_existing_render(run_dir: Path, report: dict[str, Any]) -> dict[str, 
 
 
 def render_run(run_dir: Path) -> dict[str, Any]:
+    """Render with durable attempt state and retained failure artifacts."""
+    root = run_dir.expanduser().resolve()
+    with media_attempt(root) as work:
+        token = _MEDIA_LOG_DIRECTORY.set(work)
+        try:
+            result = _render_run(root, work)
+            publish_media_generation(root, work)
+            return result
+        finally:
+            _MEDIA_LOG_DIRECTORY.reset(token)
+
+
+def _render_run(run_dir: Path, work: Path) -> dict[str, Any]:
     """Render, validate, and declare one hosted-voice research video."""
 
     root = run_dir.expanduser().resolve()
+    intake_sha256 = _sha256(root / "run_intake.json")
     intake = _read_json(root / "run_intake.json")
     _verify_visual_inventory(root, intake)
     approval = _verify_approval(root, intake)
@@ -1416,79 +1613,98 @@ def render_run(run_dir: Path) -> dict[str, Any]:
     existing_report = root / "render_report.json"
     if existing_report.is_file():
         report = _read_json(existing_report)
-        if report.get("scene_plan_sha256") == intake["scene_plan_sha256"]:
+        if (
+            report.get("status") == "ready_for_review"
+            and report.get("scene_plan_sha256") == intake["scene_plan_sha256"]
+        ):
             return _verify_existing_render(root, report)
-        raise ValueError("Use a fresh output directory for a different rendered plan")
+        if report.get("status") == "ready_for_review":
+            raise ValueError(
+                "Use a fresh output directory for a different rendered plan"
+            )
     ffmpeg = _resolve_ffmpeg()
 
     final_video = root / "research_video.mp4"
     final_poster = root / "poster.jpg"
     final_captions = root / "captions.vtt"
-    with tempfile.TemporaryDirectory(prefix="clara-research-video-") as temp_dir:
-        work = Path(temp_dir)
-        canvas_paths: list[Path] = []
-        foreground_paths: list[Path | None] = []
-        for index, scene in enumerate(plan["scenes"], start=1):
-            canvas_path = work / f"canvas-{index:02d}.png"
+    canvas_paths: list[Path] = []
+    foreground_paths: list[Path | None] = []
+    for index, scene in enumerate(plan["scenes"], start=1):
+        canvas_path = work / f"canvas-{index:02d}.png"
+        _fit_canvas(
+            Path(scene["image"]),
+            canvas_path,
+            transparent=False,
+            voice_disclosure=intake["voice"]["disclosure"],
+        )
+        canvas_paths.append(canvas_path)
+        foreground_path: Path | None = None
+        if "foreground_image" in scene:
+            foreground_path = work / f"foreground-{index:02d}.png"
             _fit_canvas(
-                Path(scene["image"]),
-                canvas_path,
-                transparent=False,
-                voice_disclosure=intake["voice"]["disclosure"],
+                Path(scene["foreground_image"]),
+                foreground_path,
+                transparent=True,
             )
-            canvas_paths.append(canvas_path)
-            foreground_path: Path | None = None
-            if "foreground_image" in scene:
-                foreground_path = work / f"foreground-{index:02d}.png"
-                _fit_canvas(
-                    Path(scene["foreground_image"]),
-                    foreground_path,
-                    transparent=True,
-                )
-            foreground_paths.append(foreground_path)
+        foreground_paths.append(foreground_path)
 
-        with Image.open(canvas_paths[0]) as first_canvas:
-            poster = first_canvas.convert("RGB")
-        if foreground_paths[0] is not None:
-            with Image.open(foreground_paths[0]) as foreground:
-                poster.paste(foreground, (0, 0), foreground)
-        temporary_poster = work / "poster.jpg"
-        poster.save(temporary_poster, format="JPEG", quality=92)
-        poster.close()
+    with Image.open(canvas_paths[0]) as first_canvas:
+        poster = first_canvas.convert("RGB")
+    if foreground_paths[0] is not None:
+        with Image.open(foreground_paths[0]) as foreground:
+            poster.paste(foreground, (0, 0), foreground)
+    temporary_poster = work / "poster.jpg"
+    poster.save(temporary_poster, format="JPEG", quality=92)
+    poster.close()
 
-        clip_durations = _visual_clip_durations(speech_durations)
-        clips: list[Path] = []
-        for index, (scene, background, foreground, duration) in enumerate(
-            zip(
-                plan["scenes"],
-                canvas_paths,
-                foreground_paths,
-                clip_durations,
-                strict=True,
-            ),
-            start=1,
-        ):
-            clip = work / f"scene-{index:02d}.mp4"
-            _render_scene_clip(
-                ffmpeg=ffmpeg,
-                background=background,
-                foreground=foreground,
-                motion=scene["motion"],
-                duration=duration,
-                output=clip,
-            )
-            clips.append(clip)
-        visual = work / "visual.mp4"
-        audio = work / "voice.m4a"
-        _join_visuals(ffmpeg, clips, clip_durations, visual)
-        target_duration = _join_audio(ffmpeg, narration_paths, audio, work)
-        rendered = work / "research_video.mp4"
-        _mux(ffmpeg, visual, audio, rendered)
-        media = _validate_media(ffmpeg, rendered)
-        shutil.copy2(rendered, final_video)
-        shutil.copy2(temporary_poster, final_poster)
+    clip_durations = _visual_clip_durations(speech_durations)
+    clips: list[Path] = []
+    for index, (scene, background, foreground, duration) in enumerate(
+        zip(
+            plan["scenes"],
+            canvas_paths,
+            foreground_paths,
+            clip_durations,
+            strict=True,
+        ),
+        start=1,
+    ):
+        clip = work / f"scene-{index:02d}.mp4"
+        _render_scene_clip(
+            ffmpeg=ffmpeg,
+            background=background,
+            foreground=foreground,
+            motion=scene["motion"],
+            duration=duration,
+            output=clip,
+        )
+        clips.append(clip)
+    visual = work / "visual.mp4"
+    audio = work / "voice.m4a"
+    _join_visuals(ffmpeg, clips, clip_durations, visual)
+    target_duration = _join_audio(ffmpeg, narration_paths, audio, work)
+    rendered = work / "research_video.mp4"
+    _mux(ffmpeg, visual, audio, rendered)
+    media = _validate_media(ffmpeg, rendered)
+    if abs(media["duration_seconds"] - target_duration) > 0.25:
+        raise ValueError(
+            "Rendered media duration does not match the approved narration timeline"
+        )
+    temporary_captions = work / "captions.vtt"
+    _write_captions(temporary_captions, plan["scenes"], speech_durations)
+    caption_validation = _validate_captions(temporary_captions, speech_durations, media)
+    if _sha256(root / "run_intake.json") != intake_sha256:
+        raise ValueError("Media intake changed while rendering")
+    _verify_visual_inventory(root, intake)
+    if _verify_approval(root, intake) != approval:
+        raise ValueError("Narration approval changed while rendering")
+    current_voice, _, _ = _verify_hosted_voice(root, intake, plan, approval)
+    if current_voice != voice_manifest:
+        raise ValueError("Hosted voice manifest changed while rendering")
+    shutil.copy2(rendered, final_video)
+    shutil.copy2(temporary_poster, final_poster)
 
-    _write_captions(final_captions, plan["scenes"], speech_durations)
+    shutil.copy2(temporary_captions, final_captions)
     report = {
         "schema_version": 1,
         "workflow": "clara:research-video",
@@ -1500,6 +1716,7 @@ def render_run(run_dir: Path) -> dict[str, Any]:
         "scene_count": len(plan["scenes"]),
         "language": plan["language"],
         "target_duration_seconds": round(target_duration, 3),
+        "caption_validation": caption_validation,
         "scene_speech_durations_seconds": [
             round(value, 3) for value in speech_durations
         ],
@@ -1600,6 +1817,30 @@ def render_run(run_dir: Path) -> dict[str, Any]:
     return report
 
 
+def verify_render_run(run_dir: Path) -> dict[str, Any]:
+    """Recheck the published generation against current approved media inputs."""
+    root = run_dir.expanduser().resolve()
+    publication = verify_media_generation(root)
+    intake = _read_json(root / "run_intake.json")
+    _verify_visual_inventory(root, intake)
+    approval = _verify_approval(root, intake)
+    plan = _read_json(root / "scene_plan.json")
+    _verify_hosted_voice(root, intake, plan, approval)
+    report = _read_json(
+        Path(publication["generation_directory"]) / "render_report.json"
+    )
+    if (
+        report["scene_plan_sha256"] != intake["scene_plan_sha256"]
+        or report["approval_sha256"] != _json_sha256(approval)
+        or report["hosted_voice_manifest_sha256"]
+        != _sha256(root / "hosted_voice_manifest.json")
+    ):
+        raise ValueError("Published media no longer matches current approved inputs")
+    if verify_media_generation(root) != publication:
+        raise ValueError("Current media generation changed during verification")
+    return {**publication, "requires_semantic_and_visual_review": True}
+
+
 def _build_parser() -> argparse.ArgumentParser:
     """Build the command-line parser."""
 
@@ -1618,6 +1859,10 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     attach_voice.add_argument("--run-dir", required=True, type=Path)
     attach_voice.add_argument("--voice-bundle", required=True, type=Path)
+    verify = subparsers.add_parser(
+        "verify", help="Verify current published media and approved inputs"
+    )
+    verify.add_argument("run_dir", type=Path)
     render = subparsers.add_parser("render", help="Render an approved scene plan")
     render.add_argument("--run-dir", required=True, type=Path)
     return parser
@@ -1638,6 +1883,8 @@ def main(argv: list[str] | None = None) -> int:
         )
     elif args.command == "attach-voice":
         attach_hosted_voice(args.run_dir, args.voice_bundle)
+    elif args.command == "verify":
+        LOGGER.info(json.dumps(verify_render_run(args.run_dir), indent=2))
     else:
         render_run(args.run_dir)
     return 0

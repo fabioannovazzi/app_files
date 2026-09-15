@@ -161,8 +161,7 @@ def _entry_text(entry: Mapping[str, Any]) -> str:
     return ""
 
 
-def _entry_slide_number(entry: Mapping[str, Any]) -> int | None:
-    match = entry.get("slide_match")
+def _matched_slide_number(match: Any) -> int | None:
     if not isinstance(match, Mapping):
         return None
     confidence = str(match.get("confidence") or "")
@@ -172,6 +171,27 @@ def _entry_slide_number(entry: Mapping[str, Any]) -> int | None:
     if isinstance(slide_number, int) and not isinstance(slide_number, bool):
         return slide_number
     return None
+
+
+def _entry_slide_number(entry: Mapping[str, Any]) -> int | None:
+    """Narrow context only when every supplied frame supports the same candidate."""
+
+    slide_number = _matched_slide_number(entry.get("slide_match"))
+    if slide_number is None:
+        return None
+    frames = entry.get("frames", [])
+    if not isinstance(frames, list):
+        return None
+    for frame in frames:
+        if (
+            not isinstance(frame, Mapping)
+            or frame.get("status") != "extracted"
+            or _matched_slide_number(frame.get("slide_match")) != slide_number
+        ):
+            # The entry summary keeps only its strongest frame. Retain the full
+            # source context when other frames are uncertain or name another slide.
+            return None
+    return slide_number
 
 
 def _frame_summary(frame: Mapping[str, Any]) -> dict[str, Any]:
@@ -370,8 +390,9 @@ def build_deck_revision_interpretation_packets(
             "slides": slides,
             "feedback_units": general_entries,
             "semantic_boundary": (
-                "This packet exists for deck-level, global, unmatched, or low-confidence "
-                "feedback. Clara/Codex decides whether it contains actionable changes."
+                "This packet exists for deck-level, global, unmatched, low-confidence, "
+                "or mixed-frame feedback. Clara/Codex decides whether it contains "
+                "actionable changes."
             ),
         }
         _write_json(packet_path, packet)

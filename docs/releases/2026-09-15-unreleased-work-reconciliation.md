@@ -1,0 +1,53 @@
+# Reconciliation of the old primary checkout
+
+The primary checkout was at `d4486cde`, 132 commits behind the inspected
+`origin/main` (`9644e38e`), with 1,058 changed tracked files and 959 untracked
+files. Its diff was not a deployable release: it mixed unreleased source,
+already released changes, superseded versions, generated packages and local
+audit output.
+
+## Recovered source
+
+- Clara case writes use a recoverable journal and cooperating-process locks.
+  Exchange imports validate portable paths and destinations before mutation.
+- Reviewed decision narratives and final Markdown, Word and HTML deliveries
+  bind to the current case and exact output files.
+- Reporting preserves parser settings, reviewed execution policy and source
+  identity, retains failed-attempt evidence, publishes complete generations,
+  and exports relocatable bundles with their input and output evidence.
+- Deck revisions resume from existing state and recheck source, approval and
+  output identity. Media rendering retains attempt diagnostics and validates
+  the completed generation.
+- Chart adapters preserve signed, zero and small values, declared period scope,
+  and source observations. Unsupported distribution bindings fail explicitly.
+- Hosted voice uploads serialize chunk completion and cleanup. Interview jobs
+  retain durable interruption state without automatically replaying uncertain
+  provider calls. Provider errors expose classified metadata rather than raw
+  response bodies.
+- The local review server reads private component metadata only for the browser
+  render tool. Normal MCP results retain their existing structured payload.
+- Public copy describes the actual journal-input and exact-duplicate contracts.
+
+## Reconciliation decisions
+
+Three-way comparisons used the old checkout as the base and current main as the
+release baseline. Exact historical blob matches identified changes already
+released. Current shared Python 3.12 setup, renamed specialist skills, expanded
+business-planning workflows, publication registry and package parity rules were
+preserved. Distinct regression tests from both histories were retained.
+
+Generated ZIPs and extracted package trees are rebuilt from canonical source;
+old generated copies are not merged. Historical local audit outputs are not
+release evidence. Previous Clara native Cowork testing was stopped at the
+user's request; this release does not claim that acceptance or model-quality
+evaluation was completed.
+
+The independent optional-onboarding change is integrated from PR #634 before
+the final package build. The separate first-use-course task retains its own
+active worktree and is not silently included in this recovery.
+
+## Validation
+
+The recovery, exchange, process, public-HTTP, semantic-execution and release-gate
+selection passed 148 tests. Final repository, package and deployment results
+are recorded after the complete release checks finish.

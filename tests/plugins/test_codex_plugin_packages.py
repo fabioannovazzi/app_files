@@ -785,6 +785,16 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
             assert builder.CODEX_DOWNLOAD_URL not in body, name
             assert not body.startswith("#"), name
     if plugin_name == "clara":
+        router = card_bodies["skills/clara/SKILL.md"]
+        assert "## Invocation and scope contract" in router
+        assert "references/workflow-catalog.md" in router
+        catalog = "skills/clara/references/workflow-catalog.md"
+        assert entries[catalog] == (ROOT / "plugins" / "clara" / catalog).read_bytes()
+        html_builder = "skills/html-deck/scripts/build_html_deck.py"
+        assert (
+            entries[html_builder]
+            == (ROOT / "plugins" / "clara" / html_builder).read_bytes()
+        )
         deck_correction = card_bodies["skills/deck-correction/SKILL.md"]
         assert "# Deck Correction" in deck_correction
         assert "Keep the original untouched and edit a copy" in deck_correction

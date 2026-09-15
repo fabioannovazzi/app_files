@@ -311,7 +311,9 @@ def assert_html_deck_runtime(
             missing.append("stage slide-change observation")
     if missing:
         joined = ", ".join(missing)
-        raise ValueError(f"{label} is missing Clara HTML deck runtime invariants: {joined}")
+        raise ValueError(
+            f"{label} is missing Clara HTML deck runtime invariants: {joined}"
+        )
 
 
 def assert_fixed_16_9_deck_runtime(html_text: str, *, label: str) -> None:
@@ -323,11 +325,15 @@ def assert_fixed_16_9_deck_runtime(html_text: str, *, label: str) -> None:
 def _resolve_profile(html_text: str, profile: str) -> str:
     normalized = "stacked" if profile == "stack" else profile
     if normalized == "auto":
-        normalized = "stage" if re.search(
-            r'<main\b[^>]*data-clara-deck-mode=["\']stage["\']',
-            html_text,
-            flags=re.IGNORECASE,
-        ) else "stacked"
+        normalized = (
+            "stage"
+            if re.search(
+                r'<main\b[^>]*data-clara-deck-mode=["\']stage["\']',
+                html_text,
+                flags=re.IGNORECASE,
+            )
+            else "stacked"
+        )
     if normalized not in _PROFILES:
         raise ValueError(f"Unsupported Clara HTML deck profile: {profile!r}")
     return normalized
@@ -363,7 +369,9 @@ def _ensure_main_deck_marker(html_text: str, *, profile: str) -> str:
     updated_attrs = attrs
     if _DECK_MARKER not in attrs:
         updated_attrs += f" {_DECK_MARKER}"
-    class_match = re.search(r'class=(?P<quote>["\'])(?P<value>.*?)(?P=quote)', updated_attrs)
+    class_match = re.search(
+        r'class=(?P<quote>["\'])(?P<value>.*?)(?P=quote)', updated_attrs
+    )
     if class_match:
         classes = class_match.group("value").split()
         if _DECK_CLASS not in classes:

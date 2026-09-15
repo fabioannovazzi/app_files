@@ -11,16 +11,33 @@ permissions:
 
 jobs:
   packaged-reporting:
-    name: Fresh Clara Cowork ZIP
-    runs-on: ubuntu-latest
+    name: Fresh Clara Cowork ZIP (${{ matrix.os }}, Python ${{ matrix.python }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: '3.10'
+          - os: macos-latest
+            python: '3.12'
+          - os: windows-latest
+            python: '3.10'
+          - os: windows-latest
+            python: '3.12'
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
     env:
       PYTHONDONTWRITEBYTECODE: '1'
     steps:
+      - name: Preserve canonical source bytes on checkout
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: ${{ matrix.python }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -28,10 +45,12 @@ jobs:
         run: |
           python -m pip install pytest
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_clara_cowork_release_gate.py tests/plugins/test_clara_claude_package.py
+      - name: Verify source privacy coverage and reviewed fingerprints
+        run: |
+          python plugins/clara/skills/privacy-surface-review/scripts/validate_privacy_surfaces.py
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_clara_privacy_surfaces.py
       - name: Verify shipped candidate matches canonical source
         run: python scripts/build_claude_plugin_zip.py clara --check
-      - name: Verify privacy reviews match the candidate source
-        run: python plugins/clara/skills/privacy-surface-review/scripts/validate_privacy_surfaces.py
       - name: Exercise the actual ZIP with fresh managed dependencies
         run: >-
           python scripts/check_clara_cowork_release.py
@@ -41,17 +60,22 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: clara-script-evidence
+          name: clara-script-evidence-${{ matrix.os }}-py${{ matrix.python }}
+          include-hidden-files: true
           if-no-files-found: warn
           path: |
             ${{ runner.temp }}/clara-acceptance/*.json
             ${{ runner.temp }}/clara-acceptance/*.log
             ${{ runner.temp }}/clara-acceptance/intake/
             ${{ runner.temp }}/clara-acceptance/render/
+            ${{ runner.temp }}/clara-acceptance/rejected/
+            ${{ runner.temp }}/clara-acceptance/reviewed-render/
+            ${{ runner.temp }}/clara-acceptance/delivery/
+            ${{ runner.temp }}/clara-acceptance/delivery-tampered/
       - name: Retain exact candidate for real Cowork acceptance
         uses: actions/upload-artifact@v4
         with:
-          name: clara-candidate
+          name: clara-candidate-${{ matrix.os }}-py${{ matrix.python }}
           path: plugin_packages/clara/clara-claude-plugin.zip
       - name: State candidate identity and remaining release checks
         if: always()
@@ -69,5 +93,6 @@ jobs:
               summary.write(f"Script status: {report.get('status', 'unverified')}\n\n")
               summary.write(f"Version: {report.get('plugin', {}).get('version', 'unknown')}\n\n")
               summary.write(f"ZIP SHA-256: {report.get('zip_sha256', 'unknown')}\n\n")
+              summary.write(f"Observed environment: {report.get('environment', {})}\n\n")
               summary.write("Native Cowork agent acceptance: unverified. It is separate from automated host-package alignment.\n")
           PY

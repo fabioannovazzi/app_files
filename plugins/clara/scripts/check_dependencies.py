@@ -300,7 +300,19 @@ def main(argv: list[str] | None = None) -> int:
             delegated_args.extend(("--requirements", str(requirement)))
         if args.include_optional:
             delegated_args.append("--include-optional")
-        ready, target, detail = ensure_runtime(plugin_root(), args.module)
+        runtime_requirements = (
+            [str(path) for path in args.requirements] if args.requirements else None
+        )
+        if args.module == "reporting-engine" and args.include_optional:
+            runtime_requirements = list(runtime_requirements or ["requirements.txt"])
+            if "requirements-render.txt" not in runtime_requirements:
+                runtime_requirements.append("requirements-render.txt")
+        if runtime_requirements is None:
+            ready, target, detail = ensure_runtime(plugin_root(), args.module)
+        else:
+            ready, target, detail = ensure_runtime(
+                plugin_root(), args.module, requirements=runtime_requirements
+            )
         if not ready:
             LOGGER.error("Clara managed Python runtime setup failed: %s", detail)
             return 1

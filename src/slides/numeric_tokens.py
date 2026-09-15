@@ -34,13 +34,14 @@ class NumericToken:
 
 
 def _unit_from_raw(raw: str) -> NumericUnit:
+    """Parse explicit unit syntax, keeping percentage points distinct from percent."""
     cleaned = (raw or "").strip().lower()
     if not cleaned:
         return "plain"
+    if cleaned in {"pp", "ppt", "p.p."} or "point" in cleaned:
+        return "pp"
     if "%" in cleaned or "percent" in cleaned or "per cent" in cleaned:
         return "percent"
-    if "pp" in cleaned or "ppt" in cleaned or "point" in cleaned:
-        return "pp"
     return "plain"
 
 

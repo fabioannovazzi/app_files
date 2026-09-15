@@ -1193,6 +1193,9 @@ def get_y_axis_total(df, chartDict, value_cols, width_col):
     else:
         lf = ensure_lazyframe(df)
         if showAverageValueName in chartDict and chartDict[showAverageValueName]:
+            # Ignore layout spacers before removing the synthetic average.
+            columns, _ = get_schema_and_column_names(lf)
+            lf = lf.filter(pl.col(columns[0]).is_not_null())
             total_df = lf.select(
                 pl.col(valueName).slice(1).sum().alias("__tot")
             ).collect(engine="streaming")
@@ -2746,7 +2749,16 @@ def add_total_annotations_for_stacked_bar(
         .collect(engine="streaming")
     )
     wcat = wcat_df.item() if wcat_df.height > 0 else 0
-    width_sum_df = width_lf.select(pl.col(columns[1]).sum()).collect(engine="streaming")
+    # The first non-spacer row is synthetic, not part of the population.
+    # Shares must use the same population total as the chart's total annotation.
+    population_width = width_lf
+    if chartDict.get(namingParams["showAverageValueName"], False):
+        population_width = population_width.filter(
+            pl.col(columns[0]).is_not_null()
+        ).slice(1)
+    width_sum_df = population_width.select(pl.col(columns[1]).sum()).collect(
+        engine="streaming"
+    )
     width_sum = width_sum_df.item() if width_sum_df.height > 0 else 0
     wcat_missing = wcat is None
     if wcat_missing:

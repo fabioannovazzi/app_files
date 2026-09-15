@@ -24,10 +24,80 @@ from pathlib import Path
 from typing import Any
 from zipfile import BadZipFile, ZipFile
 
-__all__ = ["main", "extract_package", "module_choices", "verify_acceptance"]
+__all__ = [
+    "main",
+    "extract_package",
+    "module_choices",
+    "verify_acceptance",
+    "verify_coverage",
+]
 LOGGER = logging.getLogger(__name__)
 CASE = "reporting-engine.period_comparison.trend"
-GATE_VERSION = 3
+GATE_VERSION = 4
+REQUIRED_HOST_AXES = ("Linux/3.10", "macOS/3.12", "Windows/3.10", "Windows/3.12")
+
+
+def verify_coverage(path: Path, zip_hash: str, workflows: set[str]) -> str:
+    """Enforce C18's mechanical coverage/hash contract, not semantic quality."""
+    original_hash = digest(path)
+    receipt = read_json(path)
+    if (
+        not isinstance(receipt, dict)
+        or receipt.get("schema_version") != 1
+        or receipt.get("zip_sha256") != zip_hash
+        or receipt.get("status") != "pass"
+        or not workflows
+    ):
+        raise ValueError("Coverage is missing, failed, or for a different ZIP")
+    for field in ("reviewer", "reviewed_at"):
+        if not isinstance(receipt.get(field), str) or not receipt[field].strip():
+            raise ValueError(f"Coverage needs {field}")
+    for section, names, checks in (
+        ("workflows", sorted(workflows), ("normal_path", "material_failure_path")),
+        (
+            "hosts",
+            REQUIRED_HOST_AXES,
+            ("fresh_core_setup", "optional_setup", "blocked_install", "failure_report"),
+        ),
+    ):
+        records = receipt.get(section)
+        if not isinstance(records, dict):
+            raise ValueError(f"Coverage needs {section}")
+        for name in names:
+            record = records.get(name)
+            if not isinstance(record, dict):
+                raise ValueError(f"Coverage needs {section}/{name}")
+            for check in checks:
+                axis = record.get(check)
+                if (
+                    not isinstance(axis, dict)
+                    or axis.get("status") != "pass"
+                    or axis.get("zip_sha256") != zip_hash
+                    or not isinstance(axis.get("evidence"), list)
+                    or not axis["evidence"]
+                ):
+                    raise ValueError(f"Coverage needs passing {section}/{name}/{check}")
+                for evidence in axis["evidence"]:
+                    if not isinstance(evidence, dict):
+                        raise ValueError("Invalid coverage evidence record")
+                    relative = evidence.get("path")
+                    if (
+                        not isinstance(relative, str)
+                        or not relative
+                        or Path(relative).is_absolute()
+                    ):
+                        raise ValueError("Coverage evidence needs a relative path")
+                    artifact = (path.parent / relative).resolve()
+                    if (
+                        not artifact.is_relative_to(path.parent.resolve())
+                        or not artifact.is_file()
+                        or artifact.stat().st_size == 0
+                        or digest(artifact) != evidence.get("sha256")
+                    ):
+                        raise ValueError("Missing or changed coverage evidence")
+    if digest(path) != original_hash:
+        raise ValueError("Coverage changed during verification")
+    return original_hash
 
 
 def verify_hook_registration(root: Path) -> None:
@@ -245,7 +315,12 @@ class CheckRun:
         return passed
 
     def direct(
-        self, name: str, script: str, *args: str, negative: bool = False
+        self,
+        name: str,
+        script: str,
+        *args: str,
+        negative: bool = False,
+        expected_error: str = "missing required role bindings",
     ) -> bool:
         return self.command(
             name,
@@ -255,7 +330,7 @@ class CheckRun:
                 *args,
             ],
             negative=negative,
-            expected_error="missing required role bindings",
+            expected_error=expected_error,
         )
 
     def execute(self) -> None:
@@ -281,6 +356,7 @@ class CheckRun:
             ],
         ):
             return
+        # Public CLIs bootstrap dependencies; probe the isolated interpreter itself.
         self.command(
             "reject-uninstalled-dependency",
             [
@@ -365,6 +441,8 @@ class CheckRun:
             "retail_monthly",
             "--layer",
             str(fixture / "retail_monthly.semantic.json"),
+            "--source",
+            str(fixture / "retail_monthly_source_notes.md"),
             "--snapshot-suite",
             str(fixture / "retail_monthly.snapshot_cases.json"),
             "--output",
@@ -410,13 +488,84 @@ class CheckRun:
             "{}",
             negative=True,
         )
-        if (self.output / "rejected/render_manifest.json").exists():
-            raise ValueError("Invalid request left a render manifest")
+        verify_rejected_render(self.output / "rejected")
         verify_outputs(self.output, dataset)
+        self.direct(
+            "reviewed-monthly-render",
+            "run_capability.py",
+            str(dataset),
+            "--layer",
+            str(fixture / "retail_monthly.semantic.json"),
+            "--profile",
+            str(profile),
+            "--acceptance",
+            str(self.output / "semantic_acceptance.json"),
+            "--source",
+            str(fixture / "retail_monthly_source_notes.md"),
+            "--analysis-id",
+            "analysis.sales_current_vs_prior_by_month",
+            "--capability-id",
+            "period_comparison.multitier_column",
+            "--output-dir",
+            str(self.output / "reviewed-render"),
+        )
+        if self.direct(
+            "export-delivery",
+            "run_capability.py",
+            "--export-output",
+            str(self.output / "reviewed-render"),
+            "--delivery-dir",
+            str(self.output / "delivery-staging"),
+        ):
+            delivery = self.output / "delivery"
+            (self.output / "delivery-staging").rename(delivery)
+            self.direct(
+                "verify-moved-delivery",
+                "run_capability.py",
+                "--verify-output",
+                str(delivery),
+            )
+            tampered = self.output / "delivery-tampered"
+            shutil.copytree(delivery, tampered)
+            (tampered / "period_comparison_monthly.csv").write_text("changed")
+            self.direct(
+                "reject-tampered-delivery",
+                "run_capability.py",
+                "--verify-output",
+                str(tampered),
+                negative=True,
+                expected_error="Reviewed render artifact changed",
+            )
         if digest(self.archive) != self.report["zip_sha256"]:
             raise ValueError("ZIP changed during acceptance")
         if all(step["status"] == "pass" for step in self.report["steps"]):
             self.report["status"] = "pass"
+
+
+def verify_rejected_render(output: Path) -> None:
+    """Require an inspectable preflight failure without published deliverables."""
+    manifest = read_json(output / "render_manifest.json")
+    if (
+        manifest.get("status") != "failed_or_interrupted"
+        or manifest.get("runner", {}).get("status") != "failed"
+        or "missing required role bindings"
+        not in manifest.get("failure", {}).get("message", "")
+        or manifest.get("evidence", {}).get("outputs")
+    ):
+        raise ValueError("Invalid request did not retain the expected failure receipt")
+    if read_json(output / "current_reporting.json") != manifest:
+        raise ValueError("Invalid request left an inconsistent publication state")
+    for path in output.rglob("*"):
+        if not path.is_file():
+            continue
+        relative = path.relative_to(output)
+        if relative.parts[0] == ".logs" or relative.as_posix() in {
+            ".render.lock",
+            "render_manifest.json",
+            "current_reporting.json",
+        }:
+            continue
+        raise ValueError(f"Invalid request left a published artifact: {relative}")
 
 
 def verify_outputs(output: Path, dataset: Path) -> None:
@@ -479,6 +628,10 @@ def evidence_index(output: Path) -> list[dict[str, str]]:
         *output.glob("*.json"),
         *(output / "intake").rglob("*"),
         *(output / "render").rglob("*"),
+        *(output / "rejected").rglob("*"),
+        *(output / "reviewed-render").rglob("*"),
+        *(output / "delivery").rglob("*"),
+        *(output / "delivery-tampered").rglob("*"),
     ]
     return [
         {"path": path.relative_to(output).as_posix(), "sha256": digest(path)}
@@ -516,6 +669,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--timeout", type=int, default=600)
     parser.add_argument("--cowork-acceptance", type=Path)
     parser.add_argument(
+        "--coverage-evidence",
+        type=Path,
+        help="Reviewed exact-ZIP workflow and supported-host coverage; required for release.",
+    )
+    parser.add_argument(
         "--verify-release",
         action="store_true",
         help="Verify saved script evidence and real Cowork acceptance; do not rerun.",
@@ -534,6 +692,8 @@ def main(argv: list[str] | None = None) -> int:
             report = read_json(output / "result.json")
             if not args.cowork_acceptance:
                 raise ValueError("Release requires real Cowork acceptance")
+            if not args.coverage_evidence:
+                raise ValueError("Release requires complete workflow and host coverage")
             if report["zip_sha256"] != digest(args.zip) or report["status"] != "pass":
                 raise ValueError("Script acceptance failed or is for a different ZIP")
             verify_saved_evidence(output, report)
@@ -545,6 +705,15 @@ def main(argv: list[str] | None = None) -> int:
                 verify_hook_registration(root)
                 if read_json(root / ".claude-plugin/plugin.json") != report["plugin"]:
                     raise ValueError("Saved plugin identity differs from candidate")
+                # Privacy review is an internal governance skill, not a user pipeline.
+                workflows = {
+                    skill.parent.name
+                    for skill in (root / "skills").glob("*/SKILL.md")
+                    if skill.parent.name != "privacy-surface-review"
+                }
+                coverage_hash = verify_coverage(
+                    args.coverage_evidence, report["zip_sha256"], workflows
+                )
             if report["environment"]["os"] != "Linux":
                 raise ValueError(
                     "Release requires passing clean Linux Cowork package evidence"
@@ -568,6 +737,7 @@ def main(argv: list[str] | None = None) -> int:
                     "zip_sha256": report["zip_sha256"],
                     "plugin_version": report["plugin"]["version"],
                     "acceptance_sha256": digest(args.cowork_acceptance),
+                    "coverage_sha256": coverage_hash,
                 },
             )
             LOGGER.info("[PASS] Script and Cowork acceptance match this ZIP")

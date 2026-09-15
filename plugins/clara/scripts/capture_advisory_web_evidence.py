@@ -42,6 +42,7 @@ from pathlib import Path
 from typing import Any, Sequence
 
 from advisory_evidence_lineage import LineageError, record_evidence
+from public_http import open_public_url
 
 __all__ = ["UnsafePublicUrlError", "capture_web_evidence"]
 
@@ -98,13 +99,14 @@ class _VisibleTextParser(HTMLParser):
         return re.sub(r"\n{3,}", "\n\n", "".join(self.parts)).strip()
 
 
-def _validate_public_url(url: str) -> None:
+def _validate_public_url(url: str) -> tuple[str, int, tuple[str, ...]]:
     parsed = urllib.parse.urlparse(url)
     if (
         parsed.scheme.casefold() not in STANDARD_PORTS
         or not parsed.hostname
         or parsed.username is not None
         or parsed.password is not None
+        or any(character in url for character in ("\r", "\n", "\t"))
     ):
         raise UnsafePublicUrlError("only public HTTP/S URLs without credentials")
     try:
@@ -134,20 +136,12 @@ def _validate_public_url(url: str) -> None:
         ]
     if not addresses or any(not address.is_global for address in addresses):
         raise UnsafePublicUrlError("URL resolves to a non-public network address")
+    return hostname, expected_port, tuple(str(address) for address in addresses)
 
 
-class _PublicRedirectHandler(urllib.request.HTTPRedirectHandler):
-    def redirect_request(
-        self,
-        req: urllib.request.Request,
-        fp: Any,
-        code: int,
-        msg: str,
-        headers: Any,
-        newurl: str,
-    ) -> urllib.request.Request | None:
-        _validate_public_url(newurl)
-        return super().redirect_request(req, fp, code, msg, headers, newurl)
+class _PublicOpener:
+    def open(self, request: urllib.request.Request, *, timeout: float) -> Any:
+        return open_public_url(request, timeout, _validate_public_url)
 
 
 def _sha256(path: Path) -> str:
@@ -192,7 +186,7 @@ def capture_web_evidence(
         url,
         headers={"User-Agent": "MparanzaClaraAdvisoryEvidence/0.1"},
     )
-    active_opener = opener or urllib.request.build_opener(_PublicRedirectHandler())
+    active_opener = opener or _PublicOpener()
     with active_opener.open(request, timeout=timeout) as response:
         raw = response.read(MAX_CAPTURE_BYTES + 1)
         truncated = len(raw) > MAX_CAPTURE_BYTES
@@ -265,7 +259,7 @@ def capture_web_evidence(
         "verification": {
             "status": "identity_verified",
             "checked_at": timestamp,
-            "method": "public HTTP capture with requested and final URL validation",
+            "method": "public HTTP capture with validated-address pinning and requested/final URL validation",
             "notes": [
                 "Identity verification confirms the captured response, not the semantic truth or completeness of the caller-authored observation."
             ],

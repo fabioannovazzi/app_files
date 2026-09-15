@@ -1893,10 +1893,9 @@ def _portable_render_summary(
     expected_input_sha256: str,
     expected_role_bindings: Mapping[str, Any],
 ) -> dict[str, Any]:
+    _, _, renderer, _ = _component_modules(clara_root)
     actual_files = {
-        path.relative_to(render_dir).as_posix()
-        for path in render_dir.rglob("*")
-        if path.is_file()
+        Path(path).as_posix() for path in renderer.artifact_files(render_dir)
     }
     if actual_files != EXPECTED_RENDER_FILES:
         raise ContractValidationError(
@@ -1925,11 +1924,14 @@ def _portable_render_summary(
             "render_proof",
             "evidence",
             "boundary",
+            "attempt_id",
+            "status",
         },
         label="render manifest",
     )
     if (
         render_manifest.get("schema_version") != "0.2"
+        or render_manifest.get("status") != "completed"
         or render_manifest.get("capability_id") != CAPABILITY_ID
         or render_manifest.get("owner") != "clara.reporting-engine"
         or render_manifest.get("adapter_id") != "reporting-engine.statement"
@@ -1991,6 +1993,9 @@ def _portable_render_summary(
             "returncode",
             "stdout",
             "stderr",
+            "stdout_log",
+            "stderr_log",
+            "log_excerpt_limit",
         },
         label="render runner receipt",
     )
@@ -2099,6 +2104,7 @@ def _portable_render_summary(
         "currency": None,
         "artifact_mode": ARTIFACT_MODE,
         "include_variants": False,
+        "parser_settings": None,
     }
     request_evidence = (render_manifest.get("evidence") or {}).get("request") or {}
     expected_request_sha256 = canonical_json_sha256(request_contract)
@@ -2173,6 +2179,36 @@ def _portable_render_summary(
         _artifact_receipt(handoff_dir, render_dir / relative)
         for relative in PORTABLE_RENDER_FILES
     ]
+    # Retained runtime files are not deliverables. The current immutable
+    # generation must nevertheless match this exact validated render manifest.
+    _, _, renderer, _ = _component_modules(clara_root)
+    try:
+        publication = renderer.verify_render_generation(render_dir)
+    except (ValueError, OSError, KeyError) as error:
+        raise ContractValidationError(
+            f"render generation verification failed: {error}"
+        ) from error
+    snapshot = Path(publication["generation_directory"])
+    if (
+        publication["manifest_sha256"]
+        != file_sha256(render_dir / "render_manifest.json")
+        or snapshot.resolve()
+        != (
+            render_dir
+            / ".reporting-generations"
+            / str(render_manifest["attempt_id"])
+            / "published"
+        ).resolve()
+        or {
+            path.relative_to(snapshot).as_posix()
+            for path in snapshot.rglob("*")
+            if path.is_file()
+        }
+        != EXPECTED_RENDER_FILES
+    ):
+        raise ContractValidationError(
+            "render generation identity or output inventory drifted"
+        )
     return {
         "capability_id": CAPABILITY_ID,
         "adapter_id": "reporting-engine.statement",
@@ -2805,10 +2841,14 @@ def _validate_handoff_artifacts(
     }
     if require_stored_receipt:
         required_files.add("reporting_handoff.json")
+    _, _, renderer, _ = _component_modules(clara_root)
     actual_files = {
         path.relative_to(handoff_dir).as_posix()
         for path in handoff_dir.rglob("*")
-        if path.is_file()
+        if path.is_file() and path.relative_to(handoff_dir).parts[0] != "render"
+    } | {
+        f"render/{Path(path).as_posix()}"
+        for path in renderer.artifact_files(handoff_dir / "render")
     }
     if actual_files != required_files:
         raise ContractValidationError(

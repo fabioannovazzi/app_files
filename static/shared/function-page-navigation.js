@@ -151,6 +151,7 @@
     "passive-invoice-audit": [["vera", "area-accounting"]],
     "invoice-xml": [["vera", "area-accounting"]],
     "journal-sampling": [["vera", "area-accounting"]],
+    "aml-review": [["vera", "area-clients"]],
     "new-client": [["vera", "area-clients"]],
     "new-client/geneva": [["vera", "area-clients"]],
     "new-client/uk": [["vera", "area-clients"]],

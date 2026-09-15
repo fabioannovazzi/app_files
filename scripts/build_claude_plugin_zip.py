@@ -526,6 +526,13 @@ assumptions, contradictions, and consultant decisions visible.
 Use host-neutral artifact names such as `clara-review/` and `run_review.md`.
 Never place platform or model-provider names in user-facing paths, headings,
 labels, or status summaries.
+
+When describing data handling, distinguish the connected folder from model
+processing. Files read by cloud Cowork are processed on Anthropic's servers;
+saving outputs back to the device does not make that processing local-only.
+Do not say that nothing left the device. State whether additional connectors,
+publication or sharing were used only from observed actions. Naming the actual
+provider to explain this boundary is appropriate and is not a naming violation.
 """
 LUCIA_SHARED_COWORK_COMPONENTS = frozenset(
     {
@@ -2206,6 +2213,48 @@ def _project_clara_cowork_skill(
             contract=CLARA_COWORK_EXECUTION_CONTRACT,
         )
 
+    if relative_path == "skills/research-video/SKILL.md":
+        text = re.sub(
+            r"(?m)^description: .*$",
+            "description: Prepare source-faithful research narration and render an "
+            "MP4 locally from approved scene images and a supplied matching voice "
+            "bundle. Hosted voice generation is unavailable in Cowork; without "
+            "the bundle, deliver the preparation and identify the missing input.",
+            text,
+            count=1,
+        )
+        # Project known source instructions; keep local attachment and validation intact.
+        replacements = {
+            "The complete workflow uses the authenticated Mparanza Research Video voice\n"
+            "page to generate one audio artifact per approved scene, plus a local Clara\n"
+            "runtime with Python and FFmpeg to build the MP4. No user API key is required.": "Cowork prepares the scene plan and narration locally. Rendering requires a\n"
+            "supplied voice bundle matching the exact approved plan and narration.\n"
+            "Hosted voice generation is unavailable here; do not offer or invoke that\n"
+            "route. Without the bundle, retain the preparation and report the missing\n"
+            "input rather than claiming a completed video. Local rendering uses Python\n"
+            "and FFmpeg and requires no user API key.",
+            "## Hosted-Voice Run UX": "## Research Video Run UX",
+            "Before voice generation, show one execution checkpoint": "Before attaching supplied voice, show one execution checkpoint",
+            "Show the narration script and explain that Mparanza will send the exact approved\n"
+            "narration to OpenAI.": "Show the narration script and explain that Cowork cannot generate voice.\n"
+            "A supplied voice bundle must bind to this exact approved narration.",
+            "### 4. Generate and attach hosted voice": "### 4. Attach a supplied approved voice bundle",
+            "Open `https://mparanza.com/case-notes/research-video/voice`, sign in to\n"
+            "Mparanza, upload `mparanza_voice_request.json`, and download the returned ZIP.": "Use a voice ZIP already supplied in the connected folder. Do not open a\n"
+            "voice-generation page, upload the request, or invoke a hosted service.\n"
+            "The bundle must match this run's approved request; arbitrary audio is not\n"
+            "a substitute. If no matching bundle is supplied, stop after preparation\n"
+            "and approval and state that rendering is blocked by the missing bundle.\n"
+            "The internal `approved_for_hosted_voice` status is not permission to\n"
+            "invoke hosted voice in Cowork.",
+            "Attach and normalize the downloaded bundle locally:": "Attach and normalize the supplied bundle locally:",
+            "the hosted service cannot return the bundle, leave the run": "a matching supplied bundle is unavailable, leave the run",
+        }
+        for original, replacement in replacements.items():
+            if text.count(original) != 1:
+                raise ValueError("Research Video Cowork projection needs source review")
+            text = text.replace(original, replacement, 1)
+
     if relative_path == "skills/html-deck/SKILL.md":
         text = re.sub(
             r"(?ms)^Include this user-facing revision affordance.*?"
@@ -2529,6 +2578,16 @@ def _clara_package_entries(
                     "",
                     catalog,
                 )
+            catalog, replacements = re.subn(
+                r"(?m)^- `research-video`:[^\n]*(?:\n[ ]{2}[^\n]*)*\n?",
+                "- `research-video`: prepare a source-faithful scene plan and narration;\n"
+                "  render an MP4 locally only when a matching approved voice bundle is\n"
+                "  supplied. Hosted voice generation is unavailable in Cowork. Without\n"
+                "  the bundle, report the missing input and deliver preparation only.\n",
+                catalog,
+            )
+            if replacements != 1:
+                raise ValueError("Research Video Cowork catalog needs source review")
             content = _project_clara_cowork_reference(catalog.encode("utf-8"))
         elif "/references/" in relative and relative.endswith(".md"):
             content = _project_clara_cowork_reference(content)
@@ -2990,6 +3049,10 @@ def verify_zip(path: Path, entries: dict[str, bytes]) -> list[str]:
 def build_package(package: ClaudePackage) -> tuple[Path, Path]:
     """Build one unpacked Cowork plugin and matching deterministic ZIP."""
 
+    if package.plugin == "clara" and package.public_zip is not None:
+        raise ValueError(
+            "Promote Clara through check_clara_cowork_release.py --verify-release"
+        )
     entries = claude_package_entries(package)
     # Validate the finished ZIP before replacing any distributable artifact.
     with tempfile.TemporaryDirectory(prefix="cowork-release-") as temporary:

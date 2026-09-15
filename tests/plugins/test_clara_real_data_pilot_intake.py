@@ -4,6 +4,7 @@ import copy
 import hashlib
 import importlib.util
 import json
+import subprocess
 import sys
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -749,17 +750,35 @@ def test_real_data_pilot_intake_rejects_source_outside_run_root(
         )
 
 
+def _isolated_repository(tmp_path: Path) -> tuple[Path, Path, Path]:
+    """Create a minimal real Git boundary without relying on checkout outputs."""
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    subprocess.run(
+        ["git", "init", "--quiet", str(repository)], check=True, capture_output=True
+    )
+    (repository / ".gitignore").write_text("out/\n", encoding="utf-8")
+    tracked_source = repository / "source.py"
+    tracked_source.write_text("# synthetic repository source\n", encoding="utf-8")
+    subprocess.run(
+        ["git", "-C", str(repository), "add", "source.py", ".gitignore"],
+        check=True,
+        capture_output=True,
+    )
+    ignored_parent = repository / "out"
+    ignored_parent.mkdir()
+    return repository, ignored_parent, tracked_source
+
+
 def test_real_data_pilot_intake_rejects_tracked_repository_source(
     tmp_path: Path,
 ) -> None:
-    ignored_parent = ROOT / "out"
-    ignored_parent.mkdir(exist_ok=True)
+    repository, ignored_parent, tracked_source = _isolated_repository(tmp_path)
     with TemporaryDirectory(
         prefix="clara-m6-intake-location-test-",
         dir=ignored_parent,
     ) as raw_dir:
         intake_path, _, _ = _case(Path(raw_dir))
-        tracked_source = CLARA_ROOT / "scripts" / "validate_real_data_pilot_intake.py"
 
         with pytest.raises(
             VALIDATOR.ContractValidationError,
@@ -769,16 +788,15 @@ def test_real_data_pilot_intake_rejects_tracked_repository_source(
                 intake_path,
                 tracked_source,
                 as_of_date=VALIDATION_DATE,
-                local_run_root=ROOT,
-                repository_root=ROOT,
+                local_run_root=repository,
+                repository_root=repository,
             )
 
 
 def test_real_data_pilot_intake_rejects_unrelated_repository_root(
     tmp_path: Path,
 ) -> None:
-    ignored_parent = ROOT / "out"
-    ignored_parent.mkdir(exist_ok=True)
+    repository, ignored_parent, tracked_source = _isolated_repository(tmp_path)
     unrelated_repository = tmp_path / "unrelated-repository"
     (unrelated_repository / ".git").mkdir(parents=True)
     with TemporaryDirectory(
@@ -819,9 +837,7 @@ def test_real_data_pilot_intake_rejects_source_in_nested_git_worktree(
 def test_real_data_pilot_intake_rejects_ignored_hardlink_alias(
     tmp_path: Path,
 ) -> None:
-    ignored_parent = ROOT / "out"
-    ignored_parent.mkdir(exist_ok=True)
-    tracked_source = CLARA_ROOT / "scripts" / "validate_real_data_pilot_intake.py"
+    repository, ignored_parent, tracked_source = _isolated_repository(tmp_path)
     with TemporaryDirectory(
         prefix="clara-m6-hardlink-test-",
         dir=ignored_parent,
@@ -841,7 +857,7 @@ def test_real_data_pilot_intake_rejects_ignored_hardlink_alias(
                     alias_path,
                     as_of_date=VALIDATION_DATE,
                     local_run_root=run_root,
-                    repository_root=ROOT,
+                    repository_root=repository,
                 )
         finally:
             alias_path.unlink(missing_ok=True)

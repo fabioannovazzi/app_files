@@ -1160,6 +1160,8 @@ def _build_import_feedback_timeline(
             base_dir=case_dir,
             extract_frames=True,
         )
+    except InterruptedError:
+        raise
     except (FeedbackTimelineError, OSError) as error:
         LOGGER.warning("Could not build feedback timeline: %s", error)
         return None

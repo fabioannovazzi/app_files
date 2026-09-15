@@ -97,6 +97,16 @@ below. After import, complete speaker attribution when needed and continue the
 normal interpretation and revision workflow; do not send the user back to the
 Downloads folder.
 
+For captured Clara HTML decks, inspect the imported `active_slide_timeline`
+and transcript `active_slide_id` fields first. Resolve the captured ID in the
+actual target HTML and corroborate the capture session, deck title, visible
+content and time interval. A title alone does not establish deck identity, and
+capture handles do not carry a source-file hash. Once that identity is verified,
+use the captured slide ID ahead of visual similarity candidates. If identity
+or timing conflicts, retain the conflict for model inspection rather than
+choosing an edit target automatically. These IDs are not supplied for ordinary
+PPTX screen capture; use its frames and deck snapshot instead.
+
 If the capture process is interrupted, preserve the existing local case and
 report whether the browser launch, new-bundle detection, or import failed. Fall
 back to `import_latest_hosted_voice_bundle.py` only when a completed bundle is
@@ -132,7 +142,32 @@ resolved. The intake snapshots the deck/style evidence and may attach
 conservative rendered-slide match candidates. Those matches are navigation
 evidence only.
 
+Near-identical slides can tie even at a similarity score of 1.0. Inspect all
+candidate slides for low-confidence matches, and inspect every relevant frame
+when a feedback unit spans multiple slides; its summary reports only the best
+frame match. Letterboxing, partial animation builds and poor screenshots can
+obscure the distinguishing text. No similarity score authorizes an edit or
+substitutes for interpreting the feedback against the visible source.
+
 Build the workbench and focused interpretation packets:
+
+For resumable preparation, run this after intake and again after authoring or
+revising the change list:
+
+```bash
+python scripts/run_deck_revision.py <case-dir> --voice-session voice_sessions/<timestamp>
+```
+
+Read `deck_revision_runner.json` for the current stage, material gaps and next
+action. The runner reuses byte-identical generated views, rebuilds changed
+dependencies, and requires renewed model interpretation when evidence changes.
+It never writes approval or final-review confirmations. Once current approval
+exists, add `--apply-approved` to apply supported changes and resume from their
+exact output hashes. Repeating that command reuses unchanged application and
+checks any recorded final review against current inputs and confirmations.
+`final_review_record_current` verifies the recorded review, not that the runner
+performed visual or semantic inspection. Perform that review with the commands
+below. The individual preparation commands remain available for focused inspection:
 
 ```bash
 python scripts/build_deck_revision_workbench.py <case-dir>
@@ -223,6 +258,32 @@ clipping, overlap, stale artifacts, internal instructions, process language,
 and semantic drift. Iterate until no material issue remains, then complete the
 exact-output review:
 
+For an approved structural edit, slide rebuild, or other externally edited PPTX,
+keep the original deck and save the edited result separately. Register that
+result without running automatic patches over it:
+
+```bash
+python scripts/apply_deck_revision_plan.py <case-dir> \
+  --register-external <edited-deck.pptx>
+```
+
+Registration requires the current approved plan and understanding, checks the
+plan's mechanical criteria, and preserves the submitted PPTX bytes. It creates
+the same exact-output review packet used below; it does not perform semantic or
+visual review. Failed or unsupported mechanical checks must be resolved before
+registration. Explicit manual/semantic criteria remain pending in the registered
+review packet; they are not converted into mechanical passes. The runner reports pending or stale external review and preserves
+the external deck even when `--apply-approved` is supplied. After revising an
+external deck, verify and register it again rather than reapplying automatic
+patches from the original source.
+
+The output-review packet binds the corrected deck, original source deck,
+normalized plan, approval, understanding and verification report by hash.
+Completion rejects changes to any of these inputs and packets created through
+unapproved diagnostic application. After changes, rerun approved application for
+automatic patches or register the external result again, and inspect the new
+output before recording completion.
+
 ```bash
 python scripts/complete_deck_revision_output_review.py <case-dir> \
   --reviewer "<name>" \
@@ -232,6 +293,14 @@ python scripts/complete_deck_revision_output_review.py <case-dir> \
   --semantic-evidence-fit-reviewed \
   --visual-render-reviewed
 ```
+
+When the verification report lists pending manual or semantic criteria, inspect
+each against the exact registered output and supply `--criterion-reviews
+<reviews.json>` to completion. The JSON must contain exactly those criterion IDs,
+each with `{"reviewed": true, "note": "Concrete observation supporting this review"}`.
+Record specific observations, not a blanket pass. Completion stores these notes
+against the hash-bound review packet and refuses missing or incomplete reviews.
+No criterion review substitutes for the rendered inspection or other confirmations.
 
 Do not present the corrected PPTX as final until the completion artifact exists
 for the exact reviewed output.

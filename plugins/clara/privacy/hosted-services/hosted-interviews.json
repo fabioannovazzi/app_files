@@ -16,7 +16,14 @@
     "repository/modules/hosted_interviews/api.py",
     "repository/modules/pdp/legal_content.py",
     "repository/static/js/hosted-interview.js",
-    "repository/templates/hosted_interview.html"
+    "repository/templates/hosted_interview.html",
+    "repository/modules/case_notes_voice/transcription_service.py",
+    "repository/modules/case_notes_voice/transcription_transport.py",
+    "repository/modules/case_notes_voice/__init__.py",
+    "repository/modules/hosted_interviews/review_service.py",
+    "repository/modules/hosted_interviews/job_state.py",
+    "repository/modules/hosted_interviews/__init__.py",
+    "repository/templates/hosted_interview_output.html"
   ],
   "trigger": "The user asks Clara to create or operate an external-participant hosted interview; creating the participant link is the route choice.",
   "automatic": false,
@@ -40,6 +47,16 @@
       "id": "participant-conversation",
       "when": "When the participant opens the bearer link and completes the interview",
       "content": "Participant microphone audio and answers, conversation events, and service-generated transcript and review material"
+    },
+    {
+      "id": "provider-processing",
+      "when": "During live interviewing, silent-partner guidance, post-call transcription and quality review",
+      "content": "Configured OpenAI services receive the prepared brief and participant audio or transcript. Post-call transcription uses a bounded brief excerpt. Quality review receives selected case/project fields, brief, dialog and final/live transcript excerpts, transcription provenance including audio-file metadata, event counts, completion telemetry and any screen-capture metadata. The silent partner receives the brief, recent live transcript, latest turn and previous note."
+    },
+    {
+      "id": "optional-video-endpoint",
+      "when": "If a client submits video to the bearer-token video-chunk endpoint for the active attempt",
+      "content": "Video bytes and chunk metadata are stored by Mparanza. The current participant page does not invoke its screen-capture helpers during the normal microphone workflow; endpoint support is not a promise of screen capture in that workflow."
     }
   ],
   "data_returned": [
@@ -51,7 +68,7 @@
     {
       "id": "public-status",
       "when": "When checking a known participant link",
-      "content": "Minimal status plus case name and interview title exposed by the unauthenticated status route"
+      "content": "Minimal status, case name, interview title and post-completion progress fields (status, stage, timestamp and message); internal worker host and process identifiers are excluded."
     },
     {
       "id": "bundle-and-review",
@@ -60,28 +77,31 @@
     }
   ],
   "access": {
-    "arrangement": "An authenticated preparer creates and retrieves interviews. The participant uses an expiring bearer link without login. A known bearer token can read minimal public status, including case name and interview title; bundle and review retrieval use the authenticated helper. Mparanza and OpenAI process audio, answers, and transcript to conduct, transcribe, and review the interview.",
+    "arrangement": "An authenticated preparer creates and retrieves interviews. The participant uses an expiring bearer link without login. A known bearer token can read minimal public status, including case name and interview title; bundle and review retrieval use the authenticated helper. Mparanza and OpenAI process audio, answers, and transcript to conduct, transcribe, and review the interview. The workflow instructs the preparer to use non-sensitive participant-visible labels; the server does not classify or anonymise those labels.",
     "controls": [
       "The remote helper accepts only HTTPS mparanza.com or www.mparanza.com outside local tests.",
       "Cookie headers are attached only to the approved origin.",
-      "Briefs and receipts containing bearer material are written as local 0600 files.",
-      "Participant-visible and public-status fields are required to be non-sensitive by the workflow."
+      "Briefs and receipts containing bearer material are written as local 0600 files."
     ]
   },
   "retention": {
     "status": "documented",
-    "statement": "The hosted interview record remains stored until manual or administrative deletion. Participant-link expiry, revocation, or archiving is not deletion."
+    "statement": "Prepared records, uploaded original microphone chunks, any submitted video chunks, events, transcripts, generated reviews and durable post-completion job state remain stored until manual or administrative deletion. Retry can archive earlier attempt material. Participant-link expiry, revocation or archiving is not deletion. Post-call audio assembly uses a private temporary workspace inside the interview session. Normal worker completion removes it; after abrupt worker death, the next job inspection or dispatch removes the abandoned workspace under the worker lock before proceeding. Active locked work is preserved, and cleanup failures propagate rather than report successful cleanup. This is request-triggered cleanup, not a guaranteed time-based deletion schedule. It does not delete original session media or discover temporary copies left by earlier implementations in system temp. Quality-review Responses requests explicitly set store=false; silent-partner requests omit that field. Neither fact establishes provider-wide retention or deletion, which these sources do not verify. Local downloaded bundles and receipts have a separate user-managed lifetime."
   },
   "security_controls": [
     {
-      "id": "bearer-link-handling",
-      "control": "Bearer URLs and tokens are kept out of ordinary command arguments, shell history, source files, and normal logs."
+      "id": "approved-origin-cookie-binding",
+      "control": "The helper restricts remote base URLs to approved HTTPS Mparanza origins and attaches a supplied cookie only to the exact approved origin."
+    },
+    {
+      "id": "private-local-files",
+      "control": "The helper sets local brief and receipt file permissions to mode 0600; the effect depends on host filesystem permission support."
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-12",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "90ba9223f698af21fe00ff98968f124b9ab6ff0ffb1f37bc9b700868c307fa0a"
+    "source_fingerprint": "e925b4fd244984b4676d6dc066d7335fa51574c73b660c4430d4eb83d5f0d052"
   }
 }

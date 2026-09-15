@@ -841,3 +841,133 @@ def test_case_bound_build_rejects_a_superseded_advisory_claim(
             ledger=ledger,
             deck_path=deck,
         )
+
+
+def _case_bound_cli_inputs(tmp_path):
+    work = initialize_work(tmp_path)
+    (work / "slides.html").write_text(minimal_slides())
+    write_minimal_ledger(work)
+    case = tmp_path / "case"
+    lineage = load_build_module().load_lineage_runtime()
+    lineage.initialize_lineage(case)
+    source = case / "framing.md"
+    source.write_text("The next move needs explicit governance.")
+    from hashlib import sha256
+
+    artifact = {
+        "path": "framing.md",
+        "path_reference": "case_relative",
+        "sha256": sha256(source.read_bytes()).hexdigest(),
+        "byte_count": source.stat().st_size,
+        "media_type": "text/markdown",
+    }
+    lineage.record_evidence(
+        case,
+        [
+            {
+                "id": "ev-framing",
+                "evidence_type": "advisor_judgement",
+                "recorded_at": "2026-09-06T12:00:00Z",
+                "recorded_by": "synthetic-cli-regression",
+                "capture_status": "captured",
+                "source": {
+                    "material_ids": [],
+                    "url": "",
+                    "locator": "Synthetic framing",
+                    "artifact_refs": [artifact],
+                },
+                "observation": "The next move needs explicit governance.",
+                "scope": "Synthetic CLI binding fixture",
+                "limitations": ["Not real advisory evidence"],
+                "verification": {
+                    "status": "not_checked",
+                    "checked_at": "",
+                    "method": "",
+                    "notes": [],
+                },
+                "rechecks_evidence_id": "",
+                "supersedes_evidence_id": "",
+            }
+        ],
+    )
+    claim = {
+        "id": "claim-decision",
+        "statement": "The next move needs explicit governance.",
+        "claim_type": "recommendation",
+        "recorded_at": "2026-09-06T12:00:00Z",
+        "recorded_by": "synthetic-cli-regression",
+        "provenance": {
+            "workflow": "clara:clara",
+            "step": "synthetic framing",
+            "artifact": "",
+            "locator": "Synthetic framing",
+        },
+        "evidence_links": [
+            {
+                "evidence_id": "ev-framing",
+                "relationship": "supports",
+                "analysis": "Records the synthetic framing.",
+                "proves": "The supplied framing",
+                "does_not_prove": "Actual business viability",
+            }
+        ],
+        "dependency": {
+            "mode": "none",
+            "claim_ids": [],
+            "derivation_type": "direct",
+            "explanation": "Synthetic recommendation for command binding test.",
+            "calculation_evidence_id": "",
+        },
+        "decision_use": "supporting",
+        "uncertainty": ["Synthetic test only"],
+        "professional_judgement_required": True,
+        "appearances": [],
+        "state": "active",
+        "supersedes_claim_id": "",
+    }
+    lineage.record_claims(case, [claim])
+    return work, case, lineage, claim
+
+
+def test_case_bound_cli_loads_storage_and_binds_current_claim(tmp_path):
+    work, case, _, _ = _case_bound_cli_inputs(tmp_path)
+    output = tmp_path / "dist"
+
+    result = run_script(
+        SKILL_ROOT / "scripts/build_html_deck.py",
+        str(work),
+        "--output-root",
+        str(output),
+        "--case-dir",
+        str(case),
+    )
+
+    assert result.returncode == 0, result.stderr
+    claims = json.loads((case / "advisory_claim_register.json").read_text())["claims"]
+    assert claims[0]["appearances"][0]["locator"] == "Slide decision"
+    artifact = Path(claims[0]["appearances"][0]["artifact"])
+    assert artifact.is_file()
+
+
+def test_case_bound_cli_rejects_superseded_claim(tmp_path):
+    work, case, lineage, claim = _case_bound_cli_inputs(tmp_path)
+    successor = {
+        **claim,
+        "id": "claim-new",
+        "supersedes_claim_id": "claim-decision",
+        "recorded_at": "2026-09-06T12:01:00Z",
+    }
+    lineage.record_claims(case, [successor])
+
+    result = run_script(
+        SKILL_ROOT / "scripts/build_html_deck.py",
+        str(work),
+        "--output-root",
+        str(tmp_path / "dist"),
+        "--case-dir",
+        str(case),
+    )
+
+    assert result.returncode != 0
+    assert "is not active in shared advisory lineage" in result.stderr
+    assert "ModuleNotFoundError" not in result.stderr

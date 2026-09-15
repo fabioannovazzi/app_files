@@ -18,7 +18,7 @@ from modules.auth import dependencies as auth_dependencies
 from modules.auth.config import get_auth_config
 from modules.auth.google_identity import GoogleUserInfo
 from modules.auth.session import create_session_cookie
-from modules.hosted_interviews import api
+from modules.hosted_interviews import api, review_service
 from modules.hosted_interviews.campaigns import (
     AI_ADOPTION_RESEARCH_CAMPAIGN_ID,
     CLARA_NEEDS_RESEARCH_CAMPAIGN_ID,
@@ -246,7 +246,7 @@ def _disable_post_call_interviewee_transcription(monkeypatch) -> None:
 
 
 def test_spanish_quality_review_prompt_requires_spanish_narrative_fields() -> None:
-    prompt = api._interview_review_system_prompt({"language": "es"})
+    prompt = review_service._interview_review_system_prompt({"language": "es"})
 
     assert "Write every human-readable narrative field in Spanish." in prompt
     assert "Preserve short evidence quotes in their source language" in prompt
@@ -1673,7 +1673,7 @@ def test_post_call_mic_transcription_replaces_live_interviewee_transcript(
         live_transcript,
     ]
     assert captured_review["completion"]["user_transcript"] == final_transcript
-    review_prompt = api._interview_review_prompt(
+    review_prompt = review_service._interview_review_prompt(
         record,
         completion,
         api._read_events_for_session(session_dir),

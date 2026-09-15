@@ -13,7 +13,7 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 
 | Capability | Selection emphasis | Period | Metrics | Dimensions | Primary cue |
 | --- | --- | --- | --- | --- | --- |
-| `period_comparison.by_period` | `period_by_period_gap` | `axis` | `comparison_metric` | required `comparison_series` | Question asks which individual periods have the largest current-vs-baseline gaps. |
+| `period_comparison.by_period` | `period_by_period_gap` | `axis` | `comparison_metric` | required `comparison_series` | Question asks for weekly-average current-vs-baseline gaps across overlapping recency windows, not individual calendar months. |
 | `period_comparison.comparison_table` | `summary_exact_values` | `filter` | `comparison_metric` | required `comparison_window` | Question asks for exact summary current, baseline, delta, and percent-delta values. |
 | `period_comparison.dot` | `gap_between_two_values` | `axis` | `comparison_metric` | required `comparison_item` | Question asks for low-clutter comparison of two values across items. |
 | `period_comparison.horizontal_waterfall` | `additive_reconciliation` | `axis` | `comparison_metric` | required `bridge_component_period` | Question asks how period variances add from baseline total to current total. |
@@ -35,17 +35,17 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 - Selection emphasis: `period_by_period_gap`
 - Visual grammar: `period_gap_comparison`
 - Analysis tasks: `time_and_period_movement`
-- Best when: The reader needs to compare current and baseline period values across each month or week and see where gaps are largest.
-- Avoid when: Avoid when the story is only the smooth trajectory shape or a single reconciled total movement.
-- Primary decision cue: Question asks which individual periods have the largest current-vs-baseline gaps.
+- Best when: The reader needs weekly-average current and baseline values across overlapping 52-, 26-, 13- and 4-week recency windows.
+- Avoid when: Do not use for individual calendar-month totals or monthly gaps; use multitier_column for side-by-side monthly values or trend for their trajectory. Recency windows overlap and are not additive.
+- Primary decision cue: Question asks for weekly-average current-vs-baseline gaps across overlapping recency windows, not individual calendar months.
 - Requires question focus: `period_gap`, `current_vs_baseline_by_period`
-- Reject decision cues: `asks for smooth trajectory`, `asks for additive reconciliation`, `asks for exact table`
+- Reject decision cues: `asks for individual calendar-month totals`, `asks for smooth trajectory`, `asks for additive reconciliation`, `asks for exact table`
 - Forbidden question focus: `trajectory_shape`, `bridge_reconciliation`, `exact_period_values`
 - Period role: `axis`
 - Metric roles: `comparison_metric`
 - Dimension roles: required `comparison_series`
 - Close competitors: `period_comparison.trend`, `period_comparison.multitier_column`, `period_comparison.time_series_table`, `period_comparison.horizontal_waterfall`, `period_comparison.dot`
-- Positive question: Which months explain the AC/PY sales gap?
+- Positive question: How do weekly-average AC/PY sales gaps differ across overlapping 52-, 26-, 13- and 4-week recency windows?
 - Ambiguous question: How did sales change over time?
 - Ambiguous candidates: `period_comparison.by_period`, `period_comparison.trend`, `period_comparison.multitier_column`, `period_comparison.time_series_table`, `period_comparison.horizontal_waterfall`
 - Disambiguation: Clarify whether the intended focus is `period_by_period_gap`, `trajectory_shape`, `compact_side_by_side_period_comparison`, `exact_values`, `additive_reconciliation`.

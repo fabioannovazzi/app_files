@@ -192,6 +192,7 @@ def test_build_evidence_bundle_writes_core_artifacts(tmp_path: Path) -> None:
         "journal-bank-reconciliation",
         "journal-sampling",
         "new-client",
+        "open-item-reconciliation",
         "prompt-optimizer",
         "report-builder",
     }

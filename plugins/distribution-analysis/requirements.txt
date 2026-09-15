@@ -7,3 +7,6 @@ kaleido
 Pillow
 openpyxl
 xlsxwriter
+numpy>=2.0
+psutil>=6.0
+python-dateutil>=2.9

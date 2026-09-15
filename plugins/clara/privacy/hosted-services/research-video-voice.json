@@ -19,7 +19,13 @@
     "repository/scripts/video_voice_policy.py",
     "repository/static/js/research-video-voice.js",
     "repository/static/shared/product-function-pages.js",
-    "repository/templates/research_video_voice.html"
+    "repository/templates/research_video_voice.html",
+    "repository/modules/pdp/legal_content.py",
+    "scripts/self_relaunch.py",
+    "scripts/managed_python_runtime.py",
+    "scripts/_managed_python_runtime.py",
+    "requirements.txt",
+    "components.json"
   ],
   "trigger": "After the user explicitly approves the exact scene plan and narration, the user signs in to Mparanza and uploads the generated narration-only request on the Research Video voice page.",
   "automatic": false,
@@ -52,13 +58,14 @@
     "controls": [
       "The HTML page redirects unauthenticated users to Mparanza sign-in and the API returns HTTP 401 without a valid signed session cookie.",
       "The endpoint requires the fixed Research Video action header and a strict, bounded narration-only JSON schema.",
-      "Mparanza calls a fixed HTTPS OpenAI speech endpoint and never returns, logs, or embeds the server credential in the artifact.",
-      "The response is marked no-store and nosniff; the local plugin validates the complete ZIP entry set, hashes, approval and plan binding, provider policy, WAV metadata, and scene order before rendering."
+      "Mparanza calls a fixed HTTPS OpenAI speech endpoint with a server-held credential. The request builder does not forward the Mparanza cookie or include the provider credential in the returned bundle.",
+      "The response is marked no-store and nosniff; the local plugin validates the complete ZIP entry set, hashes, approval and plan binding, provider policy, WAV metadata, and scene order before rendering.",
+      "The local Research Video CLI can prepare published Python dependencies before processing its arguments. That package-index request is separate from the hosted narration upload and carries no CLI arguments; the research-video workflow records this setup boundary."
     ]
   },
   "retention": {
     "status": "partially_documented",
-    "statement": "Mparanza builds the request response and generated ZIP in process memory and does not write narration requests or audio to application storage; the downloaded copy is retained only where the user saves it locally. Provider-side processing and retention at OpenAI follow Mparanza's provider arrangement and are not established by the plugin source."
+    "statement": "Mparanza builds narration audio and the response ZIP in process memory without writing narration requests or audio to application storage. This does not establish deletion from provider systems or technical infrastructure logs. The browser downloads the ZIP, and Clara may retain attached narration and copies in local render attempts or published snapshots until those local files are removed. Provider-side processing, retention and deletion are not established by the inspected application source."
   },
   "security_controls": [
     {
@@ -70,14 +77,14 @@
       "control": "Strict request validation rejects extra fields, missing approval evidence, duplicate scene identifiers, unsupported languages, more than 20 scenes, more than 2,500 characters per scene, or more than 20,000 narration characters in total."
     },
     {
-      "id": "in-memory-hash-bound-response",
-      "control": "Mparanza creates the ZIP in memory and binds every returned WAV to the canonical request, approved plan and approval hashes; the local attachment step rejects unsafe, extra, missing, changed, or policy-mismatched bundle entries."
+      "id": "hash-bound-bundle-validation",
+      "control": "The local attachment step verifies the complete ZIP entry set, each WAV hash, canonical request and approval/plan bindings, WAV metadata and provider policy; it rejects unsafe or mismatched entries. Hash binding verifies consistency with the supplied approval record, not independent proof of a human approval."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-13",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "78499e2e9476f192ba76964ae4755cd304dda1e02af5546c577c9884566b6eae"
+    "source_fingerprint": "1553716c6e8639bdf80cf510246ac3d97bd0662439b00c57c0f5c747099a17fb"
   }
 }

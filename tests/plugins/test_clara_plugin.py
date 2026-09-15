@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import os
@@ -951,6 +952,10 @@ def test_manifest_and_skill_are_generic() -> None:
         (PLUGIN_ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
     )
     skill = (PLUGIN_ROOT / "skills" / "clara" / "SKILL.md").read_text(encoding="utf-8")
+    assert "references/case-operations.md" in skill
+    skill += (PLUGIN_ROOT / "skills/clara/references/case-operations.md").read_text(
+        encoding="utf-8"
+    )
     director = (
         PLUGIN_ROOT / "skills" / "advisory-case-director" / "SKILL.md"
     ).read_text(encoding="utf-8")
@@ -1824,7 +1829,11 @@ def test_index_materials_merges_source_metadata(tmp_path: Path) -> None:
 
     assert len(indexed) == 1
     assert len(registry["materials"]) == 1
-    assert registry["materials"][0]["source_metadata"] == {
+    assert {
+        key: value
+        for key, value in registry["materials"][0]["source_metadata"].items()
+        if key != "preview_coverage"
+    } == {
         "advisor_perspective": "Authoritative version.",
         "planned_presentation_date": "2026-07-06",
         "provenance_note": "Corrected by the advisor.",
@@ -1858,7 +1867,11 @@ def test_index_materials_cli_accepts_provenance_and_source_metadata(
     registry = json.loads((case_dir / "material_registry.json").read_text())
 
     assert result.returncode == 0, result.stderr
-    assert registry["materials"][0]["source_metadata"] == {
+    assert {
+        key: value
+        for key, value in registry["materials"][0]["source_metadata"].items()
+        if key != "preview_coverage"
+    } == {
         "planned_presentation_date": "2026-07-06",
         "provenance_note": "Corrected by the advisor.",
     }
@@ -2566,8 +2579,8 @@ def test_unapproved_judgement_is_excluded_from_decision_pack(tmp_path: Path) -> 
     assert "Approved fact for the decision maker." in markdown
     assert "Require explicit conflict escalation rules." in markdown
     assert "Who owns quality after the transition?" in markdown
-    assert "Traccia esecutiva" in markdown
-    assert "Percorso consigliato." in markdown
+    assert "Traccia esecutiva" not in markdown
+    assert "Percorso consigliato." not in markdown
     assert "Pending sensitive judgement must stay out." not in markdown
     assert "Fatti acquisiti" in markdown
     assert "Lettura consulenziale" in markdown
@@ -2638,15 +2651,15 @@ def test_decision_pack_uses_spanish_headings_and_storyline(tmp_path: Path) -> No
         cell.text for cell in workpaper_docx.tables[0].rows[0].cells
     ]
     assert "Paquete de decisión" in markdown
-    assert "## Línea argumental ejecutiva" in markdown
-    assert "Punto de partida." in markdown
-    assert "Lectura del caso." in markdown
-    assert "Ruta recomendada." in markdown
+    assert "## Línea argumental ejecutiva" not in markdown
+    assert "Punto de partida." not in markdown
+    assert "Lectura del caso." not in markdown
+    assert "Ruta recomendada." not in markdown
     assert "Preguntas abiertas que resolver" in markdown
     assert "Documento de trabajo del paquete de decisión" in workpaper
     assert "Este documento de trabajo incluye las rutas de las fuentes" in workpaper
     assert "No hay elementos listos para el paquete de decisión." in workpaper
-    assert "Línea argumental ejecutiva" in decision_docx_text
+    assert "Línea argumental ejecutiva" not in decision_docx_text
     assert "Documento de trabajo del paquete de decisión" in workpaper_docx_text
     assert "Este documento de trabajo incluye las rutas de las fuentes" in (
         workpaper_docx_text
@@ -3541,6 +3554,34 @@ def test_dependency_checker_maps_core_and_ocr_package_imports() -> None:
     assert checker.import_name("opencv-python") == "cv2"
 
 
+@pytest.mark.parametrize(
+    "options,expected",
+    [
+        (["--include-optional"], ["requirements.txt", "requirements-render.txt"]),
+        (["--requirements", "requirements-render.txt"], ["requirements-render.txt"]),
+    ],
+)
+def test_reporting_dependency_check_prepares_selected_requirements(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    options: list[str],
+    expected: list[str],
+) -> None:
+    checker = load_dependency_checker()
+    selections = []
+
+    def prepare(root, module, **kwargs):
+        selections.append(kwargs.get("requirements"))
+        return False, tmp_path / "runtime", "injected setup failure"
+
+    monkeypatch.setattr(checker, "ensure_runtime", prepare)
+
+    result = checker.main(["--module", "reporting-engine", *options])
+
+    assert result == 1
+    assert selections == [expected]
+
+
 def test_dependency_checker_selects_optional_ocr_requirements() -> None:
     checker = load_dependency_checker()
 
@@ -3740,7 +3781,9 @@ def test_case_workspace_archive_excludes_local_runtime_dirs(tmp_path: Path) -> N
     assert "case/notes/advisor-note.md" in archive_names
     assert all(".codex_audit_reconciliation_py" not in name for name in archive_names)
     assert all(".DS_Store" not in name for name in archive_names)
-    assert result.excluded_file_count == 2
+    assert "case/.clara.lock" not in archive_names
+    expected_exclusions = 3  # Runtime file, macOS metadata, and case lock.
+    assert result.excluded_file_count == expected_exclusions
     assert result.excluded_bytes >= runtime_file.stat().st_size
 
 
@@ -3782,7 +3825,9 @@ def test_support_package_includes_request_and_excludes_runtime_dirs(
     )
     assert all(".codex_audit_reconciliation_py" not in name for name in archive_names)
     assert all(".DS_Store" not in name for name in archive_names)
-    assert result.excluded_file_count == 2
+    assert "case/.clara.lock" not in archive_names
+    expected_exclusions = 3  # Runtime file, macOS metadata, and case lock.
+    assert result.excluded_file_count == expected_exclusions
     assert result.excluded_bytes >= runtime_file.stat().st_size
 
 
@@ -5769,12 +5814,97 @@ def test_deck_revision_interpretation_packets_route_matched_feedback(
     assert "not as one huge semantic prompt" in review
 
 
+@pytest.mark.parametrize(
+    ("second_candidate", "second_confidence", "second_status", "expected_slides"),
+    [
+        (1, "medium", "extracted", [1]),
+        (2, "high", "extracted", [1, 2]),
+        (1, "low", "extracted", [1, 2]),
+        (None, "none", "extracted", [1, 2]),
+        (1, "high", "failed", [1, 2]),
+    ],
+    ids=["agree", "different-slides", "uncertain", "unmatched", "failed-frame"],
+)
+def test_interpretation_packet_preserves_context_when_frames_disagree(
+    tmp_path: Path,
+    second_candidate: int | None,
+    second_confidence: str,
+    second_status: str,
+    expected_slides: list[int],
+) -> None:
+    from pptx import Presentation
+
+    case_dir, session_dir = build_ready_deck_revision_intake(tmp_path)
+    deck_path = tmp_path / "margin_story.pptx"
+    deck = Presentation(deck_path)
+    second_slide = deck.slides.add_slide(deck.slide_layouts[1])
+    second_slide.shapes.title.text = "Second source slide"
+    second_slide.placeholders[1].text = (
+        "Retain this source when frame scope is uncertain."
+    )
+    deck.save(deck_path)
+    load_voice_deck_revision_preparer().prepare_voice_deck_revision_intake(
+        case_dir,
+        voice_session=session_dir,
+        deck_path=deck_path,
+        deck_style="ag",
+        now=fixed_now(),
+    )
+    frames = [
+        {
+            "status": "extracted",
+            "slide_match": {"best_slide_number": 1, "confidence": "high"},
+        },
+        {
+            "status": second_status,
+            "slide_match": {
+                "best_slide_number": second_candidate,
+                "confidence": second_confidence,
+            },
+        },
+    ]
+    timeline = {
+        "entries": [
+            {
+                "feedback_unit_id": "multiple-frames",
+                "text": "Review both frames before deciding which slide changes.",
+                "slide_match": {"best_slide_number": 1, "confidence": "high"},
+                "frames": frames,
+            }
+        ]
+    }
+    (session_dir / "feedback_timeline.json").write_text(json.dumps(timeline))
+    load_deck_revision_workbench_builder().build_deck_revision_workbench(
+        case_dir, voice_session=session_dir
+    )
+
+    result = load_deck_revision_interpretation_packet_builder().build_deck_revision_interpretation_packets(
+        case_dir, voice_session=session_dir
+    )
+
+    index = json.loads(result.packet_index_path.read_text())
+    assert len(index["packets"]) == 1
+    packet = json.loads((case_dir / index["packets"][0]["packet_path"]).read_text())
+    assert packet["slide_numbers"] == expected_slides
+    assert [slide["slide_number"] for slide in packet["slides"]] == expected_slides
+    assert len(packet["feedback_units"][0]["frames"]) == 2
+    assert (
+        packet["feedback_units"][0]["frames"][1]["slide_match"]
+        == frames[1]["slide_match"]
+    )
+
+
 def write_executable_deck_revision_plan(
     case_dir: Path,
     session_dir: Path,
     *,
     approved: bool = True,
 ) -> Path:
+    """Build a mechanical patch fixture; its editorial title is not semantic acceptance.
+
+    The rendered C15 review rejected that title as internal process language.
+    Tests using synthetic confirmation flags verify record handling only.
+    """
     builder = load_deck_revision_workbench_builder()
     finalizer = load_deck_revision_plan_finalizer()
     builder.build_deck_revision_workbench(
@@ -6140,6 +6270,216 @@ def test_deck_revision_execution_packets_group_slide_and_deck_changes(
         "chg-global-font"
     )
     assert "one deck-editing prompt" in review
+
+
+def _external_registration_case(tmp_path: Path):
+    case_dir, session_dir = build_ready_deck_revision_intake(tmp_path)
+    plan = write_executable_deck_revision_plan(case_dir, session_dir)
+    load_deck_revision_approver().approve_deck_revision_plan(
+        case_dir,
+        voice_session=session_dir,
+        reviewer="Synthetic reviewer",
+        understanding_reviewed=True,
+        now=fixed_now(),
+    )
+    applier = load_deck_revision_applier()
+    result = applier.apply_deck_revision_plan(
+        case_dir, voice_session=session_dir, now=fixed_now()
+    )
+    return case_dir, session_dir, plan, result.corrected_deck_path, applier
+
+
+@pytest.mark.parametrize("supply_review", [False, True])
+def test_external_manual_criteria_require_explicit_final_review(
+    tmp_path: Path, supply_review: bool
+):
+    case, session, _, output, applier = _external_registration_case(tmp_path)
+    changes_path = session / "deck_revision_changes.json"
+    changes = json.loads(changes_path.read_text())
+    changes["changes"][0]["success_criteria"].append(
+        {
+            "criterion_id": "review-layout",
+            "check_type": "manual_review",
+            "description": "Inspect the rendered layout.",
+        }
+    )
+    changes_path.write_text(json.dumps(changes))
+    load_deck_revision_plan_finalizer().finalize_deck_revision_plan(
+        case, changes_path, voice_session=session, now=fixed_now()
+    )
+    load_deck_revision_approver().approve_deck_revision_plan(
+        case,
+        voice_session=session,
+        reviewer="Synthetic reviewer",
+        understanding_reviewed=True,
+        now=fixed_now(),
+    )
+    applier.register_external_deck_revision(case, output, voice_session=session)
+    completer = load_deck_revision_output_review_completer()
+    # Synthetic flags exercise the contract, not actual visual acceptance.
+    reviews = {"review-layout": {"reviewed": True, "note": "Synthetic review note."}}
+    kwargs = dict(
+        voice_session=session,
+        reviewer="Synthetic reviewer",
+        audience_copy_reviewed=True,
+        process_language_reviewed=True,
+        requested_structure_reviewed=True,
+        semantic_evidence_fit_reviewed=True,
+        visual_render_reviewed=True,
+        criterion_reviews=reviews if supply_review else {},
+    )
+
+    if not supply_review:
+        with pytest.raises(
+            completer.CaseWorkspaceError, match="exactly the pending criteria"
+        ):
+            completer.complete_deck_revision_output_review(case, **kwargs)
+    else:
+        result = completer.complete_deck_revision_output_review(case, **kwargs)
+        payload = json.loads(result.completion_path.read_text())
+        assert payload["criterion_reviews"] == reviews
+        assert (
+            completer.verify_deck_revision_output_review(case, voice_session=session)[
+                "summary"
+            ]["status"]
+            == "complete"
+        )
+
+
+def test_external_registration_checks_text_on_slide_with_native_chart(tmp_path: Path):
+    from pptx import Presentation
+    from pptx.chart.data import CategoryChartData
+    from pptx.enum.chart import XL_CHART_TYPE
+    from pptx.util import Inches
+
+    case, session, _, output, applier = _external_registration_case(tmp_path)
+    changes_path = session / "deck_revision_changes.json"
+    changes = json.loads(changes_path.read_text())
+    changes["changes"][0]["success_criteria"][0]["check_type"] = "text_present"
+    changes_path.write_text(json.dumps(changes))
+    load_deck_revision_plan_finalizer().finalize_deck_revision_plan(
+        case, changes_path, voice_session=session, now=fixed_now()
+    )
+    load_deck_revision_approver().approve_deck_revision_plan(
+        case,
+        voice_session=session,
+        reviewer="Synthetic reviewer",
+        understanding_reviewed=True,
+        now=fixed_now(),
+    )
+    deck = Presentation(output)
+    chart_data = CategoryChartData()
+    chart_data.categories = ["Revenue", "Cost"]
+    chart_data.add_series("EUR", [400000, 440000])
+    deck.slides[0].shapes.add_chart(
+        XL_CHART_TYPE.COLUMN_CLUSTERED,
+        Inches(1),
+        Inches(2),
+        Inches(5),
+        Inches(3),
+        chart_data,
+    )
+    deck.save(output)
+
+    review = applier.register_external_deck_revision(
+        case, output, voice_session=session
+    )
+
+    packet = json.loads(review.read_text())
+    assert packet["verification_status"] == "verified"
+    assert (
+        packet["execution_inputs"]["corrected_deck"]["sha256"]
+        == hashlib.sha256(output.read_bytes()).hexdigest()
+    )
+
+
+def test_external_registration_preserves_deck_and_binds_current_inputs(tmp_path: Path):
+    case, session, plan, output, applier = _external_registration_case(tmp_path)
+    original = output.read_bytes()
+
+    review = applier.register_external_deck_revision(
+        case, output, voice_session=session
+    )
+
+    packet = json.loads(review.read_text())
+    assert output.read_bytes() == original
+    assert packet["approved_execution"] is True
+    assert packet["verification_status"] == "verified"
+    assert (
+        packet["execution_inputs"]["corrected_deck"]["sha256"]
+        == hashlib.sha256(original).hexdigest()
+    )
+
+
+@pytest.mark.parametrize("changed", ["plan", "understanding", "revoked", "missing"])
+def test_external_registration_rejects_invalid_approval_without_rewriting_deck(
+    tmp_path: Path, changed: str
+):
+    case, session, plan, output, applier = _external_registration_case(tmp_path)
+    original = output.read_bytes()
+    approval_path = session / "deck_revision_approval.json"
+    if changed == "plan":
+        plan.write_text(plan.read_text() + "\n")
+    elif changed == "understanding":
+        path = session / "deck_revision_understanding.md"
+        path.write_text(path.read_text() + "\nChanged understanding")
+    elif changed == "revoked":
+        approval = json.loads(approval_path.read_text())
+        approval["approved"] = False
+        approval_path.write_text(json.dumps(approval))
+    else:
+        approval_path.unlink()
+
+    with pytest.raises(applier.CaseWorkspaceError):
+        applier.register_external_deck_revision(case, output, voice_session=session)
+
+    assert output.read_bytes() == original
+
+
+def test_external_registration_rejects_original_source_as_output(tmp_path: Path):
+    case, session, plan, output, applier = _external_registration_case(tmp_path)
+    workbench = json.loads((session / "deck_revision_workbench.json").read_text())
+    source = Path(workbench["source_paths"]["deck_path"])
+    original = source.read_bytes()
+
+    with pytest.raises(applier.CaseWorkspaceError, match="distinct"):
+        applier.register_external_deck_revision(case, source, voice_session=session)
+
+    assert source.read_bytes() == original
+
+
+def test_external_registration_rejects_failed_mechanical_verification(tmp_path: Path):
+    from pptx import Presentation
+
+    case, session, plan, output, applier = _external_registration_case(tmp_path)
+    deck = Presentation(str(output))
+    deck.slides[0].shapes.title.text = "Incorrect replacement"
+    deck.save(str(output))
+    submitted = output.read_bytes()
+
+    with pytest.raises(applier.CaseWorkspaceError, match="mechanical verification"):
+        applier.register_external_deck_revision(case, output, voice_session=session)
+
+    assert output.read_bytes() == submitted
+
+
+def test_external_registration_rejects_input_mutation_during_verification(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    case, session, plan, output, applier = _external_registration_case(tmp_path)
+    verify = applier.verify_deck_revision_output
+
+    def changed_after_verification(*args, **kwargs):
+        result = verify(*args, **kwargs)
+        plan.write_text(plan.read_text() + "\n")
+        return result
+
+    monkeypatch.setattr(
+        applier, "verify_deck_revision_output", changed_after_verification
+    )
+
+    with pytest.raises(applier.CaseWorkspaceError, match="changed during verification"):
+        applier.register_external_deck_revision(case, output, voice_session=session)
 
 
 def test_apply_deck_revision_plan_writes_corrected_pptx_and_verifies(
@@ -6877,6 +7217,8 @@ def test_feedback_slide_matcher_matches_bordered_frame_to_rendered_slide(
         encoding="utf-8",
     )
 
+    _bind_test_slide_cache(deck_path, render_dir)
+
     result = matcher.match_feedback_timeline_to_deck(
         feedback_timeline_path=timeline_path,
         deck_path=deck_path,
@@ -6918,9 +7260,10 @@ def test_feedback_slide_matcher_invalidates_incomplete_render_cache(
     def fake_run(
         command: list[str],
         check: bool,
-        capture_output: bool,
         text: bool,
         timeout: int,
+        stdout: Any,
+        stderr: Any,
     ) -> Any:
         outdir = Path(command[command.index("--outdir") + 1])
         outdir.mkdir(parents=True, exist_ok=True)
@@ -6953,7 +7296,7 @@ def test_feedback_slide_matcher_invalidates_incomplete_render_cache(
         ]
 
     monkeypatch.setattr(matcher, "_find_soffice", fake_find_soffice)
-    monkeypatch.setattr(matcher.subprocess, "run", fake_run)
+    monkeypatch.setattr(matcher, "run_process", fake_run)
     monkeypatch.setattr(matcher, "_render_pdf_pages", fake_render_pdf_pages)
 
     renders = matcher._render_deck_slides(
@@ -7019,6 +7362,8 @@ def test_feedback_slide_matcher_marks_unrelated_frame_as_no_match(
         ),
         encoding="utf-8",
     )
+
+    _bind_test_slide_cache(deck_path, render_dir)
 
     result = matcher.match_feedback_timeline_to_deck(
         feedback_timeline_path=timeline_path,
@@ -7347,13 +7692,6 @@ def test_case_update_import_logs_conflict_without_overwriting(
     )
 
 
-def test_clara_dependency_choices_match_all_registered_runtime_modules() -> None:
-    checker = load_dependency_checker()
-    registry = json.loads((PLUGIN_ROOT / "components.json").read_text())
-
-    assert set(checker.COMPONENTS) == set(registry["plugins"])
-
-
 @pytest.mark.parametrize("suffix", [".csv", ".xlsx", ".json"])
 @pytest.mark.parametrize("directory", [False, True])
 def test_index_materials_rejects_unsupported_input_before_registry_write(
@@ -7390,3 +7728,577 @@ def test_index_materials_cli_reports_unsupported_csv(tmp_path):
     assert str(source) in result.stderr
     assert "reporting-engine" in result.stderr
     assert "Indexed 0" not in result.stderr
+
+
+def authored_narrative_case(tmp_path: Path) -> tuple[Any, Path, Path, str]:
+    """Create reviewed prose whose priority differs from register order."""
+    core, case_dir = init_case(tmp_path)
+    entries = add_lineage_bound_judgements(
+        core,
+        case_dir,
+        [
+            {
+                "kind": "fact",
+                "text": "The initial proposal assumes funding.",
+                "status": "approved",
+            },
+            {
+                "kind": "decision_implication",
+                "text": "Defer approval until funding is confirmed.",
+                "status": "approved",
+            },
+        ],
+        now=fixed_now(),
+    )
+    claims = [entry["advisory_claim_id"] for entry in entries]
+    workpaper = tmp_path / "authored.md"
+    workpaper.write_text(
+        "# Current case answer\nFunding remains unconfirmed; defer approval.",
+        encoding="utf-8",
+    )
+    core.commit_advisory_workpaper(
+        case_dir,
+        workpaper,
+        referenced_claim_ids=claims,
+        change_summary="Review funding dependency",
+        now=fixed_now(),
+    )
+    lead = "Defer approval until funding is confirmed."
+    staged = tmp_path / "narrative.json"
+    staged.write_text(
+        json.dumps(
+            {
+                "review": {
+                    "status": "model_reviewed",
+                    "reviewed_by": "synthetic-reviewer",
+                },
+                "paragraphs": [{"text": lead, "claim_ids": [claims[1]]}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    core.commit_decision_narrative(case_dir, staged)
+    return core, case_dir, staged, lead
+
+
+def test_decision_pack_preserves_authored_lead_in_both_formats(tmp_path: Path) -> None:
+    from docx import Document
+
+    core, case_dir, _, lead = authored_narrative_case(tmp_path)
+    result = core.build_decision_pack(case_dir)
+
+    markdown = result.markdown_path.read_text(encoding="utf-8")
+    assert markdown.split("## Traccia esecutiva\n\n")[1].split("\n\n")[0] == lead
+    paragraphs = [paragraph.text for paragraph in Document(result.docx_path).paragraphs]
+    assert paragraphs[paragraphs.index("Traccia esecutiva") + 1] == lead
+    receipt = json.loads(
+        (result.markdown_path.parent / "decision_pack_readiness.json").read_text()
+    )
+    assert receipt["status"] == "requires_final_deliverable_review"
+    assert receipt["ready_for_delivery"] is False
+
+
+def test_decision_pack_rejects_narrative_after_workpaper_edits(tmp_path: Path) -> None:
+    core, case_dir, _, _ = authored_narrative_case(tmp_path)
+    (case_dir / core.ADVISORY_WORKPAPER_FILENAME).write_text(
+        "Changed case answer", encoding="utf-8"
+    )
+
+    with pytest.raises(core.CaseWorkspaceError, match="stale"):
+        core.build_decision_pack(case_dir)
+
+
+def test_decision_pack_without_authored_lead_records_missing_narrative(
+    tmp_path: Path,
+) -> None:
+    core, case_dir = init_case(tmp_path)
+
+    result = core.build_decision_pack(case_dir)
+
+    receipt = json.loads(
+        (result.markdown_path.parent / "decision_pack_readiness.json").read_text()
+    )
+    assert receipt["status"] == "missing_reviewed_narrative"
+    assert receipt["ready_for_delivery"] is False
+
+
+def test_decision_narrative_rejects_unapproved_claim(tmp_path: Path) -> None:
+    core, case_dir, staged, _ = authored_narrative_case(tmp_path)
+    payload = json.loads(staged.read_text())
+    payload["paragraphs"][0]["claim_ids"] = ["unapproved-claim"]
+    staged.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(core.CaseWorkspaceError, match="unapproved"):
+        core.commit_decision_narrative(case_dir, staged)
+
+
+def test_decision_pack_register_order_does_not_select_lead(tmp_path: Path) -> None:
+    core, case_dir, _, lead = authored_narrative_case(tmp_path)
+    register = case_dir / "judgement_log.json"
+    payload = json.loads(register.read_text())
+    payload["entries"].reverse()
+    register.write_text(json.dumps(payload), encoding="utf-8")
+
+    result = core.build_decision_pack(case_dir)
+
+    markdown = result.markdown_path.read_text(encoding="utf-8")
+    assert markdown.split("## Traccia esecutiva\n\n")[1].split("\n\n")[0] == lead
+
+
+def test_decision_pack_verifier_accepts_current_output_identity(tmp_path: Path) -> None:
+    core, case_dir, _, _ = authored_narrative_case(tmp_path)
+    result = core.build_decision_pack(case_dir)
+
+    receipt = core.verify_decision_pack(
+        case_dir, output_dir=result.markdown_path.parent
+    )
+
+    assert receipt["current_identity_verified"] is True
+    assert receipt["ready_for_delivery"] is False
+
+
+@pytest.mark.parametrize("changed_source", ["workpaper", "output", "questions"])
+def test_decision_pack_verifier_rejects_changed_sources(
+    tmp_path: Path, changed_source: str
+) -> None:
+    core, case_dir, _, _ = authored_narrative_case(tmp_path)
+    result = core.build_decision_pack(case_dir)
+    paths = {
+        "workpaper": case_dir / core.ADVISORY_WORKPAPER_FILENAME,
+        "output": result.markdown_path,
+        "questions": case_dir / "open_questions.json",
+    }
+    paths[changed_source].write_text("Changed after rendering", encoding="utf-8")
+
+    with pytest.raises(core.CaseWorkspaceError, match="stale|changed"):
+        core.verify_decision_pack(case_dir, output_dir=result.markdown_path.parent)
+
+
+def _bind_test_slide_cache(deck: Path, directory: Path) -> None:
+    """Supply synthetic preview provenance for image-matching fixtures."""
+    (directory / "render_identity.json").write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "deck_sha256": hashlib.sha256(deck.read_bytes()).hexdigest(),
+                "images": [
+                    {
+                        "slide_number": int(path.stem.split("-")[1]),
+                        "filename": path.name,
+                        "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                    }
+                    for path in sorted(directory.glob("slide-*.png"))
+                ],
+            }
+        )
+    )
+
+
+@pytest.mark.parametrize(
+    "changed", ["deck", "image", "missing_receipt", "broken_receipt"]
+)
+def test_feedback_cache_rejects_changed_identity(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, changed: str
+) -> None:
+    matcher = load_feedback_slide_matcher()
+    deck = tmp_path / "deck.pptx"
+    deck.write_bytes(b"synthetic original")
+    directory = tmp_path / "renders"
+    directory.mkdir()
+    image = directory / "slide-001.png"
+    _write_test_slide_image(
+        image, title="Original", body="Original preview", fill="#FFFFFF"
+    )
+    _bind_test_slide_cache(deck, directory)
+    if changed == "deck":
+        deck.write_bytes(b"synthetic changed deck with the same slide count")
+    elif changed == "image":
+        _write_test_slide_image(
+            image, title="Changed", body="Changed preview", fill="#000000"
+        )
+    elif changed == "missing_receipt":
+        (directory / "render_identity.json").unlink()
+    else:
+        (directory / "render_identity.json").write_text("{")
+    monkeypatch.setattr(matcher, "_find_soffice", lambda _: None)
+
+    with pytest.raises(matcher.SlideFrameMatchError, match="required to render"):
+        matcher._render_deck_slides(deck, directory, expected_slide_numbers={1})
+
+
+def test_feedback_cache_reuses_exact_source_and_image_identity(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    matcher = load_feedback_slide_matcher()
+    deck = tmp_path / "deck.pptx"
+    deck.write_bytes(b"synthetic original")
+    directory = tmp_path / "renders"
+    directory.mkdir()
+    image = directory / "slide-001.png"
+    _write_test_slide_image(
+        image, title="Original", body="Original preview", fill="#FFFFFF"
+    )
+    _bind_test_slide_cache(deck, directory)
+    monkeypatch.setattr(matcher, "_find_soffice", lambda _: None)
+
+    renders = matcher._render_deck_slides(deck, directory, expected_slide_numbers={1})
+
+    assert [render.path for render in renders] == [image]
+
+
+@pytest.mark.parametrize(
+    "changed",
+    ["deck", "plan", "approval", "understanding", "verification", "source_deck"],
+)
+def test_output_review_rejects_changed_execution_evidence(
+    tmp_path: Path, changed: str
+) -> None:
+    pytest.importorskip("pptx")
+    case_dir, session_dir = build_ready_deck_revision_intake(tmp_path)
+    plan_path = write_executable_deck_revision_plan(case_dir, session_dir)
+    approver = load_deck_revision_approver()
+    applier = load_deck_revision_applier()
+    completer = load_deck_revision_output_review_completer()
+    approver.approve_deck_revision_plan(
+        case_dir,
+        voice_session=session_dir,
+        plan_path=plan_path,
+        reviewer="Reviewer",
+        understanding_reviewed=True,
+        now=fixed_now(),
+    )
+    applied = applier.apply_deck_revision_plan(
+        case_dir, voice_session=session_dir, now=fixed_now()
+    )
+    target = {
+        "deck": applied.corrected_deck_path,
+        "plan": plan_path,
+        "approval": session_dir / "deck_revision_approval.json",
+        "understanding": session_dir / "deck_revision_understanding.md",
+        "verification": applied.verification_report_path,
+        "source_deck": case_dir
+        / json.loads(applied.output_review_path.read_text())["execution_inputs"][
+            "source_deck"
+        ]["path"],
+    }[changed]
+    target.write_bytes(target.read_bytes() + b"\n")
+
+    with pytest.raises(completer.CaseWorkspaceError, match="execution input changed"):
+        completer.complete_deck_revision_output_review(
+            case_dir,
+            voice_session=session_dir,
+            reviewer="Reviewer",
+            audience_copy_reviewed=True,
+            process_language_reviewed=True,
+            requested_structure_reviewed=True,
+            semantic_evidence_fit_reviewed=True,
+            visual_render_reviewed=True,
+            now=fixed_now(),
+        )
+
+    assert not (session_dir / "deck_revision_output_review_completion.json").exists()
+
+
+def test_deck_runner_reuses_unchanged_plan_and_observes_current_approval(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.syspath_prepend(str(SCRIPTS_DIR))
+    import run_deck_revision
+
+    case_dir, session = build_ready_deck_revision_intake(tmp_path)
+    write_executable_deck_revision_plan(case_dir, session)
+    first = run_deck_revision.run_deck_revision(case_dir, voice_session=session)
+    plan = session / "deck_revision_changes.normalized.json"
+    before = plan.read_bytes()
+    load_deck_revision_approver().approve_deck_revision_plan(
+        case_dir,
+        voice_session=session,
+        reviewer="Reviewer",
+        understanding_reviewed=True,
+    )
+
+    second = run_deck_revision.run_deck_revision(case_dir, voice_session=session)
+
+    assert first["status"] == "ready_for_approval"
+    assert second["status"] == "ready_for_auto_apply"
+    assert plan.read_bytes() == before
+    assert second["semantic_review_performed"] is False
+
+
+def test_deck_runner_stops_for_model_interpretation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.syspath_prepend(str(SCRIPTS_DIR))
+    import run_deck_revision
+
+    case_dir, session = build_ready_deck_revision_intake(tmp_path)
+
+    result = run_deck_revision.run_deck_revision(case_dir, voice_session=session)
+
+    assert result["status"] == "interpretation_required"
+    assert (session / "deck_revision_interpretation_packets.json").is_file()
+    assert not (session / "deck_revision_approval.json").exists()
+
+
+def test_deck_runner_requires_new_interpretation_after_source_drift(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.syspath_prepend(str(SCRIPTS_DIR))
+    import run_deck_revision
+
+    case_dir, session = build_ready_deck_revision_intake(tmp_path)
+    write_executable_deck_revision_plan(case_dir, session)
+    run_deck_revision.run_deck_revision(case_dir, voice_session=session)
+    intake = json.loads((session / "deck_revision_intake.json").read_text())
+    transcript = case_dir / intake["speaker_attribution"]["attributed_transcript_path"]
+    transcript.write_text(
+        transcript.read_text() + "\nNew instruction: preserve the existing title.\n"
+    )
+
+    result = run_deck_revision.run_deck_revision(case_dir, voice_session=session)
+
+    assert result["status"] == "interpretation_required"
+    assert result["interpretation_stale"] is True
+
+
+def test_deck_runner_recovers_after_interrupted_packet_generation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.syspath_prepend(str(SCRIPTS_DIR))
+    import run_deck_revision
+
+    case_dir, session = build_ready_deck_revision_intake(tmp_path)
+    original = run_deck_revision.build_deck_revision_interpretation_packets
+
+    def interrupted(*args: Any, **kwargs: Any) -> Any:
+        raise InterruptedError("synthetic interruption")
+
+    monkeypatch.setattr(
+        run_deck_revision, "build_deck_revision_interpretation_packets", interrupted
+    )
+    with pytest.raises(InterruptedError):
+        run_deck_revision.run_deck_revision(case_dir, voice_session=session)
+    monkeypatch.setattr(
+        run_deck_revision, "build_deck_revision_interpretation_packets", original
+    )
+
+    result = run_deck_revision.run_deck_revision(case_dir, voice_session=session)
+
+    assert result["status"] == "interpretation_required"
+    assert result["stages"]["interpretation_packets"]["outputs"]
+
+
+@pytest.mark.parametrize("review_state", ["pending", "stale", "complete"])
+def test_deck_runner_preserves_registered_external_output(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, review_state: str
+) -> None:
+    monkeypatch.syspath_prepend(str(SCRIPTS_DIR))
+    import run_deck_revision
+
+    case, session = build_ready_deck_revision_intake(tmp_path)
+    write_executable_deck_revision_plan(case, session)
+    run_deck_revision.run_deck_revision(case, voice_session=session)
+    load_deck_revision_approver().approve_deck_revision_plan(
+        case,
+        voice_session=session,
+        reviewer="Synthetic reviewer",
+        understanding_reviewed=True,
+    )
+    applier = load_deck_revision_applier()
+    output = applier.apply_deck_revision_plan(
+        case, voice_session=session
+    ).corrected_deck_path
+    applier.register_external_deck_revision(case, output, voice_session=session)
+    if review_state == "stale":
+        output.write_bytes(output.read_bytes() + b"\n")
+    elif review_state == "complete":
+        # Synthetic confirmations test record handling, not visual quality.
+        load_deck_revision_output_review_completer().complete_deck_revision_output_review(
+            case,
+            voice_session=session,
+            reviewer="Synthetic reviewer",
+            audience_copy_reviewed=True,
+            process_language_reviewed=True,
+            requested_structure_reviewed=True,
+            semantic_evidence_fit_reviewed=True,
+            visual_render_reviewed=True,
+        )
+    original = output.read_bytes()
+
+    result = run_deck_revision.run_deck_revision(
+        case, voice_session=session, apply_approved=True
+    )
+
+    assert output.read_bytes() == original
+    assert (
+        result["status"]
+        == {
+            "pending": "external_output_pending_review",
+            "stale": "external_output_review_stale",
+            "complete": "final_review_record_current",
+        }[review_state]
+    )
+
+
+def test_deck_runner_applies_current_approval_once_and_recognizes_review(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.syspath_prepend(str(SCRIPTS_DIR))
+    import run_deck_revision
+
+    case_dir, session = build_ready_deck_revision_intake(tmp_path)
+    write_executable_deck_revision_plan(case_dir, session)
+    run_deck_revision.run_deck_revision(case_dir, voice_session=session)
+    load_deck_revision_approver().approve_deck_revision_plan(
+        case_dir,
+        voice_session=session,
+        reviewer="Reviewer",
+        understanding_reviewed=True,
+    )
+    first = run_deck_revision.run_deck_revision(
+        case_dir, voice_session=session, apply_approved=True
+    )
+    report = session / "deck_revision_apply_report.json"
+    before = report.read_bytes()
+    load_deck_revision_output_review_completer().complete_deck_revision_output_review(
+        case_dir,
+        voice_session=session,
+        reviewer="Synthetic reviewer",
+        audience_copy_reviewed=True,
+        process_language_reviewed=True,
+        requested_structure_reviewed=True,
+        semantic_evidence_fit_reviewed=True,
+        visual_render_reviewed=True,
+    )
+
+    resumed = run_deck_revision.run_deck_revision(
+        case_dir, voice_session=session, apply_approved=True
+    )
+
+    assert first["status"] == "applied_verified_pending_output_review"
+    assert resumed["status"] == "final_review_record_current"
+    assert report.read_bytes() == before
+    assert resumed["semantic_review_performed"] is False
+
+
+def test_deck_runner_apply_flag_does_not_authorize_unapproved_plan(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.syspath_prepend(str(SCRIPTS_DIR))
+    import run_deck_revision
+
+    case_dir, session = build_ready_deck_revision_intake(tmp_path)
+    write_executable_deck_revision_plan(case_dir, session)
+
+    result = run_deck_revision.run_deck_revision(
+        case_dir, voice_session=session, apply_approved=True
+    )
+
+    assert result["status"] == "ready_for_approval"
+    assert not (session / "deck_revision_apply_report.json").exists()
+
+
+@pytest.mark.parametrize("changed", ["confirmation", "output"])
+def test_completed_deck_review_verifier_rejects_stale_record(
+    tmp_path: Path, changed: str
+) -> None:
+    case_dir, session = build_ready_deck_revision_intake(tmp_path)
+    write_executable_deck_revision_plan(case_dir, session)
+    load_deck_revision_approver().approve_deck_revision_plan(
+        case_dir,
+        voice_session=session,
+        reviewer="Reviewer",
+        understanding_reviewed=True,
+    )
+    applied = load_deck_revision_applier().apply_deck_revision_plan(
+        case_dir, voice_session=session
+    )
+    completer = load_deck_revision_output_review_completer()
+    completed = completer.complete_deck_revision_output_review(
+        case_dir,
+        voice_session=session,
+        reviewer="Synthetic reviewer",
+        audience_copy_reviewed=True,
+        process_language_reviewed=True,
+        requested_structure_reviewed=True,
+        semantic_evidence_fit_reviewed=True,
+        visual_render_reviewed=True,
+    )
+    if changed == "confirmation":
+        payload = json.loads(completed.completion_path.read_text())
+        payload["confirmations"]["visual_render_reviewed"] = False
+        completed.completion_path.write_text(json.dumps(payload))
+    else:
+        applied.corrected_deck_path.write_bytes(
+            applied.corrected_deck_path.read_bytes() + b"changed"
+        )
+
+    with pytest.raises(completer.CaseWorkspaceError, match="stale|changed"):
+        completer.verify_deck_revision_output_review(case_dir, voice_session=session)
+
+
+def test_deck_runner_recovers_real_process_death_after_application(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import subprocess
+
+    monkeypatch.syspath_prepend(str(SCRIPTS_DIR))
+    import run_deck_revision
+    from pptx import Presentation
+
+    case_dir, session = build_ready_deck_revision_intake(tmp_path)
+    write_executable_deck_revision_plan(case_dir, session)
+    run_deck_revision.run_deck_revision(case_dir, voice_session=session)
+    load_deck_revision_approver().approve_deck_revision_plan(
+        case_dir,
+        voice_session=session,
+        reviewer="Reviewer",
+        understanding_reviewed=True,
+    )
+    intake = json.loads((session / "deck_revision_intake.json").read_text())
+    source = case_dir / intake["deck"]["path"]
+    source_bytes = source.read_bytes()
+    program = """
+import functools, os, sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+import run_deck_revision as runner
+original = runner.apply_deck_revision_plan
+@functools.wraps(original)
+def interrupted(*args, **kwargs):
+    original(*args, **kwargs)
+    os._exit(83)
+runner.apply_deck_revision_plan = interrupted
+runner.run_deck_revision(Path(sys.argv[2]), voice_session=Path(sys.argv[3]), apply_approved=True)
+"""
+    stopped = subprocess.run(
+        [sys.executable, "-c", program, str(SCRIPTS_DIR), str(case_dir), str(session)],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert stopped.returncode == 83
+
+    result = run_deck_revision.run_deck_revision(
+        case_dir, voice_session=session, apply_approved=True
+    )
+
+    assert result["status"] == "applied_verified_pending_output_review"
+    assert source.read_bytes() == source_bytes
+    report = json.loads((session / "deck_revision_apply_report.json").read_text())
+    assert report["summary"]["applied_patches"] == 1
+    assert (
+        Presentation(str(case_dir / report["corrected_deck_path"]))
+        .slides[0]
+        .shapes.title.text
+        == "Margin expansion should lead the page story"
+    )
+    assert not (case_dir / ".clara-transaction").exists()
+    assert not (session / "deck_revision_output_review_completion.json").exists()
+
+
+def test_clara_dependency_choices_match_all_registered_runtime_modules() -> None:
+    checker = load_dependency_checker()
+    registry = json.loads((PLUGIN_ROOT / "components.json").read_text())
+
+    assert set(checker.COMPONENTS) == set(registry["plugins"])
