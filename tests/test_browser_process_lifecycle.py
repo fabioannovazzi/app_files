@@ -544,6 +544,10 @@ def test_new_contract_and_changed_result_review_suspend_qualification(
         },
     )
     assert store.catalog()[0]["available_in_qualified_environment"] is False
+    review_report = Path(attempts[0]["report_path"]).read_text(encoding="utf-8")
+    assert "Esito tecnico: passed" in review_report
+    assert "Revisione: non corretto" in review_report
+    assert "The expected result was interpreted incorrectly" in review_report
     revised = json.loads(FIXTURE.read_text(encoding="utf-8"))
     revised["version"] = "0.1.1"
     path = tmp_path / "revision.json"

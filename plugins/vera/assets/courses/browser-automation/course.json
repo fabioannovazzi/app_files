@@ -163,12 +163,12 @@
     {
       "path": "modules/browser-automation/scripts/process_lifecycle.py",
       "repository_path": "plugins/browser-automation/scripts/process_lifecycle.py",
-      "sha256": "b51934c7799c9599c8bc098d32c8a3350fba2bd187e789dcc96186b955db6c35"
+      "sha256": "e524a1b459352a66bd75fcf7924d83944237e4847f283b98515ceaf219ac1ee7"
     },
     {
       "path": "modules/browser-automation/scripts/process_runtime.mjs",
       "repository_path": "plugins/browser-automation/scripts/process_runtime.mjs",
-      "sha256": "3fa9ac3d8324fb7789eb039a0b2f624fe51bd943455b28a74a6009765623f318"
+      "sha256": "f32151b7e05b1f294f84531ae508c4d6a5dbfe15e8e55a47709fa60de45a99e4"
     },
     {
       "path": "modules/browser-automation/scripts/teaching_checkpoint.py",

@@ -108,7 +108,7 @@ export async function executeProcess({ attemptDirectory, tab, inputs = {}, curre
   const lines = [
     `# ${plan.description.process.name}`, "",
     `Processo: ${plan.process_id}`, `Tentativo: ${plan.attempt_id} · ${plan.kind}`,
-    `Risultato: ${evidence.result}`, `Ambiente dichiarato: ${evidence.execution_mode}`,
+    `Esito tecnico: ${evidence.result}`, `Ambiente dichiarato: ${evidence.execution_mode}`,
     `Obiettivo: ${plan.description.process.objective}`,
     `Verifica attesa: ${plan.description.end_condition}`, "", "## Risultati verificabili",
     ...evidence.outputs.map(o => `- ${o.name}: ${o.record_count} · SHA-256 ${o.sha256}`),
@@ -117,6 +117,8 @@ export async function executeProcess({ attemptDirectory, tab, inputs = {}, curre
     `Durata misurata: ${evidence.elapsed_ms} ms (tempo locale, inclusa preparazione).`,
     ...Object.entries(telemetry).map(([name, item]) => `${name}: ${item.value ?? "non disponibile"} · ${item.source ?? item.missing_reason}`),
     `Motivo: ${reason ?? "nessun errore tecnico; verificare la correttezza professionale del risultato"}`,
+    "", "## Verifica del risultato",
+    "Correttezza da verificare: nessuna revisione attuale sulle prove salvate.",
     "", "## Prossimo passo",
     "Verificare gli output e salvare la revisione. Un risultato incompleto conserva le prove per lo stesso processo.",
     "Nessun CR è stato inviato da questo esecutore. Vera prepara e trasmette il riepilogo tecnico solo entro l’autorizzazione ricevuta.",

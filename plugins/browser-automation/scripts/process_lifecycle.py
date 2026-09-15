@@ -790,7 +790,7 @@ class ProcessStore:
             "",
             f"Processo: {plan['process_id']}",
             f"Tentativo: {attempt_id} · {plan['kind']}",
-            f"Risultato: {evidence['result']}",
+            f"Esito tecnico: {evidence['result']}",
             f"Ambiente dichiarato: {plan['host']['execution_mode']}",
             f"Obiettivo: {plan['description']['process']['objective']}",
             f"Verifica attesa: {plan['description']['end_condition']}",
@@ -806,6 +806,23 @@ class ProcessStore:
                 f"- [Ricevuta locale]({directory / 'run' / 'run.receipt.json'})",
                 f"- [Output locali]({directory / 'run' / 'outputs.json'})",
             ]
+        reviews = [
+            r
+            for r in self._rows(plan["process_id"], "result_review")
+            if r["attempt_id"] == attempt_id
+        ]
+        lines += ["", "## Verifica del risultato"]
+        if reviews and reviews[-1]["evidence_sha256"] == sha256_payload(evidence):
+            review = reviews[-1]["review"]
+            verdict = "corretto" if review["correct"] else "non corretto"
+            lines += [
+                f"Revisione: {verdict} · {review['reviewer']}",
+                f"Evidenza della revisione: {review['evidence']}",
+            ]
+        else:
+            lines.append(
+                "Correttezza da verificare: nessuna revisione attuale sulle prove salvate."
+            )
         if result["teaching"]:
             teaching = result["teaching"]
             lines += [
@@ -885,6 +902,7 @@ class ProcessStore:
             "result_review",
             record,
         )
+        self.report(attempt_id)
         return record
 
     def qualify(

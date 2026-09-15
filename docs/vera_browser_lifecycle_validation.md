@@ -38,7 +38,10 @@ site, account, population or UI variant works.
 ## Local validation
 
 - Connected lifecycle, API integration and existing pipeline/development-request
-  regressions: **112 passed**, new coordinator coverage **88.34%** (80% gate).
+  regressions: **112 passed**. The final report-delivery refinement also passed
+  all 28 lifecycle/API integration cases at **88.50%** coordinator coverage
+  (80% gate). Reports update immediately after result review and distinguish
+  technical success from a professionally incorrect or unreviewed result.
 - Existing JavaScript browser suites, including Agenzia and ECONS: **148 passed**.
 - After integrating current main, public model-data copy, Vera routing, website
   journeys, optional onboarding, prepared courses, product teaching scope and
