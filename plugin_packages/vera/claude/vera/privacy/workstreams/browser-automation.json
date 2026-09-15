@@ -97,7 +97,7 @@
       {
         "id": "browser-session-and-invoice-prototype-status",
         "purpose": "Resume the same authorized task after a login handoff and report the actual scope and progress of individual invoice downloads",
-        "content": "The model receives the handoff-mark result, sanitized session categories, counts, error hashes and owner-only report paths. Session inspection reads tab URLs and inventory metadata locally; only candidate IDs matching the authorized origins are returned as ephemeral task handles, without raw URLs or titles. These handles do not establish the fiscal account. For the Agenzia prototype the model reads the exact authorized date filters, direction and independent population counts; output summaries contain direction counts, pages visited, execution mode, prototype status and sanitized failure metadata. Local run revisions retain file paths, byte lengths, hashes and hashed detail identities; downloaded invoice content is not returned or transferred. Existing authorization and data disclosures govern any targeted account or business-data reading.",
+        "content": "The model receives the handoff-mark result, sanitized session categories, counts, error hashes and owner-only report paths. Session inspection reads tab URLs and inventory metadata locally; only candidate IDs matching the authorized origins are returned as ephemeral task handles, without raw URLs or titles. These handles do not establish the fiscal account. For the Agenzia prototypes the model reads the exact authorized date filters, model-reviewed category accessible names, declared format availability and independent population counts; output summaries contain category/year counts, pages visited, format states, execution mode, prototype status, native-gap markers and sanitized failure metadata. Local append-only run revisions and attempt reports retain file paths, byte lengths, hashes, hashed detail identities, exact XML/P7M/PDF archive metadata and P7M-to-extracted-XML hash bindings; downloaded invoice content and extracted XML are not returned or transferred. Existing authorization and data disclosures govern any targeted account or business-data reading.",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -235,12 +235,16 @@
     {
       "id": "named-operation-exact-procedure-binding",
       "control": "A source-owned named skill carries its process description, exact executable contract and hash, authored result checks and model-data boundary. The public skill invokes only its adjacent binding; it never selects from the development catalog. Local drafts cannot silently replace or invalidate the released version. Package checks reject an altered procedure binding. Export creates reviewable source and does not publish, attest to professional correctness or import another machine qualification. The shared executor and reviewed technical-feedback boundary are unchanged."
+    },
+    {
+      "id": "resumable-agenzia-artifact-acquisition",
+      "control": "The category/year acquisition runner requires a model-reviewed explicit plan with exact single-year filters, independently observed counts, and declared original/PDF availability. It verifies browser-event and stable-directory evidence, preserves XML/P7M originals byte-for-byte, extracts only CMS-encapsulated FatturaPA XML with a source hash binding, verifies a native PDF signature, and never claims P7M signature, certificate, signer, or revocation validation. Native Print to PDF remains an operator-owned native_gap and excludes the run from clean browser validation. Fresh owner-only directories, exclusive writes, append-only hash-linked revisions and attempt reports, retained-artifact verification, duplicate detail rejection, exact page/count reconciliation, and bounded page/invoice limits prevent blind overwrite or completion claims after incomplete work. The model receives only category/year aggregates, format states, native-gap markers, prototype status, owner-only report paths, and sanitized errors; invoice bytes and extracted content stay outside model context and portable bundles. Simulated tests do not establish target-site compatibility. CR-49 still requires two clean repetitions on the exact released version, including the requested category and resume evidence."
     }
   ],
   "review": {
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "11a9b43ae4e99bc1c482d78796f2ac5ce1de1e29d2be77a5309b562298b6090a"
+    "source_fingerprint": "6583f5ab3efa78f8e5aea1722add521a34bea35d7f095b26380de2aea7528d42"
   }
 }

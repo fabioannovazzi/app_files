@@ -26,6 +26,11 @@
       "sha256": "de9b1ea1fb9dbd8e6dbaf4137c90cfe2299c6a4f8c7be4c6104d38a2573cc722"
     },
     {
+      "path": "modules/browser-automation/references/agenzia-acquisition.md",
+      "repository_path": "plugins/browser-automation/references/agenzia-acquisition.md",
+      "sha256": "59edab5bafeb2a633a7b59bde7b1e963dfa8488ab05ee3b6d41b5863881fb0a8"
+    },
+    {
       "path": "modules/browser-automation/references/agenzia-download.md",
       "repository_path": "plugins/browser-automation/references/agenzia-download.md",
       "sha256": "affd27e1967ce61ae2bc173eeeddae09706465137fb855a7bdc17fde0549854a"
@@ -96,6 +101,16 @@
       "sha256": "e24928b0a984ed45fc3acb08439d7a4451bfc8d57be043efb601215f9481d13a"
     },
     {
+      "path": "modules/browser-automation/scripts/agenzia_acquisition.mjs",
+      "repository_path": "plugins/browser-automation/scripts/agenzia_acquisition.mjs",
+      "sha256": "685220a935fb728194d3cb3c1a676c1e50d1eace5351efe97b4c38a29ca22135"
+    },
+    {
+      "path": "modules/browser-automation/scripts/agenzia_artifacts.mjs",
+      "repository_path": "plugins/browser-automation/scripts/agenzia_artifacts.mjs",
+      "sha256": "dbe4ee98cfce1071b12d8184eda4833405a783e466dc5a669b0630623019dcc3"
+    },
+    {
       "path": "modules/browser-automation/scripts/agenzia_download.mjs",
       "repository_path": "plugins/browser-automation/scripts/agenzia_download.mjs",
       "sha256": "2f760930a0246ffc962af626f42f40e6216610fb5c09fcde9376b826abe35567"
@@ -128,7 +143,7 @@
     {
       "path": "modules/browser-automation/scripts/check_installation.py",
       "repository_path": "plugins/browser-automation/scripts/check_installation.py",
-      "sha256": "664a247eee2cb0512419531beea5bcdc87167e9bf3a23c8e59e91285bb2784ed"
+      "sha256": "5692e46244d6999f860fdb1aa3907d1a7a95dc6363038d07176acaee9ad63ded"
     },
     {
       "path": "modules/browser-automation/scripts/development_request.py",
@@ -188,12 +203,12 @@
     {
       "path": "modules/browser-automation/skills/browser-automation/SKILL.md",
       "repository_path": "plugins/browser-automation/skills/browser-automation/SKILL.md",
-      "sha256": "d97a11b77e31fcdfc85c096518a1bb7e2c89d3b9577024dc78f8e36a8287fecc"
+      "sha256": "67b74ea7b1cd3a26f9c0c34fae8f83e42d3fc1ffe2b74222a2b46ade30eda3f7"
     },
     {
       "path": "skills/browser-automation/SKILL.md",
       "repository_path": "plugins/vera/skills/browser-automation/SKILL.md",
-      "sha256": "aebeb8868ae932e190130847538a96c56c9e44159a187ffb1e09ef53b2df86ff"
+      "sha256": "3fd96ad64218593c3fa3dcb3b3adfc664d3349b29018bb65caecce7f54d3037a"
     },
     {
       "path": "vendor/modules/__init__.py",

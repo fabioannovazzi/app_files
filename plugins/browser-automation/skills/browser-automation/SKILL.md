@@ -186,6 +186,20 @@ authorization.
 
 ## Choose the operation
 
+### Acquire and archive Agenzia invoices by category and year
+
+For the CR-49 acquisition process, read
+`references/agenzia-acquisition.md` and use `scripts/agenzia_acquisition.mjs`.
+Build the category plan from currently observed authorized portal evidence;
+never infer a category or format from code. The runner reconciles independent
+counts and pages, preserves XML/P7M originals, extracts and hash-links the
+encapsulated FatturaPA XML, records unavailable formats, and resumes from a
+verified append-only state without overwriting earlier artifacts. P7M extraction
+does not validate the signature. Print to PDF remains an operator-owned
+`native_gap`, so a run using it cannot count as clean browser validation. Every
+result remains a prototype until the released version has the two required
+target-environment repetitions.
+
 ### Download individual Agenzia invoices from supplied teaching
 
 For the individual-invoice process supplied with CR-43, read

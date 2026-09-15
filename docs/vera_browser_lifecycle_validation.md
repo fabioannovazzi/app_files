@@ -1,8 +1,8 @@
 # Vera browser lifecycle: implementation and validation
 
-Candidate: Vera **0.1.261**, browser-automation **0.5.23**.
+Candidate: Vera **0.1.263**, browser-automation **0.5.25**.
 Initial base: `07689c38`; integrated the subsequently merged course release
-`306101b5` and current main `58759c04` (including the installed-version guard). Implementation plan: [vera_browser_lifecycle_plan.md](vera_browser_lifecycle_plan.md).
+`306101b5` and current main `56b8a3e0` (including the installed-version guard and PR #643 Agenzia acquisition). Implementation plan: [vera_browser_lifecycle_plan.md](vera_browser_lifecycle_plan.md).
 
 ## Result
 
@@ -65,12 +65,12 @@ existing generic examples are scaffolds and the specialized drivers retain their
 current acceptance limits. This change implements the explicit skill-authoring,
 package and ordinary-use handoff for operations developed through the loop.
 
-## Final-candidate local validation
+## Named-operation local validation before final integration
 
-The connected lifecycle and named-operation suite passes **38 tests**, with
+The connected lifecycle and named-operation suite passed **38 tests**, with
 **87.41%** combined coordinator/exporter coverage. The strict type checks and
-medium/high security scan pass. The current source builds Vera **0.1.261** and
-Clara **0.1.209**; the all-product source/parity/version checks pass, including
+medium/high security scan passed. That source built Vera **0.1.261** and
+Clara **0.1.209**; the all-product source/parity/version checks passed, including
 packaged MCP initialization. Both privacy registers are current.
 
 Package, privacy, routing, installed-version and course regression checks ran
@@ -124,7 +124,7 @@ pull-request commit; local macOS results alone are not Windows execution proof.
 This is an implementation candidate. It has not been merged, deployed or
 published by this task. Deploy the backward-compatible CR API change before
 publishing a client that sends the new partial diagnostic shape. Merge and server
-deployment require authorization for this change. Marketplace publication to
+deployment are explicitly authorized for this change. Marketplace publication to
 the existing listing is standing-authorized after applicable checks, with exact
 Published verification required. Keep the public version registry unchanged
 until that publication exists.
@@ -143,3 +143,31 @@ timing is measured locally; unavailable token/model telemetry is never estimated
 The merged course and installed-version-guard changes are retained. Reconcile
 any subsequent releases before publication; do not deploy an older candidate
 over newer source.
+
+## Approved integration with the Agenzia release
+
+The final candidate retains main's category/year acquisition runner, byte-preserved
+XML/P7M originals, CMS extraction, resumable acquisition evidence and explicit
+native-PDF boundary. Its privacy control is retained alongside the process
+lifecycle and named-skill controls. Windows and Linux CI now include both new
+Agenzia artifact/acquisition suites as well as named-skill package execution.
+
+Main's Concordato functional-test fix is retained: its existing single-call
+deadline is unchanged, with a separate 30-second deadline for multi-call document
+work. The exporter writes explicit LF endings on all operating systems.
+
+Vera 0.1.263 and browser module 0.5.25 are the combined release versions. Earlier
+35-check CI results belong to f43fb2a2, before this main integration; the final
+commit must pass its own release gates.
+
+The combined 0.1.263 candidate passes all **160 Node browser tests** and the
+**38 lifecycle tests** at **87.41% coverage**. All-product package source parity,
+versions and packaged MCP initialization pass. Black 25.1.0, Isort, strict Mypy
+and the medium/high Bandit gate pass for the checked coordinator, exporter and
+installation checker. The main-owned Concordato test passes Black 25.1.0 as
+configured in CI; no unrelated Black 26 formatting changes were applied.
+
+Combined-candidate regressions pass **117 tests** for Concordato, installation
+and lifecycle/API handoff. Package integrity, update notification, Vera privacy
+and routing checks pass **437 tests**, with one unavailable Marketplace-cache
+skip. That skip supplies no publication evidence.

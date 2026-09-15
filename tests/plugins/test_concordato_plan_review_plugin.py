@@ -26,6 +26,8 @@ ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = ROOT / "plugins" / "concordato-plan-review" / "scripts"
 CORE_PATH = SCRIPT_DIR / "concordato_plan_core.py"
 MCP_SERVER_PATH = ROOT / "plugins" / "concordato-plan-review" / "mcp" / "server.cjs"
+MCP_SERVER_TIMEOUT_SECONDS = 10
+MULTI_CALL_MCP_SERVER_TIMEOUT_SECONDS = 30
 
 
 def load_core() -> Any:
@@ -67,6 +69,7 @@ def _call_mcp_server(
     *,
     server_path: Path = MCP_SERVER_PATH,
     env: dict[str, str] | None = None,
+    timeout_seconds: int = MCP_SERVER_TIMEOUT_SECONDS,
 ) -> list[dict[str, object]]:
     node = shutil.which("node")
     if node is None:
@@ -77,9 +80,7 @@ def _call_mcp_server(
         capture_output=True,
         text=True,
         check=True,
-        # A functional request can launch Python children and render documents.
-        # Keep it bounded without treating shared-runner scheduling as a 10s SLA.
-        timeout=60,
+        timeout=timeout_seconds,
         env={**os.environ, "VERA_COMPONENT_HOST": "1", **(env or {})},
     )
     return [json.loads(line) for line in completed.stdout.splitlines() if line.strip()]
@@ -2260,7 +2261,12 @@ def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None
         },
     ]
 
-    responses = {response["id"]: response for response in _call_mcp_server(messages)}
+    responses = {
+        response["id"]: response
+        for response in _call_mcp_server(
+            messages, timeout_seconds=MULTI_CALL_MCP_SERVER_TIMEOUT_SECONDS
+        )
+    }
     validation = responses[2]["result"]["structuredContent"]
     saved = _private_tool_payload(responses[3])
     applied = _private_tool_payload(responses[4])
