@@ -142,7 +142,7 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
     validateEconsProcessingProfile(processing.profile);
     requireCondition(canonicalJson([...processing.profile.phases.post.site.allowed_origins].sort()) ===
       canonicalJson([...profile.phases.detail.site.allowed_origins].sort()), "processing_acquisition_origins_must_match");
-    requireCondition([processing.classifyInvoices, processing.reviewRedException, processing.reviewJournal, processing.approvePosting].every((callback) => typeof callback === "function"), "model_review_callbacks_required");
+    requireCondition([processing.classifyInvoices, processing.reviewRedException, processing.reviewInvoice, processing.reviewJournal, processing.approvePosting].every((callback) => typeof callback === "function"), "model_review_callbacks_required");
   }
   requireCondition(Array.isArray(excludedCompanyCodes) && excludedCompanyCodes.every((code) => typeof code === "string" && code.trim()), "explicit_exclusion_list_required");
   excludedCompanyCodes = [...excludedCompanyCodes];
@@ -334,7 +334,7 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
             invoice: { "company-code": company["company-code"], ...invoice }, detail, entry,
             readDetail: () => phase("detail", { "company-code": company["company-code"], "invoice-id": invoice["invoice-id"], "invoice-number": invoice["invoice-number"] }),
             phaseDirectory: async (name) => join(directory, `process-${entry.id}-${name}`),
-            save, reviewJournal: processing.reviewJournal, approvePosting: processing.approvePosting, environment });
+            save, reviewInvoice: processing.reviewInvoice, reviewJournal: processing.reviewJournal, approvePosting: processing.approvePosting, environment });
         }
         activeEntry = null;
       }

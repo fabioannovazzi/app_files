@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { mkdtemp, readFile, realpath, stat, writeFile } from "node:fs/promises";
+import { mkdtemp, readdir, readFile, realpath, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
@@ -395,8 +395,11 @@ class ProcessingTab extends EconsTab {
   }
 }
 function processing(changes = {}) {
-  return { profile: processingProfile(), classifyInvoices: async () => ({ company_code: 'A', red_invoice_ids: ['2'], reason: 'Operator-reviewed synthetic red indicator' }),
+  return { profile: processingProfile(), classifyInvoices: async ({ invoices }) => ({ company_code: 'A', red_invoice_ids: invoices.filter((item) => item['invoice-id'] === '2').map((item) => item['invoice-id']), reason: 'Operator-reviewed synthetic red indicator' }),
     reviewRedException: async () => ({ eligible: false, reason: 'The model did not approve the taught exception for this synthetic invoice' }),
+    reviewInvoice: async ({ invoice, detail_sha256 }) => ({ approved: true, descriptions_complete: true,
+      company_code: invoice['company-code'], invoice_id: invoice['invoice-id'], detail_sha256,
+      reason: 'Every synthetic line description was read in full before opening the journal' }),
     reviewJournal: async () => ({ approved: true, reason: 'Ditta con indetraibilità confermata al 100%', company_code: 'A', treatment_source: 'Configurazione ditta verificata', vat_nondeductible_percent: 100 }),
     approvePosting: async () => true, ...changes };
 }
@@ -430,6 +433,89 @@ test('unapproved posting never dispatches registration', async () => {
   const result = await run(tab, { processing: processing({ approvePosting: async () => false }) });
   assert.equal(tab.postCount, 0);
   assert.equal(result.completed, 0);
+});
+
+test('a second invoice with truncated descriptions never opens its journal and preserves the first posting', async () => {
+  const tab = new ProcessingTab();
+  const result = await run(tab, { processing: processing({
+    classifyInvoices: async () => ({ company_code: 'A', red_invoice_ids: [], reason: 'Both selected invoices reviewed' }),
+    reviewInvoice: async ({ invoice, detail_sha256 }) => ({ approved: invoice['invoice-id'] === '1',
+      descriptions_complete: invoice['invoice-id'] === '1', company_code: 'A', invoice_id: invoice['invoice-id'], detail_sha256,
+      reason: invoice['invoice-id'] === '1' ? 'Complete source descriptions read' : 'Second invoice still shows truncated descriptions' }),
+  }) });
+  const report = JSON.parse(await readFile(result.review_path.replace(/\.html$/, '.json'), 'utf8'));
+  assert.equal(result.completed, 1);
+  assert.equal(tab.postCount, 1);
+  assert.deepEqual(tab.opened.slice(tab.opened.indexOf('detail-2')).filter((name) => name.startsWith('open-')), ['open-exit']);
+  assert.equal(report.payload.entries[0].status, 'completed');
+  assert.equal(report.payload.entries[1].status, 'set_aside');
+  assert.match(await readFile(result.client_reviews[0], 'utf8'), /Second invoice still shows truncated descriptions/);
+});
+
+test('invoice descriptions and their review are durable before Contabilizza opens the journal', async () => {
+  const tab = new ProcessingTab();
+  const parent = await mkdtemp(join(privateTmp, 'econs-before-journal-'));
+  const runDirectory = join(parent, 'run');
+  const original = tab.output.bind(tab);
+  const savedBeforeJournal = [];
+  tab.output = (key) => {
+    const locator = original(key);
+    if (key === 'open-journal') {
+      const click = locator.click.bind(locator);
+      locator.click = async () => {
+        const files = (await readdir(join(runDirectory, 'review'))).filter((name) => /^review-\d+\.json$/.test(name)).sort();
+        savedBeforeJournal.push(JSON.parse(await readFile(join(runDirectory, 'review', files.at(-1)), 'utf8')).payload.entries[0]);
+        await click();
+      };
+    }
+    return locator;
+  };
+  await run(tab, { runDirectory, invoiceSelection: { A: ['1'] }, processing: processing() });
+  assert.equal(savedBeforeJournal.length, 2);
+  assert.ok(savedBeforeJournal[0].evidence.some((item) => item.value === 'Long full source description'));
+  assert.ok(savedBeforeJournal[0].evidence.some((item) => item.label === 'Revisione descrizioni complete'));
+  assert.notEqual(savedBeforeJournal[0].status, 'completed');
+});
+
+test('a complete-description review for another invoice cannot authorize the current invoice', async () => {
+  const tab = new ProcessingTab();
+  const result = await run(tab, { invoiceSelection: { A: ['1'] }, processing: processing({
+    reviewInvoice: async ({ detail_sha256 }) => ({ approved: true, descriptions_complete: true,
+      company_code: 'A', invoice_id: 'OTHER', detail_sha256, reason: 'Review belongs to another invoice' }),
+  }) });
+  assert.equal(result.completed, 0);
+  assert.deepEqual(tab.checkboxValues, []);
+  assert.equal(tab.opened.includes('open-journal'), false);
+  assert.match(await readFile(result.client_reviews[0], 'utf8'), /complete_invoice_review_required/);
+});
+
+test('a journal review interruption preserves displayed values without claiming a registration', async () => {
+  const tab = new ProcessingTab();
+  const result = await run(tab, { invoiceSelection: { A: ['1'] }, processing: processing({
+    reviewJournal: async () => { throw new Error('Synthetic interruption after Contabilizza'); },
+  }) });
+  const report = JSON.parse(await readFile(result.client_reviews[0].replace(/\.html$/, '.json'), 'utf8'));
+  assert.equal(tab.postCount, 0);
+  assert.equal(result.completed, 0);
+  assert.equal(report.payload.entries[0].status, 'set_aside');
+  assert.ok(report.payload.entries[0].proposed.some((item) => item.label === 'total' && item.value === '36,60'));
+  assert.match(await readFile(result.client_reviews[0], 'utf8'), /Contabilizza/);
+});
+
+test('Contabilizza and a successful confirmation click cannot replace the final posting protocol', async () => {
+  const tab = new ProcessingTab();
+  const original = tab.output.bind(tab);
+  tab.output = (key) => {
+    const locator = original(key);
+    if (key === 'posting') locator.nodes[0].protocol = '';
+    return locator;
+  };
+  const result = await run(tab, { invoiceSelection: { A: ['1'] }, processing: processing() });
+  const report = JSON.parse(await readFile(result.client_reviews[0].replace(/\.html$/, '.json'), 'utf8'));
+  assert.equal(tab.postCount, 1);
+  assert.equal(result.completed, 0);
+  assert.equal(report.payload.entries[0].status, 'unverified');
+  assert.equal(report.payload.entries[0].posting_reference, '');
 });
 
 test('a red invoice with two matching mapped lines can complete the taught exception', async () => {

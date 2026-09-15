@@ -153,9 +153,13 @@ When authorized to process ECONS purchase invoices, read the processing section
 of `references/econs-review.md` in the resolved browser-automation module. Reuse
 the acquisition profile and add the reviewed processing phases. Run
 `collectEconsReview` with its `processing` option. Vera supplies the model-led
-queue classification, red-exception review, journal review and posting-approval callbacks in the host
+queue classification, red-exception review, complete-invoice review, journal review and posting-approval callbacks in the host
 Node session; no separate model API is configured. Preserve the exact client's
 tax treatment and complete report, including green and orange invoices. A
+per-invoice review must confirm and save the full descriptions before opening
+the journal. `Contabilizza` alone never completes registration: require the
+separate final confirmation, protocol and checked absence from Non contab.
+Link the current client reports, including exceptions and uncertain outcomes. A
 missing binding is a local setup gap to resolve from the actual screen, not a
 reason to ask the operator to rewrite selectors or repeat the whole lesson.
 Report this as implemented workflow support until two clean runs on the target

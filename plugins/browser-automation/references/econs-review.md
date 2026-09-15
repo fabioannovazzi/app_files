@@ -43,7 +43,7 @@ handoff is not a prerequisite.
    profile schema changed to v2. Do not relabel a nightly-synchronization switch
    as proof of new invoices. Retain the invoice/detail and processing bindings.
 6. Connect or recover the authorized Chrome session using `browser-session.md`.
-   For registration, finish only missing processing phases and create the four
+   For registration, finish only missing processing phases and create the five
    model callbacks from the installed processing instructions. Do not silently
    replace registration with read-only review. Provision/reuse the shared managed
    Python environment when its helpers are needed, once for this setup; never
@@ -243,8 +243,8 @@ after each invoice and before any mapping or registration attempt. The returned
 `client_reviews` links identify those files. Keep later human checks and linked
 corrections through `batch_review.py`; never rewrite completed postings.
 
-`processing` contains `profile`, `classifyInvoices`, `reviewRedException`, `reviewJournal` and
-`approvePosting`. Vera implements these callbacks using the current host model
+`processing` contains `profile`, `classifyInvoices`, `reviewRedException`,
+`reviewInvoice`, `reviewJournal` and `approvePosting`. Vera implements these callbacks using the current host model
 and available authorization; they are not an invitation for the professional
 to write code or an automatic source of approval. No helper calls a second LLM.
 
@@ -285,6 +285,17 @@ exceptions remain in the report without posting. More than two consecutive reds
 suspends the remaining client. A tail of reds must not bypass exception review.
 The studio exclusion list is unchanged. Colours never approve accounting.
 
+`reviewInvoice({invoice, detail, detail_sha256})` returns `approved`,
+`descriptions_complete`, `company_code`, `invoice_id`, `detail_sha256` and `reason`.
+The model must read every full description in this invoice before it approves
+the review. Non-empty extracted text and a remembered rule do not establish
+completeness. A truncated description must be recovered from an observed full
+value; if unavailable, return false with the precise gap. Never use a constant
+true callback or reuse another invoice's review. Code checks the exact identity
+and evidence hash, saves this review alongside the acquired descriptions, and
+only then permits mapping or opening the journal. This applies independently
+to every invoice, including the second invoice and already mapped invoices.
+
 Before writing mappings, the executor rereads the invoice and requires its
 identity and complete lines to match acquisition. At least two existing lines
 must share the same account before filling missing associations; every selected
@@ -310,6 +321,14 @@ Other journal shapes remain exceptions for professional review. A discrepancy
 between invoice-line sum and displayed net needs an explicit explanation; the
 helper never generates an unexplained balancing adjustment.
 
+`Contabilizza` opens the displayed journal in the observed procedure. It is not
+the final registration: bind `Conferma reg.` to the separate consequential
+`confirm-registration` action after reviewing its actual screen behavior.
+The executor saves the displayed journal values before calling `reviewJournal`,
+so an interrupted review retains those values without claiming completion.
+Do not bypass this per-invoice sequence with freehand clicks after loading the
+rules, and do not call a report complete merely because its file exists.
+
 `approvePosting({invoice, journal, journal_sha256, action})` returns true only
 when the exact current registration is authorized under the host's rules.
 The report is saved as unverified before dispatch. Completion requires the
@@ -317,7 +336,10 @@ captured protocol and invoice absence from the complete Non contab. population
 of the same client, in the profile's exact list view. Ambiguous outcomes remain
 unverified and must be reconciled before retrying. Inspect phase receipts and
 private outputs to resolve the specific gap. Mapping confirmation and
-registration confirmation are separate phases and approvals.
+registration confirmation are separate phases and approvals. Link the current
+per-client reports in the final response, including completed registrations,
+exceptions and uncertain attempts; preserve previous completions when a later
+invoice stops. Subsequent professional corrections remain separate linked entries.
 
 Save two clean sets of phase receipts on the actual ECONS environment, with no
 locator changes or recovery, before calling the process locally validated.
