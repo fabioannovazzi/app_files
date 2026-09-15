@@ -24,6 +24,10 @@ audit output.
   retain durable interruption state without automatically replaying uncertain
   provider calls. Provider errors expose classified metadata rather than raw
   response bodies.
+- Fresh Windows reporting checks also exposed exclusive CRT reader locks;
+  managed workflows now use Windows shared read locks, so nested processes can
+  run while installers remain excluded. Installer probes exercise target package
+  metadata and fall back to target ensurepip when an older launcher pip fails.
 - The local review server reads private component metadata only for the browser
   render tool. Normal MCP results retain their existing structured payload.
 - Public copy describes the actual journal-input and exact-duplicate contracts.

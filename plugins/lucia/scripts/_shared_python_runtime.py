@@ -18,7 +18,7 @@ RECEIPT = ".mparanza-shared-ready.json"
 POLICY = ".mparanza-shared-features.json"
 INSTALLING = "MPARANZA_RUNTIME_INSTALLING"
 # Bump together across products whenever recipes, constraints or this backend change.
-POLICY_REVISION = 4
+POLICY_REVISION = 5
 # Every process in the managed interpreter holds a reader lease until exit.
 # The installer uses the same file exclusively. Never modify the interpreter
 # while readers are running. This is concurrency protection, not a sandbox.
@@ -30,9 +30,30 @@ if not os.environ.get("MPARANZA_RUNTIME_INSTALLING"):
     try:
         _mpr_lease = open(_mpr_root / "runtime.lock", "rb")
         if sys.platform == "win32":
+            import ctypes
             import msvcrt
-            _mpr_lease.seek(0)
-            msvcrt.locking(_mpr_lease.fileno(), msvcrt.LK_RLCK, 1)
+            from ctypes import wintypes
+            class _MprOverlapped(ctypes.Structure):
+                _fields_ = [
+                    ("Internal", ctypes.c_size_t),
+                    ("InternalHigh", ctypes.c_size_t),
+                    ("Offset", wintypes.DWORD),
+                    ("OffsetHigh", wintypes.DWORD),
+                    ("hEvent", wintypes.HANDLE),
+                ]
+            _mpr_overlapped = _MprOverlapped()
+            _mpr_kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+            _mpr_lock = _mpr_kernel.LockFileEx
+            _mpr_lock.argtypes = [
+                wintypes.HANDLE, wintypes.DWORD, wintypes.DWORD,
+                wintypes.DWORD, wintypes.DWORD, ctypes.POINTER(_MprOverlapped),
+            ]
+            _mpr_lock.restype = wintypes.BOOL
+            # CRT LK_RLCK is exclusive. Flags zero requests a real shared lock,
+            # allowing nested workflow processes while still excluding installers.
+            if not _mpr_lock(msvcrt.get_osfhandle(_mpr_lease.fileno()), 0, 0, 1, 0,
+                             ctypes.byref(_mpr_overlapped)):
+                raise ctypes.WinError(ctypes.get_last_error())
         else:
             import fcntl
             fcntl.flock(_mpr_lease.fileno(), fcntl.LOCK_SH)

@@ -351,8 +351,10 @@ def _bootstrap_pip(
         "--python",
         str(target_python),
     ]
+    # Listing exercises metadata imports under the target interpreter. Older pip
+    # can print its version under Python 3.12 while failing on removed stdlib APIs.
     probe = runner(
-        [*base_pip, "--version"],
+        [*base_pip, "--disable-pip-version-check", "list", "--format=json"],
         cwd=target,
         env=base_environment,
         capture_output=True,
