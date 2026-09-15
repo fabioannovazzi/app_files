@@ -65,7 +65,7 @@ jobs:
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_desktop_teaching.py tests/plugins/test_desktop_teaching_packages.py
-          tests/plugins/test_teaching_product_scope.py
+          tests/plugins/test_teaching_product_scope.py tests/plugins/test_optional_onboarding.py
           --cov=desktop_teaching --cov-fail-under=80
       - name: Check shared teaching code quality
         run: |

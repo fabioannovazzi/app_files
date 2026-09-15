@@ -113,7 +113,7 @@
     {
       "path": "skills/variance-analysis/SKILL.md",
       "repository_path": "plugins/vera/skills/variance-analysis/SKILL.md",
-      "sha256": "fcbbd189b9f4eb8fa0d40e003f822a38e2fa4604d5ecb1836cf90bbe83684392"
+      "sha256": "f05dd16e267bd6411c18ffc7cf8ad474659aea83447b2dce53331cb21dffcff8"
     }
   ],
   "example_kind": "authored_synthetic_specimen_not_execution_receipt",

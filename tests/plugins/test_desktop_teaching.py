@@ -249,7 +249,7 @@ def test_repeated_show_library_fresh_session_and_profile_identity(store):
 
 def test_repeated_cannot_bypass_first_interview(store):
     session = teaching.TeachingStore(store.root, plugin_root=store.plugin_root)
-    with pytest.raises(onboarding.OnboardingError, match="mandatory"):
+    with pytest.raises(onboarding.OnboardingError, match="Repeated tutorial sessions"):
         session.begin(
             {"workflow_id": WORKFLOWS[store.product][0], "title": "Try", "goal": "Try"}
         )

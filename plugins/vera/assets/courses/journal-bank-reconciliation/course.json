@@ -78,7 +78,7 @@
     {
       "path": "skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "e96ecf0a00bedd2fc8350dc217ffeae8f0f27fdaebf7ab19a9e894a35fe5d942"
+      "sha256": "b471d0d6351cdc97fa0a980a0fd7ce1ec938067ec2ba8be9128b23f5ef418c47"
     }
   ],
   "example_kind": "authored_synthetic_specimen_not_execution_receipt",

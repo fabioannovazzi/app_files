@@ -11,7 +11,7 @@ JSON with a file-writing tool; do not interpolate it into shell commands.
 root. Normal users omit it. `status` is read-only and returns the current profile,
 chat pair and example summaries. Add `--session <id>` for one full checkpoint.
 
-`begin --input <json>` starts one session after mandatory onboarding. Reuse or
+`begin --input <json>` starts one session after the optional introduction is complete. Reuse or
 pause the current active session before starting another. Paused sessions remain
 in the library. Its input is:
 

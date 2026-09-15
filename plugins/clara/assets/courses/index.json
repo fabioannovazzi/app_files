@@ -4,7 +4,7 @@
   "courses": {
     "attribute-reporting": {
       "path": "attribute-reporting/course.json",
-      "sha256": "20cf94533ba12397f6c01528c49109de04fbe67b2ba7ad2b0262656acc632767",
+      "sha256": "f9b789c9607a886ad7588d41c79331a694a8c6bba592e2eef63f0a2fe27cb8d8",
       "languages": [
         "it",
         "en",
@@ -23,7 +23,7 @@
     },
     "brand-fit": {
       "path": "brand-fit/course.json",
-      "sha256": "7911691fe458a3df835f20051d8a7f4df72b1951849e63232a2e2d49e23f64cf",
+      "sha256": "57ca324725a2a9e5bd07d2b97cba7433499a99c0f62a726e217240f195aeb0ac",
       "languages": [
         "it",
         "en",
@@ -42,7 +42,7 @@
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "81b9712c91432fb0bab7724accd9e4b0d6019ab038f0264bc3a6fa5455ab655a",
+      "sha256": "84cb082c91c6a4a631ff1b78edabe11a733c94956189f3d0a9329e55f5af4385",
       "languages": [
         "it",
         "en"
@@ -55,7 +55,7 @@
     },
     "deck-correction": {
       "path": "deck-correction/course.json",
-      "sha256": "905942aa6add2fd8e19ca12f02955289fd35f43bedbf7955561f560387a6dd71",
+      "sha256": "64639ebc765f8fafab1f53317c18dfa403ef381fd8ca512291a8604994f2f091",
       "languages": [
         "it",
         "en",
@@ -74,7 +74,7 @@
     },
     "hosted-interview": {
       "path": "hosted-interview/course.json",
-      "sha256": "22b4211fa6e3f6e2e5f2306c0aa8a368b370f442d42859943106054acc4dc970",
+      "sha256": "d7b7e22cb69bd95a3442a1c29cd86bd6b8d9eb25896032e5274a4dfb3d4abeab",
       "languages": [
         "it",
         "en",
@@ -93,7 +93,7 @@
     },
     "html-deck": {
       "path": "html-deck/course.json",
-      "sha256": "66375dfa0cdcddc0401790bbfa76f1c7497184511894418c52800a071ad0a203",
+      "sha256": "f4ab4353354122aff060a5222a81a70273a531312b965663955dca758980d9d9",
       "languages": [
         "it",
         "en",
@@ -112,7 +112,7 @@
     },
     "reporting-engine": {
       "path": "reporting-engine/course.json",
-      "sha256": "caaa36b3557126c6d5358d17658ff3611e654eb575bc3d82a6ca6d198d5077bb",
+      "sha256": "068f6ea2af8844b06489013a525e51a8a20c74c6ed548cb2e6ffe4c52681dff6",
       "languages": [
         "it",
         "en",
@@ -131,7 +131,7 @@
     },
     "research-video": {
       "path": "research-video/course.json",
-      "sha256": "6fa78d1acc7642627ce6280a0dc5da36cf3df75c9c5348e17f0196b08fe497f7",
+      "sha256": "50694bec9cc22334d7d02470ceafd864a732db5be6911e952c7584240d85e787",
       "languages": [
         "it",
         "en",
@@ -150,7 +150,7 @@
     },
     "transcribe": {
       "path": "transcribe/course.json",
-      "sha256": "81775e85761b155445ae92146378a8abedf2e1389b1480351c73c596277dad5d",
+      "sha256": "19658cbb3576ba4c58f86bb3bbd2edeff44a4eb72060373e28eb33811a264dc3",
       "languages": [
         "it",
         "en",

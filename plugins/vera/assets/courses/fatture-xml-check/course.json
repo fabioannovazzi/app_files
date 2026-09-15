@@ -93,7 +93,7 @@
     {
       "path": "skills/fatture-xml-check/SKILL.md",
       "repository_path": "plugins/vera/skills/fatture-xml-check/SKILL.md",
-      "sha256": "3cdf84642d701fb68cf39218ec13abf89dddfd099ac16219d9abd1e0137306d0"
+      "sha256": "09259e844b55b8cf287cb0553c8199432c28e6b511a6c05a67aabd10219c4351"
     }
   ],
   "example_kind": "authored_synthetic_specimen_not_execution_receipt",

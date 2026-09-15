@@ -23,7 +23,7 @@
     {
       "path": "skills/research-video/SKILL.md",
       "repository_path": "plugins/clara/skills/research-video/SKILL.md",
-      "sha256": "8cba891baa046a13ae47cf60f4e9dba06bb91128349260cceb6cbde39f69cc88"
+      "sha256": "fbad6f92b350e0874b4de77aaf96434257c5f09bf4bb56e7eabc2af23f775118"
     },
     {
       "path": "skills/research-video/scripts/research_video.py",
