@@ -68,7 +68,7 @@
     {
       "path": "modules/reporting-engine/scripts/render_capability.py",
       "repository_path": "plugins/clara/modules/reporting-engine/scripts/render_capability.py",
-      "sha256": "586ffabc91368e448cad4753cfaaf2ea2616918d64db9813563961e2a3418cb5"
+      "sha256": "51caedd3ab4d86906abb267d94952403def39a4500c83c82b8f7ec67b6970fab"
     },
     {
       "path": "modules/reporting-engine/scripts/render_contract_registry.py",

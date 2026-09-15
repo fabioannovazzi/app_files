@@ -112,7 +112,7 @@
     },
     "reporting-engine": {
       "path": "reporting-engine/course.json",
-      "sha256": "75379789b9b0286b75d3f75c41ded65ebd0b30b4026305372513d505e0f24b5d",
+      "sha256": "e2232b30ed48dd9b0f8ed7dca1c3b48ddae3434deeff61b88754c658193aa922",
       "languages": [
         "it",
         "en",

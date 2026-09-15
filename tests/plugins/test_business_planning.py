@@ -44,6 +44,18 @@ STRATEGIC = _load_module(
 )
 
 
+def _runner_contract_command(module: str) -> list[str]:
+    """Run public CLI validation using the test environment's dependencies."""
+    return [
+        sys.executable,
+        "-c",
+        "import importlib,sys; sys.path.insert(0,sys.argv[1]); "
+        "raise SystemExit(importlib.import_module(sys.argv[2]).main(sys.argv[3:]))",
+        str(SCRIPT_ROOT),
+        module,
+    ]
+
+
 def _case(*, evidence_status: str = "confirmed") -> dict[str, Any]:
     periods = ["2027-Q1", "2027-Q2"]
     schedule = [
@@ -470,8 +482,7 @@ def test_vera_runner_rejects_legacy_case_without_provenance(tmp_path: Path) -> N
 
     completed = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPT_ROOT / "run_business_plan.py"),
+            *_runner_contract_command("run_business_plan"),
             "--case",
             str(case_path),
             "--client-engagement",
@@ -697,8 +708,7 @@ def test_clara_runner_rejects_legacy_case_without_provenance(tmp_path: Path) -> 
 
     completed = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPT_ROOT / "run_strategic_plan.py"),
+            *_runner_contract_command("run_strategic_plan"),
             "--case",
             str(case_path),
             "--output-dir",
@@ -721,8 +731,7 @@ def test_clara_runner_rejects_output_outside_case_workspace(tmp_path: Path) -> N
 
     completed = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPT_ROOT / "run_strategic_plan.py"),
+            *_runner_contract_command("run_strategic_plan"),
             "--case",
             str(case_path),
             "--output-dir",
@@ -752,8 +761,7 @@ def test_clara_runner_rejects_legacy_summary_contribution(tmp_path: Path) -> Non
 
     completed = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPT_ROOT / "run_strategic_plan.py"),
+            *_runner_contract_command("run_strategic_plan"),
             "--case",
             str(case_path),
             "--output-dir",
@@ -787,8 +795,7 @@ def test_clara_runner_requires_migration_of_legacy_conflicting_contribution(
 
     completed = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPT_ROOT / "run_strategic_plan.py"),
+            *_runner_contract_command("run_strategic_plan"),
             "--case",
             str(case_path),
             "--output-dir",

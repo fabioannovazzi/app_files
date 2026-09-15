@@ -29,6 +29,7 @@ from tests.plugins.test_business_planning import (
     SCRIPT_ROOT,
     _clara_workspace,
     _load_customer_ledger,
+    _runner_contract_command,
 )
 
 FIXTURE = Path(__file__).resolve().parents[1] / "fixtures" / "business_planning"
@@ -344,8 +345,7 @@ def test_clara_registered_entrypoint_compiles_shared_case(tmp_path: Path) -> Non
     shutil.copytree(FIXTURE / "sources", workspace / "sources")
     completed = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPT_ROOT / "run_strategic_plan.py"),
+            *_runner_contract_command("run_strategic_plan"),
             "--case",
             str(case_path),
             "--output-dir",
@@ -410,8 +410,7 @@ def test_vera_registered_entrypoint_binds_every_source_receipt(tmp_path: Path) -
     output = Path(running["output_dir"]) / "plan"
     completed = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPT_ROOT / "run_business_plan.py"),
+            *_runner_contract_command("run_business_plan"),
             "--case",
             str(case_path),
             "--source-root",

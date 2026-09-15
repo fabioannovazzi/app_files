@@ -18,6 +18,8 @@ from zipfile import ZIP_DEFLATED, ZipFile
 
 import pytest
 
+from tests._plugin_cli import workflow_cli
+
 ROOT = Path(__file__).resolve().parents[2]
 PLUGIN_ROOT = ROOT / "plugins" / "clara"
 SCRIPTS_DIR = PLUGIN_ROOT / "scripts"
@@ -211,7 +213,10 @@ process.stdout.write(JSON.stringify(window.MPARANZA_FUNCTION_PAGES));
         function_page = (page_root / relative_path).read_text(encoding="utf-8")
         key = re.search(r'data-function-page="([^"]+)"', function_page)
         assert key is not None, relative_path
-        assert 'src="../product-function-page.js"' in function_page
+        assert any(
+            urlsplit(src).path == "../product-function-page.js"
+            for src in re.findall(r'<script[^>]*src="([^"]+)"', function_page)
+        )
         translations = catalog[key.group(1)]["copy"]
         assert {"it", "en", "fr", "de", "es"} <= set(translations)
         for language in ("it", "en", "fr", "de", "es"):
@@ -1258,8 +1263,7 @@ def test_validate_workspace_cli_accepts_clean_case(tmp_path: Path) -> None:
 
     result = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPTS_DIR / "validate_workspace.py"),
+            *workflow_cli(SCRIPTS_DIR / "validate_workspace.py"),
             str(case_dir),
         ],
         check=True,
@@ -1279,8 +1283,7 @@ def test_validate_workspace_cli_reports_errors(tmp_path: Path) -> None:
 
     result = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPTS_DIR / "validate_workspace.py"),
+            *workflow_cli(SCRIPTS_DIR / "validate_workspace.py"),
             str(case_dir),
         ],
         check=False,
@@ -1347,8 +1350,7 @@ def test_validate_workspace_cli_reports_stale_linked_audio_pointer(
 
     result = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPTS_DIR / "validate_workspace.py"),
+            *workflow_cli(SCRIPTS_DIR / "validate_workspace.py"),
             str(case_dir),
         ],
         check=False,
@@ -1466,8 +1468,7 @@ def test_delete_material_cli_reports_summary_and_refreshes_brief(
 
     result = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPTS_DIR / "delete_material.py"),
+            *workflow_cli(SCRIPTS_DIR / "delete_material.py"),
             str(case_dir),
             wrong_material["id"],
         ],
@@ -1522,8 +1523,7 @@ def test_add_open_questions_cli_imports_questions_json(tmp_path: Path) -> None:
 
     result = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPTS_DIR / "add_open_questions.py"),
+            *workflow_cli(SCRIPTS_DIR / "add_open_questions.py"),
             str(case_dir),
             "--questions-json",
             str(questions_json),
@@ -1589,8 +1589,7 @@ def test_upsert_case_issues_cli_tracks_cross_interview_issue(
 
     result = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPTS_DIR / "upsert_case_issues.py"),
+            *workflow_cli(SCRIPTS_DIR / "upsert_case_issues.py"),
             str(case_dir),
             "--issues-json",
             str(issues_json),
@@ -1750,8 +1749,7 @@ def test_integrate_transcript_review_cli_applies_evidence_chain(
 
     result = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPTS_DIR / "integrate_transcript_review.py"),
+            *workflow_cli(SCRIPTS_DIR / "integrate_transcript_review.py"),
             str(case_dir),
             "--plan-json",
             str(plan_json),
@@ -1851,8 +1849,7 @@ def test_index_materials_cli_accepts_provenance_and_source_metadata(
 
     result = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPTS_DIR / "index_materials.py"),
+            *workflow_cli(SCRIPTS_DIR / "index_materials.py"),
             str(case_dir),
             str(source),
             "--source-metadata",
@@ -2866,8 +2863,7 @@ def test_bulk_approval_script_lists_summary_and_approves_all_pending(
 
     list_result = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPTS_DIR / "approve_judgements.py"),
+            *workflow_cli(SCRIPTS_DIR / "approve_judgements.py"),
             str(case_dir),
         ],
         cwd=ROOT,
@@ -2888,8 +2884,7 @@ def test_bulk_approval_script_lists_summary_and_approves_all_pending(
 
     approve_result = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPTS_DIR / "approve_judgements.py"),
+            *workflow_cli(SCRIPTS_DIR / "approve_judgements.py"),
             str(case_dir),
             "--all-pending",
             "--recorded-by",
@@ -2928,8 +2923,7 @@ def test_bulk_approval_script_updates_one_numbered_summary_item(
 
     result = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPTS_DIR / "approve_judgements.py"),
+            *workflow_cli(SCRIPTS_DIR / "approve_judgements.py"),
             str(case_dir),
             "--item",
             "2",
@@ -3140,8 +3134,7 @@ def test_apply_inclusion_bundles_script_persists_semantic_plan(
 
     result = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPTS_DIR / "apply_inclusion_bundles.py"),
+            *workflow_cli(SCRIPTS_DIR / "apply_inclusion_bundles.py"),
             str(case_dir),
             "--bundles-json",
             str(bundles_json),
@@ -3189,8 +3182,7 @@ def test_bulk_approval_script_updates_numbered_bundle(
 
     result = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPTS_DIR / "approve_judgements.py"),
+            *workflow_cli(SCRIPTS_DIR / "approve_judgements.py"),
             str(case_dir),
             "--bundle",
             "1",
@@ -3860,8 +3852,7 @@ def test_support_package_script_writes_default_package_path(
 
     result = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPTS_DIR / "prepare_support_package.py"),
+            *workflow_cli(SCRIPTS_DIR / "prepare_support_package.py"),
             str(case_dir),
             "--request",
             "Clara needs a support reviewer to improve the output deck.",
@@ -7716,8 +7707,7 @@ def test_index_materials_cli_reports_unsupported_csv(tmp_path):
     source.write_text("18500000,8325000")
     result = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPTS_DIR / "index_materials.py"),
+            *workflow_cli(SCRIPTS_DIR / "index_materials.py"),
             str(tmp_path / "case"),
             str(source),
         ],

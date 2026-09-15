@@ -167,7 +167,7 @@ def write_json_receipt(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
     try:
-        with temporary.open("x", encoding="utf-8") as handle:
+        with temporary.open("x", encoding="utf-8", newline="\n") as handle:
             handle.write(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
             handle.flush()
             os.fsync(handle.fileno())

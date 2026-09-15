@@ -386,9 +386,11 @@ def test_reviewed_idea_cli_writes_expected_readiness(
     import json
     import shutil
     import subprocess
-    import sys
 
-    from tests.plugins.test_business_planning import SCRIPT_ROOT, _clara_workspace
+    from tests.plugins.test_business_planning import (
+        _clara_workspace,
+        _runner_contract_command,
+    )
 
     case = json.loads((FIXTURE / "idea-case.json").read_text())
     review = {
@@ -411,8 +413,7 @@ def test_reviewed_idea_cli_writes_expected_readiness(
 
     completed = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPT_ROOT / "run_strategic_plan.py"),
+            *_runner_contract_command("run_strategic_plan"),
             "--case",
             str(case_path),
             "--output-dir",

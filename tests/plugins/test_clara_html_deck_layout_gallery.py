@@ -8,6 +8,8 @@ from typing import Any
 
 import pytest
 
+from tests._plugin_cli import workflow_cli
+
 ROOT = Path(__file__).resolve().parents[2]
 SKILL_ROOT = ROOT / "plugins" / "clara" / "skills" / "html-deck"
 GALLERY_SCRIPT = SKILL_ROOT / "scripts" / "build_layout_gallery.py"
@@ -104,8 +106,17 @@ def test_gallery_composes_and_builds_every_layout_to_standalone_html(
 
 def test_gallery_browser_qa_maps_all_three_previews_when_chromium_is_available(
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     output_dir = tmp_path / "browser-layout-gallery"
+    run_json = gallery._run_json_command
+
+    def run_with_test_dependencies(command, **kwargs):
+        if Path(command[1]).name == "browser_qa_html_deck.py":
+            command = [*workflow_cli(Path(command[1])), *command[2:]]
+        return run_json(command, **kwargs)
+
+    monkeypatch.setattr(gallery, "_run_json_command", run_with_test_dependencies)
 
     manifest = gallery.build_layout_gallery(output_dir, run_browser=True)
 
