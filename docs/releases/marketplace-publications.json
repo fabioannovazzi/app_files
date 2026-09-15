@@ -3,27 +3,28 @@
   "basis": "Version directly confirmed as Published in OpenAI Platform; not inferred from a local candidate or installed cache.",
   "plugins": {
     "clara": {
-      "version": "0.1.197",
+      "version": "0.1.207",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a?q=clara",
-      "observed_at": "2026-09-14",
-      "verification_record": "https://platform.openai.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a/submissions/appsub_6aa7142447748191b61fc0de9b3c922d",
-      "basis": "OpenAI Platform directly showed Clara 0.1.197 Published after all 16 skill checks passed, the user confirmed the four terms and publisher declarations, and Publish Version completed on 2026-09-14. The public directory independently displayed Version 0.1.197.",
-      "package_sha256": "201c69c6aba00f308360bd0b49d9cb145ff9a922d8aff2d30715ef7a8c939678"
+      "observed_at": "2026-09-15",
+      "verification_record": "https://platform.openai.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a/submissions/appsub_6aa8e015579881919febea45db4068a5",
+      "basis": "OpenAI Platform authoritative version list directly showed 0.1.207 Published on 2026-09-15. All 16 skill scans passed. The publisher declarations were explicitly confirmed by Fabio. This hash identifies the uploaded archive before the post-publication registry privacy-fingerprint refresh.",
+      "package_sha256": "7f43515dce735a3ca631d960360f672f19203d331941cf5aecf38bd3ca5f8750"
     },
     "vera": {
-      "version": "0.1.253",
+      "version": "0.1.255",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d",
-      "observed_at": "2026-09-14",
-      "verification_record": "https://platform.openai.com/plugins",
-      "basis": "OpenAI Platform's authoritative Vera version list directly showed 0.1.253 Published on 2026-09-14. Publication was verified separately from the repository package version and the public update registry. The previous version's submission URL and uploaded-archive hash are not reused as evidence for this release."
+      "observed_at": "2026-09-15",
+      "verification_record": "https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6aa8f12c08dc8191b781144c1cc4c48c",
+      "basis": "OpenAI Platform authoritative version list directly showed 0.1.255 Published on 2026-09-15. All 38 skill scans passed. The publisher declarations were explicitly confirmed by Fabio. This hash identifies the uploaded archive before the post-publication registry privacy-fingerprint refresh.",
+      "package_sha256": "0397a937b8efb5183b06415af125d0f81a6f93775a4d001575d63b5422741191"
     },
     "lucia": {
-      "version": "0.1.45",
+      "version": "0.1.49",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a7aeb8b27dc8191aaef8e64146296ae",
-      "observed_at": "2026-09-14",
-      "verification_record": "https://platform.openai.com/plugins/plugins_6a7aeb8b27dc8191aaef8e64146296ae/submissions/appsub_6aa7149b0a6c81918c601025b4ddc03b",
-      "basis": "OpenAI Platform directly showed Lucia 0.1.45 Published after all 10 skill checks passed, the user confirmed the four terms and publisher declarations, and Publish Version completed on 2026-09-14. The public directory independently displayed Version 0.1.45.",
-      "package_sha256": "3b8345de5e1c2680648136096e026a3b20d6db505647b061695dd3c54b6c6b95"
+      "observed_at": "2026-09-15",
+      "verification_record": "https://platform.openai.com/plugins/plugins_6a7aeb8b27dc8191aaef8e64146296ae/submissions/appsub_6aa8f2f98e0c8191b1facef39ade437e",
+      "basis": "OpenAI Platform authoritative version list directly showed 0.1.49 Published on 2026-09-15. All 10 skill scans passed. The publisher declarations were explicitly confirmed by Fabio. This hash identifies the uploaded archive before the post-publication registry privacy-fingerprint refresh.",
+      "package_sha256": "1a657e85a85eb99ebbd6f742a6be91872186a3bcae6e47d393d361a631f9f301"
     }
   }
 }
