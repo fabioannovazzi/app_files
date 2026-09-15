@@ -11,12 +11,12 @@
       "package_sha256": "1ab78718d84f483c44fe5227156ab941766744a461e14ca9908d971a2860af5b"
     },
     "vera": {
-      "version": "0.1.257",
+      "version": "0.1.258",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d",
       "observed_at": "2026-09-15",
-      "verification_record": "https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6aa8fa8a2334819193579dc0aabb76c0",
-      "basis": "OpenAI Platform authoritative version list directly showed 0.1.257 Published on 2026-09-15. All 39 skill scans passed. Fabio approved deployment, publication and the presented publisher declarations. This hash identifies the uploaded archive containing fresh-conversation ECONS startup and per-invoice procedure checks. Synthetic tests do not establish live ECONS acceptance or observed usage savings.",
-      "package_sha256": "290ce0c267d1d2b930ae2c1faed65cfdb7605b29f656adb6d57f8cd0e381a9e0"
+      "verification_record": "https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6aa93d9a0bc48191966c4982ce716772",
+      "basis": "OpenAI Platform authoritative version list directly showed 0.1.258 Published on 2026-09-15. All 39 skill scans passed. Fabio explicitly approved the four publisher declarations. This is the exact tested teaching-release archive; PR #640 passed all 29 required release checks.",
+      "package_sha256": "79eb655c7b9ef7e3ccc4b4ee74cf826d76ef209eb2c13ebe190e54b1f239b36f"
     },
     "lucia": {
       "version": "0.1.50",
