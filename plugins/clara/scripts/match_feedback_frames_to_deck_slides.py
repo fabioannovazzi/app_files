@@ -13,10 +13,10 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping, Sequence
-from xml.etree import ElementTree
 from zipfile import BadZipFile, ZipFile
 
 from bounded_process import run_process
+from defusedxml import ElementTree
 
 __all__ = [
     "SlideFrameMatchError",

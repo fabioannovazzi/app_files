@@ -96,12 +96,16 @@
     {
       "id": "private-local-files",
       "control": "The helper sets local brief and receipt file permissions to mode 0600; the effect depends on host filesystem permission support."
+    },
+    {
+      "id": "https-provider-transport",
+      "control": "The shared quality-review and silent-partner transport rejects non-HTTPS endpoints before opening a URL. Classified transport errors omit the raw provider response body."
     }
   ],
   "review": {
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "e925b4fd244984b4676d6dc066d7335fa51574c73b660c4430d4eb83d5f0d052"
+    "source_fingerprint": "2fb8613b46cbc21808002d863b96d7a4880605a3979c4a4c3d9961be08ca690e"
   }
 }

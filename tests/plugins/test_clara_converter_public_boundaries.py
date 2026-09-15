@@ -76,6 +76,45 @@ def make_deck(tmp_path):
     return tmp_path
 
 
+def test_slide_matcher_rejects_xml_entities_before_conversion(tmp_path, monkeypatch):
+    from zipfile import ZipFile
+
+    from defusedxml.common import EntitiesForbidden
+
+    module = load_script(
+        "matcher_xml_entity_regression",
+        SCRIPTS / "match_feedback_frames_to_deck_slides.py",
+    )
+    source = make_deck(tmp_path)
+    deck = source / "current.pptx"
+    with ZipFile(deck) as archive:
+        entries = {name: archive.read(name) for name in archive.namelist()}
+    original = entries["ppt/presentation.xml"]
+    declaration, body = original.split(b"?>", 1)
+    entries["ppt/presentation.xml"] = (
+        declaration
+        + b'?>\n<!DOCTYPE p:presentation [<!ENTITY payload "untrusted">]>'
+        + body
+    )
+    with ZipFile(deck, "w") as archive:
+        for name, data in entries.items():
+            archive.writestr(name, data)
+
+    def unexpected_conversion(*args, **kwargs):
+        pytest.fail("Unsafe XML reached the converter")
+
+    monkeypatch.setattr(module, "run_process", unexpected_conversion)
+
+    with pytest.raises(EntitiesForbidden):
+        module.match_feedback_timeline_to_deck_payload(
+            feedback_timeline={"entries": []},
+            deck_path=deck,
+            deck_snapshot_path=source / "snapshot.json",
+            slide_render_dir=tmp_path / "renders",
+            soffice_path="/usr/bin/true",
+        )
+
+
 def test_noop_slide_converter_does_not_reuse_old_pdf(tmp_path, monkeypatch):
     import fitz
 

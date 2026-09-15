@@ -3595,7 +3595,7 @@ def test_dependency_checker_selects_optional_ocr_requirements() -> None:
     assert "requirements-ocr.txt" in selected_names
     assert "paddleocr" in ocr_requirements
     assert "paddlepaddle" in ocr_requirements
-    assert "opencv-python" in ocr_requirements
+    assert "opencv-contrib-python" in ocr_requirements
 
 
 def test_dependency_checker_checks_multiple_requirement_files(

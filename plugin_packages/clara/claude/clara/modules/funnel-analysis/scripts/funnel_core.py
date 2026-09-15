@@ -102,7 +102,7 @@ def default_recipe() -> dict[str, Any]:
 
     return {
         "schema_version": "1.0",
-        "title": "Baby CRM extract",
+        "title": "",
         "metric_label": "Lead readiness funnel",
         "unit": "records",
         "scope_label": "Sequential gates",
@@ -166,7 +166,7 @@ def _required_columns(stage_definitions: list[dict[str, Any]]) -> set[str]:
 def _predicate_note(predicate: dict[str, Any]) -> str:
     predicate_type = str(predicate.get("type") or "")
     if predicate_type == "all":
-        return "All source records."
+        return "All records entering this stage."
     if predicate_type == "nonblank":
         return f"Nonblank {predicate['column']}."
     if predicate_type == "any_nonblank":
@@ -184,7 +184,7 @@ def _predicate_note(predicate: dict[str, Any]) -> str:
 def _spanish_predicate_note(predicate: dict[str, Any]) -> str:
     predicate_type = str(predicate.get("type") or "")
     if predicate_type == "all":
-        return "Todos los registros de origen."
+        return "Todos los registros que llegan a esta etapa."
     if predicate_type == "nonblank":
         return f"Valor presente en {predicate['column']}."
     if predicate_type == "any_nonblank":
@@ -820,6 +820,8 @@ def run_funnel_analysis(
     """Run a deterministic funnel-stage table and write artifacts."""
 
     recipe = load_recipe(recipe_path)
+    if not str(recipe.get("title") or "").strip():
+        recipe["title"] = source_file.name
     recipe["language"] = language
     rows = _read_rows(source_file)
     stage_table_mappings = recipe.get("stage_table_mappings")

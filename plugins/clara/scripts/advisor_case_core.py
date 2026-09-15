@@ -41,6 +41,7 @@ from case_store import (
     track_write,
 )
 from decision_narrative import NARRATIVE_FILENAME, commit_narrative, load_narrative
+from defusedxml.ElementTree import fromstring as parse_xml
 from html_deck_runtime import (
     apply_fixed_16_9_deck_runtime,
     assert_fixed_16_9_deck_runtime,
@@ -1847,7 +1848,7 @@ def _run_soffice_pptx_roundtrip(
 
 def _ensure_custom_props_content_type(content_types_xml: bytes) -> bytes:
     ET.register_namespace("", CONTENT_TYPES_NS)
-    root = ET.fromstring(content_types_xml)
+    root = parse_xml(content_types_xml)
     override_tag = f"{{{CONTENT_TYPES_NS}}}Override"
     has_override = any(
         child.tag == override_tag

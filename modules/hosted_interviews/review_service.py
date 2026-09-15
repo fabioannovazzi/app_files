@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import urllib.error
+import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 from typing import Any, Callable, Mapping
@@ -340,8 +341,13 @@ class ReviewProviderError(VoiceSessionError):
 def _request_review_payload(
     request: urllib.request.Request, timeout_seconds: float
 ) -> dict[str, Any]:
+    if urllib.parse.urlsplit(request.full_url).scheme != "https":
+        raise ReviewProviderError("unsupported_endpoint", retryable=False)
     try:
-        with urllib.request.urlopen(request, timeout=timeout_seconds) as response:
+        # The scheme check excludes file and custom URL handlers.
+        with urllib.request.urlopen(  # nosec B310
+            request, timeout=timeout_seconds
+        ) as response:
             payload = json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
         code = exc.code

@@ -844,9 +844,9 @@ def prepare_canonical_frame(
         previous_start = date(previous_year, 1, 1)
         previous_end = _add_months(max_date, -12)
         period_label_expr = (
-            pl.when(_period_filter_expr(CANONICAL_DATE, current_year, cutoff_month))
+            pl.when((parsed_date >= current_start) & (parsed_date <= current_end))
             .then(pl.lit(CURRENT_PERIOD))
-            .when(_period_filter_expr(CANONICAL_DATE, previous_year, cutoff_month))
+            .when((parsed_date >= previous_start) & (parsed_date <= previous_end))
             .then(pl.lit(PREVIOUS_PERIOD))
             .otherwise(pl.lit(None))
         )
@@ -981,6 +981,21 @@ def legacy_period_monthly_table(
     ]
     monthly = monthly.select(keep_columns).filter(pl.col(CANONICAL_DATE).is_not_null())
     monthly = monthly.filter(pl.col(CANONICAL_DATE).is_in(MONTH_ORDER))
+    # The legacy chart table rounds percentages for display. Export analytical
+    # values without that rounding, retaining its signed-comparison convention.
+    current_value = pl.col(CURRENT_PERIOD)
+    previous_value = pl.col(PREVIOUS_PERIOD)
+    monthly = monthly.with_columns(
+        pl.when(previous_value != 0)
+        .then(
+            (current_value - previous_value)
+            / previous_value
+            * 100
+            * pl.when((current_value < 0) & (previous_value < 0)).then(-1).otherwise(1)
+        )
+        .otherwise(None)
+        .alias("difference in %")
+    )
     monthly = monthly.with_columns(
         pl.col(CANONICAL_DATE)
         .replace({label: index + 1 for index, label in enumerate(MONTH_ORDER)})
@@ -991,6 +1006,9 @@ def legacy_period_monthly_table(
         "status": "written",
         "source_function": "modules.data.misc_charts_data_prep.prepare_data_for_multitier_column_plot",
         "row_count": monthly.height,
+        "percentage_precision": "unrounded; display labels may round separately",
+        "percentage_zero_baseline": "null",
+        "percentage_negative_pair": "legacy sign reversal when both values are negative",
     }
     return monthly, audit
 

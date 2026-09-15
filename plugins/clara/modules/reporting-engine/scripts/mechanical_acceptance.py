@@ -1039,7 +1039,6 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("dataset", type=Path, nargs="*")
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--execute", action="store_true")
-    parser.add_argument("--currency", help="Stated currency; omit for no currency.")
     parser.add_argument(
         "--currency",
         help="Explicit currency for rendered metrics; omitted means unspecified.",

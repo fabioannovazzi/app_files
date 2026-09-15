@@ -82,6 +82,22 @@ def test_review_service_provider_error_does_not_echo_client_body(monkeypatch) ->
     assert "client-name" not in str(caught.value)
 
 
+@pytest.mark.parametrize("endpoint", ["file:///private/example", "http://example.test"])
+def test_review_service_rejects_non_https_endpoint_before_transport(
+    monkeypatch, endpoint
+) -> None:
+    def unexpected_transport(*args, **kwargs):
+        pytest.fail("Unapproved URL scheme reached the transport")
+
+    monkeypatch.setattr(review_service.urllib.request, "urlopen", unexpected_transport)
+
+    with pytest.raises(review_service.ReviewProviderError) as caught:
+        _review(endpoint=endpoint)
+
+    assert caught.value.category == "unsupported_endpoint"
+    assert caught.value.retryable is False
+
+
 def test_review_service_import_does_not_initialize_http_adapter() -> None:
     repository = Path(__file__).resolve().parents[3]
 

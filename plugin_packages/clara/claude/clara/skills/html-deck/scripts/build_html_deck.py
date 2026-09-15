@@ -91,6 +91,7 @@ def load_runtime(path: Path) -> Any:
 
 
 def load_lineage_runtime() -> Any:
+    """Load shared lineage and its sibling imports for direct skill CLI runs."""
     spec = importlib.util.spec_from_file_location(
         "clara_html_deck_lineage", LINEAGE_SCRIPT
     )
@@ -98,7 +99,12 @@ def load_lineage_runtime() -> Any:
         raise RuntimeError(f"Unable to load Clara lineage runtime: {LINEAGE_SCRIPT}")
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
+    scripts_dir = str(LINEAGE_SCRIPT.parent)
+    sys.path.insert(0, scripts_dir)
+    try:
+        spec.loader.exec_module(module)
+    finally:
+        sys.path.remove(scripts_dir)
     return module
 
 

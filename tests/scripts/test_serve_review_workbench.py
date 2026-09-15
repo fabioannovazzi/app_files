@@ -730,9 +730,7 @@ def test_private_review_metadata_is_returned_only_to_browser_render(
         module._mcp_tool_result(workbench, render_name, {}, browser_payload=True)
         == private
     )
-    assert (
+    with pytest.raises(ValueError, match="only available to browser rendering"):
         module._mcp_tool_result(
             workbench, "save_check_entries_decisions", {}, browser_payload=True
         )
-        == public
-    )

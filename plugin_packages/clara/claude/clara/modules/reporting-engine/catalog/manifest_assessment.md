@@ -68,8 +68,8 @@
   - Best when: The reader needs the trend path of the primary mix metric across ordered periods.
   - Avoid when: Avoid when composition, hierarchy, or AC/PY period comparison is the main message.
 - `period_comparison.by_period`: `period_by_period_gap` (period_gap_comparison)
-  - Best when: The reader needs to compare current and baseline period values across each month or week and see where gaps are largest.
-  - Avoid when: Avoid when the story is only the smooth trajectory shape or a single reconciled total movement.
+  - Best when: The reader needs weekly-average current and baseline values across overlapping 52-, 26-, 13- and 4-week recency windows.
+  - Avoid when: Do not use for individual calendar-month totals or monthly gaps; use multitier_column for side-by-side monthly values or trend for their trajectory. Recency windows overlap and are not additive.
 - `period_comparison.dot`: `gap_between_two_values` (dot_gap)
   - Best when: The reader needs a low-clutter comparison of two values across categories, panels, or periods.
   - Avoid when: Avoid when the month-by-month path or additive reconciliation matters.

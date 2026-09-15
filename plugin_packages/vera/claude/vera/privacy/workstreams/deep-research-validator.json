@@ -104,12 +104,16 @@
     {
       "id": "exact-opinion-pair-binding",
       "control": "The opinion CLI requires the existing deep-research-validator Studio Archive context. Fixed phase directories stay beneath its output root; traversal and symlink artifacts are rejected. Preparation binds every original phase file; delivery binds both packages and the comparison. Verification rejects changed, missing or newly added phase files and recomputes both validation records. Hashes establish local integrity, not provider attestation or legal correctness."
+    },
+    {
+      "id": "local-browser-private-review-payload",
+      "control": "The local review server requests component-only private review metadata only for the registered render tool. The browser receives that payload locally; normal MCP callers continue to receive structuredContent. This is transport separation, not anonymization of data selected for model review."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-12",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ad97f58ee22ed5db78f40f5b1847f27df657c59c8570a83d9beb2132b2e1d874"
+    "source_fingerprint": "732220a6fdc1cac78acfebaa9f933fb2ca9939b9c0ac7f2aaa3fa85e8496dd39"
   }
 }

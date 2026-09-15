@@ -139,11 +139,16 @@
       ]
     }
   ],
-  "security_controls": [],
+  "security_controls": [
+    {
+      "id": "pptx-metadata-entity-rejection",
+      "control": "The content-type and visible-slide metadata parsers reject XML entity declarations before using those metadata. This control is scoped to those local PPTX parsing helpers."
+    }
+  ],
   "review": {
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "750f8b665ee58add27a7c113517108b5c0233fff9bf146e98606308853636fc0"
+    "source_fingerprint": "ce15e4ae631b04fd64d10fd42487fbe5ee80c4161ce90e8f13eab62051c7d0c8"
   }
 }

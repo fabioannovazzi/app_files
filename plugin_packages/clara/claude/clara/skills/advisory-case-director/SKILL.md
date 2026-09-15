@@ -28,6 +28,13 @@ Use host-neutral artifact names such as `clara-review/` and `run_review.md`.
 Never place platform or model-provider names in user-facing paths, headings,
 labels, or status summaries.
 
+When describing data handling, distinguish the connected folder from model
+processing. Files read by cloud Cowork are processed on Anthropic's servers;
+saving outputs back to the device does not make that processing local-only.
+Do not say that nothing left the device. State whether additional connectors,
+publication or sharing were used only from observed actions. Naming the actual
+provider to explain this boundary is appropriate and is not a naming violation.
+
 ## Retain bound build artifacts
 
 Content-addressed build directories under `<output_root>/<sha256>/` must remain
@@ -352,7 +359,13 @@ the position, update the registers and workpaper before rebuilding and
 revalidating the deliverable. For a case-bound HTML deck,
 delivery or publication readiness additionally requires a `ready` receipt from
 `scripts/verify_advisory_html_delivery.py` for the exact final HTML and current
-case state.
+case state. Markdown and Word milestones use
+`scripts/verify_advisory_delivery.py` with the same current case and their own
+final validation audit. Word additionally needs the hash-bound visual review
+described by the deliverable validator. For generated decision packs, verify
+the pack with `scripts/verify_decision_pack.py` before reviewing each format
+against the committed narrative; mechanical verification does not establish
+that the formats communicate the same answer and qualifications.
 
 ## Data boundary
 

@@ -31,6 +31,7 @@ COMPONENTS = (
     "reporting-engine",
     "distribution-analysis",
     "funnel-analysis",
+    "management-control-pack",
     "mix-contribution-analysis",
     "period-comparison",
     "scatter-bubble-analysis",

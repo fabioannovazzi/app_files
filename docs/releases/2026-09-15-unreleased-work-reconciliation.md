@@ -49,5 +49,17 @@ active worktree and is not silently included in this recovery.
 ## Validation
 
 The recovery, exchange, process, public-HTTP, semantic-execution and release-gate
-selection passed 148 tests. Final repository, package and deployment results
-are recorded after the complete release checks finish.
+selection passed 148 tests. A broader recovered-work selection passed 1,909
+tests and exposed six integration/test failures; the repaired cases passed a
+stable seven-test rerun. Thirty-three additional provider, converter and local
+review boundary checks passed. Changed Python source passes Black and Isort;
+Bandit reports no medium/high findings in changed production Python.
+
+Canonical releases are Clara 0.1.207, Vera 0.1.255 and Lucia 0.1.49. Every Codex,
+ChatGPT upload and Cowork package was rebuilt from source; product alignment and
+Codex source-drift checks pass. Repository-wide tests and final CI remain release
+gates. Native Cowork agent acceptance is not claimed.
+
+The repository-wide formatting checks expose legacy formatting/import-order
+debt outside this recovery; the changed source passes both checks. The existing
+configured src mypy check passes, and src Bandit has no medium/high findings.
