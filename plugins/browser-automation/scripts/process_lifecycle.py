@@ -246,18 +246,61 @@ class ProcessStore:
             return current
         return record
 
-    def import_feedback(self, archive: Path) -> dict[str, Any]:
+    def import_feedback(
+        self, archive: Path, *, cr_record: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """Recover a developer's process identity from the existing reviewed handoff."""
         from development_request import verify_archive
 
         verify_archive(archive)
         with ZipFile(archive) as zipped:
             request = json.loads(zipped.read("request.json"))
+            submitted_body = (
+                json.loads(zipped.read("cr-request.json"))
+                if cr_record is not None
+                else None
+            )
         if request["schema_version"] != "browser-development-request/v2":
             raise ValueError(
                 "legacy handoff has no process identity; interpret it before registering"
             )
         lineage = request["browser_lifecycle"]
+        imported_cr = None
+        if cr_record is not None:
+            envelope = cr_record["request"]
+            # Match the CR store's compact JSON hash (the browser artifacts use
+            # a different, pretty-printed canonical representation).
+            server_hash = hashlib.sha256(
+                json.dumps(
+                    envelope,
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                    allow_nan=False,
+                ).encode("utf-8")
+            ).hexdigest()
+            # The existing intake validates but preserves the exact request body.
+            if (
+                cr_record["plugin"] != "vera"
+                or envelope["plugin"] != "vera"
+                or envelope["request"] != submitted_body
+                or cr_record["request_sha256"] != server_hash
+                or cr_record["submission_id"] != envelope["submission_id"]
+                or not re.fullmatch(r"CR-[1-9]\d*", cr_record["change_request_id"])
+                or cr_record["status"] not in {"open", "fixed"}
+            ):
+                raise ValueError(
+                    "administrative CR record does not match reviewed feedback"
+                )
+            imported_cr = {
+                "change_request_id": cr_record["change_request_id"],
+                "attempt_id": lineage["attempt_id"],
+                "submission_id": cr_record["submission_id"],
+                "status": cr_record["status"],
+                "fixed_version": cr_record["fixed_version"],
+                "source_record_sha256": sha256_payload(cr_record),
+                "provenance": "existing_cr_administration_export",
+            }
         process = self.create(
             lineage["process_description"], process_id=lineage["process_id"]
         )
@@ -283,6 +326,16 @@ class ProcessStore:
                 raise ValueError(
                     "imported attempt already has different reviewed evidence"
                 )
+        if imported_cr is not None:
+            try:
+                self._put(
+                    "developer-cr:" + sha256_payload(imported_cr),
+                    process["process_id"],
+                    "developer_cr",
+                    imported_cr,
+                )
+            except sqlite3.IntegrityError:
+                pass
         return process
 
     def add_version(
@@ -316,6 +369,9 @@ class ProcessStore:
         known_crs = {
             r["change_request_id"] for r in self._rows(process_id, "submission")
         }
+        known_crs.update(
+            r["change_request_id"] for r in self._rows(process_id, "developer_cr")
+        )
         known_crs.update(
             c
             for binding in self._rows(process_id, "installed_binding")
@@ -1015,6 +1071,7 @@ class ProcessStore:
                 }.values()
             ),
             "installed_lineage": self._rows(process_id, "installed_binding"),
+            "developer_cr_lineage": self._rows(process_id, "developer_cr"),
             "imported_development_attempts": [
                 r["attempt_id"] for r in self._rows(process_id, "imported_feedback")
             ],
@@ -1263,6 +1320,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--vera-root", type=Path)
     parser.add_argument("--module-root", type=Path)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--cr-record", type=Path)
     args = parser.parse_args(argv)
     try:
         store = ProcessStore(args.root)
@@ -1276,7 +1334,9 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "create":
             result = store.create(payload)
         elif args.command == "import-feedback":
-            result = store.import_feedback(args.input)
+            result = store.import_feedback(
+                args.input, cr_record=_read(args.cr_record) if args.cr_record else None
+            )
         elif args.command == "sync-installed":
             result = store.sync_installed(
                 args.module_root or Path(__file__).resolve().parents[1]

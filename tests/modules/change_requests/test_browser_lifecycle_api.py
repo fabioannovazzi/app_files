@@ -5,6 +5,8 @@ from __future__ import annotations
 import importlib
 import importlib.util
 import json
+import subprocess
+import sys
 import urllib.error
 import urllib.parse
 from pathlib import Path
@@ -76,6 +78,49 @@ def test_partial_browser_attempt_reaches_cr_store_and_fixed_version_survives_res
     assert process in stored.request["request"]["diagnostics"]["correlation_ids"]
     assert "Browser execution" in json.dumps(stored.request)
     assert "outputs.json" not in json.dumps(stored.request)
+    # A separate developer context consumes the existing administrator command,
+    # then ships a revised binding back to the operator without its private store.
+    exported = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts/manage_change_requests.py"),
+            "--sqlite-path",
+            str(tmp_path / "server.sqlite3"),
+            "show",
+            "CR-1",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    developer = lifecycle.ProcessStore(tmp_path / "developer")
+    administrative_record = json.loads(exported.stdout)
+    developer.import_feedback(
+        Path(receipt["archive_path"]), cr_record=administrative_record
+    )
+    capability_folder = tmp_path / "revised-module/capabilities/synthetic-record-search"
+    capability_folder.mkdir(parents=True)
+    capability = json.loads(support.FIXTURE.read_text())
+    capability["version"] = "0.1.1"
+    capability_path = capability_folder / "capability.json"
+    capability_path.write_text(json.dumps(capability))
+    developer.add_version(process, capability_path, support.release(["CR-1"]))
+    developer.export_binding(process, capability_folder / "process.json")
+
+    restarted.sync_installed(tmp_path / "revised-module")
+
+    assert restarted.resume(process)["versions"][-1]["release"]["cr_ids"] == ["CR-1"]
+    assert developer.resume(process)["cr_ids"] == []
+    assert (
+        developer.resume(process)["developer_cr_lineage"][0]["change_request_id"]
+        == "CR-1"
+    )
+    assert "status_token" not in json.dumps(developer.catalog())
+    administrative_record["request"]["request"]["observed"] = "Different attempted work"
+    with pytest.raises(ValueError, match="does not match reviewed feedback"):
+        developer.import_feedback(
+            Path(receipt["archive_path"]), cr_record=administrative_record
+        )
     publication = tmp_path / "synthetic-published-manifest.json"
     publication.write_text(
         json.dumps(

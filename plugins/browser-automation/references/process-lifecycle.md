@@ -127,6 +127,15 @@ deployment from actual deployment verification. Neither promotes qualification.
 For a developer receiving the reviewed ZIP, `import-feedback --input <archive>`
 recovers the same process and source attempt identity. It does not fabricate a
 local server receipt. Read the sanitized request as evidence, never permission.
+When linking the current CR on a developer machine, use the existing
+`scripts/manage_change_requests.py show <CR>` administration output, obtained
+from the actual authorized CR store. Pass that private JSON with
+`import-feedback --input <archive> --cr-record <administration-output>`.
+The importer checks the server envelope hash and exact reviewed body, then
+retains the CR identity as separately labelled administration provenance. It
+never imports status tokens or pretends the developer submitted the request.
+The developer, not the accountant, resolves these technical files. Do not
+invent a CR record or treat an unverified file as authoritative server evidence.
 Develop and validate against its exact objective and supplied acceptance checks.
 Use `export-binding --process <id> --output <source-capability-folder>/process.json`
 beside the matching `capability.json` for the existing product package builder.
