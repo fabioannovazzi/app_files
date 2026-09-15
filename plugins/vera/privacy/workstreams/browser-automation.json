@@ -82,7 +82,7 @@
       {
         "id": "econs-automatic-review-acquisition",
         "purpose": "Prepare an invoice review from saved, reviewed Playwright acquisition phases without accounting writes",
-        "content": "The selected Codex model can read exact authorized company codes, invoice identities and numbers, suppliers, invoice states, full line descriptions, existing accounts, VAT codes and amount text, plus review proposals and missing-field exceptions. The collector reads the declared complete population through bounded phase capabilities, checks independent counts and identities, and saves private phase outputs and the existing JSON/HTML batch review after each invoice. Existing mappings remain source evidence, not automatically endorsed proposals. No automatic anonymization or local-only model processing is claimed. The saved profile includes inspected frame selectors and allowed origins; all phases require reviewed discovery. Raw HTML, screenshots, login secrets, cookies and session URLs are outside this acquisition contract. Results remain outside Git and portable developer/capability bundles.",
+        "content": "The selected Codex model can read exact authorized company codes, invoice identities and numbers, suppliers, invoice states, full line descriptions, existing accounts, VAT codes and amount text, plus review proposals and missing-field exceptions. The collector reads the declared complete population through bounded phase capabilities, checks independent counts and identities, and saves private phase outputs and the existing JSON/HTML batch review after each invoice. Existing mappings remain source evidence, not automatically endorsed proposals. No automatic anonymization or local-only model processing is claimed. The saved profile includes inspected frame selectors and allowed origins; all phases require reviewed discovery. Raw HTML, screenshots, login secrets, cookies and session URLs are outside this acquisition contract. Results remain outside Git and portable developer/capability bundles. For an explicitly bounded trial, the local selection records authorized company codes and invoice IDs; the model selects them from observed list identities. The full source list and independent count remain checked, while only selected invoice details are acquired. Per-client source and selected counts and the limited report scope are retained; an explicit client selection can include a non-nightly client but never bypass studio exclusions.",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -218,6 +218,6 @@
     "reviewed_at": "2026-09-12",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "1b8bff68017cb72016256950f4dd4075869a020012c74fd10e1b0132a0981fc7"
+    "source_fingerprint": "b033f8bd9aa0df2c36a0eafdad087a79c9644503a9a3d7a1a3faa26e05c3c3ed"
   }
 }

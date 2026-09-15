@@ -131,7 +131,8 @@ function reviewEntry(company, item, id) {
  * pythonExecutable is the explicit managed interpreter, never PATH/default Python.
  */
 export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
-  runDirectory, pythonExecutable, maxCompanies = 50, maxInvoices = 200, environment = {}, processing = null }) {
+  runDirectory, pythonExecutable, maxCompanies = 50, maxInvoices = 200, invoiceSelection = null,
+  environment = {}, processing = null }) {
   profile = structuredClone(profile);
   validateEconsProfile(profile);
   if (processing) {
@@ -146,6 +147,18 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
   requireCondition(isAbsolute(pythonExecutable ?? ""), "managed_python_required");
   requireCondition(Number.isInteger(maxCompanies) && maxCompanies > 0 && maxCompanies <= 500 &&
     Number.isInteger(maxInvoices) && maxInvoices > 0 && maxInvoices <= 1000, "invalid_batch_limits");
+  if (invoiceSelection !== null) {
+    // Explicit identities bound a trial mechanically; the model/operator chooses
+    // its invoices from observed evidence, never a guessed accounting classifier.
+    requireCondition(typeof invoiceSelection === "object" && !Array.isArray(invoiceSelection) &&
+      Object.keys(invoiceSelection).length > 0 && Object.entries(invoiceSelection).every(([company, ids]) =>
+        company.trim() && !excludedCompanyCodes.includes(company) && Array.isArray(ids) && ids.length > 0 &&
+        ids.every((id) => typeof id === "string" && id.trim()) && new Set(ids).size === ids.length), "invalid_invoice_selection");
+    invoiceSelection = structuredClone(invoiceSelection);
+    requireCondition(Object.keys(invoiceSelection).length <= maxCompanies &&
+      Object.values(invoiceSelection).reduce((count, ids) => count + ids.length, 0) <= maxInvoices,
+      "selection_exceeds_batch_limits");
+  }
   requireCondition(typeof runDirectory === "string" && isAbsolute(runDirectory), "absolute_private_directory_required");
   const directory = await privateDirectory(runDirectory);
   let revision = 0;
@@ -162,6 +175,12 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
     scope: (processing ? "Elaborazione con revisione del modello e autorizzazione alla registrazione. " : "") + "Ditte con sincronizzazione notturna, escluse quelle nella lista locale. Acquisizione completa e rapporto persistente per cliente. Il totale resta sconosciuto finché la raccolta non è completa.",
     status: "paused", expected_items: null, entries: [], reviews: [],
   };
+  if (invoiceSelection) {
+    const count = Object.values(invoiceSelection).reduce((total, ids) => total + ids.length, 0);
+    review.scope = `Selezione esplicita di ${count} ${count === 1 ? "fattura" : "fatture"} per la prova richiesta. ` +
+      "Il rapporto riguarda soltanto queste fatture; non attesta la revisione dell'intera popolazione. " +
+      (processing ? "Elaborazione con revisione del modello e autorizzazione alla registrazione." : "Acquisizione senza contabilizzazione.");
+  }
   async function python(script, args) {
     // Fixed local scripts and argv; no shell, package installation or external API.
     await runFile(pythonExecutable, [join(scripts, script), ...args], { maxBuffer: 1024 * 1024 });
@@ -196,7 +215,8 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
     return result.delivered_outputs;
   }
   await writePrivate(join(directory, "profile.json"), profile);
-  await writePrivate(join(directory, "selection.json"), { excluded_company_codes: excludedCompanyCodes, max_companies: maxCompanies, max_invoices: maxInvoices });
+  await writePrivate(join(directory, "selection.json"), { excluded_company_codes: excludedCompanyCodes,
+    max_companies: maxCompanies, max_invoices: maxInvoices, invoice_selection: invoiceSelection });
   // Validate every phase before the first browser operation, not halfway through.
   await python("check_installation.py", []);
   await python("check_dependencies.py", []);
@@ -219,15 +239,20 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
     const companies = records(companyOutput.companies, FIELDS.companies, "company-code");
     exactPopulation(companies, companyOutput["company-count"]);
     const excluded = new Set(excludedCompanyCodes);
-    const selected = companies.filter((company) => company.nightly && !excluded.has(company["company-code"]));
+    const selected = companies.filter((company) => !excluded.has(company["company-code"]) &&
+      (invoiceSelection ? Object.hasOwn(invoiceSelection, company["company-code"]) : company.nightly));
+    if (invoiceSelection) requireCondition(selected.length === Object.keys(invoiceSelection).length, "selected_company_missing");
     requireCondition(selected.length <= maxCompanies, "company_limit_exceeded");
     for (const company of selected) {
       const output = await phase("invoices", { "company-code": company["company-code"] });
       requireCondition(sameKeys(output.company, FIELDS.company) && output.company["company-code"] === company["company-code"], "wrong_company");
-      const invoices = records(output.invoices, FIELDS.invoices, "invoice-id");
-      exactPopulation(invoices, output["invoice-count"]);
+      const population = records(output.invoices, FIELDS.invoices, "invoice-id");
+      exactPopulation(population, output["invoice-count"]);
+      const requested = invoiceSelection ? new Set(invoiceSelection[company["company-code"]]) : null;
+      const invoices = requested ? population.filter((item) => requested.has(item["invoice-id"])) : population;
+      if (requested) requireCondition(invoices.length === requested.size, "selected_invoice_missing");
       requireCondition(review.entries.length + invoices.length <= maxInvoices, "invoice_limit_exceeded");
-      selection.push({ company_code: company["company-code"], invoice_count: invoices.length });
+      selection.push({ company_code: company["company-code"], invoice_count: population.length, selected_invoice_count: invoices.length });
       const pending = invoices.map((invoice) => {
         const id = `invoice-${sha256Text(canonicalJson([company["company-code"], invoice["invoice-id"]])).slice(0, 24)}`;
         const entry = reviewEntry(company["company-code"], invoice, id);
@@ -306,6 +331,7 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
   const summary = {
     schema_version: "econs-review-acquisition/v1", status: failure ? "partial" : processing ? "processed" : "acquired",
     profile_sha256: sha256Text(canonicalJson(profile)), acquired_invoices: acquired,
+    selection_mode: invoiceSelection ? "explicit_invoices" : "eligible_population",
     pending_review: review.entries.filter((entry) => entry.status === "pending").length,
     exceptions: review.entries.filter((entry) => entry.status !== "pending").length,
     expected_items: review.expected_items,
