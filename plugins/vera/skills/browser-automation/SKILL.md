@@ -129,6 +129,21 @@ a connected-Chrome `goto` timeout as a terminal fixture failure.
 Authentication is always performed by the operator; never request, inspect,
 enter, retain, or transfer login secrets or reusable browser state.
 
+When asked to download Agenzia invoices and remember passwords, explain both
+parts of the request and continue the supported post-login work. Reuse a
+confirmed authorized session; request operator login only when it is needed.
+Do not require a special prompt, a separate enterprise RPA system or a
+credential vault for this route. Remembering the procedure does not retain
+authentication or guarantee unattended future access. Name any actual browser
+or process blocker and preserve the prototype/target-validation boundary.
+For example, adapt this explanation to the observed runtime and user request:
+“Per scaricare le fatture posso usare la sessione Chrome collegata dopo che hai
+effettuato l'accesso e selezionato il profilo corretto. Non posso inserire o
+conservare le tue credenziali: se il portale richiede un nuovo accesso, lo
+effettui tu. Posso conservare la procedura senza salvare password o sessioni.
+Verifico il percorso disponibile e i conteggi dei file scaricati; se incontro
+un blocco ti indico il passaggio preciso.”
+
 On a surface without compatible Chrome control, review or edit a supplied
 capability if useful, but state that live discovery and validation require Codex
 Desktop with the connected Chrome extension.

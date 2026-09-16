@@ -173,12 +173,12 @@
     {
       "path": "modules/browser-automation/skills/browser-automation/SKILL.md",
       "repository_path": "plugins/browser-automation/skills/browser-automation/SKILL.md",
-      "sha256": "ccefd9bc242ff8d0923d0f4897d3cec8165c3a89b26e4554e5662dfeb2b50db0"
+      "sha256": "9a8817759ddcdc92a4bfc30f8832319110174ab40b250eb2d938e3afa01560cc"
     },
     {
       "path": "skills/browser-automation/SKILL.md",
       "repository_path": "plugins/vera/skills/browser-automation/SKILL.md",
-      "sha256": "2455d4e28d0d2cc0d836f94131185268ba7034bf17cc27a3f87aa63757a4163f"
+      "sha256": "c5d048da55d7fb7c1e4ebd1d55af5b56631bd36ead20bd3ed5dcff77fdd8d56a"
     },
     {
       "path": "vendor/modules/__init__.py",

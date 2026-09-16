@@ -131,6 +131,34 @@ screen. Resume when the operator says login and account/profile selection are
 complete. Do not ask for additional progress confirmations unless a later
 consequential action or genuine ambiguity requires one.
 
+### Explain login separately from the work after login
+
+A mixed request to download invoices and remember passwords still selects the
+browser workflow for its supported post-login part. Explain that Vera can use
+the operator's authorized connected Chrome session to navigate and download,
+subject to current browser availability and the process's actual validation
+state. Vera does not enter or retain login secrets. If the operator has already
+confirmed authentication and the selected profile, inspect the existing task
+session and continue without requiring another login or a special prompt.
+If the portal requires authentication again, preserve progress and hand only
+that step to the operator before resuming.
+
+Remembering a procedure means retaining its permitted steps and settings; it
+does not save passwords, cookies or reusable login state. Explain this product
+boundary without presenting it as a general legal prohibition. Do not claim
+that the supported download route requires a separate enterprise RPA system or
+credential vault. If the user specifically requires unattended future logins,
+state that this workflow does not provide them; do not promise that an external
+tool would remove the portal's authentication requirements.
+
+For an explanation-only question, describe this boundary without opening the
+portal. For an execution request, proceed with the authorized post-login work
+and ask only for missing scope that changes the run. An unavailable browser,
+expired session, missing process binding and failed download are different
+observations: report the specific evidenced blocker. Retain the Agenzia
+prototype and target-site validation limits; this explanation is not evidence
+that a download has succeeded or that the process is production-ready.
+
 ## Prepare a development request from saved work
 
 For “prepara per Fabio”, “send the developer what we learned”, or an explicit
