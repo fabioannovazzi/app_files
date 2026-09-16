@@ -317,6 +317,19 @@ a {
   color: var(--pf-muted);
 }
 
+.pf-process-item {
+  max-width: 780px;
+  margin: 32px 0 0;
+}
+
+.pf-process-item h3 {
+  color: var(--pf-ink);
+}
+
+.pf-process-item .pf-prompt {
+  display: block;
+}
+
 .pf-prompt {
   display: block;
   margin-top: 28px;
