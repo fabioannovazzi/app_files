@@ -96,6 +96,12 @@ starter with retained partial evidence, not an unattended executor or a tutorial
 
 ## Invocation and scope contract
 
+A request to teach Vera a real browser procedure, develop it, retest a correction,
+or use that procedure for professional work routes to
+`../browser-automation/SKILL.md`. Distinguish this from a tutorial that teaches the
+user how to use Vera. The professional browser lifecycle needs no tutorial,
+onboarding profile, old conversation, or user-supplied technical identifier.
+
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
 Onboarding is optional. Continue ordinary professional work immediately,
 including direct specialist invocation, without checking or completing a local
@@ -365,6 +371,12 @@ them without changing the capability catalog:
   parents, capabilities, and available checksums. It never overwrites or automatically deletes files; exact
   duplicates are quarantine candidates and every applied move has a journal
   and rollback path;
+- Named browser operation skills installed beside this skill own ordinary work.
+  Select their specific descriptions and read the named skill, which binds one
+  exact procedure. Explicit invocation selects that operation; do not reroute to
+  the generic browser skill or look through development records. If the work is
+  ambiguous between installed operations, clarify the intended business outcome.
+  A local tested procedure is not an installed public skill.
 - `browser-automation`: a Codex Desktop capability factory that reuses the
   authorized operator's connected Chrome profile in guided, autonomous, or
   hybrid mode. Requests to learn, remember how a procedure is done, or make
@@ -754,8 +766,8 @@ not attach the run, source documents, client or customer material, credentials,
 secrets, personal data, or identifying details. Replace any necessary example
 with a synthetic equivalent. Show the user the exact sanitized request that
 would be sent, then ask only for consent to transmit that technical problem.
-Do not submit a problem report until inspected run evidence can fill this exact
-schema:
+Use this schema for the available evidence. Preserve attribution when the
+problem is reported by the operator rather than observed in the current host:
 
 ```json
 {
@@ -776,13 +788,19 @@ schema:
 }
 ```
 
-The fixed schema is mechanical because required evidence presence, lengths,
-and timestamps are auditable; it does not decide whether the report is a defect
-or who owns it. If occurred time, runtime, operation, reproduction, or at least
-one exact sanitized evidence item is unavailable, do not transmit the report.
-Reproduce safely or explain that the evidence is currently insufficient. Never
-invent diagnostic evidence or include a bearer token, private URL, local path,
-personal identifier, or source content.
+The fixed schema checks shapes and provenance, not defect ownership. Missing
+`occurred_at`, `runtime` or `operation` uses null and an explicit reason under
+`diagnostics.missing_reasons` with that field name. Missing reproduction uses
+an empty list and a `reproduction` reason in the same object. Retain at least
+one useful sanitized evidence item, including clearly attributed operator
+testimony. Missing measurements or metadata must not prevent reporting a real
+problem. Do not replace them with invented timestamps or a draft containing
+only unexplained "non disponibile" values. Reproduce safely when helpful;
+never claim that this helper ran in an earlier host without actual evidence.
+Keep bearer tokens, private URLs, local paths, personal identifiers and source
+contents out of transmission. For browser attempts use the module's
+`process-lifecycle.md` reviewed submission route so identity and evidence survive
+new conversations. Model/token measurements must come from exposed host data.
 Localize the consent question to the conversation language. In Italian, ask:
 
 > Vuoi che trasmetta questo problema tecnico allo sviluppatore così possiamo risolverlo?
@@ -791,7 +809,9 @@ In English, ask:
 
 > Should I transmit this technical problem to the developer so we can fix it?
 
-Transmit only after the user says yes. Save the approved request as JSON and
+Reuse explicit authorization that already covers the exact reviewed content and
+destination; ask only when it is missing or the scope changes. Preserve actual
+host action-time approvals. Save the approved request as JSON and
 run from the Vera root:
 
 ```bash

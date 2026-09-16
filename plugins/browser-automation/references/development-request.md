@@ -8,8 +8,11 @@ operator to find files, offer an interview or assume the working process failed.
 
 ## Recover the saved work
 
-Use file paths from this conversation, the saved checkpoint/resume instruction
-and the active case/run folder. Read the supplied checkpoint through
+First follow `process-lifecycle.md`: load the scoped persistent process catalog
+and select by the requested professional work. Recover its attempts and saved
+checkpoints without requiring a previous conversation or CR number. For records
+created before the process register, use file paths already supplied in context,
+the saved checkpoint/resume instruction and the active case/run folder. Read the supplied checkpoint through
 `teaching_checkpoint.py resume <directory> --summary`. If a path is missing,
 search only the known case/run folder for `checkpoint-*.json`,
 `discovery-evidence.json`, `browser-discovery.json`, `capability.draft.json`,
@@ -123,6 +126,15 @@ untouched. Export is not execution, capability-authoring approval, development
 completion or a guarantee of portability.
 
 ## Optional CR registration
+
+For registered process attempts, use `process_lifecycle.py prepare-feedback`
+and `submit-feedback` as described in `process-lifecycle.md`. This binds the
+reviewed structured evidence and actual returned CR receipt to the same process,
+including missing-data reasons, retries after a version update and later retests.
+The accountant does not assemble JSON, identify code or transfer receipts.
+
+The following legacy standalone route applies only to an older handoff without
+a persisted process attempt.
 
 If the operator explicitly asks to transmit the prepared sanitized request to
 Mparanza, show the exact `request.json` and identify `https://mparanza.com` as the

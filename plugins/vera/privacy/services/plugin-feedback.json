@@ -11,7 +11,10 @@
   "governed_repository_paths": [
     "modules/change_requests/api.py",
     "modules/change_requests/store.py",
-    "scripts/manage_change_requests.py"
+    "scripts/manage_change_requests.py",
+    "plugins/browser-automation/scripts/process_lifecycle.py",
+    "plugins/browser-automation/scripts/development_request.py",
+    "plugins/browser-automation/references/process-lifecycle.md"
   ],
   "runtime_profiles": [
     "openai-codex"
@@ -40,7 +43,7 @@
       "kind": "send_or_publish",
       "destination": "Mparanza's fixed HTTPS change-request intake",
       "purpose": "Submit a concrete Vera problem report or improvement suggestion to the developer",
-      "content": "The exact JSON request file selected for submission, together with request kind, Vera name and version, an idempotent submission ID, submission timestamp, operating-system family, Python version, and fixed plugin-client identifier. Problem reports must include occurred time, runtime, operation, reproduction, and at least one bounded evidence string. Vera's workflow requires showing and sanitizing the request before consent. The client enforces mechanical shape but does not detect personal data, judge semantic sufficiency, or anonymize the file automatically.",
+      "content": "The exact reviewed JSON request, request kind, Vera name/version, idempotent submission ID and bounded client context. Problem evidence may be partial: unavailable occurrence time, original runtime, operation or reproduction has an explicit missing-data reason; at least one useful attributed evidence string remains required. Browser process feedback includes opaque process/attempt IDs, capability version and execution hash, previous CR IDs, checkpoint fingerprints, counts/hashes, local elapsed time, available host telemetry and explicit missing-measurement reasons. Development requests also carry the sanitized professional process descriptor. It sends structured text, not the exported ZIP or private business outputs. The client validates mechanical shape, not semantic usefulness or automatic anonymization.",
       "retention": "Mparanza stores the submitted change request and status receipt as a service record. The plugin does not promise an automatic deletion period.",
       "activation": "explicit_user_choice",
       "optional": true,
@@ -49,7 +52,7 @@
         "openai-codex"
       ],
       "controls": [
-        "Vera must show the exact proposed request and obtain separate explicit transmission consent before invoking the submission command.",
+        "Vera shows the exact prepared content and uses explicit transmission authorization for that content and Mparanza destination; it reuses existing applicable consent, without bypassing host action-time approval.",
         "Vera's workflow instructs Codex to exclude client or customer material, source documents, run or case details, credentials, secrets, personal data, and identifying details; the client does not verify that semantic condition.",
         "The initial request URL is restricted to Mparanza HTTPS, local request and wire sizes are capped, and the receipt is stored in a mode-0600 local state file."
       ]
@@ -112,18 +115,18 @@
     },
     {
       "id": "actionable-problem-contract",
-      "control": "The plugin client and Mparanza service require a versioned bounded diagnostic shape for problem intake, while semantic defect ownership remains operator judgment.",
+      "control": "The client and service accept bounded partial diagnostics only with explicit reasons for missing values and at least one evidence string; semantic usefulness, attribution and defect ownership remain model/operator judgments.",
       "implemented_by": [
         "scripts/change_requests.py",
         "repository:modules/change_requests/api.py"
       ],
-      "on_violation": "The incomplete or malformed problem report is rejected before it becomes a durable change request."
+      "on_violation": "Malformed or unexplained missing data is rejected; an honestly documented gap does not prevent a useful report from being stored."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-13",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "1327135908c1f63f93e1f0a0658034a200d06d479973ce6dcbc8bbcc8f99eb1e"
+    "source_fingerprint": "cc2d41333710f426daa73db8b0819c8bd62269e382680faabea9397a22c3a1fb"
   }
 }

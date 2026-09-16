@@ -1,6 +1,6 @@
 ---
 name: browser-automation
-description: Use when an authorized operator or developer wants Vera to teach, discover, build, validate, or run a repeatable process on Agenzia delle Entrate, TeamSystem, Gmail, or another website through the operator's existing Chrome session, including when the developer cannot access the target system.
+description: Use when an authorized operator or developer wants Vera to teach, discover, build, validate, or repair a repeatable process on Agenzia delle Entrate, TeamSystem, Gmail, or another website through the operator's existing Chrome session, including when the developer cannot access the target system.
 ---
 
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
@@ -34,6 +34,17 @@ completely and follow it. Treat the resolved module root as the plugin working
 directory for its contracts, example capabilities, references, and validation
 commands.
 
+For development, teaching, testing and repair, read the module's
+`references/process-lifecycle.md`. Recover the development catalog and preserve
+process/attempt identities and actual CR evidence across conversations.
+For routine work, use the installed named operation skill. Do not select an
+ordinary-use procedure from the development catalog. If no released skill covers
+it, explain the missing operation; start development only within the user's scope.
+To turn a developed procedure into a release, follow `references/production-skills.md`.
+The named skill owns its inputs, result checks and exact executable binding;
+the browser module remains the shared runner. The following legacy specialist
+routes retain their existing startup and acceptance boundaries.
+
 For TeamSystem ECONS, start from a new conversation using the module reference's
 `New-conversation startup` section. Read the shipped invoice procedure and call
 `loadEconsSetup` in the existing host Node runtime before Python setup or browser
@@ -46,8 +57,10 @@ Registration requests select the processing route and its model callbacks.
 Read-only review is a separate user intent, not a fallback for missing setup.
 
 When learning is requested, follow the module's start-recording protocol before
-acting: `teaching_checkpoint.py start`, verified resume, incremental saves and a
-linked `report` at completion or interruption. Do not substitute a CR or a chat
+acting: create/recover the persistent process, start a teaching attempt and use
+`process_lifecycle.py teach` for the existing `teaching_checkpoint.py` start/save
+implementation, verified resume and a linked report at completion or interruption.
+Do not substitute a CR or a chat
 recap for recorded teaching. The checkpoint format serves different processes;
 keep the actual process boundary and provenance explicit. For an older unrecorded
 conversation, prepare the partial development request from available attributed
@@ -64,7 +77,7 @@ one unresolved process question at a time. A template is not working extraction;
 a checked example is not a validated replay. Follow the module's acquisition
 loop and persist a precise next step.
 
-This is a generic capability factory with process-specific outputs. The
+This connects generic process development with separately qualified ordinary use. The
 model leads one example, interprets each demonstrated step and saves a resumable
 teaching checkpoint before continuing. It announces when observation stops;
 unexplained button changes are not a learned procedure. A paused checkpoint is
@@ -129,9 +142,11 @@ a connected-Chrome `goto` timeout as a terminal fixture failure.
 Authentication is always performed by the operator; never request, inspect,
 enter, retain, or transfer login secrets or reusable browser state.
 
-On a surface without compatible Chrome control, review or edit a supplied
-capability if useful, but state that live discovery and validation require Codex
-Desktop with the connected Chrome extension.
+Detect compatible browser control, persistent Node and local files from actual
+callable host tools. On a surface without them, preserve useful reported evidence
+and state which operation is unavailable; never claim that a local helper ran or
+that a saved record exists without evidence. The host product name alone does
+not establish browser support or explain an earlier failure.
 
 For invoice batches, follow the module’s `references/batch-review.md` and use
 `scripts/batch_review.py`. Save a durable local report for review after processing,

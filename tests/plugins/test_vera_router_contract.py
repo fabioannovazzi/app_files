@@ -104,7 +104,23 @@ def test_vera_routes_generic_browser_process_discovery_to_browser_automation() -
     )
 
     assert "Agenzia delle Entrate, TeamSystem, Gmail" in " ".join(router.split())
-    assert "operator can demonstrate a browser process" in catalog
+    normalized_catalog = " ".join(catalog.split())
+    assert (
+        "keeping demonstrations, attempts and CRs linked across conversations"
+        in normalized_catalog
+    )
+    assert (
+        "Ordinary work uses a separately installed named operation skill"
+        in normalized_catalog
+    )
+    assert (
+        "Do not use the local development catalog as the ordinary-use menu"
+        in normalized_catalog
+    )
+    assert (
+        "No matching released skill means the operation is unavailable"
+        in normalized_catalog
+    )
     assert "connected Chrome extension" in wrapper
     assert "developer pack sanitizzato" in cards["browser-automation"]["instructions"]
     assert (
