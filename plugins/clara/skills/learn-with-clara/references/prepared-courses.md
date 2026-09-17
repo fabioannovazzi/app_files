@@ -65,7 +65,8 @@ inputs for the same own-product workflow and execute it afresh. If a required
 host capability is missing, state which step is pending. A local preparation of
 a hosted workflow is a preparation step, not a completed hosted demonstration.
 
-The helper uses local file operations only. Profile, progress and tutorial files
+Listing, inspection and rendering use local file operations only; browser
+preview separately serves the kit on loopback as described below. Profile, progress and tutorial files
 are not sent to Mparanza; native OpenAI voice/model processing still applies to
 what is discussed or read in chat. Cowork excludes this native teaching system.
 
@@ -140,3 +141,40 @@ directory. The changed vehicle availability does not supply revised volumes,
 prices or costs. Preserve the first report and compare what changed in the
 recommendation. The learner provides the evidence and question; Clara authors
 the technical case and handles its provenance.
+
+
+## Browser preview
+
+For `course.html` and a retained kit's `example.html`, serve the rendered kit
+with the installed product helper, using the same configured Python runtime:
+
+```text
+python scripts/local_courses.py serve --output-dir <absolute-rendered-kit-directory>
+```
+
+Keep this foreground command alive in a managed terminal session. It binds only
+`127.0.0.1` on an OS-selected free port and emits a JSON `url` after binding.
+Use that exact URL; do not assume a fixed port or interrupt another server.
+The root is the kit directory, preserving relative CSS, fonts and linked inputs.
+Do not serve the client workspace, copy just the HTML, or publish the kit online.
+For `example.html`, replace only the final `course.html` URL component.
+
+Prefer `open_in_codex` with `target: {type: "browser", url: <returned-url>}` in
+the working task. Never use its `type: "file"` route to present HTML: that may
+show source. If that control is unavailable, use an available browser control
+to open the exact loopback URL in a visible tab. If no browser control is
+available, provide a clickable HTTP link for the learner to open. If the local
+server cannot run, report the preview as pending; a source tab is not a preview.
+
+Report the actual tool state: `queued` means the opening request is queued,
+not that the page is visible. For a hidden working task, tell the learner to
+select that task and provide the same HTTP link. An `opened` response confirms
+the tool action only; verify rendered content and asset loading with browser
+inspection when available, or await the learner's confirmation before claiming
+that they can see the page. Do not claim visibility from successful rendering,
+an HTTP response or an opening request alone.
+
+Keep the preview process running while the learner needs its links. Stop only
+that process when the lesson is finished and no handoff needs the preview.
+The helper serves local files on loopback; it does not upload them or record
+lesson completion. Native model processing of content read in chat still applies.

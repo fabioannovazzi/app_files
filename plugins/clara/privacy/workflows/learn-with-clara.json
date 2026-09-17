@@ -79,13 +79,13 @@
     },
     {
       "id": "prepared-course-integrity",
-      "control": "The local stdlib course loader checks own-product identity, authored language, current source fingerprints and attachment hashes before rendering escaped HTML in a fresh ordinary directory. New and retained lessons both enumerate prepared artifact hashes, so those files and renamed copies cannot serve as native execution outputs. Progress requires distinct input, run-record and output files bound to the selected workflow, phase and working-thread ID. These checks do not authenticate the host or judge understanding. The renderer has no network or model client and performs no profile or completion write. The public catalogue removes local execution requests and local-path provenance. Brand Fit, Hosted Interview and Research Video remain unavailable in local teaching."
+      "control": "The local stdlib course loader checks own-product identity, authored language, current source fingerprints and attachment hashes before rendering escaped HTML in a fresh ordinary directory. New and retained lessons both enumerate prepared artifact hashes, so those files and renamed copies cannot serve as native execution outputs. Progress requires distinct input, run-record and output files bound to the selected workflow, phase and working-thread ID. These checks do not authenticate the host or judge understanding. The renderer has no network or model client and performs no profile or completion write. The public catalogue removes local execution requests and local-path provenance. Brand Fit, Hosted Interview and Research Video remain unavailable in local teaching. Browser preview is a separate optional local server: it binds only 127.0.0.1 on a free port, serves the rendered kit and relative assets, rejects resolved paths outside the kit and directory listings, and runs only for the lesson preview. It does not upload files, save access logs, change profiles or record completion. Browser/model inspection remains ordinary native model processing; loopback serving is not authentication against other local processes."
     }
   ],
   "review": {
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d981a7b057f44b26890dd40471b8f84028ca6df38916b0f93d5274638606fe22"
+    "source_fingerprint": "1ee466631b34894766812ff76e7b563a12b08ec59e670afb9a9171288256f6e1"
   }
 }

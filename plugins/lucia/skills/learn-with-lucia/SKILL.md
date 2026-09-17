@@ -73,8 +73,9 @@ complete ordinary first use. Technical exceptions belong only where they affect
 that use or answer the learner's question. Use the plain workflow title.
 
 Materialize its kit once below the active lesson's local files. Read `teacher.md`
-and, when supplied, `execution-request.json`. Open `course.html` as the outline in the working
-window, then inspect the supplied input files with the user. Import those exact
+and, when supplied, `execution-request.json`. Open `course.html` as a rendered browser outline in the working
+window using the **Browser preview** procedure in `references/prepared-courses.md`
+(never `open_in_codex` with `type: "file"` for HTML), then inspect the supplied input files with the user. Import those exact
 source files through the real tutorial case adapter. Preserve the returned
 input bindings and output directory. Read the active worker contract before
 each bounded dispatch and execute the actual current pipeline in that worker.
