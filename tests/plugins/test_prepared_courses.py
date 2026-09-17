@@ -37,6 +37,12 @@ LOCALIZED = [
 ]
 
 
+@pytest.fixture(autouse=True)
+def course_runtime_imports(monkeypatch):
+    """Restore lazy course imports after the repository's isolation hook."""
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
+
+
 def write_json(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, ensure_ascii=False), encoding="utf-8")

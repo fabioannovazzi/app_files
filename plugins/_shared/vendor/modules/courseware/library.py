@@ -353,12 +353,19 @@ class CourseLibrary:
 def main(plugin_root: Path, eligible: set[str], argv: list[str] | None = None) -> int:
     """Local CLI: catalog, inspect or render packaged content without user telemetry."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=("list", "show", "render"))
+    parser.add_argument("action", choices=("list", "show", "render", "serve"))
     parser.add_argument("--workflow")
     parser.add_argument("--language")
     parser.add_argument("--output-dir", type=Path)
     args = parser.parse_args(argv)
     try:
+        if args.action == "serve":
+            if not args.output_dir:
+                parser.error("serve requires --output-dir pointing to a rendered kit")
+            from .preview import serve
+
+            serve(args.output_dir)
+            return 0
         library = CourseLibrary(plugin_root, eligible)
         if args.action == "list":
             result: Any = library.catalog()
