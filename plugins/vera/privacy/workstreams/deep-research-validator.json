@@ -112,7 +112,7 @@
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5947c3fa6ccb22f972f1f65ecf747a7fabdc7a36fd5e93f096f33cf5bb4d5395"
+    "source_fingerprint": "79ba0e3a61720e3baf0c7e3b1eed3e135bc3a70369ff9ce9429c1e8d6613cce6"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/quesito-legale-fiscale/SKILL.md",

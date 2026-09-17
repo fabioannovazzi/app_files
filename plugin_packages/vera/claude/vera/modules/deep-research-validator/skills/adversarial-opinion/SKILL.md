@@ -97,7 +97,7 @@ override this Cowork contract.
 Run this distinct fourth stage after preparation, drafting, and validation in
 the invoking product's `quesito-legale-fiscale` journey only when its original answer contract records
 `adversarial_policy: required`. Read and follow
-`../deep-research-validator/references/adversarial-scope.md` before activating it.
+`../legal-tax-answer-review/references/adversarial-scope.md` before activating it.
 It is routine for an opinion on a concrete position, even when that opinion is
 well supported; informational research alone does not activate it. Validation asks whether that opinion is supported; this stage
 develops the strongest credible case for an incompatible conclusion. Use the
