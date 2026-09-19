@@ -347,35 +347,72 @@
     }
 
     .contributors { scroll-margin-top: 88px; }
+    .contributors .section-head { margin-bottom: clamp(38px, 6vw, 64px); }
+    .contributors .section-head__title h2 { max-width: 9ch; }
+    .contributors .section-head > p { max-width: 560px; }
     .contributor-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1px;
       margin: 0;
       padding: 0;
       border-top: 2px solid var(--navy);
+      border-bottom: 1px solid var(--cyan);
+      background: var(--cyan);
       list-style: none;
     }
-    .contributor-list li { border-bottom: 1px solid var(--cyan); }
+    .contributor-list li { min-width: 0; background: var(--white); }
+    .contributor-list li:first-child { grid-row: span 2; }
     .contributor-row {
-      min-height: 88px;
-      padding: 22px 4px;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 24px;
-      align-items: center;
+      min-height: 210px;
+      padding: clamp(24px, 3vw, 38px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 32px;
       text-decoration: none;
+      transition: background-color 160ms ease-out, color 160ms ease-out;
     }
+    .contributor-list li:first-child .contributor-row { min-height: 422px; }
+    .contributor-row:hover { background: var(--navy); color: var(--white); }
+    .contributor-mark {
+      width: 76px;
+      height: 76px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--cyan);
+      color: var(--navy);
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+    .contributor-row:hover .contributor-mark { border-color: var(--cyan); color: var(--white); }
     .contributor-name {
-      font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+      display: block;
+      font-size: clamp(1.35rem, 2.3vw, 2rem);
       font-weight: 650;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.035em;
     }
+    .contributor-role {
+      display: block;
+      margin-top: 8px;
+      color: var(--blue);
+      font-size: 0.92rem;
+    }
+    .contributor-row:hover .contributor-role,
+    .contributor-row:hover .contributor-platform { color: var(--cyan); }
     .contributor-platform {
       color: var(--blue);
       font-size: 0.875rem;
       font-weight: 650;
       white-space: nowrap;
     }
-    .contributor-row:hover .contributor-name { color: var(--blue); }
-    .contributor-row:hover .contributor-platform { color: var(--navy); }
+    .contributors-note {
+      max-width: 620px;
+      margin: 24px 0 0;
+      color: var(--blue);
+      font-size: 0.875rem;
+    }
 
     .bilancio-head {
       align-items: start;
@@ -1061,7 +1098,10 @@
       .module-row[data-vera-workflow="new-client"] > p { grid-column: 1; grid-row: 2; }
       .module-row[data-vera-workflow="new-client"] .module-row__included { grid-column: 1; grid-row: 3; }
       .module-row[data-vera-workflow="new-client"] .module-row__arrow { grid-column: 2; grid-row: 1 / span 3; }
-      .contributor-row { gap: 18px; }
+      .contributor-list { grid-template-columns: 1fr; }
+      .contributor-list li:first-child { grid-row: auto; }
+      .contributor-row,
+      .contributor-list li:first-child .contributor-row { min-height: 230px; }
       .overview-video { grid-template-columns: 1fr; }
       .overview-video__thumb { border-right: 0; border-bottom: 1px solid var(--cyan); }
     }
@@ -1076,7 +1116,7 @@
     @media (pointer: coarse) {
       .button { min-height: 52px; padding-inline: 22px; }
       .module-row { min-height: 112px; }
-      .contributor-row { min-height: 96px; }
+      .contributor-row { min-height: 230px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1105,6 +1145,7 @@
         </button>
         <nav class="product-nav__links" id="vera-product-navigation" aria-label="Navigazione della pagina" data-i18n-aria-label="nav.label">
           <a href="#area-clients" data-i18n="nav.clients">Clienti</a>
+          <a href="#contributors" data-i18n="nav.contributors">Contributors</a>
           <a href="#area-matters" data-i18n="nav.matters">Pratiche</a>
           <a href="#area-accounting" data-i18n="nav.accounting">Controlli</a>
           <a href="#area-analysis" data-i18n="nav.analysis">Analisi e report</a>
@@ -1161,6 +1202,69 @@
       <figure class="vera-mark" aria-hidden="true">
         <img src="icon.svg" alt="">
       </figure>
+    </section>
+
+    <section class="section-block contributors" id="contributors" aria-labelledby="contributors-title">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="section-index" data-i18n="contributors.index">Collaborazione</span>
+          <h2 id="contributors-title" data-i18n="contributors.title">Contributors</h2>
+        </div>
+        <p data-i18n="contributors.copy">Vera cresce attraverso il confronto con professionisti che mettono alla prova metodi, limiti e risultati nel lavoro reale.</p>
+      </div>
+      <ul class="contributor-list">
+        <li>
+          <a class="contributor-row" href="https://it.linkedin.com/in/giancarlo-coppola-903b8521" target="_blank" rel="noopener noreferrer">
+            <span class="contributor-mark" aria-hidden="true">GC</span>
+            <span>
+              <span class="contributor-name">Giancarlo Coppola</span>
+              <span class="contributor-role" data-i18n="contributors.role">Contributore di Vera</span>
+            </span>
+            <span class="contributor-platform">LinkedIn ↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="contributor-row" href="https://it.linkedin.com/in/francescogiraldo" target="_blank" rel="noopener noreferrer">
+            <span class="contributor-mark" aria-hidden="true">FG</span>
+            <span>
+              <span class="contributor-name">Francesco Giraldo</span>
+              <span class="contributor-role" data-i18n="contributors.role">Contributore di Vera</span>
+            </span>
+            <span class="contributor-platform">LinkedIn ↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="contributor-row" href="https://it.linkedin.com/in/federico-loffredo" target="_blank" rel="noopener noreferrer">
+            <span class="contributor-mark" aria-hidden="true">FL</span>
+            <span>
+              <span class="contributor-name">Federico Loffredo</span>
+              <span class="contributor-role" data-i18n="contributors.role">Contributore di Vera</span>
+            </span>
+            <span class="contributor-platform">LinkedIn ↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="contributor-row" href="https://it.linkedin.com/in/gerardo-maruotti-16b781b9" target="_blank" rel="noopener noreferrer">
+            <span class="contributor-mark" aria-hidden="true">GM</span>
+            <span>
+              <span class="contributor-name">Gerardo Maruotti</span>
+              <span class="contributor-role" data-i18n="contributors.role">Contributore di Vera</span>
+            </span>
+            <span class="contributor-platform">LinkedIn ↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="contributor-row" href="https://it.linkedin.com/in/alberto-petrelli" target="_blank" rel="noopener noreferrer">
+            <span class="contributor-mark" aria-hidden="true">AP</span>
+            <span>
+              <span class="contributor-name">Alberto Petrelli</span>
+              <span class="contributor-role" data-i18n="contributors.role">Contributore di Vera</span>
+            </span>
+            <span class="contributor-platform">LinkedIn ↗</span>
+          </a>
+        </li>
+      </ul>
+      <p class="contributors-note" data-i18n="contributors.note">I profili collegano alle informazioni pubbliche condivise da ciascun contributore. Le fotografie e le descrizioni professionali saranno aggiunte solo con materiali approvati.</p>
     </section>
 
     <section class="run-report" id="model-data-report" aria-labelledby="model-data-report-title">
@@ -1395,42 +1499,6 @@
       </div>
     </section>
 
-    <section class="section-block contributors" id="contributors" aria-labelledby="contributors-title">
-      <div class="section-head">
-        <div class="section-head__title">
-          <span class="section-index" data-i18n="contributors.index">Collaborazione</span>
-          <h2 id="contributors-title" data-i18n="contributors.title">Contributors</h2>
-        </div>
-        <p data-i18n="contributors.copy">Vera non esisterebbe senza il contributo di persone che condividono tempo, competenze e prospettive per migliorarla.</p>
-      </div>
-      <ul class="contributor-list">
-        <li>
-          <a class="contributor-row" href="https://it.linkedin.com/in/giancarlo-coppola-903b8521" target="_blank" rel="noopener noreferrer">
-            <span class="contributor-name">Giancarlo Coppola</span>
-            <span class="contributor-platform">LinkedIn ↗</span>
-          </a>
-        </li>
-        <li>
-          <a class="contributor-row" href="https://it.linkedin.com/in/francescogiraldo" target="_blank" rel="noopener noreferrer">
-            <span class="contributor-name">Francesco Giraldo</span>
-            <span class="contributor-platform">LinkedIn ↗</span>
-          </a>
-        </li>
-        <li>
-          <a class="contributor-row" href="https://it.linkedin.com/in/federico-loffredo" target="_blank" rel="noopener noreferrer">
-            <span class="contributor-name">Federico Loffredo</span>
-            <span class="contributor-platform">LinkedIn ↗</span>
-          </a>
-        </li>
-        <li>
-          <a class="contributor-row" href="https://it.linkedin.com/in/gerardo-maruotti-16b781b9" target="_blank" rel="noopener noreferrer">
-            <span class="contributor-name">Gerardo Maruotti</span>
-            <span class="contributor-platform">LinkedIn ↗</span>
-          </a>
-        </li>
-      </ul>
-    </section>
-
   </main>
 
   <footer>
@@ -1454,6 +1522,7 @@
         "nav.menu": "Menu",
         "nav.capabilities": "Cosa fa",
         "nav.clients": "Clienti",
+        "nav.contributors": "Contributors",
         "nav.matters": "Pratiche",
         "nav.accounting": "Controlli",
         "nav.analysis": "Analisi e report",
@@ -1642,7 +1711,9 @@
         "install.video.title": "Collega ChatGPT al computer con Codex",
         "contributors.index": "Collaborazione",
         "contributors.title": "Contributors",
-        "contributors.copy": "Vera non esisterebbe senza il contributo di persone che condividono tempo, competenze e prospettive per migliorarla.",
+        "contributors.copy": "Vera cresce attraverso il confronto con professionisti che mettono alla prova metodi, limiti e risultati nel lavoro reale.",
+        "contributors.role": "Contributore di Vera",
+        "contributors.note": "I profili collegano alle informazioni pubbliche condivise da ciascun contributore. Le fotografie e le descrizioni professionali saranno aggiunte solo con materiali approvati.",
         "footer.linksLabel": "Informazioni",
         "footer.source": "Codice sorgente",
         "footer.data": "Gestione dei dati"
@@ -1655,6 +1726,7 @@
         "nav.menu": "Menu",
         "nav.capabilities": "What it does",
         "nav.clients": "Clients",
+        "nav.contributors": "Contributors",
         "nav.matters": "Matters",
         "nav.accounting": "Checks",
         "nav.analysis": "Analysis and reports",
@@ -1843,7 +1915,9 @@
         "install.video.title": "Connect ChatGPT to your computer with Codex",
         "contributors.index": "Collaboration",
         "contributors.title": "Contributors",
-        "contributors.copy": "Vera could not exist without the people who share their time, expertise and perspective to improve it.",
+        "contributors.copy": "Vera grows through the exchange with professionals who test its methods, limits and results in real work.",
+        "contributors.role": "Vera contributor",
+        "contributors.note": "Profiles link to the public information each contributor has shared. Photos and professional descriptions will be added only from approved material.",
         "footer.linksLabel": "Information",
         "footer.source": "Source code",
         "footer.data": "Data handling"
@@ -1856,6 +1930,7 @@
         "nav.menu": "Menu",
         "nav.capabilities": "Ce qu’elle fait",
         "nav.clients": "Clients",
+        "nav.contributors": "Contributeurs",
         "nav.matters": "Dossiers",
         "nav.accounting": "Contrôles",
         "nav.analysis": "Analyses et rapports",
@@ -2044,7 +2119,9 @@
         "install.video.title": "Connectez ChatGPT à votre ordinateur avec Codex",
         "contributors.index": "Collaboration",
         "contributors.title": "Contributeurs",
-        "contributors.copy": "Vera ne pourrait pas exister sans les personnes qui partagent leur temps, leur expertise et leur point de vue pour l’améliorer.",
+        "contributors.copy": "Vera progresse grâce à l’échange avec des professionnels qui testent ses méthodes, ses limites et ses résultats dans le travail réel.",
+        "contributors.role": "Contributeur de Vera",
+        "contributors.note": "Les profils renvoient vers les informations publiques partagées par chaque contributeur. Les photos et les descriptions professionnelles seront ajoutées uniquement à partir de contenus approuvés.",
         "footer.linksLabel": "Informations",
         "footer.source": "Code source",
         "footer.data": "Gestion des données"
@@ -2057,6 +2134,7 @@
         "nav.menu": "Menü",
         "nav.capabilities": "Was sie kann",
         "nav.clients": "Mandanten",
+        "nav.contributors": "Mitwirkende",
         "nav.matters": "Verfahren",
         "nav.accounting": "Kontrollen",
         "nav.analysis": "Analyse und Berichte",
@@ -2245,7 +2323,9 @@
         "install.video.title": "ChatGPT mit Codex mit Ihrem Computer verbinden",
         "contributors.index": "Zusammenarbeit",
         "contributors.title": "Mitwirkende",
-        "contributors.copy": "Vera könnte ohne die Menschen nicht existieren, die ihre Zeit, ihr Fachwissen und ihre Perspektiven einbringen, um sie zu verbessern.",
+        "contributors.copy": "Vera wächst durch den Austausch mit Fachleuten, die ihre Methoden, Grenzen und Ergebnisse in der täglichen Arbeit prüfen.",
+        "contributors.role": "Vera-Mitwirkender",
+        "contributors.note": "Die Profile verlinken auf die öffentlichen Informationen, die der jeweilige Mitwirkende geteilt hat. Fotos und berufliche Beschreibungen werden nur aus freigegebenem Material ergänzt.",
         "footer.linksLabel": "Informationen",
         "footer.source": "Quellcode",
         "footer.data": "Datenverarbeitung"
@@ -2258,6 +2338,7 @@
         "nav.menu": "Menú",
         "nav.capabilities": "Qué hace",
         "nav.clients": "Clientes",
+        "nav.contributors": "Colaboradores",
         "nav.matters": "Expedientes",
         "nav.accounting": "Controles",
         "nav.analysis": "Análisis e informes",
@@ -2446,7 +2527,9 @@
         "install.video.title": "Conecta ChatGPT al ordenador con Codex",
         "contributors.index": "Colaboración",
         "contributors.title": "Colaboradores",
-        "contributors.copy": "Vera no podría existir sin las personas que comparten su tiempo, experiencia y perspectiva para mejorarla.",
+        "contributors.copy": "Vera crece a través del intercambio con profesionales que ponen a prueba sus métodos, límites y resultados en el trabajo real.",
+        "contributors.role": "Colaborador de Vera",
+        "contributors.note": "Los perfiles enlazan a la información pública que ha compartido cada colaborador. Las fotografías y descripciones profesionales se añadirán únicamente a partir de materiales aprobados.",
         "footer.linksLabel": "Información",
         "footer.source": "Código fuente",
         "footer.data": "Tratamiento de datos"
