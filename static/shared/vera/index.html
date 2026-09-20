@@ -362,7 +362,6 @@
       list-style: none;
     }
     .contributor-list li { min-width: 0; background: var(--white); }
-    .contributor-list li:first-child { grid-row: span 2; }
     .contributor-row {
       min-height: 210px;
       padding: clamp(24px, 3vw, 38px);
@@ -373,7 +372,6 @@
       text-decoration: none;
       transition: background-color 160ms ease-out, color 160ms ease-out;
     }
-    .contributor-list li:first-child .contributor-row { min-height: 422px; }
     .contributor-row:hover { background: var(--navy); color: var(--white); }
     .contributor-mark {
       width: 76px;
@@ -385,6 +383,14 @@
       font-size: 1.35rem;
       font-weight: 700;
       letter-spacing: -0.04em;
+      overflow: hidden;
+      border-radius: 50%;
+    }
+    .contributor-mark img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
     }
     .contributor-row:hover .contributor-mark { border-color: var(--cyan); color: var(--white); }
     .contributor-name {
@@ -1099,9 +1105,7 @@
       .module-row[data-vera-workflow="new-client"] .module-row__included { grid-column: 1; grid-row: 3; }
       .module-row[data-vera-workflow="new-client"] .module-row__arrow { grid-column: 2; grid-row: 1 / span 3; }
       .contributor-list { grid-template-columns: 1fr; }
-      .contributor-list li:first-child { grid-row: auto; }
-      .contributor-row,
-      .contributor-list li:first-child .contributor-row { min-height: 230px; }
+      .contributor-row { min-height: 230px; }
       .overview-video { grid-template-columns: 1fr; }
       .overview-video__thumb { border-right: 0; border-bottom: 1px solid var(--cyan); }
     }
@@ -1215,7 +1219,7 @@
       <ul class="contributor-list">
         <li>
           <a class="contributor-row" href="https://it.linkedin.com/in/giancarlo-coppola-903b8521" target="_blank" rel="noopener noreferrer">
-            <span class="contributor-mark" aria-hidden="true">GC</span>
+            <span class="contributor-mark"><img src="https://media.licdn.com/dms/image/v2/D4D03AQEnj5rhHuzbnQ/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1698482551468?e=1791417600&amp;v=beta&amp;t=A2QUEVmATRPlCP6sT-MLmV-vOeRuldG9zeFVz0dKvVw" alt="Foto di Giancarlo Coppola"></span>
             <span>
               <span class="contributor-name">Giancarlo Coppola</span>
               <span class="contributor-role" data-i18n="contributors.role">Contributore di Vera</span>
@@ -1225,7 +1229,7 @@
         </li>
         <li>
           <a class="contributor-row" href="https://it.linkedin.com/in/francescogiraldo" target="_blank" rel="noopener noreferrer">
-            <span class="contributor-mark" aria-hidden="true">FG</span>
+            <span class="contributor-mark"><img src="https://media.licdn.com/dms/image/v2/D4D35AQHU9i9M-7c4jg/profile-framedphoto-shrink_100_100/B4DZqSSEYdIMAo-/0/1763390801705?e=1790492400&amp;v=beta&amp;t=UEdHhhSzUfTqhpUDTbJCC1Xqdhq46HMtmPE_r8U3Vzk" alt="Foto di Francesco Giraldo"></span>
             <span>
               <span class="contributor-name">Francesco Giraldo</span>
               <span class="contributor-role" data-i18n="contributors.role">Contributore di Vera</span>
@@ -1245,7 +1249,7 @@
         </li>
         <li>
           <a class="contributor-row" href="https://it.linkedin.com/in/gerardo-maruotti-16b781b9" target="_blank" rel="noopener noreferrer">
-            <span class="contributor-mark" aria-hidden="true">GM</span>
+            <span class="contributor-mark"><img src="https://media.licdn.com/dms/image/v2/D4D03AQGojsgcAsiHBw/profile-displayphoto-scale_100_100/B4DaCh0D8.I4AY-/0/1789421177537?e=1791417600&amp;v=beta&amp;t=T9wWSLSQQhZEQ7T-VSV8c7Ac1cVDZM-IVdDozoWAZ-Y" alt="Foto di Gerardo Maruotti"></span>
             <span>
               <span class="contributor-name">Gerardo Maruotti</span>
               <span class="contributor-role" data-i18n="contributors.role">Contributore di Vera</span>
@@ -1255,9 +1259,19 @@
         </li>
         <li>
           <a class="contributor-row" href="https://it.linkedin.com/in/alberto-petrelli" target="_blank" rel="noopener noreferrer">
-            <span class="contributor-mark" aria-hidden="true">AP</span>
+            <span class="contributor-mark"><img src="https://media.licdn.com/dms/image/v2/D4E03AQHhyVb_fPqfSw/profile-displayphoto-scale_100_100/B4EaB14kQfIcAY-/0/1788684159071?e=1791417600&amp;v=beta&amp;t=Ktclv4izOlNAfMkTGy1Pdkh0zO1Su1Z0Z9tF4QZe-6I" alt="Foto di Alberto Petrelli"></span>
             <span>
               <span class="contributor-name">Alberto Petrelli</span>
+              <span class="contributor-role" data-i18n="contributors.role">Contributore di Vera</span>
+            </span>
+            <span class="contributor-platform">LinkedIn ↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="contributor-row" href="https://www.linkedin.com/in/monica-manfredini-0b37b791/" target="_blank" rel="noopener noreferrer">
+            <span class="contributor-mark"><img src="https://media.licdn.com/dms/image/v2/D4D03AQG7ko1ROBiSEw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1728321170023?e=1791417600&amp;v=beta&amp;t=16rt3iu9KWvPo9ocXArngiSq8wsBjpefLis5nIj0ugQ" alt="Foto di Monica Manfredini"></span>
+            <span>
+              <span class="contributor-name">Monica Manfredini</span>
               <span class="contributor-role" data-i18n="contributors.role">Contributore di Vera</span>
             </span>
             <span class="contributor-platform">LinkedIn ↗</span>
