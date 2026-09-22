@@ -353,15 +353,18 @@
     .contributor-list {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1px;
+      column-gap: 1px;
       margin: 0;
       padding: 0;
       border-top: 2px solid var(--navy);
-      border-bottom: 1px solid var(--cyan);
       background: var(--cyan);
       list-style: none;
     }
-    .contributor-list li { min-width: 0; background: var(--white); }
+    .contributor-list li {
+      min-width: 0;
+      border-bottom: 1px solid var(--cyan);
+      background: var(--white);
+    }
     .contributor-row {
       min-height: 210px;
       padding: clamp(24px, 3vw, 38px);
