@@ -31,6 +31,12 @@ LAWYER_PROFILED_WORKFLOWS = {
     "presenza-digitale-studio",
 }
 LUCIA_NATIVE_WORKFLOWS = {"apertura-pratica"}
+DOCUMENT_WORKFLOWS = {
+    "revisione-documentale",
+    "confronto-documenti",
+    "revisione-contratti",
+    "redazione-da-modello",
+}
 ORCHESTRATION_WORKFLOWS = {"quesito-legale-fiscale", "adversarial-opinion"}
 PUBLIC_WORKFLOWS = (
     SHARED_ASSURANCE_WORKFLOWS | LAWYER_PROFILED_WORKFLOWS | LUCIA_NATIVE_WORKFLOWS
@@ -39,10 +45,14 @@ PUBLIC_SKILLS = (
     (PUBLIC_WORKFLOWS - SHARED_ASSURANCE_WORKFLOWS)
     | set(ASSURANCE_SKILLS.values())
     | ORCHESTRATION_WORKFLOWS
+    | DOCUMENT_WORKFLOWS
     | {"learn-with-lucia"}
 )
 WEBSITE_SKILLS = (
-    PUBLIC_WORKFLOWS | ORCHESTRATION_WORKFLOWS | {"learn-with-lucia", "studio-archive"}
+    PUBLIC_WORKFLOWS
+    | ORCHESTRATION_WORKFLOWS
+    | DOCUMENT_WORKFLOWS
+    | {"learn-with-lucia", "studio-archive"}
 )
 PRIVATE_LIFECYCLE_WORKFLOWS = SHARED_ASSURANCE_WORKFLOWS | LUCIA_NATIVE_WORKFLOWS
 
@@ -633,6 +643,10 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
     """Exact labels should match mechanically across the two public surfaces."""
 
     canonical_labels = {
+        "revisione-contratti": "Revisione contratti",
+        "confronto-documenti": "Confronto documenti",
+        "revisione-documentale": "Revisione documentale",
+        "redazione-da-modello": "Redazione da modello",
         "quesito-legale-fiscale": "Risposta a quesiti legali e fiscali",
         "adversarial-opinion": "Parere contrapposto",
         "legal-tax-answer-planner": "Ottimizzazione prompt",
@@ -653,6 +667,10 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
         r'<h4 data-i18n="module\.[^"]+\.title">([^<]+)</h4>', page
     )
     website_keys = {
+        "revisione-contratti": "module.revisione-contratti.title",
+        "confronto-documenti": "module.confronto-documenti.title",
+        "revisione-documentale": "module.revisione-documentale.title",
+        "redazione-da-modello": "module.redazione-da-modello.title",
         "quesito-legale-fiscale": "module.question.title",
         "adversarial-opinion": "module.adversarial.title",
         "legal-tax-answer-planner": "module.prompt.title",
@@ -669,6 +687,10 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
     for workflow in set(ASSURANCE_SKILLS.values()) | LAWYER_PROFILED_WORKFLOWS:
         assert cards[workflow]["display_name"] == vera_cards[workflow]["display_name"]
     assert directory_labels == [
+        canonical_labels["revisione-contratti"],
+        canonical_labels["confronto-documenti"],
+        canonical_labels["revisione-documentale"],
+        canonical_labels["redazione-da-modello"],
         canonical_labels["quesito-legale-fiscale"],
         canonical_labels["legal-tax-answer-planner"],
         canonical_labels["adversarial-opinion"],
@@ -742,7 +764,7 @@ def test_lucia_public_page_localizes_matter_opening_and_direct_hero() -> None:
     ):
         assert len(_javascript_string_values(page, key)) == 5
     assert (
-        '"hero.lead": "Lucia aggiunge a Codex ricerca legale, verifica delle fonti, apertura pratica, comunicazione professionale e sito dello studio."'
+        '"hero.lead": "Lucia aggiunge a Codex revisione contratti, confronto documenti, redazione da modelli, ricerca legale e preparazione del lavoro di studio."'
         in page
     )
 
@@ -755,22 +777,8 @@ def test_lucia_marketplace_long_description_matches_manifest() -> None:
         .strip()
     )
 
-    stable_description = (
-        "Assistente AI per avvocati. Lucia affianca avvocati indipendenti e "
-        "studi legali. Ottimizza prompt e struttura incarichi, analizza "
-        "materiali e fonti, "
-        "verifica affermazioni e ragionamento e prepara ricerche, documenti e "
-        "risultati rivedibili.\n\n"
-        "Supporta il lavoro legale attraverso workflow specialistici adattati "
-        "al contesto, alla giurisdizione e al risultato atteso. Aiuta a "
-        "strutturare attività, controllare documenti e fonti e mantenere "
-        "collegati materiali, passaggi e decisioni.\n\n"
-        "Lucia mostra fonti, passaggi, ambiguità e informazioni mancanti prima "
-        "di consegnare il risultato. Firma, approvazione, deposito, invio, "
-        "pubblicazione e giudizio professionale restano all’avvocato."
-    )
-
-    assert approved == stable_description
-    assert manifest["interface"]["longDescription"] == stable_description
+    assert manifest["interface"]["longDescription"] == approved
+    assert "modelli forniti" in approved
+    assert "non la conclusione giuridica" in approved
     assert len(approved.split("\n\n")) == 3
     assert len(approved.split()) <= 120

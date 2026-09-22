@@ -180,6 +180,10 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "studio-archive": "modules/studio-archive/skills/studio-archive/SKILL.md",
 }
 LUCIA_CHATGPT_ROUTER_TARGETS = {
+    "revisione-contratti": "skills/revisione-contratti/SKILL.md",
+    "confronto-documenti": "skills/confronto-documenti/SKILL.md",
+    "revisione-documentale": "skills/revisione-documentale/SKILL.md",
+    "redazione-da-modello": "skills/redazione-da-modello/SKILL.md",
     "learn-with-lucia": "skills/learn-with-lucia/SKILL.md",
     "adversarial-opinion": "skills/adversarial-opinion/SKILL.md",
     "studio-archive": "modules/studio-archive/skills/studio-archive/SKILL.md",

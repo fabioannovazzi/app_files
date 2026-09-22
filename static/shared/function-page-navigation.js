@@ -57,6 +57,13 @@
       },
     },
     lucia: {
+      "area-documents": {
+        it: "Contratti e documenti",
+        en: "Contracts and documents",
+        fr: "Contrats et documents",
+        de: "Verträge und Dokumente",
+        es: "Contratos y documentos",
+      },
       core: {it: "Funzioni disponibili", en: "Available functions", fr: "Fonctions disponibles", de: "Verfügbare Funktionen", es: "Funciones disponibles"},
       "area-research": {
         it: "Ricerca legale",
@@ -120,6 +127,10 @@
     "aml-review": [["vera", "area-clients"]],
     "adeguati-assetti": [["vera", "area-analysis"]],
     "apertura-pratica": [["lucia", "area-matters"]],
+    "revisione-contratti": [["lucia", "area-documents"]],
+    "confronto-documenti": [["lucia", "area-documents"]],
+    "revisione-documentale": [["lucia", "area-documents"]],
+    "redazione-da-modello": [["lucia", "area-documents"]],
     "archive-organization": [["vera", "area-clients"]],
     "avviso-intake": [["vera", "area-matters"]],
     "bandi-agevolazioni": [["vera", "area-research"]],

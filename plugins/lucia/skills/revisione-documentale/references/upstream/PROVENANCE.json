@@ -1,0 +1,25 @@
+{
+  "repository": "https://github.com/open-legal-products/mike-workflows",
+  "commit": "ce62e6a2d3f47e1d3567a4f2edc61898cfe9e78a",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2026 Mike",
+  "files": [
+    {
+      "bundled_file": "commercial-columns.yaml",
+      "upstream_path": "tabular-review-workflows/commercial-agreement-tabular-review/table-columns.yaml",
+      "sha256": "29aeef2eae437c6ad2cd5fa9e744c8dee96db55c818da0b039a5688cb0fc07a0"
+    },
+    {
+      "bundled_file": "nda-columns.yaml",
+      "upstream_path": "tabular-review-workflows/nda-tabular-review/table-columns.yaml",
+      "sha256": "595e220c8f8ce2e03df35785c2081bc0bc7b7d03b8fc6b9a04f11cb43728ba75"
+    },
+    {
+      "bundled_file": "LICENSE",
+      "upstream_path": "LICENSE",
+      "sha256": "6e7c22106722c151ffc66d0faf2035155eca1ad91931f5679c6773891c08deef"
+    }
+  ],
+  "adaptation": "Lucia uses the upstream workflow questions with local evidence packs, explicit source coverage, lawyer review and no Mike server. Bundled upstream files are unchanged; surrounding Lucia instructions take precedence.",
+  "update_policy": "Pinned at build time. Review upstream changes, update snapshots and hashes, adapt instructions, run behavioral and package tests, then release a new Lucia version. No runtime downloads."
+}

@@ -1,0 +1,20 @@
+{
+  "repository": "https://github.com/open-legal-products/mike-workflows",
+  "commit": "ce62e6a2d3f47e1d3567a4f2edc61898cfe9e78a",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2026 Mike",
+  "files": [
+    {
+      "bundled_file": "nda-review.md",
+      "upstream_path": "assistant-workflows/nda-review/SKILL.md",
+      "sha256": "206273be4c14abfd1559089598e6d3db6451bbe64224bb4ad461bbd5bc5764c6"
+    },
+    {
+      "bundled_file": "LICENSE",
+      "upstream_path": "LICENSE",
+      "sha256": "6e7c22106722c151ffc66d0faf2035155eca1ad91931f5679c6773891c08deef"
+    }
+  ],
+  "adaptation": "Lucia uses the upstream workflow questions with local evidence packs, explicit source coverage, lawyer review and no Mike server. Bundled upstream files are unchanged; surrounding Lucia instructions take precedence.",
+  "update_policy": "Pinned at build time. Review upstream changes, update snapshots and hashes, adapt instructions, run behavioral and package tests, then release a new Lucia version. No runtime downloads."
+}
