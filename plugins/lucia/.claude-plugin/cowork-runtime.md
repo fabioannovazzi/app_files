@@ -43,6 +43,10 @@ whole request semantically and select the narrowest registered workflow:
 | An informational law-firm website to create, refresh, review, preview, or publish after approval | Read `../presenza-digitale-studio/SKILL.md` completely and follow it. |
 | A new client matter or a new matter for an existing client to intake and prepare for opening | Read `../apertura-pratica/SKILL.md` completely and follow it. Use its dedicated matter-opening validator and lawyer review contract. |
 | A complete route from question to delivery | Read `../quesito-legale-fiscale/SKILL.md` completely and follow it. |
+| Revisione contratti on supplied documents | Read `../revisione-contratti/SKILL.md` completely and follow it. |
+| Confronto documenti on supplied documents | Read `../confronto-documenti/SKILL.md` completely and follow it. |
+| Revisione documentale on supplied documents | Read `../revisione-documentale/SKILL.md` completely and follow it. |
+| Redazione da modello on supplied documents | Read `../redazione-da-modello/SKILL.md` completely and follow it. |
 | No registered workflow covers the request | Stop and say only that Lucia does not yet have a suitable workflow; do not answer the substance through a generic route. |
 
 The user can describe the work normally and does not need to know internal
@@ -76,7 +80,11 @@ for client, engagement, immutable input, and run lifecycle; its legal intake
 schema, conflict and deadline boundaries, validator, and review receipts remain
 specific to Lucia.
 
-For client and engagement setup, read `../studio-archive/SKILL.md` completely
+The four document workflows use selected files and a new local output folder. They
+require no Studio Archive, MCP service, Mike server or separate model API. Follow
+their shared local document contract.
+
+For the other workflows requiring client and engagement setup, read `../studio-archive/SKILL.md` completely
 and use the packaged `luciaStudioArchive` MCP service. Prepare and start the
 run before passing its returned context path to the mandatory engagement gate.
 

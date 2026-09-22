@@ -29,4 +29,7 @@ Course sources remain bound to Lucia’s own catalog. The native host may read t
 selected course for conversation. An authored specimen is not a newly executed
 workflow; supplementary actual starter outputs preserve separate provenance.
 Reviewed also against scripts/local_courses.py, assets/courses and the shared
-courseware module. No additional recipient or transport is introduced.
+courseware module. No additional external recipient is introduced.
+
+Browser preview reviewed 2026-09-17 against courseware/preview.py.
+Browser preview is a separate optional local server: it binds only 127.0.0.1 on a free port, serves the rendered kit and relative assets, rejects resolved paths outside the kit and directory listings, and runs only for the lesson preview. It does not upload files, save access logs, change profiles or record completion. Browser/model inspection remains ordinary native model processing; loopback serving is not authentication against other local processes.

@@ -1,6 +1,26 @@
 # Vera browser lifecycle: implementation and validation
 
-Candidate: Vera **0.1.263**, browser-automation **0.5.25**.
+Current candidate: Vera **0.1.268**, browser-automation **0.5.27**, with
+Clara **0.1.211** carrying the shared API disclosure update.
+
+## Completion against current main — 22 September 2026
+
+Integrated `5d6421f4` while retaining the later use/development split, Agenzia
+login boundaries, course previews, contributor changes and Lucia document work.
+The following earlier evidence is historical; the integrated candidate separately
+passes 111 lifecycle/API tests (88.42% coordinator/exporter coverage), 160 Node
+browser tests and 257 pipeline/checkpoint/router regression tests.
+
+Vera and Clara privacy registers are current. Packages are rebuilt from source;
+Clara changes are limited to the shared feedback API disclosure and release
+metadata, with its client diagnostic requirements unchanged. No Marketplace
+publication is authorized for this completion; public Published-version records
+remain unchanged. Real-site acceptance of a new professional operation remains
+separate from these synthetic runtime tests.
+
+## Earlier implementation evidence
+
+Previous candidate: Vera **0.1.263**, browser-automation **0.5.25**.
 Initial base: `07689c38`; integrated the subsequently merged course release
 `306101b5` and current main `56b8a3e0` (including the installed-version guard and PR #643 Agenzia acquisition). Implementation plan: [vera_browser_lifecycle_plan.md](vera_browser_lifecycle_plan.md).
 

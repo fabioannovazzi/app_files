@@ -1,0 +1,120 @@
+# Lucia document workflows
+
+Lucia includes four native workflows derived from the MIT-licensed
+[Mike workflow collection](https://github.com/open-legal-products/mike-workflows):
+contract review, document comparison, structured multi-document review and drafting
+from a supplied template. Lucia now maintains its own Italian-practice method.
+The original Mike files are
+unchanged historical/attribution snapshots, not operational instructions.
+`prassi-italiana.md`, `contratti-italiani.md` and `colonne-italiane.md` guide the
+four workflows; `fonti-italiane.md` records the inspected official sources and
+the limitations of that editorial source review. They are not a current legal
+database or an automatic legal classifier.
+
+## Runtime and evidence
+
+The host conversation model reads selected documents and authors findings,
+interpretation and proposed wording. `plugins/lucia/scripts/legal_documents.py`
+performs local extraction, original snapshots, evidence hashing, literal text
+comparison, quote-occurrence checks, report generation and exact template edits.
+It has no network or model client and starts no service. The four skills do not
+require Studio Archive or Mike's application, database, provider APIs or server.
+Other Lucia workflows retain their existing runtime contracts.
+
+PDF pages and DOCX XML-part/paragraph anchors identify evidence. DOCX extraction
+includes table paragraphs, headers, footers, notes and comments; tracked changes
+and unextracted objects remain warnings. Image-only pages and missing schedules
+are not evidence of absent terms. Nothing silently clips long sources. Review
+coverage is an explicit model declaration, not observed model telemetry. A quote
+match proves that text occurs at an anchor, not semantic or legal support.
+
+HTML, CSV and XLSX retain review perspective and coverage limits, including party
+roles/purpose, formation/negotiation evidence, applicable law separately from forum,
+legal sources checked and unresolved questions, and selected firm instructions.
+These context fields are required to prevent the basis of review disappearing
+through export. The deterministic check verifies presence, never applicability,
+validity or source currency; an explicit unknown is permitted.
+
+The host model distinguishes consumer scrutiny from specific written approval,
+legal objections from negotiating preferences, and recesso/disdetta/risoluzione.
+It does not infer Italian governing law from the lawyer's location or the report
+language. A selected firm playbook remains negotiation guidance, not legislation.
+
+Comparison adds
+one document column per source and an explicit model-authored difference for each
+topic. Spreadsheet formula-like text is escaped. Reports make no remote asset
+requests. Failed rerenders retire prior outputs instead of leaving them current.
+
+Drafting keeps the original and edits a copy of a DOCX/TXT/Markdown template.
+DOCX replacements preserve untouched ZIP parts and surrounding run formatting;
+replacement text inherits the first affected run's formatting. Changes requiring
+structure, tracked changes, fields or embedded objects need a document editor and
+visual inspection. Exact replacement validation does not validate facts or law.
+
+## Data-path review
+
+Reviewed against the four skills and local helper on 2026-09-22:
+
+| Workflow | Potential model-context content | Local outputs |
+| --- | --- | --- |
+| Contract review | Selected clauses and schedules, parties, negotiation objectives, commercial terms, quoted passages and proposed wording | Original snapshots, evidence pack, issue report, review table |
+| Comparison | Selected versions, including text removed in later versions, literal differences and their interpretation | Snapshots, text diffs, comparison and source tables |
+| Structured review | Selected files and names, questions, amendments/schedule relationships, extracted terms and evidence cells | Evidence pack, matrix, detailed findings, coverage and source register |
+| Drafting | Supplied template including examples, selected supporting facts, instructions, changes and the resulting draft; rendered pages when inspected | Original snapshot, edited copy, change register with factual basis |
+
+No new external boundary is introduced by the helpers. Model processing follows
+the host account: OpenAI on ChatGPT/Codex, Anthropic when the existing Cowork
+distribution is used. Local extraction and storage do not make model processing
+offline, automatically anonymize data or establish the host's retention policy.
+The helpers cannot observe which bytes the host actually includes in a model call.
+The public pages explain the distinct content of each workflow in five languages.
+
+## Upstream maintenance
+
+Every source snapshot has its original MIT notice and a `PROVENANCE.json` with
+upstream path, pinned commit and SHA-256. The pinned commit is
+`ce62e6a2d3f47e1d3567a4f2edc61898cfe9e78a`. There are no runtime downloads.
+
+Lucia's Italian adaptation is maintained independently. Upstream compatibility is
+not a release requirement. Compare selected ideas against a newer commit only
+when useful; review Italian applicability and licensing, and test behavior before
+adoption. Keep snapshots and provenance accurate if an upstream file changes.
+Mike updates never overwrite the Italian instructions or an installed plugin.
+
+## Scope of the Italian adaptation
+
+The supplied GPT Pro note was treated as advisory product ideas. This release
+adapts the four existing workflows and supports selected firm playbooks. It does
+not add Mike's backend-dependent Word add-in, native Word tracked changes, a new
+citation database, a forensic-proofreading workflow or practice-area packs.
+Existing template replacement still produces a copy and a change register.
+
+Selected playbook passages and supplied legal authorities read for a matter enter
+the host model context, along with the already-described document content. Their
+identifiers and verification gaps are retained in the review context. The public
+function pages disclose these additions in all five supported languages.
+
+## Verification
+
+`tests/plugins/test_lucia_legal_documents.py` covers preservation, long-document
+tails, invalid PDFs, source drift, exact citations, incomplete coverage, report
+context, comparison exports, formula/HTML escaping, Word replacements, upstream
+attribution and execution of the packaged helper. Its network guard rejects socket
+connections in the in-process workflows. The dedicated CI job runs on Linux,
+macOS and Windows with Python 3.12 and an 80% coverage gate.
+
+Independent synthetic forward tests exercised all four workflows, including an
+image-only PDF, multiple versions and split-run DOCX placeholders. Fixes from that
+evaluation preserve detailed limits and context, add the explicit comparison
+column and retire stale reports. Mechanical checks do not establish legal quality
+on all matters or acceptance in an already-open installed-plugin conversation.
+
+
+The Italian adaptation was independently exercised on synthetic consumer terms,
+a foreign-law NDA comparison and a services template with missing facts. It
+produced four review packs and an edited draft, preserving source files and 45
+matching quotations. Observed decisions separated consumer scrutiny from second
+signatures, English law from a Milan forum, firm preferences from legal thresholds,
+and advance payment from caparra. No current-law verification or generalized legal
+accuracy is claimed from those fixtures. The observed English coverage diagnostic
+was subsequently localized and covered in the five-language export checks.

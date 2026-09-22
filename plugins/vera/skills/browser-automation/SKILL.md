@@ -148,6 +148,21 @@ and state which operation is unavailable; never claim that a local helper ran or
 that a saved record exists without evidence. The host product name alone does
 not establish browser support or explain an earlier failure.
 
+When asked to download Agenzia invoices and remember passwords, explain both
+parts of the request and continue the supported post-login work. Reuse a
+confirmed authorized session; request operator login only when it is needed.
+Do not require a special prompt, a separate enterprise RPA system or a
+credential vault for this route. Remembering the procedure does not retain
+authentication or guarantee unattended future access. Name any actual browser
+or process blocker and preserve the prototype/target-validation boundary.
+For example, adapt this explanation to the observed runtime and user request:
+“Per scaricare le fatture posso usare la sessione Chrome collegata dopo che hai
+effettuato l'accesso e selezionato il profilo corretto. Non posso inserire o
+conservare le tue credenziali: se il portale richiede un nuovo accesso, lo
+effettui tu. Posso conservare la procedura senza salvare password o sessioni.
+Verifico il percorso disponibile e i conteggi dei file scaricati; se incontro
+un blocco ti indico il passaggio preciso.”
+
 For invoice batches, follow the module’s `references/batch-review.md` and use
 `scripts/batch_review.py`. Save a durable local report for review after processing,
 with exceptions first, proposed and actual treatment, reasons and source evidence.

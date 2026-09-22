@@ -1,0 +1,20 @@
+{
+  "repository": "https://github.com/open-legal-products/mike-workflows",
+  "commit": "ce62e6a2d3f47e1d3567a4f2edc61898cfe9e78a",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2026 Mike",
+  "files": [
+    {
+      "bundled_file": "compare-documents.md",
+      "upstream_path": "assistant-workflows/compare-documents/SKILL.md",
+      "sha256": "69e5a45fe6970fe169b0ee50e56330e7a00058b735e52c5582bee58ea355d3fa"
+    },
+    {
+      "bundled_file": "LICENSE",
+      "upstream_path": "LICENSE",
+      "sha256": "6e7c22106722c151ffc66d0faf2035155eca1ad91931f5679c6773891c08deef"
+    }
+  ],
+  "adaptation": "Unchanged MIT snapshots retained for attribution and comparison only. Lucia-owned Italian guidance controls the four local workflows; no Mike server or model API.",
+  "update_policy": "Independent Italian adaptation. No automatic merging or runtime downloads. Review selected upstream ideas for Italian suitability, preserve provenance, test real behavior and release Lucia deliberately; upstream compatibility is not a requirement."
+}

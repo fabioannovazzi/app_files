@@ -548,6 +548,14 @@ LUCIA_NATIVE_COWORK_COMPONENTS = frozenset({"apertura-pratica"})
 LUCIA_COWORK_COMPONENTS = (
     LUCIA_SHARED_COWORK_COMPONENTS | LUCIA_NATIVE_COWORK_COMPONENTS
 )
+LUCIA_DOCUMENT_COWORK_SKILLS = frozenset(
+    {
+        "revisione-documentale",
+        "confronto-documenti",
+        "revisione-contratti",
+        "redazione-da-modello",
+    }
+)
 LUCIA_ORCHESTRATION_COWORK_SKILLS = frozenset(
     {"quesito-legale-fiscale", "adversarial-opinion"}
 )
@@ -555,8 +563,15 @@ LUCIA_COWORK_SKILLS = (
     (LUCIA_COWORK_COMPONENTS - {"prompt-optimizer", "deep-research-validator"})
     | {"legal-tax-answer-planner", "legal-tax-answer-review"}
     | LUCIA_ORCHESTRATION_COWORK_SKILLS
+    | LUCIA_DOCUMENT_COWORK_SKILLS
 )
 LUCIA_COWORK_README = """# Lucia for Claude Cowork
+
+Lucia also reviews contracts, compares versions and agreements, prepares evidence
+tables across selected documents, and edits copies of supplied legal templates.
+These four native workflows bundle local helpers and pinned MIT-licensed Mike
+workflow references. They need no Mike server or separate model API. The host
+model reads the selected material; local code checks evidence and produces files.
 
 Lucia helps lawyers frame and validate legal work, prepare a new client matter
 or a new matter for an existing client, create reviewable professional
@@ -2703,6 +2718,16 @@ def _lucia_package_entries(
     ).encode("utf-8")
 
     for component in sorted(LUCIA_COWORK_SKILLS):
+        if component in LUCIA_DOCUMENT_COWORK_SKILLS:
+            prefix = f"skills/{component}/"
+            entries.update(
+                {
+                    name: content
+                    for name, content in source_entries.items()
+                    if name.startswith(prefix)
+                }
+            )
+            continue
         wrapper_name = f"skills/{component}/SKILL.md"
         wrapper = source_entries.get(wrapper_name)
         if wrapper is None:

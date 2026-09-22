@@ -2,21 +2,112 @@
   "schema_version": 1,
   "plugin": "lucia",
   "positive": [
-    {"id": "question-plan", "prompt": "@lucia imposta questo quesito legale e indicami fonti e controlli.", "expected": "Routes to Legal/Tax Answer Planner and answers in Italian."},
-    {"id": "answer-validation", "prompt": "Lucia, valida questa risposta legale e le sue fonti.", "expected": "Routes to Legal/Tax Answer Review and separates support, reasoning, and judgment."},
-    {"id": "full-journey", "prompt": "Lucia, dal quesito prepara una risposta verificata.", "expected": "Routes to Quesito legale e fiscale, then runs Legal/Tax Answer Planner, model-led generation, and Legal/Tax Answer Review."},
-    {"id": "foreign-law", "prompt": "Prepara in italiano una risposta sul diritto tedesco e validala.", "expected": "Routes to Quesito legale e fiscale while keeping Italian output separate from German jurisdiction and source selection."},
-    {"id": "existing-memo", "prompt": "Controlla questa memoria e proponi le correzioni necessarie.", "expected": "Validates the supplied document against a reconstructed or supplied answer contract."},
-    {"id": "professional-communication", "prompt": "Lucia, valuta questa nuova pronuncia e prepara una circolare e un post per i clienti dello studio.", "expected": "Routes through Lucia's lawyer-profiled professional communication workflow and allows no_publish when usefulness is unsupported."},
-    {"id": "confidential-communication", "prompt": "Prepara un articolo sul caso Rossi citando il cliente che ci ha autorizzato.", "expected": "Keeps client identity and matter facts out of public copy and requires lawyer review of confidentiality and professional-information rules."},
-    {"id": "law-firm-site-refresh", "prompt": "Lucia, rinnova il sito del mio studio legale usando il sito attuale e i materiali allegati.", "expected": "Routes to Studio Digital Presence with verified identity, working responsive implementation, and approval-bound publication."},
-    {"id": "lawyer-first-site", "prompt": "Prepara il primo sito informativo del mio studio legale; non ho ancora un'identità visiva.", "expected": "Builds a reviewable first-site proposal without inventing services, qualifications, clients, results, or established brand history."},
-    {"id": "matter-opening", "prompt": "Lucia, prepara una nuova pratica per questo cliente dai documenti allegati e mostrami che cosa devo confermare.", "expected": "Routes to Fascicolo nuova pratica, preserves the private evidence lifecycle, and requires separate lawyer decisions for conflicts, engagement, deadlines, AML applicability, and opening."}
+    {
+      "id": "question-plan",
+      "prompt": "@lucia imposta questo quesito legale e indicami fonti e controlli.",
+      "expected": "Routes to Legal/Tax Answer Planner and answers in Italian."
+    },
+    {
+      "id": "answer-validation",
+      "prompt": "Lucia, valida questa risposta legale e le sue fonti.",
+      "expected": "Routes to Legal/Tax Answer Review and separates support, reasoning, and judgment."
+    },
+    {
+      "id": "full-journey",
+      "prompt": "Lucia, dal quesito prepara una risposta verificata.",
+      "expected": "Routes to Quesito legale e fiscale, then runs Legal/Tax Answer Planner, model-led generation, and Legal/Tax Answer Review."
+    },
+    {
+      "id": "foreign-law",
+      "prompt": "Prepara in italiano una risposta sul diritto tedesco e validala.",
+      "expected": "Routes to Quesito legale e fiscale while keeping Italian output separate from German jurisdiction and source selection."
+    },
+    {
+      "id": "existing-memo",
+      "prompt": "Controlla questa memoria e proponi le correzioni necessarie.",
+      "expected": "Validates the supplied document against a reconstructed or supplied answer contract."
+    },
+    {
+      "id": "professional-communication",
+      "prompt": "Lucia, valuta questa nuova pronuncia e prepara una circolare e un post per i clienti dello studio.",
+      "expected": "Routes through Lucia's lawyer-profiled professional communication workflow and allows no_publish when usefulness is unsupported."
+    },
+    {
+      "id": "confidential-communication",
+      "prompt": "Prepara un articolo sul caso Rossi citando il cliente che ci ha autorizzato.",
+      "expected": "Keeps client identity and matter facts out of public copy and requires lawyer review of confidentiality and professional-information rules."
+    },
+    {
+      "id": "law-firm-site-refresh",
+      "prompt": "Lucia, rinnova il sito del mio studio legale usando il sito attuale e i materiali allegati.",
+      "expected": "Routes to Studio Digital Presence with verified identity, working responsive implementation, and approval-bound publication."
+    },
+    {
+      "id": "lawyer-first-site",
+      "prompt": "Prepara il primo sito informativo del mio studio legale; non ho ancora un'identità visiva.",
+      "expected": "Builds a reviewable first-site proposal without inventing services, qualifications, clients, results, or established brand history."
+    },
+    {
+      "id": "matter-opening",
+      "prompt": "Lucia, prepara una nuova pratica per questo cliente dai documenti allegati e mostrami che cosa devo confermare.",
+      "expected": "Routes to Fascicolo nuova pratica, preserves the private evidence lifecycle, and requires separate lawyer decisions for conflicts, engagement, deadlines, AML applicability, and opening."
+    },
+    {
+      "id": "revisione-contratti",
+      "prompt": "Usa $revisione-contratti. Rivedi questo contratto per la parte che assisto, con clausole, rischi e modifiche proposte.",
+      "expected": "Routes to revisione-contratti; uses selected documents and local helpers with the host model, preserves originals and visible source gaps; no Mike server, remote document service or separate model API."
+    },
+    {
+      "id": "confronto-documenti",
+      "prompt": "Usa $confronto-documenti. Confronta questi documenti e spiegami le differenze rilevanti per la parte che assisto.",
+      "expected": "Routes to confronto-documenti; uses selected documents and local helpers with the host model, preserves originals and visible source gaps; no Mike server, remote document service or separate model API."
+    },
+    {
+      "id": "revisione-documentale",
+      "prompt": "Usa $revisione-documentale. Esamina questi documenti con domande comuni e prepara una tabella Excel con fonti e lacune.",
+      "expected": "Routes to revisione-documentale; uses selected documents and local helpers with the host model, preserves originals and visible source gaps; no Mike server, remote document service or separate model API."
+    },
+    {
+      "id": "redazione-da-modello",
+      "prompt": "Usa $redazione-da-modello. Prepara una copia di questo modello con i fatti forniti e indica modifiche e dati mancanti.",
+      "expected": "Routes to redazione-da-modello; uses selected documents and local helpers with the host model, preserves originals and visible source gaps; no Mike server, remote document service or separate model API."
+    },
+    {
+      "id": "consumer-standard-terms",
+      "prompt": "Assisto una consumatrice. Rivedi queste condizioni predisposte dal fornitore, firmate anche una seconda volta, con esclusione della responsabilità per colpa grave e foro diverso dalla residenza.",
+      "expected": "Reviews the document with party/purpose and formation evidence; separates consumer scrutiny from specific written approval, does not treat the second signature as a cure, and marks conclusions requiring current legal sources."
+    },
+    {
+      "id": "italian-firm-foreign-law-nda",
+      "prompt": "Sono un avvocato italiano e assisto Alfa S.r.l. Confronta questi NDA in inglese: resta il diritto inglese ma il foro passa da Londra a Milano. Il playbook preferisce un massimale di 200.000 euro.",
+      "expected": "Keeps English governing law separate from the forum change and Italian report language; treats the cap as a firm negotiating preference, preserving source quotations and unresolved legal checks."
+    },
+    {
+      "id": "italian-template-missing-facts",
+      "prompt": "Adatta questo modello italiano per Alfa S.r.l., corrispettivo 12.000 euro oltre IVA e anticipo sul prezzo. Non ho ancora P.IVA e firmatario.",
+      "expected": "Preserves unresolved identifiers and authority, distinguishes advance payment from caparra, proposes evidence-based edits without assuming a template or double signature proves validity; returns a copy, basis and questions, not a final signable instrument."
+    }
   ],
   "negative": [
-    {"id": "filing", "prompt": "Deposita e firma questo atto.", "expected": "Does not claim filing or signature capability."},
-    {"id": "accounting", "prompt": "Prepara il bilancio XBRL.", "expected": "Does not route to either Lucia workflow."},
-    {"id": "marketing", "prompt": "Ottimizza questo slogan pubblicitario.", "expected": "Does not treat generic prompt polishing as legal work."},
-    {"id": "client-portal", "prompt": "Costruisci un portale clienti con login, pagamenti e scambio documenti.", "expected": "Does not hide a transactional and security-sensitive application inside the informational website workflow."}
+    {
+      "id": "filing",
+      "prompt": "Deposita e firma questo atto.",
+      "expected": "Does not claim filing or signature capability."
+    },
+    {
+      "id": "accounting",
+      "prompt": "Prepara il bilancio XBRL.",
+      "expected": "Does not route to either Lucia workflow."
+    },
+    {
+      "id": "marketing",
+      "prompt": "Ottimizza questo slogan pubblicitario.",
+      "expected": "Does not treat generic prompt polishing as legal work."
+    },
+    {
+      "id": "client-portal",
+      "prompt": "Costruisci un portale clienti con login, pagamenti e scambio documenti.",
+      "expected": "Does not hide a transactional and security-sensitive application inside the informational website workflow."
+    }
   ]
 }

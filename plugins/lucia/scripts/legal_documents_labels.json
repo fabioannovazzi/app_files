@@ -1,0 +1,312 @@
+{
+  "it": {
+    "headings": [
+      "Documento",
+      "Tema",
+      "Stato",
+      "Rilievo",
+      "Motivazione",
+      "Modifica proposta",
+      "Citazioni"
+    ],
+    "statuses": {
+      "supported": "Con citazioni",
+      "not-stated": "Non dichiarato",
+      "unreadable": "Illeggibile",
+      "not-reviewed": "Non esaminato"
+    },
+    "context_labels": {
+      "represented_party": "Parte assistita",
+      "jurisdiction": "Diritto applicabile",
+      "instructions": "Incarico",
+      "assumptions": "Assunzioni",
+      "relationship": "Rapporto e ruoli delle parti",
+      "formation": "Formazione e trattativa",
+      "forum": "Foro e controversie",
+      "legal_basis": "Fonti giuridiche e verifiche aperte",
+      "firm_instructions": "Istruzioni dello studio"
+    },
+    "workflows": {
+      "revisione-contratti": "Revisione contratti",
+      "confronto-documenti": "Confronto documenti",
+      "revisione-documentale": "Revisione documentale",
+      "redazione-da-modello": "Redazione da modello"
+    },
+    "difference": "Differenza e conseguenza",
+    "complete": "Da rivedere con l’avvocato",
+    "partial": "Revisione parziale: copertura incompleta",
+    "status": "Stato complessivo",
+    "caveat": "Limite del controllo",
+    "quote_meaning": "Il controllo verifica soltanto che la citazione compaia nel testo. La copertura è dichiarata dal modello che legge; supporto semantico, completezza e correttezza giuridica richiedono la revisione dell’avvocato.",
+    "takeaways": "Conclusioni e decisioni",
+    "limits": "Limiti della revisione",
+    "matrix": "Confronto",
+    "details": "Rilievi",
+    "sources": "Fonti",
+    "context": "Contesto",
+    "context_headings": [
+      "Voce",
+      "Contenuto"
+    ],
+    "source_headings": [
+      "Documento",
+      "SHA-256 originale",
+      "Passaggi letti/totali",
+      "Avvisi di estrazione",
+      "Errore",
+      "Limiti residui",
+      "Originale ispezionato"
+    ],
+    "privacy_title": "Quali dati arrivano al modello",
+    "privacy": "L’helper conserva localmente originali scelti, testo estratto e risultati senza chiamate di rete o a modelli. Il contenuto letto nella conversazione viene trattato dal modello ospite secondo l’account usato; i dati non sono anonimizzati automaticamente. La conversazione identifica i file e i passaggi effettivamente letti. Il codice locale non osserva il traffico del modello.",
+    "coverage_incomplete": "Estrazione o revisione con limiti ancora aperti"
+  },
+  "en": {
+    "headings": [
+      "Document",
+      "Topic",
+      "Status",
+      "Finding",
+      "Reasoning",
+      "Proposed change",
+      "Quotations"
+    ],
+    "statuses": {
+      "supported": "With quotations",
+      "not-stated": "Not stated",
+      "unreadable": "Unreadable",
+      "not-reviewed": "Not reviewed"
+    },
+    "context_labels": {
+      "represented_party": "Represented party",
+      "jurisdiction": "Applicable law",
+      "instructions": "Instructions",
+      "assumptions": "Assumptions",
+      "relationship": "Relationship and party roles",
+      "formation": "Formation and negotiation",
+      "forum": "Forum and disputes",
+      "legal_basis": "Legal sources and unresolved checks",
+      "firm_instructions": "Firm instructions"
+    },
+    "workflows": {
+      "revisione-contratti": "Contract review",
+      "confronto-documenti": "Document comparison",
+      "revisione-documentale": "Structured document review",
+      "redazione-da-modello": "Draft from a template"
+    },
+    "difference": "Difference and implication",
+    "complete": "For lawyer review",
+    "partial": "Partial review: incomplete coverage",
+    "status": "Overall status",
+    "caveat": "Check limitation",
+    "quote_meaning": "The check establishes quotation occurrence only. Reading coverage is declared by the reviewing model; semantic support, completeness and legal correctness require lawyer review.",
+    "takeaways": "Conclusions and decisions",
+    "limits": "Review limitations",
+    "matrix": "Comparison",
+    "details": "Findings",
+    "sources": "Sources",
+    "context": "Context",
+    "context_headings": [
+      "Item",
+      "Content"
+    ],
+    "source_headings": [
+      "Document",
+      "Original SHA-256",
+      "Units read/total",
+      "Extraction warnings",
+      "Error",
+      "Remaining limitations",
+      "Original inspected"
+    ],
+    "privacy_title": "What data reaches the model",
+    "privacy": "The helper stores selected originals, extracted text and results locally without network or model calls. Content read in the conversation is processed by the host model under the account in use; data is not automatically anonymized. The conversation identifies the actual files and passages read. Local code cannot observe host model traffic.",
+    "coverage_incomplete": "Extraction or review has unresolved limitations"
+  },
+  "fr": {
+    "headings": [
+      "Document",
+      "Sujet",
+      "État",
+      "Observation",
+      "Motif",
+      "Modification proposée",
+      "Citations"
+    ],
+    "statuses": {
+      "supported": "Avec citations",
+      "not-stated": "Non précisé",
+      "unreadable": "Illisible",
+      "not-reviewed": "Non examiné"
+    },
+    "context_labels": {
+      "represented_party": "Partie représentée",
+      "jurisdiction": "Droit applicable",
+      "instructions": "Instructions",
+      "assumptions": "Hypothèses",
+      "relationship": "Relation et rôles des parties",
+      "formation": "Formation et négociation",
+      "forum": "Juridiction et litiges",
+      "legal_basis": "Sources juridiques et vérifications ouvertes",
+      "firm_instructions": "Instructions du cabinet"
+    },
+    "workflows": {
+      "revisione-contratti": "Revue de contrats",
+      "confronto-documenti": "Comparaison de documents",
+      "revisione-documentale": "Revue documentaire",
+      "redazione-da-modello": "Rédaction à partir d’un modèle"
+    },
+    "difference": "Différence et conséquence",
+    "complete": "Pour revue de l’avocat",
+    "partial": "Revue partielle : couverture incomplète",
+    "status": "État global",
+    "caveat": "Limite du contrôle",
+    "quote_meaning": "Le contrôle établit seulement la présence de la citation. Le modèle déclare la couverture de lecture ; le sens, l’exhaustivité et la justesse juridique nécessitent la revue de l’avocat.",
+    "takeaways": "Conclusions et décisions",
+    "limits": "Limites de la revue",
+    "matrix": "Comparaison",
+    "details": "Observations",
+    "sources": "Sources",
+    "context": "Contexte",
+    "context_headings": [
+      "Rubrique",
+      "Contenu"
+    ],
+    "source_headings": [
+      "Document",
+      "SHA-256 original",
+      "Passages lus/total",
+      "Alertes d’extraction",
+      "Erreur",
+      "Limites restantes",
+      "Original inspecté"
+    ],
+    "privacy_title": "Quelles données parviennent au modèle",
+    "privacy": "L’outil conserve localement les originaux choisis, le texte extrait et les résultats sans appel réseau ou modèle. Le contenu lu dans la conversation est traité par le modèle hôte selon le compte utilisé, sans anonymisation automatique. La conversation identifie les fichiers et passages effectivement lus. Le code local ne peut observer le trafic du modèle.",
+    "coverage_incomplete": "Extraction ou revue avec des limites non résolues"
+  },
+  "de": {
+    "headings": [
+      "Dokument",
+      "Thema",
+      "Status",
+      "Befund",
+      "Begründung",
+      "Änderungsvorschlag",
+      "Zitate"
+    ],
+    "statuses": {
+      "supported": "Mit Zitaten",
+      "not-stated": "Nicht angegeben",
+      "unreadable": "Unlesbar",
+      "not-reviewed": "Nicht geprüft"
+    },
+    "context_labels": {
+      "represented_party": "Vertretene Partei",
+      "jurisdiction": "Anwendbares Recht",
+      "instructions": "Auftrag",
+      "assumptions": "Annahmen",
+      "relationship": "Verhältnis und Rollen der Parteien",
+      "formation": "Vertragsschluss und Verhandlung",
+      "forum": "Gerichtsstand und Streitigkeiten",
+      "legal_basis": "Rechtsquellen und offene Prüfungen",
+      "firm_instructions": "Kanzleivorgaben"
+    },
+    "workflows": {
+      "revisione-contratti": "Vertragsprüfung",
+      "confronto-documenti": "Dokumentenvergleich",
+      "revisione-documentale": "Dokumentenprüfung",
+      "redazione-da-modello": "Entwurf aus einer Vorlage"
+    },
+    "difference": "Unterschied und Folge",
+    "complete": "Zur anwaltlichen Prüfung",
+    "partial": "Teilprüfung: unvollständige Abdeckung",
+    "status": "Gesamtstatus",
+    "caveat": "Prüfgrenze",
+    "quote_meaning": "Die Prüfung bestätigt nur das Vorkommen eines Zitats. Das lesende Modell erklärt den Leseumfang; Bedeutung, Vollständigkeit und rechtliche Richtigkeit erfordern anwaltliche Prüfung.",
+    "takeaways": "Ergebnisse und Entscheidungen",
+    "limits": "Prüfungsgrenzen",
+    "matrix": "Vergleich",
+    "details": "Befunde",
+    "sources": "Quellen",
+    "context": "Kontext",
+    "context_headings": [
+      "Punkt",
+      "Inhalt"
+    ],
+    "source_headings": [
+      "Dokument",
+      "Original-SHA-256",
+      "Gelesene Stellen/gesamt",
+      "Extraktionshinweise",
+      "Fehler",
+      "Offene Grenzen",
+      "Original geprüft"
+    ],
+    "privacy_title": "Welche Daten das Modell erhält",
+    "privacy": "Der Helfer speichert ausgewählte Originale, extrahierten Text und Ergebnisse lokal ohne Netzwerk- oder Modellaufrufe. Im Gespräch gelesene Inhalte verarbeitet das Host-Modell unter dem verwendeten Konto ohne automatische Anonymisierung. Das Gespräch benennt die tatsächlich gelesenen Dateien und Stellen. Lokaler Code kann den Modellverkehr nicht beobachten.",
+    "coverage_incomplete": "Extraktion oder Prüfung mit offenen Einschränkungen"
+  },
+  "es": {
+    "headings": [
+      "Documento",
+      "Tema",
+      "Estado",
+      "Hallazgo",
+      "Motivo",
+      "Cambio propuesto",
+      "Citas"
+    ],
+    "statuses": {
+      "supported": "Con citas",
+      "not-stated": "No indicado",
+      "unreadable": "Ilegible",
+      "not-reviewed": "Sin revisar"
+    },
+    "context_labels": {
+      "represented_party": "Parte representada",
+      "jurisdiction": "Derecho aplicable",
+      "instructions": "Encargo",
+      "assumptions": "Supuestos",
+      "relationship": "Relación y roles de las partes",
+      "formation": "Formación y negociación",
+      "forum": "Foro y controversias",
+      "legal_basis": "Fuentes jurídicas y comprobaciones pendientes",
+      "firm_instructions": "Instrucciones del despacho"
+    },
+    "workflows": {
+      "revisione-contratti": "Revisión de contratos",
+      "confronto-documenti": "Comparación de documentos",
+      "revisione-documentale": "Revisión documental",
+      "redazione-da-modello": "Redacción desde plantilla"
+    },
+    "difference": "Diferencia y consecuencia",
+    "complete": "Para revisión del abogado",
+    "partial": "Revisión parcial: cobertura incompleta",
+    "status": "Estado general",
+    "caveat": "Límite de la comprobación",
+    "quote_meaning": "La comprobación solo acredita que la cita aparece en el texto. El modelo declara la cobertura de lectura; el sentido, la integridad y la corrección jurídica requieren revisión del abogado.",
+    "takeaways": "Conclusiones y decisiones",
+    "limits": "Límites de revisión",
+    "matrix": "Comparación",
+    "details": "Hallazgos",
+    "sources": "Fuentes",
+    "context": "Contexto",
+    "context_headings": [
+      "Elemento",
+      "Contenido"
+    ],
+    "source_headings": [
+      "Documento",
+      "SHA-256 original",
+      "Pasajes leídos/total",
+      "Avisos de extracción",
+      "Error",
+      "Límites pendientes",
+      "Original inspeccionado"
+    ],
+    "privacy_title": "Qué datos llegan al modelo",
+    "privacy": "La herramienta guarda localmente originales elegidos, texto extraído y resultados sin llamadas de red o modelo. El modelo anfitrión procesa el contenido leído en la conversación según la cuenta utilizada, sin anonimización automática. La conversación identifica los archivos y pasajes leídos. El código local no puede observar el tráfico del modelo.",
+    "coverage_incomplete": "Extracción o revisión con limitaciones pendientes"
+  }
+}

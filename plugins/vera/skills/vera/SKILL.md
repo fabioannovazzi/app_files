@@ -395,7 +395,14 @@ them without changing the capability catalog:
   mechanically to the same safe action and never counts as clean validation.
   It applies to Agenzia delle Entrate, TeamSystem, Gmail, or another browser-
   based gestionale; authentication remains with each operator and no session or
-  secret is transferred;
+  secret is transferred. A request to download Agenzia invoices still routes
+  here when it also asks Vera to remember passwords or log in automatically.
+  Explain the operator-owned login boundary, then continue the authorized
+  post-login work through the available browser workflow. Remembering a
+  procedure is separate from retaining credentials. Do not turn the credential
+  restriction into a blanket automation refusal or require a separate RPA
+  system or credential vault for this supported route. Check the actual host,
+  browser and process evidence before describing a blocker;
 - `studio-archive`: durable local client IDs and engagements plus four
   independent evidence routes for one client's Gmail, one verified local
   WhatsApp Desktop chat, an optional local document archive, or one bound

@@ -162,6 +162,22 @@
       </section>`
     : "";
 
+  const processSections = (text.processSections || []).map((section) => `
+    <section class="pf-section" id="${section.id}" aria-labelledby="${section.id}-title">
+      <div class="pf-section__head">
+        <div><p class="pf-section__label">${section.label}</p><h2 id="${section.id}-title">${section.title}</h2></div>
+        <p class="pf-section__copy">${section.intro}</p>
+      </div>
+      ${section.items.map((item) => `
+        <article class="pf-process-item">
+          <h3>${item.title}</h3>
+          <p>${item.copy}</p>
+          <p>${item.limits}</p>
+          <p class="pf-section__label">${ui.promptTitle}</p>
+          <code class="pf-prompt">${item.prompt}</code>
+        </article>`).join("")}
+    </section>`).join("");
+
   root.innerHTML = `
     <a class="skip-link" href="#main-content">${ui.skip}</a>
     <header class="pf-nav">
@@ -189,6 +205,7 @@
         <article class="pf-fact"><h2>${text.outputLabel || ui.output}</h2><p>${text.output}</p></article>
       </section>
       ${publicExample}
+      ${processSections}
       <section class="pf-section">
         <div class="pf-section__head">
           <div><p class="pf-section__label">${text.responsibilitiesLabel || ui.responsibilitiesLabel}</p><h2>${text.responsibilitiesTitle || ui.responsibilitiesTitle}</h2></div>
@@ -199,12 +216,12 @@
           <article class="pf-responsibility"><h3>${text.professionalRoleTitle || ui.professionalRole}</h3><p>${text.professionalRole}</p></article>
         </div>
       </section>
-      <section class="pf-section">
+      ${text.processSections ? "" : `<section class="pf-section">
         <div class="pf-section__head">
           <div><p class="pf-section__label">${ui.promptLabel}</p><h2>${text.promptTitle || ui.promptTitle}</h2></div>
           <code class="pf-prompt">${text.prompt}</code>
         </div>
-      </section>
+      </section>`}
       <section class="function-model-data" data-model-data-workflow="${pageKey}" data-model-data-status="${text.modelDataStatus}" aria-labelledby="${pageKey}-model-data-title">
         <div class="function-model-data__head">
           <div class="function-model-data__heading"><p class="function-model-data__label">${ui.modelDataLabel}</p><h2 id="${pageKey}-model-data-title">${ui.modelDataTitle}</h2></div>

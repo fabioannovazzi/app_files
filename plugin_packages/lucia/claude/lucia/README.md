@@ -1,5 +1,11 @@
 # Lucia for Claude Cowork
 
+Lucia also reviews contracts, compares versions and agreements, prepares evidence
+tables across selected documents, and edits copies of supplied legal templates.
+These four native workflows bundle local helpers and pinned MIT-licensed Mike
+workflow references. They need no Mike server or separate model API. The host
+model reads the selected material; local code checks evidence and produces files.
+
 Lucia helps lawyers frame and validate legal work, prepare a new client matter
 or a new matter for an existing client, create reviewable professional
 communications, and create or refresh an informational law-firm website from

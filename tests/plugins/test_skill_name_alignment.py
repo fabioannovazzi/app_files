@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
+from posixpath import dirname, normpath
 from zipfile import ZipFile
 
 import pytest
@@ -48,3 +50,32 @@ def test_installed_skill_identity_matches_approved_name(
 
     assert f"\nname: {skill}\n" in text
     assert not (ROOT / "plugins" / product / "skills" / retired).exists()
+
+
+@pytest.mark.parametrize("product", ["vera", "lucia"])
+@pytest.mark.parametrize("host", ["codex", "chatgpt", "cowork"])
+def test_packaged_opposing_opinion_scope_reference_resolves(
+    product: str, host: str
+) -> None:
+    """The installed opposing-opinion instructions must resolve their scope file."""
+    archives = {
+        "codex": (
+            f"{product}-plugin.zip",
+            f"{product}-codex-plugin/plugins/{product}/",
+        ),
+        "chatgpt": (f"{product}-chatgpt-upload.zip", ""),
+        "cowork": (f"{product}-claude-plugin.zip", ""),
+    }
+    filename, prefix = archives[host]
+    skill_path = (
+        f"{prefix}modules/deep-research-validator/skills/adversarial-opinion/SKILL.md"
+    )
+    with ZipFile(ROOT / "plugin_packages" / product / filename) as archive:
+        instruction = archive.read(skill_path).decode("utf-8")
+
+        reference = re.search(r"`([^`]+/adversarial-scope\.md)`", instruction)
+
+        assert reference is not None
+        target = normpath(f"{dirname(skill_path)}/{reference.group(1)}")
+        assert target in archive.namelist()
+        assert archive.read(target).strip()
