@@ -1248,7 +1248,7 @@
         </li>
         <li>
           <a class="contributor-row" href="https://www.linkedin.com/in/francesco-cerchiara-91a92558/" target="_blank" rel="noopener noreferrer">
-            <span class="contributor-mark" aria-hidden="true">FC</span>
+            <span class="contributor-mark"><img src="https://media.licdn.com/dms/image/v2/C4E03AQEkbQH_VR-xUA/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1523045349063?e=1791417600&amp;v=beta&amp;t=e7m7NlsMKT1Z6akVNL-ke9QGrQzIprnjkddr0sb2dFM" alt="Foto di Francesco Cerchiara"></span>
             <span>
               <span class="contributor-name">Francesco Cerchiara</span>
               <span class="contributor-role" data-i18n="contributors.role">Contributore di Vera</span>
@@ -2726,7 +2726,10 @@
 
     const contributorList = document.querySelector(".contributor-list");
     [...contributorList.children]
-      .sort((a, b) => a.querySelector(".contributor-name").textContent.localeCompare(b.querySelector(".contributor-name").textContent, "it"))
+      .sort((a, b) => {
+        const surname = (item) => item.querySelector(".contributor-name").textContent.trim().split(/\s+/).at(-1);
+        return surname(a).localeCompare(surname(b), "it") || a.querySelector(".contributor-name").textContent.localeCompare(b.querySelector(".contributor-name").textContent, "it");
+      })
       .forEach((item) => contributorList.appendChild(item));
 
     setLanguage(params.get("lang") || "it", false);
