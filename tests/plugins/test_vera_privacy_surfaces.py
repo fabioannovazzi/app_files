@@ -676,6 +676,9 @@ def test_vera_privacy_validator_detects_changed_shared_service_source(
         Path("modules/change_requests/api.py"),
         Path("modules/change_requests/store.py"),
         Path("scripts/manage_change_requests.py"),
+        Path("plugins/browser-automation/scripts/process_lifecycle.py"),
+        Path("plugins/browser-automation/scripts/development_request.py"),
+        Path("plugins/browser-automation/references/process-lifecycle.md"),
     ):
         target = tmp_path / relative_path
         target.parent.mkdir(parents=True, exist_ok=True)

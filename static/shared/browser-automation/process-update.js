@@ -1,4 +1,26 @@
 (() => {
+  const lifecycleCopy = {
+    it: [
+      "In una nuova conversazione Vera recupera il processo salvato, i tentativi, i risultati, le segnalazioni e le versioni. Durante lo sviluppo interpreta un esempio e conserva decisioni ed eccezioni. Lo sviluppatore prepara una skill nominativa per ogni operazione da rilasciare. Per l'uso ordinario Vera apre quella skill, esegue la procedura esatta associata e restituisce un report verificabile. Un risultato incompleto torna allo stesso ciclo di sviluppo.",
+      "Il modello legge descrizione e confini del processo, parametri forniti per il lavoro, riepiloghi dell'insegnamento, esiti, conteggi, hash e riferimenti ai report locali. Durata, modello e token sono dichiarati solo secondo le misure disponibili; le informazioni mancanti hanno un motivo esplicito. Il registro locale collega processi, tentativi, versioni e CR. L'invio autorizzato a Mparanza contiene il testo tecnico revisionato e le prove selezionate, non il file ZIP, documenti fiscali, valori degli output, identificativi del cliente o credenziali. La qualificazione richiede due esecuzioni pulite nello stesso ambiente, risultati verificati e tempi accettati; una versione pubblicata non prova il funzionamento sul sito."
+    ],
+    en: [
+      "In a new conversation Vera recovers the saved process, attempts, results, requests and versions. During development it interprets an example and retains decisions and exceptions. The developer prepares a named skill for each operation to be released. For ordinary use Vera opens that skill, executes its exact bound procedure and returns a verifiable report. An incomplete result returns to the same development cycle.",
+      "The model reads the process description and boundaries, supplied work parameters, teaching summaries, outcomes, counts, hashes and local report references. Duration, model and tokens reflect only available measurements; missing information has an explicit reason. The local register links processes, attempts, versions and CRs. Authorized submission to Mparanza contains reviewed technical text and selected evidence, not the ZIP, fiscal documents, output values, client identifiers or credentials. Qualification requires two clean executions in the same environment, checked results and accepted timing; a published version does not prove operation on the site."
+    ],
+    fr: [
+      "Dans une nouvelle conversation, Vera retrouve le processus enregistré, les essais, résultats, signalements et versions. Pendant le développement, elle interprète un exemple et conserve décisions et exceptions. Le développeur prépare une skill nommée pour chaque opération à publier. Pour l'utilisation courante, Vera ouvre cette skill, exécute sa procédure exacte et fournit un rapport vérifiable. Un résultat incomplet revient au même cycle de développement.",
+      "Le modèle lit la description et les limites du processus, les paramètres fournis, les résumés d'apprentissage, résultats, nombres, empreintes et références aux rapports locaux. Durée, modèle et jetons reflètent uniquement les mesures disponibles ; toute information manquante a un motif explicite. Le registre local relie processus, essais, versions et CR. L'envoi autorisé à Mparanza contient le texte technique relu et les preuves sélectionnées, pas le ZIP, les documents fiscaux, valeurs des résultats, identifiants clients ou identifiants de connexion. La qualification exige deux exécutions sans modification dans le même environnement, des résultats vérifiés et des délais acceptés ; une version publiée ne prouve pas le fonctionnement sur le site."
+    ],
+    de: [
+      "In einem neuen Gespräch findet Vera den gespeicherten Prozess, Versuche, Ergebnisse, Meldungen und Versionen wieder. Bei der Entwicklung interpretiert sie ein Beispiel und bewahrt Entscheidungen und Ausnahmen. Der Entwickler erstellt für jeden zu veröffentlichenden Vorgang einen benannten Skill. Für die reguläre Nutzung öffnet Vera diesen Skill, führt dessen genau zugeordnetes Verfahren aus und liefert einen überprüfbaren Bericht. Ein unvollständiges Ergebnis führt in denselben Entwicklungsablauf zurück.",
+      "Das Modell liest Prozessbeschreibung und Grenzen, angegebene Arbeitsparameter, Lernzusammenfassungen, Ergebnisse, Anzahlen, Hashes und Verweise auf lokale Berichte. Dauer, Modell und Token beruhen nur auf verfügbaren Messungen; fehlende Angaben haben einen ausdrücklichen Grund. Das lokale Register verbindet Prozesse, Versuche, Versionen und CRs. Die genehmigte Übermittlung an Mparanza enthält geprüften technischen Text und ausgewählte Belege, keine ZIP-Datei, Steuerunterlagen, Ausgabewerte, Mandantenkennungen oder Zugangsdaten. Die Qualifikation erfordert zwei saubere Ausführungen in derselben Umgebung, geprüfte Ergebnisse und akzeptierte Laufzeiten; eine veröffentlichte Version beweist keinen Betrieb auf der Website."
+    ],
+    es: [
+      "En una conversación nueva Vera recupera el proceso guardado, los intentos, resultados, incidencias y versiones. Durante el desarrollo interpreta un ejemplo y conserva decisiones y excepciones. El desarrollador prepara una skill con nombre propio para cada operación que se publicará. Para el uso habitual Vera abre esa skill, ejecuta su procedimiento exacto y entrega un informe verificable. Un resultado incompleto vuelve al mismo ciclo de desarrollo.",
+      "El modelo lee la descripción y los límites del proceso, parámetros aportados, resúmenes del aprendizaje, resultados, recuentos, hashes y referencias a informes locales. Duración, modelo y tokens reflejan solo las medidas disponibles; la información que falta tiene un motivo explícito. El registro local vincula procesos, intentos, versiones y CR. El envío autorizado a Mparanza contiene el texto técnico revisado y las pruebas seleccionadas, no el ZIP, documentos fiscales, valores de salida, identificadores del cliente ni credenciales. La cualificación exige dos ejecuciones limpias en el mismo entorno, resultados comprobados y tiempos aceptados; una versión publicada no prueba el funcionamiento en el sitio."
+    ]
+  };
   const browserSessionCopy = {
     it: [
       "Prima di una pausa per accesso o altro intervento dell'operatore, Vera conserva la scheda del processo per il turno successivo. Distingue scheda persa, elenco vuoto e browser non disponibile. Nell'acquisizione Agenzia archivia per anno e categoria, riconcilia pagine e totale osservato, conserva gli originali XML o P7M ed estrae dall'eventuale P7M l'XML collegandolo con hash. La stampa in PDF resta un passaggio dell'operatore e il risultato viene verificato dai byte salvati.",
@@ -25,5 +47,7 @@
     const page = window.MPARANZA_FUNCTION_PAGES["browser-automation"].copy[language];
     page.work += " " + text[0];
     page.modelData += "\n\n" + text[1];
+    page.work += " " + lifecycleCopy[language][0];
+    page.modelData += "\n\n" + lifecycleCopy[language][1];
   });
 })();

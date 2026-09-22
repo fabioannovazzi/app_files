@@ -988,7 +988,56 @@ def expected_zip_entries(package: BuildTarget) -> dict[str, bytes]:
             component_server = review_workbench_server_entry(component_dir)
             if component_server is not None:
                 entries[f"{component_root}/scripts/review_server.py"] = component_server
+    for plugin_dir in plugin_dirs:
+        if plugin_dir.name == "vera":
+            named_browser_skill_cards(entries, f"{root}/plugins/vera/")
     return dict(sorted(entries.items()))
+
+
+def named_browser_skill_cards(
+    entries: dict[str, bytes], prefix: str
+) -> dict[str, dict[str, str]]:
+    """Check exact skill/procedure binding; author copy supplies semantic scope."""
+    cards = {}
+    for path in sorted(entries):
+        relative = path.removeprefix(prefix).split("/")
+        if (
+            not path.startswith(prefix)
+            or len(relative) != 3
+            or relative[0] != "skills"
+            or relative[2] != "process.json"
+        ):
+            continue
+        name = relative[1]
+        base = f"{prefix}skills/{name}/"
+        required = ("SKILL.md", "capability.json", "marketplace-card.json")
+        if any(base + item not in entries for item in required):
+            raise ValueError(
+                f"{name}: named browser skill has an incomplete executable handoff"
+            )
+        binding = json.loads(entries[path])
+        capability = json.loads(entries[base + "capability.json"])
+        canonical = (
+            json.dumps(capability, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
+        ).encode()
+        if binding.get(
+            "schema_version"
+        ) != "browser-process-binding/v1" or hashlib.sha256(
+            canonical
+        ).hexdigest() != binding.get(
+            "capability_sha256"
+        ):
+            raise ValueError(f"{name}: named browser skill procedure hash differs")
+        if (
+            capability["status"] not in {"discovered", "validated_local"}
+            or binding["description"]["process"] != capability["process"]
+            or binding["description"]["site"] != capability["site"]["name"]
+        ):
+            raise ValueError(
+                f"{name}: named browser skill has a different process or a scaffold"
+            )
+        cards[name] = json.loads(entries[base + "marketplace-card.json"])
+    return cards
 
 
 def project_chatgpt_manifest(content: bytes) -> bytes:
@@ -1186,6 +1235,7 @@ def load_chatgpt_skill_cards(
     *,
     plugin_name: str,
     expected_skills: set[str],
+    browser_skill_names: frozenset[str] = frozenset(),
 ) -> dict[str, ChatGPTSkillCard]:
     """Load complete, source-owned Marketplace card copy and metadata."""
 
@@ -1304,7 +1354,11 @@ def load_chatgpt_skill_cards(
         expected_router_skills = (
             expected_skills - {plugin_name} - VERA_CHATGPT_DEVELOPER_SKILLS
         )
-        if set(VERA_CHATGPT_ROUTER_TARGETS) != expected_router_skills:
+        targets = {
+            **VERA_CHATGPT_ROUTER_TARGETS,
+            **{name: f"skills/{name}/SKILL.md" for name in browser_skill_names},
+        }
+        if set(targets) != expected_router_skills:
             raise ValueError(
                 "vera: Marketplace router target coverage differs; "
                 f"missing={sorted(expected_router_skills - set(VERA_CHATGPT_ROUTER_TARGETS))}, "
@@ -1312,7 +1366,7 @@ def load_chatgpt_skill_cards(
             )
         missing_routes = sorted(
             skill_name
-            for skill_name, target in VERA_CHATGPT_ROUTER_TARGETS.items()
+            for skill_name, target in targets.items()
             if f"`{skill_name}` → `../../{target}`" not in router
         )
         if missing_routes:
@@ -1439,6 +1493,11 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
     plugin_name = package.plugin_names[0]
     prefix = f"{package.package_root}/plugins/{plugin_name}/"
     packaged_entries = expected_zip_entries(package)
+    browser_cards = (
+        named_browser_skill_cards(packaged_entries, prefix)
+        if plugin_name == "vera"
+        else {}
+    )
     skill_cards: dict[str, ChatGPTSkillCard] = {}
     if plugin_name in CROSS_SURFACE_PLUGINS:
         expected_cards = {
@@ -1452,14 +1511,33 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
         instruction_content = packaged_entries.get(instruction_path)
         if instruction_content is None:
             raise ValueError(f"{plugin_name}: missing {CHATGPT_SKILL_CARDS_FILE}")
+        if browser_cards:
+            instructions = json.loads(instruction_content)
+            for name, card in browser_cards.items():
+                if (
+                    name in instructions["skills"]
+                    or name in VERA_CHATGPT_ROUTER_TARGETS
+                ):
+                    raise ValueError(
+                        f"{name}: named browser skill collides with an existing public skill"
+                    )
+                instructions["skills"][name] = card
+                instructions["skills"]["vera"][
+                    "instructions"
+                ] += f" Per questa operazione browser usa `{name}` → `../../skills/{name}/SKILL.md`: {card['short_description']}."
+            instruction_content = json.dumps(instructions, ensure_ascii=False).encode()
         skill_cards = load_chatgpt_skill_cards(
             instruction_content,
             plugin_name=plugin_name,
             expected_skills=expected_cards,
+            browser_skill_names=frozenset(browser_cards),
         )
     public_skill_names = set(skill_cards)
     router_targets = (
-        VERA_CHATGPT_ROUTER_TARGETS
+        {
+            **VERA_CHATGPT_ROUTER_TARGETS,
+            **{name: f"skills/{name}/SKILL.md" for name in browser_cards},
+        }
         if plugin_name == "vera"
         else LUCIA_CHATGPT_ROUTER_TARGETS if plugin_name == "lucia" else {}
     )
@@ -1546,6 +1624,12 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
             # instructions. Keep them in the registered SKILL.md instead of an
             # arbitrary sibling file that the upload scanner may not include.
             content = project_chatgpt_source_skill(content)
+            if plugin_name == "vera" and path_parts[1] == "vera" and browser_cards:
+                routes = "\n\n## Named browser operations\n\n" + "\n".join(
+                    f"- `{skill}` → `../../skills/{skill}/SKILL.md`: {card['short_description']}"
+                    for skill, card in sorted(browser_cards.items())
+                )
+                content += (routes + "\n").encode("utf-8")
         entries[name] = content
     for skill_name in sorted(public_skill_names):
         card = skill_cards[skill_name]

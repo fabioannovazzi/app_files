@@ -110,6 +110,14 @@
         "runtime_profiles": [
           "openai-codex"
         ]
+      },
+      {
+        "id": "persistent-browser-process-lifecycle",
+        "purpose": "Select an exact professional process in a fresh conversation and interpret linked teaching, attempts, reviewed feedback and qualification",
+        "content": "The current model reads the scoped local process catalog, professional objectives and exclusions, input declarations, selected business parameters supplied by the user, interpreted teaching summaries, artifact/report paths, opaque process and attempt IDs, measured execution duration, counts and hashes, explicit reasons for missing host/model/token measurements, reviewed result judgments, registered release provenance and actual CR status. It writes model-sanitized development/problem descriptions for exact content review. The owner-private SQLite register and attempt directories persist independently of conversations and plugin cache versions. The opaque local machine fingerprint is derived locally from the host name, home path and platform; those source values are not returned or transmitted by the lifecycle helpers. Runtime output values remain governed by their existing delivery declarations; no output values or runtime input hashes are copied into the external technical projection. Model and token measurements are null unless actual host telemetry is supplied with its source. Installed process bindings carry developer-declared process/release lineage but never import another environment qualification. On a developer machine, an authorized export from the existing CR administration command may be matched to the exact reviewed request. The register retains its opaque CR/submission identity, status and export hash as separate administration provenance, not the raw export or status tokens and not a local submission receipt.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -223,14 +231,22 @@
       "control": "Receipt v3 defaults execution mode to unverified. Simulated or unverified runs cannot pass capability finalization; only an explicit live_connected_chrome declaration is eligible, without claiming cryptographic attestation. Real-browser fixture results remain limited to that fixture. The individual invoice runner always retains prototype status, writes initial and per-download revisions and final outputs on handled failures, rejects repeated detail identities and checks download counts against independently observed totals. These checks do not establish live Agenzia compatibility, account correctness or professional validation."
     },
     {
+      "id": "persistent-attempt-and-reviewed-cr-lineage",
+      "control": "The local register uses owner-only paths, parameterized SQLite writes, immutable records with hashes and explicit attempt IDs. Runtime attempts have an exclusive execution-start marker, exact registered contract hash checks, current host capability checks and a local machine fingerprint. Missing or corrupt linked output evidence remains an unverified partial report and cannot qualify. Qualification reuses the existing full two-clean-live-receipt finalizer, requires exact result reviews and an accepted elapsed-time bound, and is suspended by later unfinished/failed/recovered/incorrect or slow results. These checks establish record consistency, not cryptographic browser/account attestation. External feedback reuses the existing exact reviewed archive and client, transmits only the frozen structured body, records the actual returned CR, keeps tokens in the CR client store, and deduplicates uncertain retries across client version updates. It does not upload ZIPs, fiscal documents, customer identifiers, input values or output values. Written findings still require semantic sanitization and actual transmission authorization."
+    },
+    {
+      "id": "named-operation-exact-procedure-binding",
+      "control": "A source-owned named skill carries its process description, exact executable contract and hash, authored result checks and model-data boundary. The public skill invokes only its adjacent binding; it never selects from the development catalog. Local drafts cannot silently replace or invalidate the released version. Package checks reject an altered procedure binding. Export creates reviewable source and does not publish, attest to professional correctness or import another machine qualification. The shared executor and reviewed technical-feedback boundary are unchanged."
+    },
+    {
       "id": "resumable-agenzia-artifact-acquisition",
       "control": "The category/year acquisition runner requires a model-reviewed explicit plan with exact single-year filters, independently observed counts, and declared original/PDF availability. It verifies browser-event and stable-directory evidence, preserves XML/P7M originals byte-for-byte, extracts only CMS-encapsulated FatturaPA XML with a source hash binding, verifies a native PDF signature, and never claims P7M signature, certificate, signer, or revocation validation. Native Print to PDF remains an operator-owned native_gap and excludes the run from clean browser validation. Fresh owner-only directories, exclusive writes, append-only hash-linked revisions and attempt reports, retained-artifact verification, duplicate detail rejection, exact page/count reconciliation, and bounded page/invoice limits prevent blind overwrite or completion claims after incomplete work. The model receives only category/year aggregates, format states, native-gap markers, prototype status, owner-only report paths, and sanitized errors; invoice bytes and extracted content stay outside model context and portable bundles. Simulated tests do not establish target-site compatibility. CR-49 still requires two clean repetitions on the exact released version, including the requested category and resume evidence."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-12",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "6f1647255b17fd6bb610181362650060895151d5da87fe0fcbce9818b6dcc2c7"
+    "source_fingerprint": "e0203175d93fc35b5b249eb7536bdf0efcbb0b6b6fbc894c960858c84cdf1f6f"
   }
 }

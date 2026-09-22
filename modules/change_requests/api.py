@@ -88,7 +88,9 @@ class ChangeRequestRateLimiter:
         self._max_sources = max(int(max_sources), 1)
         self._clock = clock
         self._source_events: OrderedDict[tuple[str, str], deque[float]] = OrderedDict()
-        self._global_events = {action: deque() for action in self._limits}
+        self._global_events: dict[str, deque[float]] = {
+            action: deque() for action in self._limits
+        }
         self._lock = threading.Lock()
 
     def check(self, source: str, action: str) -> None:
@@ -229,19 +231,37 @@ class ChangeRequestClientContext(BaseModel):
 
 
 class ProblemDiagnostics(BaseModel):
-    """Sanitized run evidence required for an actionable problem report."""
+    """Useful partial evidence, with explicit reasons for unavailable metadata."""
 
     model_config = ConfigDict(extra="forbid")
 
-    occurred_at: datetime
-    runtime: str = Field(min_length=1, max_length=256)
-    operation: str = Field(min_length=1, max_length=512)
+    occurred_at: datetime | None = None
+    runtime: str | None = Field(default=None, min_length=1, max_length=256)
+    operation: str | None = Field(default=None, min_length=1, max_length=512)
     evidence: list[str] = Field(min_length=1, max_length=20)
     correlation_ids: list[str] = Field(default_factory=list, max_length=20)
+    missing_reasons: dict[
+        Literal["occurred_at", "runtime", "operation", "reproduction"], str
+    ] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def require_missing_reasons(self) -> Self:
+        """Absence is checkable; usefulness and defect ownership remain human-led."""
+        if any(
+            not reason.strip() or len(reason) > 512
+            for reason in self.missing_reasons.values()
+        ):
+            raise ValueError("missing diagnostic reasons must be bounded nonempty text")
+        for name in ("occurred_at", "runtime", "operation"):
+            if (getattr(self, name) is None) != (name in self.missing_reasons):
+                raise ValueError(f"{name} must have either a value or a missing reason")
+        return self
 
     @field_validator("occurred_at")
     @classmethod
-    def require_timezone(cls, value: datetime) -> datetime:
+    def require_timezone(cls, value: datetime | None) -> datetime | None:
+        if value is None:
+            return value
         if value.tzinfo is None or value.utcoffset() is None:
             raise ValueError("occurred_at must include a timezone")
         return value
@@ -262,7 +282,7 @@ class ProblemDiagnostics(BaseModel):
 
 
 class ProblemReport(BaseModel):
-    """Complete sanitized problem contract; semantic triage remains operator-led."""
+    """Sanitized problem contract; partial evidence must retain its limitations."""
 
     model_config = ConfigDict(extra="forbid")
 
@@ -270,10 +290,20 @@ class ProblemReport(BaseModel):
     title: str = Field(min_length=1, max_length=256)
     expected: str = Field(min_length=1, max_length=4_000)
     observed: str = Field(min_length=1, max_length=4_000)
-    reproduction: list[str] = Field(min_length=1, max_length=20)
+    reproduction: list[str] = Field(max_length=20)
     diagnostics: ProblemDiagnostics
     error: str | None = Field(default=None, max_length=2_000)
     plugin_version: str | None = Field(default=None, max_length=128)
+
+    @model_validator(mode="after")
+    def require_reproduction_or_reason(self) -> Self:
+        if bool(self.reproduction) == (
+            "reproduction" in self.diagnostics.missing_reasons
+        ):
+            raise ValueError(
+                "reproduction must have steps or an explicit missing reason"
+            )
+        return self
 
     @field_validator("reproduction")
     @classmethod
