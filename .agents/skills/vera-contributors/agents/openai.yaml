@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vera Contributors"
+  short_description: "Prepare accurate Vera contributor cards"
+  default_prompt: "Use $vera-contributors to prepare or review Vera contributor cards."
