@@ -46,7 +46,7 @@ def text_pack(
         second.write_text(text)
         files.append(second)
     pack = legal.prepare(run, files, workflow, ["Payment"])
-    review = json.loads((run / "review.json").read_text())
+    review = json.loads((run / "review.json").read_text(encoding="utf-8"))
     review["context"].update(
         represented_party="Customer",
         jurisdiction="Unknown; no enforceability opinion",
@@ -94,7 +94,7 @@ def test_prepare_keeps_long_document_tail_and_original(tmp_path):
         "anchor": "line:5001",
         "text": "Liability is uncapped.",
     }
-    assert (run / "originals/D001.txt").read_text() == content
+    assert (run / "originals/D001.txt").read_text(encoding="utf-8") == content
 
 
 @pytest.mark.parametrize("filename", ["evidence.json", "originals/D001.txt"])
@@ -137,7 +137,7 @@ def test_blank_pdf_page_cannot_establish_absence(tmp_path):
     writer.write(source)
     run = tmp_path / "run"
     legal.prepare(run, [source], "revisione-documentale", ["Term"])
-    review = json.loads((run / "review.json").read_text())
+    review = json.loads((run / "review.json").read_text(encoding="utf-8"))
     review["context"].update(
         represented_party="Buyer",
         jurisdiction="Unknown",
@@ -213,7 +213,7 @@ def test_partial_review_preserves_limits_context_and_sources_in_all_outputs(tmp_
 
     target = legal.render(run, write_review(run, review))
 
-    report = target.read_text()
+    report = target.read_text(encoding="utf-8")
     assert limitation in report
     assert "Partial review" in report
     assert "Customer" in report
@@ -224,7 +224,7 @@ def test_partial_review_preserves_limits_context_and_sources_in_all_outputs(tmp_
     assert "quotation occurrence only" in context
     assert "Obtain the missing schedule" in context
     assert "Original SHA-256" in str(list(workbook["Sources"].values))
-    assert limitation in (run / "review.csv").read_text()
+    assert limitation in (run / "review.csv").read_text(encoding="utf-8")
 
 
 def test_invalid_rerender_retires_previous_outputs(tmp_path):
@@ -247,8 +247,8 @@ def test_render_escapes_html_and_disables_spreadsheet_formulas(tmp_path):
 
     target = legal.render(run, write_review(run, review))
 
-    assert "<script>" not in target.read_text()
-    assert "&lt;script&gt;" in target.read_text()
+    assert "<script>" not in target.read_text(encoding="utf-8")
+    assert "&lt;script&gt;" in target.read_text(encoding="utf-8")
     workbook = load_workbook(run / "review.xlsx")
     assert workbook["Findings"]["F2"].data_type == "s"
     assert workbook["Findings"]["F2"].value.startswith("'=")
@@ -260,7 +260,7 @@ def test_comparison_delivers_topic_by_document_with_explicit_difference(tmp_path
 
     target = legal.render(run, write_review(run, review))
 
-    assert "Difference and implication" in target.read_text()
+    assert "Difference and implication" in target.read_text(encoding="utf-8")
     workbook = load_workbook(run / "review.xlsx")
     assert list(workbook["Comparison"].values)[0] == (
         "Topic",
@@ -269,7 +269,9 @@ def test_comparison_delivers_topic_by_document_with_explicit_difference(tmp_path
         "Difference and implication",
     )
     assert workbook["Comparison"]["D2"].value == review["differences"]["Payment"]
-    assert review["differences"]["Payment"] in (run / "review.csv").read_text()
+    assert review["differences"]["Payment"] in (run / "review.csv").read_text(
+        encoding="utf-8"
+    )
 
 
 def test_comparison_requires_difference_explanations(tmp_path):
@@ -290,8 +292,8 @@ def test_literal_comparison_finds_late_document_change(tmp_path):
 
     result = legal.compare(run, "D001", "D002")
 
-    assert "-Notice: 30 days" in result.read_text()
-    assert "+Notice: 5 days" in result.read_text()
+    assert "-Notice: 30 days" in result.read_text(encoding="utf-8")
+    assert "+Notice: 5 days" in result.read_text(encoding="utf-8")
 
 
 def test_docx_draft_preserves_original_unmodified_parts_and_run_styles(tmp_path):
@@ -373,7 +375,7 @@ def test_draft_rejects_ambiguous_replacement_without_output(tmp_path):
 @pytest.mark.parametrize("workflow", legal.WORKFLOWS)
 def test_upstream_snapshots_retain_pinned_bytes_and_mit_notice(workflow):
     directory = ROOT / "plugins/lucia/skills" / workflow / "references/upstream"
-    provenance = json.loads((directory / "PROVENANCE.json").read_text())
+    provenance = json.loads((directory / "PROVENANCE.json").read_text(encoding="utf-8"))
 
     actual = {
         entry["bundled_file"]: hashlib.sha256(
@@ -386,7 +388,9 @@ def test_upstream_snapshots_retain_pinned_bytes_and_mit_notice(workflow):
         entry["bundled_file"]: entry["sha256"] for entry in provenance["files"]
     }
     assert provenance["commit"] == "ce62e6a2d3f47e1d3567a4f2edc61898cfe9e78a"
-    assert "Copyright (c) 2026 Mike" in (directory / "LICENSE").read_text()
+    assert "Copyright (c) 2026 Mike" in (directory / "LICENSE").read_text(
+        encoding="utf-8"
+    )
 
 
 @pytest.mark.parametrize(
@@ -429,7 +433,7 @@ def test_shipped_helper_runs_with_its_schema_and_labels(tmp_path, archive_name):
 
     assert result.returncode == 0, result.stderr
     assert (run / "delivery.json").is_file()
-    assert "Customer" in (run / "review.html").read_text()
+    assert "Customer" in (run / "review.html").read_text(encoding="utf-8")
 
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
@@ -448,9 +452,9 @@ def test_italian_review_basis_survives_every_export_in_any_language(tmp_path, la
 
     target = legal.render(run, write_review(run, review))
 
-    labels = json.loads(SCRIPT.with_name("legal_documents_labels.json").read_text())[
-        language
-    ]
+    labels = json.loads(
+        SCRIPT.with_name("legal_documents_labels.json").read_text(encoding="utf-8")
+    )[language]
     workbook = load_workbook(run / "review.xlsx")
     exported_context = dict(list(workbook[labels["context"]].values)[1:])
     assert (
@@ -461,9 +465,11 @@ def test_italian_review_basis_survives_every_export_in_any_language(tmp_path, la
         exported_context[labels["context_labels"]["forum"]]
         == review["context"]["forum"]
     )
-    assert review["context"]["legal_basis"] in target.read_text()
-    assert labels["coverage_incomplete"] in target.read_text()
-    assert review["context"]["firm_instructions"] in (run / "review.csv").read_text()
+    assert review["context"]["legal_basis"] in target.read_text(encoding="utf-8")
+    assert labels["coverage_incomplete"] in target.read_text(encoding="utf-8")
+    assert review["context"]["firm_instructions"] in (run / "review.csv").read_text(
+        encoding="utf-8"
+    )
     assert (
         exported_context[labels["context_labels"]["formation"]]
         == review["context"]["formation"]
