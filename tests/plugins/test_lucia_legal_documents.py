@@ -51,6 +51,11 @@ def text_pack(
         represented_party="Customer",
         jurisdiction="Unknown; no enforceability opinion",
         instructions="Review payment terms",
+        relationship="Customer role known; purchase purpose not supplied",
+        formation="Negotiation history not supplied",
+        forum="Not established",
+        legal_basis="No legal sources supplied; textual review only",
+        firm_instructions="No firm playbook supplied",
         language="en",
     )
     for source, item in zip(pack["sources"], review["items"]):
@@ -134,7 +139,14 @@ def test_blank_pdf_page_cannot_establish_absence(tmp_path):
     legal.prepare(run, [source], "revisione-documentale", ["Term"])
     review = json.loads((run / "review.json").read_text())
     review["context"].update(
-        represented_party="Buyer", jurisdiction="Unknown", instructions="Review"
+        represented_party="Buyer",
+        jurisdiction="Unknown",
+        instructions="Review",
+        relationship="Unknown",
+        formation="Unknown",
+        forum="Unknown",
+        legal_basis="No sources supplied",
+        firm_instructions="None supplied",
     )
     review["coverage"]["D001"]["reviewed_anchors"] = ["page:1"]
     review["items"][0]["status"] = "not-stated"
@@ -418,3 +430,65 @@ def test_shipped_helper_runs_with_its_schema_and_labels(tmp_path, archive_name):
     assert result.returncode == 0, result.stderr
     assert (run / "delivery.json").is_file()
     assert "Customer" in (run / "review.html").read_text()
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_italian_review_basis_survives_every_export_in_any_language(tmp_path, language):
+    run, review = text_pack(tmp_path)
+    review["coverage"]["D001"]["limitations"] = ["Factual questions remain open."]
+    review["context"].update(
+        language=language,
+        jurisdiction="English law in clause 8",
+        forum="Milan courts in clause 9; distinct from governing law",
+        relationship="Alfa S.r.l. receives confidential information for its business",
+        formation="Negotiation emails not provided; standard-form status unresolved",
+        legal_basis="2026-09-22: no authority supplied; enforceability remains open",
+        firm_instructions="Studio NDA v3: EUR 200000 cap is a negotiation preference",
+    )
+
+    target = legal.render(run, write_review(run, review))
+
+    labels = json.loads(SCRIPT.with_name("legal_documents_labels.json").read_text())[
+        language
+    ]
+    workbook = load_workbook(run / "review.xlsx")
+    exported_context = dict(list(workbook[labels["context"]].values)[1:])
+    assert (
+        exported_context[labels["context_labels"]["jurisdiction"]]
+        == "English law in clause 8"
+    )
+    assert (
+        exported_context[labels["context_labels"]["forum"]]
+        == review["context"]["forum"]
+    )
+    assert review["context"]["legal_basis"] in target.read_text()
+    assert labels["coverage_incomplete"] in target.read_text()
+    assert review["context"]["firm_instructions"] in (run / "review.csv").read_text()
+    assert (
+        exported_context[labels["context_labels"]["formation"]]
+        == review["context"]["formation"]
+    )
+
+
+def test_missing_legal_basis_cannot_disappear_from_report_context(tmp_path):
+    run, review = text_pack(tmp_path)
+    del review["context"]["legal_basis"]
+
+    result = legal.validate_review(run, review)
+
+    assert not result["valid"]
+    assert "legal_basis" in str(result["errors"])
+
+
+def test_unknown_law_and_relationship_allow_explicitly_limited_review(tmp_path):
+    run, review = text_pack(tmp_path)
+    review["context"].update(jurisdiction="Unknown", relationship="Unknown")
+
+    result = legal.validate_review(run, review)
+
+    assert result["valid"]
+    assert review["context"]["jurisdiction"] == "Unknown"
+    assert (
+        review["context"]["legal_basis"]
+        == "No legal sources supplied; textual review only"
+    )

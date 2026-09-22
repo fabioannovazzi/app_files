@@ -1,7 +1,7 @@
 {
   "name": "lucia",
-  "version": "0.1.54",
-  "description": "Lucia affianca avvocati indipendenti e studi legali con ricerca e verifica delle fonti, revisione contratti, confronto documenti, tabelle di revisione e redazione da modelli forniti.",
+  "version": "0.1.55",
+  "description": "Lucia affianca avvocati indipendenti e studi legali italiani con ricerca e verifica delle fonti, revisione contratti, confronto documenti, tabelle di revisione e redazione da modelli forniti.",
   "author": {
     "name": "Fabio Annovazzi · Mparanza",
     "email": "fabio@mparanza.com",
@@ -42,7 +42,7 @@
   "interface": {
     "displayName": "Lucia",
     "shortDescription": "Assistente AI per avvocati",
-    "longDescription": "Assistente AI per avvocati. Lucia affianca avvocati indipendenti e studi legali nella ricerca, nella verifica delle fonti e nel lavoro sui documenti.\n\nRivede contratti per la parte assistita, confronta versioni, esamina raccolte di documenti in tabelle con citazioni e prepara copie modificate di modelli forniti. Gli helper inclusi lavorano localmente senza server o API modello separate; il modello della conversazione interpreta i testi. Prepara anche apertura pratica, comunicazioni professionali e sito dello studio.\n\nLucia mostra fonti, passaggi, ambiguità e informazioni mancanti. Il controllo delle citazioni verifica il testo, non la conclusione giuridica. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano all’avvocato.",
+    "longDescription": "Assistente AI per avvocati. Lucia affianca avvocati indipendenti e studi legali italiani nella ricerca, nella verifica delle fonti e nel lavoro sui documenti.\n\nRivede contratti per la parte assistita, confronta versioni, esamina raccolte di documenti in tabelle con citazioni e prepara copie modificate di modelli forniti. Gli helper inclusi lavorano localmente senza server o API modello separate; il modello della conversazione interpreta i testi. Prepara anche apertura pratica, comunicazioni professionali e sito dello studio.\n\nLucia mostra fonti, passaggi, ambiguità e informazioni mancanti. Distingue diritto applicabile, foro, istruzioni dello studio e questioni giuridiche aperte. Le citazioni verificano il testo, non il diritto. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano all’avvocato.",
     "developerName": "Fabio Annovazzi · Mparanza",
     "category": "Productivity",
     "capabilities": [

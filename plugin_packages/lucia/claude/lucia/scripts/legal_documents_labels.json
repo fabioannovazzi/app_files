@@ -17,9 +17,14 @@
     },
     "context_labels": {
       "represented_party": "Parte assistita",
-      "jurisdiction": "Giurisdizione",
+      "jurisdiction": "Diritto applicabile",
       "instructions": "Incarico",
-      "assumptions": "Assunzioni"
+      "assumptions": "Assunzioni",
+      "relationship": "Rapporto e ruoli delle parti",
+      "formation": "Formazione e trattativa",
+      "forum": "Foro e controversie",
+      "legal_basis": "Fonti giuridiche e verifiche aperte",
+      "firm_instructions": "Istruzioni dello studio"
     },
     "workflows": {
       "revisione-contratti": "Revisione contratti",
@@ -53,7 +58,8 @@
       "Originale ispezionato"
     ],
     "privacy_title": "Quali dati arrivano al modello",
-    "privacy": "L’helper conserva localmente originali scelti, testo estratto e risultati senza chiamate di rete o a modelli. Il contenuto letto nella conversazione viene trattato dal modello ospite secondo l’account usato; i dati non sono anonimizzati automaticamente. La conversazione identifica i file e i passaggi effettivamente letti. Il codice locale non osserva il traffico del modello."
+    "privacy": "L’helper conserva localmente originali scelti, testo estratto e risultati senza chiamate di rete o a modelli. Il contenuto letto nella conversazione viene trattato dal modello ospite secondo l’account usato; i dati non sono anonimizzati automaticamente. La conversazione identifica i file e i passaggi effettivamente letti. Il codice locale non osserva il traffico del modello.",
+    "coverage_incomplete": "Estrazione o revisione con limiti ancora aperti"
   },
   "en": {
     "headings": [
@@ -73,9 +79,14 @@
     },
     "context_labels": {
       "represented_party": "Represented party",
-      "jurisdiction": "Jurisdiction",
+      "jurisdiction": "Applicable law",
       "instructions": "Instructions",
-      "assumptions": "Assumptions"
+      "assumptions": "Assumptions",
+      "relationship": "Relationship and party roles",
+      "formation": "Formation and negotiation",
+      "forum": "Forum and disputes",
+      "legal_basis": "Legal sources and unresolved checks",
+      "firm_instructions": "Firm instructions"
     },
     "workflows": {
       "revisione-contratti": "Contract review",
@@ -109,7 +120,8 @@
       "Original inspected"
     ],
     "privacy_title": "What data reaches the model",
-    "privacy": "The helper stores selected originals, extracted text and results locally without network or model calls. Content read in the conversation is processed by the host model under the account in use; data is not automatically anonymized. The conversation identifies the actual files and passages read. Local code cannot observe host model traffic."
+    "privacy": "The helper stores selected originals, extracted text and results locally without network or model calls. Content read in the conversation is processed by the host model under the account in use; data is not automatically anonymized. The conversation identifies the actual files and passages read. Local code cannot observe host model traffic.",
+    "coverage_incomplete": "Extraction or review has unresolved limitations"
   },
   "fr": {
     "headings": [
@@ -129,9 +141,14 @@
     },
     "context_labels": {
       "represented_party": "Partie représentée",
-      "jurisdiction": "Juridiction",
+      "jurisdiction": "Droit applicable",
       "instructions": "Instructions",
-      "assumptions": "Hypothèses"
+      "assumptions": "Hypothèses",
+      "relationship": "Relation et rôles des parties",
+      "formation": "Formation et négociation",
+      "forum": "Juridiction et litiges",
+      "legal_basis": "Sources juridiques et vérifications ouvertes",
+      "firm_instructions": "Instructions du cabinet"
     },
     "workflows": {
       "revisione-contratti": "Revue de contrats",
@@ -165,7 +182,8 @@
       "Original inspecté"
     ],
     "privacy_title": "Quelles données parviennent au modèle",
-    "privacy": "L’outil conserve localement les originaux choisis, le texte extrait et les résultats sans appel réseau ou modèle. Le contenu lu dans la conversation est traité par le modèle hôte selon le compte utilisé, sans anonymisation automatique. La conversation identifie les fichiers et passages effectivement lus. Le code local ne peut observer le trafic du modèle."
+    "privacy": "L’outil conserve localement les originaux choisis, le texte extrait et les résultats sans appel réseau ou modèle. Le contenu lu dans la conversation est traité par le modèle hôte selon le compte utilisé, sans anonymisation automatique. La conversation identifie les fichiers et passages effectivement lus. Le code local ne peut observer le trafic du modèle.",
+    "coverage_incomplete": "Extraction ou revue avec des limites non résolues"
   },
   "de": {
     "headings": [
@@ -185,9 +203,14 @@
     },
     "context_labels": {
       "represented_party": "Vertretene Partei",
-      "jurisdiction": "Rechtsordnung",
+      "jurisdiction": "Anwendbares Recht",
       "instructions": "Auftrag",
-      "assumptions": "Annahmen"
+      "assumptions": "Annahmen",
+      "relationship": "Verhältnis und Rollen der Parteien",
+      "formation": "Vertragsschluss und Verhandlung",
+      "forum": "Gerichtsstand und Streitigkeiten",
+      "legal_basis": "Rechtsquellen und offene Prüfungen",
+      "firm_instructions": "Kanzleivorgaben"
     },
     "workflows": {
       "revisione-contratti": "Vertragsprüfung",
@@ -221,7 +244,8 @@
       "Original geprüft"
     ],
     "privacy_title": "Welche Daten das Modell erhält",
-    "privacy": "Der Helfer speichert ausgewählte Originale, extrahierten Text und Ergebnisse lokal ohne Netzwerk- oder Modellaufrufe. Im Gespräch gelesene Inhalte verarbeitet das Host-Modell unter dem verwendeten Konto ohne automatische Anonymisierung. Das Gespräch benennt die tatsächlich gelesenen Dateien und Stellen. Lokaler Code kann den Modellverkehr nicht beobachten."
+    "privacy": "Der Helfer speichert ausgewählte Originale, extrahierten Text und Ergebnisse lokal ohne Netzwerk- oder Modellaufrufe. Im Gespräch gelesene Inhalte verarbeitet das Host-Modell unter dem verwendeten Konto ohne automatische Anonymisierung. Das Gespräch benennt die tatsächlich gelesenen Dateien und Stellen. Lokaler Code kann den Modellverkehr nicht beobachten.",
+    "coverage_incomplete": "Extraktion oder Prüfung mit offenen Einschränkungen"
   },
   "es": {
     "headings": [
@@ -241,9 +265,14 @@
     },
     "context_labels": {
       "represented_party": "Parte representada",
-      "jurisdiction": "Jurisdicción",
+      "jurisdiction": "Derecho aplicable",
       "instructions": "Encargo",
-      "assumptions": "Supuestos"
+      "assumptions": "Supuestos",
+      "relationship": "Relación y roles de las partes",
+      "formation": "Formación y negociación",
+      "forum": "Foro y controversias",
+      "legal_basis": "Fuentes jurídicas y comprobaciones pendientes",
+      "firm_instructions": "Instrucciones del despacho"
     },
     "workflows": {
       "revisione-contratti": "Revisión de contratos",
@@ -277,6 +306,7 @@
       "Original inspeccionado"
     ],
     "privacy_title": "Qué datos llegan al modelo",
-    "privacy": "La herramienta guarda localmente originales elegidos, texto extraído y resultados sin llamadas de red o modelo. El modelo anfitrión procesa el contenido leído en la conversación según la cuenta utilizada, sin anonimización automática. La conversación identifica los archivos y pasajes leídos. El código local no puede observar el tráfico del modelo."
+    "privacy": "La herramienta guarda localmente originales elegidos, texto extraído y resultados sin llamadas de red o modelo. El modelo anfitrión procesa el contenido leído en la conversación según la cuenta utilizada, sin anonimización automática. La conversación identifica los archivos y pasajes leídos. El código local no puede observar el tráfico del modelo.",
+    "coverage_incomplete": "Extracción o revisión con limitaciones pendientes"
   }
 }

@@ -5,16 +5,18 @@ description: Review a selected collection of legal documents against common ques
 
 # Revisione documentale
 
-Read `../revisione-contratti/references/document-workflow.md` before execution.
+Read `../revisione-contratti/references/document-workflow.md` and
+`../revisione-contratti/references/prassi-italiana.md` before execution.
 All helpers run on selected files; no upload to Mike, Dario, Mparanza or a separate
 model service. The host model performs the legal reading in the conversation.
 
 Agree the decision and select useful columns from the brief and the documents.
-For commercial agreements read `references/upstream/commercial-columns.yaml`;
-for NDAs read `references/upstream/nda-columns.yaml`. These are MIT-licensed
-starting questions, not a fixed taxonomy or an automatic classifier. Remove
-irrelevant columns and add case-specific questions. Do not calculate an estimated
-contract value unless the required inputs exist; show formula and assumptions.
+Use `references/colonne-italiane.md` to select questions for Italian practice.
+Choose them semantically; remove irrelevant questions and add case-specific ones.
+Record a different relationship, law or formation history in each affected document
+cell when reviewing a mixed portfolio. Upstream YAML snapshots are attribution and
+history, not the column definitions to execute. Never fill a missing contract value
+with a speculative estimate; a requested calculation needs inputs and assumptions.
 
 Create one source per document and keep amendments and annexes separately
 identifiable. Explain relationships in the review rather than merging contradictory

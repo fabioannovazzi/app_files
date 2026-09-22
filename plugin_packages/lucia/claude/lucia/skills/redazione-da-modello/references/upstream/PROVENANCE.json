@@ -15,6 +15,6 @@
       "sha256": "6e7c22106722c151ffc66d0faf2035155eca1ad91931f5679c6773891c08deef"
     }
   ],
-  "adaptation": "Lucia uses the upstream workflow questions with local evidence packs, explicit source coverage, lawyer review and no Mike server. Bundled upstream files are unchanged; surrounding Lucia instructions take precedence.",
-  "update_policy": "Pinned at build time. Review upstream changes, update snapshots and hashes, adapt instructions, run behavioral and package tests, then release a new Lucia version. No runtime downloads."
+  "adaptation": "Unchanged MIT snapshots retained for attribution and comparison only. Lucia-owned Italian guidance controls the four local workflows; no Mike server or model API.",
+  "update_policy": "Independent Italian adaptation. No automatic merging or runtime downloads. Review selected upstream ideas for Italian suitability, preserve provenance, test real behavior and release Lucia deliberately; upstream compatibility is not a requirement."
 }

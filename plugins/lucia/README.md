@@ -136,10 +136,15 @@ Python workflows use **CPython 3.12 only**. The managed setup reuses Python 3.12
 
 ## Workflow documentali incorporati
 
-I quattro workflow documentali riusano istruzioni MIT di Mike, fissate a un commit
-con licenza e checksum in ogni cartella `references/upstream`. Gli helper locali
-non chiamano rete o modelli e non installano Mike o un server. Il modello ospite
-legge i documenti selezionati e produce il giudizio; il codice controlla soltanto
-file, copertura dichiarata e occorrenza delle citazioni. Gli aggiornamenti upstream
-si valutano e si includono in una nuova release Lucia; non modificano il plugin
-installato automaticamente.
+I quattro workflow hanno un metodo proprio per lo studio italiano: distinguono
+rapporto e ruoli, condizioni predisposte e trattativa, diritto applicabile e foro,
+rilievi giuridici e preferenze negoziali. Report e tabelle conservano fonti verificate,
+questioni aperte e istruzioni dello studio; i rapporti soggetti a diritto estero
+restano tali. I riferimenti MIT di Mike sono conservati invariati con attribuzione,
+commit e checksum; non sono più le istruzioni operative.
+
+Gli helper locali non chiamano rete o modelli e non installano Mike o un server.
+Il modello ospite legge i documenti selezionati e produce il giudizio; il codice
+controlla soltanto file, copertura dichiarata, contesto e occorrenza delle citazioni.
+Lucia mantiene autonomamente l'adattamento italiano: può riprendere miglioramenti
+upstream dopo verifica, ma non promette compatibilità o aggiornamenti automatici.
