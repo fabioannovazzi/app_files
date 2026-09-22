@@ -27,4 +27,6 @@ For the photo, inspect the exact profile page and bind the direct `media.licdn.c
 
 Keep the contribution description distinct from the professional profile. A shared approved contribution description may be reused verbatim for multiple contributors; do not delete it just because it is repeated.
 
+When the user asks for proposed alternatives before contributor approval, draft distinct area-based options rather than paraphrases, keep each under the requested length, and treat them as proposals rather than verified biographical facts. Apply them to cards only when the user explicitly requests publication.
+
 Sort cards by surname. When a LinkedIn field is unavailable, leave it explicitly pending or omit it; never publish invented content.
