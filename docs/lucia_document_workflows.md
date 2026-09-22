@@ -3,9 +3,13 @@
 Lucia includes four native workflows derived from the MIT-licensed
 [Mike workflow collection](https://github.com/open-legal-products/mike-workflows):
 contract review, document comparison, structured multi-document review and drafting
-from a supplied template. The upstream questions are adapted to the represented
-party and applicable jurisdiction; they are not legal rules or an automatic
-legal classifier.
+from a supplied template. Lucia now maintains its own Italian-practice method.
+The original Mike files are
+unchanged historical/attribution snapshots, not operational instructions.
+`prassi-italiana.md`, `contratti-italiani.md` and `colonne-italiane.md` guide the
+four workflows; `fonti-italiane.md` records the inspected official sources and
+the limitations of that editorial source review. They are not a current legal
+database or an automatic legal classifier.
 
 ## Runtime and evidence
 
@@ -24,7 +28,19 @@ are not evidence of absent terms. Nothing silently clips long sources. Review
 coverage is an explicit model declaration, not observed model telemetry. A quote
 match proves that text occurs at an anchor, not semantic or legal support.
 
-HTML, CSV and XLSX retain review perspective and coverage limits. Comparison adds
+HTML, CSV and XLSX retain review perspective and coverage limits, including party
+roles/purpose, formation/negotiation evidence, applicable law separately from forum,
+legal sources checked and unresolved questions, and selected firm instructions.
+These context fields are required to prevent the basis of review disappearing
+through export. The deterministic check verifies presence, never applicability,
+validity or source currency; an explicit unknown is permitted.
+
+The host model distinguishes consumer scrutiny from specific written approval,
+legal objections from negotiating preferences, and recesso/disdetta/risoluzione.
+It does not infer Italian governing law from the lawyer's location or the report
+language. A selected firm playbook remains negotiation guidance, not legislation.
+
+Comparison adds
 one document column per source and an explicit model-authored difference for each
 topic. Spreadsheet formula-like text is escaped. Reports make no remote asset
 requests. Failed rerenders retire prior outputs instead of leaving them current.
@@ -59,11 +75,24 @@ Every source snapshot has its original MIT notice and a `PROVENANCE.json` with
 upstream path, pinned commit and SHA-256. The pinned commit is
 `ce62e6a2d3f47e1d3567a4f2edc61898cfe9e78a`. There are no runtime downloads.
 
-To take upstream improvements: compare the recorded files against a chosen newer
-commit; review legal assumptions, instructions and licences; update the snapshots
-and provenance; adapt Lucia's instructions deliberately; exercise realistic legal
-document cases and regression tests; bump Lucia and rebuild all three host
-distributions. Updating Mike does not silently change an installed Lucia version.
+Lucia's Italian adaptation is maintained independently. Upstream compatibility is
+not a release requirement. Compare selected ideas against a newer commit only
+when useful; review Italian applicability and licensing, and test behavior before
+adoption. Keep snapshots and provenance accurate if an upstream file changes.
+Mike updates never overwrite the Italian instructions or an installed plugin.
+
+## Scope of the Italian adaptation
+
+The supplied GPT Pro note was treated as advisory product ideas. This release
+adapts the four existing workflows and supports selected firm playbooks. It does
+not add Mike's backend-dependent Word add-in, native Word tracked changes, a new
+citation database, a forensic-proofreading workflow or practice-area packs.
+Existing template replacement still produces a copy and a change register.
+
+Selected playbook passages and supplied legal authorities read for a matter enter
+the host model context, along with the already-described document content. Their
+identifiers and verification gaps are retained in the review context. The public
+function pages disclose these additions in all five supported languages.
 
 ## Verification
 
@@ -79,3 +108,13 @@ image-only PDF, multiple versions and split-run DOCX placeholders. Fixes from th
 evaluation preserve detailed limits and context, add the explicit comparison
 column and retire stale reports. Mechanical checks do not establish legal quality
 on all matters or acceptance in an already-open installed-plugin conversation.
+
+
+The Italian adaptation was independently exercised on synthetic consumer terms,
+a foreign-law NDA comparison and a services template with missing facts. It
+produced four review packs and an edited draft, preserving source files and 45
+matching quotations. Observed decisions separated consumer scrutiny from second
+signatures, English law from a Milan forum, firm preferences from legal thresholds,
+and advance payment from caparra. No current-law verification or generalized legal
+accuracy is claimed from those fixtures. The observed English coverage diagnostic
+was subsequently localized and covered in the five-language export checks.

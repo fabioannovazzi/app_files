@@ -5,8 +5,8 @@ description: Review supplied contracts for a represented party, producing clause
 
 # Revisione contratti
 
-Read `references/document-workflow.md` for the shared local execution and evidence
-contract before starting. This is a native Lucia workflow: no Mike application,
+Read `references/document-workflow.md` and `references/prassi-italiana.md` before
+starting. Use `references/contratti-italiani.md` for contract/NDA reading questions. This is a native Lucia workflow: no Mike application,
 server, API key, external model API, remote document service or automatic research.
 
 Establish the represented party, commercial objective, version and review scope.
@@ -16,10 +16,9 @@ textual/commercial review with explicit limits, not an enforceability conclusion
 
 Inspect the whole selected contract, definitions and supplied schedules. Identify
 missing incorporated materials. Choose topics from the actual contract and brief.
-For an NDA, read `references/upstream/nda-review.md` as a checklist of questions,
-not governing law or automatic risk rules. Adapt its party-specific perspective;
-do not import foreign-law assumptions or treat every checklist item as required.
-For other contracts, use their actual obligations, economics and risk allocation.
+Apply the Italian practice guide to the facts and applicable law. Distinguish
+consumer protection from specific approval of standard terms, and legal objections
+from negotiation preferences. No checklist item is universally required.
 
 For each issue distinguish the observed wording, its implication for this client,
 the reason for concern and a proposed change or negotiation fallback. Quote the
@@ -36,4 +35,5 @@ not supplied, state that it needs separate source-backed research; reuse the
 existing legal-question workflow only when the user requests that wider work.
 
 Adapted from Mike workflows; see `references/upstream/PROVENANCE.json` and
-`references/upstream/LICENSE`. Updates are incorporated in reviewed Lucia releases.
+`references/upstream/LICENSE`. The original snapshots are attribution/history, not runtime instructions. Lucia’s
+Italian method is maintained independently; upstream changes are optional inputs.

@@ -764,7 +764,7 @@ def test_lucia_public_page_localizes_matter_opening_and_direct_hero() -> None:
     ):
         assert len(_javascript_string_values(page, key)) == 5
     assert (
-        '"hero.lead": "Lucia aggiunge a Codex revisione contratti, confronto documenti, redazione da modelli, ricerca legale e preparazione del lavoro di studio."'
+        '"hero.lead": "Lucia aggiunge a Codex revisione contratti, confronto documenti, redazione da modelli e ricerca legale per lo studio italiano."'
         in page
     )
 
@@ -779,6 +779,6 @@ def test_lucia_marketplace_long_description_matches_manifest() -> None:
 
     assert manifest["interface"]["longDescription"] == approved
     assert "modelli forniti" in approved
-    assert "non la conclusione giuridica" in approved
+    assert "Le citazioni verificano il testo, non il diritto" in approved
     assert len(approved.split("\n\n")) == 3
     assert len(approved.split()) <= 120

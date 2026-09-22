@@ -15,7 +15,12 @@
         "represented_party",
         "jurisdiction",
         "instructions",
-        "assumptions"
+        "assumptions",
+        "relationship",
+        "formation",
+        "forum",
+        "legal_basis",
+        "firm_instructions"
       ],
       "additionalProperties": false,
       "properties": {
@@ -45,6 +50,26 @@
             "de",
             "es"
           ]
+        },
+        "relationship": {
+          "type": "string",
+          "minLength": 1
+        },
+        "formation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "forum": {
+          "type": "string",
+          "minLength": 1
+        },
+        "legal_basis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "firm_instructions": {
+          "type": "string",
+          "minLength": 1
         }
       }
     },

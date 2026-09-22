@@ -71,6 +71,21 @@
       "id": "redazione-da-modello",
       "prompt": "Usa $redazione-da-modello. Prepara una copia di questo modello con i fatti forniti e indica modifiche e dati mancanti.",
       "expected": "Routes to redazione-da-modello; uses selected documents and local helpers with the host model, preserves originals and visible source gaps; no Mike server, remote document service or separate model API."
+    },
+    {
+      "id": "consumer-standard-terms",
+      "prompt": "Assisto una consumatrice. Rivedi queste condizioni predisposte dal fornitore, firmate anche una seconda volta, con esclusione della responsabilità per colpa grave e foro diverso dalla residenza.",
+      "expected": "Reviews the document with party/purpose and formation evidence; separates consumer scrutiny from specific written approval, does not treat the second signature as a cure, and marks conclusions requiring current legal sources."
+    },
+    {
+      "id": "italian-firm-foreign-law-nda",
+      "prompt": "Sono un avvocato italiano e assisto Alfa S.r.l. Confronta questi NDA in inglese: resta il diritto inglese ma il foro passa da Londra a Milano. Il playbook preferisce un massimale di 200.000 euro.",
+      "expected": "Keeps English governing law separate from the forum change and Italian report language; treats the cap as a firm negotiating preference, preserving source quotations and unresolved legal checks."
+    },
+    {
+      "id": "italian-template-missing-facts",
+      "prompt": "Adatta questo modello italiano per Alfa S.r.l., corrispettivo 12.000 euro oltre IVA e anticipo sul prezzo. Non ho ancora P.IVA e firmatario.",
+      "expected": "Preserves unresolved identifiers and authority, distinguishes advance payment from caparra, proposes evidence-based edits without assuming a template or double signature proves validity; returns a copy, basis and questions, not a final signable instrument."
     }
   ],
   "negative": [

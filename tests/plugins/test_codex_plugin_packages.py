@@ -5948,27 +5948,27 @@ def test_product_pages_use_direct_product_explanations_for_hero_and_metadata(
         "en": {
             "clara": "Clara adds presentations, narrated research videos, interviews, transcription, documents, retail analysis, and data analysis to Codex.",
             "vera": "Vera adds client files, accounting checks, reconciliations, analysis, reporting, communication, and research to Codex.",
-            "lucia": "Lucia adds contract review, document comparison, template drafting, legal research and preparation of law-firm work to Codex.",
+            "lucia": "Lucia adds contract review, document comparison, template drafting and legal research for Italian law firms to Codex.",
         },
         "it": {
             "clara": "Clara aggiunge a Codex presentazioni, video di ricerca narrati, interviste, trascrizione, documenti, analisi retail e analisi dei dati.",
             "vera": "Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.",
-            "lucia": "Lucia aggiunge a Codex revisione contratti, confronto documenti, redazione da modelli, ricerca legale e preparazione del lavoro di studio.",
+            "lucia": "Lucia aggiunge a Codex revisione contratti, confronto documenti, redazione da modelli e ricerca legale per lo studio italiano.",
         },
         "fr": {
             "clara": "Clara ajoute à Codex les présentations, les vidéos de recherche narrées, les entretiens, la transcription, les documents, l'analyse retail et l'analyse de données.",
             "vera": "Vera ajoute à Codex les dossiers clients, les contrôles comptables, les rapprochements, l'analyse, les rapports, la communication et la recherche.",
-            "lucia": "Lucia ajoute à Codex la revue de contrats, la comparaison de documents, la rédaction à partir de modèles, la recherche juridique et la préparation du travail du cabinet.",
+            "lucia": "Lucia ajoute à Codex la revue de contrats, la comparaison de documents, la rédaction sur modèle et la recherche juridique pour les cabinets italiens.",
         },
         "de": {
             "clara": "Clara ergänzt Codex um Präsentationen, vertonte Forschungsvideos, Interviews, Transkription, Dokumente, Retail-Analysen und Datenanalysen.",
             "vera": "Vera ergänzt Codex um Mandantenakten, Buchungsprüfungen, Abstimmungen, Analysen, Berichte, Kommunikation und Recherche.",
-            "lucia": "Lucia ergänzt Codex um Vertragsprüfung, Dokumentenvergleich, Vorlagenbearbeitung, Rechtsrecherche und die Vorbereitung der Kanzleiarbeit.",
+            "lucia": "Lucia ergänzt Codex um Vertragsprüfung, Dokumentenvergleich, Vorlagenbearbeitung und Rechtsrecherche für italienische Kanzleien.",
         },
         "es": {
             "clara": "Clara añade a Codex presentaciones, vídeos de investigación narrados, entrevistas, transcripción, documentos, análisis retail y análisis de datos.",
             "vera": "Vera añade a Codex expedientes de clientes, controles contables, conciliaciones, análisis, informes, comunicación e investigación.",
-            "lucia": "Lucia añade a Codex revisión de contratos, comparación documental, redacción desde plantillas, investigación jurídica y preparación del trabajo del despacho.",
+            "lucia": "Lucia añade a Codex revisión de contratos, comparación documental, redacción desde plantillas e investigación jurídica para despachos italianos.",
         },
     }
 

@@ -150,6 +150,10 @@ Studio Archive, un servizio MCP, server o API modello separate. Per questi quatt
 workflow segui il contratto locale condiviso in
 `../revisione-contratti/references/document-workflow.md`; il suo output locale
 può essere scelto direttamente e non richiede il ciclo di apertura pratica.
+Il metodo italiano è in `../revisione-contratti/references/prassi-italiana.md`:
+ricava rapporto, formazione e diritto dai fatti, conserva le incertezze e separa
+obiezioni giuridiche da scelte negoziali. Le copie upstream sono solo riferimenti
+di provenienza; non sostituiscono le istruzioni italiane.
 
 ## Esecuzione locale
 

@@ -215,6 +215,11 @@ def prepare(
         "context": {
             "represented_party": "",
             "jurisdiction": "",
+            "relationship": "",
+            "formation": "",
+            "forum": "",
+            "legal_basis": "",
+            "firm_instructions": "",
             "instructions": "",
             "assumptions": [],
         },
@@ -311,6 +316,9 @@ def validate_review(run_dir: Path, review: dict[str, Any]) -> dict[str, Any]:
             "limitations": [],
             "quote_checks": [],
         }
+    labels = _load(Path(__file__).with_name("legal_documents_labels.json"))[
+        review["context"].get("language", "it")
+    ]
     coverage = review.get("coverage", {})
     if set(coverage) != set(sources):
         errors.append("Coverage must include exactly the selected source IDs.")
@@ -336,9 +344,7 @@ def validate_review(run_dir: Path, review: dict[str, Any]) -> dict[str, Any]:
         ):
             complete_sources.add(source_id)
         else:
-            incomplete.append(
-                f"{source_id}: extraction or review coverage is incomplete"
-            )
+            incomplete.append(f"{source_id}: {labels['coverage_incomplete']}")
     for source_id, current in coverage.items():
         incomplete.extend(f"{source_id}: {limit}" for limit in current["limitations"])
     for source in sources.values():
@@ -383,7 +389,7 @@ def validate_review(run_dir: Path, review: dict[str, Any]) -> dict[str, Any]:
                 f"Item {number}: absence cannot be asserted from incomplete coverage"
             )
         if status in ("not-reviewed", "unreadable"):
-            incomplete.append(f"{source_id} / {topic}: {status}")
+            incomplete.append(f"{source_id} / {topic}: {labels['statuses'][status]}")
         for citation in citations:
             cited_id = citation.get("source_id")
             anchor = citation.get("anchor")

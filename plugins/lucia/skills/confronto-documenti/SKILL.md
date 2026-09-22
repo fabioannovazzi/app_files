@@ -6,8 +6,8 @@ description: Compare two or more supplied legal documents or versions, showing t
 # Confronto documenti
 
 Read `../revisione-contratti/references/document-workflow.md` and
-`references/upstream/compare-documents.md`. The local contract takes precedence
-over upstream assumptions about uploads or tools. No Mike server or separate API.
+`../revisione-contratti/references/prassi-italiana.md`. No Mike server or separate API.
+The upstream snapshot is attribution/history, not an operational instruction.
 
 Identify whether these are versions of one instrument or separate agreements.
 Use filenames, dates and the user's instruction to establish order; ask if the
@@ -21,7 +21,11 @@ explanation of the difference. Cover the material similarities as well as change
 to rights, obligations, economics, deadlines, definitions and incorporated texts.
 Trace each term to its own document and anchor. Distinguish new, deleted, moved
 and reworded provisions through model judgment. Explain why a change matters for
-the represented party. A changed word can matter more than a moved page.
+the represented party. A changed word can matter more than a moved page. In Italian matters distinguish
+changes to recesso, disdetta and risoluzione, not merely a generic termination row.
+A new forum is not necessarily a change of governing law. Compare approval blocks
+and annex relationships without treating a second signature as proof of validity.
+Keep textual changes, legal questions and firm-policy deviations distinct.
 
 Keep every document visible, including unreadable versions. “Not stated” requires
 complete reading coverage; an extraction gap is not deletion. If the documents

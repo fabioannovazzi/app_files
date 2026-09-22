@@ -63,6 +63,13 @@ document/topic, even if unfinished. Required fields:
 
 - `context`: represented party, jurisdiction (or explicit unknown), instructions,
   assumptions and optional `language` (`it`, `en`, `fr`, `de`, `es`; default `it`).
+  Also record `relationship` (roles, purpose and any uncertainty), `formation`
+  (standard terms/negotiation evidence or unknown), `forum` separately from law,
+  `legal_basis` (sources actually checked, version/date, applicability and open
+  legal questions) and `firm_instructions` (selected playbook/version or none).
+  Use explicit unknown/not supplied where appropriate, never invented facts.
+  For mixed portfolios record per-document differences in the corresponding cells.
+  Presence checks preserve the review basis through export; they cannot judge law.
   These establish the review perspective, not a legal conclusion. Report labels
   follow `language`; write the model-authored content in that same language.
 - `coverage[source_id]`: `reviewed_anchors` actually read, remaining `limitations`,
