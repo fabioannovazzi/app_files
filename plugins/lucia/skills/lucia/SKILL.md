@@ -84,6 +84,10 @@ funzione Lucia:
 | Sito informativo dello studio legale da creare, rinnovare, revisionare, preparare in preview o pubblicare dopo approvazione | Leggi integralmente `../presenza-digitale-studio/SKILL.md` e seguilo. |
 | Nuova pratica per un nuovo cliente o per un cliente esistente da raccogliere e preparare all'apertura | Leggi integralmente `../apertura-pratica/SKILL.md` e seguilo. Usa il suo validatore specifico e il contratto di revisione dell'avvocato. |
 | Percorso completo dal quesito alla consegna | Leggi integralmente `../quesito-legale-fiscale/SKILL.md` e seguilo. |
+| Revisione contratti sui documenti forniti | Leggi integralmente `../revisione-contratti/SKILL.md` e seguilo. |
+| Confronto documenti sui documenti forniti | Leggi integralmente `../confronto-documenti/SKILL.md` e seguilo. |
+| Revisione documentale sui documenti forniti | Leggi integralmente `../revisione-documentale/SKILL.md` e seguilo. |
+| Redazione da modello sui documenti forniti | Leggi integralmente `../redazione-da-modello/SKILL.md` e seguilo. |
 | Nessun workflow registrato copre la richiesta | Fermati. Dì soltanto che Lucia non dispone di un workflow adatto; non rispondere al merito e non offrire un percorso generico. |
 
 L'utente descrive il lavoro normalmente e non deve conoscere i nomi interni.
@@ -138,6 +142,15 @@ Studio Archive è solo l'infrastruttura privata necessaria al contratto di
 input, output e tracciabilità. Non presentarlo come capacità Lucia e non usarlo
 per ricerca d'archivio, Gmail, Drive, WhatsApp o altri lavori di studio.
 
+## Workflow documentali locali
+
+Revisione contratti, Confronto documenti, Revisione documentale e Redazione da modello
+usano i file scelti e una nuova cartella di output locale dell’incarico. Non richiedono
+Studio Archive, un servizio MCP, server o API modello separate. Per questi quattro
+workflow segui il contratto locale condiviso in
+`../revisione-contratti/references/document-workflow.md`; il suo output locale
+può essere scelto direttamente e non richiede il ciclo di apertura pratica.
+
 ## Esecuzione locale
 
 Prima del primo comando verifica i requisiti dalla root Lucia:
@@ -152,7 +165,7 @@ esempio `--module comunicazione-professionale`. Il gestore prepara soltanto le d
 `python scripts/managed_python_runtime.py --module <workflow> run scripts/<helper>.py`
 per eseguire gli helper nello stesso ambiente. Non installare pacchetti arbitrari.
 
-Never write run outputs inside this Git workspace. Nel lavoro locale usa
+Never write run outputs inside this Git workspace. Negli altri workflow locali usa
 soltanto l'`output_dir` restituito dal ciclo privato dell'incarico e richiesto
 dalla skill componente. Non inventare cartelle parallele, non riutilizzare
 input tra clienti o incarichi e non considerare completa una run parziale.

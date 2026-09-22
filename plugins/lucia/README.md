@@ -17,6 +17,12 @@ responsabilità restano al professionista.
 Il catalogo cresce attraverso workflow specialistici registrati. Le funzioni
 attualmente pubbliche sono:
 
+- **Revisione contratti** — Esamina clausole, rischi e modifiche proposte per la parte assistita.
+- **Confronto documenti** — Confronta versioni e accordi con riferimenti puntuali.
+- **Revisione documentale** — Esamina più documenti in una tabella con evidenze e lacune.
+- **Redazione da modello** — Compila una copia del modello con modifiche e fatti tracciabili.
+
+
 - **Risposta a quesiti legali e fiscali** — Porta un quesito legale, fiscale o
   di compliance dalla domanda iniziale a una risposta con fonti, ragionamento
   e limiti professionali verificati.
@@ -127,3 +133,13 @@ La descrizione completa è disponibile nella pagina
 ## Python runtime
 
 Python workflows use **CPython 3.12 only**. The managed setup reuses Python 3.12, finds an installed 3.12 interpreter, or provisions it with an already installed `uv`. It never creates workflow environments with another Python minor version. If neither is available, setup gives an explicit installation instruction. Existing environments are preserved; separate component dependency environments remain necessary until their dependency sets are consolidated.
+
+## Workflow documentali incorporati
+
+I quattro workflow documentali riusano istruzioni MIT di Mike, fissate a un commit
+con licenza e checksum in ogni cartella `references/upstream`. Gli helper locali
+non chiamano rete o modelli e non installano Mike o un server. Il modello ospite
+legge i documenti selezionati e produce il giudizio; il codice controlla soltanto
+file, copertura dichiarata e occorrenza delle citazioni. Gli aggiornamenti upstream
+si valutano e si includono in una nuova release Lucia; non modificano il plugin
+installato automaticamente.

@@ -819,6 +819,10 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert "## Required Questions" in full_workflow
     if plugin_name == "lucia":
         assert set(card_bodies) == {
+            "skills/revisione-contratti/SKILL.md",
+            "skills/confronto-documenti/SKILL.md",
+            "skills/revisione-documentale/SKILL.md",
+            "skills/redazione-da-modello/SKILL.md",
             "skills/adversarial-opinion/SKILL.md",
             "skills/studio-archive/SKILL.md",
             "skills/lucia/SKILL.md",
@@ -2779,6 +2783,16 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 assert "scripts/datev_starter.py" in normalized_skill_text
                 assert "not make DATEV a browser application" in normalized_skill_text
                 assert "references/batch-review.md" in normalized_skill_text
+                continue
+            if plugin_root.name == "lucia" and skill_file.parent.name in {
+                "revisione-contratti",
+                "confronto-documenti",
+                "revisione-documentale",
+                "redazione-da-modello",
+            }:
+                # Native skills share a local evidence contract, not another module wrapper.
+                assert "references/document-workflow.md" in skill_text
+                assert "references/upstream/" in skill_text
                 continue
             if plugin_root.name in {"lucia", "vera"} and (
                 skill_file.parent.name != plugin_root.name
@@ -5588,6 +5602,7 @@ def test_clara_public_icon_matches_plugin_source() -> None:
             "/?lang=it",
             "Lucia",
             (
+                "#area-documents",
                 "#area-research",
                 "#area-matters",
                 "#area-studio",
@@ -5933,27 +5948,27 @@ def test_product_pages_use_direct_product_explanations_for_hero_and_metadata(
         "en": {
             "clara": "Clara adds presentations, narrated research videos, interviews, transcription, documents, retail analysis, and data analysis to Codex.",
             "vera": "Vera adds client files, accounting checks, reconciliations, analysis, reporting, communication, and research to Codex.",
-            "lucia": "Lucia adds legal research, source validation, matter opening, professional communication, and firm websites to Codex.",
+            "lucia": "Lucia adds contract review, document comparison, template drafting, legal research and preparation of law-firm work to Codex.",
         },
         "it": {
             "clara": "Clara aggiunge a Codex presentazioni, video di ricerca narrati, interviste, trascrizione, documenti, analisi retail e analisi dei dati.",
             "vera": "Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.",
-            "lucia": "Lucia aggiunge a Codex ricerca legale, verifica delle fonti, apertura pratica, comunicazione professionale e sito dello studio.",
+            "lucia": "Lucia aggiunge a Codex revisione contratti, confronto documenti, redazione da modelli, ricerca legale e preparazione del lavoro di studio.",
         },
         "fr": {
             "clara": "Clara ajoute à Codex les présentations, les vidéos de recherche narrées, les entretiens, la transcription, les documents, l'analyse retail et l'analyse de données.",
             "vera": "Vera ajoute à Codex les dossiers clients, les contrôles comptables, les rapprochements, l'analyse, les rapports, la communication et la recherche.",
-            "lucia": "Lucia ajoute à Codex la recherche juridique, la vérification des sources, l'ouverture de dossier, la communication professionnelle et le site du cabinet.",
+            "lucia": "Lucia ajoute à Codex la revue de contrats, la comparaison de documents, la rédaction à partir de modèles, la recherche juridique et la préparation du travail du cabinet.",
         },
         "de": {
             "clara": "Clara ergänzt Codex um Präsentationen, vertonte Forschungsvideos, Interviews, Transkription, Dokumente, Retail-Analysen und Datenanalysen.",
             "vera": "Vera ergänzt Codex um Mandantenakten, Buchungsprüfungen, Abstimmungen, Analysen, Berichte, Kommunikation und Recherche.",
-            "lucia": "Lucia ergänzt Codex um juristische Recherche, Quellenprüfung, Aktenanlage, professionelle Kommunikation und Kanzlei-Websites.",
+            "lucia": "Lucia ergänzt Codex um Vertragsprüfung, Dokumentenvergleich, Vorlagenbearbeitung, Rechtsrecherche und die Vorbereitung der Kanzleiarbeit.",
         },
         "es": {
             "clara": "Clara añade a Codex presentaciones, vídeos de investigación narrados, entrevistas, transcripción, documentos, análisis retail y análisis de datos.",
             "vera": "Vera añade a Codex expedientes de clientes, controles contables, conciliaciones, análisis, informes, comunicación e investigación.",
-            "lucia": "Lucia añade a Codex investigación jurídica, comprobación de fuentes, apertura de asuntos, comunicación profesional y sitios web del despacho.",
+            "lucia": "Lucia añade a Codex revisión de contratos, comparación documental, redacción desde plantillas, investigación jurídica y preparación del trabajo del despacho.",
         },
     }
 

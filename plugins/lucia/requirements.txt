@@ -2,6 +2,7 @@
 # lifecycle workflows.
 fonttools>=4.55,<5
 jsonschema>=4.23,<5
+lxml>=5.0,<7,!=6.0.0
 Pillow>=11.1,<12
 pypdf
 python-docx
