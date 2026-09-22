@@ -7,7 +7,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "it": {
         "name": "Revisione contratti",
         "summary": "Esamina un contratto dalla prospettiva della parte assistita e prepara osservazioni e modifiche proposte.",
-        "useWhen": "Per preparare una negoziazione o rivedere un contratto prima dell’approvazione.",
+        "useWhen": "Per preparare una negoziazione o rivedere un contratto prima dell’approvazione. Questa funzione deriva dai workflow open source di <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (licenza MIT). Lucia ne adatta e mantiene una versione per la pratica legale italiana.",
         "input": "Contratto e allegati selezionati, parte assistita, obiettivo negoziale, diritto applicabile se noto e priorità della revisione. Eventuali istruzioni o playbook dello studio e fonti giuridiche già selezionate.",
         "work": "Inquadra ruoli delle parti, condizioni predisposte e trattativa; distingue diritto applicabile e foro. Legge clausole, definizioni e rinvii. Nelle questioni italiane distingue tutela del consumatore, approvazioni specifiche, responsabilità e rimedi. Separa rilievi giuridici, rischi negoziali e scostamenti dalle istruzioni dello studio, con citazioni e lacune visibili.",
         "output": "Report HTML e tabella Excel con temi, clausole citate, motivazioni, proposte e copertura della lettura. Il contratto originale rimane invariato. Il risultato conserva ruoli, formazione del contratto, diritto applicabile, foro, fonti verificate e quesiti aperti.",
@@ -22,7 +22,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "en": {
         "name": "Contract review",
         "summary": "Examines a contract from the represented party’s perspective and prepares findings and proposed changes.",
-        "useWhen": "Use before a negotiation or when reviewing a contract for approval.",
+        "useWhen": "Use before a negotiation or when reviewing a contract for approval. This function is adapted from the open-source workflows of <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (MIT license). Lucia adapts and maintains its own version for Italian legal practice.",
         "input": "Selected contract and schedules, represented party, negotiation objective, applicable law if known and review priorities. Any selected firm instructions or playbook and supplied legal sources.",
         "work": "Establishes party roles, standard terms and negotiation evidence; separates applicable law from forum. Reads clauses, definitions and cross-references. For Italian matters it distinguishes consumer protection, specific approvals, liability and remedies. Separates legal issues, negotiation risks and departures from firm instructions, with quotations and visible gaps.",
         "output": "HTML report and Excel table with topics, quoted clauses, reasoning, proposals and reading coverage. The original contract remains unchanged. The result retains roles, contract formation, applicable law, forum, verified sources and open questions.",
@@ -37,7 +37,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "fr": {
         "name": "Revue de contrats",
         "summary": "Examine un contrat du point de vue de la partie représentée et prépare des observations et modifications proposées.",
-        "useWhen": "Pour préparer une négociation ou revoir un contrat avant approbation.",
+        "useWhen": "Pour préparer une négociation ou revoir un contrat avant approbation. Cette fonction est adaptée des workflows open source de <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (licence MIT). Lucia adapte et maintient sa propre version pour la pratique juridique italienne.",
         "input": "Contrat et annexes sélectionnés, partie représentée, objectif de négociation, droit applicable si connu et priorités de revue. Éventuelles instructions ou guide du cabinet sélectionnés et sources juridiques fournies.",
         "work": "Établit les rôles, les conditions préétablies et les preuves de négociation ; distingue droit applicable et juridiction. Lit clauses, définitions et renvois. Pour les dossiers italiens, distingue protection du consommateur, approbations spécifiques, responsabilité et recours. Sépare questions juridiques, risques de négociation et écarts aux instructions du cabinet, avec citations et lacunes visibles.",
         "output": "Rapport HTML et tableau Excel avec sujets, clauses citées, motifs, propositions et couverture de lecture. Le contrat original reste inchangé. Le résultat conserve rôles, formation du contrat, droit applicable, juridiction, sources vérifiées et questions ouvertes.",
@@ -52,7 +52,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "de": {
         "name": "Vertragsprüfung",
         "summary": "Prüft einen Vertrag aus Sicht der vertretenen Partei und erstellt Befunde und Änderungsvorschläge.",
-        "useWhen": "Zur Vorbereitung einer Verhandlung oder Vertragsprüfung vor der Freigabe.",
+        "useWhen": "Zur Vorbereitung einer Verhandlung oder Vertragsprüfung vor der Freigabe. Diese Funktion basiert auf den Open-Source-Workflows von <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (MIT-Lizenz). Lucia passt sie an die italienische Rechtspraxis an und pflegt eine eigene Fassung.",
         "input": "Ausgewählter Vertrag mit Anlagen, vertretene Partei, Verhandlungsziel, anwendbares Recht soweit bekannt und Prüfungsschwerpunkte. Gegebenenfalls ausgewählte Kanzleivorgaben und bereitgestellte Rechtsquellen.",
         "work": "Erfasst Parteienrollen, vorformulierte Bedingungen und Verhandlungsnachweise; trennt anwendbares Recht und Gerichtsstand. Liest Klauseln, Definitionen und Verweise. Unterscheidet bei italienischen Sachverhalten Verbraucherschutz, gesonderte Zustimmung, Haftung und Rechtsbehelfe. Trennt Rechtsfragen, Verhandlungsrisiken und Abweichungen von Kanzleivorgaben mit Zitaten und sichtbaren Lücken.",
         "output": "HTML-Bericht und Excel-Tabelle mit Themen, zitierten Klauseln, Begründungen, Vorschlägen und Leseumfang. Der Originalvertrag bleibt unverändert. Das Ergebnis enthält Rollen, Vertragsschluss, anwendbares Recht, Gerichtsstand, geprüfte Quellen und offene Fragen.",
@@ -67,7 +67,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "es": {
         "name": "Revisión de contratos",
         "summary": "Examina un contrato desde la perspectiva de la parte representada y prepara observaciones y cambios propuestos.",
-        "useWhen": "Para preparar una negociación o revisar un contrato antes de aprobarlo.",
+        "useWhen": "Para preparar una negociación o revisar un contrato antes de aprobarlo. Esta función deriva de los flujos de trabajo de código abierto de <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (licencia MIT). Lucia adapta y mantiene su propia versión para la práctica jurídica italiana.",
         "input": "Contrato y anexos seleccionados, parte representada, objetivo negociador, derecho aplicable si se conoce y prioridades. Instrucciones o guía del despacho seleccionadas y fuentes jurídicas aportadas.",
         "work": "Determina roles, condiciones predispuestas y pruebas de negociación; separa derecho aplicable y foro. Lee cláusulas, definiciones y referencias. En asuntos italianos distingue protección del consumidor, aprobaciones específicas, responsabilidad y remedios. Separa cuestiones jurídicas, riesgos de negociación y desviaciones de las instrucciones del despacho, con citas y lagunas visibles.",
         "output": "Informe HTML y tabla Excel con temas, cláusulas citadas, motivos, propuestas y cobertura de lectura. El contrato original queda intacto. El resultado conserva roles, formación contractual, derecho aplicable, foro, fuentes verificadas y cuestiones abiertas.",
@@ -88,7 +88,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "it": {
         "name": "Confronto documenti",
         "summary": "Confronta due o più versioni o accordi e spiega le differenze rilevanti per la parte assistita.",
-        "useWhen": "Per capire le modifiche della controparte o confrontare condizioni di accordi diversi.",
+        "useWhen": "Per capire le modifiche della controparte o confrontare condizioni di accordi diversi. Questa funzione deriva dai workflow open source di <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (licenza MIT). Lucia ne adatta e mantiene una versione per la pratica legale italiana.",
         "input": "Documenti selezionati, versione di riferimento se esiste, ordine delle versioni, parte assistita e temi da confrontare. Eventuali istruzioni o playbook dello studio e fonti giuridiche già selezionate.",
         "work": "Confronta ogni tema nelle versioni scelte e spiega le conseguenze per la parte assistita. Distingue variazioni di diritto applicabile e foro, durata, disdetta, recesso e risoluzione. Tiene separati cambiamenti testuali, questioni giuridiche e preferenze dello studio; non presume la validità di una clausola dalla seconda firma.",
         "output": "Tabella comparativa, report con citazioni, file delle differenze testuali e tabella Excel. Le versioni illeggibili o non esaminate restano visibili. Il risultato conserva ruoli, formazione del contratto, diritto applicabile, foro, fonti verificate e quesiti aperti.",
@@ -103,7 +103,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "en": {
         "name": "Document comparison",
         "summary": "Compares two or more versions or agreements and explains material differences for the represented party.",
-        "useWhen": "Use to understand a counterparty’s revisions or compare terms across different agreements.",
+        "useWhen": "Use to understand a counterparty’s revisions or compare terms across different agreements. This function is adapted from the open-source workflows of <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (MIT license). Lucia adapts and maintains its own version for Italian legal practice.",
         "input": "Selected documents, baseline if applicable, version order, represented party and comparison topics. Any selected firm instructions or playbook and supplied legal sources.",
         "work": "Compares each topic across selected versions and explains the consequences for the represented party. Distinguishes changes to applicable law and forum, duration, non-renewal, withdrawal and termination for breach. Separates textual changes, legal questions and firm preferences; a second signature does not establish clause validity.",
         "output": "Comparison table, report with quotations, literal diff files and Excel table. Unreadable or unreviewed versions remain visible. The result retains roles, contract formation, applicable law, forum, verified sources and open questions.",
@@ -118,7 +118,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "fr": {
         "name": "Comparaison de documents",
         "summary": "Compare plusieurs versions ou accords et explique les différences pertinentes pour la partie représentée.",
-        "useWhen": "Pour comprendre les modifications de la contrepartie ou comparer plusieurs accords.",
+        "useWhen": "Pour comprendre les modifications de la contrepartie ou comparer plusieurs accords. Cette fonction est adaptée des workflows open source de <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (licence MIT). Lucia adapte et maintient sa propre version pour la pratique juridique italienne.",
         "input": "Documents choisis, version de référence éventuelle, ordre des versions, partie représentée et sujets à comparer. Éventuelles instructions ou guide du cabinet sélectionnés et sources juridiques fournies.",
         "work": "Compare chaque sujet dans les versions choisies et explique les conséquences pour la partie représentée. Distingue droit applicable et juridiction, durée, non-renouvellement, retrait et résolution pour inexécution. Sépare modifications textuelles, questions juridiques et préférences du cabinet ; une seconde signature ne prouve pas la validité de la clause.",
         "output": "Tableau comparatif, rapport avec citations, fichiers de différences et tableau Excel. Les versions illisibles ou non examinées restent visibles. Le résultat conserve rôles, formation du contrat, droit applicable, juridiction, sources vérifiées et questions ouvertes.",
@@ -133,7 +133,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "de": {
         "name": "Dokumentenvergleich",
         "summary": "Vergleicht mehrere Fassungen oder Verträge und erklärt relevante Unterschiede für die vertretene Partei.",
-        "useWhen": "Um Änderungen der Gegenseite zu verstehen oder Konditionen verschiedener Verträge zu vergleichen.",
+        "useWhen": "Um Änderungen der Gegenseite zu verstehen oder Konditionen verschiedener Verträge zu vergleichen. Diese Funktion basiert auf den Open-Source-Workflows von <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (MIT-Lizenz). Lucia passt sie an die italienische Rechtspraxis an und pflegt eine eigene Fassung.",
         "input": "Ausgewählte Dokumente, gegebenenfalls Ausgangsfassung, Reihenfolge der Versionen, vertretene Partei und Vergleichsthemen. Gegebenenfalls ausgewählte Kanzleivorgaben und bereitgestellte Rechtsquellen.",
         "work": "Vergleicht jedes Thema zwischen ausgewählten Fassungen und erläutert Folgen für die vertretene Partei. Unterscheidet Änderungen an Recht und Gerichtsstand, Laufzeit, Nichtverlängerung, Kündigung und Auflösung wegen Pflichtverletzung. Trennt Textänderungen, Rechtsfragen und Kanzleipräferenzen; eine zweite Unterschrift belegt keine Wirksamkeit.",
         "output": "Vergleichstabelle, Bericht mit Zitaten, Dateien der Textunterschiede und Excel-Tabelle. Unlesbare oder ungeprüfte Fassungen bleiben sichtbar. Das Ergebnis enthält Rollen, Vertragsschluss, anwendbares Recht, Gerichtsstand, geprüfte Quellen und offene Fragen.",
@@ -148,7 +148,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "es": {
         "name": "Comparación de documentos",
         "summary": "Compara varias versiones o acuerdos y explica diferencias relevantes para la parte representada.",
-        "useWhen": "Para entender cambios de la contraparte o comparar condiciones entre acuerdos.",
+        "useWhen": "Para entender cambios de la contraparte o comparar condiciones entre acuerdos. Esta función deriva de los flujos de trabajo de código abierto de <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (licencia MIT). Lucia adapta y mantiene su propia versión para la práctica jurídica italiana.",
         "input": "Documentos seleccionados, versión de referencia si existe, orden de versiones, parte representada y temas de comparación. Instrucciones o guía del despacho seleccionadas y fuentes jurídicas aportadas.",
         "work": "Compara cada tema entre versiones y explica las consecuencias para la parte representada. Distingue cambios en derecho aplicable y foro, duración, no renovación, desistimiento y resolución por incumplimiento. Separa cambios textuales, cuestiones jurídicas y preferencias del despacho; una segunda firma no demuestra la validez de la cláusula.",
         "output": "Tabla comparativa, informe con citas, archivos de diferencias y tabla Excel. Las versiones ilegibles o sin revisar permanecen visibles. El resultado conserva roles, formación contractual, derecho aplicable, foro, fuentes verificadas y cuestiones abiertas.",
@@ -169,7 +169,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "it": {
         "name": "Revisione documentale",
         "summary": "Esamina una raccolta di documenti con domande comuni e prepara una tabella con fonti e lacune.",
-        "useWhen": "Per rispondere alle stesse domande su più contratti o preparare una revisione documentale delimitata.",
+        "useWhen": "Per rispondere alle stesse domande su più contratti o preparare una revisione documentale delimitata. Questa funzione deriva dai workflow open source di <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (licenza MIT). Lucia ne adatta e mantiene una versione per la pratica legale italiana.",
         "input": "File selezionati, obiettivo della revisione, domande o colonne desiderate e relazioni note tra accordi, modifiche e allegati. Eventuali istruzioni o playbook dello studio e fonti giuridiche già selezionate.",
         "work": "Sceglie le colonne utili all’incarico e legge ogni documento con citazioni puntuali. Distingue importi dichiarati e calcoli, penali e anticipi, legge e foro, scadenza e rimedi. Nei fascicoli misti conserva per ogni documento il diverso rapporto e contesto giuridico. Le celle mancanti, illeggibili o non esaminate restano visibili.",
         "output": "Matrice Excel con una riga per documento, foglio di dettaglio con citazioni e report HTML. Evidenzia eccezioni, conflitti, documenti mancanti e decisioni aperte. Il risultato conserva ruoli, formazione del contratto, diritto applicabile, foro, fonti verificate e quesiti aperti.",
@@ -184,7 +184,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "en": {
         "name": "Structured document review",
         "summary": "Reviews a collection of documents against common questions and prepares a table with evidence and gaps.",
-        "useWhen": "Use to answer the same questions across contracts or prepare a defined document review.",
+        "useWhen": "Use to answer the same questions across contracts or prepare a defined document review. This function is adapted from the open-source workflows of <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (MIT license). Lucia adapts and maintains its own version for Italian legal practice.",
         "input": "Selected files, review objective, questions or desired columns and known relationships between agreements, amendments and schedules. Any selected firm instructions or playbook and supplied legal sources.",
         "work": "Chooses columns for the engagement and reads each document with precise quotations. Separates stated amounts from calculations, penalties from advances, law from forum, and expiry from remedies. In mixed collections each document retains its relationship and legal context. Missing, unreadable and unreviewed cells remain visible.",
         "output": "Excel matrix with one row per document, a detailed evidence sheet and HTML report. Highlights exceptions, conflicts, missing documents and open decisions. The result retains roles, contract formation, applicable law, forum, verified sources and open questions.",
@@ -199,7 +199,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "fr": {
         "name": "Revue documentaire",
         "summary": "Examine un ensemble de documents à partir de questions communes et prépare un tableau avec preuves et lacunes.",
-        "useWhen": "Pour répondre aux mêmes questions sur plusieurs contrats ou préparer une revue délimitée.",
+        "useWhen": "Pour répondre aux mêmes questions sur plusieurs contrats ou préparer une revue délimitée. Cette fonction est adaptée des workflows open source de <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (licence MIT). Lucia adapte et maintient sa propre version pour la pratique juridique italienne.",
         "input": "Fichiers choisis, objectif, questions ou colonnes souhaitées et liens connus entre accords, avenants et annexes. Éventuelles instructions ou guide du cabinet sélectionnés et sources juridiques fournies.",
         "work": "Choisit les colonnes utiles à la mission et lit chaque document avec des citations précises. Distingue montants déclarés et calculs, pénalités et avances, droit et juridiction, échéance et recours. Dans un dossier mixte, conserve la relation et le contexte juridique de chaque document. Les cellules manquantes, illisibles ou non examinées restent visibles.",
         "output": "Matrice Excel avec une ligne par document, feuille détaillée de citations et rapport HTML. Signale exceptions, contradictions, pièces manquantes et décisions ouvertes. Le résultat conserve rôles, formation du contrat, droit applicable, juridiction, sources vérifiées et questions ouvertes.",
@@ -214,7 +214,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "de": {
         "name": "Strukturierte Dokumentenprüfung",
         "summary": "Prüft eine Dokumentensammlung anhand gemeinsamer Fragen und erstellt eine Tabelle mit Belegen und Lücken.",
-        "useWhen": "Um dieselben Fragen über mehrere Verträge zu beantworten oder eine abgegrenzte Prüfung vorzubereiten.",
+        "useWhen": "Um dieselben Fragen über mehrere Verträge zu beantworten oder eine abgegrenzte Prüfung vorzubereiten. Diese Funktion basiert auf den Open-Source-Workflows von <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (MIT-Lizenz). Lucia passt sie an die italienische Rechtspraxis an und pflegt eine eigene Fassung.",
         "input": "Ausgewählte Dateien, Prüfungsziel, Fragen oder gewünschte Spalten sowie bekannte Beziehungen zwischen Verträgen, Änderungen und Anlagen. Gegebenenfalls ausgewählte Kanzleivorgaben und bereitgestellte Rechtsquellen.",
         "work": "Wählt zur Aufgabe passende Spalten und liest jedes Dokument mit genauen Zitaten. Trennt angegebene Beträge und Berechnungen, Vertragsstrafen und Anzahlungen, Recht und Gerichtsstand, Ablauf und Rechtsbehelfe. Bei gemischten Beständen bleibt der jeweilige rechtliche Kontext sichtbar, ebenso fehlende, unlesbare und ungeprüfte Inhalte.",
         "output": "Excel-Matrix mit einer Zeile pro Dokument, Detailblatt mit Zitaten und HTML-Bericht. Zeigt Ausnahmen, Widersprüche, fehlende Unterlagen und offene Entscheidungen. Das Ergebnis enthält Rollen, Vertragsschluss, anwendbares Recht, Gerichtsstand, geprüfte Quellen und offene Fragen.",
@@ -229,7 +229,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "es": {
         "name": "Revisión documental",
         "summary": "Examina una colección con preguntas comunes y prepara una tabla con evidencias y lagunas.",
-        "useWhen": "Para responder las mismas preguntas sobre varios contratos o preparar una revisión delimitada.",
+        "useWhen": "Para responder las mismas preguntas sobre varios contratos o preparar una revisión delimitada. Esta función deriva de los flujos de trabajo de código abierto de <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (licencia MIT). Lucia adapta y mantiene su propia versión para la práctica jurídica italiana.",
         "input": "Archivos elegidos, objetivo, preguntas o columnas deseadas y relaciones conocidas entre acuerdos, modificaciones y anexos. Instrucciones o guía del despacho seleccionadas y fuentes jurídicas aportadas.",
         "work": "Elige columnas útiles para el encargo y lee cada documento con citas precisas. Separa importes declarados y cálculos, penalizaciones y anticipos, ley y foro, vencimiento y remedios. En expedientes mixtos conserva la relación y el contexto jurídico de cada documento. Las celdas ausentes, ilegibles o sin revisar permanecen visibles.",
         "output": "Matriz Excel con una fila por documento, hoja detallada de citas e informe HTML. Destaca excepciones, contradicciones, documentos faltantes y decisiones abiertas. El resultado conserva roles, formación contractual, derecho aplicable, foro, fuentes verificadas y cuestiones abiertas.",
@@ -250,7 +250,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "it": {
         "name": "Redazione da modello",
         "summary": "Prepara una copia modificata di un modello legale fornito, con registro dei cambiamenti e informazioni mancanti.",
-        "useWhen": "Quando lo studio dispone già di un modello da adattare a un incarico concreto.",
+        "useWhen": "Quando lo studio dispone già di un modello da adattare a un incarico concreto. Questa funzione deriva dai workflow open source di <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (licenza MIT). Lucia ne adatta e mantiene una versione per la pratica legale italiana.",
         "input": "Modello modificabile DOCX, TXT o Markdown, istruzioni, fatti confermati e materiali di supporto. Un PDF richiede una versione modificabile. Eventuali istruzioni o playbook dello studio e fonti giuridiche già selezionate.",
         "work": "Usa fatti confermati e istruzioni dello studio per modificare una copia del modello. Verifica coerenza di ruoli, importi, definizioni e rinvii; segnala dati del firmatario, poteri e fonti mancanti. Non presume che un formulario sia adatto al rapporto né sostituisce silenziosamente il diritto estero. Le modifiche esatte al DOCX conservano le parti non toccate; non sono revisioni native di Word.",
         "output": "Copia modificata nello stesso formato supportato, registro delle sostituzioni con base fattuale, segnaposto irrisolti e punti da rivedere. Il risultato conserva ruoli, formazione del contratto, diritto applicabile, foro, fonti verificate e quesiti aperti.",
@@ -265,7 +265,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "en": {
         "name": "Draft from a template",
         "summary": "Prepares an edited copy of a supplied legal template, with a change register and missing information.",
-        "useWhen": "Use when the firm already has a template to adapt to a specific matter.",
+        "useWhen": "Use when the firm already has a template to adapt to a specific matter. This function is adapted from the open-source workflows of <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (MIT license). Lucia adapts and maintains its own version for Italian legal practice.",
         "input": "Editable DOCX, TXT or Markdown template, instructions, confirmed facts and supporting materials. A PDF requires an editable source. Any selected firm instructions or playbook and supplied legal sources.",
         "work": "Uses confirmed facts and firm instructions to edit a copy of the template. Checks consistency of roles, amounts, definitions and references; flags missing signatory details, authority and sources. Does not assume a template suits the relationship or silently replace foreign law. Exact DOCX edits preserve untouched parts; they are not native Word tracked changes.",
         "output": "Edited copy in the same supported format, replacement register with factual basis, unresolved placeholders and review points. The result retains roles, contract formation, applicable law, forum, verified sources and open questions.",
@@ -280,7 +280,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "fr": {
         "name": "Rédaction à partir d’un modèle",
         "summary": "Prépare une copie modifiée d’un modèle juridique fourni, avec registre des changements et informations manquantes.",
-        "useWhen": "Lorsque le cabinet dispose déjà d’un modèle à adapter à un dossier concret.",
+        "useWhen": "Lorsque le cabinet dispose déjà d’un modèle à adapter à un dossier concret. Cette fonction est adaptée des workflows open source de <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (licence MIT). Lucia adapte et maintient sa propre version pour la pratique juridique italienne.",
         "input": "Modèle DOCX, TXT ou Markdown modifiable, instructions, faits confirmés et pièces justificatives. Un PDF nécessite une source modifiable. Éventuelles instructions ou guide du cabinet sélectionnés et sources juridiques fournies.",
         "work": "Utilise les faits confirmés et les instructions du cabinet pour modifier une copie du modèle. Vérifie rôles, montants, définitions et renvois ; signale les informations du signataire, pouvoirs et sources manquants. Ne présume pas que le modèle convient à la relation et ne remplace pas silencieusement le droit étranger. Les modifications exactes du DOCX conservent les parties intactes ; elles ne sont pas des révisions natives de Word.",
         "output": "Copie modifiée dans le même format pris en charge, registre des substitutions avec leur base factuelle, champs non résolus et points de revue. Le résultat conserve rôles, formation du contrat, droit applicable, juridiction, sources vérifiées et questions ouvertes.",
@@ -295,7 +295,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "de": {
         "name": "Entwurf aus einer Vorlage",
         "summary": "Erstellt eine bearbeitete Kopie einer vorgegebenen juristischen Vorlage mit Änderungsverzeichnis und fehlenden Angaben.",
-        "useWhen": "Wenn die Kanzlei bereits eine Vorlage für die Anpassung an ein konkretes Mandat hat.",
+        "useWhen": "Wenn die Kanzlei bereits eine Vorlage für die Anpassung an ein konkretes Mandat hat. Diese Funktion basiert auf den Open-Source-Workflows von <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (MIT-Lizenz). Lucia passt sie an die italienische Rechtspraxis an und pflegt eine eigene Fassung.",
         "input": "Bearbeitbare DOCX-, TXT- oder Markdown-Vorlage, Anweisungen, bestätigte Fakten und Belege. Für PDF wird eine bearbeitbare Quelldatei benötigt. Gegebenenfalls ausgewählte Kanzleivorgaben und bereitgestellte Rechtsquellen.",
         "work": "Bearbeitet eine Kopie der Vorlage anhand bestätigter Fakten und Kanzleivorgaben. Prüft Rollen, Beträge, Definitionen und Verweise; kennzeichnet fehlende Unterzeichnerdaten, Vollmachten und Quellen. Setzt weder die Eignung einer Vorlage voraus noch ersetzt es stillschweigend ausländisches Recht. Exakte DOCX-Änderungen erhalten unberührte Teile; es sind keine nativen Word-Änderungsmarkierungen.",
         "output": "Bearbeitete Kopie im gleichen unterstützten Format, Ersetzungsverzeichnis mit Tatsachengrundlage, offene Platzhalter und Prüfpunkte. Das Ergebnis enthält Rollen, Vertragsschluss, anwendbares Recht, Gerichtsstand, geprüfte Quellen und offene Fragen.",
@@ -310,7 +310,7 @@ Object.assign(window.MPARANZA_FUNCTION_PAGES, {
       "es": {
         "name": "Redacción desde una plantilla",
         "summary": "Prepara una copia modificada de una plantilla jurídica aportada, con registro de cambios e información faltante.",
-        "useWhen": "Cuando el despacho ya dispone de una plantilla para adaptar a un asunto concreto.",
+        "useWhen": "Cuando el despacho ya dispone de una plantilla para adaptar a un asunto concreto. Esta función deriva de los flujos de trabajo de código abierto de <a href=\"https://github.com/open-legal-products/mike-workflows\">Mike</a> (licencia MIT). Lucia adapta y mantiene su propia versión para la práctica jurídica italiana.",
         "input": "Plantilla editable DOCX, TXT o Markdown, instrucciones, hechos confirmados y materiales de apoyo. Un PDF requiere una fuente editable. Instrucciones o guía del despacho seleccionadas y fuentes jurídicas aportadas.",
         "work": "Modifica una copia de la plantilla con hechos confirmados e instrucciones del despacho. Comprueba roles, importes, definiciones y referencias; señala datos del firmante, poderes y fuentes pendientes. No presume que la plantilla sea adecuada ni sustituye silenciosamente el derecho extranjero. Los cambios exactos del DOCX conservan las partes intactas; no son revisiones nativas de Word.",
         "output": "Copia modificada en el mismo formato compatible, registro de sustituciones con base factual, campos pendientes y puntos de revisión. El resultado conserva roles, formación contractual, derecho aplicable, foro, fuentes verificadas y cuestiones abiertas.",
