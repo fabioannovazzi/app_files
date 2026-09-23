@@ -748,7 +748,9 @@ def _prepared_payload(
         "interview_mode": _clean_interview_mode(payload.interview_mode),
         "language": _clean_language(payload.language),
         "purpose": _clean_text(payload.purpose),
-        "participant_intro": _clean_text(payload.participant_intro),
+        "participant_intro": "\n".join(
+            _clean_text(line) for line in payload.participant_intro.splitlines()
+        ).strip()[:MAX_PREPARED_TEXT_CHARS],
         "background_context": _clean_text(payload.background_context),
         "hypotheses_to_test": _clean_list(payload.hypotheses_to_test),
         "priority_topics": _clean_list(payload.priority_topics),
