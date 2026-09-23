@@ -450,7 +450,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "c7e389447a1e29050daa3902a3b93599c7e239d9426b6b68385bd4c982a29239",
+      "sha256": "85d95f163e029c2297515178018e13ea5d44480d553858e0a872115f75ca73f9",
       "languages": [
         "it",
         "en",
@@ -637,7 +637,7 @@
     },
     "purchase-invoice-review": {
       "path": "purchase-invoice-review/course.json",
-      "sha256": "73c17f78fee499ed3d74ec5644108e96b27fb51b42548bd7881a7bb2f6085eff",
+      "sha256": "8c666a194c4332e886b5ccc324c8fa056833358327aa4369b442e7e9f9825557",
       "languages": [
         "it",
         "en",
@@ -649,20 +649,19 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Fatture passive: collegare ogni documento alla registrazione",
-        "en": "Connect each purchase invoice to the actual posting",
-        "fr": "Relier chaque facture fournisseur à l'écriture réelle",
-        "de": "Jede Eingangsrechnung mit der tatsächlichen Buchung verbinden",
-        "es": "Vincular cada factura de compra con el asiento real"
+        "it": "Rivedere le fatture di acquisto con la contabilità",
+        "en": "Review purchase invoices against the ledger",
+        "fr": "Revoir les factures d’achat avec la comptabilité",
+        "de": "Eingangsrechnungen mit der Buchhaltung prüfen",
+        "es": "Revisar facturas de compra con la contabilidad"
       },
       "goals": {
-        "it": "Leggere la copertura di una popolazione di fatture passive e riconoscere i casi che richiedono revisione contabile.",
-        "en": "Read population coverage and identify invoices needing accounting review.",
-        "fr": "Lire la couverture d'une population de factures et repérer les cas nécessitant une revue comptable.",
-        "de": "Die Abdeckung eines Rechnungsbestands lesen und buchhalterischen Prüfbedarf erkennen.",
-        "es": "Leer la cobertura de una población e identificar facturas que requieren revisión contable."
-      },
-      "material": "retained"
+        "it": "Imparare a confrontare un lotto di fatture con le registrazioni già effettuate e usare il foglio delle eccezioni per la revisione.",
+        "en": "Learn to compare an invoice batch with existing postings and use the exception workbook for review.",
+        "fr": "Apprendre à comparer un lot de factures aux écritures existantes et à utiliser le classeur des exceptions.",
+        "de": "Lernen, Rechnungen mit vorhandenen Buchungen zu vergleichen und die Ausnahmeliste für die Prüfung zu nutzen.",
+        "es": "Aprender a comparar un lote de facturas con asientos existentes y utilizar el libro de excepciones para revisarlos."
+      }
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",

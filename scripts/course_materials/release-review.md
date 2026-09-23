@@ -1,5 +1,25 @@
 # Teaching-kit release review
 
+## Final prepared-kit completion — 23 September 2026
+
+The last retained invoice-review lesson has been replaced with its prepared kit.
+The release selection now contains 45 prepared kits and 205 localized lessons,
+with no retained replacements. The three hosted Clara workflows remain excluded
+from local lessons as requested. Ten actual native invoice runs (demonstration
+and practice in five languages) completed with real worker launch receipts;
+portable regressions replay their exact semantic results through the current
+workflow. Every run found only the supported DEMO-003 consulting/fuel exception.
+Practice adds a correctly booked fourth invoice and preserves the first result.
+The lesson names the actual Exceptions sheet and discloses English workbook
+labels. Review records distinguish programmatic workbook inspection from visual
+acceptance, and replay from fresh model execution. Ten bank lesson reruns retain
+identical reviewed workbook and localized-note bytes after host qualification.
+
+Codex retains its teacher/working conversations; Cowork retains written lessons.
+This record describes source and tested materials. Deployment is recorded by the
+release commit and server verification; Marketplace publication is prohibited.
+
+
 ## Current release decision — 15 September 2026
 
 The owner requested an interim mixed release: 34 completed new kits plus the

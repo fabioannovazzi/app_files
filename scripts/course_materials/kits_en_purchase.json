@@ -9,7 +9,7 @@
     "steps": [
       "The working chat checks the batch and ledger columns. Voice explains invoice, movement and booked account identity and helps resolve material ambiguities.",
       "The current workflow matches invoices to movements, checks amounts and uses its native reviewer to assess descriptions and accounts. Voice follows actual progress and distinguishes calculation from judgement.",
-      "Open the Excel exception workbook first. Choose a row, read the reason for review and trace it to the invoice description and account actually used. Review findings before drawing conclusions."
+      "Open the “Exceptions” worksheet in the Excel file first. Choose a row, read the reason for review and trace it to the invoice description and account actually used. Review findings before drawing conclusions."
     ],
     "deliverables": [
       "Excel exception workbook with reasons and references to examine.",

@@ -9,7 +9,7 @@
     "steps": [
       "La chat di lavoro verifica il lotto e le colonne della contabilità. La voce spiega come identificare fattura, movimento e conto registrato; conferma con te le eventuali ambiguità.",
       "Il flusso corrente abbina fatture e movimenti, controlla gli importi e usa il proprio revisore nativo per valutare descrizioni e conti. La voce segue lo stato reale del lavoro e distingue calcoli e valutazioni.",
-      "Apri prima il foglio Excel delle eccezioni. Scegli una riga, leggi la ragione del controllo e ritrova descrizione della fattura e conto effettivamente usato. Rivedi le segnalazioni prima di trarre conclusioni."
+      "Apri prima il foglio “Exceptions” nel file Excel: le etichette del file sono in inglese. Scegli una riga, leggi la ragione del controllo e ritrova descrizione della fattura e conto effettivamente usato. Rivedi le segnalazioni prima di trarre conclusioni."
     ],
     "deliverables": [
       "Foglio Excel delle eccezioni, con motivi e riferimenti da esaminare.",

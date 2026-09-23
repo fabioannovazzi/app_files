@@ -1,0 +1,2815 @@
+{
+  "scope": "Replay of reviewed actual Luna outputs for fictional teaching inputs; not a fresh model call, host qualification, professional approval or learner completion.",
+  "cases": {
+    "de-demo": {
+      "results": {
+        "DEMO-002": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "600.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "732.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-12",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "600.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-002",
+            "ledger_reference": "ledger-march.csv:movement=INV-2",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "600.00",
+                "vat_amount": "132.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Account 6100: \"Consulenze amministrative\", booked amount EUR 600.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 600.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "The invoice describes administrative consulting and is booked to administrative consulting expense, with no visible material inconsistency.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "d179d754cb4adefb9dcdf4dd521dc4d4587bcec4e6e19a1173f05aa8cdca9059"
+        },
+        "DEMO-001": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "1000.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "1220.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-05",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "1000.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-001",
+            "ledger_reference": "ledger-march.csv:movement=INV-1",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "1000.00",
+                "vat_amount": "220.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Account 6100: \"Consulenze amministrative\", booked amount EUR 1,000.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 1,000.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "The invoice describes administrative consulting and is booked to administrative consulting expense, with no visible material inconsistency.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "35a6da42ada430646d4faee2a19c9dc6ed9ac5cbd232cbe990cacac9c775a8d0"
+        },
+        "DEMO-003": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6050",
+                "account_description": "Carburante automezzi",
+                "amount_signed": "400.00",
+                "client_chart_description": "",
+                "line_description": "Carburante automezzi"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "488.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-22",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "400.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-003",
+            "ledger_reference": "ledger-march.csv:movement=INV-3",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "400.00",
+                "vat_amount": "88.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Account 6050: \"Carburante automezzi\", booked amount EUR 400.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 400.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "Inspect the underlying invoice and supporting documentation to determine whether the expense is consulting or vehicle fuel, and correct the account classification if necessary.",
+            "short_reason": "The invoice describes administrative consulting, but the recorded account is vehicle fuel expense, indicating a material economic-substance/account mismatch.",
+            "status": "review_required",
+            "suspected_issue_type": "economic_substance_account_mismatch"
+          },
+          "source_sha256": "f6b8b9cfc39c7b04ee160987bae64b5c3f53991a50bd5844ee4774142d125e7d"
+        }
+      },
+      "population_sha256": "17602cee2aaa8836bd5b907b0452f33d92bf58aad00c26b425218848f1afd2b8",
+      "native_receipts": [
+        "9cc164e71113726522ca5403ee3b6b65695c5cd494c802e1b71c81af33de9f9a"
+      ]
+    },
+    "de-practice": {
+      "results": {
+        "DEMO-004": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6150",
+                "account_description": "Manutenzione impianti",
+                "amount_signed": "800.00",
+                "client_chart_description": "",
+                "line_description": "Manutenzione impianti"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "976.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-04-03",
+            "invoice_lines": [
+              {
+                "description": "Manutenzione ordinaria dimostrativa",
+                "line_total": "800.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-004",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-4",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "800.00",
+                "vat_amount": "176.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked to account 6150, \"Manutenzione impianti\", EUR 800.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Manutenzione ordinaria dimostrativa\" for EUR 800.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "Invoice describes ordinary plant maintenance and is booked to a plant-maintenance expense account.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "60f7795a684bacad0d4c6e1429a6a870432c534d2e590bf198f51973b49924bb"
+        },
+        "DEMO-003": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6050",
+                "account_description": "Carburante automezzi",
+                "amount_signed": "400.00",
+                "client_chart_description": "",
+                "line_description": "Carburante automezzi"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "488.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-22",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "400.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-003",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-3",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "400.00",
+                "vat_amount": "88.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked to account 6050, \"Carburante automezzi\", EUR 400.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 400.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "Confirm the underlying service and reclassify the expense if necessary; inspect the invoice and supporting documentation for the correct account and VAT treatment.",
+            "short_reason": "The invoice describes administrative consultancy but is booked to an automotive fuel expense account, indicating a material economic-substance/account mismatch.",
+            "status": "review_required",
+            "suspected_issue_type": "economic_substance_account_mismatch"
+          },
+          "source_sha256": "f6b8b9cfc39c7b04ee160987bae64b5c3f53991a50bd5844ee4774142d125e7d"
+        },
+        "DEMO-002": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "600.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "732.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-12",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "600.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-002",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-2",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "600.00",
+                "vat_amount": "132.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked to account 6100, \"Consulenze amministrative\", EUR 600.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 600.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "Invoice describes administrative consultancy and is booked to an administrative-consultancy expense account.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "d179d754cb4adefb9dcdf4dd521dc4d4587bcec4e6e19a1173f05aa8cdca9059"
+        },
+        "DEMO-001": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "1000.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "1220.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-05",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "1000.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-001",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-1",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "1000.00",
+                "vat_amount": "220.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked to account 6100, \"Consulenze amministrative\", EUR 1,000.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 1,000.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "Invoice describes administrative consultancy and is booked to an administrative-consultancy expense account.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "35a6da42ada430646d4faee2a19c9dc6ed9ac5cbd232cbe990cacac9c775a8d0"
+        }
+      },
+      "population_sha256": "ef1e2ffd7a054d74ddedf660e36571ff41293855fe52cb95aa74f9358e8a0d94",
+      "native_receipts": [
+        "7f98a8f8cd75b5d0f657f1f10671526a547a3fa02c5ca3ce62b44f92099b9df7"
+      ]
+    },
+    "en-demo": {
+      "results": {
+        "DEMO-001": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "1000.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "1220.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-05",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "1000.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-001",
+            "ledger_reference": "ledger-march.csv:movement=INV-1",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "1000.00",
+                "vat_amount": "220.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked to account 6100, \"Consulenze amministrative\", EUR 1,000.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 1,000.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "Invoice describes administrative consulting and is booked to administrative consulting expense, with no concrete material inconsistency visible.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "35a6da42ada430646d4faee2a19c9dc6ed9ac5cbd232cbe990cacac9c775a8d0"
+        },
+        "DEMO-002": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "600.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "732.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-12",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "600.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-002",
+            "ledger_reference": "ledger-march.csv:movement=INV-2",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "600.00",
+                "vat_amount": "132.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked to account 6100, \"Consulenze amministrative\", EUR 600.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 600.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "Invoice describes administrative consulting and is booked to administrative consulting expense, with no concrete material inconsistency visible.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "d179d754cb4adefb9dcdf4dd521dc4d4587bcec4e6e19a1173f05aa8cdca9059"
+        },
+        "DEMO-003": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6050",
+                "account_description": "Carburante automezzi",
+                "amount_signed": "400.00",
+                "client_chart_description": "",
+                "line_description": "Carburante automezzi"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "488.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-22",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "400.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-003",
+            "ledger_reference": "ledger-march.csv:movement=INV-3",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "400.00",
+                "vat_amount": "88.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked to account 6050, \"Carburante automezzi\", EUR 400.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 400.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "Inspect the underlying invoice and supporting documentation to confirm the service received and correct the expense classification if the administrative consulting description is accurate.",
+            "short_reason": "The invoice describes administrative consulting, but the amount is booked as vehicle fuel expense, indicating an economic substance/account mismatch.",
+            "status": "review_required",
+            "suspected_issue_type": "economic_substance_account_mismatch"
+          },
+          "source_sha256": "f6b8b9cfc39c7b04ee160987bae64b5c3f53991a50bd5844ee4774142d125e7d"
+        }
+      },
+      "population_sha256": "8144643ef5375039e894d3bab890990c425cd2106f065ee4a3bc9caa166dc025",
+      "native_receipts": [
+        "7cf14eabcb3324a2f5a60a119f8a9f70d2e7a33f658cb70af348449b312a815d"
+      ]
+    },
+    "en-practice": {
+      "results": {
+        "DEMO-002": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "600.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "732.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-12",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "600.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-002",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-2",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "600.00",
+                "vat_amount": "132.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked to account 6100, \"Consulenze amministrative\", for EUR 600.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 600.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "Invoice description is consistent with the booked administrative consultancy expense account.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "d179d754cb4adefb9dcdf4dd521dc4d4587bcec4e6e19a1173f05aa8cdca9059"
+        },
+        "DEMO-004": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6150",
+                "account_description": "Manutenzione impianti",
+                "amount_signed": "800.00",
+                "client_chart_description": "",
+                "line_description": "Manutenzione impianti"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "976.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-04-03",
+            "invoice_lines": [
+              {
+                "description": "Manutenzione ordinaria dimostrativa",
+                "line_total": "800.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-004",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-4",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "800.00",
+                "vat_amount": "176.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked to account 6150, \"Manutenzione impianti\", for EUR 800.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Manutenzione ordinaria dimostrativa\" for EUR 800.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "The ordinary maintenance invoice is consistent with the booked plant-maintenance expense account.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "60f7795a684bacad0d4c6e1429a6a870432c534d2e590bf198f51973b49924bb"
+        },
+        "DEMO-003": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6050",
+                "account_description": "Carburante automezzi",
+                "amount_signed": "400.00",
+                "client_chart_description": "",
+                "line_description": "Carburante automezzi"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "488.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-22",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "400.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-003",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-3",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "400.00",
+                "vat_amount": "88.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked to account 6050, \"Carburante automezzi\", for EUR 400.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 400.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "Inspect the source invoice and posting support to determine whether the expense account should be administrative consultancy rather than vehicle fuel, and verify the VAT treatment.",
+            "short_reason": "The invoice describes administrative consultancy, but it was booked as vehicle fuel, indicating an economic-substance/account mismatch.",
+            "status": "review_required",
+            "suspected_issue_type": "economic_substance_account_mismatch"
+          },
+          "source_sha256": "f6b8b9cfc39c7b04ee160987bae64b5c3f53991a50bd5844ee4774142d125e7d"
+        },
+        "DEMO-001": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "1000.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "1220.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-05",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "1000.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-001",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-1",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "1000.00",
+                "vat_amount": "220.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked to account 6100, \"Consulenze amministrative\", for EUR 1,000.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 1,000.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "Invoice description is consistent with the booked administrative consultancy expense account.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "35a6da42ada430646d4faee2a19c9dc6ed9ac5cbd232cbe990cacac9c775a8d0"
+        }
+      },
+      "population_sha256": "6ea6e8a5ed3389d852c9a29e63d0e72894ad3fc43ea7b3cf6d1412e8e3cc4337",
+      "native_receipts": [
+        "7cc51111baa728673ffbbca9868b7f6b704b55fa9df1dfa1e794a89451cea1d9"
+      ]
+    },
+    "es-demo": {
+      "results": {
+        "DEMO-003": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6050",
+                "account_description": "Carburante automezzi",
+                "amount_signed": "400.00",
+                "client_chart_description": "",
+                "line_description": "Carburante automezzi"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "488.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-22",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "400.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-003",
+            "ledger_reference": "ledger-march.csv:movement=INV-3",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "400.00",
+                "vat_amount": "88.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Account 6050: “Carburante automezzi”, EUR 400.00; line description: “Carburante automezzi”."
+            ],
+            "invoice_evidence": [
+              "Invoice line: “Consulenza amministrativa dimostrativa”, taxable amount EUR 400.00."
+            ],
+            "professional_should_inspect": "Confirm the service received and reclassify the expense if the invoice description is accurate; investigate whether the invoice or booking is erroneous.",
+            "short_reason": "The invoice describes administrative consulting, but the expense was booked to vehicle fuel.",
+            "status": "review_required",
+            "suspected_issue_type": "economic_substance_account_mismatch"
+          },
+          "source_sha256": "f6b8b9cfc39c7b04ee160987bae64b5c3f53991a50bd5844ee4774142d125e7d"
+        },
+        "DEMO-002": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "600.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "732.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-12",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "600.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-002",
+            "ledger_reference": "ledger-march.csv:movement=INV-2",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "600.00",
+                "vat_amount": "132.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Account 6100: “Consulenze amministrative”, EUR 600.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: “Consulenza amministrativa dimostrativa”, taxable amount EUR 600.00."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "The invoice description and booked expense account both identify administrative consulting.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "d179d754cb4adefb9dcdf4dd521dc4d4587bcec4e6e19a1173f05aa8cdca9059"
+        },
+        "DEMO-001": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "1000.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "1220.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-05",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "1000.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-001",
+            "ledger_reference": "ledger-march.csv:movement=INV-1",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "1000.00",
+                "vat_amount": "220.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Account 6100: “Consulenze amministrative”, EUR 1,000.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: “Consulenza amministrativa dimostrativa”, taxable amount EUR 1,000.00."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "The invoice description and booked expense account both identify administrative consulting.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "35a6da42ada430646d4faee2a19c9dc6ed9ac5cbd232cbe990cacac9c775a8d0"
+        }
+      },
+      "population_sha256": "7a9a419a91803faba2e4cc215e4c574970d40e2c6ebaaeeea67eeec0a9889a3d",
+      "native_receipts": [
+        "cc9c1d6868ff6fb48741310957f1a6d3a48ca8d9b5f603719b79be6df8741f35"
+      ]
+    },
+    "es-practice": {
+      "results": {
+        "DEMO-001": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "1000.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "1220.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-05",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "1000.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-001",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-1",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "1000.00",
+                "vat_amount": "220.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Account 6100: \"Consulenze amministrative\" for EUR 1,000.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 1,000.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "The invoice describes administrative consulting and is booked to administrative consulting expense, with no concrete material inconsistency visible.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "35a6da42ada430646d4faee2a19c9dc6ed9ac5cbd232cbe990cacac9c775a8d0"
+        },
+        "DEMO-002": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "600.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "732.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-12",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "600.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-002",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-2",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "600.00",
+                "vat_amount": "132.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Account 6100: \"Consulenze amministrative\" for EUR 600.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 600.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "The invoice describes administrative consulting and is booked to administrative consulting expense, with no concrete material inconsistency visible.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "d179d754cb4adefb9dcdf4dd521dc4d4587bcec4e6e19a1173f05aa8cdca9059"
+        },
+        "DEMO-004": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6150",
+                "account_description": "Manutenzione impianti",
+                "amount_signed": "800.00",
+                "client_chart_description": "",
+                "line_description": "Manutenzione impianti"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "976.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-04-03",
+            "invoice_lines": [
+              {
+                "description": "Manutenzione ordinaria dimostrativa",
+                "line_total": "800.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-004",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-4",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "800.00",
+                "vat_amount": "176.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Account 6150: \"Manutenzione impianti\" for EUR 800.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Manutenzione ordinaria dimostrativa\" for EUR 800.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "The invoice describes ordinary maintenance and is booked to plant maintenance expense, with no concrete material inconsistency visible.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "60f7795a684bacad0d4c6e1429a6a870432c534d2e590bf198f51973b49924bb"
+        },
+        "DEMO-003": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6050",
+                "account_description": "Carburante automezzi",
+                "amount_signed": "400.00",
+                "client_chart_description": "",
+                "line_description": "Carburante automezzi"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "488.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-22",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "400.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-003",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-3",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "400.00",
+                "vat_amount": "88.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Account 6050: \"Carburante automezzi\" for EUR 400.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 400.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "Inspect the source invoice and posting support to confirm the service received and correct the account classification if the invoice is genuinely for administrative consulting.",
+            "short_reason": "The invoice describes administrative consulting, but the recorded account is vehicle fuel, indicating a material economic-substance/account mismatch.",
+            "status": "review_required",
+            "suspected_issue_type": "economic_substance_account_mismatch"
+          },
+          "source_sha256": "f6b8b9cfc39c7b04ee160987bae64b5c3f53991a50bd5844ee4774142d125e7d"
+        }
+      },
+      "population_sha256": "532aef5674219f6920c936394e23aea7a5ed93f442c1aeabe2b70ca92fc6af16",
+      "native_receipts": [
+        "ca30cad1a0bc97e4251decdf4cd9e09754b0097b00311679eca5cc1c0ee56b05"
+      ]
+    },
+    "fr-demo": {
+      "results": {
+        "DEMO-002": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "600.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "732.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-12",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "600.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-002",
+            "ledger_reference": "ledger-march.csv:movement=INV-2",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "600.00",
+                "vat_amount": "132.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Account 6100: \"Consulenze amministrative\", EUR 600.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 600.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "The invoice describes administrative consulting and is booked to administrative consulting expense.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "d179d754cb4adefb9dcdf4dd521dc4d4587bcec4e6e19a1173f05aa8cdca9059"
+        },
+        "DEMO-001": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "1000.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "1220.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-05",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "1000.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-001",
+            "ledger_reference": "ledger-march.csv:movement=INV-1",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "1000.00",
+                "vat_amount": "220.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Account 6100: \"Consulenze amministrative\", EUR 1,000.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 1,000.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "The invoice describes administrative consulting and is booked to administrative consulting expense.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "35a6da42ada430646d4faee2a19c9dc6ed9ac5cbd232cbe990cacac9c775a8d0"
+        },
+        "DEMO-003": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6050",
+                "account_description": "Carburante automezzi",
+                "amount_signed": "400.00",
+                "client_chart_description": "",
+                "line_description": "Carburante automezzi"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "488.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-22",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "400.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-003",
+            "ledger_reference": "ledger-march.csv:movement=INV-3",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "400.00",
+                "vat_amount": "88.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Account 6050: \"Carburante automezzi\", EUR 400.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 400.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "Inspect the underlying invoice and supporting documentation to confirm the service received and correct the expense classification if the consulting description is accurate.",
+            "short_reason": "The invoice describes administrative consulting but the amount is booked as vehicle fuel, indicating an economic substance/account mismatch.",
+            "status": "review_required",
+            "suspected_issue_type": "economic_substance_account_mismatch"
+          },
+          "source_sha256": "f6b8b9cfc39c7b04ee160987bae64b5c3f53991a50bd5844ee4774142d125e7d"
+        }
+      },
+      "population_sha256": "563bd73ff00ad179c16e07f38092982d2de829b0c389f71edf98976341b6a689",
+      "native_receipts": [
+        "bd6272c4ce3e16806f74117cababac8f7474802d50a81c07d540530475db7cc8"
+      ]
+    },
+    "fr-practice": {
+      "results": {
+        "DEMO-002": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "600.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "732.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-12",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "600.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-002",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-2",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "600.00",
+                "vat_amount": "132.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked account 6100: \"Consulenze amministrative\" for EUR 600.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 600.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "Invoice describes administrative consulting and is booked to administrative consulting expense.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "d179d754cb4adefb9dcdf4dd521dc4d4587bcec4e6e19a1173f05aa8cdca9059"
+        },
+        "DEMO-003": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6050",
+                "account_description": "Carburante automezzi",
+                "amount_signed": "400.00",
+                "client_chart_description": "",
+                "line_description": "Carburante automezzi"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "488.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-22",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "400.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-003",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-3",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "400.00",
+                "vat_amount": "88.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked account 6050: \"Carburante automezzi\" for EUR 400.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 400.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "Confirm the underlying service and reclassify the expense if the invoice description is correct; inspect supporting documentation for any exceptional fuel-related substance.",
+            "short_reason": "The invoice describes administrative consulting, but the amount is booked to vehicle fuel, indicating a material economic-substance/account mismatch.",
+            "status": "review_required",
+            "suspected_issue_type": "economic_substance_account_mismatch"
+          },
+          "source_sha256": "f6b8b9cfc39c7b04ee160987bae64b5c3f53991a50bd5844ee4774142d125e7d"
+        },
+        "DEMO-001": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "1000.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "1220.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-05",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "1000.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-001",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-1",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "1000.00",
+                "vat_amount": "220.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked account 6100: \"Consulenze amministrative\" for EUR 1,000.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 1,000.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "Invoice describes administrative consulting and is booked to administrative consulting expense.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "35a6da42ada430646d4faee2a19c9dc6ed9ac5cbd232cbe990cacac9c775a8d0"
+        },
+        "DEMO-004": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6150",
+                "account_description": "Manutenzione impianti",
+                "amount_signed": "800.00",
+                "client_chart_description": "",
+                "line_description": "Manutenzione impianti"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "976.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-04-03",
+            "invoice_lines": [
+              {
+                "description": "Manutenzione ordinaria dimostrativa",
+                "line_total": "800.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-004",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-4",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "800.00",
+                "vat_amount": "176.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked account 6150: \"Manutenzione impianti\" for EUR 800.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Manutenzione ordinaria dimostrativa\" for EUR 800.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "Invoice describes ordinary maintenance and is booked to plant maintenance expense.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "60f7795a684bacad0d4c6e1429a6a870432c534d2e590bf198f51973b49924bb"
+        }
+      },
+      "population_sha256": "293dbb86a043ac7ea1b2006c29a6bf888740344c07fa5a3fe1dfea36f5c3d83e",
+      "native_receipts": [
+        "eaf6ee1763c76793a98568985eb1a5aa396b22f88de383b34b3df082175742ac"
+      ]
+    },
+    "it-demo": {
+      "results": {
+        "DEMO-003": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6050",
+                "account_description": "Carburante automezzi",
+                "amount_signed": "400.00",
+                "client_chart_description": "",
+                "line_description": "Carburante automezzi"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "488.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-22",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "400.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-003",
+            "ledger_reference": "ledger-march.csv:movement=INV-3",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "400.00",
+                "vat_amount": "88.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Account 6050 is described as \"Carburante automezzi\" for EUR 400.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 400.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "Confirm the service received and reclassify the expense if the invoice description is accurate; inspect supporting documentation for the transaction.",
+            "short_reason": "The invoice describes administrative consulting, but the booked expense account is for vehicle fuel.",
+            "status": "review_required",
+            "suspected_issue_type": "economic_substance_account_mismatch"
+          },
+          "source_sha256": "f6b8b9cfc39c7b04ee160987bae64b5c3f53991a50bd5844ee4774142d125e7d"
+        },
+        "DEMO-002": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "600.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "732.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-12",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "600.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-002",
+            "ledger_reference": "ledger-march.csv:movement=INV-2",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "600.00",
+                "vat_amount": "132.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Account 6100 is described as \"Consulenze amministrative\" for EUR 600.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 600.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "The administrative consulting invoice is booked to the corresponding administrative consulting expense account.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "d179d754cb4adefb9dcdf4dd521dc4d4587bcec4e6e19a1173f05aa8cdca9059"
+        },
+        "DEMO-001": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "1000.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "1220.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-05",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "1000.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-001",
+            "ledger_reference": "ledger-march.csv:movement=INV-1",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "1000.00",
+                "vat_amount": "220.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Account 6100 is described as \"Consulenze amministrative\" for EUR 1,000.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 1,000.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "The administrative consulting invoice is booked to the corresponding administrative consulting expense account.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "35a6da42ada430646d4faee2a19c9dc6ed9ac5cbd232cbe990cacac9c775a8d0"
+        }
+      },
+      "population_sha256": "3e5aee5c8be8f53aae453e99443a1459a7f26fb5b5c3251ac3000a4de8418ff5",
+      "native_receipts": [
+        "00301dd31c8cc750643b73a38fd53adf4c825f17636f1bb4801ac33e56f2fd08"
+      ]
+    },
+    "it-practice": {
+      "results": {
+        "DEMO-004": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6150",
+                "account_description": "Manutenzione impianti",
+                "amount_signed": "800.00",
+                "client_chart_description": "",
+                "line_description": "Manutenzione impianti"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "976.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-04-03",
+            "invoice_lines": [
+              {
+                "description": "Manutenzione ordinaria dimostrativa",
+                "line_total": "800.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-004",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-4",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "800.00",
+                "vat_amount": "176.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked to account 6150, \"Manutenzione impianti\", for EUR 800.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Manutenzione ordinaria dimostrativa\" for EUR 800.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "The invoice describes ordinary maintenance and is booked to the maintenance-account.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "60f7795a684bacad0d4c6e1429a6a870432c534d2e590bf198f51973b49924bb"
+        },
+        "DEMO-001": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "1000.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "1220.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-05",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "1000.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-001",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-1",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "1000.00",
+                "vat_amount": "220.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked to account 6100, \"Consulenze amministrative\", for EUR 1,000.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 1,000.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "The invoice describes administrative consulting and is booked to the corresponding consulting account.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "35a6da42ada430646d4faee2a19c9dc6ed9ac5cbd232cbe990cacac9c775a8d0"
+        },
+        "DEMO-002": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6100",
+                "account_description": "Consulenze amministrative",
+                "amount_signed": "600.00",
+                "client_chart_description": "",
+                "line_description": "Consulenze amministrative"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "732.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-12",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "600.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-002",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-2",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "600.00",
+                "vat_amount": "132.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked to account 6100, \"Consulenze amministrative\", for EUR 600.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 600.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "",
+            "short_reason": "The invoice describes administrative consulting and is booked to the corresponding consulting account.",
+            "status": "no_issue_detected",
+            "suspected_issue_type": "none"
+          },
+          "source_sha256": "d179d754cb4adefb9dcdf4dd521dc4d4587bcec4e6e19a1173f05aa8cdca9059"
+        },
+        "DEMO-003": {
+          "packet": {
+            "accounting_context": {
+              "causale": [
+                "Esempio sintetico, non inviare a SdI"
+              ],
+              "causale_truncated": false,
+              "related_documents": [],
+              "related_documents_truncated": false,
+              "stamp_duty": {
+                "amount": "",
+                "virtual": ""
+              },
+              "withholdings": [],
+              "withholdings_truncated": false
+            },
+            "actual_accounting_treatment": [
+              {
+                "account_code": "6050",
+                "account_description": "Carburante automezzi",
+                "amount_signed": "400.00",
+                "client_chart_description": "",
+                "line_description": "Carburante automezzi"
+              }
+            ],
+            "currency": "EUR",
+            "deterministic_findings": [],
+            "document_type": "TD01",
+            "flags": {
+              "credit_note": false,
+              "reverse_charge": false,
+              "split_payment": false
+            },
+            "gross_amount": "488.00",
+            "history_is_supporting_evidence_not_a_prerequisite": true,
+            "invoice_date": "2026-03-22",
+            "invoice_lines": [
+              {
+                "description": "Consulenza amministrativa dimostrativa",
+                "line_total": "400.00",
+                "quantity": "1.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ],
+            "invoice_lines_truncated": false,
+            "invoice_number": "DEMO-003",
+            "ledger_reference": "ledger-march-april.csv:movement=INV-3",
+            "relevant_history": [],
+            "supplier": {
+              "name": "FORNITORE FITTIZIO - SOLO ESERCITAZIONE",
+              "tax_id": "00000000000"
+            },
+            "vat_summaries": [
+              {
+                "collectability": "I",
+                "legal_reference": "",
+                "taxable_amount": "400.00",
+                "vat_amount": "88.00",
+                "vat_nature": "",
+                "vat_rate": "22.00"
+              }
+            ]
+          },
+          "response": {
+            "booked_account_evidence": [
+              "Booked to account 6050, \"Carburante automezzi\", for EUR 400.00."
+            ],
+            "invoice_evidence": [
+              "Invoice line: \"Consulenza amministrativa dimostrativa\" for EUR 400.00 plus 22% VAT."
+            ],
+            "professional_should_inspect": "Inspect the underlying invoice and supporting documentation to confirm the nature of the service and reclassify the booking if it is administrative consulting rather than vehicle fuel.",
+            "short_reason": "The invoice describes administrative consulting but the amount is booked as vehicle fuel, indicating an economic-substance/account mismatch.",
+            "status": "review_required",
+            "suspected_issue_type": "economic_substance_account_mismatch"
+          },
+          "source_sha256": "f6b8b9cfc39c7b04ee160987bae64b5c3f53991a50bd5844ee4774142d125e7d"
+        }
+      },
+      "population_sha256": "d321b6312a8954c72655ee6158da6b89b88596775dd02bbccc613e6e431afa56",
+      "native_receipts": [
+        "59731dcd813cd69b03da2f83bdb9c894724844ec3aa02b72914fb7c17b134575"
+      ]
+    }
+  }
+}

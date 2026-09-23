@@ -189,7 +189,8 @@ RESOLUTION_LEVELS = (
 RESOLUTION_RANK = {level: rank for rank, level in enumerate(RESOLUTION_LEVELS)}
 DEFAULT_REQUIRED_RESOLUTION_LEVEL = "classified"
 
-WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v1"
+LEGACY_WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v1"
+WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v2"
 SEATBELT_PROFILE = """(version 1)
 (deny default)
 (import "system.sb")
@@ -296,8 +297,8 @@ class _HostCapabilityProfile:
 
 _HOST_CAPABILITY_PROFILES: Mapping[str, _HostCapabilityProfile] = MappingProxyType(
     {
-        WORKER_BOUNDARY_CONTRACT_ID: _HostCapabilityProfile(
-            contract_id=WORKER_BOUNDARY_CONTRACT_ID,
+        LEGACY_WORKER_BOUNDARY_CONTRACT_ID: _HostCapabilityProfile(
+            contract_id=LEGACY_WORKER_BOUNDARY_CONTRACT_ID,
             provenance="retained_legacy",
             platform="Darwin",
             darwin_build="25F84",
@@ -310,7 +311,22 @@ _HOST_CAPABILITY_PROFILES: Mapping[str, _HostCapabilityProfile] = MappingProxyTy
             seatbelt_sha256="c9fb7bbd473cf77e38e7ca041bb8b34b7c16178108f0a2660e6ba3131313d3be",
             disabled_features=_LEGACY_DISABLED_WORKER_FEATURES,
             qualification_basis="pinned_hidden_view_image_outside_nonce_denied",
-        )
+        ),
+        WORKER_BOUNDARY_CONTRACT_ID: _HostCapabilityProfile(
+            contract_id=WORKER_BOUNDARY_CONTRACT_ID,
+            provenance="native_qualified",
+            platform="Darwin",
+            darwin_build="26A428",
+            codex_version="codex-cli 0.155.0-alpha.16",
+            codex_sha256="2f76d9cb0acab786dbb1cbf1020e8001d0e6d4de7b3c87a5d5769a4d03480f13",
+            sandbox_exec_path=Path("/usr/bin/sandbox-exec"),
+            sandbox_exec_sha256="58839ef01b4eef8aac0d2aa8f9d1c074ae45aafe3533965b030672450064acc8",
+            canary_path=Path("/bin/cat"),
+            canary_sha256="1e238665b377c3ef21734890c783aa828cf912d175b90998b88276cefad0b25a",
+            seatbelt_sha256="c9fb7bbd473cf77e38e7ca041bb8b34b7c16178108f0a2660e6ba3131313d3be",
+            disabled_features=_LEGACY_DISABLED_WORKER_FEATURES,
+            qualification_basis="pinned_outer_boundary_image_controls_2026_09_23",
+        ),
     }
 )
 
@@ -318,20 +334,20 @@ _HOST_CAPABILITY_PROFILES: Mapping[str, _HostCapabilityProfile] = MappingProxyTy
 def _resolve_host_profile(
     contract_id: str = WORKER_BOUNDARY_CONTRACT_ID,
 ) -> _HostCapabilityProfile:
-    """Resolve packaged legacy authority, never a runtime qualification claim."""
+    """Resolve reviewed packaged authority, never a runtime qualification claim."""
     if not isinstance(contract_id, str):
         raise ValueError("Unknown or unqualified native worker host profile")
     profile = _HOST_CAPABILITY_PROFILES.get(contract_id)
     if (
         profile is None
         or profile.contract_id != contract_id
-        or profile.provenance != "retained_legacy"
+        or profile.provenance not in {"retained_legacy", "native_qualified"}
     ):
         raise ValueError("Unknown or unqualified native worker host profile")
     return profile
 
 
-# Compatibility names are derived from the sole record; enforcement uses it.
+# Compatibility names derive from the current record; legacy authority is retained.
 PINNED_DARWIN_BUILD = _resolve_host_profile().darwin_build
 PINNED_CODEX_VERSION = _resolve_host_profile().codex_version
 PINNED_CODEX_SHA256 = _resolve_host_profile().codex_sha256

@@ -1,61 +1,71 @@
-# Vincular cada factura de compra con el asiento real
+# Revisar facturas de compra con la contabilidad
 
-Un recorrido guiado de unos 6 minutos y medio. La activación de voz, los procesos externos y el ejercicio opcional requieren tiempo adicional.
+La explicación y una práctica breve requieren unos 5–8 minutos. El procesamiento y tus preguntas pueden alargar la sesión.
 
-Habla con el docente mediante la voz estándar de Codex. En la segunda conversación, abierta al lado, examina los archivos y el resultado. Ambas siguen vinculadas; puedes interrumpir, preguntar por qué o reducir el ritmo cuando quieras.
+Habla con el docente mediante la voz estándar de Codex. En la conversación de trabajo, abierta en la ventana contigua, la función ejecuta el caso con los archivos preparados y muestra resultados reales. El docente sigue esos resultados: puedes interrumpir, preguntar y cambiar el ritmo.
 
-Utiliza este material preparado. No reescribas la lección ni inventes resultados. Habla en turnos breves, deja tiempo para observar y escucha respuestas reales. No muestres la solución antes del intento. Los tiempos incluyen observación y diálogo. Mostrar estos archivos no completa demostración, práctica ni comprensión en el registro local. El docente elige por pertinencia únicamente dentro del catálogo de su producto.
+Utiliza el material preparado para enseñar un primer uso completo. Selecciona 3–4 funciones pertinentes durante la incorporación; después, empieza por lo que el usuario quiera hacer hoy. Adapta el ritmo y las explicaciones. Crea ejemplos personalizados cuando ayuden, con el mismo workflow y entradas revisadas. Lee execution-request.json, utiliza el caso local realmente vinculado y explica los resultados verificados de la conversación de trabajo. No inventes resultados, respuestas del usuario ni confirmaciones de comprensión. Abrir el kit no completa la lección.
 
-## 1. Tu objetivo · 45 s
+## 1. Cuándo utilizarla · 45 s
 
-Escucha la petición. Relaciona el caso con un trabajo que ya haces.
+Relaciona la función con una tarea profesional concreta.
 
-El lote ficticio tiene tres facturas: una con asiento coherente, otra sin asiento encontrado y otra con dos candidatos ambiguos. Periodo y población contable están delimitados expresamente.
+Aprender a comparar un lote de facturas con asientos existentes y utilizar el libro de excepciones para revisarlos.
 
-Vera, comprueba la relación entre este lote de facturas de compra y los asientos reales.
+Officina Arco aporta tres facturas XML y sus asientos de marzo. El despacho quiere identificar puntos que necesitan revisión.
 
-## 2. Los datos de partida · 60 s
+Primer uso de la revisión de facturas de compra italianas. Vera lee facturas y contabilidad, las compara y evalúa la coherencia de las cuentas; no modifica asientos.
 
-Mira los documentos en la otra conversación. Identifica un dato útil y una información que falta.
+## 2. Archivos y petición · 60 s
 
-P1 es el lote XML y G1 el export contable del periodo. Los hallazgos quedan vinculados a ambos alcances; no se inventa ningún asiento ausente.
+Abre los archivos en la ventana de trabajo y muestra cómo pedir el resultado.
 
-[["PA-101 · EUR 1.220", "Un asiento coherente", "Revisar naturaleza y tratamiento"], ["PA-102 · EUR 610", "Ningún candidato en el periodo", "Recuperar o aclarar"], ["PA-103 · EUR 244", "Dos candidatos", "Resolver identidad"]]
+Abre ledger-march.csv, la carpeta invoices y context-es.md. Aporta facturas y contabilidad real del mismo período. Vera comprueba las columnas y prepara su correspondencia para revisión antes de ejecutar.
 
-## 3. Cómo trabaja el workflow · 75 s
+Vera, revisa estas facturas de compra frente a los asientos de marzo de Officina Arco. Muéstrame en el libro de excepciones qué debo comprobar y por qué.
 
-Sigue los tres pasos. Detente en la decisión que cambia el resultado.
+## 3. Ejecutar el trabajo · 105 s
 
-Importa facturas y asientos reales y cualifica periodo, cuentas, identidades y totales de lote.
-Ejecuta el método actual de asociación y revisión con sus capacidades nativas requeridas. Deja pendientes las etapas no disponibles en lugar de simularlas.
-Lee cobertura, ambigüedades y propuestas. El profesional evalúa naturaleza y tratamiento del gasto; las propuestas no se convierten en asientos o aprobaciones automáticas.
+Explica el paso que se está ejecutando y espera su resultado real.
 
-## 4. Leer el resultado · 90 s
+La conversación de trabajo verifica lote y columnas contables. La voz explica identificación de factura, asiento y cuenta usada y ayuda a resolver ambigüedades relevantes.
 
-Abre el ejemplo en la segunda conversación. Vincula cada conclusión con su fuente.
+El flujo actual relaciona facturas y asientos, comprueba importes y usa su revisor nativo para evaluar descripciones y cuentas. La voz sigue el avance real y distingue cálculo y juicio.
 
-Hay un vínculo disponible, otro no encontrado dentro del alcance y otro ambiguo. Conserva esas diferencias durante la revisión.
+Abre primero la hoja «Exceptions» del archivo Excel: las etiquetas del archivo están en inglés. Elige una línea, lee la razón del control y localiza descripción de factura y cuenta realmente utilizada. Revisa los avisos antes de concluir.
 
-[["PA-101", "Vínculo disponible", "Revisar tratamiento contra pruebas"], ["PA-102", "No encontrado dentro del alcance", "Comprobar periodo y export"], ["PA-103", "Ambiguo", "Resolver candidatos con evidencia"]]
+Durante la lección, la conversación de trabajo ejecuta la función y produce el resultado. Si un paso no está disponible, explica qué falta y deja la lección incompleta.
 
-## 5. La comprobación clave · 75 s
+## 4. Utilizar el resultado · 75 s
 
-Antes de mostrar la respuesta, explica qué comprobarías.
+Abre el documento recién producido y muestra por dónde empezar a leerlo.
 
-Cobertura de asociaciones no equivale a corrección contable. Una ejecución técnica satisfactoria no aprueba deducibilidad ni IVA.
+Libro Excel de excepciones con motivos y referencias para revisar.
 
-¿Podemos afirmar sin matices 'factura no contabilizada' para PA-102?
+Resumen del lote y trazabilidad de comparaciones hacia facturas y asientos.
 
-Comparar el razonamiento: Lo respaldado es 'asiento no encontrado en el alcance examinado'. Comprueba integridad y periodo del export antes de concluir más ampliamente.
+Comprueba cobertura del lote y documentos que respaldan cada aviso. «Ningún problema detectado» es un resultado de cribado, no una certificación. Los cambios de cuenta y correcciones siguen el proceso contable habitual.
 
-## 6. Probar juntos · 45 s
+## 5. Parar y comprobar · 45 s
 
-Decide si prefieres practicar ahora o guardar el ejemplo para tu próximo encargo.
+Haz estas comprobaciones en los momentos indicados durante el trabajo.
 
-Añade el asiento de PA-102 y compara una nueva ejecución sin borrar el resultado anterior.
+Antes de ejecutar, identifica los dos conjuntos de información comparados.
 
-Selecciona lote y asientos reales del periodo y comprueba las capacidades nativas requeridas por el workflow instalado.
+En el resultado, explica un aviso mediante su factura y asiento.
 
-Este es un ejemplo didáctico preparado, no un comprobante de una nueva ejecución. Las fuentes y decisiones son ficticias; no se presupone aprobación profesional. Con tus archivos, el workflow actual realiza sus comprobaciones y conserva los resultados reales.
+Estas pausas ayudan a aprender a utilizar la función. No son un examen de detalles técnicos.
+
+## 6. Ahora prueba tú · 60 s
+
+Deja que el usuario formule la petición y acompaña su intento.
+
+Repite con ledger-march-april.csv y las cuatro facturas de la práctica. Conserva el primer resultado. Comprueba el nuevo número de facturas y un aviso, pidiendo ayuda solo donde haga falta.
+
+Sabes aportar ambas entradas, iniciar la revisión, encontrar excepciones y comprobar sus motivos sin confundir cribado y aprobación.
+
+Pide a Vera revisar las facturas de compra de un cliente para un período concreto y aporta también la contabilidad registrada. Revisa correspondencia, cobertura y avisos en el expediente correcto.
+
+El kit contiene archivos ficticios y un guion preparado. Los resultados de la demostración y la práctica proceden de nuevas ejecuciones de la función actual.
 
 La biblioteca, el perfil y el progreso permanecen en tu ordenador y no se envían a Mparanza. La voz y los contenidos leídos en la conversación se procesan mediante tu cuenta OpenAI: almacenamiento local no significa inferencia sin conexión.

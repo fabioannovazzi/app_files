@@ -1,0 +1,286 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "purchase-invoice-review",
+  "course_sha256": "8c666a194c4332e886b5ccc324c8fa056833358327aa4369b442e7e9f9825557",
+  "reviewer": "Codex: localized first-use lessons, ten actual native executions and source-bound workbook/data review",
+  "reviewed_at": "2026-09-23T16:07:48.557541+00:00",
+  "review_scope": "Five localized fictional demonstration/practice pairs executed through the actual current Codex worker, with real launch receipts. All 35 invoice outcomes, ten exception workbooks and five lesson outlines inspected. Portable CI replays the exact retained semantic responses through the current matching, persistence and workbook workflow; it does not claim fresh model calls. Workbook cells and formatting inspected programmatically, not visually rendered. No learner completion, professional approval, measured lesson duration or live voice/Cowork acceptance is claimed.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches the entire first use: supply purchase invoices and actual postings for the same period, review the mapping, run comparison, locate exceptions and trace a finding to evidence. It does not turn one accounting detail into the lesson subject.",
+        "inputs_and_request": "The prepared fictional Officina Arco case provides three March XML invoices, nine ledger rows and a localized context note. The natural-language request states company, period and desired exception workbook. The learner must supply both invoices and booked accounting, not invoices alone.",
+        "execution_and_checkpoints": "Actual Studio Archive-bound run_audit commands matched every invoice and called the qualified native worker. The checkpoints ask which evidence sets are compared and how the finding follows from invoice and posting. No learner mapping, understanding or professional approval was fabricated.",
+        "deliverable_and_next_action": "The actual workbook contains Summary, Exceptions and LedgerOrphans. Exceptions has one data row, DEMO-003: administrative consulting booked to vehicle fuel account 6050. Reasons, source descriptions and next action are populated. The lesson names the actual Exceptions sheet; non-English editions disclose English workbook labels. Filters, frozen header and styled headings were inspected in all ten files. Findings require professional review before any accounting change.",
+        "practice_and_repeat": "The cumulative practice keeps the original case and adds a fourth maintenance invoice with three April ledger rows. The real result rises from three to four matched invoices while the same consulting/fuel exception remains. Correct maintenance account 6150 does not create another exception. The closing request tells the learner how to repeat with a real client, period and actual ledger.",
+        "language_and_pacing": "The it outline and context were read in full. Six stages budget 390 seconds; execution time and questions can extend this. English workbook labels are explicit where needed. Codex teacher/working delivery and Cowork written projection remain the existing host contracts, not new observed live-user acceptance."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_purchase_execution::test_purchase_kit_runs_reviewed_native_results_through_current_workflow[demo-3-it]",
+        "result_review": "Actual native run completed with 3 matched invoices, no unmatched ledger entries or failed semantic chunks, and exactly one professional-review exception: DEMO-003 consulting on fuel account 6050. All actual model results and workbook fields were inspected. The named portable regression replays those exact semantic packets/results and verifies resume without repeating completed chunks; it is not a new model execution.",
+        "reviewed_artifacts": [
+          {
+            "name": "full_population.jsonl",
+            "sha256": "3e5aee5c8be8f53aae453e99443a1459a7f26fb5b5c3251ac3000a4de8418ff5"
+          },
+          {
+            "name": "run_summary.json",
+            "sha256": "82309bf782da6e43c6e6127a197115be66f6f1d3db8bb17962fc7263bdeea9c5"
+          },
+          {
+            "name": "exception_workpaper.xlsx",
+            "sha256": "9310f04499f9521ea1383f507433d5a756f9ea262ea7701dec6007b71f077e85"
+          },
+          {
+            "name": "luna_launch_receipt.json",
+            "sha256": "00301dd31c8cc750643b73a38fd53adf4c825f17636f1bb4801ac33e56f2fd08"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_purchase_execution::test_purchase_kit_runs_reviewed_native_results_through_current_workflow[practice-4-it]",
+        "result_review": "Actual native run completed with 4 matched invoices, no unmatched ledger entries or failed semantic chunks, and exactly one professional-review exception: DEMO-003 consulting on fuel account 6050. All actual model results and workbook fields were inspected. The named portable regression replays those exact semantic packets/results and verifies resume without repeating completed chunks; it is not a new model execution.",
+        "reviewed_artifacts": [
+          {
+            "name": "full_population.jsonl",
+            "sha256": "d321b6312a8954c72655ee6158da6b89b88596775dd02bbccc613e6e431afa56"
+          },
+          {
+            "name": "run_summary.json",
+            "sha256": "ffadc7b5bc7f57497c1e630d53b989b02cd58b00b03a93f75c6d92bc409b59ff"
+          },
+          {
+            "name": "exception_workpaper.xlsx",
+            "sha256": "0d2f30ca63267c8a514631ce1f6730f7c927c0c4f4e8a3e46f6ca5b998dfa943"
+          },
+          {
+            "name": "luna_launch_receipt.json",
+            "sha256": "59731dcd813cd69b03da2f83bdb9c894724844ec3aa02b72914fb7c17b134575"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches the entire first use: supply purchase invoices and actual postings for the same period, review the mapping, run comparison, locate exceptions and trace a finding to evidence. It does not turn one accounting detail into the lesson subject.",
+        "inputs_and_request": "The prepared fictional Officina Arco case provides three March XML invoices, nine ledger rows and a localized context note. The natural-language request states company, period and desired exception workbook. The learner must supply both invoices and booked accounting, not invoices alone.",
+        "execution_and_checkpoints": "Actual Studio Archive-bound run_audit commands matched every invoice and called the qualified native worker. The checkpoints ask which evidence sets are compared and how the finding follows from invoice and posting. No learner mapping, understanding or professional approval was fabricated.",
+        "deliverable_and_next_action": "The actual workbook contains Summary, Exceptions and LedgerOrphans. Exceptions has one data row, DEMO-003: administrative consulting booked to vehicle fuel account 6050. Reasons, source descriptions and next action are populated. The lesson names the actual Exceptions sheet; non-English editions disclose English workbook labels. Filters, frozen header and styled headings were inspected in all ten files. Findings require professional review before any accounting change.",
+        "practice_and_repeat": "The cumulative practice keeps the original case and adds a fourth maintenance invoice with three April ledger rows. The real result rises from three to four matched invoices while the same consulting/fuel exception remains. Correct maintenance account 6150 does not create another exception. The closing request tells the learner how to repeat with a real client, period and actual ledger.",
+        "language_and_pacing": "The en outline and context were read in full. Six stages budget 390 seconds; execution time and questions can extend this. English workbook labels are explicit where needed. Codex teacher/working delivery and Cowork written projection remain the existing host contracts, not new observed live-user acceptance."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_purchase_execution::test_purchase_kit_runs_reviewed_native_results_through_current_workflow[demo-3-en]",
+        "result_review": "Actual native run completed with 3 matched invoices, no unmatched ledger entries or failed semantic chunks, and exactly one professional-review exception: DEMO-003 consulting on fuel account 6050. All actual model results and workbook fields were inspected. The named portable regression replays those exact semantic packets/results and verifies resume without repeating completed chunks; it is not a new model execution.",
+        "reviewed_artifacts": [
+          {
+            "name": "full_population.jsonl",
+            "sha256": "8144643ef5375039e894d3bab890990c425cd2106f065ee4a3bc9caa166dc025"
+          },
+          {
+            "name": "run_summary.json",
+            "sha256": "9740854f39b2a90538cec4f9daf16a42c8d164b1dc265842c0a86ce9332eab76"
+          },
+          {
+            "name": "exception_workpaper.xlsx",
+            "sha256": "3ce01c8d1d9629ce467207d31a67edbbeb79f246bedc1a71d1b2e843fe196783"
+          },
+          {
+            "name": "luna_launch_receipt.json",
+            "sha256": "7cf14eabcb3324a2f5a60a119f8a9f70d2e7a33f658cb70af348449b312a815d"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_purchase_execution::test_purchase_kit_runs_reviewed_native_results_through_current_workflow[practice-4-en]",
+        "result_review": "Actual native run completed with 4 matched invoices, no unmatched ledger entries or failed semantic chunks, and exactly one professional-review exception: DEMO-003 consulting on fuel account 6050. All actual model results and workbook fields were inspected. The named portable regression replays those exact semantic packets/results and verifies resume without repeating completed chunks; it is not a new model execution.",
+        "reviewed_artifacts": [
+          {
+            "name": "full_population.jsonl",
+            "sha256": "6ea6e8a5ed3389d852c9a29e63d0e72894ad3fc43ea7b3cf6d1412e8e3cc4337"
+          },
+          {
+            "name": "run_summary.json",
+            "sha256": "c0be02090ea05f866b6c85060ebbc592635b3b50dd4a24e728f5d95122c6b3b4"
+          },
+          {
+            "name": "exception_workpaper.xlsx",
+            "sha256": "49d455159f9417e23ca4bb6f10e529945c260916994d293a8fe00d2d4bdc68d6"
+          },
+          {
+            "name": "luna_launch_receipt.json",
+            "sha256": "7cc51111baa728673ffbbca9868b7f6b704b55fa9df1dfa1e794a89451cea1d9"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches the entire first use: supply purchase invoices and actual postings for the same period, review the mapping, run comparison, locate exceptions and trace a finding to evidence. It does not turn one accounting detail into the lesson subject.",
+        "inputs_and_request": "The prepared fictional Officina Arco case provides three March XML invoices, nine ledger rows and a localized context note. The natural-language request states company, period and desired exception workbook. The learner must supply both invoices and booked accounting, not invoices alone.",
+        "execution_and_checkpoints": "Actual Studio Archive-bound run_audit commands matched every invoice and called the qualified native worker. The checkpoints ask which evidence sets are compared and how the finding follows from invoice and posting. No learner mapping, understanding or professional approval was fabricated.",
+        "deliverable_and_next_action": "The actual workbook contains Summary, Exceptions and LedgerOrphans. Exceptions has one data row, DEMO-003: administrative consulting booked to vehicle fuel account 6050. Reasons, source descriptions and next action are populated. The lesson names the actual Exceptions sheet; non-English editions disclose English workbook labels. Filters, frozen header and styled headings were inspected in all ten files. Findings require professional review before any accounting change.",
+        "practice_and_repeat": "The cumulative practice keeps the original case and adds a fourth maintenance invoice with three April ledger rows. The real result rises from three to four matched invoices while the same consulting/fuel exception remains. Correct maintenance account 6150 does not create another exception. The closing request tells the learner how to repeat with a real client, period and actual ledger.",
+        "language_and_pacing": "The fr outline and context were read in full. Six stages budget 390 seconds; execution time and questions can extend this. English workbook labels are explicit where needed. Codex teacher/working delivery and Cowork written projection remain the existing host contracts, not new observed live-user acceptance."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_purchase_execution::test_purchase_kit_runs_reviewed_native_results_through_current_workflow[demo-3-fr]",
+        "result_review": "Actual native run completed with 3 matched invoices, no unmatched ledger entries or failed semantic chunks, and exactly one professional-review exception: DEMO-003 consulting on fuel account 6050. All actual model results and workbook fields were inspected. The named portable regression replays those exact semantic packets/results and verifies resume without repeating completed chunks; it is not a new model execution.",
+        "reviewed_artifacts": [
+          {
+            "name": "full_population.jsonl",
+            "sha256": "563bd73ff00ad179c16e07f38092982d2de829b0c389f71edf98976341b6a689"
+          },
+          {
+            "name": "run_summary.json",
+            "sha256": "fa7106addc2e6e9649e399ff5dcedbaa7ed556a4c9a04ad3f207ceacdb1a62a2"
+          },
+          {
+            "name": "exception_workpaper.xlsx",
+            "sha256": "d8842eb26e64860a67f0e8069cfd86c656fd494f874fa8dd711a3d00735943fe"
+          },
+          {
+            "name": "luna_launch_receipt.json",
+            "sha256": "bd6272c4ce3e16806f74117cababac8f7474802d50a81c07d540530475db7cc8"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_purchase_execution::test_purchase_kit_runs_reviewed_native_results_through_current_workflow[practice-4-fr]",
+        "result_review": "Actual native run completed with 4 matched invoices, no unmatched ledger entries or failed semantic chunks, and exactly one professional-review exception: DEMO-003 consulting on fuel account 6050. All actual model results and workbook fields were inspected. The named portable regression replays those exact semantic packets/results and verifies resume without repeating completed chunks; it is not a new model execution.",
+        "reviewed_artifacts": [
+          {
+            "name": "full_population.jsonl",
+            "sha256": "293dbb86a043ac7ea1b2006c29a6bf888740344c07fa5a3fe1dfea36f5c3d83e"
+          },
+          {
+            "name": "run_summary.json",
+            "sha256": "a1e4ee767daa46ca1b73eeeb9267512458737fbf6fc0669d174ca0bdfb3badfa"
+          },
+          {
+            "name": "exception_workpaper.xlsx",
+            "sha256": "09bda9f69963b079b1b995dcec1e48d37031683df088bfc4d40b712ece23039c"
+          },
+          {
+            "name": "luna_launch_receipt.json",
+            "sha256": "eaf6ee1763c76793a98568985eb1a5aa396b22f88de383b34b3df082175742ac"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches the entire first use: supply purchase invoices and actual postings for the same period, review the mapping, run comparison, locate exceptions and trace a finding to evidence. It does not turn one accounting detail into the lesson subject.",
+        "inputs_and_request": "The prepared fictional Officina Arco case provides three March XML invoices, nine ledger rows and a localized context note. The natural-language request states company, period and desired exception workbook. The learner must supply both invoices and booked accounting, not invoices alone.",
+        "execution_and_checkpoints": "Actual Studio Archive-bound run_audit commands matched every invoice and called the qualified native worker. The checkpoints ask which evidence sets are compared and how the finding follows from invoice and posting. No learner mapping, understanding or professional approval was fabricated.",
+        "deliverable_and_next_action": "The actual workbook contains Summary, Exceptions and LedgerOrphans. Exceptions has one data row, DEMO-003: administrative consulting booked to vehicle fuel account 6050. Reasons, source descriptions and next action are populated. The lesson names the actual Exceptions sheet; non-English editions disclose English workbook labels. Filters, frozen header and styled headings were inspected in all ten files. Findings require professional review before any accounting change.",
+        "practice_and_repeat": "The cumulative practice keeps the original case and adds a fourth maintenance invoice with three April ledger rows. The real result rises from three to four matched invoices while the same consulting/fuel exception remains. Correct maintenance account 6150 does not create another exception. The closing request tells the learner how to repeat with a real client, period and actual ledger.",
+        "language_and_pacing": "The de outline and context were read in full. Six stages budget 390 seconds; execution time and questions can extend this. English workbook labels are explicit where needed. Codex teacher/working delivery and Cowork written projection remain the existing host contracts, not new observed live-user acceptance."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_purchase_execution::test_purchase_kit_runs_reviewed_native_results_through_current_workflow[demo-3-de]",
+        "result_review": "Actual native run completed with 3 matched invoices, no unmatched ledger entries or failed semantic chunks, and exactly one professional-review exception: DEMO-003 consulting on fuel account 6050. All actual model results and workbook fields were inspected. The named portable regression replays those exact semantic packets/results and verifies resume without repeating completed chunks; it is not a new model execution.",
+        "reviewed_artifacts": [
+          {
+            "name": "full_population.jsonl",
+            "sha256": "17602cee2aaa8836bd5b907b0452f33d92bf58aad00c26b425218848f1afd2b8"
+          },
+          {
+            "name": "run_summary.json",
+            "sha256": "3c90413f260c3eeadf6c588426986dcf5e7ce4573940c5ca467010d9abbacd5e"
+          },
+          {
+            "name": "exception_workpaper.xlsx",
+            "sha256": "cc8bd8a45d6fbdcf0abef24036bf053cf3c92ff2812fd29d38766d65cbe543a3"
+          },
+          {
+            "name": "luna_launch_receipt.json",
+            "sha256": "9cc164e71113726522ca5403ee3b6b65695c5cd494c802e1b71c81af33de9f9a"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_purchase_execution::test_purchase_kit_runs_reviewed_native_results_through_current_workflow[practice-4-de]",
+        "result_review": "Actual native run completed with 4 matched invoices, no unmatched ledger entries or failed semantic chunks, and exactly one professional-review exception: DEMO-003 consulting on fuel account 6050. All actual model results and workbook fields were inspected. The named portable regression replays those exact semantic packets/results and verifies resume without repeating completed chunks; it is not a new model execution.",
+        "reviewed_artifacts": [
+          {
+            "name": "full_population.jsonl",
+            "sha256": "ef1e2ffd7a054d74ddedf660e36571ff41293855fe52cb95aa74f9358e8a0d94"
+          },
+          {
+            "name": "run_summary.json",
+            "sha256": "84303c9d5c3a0446b2050a6741fa70eebb97a1b90fcc3112ddc881d3e713b78b"
+          },
+          {
+            "name": "exception_workpaper.xlsx",
+            "sha256": "4c9ab589b766db5921c765315e4d443fc37b67f8c25b4037fc5b005d5de5d7b8"
+          },
+          {
+            "name": "luna_launch_receipt.json",
+            "sha256": "7f98a8f8cd75b5d0f657f1f10671526a547a3fa02c5ca3ce62b44f92099b9df7"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches the entire first use: supply purchase invoices and actual postings for the same period, review the mapping, run comparison, locate exceptions and trace a finding to evidence. It does not turn one accounting detail into the lesson subject.",
+        "inputs_and_request": "The prepared fictional Officina Arco case provides three March XML invoices, nine ledger rows and a localized context note. The natural-language request states company, period and desired exception workbook. The learner must supply both invoices and booked accounting, not invoices alone.",
+        "execution_and_checkpoints": "Actual Studio Archive-bound run_audit commands matched every invoice and called the qualified native worker. The checkpoints ask which evidence sets are compared and how the finding follows from invoice and posting. No learner mapping, understanding or professional approval was fabricated.",
+        "deliverable_and_next_action": "The actual workbook contains Summary, Exceptions and LedgerOrphans. Exceptions has one data row, DEMO-003: administrative consulting booked to vehicle fuel account 6050. Reasons, source descriptions and next action are populated. The lesson names the actual Exceptions sheet; non-English editions disclose English workbook labels. Filters, frozen header and styled headings were inspected in all ten files. Findings require professional review before any accounting change.",
+        "practice_and_repeat": "The cumulative practice keeps the original case and adds a fourth maintenance invoice with three April ledger rows. The real result rises from three to four matched invoices while the same consulting/fuel exception remains. Correct maintenance account 6150 does not create another exception. The closing request tells the learner how to repeat with a real client, period and actual ledger.",
+        "language_and_pacing": "The es outline and context were read in full. Six stages budget 390 seconds; execution time and questions can extend this. English workbook labels are explicit where needed. Codex teacher/working delivery and Cowork written projection remain the existing host contracts, not new observed live-user acceptance."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_purchase_execution::test_purchase_kit_runs_reviewed_native_results_through_current_workflow[demo-3-es]",
+        "result_review": "Actual native run completed with 3 matched invoices, no unmatched ledger entries or failed semantic chunks, and exactly one professional-review exception: DEMO-003 consulting on fuel account 6050. All actual model results and workbook fields were inspected. The named portable regression replays those exact semantic packets/results and verifies resume without repeating completed chunks; it is not a new model execution.",
+        "reviewed_artifacts": [
+          {
+            "name": "full_population.jsonl",
+            "sha256": "7a9a419a91803faba2e4cc215e4c574970d40e2c6ebaaeeea67eeec0a9889a3d"
+          },
+          {
+            "name": "run_summary.json",
+            "sha256": "897963e5ff5ff2dac048ff874cf6565baf6146d40a0e4085d4e25497c615277f"
+          },
+          {
+            "name": "exception_workpaper.xlsx",
+            "sha256": "b8cd5e85959a82a3558c77c7dfafb0ecd10b58f54c9642b74543e81cd4aa925e"
+          },
+          {
+            "name": "luna_launch_receipt.json",
+            "sha256": "cc9c1d6868ff6fb48741310957f1a6d3a48ca8d9b5f603719b79be6df8741f35"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_purchase_execution::test_purchase_kit_runs_reviewed_native_results_through_current_workflow[practice-4-es]",
+        "result_review": "Actual native run completed with 4 matched invoices, no unmatched ledger entries or failed semantic chunks, and exactly one professional-review exception: DEMO-003 consulting on fuel account 6050. All actual model results and workbook fields were inspected. The named portable regression replays those exact semantic packets/results and verifies resume without repeating completed chunks; it is not a new model execution.",
+        "reviewed_artifacts": [
+          {
+            "name": "full_population.jsonl",
+            "sha256": "532aef5674219f6920c936394e23aea7a5ed93f442c1aeabe2b70ca92fc6af16"
+          },
+          {
+            "name": "run_summary.json",
+            "sha256": "c159a5b1984cf31908b9a7653657a4919a8490f2ba17a1824b97e5e4b36fe0f6"
+          },
+          {
+            "name": "exception_workpaper.xlsx",
+            "sha256": "cd652bda4f224c452e84d6efcd6cb6c486476a62312563eb251f6cbc0a0ce0c2"
+          },
+          {
+            "name": "luna_launch_receipt.json",
+            "sha256": "ca30cad1a0bc97e4251decdf4cd9e09754b0097b00311679eca5cc1c0ee56b05"
+          }
+        ]
+      }
+    }
+  }
+}
