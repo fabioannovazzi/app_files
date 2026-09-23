@@ -5,13 +5,14 @@ import vm from 'node:vm';
 
 const script = readFileSync(new URL('../static/js/hosted-interview.js', import.meta.url), 'utf8');
 
-function browser({ storage = new Map(), status = 200, attempt = 'new-attempt', mode = 'research_interview' } = {}) {
+function browser({ storage = new Map(), status = 200, attempt = 'new-attempt', mode = 'research_interview', blockedAudio = false } = {}) {
   const elements = new Map();
   const requests = [];
   const sent = [];
   const timers = new Map();
   let nextTimer = 0;
-  let interval;
+  const intervals = new Map();
+  let microphoneSignal = 0;
   let now = Date.now();
   class Clock extends Date { static now() { return now; } }
   let peer;
@@ -23,7 +24,9 @@ function browser({ storage = new Map(), status = 200, attempt = 'new-attempt', m
     });
     return elements.get(id);
   };
-  const track = { stop() {} };
+  const track = { listeners: {}, stop() {}, addEventListener(type, fn) { this.listeners[type] = fn; } };
+  const audio = { pause() {}, async play() { if (blockedAudio) throw Object.assign(new Error('blocked'), { name: 'NotAllowedError' }); } };
+  const windowListeners = {};
   class Peer {
     constructor() { peer = this; }
     listeners = {};
@@ -48,14 +51,19 @@ function browser({ storage = new Map(), status = 200, attempt = 'new-attempt', m
       setItem: (key, value) => storage.set(key, value),
       removeItem: key => storage.delete(key),
     },
-    clearInterval() {}, setInterval(fn) { interval = fn; }, addEventListener() {},
+    AudioContext: class {
+      async resume() {} async close() {}
+      createAnalyser() { return { fftSize: 1024, getFloatTimeDomainData(samples) { samples.fill(microphoneSignal); } }; }
+      createMediaStreamSource() { return { connect() {} }; }
+    },
+    clearInterval(id) { intervals.delete(id); }, setInterval(fn) { intervals.set(++nextTimer, fn); return nextTimer; }, addEventListener(type, fn) { windowListeners[type] = fn; },
     clearTimeout: id => timers.delete(id),
     setTimeout: callback => { timers.set(++nextTimer, callback); return nextTimer; },
   };
   vm.runInNewContext(script, {
     window, document: {
       body: { dataset: { token: 'synthetic-token', ready: 'true', language: 'it', mode } },
-      getElementById: element, createElement: () => ({}),
+      getElementById: element, createElement: () => audio,
     },
     navigator: { mediaDevices: { getUserMedia: async () => ({
       getAudioTracks: () => [track], getTracks: () => [track],
@@ -63,13 +71,20 @@ function browser({ storage = new Map(), status = 200, attempt = 'new-attempt', m
     RTCPeerConnection: Peer, console, AbortController, Date: Clock,
     fetch: async (url, options) => {
       requests.push({ url, payload: JSON.parse(options.body) });
-      return { ok: status === 200, status, text: async () => 'active attempt',
+      return { ok: status === 200, status, text: async () => status === 200 ? JSON.stringify({status:'incomplete'}) : 'active attempt',
         json: async () => ({ attempt_id: attempt, sdp: 'answer' }) };
     },
   });
   return {
     requests, element, sent,
-    tick(ms = 4000) { now += ms; interval?.(); },
+    peerState(state) { peer.connectionState = state; peer.listeners.connectionstatechange(); },
+    audioTrack() { peer.ontrack({ streams: [{}] }); },
+    allowAudio() { blockedAudio = false; },
+    hide() { windowListeners.pagehide(); },
+    restore() { windowListeners.pageshow({ persisted: true }); },
+    micEnded() { track.listeners.ended(); },
+    microphoneSignal(value) { microphoneSignal = value; },
+    tick(ms = 4000) { now += ms; for (const fn of intervals.values()) fn(); },
     open() { peer.channel.listeners.open(); },
     receive(event) { peer.channel.listeners.message({ data: JSON.stringify(event) }); },
     settle() { for (const [id, callback] of [...timers]) { timers.delete(id); callback(); } },
@@ -217,4 +232,73 @@ test('failed transcription releases the pending input state and offers a retry',
   page.tick();
   assert.equal(page.sent.at(-1).response.metadata.trigger, 'audio_transcription_recovery');
   assert.match(page.element('statusDetail').textContent, /Controlla il microfono/);
+});
+
+async function drain() {
+  for (let i = 0; i < 8; i++) await new Promise(resolve => setImmediate(resolve));
+}
+
+test('transient disconnect preserves the conversation and cancels finalisation on recovery', async () => {
+  const page = browser();
+  await page.start(); page.open();
+  page.peerState('disconnected');
+  assert.match(page.element('statusDetail').textContent, /riconnetterci/);
+  assert.equal(page.requests.some(r => r.url.endsWith('/complete')), false);
+  page.peerState('connected'); page.settle(); await drain();
+  assert.equal(page.requests.some(r => r.url.endsWith('/complete')), false);
+  assert.equal(page.requests.filter(r => r.url.endsWith('/session')).length, 1);
+  assert.equal(page.requests.some(r => r.payload.event_type === 'connection_recovered'), true);
+});
+
+test('persistent disconnection saves partial evidence and enables retry on the same link', async () => {
+  const page = browser();
+  await page.start(); page.open();
+  page.peerState('disconnected'); page.settle(); await drain();
+  page.settle(); await drain();
+  const completion = page.requests.find(r => r.url.endsWith('/complete'));
+  assert.equal(completion.payload.telemetry.completion_reason, 'connection_issue');
+  assert.equal(page.element('startButton').disabled, false);
+  assert.match(page.element('statusTitle').textContent, /interrotta/);
+});
+
+test('blocked speaker audio is visible and can be resumed with a user gesture', async () => {
+  const page = browser({ blockedAudio: true });
+  await page.start(); page.open(); page.audioTrack(); await drain(); page.tick();
+  assert.match(page.element('statusDetail').textContent, /Attiva audio/);
+  assert.equal(page.requests.some(r => r.payload.event_type === 'audio_playback_blocked'), true);
+  page.allowAudio(); await page.element('enableAudioButton').listeners.click(); page.tick();
+  assert.doesNotMatch(page.element('statusDetail').textContent, /Attiva audio/);
+});
+
+test('departure sends the attempt identifier for server-side partial finalisation', async () => {
+  const page = browser();
+  await page.start(); page.open(); page.hide();
+  const departure = page.requests.find(r => r.payload.event_type === 'pagehide');
+  assert.equal(departure.payload.attempt_id, 'new-attempt');
+  assert.equal(departure.payload.payload.script_version, '20260924-connection-recovery-v1');
+});
+
+
+test('microphone level displays local signal energy without classifying answers', async () => {
+  const page = browser();
+  await page.start(); page.open(); page.tick();
+  assert.equal(page.element('microphoneLevel').value, 0);
+  page.microphoneSignal(0.1); page.tick();
+  assert.ok(page.element('microphoneLevel').value > 0.7);
+  assert.equal(page.requests.some(r => r.payload.event_type === 'microphone_level'), false);
+});
+
+
+test('returning from browser page cache does not leave a dead interview active', async () => {
+  const page = browser();
+  await page.start(); page.open(); page.hide(); page.restore();
+  assert.equal(page.element('startButton').disabled, false);
+  assert.match(page.element('statusDetail').textContent, /ricominciare/);
+});
+
+test('closing the page during manual saving still sends server recovery evidence', async () => {
+  const page = browser();
+  await page.start(); page.open();
+  page.element('endButton').listeners.click(); page.hide();
+  assert.equal(page.requests.some(r => r.payload.event_type === 'pagehide'), true);
 });

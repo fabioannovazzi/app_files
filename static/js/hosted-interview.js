@@ -8,8 +8,9 @@
   const PLUGIN_IMPROVEMENT_MODE = "plugin_improvement_interview";
   const isPluginImprovementInterview =
     interviewMode === PLUGIN_IMPROVEMENT_MODE;
-  const SCRIPT_VERSION = "20260923-audio-recovery-v1";
+  const SCRIPT_VERSION = "20260924-connection-recovery-v1";
   const attemptStorageKey = `hosted-interview-attempt:${token}`;
+  const CONNECTION_RECOVERY_MS = 15000;
   const FINAL_TRANSCRIPT_SETTLE_MS = 2500;
   const UPLOAD_REQUEST_TIMEOUT_MS = 8000;
   const FINAL_UPLOAD_SETTLE_TIMEOUT_MS = 10000;
@@ -54,6 +55,14 @@
   const statusDetail = document.getElementById("statusDetail");
   const notice = document.getElementById("notice");
 
+  const enableAudioButton = document.getElementById("enableAudioButton");
+  const microphoneLevel = document.getElementById("microphoneLevel");
+  const microphoneCheck = document.getElementById("microphoneCheck");
+  let microphoneContext = null;
+  let microphoneMeterTimer = null;
+  let remoteAudio = null;
+  let playbackBlocked = false;
+  let connectionRecoveryTimer = null;
   let pc = null;
   let dc = null;
   let localStream = null;
@@ -114,6 +123,14 @@
   let uploadSettleTimedOut = false;
 
   const italianCopy = {
+    "You can restart using this same link.": "Puoi ricominciare con questo stesso link.",
+    "Reconnecting": "Riconnessione in corso",
+    "Connection interrupted. Keep this page open while we try to reconnect.": "Connessione interrotta. Tieni aperta questa pagina mentre proviamo a riconnetterci.",
+    "Audio paused": "Audio in pausa",
+    "Tap Enable audio to hear the interviewer, then answer the question.": "Premi Attiva audio per ascoltare Clara, poi rispondi alla domanda.",
+    "Interview interrupted": "Intervista interrotta",
+    "Your available answers were saved. You can retry using this same link.": "Le risposte ricevute sono state salvate. Puoi riprovare con questo stesso link.",
+
     "Something went wrong": "Si è verificato un problema",
     "Recording and saving": "Registrazione e salvataggio",
     "Interview active": "Intervista in corso",
@@ -165,6 +182,14 @@
   };
 
   const spanishCopy = {
+    "You can restart using this same link.": "Puedes reiniciar con este mismo enlace.",
+    "Reconnecting": "Reconectando",
+    "Connection interrupted. Keep this page open while we try to reconnect.": "Conexión interrumpida. Mantén esta página abierta mientras intentamos reconectar.",
+    "Audio paused": "Audio en pausa",
+    "Tap Enable audio to hear the interviewer, then answer the question.": "Pulsa Activar audio para escuchar a la entrevistadora y responder.",
+    "Interview interrupted": "Entrevista interrumpida",
+    "Your available answers were saved. You can retry using this same link.": "Las respuestas recibidas se han guardado. Puedes reintentar con este mismo enlace.",
+
     "Something went wrong": "Se ha producido un problema",
     "Recording and saving": "Grabando y guardando",
     "Interview active": "Entrevista en curso",
@@ -310,6 +335,14 @@
       if (checkLiveConnectionStall()) {
         return;
       }
+      if (connectionRecoveryTimer) {
+        showConnectionRecovery();
+        return;
+      }
+      if (playbackBlocked) {
+        showPlaybackHelp();
+        return;
+      }
       manageSessionFlow();
       if (audioNeedsRecovery) {
         showAudioRecovery();
@@ -331,6 +364,8 @@
 
   function resetInterviewState() {
     window.clearInterval(elapsedTimer);
+    clearConnectionRecovery();
+    playbackBlocked = false;
     audioChunkIndex = 0;
     videoChunkIndex = 0;
     audioChunksUploaded = 0;
@@ -746,6 +781,22 @@
     });
   }
 
+  function startMicrophoneMeter(stream) {
+    if (!microphoneContext || !microphoneLevel) return;
+    const analyser = microphoneContext.createAnalyser();
+    analyser.fftSize = 1024;
+    const source = microphoneContext.createMediaStreamSource(stream);
+    source.connect(analyser);
+    const samples = new Float32Array(analyser.fftSize);
+    microphoneCheck?.classList.remove("hidden");
+    microphoneMeterTimer = window.setInterval(() => {
+      analyser.getFloatTimeDomainData(samples);
+      // Display measured input energy locally; this does not classify speech.
+      const rms = Math.sqrt(samples.reduce((sum, value) => sum + value * value, 0) / samples.length);
+      microphoneLevel.value = Math.max(0, Math.min(1, (20 * Math.log10(Math.max(rms, 0.00001)) + 80) / 80));
+    }, 200);
+  }
+
   async function openMicrophone() {
     if (!navigator.mediaDevices?.getUserMedia) {
       throw new Error("Microphone access is not available in this browser.");
@@ -774,6 +825,65 @@
       throw new Error("Interview connection is not open.");
     }
     dc.send(JSON.stringify(event));
+  }
+
+  function clearConnectionRecovery() {
+    window.clearTimeout(connectionRecoveryTimer);
+    connectionRecoveryTimer = null;
+  }
+
+  function showConnectionRecovery() {
+    setStatus("Reconnecting", "Connection interrupted. Keep this page open while we try to reconnect.");
+  }
+
+  function handlePeerState(state) {
+    lastPeerConnectionState = state;
+    if (state === "connected") {
+      if (connectionRecoveryTimer) {
+        clearConnectionRecovery();
+        postEvent("connection_recovered", { elapsed_seconds: secondsElapsed() });
+        setStatus("Interview active", activeStatusDetail());
+      }
+      return;
+    }
+    if (state === "disconnected") {
+      if (ending || connectionRecoveryTimer) return;
+      // WebRTC disconnected can be transient; keep the same conversation alive.
+      showConnectionRecovery();
+      postEvent("connection_recovering", { elapsed_seconds: secondsElapsed() });
+      connectionRecoveryTimer = window.setTimeout(() => {
+        connectionRecoveryTimer = null;
+        if (pc?.connectionState === "disconnected") {
+          handleConnectionIssue("peer_connection", "disconnected_timeout");
+        }
+      }, CONNECTION_RECOVERY_MS);
+      return;
+    }
+    if (["failed", "closed"].includes(state)) {
+      clearConnectionRecovery();
+      handleConnectionIssue("peer_connection", state);
+    }
+  }
+
+  function showPlaybackHelp() {
+    setStatus("Audio paused", "Tap Enable audio to hear the interviewer, then answer the question.");
+    enableAudioButton?.classList.remove("hidden");
+  }
+
+  async function playRemoteAudio() {
+    const audio = remoteAudio;
+    if (!audio) return;
+    try {
+      await audio.play();
+      if (audio !== remoteAudio) return;
+      playbackBlocked = false;
+      enableAudioButton?.classList.add("hidden");
+    } catch (error) {
+      if (audio !== remoteAudio) return;
+      playbackBlocked = true;
+      showPlaybackHelp();
+      postEvent("audio_playback_blocked", { name: error?.name || "unknown" });
+    }
   }
 
   async function handleConnectionIssue(source, detail) {
@@ -1475,23 +1585,44 @@
     statusTitle.classList.remove("error");
     startButton.disabled = true;
     setStatus("Starting interview", "Requesting microphone access...");
+    // Create/resume the audio context inside the participant's Start gesture.
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextClass) {
+      try {
+        microphoneContext = new AudioContextClass();
+        microphoneContext.resume().catch(() => undefined);
+      } catch (error) {
+        console.warn("Microphone level display unavailable", error);
+      }
+    }
     localStream = await openMicrophone();
+    startMicrophoneMeter(localStream);
     pc = new RTCPeerConnection();
     const sessionPeer = pc;
     pc.addEventListener("connectionstatechange", () => {
       if (pc !== sessionPeer) return;
       const state = pc?.connectionState || "";
-      lastPeerConnectionState = state;
-      if (["failed", "disconnected", "closed"].includes(state)) {
-        handleConnectionIssue("peer_connection", state);
-      }
+      handlePeerState(state);
     });
-    const remoteAudio = document.createElement("audio");
+    remoteAudio = document.createElement("audio");
     remoteAudio.autoplay = true;
+    remoteAudio.playsInline = true;
     pc.ontrack = (event) => {
       remoteAudio.srcObject = event.streams[0];
+      playRemoteAudio();
     };
-    pc.addTrack(localStream.getAudioTracks()[0]);
+    const microphoneTrack = localStream.getAudioTracks()[0];
+    microphoneTrack.addEventListener("mute", () => {
+      if (ending) return;
+      audioNeedsRecovery = true;
+      showAudioRecovery();
+      postEvent("microphone_muted", {});
+    });
+    microphoneTrack.addEventListener("unmute", () => postEvent("microphone_unmuted", {}));
+    microphoneTrack.addEventListener("ended", () => {
+      if (!ending) handleConnectionIssue("microphone", "track_ended");
+    });
+    pc.addTrack(microphoneTrack);
     dc = pc.createDataChannel("oai-events");
     const sessionChannel = dc;
     dc.addEventListener("close", () => {
@@ -1562,6 +1693,16 @@
   }
 
   function cleanupConnection() {
+    clearConnectionRecovery();
+    window.clearInterval(microphoneMeterTimer);
+    microphoneMeterTimer = null;
+    microphoneContext?.close().catch(() => undefined);
+    microphoneContext = null;
+    microphoneCheck?.classList.add("hidden");
+    remoteAudio?.pause();
+    remoteAudio = null;
+    playbackBlocked = false;
+    enableAudioButton?.classList.add("hidden");
     window.clearTimeout(genericAnswerSettleTimer);
     genericAnswerSettleTimer = null;
     inputSpeechActive = false;
@@ -1683,6 +1824,13 @@
       const postCallQueued =
         responsePayload.notification_status === "queued_after_post_call_transcription" ||
         responsePayload.review_status === "queued_after_post_call_transcription";
+      if (["connection_issue", "pagehide"].includes(reason)) {
+        ending = false;
+        startButton.disabled = !sessionReady;
+        endButton.classList.add("hidden");
+        setStatus("Interview interrupted", "Your available answers were saved. You can retry using this same link.");
+        return;
+      }
       if (postCallQueued) {
         setStatus(
           "Interview saved",
@@ -1726,6 +1874,8 @@
     }
   }
 
+  enableAudioButton?.addEventListener("click", playRemoteAudio);
+
   startButton?.addEventListener("click", () => {
     startInterview().catch((error) => {
       cleanupConnection();
@@ -1750,6 +1900,16 @@
     });
   });
 
+  window.addEventListener("pageshow", (event) => {
+    if (!event.persisted || !startedAt) return;
+    cleanupConnection();
+    startedAt = null;
+    ending = false;
+    startButton.disabled = !sessionReady;
+    endButton.classList.add("hidden");
+    setStatus("Interview interrupted", "You can restart using this same link.");
+  });
+
   window.addEventListener("pagehide", () => {
     if (startedAt && activeAttemptId) {
       postJson(
@@ -1758,6 +1918,7 @@
           attempt_id: activeAttemptId,
           event_type: "pagehide",
           payload: {
+            elapsed_seconds: secondsElapsed(),
             transcript_words: transcriptWordCount(),
             audio_chunks: audioChunksUploaded,
             video_chunks: videoChunksUploaded,

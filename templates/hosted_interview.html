@@ -248,9 +248,17 @@
           </p>
         </div>
 
+        <div class="hidden" id="microphoneCheck">
+          <label for="microphoneLevel">{% if language == "it" %}Livello microfono{% elif language == "es" %}Nivel del micrófono{% else %}Microphone level{% endif %}</label>
+          <meter id="microphoneLevel" min="0" max="1" value="0"></meter>
+          <p>{% if language == "it" %}Parla e controlla che il livello si muova. Se resta fermo, controlla il microfono o scollega le cuffie Bluetooth e riprova.{% elif language == "es" %}Habla y comprueba que el nivel se mueva. Si no cambia, revisa el micrófono o desconecta los auriculares Bluetooth y reintenta.{% else %}Speak and check that the level moves. If it stays still, check the microphone or disconnect Bluetooth headphones and retry.{% endif %}</p>
+        </div>
         <div class="controls">
           <button class="primary" id="startButton" {% if not session_ready %}disabled{% endif %}>
             {% if language == "it" %}Inizia l'intervista{% elif language == "es" %}Iniciar entrevista{% else %}Start interview{% endif %}
+          </button>
+          <button class="secondary hidden" id="enableAudioButton" type="button">
+            {% if language == "it" %}Attiva audio{% elif language == "es" %}Activar audio{% else %}Enable audio{% endif %}
           </button>
           <button class="secondary hidden" id="endButton" disabled>
             {% if language == "it" %}Termina e salva{% elif language == "es" %}Finalizar y guardar{% else %}End and save{% endif %}
@@ -307,6 +315,6 @@
         </p>
       </section>
     </main>
-    <script src="/static/js/hosted-interview.js?v=20260923-audio-recovery-v1" defer></script>
+    <script src="/static/js/hosted-interview.js?v=20260924-connection-recovery-v1" defer></script>
   </body>
 </html>
