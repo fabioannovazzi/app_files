@@ -1,0 +1,23 @@
+name: Hosted interview browser
+on:
+  pull_request:
+    paths:
+      - 'static/js/hosted-interview.js'
+      - 'templates/hosted_interview.html'
+      - 'tests/test_hosted_interview_retry.mjs'
+      - '.github/workflows/hosted-interview-browser.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'static/js/hosted-interview.js'
+      - 'tests/test_hosted_interview_retry.mjs'
+      - '.github/workflows/hosted-interview-browser.yml'
+jobs:
+  conversation-and-retry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/test_hosted_interview_retry.mjs
