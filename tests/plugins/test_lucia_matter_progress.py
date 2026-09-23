@@ -28,7 +28,7 @@ def matter(tmp_path):
     run = tmp_path / "pratica"
     prepare(run, [source], "revisione-documentale", ["Credito"])
     initialize(run, "recupero-crediti", "Preparare la pratica di recupero del credito")
-    state = json.loads((run / "matter.json").read_text())
+    state = json.loads((run / "matter.json").read_text(encoding="utf-8"))
     state["stages"] = [
         {
             "id": "evidence",
@@ -77,7 +77,7 @@ def test_unanswered_question_only_blocks_its_dependent_stage(tmp_path):
 def test_answered_question_resumes_saved_work_and_retains_history(tmp_path):
     run, state = matter(tmp_path)
     save(run, proposal(run, state), 0)
-    reopened = json.loads((run / "matter.json").read_text())
+    reopened = json.loads((run / "matter.json").read_text(encoding="utf-8"))
     reopened["questions"][0].update(
         status="answered",
         answer="Il cliente conferma il 20 settembre 2026; fonte contrattuale da verificare.",
@@ -85,9 +85,9 @@ def test_answered_question_resumes_saved_work_and_retains_history(tmp_path):
     save(run, proposal(run, reopened), 1)
     assert status(run)["ready_stages"] == ["evidence", "interest"]
     assert (
-        json.loads((run / "matter-history/revision-0001.json").read_text())[
-            "questions"
-        ][0]["status"]
+        json.loads(
+            (run / "matter-history/revision-0001.json").read_text(encoding="utf-8")
+        )["questions"][0]["status"]
         == "open"
     )
 
@@ -133,7 +133,7 @@ def test_stale_update_is_rejected_without_overwriting_answers(tmp_path):
 def test_matter_review_html_shows_questions_and_results(tmp_path):
     run, state = matter(tmp_path)
     save(run, proposal(run, state), 0)
-    output = render(run).read_text()
+    output = render(run).read_text(encoding="utf-8")
     assert "Quando è scaduto il pagamento?" in output
     assert "Serve il termine iniziale" in output
     assert "Passaggi interessati" in output
@@ -190,7 +190,7 @@ def test_conflicting_history_cannot_be_overwritten(tmp_path):
     snapshot.write_text('{"revision":999}')
     with pytest.raises(ValueError, match="history differs"):
         save(run, proposal(run, state), 0)
-    assert snapshot.read_text() == '{"revision":999}'
+    assert snapshot.read_text(encoding="utf-8") == '{"revision":999}'
     assert status(run)["revision"] == 0
 
 
@@ -200,7 +200,7 @@ def test_parallel_save_lock_preserves_existing_work(tmp_path):
     lock.write_text("another save")
     with pytest.raises(ValueError, match="Another save"):
         save(run, proposal(run, state), 0)
-    assert lock.read_text() == "another save"
+    assert lock.read_text(encoding="utf-8") == "another save"
     assert status(run)["revision"] == 0
 
 

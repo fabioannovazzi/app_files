@@ -49,7 +49,10 @@ The model authored the analysis; no keyword classifier chose law or source relev
   and EUR 2,500 produced EUR 100 and zero differences. Missing March and the
   quarter total remained unavailable. Supplying EUR 2,300 recalculated the total
   to EUR 300; equal inputs recalculated to zero. No dismissal multiplier or
-  collective agreement was guessed.
+  collective agreement was guessed. A subsequent simulated answer was saved in
+  the same matter, produced a separate reopened/recalculated workbook with the
+  EUR 300 total, closed the dependent question and preserved the original files
+  and revision history. Reopening reported no changed output hashes.
 * **Debt recovery:** a EUR 10,000 principal and expressly agreed EUR 4,000 capital
   payment were split into 31 days on EUR 10,000 and 59 on EUR 6,000. The explicit
   simulation used 1.60%, actual/365 simple interest and rounding only on the

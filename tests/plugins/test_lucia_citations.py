@@ -35,7 +35,7 @@ def case(tmp_path):
     run = tmp_path / "citations"
     prepare(run, [document, source], "revisione-documentale", ["Citazioni"])
     path = scaffold(run, ["D001"], "Controllo del documento di prova")
-    value = json.loads(path.read_text())
+    value = json.loads(path.read_text(encoding="utf-8"))
     value["inventory"]["D001"].update(reviewed_anchors=["line:1"], limitations=[])
     value["authorities"] = [
         {
@@ -217,7 +217,7 @@ def test_render_includes_proposition_source_support_and_data_path(
     value["claims"][0]["correction"] = '<script>alert("not executed")</script>'
     path = run / "citations.json"
     path.write_text(json.dumps(value))
-    page = render_citations(run, path).read_text()
+    page = render_citations(run, path).read_text(encoding="utf-8")
     assert title in page
     assert "2026-09-23" in page
     assert "La comunicazione deve essere scritta." in page

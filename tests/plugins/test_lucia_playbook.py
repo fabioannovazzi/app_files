@@ -29,7 +29,9 @@ def no_network(monkeypatch):
 
 
 def instructions(tmp_path):
-    value = json.loads((ROOT / "plugins/lucia/assets/playbook-nda.json").read_text())
+    value = json.loads(
+        (ROOT / "plugins/lucia/assets/playbook-nda.json").read_text(encoding="utf-8")
+    )
     value.update(id="studio-bianchi", name="NDA — Studio Bianchi", version=4)
     value["columns"] = ["Responsabilità", "Legge applicabile", "Non sollecitazione"]
     value["firm_positions"] = (
@@ -56,13 +58,14 @@ def test_selected_firm_version_changes_the_prepared_review_and_survives_resume(
     handoff = prepare_playbook(run, path, [source])
 
     pack = read_pack(run)
-    review = json.loads((run / "review.json").read_text())
+    review = json.loads((run / "review.json").read_text(encoding="utf-8"))
     assert pack["topics"] == value["columns"]
     assert [item["topic"] for item in review["items"]] == value["columns"]
     assert review["context"]["firm_instructions"] == value["firm_positions"]
     assert read_playbook_run(run)["playbook"]["version"] == 4
     assert (
-        json.loads(handoff.read_text())["playbook"]["questions"] == value["questions"]
+        json.loads(handoff.read_text(encoding="utf-8"))["playbook"]["questions"]
+        == value["questions"]
     )
     path.write_text("The external configuration is no longer this version.")
     assert read_playbook_run(run)["playbook"]["id"] == "studio-bianchi"
@@ -131,7 +134,7 @@ def test_editor_embeds_instruction_text_as_data_and_never_overwrites_an_existing
 
     write_editor(output, path)
 
-    html = output.read_text()
+    html = output.read_text(encoding="utf-8")
     assert '</script><script>alert("injected")' not in html
     assert "\\u003c/script>" in html
     assert "connect-src 'none'" in html
@@ -150,13 +153,15 @@ def test_oversized_configuration_is_not_loaded(tmp_path):
 def test_editor_cli_creates_a_working_standalone_file(tmp_path):
     target = tmp_path / "studio.html"
     assert playbook_main(["editor", "--out", str(target)]) == 0
-    assert "__PLAYBOOK_DATA__" not in target.read_text()
+    assert "__PLAYBOOK_DATA__" not in target.read_text(encoding="utf-8")
 
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 def test_editor_labels_cover_every_language_and_workflow(language):
     labels = json.loads(
-        (ROOT / "plugins/lucia/scripts/legal_playbook_labels.json").read_text()
+        (ROOT / "plugins/lucia/scripts/legal_playbook_labels.json").read_text(
+            encoding="utf-8"
+        )
     )
     assert set(labels[language]) == set(labels["it"])
     assert len(labels[language]["workflows"]) == 5

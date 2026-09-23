@@ -150,7 +150,7 @@ def completed_audit(tmp_path):
     )
     run = tmp_path / "review"
     pack = prepare(run, [source], "controllo-documento", ["Proofreading"])
-    audit = json.loads(scaffold(run).read_text())
+    audit = json.loads(scaffold(run).read_text(encoding="utf-8"))
     audit["context"].update(
         {
             key: "Non fornito; sola revisione testuale"
@@ -300,7 +300,7 @@ def test_literal_comparison_uses_final_text_without_revision_or_metadata_noise(
     run = tmp_path / "comparison"
     prepare(run, [source, result], "confronto-documenti", ["Termine"])
 
-    diff = compare(run, "D001", "D002").read_text()
+    diff = compare(run, "D001", "D002").read_text(encoding="utf-8")
 
     assert "+Pagamento entro 60 giorni." in diff
     assert "3060" not in diff
@@ -313,7 +313,7 @@ def test_original_revision_comparison_retains_prior_text(tmp_path):
     run = tmp_path / "comparison"
     prepare(run, [source, result], "confronto-documenti", ["Termine"])
 
-    diff = compare(run, "D001", "D002", view="original").read_text()
+    diff = compare(run, "D001", "D002", view="original").read_text(encoding="utf-8")
 
     assert diff.startswith("No differences")
 
@@ -424,7 +424,7 @@ def test_proofreading_renders_local_report_with_coverage_and_escaped_content(
     path = run / "proofreading.json"
     path.write_text(json.dumps(audit))
 
-    report = render_audit(run, path).read_text()
+    report = render_audit(run, path).read_text(encoding="utf-8")
 
     assert f'<html lang="{language}">' in report
     assert "&lt;script&gt;" in report
@@ -565,7 +565,7 @@ def test_word_bridge_cli_saves_failure_report_for_missed_edits(tmp_path):
     )
 
     assert status == 2
-    assert json.loads(report.read_text())["valid"] is False
+    assert json.loads(report.read_text(encoding="utf-8"))["valid"] is False
 
 
 def test_proofreading_cli_writes_supported_finding_and_reference_map(tmp_path):
@@ -592,8 +592,10 @@ def test_proofreading_cli_writes_supported_finding_and_reference_map(tmp_path):
     status = proofreading_main(["render", "--run-dir", str(run)])
 
     assert status == 0
-    assert "Alfa S.r.l." in (run / "proofreading.html").read_text()
-    assert "Richiedere la prova" in (run / "proofreading.html").read_text()
+    assert "Alfa S.r.l." in (run / "proofreading.html").read_text(encoding="utf-8")
+    assert "Richiedere la prova" in (run / "proofreading.html").read_text(
+        encoding="utf-8"
+    )
 
 
 def test_proofreading_rejects_empty_completion_note_and_missing_visual_evidence(
