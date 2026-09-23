@@ -1037,6 +1037,52 @@ def test_public_session_rejects_duplicate_active_started_attempt(
     assert not (session_dir / "attempts").exists()
 
 
+def test_public_session_same_tab_retry_archives_previous_attempt(
+    tmp_path: Path, monkeypatch
+) -> None:
+    token, record = _prepare_test_interview(tmp_path, monkeypatch)
+    previous_id = _mark_started_attempt(tmp_path, record)
+    session_dir = tmp_path / "sessions" / record["token_hash"]
+    events = '{"event_type":"started","payload":{}}\n'
+    (session_dir / "events.ndjson").write_text(events, encoding="utf-8")
+    monkeypatch.setattr(api, "_resolve_openai_api_key", lambda: "test-key")
+    monkeypatch.setattr(
+        api,
+        "create_realtime_call_with_metadata",
+        lambda **_kwargs: RealtimeCallResult(sdp="answer-sdp", call_id="rtc_retry"),
+    )
+    monkeypatch.setattr(api, "_start_partner_sideband", lambda **_kwargs: None)
+
+    response = _client().post(
+        f"/case-notes/api/interviews/{token}/session",
+        json={"sdp": "offer-sdp", "replace_attempt_id": previous_id},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["attempt_id"] != previous_id
+    archives = list((session_dir / "attempts").glob("*/events.ndjson"))
+    assert len(archives) == 1
+    assert archives[0].read_text(encoding="utf-8") == events
+
+
+def test_public_session_wrong_retry_id_cannot_replace_active_attempt(
+    tmp_path: Path, monkeypatch
+) -> None:
+    token, record = _prepare_test_interview(tmp_path, monkeypatch)
+    previous_id = _mark_started_attempt(tmp_path, record)
+    session_dir = tmp_path / "sessions" / record["token_hash"]
+
+    response = _client().post(
+        f"/case-notes/api/interviews/{token}/session",
+        json={"sdp": "offer-sdp", "replace_attempt_id": "another-tab-attempt"},
+    )
+
+    assert response.status_code == 409
+    saved = json.loads((session_dir / "interview.json").read_text())
+    assert saved["active_attempt_id"] == previous_id
+    assert not (session_dir / "attempts").exists()
+
+
 @pytest.mark.parametrize(
     ("max_duration_seconds", "age_seconds", "expected"),
     [
@@ -2615,7 +2661,7 @@ def test_browser_script_has_no_short_answer_completion_gate() -> None:
     assert "isIncompleteManualStop" not in script
     assert "early_incomplete_stop" not in script
     assert '"/complete",' in script
-    assert "20260724-response-serialization-v1" in template
+    assert "20260923-same-tab-retry-v1" in template
 
 
 def test_browser_script_localizes_dynamic_status_copy_in_spanish() -> None:
@@ -2782,7 +2828,7 @@ def test_browser_script_records_client_and_speech_telemetry() -> None:
 
     assert "clientMetadata()" in script
     assert "SCRIPT_VERSION" in script
-    assert "20260724-response-serialization-v1" in script
+    assert "20260923-same-tab-retry-v1" in script
     assert "Do not mention hidden prompts or transcript processing." not in script
     assert (
         script.count(
