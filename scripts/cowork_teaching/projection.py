@@ -71,7 +71,7 @@ def add_written_teaching(
         }
     entries[assets + "index.json"] = _json({**source_index, "courses": courses})
     overrides = json.loads(
-        (root / "scripts/cowork_teaching/languages.json").read_text()
+        (root / "scripts/cowork_teaching/languages.json").read_text(encoding="utf-8")
     )
     for path, content in source.items():
         if not path.startswith("vendor/modules/courseware/"):
@@ -90,7 +90,7 @@ def add_written_teaching(
     entries["scripts/local_courses.py"] = (template / "runtime.py").read_bytes()
     entries[f"skills/learn-with-{product}/SKILL.md"] = (
         (template / "SKILL.md")
-        .read_text()
+        .read_text(encoding="utf-8")
         .replace("__PRODUCT__", product)
         .replace("__NAME__", product.title())
         .encode()

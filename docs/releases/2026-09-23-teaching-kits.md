@@ -54,6 +54,7 @@ A separate package/update/Cowork/privacy group passed 439 tests with three
 conditional skips. All three host-package builds match source and versions.
 
 Windows CI identified an archive-key separator error in Cowork course projection.
-The builder now uses slash-separated archive names on every OS. A regression
-exercises both Windows and POSIX path types; both pass locally. Final Windows
+The builder now uses slash-separated archive names and explicit UTF-8 for
+localized templates on every OS. A regression exercises Windows and POSIX path
+types with a Windows default decoder; both pass locally. Final Windows
 CI remains required before merge. No workflow or sandbox boundary was changed.

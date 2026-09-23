@@ -194,6 +194,14 @@ def test_course_attachment_archive_names_are_portable(monkeypatch, path_type):
         skill: b"method",
     }
     entries = {skill: b"projected method", "skills/clara/SKILL.md": b"Clara"}
+    original_read = Path.read_text
+
+    def windows_default_read(path, *args, **kwargs):
+        if not args:
+            kwargs.setdefault("encoding", "cp1252")
+        return original_read(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", windows_default_read)
     monkeypatch.setattr(projection, "Path", getattr(pathlib, path_type))
     projection.add_written_teaching(ROOT, "clara", source, entries)
     assert entries[attachment] == content
