@@ -60,7 +60,7 @@ def add_written_teaching(
             relative = Path(item["path"])
             if relative.is_absolute() or ".." in relative.parts:
                 raise ValueError("Invalid course attachment path")
-            path = str(Path(manifest).parent / relative)
+            path = (Path(manifest).parent / relative).as_posix()
             content = source[path]
             if hashlib.sha256(content).hexdigest() != item["sha256"]:
                 raise ValueError(f"Unreviewed course attachment: {path}")

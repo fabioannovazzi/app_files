@@ -155,3 +155,46 @@ def test_cowork_tutorial_marker_suppresses_receipt_transport(installed, monkeypa
         report, output_dir=lesson, plugin_root=root, opener=forbidden_transport
     )
     assert result == {"status": "not_requested", "reason": "local_onboarding"}
+
+
+@pytest.mark.parametrize("path_type", ["PurePosixPath", "PureWindowsPath"])
+def test_course_attachment_archive_names_are_portable(monkeypatch, path_type):
+    """A Windows build must resolve the same slash-separated archive input."""
+    import hashlib
+    import pathlib
+
+    from scripts.cowork_teaching import projection
+
+    skill = "skills/example/SKILL.md"
+    attachment = "assets/courses/example/files/input/note.md"
+    content = b"Fictional input\n"
+    course = {
+        "sources": [{"path": skill, "sha256": hashlib.sha256(b"method").hexdigest()}],
+        "files": [
+            {
+                "path": "files/input/note.md",
+                "sha256": hashlib.sha256(content).hexdigest(),
+            }
+        ],
+    }
+    course_bytes = json.dumps(course).encode()
+    index = {
+        "product": "clara",
+        "courses": {
+            "example": {
+                "path": "example/course.json",
+                "sha256": hashlib.sha256(course_bytes).hexdigest(),
+            }
+        },
+    }
+    source = {
+        "assets/courses/index.json": json.dumps(index).encode(),
+        "assets/courses/example/course.json": course_bytes,
+        attachment: content,
+        skill: b"method",
+    }
+    entries = {skill: b"projected method", "skills/clara/SKILL.md": b"Clara"}
+    monkeypatch.setattr(projection, "Path", getattr(pathlib, path_type))
+    projection.add_written_teaching(ROOT, "clara", source, entries)
+    assert entries[attachment] == content
+    assert not any("\\" in name for name in entries)

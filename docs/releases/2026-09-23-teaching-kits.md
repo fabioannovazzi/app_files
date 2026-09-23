@@ -43,3 +43,17 @@ before its replacement can be accepted.
 Catalogue and downloadable package deployment are authorized. Marketplace
 publication is blocked by the owner. Published-version registries must remain
 unchanged. Deployment and final CI evidence will be recorded after verification.
+
+## Local release checks
+
+The complete teaching suite passed 975 tests with 12 explicit skips and 89.96%
+courseware coverage. Ten skips are the unaccepted invoice replacement; the
+other two concern Vera-only receipt transport in Clara/Lucia. The native release
+verifier accepts all 44 prepared kits and all 200 supported language variants.
+A separate package/update/Cowork/privacy group passed 439 tests with three
+conditional skips. All three host-package builds match source and versions.
+
+Windows CI identified an archive-key separator error in Cowork course projection.
+The builder now uses slash-separated archive names on every OS. A regression
+exercises both Windows and POSIX path types; both pass locally. Final Windows
+CI remains required before merge. No workflow or sandbox boundary was changed.
