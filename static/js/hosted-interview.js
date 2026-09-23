@@ -8,7 +8,7 @@
   const PLUGIN_IMPROVEMENT_MODE = "plugin_improvement_interview";
   const isPluginImprovementInterview =
     interviewMode === PLUGIN_IMPROVEMENT_MODE;
-  const SCRIPT_VERSION = "20260923-conversation-context-v1";
+  const SCRIPT_VERSION = "20260923-audio-recovery-v1";
   const attemptStorageKey = `hosted-interview-attempt:${token}`;
   const FINAL_TRANSCRIPT_SETTLE_MS = 2500;
   const UPLOAD_REQUEST_TIMEOUT_MS = 8000;
@@ -79,6 +79,8 @@
   let ending = false;
   let transcriptionDeltaActive = false;
   let inputSpeechPending = false;
+  let audioNeedsRecovery = false;
+  let audioRecoverySpoken = false;
   let lastPeerConnectionState = "";
   let lastDataChannelState = "";
   let assistantResponseActive = false;
@@ -125,6 +127,7 @@
       "La connessione ha segnalato un problema. Puoi continuare o terminare l'intervista.",
     "Starting interview": "Avvio dell'intervista",
     "Requesting microphone access...": "Richiesta di accesso al microfono...",
+    "No clear speech was transcribed. Check your microphone or headset, then try speaking again. You can end and restart using the same link.": "Non riesco a trascrivere la tua voce. Controlla il microfono o gli auricolari e prova a parlare di nuovo. Puoi terminare e ripartire dallo stesso link.",
     "Saving interview": "Salvataggio dell'intervista",
     "Finalizing audio and transcript...":
       "Completamento dell'audio e della trascrizione...",
@@ -175,6 +178,7 @@
       "La conexión ha indicado un problema. Puedes continuar o finalizar la entrevista.",
     "Starting interview": "Iniciando la entrevista",
     "Requesting microphone access...": "Solicitando acceso al micrófono...",
+    "No clear speech was transcribed. Check your microphone or headset, then try speaking again. You can end and restart using the same link.": "No se pudo transcribir tu voz. Comprueba el micrófono o los auriculares e intenta hablar de nuevo. Puedes finalizar y volver a empezar con el mismo enlace.",
     "Saving interview": "Guardando la entrevista",
     "Finalizing audio and transcript...":
       "Finalizando el audio y la transcripción...",
@@ -307,6 +311,10 @@
         return;
       }
       manageSessionFlow();
+      if (audioNeedsRecovery) {
+        showAudioRecovery();
+        return;
+      }
       const prefix = shouldWrapUp() ? "Wrapping up and saving" : "Recording and saving";
       setStatus("Interview active", activeStatusDetail(prefix));
     }, 1000);
@@ -340,6 +348,8 @@
     ending = false;
     transcriptionDeltaActive = false;
     inputSpeechPending = false;
+    audioNeedsRecovery = false;
+    audioRecoverySpoken = false;
     lastPeerConnectionState = "";
     lastDataChannelState = "";
     assistantResponseActive = false;
@@ -1127,7 +1137,34 @@
     });
   }
 
+  const audioRecoveryMessage = "No clear speech was transcribed. Check your microphone or headset, then try speaking again. You can end and restart using the same link.";
+
+  function showAudioRecovery() {
+    setStatus("Interview active", audioRecoveryMessage);
+  }
+
+  function recoverUntranscribedAudio() {
+    if (!audioNeedsRecovery || ending || interviewClosing) return false;
+    showAudioRecovery();
+    // Empty/failed ASR is a provider fact, not a judgment about answer quality.
+    // One spoken recovery per unresolved episode prevents a new repetition loop.
+    if (!audioRecoverySpoken && !inputSpeechActive && !inputSpeechPending && !transcriptionDeltaActive) {
+      audioRecoverySpoken = sendSessionManagementPrompt(
+        "audio_transcription_recovery",
+        [
+          "The last microphone input produced no usable transcript. Do not invent or infer an answer.",
+          "Briefly explain that you could not hear a clear answer and ask the participant to check their microphone or headset.",
+          "If you have not yet asked the opening question, ask that question from the prepared brief now. Otherwise briefly repeat only the pending question.",
+          "Keep this recovery short, in the configured interview language, without restarting the introduction or moving to a new topic.",
+        ].join("\n"),
+        "Help the participant resume after unreadable microphone input."
+      );
+    }
+    return true;
+  }
+
   function manageSessionFlow() {
+    if (recoverUntranscribedAudio()) return;
     // Improvement interviews have a mechanically bounded number of interviewer
     // response turns. The model decides whether the optional follow-up is useful.
     if (isPluginImprovementInterview) return;
@@ -1299,6 +1336,8 @@
         if (lastInterviewerTurnAtMs > lastIntervieweeTurnAtMs) {
           awaitingIntervieweeAnswer = true;
         }
+        audioNeedsRecovery = true;
+        showAudioRecovery();
         postEvent("transcription_completed_empty", {
           elapsed_seconds: secondsElapsed(),
           turn_index: turnCount,
@@ -1306,6 +1345,8 @@
         });
         return;
       }
+      audioNeedsRecovery = false;
+      audioRecoverySpoken = false;
       lastIntervieweeTurnAtMs = Date.now();
       awaitingIntervieweeAnswer = false;
       silenceRecoveryCount = 0;
@@ -1322,6 +1363,15 @@
       } else {
         queueGenericResponse();
       }
+    }
+    if (event.type === "conversation.item.input_audio_transcription.failed") {
+      transcriptDeltaBuffer = "";
+      transcriptionDeltaActive = false;
+      inputSpeechPending = false;
+      audioNeedsRecovery = true;
+      markInputActivity();
+      postEvent("transcription_failed", { item_id: String(event.item_id || ""), code: String(event.error?.code || "unknown") });
+      showAudioRecovery();
     }
     if (event.type === "response.output_audio_transcript.done") {
       const text = cleanTranscriptText(event.transcript || "");
@@ -1358,6 +1408,7 @@
       lastResponseCreateAtMs = Date.now();
     }
     if (event.type === "response.done") {
+      const isAudioRecovery = event.response?.metadata?.trigger === "audio_transcription_recovery";
       assistantResponseActive = false;
       if (
         isPluginImprovementInterview &&
@@ -1375,7 +1426,7 @@
       if (interviewClosing) {
         awaitingIntervieweeAnswer = false;
       } else if (isPluginImprovementInterview) {
-        improvementQuestionTurnCount += 1;
+        if (!isAudioRecovery) improvementQuestionTurnCount += 1;
         improvementAwaitingAnswer = true;
         awaitingIntervieweeAnswer = true;
       } else if (lastInterviewerTurnAtMs > lastIntervieweeTurnAtMs && lastInterviewerTurnText) {
@@ -1398,6 +1449,7 @@
         });
       }
       setStatus("Interview active", activeStatusDetail());
+      if (audioNeedsRecovery) showAudioRecovery();
       if (isPluginImprovementInterview && interviewClosing && !ending) {
         endInterview({ reason: "interviewer_close" }).catch((error) => {
           setError(error.message || "The interview could not be saved.");
