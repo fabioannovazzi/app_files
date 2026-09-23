@@ -8,7 +8,8 @@
   const PLUGIN_IMPROVEMENT_MODE = "plugin_improvement_interview";
   const isPluginImprovementInterview =
     interviewMode === PLUGIN_IMPROVEMENT_MODE;
-  const SCRIPT_VERSION = "20260724-response-serialization-v1";
+  const SCRIPT_VERSION = "20260923-same-tab-retry-v1";
+  const attemptStorageKey = `hosted-interview-attempt:${token}`;
   const FINAL_TRANSCRIPT_SETTLE_MS = 2500;
   const UPLOAD_REQUEST_TIMEOUT_MS = 8000;
   const FINAL_UPLOAD_SETTLE_TIMEOUT_MS = 10000;
@@ -764,7 +765,7 @@
   }
 
   async function handleConnectionIssue(source, detail) {
-    if (ending || connectionIssueHandled) return;
+    if (ending || connectionIssueHandled || !activeAttemptId) return;
     connectionIssueHandled = true;
     await postEvent("connection_issue", {
       source,
@@ -1426,7 +1427,9 @@
     setStatus("Starting interview", "Requesting microphone access...");
     localStream = await openMicrophone();
     pc = new RTCPeerConnection();
+    const sessionPeer = pc;
     pc.addEventListener("connectionstatechange", () => {
+      if (pc !== sessionPeer) return;
       const state = pc?.connectionState || "";
       lastPeerConnectionState = state;
       if (["failed", "disconnected", "closed"].includes(state)) {
@@ -1440,15 +1443,19 @@
     };
     pc.addTrack(localStream.getAudioTracks()[0]);
     dc = pc.createDataChannel("oai-events");
+    const sessionChannel = dc;
     dc.addEventListener("close", () => {
+      if (dc !== sessionChannel) return;
       lastDataChannelState = "closed";
       handleConnectionIssue("data_channel", "closed");
     });
     dc.addEventListener("error", (event) => {
+      if (dc !== sessionChannel) return;
       lastDataChannelState = "error";
       handleConnectionIssue("data_channel", event?.message || "error");
     });
     dc.addEventListener("message", (message) => {
+      if (dc !== sessionChannel) return;
       try {
         handleRealtimeEvent(JSON.parse(message.data));
       } catch (error) {
@@ -1456,6 +1463,7 @@
       }
     });
     dc.addEventListener("open", () => {
+      if (dc !== sessionChannel) return;
       lastDataChannelState = "open";
       markRealtimeProgress();
       startedAt = new Date();
@@ -1480,20 +1488,36 @@
       sdp: offer.sdp,
       language,
       model,
+      replace_attempt_id: rememberedAttempt(),
     });
     if (!response.ok) {
-      throw new Error(await response.text());
+      const errorText = await response.text();
+      if (response.status === 409) {
+        throw new Error(
+          language === "it"
+            ? "Una precedente sessione risulta ancora attiva. Chiudi le altre schede dell’intervista e riprova tra qualche minuto con questo stesso link."
+            : "A previous interview session is still active. Close other interview tabs and retry this same link in a few minutes."
+        );
+      }
+      throw new Error(errorText);
     }
     const payload = await response.json();
     activeAttemptId = payload.attempt_id || "";
     if (!activeAttemptId) {
       throw new Error("The interview attempt could not be initialized.");
     }
+    rememberAttempt(activeAttemptId);
     startAudioRecorder(localStream);
     await pc.setRemoteDescription({ type: "answer", sdp: payload.sdp });
   }
 
   function cleanupConnection() {
+    // Detach first: close events from our own cleanup are not network failures.
+    // This also prevents startup errors from triggering completion with no ID.
+    const closingPeer = pc;
+    pc = null;
+    dc = null;
+    connectionIssueHandled = true;
     if (recorder && recorder.state !== "inactive") {
       try {
         recorder.stop();
@@ -1513,10 +1537,26 @@
     screenStream?.getTracks().forEach((track) => track.stop());
     screenStream = null;
     dc = null;
-    pc?.close();
-    pc = null;
+    closingPeer?.close();
     setActive(false);
     stopElapsedTimer();
+  }
+
+  function rememberedAttempt() {
+    try {
+      return window.sessionStorage.getItem(attemptStorageKey) || "";
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function rememberAttempt(attemptId) {
+    try {
+      if (attemptId) window.sessionStorage.setItem(attemptStorageKey, attemptId);
+      else window.sessionStorage.removeItem(attemptStorageKey);
+    } catch (error) {
+      // Storage may be disabled; normal interviews still work without reload recovery.
+    }
   }
 
   async function endInterview({ reason = "manual" } = {}) {
@@ -1585,6 +1625,7 @@
       if (!response.ok || responsePayload.ok === false) {
         throw new Error(responseText || "The interview could not be saved.");
       }
+      rememberAttempt("");
       const completionStatus = responsePayload.status || "completed";
       const postCallQueued =
         responsePayload.notification_status === "queued_after_post_call_transcription" ||

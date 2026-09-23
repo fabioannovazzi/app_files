@@ -458,6 +458,7 @@ class InterviewSessionRequest(BaseModel):
     sdp: str = Field(min_length=1)
     language: str = "it"
     model: str = DEFAULT_MODEL
+    replace_attempt_id: str = Field(default="", max_length=120)
 
 
 class InterviewEventRequest(BaseModel):
@@ -1199,6 +1200,19 @@ def _instructions_with_partner_note(
     )
 
 
+def _sideband_attempt_is_current(token: str, record: Mapping[str, Any]) -> bool:
+    """Keep replaced attempts from appending to the new attempt's evidence."""
+
+    attempt_id = str(record.get("active_attempt_id", ""))
+    if not attempt_id:
+        return True
+    try:
+        current = _load_record_for_token(token)
+    except HostedInterviewError:
+        return False
+    return current.get("active_attempt_id") == attempt_id
+
+
 async def _hosted_partner_sideband_loop(
     *,
     token: str,
@@ -1220,8 +1234,12 @@ async def _hosted_partner_sideband_loop(
             "OpenAI-Safety-Identifier": safety_identifier,
         },
     ) as websocket:
+        if not _sideband_attempt_is_current(token, record):
+            return
         _append_event(token, "partner_sideband_connected", {"call_id": call_id})
         async for raw_message in websocket:
+            if not _sideband_attempt_is_current(token, record):
+                return
             try:
                 event = json.loads(raw_message)
             except json.JSONDecodeError:
@@ -1264,6 +1282,8 @@ async def _hosted_partner_sideband_loop(
             except VoiceSessionError as exc:
                 LOGGER.info("Hosted interview partner sideband skipped: %s", exc)
                 continue
+            if not _sideband_attempt_is_current(token, record):
+                return
             if not whisper:
                 if last_whisper:
                     await websocket.send(
@@ -1336,6 +1356,8 @@ def _run_partner_sideband(
         )
     except Exception as exc:  # noqa: BLE001 - sideband must not break interview
         LOGGER.info("Hosted interview partner sideband ended: %s", exc)
+        if not _sideband_attempt_is_current(token, record):
+            return
         try:
             _append_event(
                 token,
@@ -2630,7 +2652,10 @@ def public_interview_session(
         record_status = str(record.get("status", ""))
         should_archive_attempt = record_status in RETRYABLE_INTERVIEW_STATUSES
         if record_status == INTERVIEW_STATUS_STARTED:
-            if not _started_attempt_is_stale(record):
+            replaces_own_attempt = bool(payload.replace_attempt_id) and (
+                payload.replace_attempt_id == record.get("active_attempt_id")
+            )
+            if not replaces_own_attempt and not _started_attempt_is_stale(record):
                 raise HTTPException(
                     status_code=status.HTTP_409_CONFLICT,
                     detail="This interview already has an active started attempt.",
