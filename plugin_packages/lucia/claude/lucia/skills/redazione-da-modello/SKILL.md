@@ -33,14 +33,19 @@ structure, schedules and instructions. Create `changes.json` as exact replacemen
 [{"anchor":"word/document.xml#p3","old":"[CLIENT]","new":"Example S.r.l.","basis":"Client name confirmed in the user's instruction"}]
 ```
 
-For DOCX/TXT/Markdown use `draft --template D001 --changes /absolute/changes.json`.
-The helper creates a new copy, checks each exact replacement and preserves
-unmodified DOCX package parts and surrounding run formatting. It refuses edits
-to paragraphs containing tracked changes, fields or objects. For structural edits,
-complex tables or tracked changes, use an available document editor on a copy
-following its document skill; keep the same change register and evidence contract.
-If that tooling is unavailable, return proposed edits and identify the unfinished
-drafting step. Do not silently replace the template's layout or file format.
+For DOCX read `../revisione-contratti/references/word-handoff.md` and use the
+host's Documents/Word skill for authoring, native revisions/comments and rendering.
+Use tracked edits when showing adaptations for review; prepare a clean copy only
+when requested, with the same change register. The local Word bridge verifies
+inline edit results against the original and proposed changes. Do not rebuild a
+second Word editor inside Lucia or mistake a helper's success message for proof
+that every change was applied.
+
+For TXT/Markdown use `draft --template D001 --changes /absolute/changes.json`.
+The older local DOCX replacement mode remains a bounded clean-text helper, not
+the normal Word authoring route or a substitute for native revisions. If the host
+document capability is unavailable, return the proposed edits and identify the
+unfinished Word step. Do not silently replace the template's layout or file format.
 
 Inspect the resulting file, render it when local rendering is available, and
 verify layout, numbering, definitions, cross-references, annexes and unresolved

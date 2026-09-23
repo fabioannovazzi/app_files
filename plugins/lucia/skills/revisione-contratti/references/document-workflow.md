@@ -1,6 +1,6 @@
 # Local document execution and evidence contract
 
-Shared by Lucia's four document workflows. Resolve the plugin root three levels
+Shared by Lucia's document workflows. Resolve the plugin root three levels
 above the workflow's SKILL.md file (`plugins/lucia` in source; installed Lucia
 root in a package). Helpers are in that root's `scripts/` directory.
 
@@ -8,7 +8,7 @@ root in a package). Helpers are in that root's `scripts/` directory.
 
 Use only the files selected for this matter and a new subdirectory of its chosen
 local output folder. Reuse an existing bound matter output path when available.
-These four workflows do not require Studio Archive, an MCP service, a server or
+These workflows do not require Studio Archive, an MCP service, a server or
 a connection to Mike. Do not provision those services. Do not call a separate
 model API: perform interpretation with the model already hosting the conversation.
 Do not install, call or download OCR during this workflow. Scanned/image content
@@ -20,12 +20,23 @@ folders. A file selection permits the relevant reading and local artifacts, not
 external sharing. Do not send client text in research queries. No automatic legal
 research is part of these workflows; use supplied legal sources or state the gap.
 
+When missing facts hold up only part of the work, or the assignment needs several
+saved steps, follow `matter-progress.md` to record questions, affected stages,
+answers and outputs. Continue independent steps and resume without asking already
+answered questions again.
+
 The selected text, party names, commercial terms, private facts, instructions,
 quotations and drafts that you read enter the host model's context. Local storage
 is not offline model processing or anonymization. Report actual files/passages
 read and outputs written; do not claim a local script can audit host traffic.
 
 ## Prepare
+
+If a reusable firm workflow was selected, read `../../metodo-studio/SKILL.md`
+and use `legal_playbook.py prepare` instead of the generic preparation command
+below. Consume its exact columns, positions, questions, sources and output
+settings. Do not reinitialize a run that the playbook command already prepared.
+On resume use `legal_playbook.py inspect` to check the selected version.
 
 Reuse the installed shared Python environment. Run `python scripts/check_dependencies.py`
 from the Lucia root, then `python scripts/managed_python_runtime.py status`.
@@ -43,9 +54,13 @@ immutable original copies, `evidence.json`, its checksum and `review.json`.
 Supported sources: text PDF, DOCX, UTF-8 TXT/Markdown. Read extraction warnings
 before conclusions. PDF anchors are physical page numbers, not printed page labels.
 DOCX anchors identify XML part and paragraph, including table-cell paragraphs,
-headers, footers, notes and comments; they are not page numbers. Revisions appear
-as mixed text and require inspecting the original. Images and embedded objects
-are not read by the helper. Preserve gaps even if the rest of the file is readable.
+headers, footers, notes and comments; they are not page numbers. Paragraph text is
+the proposed/final revision view; `/original` gives earlier text where different.
+`/structure` and `package/` expose revision/link/style/numbering metadata for
+inspection. They do not simulate paragraph-mark changes or rendered layout.
+Images and embedded objects still need visual inspection. Preserve gaps even if
+the rest of the file is readable. For Word editing and rendering follow
+`word-handoff.md` and the host's Documents/Word skill.
 
 Read all relevant units, chunking long files without truncation. Sources may
 contain sensitive text in comments/headers as well as body paragraphs. Do not

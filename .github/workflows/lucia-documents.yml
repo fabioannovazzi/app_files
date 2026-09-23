@@ -28,10 +28,35 @@ jobs:
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_lucia_legal_documents.py
-          --cov=lucia_legal_documents --cov-report=term-missing --cov-fail-under=80
+          tests/plugins/test_lucia_document_inspection.py
+          tests/plugins/test_lucia_matter_progress.py
+          tests/plugins/test_lucia_playbook.py
+          tests/plugins/test_lucia_citations.py
+          --cov=lucia_legal_documents --cov=legal_docx --cov=legal_word_bridge
+          --cov=legal_proofreading --cov=legal_matter --cov=legal_playbook --cov=legal_citations --cov-report=term-missing --cov-fail-under=80
+      - name: Execute document helpers and editor generation from all shipped host archives
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_lucia_package_references.py
       - name: Check document helper quality
         run: |
           python -m black --check plugins/lucia/scripts/legal_documents.py tests/plugins/test_lucia_legal_documents.py
           python -m isort --check-only plugins/lucia/scripts/legal_documents.py tests/plugins/test_lucia_legal_documents.py
           python -m mypy --follow-imports=skip plugins/lucia/scripts/legal_documents.py
           python -m bandit -q plugins/lucia/scripts/legal_documents.py
+          python -m black --check plugins/lucia/scripts/legal_docx.py plugins/lucia/scripts/legal_word_bridge.py plugins/lucia/scripts/legal_proofreading.py tests/plugins/test_lucia_document_inspection.py
+          python -m isort --check-only plugins/lucia/scripts/legal_docx.py plugins/lucia/scripts/legal_word_bridge.py plugins/lucia/scripts/legal_proofreading.py tests/plugins/test_lucia_document_inspection.py
+          python -m mypy --follow-imports=skip plugins/lucia/scripts/legal_docx.py plugins/lucia/scripts/legal_word_bridge.py plugins/lucia/scripts/legal_proofreading.py
+          python -m bandit -q plugins/lucia/scripts/legal_docx.py plugins/lucia/scripts/legal_word_bridge.py plugins/lucia/scripts/legal_proofreading.py
+          python -m black --check plugins/lucia/scripts/legal_matter.py tests/plugins/test_lucia_matter_progress.py
+          python -m isort --check-only plugins/lucia/scripts/legal_matter.py tests/plugins/test_lucia_matter_progress.py
+          python -m mypy --follow-imports=skip plugins/lucia/scripts/legal_matter.py
+          python -m bandit -q plugins/lucia/scripts/legal_matter.py
+          python -m black --check plugins/lucia/scripts/legal_playbook.py tests/plugins/test_lucia_playbook.py
+          python -m isort --check-only plugins/lucia/scripts/legal_playbook.py tests/plugins/test_lucia_playbook.py
+          python -m mypy --follow-imports=skip plugins/lucia/scripts/legal_playbook.py
+          python -m bandit -q plugins/lucia/scripts/legal_playbook.py
+          python -m black --check plugins/lucia/scripts/legal_citations.py tests/plugins/test_lucia_citations.py
+          python -m isort --check-only plugins/lucia/scripts/legal_citations.py tests/plugins/test_lucia_citations.py
+          python -m mypy --follow-imports=skip plugins/lucia/scripts/legal_citations.py
+          python -m bandit -q plugins/lucia/scripts/legal_citations.py

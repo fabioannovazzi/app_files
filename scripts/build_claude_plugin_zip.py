@@ -550,6 +550,14 @@ LUCIA_COWORK_COMPONENTS = (
 )
 LUCIA_DOCUMENT_COWORK_SKILLS = frozenset(
     {
+        "controllo-documento",
+        "estrazione-clausole",
+        "metodo-studio",
+        "verifica-citazioni",
+        "contenzioso-civile",
+        "operazioni-ma",
+        "lavoro",
+        "recupero-crediti",
         "revisione-documentale",
         "confronto-documenti",
         "revisione-contratti",
@@ -569,9 +577,15 @@ LUCIA_COWORK_README = """# Lucia for Claude Cowork
 
 Lucia also reviews contracts, compares versions and agreements, prepares evidence
 tables across selected documents, and edits copies of supplied legal templates.
-These four native workflows bundle local helpers and pinned MIT-licensed Mike
-workflow references. They need no Mike server or separate model API. The host
-model reads the selected material; local code checks evidence and produces files.
+The document workflows include proofreading, single-contract extraction,
+editable firm instructions, saved questions and Italian citation review, plus
+civil litigation, M&A, employment and debt-recovery routes. The four original
+document workflows and proofreading adapt pinned MIT-licensed Mike references.
+They need no Mike server or separate model API. The host model reads the selected
+material; local code checks evidence and produces files. Use the host document
+capability for Word authoring, native revisions, comments and rendering, and its
+spreadsheet capability for calculations. Missing capabilities leave the affected
+output unfinished; they do not justify a completion claim.
 
 Lucia helps lawyers frame and validate legal work, prepare a new client matter
 or a new matter for an existing client, create reviewable professional
@@ -2781,6 +2795,8 @@ def _lucia_package_entries(
     entries["README.md"] = LUCIA_COWORK_README.encode("utf-8")
     if "assets/icon.svg" in source_entries:
         entries["assets/icon.svg"] = source_entries["assets/icon.svg"]
+    for asset in ("assets/playbook-editor.html", "assets/playbook-nda.json"):
+        entries[asset] = source_entries[asset]
     entries[".claude-plugin/plugin.json"] = project_claude_manifest(
         source_manifest,
         include_agents=False,

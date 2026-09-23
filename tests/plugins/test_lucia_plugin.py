@@ -36,6 +36,14 @@ DOCUMENT_WORKFLOWS = {
     "confronto-documenti",
     "revisione-contratti",
     "redazione-da-modello",
+    "controllo-documento",
+    "estrazione-clausole",
+    "metodo-studio",
+    "verifica-citazioni",
+    "contenzioso-civile",
+    "operazioni-ma",
+    "lavoro",
+    "recupero-crediti",
 }
 ORCHESTRATION_WORKFLOWS = {"quesito-legale-fiscale", "adversarial-opinion"}
 PUBLIC_WORKFLOWS = (
@@ -52,7 +60,7 @@ WEBSITE_SKILLS = (
     PUBLIC_WORKFLOWS
     | ORCHESTRATION_WORKFLOWS
     | DOCUMENT_WORKFLOWS
-    | {"learn-with-lucia", "studio-archive"}
+    | {"learn-with-lucia", "studio-archive", "revisione-word"}
 )
 PRIVATE_LIFECYCLE_WORKFLOWS = SHARED_ASSURANCE_WORKFLOWS | LUCIA_NATIVE_WORKFLOWS
 
@@ -114,8 +122,9 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     assert interface["shortDescription"] == "Assistente AI per avvocati"
     assert len(interface["defaultPrompt"]) == 3
     assert all(len(prompt) <= 128 for prompt in interface["defaultPrompt"])
-    assert "avvocati indipendenti" in interface["longDescription"]
-    assert "Lucia mostra fonti" in interface["longDescription"]
+    assert "studio italiano" in interface["longDescription"]
+    assert "Document" in interface["longDescription"]
+    assert "questioni aperte" in interface["longDescription"]
     assert "esattamente due" not in interface["longDescription"]
     assert "prima versione" not in interface["longDescription"]
 
@@ -643,10 +652,18 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
     """Exact labels should match mechanically across the two public surfaces."""
 
     canonical_labels = {
-        "revisione-contratti": "Revisione contratti",
-        "confronto-documenti": "Confronto documenti",
-        "revisione-documentale": "Revisione documentale",
-        "redazione-da-modello": "Redazione da modello",
+        "revisione-contratti": "Rivedi un contratto per il tuo cliente",
+        "confronto-documenti": "Confronta versioni e conseguenze delle modifiche",
+        "revisione-documentale": "Rivedi più documenti in una tabella",
+        "redazione-da-modello": "Prepara una bozza dal modello dello studio",
+        "controllo-documento": "Trova errori e incoerenze nel documento",
+        "estrazione-clausole": "Estrai i dati principali di un contratto",
+        "metodo-studio": "Personalizza le istruzioni dello studio",
+        "verifica-citazioni": "Verifica norme, sentenze e citazioni",
+        "contenzioso-civile": "Prepara il fascicolo di contenzioso civile",
+        "operazioni-ma": "Rivedi i documenti di un’acquisizione",
+        "lavoro": "Rivedi un fascicolo di lavoro",
+        "recupero-crediti": "Prepara una pratica di recupero crediti",
         "quesito-legale-fiscale": "Risposta a quesiti legali e fiscali",
         "adversarial-opinion": "Parere contrapposto",
         "legal-tax-answer-planner": "Ottimizzazione prompt",
@@ -680,6 +697,7 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
         "apertura-pratica": "module.matter.title",
         "presenza-digitale-studio": "module.website.title",
     }
+    website_keys.update({key: f"module.{key}.title" for key in DOCUMENT_WORKFLOWS})
 
     assert {
         workflow: cards[workflow]["display_name"] for workflow in canonical_labels
@@ -691,10 +709,19 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
         canonical_labels["confronto-documenti"],
         canonical_labels["revisione-documentale"],
         canonical_labels["redazione-da-modello"],
+        canonical_labels["controllo-documento"],
+        canonical_labels["estrazione-clausole"],
+        "Ricevi un Word con revisioni e commenti",
+        canonical_labels["metodo-studio"],
         canonical_labels["quesito-legale-fiscale"],
         canonical_labels["legal-tax-answer-planner"],
         canonical_labels["adversarial-opinion"],
         canonical_labels["legal-tax-answer-review"],
+        canonical_labels["verifica-citazioni"],
+        canonical_labels["contenzioso-civile"],
+        canonical_labels["operazioni-ma"],
+        canonical_labels["lavoro"],
+        canonical_labels["recupero-crediti"],
         canonical_labels["studio-archive"],
         canonical_labels["apertura-pratica"],
         canonical_labels["comunicazione-professionale"],
@@ -764,7 +791,7 @@ def test_lucia_public_page_localizes_matter_opening_and_direct_hero() -> None:
     ):
         assert len(_javascript_string_values(page, key)) == 5
     assert (
-        '"hero.lead": "Lucia aggiunge a Codex revisione contratti, confronto documenti, redazione da modelli e ricerca legale per lo studio italiano."'
+        '"hero.lead": "Lucia aggiunge a Codex revisione di documenti legali, bozze Word e ricerca per lo studio italiano. Puoi descrivere il lavoro richiesto in chat e fornire i file da usare."'
         in page
     )
 
@@ -778,7 +805,12 @@ def test_lucia_marketplace_long_description_matches_manifest() -> None:
     )
 
     assert manifest["interface"]["longDescription"] == approved
-    assert "modelli forniti" in approved
-    assert "Le citazioni verificano il testo, non il diritto" in approved
-    assert len(approved.split("\n\n")) == 3
-    assert len(approved.split()) <= 120
+    assert "modello scelto dallo studio" in approved
+    assert "Documents/Word" in approved
+    assert (
+        "Una citazione corrispondente non certifica la conclusione giuridica"
+        in approved
+    )
+    assert "senza server o API modello separate" in approved
+    assert len(approved.split("\n\n")) == 5
+    assert len(approved.split()) <= 250

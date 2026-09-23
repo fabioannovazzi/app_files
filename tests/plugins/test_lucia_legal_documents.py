@@ -16,6 +16,7 @@ from pypdf import PdfWriter
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "plugins/lucia/scripts/legal_documents.py"
+sys.path.insert(0, str(SCRIPT.parent))
 SPEC = importlib.util.spec_from_file_location("lucia_legal_documents", SCRIPT)
 legal = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = legal
@@ -401,6 +402,7 @@ def test_shipped_helper_runs_with_its_schema_and_labels(tmp_path, archive_name):
     archive_path = ROOT / "plugin_packages/lucia" / archive_name
     script_names = (
         "legal_documents.py",
+        "legal_docx.py",
         "legal_documents_review.schema.json",
         "legal_documents_labels.json",
     )

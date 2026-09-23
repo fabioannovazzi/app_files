@@ -819,6 +819,14 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert "## Required Questions" in full_workflow
     if plugin_name == "lucia":
         assert set(card_bodies) == {
+            "skills/controllo-documento/SKILL.md",
+            "skills/estrazione-clausole/SKILL.md",
+            "skills/metodo-studio/SKILL.md",
+            "skills/verifica-citazioni/SKILL.md",
+            "skills/contenzioso-civile/SKILL.md",
+            "skills/operazioni-ma/SKILL.md",
+            "skills/lavoro/SKILL.md",
+            "skills/recupero-crediti/SKILL.md",
             "skills/revisione-contratti/SKILL.md",
             "skills/confronto-documenti/SKILL.md",
             "skills/revisione-documentale/SKILL.md",
@@ -2797,6 +2805,22 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 # Native skills share a local evidence contract, not another module wrapper.
                 assert "references/document-workflow.md" in skill_text
                 assert "references/upstream/" in skill_text
+                continue
+            lucia_native_references = {
+                "controllo-documento": "references/document-workflow.md",
+                "estrazione-clausole": "../revisione-documentale/SKILL.md",
+                "metodo-studio": "scripts/legal_playbook.py",
+                "verifica-citazioni": "scripts/legal_citations.py",
+                "contenzioso-civile": "references/practice-workflow.md",
+                "operazioni-ma": "references/practice-workflow.md",
+                "lavoro": "references/practice-workflow.md",
+                "recupero-crediti": "references/practice-workflow.md",
+            }
+            if (
+                plugin_root.name == "lucia"
+                and skill_file.parent.name in lucia_native_references
+            ):
+                assert lucia_native_references[skill_file.parent.name] in skill_text
                 continue
             if plugin_root.name in {"lucia", "vera"} and (
                 skill_file.parent.name != plugin_root.name
@@ -5609,6 +5633,7 @@ def test_clara_public_icon_matches_plugin_source() -> None:
             (
                 "#area-documents",
                 "#area-research",
+                "#area-practice",
                 "#area-matters",
                 "#area-studio",
             ),
@@ -5953,27 +5978,27 @@ def test_product_pages_use_direct_product_explanations_for_hero_and_metadata(
         "en": {
             "clara": "Clara adds presentations, narrated research videos, interviews, transcription, documents, retail analysis, and data analysis to Codex.",
             "vera": "Vera adds client files, accounting checks, reconciliations, analysis, reporting, communication, and research to Codex.",
-            "lucia": "Lucia adds contract review, document comparison, template drafting and legal research for Italian law firms to Codex.",
+            "lucia": "Lucia adds legal document review, Word drafts and research for Italian law firms to Codex. Describe the work in chat and provide the files to use.",
         },
         "it": {
             "clara": "Clara aggiunge a Codex presentazioni, video di ricerca narrati, interviste, trascrizione, documenti, analisi retail e analisi dei dati.",
             "vera": "Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.",
-            "lucia": "Lucia aggiunge a Codex revisione contratti, confronto documenti, redazione da modelli e ricerca legale per lo studio italiano.",
+            "lucia": "Lucia aggiunge a Codex revisione di documenti legali, bozze Word e ricerca per lo studio italiano. Puoi descrivere il lavoro richiesto in chat e fornire i file da usare.",
         },
         "fr": {
             "clara": "Clara ajoute à Codex les présentations, les vidéos de recherche narrées, les entretiens, la transcription, les documents, l'analyse retail et l'analyse de données.",
             "vera": "Vera ajoute à Codex les dossiers clients, les contrôles comptables, les rapprochements, l'analyse, les rapports, la communication et la recherche.",
-            "lucia": "Lucia ajoute à Codex la revue de contrats, la comparaison de documents, la rédaction sur modèle et la recherche juridique pour les cabinets italiens.",
+            "lucia": "Lucia ajoute à Codex revue de documents juridiques, projets Word et recherche pour les cabinets italiens. Décrivez le travail dans le chat et fournissez les fichiers à utiliser.",
         },
         "de": {
             "clara": "Clara ergänzt Codex um Präsentationen, vertonte Forschungsvideos, Interviews, Transkription, Dokumente, Retail-Analysen und Datenanalysen.",
             "vera": "Vera ergänzt Codex um Mandantenakten, Buchungsprüfungen, Abstimmungen, Analysen, Berichte, Kommunikation und Recherche.",
-            "lucia": "Lucia ergänzt Codex um Vertragsprüfung, Dokumentenvergleich, Vorlagenbearbeitung und Rechtsrecherche für italienische Kanzleien.",
+            "lucia": "Lucia ergänzt Codex um juristische Dokumentenprüfung, Word-Entwürfe und Recherche für italienische Kanzleien. Beschreiben Sie den Auftrag im Chat und stellen Sie die Dateien bereit.",
         },
         "es": {
             "clara": "Clara añade a Codex presentaciones, vídeos de investigación narrados, entrevistas, transcripción, documentos, análisis retail y análisis de datos.",
             "vera": "Vera añade a Codex expedientes de clientes, controles contables, conciliaciones, análisis, informes, comunicación e investigación.",
-            "lucia": "Lucia añade a Codex revisión de contratos, comparación documental, redacción desde plantillas e investigación jurídica para despachos italianos.",
+            "lucia": "Lucia añade a Codex revisión de documentos jurídicos, borradores Word e investigación para despachos italianos. Describe el trabajo en el chat y aporta los archivos.",
         },
     }
 

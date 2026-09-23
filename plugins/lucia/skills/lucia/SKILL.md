@@ -85,12 +85,25 @@ funzione Lucia:
 | Nuova pratica per un nuovo cliente o per un cliente esistente da raccogliere e preparare all'apertura | Leggi integralmente `../apertura-pratica/SKILL.md` e seguilo. Usa il suo validatore specifico e il contratto di revisione dell'avvocato. |
 | Percorso completo dal quesito alla consegna | Leggi integralmente `../quesito-legale-fiscale/SKILL.md` e seguilo. |
 | Revisione contratti sui documenti forniti | Leggi integralmente `../revisione-contratti/SKILL.md` e seguilo. |
+| Errori, incongruenze, rinvii, nomi, importi o difetti nascosti di un documento da controllare sistematicamente | Leggi integralmente `../controllo-documento/SKILL.md` e seguilo. |
 | Confronto documenti sui documenti forniti | Leggi integralmente `../confronto-documenti/SKILL.md` e seguilo. |
 | Revisione documentale sui documenti forniti | Leggi integralmente `../revisione-documentale/SKILL.md` e seguilo. |
+| Clausole e termini di un contratto da estrarre in una scheda con fonti | Leggi integralmente `../estrazione-clausole/SKILL.md` e seguilo. |
 | Redazione da modello sui documenti forniti | Leggi integralmente `../redazione-da-modello/SKILL.md` e seguilo. |
+| Istruzioni riutilizzabili dello studio da creare, modificare, duplicare o applicare | Leggi integralmente `../metodo-studio/SKILL.md` e seguilo. |
+| Citazioni di norme o decisioni e proposizioni giuridiche in un documento da verificare | Leggi integralmente `../verifica-citazioni/SKILL.md` e seguilo. |
+| Cronologia, matrice delle prove, date processuali o bozza per un contenzioso civile | Leggi integralmente `../contenzioso-civile/SKILL.md` e seguilo. |
+| NDA, due diligence, questioni SPA o riscontro disclosure in un'operazione M&A | Leggi integralmente `../operazioni-ma/SKILL.md` e seguilo. |
+| Contratti di lavoro, fascicolo di licenziamento, dati retributivi o calcolo specifico documentato | Leggi integralmente `../lavoro/SKILL.md` e seguilo. |
+| Prove, capitale/pagamenti, interessi o bozza della fase richiesta per recuperare un credito | Leggi integralmente `../recupero-crediti/SKILL.md` e seguilo. |
 | Nessun workflow registrato copre la richiesta | Fermati. Dì soltanto che Lucia non dispone di un workflow adatto; non rispondere al merito e non offrire un percorso generico. |
 
 L'utente descrive il lavoro normalmente e non deve conoscere i nomi interni.
+Per produrre o modificare file Word, revisioni native e commenti, usa la skill
+Documents/Word disponibile nell'host e il contratto
+`../revisione-contratti/references/word-handoff.md`. Lucia fornisce analisi e
+modifiche motivate; la skill documentale gestisce il file e la verifica visiva.
+Non presumere che sia installata né replicare un editor Word dentro Lucia.
 Una richiesta supportata ma priva di documenti o fatti essenziali è `partial` o
 `blocked`, non un caso fuori perimetro.
 
@@ -144,9 +157,9 @@ per ricerca d'archivio, Gmail, Drive, WhatsApp o altri lavori di studio.
 
 ## Workflow documentali locali
 
-Revisione contratti, Confronto documenti, Revisione documentale e Redazione da modello
+Revisione contratti, Controllo documento, Confronto documenti, Revisione documentale e Redazione da modello
 usano i file scelti e una nuova cartella di output locale dell’incarico. Non richiedono
-Studio Archive, un servizio MCP, server o API modello separate. Per questi quattro
+Studio Archive, un servizio MCP, server o API modello separate. Per questi
 workflow segui il contratto locale condiviso in
 `../revisione-contratti/references/document-workflow.md`; il suo output locale
 può essere scelto direttamente e non richiede il ciclo di apertura pratica.

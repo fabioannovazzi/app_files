@@ -112,7 +112,7 @@
       "displayName": "Lucia",
       "source": "./plugin_packages/lucia/claude/lucia",
       "description": "Assistente AI per avvocati e studi legali italiani. Rivede contratti, confronta documenti, prepara tabelle con citazioni e modifica copie di modelli forniti. Include ricerca, verifica delle fonti, apertura pratica, comunicazione professionale e sito dello studio. Gli helper documentali sono locali; il modello ospite interpreta i testi. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano all’avvocato.",
-      "version": "0.1.55",
+      "version": "0.1.56",
       "author": {
         "name": "Mparanza",
         "email": "fabio@mparanza.com",

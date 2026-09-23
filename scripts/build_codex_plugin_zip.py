@@ -180,6 +180,14 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "studio-archive": "modules/studio-archive/skills/studio-archive/SKILL.md",
 }
 LUCIA_CHATGPT_ROUTER_TARGETS = {
+    "estrazione-clausole": "skills/estrazione-clausole/SKILL.md",
+    "contenzioso-civile": "skills/contenzioso-civile/SKILL.md",
+    "operazioni-ma": "skills/operazioni-ma/SKILL.md",
+    "lavoro": "skills/lavoro/SKILL.md",
+    "recupero-crediti": "skills/recupero-crediti/SKILL.md",
+    "verifica-citazioni": "skills/verifica-citazioni/SKILL.md",
+    "metodo-studio": "skills/metodo-studio/SKILL.md",
+    "controllo-documento": "skills/controllo-documento/SKILL.md",
     "revisione-contratti": "skills/revisione-contratti/SKILL.md",
     "confronto-documenti": "skills/confronto-documenti/SKILL.md",
     "revisione-documentale": "skills/revisione-documentale/SKILL.md",

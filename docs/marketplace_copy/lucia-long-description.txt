@@ -1,5 +1,9 @@
-Assistente AI per avvocati. Lucia affianca avvocati indipendenti e studi legali italiani nella ricerca, nella verifica delle fonti e nel lavoro sui documenti.
+Assistente AI per avvocati. Lucia affianca lo studio italiano nella ricerca, nella verifica delle fonti e nel lavoro sui documenti.
 
-Rivede contratti per la parte assistita, confronta versioni, esamina raccolte di documenti in tabelle con citazioni e prepara copie modificate di modelli forniti. Gli helper inclusi lavorano localmente senza server o API modello separate; il modello della conversazione interpreta i testi. Prepara anche apertura pratica, comunicazioni professionali e sito dello studio.
+Rivede contratti, confronta versioni e conseguenze delle modifiche, estrae termini in tabelle e controlla nomi, importi, definizioni e rinvii. Per bozze, revisioni native e commenti Word usa la capacità Documents/Word dell’ambiente ospite. Si parte dal modello scelto dallo studio e dai fatti documentati.
 
-Lucia mostra fonti, passaggi, ambiguità e informazioni mancanti. Distingue diritto applicabile, foro, istruzioni dello studio e questioni giuridiche aperte. Le citazioni verificano il testo, non il diritto. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano all’avvocato.
+Le istruzioni dello studio possono essere modificate ed esportate in un editor locale. Domande, risposte e file prodotti restano collegati alla pratica, che può essere ripresa. I percorsi di contenzioso civile, M&A, lavoro e recupero crediti preparano prove, cronologie, questioni e gli elaborati richiesti. I calcoli usano Spreadsheets dell’host con dati e formule espliciti.
+
+I workflow documentali e di proofreading adattano metodi MIT di Mike; l’integrazione con Word, il registro e la verifica delle citazioni italiane sono sviluppati da Lucia. I nuovi helper operano localmente senza server o API modello separate; il modello della conversazione legge i materiali selezionati.
+
+Lucia distingue legge, foro, preferenze dello studio e questioni aperte. Una citazione corrispondente non certifica la conclusione giuridica. Firma, deposito, notifica, invio e giudizio professionale restano all’avvocato. Prepara anche apertura pratica, comunicazioni professionali e sito dello studio.

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; font-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<title>Lucia · Istruzioni dello studio</title>
+<style>
+@font-face{font-family:'Instrument Sans';src:url(data:font/ttf;base64,__FONT_DATA__) format('truetype');font-weight:400 700;font-display:swap}
+:root{font-family:'Instrument Sans',sans-serif;color:#152c49;background:#fff;line-height:1.55;font-synthesis:weight;--blue:#165ca2;--line:#cfdae5}
+*{box-sizing:border-box}body{margin:0}button,input,textarea,select{font:inherit;color:inherit}button,select{cursor:pointer}button{padding:10px 16px;border:1px solid var(--line);background:white;border-radius:3px}button:hover{background:#edf4fa}button.primary{background:var(--blue);border-color:var(--blue);color:white}button.primary:hover{background:#114a84}button:disabled{opacity:.5;cursor:default}:focus-visible{outline:3px solid #3b91d1;outline-offset:3px}a{color:var(--blue);text-underline-offset:4px}
+.masthead{border-bottom:1px solid var(--line);padding:20px max(24px,calc((100vw - 1180px)/2));display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-size:23px;letter-spacing:-.6px;font-weight:700}.language{display:flex;align-items:center;gap:12px;font-size:14px}.language select{padding:7px 10px;border:1px solid var(--line);border-radius:3px;background:white}
+main{max-width:1180px;margin:0 auto;padding:52px 24px 100px}.intro{max-width:820px}h1{font-size:clamp(32px,4vw,48px);line-height:1.12;letter-spacing:-1.3px;margin:12px 0 22px}h2{font-size:25px;letter-spacing:-.4px;margin:0 0 12px;line-height:1.2}p{margin:0 0 16px}.eyebrow{font-size:13px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#456582}.intro p{max-width:70ch;font-size:18px;color:#465c71}.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:26px 0 14px}.state{font-size:14px;color:#476077;min-height:24px}.message{max-width:820px;min-height:26px;margin:12px 0 28px;white-space:pre-wrap}.message.error{color:#a21f32}
+.work{display:grid;grid-template-columns:210px minmax(0,1fr);gap:50px;margin-top:26px}.nav{position:sticky;top:24px;align-self:start;display:grid;gap:15px;font-size:15px}.nav a{text-decoration:none}.nav a:hover{text-decoration:underline}.nav p{font-size:13px;color:#536b80;margin-top:16px;max-width:22ch}section{border-top:1px solid var(--line);padding:28px 0 34px;scroll-margin-top:24px}.section-note{color:#536b80;font-size:15px;max-width:65ch;margin-bottom:22px}.field{display:block;margin:0 0 24px}.field-title{display:block;font-weight:700;margin-bottom:7px}.help{display:block;font-size:14px;color:#536b80;margin:7px 0 0;max-width:70ch}input[type=text],textarea{display:block;width:100%;border:1px solid #aebfce;border-radius:3px;background:#fff;padding:11px 13px}textarea{resize:vertical;min-height:90px;line-height:1.55}.radio-list{display:grid;gap:9px;border:0;padding:0;margin:0 0 24px}.radio-list legend{font-weight:700;margin-bottom:9px}.choice{display:flex;align-items:baseline;gap:10px;padding:5px 0}.choice input{accent-color:var(--blue);flex-shrink:0}.formats{display:flex;gap:24px;flex-wrap:wrap;border:0;padding:0;margin:0 0 20px}.formats legend{font-weight:700;margin-bottom:8px}.footer-note{margin-top:16px;font-size:14px;color:#536b80}.privacy{margin-top:18px;padding-bottom:0}.privacy p{max-width:75ch;color:#465c71}code{font-size:13px;overflow-wrap:anywhere}.identity{color:#536b80;font-size:13px;margin-top:24px;overflow-wrap:anywhere}[hidden]{display:none!important}
+@media(max-width:760px){main{padding:34px 20px 70px}.masthead{padding:16px 20px}.work{display:block}.nav{position:static;display:flex;flex-wrap:wrap;gap:10px 22px;margin-bottom:24px}.nav p{display:none}.intro p{font-size:17px}.toolbar{gap:8px}.toolbar button{flex-grow:1}.language>span{display:none}h1{letter-spacing:-.8px}section{padding-top:23px}}
+</style>
+</head>
+<body>
+<header class="masthead"><div class="brand">Lucia</div><label class="language"><span data-label="language"></span><select id="language" data-native-select="true" aria-label="Lingua / Language"><option value="it">Italiano</option><option value="en">English</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="es">Español</option></select></label></header>
+<main>
+<div class="intro"><div class="eyebrow" data-label="eyebrow"></div><h1 data-label="title"></h1><p data-label="intro"></p></div>
+<div class="toolbar"><button type="button" id="export" class="primary" data-label="export"></button><button type="button" id="import" data-label="import"></button><button type="button" id="duplicate" data-label="duplicate"></button><button type="button" id="reset" data-label="reset" hidden></button><input id="file" type="file" accept=".json,application/json" hidden></div>
+<div id="state" class="state"></div><div id="message" class="message" role="status" aria-live="polite"></div>
+<div class="work"><nav class="nav" aria-label="Sezioni / Sections"><a href="#assignment" data-label="assignment"></a><a href="#method" data-label="method"></a><a href="#deliverables" data-label="deliverables"></a><p data-label="local_note"></p></nav>
+<div>
+<section id="assignment"><h2 data-label="assignment"></h2><p class="section-note" data-label="assignment_note"></p><div id="identity-fields"></div><fieldset id="workflows" class="radio-list"><legend data-label="workflow"></legend></fieldset></section>
+<section id="method"><h2 data-label="method"></h2><p class="section-note" data-label="method_note"></p><div id="method-fields"></div></section>
+<section id="deliverables"><h2 data-label="deliverables"></h2><p class="section-note" data-label="deliverables_note"></p><div id="template-field"></div><fieldset class="formats" id="formats"><legend data-label="outputs"></legend></fieldset><label class="choice"><input type="checkbox" id="tracked"><span data-label="tracked_changes"></span></label><p class="help" data-label="tracked_help"></p><div id="identity" class="identity"></div></section>
+<section class="privacy"><h2 data-label="privacy_title"></h2><p data-label="privacy"></p></section>
+</div></div>
+<noscript>Abilitare JavaScript per modificare ed esportare le istruzioni. / Enable JavaScript to edit and export these instructions.</noscript>
+</main>
+<script type="application/json" id="initial-playbook">__PLAYBOOK_DATA__</script>
+<script type="application/json" id="editor-labels">__LABEL_DATA__</script>
+<script>
+'use strict';
+const labels = JSON.parse(document.getElementById('editor-labels').textContent);
+let baseline = JSON.parse(document.getElementById('initial-playbook').textContent);
+let value = structuredClone(baseline);
+let dirty = false;
+const workflows = ['revisione-contratti','confronto-documenti','revisione-documentale','redazione-da-modello','controllo-documento'];
+const byId = id => document.getElementById(id);
+const t = key => labels[value.language][key];
+const clone = data => structuredClone(data);
+const message = (text, error=false) => { byId('message').textContent = text; byId('message').classList.toggle('error',error); };
+function changed() { dirty = JSON.stringify(value) !== JSON.stringify(baseline); updateState(); message(''); }
+function updateState() {
+  byId('state').textContent = t(dirty ? 'unsaved' : 'saved') + ' · ' + t('version') + ' ' + value.version;
+  byId('reset').hidden = !dirty;
+  byId('identity').textContent = t('identifier') + ': ' + value.id + (value.derived_from ? ' · ' + t('derived') + ': ' + value.derived_from.id + ' v' + value.derived_from.version : '');
+  byId('tracked').disabled = !value.outputs.includes('docx');
+  byId('tracked').checked = value.tracked_changes;
+}
+function field(parent,key,rows=1,list=false) {
+  const label = document.createElement('label'); label.className='field';
+  const title = document.createElement('span'); title.className='field-title'; title.textContent=t(key); label.append(title);
+  const input = document.createElement(rows===1?'input':'textarea'); input.id=key;
+  if(rows===1) input.type='text'; else input.rows=rows;
+  input.value=list?value[key].join('\n'):value[key];
+  input.addEventListener('input',()=>{value[key]=list?input.value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean):input.value;changed();});
+  label.append(input);
+  if(t(key+'_help')) { const help=document.createElement('span'); help.className='help'; help.textContent=t(key+'_help');help.id=key+'-help'; input.setAttribute('aria-describedby',help.id);label.append(help); }
+  byId(parent).append(label);
+}
+function draw() {
+  document.documentElement.lang=value.language;document.title='Lucia · '+t('title');
+  document.querySelectorAll('[data-label]').forEach(node=>node.textContent=t(node.dataset.label));
+  byId('language').value=value.language;
+  for(const id of ['identity-fields','method-fields','template-field']) byId(id).replaceChildren();
+  field('identity-fields','name');field('identity-fields','purpose',3);
+  field('method-fields','columns',5,true);field('method-fields','questions',4,true);field('method-fields','firm_positions',7);field('method-fields','source_requirements',4,true);field('template-field','template_name');
+  const choices=byId('workflows'); choices.querySelectorAll('label').forEach(node=>node.remove());
+  workflows.forEach(workflow=>{const label=document.createElement('label');label.className='choice';const input=document.createElement('input');input.type='radio';input.name='workflow';input.value=workflow;input.checked=value.workflow===workflow;input.addEventListener('change',()=>{value.workflow=workflow;changed();});const text=document.createElement('span');text.textContent=t('workflows')[workflow];label.append(input,text);choices.append(label);});
+  const formats=byId('formats');formats.querySelectorAll('label').forEach(node=>node.remove());
+  ['html','xlsx','docx'].forEach(format=>{const label=document.createElement('label');label.className='choice';const input=document.createElement('input');input.type='checkbox';input.value=format;input.checked=value.outputs.includes(format);input.addEventListener('change',()=>{value.outputs=['html','xlsx','docx'].filter(f=>formats.querySelector('input[value="'+f+'"]').checked);if(!value.outputs.includes('docx'))value.tracked_changes=false;changed();});const text=document.createElement('span');text.textContent=t('formats')[format];label.append(input,text);formats.append(label);});
+  updateState();
+}
+function validate(data) {
+  const required=['schema_version','id','version','derived_from','name','workflow','language','purpose','columns','questions','firm_positions','source_requirements','template_name','outputs','tracked_changes'];
+  const str=(v,max,needed=false)=>typeof v==='string'&&v.length<=max&&(!needed||v.trim().length>0);
+  const strings=(v,maxItems,maxLength,needed=false)=>Array.isArray(v)&&v.length<=maxItems&&(!needed||v.length>0)&&v.every(s=>str(s,maxLength,true));
+  const id=v=>typeof v==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(v);
+  const version=v=>Number.isSafeInteger(v)&&v>=1;
+  if(!data||typeof data!=='object'||Array.isArray(data)||Object.keys(data).length!==required.length||!required.every(k=>Object.hasOwn(data,k)))throw new Error(t('invalid'));
+  const parent=data.derived_from;
+  if(data.schema_version!==1||!id(data.id)||!version(data.version)||!(parent===null||(typeof parent==='object'&&!Array.isArray(parent)&&Object.keys(parent).length===2&&id(parent.id)&&version(parent.version)))||!str(data.name,300,true)||!str(data.purpose,5000,true)||!workflows.includes(data.workflow)||!Object.hasOwn(labels,data.language)||!strings(data.columns,100,300,true)||new Set(data.columns.map(s=>s.trim().toLocaleLowerCase())).size!==data.columns.length||!strings(data.questions,100,2000)||!strings(data.source_requirements,100,2000)||!str(data.firm_positions,50000)||!str(data.template_name,500)||!Array.isArray(data.outputs)||!data.outputs.length||new Set(data.outputs).size!==data.outputs.length||!data.outputs.every(s=>['html','xlsx','docx'].includes(s))||typeof data.tracked_changes!=='boolean'||(data.tracked_changes&&!data.outputs.includes('docx')))throw new Error(t('invalid'));
+  return data;
+}
+byId('language').addEventListener('change',event=>{value.language=event.target.value;changed();draw();});
+byId('tracked').addEventListener('change',event=>{value.tracked_changes=event.target.checked;changed();});
+byId('reset').addEventListener('click',()=>{value=clone(baseline);dirty=false;draw();message(t('reset_done'));});
+byId('duplicate').addEventListener('click',()=>{value.derived_from={id:value.id,version:value.version};value.id='studio-'+crypto.randomUUID();value.version=1;value.name=value.name+' — '+t('copy');dirty=true;draw();message(t('copy_done'));byId('name').focus();});
+byId('export').addEventListener('click',()=>{
+  try{
+    const next=clone(validate(value));
+    if(dirty&&next.id===baseline.id)next.version=baseline.version+1;
+    validate(next);
+    if(new TextEncoder().encode(JSON.stringify(next)).byteLength>1000000)throw new Error(t('too_large'));
+    const blob=new Blob([JSON.stringify(next,null,2)+'\n'],{type:'application/json'});
+    const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=next.id+'-v'+next.version+'.json';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    value=next;baseline=clone(next);dirty=false;draw();message(t('export_done'));
+  }catch(error){message(error.message,true);}
+});
+byId('import').addEventListener('click',()=>{if(dirty){message(t('dirty_import'),true);return;}byId('file').click();});
+byId('file').addEventListener('change',async event=>{
+  const file=event.target.files[0];event.target.value='';if(!file)return;
+  try{if(file.size>1000000)throw new Error(t('too_large'));const imported=validate(JSON.parse(await file.text()));value=clone(imported);baseline=clone(imported);dirty=false;draw();message(t('import_done'));}catch(error){message(t('import_error')+' '+error.message,true);}
+});
+window.addEventListener('beforeunload',event=>{if(dirty){event.preventDefault();event.returnValue='';}});
+draw();
+</script>
+</body>
+</html>

@@ -1,0 +1,267 @@
+{
+  "it": {
+    "title": "Controllo di errori e incoerenze",
+    "findings": "Rilievi",
+    "coverage": "Passaggi di revisione e mappe",
+    "context": "Contesto",
+    "limits": "Limiti",
+    "privacy_title": "Quali dati arrivano al modello",
+    "complete": "Passaggi dichiarati completi; risultato da rivedere",
+    "partial": "Revisione parziale: restano controlli aperti",
+    "meaning": "Il codice controlla le citazioni e i campi dichiarati. Non dimostra che il modello abbia individuato ogni difetto o verificato il diritto.",
+    "privacy": "Testo, metadati, mappe e rilievi letti nella conversazione arrivano al modello ospite. Il rapporto e le copie restano nella cartella locale; questo script non usa rete.",
+    "columns": [
+      "ID",
+      "Priorità",
+      "Controllo",
+      "Tipo",
+      "Fonte e citazione",
+      "Problema e conseguenza",
+      "Correzione proposta"
+    ],
+    "categories": {
+      "definitions": "Definizioni",
+      "references": "Rinvii",
+      "consistency": "Coerenza interna",
+      "entities": "Parti e soggetti",
+      "numbers": "Numeri e date",
+      "language": "Lingua",
+      "numbering": "Numerazione",
+      "formatting": "Formattazione e metadati"
+    },
+    "severities": {
+      "critical": "Critica",
+      "high": "Alta",
+      "medium": "Media",
+      "low": "Bassa",
+      "info": "Informazione"
+    },
+    "kinds": {
+      "error": "Errore",
+      "preference": "Preferenza",
+      "uncertain": "Da verificare"
+    },
+    "states": {
+      "complete": "Completo",
+      "partial": "Parziale",
+      "not-reviewed": "Non esaminato"
+    },
+    "maps": {
+      "entities": "Mappa soggetti",
+      "sections": "Mappa sezioni",
+      "terms": "Mappa termini"
+    }
+  },
+  "en": {
+    "title": "Document errors and inconsistencies",
+    "findings": "Findings",
+    "coverage": "Review passes and maps",
+    "context": "Context",
+    "limits": "Limitations",
+    "privacy_title": "What data reaches the model",
+    "complete": "Passes declared complete; review required",
+    "partial": "Partial review: checks remain open",
+    "meaning": "Code checks quotations and declared fields. It does not prove that the model found every defect or verified the law.",
+    "privacy": "Text, metadata, maps and findings read in the conversation reach the host model. Reports and copies remain in the local folder; this script uses no network.",
+    "columns": [
+      "ID",
+      "Priority",
+      "Check",
+      "Kind",
+      "Source and quotation",
+      "Issue and consequence",
+      "Proposed correction"
+    ],
+    "categories": {
+      "definitions": "Definitions",
+      "references": "Cross-references",
+      "consistency": "Internal consistency",
+      "entities": "Parties and entities",
+      "numbers": "Numbers and dates",
+      "language": "Language",
+      "numbering": "Numbering",
+      "formatting": "Formatting and metadata"
+    },
+    "severities": {
+      "critical": "Critical",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low",
+      "info": "Information"
+    },
+    "kinds": {
+      "error": "Error",
+      "preference": "Preference",
+      "uncertain": "Uncertain"
+    },
+    "states": {
+      "complete": "Complete",
+      "partial": "Partial",
+      "not-reviewed": "Not reviewed"
+    },
+    "maps": {
+      "entities": "Entity map",
+      "sections": "Section map",
+      "terms": "Term map"
+    }
+  },
+  "fr": {
+    "title": "Erreurs et incohérences du document",
+    "findings": "Constats",
+    "coverage": "Passes de revue et cartes",
+    "context": "Contexte",
+    "limits": "Limites",
+    "privacy_title": "Quelles données parviennent au modèle",
+    "complete": "Passes déclarées complètes ; résultat à revoir",
+    "partial": "Revue partielle : contrôles encore ouverts",
+    "meaning": "Le code contrôle les citations et les champs déclarés. Il ne prouve pas que le modèle a repéré chaque défaut ou vérifié le droit.",
+    "privacy": "Le texte, les métadonnées, les cartes et les constats lus dans la conversation parviennent au modèle hôte. Les rapports et copies restent dans le dossier local ; ce script ne contacte aucun réseau.",
+    "columns": [
+      "ID",
+      "Priorité",
+      "Contrôle",
+      "Type",
+      "Source et citation",
+      "Problème et conséquence",
+      "Correction proposée"
+    ],
+    "categories": {
+      "definitions": "Définitions",
+      "references": "Renvois",
+      "consistency": "Cohérence interne",
+      "entities": "Parties et entités",
+      "numbers": "Chiffres et dates",
+      "language": "Langue",
+      "numbering": "Numérotation",
+      "formatting": "Mise en forme et métadonnées"
+    },
+    "severities": {
+      "critical": "Critique",
+      "high": "Élevée",
+      "medium": "Moyenne",
+      "low": "Faible",
+      "info": "Information"
+    },
+    "kinds": {
+      "error": "Erreur",
+      "preference": "Préférence",
+      "uncertain": "À vérifier"
+    },
+    "states": {
+      "complete": "Complet",
+      "partial": "Partiel",
+      "not-reviewed": "Non examiné"
+    },
+    "maps": {
+      "entities": "Carte des entités",
+      "sections": "Carte des sections",
+      "terms": "Carte des termes"
+    }
+  },
+  "de": {
+    "title": "Fehler und Widersprüche im Dokument",
+    "findings": "Feststellungen",
+    "coverage": "Prüfschritte und Verzeichnisse",
+    "context": "Kontext",
+    "limits": "Grenzen",
+    "privacy_title": "Welche Daten das Modell erreichen",
+    "complete": "Prüfschritte als vollständig angegeben; Durchsicht erforderlich",
+    "partial": "Teilprüfung: Prüfungen noch offen",
+    "meaning": "Der Code prüft Zitate und angegebene Felder. Er beweist nicht, dass das Modell jeden Fehler erkannt oder die Rechtslage geprüft hat.",
+    "privacy": "Im Gespräch gelesene Texte, Metadaten, Verzeichnisse und Feststellungen erreichen das Host-Modell. Berichte und Kopien bleiben im lokalen Ordner; dieses Skript nutzt kein Netzwerk.",
+    "columns": [
+      "ID",
+      "Priorität",
+      "Prüfung",
+      "Art",
+      "Quelle und Zitat",
+      "Problem und Auswirkung",
+      "Korrekturvorschlag"
+    ],
+    "categories": {
+      "definitions": "Definitionen",
+      "references": "Querverweise",
+      "consistency": "Innere Konsistenz",
+      "entities": "Parteien und Rechtsträger",
+      "numbers": "Zahlen und Daten",
+      "language": "Sprache",
+      "numbering": "Nummerierung",
+      "formatting": "Formatierung und Metadaten"
+    },
+    "severities": {
+      "critical": "Kritisch",
+      "high": "Hoch",
+      "medium": "Mittel",
+      "low": "Niedrig",
+      "info": "Information"
+    },
+    "kinds": {
+      "error": "Fehler",
+      "preference": "Präferenz",
+      "uncertain": "Ungeklärt"
+    },
+    "states": {
+      "complete": "Vollständig",
+      "partial": "Teilweise",
+      "not-reviewed": "Nicht geprüft"
+    },
+    "maps": {
+      "entities": "Parteienverzeichnis",
+      "sections": "Abschnittsverzeichnis",
+      "terms": "Begriffsverzeichnis"
+    }
+  },
+  "es": {
+    "title": "Errores e incoherencias del documento",
+    "findings": "Hallazgos",
+    "coverage": "Pasadas de revisión y mapas",
+    "context": "Contexto",
+    "limits": "Limitaciones",
+    "privacy_title": "Qué datos llegan al modelo",
+    "complete": "Pasadas declaradas completas; requiere revisión",
+    "partial": "Revisión parcial: quedan controles abiertos",
+    "meaning": "El código comprueba las citas y los campos declarados. No demuestra que el modelo haya encontrado todos los defectos o verificado el derecho.",
+    "privacy": "El texto, los metadatos, los mapas y los hallazgos leídos en la conversación llegan al modelo anfitrión. Los informes y copias quedan en la carpeta local; este script no usa la red.",
+    "columns": [
+      "ID",
+      "Prioridad",
+      "Control",
+      "Tipo",
+      "Fuente y cita",
+      "Problema y consecuencia",
+      "Corrección propuesta"
+    ],
+    "categories": {
+      "definitions": "Definiciones",
+      "references": "Referencias cruzadas",
+      "consistency": "Coherencia interna",
+      "entities": "Partes y entidades",
+      "numbers": "Cifras y fechas",
+      "language": "Idioma",
+      "numbering": "Numeración",
+      "formatting": "Formato y metadatos"
+    },
+    "severities": {
+      "critical": "Crítica",
+      "high": "Alta",
+      "medium": "Media",
+      "low": "Baja",
+      "info": "Información"
+    },
+    "kinds": {
+      "error": "Error",
+      "preference": "Preferencia",
+      "uncertain": "Por verificar"
+    },
+    "states": {
+      "complete": "Completo",
+      "partial": "Parcial",
+      "not-reviewed": "No examinado"
+    },
+    "maps": {
+      "entities": "Mapa de entidades",
+      "sections": "Mapa de secciones",
+      "terms": "Mapa de términos"
+    }
+  }
+}

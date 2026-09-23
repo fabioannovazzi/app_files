@@ -11,9 +11,22 @@ They are available for ordinary work, outside the prepared-course inventory belo
 | Skill | Scope |
 | --- | --- |
 | `revisione-contratti` | Review a selected contract for the represented party with quoted clauses and proposed changes. |
+| `controllo-documento` | Systematically inspect a legal document and its hidden structure for errors, inconsistencies and proposed corrections. |
 | `confronto-documenti` | Compare selected versions or agreements with source-specific terms and explained differences. |
 | `revisione-documentale` | Examine selected documents against common questions and deliver an evidence-linked matrix. |
+| `estrazione-clausole` | Extract the actual terms of one contract into a source-linked table, retaining conditions and missing information. |
 | `redazione-da-modello` | Edit a copy of a supplied template using confirmed facts and a change register. |
+| `metodo-studio` | Edit, duplicate, export and apply reusable firm instructions through a local file, preserving the selected version in each run. |
+| `verifica-citazioni` | Check document claims against acquired legal authorities, separating identity, temporal version, semantic support and unavailable text. |
+| `contenzioso-civile` | Prepare a civil chronology, evidence matrix, verified procedural-date inputs and a reviewable pleading draft. |
+| `operazioni-ma` | Prepare NDA reviews, due-diligence matrices, SPA issues and disclosure cross-checks for the selected side of an operation. |
+| `lavoro` | Review employment terms, organize dismissal evidence, extract pay records and prepare explicitly scoped calculations. |
+| `recupero-crediti` | Reconcile debt evidence and payments, prepare source-backed interest calculations and draft the requested recovery-stage document. |
+
+DOCX editing, native revisions, comments and rendering use the host's available
+Documents/Word skill. Lucia supplies the legal/evidence contract and checks the
+result; see `../revisione-contratti/references/word-handoff.md` relative to the
+Lucia skill directory.
 
 ## Existing workflows and internal support
 
