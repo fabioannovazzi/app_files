@@ -11,6 +11,9 @@ function browser({ storage = new Map(), status = 200, attempt = 'new-attempt', m
   const sent = [];
   const timers = new Map();
   let nextTimer = 0;
+  let interval;
+  let now = Date.now();
+  class Clock extends Date { static now() { return now; } }
   let peer;
   const element = id => {
     if (!elements.has(id)) elements.set(id, {
@@ -45,7 +48,7 @@ function browser({ storage = new Map(), status = 200, attempt = 'new-attempt', m
       setItem: (key, value) => storage.set(key, value),
       removeItem: key => storage.delete(key),
     },
-    clearInterval() {}, setInterval() {}, addEventListener() {},
+    clearInterval() {}, setInterval(fn) { interval = fn; }, addEventListener() {},
     clearTimeout: id => timers.delete(id),
     setTimeout: callback => { timers.set(++nextTimer, callback); return nextTimer; },
   };
@@ -57,7 +60,7 @@ function browser({ storage = new Map(), status = 200, attempt = 'new-attempt', m
     navigator: { mediaDevices: { getUserMedia: async () => ({
       getAudioTracks: () => [track], getTracks: () => [track],
     }) } },
-    RTCPeerConnection: Peer, console, AbortController,
+    RTCPeerConnection: Peer, console, AbortController, Date: Clock,
     fetch: async (url, options) => {
       requests.push({ url, payload: JSON.parse(options.body) });
       return { ok: status === 200, status, text: async () => 'active attempt',
@@ -66,6 +69,7 @@ function browser({ storage = new Map(), status = 200, attempt = 'new-attempt', m
   });
   return {
     requests, element, sent,
+    tick(ms = 4000) { now += ms; interval?.(); },
     open() { peer.channel.listeners.open(); },
     receive(event) { peer.channel.listeners.message({ data: JSON.stringify(event) }); },
     settle() { for (const [id, callback] of [...timers]) { timers.delete(id); callback(); } },
@@ -166,4 +170,51 @@ test('bounded improvement follow-up also preserves conversation context', async 
   assert.equal(responses.length, 2);
   assert.equal(Object.hasOwn(responses[1].response, 'input'), false);
   assert.equal(responses[1].response.metadata.trigger, 'plugin_improvement_follow_up_or_close');
+});
+
+
+test('empty microphone transcription gives visible help and one contextual recovery, then resumes on clear speech', async () => {
+  const page = browser();
+  await page.start();
+  page.open();
+  responseDone(page);
+  answer(page, '');
+  assert.match(page.element('statusDetail').textContent, /Controlla il microfono/);
+  page.tick();
+  const recovery = page.sent.filter(e => e.type === 'response.create').at(-1);
+  assert.equal(recovery.response.metadata.trigger, 'audio_transcription_recovery');
+  assert.equal(Object.hasOwn(recovery.response, 'input'), false);
+  responseDone(page);
+  answer(page, '');
+  page.tick(80000);
+  assert.equal(page.sent.filter(e => e.type === 'response.create').length, 2);
+  answer(page, 'Non ho ancora usato Vera.');
+  page.settle();
+  assert.equal(page.sent.filter(e => e.type === 'response.create').length, 3);
+  assert.equal(page.sent.at(-1).response.metadata.trigger, 'interviewee_turn_completed');
+});
+
+test('empty input during the opening waits until the interviewer finishes instead of overlapping responses', async () => {
+  const page = browser();
+  await page.start();
+  page.open();
+  answer(page, '');
+  page.tick();
+  assert.equal(page.sent.filter(e => e.type === 'response.create').length, 1);
+  responseDone(page);
+  page.tick();
+  assert.equal(page.sent.filter(e => e.type === 'response.create').length, 2);
+});
+
+test('failed transcription releases the pending input state and offers a retry', async () => {
+  const page = browser();
+  await page.start();
+  page.open();
+  responseDone(page);
+  page.receive({ type: 'input_audio_buffer.speech_started' });
+  page.receive({ type: 'input_audio_buffer.speech_stopped' });
+  page.receive({ type: 'conversation.item.input_audio_transcription.failed', error: { code: 'transcription_error' } });
+  page.tick();
+  assert.equal(page.sent.at(-1).response.metadata.trigger, 'audio_transcription_recovery');
+  assert.match(page.element('statusDetail').textContent, /Controlla il microfono/);
 });
