@@ -3080,9 +3080,23 @@ def test_departure_finaliser_cannot_overwrite_a_new_attempt(
     tmp_path: Path, monkeypatch
 ) -> None:
     token, record = _prepare_test_interview(tmp_path, monkeypatch)
-    _mark_started_attempt(tmp_path, record, attempt_id="replacement")
-    result = api._save_departed_interview(token, "departed-old-attempt")
-    assert result is None
+    attempt_id = _mark_started_attempt(
+        tmp_path, record, attempt_id="departed-old-attempt"
+    )
+    finish = api._finish_departed_interview
+
+    async def replace_before_background_save(token: str, attempt_id: str) -> None:
+        _mark_started_attempt(tmp_path, record, attempt_id="replacement")
+        await finish(token, attempt_id)
+
+    monkeypatch.setattr(
+        api, "_finish_departed_interview", replace_before_background_save
+    )
+    response = _client().post(
+        f"/case-notes/api/interviews/{token}/event",
+        json={"attempt_id": attempt_id, "event_type": "pagehide", "payload": {}},
+    )
+    assert response.status_code == 200
     assert not (
         tmp_path / "sessions" / record["token_hash"] / "completed.json"
     ).exists()
