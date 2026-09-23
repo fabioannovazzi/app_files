@@ -1,0 +1,502 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "concordato-plan-review",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "review_plan_sources_then_build_professional_workpaper"
+  },
+  "sources": [
+    {
+      "path": "modules/concordato-plan-review/assets/concordato-plan-review-widget.html",
+      "sha256": "2e7c3dbcc3c4b004226bd147057b023e92587860d4b09c4e9bf397bbb0b07fe9"
+    },
+    {
+      "path": "modules/concordato-plan-review/assets/icon.svg",
+      "sha256": "0fc9391144bc35cfde2c9258a9901c32b0b1474a4c60968b3a7a02315f08b510"
+    },
+    {
+      "path": "modules/concordato-plan-review/assets/review-workbench-adapter.json",
+      "sha256": "4e6bac64f9315447dce09db8d0c103988550e45a18c0f3eea6fcd45c4d7268f6"
+    },
+    {
+      "path": "modules/concordato-plan-review/references/review-methodology.md",
+      "sha256": "156c354369dd2ccc47832ad41eeabc1f9db464e8362355be2aa05b9495bd7e26"
+    },
+    {
+      "path": "modules/concordato-plan-review/references/workflow-reference.md",
+      "sha256": "ac329d21d1413cfd099c3250d8bf206da940a25d46a4913c0637636b26ac63bb"
+    },
+    {
+      "path": "modules/concordato-plan-review/requirements.txt",
+      "sha256": "26d333237060f895fb50456eee0e1b91cd05d26d680c526ce1fcc9d5ff801737"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/apply_review_edits.py",
+      "sha256": "9f5345c655b984ffef8dcbf4e957343faa9f22a2b06e43ef39f9b5e70a88dd88"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/check_dependencies.py",
+      "sha256": "43b2b7348fc5c892c2ef2984d83a0f960037c421de1a3df3da764a94563f61ba"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/concordato_labels.py",
+      "sha256": "014b2f80b7393f2bff1e66ce42ca078aaf744a8a4e3ceda155f7c02c9aae44cd"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/concordato_plan_core.py",
+      "sha256": "03d3638330d88dcbc963b4eb0a97994892a5600d6ce66e49f43892b6eb5f574b"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/concordato_semantic.py",
+      "sha256": "270c269c8af48bc663888741787163fb356304305c4524efbdd0535068ff7500"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/finalize_output_closure.py",
+      "sha256": "39390d5985ecab770767e9e4f217c8197d328debe60637308ac2b2d8f240a3d5"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
+      "sha256": "af471aa7a524bd47c5c7a1ba3766bdcfbf98ea814a64df527d9b9ed9981f2fd7"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/output_closure.py",
+      "sha256": "25857c7c622e3c6b766dc22344fd2f6b5c77d97263e7068636240b183b04d92a"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/replay_assurance.py",
+      "sha256": "94f107f959fa31225a5b3c071d22d00ce44cfe7ab55d77d648c07d833a35a110"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/review_case_model.py",
+      "sha256": "dd65b8da66bdf17df3b3bdfec51682a683709a4be86656500d4412b5a1bc45c5"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/review_session.py",
+      "sha256": "ae81be41ddae374283852e0e763e8f531bc1fd4eb56cbafc44bb897d01dc0378"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/review_source_roles.py",
+      "sha256": "e2d25e8d0f4f0137dbd7e206952e78b20c0819f49ca79269645814d50b6ee1b6"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/run_concordato_review.py",
+      "sha256": "ae50995543e1e6687d1a46c46eb05af70721945bfd104477f0313d087a86d618"
+    },
+    {
+      "path": "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
+      "sha256": "0d6d38e3e49f58dd71a2562fce31cdb46b34b35de075ba88b204310d54aa4332"
+    },
+    {
+      "path": "modules/concordato-plan-review/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/concordato-plan-review/SKILL.md",
+      "sha256": "2f686784058bffd08e96a34ab6fd86e9452b5a013ec55e7ce2c05463089f28e6"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/demo-it.xlsx",
+      "sha256": "788665163a1eb4342b29a6f2d3a87eba29f064f7bb52d5b21e917582c1a3a5e5",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/practice-it.xlsx",
+      "sha256": "cec29c1f372b6bca4329ce913e4e889b4a3227b71cc8da7ed19dd2a0ed257fa2",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/demo-en.xlsx",
+      "sha256": "fbc943a2ec9db47e46acff23363d8a652d45378ad7dcdd52815c3f479f461bdb",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/practice-en.xlsx",
+      "sha256": "1046e1ea6f6a7922f801e894f0eb3318eda1b7f65b424e1a848382bc9b0d822c",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/demo-fr.xlsx",
+      "sha256": "cbb5f2098a3c4dab951c1ad85e77aed02a4565432ce5cb3087b9219415fd2a83",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/practice-fr.xlsx",
+      "sha256": "f5bf2f1da70170f04bcace802a7540182a30d92757d080491112b4e4d2c6a1a4",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/demo-de.xlsx",
+      "sha256": "6d07209ba18e51ff5c29978b41cbe02c045b2420569c9751b77b4e57bda0e6d0",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/practice-de.xlsx",
+      "sha256": "0bc2189758b5f3197b39375c6b0aad23721f23ac0248928da43d5a30d4896bdd",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/demo-es.xlsx",
+      "sha256": "1ad044ede7620ad48751f3118c083488374252a10437e5b3be3816c81e4f229a",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/practice-es.xlsx",
+      "sha256": "7430455e4fc18e661f428eff07443adb3179b5aa0d7317f186164df9443133bf",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/management-demo-it.pdf",
+      "sha256": "56f9c331cf4f0e30d4775a25406434f817b436408f77c3a865ea11a183b34c44",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/management-practice-it.pdf",
+      "sha256": "d6b07444b784f7434e8358fad2690a3de0c8b5932d6948b44b090aea34c2a910",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/management-demo-en.pdf",
+      "sha256": "d0ad0862d86c858b77fea42faeeabbbd37b0433c787de166bbfd9ecf7b909b12",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/management-practice-en.pdf",
+      "sha256": "b864eb912dc88715f418c880acfe1942141402332af4669b371f34b0aae8aab7",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/management-demo-fr.pdf",
+      "sha256": "98aaf4368684df74d65081dd5c9657126e5e43986295f40adbd4bbd81a58d772",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/management-practice-fr.pdf",
+      "sha256": "1d95a9eb0fffa59d1d2328a5f113a52345dfced301382923a5216932c7dfad17",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/management-demo-de.pdf",
+      "sha256": "350514644b4eed507494cf511660c8d6fc9df0844476226db690f53d840c7b3e",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/management-practice-de.pdf",
+      "sha256": "f5b6fea0960d6c98bc7bf6491dc332b2a0233df6dd8ecad04d913cef2429368a",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/management-demo-es.pdf",
+      "sha256": "7aab2dd46beb0cb2155e7e3af8077c77b0a8abf2338e9e18d3e87e86d9f52513",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/management-practice-es.pdf",
+      "sha256": "6ddec68fa67b6cba5de0391996e2e6b8e7ece6d935e21cc3967b08fd5919d58d",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Rivedere un piano di concordato con Vera",
+      "goal": "Imparare ad avviare la revisione di una proposta e di un piano, fornire i documenti e usare il dossier prodotto per il lavoro professionale.",
+      "scenario": "Officina Riva ha preparato una prima bozza per proseguire l’attività e pagare i creditori. Il professionista deve capire che cosa contiene, quali ipotesi richiedono verifica e quali documenti mancano.",
+      "scope": "Una prima revisione completa nel suo percorso: incarico, fonti, quadro della procedura, creditori, proposta, piano, questioni aperte e relazione. Il caso piccolo serve a imparare il workflow, non a esaurire la disciplina del concordato.",
+      "inputs": "Apri demo-it.xlsx e management-demo-it.pdf. Excel presenta incarico, creditori e piano annuale; le due pagine della direzione aggiungono posizioni dichiarate, stima di liquidazione e calendario trimestrale. Sono fonti fittizie da esaminare, non conclusioni approvate.",
+      "request": "Vera, rivedi la proposta e il piano di concordato preventivo di Officina Riva in questi due file. Prepara un dossier con trattamento dei creditori, fonti e impieghi, liquidità, documenti mancanti e questioni da risolvere.",
+      "steps": [
+        "Nel thread di lavoro Vera legge i file e riassume incarico, data, fase e documenti disponibili. Nella chat vocale spiega il percorso e ti chiede di confermare o correggere il perimetro.",
+        "Vera ricostruisce il caso dalle fonti, verifica il quadro pertinente e prepara le valutazioni da rivedere. Passa in rassegna proposta, piano, creditori, confronto con liquidazione, cassa e lacune. Tu rivedi le interpretazioni e le ipotesi prima della conferma richiesta dal workflow.",
+        "Il workflow corrente produce i prospetti e i documenti reali. Apri il riepilogo e poi Excel: individua cosa ricevono i creditori, come è distribuita la cassa e quali documenti servono. Segui una questione fino alla pagina o cella di origine e scegli la prossima azione. Nella chat vocale Vera spiega i risultati effettivi e risponde alle domande senza leggere tutto il rapporto."
+      ],
+      "deliverables": [
+        "Relazione Word e riepilogo leggibile della revisione, con limiti e questioni aperte.",
+        "Foglio Excel e prospetti di creditori, trattamento, fonti e impieghi, liquidità e controlli."
+      ],
+      "review": "Controlla fonti, date, perimetro dei creditori, ipotesi e richieste documentali. Un importo che torna non dimostra fattibilità o correttezza giuridica. La bozza fornita non include l’attestazione né prova la disponibilità della finanza.",
+      "checkpoints": [
+        "Prima di procedere, spiega quale lavoro stai chiedendo a Vera e quali file stai fornendo.",
+        "Nel dossier, trova la sintesi, una questione da rivedere e il documento o chiarimento necessario per affrontarla."
+      ],
+      "practice": "Nella stessa pratica, avvia una nuova revisione con practice-it.xlsx e management-practice-it.pdf: la direzione ha ridotto la nuova finanza ipotizzata. Conserva intatti il primo dossier e le sue fonti. Chiedi a Vera di riesaminare il caso e spiegare quali risultati e azioni cambiano; non basta sostituire un numero nel rapporto precedente.",
+      "success": "Sai avviare il workflow, rivedere il perimetro e le interpretazioni, orientarti nei risultati e ripetere il lavoro con una versione aggiornata.",
+      "repeat": "Fornisci a Vera proposta, piano, elenco creditori, attestazione e supporti disponibili, indicando fase, data e obiettivo della revisione. Conferma il perimetro, rivedi le fonti e usa il dossier nel normale percorso professionale."
+    },
+    "en": {
+      "title": "Review a composition plan with Vera",
+      "goal": "Learn to start a review of a proposal and plan, provide the documents and use the resulting file in professional work.",
+      "scenario": "Officina Riva has drafted a proposal to continue operating and pay creditors. The professional needs to understand its contents, assumptions requiring review and missing documents.",
+      "scope": "A complete first-use journey: assignment, sources, procedural context, creditors, proposal, plan, open questions and report. The small case teaches the workflow; it is not a complete course on Italian insolvency law.",
+      "inputs": "Open demo-en.xlsx and management-demo-en.pdf. Excel contains the assignment, creditors and annual plan; the two management pages add declared positions, the liquidation estimate and quarterly cash timing. These are fictional sources to examine, not approved conclusions.",
+      "request": "Vera, review Officina Riva’s concordato preventivo proposal and plan in these two files. Prepare a review file covering creditor treatment, sources and uses, liquidity, missing documents and questions to resolve.",
+      "steps": [
+        "In the working thread Vera reads the files and summarizes assignment, date, stage and available documents. In the voice chat it explains the process and asks you to confirm or correct the scope.",
+        "Vera reconstructs the case from sources, checks the relevant framework and prepares interpretations for review. It considers the proposal, plan, creditors, liquidation comparison, cash and evidence gaps. You review interpretations and assumptions before the confirmation required by the workflow.",
+        "The current workflow produces actual schedules and review documents. Open the summary, then Excel: find what creditors receive, how cash is timed and which documents are needed. Trace one issue to its source page or cell and choose the next action. In the voice chat Vera explains actual results and answers questions without reading the entire report aloud."
+      ],
+      "deliverables": [
+        "A Word report and readable review summary with limitations and open questions.",
+        "An Excel workpaper and schedules for creditors, treatment, sources and uses, liquidity and checks."
+      ],
+      "review": "Check sources, dates, creditor scope, assumptions and document requests. Arithmetic agreement does not prove feasibility or legal correctness. The supplied draft lacks the attestation and proof that financing is available.",
+      "checkpoints": [
+        "Before proceeding, explain the work you are asking Vera to do and the files you are supplying.",
+        "Find the summary, one issue to review and the document or clarification needed to address it."
+      ],
+      "practice": "In the same case, start a new review with practice-en.xlsx and management-practice-en.pdf: management has reduced assumed new financing. Preserve the first dossier and its sources intact. Ask Vera to reassess the case and explain which results and actions change; do not merely replace one number in the earlier report.",
+      "success": "You can start the workflow, review scope and interpretations, navigate the deliverables and repeat the work with an updated version.",
+      "repeat": "Give Vera the available proposal, plan, creditor list, attestation and supporting documents, stating the procedural stage, date and review objective. Confirm scope, review sources and use the file in the normal professional process."
+    },
+    "fr": {
+      "title": "Revoir un plan de concordato avec Vera",
+      "goal": "Apprendre à lancer la revue d’une proposition et d’un plan, fournir les documents et utiliser le dossier produit dans le travail professionnel.",
+      "scenario": "Officina Riva a rédigé un premier projet pour poursuivre l’activité et payer les créanciers. Le professionnel doit comprendre son contenu, les hypothèses à vérifier et les pièces manquantes.",
+      "scope": "Un premier parcours complet : mission, sources, cadre de procédure, créanciers, proposition, plan, questions ouvertes et rapport. Le petit cas enseigne le workflow, sans prétendre couvrir tout le droit italien des procédures collectives.",
+      "inputs": "Ouvrez demo-fr.xlsx et management-demo-fr.pdf. Excel présente mission, créanciers et plan annuel ; les deux pages de la direction ajoutent positions déclarées, estimation de liquidation et calendrier trimestriel. Ce sont des sources fictives à examiner, pas des conclusions approuvées.",
+      "request": "Vera, examine la proposition et le plan de concordato preventivo d’Officina Riva dans ces deux fichiers. Prépare un dossier couvrant traitement des créanciers, ressources et emplois, trésorerie, pièces manquantes et questions à résoudre.",
+      "steps": [
+        "Dans le fil de travail, Vera lit les fichiers et résume mission, date, étape et documents disponibles. Dans le fil vocal, elle explique le parcours et vous demande de confirmer ou corriger le périmètre.",
+        "Vera reconstitue le cas à partir des sources, vérifie le cadre pertinent et prépare les interprétations à revoir. Elle examine proposition, plan, créanciers, comparaison avec la liquidation, trésorerie et lacunes. Vous revoyez interprétations et hypothèses avant la confirmation requise par le workflow.",
+        "Le workflow actuel produit les tableaux et documents réels. Ouvrez la synthèse puis Excel : repérez ce que reçoivent les créanciers, le calendrier de trésorerie et les pièces nécessaires. Remontez une question à sa page ou cellule source et choisissez la prochaine action. Dans le fil vocal, Vera explique les résultats réels et répond aux questions sans lire tout le rapport."
+      ],
+      "deliverables": [
+        "Rapport Word et résumé lisible de la revue, avec limites et questions ouvertes.",
+        "Classeur de travail Excel et tableaux des créanciers, traitement, ressources et emplois, trésorerie et contrôles."
+      ],
+      "review": "Vérifiez sources, dates, périmètre des créanciers, hypothèses et demandes de pièces. Un calcul cohérent ne démontre ni faisabilité ni validité juridique. Le projet ne contient pas l’attestation ni la preuve de disponibilité du financement.",
+      "checkpoints": [
+        "Avant de poursuivre, expliquez le travail demandé à Vera et les fichiers fournis.",
+        "Repérez la synthèse, une question à revoir et le document ou éclaircissement nécessaire."
+      ],
+      "practice": "Dans le même dossier, lancez une nouvelle revue avec practice-fr.xlsx et management-practice-fr.pdf : la direction a réduit le financement nouveau supposé. Conservez intacts le premier dossier de revue et ses sources. Demandez à Vera de réexaminer le cas et d’expliquer les résultats et actions qui changent ; ne remplacez pas simplement un chiffre dans le rapport précédent.",
+      "success": "Vous savez lancer le workflow, revoir périmètre et interprétations, utiliser les livrables et recommencer avec une version actualisée.",
+      "repeat": "Donnez à Vera proposition, plan, liste des créanciers, attestation et justificatifs disponibles, avec étape, date et objectif. Confirmez le périmètre, revoyez les sources et utilisez le dossier dans le parcours professionnel normal."
+    },
+    "de": {
+      "title": "Einen Concordato-Plan mit Vera prüfen",
+      "goal": "Lernen Sie, die Prüfung von Vorschlag und Plan zu starten, Unterlagen bereitzustellen und die erzeugte Akte fachlich zu nutzen.",
+      "scenario": "Officina Riva hat einen ersten Entwurf zur Betriebsfortführung und Gläubigerzahlung vorgelegt. Die Fachperson muss Inhalt, zu prüfende Annahmen und fehlende Unterlagen verstehen.",
+      "scope": "Ein vollständiger erster Ablauf: Auftrag, Quellen, Verfahrensrahmen, Gläubiger, Vorschlag, Plan, offene Fragen und Bericht. Der kleine Fall erklärt den Workflow, nicht das gesamte italienische Insolvenzrecht.",
+      "inputs": "Öffnen Sie demo-de.xlsx und management-demo-de.pdf. Excel enthält Auftrag, Gläubiger und Jahresplan; die zwei Seiten der Geschäftsführung ergänzen angegebene Positionen, Liquidationsschätzung und Quartalsliquidität. Dies sind fiktive Prüfungsquellen, keine freigegebenen Schlussfolgerungen.",
+      "request": "Vera, prüfe den Concordato-preventivo-Vorschlag und Plan von Officina Riva in diesen beiden Dateien. Erstelle eine Prüfungsakte zu Gläubigerbehandlung, Mittelherkunft und -verwendung, Liquidität, fehlenden Unterlagen und offenen Fragen.",
+      "steps": [
+        "Im Arbeitschat liest Vera die Dateien und fasst Auftrag, Datum, Phase und Unterlagen zusammen. Im Sprachchat erklärt sie den Ablauf und bittet um Bestätigung oder Korrektur des Umfangs.",
+        "Vera rekonstruiert den Fall anhand der Quellen, prüft den passenden Rahmen und bereitet Interpretationen zur Prüfung vor. Sie betrachtet Vorschlag, Plan, Gläubiger, Liquidationsvergleich, Liquidität und Beleglücken. Sie prüfen Interpretationen und Annahmen vor der vom Workflow verlangten Bestätigung.",
+        "Der aktuelle Workflow erstellt echte Aufstellungen und Prüfungsdokumente. Öffnen Sie Zusammenfassung und Excel: Finden Sie Gläubigerzahlungen, Liquiditätsverlauf und benötigte Unterlagen. Verfolgen Sie eine offene Frage bis zur Quellseite oder Zelle und wählen Sie die nächste Handlung. Im Sprachchat erklärt Vera tatsächliche Ergebnisse und beantwortet Fragen, ohne den gesamten Bericht vorzulesen."
+      ],
+      "deliverables": [
+        "Word-Bericht und lesbare Prüfungszusammenfassung mit Grenzen und offenen Fragen.",
+        "Excel-Arbeitsmappe und Tabellen zu Gläubigern, Behandlung, Mittelherkunft und -verwendung, Liquidität und Kontrollen."
+      ],
+      "review": "Prüfen Sie Quellen, Daten, Gläubigerumfang, Annahmen und Unterlagenanforderungen. Rechnerische Übereinstimmung beweist weder Machbarkeit noch rechtliche Richtigkeit. Attestierung und Beleg der Finanzierungsverfügbarkeit fehlen im Entwurf.",
+      "checkpoints": [
+        "Erklären Sie vor dem Start den Auftrag an Vera und die gelieferten Dateien.",
+        "Finden Sie Zusammenfassung, eine zu prüfende Frage und den dafür benötigten Beleg oder die Rückfrage."
+      ],
+      "practice": "Starten Sie im selben Fall eine neue Prüfung mit practice-de.xlsx und management-practice-de.pdf: Die Geschäftsführung hat die angenommene neue Finanzierung reduziert. Bewahren Sie die erste Prüfungsakte und ihre Quellen unverändert auf. Bitten Sie Vera um erneute Prüfung und Erklärung der geänderten Ergebnisse und Maßnahmen; ersetzen Sie nicht nur eine Zahl im alten Bericht.",
+      "success": "Sie können den Workflow starten, Umfang und Interpretationen prüfen, Ergebnisse nutzen und die Arbeit mit einer aktualisierten Fassung wiederholen.",
+      "repeat": "Geben Sie Vera Vorschlag, Plan, Gläubigerliste, Attestierung und verfügbare Belege mit Phase, Datum und Prüfungsziel. Bestätigen Sie den Umfang, prüfen Sie Quellen und nutzen Sie die Akte im normalen fachlichen Verfahren."
+    },
+    "es": {
+      "title": "Revisar un plan de concordato con Vera",
+      "goal": "Aprender a iniciar la revisión de una propuesta y un plan, aportar documentos y usar el expediente producido en el trabajo profesional.",
+      "scenario": "Officina Riva ha preparado un primer borrador para continuar la actividad y pagar a los acreedores. El profesional necesita entender su contenido, los supuestos que revisar y los documentos pendientes.",
+      "scope": "Un primer recorrido completo: encargo, fuentes, marco procesal, acreedores, propuesta, plan, preguntas abiertas e informe. El caso pequeño enseña el workflow, sin intentar cubrir todo el derecho concursal italiano.",
+      "inputs": "Abre demo-es.xlsx y management-demo-es.pdf. Excel presenta encargo, acreedores y plan anual; las dos páginas de la dirección añaden posiciones declaradas, estimación de liquidación y calendario trimestral. Son fuentes ficticias que examinar, no conclusiones aprobadas.",
+      "request": "Vera, revisa la propuesta y el plan de concordato preventivo de Officina Riva en estos dos archivos. Prepara un expediente sobre tratamiento de acreedores, fuentes y usos, liquidez, documentos pendientes y cuestiones por resolver.",
+      "steps": [
+        "En el hilo de trabajo Vera lee los archivos y resume encargo, fecha, fase y documentos. En el hilo de voz explica el recorrido y pide confirmar o corregir el alcance.",
+        "Vera reconstruye el caso desde las fuentes, verifica el marco pertinente y prepara interpretaciones para revisar. Examina propuesta, plan, acreedores, comparación con liquidación, caja y lagunas. Revisas interpretaciones y supuestos antes de la confirmación exigida por el workflow.",
+        "El workflow actual genera los cuadros y documentos reales. Abre el resumen y después Excel: localiza qué reciben los acreedores, el calendario de caja y los documentos necesarios. Sigue una cuestión hasta su página o celda de origen y elige la próxima acción. En el hilo de voz, Vera explica resultados reales y responde preguntas sin leer todo el informe."
+      ],
+      "deliverables": [
+        "Informe Word y resumen legible de la revisión, con límites y preguntas abiertas.",
+        "Libro de trabajo Excel y cuadros de acreedores, tratamiento, fuentes y usos, liquidez y controles."
+      ],
+      "review": "Comprueba fuentes, fechas, perímetro de acreedores, supuestos y solicitudes. Que las cifras cuadren no prueba viabilidad ni validez jurídica. El borrador carece de atestación y de prueba de disponibilidad de financiación.",
+      "checkpoints": [
+        "Antes de continuar, explica el trabajo que pides a Vera y los archivos que aportas.",
+        "Localiza la síntesis, una cuestión por revisar y el documento o aclaración necesarios."
+      ],
+      "practice": "En el mismo caso, inicia una nueva revisión con practice-es.xlsx y management-practice-es.pdf: la dirección ha reducido la nueva financiación supuesta. Conserva intactos el primer expediente y sus fuentes. Pide a Vera que reexamine el caso y explique qué resultados y acciones cambian; no basta con sustituir una cifra en el informe anterior.",
+      "success": "Sabes iniciar el workflow, revisar alcance e interpretaciones, usar los resultados y repetir el trabajo con una versión actualizada.",
+      "repeat": "Aporta a Vera propuesta, plan, lista de acreedores, atestación y justificantes disponibles, indicando fase, fecha y objetivo. Confirma el alcance, revisa las fuentes y usa el expediente en el recorrido profesional habitual."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "5dfbf0965bbb5200a51727948f65a73b5bf45a8385fcdc0918e5628ec180ca4a"
+}

@@ -1,0 +1,465 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "fatture-xml-check",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "supporting_task",
+  "parent_workflow": "new-client",
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
+  "sources": [
+    {
+      "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+      "sha256": "4b56449248b02f910f434804918f16c28713387b17432aea4993607a5275adf7"
+    },
+    {
+      "path": "modules/client-file-preparation/assets/icon.svg",
+      "sha256": "b4f798ec673400c5145bda9fb5cb282fff745455a56845e42feb1738d1013219"
+    },
+    {
+      "path": "modules/client-file-preparation/assets/review-workbench-adapter.json",
+      "sha256": "42af84f012b36d6d34c2646a9277b1a9aaf9eb8c4bf9287038948a56d2d401d0"
+    },
+    {
+      "path": "modules/client-file-preparation/references/workflow-reference.md",
+      "sha256": "0f8a3080bafdadf5d8aed1082908d851da3c2423c1730291f2a19dc4e10a9e71"
+    },
+    {
+      "path": "modules/client-file-preparation/requirements.txt",
+      "sha256": "52d819e8a9f405e7605de84ae65521166be565d85ad602df65adc740d5693186"
+    },
+    {
+      "path": "modules/client-file-preparation/schemas/model_handoff.schema.json",
+      "sha256": "38d7e5593d9a0ba12cbab23d7f1e8a03f239ceb230605f780b2bce4064e1d40d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/build_file_preparation_outputs.py",
+      "sha256": "5d84eb4fba8b93ae03a50108925fcaef068ffaad0263ccd0fc1a93deb08659d1"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_dependencies.py",
+      "sha256": "48d98b528325d883fbeb8d3921cb8c8883d7087c87cc8950dd77b4be711ee9c4"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_environment.py",
+      "sha256": "70f67540c705fe174163390ac2aea0582ef30235a52f2dd60f08717efd096400"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/detect_duplicates.py",
+      "sha256": "6d65563443e8be6eb08a97a89638e5e5fc035c27c34fbc0bbf793fe0e0d2ee81"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/extract_documents.py",
+      "sha256": "811ce6a6b2212c2550ab3c7c41e7c5e9d6662ce77256382b63d257a7419f87aa"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/managed_ocr_runtime.py",
+      "sha256": "664987b3e53f0b66bd1907493215f352c8487c75c7ec76347f8a41ba3336b222"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/model_handoff.py",
+      "sha256": "9c46e69ad33e0087b7d23585442c0dad425cf6eb4551f164d460ba27ec6afb5f"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fatturapa_xml.py",
+      "sha256": "27c6dc9104e04cea7bcff287dec4315951fe3bf9ef07526a89845fd5b7eb255d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fiscal_forms.py",
+      "sha256": "a18d78910d8015c4e41b2e0355724bc8df25dd5330b26b07b2785a2c24c384fe"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/review_session.py",
+      "sha256": "df5c9a8a2f47c6f6200c36f7d2a9e3c4db026f1c7c95492a734ba2f7305b1e3d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/scan_folder.py",
+      "sha256": "b4e5bb6dd0347b9c66e1e21b3f21a7e1a84805f58008401857cc613e90043789"
+    },
+    {
+      "path": "modules/client-file-preparation/skills/fatture-xml-check/SKILL.md",
+      "sha256": "c57a22a218050ce826b041a1c85cee152128d63fd0c68bbd6be6cf558fdf6db2"
+    },
+    {
+      "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
+      "sha256": "5cb95e09970123a29a0574459d953ce03a908e69a899a68bb4374d383640a704"
+    },
+    {
+      "path": "modules/client-file-preparation/templates/memo_istruttoria.md",
+      "sha256": "d718069bee76ed6cd63e4f96b1dffb2d199ba8c3e969a7da1aaf709f6ee691dd"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/fatture-xml-check/SKILL.md",
+      "sha256": "a12daa2fbe5feaf79d32c62121ebefc3305718ee02cb55fa14cab03f5394233d"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/invoice-01.xml",
+      "sha256": "d4ca9ae523f4787e494d3905217e4345fc998e54c6fcf9ba6f1624f1d7386df0",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/invoice-02.xml",
+      "sha256": "607d489ce5c54ff28f23da3e1bb83a44b8e49e6d966055686961fbddafdb8722",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/invoice-03.xml",
+      "sha256": "84dd0c14ffa4de5044f711792293ad79470430580e157c8d27507b9fbdff4df1",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/invoice-01.xml",
+      "sha256": "d4ca9ae523f4787e494d3905217e4345fc998e54c6fcf9ba6f1624f1d7386df0",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/invoice-02.xml",
+      "sha256": "607d489ce5c54ff28f23da3e1bb83a44b8e49e6d966055686961fbddafdb8722",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/invoice-03.xml",
+      "sha256": "84dd0c14ffa4de5044f711792293ad79470430580e157c8d27507b9fbdff4df1",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/invoice-04.xml",
+      "sha256": "d35c927b32eb5c79886b390bb576fa184d060896238562948236a1acc1be229c",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/case-it.md",
+      "sha256": "8d022c51dad1c1a80fcefddde4fa9dfaddbb80f01d5d647f470a6ffe95552446",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/case-en.md",
+      "sha256": "7449682ce37788cd5028e63e5f4907a9a58dc6041097869e13f091b887ab41e2",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/case-fr.md",
+      "sha256": "ddcca438ce5931926620443ddd1cff7b0f6346284818182003d6a97340a97530",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/case-de.md",
+      "sha256": "1ce24284e2920238faffe6b31a7901d2860ef3a9729f56b0065b8b18162adc3f",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/case-es.md",
+      "sha256": "a821d3e4008038d9358193b17a080252675fb68f0a74ddc704672964342ca4fe",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Controllare le fatture XML con Vera",
+      "goal": "Impara a consegnare una cartella di fatture, leggere il riepilogo dei documenti e gestire ciò che richiede verifica.",
+      "scenario": "Lo Studio Arco ha ricevuto tre fatture XML di marzo per un cliente fittizio. Vuole sapere quali documenti sono arrivati e se sono leggibili e coerenti prima di proseguire il lavoro contabile.",
+      "scope": "Questo controllo prepara e verifica i documenti ricevuti. Registrazione contabile e invio a SdI seguono i propri processi.",
+      "inputs": "Apri i tre file invoice-01.xml, invoice-02.xml e invoice-03.xml. Sono FatturaPA didattiche con identificativi fittizi. La nota del caso indica il periodo e il totale atteso del lotto: EUR 2.440.",
+      "request": "Vera, controlla le fatture XML di marzo in questa cartella. Mostrami quali documenti abbiamo ricevuto, il riepilogo degli importi e gli eventuali punti da verificare.",
+      "steps": [
+        "Vera prende in carico la cartella nel caso didattico e legge gli XML con il parser della funzione. Guarda quali file vengono inclusi.",
+        "Nella chat di lavoro il workflow estrae numero, data, soggetti e importi, controlla la forma e segnala eventuali anomalie o duplicati candidati.",
+        "Apri il riepilogo appena prodotto. Vera collega le segnalazioni ai file e prepara le verifiche utili prima del passaggio successivo."
+      ],
+      "deliverables": [
+        "Riepilogo delle fatture: individua un documento e ritrova numero, data e totale nel suo XML.",
+        "Elenco delle anomalie: leggi file interessato, problema osservato e verifica richiesta. Il conteggio dei documenti chiarisce cosa è stato esaminato."
+      ],
+      "review": "Confronta i tre documenti ricevuti con il riepilogo e il totale del lotto. Una segnalazione richiede un riscontro sul documento: il controllo non decide la detraibilità né conferma una contabilizzazione.",
+      "checkpoints": [
+        "Prima di avviare: indica la cartella e il mese da controllare.",
+        "Sul risultato: apri una riga e il relativo XML; individua dove leggeresti eventuali anomalie."
+      ],
+      "practice": "Aggiungi invoice-04.xml a una nuova cartella di prova e chiedi il controllo delle quattro fatture, includendo aprile.",
+      "success": "Il nuovo riepilogo deve includere la quarta fattura e rendere riconoscibili i due mesi. Spiega dove controlleresti un file problematico.",
+      "repeat": "Per rifarlo, seleziona la cartella del cliente e chiedi il controllo degli XML ricevuti. Rivedi riepilogo e segnalazioni prima di continuare."
+    },
+    "en": {
+      "title": "Check XML invoices with Vera",
+      "goal": "Learn to supply an invoice folder, read the document summary and handle items needing review.",
+      "scenario": "Arco Practice has received three March XML invoices for a fictional client. It wants to identify the documents and check that they are readable and consistent before continuing the accounting work.",
+      "scope": "This function prepares and checks received documents. Accounting entries and submission to SdI follow their own processes.",
+      "inputs": "Open invoice-01.xml, invoice-02.xml and invoice-03.xml. These are teaching FatturaPA files with fictional identifiers. The case note states the period and the expected batch total: EUR 2,440.",
+      "request": "Vera, check the March XML invoices in this folder. Show the documents received, their amounts and anything that needs review.",
+      "steps": [
+        "Vera imports the folder into the teaching case and reads the XML files through the function’s parser. Check which files are included.",
+        "In the working chat, the workflow extracts numbers, dates, parties and amounts, checks structure and reports anomalies or possible duplicates.",
+        "Open the new summary. Vera links findings to the source files and identifies useful checks before the next step."
+      ],
+      "deliverables": [
+        "Invoice summary: find one document and locate its number, date and total in the XML.",
+        "Anomaly list: inspect the affected file, observed problem and required check. The document count shows the coverage."
+      ],
+      "review": "Compare the three received documents with the summary and batch total. Resolve a finding against its source; this check does not decide deductibility or confirm bookkeeping.",
+      "checkpoints": [
+        "Before running: identify the folder and month to check.",
+        "At the result: open one row and its XML; locate where any anomalies would appear."
+      ],
+      "practice": "Add invoice-04.xml to a fresh practice folder and request a check of all four invoices, including April.",
+      "success": "The new summary must include the fourth invoice and distinguish the two months. Explain where you would investigate a problematic file.",
+      "repeat": "To repeat this at work, select the client folder and ask Vera to check the received XML invoices. Review the summary and findings before continuing."
+    },
+    "fr": {
+      "title": "Contrôler les factures XML avec Vera",
+      "goal": "Apprenez à fournir un dossier de factures, lire le récapitulatif et traiter les points à vérifier.",
+      "scenario": "Le cabinet Arco a reçu trois factures XML de mars pour un client fictif. Il veut identifier les documents et vérifier leur lisibilité et leur cohérence avant de poursuivre le travail comptable.",
+      "scope": "Cette fonction prépare et contrôle les documents reçus. La comptabilisation et l’envoi à SdI suivent leurs propres procédures.",
+      "inputs": "Ouvrez invoice-01.xml, invoice-02.xml et invoice-03.xml. Ce sont des FatturaPA pédagogiques avec des identifiants fictifs. La note précise la période et le total attendu du lot : 2 440 EUR.",
+      "request": "Vera, contrôle les factures XML de mars dans ce dossier. Montre les documents reçus, leurs montants et les points à vérifier.",
+      "steps": [
+        "Vera importe le dossier dans le cas pédagogique et lit les XML avec le parseur de la fonction. Regardez quels fichiers sont inclus.",
+        "Dans la conversation de travail, la procédure extrait numéros, dates, parties et montants, contrôle la structure et signale anomalies ou doublons possibles.",
+        "Ouvrez le nouveau récapitulatif. Vera relie les constats aux fichiers et indique les vérifications utiles avant la suite."
+      ],
+      "deliverables": [
+        "Récapitulatif des factures : retrouvez le numéro, la date et le total d’un document dans son XML.",
+        "Liste des anomalies : examinez le fichier concerné, le problème constaté et la vérification demandée. Le nombre de documents indique le périmètre traité."
+      ],
+      "review": "Comparez les trois documents reçus au récapitulatif et au total du lot. Vérifiez chaque constat dans sa source ; ce contrôle ne décide pas de la déductibilité et ne confirme aucune écriture.",
+      "checkpoints": [
+        "Avant de lancer : indiquez le dossier et le mois à contrôler.",
+        "Sur le résultat : ouvrez une ligne et son XML ; repérez où apparaissent les anomalies."
+      ],
+      "practice": "Ajoutez invoice-04.xml dans un nouveau dossier d’exercice et demandez le contrôle des quatre factures, y compris avril.",
+      "success": "Le nouveau récapitulatif doit inclure la quatrième facture et distinguer les deux mois. Expliquez où examiner un fichier problématique.",
+      "repeat": "Pour recommencer au travail, sélectionnez le dossier du client et demandez le contrôle des XML reçus. Revoyez le récapitulatif et les constats avant de poursuivre."
+    },
+    "de": {
+      "title": "XML-Rechnungen mit Vera prüfen",
+      "goal": "Lernen Sie, einen Rechnungsordner bereitzustellen, die Übersicht zu lesen und offene Prüfpunkte zu bearbeiten.",
+      "scenario": "Die Kanzlei Arco hat drei XML-Rechnungen für März für einen fiktiven Mandanten erhalten. Sie möchte die Dokumente erfassen und ihre Lesbarkeit und Konsistenz vor der weiteren Buchhaltungsarbeit prüfen.",
+      "scope": "Die Funktion bereitet eingegangene Dokumente auf und prüft sie. Buchung und Übermittlung an SdI haben eigene Abläufe.",
+      "inputs": "Öffnen Sie invoice-01.xml, invoice-02.xml und invoice-03.xml. Es sind FatturaPA-Übungsdateien mit fiktiven Kennungen. Die Fallnotiz nennt Zeitraum und erwarteten Gesamtbetrag: 2.440 EUR.",
+      "request": "Vera, prüfe die XML-Rechnungen für März in diesem Ordner. Zeige die eingegangenen Dokumente, ihre Beträge und die offenen Prüfpunkte.",
+      "steps": [
+        "Vera importiert den Ordner in den Übungsfall und liest die XML-Dateien mit dem Parser der Funktion. Prüfen Sie, welche Dateien enthalten sind.",
+        "Im Arbeitschat extrahiert der Workflow Nummern, Daten, Beteiligte und Beträge, prüft die Struktur und meldet Auffälligkeiten oder mögliche Dubletten.",
+        "Öffnen Sie die neue Übersicht. Vera verknüpft Feststellungen mit den Quelldateien und nennt sinnvolle Prüfungen vor dem nächsten Schritt."
+      ],
+      "deliverables": [
+        "Rechnungsübersicht: Finden Sie Nummer, Datum und Gesamtbetrag eines Dokuments in dessen XML wieder.",
+        "Auffälligkeiten: Prüfen Sie betroffene Datei, beobachtetes Problem und nötige Kontrolle. Die Dokumentenzahl zeigt den Umfang der Prüfung."
+      ],
+      "review": "Vergleichen Sie die drei erhaltenen Dokumente mit Übersicht und Gesamtbetrag. Klären Sie Feststellungen anhand der Quelle; diese Prüfung entscheidet weder über Abzugsfähigkeit noch bestätigt sie Buchungen.",
+      "checkpoints": [
+        "Vor dem Start: Benennen Sie Ordner und Prüfmonat.",
+        "Beim Ergebnis: Öffnen Sie eine Zeile und das zugehörige XML; zeigen Sie, wo Auffälligkeiten stehen."
+      ],
+      "practice": "Fügen Sie invoice-04.xml in einen neuen Übungsordner ein und lassen Sie alle vier Rechnungen einschließlich April prüfen.",
+      "success": "Die neue Übersicht muss die vierte Rechnung und beide Monate enthalten. Erklären Sie, wo Sie eine problematische Datei prüfen würden.",
+      "repeat": "Für die Arbeit wählen Sie den Mandantenordner und bitten um Prüfung der erhaltenen XML-Rechnungen. Sehen Sie Übersicht und Feststellungen durch, bevor Sie fortfahren."
+    },
+    "es": {
+      "title": "Comprobar facturas XML con Vera",
+      "goal": "Aprende a proporcionar una carpeta de facturas, leer el resumen y resolver los puntos que necesitan revisión.",
+      "scenario": "El despacho Arco ha recibido tres facturas XML de marzo para un cliente ficticio. Quiere identificar los documentos y comprobar su legibilidad y coherencia antes de continuar el trabajo contable.",
+      "scope": "Esta función prepara y comprueba documentos recibidos. La contabilización y el envío a SdI siguen sus propios procesos.",
+      "inputs": "Abre invoice-01.xml, invoice-02.xml e invoice-03.xml. Son archivos FatturaPA didácticos con identificadores ficticios. La nota indica el período y el total esperado del lote: 2.440 EUR.",
+      "request": "Vera, comprueba las facturas XML de marzo de esta carpeta. Muéstrame los documentos recibidos, sus importes y los puntos que necesitan revisión.",
+      "steps": [
+        "Vera importa la carpeta al caso didáctico y lee los XML con el analizador de la función. Comprueba qué archivos se incluyen.",
+        "En la conversación de trabajo, el workflow extrae números, fechas, partes e importes, comprueba la estructura y señala anomalías o posibles duplicados.",
+        "Abre el nuevo resumen. Vera vincula los hallazgos con los archivos y señala las comprobaciones útiles antes del siguiente paso."
+      ],
+      "deliverables": [
+        "Resumen de facturas: localiza el número, la fecha y el total de un documento en su XML.",
+        "Lista de anomalías: revisa el archivo afectado, el problema observado y la comprobación necesaria. El número de documentos muestra la cobertura."
+      ],
+      "review": "Compara los tres documentos recibidos con el resumen y el total del lote. Resuelve cada hallazgo contra su fuente; este control no decide la deducibilidad ni confirma asientos contables.",
+      "checkpoints": [
+        "Antes de empezar: indica la carpeta y el mes que quieres comprobar.",
+        "En el resultado: abre una fila y su XML; localiza dónde aparecerían las anomalías."
+      ],
+      "practice": "Añade invoice-04.xml a una carpeta nueva de práctica y pide comprobar las cuatro facturas, incluyendo abril.",
+      "success": "El nuevo resumen debe incluir la cuarta factura y distinguir ambos meses. Explica dónde revisarías un archivo problemático.",
+      "repeat": "Para repetirlo en el trabajo, selecciona la carpeta del cliente y pide comprobar los XML recibidos. Revisa el resumen y los hallazgos antes de continuar."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "bec185744fe238b4ce8a43728da6be90efccef9c8ae0feef34115a8c79c55830"
+}

@@ -15,6 +15,7 @@ from pathlib import Path
 
 import pytest
 
+from tests.plugins._attribute_teaching import complete_model
 from tests.plugins._teaching_release import prepared_kit, record_native_check
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -228,6 +229,7 @@ def test_assortment_kit_renders_native_comparisons_and_requires_independent_revi
             ],
         },
     ]
+    complete_model(model, language, phase, common)
     model_path.write_text(json.dumps(model, ensure_ascii=False, indent=2))
 
     native.render_report(output)

@@ -1,0 +1,326 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "clara",
+  "workflow": "attribute-reporting",
+  "course_sha256": "b13bd3711afa16fdff0aa0653c8f99d683b1b4fd74487e17927f575d622d652c",
+  "reviewer": "Codex editorial review; independent report review by attribute_course_independent_review",
+  "reviewed_at": "2026-09-23T11:44:31.208927+00:00",
+  "review_scope": "Reviewed five localized first-use lessons and actual demo/practice reports. Independent agent reviewed every exact rendered report and claim ledger, then the native browser QA and finalizer completed all ten reports. Automated regression separately tests native construction and refuses final semantic acceptance when independent review is missing. No learner participation or live retailer-data acquisition is claimed.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The learner supplies an existing retail evidence package, requests an assortment report and learns where to read the summary, comparisons, product evidence and verdict. The scope explicitly excludes separate data collection, central classification and Brand Fit.",
+        "inputs_and_request": "Localized briefs and fictional knitwear ZIPs contain source products, declared cohorts and computed comparisons, not a finished report or approved interpretation. Integrity checks run through the normal package intake.",
+        "execution_and_checkpoints": "The current workflow generates evidence tables, renders the authored report, receives a separate agent review, runs desktop/mobile browser checks and finalizes the verdict. Checkpoints connect the original package and ordinary request to a supported conclusion and its review status.",
+        "deliverable_and_next_action": "All ten actual reports finalized Correct with caveats. The structured report has a summary, cohort evidence, brand context, emerging signal, bridge interpretation, product examples and method. Missing images and consumer reviews are disclosed; product counts and seller-defined cohorts are not sales volumes or causal evidence.",
+        "practice_and_repeat": "The practice package changes the recent cohort from black cardigans to blue sweaters. The report explains divergence from best sellers rather than claiming the same signal persists; actual source products support the examples. Practice writes a separate report and leaves the earlier report available.",
+        "language_and_pacing": "The it lesson uses a descriptive title, complete first-use request and concrete output checks. Its outline totals 390 seconds; execution, review and questions may extend it. Reports are localized, with a disclosed minor caveat for English comparison identifiers. Human timing and host interaction are not certified."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[demo-it]",
+        "result_review": "The demo supports the black-cardigan signal in the declared recent cohort and best-seller evidence. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "7fcda2d7e02789a7b0ff439122b30557ac77cfe2cb58d6c6e6420b401608e1a7"
+          },
+          {
+            "name": "claim_ledger.json",
+            "sha256": "755d43370d72fb99dd5dc63d9c095acc9eac725214b690c04f62bd429c5f25ee"
+          },
+          {
+            "name": "semantic_review.json",
+            "sha256": "af4ec7d9e1c2ab00868c7354908a990647b48576e1e93a43d32d6a220fe6c5fc"
+          },
+          {
+            "name": "browser_qa.json",
+            "sha256": "8c7916e04532e19ba2db01af967cbed6d081c29f38ef554d5edd926c04a4ec02"
+          },
+          {
+            "name": "correctness_verdict.json",
+            "sha256": "5c18e0907d339832401831ba871e003b402d0d20fc2f8f690835f8deff77f06a"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[practice-it]",
+        "result_review": "The practice supports blue sweaters in the changed recent cohort, uses the correct recent product examples and explains that this differs from the best-seller signal. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "74e4e0f9315e08cae5c14c7848f2acf65b6c0dd56605db8ea1819ce715efcf16"
+          },
+          {
+            "name": "claim_ledger.json",
+            "sha256": "05c57dbce1a17590b31f9aa7f9e269b71f7db8097a78bbae67a0d818690b97f2"
+          },
+          {
+            "name": "semantic_review.json",
+            "sha256": "5f265dab03278f94aea5e625b174a650b84436fb809a8dccf8fb2ce566dd805e"
+          },
+          {
+            "name": "browser_qa.json",
+            "sha256": "5c24cba2ba456e14cb031249745f3cc069018a3e83fc886babc511494ab53d24"
+          },
+          {
+            "name": "correctness_verdict.json",
+            "sha256": "eb83db91d702bace6c05255d1fe8760596111397d3ba749d7167e61dc87150d0"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The learner supplies an existing retail evidence package, requests an assortment report and learns where to read the summary, comparisons, product evidence and verdict. The scope explicitly excludes separate data collection, central classification and Brand Fit.",
+        "inputs_and_request": "Localized briefs and fictional knitwear ZIPs contain source products, declared cohorts and computed comparisons, not a finished report or approved interpretation. Integrity checks run through the normal package intake.",
+        "execution_and_checkpoints": "The current workflow generates evidence tables, renders the authored report, receives a separate agent review, runs desktop/mobile browser checks and finalizes the verdict. Checkpoints connect the original package and ordinary request to a supported conclusion and its review status.",
+        "deliverable_and_next_action": "All ten actual reports finalized Correct with caveats. The structured report has a summary, cohort evidence, brand context, emerging signal, bridge interpretation, product examples and method. Missing images and consumer reviews are disclosed; product counts and seller-defined cohorts are not sales volumes or causal evidence.",
+        "practice_and_repeat": "The practice package changes the recent cohort from black cardigans to blue sweaters. The report explains divergence from best sellers rather than claiming the same signal persists; actual source products support the examples. Practice writes a separate report and leaves the earlier report available.",
+        "language_and_pacing": "The en lesson uses a descriptive title, complete first-use request and concrete output checks. Its outline totals 390 seconds; execution, review and questions may extend it. Reports are localized, with a disclosed minor caveat for English comparison identifiers. Human timing and host interaction are not certified."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[demo-en]",
+        "result_review": "The demo supports the black-cardigan signal in the declared recent cohort and best-seller evidence. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "c698e0d6ce18a3755e5acff270f430b8d3b94ec4f593f84dfc2b01333aee0a5e"
+          },
+          {
+            "name": "claim_ledger.json",
+            "sha256": "5d212f3f14d4e2c255aa6507835a94014dbf06f9703afe3131dbfa82088582ce"
+          },
+          {
+            "name": "semantic_review.json",
+            "sha256": "e3af100b2bb5cc5fe230721823ba725ab1f8b2f2926a2435aaf5a7e2c06ce5ae"
+          },
+          {
+            "name": "browser_qa.json",
+            "sha256": "7d5861338c587e99ed6a7bb6ee88ede9cfb844f4d261c297ad7d69d4e29a386c"
+          },
+          {
+            "name": "correctness_verdict.json",
+            "sha256": "b51ed8c91e0134079df50091b27dee4b5899d56c829019607961817f7d103d88"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[practice-en]",
+        "result_review": "The practice supports blue sweaters in the changed recent cohort, uses the correct recent product examples and explains that this differs from the best-seller signal. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "abb64e9c3fadd2abdba402095314035a053ea9da6f50822d399d5be738f8cfc2"
+          },
+          {
+            "name": "claim_ledger.json",
+            "sha256": "0d1f5e81918131ff82d0d53b5f58b4f973389ac6d2d707c4fb4905c81b4c4284"
+          },
+          {
+            "name": "semantic_review.json",
+            "sha256": "e3fb4130303b31bc989ee073e84289baca931cf6a901208d32e2c3f24675c1df"
+          },
+          {
+            "name": "browser_qa.json",
+            "sha256": "1361c485bf36d9e3dfedfc1e6a322290b60e6e130757b7f00eb175e214a59379"
+          },
+          {
+            "name": "correctness_verdict.json",
+            "sha256": "e4d84fb35744dbe8e43ecda5c4401ebb8db78f78e7d49d248546379b30e152db"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The learner supplies an existing retail evidence package, requests an assortment report and learns where to read the summary, comparisons, product evidence and verdict. The scope explicitly excludes separate data collection, central classification and Brand Fit.",
+        "inputs_and_request": "Localized briefs and fictional knitwear ZIPs contain source products, declared cohorts and computed comparisons, not a finished report or approved interpretation. Integrity checks run through the normal package intake.",
+        "execution_and_checkpoints": "The current workflow generates evidence tables, renders the authored report, receives a separate agent review, runs desktop/mobile browser checks and finalizes the verdict. Checkpoints connect the original package and ordinary request to a supported conclusion and its review status.",
+        "deliverable_and_next_action": "All ten actual reports finalized Correct with caveats. The structured report has a summary, cohort evidence, brand context, emerging signal, bridge interpretation, product examples and method. Missing images and consumer reviews are disclosed; product counts and seller-defined cohorts are not sales volumes or causal evidence.",
+        "practice_and_repeat": "The practice package changes the recent cohort from black cardigans to blue sweaters. The report explains divergence from best sellers rather than claiming the same signal persists; actual source products support the examples. Practice writes a separate report and leaves the earlier report available.",
+        "language_and_pacing": "The fr lesson uses a descriptive title, complete first-use request and concrete output checks. Its outline totals 390 seconds; execution, review and questions may extend it. Reports are localized, with a disclosed minor caveat for English comparison identifiers. Human timing and host interaction are not certified."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[demo-fr]",
+        "result_review": "The demo supports the black-cardigan signal in the declared recent cohort and best-seller evidence. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "d7993c8059d426ae359f89d7d18949dacb474808d5036649508b42e3bc3fc17b"
+          },
+          {
+            "name": "claim_ledger.json",
+            "sha256": "11d93b86c048dd5104b139b45a85d2fbd73d2f91b54b8fa20af68f7df37f9210"
+          },
+          {
+            "name": "semantic_review.json",
+            "sha256": "4aec21b7e819537574e26082507e29b16fb71f4e8653a2818cd844bc29d16a90"
+          },
+          {
+            "name": "browser_qa.json",
+            "sha256": "40943022f6b179516fc0d64e435ad640a3ba1c7bb4be2da9f4a9f2523a19400d"
+          },
+          {
+            "name": "correctness_verdict.json",
+            "sha256": "d04237e826d03da352ec82fb37f5bf7b37059a9f2ae8b511dcb605e0c572e580"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[practice-fr]",
+        "result_review": "The practice supports blue sweaters in the changed recent cohort, uses the correct recent product examples and explains that this differs from the best-seller signal. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "00ca7bd4dfc2cc31b2a0d04b990a4fa8b6f5f6e4b3177a99c58cc5405b7d319e"
+          },
+          {
+            "name": "claim_ledger.json",
+            "sha256": "bf955b69824431d94d22c1c5b9ea33fb94c3122c2be63f5cc0b83f4684f0a73b"
+          },
+          {
+            "name": "semantic_review.json",
+            "sha256": "c96d0e677085dc3841cc45f0c4e6aa5a666bcf876000034895e2bf14c5840fe6"
+          },
+          {
+            "name": "browser_qa.json",
+            "sha256": "e360c4de590953a3ac822df755c0c54af30c5e3a5af046ede0afb9b28f215493"
+          },
+          {
+            "name": "correctness_verdict.json",
+            "sha256": "4b8c41bd22424c97a0a000186a2a2a104c71cc76756e9ea929851dadb7397616"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The learner supplies an existing retail evidence package, requests an assortment report and learns where to read the summary, comparisons, product evidence and verdict. The scope explicitly excludes separate data collection, central classification and Brand Fit.",
+        "inputs_and_request": "Localized briefs and fictional knitwear ZIPs contain source products, declared cohorts and computed comparisons, not a finished report or approved interpretation. Integrity checks run through the normal package intake.",
+        "execution_and_checkpoints": "The current workflow generates evidence tables, renders the authored report, receives a separate agent review, runs desktop/mobile browser checks and finalizes the verdict. Checkpoints connect the original package and ordinary request to a supported conclusion and its review status.",
+        "deliverable_and_next_action": "All ten actual reports finalized Correct with caveats. The structured report has a summary, cohort evidence, brand context, emerging signal, bridge interpretation, product examples and method. Missing images and consumer reviews are disclosed; product counts and seller-defined cohorts are not sales volumes or causal evidence.",
+        "practice_and_repeat": "The practice package changes the recent cohort from black cardigans to blue sweaters. The report explains divergence from best sellers rather than claiming the same signal persists; actual source products support the examples. Practice writes a separate report and leaves the earlier report available.",
+        "language_and_pacing": "The de lesson uses a descriptive title, complete first-use request and concrete output checks. Its outline totals 390 seconds; execution, review and questions may extend it. Reports are localized, with a disclosed minor caveat for English comparison identifiers. Human timing and host interaction are not certified."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[demo-de]",
+        "result_review": "The demo supports the black-cardigan signal in the declared recent cohort and best-seller evidence. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "d178bf957dba660b4b827c0d9a5d7ca6b053d305e7b2124ce9b38e02d5d3436e"
+          },
+          {
+            "name": "claim_ledger.json",
+            "sha256": "a6069a307652e226a5f272278fd5a07e71b401f3f59117aa62ad67740d4efea9"
+          },
+          {
+            "name": "semantic_review.json",
+            "sha256": "082c3dc5ea3a7e5b9d4d8b2b1070acc42d64deb8dd6477f5d4ccba57229660a4"
+          },
+          {
+            "name": "browser_qa.json",
+            "sha256": "613e8444f8da3ab494a16c403b83ae2074a79998b6416e760fe77989e2a0d8c6"
+          },
+          {
+            "name": "correctness_verdict.json",
+            "sha256": "9f8cab282402bba8db131fa21a4c09107ab5dd4fb4c0b8adfb911023b11f0608"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[practice-de]",
+        "result_review": "The practice supports blue sweaters in the changed recent cohort, uses the correct recent product examples and explains that this differs from the best-seller signal. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "5c82089cf83122c43d3b45eaf5c651158189220fcb9c196ef34bd6668cf38b58"
+          },
+          {
+            "name": "claim_ledger.json",
+            "sha256": "fc4ccf1e6c6a8adcf61267465d4e0a0db2ec652a46f0aeca93065c73a1db28e5"
+          },
+          {
+            "name": "semantic_review.json",
+            "sha256": "fd34529e3a2f09ceac004b8ec36033f5447d9f85bbbe1729ce214235b0296cf6"
+          },
+          {
+            "name": "browser_qa.json",
+            "sha256": "edb6bd1ca5c0617e37f171924a820fcc378763c7c8814bba73ba69af13071033"
+          },
+          {
+            "name": "correctness_verdict.json",
+            "sha256": "cd61982941aba91d13478602c6e88ea3cb1068cc50359a7100adc978033b8a68"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The learner supplies an existing retail evidence package, requests an assortment report and learns where to read the summary, comparisons, product evidence and verdict. The scope explicitly excludes separate data collection, central classification and Brand Fit.",
+        "inputs_and_request": "Localized briefs and fictional knitwear ZIPs contain source products, declared cohorts and computed comparisons, not a finished report or approved interpretation. Integrity checks run through the normal package intake.",
+        "execution_and_checkpoints": "The current workflow generates evidence tables, renders the authored report, receives a separate agent review, runs desktop/mobile browser checks and finalizes the verdict. Checkpoints connect the original package and ordinary request to a supported conclusion and its review status.",
+        "deliverable_and_next_action": "All ten actual reports finalized Correct with caveats. The structured report has a summary, cohort evidence, brand context, emerging signal, bridge interpretation, product examples and method. Missing images and consumer reviews are disclosed; product counts and seller-defined cohorts are not sales volumes or causal evidence.",
+        "practice_and_repeat": "The practice package changes the recent cohort from black cardigans to blue sweaters. The report explains divergence from best sellers rather than claiming the same signal persists; actual source products support the examples. Practice writes a separate report and leaves the earlier report available.",
+        "language_and_pacing": "The es lesson uses a descriptive title, complete first-use request and concrete output checks. Its outline totals 390 seconds; execution, review and questions may extend it. Reports are localized, with a disclosed minor caveat for English comparison identifiers. Human timing and host interaction are not certified."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[demo-es]",
+        "result_review": "The demo supports the black-cardigan signal in the declared recent cohort and best-seller evidence. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "3da41fa4c88e973f3cfe8a6ae15cb249314a262b3c3bdcaa9a92771c771aaa56"
+          },
+          {
+            "name": "claim_ledger.json",
+            "sha256": "3aa90c51f57137f76c0fc454d704dc30143cfa899cbf3420fff0c8dcd93dd454"
+          },
+          {
+            "name": "semantic_review.json",
+            "sha256": "0b8d719486f92ca6b60ea106367212e260020b77314636f91b65f158100c8560"
+          },
+          {
+            "name": "browser_qa.json",
+            "sha256": "27fb52dbe34cb91d0c9f69fa280625fe4a24cdad69eedbb01e0af7f685aa5418"
+          },
+          {
+            "name": "correctness_verdict.json",
+            "sha256": "9afebcee3c88c9e91c88f372c72378c420cf6e3bb68cd113fbecf3bf9191aec8"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[practice-es]",
+        "result_review": "The practice supports blue sweaters in the changed recent cohort, uses the correct recent product examples and explains that this differs from the best-seller signal. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "f40c3fba5fee9b9b71fcd94ffd0a980e56e88d9d6441167c042ab8a3f3036cb2"
+          },
+          {
+            "name": "claim_ledger.json",
+            "sha256": "244e2ad15ad25ca358004ff6d9e23741841449593d4e56719ee328308253980d"
+          },
+          {
+            "name": "semantic_review.json",
+            "sha256": "53efa9e74139ce1648df0484d03c2c3378f1382fafba0af822bbe04ddd659bde"
+          },
+          {
+            "name": "browser_qa.json",
+            "sha256": "6b7b818d568bfe1d3db8c73525c3a2f9f20bdfac01b6202c53c19ed9c7566d8b"
+          },
+          {
+            "name": "correctness_verdict.json",
+            "sha256": "f13a9d07e54cb4e402408ac1e4a2e49754a2f8cf140130592fea810a576284f3"
+          }
+        ]
+      }
+    }
+  }
+}

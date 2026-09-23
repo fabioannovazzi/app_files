@@ -88,7 +88,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "9094c00ac1a0ad08140b0d32f708f83a956bf4a3cb3a98bb7de0a6b7cdcff79c",
+      "sha256": "66b9e925b2a84f0f13cc30c562d588a6aaa4a2bd17109a24425d333f635661ff",
       "languages": [
         "it",
         "en",
@@ -100,20 +100,19 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Da una domanda generica a una risposta che si può verificare",
-        "en": "From a broad question to a verifiable answer",
-        "fr": "D'une question générale à une réponse vérifiable",
-        "de": "Von einer allgemeinen Frage zu einer prüfbaren Antwort",
-        "es": "De una pregunta general a una respuesta verificable"
+        "it": "Ottenere una risposta verificata con Lucia",
+        "en": "Get a checked answer with Lucia",
+        "fr": "Obtenir une réponse vérifiée avec Lucia",
+        "de": "Eine geprüfte Antwort mit Lucia erhalten",
+        "es": "Obtener una respuesta verificada con Lucia"
       },
       "goals": {
-        "it": "Capire come fatti, fonti, alternative e revisione formano un unico percorso di risposta professionale.",
-        "en": "Understand how facts, sources, alternatives and review form one professional answer workflow.",
-        "fr": "Comprendre comment faits, sources, alternatives et revue forment un parcours professionnel unique.",
-        "de": "Verstehen, wie Fakten, Quellen, Alternativen und Prüfung einen fachlichen Antwortprozess bilden.",
-        "es": "Entender cómo hechos, fuentes, alternativas y revisión forman un único proceso de respuesta profesional."
-      },
-      "material": "retained"
+        "it": "Imparare a porre un quesito professionale, seguire ricerca e verifiche e utilizzare la risposta con le sue fonti e i punti ancora aperti.",
+        "en": "Learn to ask a professional question, follow research and checks, and use the answer with its sources and unresolved points.",
+        "fr": "Apprendre à poser une question professionnelle, suivre la recherche et les vérifications et utiliser la réponse avec ses sources et points ouverts.",
+        "de": "Lernen, eine fachliche Frage zu stellen, Recherche und Prüfungen zu verfolgen und die Antwort mit Quellen und offenen Punkten zu verwenden.",
+        "es": "Aprender a plantear una cuestión profesional, seguir la investigación y las comprobaciones y usar la respuesta con sus fuentes y puntos abiertos."
+      }
     }
   }
 }

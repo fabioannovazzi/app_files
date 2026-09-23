@@ -1,0 +1,3 @@
+# Profilo e incarico
+
+Tutti i nomi, documenti e riferimenti sono fittizi e destinati soltanto alla lezione. Officina Arco è una società italiana che ripara veicoli per clienti locali. Lo studio tiene la contabilità dal gennaio 2026. Elena Bianchi si presenta come amministratrice e interlocutrice. Lo scopo della revisione è ricostruire cliente, persone coinvolte e documenti disponibili, preparando una valutazione antiriciclaggio da sottoporre al professionista. Il pacchetto non contiene documenti di identità, verifica del registro imprese o report di screening. Non trattare queste assenze come controlli negativi. Non contattare persone e non inviare segnalazioni.

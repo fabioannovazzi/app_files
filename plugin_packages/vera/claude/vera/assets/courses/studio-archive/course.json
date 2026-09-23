@@ -1,0 +1,514 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "studio-archive",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "local_archive_search"
+  },
+  "sources": [
+    {
+      "path": "modules/studio-archive/assets/icon.svg",
+      "sha256": "9af9d82ba0869b79fca8ba154b1efe2eaa5970c2d3d589a588c987cf2952d7a4"
+    },
+    {
+      "path": "modules/studio-archive/requirements.txt",
+      "sha256": "e1410b9553859a73d5c30af448a442751c1599c66f84e2a72574111f1a4b0b94"
+    },
+    {
+      "path": "modules/studio-archive/scripts/archive_core.py",
+      "sha256": "4e387c793a7e1df9bc02fbbbda1a0b51709acd8e19a35bf10b3302481e1cc499"
+    },
+    {
+      "path": "modules/studio-archive/scripts/build_model_data_report.py",
+      "sha256": "57eebdae3bb98531ee030dda2fca05de45ce84331ac4f8fdede6a3c3b06ea409"
+    },
+    {
+      "path": "modules/studio-archive/scripts/check_dependencies.py",
+      "sha256": "9af5b8c81cdd7c1811d2a2d39c0d8db19c51d098cde5f4bb808df1af6ee18ea4"
+    },
+    {
+      "path": "modules/studio-archive/scripts/client_ledger.py",
+      "sha256": "96a8bc37a6632edb3d345cd78d86b6d3a78c615f741ead702d489ae5a4e040f4"
+    },
+    {
+      "path": "modules/studio-archive/scripts/google_drive.py",
+      "sha256": "7ea637902377f41bbc785f0d2224246bba69f7f5eb67526120ccbd9e7ed5e2e5"
+    },
+    {
+      "path": "modules/studio-archive/scripts/studio_archive.py",
+      "sha256": "5b6b94827523c276528f712bb87ecb1bc79d0b99ef93a96c57d6c8458b01f9d2"
+    },
+    {
+      "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
+      "sha256": "cbbe1b6b508c004c0e488def9754cf1d3064c8ce798feb82db7678ac338abfb9"
+    },
+    {
+      "path": "modules/studio-archive/skills/studio-archive/agents/openai.yaml",
+      "sha256": "0b49613aaab7500139dc8b6f601d73ecf1c09d09f0a81f4a22bf91fba829c79b"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/model-data-report-contract.md",
+      "sha256": "5f197764fb302393d549f49b16d6ce7301291356208f31ac1f9affcc9216c03c"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/model_data_report.py",
+      "sha256": "54fcde02508b195250c5a4c58758e10f796a63a32448115de64fccbce8b4022c"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    },
+    {
+      "path": "skills/studio-archive/SKILL.md",
+      "sha256": "cbbe1b6b508c004c0e488def9754cf1d3064c8ce798feb82db7678ac338abfb9"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/archive/Ciclo Arco/maintenance-it.md",
+      "sha256": "410643b1f5d232e4746b83b22e52a655e60e0178366b0b84486d79a5f99d43fa",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/archive/Delta/maintenance-it.md",
+      "sha256": "831095b0ef84df0cf72bd37e9b7b97827760b22f3f965303f3aa6587c34024d1",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/archive/Ciclo Arco/maintenance-it.md",
+      "sha256": "410643b1f5d232e4746b83b22e52a655e60e0178366b0b84486d79a5f99d43fa",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/archive/Delta/maintenance-it.md",
+      "sha256": "831095b0ef84df0cf72bd37e9b7b97827760b22f3f965303f3aa6587c34024d1",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/archive/Ciclo Arco/update-it.md",
+      "sha256": "7c91194aa58f01caa7799571302147e5c44ca883064f8a2da2f4af4ac594d018",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/archive/Ciclo Arco/maintenance-en.md",
+      "sha256": "fe65e8d3c060dfcb34831b86ff980227218053f65fa4203ad5052bd4a0de8942",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/archive/Delta/maintenance-en.md",
+      "sha256": "86483b398f92115e071d481edb149c721a82f597424f97ec166f8e882f7403b2",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/archive/Ciclo Arco/maintenance-en.md",
+      "sha256": "fe65e8d3c060dfcb34831b86ff980227218053f65fa4203ad5052bd4a0de8942",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/archive/Delta/maintenance-en.md",
+      "sha256": "86483b398f92115e071d481edb149c721a82f597424f97ec166f8e882f7403b2",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/archive/Ciclo Arco/update-en.md",
+      "sha256": "dc654fa057bf7e565cfe11628ad53d7193e7d99bfc52e7bbe64e5916a1c60765",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/archive/Ciclo Arco/maintenance-fr.md",
+      "sha256": "d0022e32041e4652c1e3dca82a263fcf608715016e8ac610ebee87c1544445d2",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/archive/Delta/maintenance-fr.md",
+      "sha256": "197839aade1e3c4c8a909960072573c69cbca7aa36d0fb9e10de08aad7d928a5",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/archive/Ciclo Arco/maintenance-fr.md",
+      "sha256": "d0022e32041e4652c1e3dca82a263fcf608715016e8ac610ebee87c1544445d2",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/archive/Delta/maintenance-fr.md",
+      "sha256": "197839aade1e3c4c8a909960072573c69cbca7aa36d0fb9e10de08aad7d928a5",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/archive/Ciclo Arco/update-fr.md",
+      "sha256": "fed8b3e611e758b102bcc6ce21e5e0ffc3369b2ff24a469f9556cba7c8b2aec2",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/archive/Ciclo Arco/maintenance-de.md",
+      "sha256": "1d8a8c63da6b9d6ec8674ecb880338cdcfe87c93db5e81eba3dc5f1bdb038bbc",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/archive/Delta/maintenance-de.md",
+      "sha256": "ed14330d78aee1160cb939434db84fb009bd435a117355a42efcab06776c0ae1",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/archive/Ciclo Arco/maintenance-de.md",
+      "sha256": "1d8a8c63da6b9d6ec8674ecb880338cdcfe87c93db5e81eba3dc5f1bdb038bbc",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/archive/Delta/maintenance-de.md",
+      "sha256": "ed14330d78aee1160cb939434db84fb009bd435a117355a42efcab06776c0ae1",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/archive/Ciclo Arco/update-de.md",
+      "sha256": "4b0f60fe028a8693001e98ed2ee033145234492b3b51ddc7b7d888c221f566a8",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/archive/Ciclo Arco/maintenance-es.md",
+      "sha256": "b6a644fbbe0ccb34571ac50862d72192cc3008efac4106a39584a1301cd811d3",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/archive/Delta/maintenance-es.md",
+      "sha256": "727d2b1a5291abdd69544f798fd058f79d55e86e04a0f04621d984f36927fdfa",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/archive/Ciclo Arco/maintenance-es.md",
+      "sha256": "b6a644fbbe0ccb34571ac50862d72192cc3008efac4106a39584a1301cd811d3",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/archive/Delta/maintenance-es.md",
+      "sha256": "727d2b1a5291abdd69544f798fd058f79d55e86e04a0f04621d984f36927fdfa",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/archive/Ciclo Arco/update-es.md",
+      "sha256": "908bcda5d09f2f8b1005b25affaf5ad8726ae6cf2a1489485cb8fadcd15032e3",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Cercare documenti di un cliente con Vera",
+      "goal": "Imparare a collegare una cartella di studio, cercare nel cliente corretto e ottenere una risposta con riferimenti ai documenti.",
+      "scenario": "Lo studio vuole ritrovare il servizio di manutenzione concordato da Ciclo Arco e il termine indicato nell’accordo. L’archivio fittizio contiene anche un altro cliente.",
+      "scope": "Ricerca nei documenti locali. Gmail, WhatsApp e Google Drive sono altri percorsi della funzione e richiedono le rispettive connessioni; non vengono attivati in questa lezione.",
+      "inputs": "Apri la cartella archive: contiene Ciclo Arco e Delta, ciascuno con il proprio accordo. Vera prepara una copia didattica e un indice locale separato; le impostazioni del tuo archivio di studio restano quelle esistenti.",
+      "request": "Vera, cerca nei documenti di Ciclo Arco l’accordo con Tecnica Esempio. Quale servizio è previsto e fino a quando? Mostrami i passaggi che sostengono la risposta.",
+      "steps": [
+        "Nella chat di lavoro Vera prepara la cartella didattica, ne verifica l’accesso e indicizza i documenti leggibili. Se serve la scelta della cartella, seleziona quella dell’esercizio.",
+        "Seleziona Ciclo Arco. Il flusso corrente cerca nell’ambito di quel cliente e apre le fonti pertinenti; la voce spiega come passare dai risultati di ricerca al documento.",
+        "Leggi la risposta e apri le citazioni. Verifica che riportino cliente, servizio mensile e periodo dell’accordo. Individua anche eventuali limiti di lettura o documenti non indicizzati."
+      ],
+      "deliverables": [
+        "Risposta con citazioni apribili: servizio, periodo e passaggi dei documenti che li descrivono.",
+        "Stato dell’indice e traccia della ricerca: cliente selezionato, fonti aperte e limiti incontrati."
+      ],
+      "review": "Controlla il cliente selezionato e leggi il passaggio citato. La ricerca trova ciò che è nei file indicizzati; non dimostra che l’archivio contenga tutti gli accordi o che un documento sia giuridicamente valido.",
+      "checkpoints": [
+        "Prima della ricerca, identifica la cartella di Ciclo Arco.",
+        "Alla risposta, apri una citazione e ritrova il dato nel documento."
+      ],
+      "practice": "Aggiungi update-it.md dai file di prova alla copia didattica di Ciclo Arco, conserva l’accordo e chiedi di aggiornare l’indice. Ripeti la domanda sul termine del servizio e apri entrambe le fonti.",
+      "success": "La risposta tiene conto dell’aggiornamento fino al 30 giugno 2027 e conserva il riferimento all’accordo iniziale. Spiega quando serve aggiornare l’indice.",
+      "repeat": "Indica cliente e domanda concreta. Dopo nuovi documenti chiedi di aggiornare l’archivio; apri le fonti usate prima di affidarti alla risposta."
+    },
+    "en": {
+      "title": "Find a client’s documents with Vera",
+      "goal": "Learn to connect a studio folder, search the right client and obtain an answer linked to its source documents.",
+      "scenario": "The studio wants to find Ciclo Arco’s agreed maintenance service and the end date stated in its agreement. The fictional archive also contains another client.",
+      "scope": "Local document search. Gmail, WhatsApp and Google Drive are separate routes requiring their own connections; this lesson does not activate them.",
+      "inputs": "Open archive: it contains Ciclo Arco and Delta, each with its own agreement. Vera prepares a teaching copy and separate local index while retaining your existing studio archive settings.",
+      "request": "Vera, find Ciclo Arco’s agreement with Tecnica Esempio. What service is provided and until when? Show the passages supporting your answer.",
+      "steps": [
+        "In the working chat, Vera prepares the teaching folder, checks access and indexes readable documents. If a folder selection is needed, choose the exercise folder.",
+        "Select Ciclo Arco. The current workflow searches within that client and opens relevant sources; the voice chat explains the move from a search result to its document.",
+        "Read the answer and open its citations. Check the client, monthly service and stated period. Locate any extraction limits or documents that were not indexed."
+      ],
+      "deliverables": [
+        "Answer with source links: service, period and the document passages describing them.",
+        "Index status and search trail: selected client, opened sources and encountered limits."
+      ],
+      "review": "Check the selected client and read the cited passage. Search finds content in indexed files; it does not prove that all agreements are present or that a document is legally valid.",
+      "checkpoints": [
+        "Before searching, identify Ciclo Arco’s folder.",
+        "At delivery, open a citation and find the stated fact in its document."
+      ],
+      "practice": "Add update-en.md from the practice files to the Ciclo Arco teaching copy, keep the agreement and ask Vera to refresh the index. Repeat the end-date question and open both sources.",
+      "success": "The answer reflects the extension to 30 June 2027 and retains the original agreement reference. Explain when the index needs refreshing.",
+      "repeat": "Name the client and a concrete question. Refresh after new documents arrive and open the sources before relying on the answer."
+    },
+    "fr": {
+      "title": "Retrouver les documents d’un client avec Vera",
+      "goal": "Apprendre à connecter un dossier de cabinet, chercher chez le bon client et obtenir une réponse reliée aux documents sources.",
+      "scenario": "Le cabinet veut retrouver le service de maintenance convenu par Ciclo Arco et la fin indiquée dans l’accord. L’archive fictive contient aussi un autre client.",
+      "scope": "Recherche dans des documents locaux. Gmail, WhatsApp et Google Drive sont des parcours distincts avec leurs propres connexions ; ils ne sont pas activés ici.",
+      "inputs": "Ouvrez archive : Ciclo Arco et Delta ont chacun leur accord. Vera prépare une copie pédagogique et un index local séparé, en conservant les paramètres de votre archive habituelle.",
+      "request": "Vera, retrouve l’accord de Ciclo Arco avec Tecnica Esempio. Quel service est prévu et jusqu’à quand ? Montre les passages qui étayent la réponse.",
+      "steps": [
+        "Dans la conversation de travail, Vera prépare le dossier pédagogique, vérifie l’accès et indexe les documents lisibles. Si un dossier doit être choisi, sélectionnez celui de l’exercice.",
+        "Sélectionnez Ciclo Arco. Le flux actuel cherche dans ce client et ouvre les sources pertinentes ; la conversation vocale explique le passage du résultat de recherche au document.",
+        "Lisez la réponse et ouvrez les citations. Vérifiez client, service mensuel et période indiquée. Repérez les limites de lecture ou documents non indexés."
+      ],
+      "deliverables": [
+        "Réponse avec liens : service, période et passages des documents qui les décrivent.",
+        "État de l’index et trace de recherche : client choisi, sources ouvertes et limites rencontrées."
+      ],
+      "review": "Vérifiez le client sélectionné et lisez le passage cité. La recherche trouve les contenus indexés ; elle ne prouve ni l’exhaustivité des accords ni leur validité juridique.",
+      "checkpoints": [
+        "Avant la recherche, identifiez le dossier de Ciclo Arco.",
+        "À la remise, ouvrez une citation et retrouvez l’information dans le document."
+      ],
+      "practice": "Ajoutez update-fr.md depuis les fichiers d’exercice à la copie pédagogique de Ciclo Arco, conservez l’accord et demandez d’actualiser l’index. Répétez la question sur la fin du service et ouvrez les deux sources.",
+      "success": "La réponse tient compte de la prolongation au 30 juin 2027 et garde la référence à l’accord initial. Expliquez quand actualiser l’index.",
+      "repeat": "Indiquez client et question concrète. Actualisez après l’arrivée de nouveaux documents et ouvrez les sources avant d’utiliser la réponse."
+    },
+    "de": {
+      "title": "Kundendokumente mit Vera finden",
+      "goal": "Lernen, einen Kanzleiordner anzubinden, beim richtigen Kunden zu suchen und eine Antwort mit Quellenverweisen zu erhalten.",
+      "scenario": "Die Kanzlei möchte den vereinbarten Wartungsservice von Ciclo Arco und dessen angegebenes Ende finden. Das fiktive Archiv enthält auch einen anderen Kunden.",
+      "scope": "Suche in lokalen Dokumenten. Gmail, WhatsApp und Google Drive sind eigene Wege mit eigenen Verbindungen; sie werden hier nicht aktiviert.",
+      "inputs": "Öffnen Sie archive: Ciclo Arco und Delta haben jeweils ihre eigene Vereinbarung. Vera erstellt eine Übungskopie und einen getrennten lokalen Index; Ihre bestehenden Archiveinstellungen bleiben erhalten.",
+      "request": "Vera, finde die Vereinbarung von Ciclo Arco mit Tecnica Esempio. Welcher Service ist vorgesehen und bis wann? Zeige die Belegstellen für deine Antwort.",
+      "steps": [
+        "Im Arbeitschat bereitet Vera den Übungsordner vor, prüft den Zugriff und indexiert lesbare Dokumente. Falls eine Ordnerauswahl erforderlich ist, wählen Sie den Übungsordner.",
+        "Wählen Sie Ciclo Arco. Der aktuelle Ablauf sucht nur bei diesem Kunden und öffnet passende Quellen. Der Sprachchat erklärt den Weg vom Suchtreffer zum Dokument.",
+        "Lesen Sie die Antwort und öffnen Sie die Quellenverweise. Prüfen Sie Kunde, monatlichen Service und Zeitraum sowie mögliche Leselücken oder nicht indexierte Dokumente."
+      ],
+      "deliverables": [
+        "Antwort mit Quellenlinks: Service, Zeitraum und zugehörige Dokumentstellen.",
+        "Indexstatus und Suchverlauf: ausgewählter Kunde, geöffnete Quellen und Grenzen."
+      ],
+      "review": "Prüfen Sie den gewählten Kunden und lesen Sie die zitierte Stelle. Die Suche findet indexierte Inhalte; sie beweist weder die Vollständigkeit des Archivs noch die rechtliche Gültigkeit eines Dokuments.",
+      "checkpoints": [
+        "Identifizieren Sie vor der Suche den Ordner von Ciclo Arco.",
+        "Öffnen Sie bei der Antwort einen Quellenverweis und finden Sie die Information im Dokument."
+      ],
+      "practice": "Fügen Sie update-de.md aus den Übungsdateien zur Ciclo-Arco-Übungskopie hinzu, behalten Sie die Vereinbarung und lassen Sie den Index aktualisieren. Fragen Sie erneut nach dem Ende und öffnen Sie beide Quellen.",
+      "success": "Die Antwort berücksichtigt die Verlängerung bis zum 30. Juni 2027 und behält den Verweis auf die ursprüngliche Vereinbarung. Erklären Sie, wann der Index aktualisiert werden muss.",
+      "repeat": "Nennen Sie Kunde und konkrete Frage. Aktualisieren Sie nach neuen Dokumenten und öffnen Sie die verwendeten Quellen, bevor Sie die Antwort nutzen."
+    },
+    "es": {
+      "title": "Encontrar documentos de un cliente con Vera",
+      "goal": "Aprender a conectar una carpeta del despacho, buscar en el cliente correcto y obtener una respuesta vinculada a sus documentos.",
+      "scenario": "El despacho quiere encontrar el mantenimiento acordado por Ciclo Arco y el final indicado en su acuerdo. El archivo ficticio también contiene otro cliente.",
+      "scope": "Búsqueda en documentos locales. Gmail, WhatsApp y Google Drive son rutas separadas con sus propias conexiones; no se activan en esta lección.",
+      "inputs": "Abre archive: contiene Ciclo Arco y Delta, cada uno con su acuerdo. Vera prepara una copia didáctica y un índice local separado, manteniendo los ajustes del archivo habitual.",
+      "request": "Vera, busca el acuerdo de Ciclo Arco con Tecnica Esempio. ¿Qué servicio se prevé y hasta cuándo? Muéstrame los pasajes que respaldan la respuesta.",
+      "steps": [
+        "En la conversación de trabajo, Vera prepara la carpeta didáctica, comprueba el acceso e indexa los documentos legibles. Si hay que elegir una carpeta, selecciona la del ejercicio.",
+        "Selecciona Ciclo Arco. El flujo actual busca dentro de ese cliente y abre las fuentes pertinentes; la conversación de voz explica cómo pasar del resultado al documento.",
+        "Lee la respuesta y abre las citas. Comprueba cliente, servicio mensual y periodo indicado. Localiza también límites de lectura o documentos no indexados."
+      ],
+      "deliverables": [
+        "Respuesta con enlaces: servicio, periodo y pasajes de los documentos que los describen.",
+        "Estado del índice y registro de búsqueda: cliente, fuentes abiertas y límites encontrados."
+      ],
+      "review": "Comprueba el cliente seleccionado y lee el pasaje citado. La búsqueda encuentra lo indexado; no demuestra que estén todos los acuerdos ni la validez jurídica de un documento.",
+      "checkpoints": [
+        "Antes de buscar, identifica la carpeta de Ciclo Arco.",
+        "En la respuesta, abre una cita y encuentra el dato en el documento."
+      ],
+      "practice": "Añade update-es.md desde los archivos de práctica a la copia didáctica de Ciclo Arco, conserva el acuerdo y pide actualizar el índice. Repite la pregunta sobre el final del servicio y abre ambas fuentes.",
+      "success": "La respuesta recoge la ampliación hasta el 30 de junio de 2027 y conserva la referencia al acuerdo inicial. Explica cuándo actualizar el índice.",
+      "repeat": "Indica cliente y pregunta concreta. Actualiza cuando lleguen documentos y abre las fuentes antes de usar la respuesta."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "3ff4cf7685e58dba1440bfcbe9f1dade217121409f0da625d6ccb9a899dad126"
+}

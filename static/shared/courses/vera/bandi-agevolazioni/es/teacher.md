@@ -1,61 +1,71 @@
-# Una oportunidad interesante no acredita la elegibilidad
+# Preparar un expediente de ayudas con Vera
 
-Un recorrido guiado de unos 6 minutos y medio. La activación de voz, los procesos externos y el ejercicio opcional requieren tiempo adicional.
+La explicación y una práctica breve requieren unos 5–8 minutos. El procesamiento y tus preguntas pueden alargar la sesión.
 
-Habla con el docente mediante la voz estándar de Codex. En la segunda conversación, abierta al lado, examina los archivos y el resultado. Ambas siguen vinculadas; puedes interrumpir, preguntar por qué o reducir el ritmo cuando quieras.
+Habla con el docente mediante la voz estándar de Codex. En la conversación de trabajo, abierta en la ventana contigua, la función ejecuta el caso con los archivos preparados y muestra resultados reales. El docente sigue esos resultados: puedes interrumpir, preguntar y cambiar el ritmo.
 
-Utiliza este material preparado. No reescribas la lección ni inventes resultados. Habla en turnos breves, deja tiempo para observar y escucha respuestas reales. No muestres la solución antes del intento. Los tiempos incluyen observación y diálogo. Mostrar estos archivos no completa demostración, práctica ni comprensión en el registro local. El docente elige por pertinencia únicamente dentro del catálogo de su producto.
+Utiliza el material preparado para enseñar un primer uso completo. Selecciona 3–4 funciones pertinentes durante la incorporación; después, empieza por lo que el usuario quiera hacer hoy. Adapta el ritmo y las explicaciones. Crea ejemplos personalizados cuando ayuden, con el mismo workflow y entradas revisadas. Lee execution-request.json, utiliza el caso local realmente vinculado y explica los resultados verificados de la conversación de trabajo. No inventes resultados, respuestas del usuario ni confirmaciones de comprensión. Abrir el kit no completa la lección.
 
-## 1. Tu objetivo · 45 s
+## 1. Cuándo utilizarla · 45 s
 
-Escucha la petición. Relaciona el caso con un trabajo que ya haces.
+Relaciona la función con una tarea profesional concreta.
 
-Una convocatoria totalmente ficticia financia maquinaria para fabricantes de una región. Arco propone invertir EUR 80.000. Faltan pruebas del establecimiento y de la fecha de inicio del gasto.
+Aprender a empezar con una convocatoria seleccionada, aportar documentos de la empresa y revisar el expediente preparado por Vera.
 
-Vera, muestra cómo una convocatoria encontrada se convierte en comprobaciones para esta empresa.
+Un despacho examina el proyecto digital de una pequeña empresa. Una convocatoria totalmente ficticia y documentos simulados permiten seguir el trabajo desde las condiciones hasta el expediente y actualizar después el presupuesto.
 
-## 2. Los datos de partida · 60 s
+Preparación tras seleccionar una convocatoria: fuentes, requisitos, evidencias, gastos, documentos, borrador y revisión. La búsqueda de oportunidades es la otra etapa de la función; aquí ya se aporta la convocatoria. Sus condiciones no son normas ni financiación reales.
 
-Mira los documentos en la otra conversación. Identifica un dato útil y una información que falta.
+## 2. Archivos y petición · 60 s
 
-B1 define solo las condiciones del ejemplo. C1 acredita un proyecto, no el cumplimiento de todos los requisitos. No se inventa un porcentaje de ayuda.
+Abre los archivos en la ventana de trabajo y muestra cómo pedir el resultado.
 
-[["B1 · convocatoria DEMO § 2", "Establecimiento en la región convocante", "Ubicación sin documentar"], ["B1 · § 4", "Gasto iniciado después de solicitar", "Falta fecha del pedido"], ["C1 · proyecto Arco", "Maquinaria: EUR 80.000", "Presupuesto entregado"]]
+Abre avviso-es.md, progetto-es.md y preventivo-es.csv: convocatoria simulada, hechos declarados de la empresa y costes propuestos. No incluyen una evaluación de elegibilidad, clasificación de gastos aceptada ni aprobación previa.
 
-## 3. Cómo trabaja el workflow · 75 s
+Vera, prepara un expediente de práctica con esta convocatoria y los documentos de la empresa. Muéstrame requisitos, comparación con las evidencias, gastos, documentos necesarios y puntos que debo revisar.
 
-Sigue los tres pasos. Detente en la decisión que cambia el resultado.
+## 3. Ejecutar el trabajo · 105 s
 
-Define el objetivo de búsqueda y revisa fuentes pertinentes. Vincula cada oportunidad con fuente y versión exactas.
-Compara cada requisito con las pruebas de la empresa seleccionada e identifica documentos pendientes.
-Prepara ficha, lista de comprobación y dossier revisable. Distingue pertinencia, requisitos verificados y preparación documental; no presentes la solicitud.
+Explica el paso que se está ejecutando y espera su resultado real.
 
-## 4. Leer el resultado · 90 s
+En la ventana de trabajo, Vera abre el caso y registra los documentos. La conversación de voz explica encargo, fuentes y resultado. Revisa qué documentos rigen el ejercicio y cuáles describen la empresa.
 
-Abre el ejemplo en la segunda conversación. Vincula cada conclusión con su fuente.
+Vera propone requisitos y comparaciones con los hechos, examina gastos y prepara la lista de documentos y el borrador. Sigue un punto desde la fuente hasta la propuesta y revisa las decisiones previstas por el procedimiento normal.
 
-El proyecto encaja con el objeto de la convocatoria. Dos condiciones decisivas siguen sin documentar.
+Abre review_dossier.html: empieza por el resumen y después revisa gastos, documentos y borrador del proyecto. Despliega una condición para leer su evaluación y el extracto de la fuente. Vera explica las revisiones pendientes y los siguientes pasos; este ejercicio no utiliza portales ni envía nada.
 
-[["Encaje de inversión · B1/C1", "Maquinaria descrita", "Completar comparación técnica"], ["Ubicación · B1 § 2", "No verificada", "Documento del establecimiento"], ["Inicio del gasto · B1 § 4", "No verificado", "Pedido y cronología del gasto"]]
+Durante la lección, la conversación de trabajo ejecuta la función y produce el resultado. Si un paso no está disponible, explica qué falta y deja la lección incompleta.
 
-## 5. La comprobación clave · 75 s
+## 4. Utilizar el resultado · 75 s
 
-Antes de mostrar la respuesta, explica qué comprobarías.
+Abre el documento recién producido y muestra por dónde empezar a leerlo.
 
-La pertinencia no demuestra elegibilidad. Una ficha no sustituye la convocatoria oficial y sus anexos.
+Expediente local con requisitos, evidencias, evaluaciones propuestas, gastos, documentos y borrador.
 
-El presupuesto encaja perfectamente. ¿Podemos afirmar que Arco es elegible?
+Controles y registro de revisiones con puntos abiertos y próximas acciones.
 
-Comparar el razonamiento: No. Ubicación, momento y demás condiciones de la fuente completa necesitan evaluación. Entrega las comprobaciones abiertas.
+Comprueba que cada requisito remita a la convocatoria y cada hecho al documento correcto. Distingue disponibilidad documental, resultado propuesto y decisión del organismo: un expediente no concede una ayuda.
 
-## 6. Probar juntos · 45 s
+## 5. Parar y comprobar · 45 s
 
-Decide si prefieres practicar ahora o guardar el ejemplo para tu próximo encargo.
+Haz estas comprobaciones en los momentos indicados durante el trabajo.
 
-Añade un pedido ficticio anterior a la solicitud y reconsidera la condición temporal.
+Explica los archivos y la petición necesarios cuando ya hay una convocatoria seleccionada.
 
-Selecciona oportunidad y empresa reales y verifica la fuente oficial vigente antes de prometer una ayuda.
+Abre el expediente, vincula una propuesta con su fuente e identifica la revisión pendiente.
 
-Este es un ejemplo didáctico preparado, no un comprobante de una nueva ejecución. Las fuentes y decisiones son ficticias; no se presupone aprobación profesional. Con tus archivos, el workflow actual realiza sus comprobaciones y conserva los resultados reales.
+Estas pausas ayudan a aprender a utilizar la función. No son un examen de detalles técnicos.
+
+## 6. Ahora prueba tú · 60 s
+
+Deja que el usuario formule la petición y acompaña su intento.
+
+Aporta el presupuesto actualizado del ejercicio. Pide un nuevo expediente conservando el primero y revisa cómo cambian costes, importe propuesto y revisiones necesarias.
+
+Sabes iniciar el trabajo con una convocatoria, revisar el expediente y solicitar una actualización sin confundir propuesta y aprobación.
+
+Aporta convocatoria oficial, anexos y documentos de la empresa, con proyecto y fecha de referencia. Vera prepara el expediente con las revisiones normales. Si primero buscas una oportunidad, indica territorio y proyecto.
+
+El kit contiene archivos ficticios y un guion preparado. Los resultados de la demostración y la práctica proceden de nuevas ejecuciones de la función actual.
 
 La biblioteca, el perfil y el progreso permanecen en tu ordenador y no se envían a Mparanza. La voz y los contenidos leídos en la conversación se procesan mediante tu cuenta OpenAI: almacenamiento local no significa inferencia sin conexión.

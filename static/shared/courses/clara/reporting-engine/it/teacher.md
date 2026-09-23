@@ -1,61 +1,71 @@
-# Prima del grafico, il significato dei dati
+# Preparare un report dai dati con Clara
 
-Percorso guidato di circa 6 minuti e mezzo. Avvio della voce, elaborazioni esterne ed esercizio facoltativo sono separati dal tempo della lezione.
+La spiegazione e una breve prova richiedono circa 5–8 minuti. I tempi di elaborazione e le tue domande possono allungare la sessione.
 
-Nella chat insegnante parli con la voce standard di Codex. Nella seconda chat, aperta accanto, guardi i file e il risultato. Le due chat restano abbinate; puoi interrompere, chiedere perché o rallentare in qualsiasi momento.
+Nella chat insegnante parli con la voce standard di Codex. Nella chat di lavoro, aperta nella finestra accanto, la funzione esegue il caso con i file preparati e mostra i risultati effettivi. L’insegnante segue quei risultati: puoi interrompere, fare domande e cambiare ritmo.
 
-Usa questi contenuti già pronti. Non riscrivere la lezione né inventare risultati. Parla in brevi turni, lascia il tempo di guardare e ascolta le risposte reali. Non leggere la soluzione prima del tentativo. I tempi includono osservazione e dialogo, non solo il testo parlato. Mostrare questi file non completa demo, pratica o comprensione nel registro locale. Il docente sceglie semanticamente il workflow adatto dal solo catalogo del proprio prodotto.
+Parti dal materiale preparato e insegna l’intero primo utilizzo. Scegli 3–4 funzioni pertinenti durante l’onboarding; nelle visite successive parti da ciò che l’utente vuole fare oggi. Adatta il ritmo e le spiegazioni. Crea esempi personalizzati quando aiutano, mantenendo lo stesso workflow e verificando i nuovi input. Leggi execution-request.json, usa il vero caso locale abbinato e collega ogni spiegazione ai risultati verificati della chat di lavoro. Non inventare risultati, risposte dell’utente o conferme di comprensione. Mostrare il kit non completa la lezione.
 
-## 1. Il tuo obiettivo · 45 s
+## 1. A cosa serve · 45 s
 
-Ascolta la richiesta. Collega il caso a un lavoro che fai già.
+Collega la funzione a un lavoro concreto del professionista.
 
-Il dataset fittizio riporta vendite nette: gennaio 40.000 EUR e febbraio 50.000 EUR. Un campo 'Discount' non è presente. Le note della fonte confermano che Sales è già al netto degli sconti, quindi sottrarli ancora sarebbe errato.
+Impara a confrontare consuntivo e budget, seguire la preparazione del report e usare le differenze per la revisione mensile.
 
-Clara, mostrami l'andamento delle vendite e spiegami quali dati stai usando.
+Arco ha preparato i dati economici di gennaio e febbraio e il budget degli stessi mesi. Il responsabile vuole capire il risultato operativo e quali categorie spiegano la differenza dal piano, prima della riunione mensile.
 
-## 2. Da quali dati partiamo · 60 s
+Il caso comprende ricavi, costo del venduto e costi operativi in euro. Il report distingue i dati osservati dalle spiegazioni che richiedono informazioni dell’azienda. Clara sceglie l’analisi in base alla domanda e ai dati; questo primo utilizzo segue il confronto con il budget. Il report della lezione resta locale.
 
-Guarda i documenti nella chat accanto. Individua un dato utile e un'informazione mancante.
+## 2. I file e la richiesta · 60 s
 
-R1 contiene due mesi; R2 definisce Sales come vendite nette. Il ruolo Discount è assente come misura separata in questo dataset, non un importo pari a zero.
+Apri i file nella finestra di lavoro e mostra come chiedere il risultato.
 
-[["2026-01", "40.000 EUR", "Vendite nette"], ["2026-02", "50.000 EUR", "Vendite nette"], ["Discount separato", "Assente", "Già incorporato in Sales"]]
+Apri actual-budget.xlsx e facts-it.md. Il foglio GL contiene movimenti mensili per conto e categoria; Budget contiene il piano comparabile. I ricavi sono positivi e i costi negativi. Il caso indica periodo, significati e totali di controllo: consuntivo EUR 53.000 e budget EUR 47.000.
 
-## 3. Come lavora il workflow · 75 s
+Clara, prepara il report consuntivo–budget di Arco per gennaio e febbraio 2026 da questo workbook. Mostrami risultato operativo, scostamenti e dettaglio per categoria.
 
-Segui i tre passaggi. Fermati sulla scelta che cambia il risultato.
+## 3. Eseguiamo il lavoro · 105 s
 
-Esegui l'intake e leggi dati, profilo e note. Rivedi significato, aggregazione e ruoli Sales, Discount e COGS; un'intestazione non basta.
-Seleziona una capacità compatibile con le metriche rivedute e genera il grafico attraverso l'adapter di Clara. Conserva richiesta e prove dell'output.
-Apri il risultato, verifica valori, unità, periodi e conclusione. Per upload successivi riusa il contratto semantico stabile quando compatibile, senza reinventarlo a ogni file.
+Spiega il passaggio che sta avvenendo e attendi il suo risultato effettivo.
 
-## 4. Leggiamo il risultato · 90 s
+L’assistente esamina i fogli e propone quali colonne rappresentano date, categorie e importi. Conferma il periodo gennaio–febbraio e la convenzione dei segni prima del calcolo.
 
-Apri l'esempio nella seconda chat. Collega ogni conclusione alla sua fonte.
+Il workflow applica la mappatura verificata, confronta consuntivo e budget e controlla i totali. La chat vocale spiega il passaggio effettivo e le eventuali informazioni richieste.
 
-Le vendite nette passano da 40.000 a 50.000 EUR: +10.000 EUR, pari a +25%. Non disponiamo di una misura separata degli sconti o dei costi.
+Apri il cruscotto e il workbook prodotti nella chat di lavoro. Parti dalla sintesi del periodo, passa al confronto mensile e poi al dettaglio delle categorie.
 
-[["Gennaio", "40.000 EUR", "R1 · vendite nette"], ["Febbraio", "50.000 EUR", "R1 · vendite nette"], ["Variazione", "+10.000 EUR · +25%", "Base gennaio 40.000 EUR"]]
+Durante la lezione, la chat di lavoro esegue la funzione e produce il risultato. Se un passaggio non è disponibile, spieghiamo cosa manca e manteniamo la lezione incompleta.
 
-## 5. Il controllo che conta · 75 s
+## 4. Usiamo il risultato · 75 s
 
-Prima di aprire la risposta, spiega a voce cosa controlleresti.
+Apri il documento appena prodotto e mostra dove iniziare a leggerlo.
 
-Compatibilità tecnica e corretto significato della metrica sono controlli diversi. Un dataset può avere colonne valide e una mappatura semanticamente sbagliata.
+Cruscotto: mostra risultato del periodo e scostamenti assoluti e percentuali dove significativi. Usalo per scegliere quali voci approfondire.
 
-Non c'è Discount: possiamo dire che non sono stati concessi sconti?
+Workbook e report: conservano prospetti, controlli e collegamenti ai dati. La sintesi distingue la misura dello scostamento dalla sua causa da verificare.
 
-Confronta il ragionamento: No. La fonte dice che Sales è netto; non fornisce una misura separata. L'assenza della colonna non dimostra assenza di sconti.
+Controlla che i due fogli coprano gli stessi mesi e che i costi abbiano il segno previsto. Collega una differenza alla categoria e al mese di origine. Chiedi spiegazioni all’azienda quando i numeri non documentano la causa.
 
-## 6. Proviamo insieme · 45 s
+## 5. Fermiamoci a verificare · 45 s
 
-Scegli se provare ora o conservare l'esempio per il prossimo incarico.
+Fai queste verifiche nel momento indicato, durante il lavoro.
 
-Aggiungi marzo con la stessa definizione di Sales e verifica il riuso del contratto e l'aggiornamento del grafico.
+Prima del calcolo: trova i due fogli e conferma il periodo del report.
 
-Seleziona CSV, Excel o Parquet e le note che spiegano le metriche. Per Actual/Budget Clara usa la propria route di budget nello stesso workflow.
+Sul risultato: indica il confronto complessivo e poi una categoria che approfondiresti.
 
-Questo è un esempio didattico preparato, non la ricevuta di una nuova esecuzione. Le fonti e le decisioni sono fittizie; nessuna approvazione del professionista è implicita. Per lavorare sui tuoi file, il workflow corrente esegue i propri controlli e conserva i risultati effettivi.
+Queste pause servono a capire come usare la funzione. Le risposte non sono un esame di dettaglio tecnico.
+
+## 6. Ora prova tu · 60 s
+
+Lascia formulare la richiesta all’utente e accompagna la sua prova.
+
+Usa actual-budget-march.xlsx per chiedere un aggiornamento fino a marzo. Formula la richiesta, conferma il nuovo periodo e confronta il risultato con il report precedente.
+
+Il nuovo report deve includere marzo e conservare il precedente. Sai trovare il confronto con il budget e risalire ai dati di una categoria.
+
+Per rifarlo, fornisci consuntivo e piano con periodi comparabili, indica il periodo e lo scopo della riunione, rivedi la lettura dei dati e apri il report generato.
+
+Il kit contiene file fittizi e una traccia preparata. I risultati della dimostrazione e della prova provengono da nuove esecuzioni della funzione corrente.
 
 La biblioteca, il profilo e i progressi della lezione restano sul computer. Non vengono inviati a Mparanza. La voce e i contenuti letti in chat sono elaborati dall'account OpenAI: salvare in locale non significa inferenza offline.

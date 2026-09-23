@@ -1,0 +1,307 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "management-control-pack",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en"
+  ],
+  "language_basis": "workflow_output_contract",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
+  "sources": [
+    {
+      "path": "modules/management-control-pack/assets/budget-report.css",
+      "sha256": "708ebf8bc1867002287453273982e1e709a8979bce7935027196559485415bce"
+    },
+    {
+      "path": "modules/management-control-pack/assets/budget-report.js",
+      "sha256": "290f329589411bd18c956ef9d9f908a785cc6775e0e66049063519fc5e6c559b"
+    },
+    {
+      "path": "modules/management-control-pack/assets/icon.svg",
+      "sha256": "8242353d7b5b73e94c302432ec362ea06a36a7acd1682e6b84c9d67bd292ae96"
+    },
+    {
+      "path": "modules/management-control-pack/assets/management-report-copy.json",
+      "sha256": "1214b0fd2646a5a13db85ccebf1ef233f0cb2cb1f8ce3daf28cb681f4244db94"
+    },
+    {
+      "path": "modules/management-control-pack/requirements.txt",
+      "sha256": "9bba605fd7b6ea23038de15e5a1ae6714b3d3fb14ed2d6e6bedbfb0665ca2122"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/budget_presentation.py",
+      "sha256": "643f526d3c6980fcefee72d3919c652da0b1016d6a0c9bfabff6de4b3a713706"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/check_dependencies.py",
+      "sha256": "edbc9f16d57800b1110eb94c9c6d68d94e2713bd2da7120cb5c8bc33186e17a5"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/finalize_pack.py",
+      "sha256": "7cddaa2377112588a905b04f09c54e5f5d9d57a91c9cad6810de5b93161e5a7e"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/inspect_inputs.py",
+      "sha256": "02fabbeaf9770fc750003ae7981eb4f5d58e3ca745808a13f655a524ddb81456"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/management_control_core.py",
+      "sha256": "0068ff898813ada9f1dc8bb5bacbbc88a7a0ae7c866408a72619e26a5992561f"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/management_delivery.py",
+      "sha256": "4f0defc123841a3ed85d69b5dbdb7ea360363a7ef32aba0dac174bce707ce6ef"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/management_report_copy.py",
+      "sha256": "4d972ac51f9d101f954fa4b3aaff645747fa51b7bef9fac4e88fb44a678c7e63"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/management_site.py",
+      "sha256": "5001e888310f865a2d226770a3c1438e4d0f5fdd90f5c4f157a876d9c9828f81"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/prepare_report_site.py",
+      "sha256": "17c9c3296fd152848ab4299347be4806c1a0062367cc27b6c37f173fd2510d3b"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/run_pack.py",
+      "sha256": "69ef1cbde7526f347c45bf51758f9356796cb583c64a484bacaa04014d266fdd"
+    },
+    {
+      "path": "modules/management-control-pack/skills/management-control-pack/SKILL.md",
+      "sha256": "b26c4dc8a8841687f3cab26070d02c9d6052fee4dfcc91efde78d1d865c9bf5b"
+    },
+    {
+      "path": "modules/management-control-pack/skills/management-control-pack/references/sites-delivery.md",
+      "sha256": "12d9a79f93c192433729d1bce13f4951cad613545c1bec9c409398bc53f7dc52"
+    },
+    {
+      "path": "modules/management-control-pack/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/management-control-pack/vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "modules/management-control-pack/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/management-control-pack/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/management-control-pack/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/management-control-pack/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/management-control-pack/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/management-control-pack/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/management-control-pack/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/management-control-pack/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/management-control-pack/SKILL.md",
+      "sha256": "ea40e29c7964f4ddd84f3f2e9daa45553067bd4279048c56036ebabc900b4eb1"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/actual-budget.xlsx",
+      "sha256": "5540ffaa5d8dad4b30de5899f15ccef6c83100b2c673acfeaef6a209b7aba8f0",
+      "languages": [
+        "it",
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/facts-it.md",
+      "sha256": "e6d453933c55d15d78115894ed39bb9f742f0903fcdd78a37d37746f15eb29eb",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/facts-en.md",
+      "sha256": "86137c1a1ae2f0eac6736f1749f75d166d32b41aa2a412aa6e404cb0e9ded4cd",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/actual-budget-march.xlsx",
+      "sha256": "526cea3fe0d3befacee14153e4edf63c78cd7e2b9c13a2e2fcca791f64d7a675",
+      "languages": [
+        "it",
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/facts-it.md",
+      "sha256": "e6d453933c55d15d78115894ed39bb9f742f0903fcdd78a37d37746f15eb29eb",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/facts-en.md",
+      "sha256": "86137c1a1ae2f0eac6736f1749f75d166d32b41aa2a412aa6e404cb0e9ded4cd",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "goal": "Impara a confrontare consuntivo e budget, seguire la preparazione del report e usare le differenze per la revisione mensile.",
+      "scenario": "Arco ha preparato i dati economici di gennaio e febbraio e il budget degli stessi mesi. Il responsabile vuole capire il risultato operativo e quali categorie spiegano la differenza dal piano, prima della riunione mensile.",
+      "scope": "Il caso comprende ricavi, costo del venduto e costi operativi in euro. Il report distingue i dati osservati dalle spiegazioni che richiedono informazioni dell’azienda.",
+      "inputs": "Apri actual-budget.xlsx e facts-it.md. Il foglio GL contiene movimenti mensili per conto e categoria; Budget contiene il piano comparabile. I ricavi sono positivi e i costi negativi. Il caso indica periodo, significati e totali di controllo: consuntivo EUR 53.000 e budget EUR 47.000.",
+      "steps": [
+        "Vera importa i dati nel caso didattico collegato al cliente. Il pacchetto di controllo di gestione può includere anche altri export; qui impariamo il percorso completo del confronto economico con il budget.",
+        "L’assistente esamina i fogli e propone quali colonne rappresentano date, categorie e importi. Conferma il periodo gennaio–febbraio e la convenzione dei segni prima del calcolo.",
+        "Il workflow applica la mappatura verificata, confronta consuntivo e budget e controlla i totali. La chat vocale spiega il passaggio effettivo e le eventuali informazioni richieste.",
+        "Vera prepara un breve commento collegato ai numeri e una domanda da discutere in riunione. Apri report, cruscotto e workbook nella chat di lavoro: leggi la sintesi del periodo, passa al confronto mensile e trova il dettaglio delle categorie."
+      ],
+      "deliverables": [
+        "Cruscotto: mostra risultato del periodo e scostamenti assoluti e percentuali dove significativi. Usalo per scegliere quali voci approfondire.",
+        "Workbook e report: conservano prospetti, controlli e collegamenti ai dati. La sintesi distingue la misura dello scostamento dalla sua causa da verificare."
+      ],
+      "review": "Controlla che i due fogli coprano gli stessi mesi e che i costi abbiano il segno previsto. Collega una differenza alla categoria e al mese di origine. Chiedi spiegazioni all’azienda quando i numeri non documentano la causa.",
+      "checkpoints": [
+        "Prima del calcolo: trova i due fogli e conferma il periodo del report.",
+        "Sul risultato: indica il confronto complessivo e poi una categoria che approfondiresti."
+      ],
+      "practice": "Usa actual-budget-march.xlsx per chiedere un aggiornamento fino a marzo. Formula la richiesta, conferma il nuovo periodo e confronta il risultato con il report precedente.",
+      "success": "Il nuovo report deve includere marzo e conservare il precedente. Sai trovare il confronto con il budget e risalire ai dati di una categoria.",
+      "repeat": "Per rifarlo, fornisci consuntivo e piano con periodi comparabili, indica il periodo e lo scopo della riunione, rivedi la lettura dei dati e apri il report generato.",
+      "title": "Preparare il controllo di gestione con Vera",
+      "request": "Vera, prepara il report consuntivo–budget di Arco per gennaio e febbraio 2026 da questo workbook. Mostrami risultato operativo, scostamenti e dettaglio per categoria."
+    },
+    "en": {
+      "goal": "Learn to compare actual performance with budget, follow report preparation and use the differences in a monthly review.",
+      "scenario": "Arco has prepared January and February management accounts and a budget for the same months. The manager wants to understand operating performance and which categories explain the difference from plan before the monthly meeting.",
+      "scope": "The case includes revenue, cost of goods sold and operating expenses in EUR. The report separates observed figures from explanations requiring company evidence.",
+      "inputs": "Open actual-budget.xlsx and facts-en.md. GL contains monthly movements by account and category; Budget contains the comparable plan. Revenue is positive and costs are negative. The case declares periods, meanings and control totals: actual EUR 53,000 and budget EUR 47,000.",
+      "steps": [
+        "Vera imports the data into the client-bound teaching case. The management-control pack also accepts other exports; here we learn the complete actual-versus-budget reporting journey.",
+        "The assistant inspects the sheets and proposes which columns contain dates, categories and amounts. Confirm January–February and the sign convention before calculation.",
+        "The workflow applies the reviewed mapping, compares actual with budget and checks totals. The voice chat explains the actual step and any requested information.",
+        "Vera prepares a short commentary tied to the figures and a question for the meeting. Open the report, dashboard and workbook in the working chat: read the period summary, switch to the monthly comparison and find the category detail."
+      ],
+      "deliverables": [
+        "Dashboard: shows period performance and absolute and percentage variances where meaningful. Use it to decide which categories to investigate.",
+        "Workbook and report: retain tables, controls and links to the data. The summary distinguishes the measured variance from its cause, which may need investigation."
+      ],
+      "review": "Check that both sheets cover the same months and that costs use the expected sign. Trace one difference to its source category and month. Ask the company for explanations when the figures do not establish a cause.",
+      "checkpoints": [
+        "Before calculation: find the two sheets and confirm the reporting period.",
+        "At the result: locate the overall comparison and one category you would investigate."
+      ],
+      "practice": "Use actual-budget-march.xlsx to request an update through March. Formulate the request, confirm the new period and compare the result with the preceding report.",
+      "success": "The new report must include March and preserve the preceding version. You can find the budget comparison and trace one category to its data.",
+      "repeat": "To repeat at work, supply actuals and plan for comparable periods, specify the period and meeting purpose, review the interpretation of the inputs and open the generated report.",
+      "title": "Prepare a management-control report with Vera",
+      "request": "Vera, prepare Arco’s actual-versus-budget report for January and February 2026 from this workbook. Show operating performance, variances and category detail."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "179efcc5ad4ac42f9541ecc76cd9b4fa94521c105a1309606e23c381c4c471b6"
+}

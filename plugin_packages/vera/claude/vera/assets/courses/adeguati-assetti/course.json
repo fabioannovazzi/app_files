@@ -1,0 +1,574 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "adeguati-assetti",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "assess_arrangements_then_review_new_evidence"
+  },
+  "sources": [
+    {
+      "path": "modules/adeguati-assetti/assets/icon.svg",
+      "sha256": "d215fd17d4913d8f3fe5a4bf4d492f78ee46fa65408d0ec878b3fec32db8a004"
+    },
+    {
+      "path": "modules/adeguati-assetti/references/intelligent-assessment.md",
+      "sha256": "21c88ce5d0b3d13c97a67d0b28d4ff33893c7fa09e6b990aa69f07e2dd5f3310"
+    },
+    {
+      "path": "modules/adeguati-assetti/references/professional-method.md",
+      "sha256": "f9694892eed84b1fb8925e83255718734be12fe427b70486ca1b3ebed140611e"
+    },
+    {
+      "path": "modules/adeguati-assetti/references/record-contract.md",
+      "sha256": "976b4f5219b7b7457bad0b3665c6a8e14488d7db07e92396ee7a2d3df444ae01"
+    },
+    {
+      "path": "modules/adeguati-assetti/requirements.txt",
+      "sha256": "a289f525166e15bc5b9d66d072d85822ef3152ad0f0456a801a99ed82593ca58"
+    },
+    {
+      "path": "modules/adeguati-assetti/scripts/assetti_review.py",
+      "sha256": "706f1bc9cbe67bcbd0c34958a97ecba6c0571d2fb23cf400d040d800beee89f7"
+    },
+    {
+      "path": "modules/adeguati-assetti/scripts/check_dependencies.py",
+      "sha256": "0d196d5928e53e302ccb750a58def7ee90797b67ed1f0fa5c421d52e3ab75f00"
+    },
+    {
+      "path": "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
+      "sha256": "e8d517aa143cd3436a2e5f1dad977d3804925272747ef972a0880de4d2dd454b"
+    },
+    {
+      "path": "modules/adeguati-assetti/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/adeguati-assetti/SKILL.md",
+      "sha256": "29195b5c03c7dc5f4e93d48cfac055076f4c85e72edaa539093b90d146936dc5"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/company-it.md",
+      "sha256": "63e991cc0a2363680116ab14d85f2de8e89d64e8687d59031e6324307d1f516f",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-it.md",
+      "sha256": "63e991cc0a2363680116ab14d85f2de8e89d64e8687d59031e6324307d1f516f",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/procedure-it.md",
+      "sha256": "6f7a7beb8b67741474f657a27088d3602f05d33200d979aae6cdf61a971d1479",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/procedure-it.md",
+      "sha256": "6f7a7beb8b67741474f657a27088d3602f05d33200d979aae6cdf61a971d1479",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/operation-it.md",
+      "sha256": "6dc0f6fd6f685739e6d2a9a4a1f8d9ba74b8e0bbaa2cafa43b573f0ce4a580c4",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/operation-it.md",
+      "sha256": "6dc0f6fd6f685739e6d2a9a4a1f8d9ba74b8e0bbaa2cafa43b573f0ce4a580c4",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-it.md",
+      "sha256": "0512a27a30f2345062088f8b66a5990fad709f2687b80e35849b07f634f97f9f",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/company-en.md",
+      "sha256": "cc734b7fb3ea492c612b5e372b51aa6c5dfae91f78996c97bd0be53f60d4bc66",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-en.md",
+      "sha256": "cc734b7fb3ea492c612b5e372b51aa6c5dfae91f78996c97bd0be53f60d4bc66",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/procedure-en.md",
+      "sha256": "06039e8a2a4aab2974c8c555e7c541460dc2646bedfb7c108e4d17fed1707836",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/procedure-en.md",
+      "sha256": "06039e8a2a4aab2974c8c555e7c541460dc2646bedfb7c108e4d17fed1707836",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/operation-en.md",
+      "sha256": "4c5552d23d43b7a0a95cda2a7ec596f17c215d0afecc7ef113bc4cb78f1a5e3a",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/operation-en.md",
+      "sha256": "4c5552d23d43b7a0a95cda2a7ec596f17c215d0afecc7ef113bc4cb78f1a5e3a",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-en.md",
+      "sha256": "c258126aa9e69ca2b174c72b5b1e889b3c5b9b7ad6ce7e15e74ca587ab2d4ac6",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/company-fr.md",
+      "sha256": "cd009e509f37a8f012dd33f7001283a8606512592db936636db8f82bde322b65",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-fr.md",
+      "sha256": "cd009e509f37a8f012dd33f7001283a8606512592db936636db8f82bde322b65",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/procedure-fr.md",
+      "sha256": "e268e23a6222514da13dd702cab8c12bf327efc8dc6321797c8806530208b140",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/procedure-fr.md",
+      "sha256": "e268e23a6222514da13dd702cab8c12bf327efc8dc6321797c8806530208b140",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/operation-fr.md",
+      "sha256": "ccd482f74133c775014467236ba92df0d51f576b7d3c315369dffeda125215f6",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/operation-fr.md",
+      "sha256": "ccd482f74133c775014467236ba92df0d51f576b7d3c315369dffeda125215f6",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-fr.md",
+      "sha256": "2091058243f06b7cc83e0c7b1807186d41c51092e4d5b76d08ac11a9f2975a16",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/company-de.md",
+      "sha256": "70c66f2b64cb4087d2d21b00d7f0ad41e467499cd54839d3a63065460a69385d",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-de.md",
+      "sha256": "70c66f2b64cb4087d2d21b00d7f0ad41e467499cd54839d3a63065460a69385d",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/procedure-de.md",
+      "sha256": "25885c986c21f6f414bb0a5ebf03fa0db2730b5c187502881e3e5ac2fcc97b20",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/procedure-de.md",
+      "sha256": "25885c986c21f6f414bb0a5ebf03fa0db2730b5c187502881e3e5ac2fcc97b20",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/operation-de.md",
+      "sha256": "ce01ca87e4599bed1239e0f81d4108e8c5fe22b015e499de3aa56612514b7a8e",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/operation-de.md",
+      "sha256": "ce01ca87e4599bed1239e0f81d4108e8c5fe22b015e499de3aa56612514b7a8e",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-de.md",
+      "sha256": "9069d44a470ceb2a17d32fd24daf7e9d24b1e67395621d387c780d933fe8d4a6",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/company-es.md",
+      "sha256": "8bc84cfd3ea1292c6a694e9ffdd3ff553b329474fa482c8c4cebd1f88c921a45",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-es.md",
+      "sha256": "8bc84cfd3ea1292c6a694e9ffdd3ff553b329474fa482c8c4cebd1f88c921a45",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/procedure-es.md",
+      "sha256": "a6f707bb9121f14d932cde7da6bb7c1f584577a2292e37cbf3692a1bc5bbc8b3",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/procedure-es.md",
+      "sha256": "a6f707bb9121f14d932cde7da6bb7c1f584577a2292e37cbf3692a1bc5bbc8b3",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/operation-es.md",
+      "sha256": "5ed25f831384972cb21ea030a0f457b5f973e2363702494596228291b2e01b6c",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/operation-es.md",
+      "sha256": "5ed25f831384972cb21ea030a0f457b5f973e2363702494596228291b2e01b6c",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-es.md",
+      "sha256": "cf38699872fa602ace8cee5f1c17939f7a60f8b65e74f9902977d51a92eb1b25",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Valutare gli assetti aziendali con Vera",
+      "goal": "Imparare a richiedere una valutazione degli assetti, fornire evidenze del loro funzionamento e utilizzare rilievi e azioni proposte.",
+      "scenario": "Officina Arco vuole rivedere responsabilità, chiusura mensile e informazioni sugli incassi. Abbiamo il profilo aziendale, una procedura e un esempio reale nel caso fittizio.",
+      "scope": "Una prima valutazione mirata degli assetti organizzativi, amministrativi e contabili. Il perimetro è quello descritto nei documenti; non è una certificazione dell’intera azienda.",
+      "inputs": "Apri company-it.md, procedure-it.md e operation-it.md. Spiega a Vera impresa, incarico e data: 31 marzo 2026. Fornisci esempi di lavoro svolto insieme alle procedure scritte.",
+      "request": "Vera, valuta gli assetti di Officina Arco per responsabilità, chiusura mensile e gestione delle informazioni sugli incassi. Usa questi documenti e mostrami valutazione, limiti e azioni da discutere.",
+      "steps": [
+        "Nel thread di lavoro Vera ricostruisce il funzionamento dell’impresa e propone il perimetro. La voce spiega perché una procedura e un esempio della sua applicazione sono entrambi utili.",
+        "Vera confronta responsabilità, scadenze, consegne e decisioni, verifica le fonti professionali pertinenti e prepara rilievi proporzionati. La voce segue le evidenze effettive e le domande che possono cambiare il giudizio.",
+        "Apri il memo prodotto. Leggi prima la valutazione complessiva, poi un rilievo, la sua fonte e l’azione collegata. Distingui chi e quando sono proposti da impegni già accettati."
+      ],
+      "deliverables": [
+        "Memo con valutazione motivata, osservazioni, rilievi e piano di miglioramento.",
+        "Record collegato alle fonti che consente un riesame successivo e conserva le decisioni effettivamente espresse."
+      ],
+      "review": "Controlla la corrispondenza tra giudizio e prove, il perimetro, le aree non esaminate e la proporzione delle azioni. Un documento scritto o un ciclo riuscito non prova continuità; una lacuna documentale non dimostra da sola che il processo non funzioni.",
+      "checkpoints": [
+        "Prima dell’analisi, identifica il processo e un esempio di funzionamento disponibile.",
+        "Nel memo, collega un’azione al rilievo e alla fonte che la motivano."
+      ],
+      "practice": "Aggiungi update-it.md nello stesso dossier e chiedi il riesame al 30 aprile. Vera collega il record appena prodotto, rivaluta ogni azione precedente e conserva la prima versione. Spiega come le nuove evidenze cambiano il giudizio.",
+      "success": "Sai fornire documenti utili, richiedere la valutazione, usare il piano di azioni e chiedere un riesame basato su nuove evidenze.",
+      "repeat": "Descrivi impresa, finalità e perimetro della valutazione. Dai a Vera procedure, esempi operativi e precedenti pertinenti. Rivedi conclusioni e azioni prima di concordarle con l’impresa."
+    },
+    "en": {
+      "title": "Assess company arrangements with Vera",
+      "goal": "Learn to request an assessment of company arrangements, supply evidence of their operation and use findings and proposed actions.",
+      "scenario": "Officina Arco wants to review responsibilities, monthly closing and collection information. We have its company profile, a procedure and one operating example in the fictional case.",
+      "scope": "An initial focused assessment of organizational, administrative and accounting arrangements in an Italian company. Scope follows the documents; this is not a whole-company certificate.",
+      "inputs": "Open company-en.md, procedure-en.md and operation-en.md. State company, assignment and date: 31 March 2026. Provide operating examples alongside written procedures.",
+      "request": "Vera, assess Officina Arco’s arrangements for responsibilities, monthly closing and collection information. Use these documents and show the assessment, limits and actions to discuss.",
+      "steps": [
+        "In the working chat, Vera reconstructs how the company operates and proposes scope. Voice explains why both a procedure and an example of its use are useful.",
+        "Vera compares responsibilities, deadlines, deliveries and decisions, verifies relevant professional sources and prepares proportionate findings. Voice follows actual evidence and questions that could change the assessment.",
+        "Open the generated memo. Read the overall assessment first, then one finding, its source and linked action. Distinguish proposed owners and timing from accepted commitments."
+      ],
+      "deliverables": [
+        "Memo with reasoned assessment, observations, findings and improvement plan.",
+        "Source-linked record for subsequent assessment and decisions actually expressed."
+      ],
+      "review": "Check the link between assessment and evidence, scope, unassessed areas and proportionate actions. A written policy or one successful cycle does not prove continuity; a documentation gap alone does not prove the process fails.",
+      "checkpoints": [
+        "Before analysis, identify the process and one available operating example.",
+        "In the memo, link an action to the finding and source that justify it."
+      ],
+      "practice": "Add update-en.md to the same file and request review at 30 April. Vera links the newly generated record, reassesses every earlier action and preserves the first version. Explain how the new evidence changes the assessment.",
+      "success": "You can provide useful documents, request the assessment, use the action plan and request a reassessment based on new evidence.",
+      "repeat": "Describe company, purpose and scope. Give Vera relevant procedures, operating examples and prior reviews. Review conclusions and actions before agreeing them with the company."
+    },
+    "fr": {
+      "title": "Évaluer l’organisation de l’entreprise avec Vera",
+      "goal": "Apprendre à demander une évaluation des dispositifs de l’entreprise, fournir des preuves de fonctionnement et utiliser constats et actions proposées.",
+      "scenario": "Officina Arco revoit responsabilités, clôture mensuelle et informations de recouvrement. Le cas fictif fournit profil, procédure et un exemple de fonctionnement.",
+      "scope": "Une première évaluation ciblée des dispositifs organisationnels, administratifs et comptables d’une entreprise italienne. Le périmètre suit les documents ; aucune certification de toute l’entreprise.",
+      "inputs": "Ouvrez company-fr.md, procedure-fr.md et operation-fr.md. Précisez entreprise, mission et date : 31 mars 2026. Fournissez des exemples de travail avec les procédures écrites.",
+      "request": "Vera, évalue les dispositifs d’Officina Arco pour responsabilités, clôture mensuelle et informations de recouvrement. Utilise ces documents et montre évaluation, limites et actions à discuter.",
+      "steps": [
+        "Dans la conversation de travail, Vera reconstitue le fonctionnement et propose le périmètre. La voix explique l’utilité conjointe d’une procédure et d’un exemple de son application.",
+        "Vera compare responsabilités, échéances, livraisons et décisions, vérifie les sources professionnelles pertinentes et prépare des constats proportionnés. La voix suit les preuves réelles et questions pouvant modifier le jugement.",
+        "Ouvrez le mémo produit. Lisez l’évaluation globale, puis un constat, sa source et l’action liée. Distinguez responsables et délais proposés des engagements acceptés."
+      ],
+      "deliverables": [
+        "Mémo avec évaluation motivée, observations, constats et plan d’amélioration.",
+        "Version liée aux sources permettant un réexamen et la conservation des décisions exprimées."
+      ],
+      "review": "Vérifiez lien entre jugement et preuves, périmètre, domaines non examinés et proportion des actions. Une procédure ou un cycle réussi ne prouve pas la continuité ; une lacune documentaire ne prouve pas seule un dysfonctionnement.",
+      "checkpoints": [
+        "Avant l’analyse, identifiez le processus et un exemple disponible de son fonctionnement.",
+        "Dans le mémo, reliez une action au constat et à sa source."
+      ],
+      "practice": "Ajoutez update-fr.md au même dossier et demandez un réexamen au 30 avril. Vera relie la version produite, réévalue chaque action antérieure et conserve la première version. Expliquez l’effet des nouvelles preuves.",
+      "success": "Vous savez fournir les pièces, demander l’évaluation, utiliser le plan d’actions et solliciter un réexamen avec de nouvelles preuves.",
+      "repeat": "Décrivez entreprise, finalité et périmètre. Fournissez procédures, exemples et revues antérieures pertinentes. Revoyez conclusions et actions avant de les convenir avec l’entreprise."
+    },
+    "de": {
+      "title": "Unternehmensorganisation mit Vera beurteilen",
+      "goal": "Lernen, eine Beurteilung betrieblicher Vorkehrungen anzufordern, Nachweise ihrer Anwendung zu liefern und Feststellungen sowie Maßnahmenvorschläge zu nutzen.",
+      "scenario": "Officina Arco prüft Zuständigkeiten, Monatsabschluss und Informationen zum Forderungseinzug. Der fiktive Fall enthält Unternehmensprofil, Verfahren und ein Betriebsbeispiel.",
+      "scope": "Eine erste gezielte Beurteilung organisatorischer, administrativer und buchhalterischer Vorkehrungen eines italienischen Unternehmens. Der Umfang folgt den Unterlagen; keine Zertifizierung des gesamten Unternehmens.",
+      "inputs": "Öffnen Sie company-de.md, procedure-de.md und operation-de.md. Nennen Sie Unternehmen, Auftrag und Stichtag: 31. März 2026. Liefern Sie Betriebsbeispiele neben schriftlichen Verfahren.",
+      "request": "Vera, beurteile bei Officina Arco Zuständigkeiten, Monatsabschluss und Informationen zum Forderungseinzug. Nutze diese Unterlagen und zeige Beurteilung, Grenzen und zu besprechende Maßnahmen.",
+      "steps": [
+        "Im Arbeitschat rekonstruiert Vera die Abläufe und schlägt den Umfang vor. Die Stimme erklärt, warum Verfahren und Anwendungsbeispiel gemeinsam nützlich sind.",
+        "Vera vergleicht Zuständigkeiten, Fristen, Übergaben und Entscheidungen, prüft relevante Fachquellen und erarbeitet verhältnismäßige Feststellungen. Die Stimme folgt den tatsächlichen Nachweisen und entscheidungsrelevanten Fragen.",
+        "Öffnen Sie das Memo. Lesen Sie zuerst Gesamtbeurteilung, dann eine Feststellung mit Quelle und Maßnahme. Unterscheiden Sie vorgeschlagene Zuständige und Termine von vereinbarten Zusagen."
+      ],
+      "deliverables": [
+        "Memo mit begründeter Beurteilung, Beobachtungen, Feststellungen und Verbesserungsplan.",
+        "Quellengebundene Version für spätere Beurteilungen und tatsächlich geäußerte Entscheidungen."
+      ],
+      "review": "Prüfen Sie Beleggrundlage, Umfang, ungeprüfte Bereiche und Verhältnismäßigkeit. Ein Verfahren oder erfolgreicher Zyklus beweist keine Kontinuität; eine Dokumentationslücke allein beweist kein Versagen.",
+      "checkpoints": [
+        "Benennen Sie vor der Analyse Prozess und verfügbares Betriebsbeispiel.",
+        "Verbinden Sie im Memo eine Maßnahme mit Feststellung und Quelle."
+      ],
+      "practice": "Fügen Sie update-de.md derselben Akte hinzu und bitten Sie um Prüfung zum 30. April. Vera verknüpft die erzeugte Version, bewertet jede frühere Maßnahme neu und bewahrt die erste Version. Erklären Sie die Wirkung der neuen Nachweise.",
+      "success": "Sie können geeignete Unterlagen liefern, die Beurteilung anfordern, den Maßnahmenplan nutzen und mit neuen Belegen erneut prüfen lassen.",
+      "repeat": "Beschreiben Sie Unternehmen, Zweck und Umfang. Geben Sie Vera relevante Verfahren, Betriebsbeispiele und frühere Beurteilungen. Prüfen Sie Schlussfolgerungen und Maßnahmen vor der Abstimmung mit dem Unternehmen."
+    },
+    "es": {
+      "title": "Evaluar la organización de la empresa con Vera",
+      "goal": "Aprender a solicitar una evaluación de los mecanismos empresariales, aportar pruebas de funcionamiento y utilizar hallazgos y acciones propuestas.",
+      "scenario": "Officina Arco revisa responsabilidades, cierre mensual e información de cobros. El caso ficticio aporta perfil, procedimiento y un ejemplo operativo.",
+      "scope": "Una primera evaluación concreta de mecanismos organizativos, administrativos y contables de una empresa italiana. El alcance sigue los documentos; no es certificación de toda la empresa.",
+      "inputs": "Abre company-es.md, procedure-es.md y operation-es.md. Indica empresa, encargo y fecha: 31 de marzo de 2026. Aporta ejemplos operativos junto a procedimientos escritos.",
+      "request": "Vera, evalúa los mecanismos de Officina Arco para responsabilidades, cierre mensual e información de cobros. Usa estos documentos y muestra evaluación, límites y acciones que discutir.",
+      "steps": [
+        "En la conversación de trabajo, Vera reconstruye el funcionamiento y propone alcance. La voz explica por qué son útiles tanto procedimiento como ejemplo de aplicación.",
+        "Vera compara responsabilidades, plazos, entregas y decisiones, verifica fuentes profesionales pertinentes y prepara hallazgos proporcionados. La voz sigue pruebas reales y preguntas que pueden cambiar la evaluación.",
+        "Abre el memo generado. Lee primero la evaluación global, después un hallazgo, su fuente y acción vinculada. Distingue responsables y fechas propuestos de compromisos aceptados."
+      ],
+      "deliverables": [
+        "Memo con evaluación razonada, observaciones, hallazgos y plan de mejora.",
+        "Versión vinculada a fuentes para revisiones posteriores y decisiones realmente expresadas."
+      ],
+      "review": "Comprueba relación entre juicio y pruebas, alcance, áreas no examinadas y proporción de acciones. Un procedimiento o ciclo correcto no prueba continuidad; una carencia documental no demuestra por sí sola fallo del proceso.",
+      "checkpoints": [
+        "Antes del análisis, identifica proceso y ejemplo operativo disponible.",
+        "En el memo, relaciona una acción con el hallazgo y su fuente."
+      ],
+      "practice": "Añade update-es.md al mismo expediente y pide revisión al 30 de abril. Vera enlaza la versión generada, reevalúa cada acción anterior y conserva la primera. Explica cómo cambian la evaluación las nuevas pruebas.",
+      "success": "Sabes aportar documentos útiles, pedir la evaluación, usar el plan de acciones y solicitar revisión con nuevas pruebas.",
+      "repeat": "Describe empresa, finalidad y alcance. Da a Vera procedimientos, ejemplos y revisiones anteriores pertinentes. Revisa conclusiones y acciones antes de acordarlas con la empresa."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "c42bb45e382cbaef9185d5f477582b300f3c6649e1f58186daa5557e775030c3"
+}

@@ -58,6 +58,26 @@ CLAUDE_PLUGIN_SCHEMA = "https://json.schemastore.org/claude-code-plugin-manifest
 FIXED_ZIP_DATE = (1980, 1, 1, 0, 0, 0)
 LOGGER = logging.getLogger(__name__)
 
+
+def _add_written_teaching(
+    product: str, source: dict[str, bytes], entries: dict[str, bytes]
+) -> None:
+    spec = importlib.util.spec_from_file_location(
+        "cowork_course_projection", ROOT / "scripts/cowork_teaching/projection.py"
+    )
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.add_written_teaching(ROOT, product, source, entries)
+    if product == "vera":
+        path = "skills/learn-with-vera/SKILL.md"
+        entries[path] = _inject_named_execution_contract(
+            entries[path].decode(),
+            heading="## Cowork execution contract",
+            contract=COWORK_EXECUTION_CONTRACT,
+        ).encode()
+
+
 ROOT_OMITTED_PATHS = frozenset(
     {
         ".app.json",
@@ -427,6 +447,7 @@ artifact card and final response.""",
 
 CLARA_COWORK_INCLUDED_SKILLS = frozenset(
     {
+        "learn-with-clara",
         "advisory-deliverable-validator",
         "advisory-brief-planner",
         "advisory-case-director",
@@ -2643,6 +2664,7 @@ def _clara_package_entries(
     _overlay_cowork_agents(entries, plugin="clara")
     entries["LICENSE"] = (ROOT / "LICENSE").read_bytes()
     components = builder.embedded_plugin_names(ROOT / "plugins" / "clara")
+    _add_written_teaching("clara", source_entries, entries)
     _validate_clara_cowork_entries(entries, components=components)
     return dict(sorted(entries.items()))
 
@@ -2825,6 +2847,7 @@ def _lucia_package_entries(
         }
         if lucia_component != vera_component:
             raise ValueError(f"lucia: Cowork component differs from Vera: {component}")
+    _add_written_teaching("lucia", source_entries, entries)
     return dict(sorted(entries.items()))
 
 
@@ -2940,7 +2963,9 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
         if relative == ".codex-plugin/plugin.json":
             continue
         if relative == "scripts/notarized_run_receipt.py":
-            content = _without_openai_onboarding(content)
+            content = content.replace(
+                b"    # VERA_OPENAI_ONBOARDING_BEGIN\n", b""
+            ).replace(b"    # VERA_OPENAI_ONBOARDING_END\n", b"")
         if relative == ".mcp.json":
             content = project_claude_mcp(content)
         elif relative.endswith("/SKILL.md"):
@@ -2971,7 +2996,6 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
                 for skill in registry["vera_wrapper_skills"]
                 if skill
                 not in {
-                    "skills/learn-with-vera/SKILL.md",
                     "skills/datev-invoice-start/SKILL.md",
                 }
             ]
@@ -2995,6 +3019,15 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
         template_content=claude_template_path.read_bytes(),
     )
     entries["LICENSE"] = (ROOT / "LICENSE").read_bytes()
+    _add_written_teaching(
+        "vera",
+        {
+            name.removeprefix(prefix): content
+            for name, content in packaged.items()
+            if name.startswith(prefix)
+        },
+        entries,
+    )
     _project_cowork_privacy_register(entries)
     _validate_cowork_instruction_entries(entries)
 

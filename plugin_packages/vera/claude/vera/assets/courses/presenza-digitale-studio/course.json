@@ -1,0 +1,450 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "presenza-digitale-studio",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "local_website_workspace"
+  },
+  "sources": [
+    {
+      "path": "modules/presenza-digitale-studio/assets/icon.svg",
+      "sha256": "cbe3b6f7d613692939189a57abad109a1558a9e63b18e18a31007fbc1ada181f"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/requirements.txt",
+      "sha256": "117bb7857e2106917057761be56b51e26df4b9c0e3ebdbcf48a992e94534c6ac"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/schemas/quality_assessment.schema.json",
+      "sha256": "470146a234449e2ff332fadc524ff3db8d2c4057e9dc78a80a63557c0fae059d"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/schemas/site_brief.schema.json",
+      "sha256": "908dcdffe437380f3167920c56ed09d864578f267faafab2b80a273ba020a40a"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/schemas/sites_delivery.schema.json",
+      "sha256": "fa7e55c67e1138dd91d2f2c7a6656405c0c304affa963e889638c54b6a5c667c"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/schemas/website_intake.schema.json",
+      "sha256": "e7b925fd9a18c5b9010dd61738cefa6e5563a09ef509ab8dc2866c85a7526b8c"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/check_dependencies.py",
+      "sha256": "55000b29aeb8c3b9f479264699eeb24aba2adb3538de7f143c854e0cd296e0de"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/initialize_workspace.py",
+      "sha256": "ba2870b9095f57bf01bcd8654dabee06a262cd42824e171b29dad5170188e135"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/package_website.py",
+      "sha256": "f9d02dd3e457f40623267796989b27b5bd7d446146c93d2bd5d26a7a65df80c9"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/prepare_run.py",
+      "sha256": "63d72e850933f98a1b9805a748d41f583bb48ee4d5a45f9562226d069c83d6b2"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/prepare_sites_binding.py",
+      "sha256": "939c5c9b4f25c33ca3dade569f82820c0b2ee79386e8723f6aedc7c47ea953ef"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/record_external_delivery.py",
+      "sha256": "d15afd03d048e3e9b8f557b6c7769486317c375e9d94fe2718d39f647a5dfbcc"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/record_quality_assessment.py",
+      "sha256": "dd866b32a646fefcb8212a2da37223d975ddadcfa1dc4f40946f493e995cdc51"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/record_review.py",
+      "sha256": "4ca219146eb360b9b07fcc1c53258b8345ebc0cac4e59203b7c95788470d73e3"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/record_site_brief.py",
+      "sha256": "642b3cbda1dee795d17944262603d3378e2848f5375c30a06a07a327e02c02ae"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/record_sites_delivery.py",
+      "sha256": "5f789b57536d29e4f793316ea448805676b06dd6649b66d25d3dc031bcc7b51b"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/validate_run.py",
+      "sha256": "1442d4b1fb4dd84d25d33cb5cc78cf6cb493a48c4657ad3eb5ab8bc56707b5d0"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/validate_site.py",
+      "sha256": "bdd0f5cbe0d66e3df26092d16b05ea52a458eb78705b017b7d5800bc6c4db019"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/workflow_core.py",
+      "sha256": "d3cef57e45011809f997da6903ff1fc04f2617f4682601f675d4e9662112b9d4"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/SKILL.md",
+      "sha256": "ebcac618e54662d0c68d516321fdc2a19bd4fbfb77130a54af3d161ec948018b"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/agents/openai.yaml",
+      "sha256": "55bf9675e95b959824081d6fe39e05a363c478c123fca73b8de05530d05a17c6"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/product-thesis.md",
+      "sha256": "146a5d008d51ca69c608a1e5465d29950b4ecc2dfa94220d01aed38b0cf73fed"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/sites-handoff.md",
+      "sha256": "acb78509ff897048de073f8ca978129531ee08124e507b8fb181f7a99ac65c45"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/skill-orchestration.md",
+      "sha256": "90385deab7022beb9260dade7fd542d9f7edf017958657e50191c8bc3a21be3a"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/website-quality-standard.md",
+      "sha256": "23821e70357e62d70e3c556f09c9fe418378bd597ffd5143392963630c5718d1"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/workflow-method.md",
+      "sha256": "3c5a4c5dba4742c27684937723532fc9b7ab7303e470c7b1550a5667d6e095a2"
+    },
+    {
+      "path": "skills/presenza-digitale-studio/SKILL.md",
+      "sha256": "7f95011c11e64b7ec82b315ce2201a653dfc674193c201a577ef79bc14f5fe35"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/vera-studio-it.md",
+      "sha256": "4f7d3cbbab5a823ff55fd6e03a64184ae9da377661e0e8969b3f5581343f6d38",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/vera-studio-it.md",
+      "sha256": "4f7d3cbbab5a823ff55fd6e03a64184ae9da377661e0e8969b3f5581343f6d38",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/vera-update-it.md",
+      "sha256": "648f6f07e2072be75624538ac589afb29d39e5f06356015edbd760d70a123701",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/vera-studio-en.md",
+      "sha256": "9a908b2322f864c0453d32797abe25d5fe5f3f36147ca0952f6b116b724c3207",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/vera-studio-en.md",
+      "sha256": "9a908b2322f864c0453d32797abe25d5fe5f3f36147ca0952f6b116b724c3207",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/vera-update-en.md",
+      "sha256": "f1d7e7f3e6a3a12450d4594d91dd6eccfb3b8c02d99cf69b3fa811f80f93adb0",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/vera-studio-fr.md",
+      "sha256": "9af028981d3c04086131f8435c436b37968bc60b29729d6a957cf736baef69e9",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/vera-studio-fr.md",
+      "sha256": "9af028981d3c04086131f8435c436b37968bc60b29729d6a957cf736baef69e9",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/vera-update-fr.md",
+      "sha256": "04ddb25e18a3c40c0a0860c95568c5d6202bc5f337f9b5fbc28d2c4d197ba643",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/vera-studio-de.md",
+      "sha256": "95b1d34019c0be2234687e3a8cf431a9d590ad9efc4d73e7e3413912f80df81f",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/vera-studio-de.md",
+      "sha256": "95b1d34019c0be2234687e3a8cf431a9d590ad9efc4d73e7e3413912f80df81f",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/vera-update-de.md",
+      "sha256": "9884034d23d87c9d470482b7c684f2a57a8cf9087114fdca7be398c2b55152b7",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/vera-studio-es.md",
+      "sha256": "819508de01409eb7d2cc8c81fd4df6ef3be938091339666ae6c145e28d170e53",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/vera-studio-es.md",
+      "sha256": "819508de01409eb7d2cc8c81fd4df6ef3be938091339666ae6c145e28d170e53",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/vera-update-es.md",
+      "sha256": "5323f6529498d654c7868bccfca4c2e61a3212146b98cee59823263f31846c75",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Preparare il sito dello studio con Vera",
+      "goal": "Imparare a partire dalle informazioni dello studio, ottenere un sito funzionante e rivederlo prima di scegliere la pubblicazione.",
+      "scenario": "Studio Arco non ha un sito. Costruiamo una pagina che presenti lo studio, le attività fornite e il modo di contattarlo, usando soltanto il profilo fittizio.",
+      "scope": "Primo sito informativo di uno studio italiano. La dimostrazione arriva a una versione locale da rivedere; la pubblicazione richiede in seguito destinazione e approvazioni sul sito esatto.",
+      "inputs": "Apri vera-studio-it.md. Contiene destinatari, attività, contatto e orari. Scegli questo file per la lezione e una cartella didattica. Logo e fotografie non sono necessari; i dati assenti restano assenti.",
+      "request": "Vera, prepara il primo sito di Studio Arco da queste informazioni: presentazione, attività e contatti in una pagina leggibile da computer e telefono. Mostrami una versione locale da rivedere.",
+      "steps": [
+        "La chat di lavoro registra il materiale scelto e prepara il progetto. Vera riassume quali fatti userà e propone ordine dei contenuti, caratteri e colori; la chat vocale collega queste scelte alle informazioni che un visitatore cerca.",
+        "Il flusso realizza la pagina HTML con i suoi stili e controlla file e collegamenti. Apri il sito funzionante e percorri presentazione, attività e contatti, osservando cosa è stato scritto dalle fonti.",
+        "Rivedi la pagina a larghezza desktop e telefono, con le immagini di verifica. Controlla identità e testi, leggibilità e collegamenti. Vera mostra stato dei controlli e ciò che manca prima di una pubblicazione reale."
+      ],
+      "deliverables": [
+        "Sito locale funzionante e file modificabili: il risultato da aprire e usare per la revisione.",
+        "Sintesi delle fonti e delle scelte, controlli tecnici, immagini desktop e telefono e stato delle revisioni."
+      ],
+      "review": "Confronta attività, contatto e orari con il profilo. Non devono comparire titoli, risultati o recapiti inventati. Nel caso di Vera, la revisione professionale resta in capo allo studio; un sito locale verificato non è un sito già pubblicato.",
+      "checkpoints": [
+        "Prima di costruire, indica chi visiterà la pagina e dove deve trovare il contatto.",
+        "Alla revisione, apri la sezione contatti sul telefono e controlla orari e leggibilità."
+      ],
+      "practice": "Usa vera-update-it.md per aggiungere l’orario del venerdì a una nuova versione. Chiedi di conservare le informazioni precedenti. Riapri il risultato sui due formati e verifica che l’aggiunta compaia senza sostituire gli altri orari.",
+      "success": "Sai fornire il materiale, chiedere il sito, trovare la versione funzionante e controllare una modifica. Sai che anteprima esterna e pubblicazione finale sono scelte successive, legate ai file approvati.",
+      "repeat": "Per il tuo studio indica sito esistente o primo sito, materiali destinati al pubblico e obiettivo. Dopo la revisione scegli la destinazione; il flusso prepara e pubblica solo il pacchetto esatto autorizzato."
+    },
+    "en": {
+      "title": "Prepare the firm’s website with Vera",
+      "goal": "Learn to start from firm information, obtain a working website and review it before choosing publication.",
+      "scenario": "Studio Arco has no website. We build a page introducing the firm, its supplied activities and contact path, using only the fictional profile.",
+      "scope": "First informational website for an Italian practice. The demonstration produces a local version for review; later publication needs a destination and approvals for the exact site.",
+      "inputs": "Open vera-studio-en.md with the audience, activities, contact and hours. Select it for the lesson and choose a teaching folder. A logo or photographs are not required; missing facts stay missing.",
+      "request": "Vera, prepare Studio Arco’s first website from this information: introduction, activities and contact on one page readable on desktop and phone. Show a local version for review.",
+      "steps": [
+        "The working chat records the selected material and prepares the project. Vera summarises the facts to use and proposes content order, typography and colours; the voice chat links these choices to the visitor’s questions.",
+        "The workflow implements HTML and styles and checks files and links. Open the working site and move through introduction, activities and contact, checking how the source information became copy.",
+        "Review the page at desktop and phone widths with its captured images. Check identity and claims, readability and links. Vera shows validation status and what remains before real publication."
+      ],
+      "deliverables": [
+        "Working local website and editable files: the result to open and review.",
+        "Source and design summary, technical checks, desktop and phone captures and review status."
+      ],
+      "review": "Compare activities, contact and hours with the profile. There should be no invented qualifications, results or contact details. The firm owns professional review; a checked local site is not an already published site.",
+      "checkpoints": [
+        "Before building, name the visitor and where they should find the contact.",
+        "At review, open the contact section on the phone layout and check hours and readability."
+      ],
+      "practice": "Use vera-update-en.md to add Friday hours in a new version while retaining the earlier information. Reopen both layouts and verify that the addition does not replace the other hours.",
+      "success": "You can supply material, request the site, find the working version and check a change. You know that external preview and final publication are later choices bound to approved files.",
+      "repeat": "For your practice, identify an existing or first website, public-use materials and objective. After review choose the destination; the workflow packages and publishes only the exact authorized version."
+    },
+    "fr": {
+      "title": "Préparer le site du cabinet avec Vera",
+      "goal": "Apprendre à partir des informations du cabinet, obtenir un site fonctionnel et le revoir avant de choisir sa publication.",
+      "scenario": "Studio Arco n’a pas de site. Nous créons une page présentant le cabinet, les activités fournies et le contact, à partir du seul profil fictif.",
+      "scope": "Premier site informatif d’un cabinet italien. La démonstration produit une version locale à revoir ; publier ensuite exige une destination et des validations du site exact.",
+      "inputs": "Ouvrez vera-studio-fr.md : public, activités, contact et horaires. Sélectionnez ce fichier pour la leçon et un dossier pédagogique. Logo et photos ne sont pas indispensables ; les faits absents restent absents.",
+      "request": "Vera, prépare le premier site de Studio Arco avec ces informations : présentation, activités et contact sur une page lisible sur ordinateur et téléphone. Montre une version locale à revoir.",
+      "steps": [
+        "La conversation de travail enregistre le matériel choisi et prépare le projet. Vera résume les faits et propose ordre, typographie et couleurs ; la conversation vocale relie ces choix aux questions du visiteur.",
+        "Le processus réalise la page HTML et ses styles, puis vérifie fichiers et liens. Ouvrez le site fonctionnel et parcourez présentation, activités et contact en comparant le texte aux sources.",
+        "Revoyez la page aux largeurs ordinateur et téléphone, avec les captures. Vérifiez identité, informations, lisibilité et liens. Vera montre les contrôles et ce qui manque avant une publication réelle."
+      ],
+      "deliverables": [
+        "Site local fonctionnel et fichiers modifiables à ouvrir et revoir.",
+        "Résumé des sources et choix, contrôles techniques, captures ordinateur et téléphone et état des revues."
+      ],
+      "review": "Comparez activités, contact et horaires au profil. Aucun titre, résultat ou contact ne doit être inventé. La revue professionnelle appartient au cabinet ; un site local vérifié n’est pas déjà publié.",
+      "checkpoints": [
+        "Avant construction, identifiez le visiteur et l’emplacement du contact.",
+        "Lors de la revue, ouvrez les contacts en format téléphone et vérifiez horaires et lisibilité."
+      ],
+      "practice": "Utilisez vera-update-fr.md pour ajouter les horaires du vendredi dans une nouvelle version en conservant les informations précédentes. Rouvrez les deux formats et vérifiez que l’ajout ne remplace pas les autres horaires.",
+      "success": "Vous savez fournir le matériel, demander le site, retrouver la version fonctionnelle et vérifier une modification. Aperçu externe et publication finale sont des choix ultérieurs liés aux fichiers approuvés.",
+      "repeat": "Pour votre cabinet, indiquez site existant ou premier site, matériel destiné au public et objectif. Après revue, choisissez la destination ; le processus ne prépare et publie que la version exacte autorisée."
+    },
+    "de": {
+      "title": "Die Kanzleiwebsite mit Vera vorbereiten",
+      "goal": "Lernen, aus Kanzleiinformationen eine funktionierende Website zu erstellen und sie vor der Veröffentlichungsentscheidung zu prüfen.",
+      "scenario": "Studio Arco hat keine Website. Aus dem fiktiven Profil erstellen wir eine Seite mit Vorstellung, angegebenen Tätigkeiten und Kontakt.",
+      "scope": "Erste Informationswebsite einer italienischen Kanzlei. Die Demonstration erstellt eine lokal prüfbare Fassung; eine spätere Veröffentlichung braucht Ziel und Freigaben für die genaue Website.",
+      "inputs": "Öffnen Sie vera-studio-de.md mit Zielgruppe, Tätigkeiten, Kontakt und Zeiten. Wählen Sie die Datei für die Lektion und einen Übungsordner. Logo und Fotos sind nicht erforderlich; fehlende Angaben bleiben offen.",
+      "request": "Vera, erstelle aus diesen Angaben die erste Website von Studio Arco: Vorstellung, Tätigkeiten und Kontakt auf einer am Computer und Telefon lesbaren Seite. Zeige eine lokale Fassung zur Prüfung.",
+      "steps": [
+        "Der Arbeitschat erfasst das ausgewählte Material und bereitet das Projekt vor. Vera fasst Fakten zusammen und schlägt Reihenfolge, Schrift und Farben vor; der Sprachchat erklärt den Bezug zu den Besucherfragen.",
+        "Der Ablauf erstellt HTML und Gestaltung und prüft Dateien und Links. Öffnen Sie die funktionierende Seite und vergleichen Sie Vorstellung, Tätigkeiten und Kontakt mit den Quellen.",
+        "Prüfen Sie die Seite in Desktop- und Telefonbreite anhand der Aufnahmen. Kontrollieren Sie Identität, Aussagen, Lesbarkeit und Links. Vera zeigt Prüfstatus und offene Punkte vor einer echten Veröffentlichung."
+      ],
+      "deliverables": [
+        "Funktionierende lokale Website und bearbeitbare Dateien zum Öffnen und Prüfen.",
+        "Quellen- und Gestaltungsübersicht, technische Prüfungen, Desktop- und Telefonaufnahmen sowie Prüfstatus."
+      ],
+      "review": "Vergleichen Sie Tätigkeiten, Kontakt und Zeiten mit dem Profil. Qualifikationen, Ergebnisse oder Kontaktdaten dürfen nicht erfunden sein. Die fachliche Prüfung liegt bei der Kanzlei; eine geprüfte lokale Website ist noch nicht veröffentlicht.",
+      "checkpoints": [
+        "Benennen Sie vor dem Aufbau Besucher und Ort der Kontaktangaben.",
+        "Öffnen Sie bei der Prüfung den Kontaktbereich in Telefonbreite und prüfen Sie Zeiten und Lesbarkeit."
+      ],
+      "practice": "Ergänzen Sie mit vera-update-de.md die Freitagszeiten in einer neuen Fassung und behalten Sie bisherige Angaben bei. Öffnen Sie beide Formate erneut und prüfen Sie, dass die Ergänzung die anderen Zeiten nicht ersetzt.",
+      "success": "Sie können Material liefern, die Website anfordern, die funktionierende Fassung finden und Änderungen prüfen. Externe Vorschau und endgültige Veröffentlichung sind spätere Entscheidungen zu freigegebenen Dateien.",
+      "repeat": "Nennen Sie für Ihre Kanzlei bestehende oder erste Website, für die Öffentlichkeit bestimmte Unterlagen und Ziel. Wählen Sie nach der Prüfung den Veröffentlichungsort; nur die genaue genehmigte Fassung wird paketiert und veröffentlicht."
+    },
+    "es": {
+      "title": "Preparar el sitio del despacho con Vera",
+      "goal": "Aprender a partir de la información del despacho, obtener un sitio funcional y revisarlo antes de elegir su publicación.",
+      "scenario": "Studio Arco no tiene sitio web. Creamos una página de presentación, actividades facilitadas y contacto usando solo el perfil ficticio.",
+      "scope": "Primer sitio informativo de un despacho italiano. La demostración entrega una versión local para revisar; publicar después exige destino y aprobaciones del sitio exacto.",
+      "inputs": "Abre vera-studio-es.md con público, actividades, contacto y horario. Selecciónalo para la lección y elige una carpeta didáctica. No hacen falta logotipo ni fotos; los datos ausentes quedan pendientes.",
+      "request": "Vera, prepara el primer sitio de Studio Arco con esta información: presentación, actividades y contacto en una página legible en ordenador y teléfono. Muestra una versión local para revisar.",
+      "steps": [
+        "La conversación de trabajo registra el material elegido y prepara el proyecto. Vera resume los hechos y propone orden, tipografía y colores; la conversación de voz relaciona las decisiones con las preguntas del visitante.",
+        "El flujo crea HTML y estilos y comprueba archivos y enlaces. Abre el sitio funcional y recorre presentación, actividades y contacto comparando el texto con las fuentes.",
+        "Revisa la página en anchura de ordenador y teléfono con sus capturas. Comprueba identidad, información, legibilidad y enlaces. Vera muestra controles y pendientes antes de una publicación real."
+      ],
+      "deliverables": [
+        "Sitio local funcional y archivos editables para abrir y revisar.",
+        "Resumen de fuentes y decisiones, controles técnicos, capturas de ordenador y teléfono y estado de revisión."
+      ],
+      "review": "Compara actividades, contacto y horario con el perfil. No debe haber titulaciones, resultados ni contactos inventados. El despacho realiza la revisión profesional; un sitio local comprobado aún no está publicado.",
+      "checkpoints": [
+        "Antes de crear, identifica al visitante y dónde encontrará el contacto.",
+        "En la revisión, abre los contactos en formato teléfono y comprueba horario y legibilidad."
+      ],
+      "practice": "Usa vera-update-es.md para añadir el horario del viernes en una nueva versión conservando la información anterior. Reabre ambos formatos y verifica que la adición no sustituye los otros horarios.",
+      "success": "Sabes aportar material, solicitar el sitio, encontrar la versión funcional y comprobar un cambio. Vista previa externa y publicación final son decisiones posteriores vinculadas a los archivos aprobados.",
+      "repeat": "Para tu despacho indica sitio existente o primero, material destinado al público y objetivo. Tras revisar, elige el destino; el flujo prepara y publica solo la versión exacta autorizada."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "8f6a7b958b2cb9c236ba1376513b1ad315cd996aa5f3f86cdf76d7e85f11b12b"
+}

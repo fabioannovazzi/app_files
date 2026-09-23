@@ -1,0 +1,533 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "clara",
+  "workflow": "advisory-deliverable-validator",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
+  "sources": [
+    {
+      "path": "contracts/advisory_contract.v1.schema.json",
+      "sha256": "f4e09400874f39edddaa473453e829d269a224a0aa6644a8713517d70e8ed078"
+    },
+    {
+      "path": "scripts/advisor_case_core.py",
+      "sha256": "ea3a96b953acc6e3668dd5d21aef4ed631cf48e790d5b075115b8a691a46c984"
+    },
+    {
+      "path": "scripts/advisory_delivery.py",
+      "sha256": "877d87df4bc1d5b2322e3b96bfc86fd86d6fdb1a7a288ca84f439e104d2c71e8"
+    },
+    {
+      "path": "scripts/advisory_evidence_lineage.py",
+      "sha256": "958a516f4341bafecd8fabafa4e848fed2e7b52d3bbf8f3f07292048261e3009"
+    },
+    {
+      "path": "scripts/advisory_lineage_labels.py",
+      "sha256": "2ad7c96dee1bd61d76f578bfef1dac2f90d3b7ab8d72e0a355dce4ebed44d934"
+    },
+    {
+      "path": "scripts/bounded_process.py",
+      "sha256": "e409460e7df27d1fc89df5d2908c6ff3b438420d1c0bd1a1b4c9e4ce7de0ea3b"
+    },
+    {
+      "path": "scripts/capture_advisory_web_evidence.py",
+      "sha256": "4fa2abd98b581cc0fac46b77b158baa43dc1fdae03ad51fb24823e246a6eec08"
+    },
+    {
+      "path": "scripts/case_exchange_safety.py",
+      "sha256": "8aaa910146d7accdcdb99ab793fb2c3e59585697d5d9284aab8946a2de7c35e3"
+    },
+    {
+      "path": "scripts/case_store.py",
+      "sha256": "46f7c0295caadc811e36a341404ff6f1d7bee5b803dc0c18281a9be24bb64dc1"
+    },
+    {
+      "path": "scripts/check_dependencies.py",
+      "sha256": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+    },
+    {
+      "path": "scripts/decision_narrative.py",
+      "sha256": "d596dcb192db69e8ca32e511f99aba371328260ddd916e77c7b7d250b781daf2"
+    },
+    {
+      "path": "scripts/html_deck_runtime.py",
+      "sha256": "a4585f10b456bbc44513873c430c58bc3f40351a69646b2e255e14861ace6d21"
+    },
+    {
+      "path": "scripts/managed_ocr_runtime.py",
+      "sha256": "664987b3e53f0b66bd1907493215f352c8487c75c7ec76347f8a41ba3336b222"
+    },
+    {
+      "path": "scripts/managed_python_runtime.py",
+      "sha256": "6f1e29d38fa4ff7919a507ddcb95df81d4bdf600b2ab6fc392956772d846d76d"
+    },
+    {
+      "path": "scripts/public_http.py",
+      "sha256": "0320cf3b5407c0805c453f2f81918c29b1eb33c32d7384855d5b39d2ae09c073"
+    },
+    {
+      "path": "scripts/record_case_direction_return.py",
+      "sha256": "9bc960fe45ba6f8ba0e6a5dc19b35f40342d3bc318873d1a257c4257193c4f42"
+    },
+    {
+      "path": "scripts/verify_advisory_delivery.py",
+      "sha256": "1db20ac24cadf936821244631b51bf6187258efb269c745d61fc6c6261fe950a"
+    },
+    {
+      "path": "scripts/verify_advisory_html_delivery.py",
+      "sha256": "771dec6416bb5bd0eb2453caed09fbd9644c1386dab1c187c1d2b859e377d8ef"
+    },
+    {
+      "path": "skills/advisory-deliverable-validator/SKILL.md",
+      "sha256": "a31cc0544500ef3e8af9ae17bdd6e49c35986752604db47ca5b057e9dec06430"
+    },
+    {
+      "path": "skills/advisory-deliverable-validator/references/advisory-contract.md",
+      "sha256": "c34fc34c7a642dc2e08f02c9fd4bc1038f559ccb14114f8a2127fa4d1e71dd79"
+    },
+    {
+      "path": "skills/advisory-deliverable-validator/scripts/advisory_review_render.py",
+      "sha256": "0aed18e4209aa68d5caedf2cf1b3136a4d6a7caf86dd4fc5bf8a844a2c0e6783"
+    },
+    {
+      "path": "skills/advisory-deliverable-validator/scripts/advisory_validation.py",
+      "sha256": "0dd40590d97c29a5e357cdeb6cd555c2ddace6a960882315f1cbb339c25003ab"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/assignment-it.md",
+      "sha256": "4a007cb48b0f718504e633dfff996823a739810cea7c4e4b7c8a8013c2ba6978",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/notes-it.md",
+      "sha256": "5a4921c49a21aaa1749eb79477e0b5ef4ab3d7acdac915c70f8c141478993724",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/external-memo-it.md",
+      "sha256": "282601d9a6f22b27b030de8623c827e69a213cc02726f83e031535b6e613cd8c",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assignment-it.md",
+      "sha256": "4a007cb48b0f718504e633dfff996823a739810cea7c4e4b7c8a8013c2ba6978",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/notes-it.md",
+      "sha256": "5a4921c49a21aaa1749eb79477e0b5ef4ab3d7acdac915c70f8c141478993724",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/external-memo-it.md",
+      "sha256": "282601d9a6f22b27b030de8623c827e69a213cc02726f83e031535b6e613cd8c",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-it.md",
+      "sha256": "a599116ddbffabd623c998837779209fff52d8673c83905d94d9ab1c07a745fc",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assignment-en.md",
+      "sha256": "b82d4b916c260ac81e66fb64888f0d645a9c35a1bd86f32620db5f815ff83571",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/notes-en.md",
+      "sha256": "03cf0a00073274ea8817ab632505aca5c94008fcc89d90b4b29aac71f5c0dbe9",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/external-memo-en.md",
+      "sha256": "f3e1a0ab4707fe5397fa5425b6ca3fd54e140bc039eb0ba67d898024b2ca16f3",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assignment-en.md",
+      "sha256": "b82d4b916c260ac81e66fb64888f0d645a9c35a1bd86f32620db5f815ff83571",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/notes-en.md",
+      "sha256": "03cf0a00073274ea8817ab632505aca5c94008fcc89d90b4b29aac71f5c0dbe9",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/external-memo-en.md",
+      "sha256": "f3e1a0ab4707fe5397fa5425b6ca3fd54e140bc039eb0ba67d898024b2ca16f3",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-en.md",
+      "sha256": "a31453bcfbc933c681f99a4406e0318f90b80ae32bf4493f10d166160c5abfb8",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assignment-fr.md",
+      "sha256": "abc3c900bae063479709775ef1ab6b92973917192e50d13433e009b28eaf2529",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/notes-fr.md",
+      "sha256": "0d65e1a705756ef1c9d4194372586c4b7c5340ee04b9aca45023d2038d67a504",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/external-memo-fr.md",
+      "sha256": "75a3b41edea9fb6ad58601337b9cccad08eff98b9c7f01db9001e2297569f026",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assignment-fr.md",
+      "sha256": "abc3c900bae063479709775ef1ab6b92973917192e50d13433e009b28eaf2529",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/notes-fr.md",
+      "sha256": "0d65e1a705756ef1c9d4194372586c4b7c5340ee04b9aca45023d2038d67a504",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/external-memo-fr.md",
+      "sha256": "75a3b41edea9fb6ad58601337b9cccad08eff98b9c7f01db9001e2297569f026",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-fr.md",
+      "sha256": "e2b00c3a2339dfd913b8bfa03ed427da9db57f8da33a8a9e86913d7ea156f8fc",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assignment-de.md",
+      "sha256": "1a61c7bb653687dcc3c6e3b54b12ba0c174e6563d5e6599701c4b2bf70566c58",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/notes-de.md",
+      "sha256": "d3ab12e88268758a3a3eee9ecc1a64cc4f809ae3c0dff4742a3eaa9a2a9f8585",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/external-memo-de.md",
+      "sha256": "c8619aff4d40052a4d133738bfcd9f0a9bf3ab939f925439492313ba803b845d",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assignment-de.md",
+      "sha256": "1a61c7bb653687dcc3c6e3b54b12ba0c174e6563d5e6599701c4b2bf70566c58",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/notes-de.md",
+      "sha256": "d3ab12e88268758a3a3eee9ecc1a64cc4f809ae3c0dff4742a3eaa9a2a9f8585",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/external-memo-de.md",
+      "sha256": "c8619aff4d40052a4d133738bfcd9f0a9bf3ab939f925439492313ba803b845d",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-de.md",
+      "sha256": "90f0981b19520d2e51edae37b12994415158108ada466c14e6a8564c6f1ec516",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assignment-es.md",
+      "sha256": "3f3aa30ee3ce0b3447c32fbef8dcf0db5ef9714fa8d09e46a4cb5a8b8f443728",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/notes-es.md",
+      "sha256": "7edda147e20f7b5f33faab0eee7a55bd67a400ef1bcb3b79c32d48ca2856251b",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/external-memo-es.md",
+      "sha256": "7c131701fe0039893b37d7327388c727d68d4be6721d14d53415e8240a42dccd",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assignment-es.md",
+      "sha256": "3f3aa30ee3ce0b3447c32fbef8dcf0db5ef9714fa8d09e46a4cb5a8b8f443728",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/notes-es.md",
+      "sha256": "7edda147e20f7b5f33faab0eee7a55bd67a400ef1bcb3b79c32d48ca2856251b",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/external-memo-es.md",
+      "sha256": "7c131701fe0039893b37d7327388c727d68d4be6721d14d53415e8240a42dccd",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-es.md",
+      "sha256": "832e12c7a7d71a8e4b3ebc2459de73b16ed1f097e32dc6487f7df395ef4ce2e6",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Rivedere un memo di consulenza con Clara",
+      "goal": "Imparare a verificare se un documento risponde all’incarico e se la raccomandazione deriva dalle fonti disponibili.",
+      "scenario": "Un memo esterno raccomanda il servizio quotidiano di ritiro per Ciclo Arco. Rivediamo l’intero breve documento rispetto alla richiesta della titolare e alle note di partenza.",
+      "scope": "Un memo Markdown fornito e fonti locali. Lo storico della sua redazione non è disponibile: la revisione confronta le affermazioni con le fonti ora fornite.",
+      "inputs": "Apri external-memo-it.md, assignment-it.md e notes-it.md. Il memo è il documento da rivedere; gli altri file descrivono incarico e informazioni disponibili.",
+      "request": "Clara, rivedi questo memo rispetto all’incarico e alle note fornite. Spiega se è utilizzabile, che cosa va corretto e quali decisioni restano alla titolare.",
+      "steps": [
+        "Clara definisce il perimetro della revisione, conserva il memo e prepara l’inventario dei contenuti e delle fonti selezionate.",
+        "Il flusso corrente esamina perimetro, affermazioni, ragionamento, raccomandazione, limiti e stato di consegna. La chat vocale collega i rilievi ai passaggi esatti del memo e delle note.",
+        "Apri il pacchetto di revisione. Leggi esito complessivo, rilievi sostanziali e correzioni proposte. L’originale resta intatto; un memo corretto richiede una propria revisione."
+      ],
+      "deliverables": [
+        "Revisione leggibile: conclusione complessiva, confronto con le fonti, correzioni e incertezze residue.",
+        "Verifica del registro e inventari: contenuti esaminati e completezza formale della revisione."
+      ],
+      "review": "Confronta il servizio quotidiano raccomandato con le dichiarazioni effettive dei clienti e la disponibilità del mezzo. Un registro completo non approva il memo né dimostra da solo le sue affermazioni.",
+      "checkpoints": [
+        "Prima di iniziare, distingui il documento da rivedere dalle fonti di supporto.",
+        "Alla consegna, spiega l’esito e trova il passaggio e la fonte di un rilievo importante."
+      ],
+      "practice": "Aggiungi update-it.md e richiedi una nuova revisione del memo esterno invariato con le fonti aggiornate. Conserva la prima revisione e confronta i rilievi.",
+      "success": "La nuova revisione recepisce l’indisponibilità del mezzo e ne chiarisce l’effetto sull’uso del memo. Indica che cosa deve cambiare perché aiuti la decisione della titolare.",
+      "repeat": "Fornisci documento, incarico e fonti. Leggi esito complessivo e rilievi sostanziali, poi rivedi separatamente le eventuali correzioni prima dell’utilizzo."
+    },
+    "en": {
+      "title": "Review an advisory memo with Clara",
+      "goal": "Learn to check whether an advisory document answers its assignment and whether its recommendation follows from the available evidence.",
+      "scenario": "An external memo recommends launching Ciclo Arco’s daily collection service. We will review the whole short memo against the owner’s request and source notes.",
+      "scope": "A supplied Markdown memo and local evidence. Its original drafting history is unavailable, so the review matches claims to evidence now supplied.",
+      "inputs": "Open external-memo-en.md, assignment-en.md and notes-en.md. The memo is the document under review; the other files establish what was requested and what is known.",
+      "request": "Clara, review this memo against the assignment and supplied notes. Explain whether it is usable, what needs correction and which decisions remain with the owner.",
+      "steps": [
+        "Clara establishes the review contract, preserves the memo and prepares an inventory of its contents and the selected evidence.",
+        "The current review workflow examines scope, claims, reasoning, recommendation, limitations and readiness. The voice thread connects findings to the exact memo passages and source notes.",
+        "Open the review package. Read the overall delivery status, material findings and proposed corrections. The original stays intact; a revised memo requires its own review."
+      ],
+      "deliverables": [
+        "Readable review package: overall conclusion, source comparisons, corrections and remaining uncertainty.",
+        "Validation audit and inventories: what was reviewed and whether the review record is complete."
+      ],
+      "review": "Compare the daily-service recommendation with actual customer statements and vehicle availability. A complete review record does not itself approve the memo or prove its claims.",
+      "checkpoints": [
+        "Before reviewing, distinguish the deliverable from its supporting evidence.",
+        "At delivery, explain the readiness conclusion and find the passage and source behind a material finding."
+      ],
+      "practice": "Add update-en.md and request a new review of the unchanged external memo with the expanded evidence. Preserve the first review and compare their findings.",
+      "success": "The new review reflects the vehicle’s unavailability and makes its delivery consequence clear. State what must change before the memo can support the owner’s decision.",
+      "repeat": "Provide the document, its assignment and supporting sources. Read the overall review and material findings, then review any separate correction before using it."
+    },
+    "fr": {
+      "title": "Revoir une note de conseil avec Clara",
+      "goal": "Apprendre à vérifier qu’un document répond à sa mission et que sa recommandation découle des sources disponibles.",
+      "scenario": "Une note externe recommande le service quotidien de collecte pour Ciclo Arco. Nous revoyons toute cette courte note par rapport à la demande et aux sources.",
+      "scope": "Une note Markdown fournie et des sources locales. Son historique de rédaction est indisponible : la revue rapproche les affirmations des éléments maintenant fournis.",
+      "inputs": "Ouvrez external-memo-fr.md, assignment-fr.md et notes-fr.md. La note est le document à revoir ; les autres fichiers établissent la demande et les informations connues.",
+      "request": "Clara, revois cette note par rapport à la mission et aux sources fournies. Explique si elle est utilisable, ce qui doit être corrigé et les décisions qui restent à la dirigeante.",
+      "steps": [
+        "Clara définit le périmètre de revue, préserve la note et prépare l’inventaire de ses contenus et des sources sélectionnées.",
+        "Le flux actuel examine périmètre, affirmations, raisonnement, recommandation, limites et état de remise. La conversation vocale relie les constats aux passages exacts de la note et des sources.",
+        "Ouvrez le dossier de revue. Lisez l’état global, les constats importants et les corrections proposées. L’original reste intact ; une note corrigée demande sa propre revue."
+      ],
+      "deliverables": [
+        "Revue lisible : conclusion globale, rapprochements avec les sources, corrections et incertitudes résiduelles.",
+        "Audit du dossier et inventaires : contenus examinés et complétude formelle de la revue."
+      ],
+      "review": "Comparez le service quotidien recommandé avec les déclarations réelles des clients et la disponibilité du véhicule. Un dossier complet n’approuve pas la note et ne prouve pas à lui seul ses affirmations.",
+      "checkpoints": [
+        "Avant la revue, distinguez le document de ses sources.",
+        "À la remise, expliquez l’état de préparation et retrouvez passage et source d’un constat important."
+      ],
+      "practice": "Ajoutez update-fr.md et demandez une nouvelle revue de la note externe inchangée avec les sources actualisées. Conservez la première revue et comparez les constats.",
+      "success": "La nouvelle revue intègre l’indisponibilité du véhicule et précise sa conséquence sur l’utilisation de la note. Indiquez ce qui doit changer pour éclairer la décision.",
+      "repeat": "Fournissez document, mission et sources. Lisez conclusion et constats importants, puis revoyez séparément toute correction avant utilisation."
+    },
+    "de": {
+      "title": "Ein Beratungsmemo mit Clara prüfen",
+      "goal": "Lernen, ob ein Dokument seinen Auftrag erfüllt und seine Empfehlung aus den vorhandenen Quellen folgt.",
+      "scenario": "Ein externes Memo empfiehlt Ciclo Arco einen täglichen Abholservice. Wir prüfen das gesamte kurze Memo anhand des Auftrags und der Ausgangsnotizen.",
+      "scope": "Ein bereitgestelltes Markdown-Memo und lokale Quellen. Die Entstehungsgeschichte fehlt; die Prüfung gleicht Aussagen mit den jetzt vorliegenden Belegen ab.",
+      "inputs": "Öffnen Sie external-memo-de.md, assignment-de.md und notes-de.md. Das Memo wird geprüft; die übrigen Dateien beschreiben Auftrag und bekannten Sachstand.",
+      "request": "Clara, prüfe dieses Memo anhand des Auftrags und der Notizen. Erkläre, ob es verwendbar ist, was korrigiert werden muss und welche Entscheidungen bei der Inhaberin bleiben.",
+      "steps": [
+        "Clara legt den Prüfauftrag fest, bewahrt das Memo unverändert auf und erstellt ein Inventar seiner Inhalte und der ausgewählten Quellen.",
+        "Der aktuelle Ablauf prüft Umfang, Aussagen, Begründung, Empfehlung, Grenzen und Auslieferungsstatus. Der Sprachchat verbindet Befunde mit den genauen Stellen im Memo und in den Notizen.",
+        "Öffnen Sie das Prüfungspaket. Lesen Sie Gesamtstatus, wesentliche Befunde und Korrekturvorschläge. Das Original bleibt erhalten; ein korrigiertes Memo benötigt eine eigene Prüfung."
+      ],
+      "deliverables": [
+        "Lesbares Prüfungspaket: Gesamtergebnis, Quellenabgleich, Korrekturen und verbleibende Unsicherheit.",
+        "Prüfaudit und Inventare: untersuchte Inhalte und formale Vollständigkeit der Prüfaufzeichnung."
+      ],
+      "review": "Vergleichen Sie die tägliche Serviceempfehlung mit tatsächlichen Kundenaussagen und Fahrzeugverfügbarkeit. Eine vollständige Prüfaufzeichnung genehmigt weder das Memo noch beweist sie seine Aussagen.",
+      "checkpoints": [
+        "Unterscheiden Sie vor der Prüfung das Dokument von seinen Belegen.",
+        "Erklären Sie bei der Übergabe den Status und finden Sie Textstelle und Quelle eines wesentlichen Befunds."
+      ],
+      "practice": "Fügen Sie update-de.md hinzu und lassen Sie das unveränderte externe Memo mit den ergänzten Quellen erneut prüfen. Bewahren Sie die erste Prüfung auf und vergleichen Sie die Befunde.",
+      "success": "Die neue Prüfung berücksichtigt das fehlende Fahrzeug und erläutert die Folge für die Verwendbarkeit. Benennen Sie, was sich ändern muss, damit das Memo die Entscheidung unterstützt.",
+      "repeat": "Liefern Sie Dokument, Auftrag und Quellen. Lesen Sie Gesamtergebnis und wesentliche Befunde und prüfen Sie eine separate Korrektur vor ihrer Verwendung erneut."
+    },
+    "es": {
+      "title": "Revisar un informe de consultoría con Clara",
+      "goal": "Aprender a comprobar si un documento responde al encargo y si su recomendación se deriva de las fuentes disponibles.",
+      "scenario": "Un informe externo recomienda el servicio diario de recogida para Ciclo Arco. Revisamos todo el breve documento frente a la petición de la propietaria y las notas.",
+      "scope": "Un informe Markdown suministrado y fuentes locales. No se dispone de su historial de redacción: la revisión contrasta afirmaciones con las pruebas aportadas ahora.",
+      "inputs": "Abre external-memo-es.md, assignment-es.md y notes-es.md. El informe es el documento revisado; los otros archivos establecen encargo e información conocida.",
+      "request": "Clara, revisa este informe frente al encargo y las notas. Explica si es utilizable, qué debe corregirse y qué decisiones siguen correspondiendo a la propietaria.",
+      "steps": [
+        "Clara define la revisión, conserva el informe y prepara un inventario de contenidos y fuentes seleccionadas.",
+        "El flujo actual examina alcance, afirmaciones, razonamiento, recomendación, límites y estado de entrega. La conversación de voz conecta hallazgos con los pasajes exactos del informe y las notas.",
+        "Abre el paquete de revisión. Lee estado general, hallazgos importantes y correcciones propuestas. El original queda intacto; un informe corregido requiere su propia revisión."
+      ],
+      "deliverables": [
+        "Revisión legible: conclusión general, contraste con fuentes, correcciones e incertidumbre residual.",
+        "Auditoría e inventarios: contenidos examinados e integridad formal del registro de revisión."
+      ],
+      "review": "Compara el servicio diario recomendado con las declaraciones reales de clientes y la disponibilidad del vehículo. Un registro completo no aprueba el informe ni demuestra por sí solo sus afirmaciones.",
+      "checkpoints": [
+        "Antes de revisar, distingue el documento de las fuentes que lo respaldan.",
+        "En la entrega, explica el estado y encuentra el pasaje y la fuente de un hallazgo importante."
+      ],
+      "practice": "Añade update-es.md y solicita otra revisión del informe externo sin cambios con las fuentes ampliadas. Conserva la primera revisión y compara los hallazgos.",
+      "success": "La nueva revisión refleja la falta del vehículo y aclara su efecto en el uso del informe. Indica qué debe cambiar para apoyar la decisión de la propietaria.",
+      "repeat": "Aporta documento, encargo y fuentes. Lee conclusión y hallazgos importantes y revisa por separado las correcciones antes de utilizarlas."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "5d3197ecc40793ba2317803885ed9caa489cd54fa3244b2cc95293a078612b7e"
+}

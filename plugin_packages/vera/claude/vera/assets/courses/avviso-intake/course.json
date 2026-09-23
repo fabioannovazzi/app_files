@@ -1,0 +1,377 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "avviso-intake",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
+  "sources": [
+    {
+      "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+      "sha256": "4b56449248b02f910f434804918f16c28713387b17432aea4993607a5275adf7"
+    },
+    {
+      "path": "modules/client-file-preparation/assets/icon.svg",
+      "sha256": "b4f798ec673400c5145bda9fb5cb282fff745455a56845e42feb1738d1013219"
+    },
+    {
+      "path": "modules/client-file-preparation/assets/review-workbench-adapter.json",
+      "sha256": "42af84f012b36d6d34c2646a9277b1a9aaf9eb8c4bf9287038948a56d2d401d0"
+    },
+    {
+      "path": "modules/client-file-preparation/references/workflow-reference.md",
+      "sha256": "0f8a3080bafdadf5d8aed1082908d851da3c2423c1730291f2a19dc4e10a9e71"
+    },
+    {
+      "path": "modules/client-file-preparation/requirements.txt",
+      "sha256": "52d819e8a9f405e7605de84ae65521166be565d85ad602df65adc740d5693186"
+    },
+    {
+      "path": "modules/client-file-preparation/schemas/model_handoff.schema.json",
+      "sha256": "38d7e5593d9a0ba12cbab23d7f1e8a03f239ceb230605f780b2bce4064e1d40d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/build_file_preparation_outputs.py",
+      "sha256": "5d84eb4fba8b93ae03a50108925fcaef068ffaad0263ccd0fc1a93deb08659d1"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_dependencies.py",
+      "sha256": "48d98b528325d883fbeb8d3921cb8c8883d7087c87cc8950dd77b4be711ee9c4"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_environment.py",
+      "sha256": "70f67540c705fe174163390ac2aea0582ef30235a52f2dd60f08717efd096400"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/detect_duplicates.py",
+      "sha256": "6d65563443e8be6eb08a97a89638e5e5fc035c27c34fbc0bbf793fe0e0d2ee81"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/extract_documents.py",
+      "sha256": "811ce6a6b2212c2550ab3c7c41e7c5e9d6662ce77256382b63d257a7419f87aa"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/managed_ocr_runtime.py",
+      "sha256": "664987b3e53f0b66bd1907493215f352c8487c75c7ec76347f8a41ba3336b222"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/model_handoff.py",
+      "sha256": "9c46e69ad33e0087b7d23585442c0dad425cf6eb4551f164d460ba27ec6afb5f"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fatturapa_xml.py",
+      "sha256": "27c6dc9104e04cea7bcff287dec4315951fe3bf9ef07526a89845fd5b7eb255d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fiscal_forms.py",
+      "sha256": "a18d78910d8015c4e41b2e0355724bc8df25dd5330b26b07b2785a2c24c384fe"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/review_session.py",
+      "sha256": "df5c9a8a2f47c6f6200c36f7d2a9e3c4db026f1c7c95492a734ba2f7305b1e3d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/scan_folder.py",
+      "sha256": "b4e5bb6dd0347b9c66e1e21b3f21a7e1a84805f58008401857cc613e90043789"
+    },
+    {
+      "path": "modules/client-file-preparation/skills/avviso-intake/SKILL.md",
+      "sha256": "0f65aefe7e9f965e76f8373f5d918245a99a8a43a09f820aaf63c61d5e2de6d2"
+    },
+    {
+      "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
+      "sha256": "5cb95e09970123a29a0574459d953ce03a908e69a899a68bb4374d383640a704"
+    },
+    {
+      "path": "modules/client-file-preparation/templates/memo_istruttoria.md",
+      "sha256": "d718069bee76ed6cd63e4f96b1dffb2d199ba8c3e969a7da1aaf709f6ee691dd"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/avviso-intake/SKILL.md",
+      "sha256": "66b373722146c367a97f358f0b7e67e6291a58148d347977ade081c56e0fa77c"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/avviso.md",
+      "sha256": "904fa43cec9b518217094380d5436d7a36607631885a051e75423d001baf7d13",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/avviso.md",
+      "sha256": "904fa43cec9b518217094380d5436d7a36607631885a051e75423d001baf7d13",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client-update.md",
+      "sha256": "056cd3b4c07d14952bfdfe7a55f35050ac89132a8c09baf8839dfcfbfd6db716",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Preparare la prima lettura di un avviso con Vera",
+      "goal": "Imparare a fornire una comunicazione fiscale e ottenere una nota operativa con riferimenti, informazioni mancanti e verifiche da svolgere.",
+      "scenario": "Marco Prova porta allo studio una richiesta di documenti. Occorre capire che cosa dice, quali materiali recuperare e quali date verificare prima di decidere come procedere.",
+      "scope": "Caso italiano fittizio. La prima lettura organizza i dati del documento; la valutazione giuridica e la risposta seguono il normale percorso professionale.",
+      "inputs": "Apri avviso.md, una trascrizione didattica della comunicazione DEMO-NOTICE-01. Sono indicati destinatario, periodo, documenti richiesti e una data di risposta; manca la prova di ricezione.",
+      "request": "Vera, prepara la prima lettura di questa comunicazione per Marco Prova. Riassumi la richiesta, i riferimenti, le date da verificare e i documenti da recuperare.",
+      "steps": [
+        "Vera importa la comunicazione nella pratica didattica e ne esegue lettura ed estrazione. Controlla che il testo sia leggibile e che la classificazione corrisponda al contenuto.",
+        "La procedura prepara la nota di prima lettura e l’elenco dei riferimenti. La voce spiega quali elementi provengono dalla lettera e quali informazioni restano mancanti.",
+        "Apri i risultati e confrontali con la comunicazione. Individua richiesta documentale, protocollo, date riportate e prossime verifiche."
+      ],
+      "deliverables": [
+        "Nota di prima lettura: permette allo studio di inquadrare la richiesta e organizzare i documenti da acquisire.",
+        "Tabella di date, importi e riferimenti: aiuta a tornare alle fonti; una data individuata non è automaticamente un termine legale verificato."
+      ],
+      "review": "Verifica protocollo, periodo e richiesta sul testo. La lettera non quantifica un debito. Distingui la data indicata per rispondere dalla prova di ricezione ancora mancante.",
+      "checkpoints": [
+        "Prima di partire, identifica comunicazione e obiettivo della prima lettura.",
+        "Alla consegna, mostra che cosa viene richiesto e quali informazioni servono prima della risposta."
+      ],
+      "practice": "Aggiungi client-update.md e chiedi una nuova nota. Il cliente dichiara quando ha trovato la comunicazione e quali documenti ha recuperato; lo studio non li ha ancora ricevuti.",
+      "success": "La nota aggiornata distingue la dichiarazione del cliente dalla prova di ricezione e mantiene visibili i documenti ancora da acquisire.",
+      "repeat": "Fornisci comunicazione completa e prove di ricezione disponibili, chiedi la prima lettura e controlla la nota prima di decidere risposta e approfondimenti."
+    },
+    "en": {
+      "title": "Prepare a first reading of a tax notice with Vera",
+      "goal": "Learn to supply a tax communication and obtain an operational note with references, missing information and checks to perform.",
+      "scenario": "Marco Prova brings the practice a request for documents. We need to understand what it says, what to collect and which dates to verify before deciding how to proceed.",
+      "scope": "Fictional Italian case. First intake organizes document facts; legal assessment and a response follow the normal professional process.",
+      "inputs": "Open avviso.md, an Italian teaching transcription of communication DEMO-NOTICE-01. It states the addressee, period, requested documents and a response date; evidence of receipt is missing.",
+      "request": "Vera, prepare a first-intake note for Marco Prova’s communication. Summarize the request, references, dates to verify and documents to collect.",
+      "steps": [
+        "Vera imports the communication into the teaching case and runs reading and extraction. Check that the text is readable and its classification fits the contents.",
+        "The workflow prepares the intake note and reference list. The voice chat explains which elements come from the letter and which information remains missing.",
+        "Open the results and compare them with the communication. Locate the document request, reference number, stated dates and next checks."
+      ],
+      "deliverables": [
+        "First-intake note: helps the practice understand the request and organize document collection.",
+        "Dates, amounts and references table: helps locate source evidence; a detected date is not automatically a verified legal deadline."
+      ],
+      "review": "Verify reference number, period and request against the text. The letter does not quantify a debt. Distinguish its stated response date from the missing evidence of receipt.",
+      "checkpoints": [
+        "Before starting, identify the communication and the purpose of the intake.",
+        "At delivery, show what is requested and what is needed before a response."
+      ],
+      "practice": "Add client-update.md and request a new note. The client reports when he found the communication and which documents he recovered; the practice has not yet received them.",
+      "success": "The updated note distinguishes the client’s statement from evidence of receipt and keeps outstanding documents visible.",
+      "repeat": "Supply the full communication and available receipt evidence, request first intake and check the note before deciding on a response and further analysis."
+    },
+    "fr": {
+      "title": "Préparer la première lecture d’un avis fiscal avec Vera",
+      "goal": "Apprendre à fournir une communication fiscale et obtenir une note opérationnelle avec références, informations manquantes et vérifications à effectuer.",
+      "scenario": "Marco Prova apporte au cabinet une demande de documents. Il faut comprendre son contenu, les pièces à récupérer et les dates à vérifier avant de décider de la suite.",
+      "scope": "Cas italien fictif. La première lecture organise les faits du document ; l’analyse juridique et la réponse suivent le parcours professionnel normal.",
+      "inputs": "Ouvrez avviso.md, transcription pédagogique italienne de la communication DEMO-NOTICE-01. Destinataire, période, pièces demandées et date de réponse sont indiqués ; la preuve de réception manque.",
+      "request": "Vera, prépare une première note sur cette communication destinée à Marco Prova. Résume la demande, les références, les dates à vérifier et les documents à récupérer.",
+      "steps": [
+        "Vera importe la communication dans le dossier pédagogique puis exécute lecture et extraction. Vérifiez la lisibilité du texte et la cohérence de sa classification avec son contenu.",
+        "La procédure prépare la note et la liste des références. La conversation vocale distingue les éléments tirés de la lettre des informations encore manquantes.",
+        "Ouvrez les résultats et comparez-les à la communication. Retrouvez pièces demandées, référence, dates indiquées et prochaines vérifications."
+      ],
+      "deliverables": [
+        "Note de première lecture : aide le cabinet à comprendre la demande et organiser la collecte des pièces.",
+        "Tableau des dates, montants et références : permet de retrouver les sources ; une date détectée n’est pas automatiquement un délai légal vérifié."
+      ],
+      "review": "Vérifiez référence, période et demande dans le texte. La lettre ne chiffre aucune dette. Distinguez la date de réponse indiquée de la preuve de réception encore manquante.",
+      "checkpoints": [
+        "Avant de commencer, identifiez la communication et l’objectif de la première lecture.",
+        "À la livraison, montrez la demande et les informations nécessaires avant de répondre."
+      ],
+      "practice": "Ajoutez client-update.md et demandez une nouvelle note. Le client indique quand il a trouvé la communication et les pièces récupérées ; le cabinet ne les a pas encore reçues.",
+      "success": "La note actualisée distingue la déclaration du client de la preuve de réception et conserve les pièces restant à obtenir.",
+      "repeat": "Fournissez la communication complète et les preuves de réception disponibles, demandez la première lecture et vérifiez la note avant de décider de la réponse et des approfondissements."
+    },
+    "de": {
+      "title": "Ein Steuerschreiben mit Vera erstmals sichten",
+      "goal": "Lernen, ein Steuerschreiben bereitzustellen und eine Arbeitsnotiz mit Referenzen, fehlenden Informationen und nächsten Prüfungen zu erhalten.",
+      "scenario": "Marco Prova bringt der Kanzlei eine Dokumentenanforderung. Vor der Entscheidung über das weitere Vorgehen müssen Inhalt, benötigte Unterlagen und zu prüfende Daten geklärt werden.",
+      "scope": "Fiktiver italienischer Fall. Die Erstsichtung ordnet Dokumentangaben; rechtliche Bewertung und Antwort folgen dem üblichen fachlichen Verfahren.",
+      "inputs": "Öffnen Sie avviso.md, eine italienische Übungstranskription des Schreibens DEMO-NOTICE-01. Empfänger, Zeitraum, angeforderte Unterlagen und Antwortdatum sind genannt; ein Zugangsnachweis fehlt.",
+      "request": "Vera, erstelle eine erste Arbeitsnotiz zu diesem Schreiben für Marco Prova. Fasse Anforderung, Referenzen, zu prüfende Daten und benötigte Unterlagen zusammen.",
+      "steps": [
+        "Vera importiert das Schreiben in den Übungsfall und führt Lesen und Extraktion aus. Prüfen Sie Lesbarkeit und Übereinstimmung der Dokumentklassifikation mit dem Inhalt.",
+        "Der Ablauf erstellt die Arbeitsnotiz und Referenzliste. Der Sprachchat erklärt, welche Angaben aus dem Schreiben stammen und welche noch fehlen.",
+        "Öffnen Sie die Ergebnisse und vergleichen Sie diese mit dem Schreiben. Finden Sie Dokumentenanforderung, Referenz, genannte Daten und nächste Prüfungen."
+      ],
+      "deliverables": [
+        "Notiz zur Erstsichtung: hilft der Kanzlei, die Anforderung einzuordnen und Unterlagen zu beschaffen.",
+        "Tabelle mit Daten, Beträgen und Referenzen: erleichtert die Quellenprüfung; ein gefundenes Datum ist nicht automatisch eine geprüfte gesetzliche Frist."
+      ],
+      "review": "Prüfen Sie Referenz, Zeitraum und Anforderung am Text. Das Schreiben beziffert keine Schuld. Unterscheiden Sie das genannte Antwortdatum vom fehlenden Zugangsnachweis.",
+      "checkpoints": [
+        "Vor dem Start: Benennen Sie Schreiben und Ziel der Erstsichtung.",
+        "Bei der Übergabe: Zeigen Sie die Anforderung und die vor einer Antwort benötigten Informationen."
+      ],
+      "practice": "Ergänzen Sie client-update.md und fordern Sie eine neue Notiz an. Der Mandant berichtet, wann er das Schreiben fand und welche Dokumente er beschafft hat; die Kanzlei hat diese noch nicht erhalten.",
+      "success": "Die aktualisierte Notiz unterscheidet die Aussage des Mandanten vom Zugangsnachweis und zeigt weiterhin fehlende Unterlagen.",
+      "repeat": "Stellen Sie das vollständige Schreiben und vorhandene Zugangsnachweise bereit, fordern Sie eine Erstsichtung an und prüfen Sie die Notiz vor weiteren Schritten."
+    },
+    "es": {
+      "title": "Preparar la primera lectura de una comunicación fiscal con Vera",
+      "goal": "Aprender a aportar una comunicación fiscal y obtener una nota operativa con referencias, información pendiente y comprobaciones necesarias.",
+      "scenario": "Marco Prova trae al despacho una solicitud de documentos. Hay que entender su contenido, qué recuperar y qué fechas verificar antes de decidir cómo proceder.",
+      "scope": "Caso italiano ficticio. La primera lectura organiza los datos documentales; la valoración jurídica y la respuesta siguen el procedimiento profesional normal.",
+      "inputs": "Abre avviso.md, transcripción didáctica italiana de la comunicación DEMO-NOTICE-01. Indica destinatario, periodo, documentos solicitados y fecha de respuesta; falta la prueba de recepción.",
+      "request": "Vera, prepara una primera nota de esta comunicación para Marco Prova. Resume la solicitud, las referencias, las fechas que debo verificar y los documentos que faltan.",
+      "steps": [
+        "Vera importa la comunicación al expediente didáctico y ejecuta lectura y extracción. Comprueba que el texto sea legible y que su clasificación corresponda al contenido.",
+        "El procedimiento prepara la nota y la lista de referencias. El chat de voz explica qué elementos proceden de la carta y qué información sigue faltando.",
+        "Abre los resultados y compáralos con la comunicación. Localiza la solicitud documental, la referencia, las fechas indicadas y las siguientes comprobaciones."
+      ],
+      "deliverables": [
+        "Nota de primera lectura: ayuda al despacho a entender la solicitud y organizar la recopilación de documentos.",
+        "Tabla de fechas, importes y referencias: facilita volver a las fuentes; una fecha detectada no es automáticamente un plazo legal verificado."
+      ],
+      "review": "Verifica referencia, periodo y solicitud en el texto. La carta no cuantifica una deuda. Distingue la fecha de respuesta indicada de la prueba de recepción que falta.",
+      "checkpoints": [
+        "Antes de empezar, identifica la comunicación y el objetivo de la primera lectura.",
+        "En la entrega, muestra qué se solicita y qué información hace falta antes de responder."
+      ],
+      "practice": "Añade client-update.md y pide una nota nueva. El cliente declara cuándo encontró la comunicación y qué documentos recuperó; el despacho todavía no los ha recibido.",
+      "success": "La nota actualizada distingue la declaración del cliente de la prueba de recepción y mantiene visibles los documentos pendientes.",
+      "repeat": "Facilita la comunicación completa y las pruebas de recepción disponibles, solicita la primera lectura y revisa la nota antes de decidir la respuesta y los análisis posteriores."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "ce740c0b4525279fbf5cb4620dd97c7ee4ac8f4c7c2bb30fd06baa959d6e1ba4"
+}

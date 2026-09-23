@@ -1,21 +1,28 @@
 {
-  "schema": "mparanza.course.v1",
+  "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "bilancio-oic",
-  "revision": "2026-09-14.1",
+  "revision": "2026-09-14.2",
   "seconds": [
     45,
     60,
+    105,
     75,
-    90,
-    75,
-    45
+    45,
+    60
   ],
   "supported_languages": [
     "it",
     "en"
   ],
   "language_basis": "workflow_output_contract",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "prepare_oic_draft_then_update_trial_balance"
+  },
   "sources": [
     {
       "path": "modules/bilancio-xbrl-it/assets/icon.svg",
@@ -443,150 +450,170 @@
       "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     }
   ],
-  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
-  "files": [],
+  "files": [
+    {
+      "path": "files/input/company-it.md",
+      "sha256": "8a185e0e875fe6570b838f62b0e42210a988a94b876bd177d8a81e4bcf6a0e98",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/trial-balance-it.csv",
+      "sha256": "d0beca7af4dd82ebd974f6359ef92cd8d2c3fa6c5119897a908e6e9f6ffd01ed",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-it.md",
+      "sha256": "8a185e0e875fe6570b838f62b0e42210a988a94b876bd177d8a81e4bcf6a0e98",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/trial-balance-updated-it.csv",
+      "sha256": "48761d143f8c222a76b9e143a213f5fd14297350f54aaed8bae8dba3c0db9257",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-it.md",
+      "sha256": "1db255c129364b3caccb941291f7e00e04e0b5e5aa57cd709c62388157bbd882",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/company-en.md",
+      "sha256": "6487101087839a49037e5a8a3bdf4ee0371628b3faf258c06b55ab287c88ee07",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/trial-balance-en.csv",
+      "sha256": "ae5e4fec987297d72fe7a2a0c46fed1888e57845a987c1aa338285465c97064e",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-en.md",
+      "sha256": "6487101087839a49037e5a8a3bdf4ee0371628b3faf258c06b55ab287c88ee07",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/trial-balance-updated-en.csv",
+      "sha256": "a8eacb2af676e5bee22a9fed8415519c7483f9b426d3810f436c81fa9a58f70d",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-en.md",
+      "sha256": "5ecbc0d578e1707788364317d0437e5080688bd3eb90177daba11e0e53a1ec68",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/year-end-it.txt",
+      "sha256": "b9620311fbb8253972eeb4410dca3509829ae3906d2a53f3abd439045d756574",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/year-end-updated-it.txt",
+      "sha256": "059836612d502a565bc2e2ef405ee81ee736a2a637aa1a4fecef6c2e9dc4536e",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/year-end-en.txt",
+      "sha256": "0e0298f967fe3e96788932e5e43fa5beebdf6743588018def7e863b425e6e59e",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/year-end-updated-en.txt",
+      "sha256": "566879705c40e99c07b0030d16079011aa3136c8398b0deda862e4398cc9d909",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    }
+  ],
   "locales": {
     "it": {
-      "title": "Dal prospetto contabile alla bozza di bilancio",
-      "goal": "Capire come lettura dei saldi, mappatura e controlli accompagnano la preparazione di un bilancio OIC/XBRL da rivedere.",
-      "scenario": "Arco consegna un prospetto con attività di 250.000 EUR, passività di 180.000 EUR e patrimonio netto di 70.000 EUR. La voce 'crediti diversi' comprende 8.000 EUR senza dettaglio. I numeri quadrano, ma la classificazione di quel saldo rimane da chiarire.",
-      "request": "Vera, mostrami la mappatura e i punti da chiarire prima di produrre la bozza di bilancio.",
-      "scope": "Microcaso di lettura e mappatura; non è un bilancio depositabile. Tassonomia, forma del bilancio, comparativi e note richiedono il normale percorso completo.",
-      "input_columns": [
-        "Voce del prospetto fittizio",
-        "EUR",
-        "Riferimento"
+      "title": "Preparare una bozza di bilancio con Vera",
+      "goal": "Imparare a fornire i documenti, rivedere le proposte di Vera e leggere una bozza di bilancio con prospetti, informazioni di supporto e controlli.",
+      "scenario": "Uno studio prepara il primo bilancio di una piccola società di servizi. Seguiamo il lavoro dai file del cliente ai prospetti e alla revisione, poi aggiorniamo la bozza con una fattura dimenticata.",
+      "scope": "Preparazione di un bilancio individuale OIC italiano per una piccola società al primo esercizio. Segui il lavoro dai documenti alla bozza e alla verifica locale del candidato XBRL. La revisione e l’approvazione professionale restano il passo successivo.",
+      "inputs": "Apri company-it.md, trial-balance-it.csv e year-end-it.txt. Contengono i dati della società, nove conti con movimenti e saldi e le informazioni di fine esercizio. Sono documenti di fantasia da elaborare, senza un bilancio già pronto. Le imposte sono un dato fornito dal prospetto fiscale esterno.",
+      "request": "Vera, prepara una bozza del bilancio OIC da questi file. Guidami nella revisione della forma e delle classificazioni, poi mostrami il bilancio, le sue fonti e i controlli prima dell’approvazione.",
+      "steps": [
+        "Nella finestra di lavoro Vera apre il caso, importa i tre file e mostra come ha letto i saldi. Nella chat vocale spiega che cosa preparerà e quale file serve a ciascun passaggio. Confronta l’interpretazione dei movimenti con il CSV e confermala quando è corretta.",
+        "Rivedi la forma proposta e le classificazioni dei nove conti. Soffermati su una proposta e sulla sua fonte; la voce risponde alle tue domande senza leggere tutte le righe. Vera calcola i prospetti, presenta il risultato nel patrimonio netto e usa le informazioni di fine esercizio per preparare i dettagli e le informazioni in calce. Le decisioni restano visibili nella finestra di lavoro.",
+        "Apri la bozza generata e trova attivo, debiti, patrimonio netto e risultato dell’esercizio. Segui un importo fino al file originale, poi guarda le informazioni in calce e l’esito dei controlli. Vera esegue anche la verifica locale del candidato XBRL. La voce spiega il risultato effettivo e il prossimo passo: rivedere il bilancio prima dell’approvazione. Se il workflow segnala un problema, mostrane la richiesta concreta e come proseguire."
       ],
-      "input_rows": [
-        [
-          "Attività totali",
-          "250.000",
-          "S1 · riga 10"
-        ],
-        [
-          "Passività",
-          "180.000",
-          "S1 · riga 20"
-        ],
-        [
-          "Patrimonio netto",
-          "70.000",
-          "S1 · riga 30"
-        ],
-        [
-          "Crediti diversi, inclusi nelle attività",
-          "8.000",
-          "S1 · riga 7; dettaglio assente"
-        ]
+      "deliverables": [
+        "Bozza di bilancio con prospetti, informazioni in calce, dettagli di supporto e fonti consultabili.",
+        "Controlli del caso e verifica locale del candidato XBRL, con stato della revisione."
       ],
-      "basis": "Il prospetto S1 supporta soltanto saldi e quadratura. Non spiega la natura degli 8.000 EUR, né fornisce comparativi o informazioni integrative.",
-      "method": [
-        "Conferma esercizio, forma del bilancio, principi e lingua; ispeziona le fonti e conserva i localizzatori di ogni saldo.",
-        "Proponi la mappatura motivata. Raccogli chiarimenti sulle voci ambigue e lascia visibili le decisioni da rivedere.",
-        "Esegui controlli e generazione solo con il contratto e la tassonomia correnti. Presenta bozze e diagnostica con lo stato di revisione, senza dichiarare un deposito."
+      "review": "Trova il risultato dell’esercizio e la sua presenza nel patrimonio netto. Verifica un importo nel file originale e leggi l’esito dei controlli. Spiega quale revisione rimane prima dell’approvazione: un controllo tecnico superato non è una delibera del bilancio.",
+      "checkpoints": [
+        "Indica quali tre file hai fornito e dove rivedi le proposte di Vera.",
+        "Trova il risultato, una fonte e lo stato dei controlli; spiega quale passo viene dopo la bozza."
       ],
-      "result_title": "Quadratura presente, classificazione aperta",
-      "conclusion": "250.000 − 180.000 − 70.000 = 0 EUR. La quadratura non risolve la natura dei crediti diversi.",
-      "output_columns": [
-        "Controllo",
-        "Risultato",
-        "Conseguenza"
-      ],
-      "output_rows": [
-        [
-          "Equilibrio patrimoniale",
-          "0 EUR di differenza",
-          "Controllo aritmetico soddisfatto"
-        ],
-        [
-          "Crediti diversi · 8.000 EUR",
-          "Natura non documentata",
-          "Richiedere dettaglio prima della mappatura definitiva"
-        ],
-        [
-          "Comparativi e note",
-          "Non forniti nel microcaso",
-          "Perimetro incompleto"
-        ]
-      ],
-      "check": "Una quadratura numerica non certifica classificazione, completezza o conformità. L'istanza e le bozze conservano i propri limiti e la revisione professionale.",
-      "question": "Possiamo assegnare tutti i crediti diversi a una voce solo per chiudere la mappatura?",
-      "answer": "No. La natura del credito deve essere sostenuta dal dettaglio. Il punto resta aperto e il professionista rivede la proposta.",
-      "practice": "Aggiungi il dettaglio degli 8.000 EUR e rivedi la mappatura senza cambiare i totali.",
-      "next": "Nel tuo fascicolo prepara prospetti completi, comparativi e documenti integrativi; indica esercizio e forma del bilancio."
+      "practice": "Leggi update-it.md e fornisci trial-balance-updated-it.csv e year-end-updated-it.txt come sostituzioni dei corrispondenti file. Chiedi: «Aggiorna questa bozza nella stessa pratica, conservando la versione precedente». Apri il nuovo risultato e spiega l’effetto della fattura aggiunta e delle imposte aggiornate. Verifica che la prima versione sia ancora disponibile.",
+      "success": "Sai quali documenti fornire, come avviare il bilancio e rivedere le proposte, dove leggere prospetti e controlli e come ottenere una nuova versione nella stessa pratica.",
+      "repeat": "Fornisci situazione contabile, dati della società, periodo e documenti disponibili. Chiedi la preparazione del bilancio, rivedi le proposte e completa le integrazioni segnalate prima di approvazione ed esportazione."
     },
     "en": {
-      "title": "From accounting balances to a draft financial statement",
-      "goal": "Understand how source reading, mapping and checks support a reviewable OIC statement and XBRL output.",
-      "scenario": "Fictional Arco supplies assets of EUR 250,000, liabilities of EUR 180,000 and equity of EUR 70,000. Other receivables include EUR 8,000 without detail. The totals balance, but that classification remains unresolved.",
-      "request": "Vera, show the mapping and questions to resolve before preparing the draft statement.",
-      "scope": "A small reading and mapping case, not a filing-ready statement. Taxonomy, statement form, comparatives and notes need the complete normal workflow.",
-      "input_columns": [
-        "Fictional statement item",
-        "EUR",
-        "Reference"
+      "title": "Prepare draft annual accounts with Vera",
+      "goal": "Learn to supply the documents, review Vera’s proposals and read draft annual accounts with statements, supporting information and checks.",
+      "scenario": "An accounting firm prepares the first annual accounts for a small service company. Follow the work from client files to statements and review, then update the draft after a missing invoice is recorded.",
+      "scope": "Prepare individual Italian OIC annual accounts for a small company in its first year. Follow the work from documents to the draft and local validation of an XBRL candidate. Professional review and approval remain the next step.",
+      "inputs": "Open company-en.md, trial-balance-en.csv and year-end-en.txt. They contain the company details, nine accounts with movements and balances, and year-end information. These are fictional documents to process, with no finished accounts. Tax is an input supplied by the external tax workpaper.",
+      "request": "Vera, prepare draft OIC annual accounts from these files. Guide me through review of the form and classifications, then show the accounts, their sources and the checks before approval.",
+      "steps": [
+        "In the working window, Vera opens the case, imports the three files and shows how it read the balances. In the voice chat, it explains what it will prepare and which file supports each step. Compare the movement interpretation with the CSV and confirm it when correct.",
+        "Review the proposed form and classifications for the nine accounts. Pause on one proposal and its source; the voice chat answers questions without reading every row. Vera calculates the statements, presents the result within equity and uses the year-end information for supporting schedules and statutory footnotes. Decisions remain visible in the working window.",
+        "Open the generated draft and find assets, debts, equity and the result for the year. Follow one amount back to its original file, then read the footnotes and check results. Vera also runs local validation of the XBRL candidate. The voice chat explains the actual outcome and next step: review the accounts before approval. If the workflow identifies a problem, show its concrete evidence request and how to continue."
       ],
-      "input_rows": [
-        [
-          "Total assets",
-          "250,000",
-          "S1 · row 10"
-        ],
-        [
-          "Liabilities",
-          "180,000",
-          "S1 · row 20"
-        ],
-        [
-          "Equity",
-          "70,000",
-          "S1 · row 30"
-        ],
-        [
-          "Other receivables within assets",
-          "8,000",
-          "S1 · row 7; no breakdown"
-        ]
+      "deliverables": [
+        "Draft annual accounts with statements, statutory footnotes, supporting schedules and inspectable sources.",
+        "Case checks and local validation of the XBRL candidate, with the review status."
       ],
-      "basis": "S1 supports the balances and arithmetic. It does not explain the receivables or provide comparatives and disclosures.",
-      "method": [
-        "Confirm year, statement form, principles and language. Inspect sources and preserve each balance's locator.",
-        "Propose a reasoned mapping and resolve ambiguous items. Keep decisions awaiting review visible.",
-        "Use the current contract and taxonomy for checks and generation. Deliver drafts and diagnostics with their review status, without claiming filing."
+      "review": "Find the result for the year and its place in equity. Check one amount against the original file and read the check results. Explain what review remains before approval: passing a technical check does not approve the annual accounts.",
+      "checkpoints": [
+        "Name the three files you supplied and show where you review Vera’s proposals.",
+        "Find the result, one source and the check status; explain the next step after the draft."
       ],
-      "result_title": "Balanced totals, unresolved classification",
-      "conclusion": "250,000 − 180,000 − 70,000 = EUR 0. Balance does not resolve the nature of other receivables.",
-      "output_columns": [
-        "Check",
-        "Result",
-        "Consequence"
-      ],
-      "output_rows": [
-        [
-          "Balance-sheet equation",
-          "EUR 0 difference",
-          "Arithmetic closes"
-        ],
-        [
-          "Other receivables · EUR 8,000",
-          "Nature undocumented",
-          "Obtain detail before final mapping"
-        ],
-        [
-          "Comparatives and notes",
-          "Not supplied in this small case",
-          "Incomplete scope"
-        ]
-      ],
-      "check": "Balanced totals do not certify classification, completeness or compliance. Drafts retain their limitations and professional-review requirement.",
-      "question": "Can we assign all other receivables to one category just to finish mapping?",
-      "answer": "No. The nature of the balance needs supporting detail. Keep the point open and submit the proposal for professional review.",
-      "practice": "Add the EUR 8,000 breakdown and reconsider mapping without changing the totals.",
-      "next": "Prepare complete balances, comparatives and supporting documents; identify the year and statement form."
+      "practice": "Read update-en.md and supply trial-balance-updated-en.csv and year-end-updated-en.txt as replacements for the corresponding files. Ask: “Update this draft in the same engagement, keeping the previous version.” Open the new result and explain the effect of the additional invoice and updated tax input. Check that the first version remains available.",
+      "success": "You know which documents to provide, how to start the accounts and review proposals, where to read the statements and checks, and how to obtain a new version in the same engagement.",
+      "repeat": "Supply the trial balance, company details, period and available supporting documents. Ask for annual-accounts preparation, review the proposals and complete the outstanding evidence before approval and export."
     }
-  },
-  "retained_from": {
-    "course_sha256": "d1c08218616d6dd4456994cb2e4bf38f656309ab91c0220eed7b6a843c9eb175",
-    "published_version": "0.1.257"
   }
 }

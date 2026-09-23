@@ -21,7 +21,8 @@
     "marketplace_skill_instructions.json",
     "repository/plugins/_shared/vendor/modules/courseware",
     "repository/scripts/course_materials",
-    "repository/static/shared/courses"
+    "repository/static/shared/courses",
+    "repository/scripts/cowork_teaching"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -86,6 +87,6 @@
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c70bad2ea970f9ee6fd7f7ce1e6b2ba69f2ead7d946c0c9ba2a6e785abb94949"
+    "source_fingerprint": "eb7396d5019bcbe95f7adee5a40d7991596e926d1e99689fa58128c4eecfb919"
   }
 }

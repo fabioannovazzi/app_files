@@ -1,0 +1,690 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "comunicazione-professionale",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "prepare_sources_then_review_communication_package"
+  },
+  "sources": [
+    {
+      "path": "modules/comunicazione-professionale/assets/fonts/InstrumentSans-Bold.ttf",
+      "sha256": "735badeb8b2046cee6f5e1226412ab6c29db04accbca413af03d70e991dce10d"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/fonts/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/fonts/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/fonts/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/icon.svg",
+      "sha256": "9cad267791094a6a9b20ff3a4c7e44d730bc7e05de4d40e7865931392e7803b4"
+    },
+    {
+      "path": "modules/comunicazione-professionale/requirements.txt",
+      "sha256": "4376e39d90f829be0b643d59c8df0c2ac265409071947ee64265207daae4c2e7"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/answer_contract.schema.json",
+      "sha256": "1167a143aea147883d9c1961f8eaebfa652ea1c1e7b381907d14869ab45774d5"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/claim_assurance.schema.json",
+      "sha256": "6f560e9c2264349ce6e1333024b54241ed6352f2f5c771550e0889506b7bc728"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/communication_intake.schema.json",
+      "sha256": "a53683440b910d297838b87d7d2cb1b9ce9a1035f52f54da6f44207913412fe6"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/creative_direction_decision.schema.json",
+      "sha256": "7c08d51b1bb5f50e67c7493237f68b42fb77bfb147e05a8697e38312e0dc70e5"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/creative_direction_handoff.schema.json",
+      "sha256": "8a58f5037fed81655a1e3477a8e310e9a56e8344de5f7fb69bc3a2eefe010483"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/creative_direction_selection_input.schema.json",
+      "sha256": "59ddeb76e13171a8a793881c7b7bbd2713d5b67c01d70f8abee3dba201ae34e2"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/editorial_assessment.schema.json",
+      "sha256": "601cfc6f56620b71fc4dff91245a1df6980ab5ba1ee4f0f397bcaa9adb151b91"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/editorial_benchmark_results.schema.json",
+      "sha256": "ea70db0707f9e498c00d36593968045aba59b2497662232a2cd9441bd6bbe830"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/history_privacy_assessment.schema.json",
+      "sha256": "d2326990b65e8105d2bffaa7f38e0f5b841134fc5818325edce8841fdb908584"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/history_pseudonymization.schema.json",
+      "sha256": "f8f6825ac060568be8b629c4e0473d2cd08d08d60d9f01e561fbc5ec960e1c18"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/model_contribution.schema.json",
+      "sha256": "468d2884b8542964a1470b88a6b3dac1799e3a2cfc20b758085e43bdc329dd86"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/review_bundle.schema.json",
+      "sha256": "a8352cd640680073c383181f3aeeeb136fe2ec132477b94e0f04e0107bd10462"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/visual_assessment.schema.json",
+      "sha256": "10c887b04f047b4cff4866717ca7908263e2a3d153693151d415139dc961101d"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/workspace.schema.json",
+      "sha256": "7b73a414fa43f7b098142c3c8feb987366d14a0d371c4a88092a3c2004680a79"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/check_dependencies.py",
+      "sha256": "580ea4e20a04f097f3b21bd4fb8279b594b5dccda2880344aee66bbb1a1c071d"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/history_privacy.py",
+      "sha256": "1b22ced235b168743888a1bc397d30b0ce6edff93a151c3e700e9ff5300f75ee"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/initialize_workspace.py",
+      "sha256": "4beedaf22e478a26174c8a09c23e99e4be54f3c7b02516b395299205b91d97db"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/package_communications.py",
+      "sha256": "15f877e32d62c99849d798dab0602014953a434d15950b4621e24cada117994a"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/prepare_creative_direction_handoff.py",
+      "sha256": "b612df7130f0fa2a4e7ff7a960b79886059f69387e91b1b978df0b3840bc7468"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/prepare_model_phase.py",
+      "sha256": "72bbc6bd7349e51017a7c10b2bb234fda9307c29420313f96b638e86354d0043"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/prepare_run.py",
+      "sha256": "294f8ae28f40afa3596295e1639f54270e9b96f0104d4c0ae0a71354ff989085"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/promote_studio_profile.py",
+      "sha256": "11443b542e3174ca1faf7ef293e675854a78322cf0b0c078c369250d524856cc"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/qualify_editorial_assessor.py",
+      "sha256": "2a587789eca2e2b970c9f388048d7ea14bd009c1499055c3d9bd3167ce18bef3"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_contribution.py",
+      "sha256": "c90888296819d48bbefbd6a4b8dbcc08e8433aafca6e4931d7de417f16a3e629"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_creative_direction_decision.py",
+      "sha256": "4bffbd20a0700c483987652cb350ebd13eb214ba02a3aeaeec82029d7c5697ba"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_external_delivery.py",
+      "sha256": "3cef3f7267012d1cac0bad8f1949e3e927f851ed2d4b9db23c9a37d78dd01d43"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_history_privacy_assessment.py",
+      "sha256": "2986ccb7ab027420a1d9e5ddfec09eec4c9b540d9d0900ea694ca132157f658b"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_history_pseudonymization.py",
+      "sha256": "248a5f5baad2b95639d0a336365a6337ae9bd4fe7b1181ca33d221b0bb7871cc"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_review.py",
+      "sha256": "6b40e370d916be6ec21a93614cdf2a498dbffaadb78b2190dcabc7a6de7d13ee"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_visual_assessment.py",
+      "sha256": "d86621b311eb8bedce1414000e99289cfefbbf1123598e3a4eca1701e51e7642"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/render_visuals.py",
+      "sha256": "c07ac4376bd254bcbd249e9e3a8432e1948999cf1678c5dd5cd9233ac03a033c"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/validate_run.py",
+      "sha256": "93410dfa2c1c87a8d950b5421bbb00960933341ae4fa8fb88e76ff75ff5004f5"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/workflow_core.py",
+      "sha256": "e7fb34cd0b443b0fab6e4afd1cc0ccedb05d0c8dcb9e7befb157e732bede3831"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
+      "sha256": "ebb25c81e3050cff1e26fad123db596b9bc8c7b3bf764b1b6b22cdd0e0877e3e"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/agents/openai.yaml",
+      "sha256": "1f89631cf95b1e7954a0430a0a64725ec0c729f9b37996641ddd4ac7ec365252"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/model-contribution-contract.md",
+      "sha256": "96789db8b67bdccf822f574fdfee09a077c9a724e66a375a37439bb18d217181"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/product-thesis.md",
+      "sha256": "5d4327d32cfb67b01c43085dcab635d0c4bcd0bd4a62d131ff2d7694a041751d"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/professional-circular-pattern.md",
+      "sha256": "b6e4caece0df1f610d90e6c7f302e5014423480c41e2c6563e3c4f5d3c38761e"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/visual-system.md",
+      "sha256": "fafeb05519cf3e34a46323e66db8232b874561ac201592815d9668bdd6a1cf8f"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/workflow-method.md",
+      "sha256": "a6b1846ea5367eef0d0a0c3fe54d060b1a1418024791b2d9ac47b45124224621"
+    },
+    {
+      "path": "skills/comunicazione-professionale/SKILL.md",
+      "sha256": "a1c4b4befe3fc49e3e545786ad6f73e4dc149462842ad2660d25aff6be97f470"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/brief-it.md",
+      "sha256": "ab2c7f22dcfd6edf1d8109f8a72b6bf78724d53831bc8f4d978e56d5f4890e38",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-it.md",
+      "sha256": "c4c8f51c2ed0f1e76a6b2d6f01cf40e702ef5683f7dba3c8be88e0634573d2c8",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-it-provenance.json",
+      "sha256": "d4faa7f37c608fae9a43eb04e5d6caf9407bb3334a98d1d9b684d1939f44a07d",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/brief-it.md",
+      "sha256": "ab2c7f22dcfd6edf1d8109f8a72b6bf78724d53831bc8f4d978e56d5f4890e38",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-it.md",
+      "sha256": "c4c8f51c2ed0f1e76a6b2d6f01cf40e702ef5683f7dba3c8be88e0634573d2c8",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-it-provenance.json",
+      "sha256": "d4faa7f37c608fae9a43eb04e5d6caf9407bb3334a98d1d9b684d1939f44a07d",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-it.md",
+      "sha256": "dc77bac707b4e559ef8a7c2eefdfbec49a9af3584b13e3ec5793d5fbff902e57",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/brief-en.md",
+      "sha256": "56c28c7f59e443f5b7e772c1d54cde8dbd451c774179742b317e6c3a2755b195",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-en.md",
+      "sha256": "75b96074c44743ff328f139d45ad296dd8b392a854809b499ff9b8733aff079d",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-en-provenance.json",
+      "sha256": "92fd09ad935a5f9f3082309b32b6bd64ba79ef67ef0ee0f815658f3e6fdbf56a",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/brief-en.md",
+      "sha256": "56c28c7f59e443f5b7e772c1d54cde8dbd451c774179742b317e6c3a2755b195",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-en.md",
+      "sha256": "75b96074c44743ff328f139d45ad296dd8b392a854809b499ff9b8733aff079d",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-en-provenance.json",
+      "sha256": "92fd09ad935a5f9f3082309b32b6bd64ba79ef67ef0ee0f815658f3e6fdbf56a",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-en.md",
+      "sha256": "1ac855a62ab75e8b1dfda2721c1a58d704ed048eb58aef6db3651baf3ac197a7",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/brief-fr.md",
+      "sha256": "ced4bae5981d708958db7ce49b7a7ee2352b91edc8cae0c1363812f5f943c279",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-fr.md",
+      "sha256": "531675a284d296bb8eef0c6ec8458aca65378fd691f814959bc3d9a70f5e275c",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-fr-provenance.json",
+      "sha256": "a39f603e496e9fec2423c682d63ec0668847457dfb3f88c1a90731ef7309e535",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/brief-fr.md",
+      "sha256": "ced4bae5981d708958db7ce49b7a7ee2352b91edc8cae0c1363812f5f943c279",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-fr.md",
+      "sha256": "531675a284d296bb8eef0c6ec8458aca65378fd691f814959bc3d9a70f5e275c",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-fr-provenance.json",
+      "sha256": "a39f603e496e9fec2423c682d63ec0668847457dfb3f88c1a90731ef7309e535",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-fr.md",
+      "sha256": "2a3b50913467d3a7e60b8f8d4f6e82a4e8b3eb5a01bcad88d7ebc90bd6256435",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/brief-de.md",
+      "sha256": "5c0a243e07d4c32300d6f6fced22fd2000053a32d3f68cd9e4aa639c1e594218",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-de.md",
+      "sha256": "42a61615cce6ee54aa9c2533423da021eeb1ae5237d13924e2a795910baa8068",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-de-provenance.json",
+      "sha256": "eaa7fb097004033731a00c1c8d733d8ad6625c831aa8e7eee6eb1cb86ef6ed27",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/brief-de.md",
+      "sha256": "5c0a243e07d4c32300d6f6fced22fd2000053a32d3f68cd9e4aa639c1e594218",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-de.md",
+      "sha256": "42a61615cce6ee54aa9c2533423da021eeb1ae5237d13924e2a795910baa8068",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-de-provenance.json",
+      "sha256": "eaa7fb097004033731a00c1c8d733d8ad6625c831aa8e7eee6eb1cb86ef6ed27",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-de.md",
+      "sha256": "2bba3c1f2b3c6f36bb4f0875b08b5aef3fefabe936dfd15f457ee2e5499e4159",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/brief-es.md",
+      "sha256": "a2de9b73aea6269bdc37cf4968437b2f45b8cb987b84bc5a30f350201b6634e3",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-es.md",
+      "sha256": "3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-es-provenance.json",
+      "sha256": "ec0909b8cf3b7f14103b6b0032ddac870241a38a7aa42bd708eab7781ab9f952",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/brief-es.md",
+      "sha256": "a2de9b73aea6269bdc37cf4968437b2f45b8cb987b84bc5a30f350201b6634e3",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-es.md",
+      "sha256": "3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-es-provenance.json",
+      "sha256": "ec0909b8cf3b7f14103b6b0032ddac870241a38a7aa42bd708eab7781ab9f952",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-es.md",
+      "sha256": "829466f9c59c8b99aecb00534a622e5c3800ae121f0bb51a742345e07e775fdc",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Preparare una comunicazione professionale con Vera",
+      "goal": "Imparare a partire da un argomento e dalle fonti, preparare una comunicazione per un pubblico preciso e rivedere il pacchetto prima di usarlo.",
+      "scenario": "Studio Riva vuole spiegare alle piccole imprese clienti come orientarsi quando ricevono una richiesta di accesso ai dati. Prepariamo una FAQ breve usando una fonte ufficiale selezionata.",
+      "scope": "Il percorso completo della comunicazione: obiettivo e destinatari, fonti, scelta di che cosa dire, bozza, verifiche, revisione e file finali. Il contenuto giuridico dell’esempio serve a provare il workflow; la lezione non è un corso sul GDPR.",
+      "inputs": "Apri brief-it.md per leggere l’incarico e il formato richiesto. Apri source-it.md per vedere la guida ufficiale selezionata. Lo studio è fittizio e parte senza comunicazioni precedenti.",
+      "request": "Vera, prepara una FAQ per le piccole imprese clienti di Studio Riva sulla gestione delle richieste di accesso ai dati. Usa questo brief e questa fonte. Fammi rivedere contenuti e formato, poi prepara il pacchetto locale senza inviarlo o pubblicarlo.",
+      "steps": [
+        "Nel thread di lavoro Vera chiarisce pubblico, obiettivo, lingua e canale e prepara lo spazio locale dello studio. Nella chat vocale spiega che cosa produrremo. Confermi il perimetro e il luogo in cui salvare il lavoro.",
+        "Vera esamina la fonte, decide quali informazioni sono utili e prepara la FAQ e il formato proposto. Il workflow corrente verifica separatamente affermazioni e qualità editoriale. La voce ti accompagna attraverso i risultati effettivi; se una verifica richiede correzioni, vedi la revisione.",
+        "Rivedi la comunicazione, le fonti e il formato. Dopo le conferme previste dal workflow, apri il pacchetto realmente generato e controlla come usarne i file. Un eventuale invio o pubblicazione è un’azione successiva, separata."
+      ],
+      "deliverables": [
+        "FAQ in Markdown, pronta da esaminare e riutilizzare dopo la revisione.",
+        "Base tecnica, riferimenti alle fonti e registrazioni delle verifiche e delle decisioni."
+      ],
+      "review": "Leggi la FAQ come un cliente: destinatario e utilità devono essere chiari. Controlla che le affermazioni corrispondano alla fonte, che i limiti restino visibili e che il formato sia quello accettato. Il workflow può chiedere una correzione o motivare perché non comunicare.",
+      "checkpoints": [
+        "Indica quale pubblico vuoi raggiungere, con quale contenuto e in quale formato.",
+        "Trova nel pacchetto il testo da usare e la fonte di una sua affermazione; spiega che cosa devi rivedere prima dell’uso."
+      ],
+      "practice": "Leggi practice-it.md e chiedi una nuova versione che includa un’email di accompagnamento alla FAQ. Rivedi come cambia il testo per il canale, conserva il primo pacchetto e apri i nuovi file. Non inviare nulla.",
+      "success": "Sai avviare una comunicazione da fonti selezionate, seguire le verifiche, rivedere il risultato e chiedere una nuova versione per un altro canale.",
+      "repeat": "Indica a Vera argomento, pubblico, canali e fonti disponibili. Puoi aggiungere esempi precisi dello stile dello studio. Rivedi proposta, fonti e pacchetto prima di utilizzarlo."
+    },
+    "en": {
+      "title": "Prepare a professional communication with Vera",
+      "goal": "Learn to turn a topic and selected sources into a communication for a defined audience, then review the package before using it.",
+      "scenario": "Studio Riva wants to help its small business clients understand how to handle a data access request. We will prepare a short FAQ using a selected official source.",
+      "scope": "The complete communication workflow: objective and audience, sources, editorial decision, draft, checks, review and final files. The legal example lets you try the workflow; this lesson is not a GDPR course.",
+      "inputs": "Open brief-en.md for the assignment and requested format. Open source-en.md to inspect the selected official guide. The fictional firm starts without previous communications.",
+      "request": "Vera, prepare a FAQ for Studio Riva’s small business clients about handling data access requests. Use this brief and source. Let me review the content and format, then prepare the local package without sending or publishing it.",
+      "steps": [
+        "In the working thread, Vera establishes the audience, objective, language and channel and prepares the firm’s local workspace. In the voice chat, it explains what we will produce. You confirm the scope and where the work will be saved.",
+        "Vera examines the source, decides what is useful and drafts the FAQ and proposed format. The current workflow checks claims and editorial quality separately. The voice explanation follows actual results, including any revision a check requires.",
+        "Review the communication, sources and format. After the confirmations required by the workflow, open the actual generated package and find out how to use its files. Sending or publishing is a separate subsequent action."
+      ],
+      "deliverables": [
+        "FAQ in Markdown, for inspection and reuse after review.",
+        "Technical basis, source references and records of checks and decisions."
+      ],
+      "review": "Read the FAQ as a client: its audience and practical use should be clear. Check that claims match the source, limits remain visible and the format is the one accepted. The workflow may require revision or explain why no communication is warranted.",
+      "checkpoints": [
+        "State the audience you want to reach, the content they need and the format you want.",
+        "Find the usable text and the source of one claim in the package; explain what you need to review before use."
+      ],
+      "practice": "Read practice-en.md and request a new version including a covering email for the FAQ. Review the channel adaptation, preserve the first package and open the new files. Do not send anything.",
+      "success": "You can start from selected sources, follow checks, review the communication and request a new version for another channel.",
+      "repeat": "Tell Vera the topic, audience, channels and available sources. You can add exact examples of the firm’s style. Review the proposal, sources and package before using it."
+    },
+    "fr": {
+      "title": "Préparer une communication professionnelle avec Vera",
+      "goal": "Apprendre à partir d’un sujet et de sources sélectionnées, préparer une communication pour un public précis et revoir le dossier avant utilisation.",
+      "scenario": "Studio Riva souhaite aider ses petites entreprises clientes à s’orienter lorsqu’elles reçoivent une demande d’accès aux données. Nous préparons une courte FAQ à partir d’une source officielle sélectionnée.",
+      "scope": "Le parcours complet : objectif et public, sources, choix éditorial, brouillon, vérifications, revue et fichiers finaux. L’exemple juridique sert à essayer le workflow ; cette leçon n’est pas un cours sur le RGPD.",
+      "inputs": "Ouvre brief-fr.md pour la mission et le format demandé, puis source-fr.md pour consulter le guide officiel sélectionné. Le cabinet fictif commence sans communications antérieures.",
+      "request": "Vera, prépare une FAQ pour les petites entreprises clientes de Studio Riva sur le traitement des demandes d’accès aux données. Utilise ce brief et cette source. Fais-moi revoir contenu et format, puis prépare le dossier local sans l’envoyer ni le publier.",
+      "steps": [
+        "Dans le fil de travail, Vera précise public, objectif, langue et canal et prépare l’espace local du cabinet. Dans la conversation vocale, elle explique le résultat visé. Tu confirmes le périmètre et le lieu d’enregistrement.",
+        "Vera examine la source, choisit les informations utiles et rédige la FAQ et le format proposé. Le workflow actuel vérifie séparément les affirmations et la qualité éditoriale. L’explication vocale suit les résultats réels, y compris les corrections demandées.",
+        "Revois la communication, les sources et le format. Après les confirmations prévues, ouvre le dossier effectivement généré et repère comment utiliser ses fichiers. Un envoi ou une publication constitue une action ultérieure distincte."
+      ],
+      "deliverables": [
+        "FAQ en Markdown, à examiner et réutiliser après revue.",
+        "Base technique, références aux sources et traces des vérifications et décisions."
+      ],
+      "review": "Lis la FAQ comme un client : public et utilité doivent être clairs. Vérifie que les affirmations correspondent à la source, que les limites sont visibles et que le format est celui accepté. Le workflow peut demander une correction ou expliquer pourquoi ne pas communiquer.",
+      "checkpoints": [
+        "Indique le public à atteindre, le contenu utile et le format souhaité.",
+        "Retrouve le texte utilisable et la source d’une affirmation dans le dossier ; explique les points à revoir avant usage."
+      ],
+      "practice": "Lis practice-fr.md et demande une nouvelle version avec un courriel d’accompagnement de la FAQ. Revois l’adaptation au canal, conserve le premier dossier et ouvre les nouveaux fichiers. N’envoie rien.",
+      "success": "Tu sais partir de sources sélectionnées, suivre les vérifications, revoir la communication et demander une version pour un autre canal.",
+      "repeat": "Indique à Vera le sujet, le public, les canaux et les sources disponibles. Tu peux ajouter des exemples précis du style du cabinet. Revois proposition, sources et dossier avant utilisation."
+    },
+    "de": {
+      "title": "Eine professionelle Mitteilung mit Vera erstellen",
+      "goal": "Lernen, aus einem Thema und ausgewählten Quellen eine Mitteilung für eine bestimmte Zielgruppe zu erstellen und das Paket vor der Verwendung zu prüfen.",
+      "scenario": "Studio Riva möchte seinen kleinen Unternehmenskunden den Umgang mit Auskunftsanfragen erleichtern. Wir erstellen anhand einer ausgewählten offiziellen Quelle eine kurze FAQ.",
+      "scope": "Der vollständige Ablauf: Ziel und Zielgruppe, Quellen, redaktionelle Entscheidung, Entwurf, Kontrollen, Prüfung und fertige Dateien. Das rechtliche Beispiel dient zum Erproben des Workflows; die Lektion ist kein DSGVO-Kurs.",
+      "inputs": "Öffne brief-de.md für Auftrag und Formatwünsche sowie source-de.md für den ausgewählten offiziellen Leitfaden. Die fiktive Kanzlei startet ohne frühere Mitteilungen.",
+      "request": "Vera, erstelle eine FAQ zum Umgang mit Auskunftsanfragen für die kleinen Unternehmenskunden von Studio Riva. Nutze diesen Auftrag und diese Quelle. Lass mich Inhalt und Format prüfen und erstelle das lokale Paket ohne Versand oder Veröffentlichung.",
+      "steps": [
+        "Im Arbeitsthread klärt Vera Zielgruppe, Ziel, Sprache und Kanal und bereitet den lokalen Arbeitsbereich der Kanzlei vor. Im Sprachchat erklärt sie das geplante Ergebnis. Du bestätigst Umfang und Speicherort.",
+        "Vera prüft die Quelle, wählt nützliche Inhalte und entwirft FAQ und Format. Der aktuelle Workflow kontrolliert Aussagen und redaktionelle Qualität getrennt. Die Spracherklärung folgt den tatsächlichen Ergebnissen und nötigen Überarbeitungen.",
+        "Prüfe Mitteilung, Quellen und Format. Öffne nach den vorgesehenen Bestätigungen das tatsächlich erzeugte Paket und orientiere dich in den verwendbaren Dateien. Versand oder Veröffentlichung sind spätere, separate Schritte."
+      ],
+      "deliverables": [
+        "FAQ als Markdown, zur Prüfung und anschließenden Verwendung.",
+        "Fachliche Grundlage, Quellenverweise sowie Nachweise der Kontrollen und Entscheidungen."
+      ],
+      "review": "Lies die FAQ aus Kundensicht: Zielgruppe und Nutzen müssen klar sein. Prüfe Quellenbezug, sichtbare Grenzen und das bestätigte Format. Der Workflow kann eine Überarbeitung verlangen oder begründen, weshalb keine Mitteilung sinnvoll ist.",
+      "checkpoints": [
+        "Benenne Zielgruppe, benötigten Inhalt und gewünschtes Format.",
+        "Finde im Paket den verwendbaren Text und die Quelle einer Aussage; erkläre, was du vor der Verwendung prüfen musst."
+      ],
+      "practice": "Lies practice-de.md und fordere eine neue Version mit einer Begleit-E-Mail zur FAQ an. Prüfe die Anpassung an den Kanal, bewahre das erste Paket und öffne die neuen Dateien. Nichts versenden.",
+      "success": "Du kannst mit ausgewählten Quellen beginnen, Kontrollen verfolgen, die Mitteilung prüfen und eine neue Version für einen anderen Kanal anfordern.",
+      "repeat": "Nenne Vera Thema, Zielgruppe, Kanäle und verfügbare Quellen. Du kannst konkrete Stilbeispiele der Kanzlei ergänzen. Prüfe Vorschlag, Quellen und Paket vor der Verwendung."
+    },
+    "es": {
+      "title": "Preparar una comunicación profesional con Vera",
+      "goal": "Aprender a partir de un tema y fuentes seleccionadas, preparar una comunicación para un público concreto y revisar el paquete antes de utilizarlo.",
+      "scenario": "Studio Riva quiere orientar a sus pequeñas empresas clientes cuando reciben una solicitud de acceso a datos. Preparamos una FAQ breve con una fuente oficial seleccionada.",
+      "scope": "El proceso completo: objetivo y público, fuentes, decisión editorial, borrador, comprobaciones, revisión y archivos finales. El ejemplo jurídico sirve para probar el workflow; esta lección no es un curso sobre el RGPD.",
+      "inputs": "Abre brief-es.md para conocer el encargo y formato solicitado, y source-es.md para consultar la guía oficial seleccionada. El despacho ficticio empieza sin comunicaciones anteriores.",
+      "request": "Vera, prepara una FAQ sobre la gestión de solicitudes de acceso a datos para las pequeñas empresas clientes de Studio Riva. Usa este brief y esta fuente. Déjame revisar contenido y formato; después prepara el paquete local sin enviarlo ni publicarlo.",
+      "steps": [
+        "En el hilo de trabajo, Vera concreta público, objetivo, idioma y canal y prepara el espacio local del despacho. En la conversación de voz explica qué produciremos. Confirmas el alcance y dónde guardar el trabajo.",
+        "Vera examina la fuente, selecciona la información útil y prepara la FAQ y el formato propuesto. El workflow actual comprueba por separado las afirmaciones y la calidad editorial. La voz sigue los resultados reales y las correcciones necesarias.",
+        "Revisa comunicación, fuentes y formato. Tras las confirmaciones previstas, abre el paquete realmente generado y aprende a utilizar sus archivos. Enviarlo o publicarlo es una acción posterior independiente."
+      ],
+      "deliverables": [
+        "FAQ en Markdown, para revisar y reutilizar después de la revisión.",
+        "Base técnica, referencias a las fuentes y registros de comprobaciones y decisiones."
+      ],
+      "review": "Lee la FAQ como un cliente: público y utilidad deben estar claros. Comprueba que las afirmaciones corresponden a la fuente, los límites siguen visibles y el formato es el aceptado. El workflow puede pedir cambios o explicar por qué no conviene comunicar.",
+      "checkpoints": [
+        "Indica a qué público quieres llegar, qué contenido necesita y qué formato deseas.",
+        "Encuentra el texto utilizable y la fuente de una afirmación en el paquete; explica qué debes revisar antes de usarlo."
+      ],
+      "practice": "Lee practice-es.md y solicita una nueva versión con un correo de presentación de la FAQ. Revisa la adaptación al canal, conserva el primer paquete y abre los archivos nuevos. No envíes nada.",
+      "success": "Sabes empezar con fuentes seleccionadas, seguir las comprobaciones, revisar la comunicación y pedir una versión para otro canal.",
+      "repeat": "Indica a Vera tema, público, canales y fuentes disponibles. Puedes añadir ejemplos concretos del estilo del despacho. Revisa propuesta, fuentes y paquete antes de utilizarlo."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "61ea0ec5466a6952270b69a7a1ff84549e32412dac2685eaca0c9f966d5da617"
+}

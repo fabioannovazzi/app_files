@@ -1,61 +1,71 @@
-# From a broad question to a verifiable answer
+# Get a checked answer with Lucia
 
-A guided walkthrough of about 6½ minutes. Voice setup, external processing and optional practice are outside the lesson time.
+The explanation and a short practice take about 5–8 minutes. Processing and your questions can extend the session.
 
-Talk with the teacher using the standard Codex voice. In the second chat, open beside it, inspect the files and result. The chats stay paired; interrupt, ask why or slow down whenever you need.
+Speak with the teacher using the standard Codex voice. In the working chat, open in the window beside it, the function runs the case using the prepared files and shows its actual results. The teacher follows those results: interrupt, ask questions and change the pace whenever you need.
 
-Use this prepared material. Do not rewrite the lesson or invent results. Speak in short turns, allow inspection time and listen to actual answers. Do not reveal the solution before the attempt. Timings include observation and conversation, not just spoken text. Showing these files does not complete demo, practice or understanding records. The teacher judges relevance using only its own product's catalog.
+Start from the prepared material and teach the complete first use. Select 3–4 relevant functions during onboarding; on later visits start with what the user wants to do today. Adapt pace and explanations. Create custom examples when helpful, using the same workflow and checking new inputs. Read execution-request.json, use the real paired local case, and connect explanations to verified working-chat results. Never invent results, user answers or understanding confirmations. Opening the kit does not complete the lesson.
 
-## 1. Your objective · 45 s
+## 1. When to use it · 45 s
 
-Listen to the request. Connect this case to work you already do.
+Connect the function to a concrete professional task.
 
-A fictional client asks whether a cost is deductible. An invoice describes a service, but entity, period, regime and actual use are unknown. This lesson frames the question and answer scope without giving a tax opinion.
+Learn to ask a professional question, follow research and checks, and use the answer with its sources and unresolved points.
 
-Lucia, show how you turn this question into a source-supported answer.
+Imprese Arco asks the professional for a short briefing on EU late-payment rules. We start with the written request and initial sources, then produce an actual answer through the workflow.
 
-## 2. The starting evidence · 60 s
+The complete journey from question to checked answer. An informational briefing is a straightforward example for learning the process; an opinion on a concrete position may also require an opposing examination.
 
-Look at the documents in the other chat. Find one useful fact and one missing item.
+## 2. Files and request · 60 s
 
-Q1 supports a documentary description, not the tax conditions. Missing facts can change both research and conclusion.
+Open the files in the working window and show how to request the result.
 
-[["Invoice Q1", "Service description and amount", "Actual use"], ["Client question", "Interest in deduction", "Entity, regime and period"], ["Legal sources", "Not selected in this small case", "Applicable framework after clarification"]]
+Open question-en.md for the request, audience, scope and format. sources-en.md introduces the attached guidance and official text. You do not need to write technical instructions or choose internal stages.
 
-## 3. How the workflow works · 75 s
+Lucia, answer Imprese Arco’s question in this file. Prepare the requested short briefing, check the sources and answer, and show me the document and matters requiring review.
 
-Follow the three steps. Pause at the decision that changes the result.
+## 3. Run the workflow · 105 s
 
-Frame the question, decision and material facts. Ask only what the supplied evidence cannot resolve.
-Follow the current planning, research and answer journey. Check source authority, version and applicability while separating facts and citations.
-Review claims, address relevant alternatives and perform opposing examination when the method requires it. Deliver the answer, bases and residual questions for professional review.
+Explain the step happening now and wait for its actual result.
 
-## 4. Read the result · 90 s
+In the working thread, Lucia reads the question and prepares its objective, source plan, language and legal framework. The voice chat explains what the answer will cover. Correct misunderstandings and answer only questions that affect the work.
 
-Open the example in the second chat. Connect each conclusion to its source.
+Choose ordinary research or Deep Research when available; the workflow preserves a choice already made for this question. The working thread researches and drafts the answer. The voice explanation follows real progress and takes your questions.
 
-The question must identify entity, period, regime and use of the service. Without them, a categorical yes or no would be premature.
+Lucia checks the answer against the question, sources and reasoning, making necessary corrections. Open the Word briefing, see how conclusions are presented and trace one source. Review limitations and unresolved points before use.
 
-[["Framing", "Question and confirmed facts", "A source for each fact"], ["Research", "Applicable sources", "Version, authority and locator"], ["Reviewed answer", "Conclusion with conditions and alternatives", "No invented citations"]]
+During the lesson, the working chat runs the function and produces the result. If a step is unavailable, explain what is missing and keep the lesson incomplete.
 
-## 5. The check that matters · 75 s
+## 4. Use the result · 75 s
 
-Before revealing the answer, say what you would check.
+Open the document just produced and show where to start reading.
 
-A genuine citation can still be inapplicable. Verify both the source text and its relationship to the case facts.
+Word briefing and checked answer text, with sources and limitations.
 
-Is a page discussing deductibility enough to answer?
+Review package showing how claims were checked and what still requires review.
 
-Compare your reasoning: No. Authority, period, facts and conditions must be assessed. A common topic alone does not establish applicability.
+Check that the briefing answers the question in the requested scope and language. Open a source and compare it with one claim. Distinguish a general rule from its application to a client; checks do not replace professional judgment.
 
-## 6. Try it together · 45 s
+## 5. Pause and check · 45 s
 
-Choose whether to try now or keep the example for your next assignment.
+Make these checks at the indicated points during the work.
 
-Add entity, period and service use, then formulate the precise research question.
+Explain the question, intended reader and legal framework.
 
-State the decision you need and select relevant documents. Lucia manages the internal stages without requiring separate skill selection.
+Find a conclusion, its source and a limitation or remaining check.
 
-This is a prepared teaching example, not a receipt for a new execution. Sources and decisions are fictional; no professional approval is implied. For your own files, the current workflow performs its checks and preserves the actual outputs.
+These pauses help you learn how to use the function. They are not a technical detail quiz.
+
+## 6. Try it yourself · 60 s
+
+Let the user formulate the request and guide their attempt.
+
+Read practice-en.md and request a new version for the meeting that now includes suppliers to public authorities. Preserve the first version, follow the new research and checks, and explain how to use the resulting comparison.
+
+You can frame a complete question, choose the research route, navigate the answer and its checks, and update the work when the request changes.
+
+Give Lucia the question, available facts, country or legal framework, intended reader and required result. Review scope, sources, conclusions and unresolved points in the resulting document.
+
+The kit contains fictional files and a prepared outline. Demonstration and practice results come from fresh runs of the current function.
 
 The lesson library, profile and progress stay on your computer. They are not sent to Mparanza. Voice and content read in chat are processed by your OpenAI account: local storage does not mean offline inference.

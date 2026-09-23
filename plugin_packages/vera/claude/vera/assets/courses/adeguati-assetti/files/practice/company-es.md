@@ -1,0 +1,3 @@
+# Empresa y encargo
+
+Caso totalmente ficticio: Officina Arco, empresa italiana, una sede, doce personas, reparación de vehículos para clientes locales. Elena Bianchi dirige y autoriza pagos; Paolo Neri coordina el taller; Sara Rossi gestiona documentos y vencimientos. El despacho externo contabiliza y prepara el resumen mensual, sin gestionar cobros. La solicitud cubre responsabilidades, cierre mensual y uso de información para cobros al 31 de marzo de 2026; no todos los procesos de la empresa. Se aporta una norma interna y un ejemplo operativo de febrero, sin previsión de tesorería ni otro ciclo de cierre.

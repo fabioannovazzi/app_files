@@ -1,0 +1,437 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "clara",
+  "workflow": "advisory-case-director",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
+  "sources": [
+    {
+      "path": "contracts/advisory_case_direction_return.v1.schema.json",
+      "sha256": "ed165ac93e2d246a3c22493b88d66447806dc0df97e93fdd0f5c3e2fdfe9c4b5"
+    },
+    {
+      "path": "scripts/advisor_case_core.py",
+      "sha256": "ea3a96b953acc6e3668dd5d21aef4ed631cf48e790d5b075115b8a691a46c984"
+    },
+    {
+      "path": "scripts/advisory_delivery.py",
+      "sha256": "877d87df4bc1d5b2322e3b96bfc86fd86d6fdb1a7a288ca84f439e104d2c71e8"
+    },
+    {
+      "path": "scripts/advisory_evidence_lineage.py",
+      "sha256": "958a516f4341bafecd8fabafa4e848fed2e7b52d3bbf8f3f07292048261e3009"
+    },
+    {
+      "path": "scripts/advisory_lineage_labels.py",
+      "sha256": "2ad7c96dee1bd61d76f578bfef1dac2f90d3b7ab8d72e0a355dce4ebed44d934"
+    },
+    {
+      "path": "scripts/bounded_process.py",
+      "sha256": "e409460e7df27d1fc89df5d2908c6ff3b438420d1c0bd1a1b4c9e4ce7de0ea3b"
+    },
+    {
+      "path": "scripts/case_exchange_safety.py",
+      "sha256": "8aaa910146d7accdcdb99ab793fb2c3e59585697d5d9284aab8946a2de7c35e3"
+    },
+    {
+      "path": "scripts/case_store.py",
+      "sha256": "46f7c0295caadc811e36a341404ff6f1d7bee5b803dc0c18281a9be24bb64dc1"
+    },
+    {
+      "path": "scripts/commit_advisory_workpaper.py",
+      "sha256": "1a3f0ea7271385efc38cd7d4ae7ceeb814766b73045c3ba851194c6ea2cf24c4"
+    },
+    {
+      "path": "scripts/decision_narrative.py",
+      "sha256": "d596dcb192db69e8ca32e511f99aba371328260ddd916e77c7b7d250b781daf2"
+    },
+    {
+      "path": "scripts/html_deck_runtime.py",
+      "sha256": "a4585f10b456bbc44513873c430c58bc3f40351a69646b2e255e14861ace6d21"
+    },
+    {
+      "path": "scripts/record_case_direction_return.py",
+      "sha256": "9bc960fe45ba6f8ba0e6a5dc19b35f40342d3bc318873d1a257c4257193c4f42"
+    },
+    {
+      "path": "scripts/verify_advisory_delivery.py",
+      "sha256": "1db20ac24cadf936821244631b51bf6187258efb269c745d61fc6c6261fe950a"
+    },
+    {
+      "path": "scripts/verify_advisory_html_delivery.py",
+      "sha256": "771dec6416bb5bd0eb2453caed09fbd9644c1386dab1c187c1d2b859e377d8ef"
+    },
+    {
+      "path": "scripts/verify_decision_pack.py",
+      "sha256": "9c32fa783af5d65223d284c7b6c23e551d2c92265a0f4f6efc8c0f31eaa4cf83"
+    },
+    {
+      "path": "skills/advisory-case-director/SKILL.md",
+      "sha256": "548450e5ea8867cf5e582b10685b4c5357f8962bdc55a1db0f20674f85397812"
+    },
+    {
+      "path": "skills/advisory-case-director/references/case-direction-return.md",
+      "sha256": "b7a68ee800a7825298dbe645d49a21f3e41b764ae6feb310968989e70ecad5b3"
+    },
+    {
+      "path": "skills/advisory-case-director/references/operating-model.md",
+      "sha256": "db2f2f43c3bffbf0f53323bae5b64000a1b04971b519402f62e0c4115a3db395"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/assignment-it.md",
+      "sha256": "4a007cb48b0f718504e633dfff996823a739810cea7c4e4b7c8a8013c2ba6978",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/notes-it.md",
+      "sha256": "5a4921c49a21aaa1749eb79477e0b5ef4ab3d7acdac915c70f8c141478993724",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assignment-it.md",
+      "sha256": "4a007cb48b0f718504e633dfff996823a739810cea7c4e4b7c8a8013c2ba6978",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/notes-it.md",
+      "sha256": "5a4921c49a21aaa1749eb79477e0b5ef4ab3d7acdac915c70f8c141478993724",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-it.md",
+      "sha256": "a599116ddbffabd623c998837779209fff52d8673c83905d94d9ab1c07a745fc",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assignment-en.md",
+      "sha256": "b82d4b916c260ac81e66fb64888f0d645a9c35a1bd86f32620db5f815ff83571",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/notes-en.md",
+      "sha256": "03cf0a00073274ea8817ab632505aca5c94008fcc89d90b4b29aac71f5c0dbe9",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assignment-en.md",
+      "sha256": "b82d4b916c260ac81e66fb64888f0d645a9c35a1bd86f32620db5f815ff83571",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/notes-en.md",
+      "sha256": "03cf0a00073274ea8817ab632505aca5c94008fcc89d90b4b29aac71f5c0dbe9",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-en.md",
+      "sha256": "a31453bcfbc933c681f99a4406e0318f90b80ae32bf4493f10d166160c5abfb8",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assignment-fr.md",
+      "sha256": "abc3c900bae063479709775ef1ab6b92973917192e50d13433e009b28eaf2529",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/notes-fr.md",
+      "sha256": "0d65e1a705756ef1c9d4194372586c4b7c5340ee04b9aca45023d2038d67a504",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assignment-fr.md",
+      "sha256": "abc3c900bae063479709775ef1ab6b92973917192e50d13433e009b28eaf2529",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/notes-fr.md",
+      "sha256": "0d65e1a705756ef1c9d4194372586c4b7c5340ee04b9aca45023d2038d67a504",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-fr.md",
+      "sha256": "e2b00c3a2339dfd913b8bfa03ed427da9db57f8da33a8a9e86913d7ea156f8fc",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assignment-de.md",
+      "sha256": "1a61c7bb653687dcc3c6e3b54b12ba0c174e6563d5e6599701c4b2bf70566c58",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/notes-de.md",
+      "sha256": "d3ab12e88268758a3a3eee9ecc1a64cc4f809ae3c0dff4742a3eaa9a2a9f8585",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assignment-de.md",
+      "sha256": "1a61c7bb653687dcc3c6e3b54b12ba0c174e6563d5e6599701c4b2bf70566c58",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/notes-de.md",
+      "sha256": "d3ab12e88268758a3a3eee9ecc1a64cc4f809ae3c0dff4742a3eaa9a2a9f8585",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-de.md",
+      "sha256": "90f0981b19520d2e51edae37b12994415158108ada466c14e6a8564c6f1ec516",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assignment-es.md",
+      "sha256": "3f3aa30ee3ce0b3447c32fbef8dcf0db5ef9714fa8d09e46a4cb5a8b8f443728",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/notes-es.md",
+      "sha256": "7edda147e20f7b5f33faab0eee7a55bd67a400ef1bcb3b79c32d48ca2856251b",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assignment-es.md",
+      "sha256": "3f3aa30ee3ce0b3447c32fbef8dcf0db5ef9714fa8d09e46a4cb5a8b8f443728",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/notes-es.md",
+      "sha256": "7edda147e20f7b5f33faab0eee7a55bd67a400ef1bcb3b79c32d48ca2856251b",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-es.md",
+      "sha256": "832e12c7a7d71a8e4b3ebc2459de73b16ed1f097e32dc6487f7df395ef4ce2e6",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Sviluppare un caso di consulenza con Clara",
+      "goal": "Imparare a mantenere una valutazione di lavoro fondata sulle fonti e aggiornare le prossime azioni quando arrivano nuove informazioni.",
+      "scenario": "Ciclo Arco deve valutare un servizio di ritiro biciclette. I commenti dei clienti indicano un possibile interesse; le note operative descrivono una possibilità limitata di provarlo.",
+      "scope": "Un caso di consulenza locale basato sulle note fornite. Il risultato è una valutazione di lavoro, non una previsione economica né un’autorizzazione all’avvio.",
+      "inputs": "Apri assignment-it.md e notes-it.md: contengono decisione, commenti dei clienti e disponibilità del mezzo. La chat di lavoro crea il caso durante la lezione.",
+      "request": "Clara, sviluppa questo caso. Dammi la tua raccomandazione attuale, le fonti e i limiti su cui si basa e il prossimo lavoro utile alla decisione della titolare.",
+      "steps": [
+        "Clara definisce l’incarico e crea un caso locale. Registra i materiali e formula una prima risposta con le sue condizioni.",
+        "Il flusso corrente registra ragionamento e collegamenti alle fonti, poi salva la valutazione. La chat vocale spiega raccomandazione e questioni aperte.",
+        "Apri il documento di lavoro e la mappa delle fonti. Segui una conclusione fino alla fonte e discuti quale verifica potrebbe cambiare la risposta."
+      ],
+      "deliverables": [
+        "Documento di lavoro corrente: raccomandazione, motivi, incognite importanti e azioni proposte.",
+        "Mappa delle fonti e storico del caso: supporto delle conclusioni e modifiche intervenute nel lavoro."
+      ],
+      "review": "L’interesse espresso non è una prenotazione né una prova della domanda complessiva. Controlla ciò che consente davvero la nota sul mezzo. Clara propone; la titolare decide se attuare.",
+      "checkpoints": [
+        "Alla prima risposta, distingui gli elementi supportati dalle condizioni da verificare.",
+        "Alla consegna, trova la fonte di una conclusione e la prossima verifica utile."
+      ],
+      "practice": "Aggiungi update-it.md allo stesso caso didattico. Chiedi a Clara come l’indisponibilità del mezzo cambia valutazione e prossime azioni. Apri il documento aggiornato e la versione precedente conservata.",
+      "success": "Il caso recepisce la nuova disponibilità e non considera concordato il possibile prestito. Spiega che cosa è cambiato nella raccomandazione o nelle sue condizioni.",
+      "repeat": "Chiedi a Clara di riprendere il caso, fornisci nuove fonti e indica la decisione da prendere. Rivedi risposta aggiornata, motivi e prossimo lavoro."
+    },
+    "en": {
+      "title": "Develop an advisory case with Clara",
+      "goal": "Learn to maintain an evidence-based working answer and update the next actions when new information arrives.",
+      "scenario": "Ciclo Arco needs an initial view on a bicycle collection service. Customer comments suggest possible interest; operating notes describe a limited way to test it.",
+      "scope": "One local advisory case using supplied notes. The output is a working assessment, not a financial forecast or authorization to launch.",
+      "inputs": "Open assignment-en.md and notes-en.md. They establish the decision, customer comments and vehicle availability. The working chat creates the case during the lesson.",
+      "request": "Clara, develop this case. Give me your current recommendation, the evidence and limits behind it, and the next work that would help the owner decide.",
+      "steps": [
+        "Clara establishes the assignment and creates a local case. It registers the supplied materials and states a provisional answer with its conditions.",
+        "The current workflow records the reasoning and evidence relationships, then saves the working assessment. The voice thread explains the recommendation and unresolved questions.",
+        "Open the current workpaper and evidence map. Follow a material conclusion to its source and discuss which next check could change the answer."
+      ],
+      "deliverables": [
+        "Current workpaper: recommendation, reasoning, important unknowns and proposed next actions.",
+        "Evidence map and case history: the sources behind conclusions and the changes made as the case develops."
+      ],
+      "review": "Customer interest is not a booking or proof of wider demand. Check what the vehicle note actually permits. Clara proposes a course of action; the owner decides whether to implement it.",
+      "checkpoints": [
+        "At the first answer, identify what is supported and what is conditional.",
+        "At delivery, locate the source behind a conclusion and the next useful check."
+      ],
+      "practice": "Add update-en.md to the same teaching case. Ask Clara how the unavailable vehicle changes the assessment and next actions. Open the revised workpaper and preserved earlier version.",
+      "success": "The case acknowledges the changed vehicle availability and does not treat a possible loan as agreed. Explain what changed in the recommendation or its conditions.",
+      "repeat": "Ask Clara to resume the case, supply new evidence and state the decision you need. Review its updated answer, reasons and proposed next work."
+    },
+    "fr": {
+      "title": "Faire évoluer un dossier de conseil avec Clara",
+      "goal": "Apprendre à maintenir une analyse fondée sur les sources et à actualiser les prochaines actions lorsque de nouvelles informations arrivent.",
+      "scenario": "Ciclo Arco évalue un service de collecte de vélos. Les commentaires clients suggèrent un intérêt possible ; les notes opérationnelles décrivent une possibilité limitée de l’essayer.",
+      "scope": "Un dossier local fondé sur les notes fournies. Le résultat est une analyse de travail, pas une prévision financière ni une autorisation de lancement.",
+      "inputs": "Ouvrez assignment-fr.md et notes-fr.md : décision, commentaires clients et disponibilité du véhicule. La conversation de travail crée le dossier pendant la leçon.",
+      "request": "Clara, développe ce dossier. Donne ta recommandation actuelle, ses sources et ses limites, puis le prochain travail utile à la décision de la dirigeante.",
+      "steps": [
+        "Clara cadre la mission et crée un dossier local. Elle enregistre les documents et formule une première réponse avec ses conditions.",
+        "Le flux actuel enregistre le raisonnement et ses liens avec les sources, puis sauvegarde l’analyse. La conversation vocale explique recommandation et questions ouvertes.",
+        "Ouvrez le document de travail et la carte des sources. Remontez d’une conclusion à sa source et discutez de la vérification qui pourrait changer la réponse."
+      ],
+      "deliverables": [
+        "Document de travail actuel : recommandation, raisonnement, inconnues importantes et actions proposées.",
+        "Carte des sources et historique : éléments étayant les conclusions et changements apportés au dossier."
+      ],
+      "review": "Un intérêt exprimé n’est ni une réservation ni une preuve de demande globale. Vérifiez ce que la note sur le véhicule permet réellement. Clara propose ; la dirigeante décide de la mise en œuvre.",
+      "checkpoints": [
+        "À la première réponse, distinguez les éléments étayés des conditions à vérifier.",
+        "À la remise, retrouvez la source d’une conclusion et la prochaine vérification utile."
+      ],
+      "practice": "Ajoutez update-fr.md au même dossier pédagogique. Demandez comment l’indisponibilité du véhicule change l’analyse et les prochaines actions. Ouvrez le document actualisé et la version précédente conservée.",
+      "success": "Le dossier intègre la nouvelle disponibilité sans considérer un prêt éventuel comme convenu. Expliquez ce qui change dans la recommandation ou ses conditions.",
+      "repeat": "Demandez à Clara de reprendre le dossier, fournissez de nouvelles sources et précisez la décision. Revoyez réponse actualisée, motifs et prochain travail."
+    },
+    "de": {
+      "title": "Einen Beratungsfall mit Clara entwickeln",
+      "goal": "Lernen, eine quellenbasierte Arbeitseinschätzung zu pflegen und nächste Schritte bei neuen Informationen anzupassen.",
+      "scenario": "Ciclo Arco bewertet einen Fahrrad-Abholservice. Kundenkommentare zeigen mögliches Interesse; Betriebsnotizen beschreiben eine begrenzte Erprobungsmöglichkeit.",
+      "scope": "Ein lokaler Beratungsfall mit den bereitgestellten Notizen. Das Ergebnis ist eine Arbeitseinschätzung, keine Finanzprognose oder Startfreigabe.",
+      "inputs": "Öffnen Sie assignment-de.md und notes-de.md: Entscheidung, Kundenkommentare und Fahrzeugverfügbarkeit. Der Arbeitschat legt den Fall während der Lektion an.",
+      "request": "Clara, entwickle diesen Fall. Nenne deine aktuelle Empfehlung, ihre Quellen und Grenzen sowie die nächste Arbeit, die der Inhaberin bei der Entscheidung hilft.",
+      "steps": [
+        "Clara klärt den Auftrag und legt einen lokalen Fall an. Sie registriert die Unterlagen und formuliert eine erste Antwort mit Bedingungen.",
+        "Der aktuelle Ablauf dokumentiert Begründung und Quellenbeziehungen und speichert die Einschätzung. Der Sprachchat erklärt Empfehlung und offene Fragen.",
+        "Öffnen Sie Arbeitspapier und Quellenübersicht. Verfolgen Sie eine Schlussfolgerung bis zur Quelle und besprechen Sie, welche Prüfung die Antwort ändern könnte."
+      ],
+      "deliverables": [
+        "Aktuelles Arbeitspapier: Empfehlung, Gründe, wichtige Unbekannte und vorgeschlagene Schritte.",
+        "Quellenübersicht und Fallhistorie: Belege für Schlussfolgerungen und Änderungen im Verlauf."
+      ],
+      "review": "Geäußertes Interesse ist keine Buchung und kein Nachweis der Gesamtnachfrage. Prüfen Sie, was die Fahrzeugnotiz tatsächlich ermöglicht. Clara schlägt vor; die Inhaberin entscheidet über die Umsetzung.",
+      "checkpoints": [
+        "Unterscheiden Sie bei der ersten Antwort Belegtes und noch zu prüfende Bedingungen.",
+        "Finden Sie bei der Übergabe die Quelle einer Schlussfolgerung und den nächsten sinnvollen Prüfschritt."
+      ],
+      "practice": "Fügen Sie update-de.md demselben Übungsfall hinzu. Fragen Sie, wie das fehlende Fahrzeug Einschätzung und nächste Schritte verändert. Öffnen Sie das aktualisierte Arbeitspapier und die aufbewahrte Vorversion.",
+      "success": "Der Fall berücksichtigt die neue Verfügbarkeit und behandelt eine mögliche Ausleihe nicht als vereinbart. Erklären Sie die Änderung der Empfehlung oder ihrer Bedingungen.",
+      "repeat": "Bitten Sie Clara, den Fall fortzusetzen, liefern Sie neue Quellen und nennen Sie die Entscheidung. Prüfen Sie aktualisierte Antwort, Gründe und nächste Arbeit."
+    },
+    "es": {
+      "title": "Desarrollar un caso de consultoría con Clara",
+      "goal": "Aprender a mantener una valoración basada en fuentes y actualizar las próximas acciones cuando llega nueva información.",
+      "scenario": "Ciclo Arco evalúa un servicio de recogida de bicicletas. Los comentarios sugieren posible interés; las notas operativas describen una forma limitada de probarlo.",
+      "scope": "Un caso local con las notas suministradas. El resultado es una valoración de trabajo, no una previsión financiera ni autorización para lanzar el servicio.",
+      "inputs": "Abre assignment-es.md y notes-es.md: decisión, comentarios y disponibilidad del vehículo. La conversación de trabajo crea el caso durante la lección.",
+      "request": "Clara, desarrolla este caso. Dame tu recomendación actual, las fuentes y límites que la sustentan y el próximo trabajo útil para la decisión de la propietaria.",
+      "steps": [
+        "Clara define el encargo y crea un caso local. Registra los materiales y formula una primera respuesta con sus condiciones.",
+        "El flujo actual registra el razonamiento y sus vínculos con las fuentes, y guarda la valoración. La conversación de voz explica recomendación y preguntas abiertas.",
+        "Abre el documento de trabajo y el mapa de fuentes. Sigue una conclusión hasta su fuente y comenta qué comprobación podría cambiar la respuesta."
+      ],
+      "deliverables": [
+        "Documento de trabajo actual: recomendación, motivos, incógnitas importantes y acciones propuestas.",
+        "Mapa de fuentes e historial: respaldo de las conclusiones y cambios realizados durante el caso."
+      ],
+      "review": "El interés expresado no es una reserva ni demuestra la demanda general. Comprueba qué permite realmente la nota del vehículo. Clara propone; la propietaria decide si llevarlo a cabo.",
+      "checkpoints": [
+        "En la primera respuesta, distingue lo respaldado de las condiciones pendientes.",
+        "En la entrega, localiza la fuente de una conclusión y la próxima comprobación útil."
+      ],
+      "practice": "Añade update-es.md al mismo caso didáctico. Pregunta cómo cambia la valoración y las próximas acciones al faltar el vehículo. Abre el documento actualizado y la versión anterior conservada.",
+      "success": "El caso recoge la nueva disponibilidad sin dar por acordado un posible préstamo. Explica qué cambia en la recomendación o sus condiciones.",
+      "repeat": "Pide a Clara que retome el caso, aporta nuevas fuentes e indica la decisión. Revisa respuesta actualizada, motivos y próximo trabajo."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "422257d77fdcf5697c73c2cee50daf55b411a8fdf6065883743863df29a32a38"
+}

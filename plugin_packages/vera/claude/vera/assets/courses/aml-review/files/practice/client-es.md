@@ -1,0 +1,3 @@
+# Cliente y encargo
+
+Todos los nombres, documentos y referencias son ficticios y exclusivos de la lección. Officina Arco es una empresa italiana que repara vehículos para clientes locales. El despacho lleva su contabilidad desde enero de 2026. Elena Bianchi se presenta como administradora e interlocutora. La revisión busca reconstruir cliente, personas y documentos disponibles y preparar una evaluación antiblanqueo para el profesional. No se aportan documentos de identidad, verificación registral ni informes de cribado. Una comprobación no realizada no es un resultado negativo. No contactar a nadie ni enviar comunicaciones de sospecha.

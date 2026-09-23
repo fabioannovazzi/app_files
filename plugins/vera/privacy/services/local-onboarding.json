@@ -87,13 +87,14 @@
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "1d23d63d4e94660f7d7f0dff00f44ff362c1294ab8d6ed0f027bd6bfb1ec34d7"
+    "source_fingerprint": "0d460d84af2583d02065d8e62c3b3a067f7c16832d069af8f8bbc5abb3c0a8ca"
   },
   "governed_repository_paths": [
     "static/shared/learn-with-vera/index.html",
     "static/shared/product-function-pages.js",
     "plugins/_shared/vendor/modules/courseware",
     "scripts/course_materials",
-    "static/shared/courses"
+    "static/shared/courses",
+    "scripts/cowork_teaching"
   ]
 }

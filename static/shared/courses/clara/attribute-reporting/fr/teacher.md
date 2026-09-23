@@ -1,61 +1,71 @@
-# Un signal d'assortiment n'est pas une part de marché
+# Créer un rapport sur l’assortiment avec Clara
 
-Un parcours guidé d'environ 6 minutes et demie. L'activation de la voix, les traitements externes et l'exercice facultatif ne sont pas compris.
+L’explication et un court exercice prennent environ 5–8 minutes. Le traitement et vos questions peuvent prolonger la séance.
 
-Parle avec l'enseignant en utilisant la voix standard de Codex. Dans la seconde conversation, ouverte à côté, examine les fichiers et le résultat. Les conversations restent associées ; tu peux interrompre, demander pourquoi ou ralentir à tout moment.
+Parlez avec l’enseignant en utilisant la voix standard de Codex. Dans la conversation de travail, ouverte dans la fenêtre voisine, la fonction traite le cas avec les fichiers préparés et affiche ses résultats réels. L’enseignant suit ces résultats : vous pouvez interrompre, poser des questions et changer de rythme.
 
-Utilise ces contenus préparés. Ne réécris pas la leçon et n'invente pas de résultats. Parle brièvement, laisse observer et écoute les réponses réelles. Ne dévoile pas la solution avant l'essai. Les durées comprennent observation et dialogue. Montrer ces fichiers ne valide ni démonstration, ni pratique, ni compréhension dans le suivi local. L'enseignant choisit le workflow pertinent uniquement dans le catalogue de son produit.
+Utilisez le matériel préparé pour enseigner une première utilisation complète. Choisissez 3–4 fonctions pertinentes lors de l’intégration ; ensuite, partez de ce que l’utilisateur souhaite faire aujourd’hui. Adaptez le rythme et les explications. Créez des exemples personnalisés si cela aide, avec le même workflow et des données vérifiées. Lisez execution-request.json, utilisez le véritable cas local associé et reliez les explications aux résultats vérifiés de la conversation de travail. N’inventez ni résultats, ni réponses de l’utilisateur, ni confirmation de compréhension. Ouvrir le kit ne termine pas la leçon.
 
-## 1. Ton objectif · 45 s
+## 1. Quand l’utiliser · 45 s
 
-Écoute la demande. Rapproche ce cas d'un travail que tu fais déjà.
+Reliez la fonction à une tâche professionnelle concrète.
 
-Le paquet fictif du distributeur Nord contient 20 nouveautés, dont 12 rechargeables, et 80 produits dans le reste de l'assortiment, dont 24 rechargeables. Ce relevé ne mesure ni ventes ni parts de marché.
+Apprendre à fournir un dossier de données commerciales existant, demander une analyse et utiliser le rapport HTML vérifié.
 
-Clara, montre si la recharge est plus fréquente parmi les nouveautés et comment lire le signal.
+Une équipe produit veut comprendre l’assortiment avant sa prochaine réunion. Partez d’un dossier fictif sur la maille, suivez la préparation du rapport et rapprochez les conclusions des produits sources. Recommencez avec un dossier actualisé.
 
-## 2. Les données de départ · 60 s
+Un premier rapport complet à partir d’un dossier local existant : réception, comparaison, interprétation, révision indépendante et livraison. La collecte sur les sites, le classement central des attributs et Brand Fit sont des travaux distincts, sans simulation dans cette leçon.
 
-Regarde les documents dans l'autre conversation. Repère une donnée utile et une information manquante.
+## 2. Les fichiers et la demande · 60 s
 
-A1 définit cohortes et attribut. Comparer 12 à 24 sans tenir compte des dénominateurs serait trompeur.
+Ouvrez les fichiers dans la fenêtre de travail et montrez comment demander le résultat.
 
-[["Nouveautés", "12", "20"], ["Reste", "24", "80"]]
+Ouvrez brief-fr.md et fournissez assortment-demo-fr.zip. L’archive contient des produits fictifs, des groupes explicitement définis de nouveautés et de meilleures ventes, des comparaisons calculées et un contrôle d’intégrité. Aucun rapport final, interprétation approuvée ou reçu serveur n’est fourni.
 
-## 3. La méthode du workflow · 75 s
+Clara, prépare un rapport sur l’assortiment à partir de ce dossier pour notre équipe produit. Explique les données couvertes, compare meilleures ventes et nouveautés au reste, puis montre le rapport et ses contrôles.
 
-Suis les trois étapes. Arrête-toi sur la décision qui change le résultat.
+## 3. Exécuter le travail · 105 s
 
-Pars d'un paquet cohérent et vérifié ; revois les attributs sur les produits et préserve comparaisons et seuils du contrat.
-Interprète les tableaux sans transformer une correspondance d'attribut en jugement automatique. Relie preuves et images aux produits exacts.
-Rédige le rapport local et termine revue sémantique indépendante, contrôle navigateur et vérifications courantes. Donne le verdict réel et les limites.
+Expliquez l’étape en cours et attendez son résultat réel.
 
-## 4. Lire le résultat · 90 s
+Confirmez distributeur, catégorie, données fournies et destinataires. Clara ouvre l’archive et vérifie son intégrité. La conversation vocale explique les produits sources et les groupes définis par le distributeur.
 
-Ouvre l'exemple dans la seconde conversation. Relie chaque conclusion à sa source.
+Clara prépare les tableaux comparatifs habituels et rédige le rapport à partir des preuves. Suivez une comparaison des produits au tableau puis à la conclusion ; distinguez une caractéristique de l’assortiment des volumes vendus ou d’une explication causale.
 
-L'attribut est deux fois plus fréquent parmi les nouveautés. Cela décrit l'assortiment observé, pas la demande ou les ventes.
+Une révision indépendante vérifie les affirmations et la lisibilité ; les contrôles dans le navigateur examinent l’HTML. Ouvrez le rapport réel, son verdict et ses réserves. Repérez synthèse, tableaux, produits sources et prochaine question pour l’équipe.
 
-[["Nouveautés", "12 / 20", "60 %"], ["Reste", "24 / 80", "30 %"], ["Comparaison illustrée", "60 % / 30 %", "2×"]]
+Pendant la leçon, la conversation de travail exécute la fonction et produit le résultat. Si une étape est indisponible, expliquez ce qui manque et laissez la leçon inachevée.
 
-## 5. Le contrôle essentiel · 75 s
+## 4. Utiliser le résultat · 75 s
 
-Avant d'afficher la réponse, explique ce que tu vérifierais.
+Ouvrez le document qui vient d’être produit et montrez par où commencer.
 
-Conserve dénominateurs et date du relevé. Nom d'un produit et attribut isolé ne démontrent pas sa réussite commerciale.
+Un rapport HTML local avec comparaisons, interprétation, références et verdict explicite sur sa justesse.
 
-Les 60 % représentent-ils la part des ventes des produits rechargeables ?
+Des tableaux sources et comptes rendus de révision expliquant le verdict et les limites.
 
-Comparer le raisonnement: Non. C'est la proportion de nouveautés portant l'attribut dans le paquet. Aucune donnée de vente n'est fournie.
+Vérifiez les données fournies, les groupes et les preuves d’une conclusion. Les nouveautés sont celles désignées par la source ; le classement des meilleures ventes ne donne pas les volumes vendus. Lisez les motifs du verdict avant utilisation.
 
-## 6. Essayer ensemble · 45 s
+## 5. Faire le point · 45 s
 
-Choisis de faire l'exercice maintenant ou de garder l'exemple pour une prochaine mission.
+Faites ces vérifications aux moments indiqués pendant le travail.
 
-Ajoute deux nouveautés non rechargeables et recalcule avec le nouveau dénominateur.
+Identifiez le dossier et la demande nécessaires pour commencer, puis expliquez le résultat attendu.
 
-Sélectionne distributeur, catégorie et comparaison supportée ; distingue relevé existant et nouvelle acquisition.
+Ouvrez le rapport et reliez une conclusion à ses preuves et à son état de révision.
 
-Cet exemple pédagogique a été préparé à l'avance. Il ne prouve pas une nouvelle exécution. Les sources et décisions sont fictives ; aucune validation professionnelle n'est implicite. Sur tes propres fichiers, le workflow actuel effectue ses contrôles et conserve les résultats réels.
+Ces pauses aident à apprendre à utiliser la fonction. Ce ne sont pas des questions sur des détails techniques.
 
-La bibliothèque, le profil et la progression restent sur ton ordinateur et ne sont pas envoyés à Mparanza. La voix et les contenus lus dans la conversation sont traités par ton compte OpenAI : stockage local ne signifie pas traitement hors ligne.
+## 6. À vous d’essayer · 60 s
+
+Laissez l’utilisateur formuler la demande et accompagnez son essai.
+
+Fournissez assortment-practice-fr.zip, qui modifie le groupe fictif des nouveautés. Demandez un nouveau rapport pour le même public. Conservez le premier et comparez les changements dans les preuves et l’interprétation.
+
+Vous savez lancer un rapport, lire sa synthèse et ses preuves, comprendre le verdict et recommencer avec un autre dossier.
+
+Fournissez un dossier dont l’intégrité a été vérifiée et précisez le public et la question. Clara prépare, révise et livre l’HTML localement. Les données centrales actuelles suivent une réception authentifiée distincte et son périmètre de données déclaré.
+
+Le kit contient des fichiers fictifs et un plan préparé. Les résultats de la démonstration et de l’exercice proviennent de nouvelles exécutions de la fonction actuelle.
+
+La bibliothèque, le profil et la progression restent sur votre ordinateur et ne sont pas envoyés à Mparanza. La voix et les contenus lus dans la conversation sont traités par votre compte OpenAI : stockage local ne signifie pas traitement hors ligne.

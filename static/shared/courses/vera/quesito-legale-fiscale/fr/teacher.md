@@ -1,61 +1,71 @@
-# D'une question générale à une réponse vérifiable
+# Obtenir une réponse vérifiée avec Vera
 
-Un parcours guidé d'environ 6 minutes et demie. L'activation de la voix, les traitements externes et l'exercice facultatif ne sont pas compris.
+L’explication et un court exercice prennent environ 5–8 minutes. Le traitement et vos questions peuvent prolonger la séance.
 
-Parle avec l'enseignant en utilisant la voix standard de Codex. Dans la seconde conversation, ouverte à côté, examine les fichiers et le résultat. Les conversations restent associées ; tu peux interrompre, demander pourquoi ou ralentir à tout moment.
+Parlez avec l’enseignant en utilisant la voix standard de Codex. Dans la conversation de travail, ouverte dans la fenêtre voisine, la fonction traite le cas avec les fichiers préparés et affiche ses résultats réels. L’enseignant suit ces résultats : vous pouvez interrompre, poser des questions et changer de rythme.
 
-Utilise ces contenus préparés. Ne réécris pas la leçon et n'invente pas de résultats. Parle brièvement, laisse observer et écoute les réponses réelles. Ne dévoile pas la solution avant l'essai. Les durées comprennent observation et dialogue. Montrer ces fichiers ne valide ni démonstration, ni pratique, ni compréhension dans le suivi local. L'enseignant choisit le workflow pertinent uniquement dans le catalogue de son produit.
+Utilisez le matériel préparé pour enseigner une première utilisation complète. Choisissez 3–4 fonctions pertinentes lors de l’intégration ; ensuite, partez de ce que l’utilisateur souhaite faire aujourd’hui. Adaptez le rythme et les explications. Créez des exemples personnalisés si cela aide, avec le même workflow et des données vérifiées. Lisez execution-request.json, utilisez le véritable cas local associé et reliez les explications aux résultats vérifiés de la conversation de travail. N’inventez ni résultats, ni réponses de l’utilisateur, ni confirmation de compréhension. Ouvrir le kit ne termine pas la leçon.
 
-## 1. Ton objectif · 45 s
+## 1. Quand l’utiliser · 45 s
 
-Écoute la demande. Rapproche ce cas d'un travail que tu fais déjà.
+Reliez la fonction à une tâche professionnelle concrète.
 
-Un client fictif demande si une dépense est déductible. La facture décrit un service, mais sujet, période, régime et utilisation réelle sont inconnus. La leçon précise la question sans donner d'avis fiscal sur le cas.
+Apprendre à poser une question professionnelle, suivre la recherche et les vérifications et utiliser la réponse avec ses sources et points ouverts.
 
-Vera, montre comment transformer cette question en réponse fondée sur les sources.
+Imprese Arco demande au professionnel une courte note sur les règles UE relatives aux retards de paiement. Nous partons de la demande écrite et des sources initiales pour produire une vraie réponse par le workflow.
 
-## 2. Les données de départ · 60 s
+Le parcours complet de la question à la réponse vérifiée. Une note informative permet d’apprendre le processus ; un avis sur une position concrète peut aussi nécessiter un examen de la thèse opposée.
 
-Regarde les documents dans l'autre conversation. Repère une donnée utile et une information manquante.
+## 2. Les fichiers et la demande · 60 s
 
-Q1 soutient une description documentaire, pas les conditions fiscales. Les faits manquants peuvent changer recherche et conclusion.
+Ouvrez les fichiers dans la fenêtre de travail et montrez comment demander le résultat.
 
-[["Facture Q1", "Description et montant du service", "Utilisation réelle"], ["Question client", "Intérêt pour la déduction", "Sujet, régime et période"], ["Sources juridiques", "Non sélectionnées dans le microcas", "Cadre applicable après clarification"]]
+Ouvre question-fr.md pour la demande, le public, le périmètre et le format. sources-fr.md présente le guide et le texte officiel joints. Tu n’as pas à rédiger d’instructions techniques ni à choisir les étapes internes.
 
-## 3. La méthode du workflow · 75 s
+Vera, réponds à la question d’Imprese Arco dans ce fichier. Prépare la courte note demandée, vérifie sources et réponse, puis montre-moi le document et les points à revoir.
 
-Suis les trois étapes. Arrête-toi sur la décision qui change le résultat.
+## 3. Exécuter le travail · 105 s
 
-Formule question, décision et faits matériels. Demande seulement ce que les preuves disponibles ne permettent pas de résoudre.
-Suis le parcours courant de planification, recherche et réponse. Vérifie autorité, version et applicabilité des sources en séparant faits et citations.
-Revois les affirmations, traite les alternatives pertinentes et l'examen contradictoire lorsque la méthode le prévoit. Livre réponse, bases et questions résiduelles à la revue professionnelle.
+Expliquez l’étape en cours et attendez son résultat réel.
 
-## 4. Lire le résultat · 90 s
+Dans le fil de travail, Vera lit la question et prépare objectif, sources, langue et cadre juridique. La conversation vocale explique le contenu visé. Corrige les incompréhensions et réponds seulement aux questions qui influent sur le travail.
 
-Ouvre l'exemple dans la seconde conversation. Relie chaque conclusion à sa source.
+Choisis la recherche ordinaire ou Deep Research si disponible ; le workflow conserve un choix déjà fait pour cette question. Le fil de travail recherche et rédige la réponse. La voix suit le progrès réel et répond à tes questions.
 
-La question doit préciser sujet, période, régime et utilisation du service. Un oui ou non catégorique serait prématuré sans ces éléments.
+Vera vérifie la réponse par rapport à la demande, aux sources et au raisonnement et apporte les corrections nécessaires. Ouvre la note Word, repère les conclusions et retrouve une source. Revois limites et points ouverts avant utilisation.
 
-[["Cadrage", "Question et faits confirmés", "Une source par fait"], ["Recherche", "Sources applicables", "Version, autorité et localisateur"], ["Réponse revue", "Conclusion, conditions et alternatives", "Aucune citation inventée"]]
+Pendant la leçon, la conversation de travail exécute la fonction et produit le résultat. Si une étape est indisponible, expliquez ce qui manque et laissez la leçon inachevée.
 
-## 5. Le contrôle essentiel · 75 s
+## 4. Utiliser le résultat · 75 s
 
-Avant d'afficher la réponse, explique ce que tu vérifierais.
+Ouvrez le document qui vient d’être produit et montrez par où commencer.
 
-Une citation authentique peut être inapplicable. Vérifie le texte et son rapport aux faits du cas.
+Note Word et texte de la réponse vérifiée, avec sources et limites.
 
-Une page sur la déduction suffit-elle à répondre ?
+Dossier de vérification retraçant le contrôle des affirmations et les points à revoir.
 
-Comparer le raisonnement: Non. Autorité, période, situation et conditions doivent être examinées. Un thème commun ne suffit pas à établir l'applicabilité.
+Vérifie que la note répond à la demande dans le périmètre et la langue prévus. Ouvre une source et compare-la à une affirmation. Distingue règle générale et application au client ; les vérifications ne remplacent pas le jugement professionnel.
 
-## 6. Essayer ensemble · 45 s
+## 5. Faire le point · 45 s
 
-Choisis de faire l'exercice maintenant ou de garder l'exemple pour une prochaine mission.
+Faites ces vérifications aux moments indiqués pendant le travail.
 
-Ajoute sujet, période et utilisation, puis formule la question précise à rechercher.
+Explique la question, son destinataire et le cadre juridique.
 
-Indique la décision attendue et les documents pertinents. Vera gère les étapes internes sans imposer le choix de plusieurs skills.
+Retrouve une conclusion, sa source et une limite ou vérification encore nécessaire.
 
-Cet exemple pédagogique a été préparé à l'avance. Il ne prouve pas une nouvelle exécution. Les sources et décisions sont fictives ; aucune validation professionnelle n'est implicite. Sur tes propres fichiers, le workflow actuel effectue ses contrôles et conserve les résultats réels.
+Ces pauses aident à apprendre à utiliser la fonction. Ce ne sont pas des questions sur des détails techniques.
 
-La bibliothèque, le profil et la progression restent sur ton ordinateur et ne sont pas envoyés à Mparanza. La voix et les contenus lus dans la conversation sont traités par ton compte OpenAI : stockage local ne signifie pas traitement hors ligne.
+## 6. À vous d’essayer · 60 s
+
+Laissez l’utilisateur formuler la demande et accompagnez son essai.
+
+Lis practice-fr.md et demande une nouvelle version pour la réunion accueillant aussi des fournisseurs du secteur public. Conserve la première version, suis la nouvelle recherche et sa vérification, puis explique l’usage du comparatif produit.
+
+Tu sais formuler une question complète, choisir la recherche, lire la réponse et ses vérifications et actualiser le travail si la demande change.
+
+Donne à Vera la question, les faits disponibles, le pays ou cadre juridique, le destinataire et le résultat attendu. Revois périmètre, sources, conclusions et points ouverts dans le document produit.
+
+Le kit contient des fichiers fictifs et un plan préparé. Les résultats de la démonstration et de l’exercice proviennent de nouvelles exécutions de la fonction actuelle.
+
+La bibliothèque, le profil et la progression restent sur votre ordinateur et ne sont pas envoyés à Mparanza. La voix et les contenus lus dans la conversation sont traités par votre compte OpenAI : stockage local ne signifie pas traitement hors ligne.

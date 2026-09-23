@@ -1,0 +1,710 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "quesito-legale-fiscale",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "plan_question_research_then_validate_answer"
+  },
+  "sources": [
+    {
+      "path": "modules/deep-research-validator/assets/deep-research-review-widget.html",
+      "sha256": "88a55257c6e258006ff86fb375e37553956312f509b0017048dce7cc02b3151f"
+    },
+    {
+      "path": "modules/deep-research-validator/assets/icon.svg",
+      "sha256": "073aa85b571ca655a9a0aa4297fa975fe8a41b4d52cf3c14f7d4a6dfb9e11f1e"
+    },
+    {
+      "path": "modules/deep-research-validator/assets/review-workbench-adapter.json",
+      "sha256": "5f295f506e378fee83909433dff20fe940ed9b5b0688fb7018d26fbff16535f8"
+    },
+    {
+      "path": "modules/deep-research-validator/references/workflow-reference.md",
+      "sha256": "b191b355896206ac3a2dc82bc9c9a7636e224270dab0bd38173d3467b31ee039"
+    },
+    {
+      "path": "modules/deep-research-validator/requirements.txt",
+      "sha256": "6527cbf979a4d366f1ba520cf291c412ef28ec7157c002f358090c5bcf06d3df"
+    },
+    {
+      "path": "modules/deep-research-validator/scripts/adversarial_opinion.py",
+      "sha256": "46e221dc04957f658a4369f1f52a2b02a3203b90fa767579401aa5ab8c5e931a"
+    },
+    {
+      "path": "modules/deep-research-validator/scripts/apply_review_edits.py",
+      "sha256": "fda83187337bd3f38f236ee750fad8e300d7e3395e93e97204df74e4c70ee46f"
+    },
+    {
+      "path": "modules/deep-research-validator/scripts/check_dependencies.py",
+      "sha256": "3bff292963b959762c57785c9b7f9a796a0454eb7438880ef672bed13c1ae5d5"
+    },
+    {
+      "path": "modules/deep-research-validator/scripts/inspect_document.py",
+      "sha256": "f76c0db4dc72942ecf90195c035177d263cb122e90b49cdb8a6550c66fbfbb8d"
+    },
+    {
+      "path": "modules/deep-research-validator/scripts/inspect_sources.py",
+      "sha256": "e257e2ce924c6b9b74d724bcb1b584301d6ab02f98a2a6c1986135a3c8f1ba7f"
+    },
+    {
+      "path": "modules/deep-research-validator/scripts/package_validation.py",
+      "sha256": "d305e856cc9bd889e5fee69726a4b08ff062a73b6f197c3525dfc12601bae575"
+    },
+    {
+      "path": "modules/deep-research-validator/scripts/review_session.py",
+      "sha256": "beb7e88a185a41cd169742fadc5970db66468d787c464a3f0d809f4c8c676a0d"
+    },
+    {
+      "path": "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md",
+      "sha256": "d7666205cc67deacd734baa1db45da896edf89c87525cdcfeeadd56a59d6c6ca"
+    },
+    {
+      "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/adversarial-scope.md",
+      "sha256": "34e033fe2eb3ff0455731e378ddf19347bd68fa5c7075d7a34df802f5ebab80d"
+    },
+    {
+      "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md",
+      "sha256": "33fca75a6ab0b1ff43d8ecf6ea28280a36747721df913d83219f9161111b21f4"
+    },
+    {
+      "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/research-choice.md",
+      "sha256": "91b1a3e336af61d91cc4645ba54d34d2a36be949c4dadbff9f6fa9af2a1f23a3"
+    },
+    {
+      "path": "modules/deep-research-validator/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/deep-research-validator/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/deep-research-validator/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/deep-research-validator/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/deep-research-validator/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/deep-research-validator/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/deep-research-validator/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/deep-research-validator/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/quesito-legale-fiscale/SKILL.md",
+      "sha256": "d1612999e363b8392ad87179ad79b3ef47b70cb8c4a0fb9bce6cd90dc7f1ad54"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/question-it.md",
+      "sha256": "fc054c044e7207f1b51aa1090e0817f3a6080d92798604ffb3705cbb5b7c6c60",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/sources-it.md",
+      "sha256": "083906eee3824b1668b362ff56bedc7c8a3f6cd028d12fde8d1ab90d3755a2a0",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/guide-it.md",
+      "sha256": "a68c5a5b24e694d5546b58a493e521ed0957f92cc1a82f8507a62d0da3100a63",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-provenance-it.json",
+      "sha256": "4991c54a144a4407a00665c5e8539980084ba2e8eac54b9a48c56b24fc930212",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/question-it.md",
+      "sha256": "fc054c044e7207f1b51aa1090e0817f3a6080d92798604ffb3705cbb5b7c6c60",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/sources-it.md",
+      "sha256": "083906eee3824b1668b362ff56bedc7c8a3f6cd028d12fde8d1ab90d3755a2a0",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/guide-it.md",
+      "sha256": "a68c5a5b24e694d5546b58a493e521ed0957f92cc1a82f8507a62d0da3100a63",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-provenance-it.json",
+      "sha256": "4991c54a144a4407a00665c5e8539980084ba2e8eac54b9a48c56b24fc930212",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-it.md",
+      "sha256": "26b4324e25264aeb69c4d5ea70c12938e48b6e8daf212b355c331769133e864f",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/question-en.md",
+      "sha256": "54eb6f2eedfefa5ac42ab82d4f16fbc0399d9aa15fa17300822389b702dc26f3",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/sources-en.md",
+      "sha256": "84cd3b6db5c551ab6916df3e1cefe9afc27f9be5ce8af15960cd200d43b363a5",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/guide-en.md",
+      "sha256": "9bdfed2dfe94df52e12f0916eb36329b1d24911e023a7195932ea9b8eecc34d7",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-provenance-en.json",
+      "sha256": "f861377fbdc1c4f394899bedbf51069f1fa6d4c51db3923a4803a9d4550c30ed",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/question-en.md",
+      "sha256": "54eb6f2eedfefa5ac42ab82d4f16fbc0399d9aa15fa17300822389b702dc26f3",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/sources-en.md",
+      "sha256": "84cd3b6db5c551ab6916df3e1cefe9afc27f9be5ce8af15960cd200d43b363a5",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/guide-en.md",
+      "sha256": "9bdfed2dfe94df52e12f0916eb36329b1d24911e023a7195932ea9b8eecc34d7",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-provenance-en.json",
+      "sha256": "f861377fbdc1c4f394899bedbf51069f1fa6d4c51db3923a4803a9d4550c30ed",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-en.md",
+      "sha256": "4dbf8cd9a2de835cdd929ecc529cf18bd6c5ce7b151f7abe3c6b1a033ce547b2",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/question-fr.md",
+      "sha256": "018b71a83123908dfcd830ebdb1ab805e92a37f63c77110c570931c488164055",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/sources-fr.md",
+      "sha256": "8d6a667b753783b3bf00b411a9c2197b9ca16ccec77f956cfc6ee59a91a688b0",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/guide-fr.md",
+      "sha256": "b48e314a81c8712a17b4c80278d281c5aefa69ac02d850d328382fc010c21b30",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-provenance-fr.json",
+      "sha256": "b687cebc26d85d3f1121a8b1da4613faef65b219e0017b06bd6293ca3659f7cc",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/question-fr.md",
+      "sha256": "018b71a83123908dfcd830ebdb1ab805e92a37f63c77110c570931c488164055",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/sources-fr.md",
+      "sha256": "8d6a667b753783b3bf00b411a9c2197b9ca16ccec77f956cfc6ee59a91a688b0",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/guide-fr.md",
+      "sha256": "b48e314a81c8712a17b4c80278d281c5aefa69ac02d850d328382fc010c21b30",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-provenance-fr.json",
+      "sha256": "b687cebc26d85d3f1121a8b1da4613faef65b219e0017b06bd6293ca3659f7cc",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-fr.md",
+      "sha256": "ac2808d22f92c4072a12b3cded8c7789cc186269439cd8944312197d41494338",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/question-de.md",
+      "sha256": "f2a90353d4807d63ecac8fd449f4ee812d1aab8584b550fcc3546bd9ef4cf926",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/sources-de.md",
+      "sha256": "858cc3c773e95b5abf2993f612ec722ae3abdaeed659cbedf8a78909fb515735",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/guide-de.md",
+      "sha256": "3542e8439ee81608bb9fe3e47ca3a2625eca3fb74854fb726b86471eedc7817a",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-provenance-de.json",
+      "sha256": "7fe1e2dbae17ac1976ab75c5f1f6b57b6b80a7060966c5648fbb32d0aedf4476",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/question-de.md",
+      "sha256": "f2a90353d4807d63ecac8fd449f4ee812d1aab8584b550fcc3546bd9ef4cf926",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/sources-de.md",
+      "sha256": "858cc3c773e95b5abf2993f612ec722ae3abdaeed659cbedf8a78909fb515735",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/guide-de.md",
+      "sha256": "3542e8439ee81608bb9fe3e47ca3a2625eca3fb74854fb726b86471eedc7817a",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-provenance-de.json",
+      "sha256": "7fe1e2dbae17ac1976ab75c5f1f6b57b6b80a7060966c5648fbb32d0aedf4476",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-de.md",
+      "sha256": "b826ce81ec3db22953f53e56615608278913c05b41ff182601ee7a94a4361e0e",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/question-es.md",
+      "sha256": "3c93b90be9489c684a08238546e27960999dfd9690a7a43861abf9587852ff64",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/sources-es.md",
+      "sha256": "31a79e0a9b1f46579b1316d0b049f170c14368fd0d4a0b9b45d1fb3dc833be13",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/guide-es.md",
+      "sha256": "28eae2224635f2e150e538c888cac681c032dd7a466a8996829df0da0013d9d5",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-provenance-es.json",
+      "sha256": "e6902555d5ccc8823ca306b704f8e4962cb285a142d27071b1f0a9b3b22a7f23",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/question-es.md",
+      "sha256": "3c93b90be9489c684a08238546e27960999dfd9690a7a43861abf9587852ff64",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/sources-es.md",
+      "sha256": "31a79e0a9b1f46579b1316d0b049f170c14368fd0d4a0b9b45d1fb3dc833be13",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/guide-es.md",
+      "sha256": "28eae2224635f2e150e538c888cac681c032dd7a466a8996829df0da0013d9d5",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-provenance-es.json",
+      "sha256": "e6902555d5ccc8823ca306b704f8e4962cb285a142d27071b1f0a9b3b22a7f23",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-es.md",
+      "sha256": "b9c574edcf33cb98bd65c4e2f323f6704683d35350811caf8524231fd3ef5bc7",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/directive-original-es.pdf",
+      "sha256": "1b6a68e172965e8bd7cfcc74a1a892f0f32045e5f94fc339d5f1125b422bf1c8",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/directive-original-es.pdf",
+      "sha256": "1b6a68e172965e8bd7cfcc74a1a892f0f32045e5f94fc339d5f1125b422bf1c8",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Ottenere una risposta verificata con Vera",
+      "goal": "Imparare a porre un quesito professionale, seguire ricerca e verifiche e utilizzare la risposta con le sue fonti e i punti ancora aperti.",
+      "scenario": "Imprese Arco chiede al professionista una breve nota sulle regole UE per i ritardi di pagamento. Partiamo dalla richiesta scritta e dalle fonti iniziali, poi produciamo una risposta vera attraverso il workflow.",
+      "scope": "Il percorso completo dal quesito alla risposta verificata. La nota informativa è un esempio semplice per imparare il processo; un parere su una posizione concreta può richiedere anche l’esame della tesi contraria.",
+      "inputs": "Apri question-it.md per leggere richiesta, pubblico, perimetro e formato. sources-it.md presenta la guida e il testo ufficiale allegati. Non devi preparare istruzioni tecniche né scegliere i passaggi interni.",
+      "request": "Vera, rispondi al quesito di Imprese Arco in questo file. Prepara la breve nota richiesta, verifica le fonti e la risposta e mostrami il documento e le questioni da rivedere.",
+      "steps": [
+        "Nel thread di lavoro Vera legge il quesito e prepara obiettivo, fonti, lingua e quadro giuridico. La voce spiega che cosa verrà risposto. Correggi eventuali incomprensioni e rispondi solo alle domande che cambiano il lavoro.",
+        "Scegli la ricerca ordinaria o Deep Research se disponibile; il workflow conserva una scelta già fatta per questo quesito. Il thread di lavoro ricerca e redige la risposta. La voce spiega il progresso effettivo e risponde alle tue domande.",
+        "Vera verifica la risposta rispetto al quesito, alle fonti e al ragionamento, correggendo quanto necessario. Apri la nota Word, osserva come sono esposte le conclusioni e rintraccia una fonte. Rivedi limiti e questioni aperte prima di utilizzarla."
+      ],
+      "deliverables": [
+        "Nota Word e testo della risposta verificata, con fonti e limiti.",
+        "Pacchetto di verifica che permette di ricostruire come sono state controllate le affermazioni e che cosa resta da rivedere."
+      ],
+      "review": "Controlla che la nota risponda al quesito nel perimetro e nella lingua richiesti. Apri una fonte e confrontala con un’affermazione. Distingui una regola generale dalla sua applicazione al cliente; le verifiche non sostituiscono il giudizio professionale.",
+      "checkpoints": [
+        "Spiega che cosa stai chiedendo, a chi servirà la risposta e quale quadro giuridico riguarda.",
+        "Trova una conclusione, la sua fonte e un limite o una verifica ancora necessaria."
+      ],
+      "practice": "Leggi practice-it.md e chiedi una nuova versione della nota per l’incontro che comprende anche fornitori della pubblica amministrazione. Conserva la prima versione, segui la nuova ricerca e verifica e spiega come usare il confronto prodotto.",
+      "success": "Sai porre un quesito completo, scegliere il percorso di ricerca, orientarti nella risposta e nelle verifiche e aggiornare il lavoro quando cambia la richiesta.",
+      "repeat": "Fornisci a Vera la domanda, i fatti disponibili, il paese o quadro giuridico, il destinatario e il risultato che ti serve. Rivedi perimetro, fonti, conclusioni e questioni aperte nel documento prodotto."
+    },
+    "en": {
+      "title": "Get a checked answer with Vera",
+      "goal": "Learn to ask a professional question, follow research and checks, and use the answer with its sources and unresolved points.",
+      "scenario": "Imprese Arco asks the professional for a short briefing on EU late-payment rules. We start with the written request and initial sources, then produce an actual answer through the workflow.",
+      "scope": "The complete journey from question to checked answer. An informational briefing is a straightforward example for learning the process; an opinion on a concrete position may also require an opposing examination.",
+      "inputs": "Open question-en.md for the request, audience, scope and format. sources-en.md introduces the attached guidance and official text. You do not need to write technical instructions or choose internal stages.",
+      "request": "Vera, answer Imprese Arco’s question in this file. Prepare the requested short briefing, check the sources and answer, and show me the document and matters requiring review.",
+      "steps": [
+        "In the working thread, Vera reads the question and prepares its objective, source plan, language and legal framework. The voice chat explains what the answer will cover. Correct misunderstandings and answer only questions that affect the work.",
+        "Choose ordinary research or Deep Research when available; the workflow preserves a choice already made for this question. The working thread researches and drafts the answer. The voice explanation follows real progress and takes your questions.",
+        "Vera checks the answer against the question, sources and reasoning, making necessary corrections. Open the Word briefing, see how conclusions are presented and trace one source. Review limitations and unresolved points before use."
+      ],
+      "deliverables": [
+        "Word briefing and checked answer text, with sources and limitations.",
+        "Review package showing how claims were checked and what still requires review."
+      ],
+      "review": "Check that the briefing answers the question in the requested scope and language. Open a source and compare it with one claim. Distinguish a general rule from its application to a client; checks do not replace professional judgment.",
+      "checkpoints": [
+        "Explain the question, intended reader and legal framework.",
+        "Find a conclusion, its source and a limitation or remaining check."
+      ],
+      "practice": "Read practice-en.md and request a new version for the meeting that now includes suppliers to public authorities. Preserve the first version, follow the new research and checks, and explain how to use the resulting comparison.",
+      "success": "You can frame a complete question, choose the research route, navigate the answer and its checks, and update the work when the request changes.",
+      "repeat": "Give Vera the question, available facts, country or legal framework, intended reader and required result. Review scope, sources, conclusions and unresolved points in the resulting document."
+    },
+    "fr": {
+      "title": "Obtenir une réponse vérifiée avec Vera",
+      "goal": "Apprendre à poser une question professionnelle, suivre la recherche et les vérifications et utiliser la réponse avec ses sources et points ouverts.",
+      "scenario": "Imprese Arco demande au professionnel une courte note sur les règles UE relatives aux retards de paiement. Nous partons de la demande écrite et des sources initiales pour produire une vraie réponse par le workflow.",
+      "scope": "Le parcours complet de la question à la réponse vérifiée. Une note informative permet d’apprendre le processus ; un avis sur une position concrète peut aussi nécessiter un examen de la thèse opposée.",
+      "inputs": "Ouvre question-fr.md pour la demande, le public, le périmètre et le format. sources-fr.md présente le guide et le texte officiel joints. Tu n’as pas à rédiger d’instructions techniques ni à choisir les étapes internes.",
+      "request": "Vera, réponds à la question d’Imprese Arco dans ce fichier. Prépare la courte note demandée, vérifie sources et réponse, puis montre-moi le document et les points à revoir.",
+      "steps": [
+        "Dans le fil de travail, Vera lit la question et prépare objectif, sources, langue et cadre juridique. La conversation vocale explique le contenu visé. Corrige les incompréhensions et réponds seulement aux questions qui influent sur le travail.",
+        "Choisis la recherche ordinaire ou Deep Research si disponible ; le workflow conserve un choix déjà fait pour cette question. Le fil de travail recherche et rédige la réponse. La voix suit le progrès réel et répond à tes questions.",
+        "Vera vérifie la réponse par rapport à la demande, aux sources et au raisonnement et apporte les corrections nécessaires. Ouvre la note Word, repère les conclusions et retrouve une source. Revois limites et points ouverts avant utilisation."
+      ],
+      "deliverables": [
+        "Note Word et texte de la réponse vérifiée, avec sources et limites.",
+        "Dossier de vérification retraçant le contrôle des affirmations et les points à revoir."
+      ],
+      "review": "Vérifie que la note répond à la demande dans le périmètre et la langue prévus. Ouvre une source et compare-la à une affirmation. Distingue règle générale et application au client ; les vérifications ne remplacent pas le jugement professionnel.",
+      "checkpoints": [
+        "Explique la question, son destinataire et le cadre juridique.",
+        "Retrouve une conclusion, sa source et une limite ou vérification encore nécessaire."
+      ],
+      "practice": "Lis practice-fr.md et demande une nouvelle version pour la réunion accueillant aussi des fournisseurs du secteur public. Conserve la première version, suis la nouvelle recherche et sa vérification, puis explique l’usage du comparatif produit.",
+      "success": "Tu sais formuler une question complète, choisir la recherche, lire la réponse et ses vérifications et actualiser le travail si la demande change.",
+      "repeat": "Donne à Vera la question, les faits disponibles, le pays ou cadre juridique, le destinataire et le résultat attendu. Revois périmètre, sources, conclusions et points ouverts dans le document produit."
+    },
+    "de": {
+      "title": "Eine geprüfte Antwort mit Vera erhalten",
+      "goal": "Lernen, eine fachliche Frage zu stellen, Recherche und Prüfungen zu verfolgen und die Antwort mit Quellen und offenen Punkten zu verwenden.",
+      "scenario": "Imprese Arco bittet um eine kurze Notiz zu den EU-Regeln gegen Zahlungsverzug. Wir beginnen mit der schriftlichen Anfrage und den Ausgangsquellen und erstellen über den Workflow eine tatsächliche Antwort.",
+      "scope": "Der vollständige Weg von der Frage zur geprüften Antwort. Eine allgemeine Informationsnotiz dient als einfaches Beispiel; ein Gutachten zu einer konkreten Position kann zusätzlich die Prüfung einer Gegenposition erfordern.",
+      "inputs": "Öffne question-de.md für Anfrage, Zielgruppe, Umfang und Format. sources-de.md stellt Leitfaden und offiziellen Text vor. Du musst keine technischen Anweisungen verfassen oder interne Schritte auswählen.",
+      "request": "Vera, beantworte die Frage von Imprese Arco in dieser Datei. Erstelle die gewünschte kurze Notiz, prüfe Quellen und Antwort und zeige mir das Dokument und die noch zu prüfenden Punkte.",
+      "steps": [
+        "Im Arbeitsthread liest Vera die Frage und bereitet Ziel, Quellenplan, Sprache und Rechtsrahmen vor. Der Sprachchat erklärt den vorgesehenen Inhalt. Korrigiere Missverständnisse und beantworte nur Fragen, die die Arbeit beeinflussen.",
+        "Wähle gewöhnliche Recherche oder Deep Research, falls verfügbar; eine bereits für diese Frage getroffene Wahl bleibt erhalten. Im Arbeitsthread entstehen Recherche und Antwort. Die Spracherklärung folgt dem tatsächlichen Fortschritt und nimmt deine Fragen auf.",
+        "Vera prüft die Antwort anhand von Frage, Quellen und Begründung und korrigiert nötigenfalls. Öffne die Word-Notiz, sieh dir die Schlussfolgerungen an und verfolge eine Quelle. Prüfe Grenzen und offene Punkte vor der Verwendung."
+      ],
+      "deliverables": [
+        "Word-Notiz und geprüfter Antworttext mit Quellen und Grenzen.",
+        "Prüfpaket, das die Kontrolle der Aussagen und verbleibende Prüfaufgaben nachvollziehbar macht."
+      ],
+      "review": "Prüfe, ob die Notiz die Frage im gewünschten Umfang und in der gewünschten Sprache beantwortet. Vergleiche eine Aussage mit ihrer Quelle. Unterscheide allgemeine Regeln und ihre Anwendung auf einen Mandanten; Prüfungen ersetzen kein fachliches Urteil.",
+      "checkpoints": [
+        "Erkläre Frage, Zielgruppe und Rechtsrahmen.",
+        "Finde eine Schlussfolgerung, ihre Quelle und eine Grenze oder ausstehende Prüfung."
+      ],
+      "practice": "Lies practice-de.md und fordere eine neue Fassung für die Einführung mit Lieferanten öffentlicher Stellen an. Bewahre die erste Version, verfolge neue Recherche und Prüfung und erläutere die Verwendung des Vergleichs.",
+      "success": "Du kannst eine vollständige Frage formulieren, den Rechercheweg wählen, Antwort und Prüfungen einordnen und die Arbeit bei einer geänderten Anfrage aktualisieren.",
+      "repeat": "Nenne Vera Frage, verfügbare Fakten, Land oder Rechtsrahmen, Zielgruppe und gewünschtes Ergebnis. Prüfe Umfang, Quellen, Schlussfolgerungen und offene Punkte im erstellten Dokument."
+    },
+    "es": {
+      "title": "Obtener una respuesta verificada con Vera",
+      "goal": "Aprender a plantear una cuestión profesional, seguir la investigación y las comprobaciones y usar la respuesta con sus fuentes y puntos abiertos.",
+      "scenario": "Imprese Arco pide al profesional una nota breve sobre las reglas de la UE contra la morosidad. Partimos del encargo escrito y las fuentes iniciales para producir una respuesta real mediante el workflow.",
+      "scope": "El recorrido completo desde la pregunta hasta la respuesta verificada. Una nota informativa permite aprender el proceso; un dictamen sobre una posición concreta puede necesitar además el examen de la tesis contraria.",
+      "inputs": "Abre question-es.md para ver encargo, público, alcance y formato. sources-es.md presenta la guía y el texto oficial adjuntos. No necesitas preparar instrucciones técnicas ni elegir etapas internas.",
+      "request": "Vera, responde a la cuestión de Imprese Arco en este archivo. Prepara la nota breve solicitada, verifica fuentes y respuesta y muéstrame el documento y los puntos que requieren revisión.",
+      "steps": [
+        "En el hilo de trabajo, Vera lee la pregunta y prepara objetivo, fuentes, idioma y marco jurídico. La voz explica qué abarcará la respuesta. Corrige malentendidos y responde solo a las preguntas que cambian el trabajo.",
+        "Elige investigación ordinaria o Deep Research si está disponible; el workflow conserva una elección ya hecha para esta pregunta. El hilo de trabajo investiga y redacta. La voz sigue el progreso real y responde a tus preguntas.",
+        "Vera verifica la respuesta frente al encargo, las fuentes y el razonamiento y corrige lo necesario. Abre la nota Word, observa las conclusiones y localiza una fuente. Revisa límites y puntos abiertos antes de usarla."
+      ],
+      "deliverables": [
+        "Nota Word y texto de la respuesta verificada, con fuentes y límites.",
+        "Paquete de verificación que permite reconstruir la revisión de las afirmaciones y los puntos pendientes."
+      ],
+      "review": "Comprueba que la nota responde al encargo con el alcance y el idioma previstos. Abre una fuente y compárala con una afirmación. Distingue una regla general de su aplicación al cliente; las comprobaciones no sustituyen el juicio profesional.",
+      "checkpoints": [
+        "Explica la pregunta, su destinatario y el marco jurídico.",
+        "Encuentra una conclusión, su fuente y un límite o comprobación pendiente."
+      ],
+      "practice": "Lee practice-es.md y pide una nueva versión para la reunión que incluye proveedores de administraciones públicas. Conserva la primera versión, sigue la nueva investigación y verificación y explica cómo usar la comparación producida.",
+      "success": "Sabes plantear una pregunta completa, elegir la investigación, orientarte en la respuesta y sus comprobaciones y actualizar el trabajo cuando cambia el encargo.",
+      "repeat": "Proporciona a Vera pregunta, hechos disponibles, país o marco jurídico, destinatario y resultado esperado. Revisa alcance, fuentes, conclusiones y puntos abiertos en el documento generado."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "64500bf6ecdd77a47c45d277d4fc0798473c4310af5de08d1089d439d1b417ce"
+}

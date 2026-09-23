@@ -1,0 +1,166 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "clara",
+  "workflow": "reporting-engine",
+  "course_sha256": "6f792148421640a7761b325031d14abed77952092b99898ebf132cca2df6de1e",
+  "reviewer": "Codex lesson and actual generated report review",
+  "reviewed_at": "2026-09-23T11:51:00.788201+00:00",
+  "review_scope": "Reviewed localized lessons, prepared workbook meanings and generated demo/practice narratives and tables. Current native execution checks recalculate the workbook and retain the previous report. Authored commentary is replayed as a fixture, not represented as fresh model inference. The shared Italian dashboard was also inspected in Chrome and its February selector verified. No learner participation, professional approval, live voice or all-locale visual inspection is claimed.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The ordinary first-use task is a monthly actual-versus-budget report: supply a workbook, confirm its meaning, run the comparison, read the output and request the next month. The lesson does not substitute an isolated variance detail for learning the workflow.",
+        "inputs_and_request": "Fictional Arco files contain GL and Budget sheets, declared sign convention, comparable months and control totals. The localized request asks for operating performance and category detail. No finished report is shipped as an input.",
+        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month.",
+        "deliverable_and_next_action": "The report separates calculation, questions and limitations. January-February EBITDA is EUR 53000 against EUR 47000; a positive cumulative result does not conceal February being EUR 6000 below budget. Missing accounting categories, forecast and ancillary exports are explicit. The learner can choose a concrete question for the monthly meeting without accepting an invented commercial cause.",
+        "practice_and_repeat": "The supplied March workbook produces a separate update through March while retaining the preceding outputs. The updated EBITDA is EUR 85000 against EUR 77000; March adds EUR 2000 favourable variance and does not resolve the February question. Repeat instructions explain which actuals, budget, period and purpose to provide.",
+        "language_and_pacing": "The it lesson and generated explanation use localized first-use instructions and descriptive titles. The outline totals 390 seconds; execution, review and questions can extend the session. Codex teacher/working chats and the separately projected written Cowork lesson are preserved."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[demo-it]",
+        "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "972a62621229598fb78467e2a17d8e00fe1af597e9ae3749605cdecf03cd39d9"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[practice-it]",
+        "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "0a540457b751a74efd6bdbc196e7d5c9c25954765255839ed69c5d992f3a0762"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The ordinary first-use task is a monthly actual-versus-budget report: supply a workbook, confirm its meaning, run the comparison, read the output and request the next month. The lesson does not substitute an isolated variance detail for learning the workflow.",
+        "inputs_and_request": "Fictional Arco files contain GL and Budget sheets, declared sign convention, comparable months and control totals. The localized request asks for operating performance and category detail. No finished report is shipped as an input.",
+        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month.",
+        "deliverable_and_next_action": "The report separates calculation, questions and limitations. January-February EBITDA is EUR 53000 against EUR 47000; a positive cumulative result does not conceal February being EUR 6000 below budget. Missing accounting categories, forecast and ancillary exports are explicit. The learner can choose a concrete question for the monthly meeting without accepting an invented commercial cause.",
+        "practice_and_repeat": "The supplied March workbook produces a separate update through March while retaining the preceding outputs. The updated EBITDA is EUR 85000 against EUR 77000; March adds EUR 2000 favourable variance and does not resolve the February question. Repeat instructions explain which actuals, budget, period and purpose to provide.",
+        "language_and_pacing": "The en lesson and generated explanation use localized first-use instructions and descriptive titles. The outline totals 390 seconds; execution, review and questions can extend the session. Codex teacher/working chats and the separately projected written Cowork lesson are preserved."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[demo-en]",
+        "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "4a1067cf1a21597e1639fa0d9479d5538ea2bad546d3c3f416bd9dcac06a7c57"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[practice-en]",
+        "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "cff49767525b5f7bf0071cffab8bc530d904a5267790a70c3f689b01d1054250"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The ordinary first-use task is a monthly actual-versus-budget report: supply a workbook, confirm its meaning, run the comparison, read the output and request the next month. The lesson does not substitute an isolated variance detail for learning the workflow.",
+        "inputs_and_request": "Fictional Arco files contain GL and Budget sheets, declared sign convention, comparable months and control totals. The localized request asks for operating performance and category detail. No finished report is shipped as an input.",
+        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month.",
+        "deliverable_and_next_action": "The report separates calculation, questions and limitations. January-February EBITDA is EUR 53000 against EUR 47000; a positive cumulative result does not conceal February being EUR 6000 below budget. Missing accounting categories, forecast and ancillary exports are explicit. The learner can choose a concrete question for the monthly meeting without accepting an invented commercial cause.",
+        "practice_and_repeat": "The supplied March workbook produces a separate update through March while retaining the preceding outputs. The updated EBITDA is EUR 85000 against EUR 77000; March adds EUR 2000 favourable variance and does not resolve the February question. Repeat instructions explain which actuals, budget, period and purpose to provide.",
+        "language_and_pacing": "The fr lesson and generated explanation use localized first-use instructions and descriptive titles. The outline totals 390 seconds; execution, review and questions can extend the session. Codex teacher/working chats and the separately projected written Cowork lesson are preserved."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[demo-fr]",
+        "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "2b551d685d06a3124c9b9e706a00e9a7d2193c8428a28d241f1d5dbec2c3cbe2"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[practice-fr]",
+        "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "c7906d2a1523d25bf383b45d9911a14f461897ab098bcda9d36e635cf66e12cc"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The ordinary first-use task is a monthly actual-versus-budget report: supply a workbook, confirm its meaning, run the comparison, read the output and request the next month. The lesson does not substitute an isolated variance detail for learning the workflow.",
+        "inputs_and_request": "Fictional Arco files contain GL and Budget sheets, declared sign convention, comparable months and control totals. The localized request asks for operating performance and category detail. No finished report is shipped as an input.",
+        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month.",
+        "deliverable_and_next_action": "The report separates calculation, questions and limitations. January-February EBITDA is EUR 53000 against EUR 47000; a positive cumulative result does not conceal February being EUR 6000 below budget. Missing accounting categories, forecast and ancillary exports are explicit. The learner can choose a concrete question for the monthly meeting without accepting an invented commercial cause.",
+        "practice_and_repeat": "The supplied March workbook produces a separate update through March while retaining the preceding outputs. The updated EBITDA is EUR 85000 against EUR 77000; March adds EUR 2000 favourable variance and does not resolve the February question. Repeat instructions explain which actuals, budget, period and purpose to provide.",
+        "language_and_pacing": "The de lesson and generated explanation use localized first-use instructions and descriptive titles. The outline totals 390 seconds; execution, review and questions can extend the session. Codex teacher/working chats and the separately projected written Cowork lesson are preserved."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[demo-de]",
+        "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "b4efb79cf6513c4b384911ec3dea593c01af45dde548903aae1cb15b4f0632f2"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[practice-de]",
+        "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "16ed7ac94fe2506ac53d328001381902d6df67d64f45fa5788b09721f6ed9618"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The ordinary first-use task is a monthly actual-versus-budget report: supply a workbook, confirm its meaning, run the comparison, read the output and request the next month. The lesson does not substitute an isolated variance detail for learning the workflow.",
+        "inputs_and_request": "Fictional Arco files contain GL and Budget sheets, declared sign convention, comparable months and control totals. The localized request asks for operating performance and category detail. No finished report is shipped as an input.",
+        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month.",
+        "deliverable_and_next_action": "The report separates calculation, questions and limitations. January-February EBITDA is EUR 53000 against EUR 47000; a positive cumulative result does not conceal February being EUR 6000 below budget. Missing accounting categories, forecast and ancillary exports are explicit. The learner can choose a concrete question for the monthly meeting without accepting an invented commercial cause.",
+        "practice_and_repeat": "The supplied March workbook produces a separate update through March while retaining the preceding outputs. The updated EBITDA is EUR 85000 against EUR 77000; March adds EUR 2000 favourable variance and does not resolve the February question. Repeat instructions explain which actuals, budget, period and purpose to provide.",
+        "language_and_pacing": "The es lesson and generated explanation use localized first-use instructions and descriptive titles. The outline totals 390 seconds; execution, review and questions can extend the session. Codex teacher/working chats and the separately projected written Cowork lesson are preserved."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[demo-es]",
+        "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "0d8c084b3d7c027426eca490710230fc61754a72952533a4f6e29c8feb32fba2"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[practice-es]",
+        "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "4be553c72771064e8c9c1e9732e05a7a52d1a52f4d91a7c49afc4540f0910543"
+          }
+        ]
+      }
+    }
+  }
+}

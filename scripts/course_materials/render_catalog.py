@@ -92,6 +92,7 @@ def render(destination: Path, *, preview: bool = False, public: bool = False) ->
                             product,
                             entry["titles"][language],
                             language,
+                            workflow,
                         ).replace(
                             "<main>",
                             '<main><p><a href="../../../index.html#'
@@ -167,10 +168,11 @@ def render(destination: Path, *, preview: bool = False, public: bool = False) ->
         '<section id="come-iniziare"><h2>Come avviare una lezione</h2>'
         "<p>Scegli qui sotto una funzione e apri la lezione nella tua lingua. "
         "All’inizio della pagina trovi <strong>Avvia questa lezione</strong>: copia la richiesta, "
-        "apri Codex sul computer con il plugin indicato installato, seleziona @Vera, @Clara o @Lucia "
+        "scegli Codex oppure Claude Cowork con il plugin indicato installato. In Codex seleziona @Vera, @Clara o @Lucia "
         "e invia la richiesta nella chat. Attiva la voce; l’assistente ti guiderà ad aprire "
-        "la seconda chat di lavoro in un’altra finestra. I file fittizi sono inclusi nel plugin.</p></section>"
-        '<div class="paired"><strong>Due chat durante la lezione</strong>'
+        "la seconda chat di lavoro in un’altra finestra. In Cowork usa la richiesta dedicata: la lezione è scritta, "
+        "in una sola conversazione, senza voce. I file fittizi sono inclusi nel plugin.</p></section>"
+        '<div class="paired"><strong>Due chat durante la lezione in Codex</strong>'
         "<p>Nella chat di lavoro il flusso corrente usa i file fittizi e produce il risultato. "
         "Nella chat vocale l’assistente spiega ciò che sta avvenendo, apre i risultati effettivi e risponde alle domande. "
         "La guida prepara il percorso; il risultato viene eseguito dal vivo.</p></div>"

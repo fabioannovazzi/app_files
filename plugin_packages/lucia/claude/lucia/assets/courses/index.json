@@ -1,0 +1,118 @@
+{
+  "schema": "mparanza.teaching_catalog.v2",
+  "product": "lucia",
+  "courses": {
+    "apertura-pratica": {
+      "path": "apertura-pratica/course.json",
+      "sha256": "cc01b952fc991a911dbaf8d2e62738dd1a596cfff92132a5d184b5baec38e385",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Preparare una nuova pratica con Lucia",
+        "en": "Prepare a new matter with Lucia",
+        "fr": "Préparer un nouveau dossier avec Lucia",
+        "de": "Eine neue Angelegenheit mit Lucia vorbereiten",
+        "es": "Preparar un nuevo expediente con Lucia"
+      },
+      "goals": {
+        "it": "Impara a partire dalla richiesta e dai documenti del cliente, ottenere un fascicolo da rivedere e capire cosa manca prima dell’apertura.",
+        "en": "Learn to start from a client request and documents, obtain a reviewable matter file and identify what is needed before opening.",
+        "fr": "Apprenez à partir de la demande et des documents du client, obtenir un dossier à revoir et identifier ce qui manque avant son ouverture.",
+        "de": "Lernen Sie, aus Mandantenanfrage und Unterlagen eine prüfbare Akte zu erstellen und den Bedarf vor der Eröffnung zu erkennen.",
+        "es": "Aprende a partir de la solicitud y los documentos del cliente, obtener un expediente revisable e identificar qué falta antes de abrirlo."
+      }
+    },
+    "comunicazione-professionale": {
+      "path": "comunicazione-professionale/course.json",
+      "sha256": "7986afeb71a24f9cfae36f383bfbc49738449b4e122ff51e89928b9620df52fb",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Preparare una comunicazione professionale con Lucia",
+        "en": "Prepare a professional communication with Lucia",
+        "fr": "Préparer une communication professionnelle avec Lucia",
+        "de": "Eine professionelle Mitteilung mit Lucia erstellen",
+        "es": "Preparar una comunicación profesional con Lucia"
+      },
+      "goals": {
+        "it": "Imparare a partire da un argomento e dalle fonti, preparare una comunicazione per un pubblico preciso e rivedere il pacchetto prima di usarlo.",
+        "en": "Learn to turn a topic and selected sources into a communication for a defined audience, then review the package before using it.",
+        "fr": "Apprendre à partir d’un sujet et de sources sélectionnées, préparer une communication pour un public précis et revoir le dossier avant utilisation.",
+        "de": "Lernen, aus einem Thema und ausgewählten Quellen eine Mitteilung für eine bestimmte Zielgruppe zu erstellen und das Paket vor der Verwendung zu prüfen.",
+        "es": "Aprender a partir de un tema y fuentes seleccionadas, preparar una comunicación para un público concreto y revisar el paquete antes de utilizarlo."
+      }
+    },
+    "presenza-digitale-studio": {
+      "path": "presenza-digitale-studio/course.json",
+      "sha256": "e11ee8e68681ed273594120b04fc8ec8198207a34ca6ba38b5ddd9b93bd0deab",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Preparare il sito dello studio con Lucia",
+        "en": "Prepare the firm’s website with Lucia",
+        "fr": "Préparer le site du cabinet avec Lucia",
+        "de": "Die Kanzleiwebsite mit Lucia vorbereiten",
+        "es": "Preparar el sitio del despacho con Lucia"
+      },
+      "goals": {
+        "it": "Imparare a partire dalle informazioni dello studio, ottenere un sito funzionante e rivederlo prima di scegliere la pubblicazione.",
+        "en": "Learn to start from firm information, obtain a working website and review it before choosing publication.",
+        "fr": "Apprendre à partir des informations du cabinet, obtenir un site fonctionnel et le revoir avant de choisir sa publication.",
+        "de": "Lernen, aus Kanzleiinformationen eine funktionierende Website zu erstellen und sie vor der Veröffentlichungsentscheidung zu prüfen.",
+        "es": "Aprender a partir de la información del despacho, obtener un sitio funcional y revisarlo antes de elegir su publicación."
+      }
+    },
+    "quesito-legale-fiscale": {
+      "path": "quesito-legale-fiscale/course.json",
+      "sha256": "31dff59c953cafdb1a3abaa228f6d1f7be8248f4a0e22e42bbb45420d094f8cd",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Ottenere una risposta verificata con Lucia",
+        "en": "Get a checked answer with Lucia",
+        "fr": "Obtenir une réponse vérifiée avec Lucia",
+        "de": "Eine geprüfte Antwort mit Lucia erhalten",
+        "es": "Obtener una respuesta verificada con Lucia"
+      },
+      "goals": {
+        "it": "Imparare a porre un quesito professionale, seguire ricerca e verifiche e utilizzare la risposta con le sue fonti e i punti ancora aperti.",
+        "en": "Learn to ask a professional question, follow research and checks, and use the answer with its sources and unresolved points.",
+        "fr": "Apprendre à poser une question professionnelle, suivre la recherche et les vérifications et utiliser la réponse avec ses sources et points ouverts.",
+        "de": "Lernen, eine fachliche Frage zu stellen, Recherche und Prüfungen zu verfolgen und die Antwort mit Quellen und offenen Punkten zu verwenden.",
+        "es": "Aprender a plantear una cuestión profesional, seguir la investigación y las comprobaciones y usar la respuesta con sus fuentes y puntos abiertos."
+      }
+    }
+  }
+}

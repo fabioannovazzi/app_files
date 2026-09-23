@@ -1,0 +1,193 @@
+{
+  "schema": "mparanza.teaching_catalog.v2",
+  "product": "clara",
+  "courses": {
+    "advisory-brief-planner": {
+      "path": "advisory-brief-planner/course.json",
+      "sha256": "cd552501ddbd5f4bbfa6bca0765a3481d97b7f164fb8fbae4cd08de1e6252948",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Impostare un incarico di consulenza con Clara",
+        "en": "Plan an advisory assignment with Clara",
+        "fr": "Définir une mission de conseil avec Clara",
+        "de": "Einen Beratungsauftrag mit Clara planen",
+        "es": "Planificar un encargo de consultoría con Clara"
+      },
+      "goals": {
+        "it": "Imparare a trasformare una richiesta in un incarico chiaro: decisione, fonti, risultato e lavoro da svolgere.",
+        "en": "Learn to turn a request into a clear assignment: the decision, evidence, deliverable and next work.",
+        "fr": "Apprendre à transformer une demande en mission claire : décision, sources, livrable et travail à réaliser.",
+        "de": "Lernen, aus einer Anfrage einen klaren Auftrag mit Entscheidung, Quellen, Ergebnis und nächsten Arbeitsschritten zu machen.",
+        "es": "Aprender a convertir una petición en un encargo claro: decisión, fuentes, entregable y trabajo siguiente."
+      }
+    },
+    "advisory-case-director": {
+      "path": "advisory-case-director/course.json",
+      "sha256": "220e20ec87bfcf785e7eb05971730a269e8d8933b9cd5c9f18927faf480e5c03",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Sviluppare un caso di consulenza con Clara",
+        "en": "Develop an advisory case with Clara",
+        "fr": "Faire évoluer un dossier de conseil avec Clara",
+        "de": "Einen Beratungsfall mit Clara entwickeln",
+        "es": "Desarrollar un caso de consultoría con Clara"
+      },
+      "goals": {
+        "it": "Imparare a mantenere una valutazione di lavoro fondata sulle fonti e aggiornare le prossime azioni quando arrivano nuove informazioni.",
+        "en": "Learn to maintain an evidence-based working answer and update the next actions when new information arrives.",
+        "fr": "Apprendre à maintenir une analyse fondée sur les sources et à actualiser les prochaines actions lorsque de nouvelles informations arrivent.",
+        "de": "Lernen, eine quellenbasierte Arbeitseinschätzung zu pflegen und nächste Schritte bei neuen Informationen anzupassen.",
+        "es": "Aprender a mantener una valoración basada en fuentes y actualizar las próximas acciones cuando llega nueva información."
+      }
+    },
+    "advisory-deliverable-validator": {
+      "path": "advisory-deliverable-validator/course.json",
+      "sha256": "5f5e29c201bcd5a682578e1772a0939c5c76ea6d6c812abd56cb1f59daaed401",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Rivedere un memo di consulenza con Clara",
+        "en": "Review an advisory memo with Clara",
+        "fr": "Revoir une note de conseil avec Clara",
+        "de": "Ein Beratungsmemo mit Clara prüfen",
+        "es": "Revisar un informe de consultoría con Clara"
+      },
+      "goals": {
+        "it": "Imparare a verificare se un documento risponde all’incarico e se la raccomandazione deriva dalle fonti disponibili.",
+        "en": "Learn to check whether an advisory document answers its assignment and whether its recommendation follows from the available evidence.",
+        "fr": "Apprendre à vérifier qu’un document répond à sa mission et que sa recommandation découle des sources disponibles.",
+        "de": "Lernen, ob ein Dokument seinen Auftrag erfüllt und seine Empfehlung aus den vorhandenen Quellen folgt.",
+        "es": "Aprender a comprobar si un documento responde al encargo y si su recomendación se deriva de las fuentes disponibles."
+      }
+    },
+    "attribute-reporting": {
+      "path": "attribute-reporting/course.json",
+      "sha256": "fa53a7e21f62e3f42c65f524e98bd832457117ef7cfc433bfe53025704421f8b",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Creare un rapporto sull’assortimento con Clara",
+        "en": "Create an assortment report with Clara",
+        "fr": "Créer un rapport sur l’assortiment avec Clara",
+        "de": "Mit Clara einen Sortimentsbericht erstellen",
+        "es": "Crear un informe del surtido con Clara"
+      },
+      "goals": {
+        "it": "Imparare a fornire un pacchetto di dati commerciali già disponibile, chiedere un’analisi e usare il rapporto HTML verificato.",
+        "en": "Learn to supply an existing retail evidence package, request an analysis and use the checked HTML report.",
+        "fr": "Apprendre à fournir un dossier de données commerciales existant, demander une analyse et utiliser le rapport HTML vérifié.",
+        "de": "Lernen, ein vorhandenes Handelsdatenpaket bereitzustellen, eine Analyse anzufordern und den geprüften HTML-Bericht zu verwenden.",
+        "es": "Aprender a aportar un paquete de datos comerciales existente, solicitar un análisis y utilizar el informe HTML verificado."
+      }
+    },
+    "business-planning": {
+      "path": "business-planning/course.json",
+      "sha256": "72da083580b72606c2a0662d3a83269a014d32242f8a3c3a3406aeac62cc86bc",
+      "languages": [
+        "it",
+        "en"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Preparare un business plan con Clara",
+        "en": "Prepare a business plan with Clara"
+      },
+      "goals": {
+        "it": "Imparare a partire da una proposta, fornire i dati disponibili e ottenere un report che aiuti a decidere cosa provare, cambiare o approfondire.",
+        "en": "Learn to start from a proposal, supply available information and obtain a report that helps decide what to test, change or investigate."
+      }
+    },
+    "html-deck": {
+      "path": "html-deck/course.json",
+      "sha256": "7c1f4bbf91983c4944ed7a166eecc55278dcc1a7b40bf34bfb5a5c6be4c8186f",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Creare una presentazione HTML con Clara",
+        "en": "Create an HTML presentation with Clara",
+        "fr": "Créer une présentation HTML avec Clara",
+        "de": "Eine HTML-Präsentation mit Clara erstellen",
+        "es": "Crear una presentación HTML con Clara"
+      },
+      "goals": {
+        "it": "Imparare a trasformare documenti e una richiesta in slide utilizzabili, controllare ciò che viene detto e presentarle dal browser.",
+        "en": "Learn to turn documents and a clear request into usable slides, check their message and present them in a browser.",
+        "fr": "Apprendre à transformer des documents et une demande en diapositives utilisables, vérifier leur message et les présenter dans le navigateur.",
+        "de": "Lernen Sie, aus Dokumenten und einer klaren Anfrage brauchbare Folien zu erstellen, Aussagen zu prüfen und im Browser zu präsentieren.",
+        "es": "Aprender a transformar documentos y una petición clara en diapositivas útiles, comprobar sus mensajes y presentarlas en el navegador."
+      }
+    },
+    "reporting-engine": {
+      "path": "reporting-engine/course.json",
+      "sha256": "a7873691e200f04f1d9d7398431aca8937ff71be68cad3c13550874fdc1c1254",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Preparare un report dai dati con Clara",
+        "en": "Prepare a report from data with Clara",
+        "fr": "Préparer un rapport à partir des données avec Clara",
+        "de": "Einen Bericht aus Daten mit Clara erstellen",
+        "es": "Preparar un informe a partir de datos con Clara"
+      },
+      "goals": {
+        "it": "Impara a confrontare consuntivo e budget, seguire la preparazione del report e usare le differenze per la revisione mensile.",
+        "en": "Learn to compare actual performance with budget, follow report preparation and use the differences in a monthly review.",
+        "fr": "Apprenez à comparer les résultats au budget, suivre la préparation du rapport et utiliser les écarts lors d’une revue mensuelle.",
+        "de": "Lernen Sie, Ist und Budget zu vergleichen, die Berichtserstellung zu verfolgen und die Abweichungen bei der Monatsbesprechung zu nutzen.",
+        "es": "Aprende a comparar resultados y presupuesto, seguir la preparación del informe y utilizar las diferencias en la revisión mensual."
+      }
+    }
+  }
+}

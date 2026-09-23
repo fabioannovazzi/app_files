@@ -1,61 +1,71 @@
-# Vor der Grafik klären, was die Daten bedeuten
+# Einen Bericht aus Daten mit Clara erstellen
 
-Ein geführter Rundgang von etwa 6½ Minuten. Sprachaktivierung, externe Verarbeitung und die freiwillige Übung kommen zeitlich hinzu.
+Erklärung und kurze Übung dauern ungefähr 5–8 Minuten. Verarbeitung und Ihre Fragen können die Sitzung verlängern.
 
-Sprich mit dem Lehrchat über die Standardstimme von Codex. Im zweiten, daneben geöffneten Chat siehst du Dateien und Ergebnisse. Die Chats bleiben verbunden. Du kannst jederzeit unterbrechen, nachfragen oder langsamer fortfahren.
+Sprechen Sie im Lehrchat mit der Standardstimme von Codex. Im Arbeitschat im Fenster daneben führt die Funktion den Fall mit den vorbereiteten Dateien aus und zeigt die tatsächlichen Ergebnisse. Die Erklärung folgt diesen Ergebnissen: Sie können unterbrechen, Fragen stellen und das Tempo ändern.
 
-Verwende die vorbereiteten Inhalte. Schreibe die Lektion nicht neu und erfinde keine Ergebnisse. Sprich in kurzen Abschnitten, lass Zeit zum Anschauen und höre die tatsächlichen Antworten. Zeige die Lösung erst nach dem Versuch. Die Zeiten umfassen Anschauen und Dialog. Das Anzeigen dieser Dateien bestätigt weder Demo noch Übung oder Verständnis. Der Lehrchat beurteilt die Eignung ausschließlich anhand des Katalogs seines eigenen Produkts.
+Vermitteln Sie mit dem vorbereiteten Material eine vollständige erste Anwendung. Wählen Sie bei der Einführung 3–4 passende Funktionen; beginnen Sie später mit dem heutigen Arbeitswunsch. Passen Sie Tempo und Erklärungen an. Erstellen Sie bei Bedarf eigene Beispiele mit demselben Workflow und geprüften Eingaben. Lesen Sie execution-request.json, verwenden Sie den echten zugeordneten lokalen Fall und erklären Sie die überprüften Ergebnisse des Arbeitschats. Erfinden Sie weder Ergebnisse noch Nutzerantworten oder Verständnisbestätigungen. Das Öffnen des Materials schließt keine Lektion ab.
 
-## 1. Dein Ziel · 45 s
+## 1. Wann sie hilft · 45 s
 
-Höre die Anfrage. Stelle einen Bezug zu deiner bisherigen Arbeit her.
+Verbinden Sie die Funktion mit einer konkreten beruflichen Aufgabe.
 
-Der fiktive Datensatz zeigt Nettoumsatz von EUR 40.000 im Januar und EUR 50.000 im Februar. Ein separates Discount-Feld fehlt. Quellennotizen bestätigen, dass Sales Rabatte bereits berücksichtigt; ein erneuter Abzug wäre falsch.
+Lernen Sie, Ist und Budget zu vergleichen, die Berichtserstellung zu verfolgen und die Abweichungen bei der Monatsbesprechung zu nutzen.
 
-Clara, zeige den Umsatzverlauf und erkläre die verwendeten Daten.
+Arco hat die Managementzahlen für Januar und Februar und das Budget derselben Monate vorbereitet. Die Leitung möchte das operative Ergebnis und die zu untersuchenden Kategorien vor der Monatsbesprechung verstehen.
 
-## 2. Die Ausgangsdaten · 60 s
+Der Fall umfasst Umsatz, Wareneinsatz und Betriebsaufwand in EUR. Clara wählt die Analyse anhand von Frage und Daten; diese erste Anwendung zeigt einen Budgetvergleich und bleibt lokal.
 
-Sieh dir die Dokumente im anderen Chat an. Finde eine nützliche Angabe und eine fehlende Information.
+## 2. Dateien und Anfrage · 60 s
 
-R1 enthält zwei Monate; R2 definiert Sales als netto. Discount fehlt als eigene Kennzahl und ist kein erfasster Nullwert.
+Öffnen Sie die Dateien im Arbeitsfenster und zeigen Sie die passende Anfrage.
 
-[["2026-01", "EUR 40.000", "Nettoumsatz"], ["2026-02", "EUR 50.000", "Nettoumsatz"], ["Separates Discount", "Fehlt", "Bereits in Sales berücksichtigt"]]
+Öffnen Sie actual-budget.xlsx und facts-de.md. GL enthält monatliche Bewegungen nach Konto und Kategorie, Budget den vergleichbaren Plan. Umsätze sind positiv, Kosten negativ. Die Kontrollsummen betragen 53.000 EUR im Ist und 47.000 EUR im Budget.
 
-## 3. So arbeitet der Workflow · 75 s
+Clara, erstelle aus dieser Arbeitsmappe Arcos Ist-Budget-Bericht für Januar und Februar 2026. Zeige operatives Ergebnis, Abweichungen und Kategorien.
 
-Folge den drei Schritten. Halte bei der Entscheidung an, die das Ergebnis verändert.
+## 3. Den Ablauf ausführen · 105 s
 
-Führe die Datenaufnahme aus und prüfe Daten, Profil und Notizen. Prüfe Bedeutung, Aggregation sowie Sales-, Discount- und COGS-Rollen; Spaltennamen allein reichen nicht.
-Wähle eine kompatible Fähigkeit und rendere über Claras Adapter unter Erhalt des tatsächlichen Auftrags und Ausgabenachweises.
-Öffne das Ergebnis und prüfe Werte, Einheiten, Perioden und Schlussfolgerung. Verwende bei späteren Uploads einen passenden stabilen Bedeutungsvertrag erneut.
+Erklären Sie den laufenden Schritt und warten Sie auf sein tatsächliches Ergebnis.
 
-## 4. Das Ergebnis lesen · 90 s
+Clara untersucht die Tabellen und schlägt die Spalten für Datum, Kategorie und Betrag vor. Bestätigen Sie Januar–Februar und die Vorzeichen vor der Berechnung.
 
-Öffne das Beispiel im zweiten Chat. Ordne jede Schlussfolgerung ihrer Quelle zu.
+Der Workflow verwendet die geprüfte Zuordnung, vergleicht Ist und Budget und kontrolliert die Summen. Der Sprachchat erklärt den tatsächlichen Schritt und etwaige Rückfragen.
 
-Nettoumsatz steigt von EUR 40.000 auf EUR 50.000: EUR 10.000 oder 25 % mehr. Separate Rabatte und Kosten sind nicht verfügbar.
+Öffnen Sie Dashboard und Arbeitsmappe aus dem Arbeitschat. Beginnen Sie bei der Zusammenfassung, danach Monatsvergleich und Kategorien.
 
-[["Januar", "EUR 40.000", "R1 · Nettoumsatz"], ["Februar", "EUR 50.000", "R1 · Nettoumsatz"], ["Veränderung", "+EUR 10.000 · +25 %", "Januarbasis EUR 40.000"]]
+Während der Lektion führt der Arbeitschat die Funktion aus und erstellt das Ergebnis. Ist ein Schritt nicht verfügbar, erklären Sie, was fehlt, und lassen Sie die Lektion unvollständig.
 
-## 5. Die entscheidende Prüfung · 75 s
+## 4. Das Ergebnis verwenden · 75 s
 
-Erkläre vor dem Aufklappen der Antwort, was du prüfen würdest.
+Öffnen Sie das gerade erstellte Dokument und zeigen Sie den Einstieg.
 
-Technische Kompatibilität und inhaltliche Richtigkeit sind verschiedene Prüfungen. Gültige Spalten können geschäftlich falsch zugeordnet sein.
+Dashboard: Ergebnis des Zeitraums sowie absolute und sinnvolle prozentuale Abweichungen. Wählen Sie daraus Kategorien zur weiteren Untersuchung.
 
-Dürfen wir ohne Discount-Spalte sagen, es seien keine Rabatte gewährt worden?
+Arbeitsmappe und Bericht: Tabellen, Kontrollen und Datenbezüge. Die Zusammenfassung unterscheidet die gemessene Abweichung von ihrer noch zu prüfenden Ursache.
 
-Überlegungen vergleichen: Nein. Sales ist netto, ein eigener Rabattwert fehlt. Eine fehlende Spalte beweist nicht das Fehlen von Rabatten.
+Prüfen Sie gleiche Monate in beiden Tabellen und die erwarteten Vorzeichen der Kosten. Verfolgen Sie eine Differenz zu Kategorie und Ursprungsmonat. Fragen Sie das Unternehmen nach Erklärungen, wenn die Zahlen keine Ursache belegen.
 
-## 6. Gemeinsam ausprobieren · 45 s
+## 5. Gemeinsam prüfen · 45 s
 
-Entscheide, ob du jetzt üben oder das Beispiel für den nächsten Auftrag behalten möchtest.
+Führen Sie diese Prüfungen an den angegebenen Stellen durch.
 
-Ergänze März mit derselben Sales-Definition und prüfe Wiederverwendung des Vertrags und aktualisierte Grafik.
+Vor der Berechnung: Finden Sie beide Tabellen und bestätigen Sie den Zeitraum.
 
-Wähle CSV, Excel oder Parquet mit Kennzahlennotizen. Ist-/Budget-Berichte nutzen Claras eigenen Budgetweg innerhalb dieses Workflows.
+Beim Ergebnis: Zeigen Sie Gesamtvergleich und eine näher zu untersuchende Kategorie.
 
-Dies ist ein vorbereitetes Lehrbeispiel, kein Nachweis einer neuen Ausführung. Quellen und Entscheidungen sind fiktiv; eine fachliche Freigabe ist nicht vorausgesetzt. Bei deinen eigenen Dateien führt der aktuelle Workflow seine Prüfungen durch und bewahrt die tatsächlichen Ergebnisse auf.
+Diese Pausen helfen beim Erlernen der Funktion. Sie sind kein Quiz über technische Einzelheiten.
 
-Bibliothek, Profil und Lernfortschritt bleiben auf deinem Computer und werden nicht an Mparanza gesendet. Sprache und im Chat gelesene Inhalte verarbeitet dein OpenAI-Konto: Lokale Speicherung bedeutet keine Offline-Inferenz.
+## 6. Selbst ausprobieren · 60 s
+
+Lassen Sie den Nutzer die Anfrage formulieren und begleiten Sie seinen Versuch.
+
+Fordern Sie mit actual-budget-march.xlsx eine Aktualisierung bis März an. Formulieren Sie die Anfrage, bestätigen Sie den Zeitraum und vergleichen Sie mit dem vorherigen Bericht.
+
+Der neue Bericht enthält März und bewahrt die vorherige Version. Sie finden den Budgetvergleich und die Ursprungsdaten einer Kategorie.
+
+Für die Wiederholung stellen Sie Ist und Plan für vergleichbare Zeiträume bereit, nennen Zeitraum und Besprechungsziel, prüfen die Interpretation der Daten und öffnen den erstellten Bericht.
+
+Das Material enthält fiktive Dateien und einen vorbereiteten Ablauf. Ergebnisse der Demonstration und Übung entstehen durch neue Ausführungen der aktuellen Funktion.
+
+Bibliothek, Profil und Lernfortschritt bleiben auf Ihrem Computer und werden nicht an Mparanza gesendet. Sprache und im Chat gelesene Inhalte verarbeitet Ihr OpenAI-Konto: Lokale Speicherung bedeutet keine Offline-Inferenz.

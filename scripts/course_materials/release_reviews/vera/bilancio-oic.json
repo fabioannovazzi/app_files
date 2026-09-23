@@ -1,0 +1,89 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "bilancio-oic",
+  "course_sha256": "dc9a1820a2ab57ed39a1299a4d33554dd112fcadd81d411eec23c07809ed0d7f",
+  "reviewer": "Codex lesson, generated accounts and integration evidence review",
+  "reviewed_at": "2026-09-23T11:54:05.184666+00:00",
+  "review_scope": "Reviewed both localized lessons and four actual generated draft accounts. Native execution uses the checksum-verified official PCI taxonomy and Arelle. Parser, mapping and disclosure decisions in automated checks are explicitly synthetic fixtures supported by the fictional declaration, not learner or professional approvals. No filing, signature, human timing or live voice is claimed.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson follows the complete ordinary preparation of first-year Italian OIC accounts: identify documents, import, review interpretation and classification, generate a draft, trace a source and understand the checks before approval.",
+        "inputs_and_request": "Fictional company details, nine-account trial balance and year-end declarations provide the case. Tax is expressly a supplied external-workpaper input; the assistant is not asked to invent a tax calculation. There is no precomputed set of accounts in the input kit.",
+        "execution_and_checkpoints": "The native case engine reads the balances, records proposed classifications, builds statements and schedules, renders the HTML draft and locally validates an XBRL candidate with the official taxonomy. The lesson asks the learner to review actual proposals; automated fixture decisions are not used as evidence of their participation.",
+        "deliverable_and_next_action": "The drafts show EUR27000 assets, EUR6500 liabilities, EUR10000 capital and EUR10500 current result, with the result represented in equity. Four supporting schedules reconcile. The footnote disclosures link to the fictional declaration. Technical validation passes while case approval remains absent; signature and filing are separate.",
+        "practice_and_repeat": "Replacing the trial balance and year-end information in the same engagement generates a new run and retains earlier output bytes. The additional EUR200 expense and EUR50 lower supplied tax reduce the result by EUR150 to EUR10350 and increase liabilities to EUR6650. The learner checks both the new outcome and the preserved prior version.",
+        "language_and_pacing": "The it lesson and draft labels are localized, while the jurisdiction remains Italian OIC. The descriptive outline totals 390 seconds; actual review and processing can take longer. Codex teacher/working windows and the written Cowork projection remain distinct supported teaching formats."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_bilancio_execution::test_oic_kit_prepares_reviewable_accounts_and_retains_prior_version[demo-it]",
+        "result_review": "The first-year draft correctly presents the EUR10500 result and balances EUR27000 assets against capital, liabilities and current result. Supporting schedules, disclosure coverage and native local XBRL checks pass. Source references remain available and the case has no final approval. Regression review dispositions are explicit synthetic test fixtures, not professional sign-off.",
+        "reviewed_artifacts": [
+          {
+            "name": "draft-accounts.html",
+            "sha256": "45ca7fa659fe4cf1dc27dd92770332cfb6072fb61e5fceb0384419a4223a0856"
+          },
+          {
+            "name": "validation.json",
+            "sha256": "a5212a2d96f0da0d479a2785726246345995b7f807553194c3b4bf978d0967f9"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_bilancio_execution::test_oic_kit_prepares_reviewable_accounts_and_retains_prior_version[practice-it]",
+        "result_review": "The revised draft presents EUR10350 result and EUR6650 liabilities from the replacement sources, with the original run preserved. Supporting schedules, disclosure coverage and native local XBRL checks pass. Source references remain available and the case has no final approval. Regression review dispositions are explicit synthetic test fixtures, not professional sign-off.",
+        "reviewed_artifacts": [
+          {
+            "name": "draft-accounts.html",
+            "sha256": "0a6dd8d1c21a2dabb1e0b4c3c044e789702f2a762a2b06f74c0ca2dfd0dd2740"
+          },
+          {
+            "name": "validation.json",
+            "sha256": "1ce0b9d79194c3521db490f767f944796cd1e64573a026ac738c2e6804dad324"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson follows the complete ordinary preparation of first-year Italian OIC accounts: identify documents, import, review interpretation and classification, generate a draft, trace a source and understand the checks before approval.",
+        "inputs_and_request": "Fictional company details, nine-account trial balance and year-end declarations provide the case. Tax is expressly a supplied external-workpaper input; the assistant is not asked to invent a tax calculation. There is no precomputed set of accounts in the input kit.",
+        "execution_and_checkpoints": "The native case engine reads the balances, records proposed classifications, builds statements and schedules, renders the HTML draft and locally validates an XBRL candidate with the official taxonomy. The lesson asks the learner to review actual proposals; automated fixture decisions are not used as evidence of their participation.",
+        "deliverable_and_next_action": "The drafts show EUR27000 assets, EUR6500 liabilities, EUR10000 capital and EUR10500 current result, with the result represented in equity. Four supporting schedules reconcile. The footnote disclosures link to the fictional declaration. Technical validation passes while case approval remains absent; signature and filing are separate.",
+        "practice_and_repeat": "Replacing the trial balance and year-end information in the same engagement generates a new run and retains earlier output bytes. The additional EUR200 expense and EUR50 lower supplied tax reduce the result by EUR150 to EUR10350 and increase liabilities to EUR6650. The learner checks both the new outcome and the preserved prior version.",
+        "language_and_pacing": "The en lesson and draft labels are localized, while the jurisdiction remains Italian OIC. The descriptive outline totals 390 seconds; actual review and processing can take longer. Codex teacher/working windows and the written Cowork projection remain distinct supported teaching formats."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_bilancio_execution::test_oic_kit_prepares_reviewable_accounts_and_retains_prior_version[demo-en]",
+        "result_review": "The first-year draft correctly presents the EUR10500 result and balances EUR27000 assets against capital, liabilities and current result. Supporting schedules, disclosure coverage and native local XBRL checks pass. Source references remain available and the case has no final approval. Regression review dispositions are explicit synthetic test fixtures, not professional sign-off.",
+        "reviewed_artifacts": [
+          {
+            "name": "draft-accounts.html",
+            "sha256": "8271ef1d49bc7861215d81e3eaf26f02617656cc2a9d9918255f5f9b8eba74f2"
+          },
+          {
+            "name": "validation.json",
+            "sha256": "01806b76ed6ced7db320aa38dbddd38a66339b01b378b8e85498973a3d8bdc05"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_bilancio_execution::test_oic_kit_prepares_reviewable_accounts_and_retains_prior_version[practice-en]",
+        "result_review": "The revised draft presents EUR10350 result and EUR6650 liabilities from the replacement sources, with the original run preserved. Supporting schedules, disclosure coverage and native local XBRL checks pass. Source references remain available and the case has no final approval. Regression review dispositions are explicit synthetic test fixtures, not professional sign-off.",
+        "reviewed_artifacts": [
+          {
+            "name": "draft-accounts.html",
+            "sha256": "049a5855f3bd9ac6977c5a052bca1930111dc881af70995343769966abb1f0ef"
+          },
+          {
+            "name": "validation.json",
+            "sha256": "21e751f18f6e35f56ba77558abc93227d5dfcd3a68f3008a8b8f08ae22ad51b9"
+          }
+        ]
+      }
+    }
+  }
+}

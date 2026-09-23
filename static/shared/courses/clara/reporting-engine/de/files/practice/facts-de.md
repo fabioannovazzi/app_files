@@ -1,0 +1,7 @@
+# Arco — fiktive monatliche Managementrechnung
+
+Währung EUR. Das Blatt GL enthält monatliche Erfolgsbewegungen, keine kumulierten Abschlusssalden. Revenue ist positiv; COGS und Operating expenses sind negativ. Konto 4000 steht für Umsatz, 5000 für Umsatzkosten und 6000 für betriebliche Aufwendungen. Budget verwendet dieselben Kategorien und Vorzeichen. Die Daten beziehen sich auf Monatsenden 2026; das Geschäftsjahr beginnt im Januar. Andere betriebliche Posten, Abschreibungen, Zinsen und Steuern sind nicht enthalten: Das Ergebnis ist hier EBITDA, nicht Jahresüberschuss. Die Daten sind fiktiv und kein handelsrechtlicher Abschluss.
+
+Der erste Bericht umfasst Januar–Februar mit Stichtag 28. Februar 2026. Die Kontrollsumme beträgt EUR 53.000 für GL und EUR 47.000 für Budget. Die März-Übung ergänzt einen Monat, ohne vorherige Zeilen zu ersetzen: Die kumulierten Summen betragen dann EUR 85.000 für GL und EUR 77.000 für Budget. Beide Blätter enthalten dieselben Zeiträume und Kategorien. Die Übung betrifft das Erstellen und Lesen eines Berichts; die Zahlen belegen keine Ursachen der Abweichungen.
+
+Für das Management Control Pack und Claras Budgetbericht nach Prüfung der Blätter Revenue dem Wert revenue, COGS dem Wert cogs und Operating expenses dem Wert operating_expense zuordnen. Andere Funktionen müssen ihre eigenen Aufbereitungs- und Eingabeverträge beachten. Diese Notiz erklärt die Bedeutung der Falldaten; sie ist weder eine bereits geprüfte technische Rezeptur noch eine fachliche Freigabe.

@@ -1,0 +1,87 @@
+{
+  "it": {
+    "two_threads": "Una conversazione scritta",
+    "pair_explanation": "Segui la lezione per iscritto in questa conversazione. L’assistente spiega un passaggio, esegue la funzione e apre i risultati effettivi. Fai domande e cambia ritmo quando vuoi.",
+    "timing": "Spiegazione e breve prova richiedono circa 5–8 minuti; elaborazione e domande possono richiedere altro tempo.",
+    "privacy": "I materiali e i progressi sono salvati nella cartella collegata scelta per la lezione. Non vengono inviati a Mparanza. Claude elabora conversazione e file letti secondo il tuo account Anthropic; il salvataggio nella cartella non implica elaborazione offline.",
+    "teacher_rule": "Usa i materiali preparati e insegna il primo utilizzo completo per iscritto. Esegui la procedura corrente in questa conversazione e collega la spiegazione ai risultati verificati. Attendi le risposte reali. Non inventare esecuzioni o conferme di comprensione. Aprire la guida non completa la lezione.",
+    "live_rule": "Esegui la funzione in questa conversazione. Se un passaggio non è disponibile, spiega cosa manca e lascia la dimostrazione incompleta.",
+    "optional_practice": "La prova richiede una nuova esecuzione della procedura corrente con i file di esercizio. Se viene saltata, registrala come non svolta.",
+    "cues": [
+      "Collega la funzione a un lavoro concreto.",
+      "Apri i file e mostra come chiedere il risultato.",
+      "Spiega il passaggio e attendi il risultato effettivo.",
+      "Apri il documento e indica da dove iniziare.",
+      "Fermati e attendi la risposta del professionista.",
+      "Lascia formulare la richiesta all’utente e guidane la prova."
+    ]
+  },
+  "en": {
+    "two_threads": "One written conversation",
+    "pair_explanation": "Follow the lesson in writing in this conversation. The assistant explains a step, runs the function and opens the actual results. Ask questions and change the pace whenever you need.",
+    "timing": "Explanation and a short practice take about 5–8 minutes; processing and questions may add time.",
+    "privacy": "Materials and progress are saved in the connected folder chosen for the lesson. They are not sent to Mparanza. Claude processes the conversation and files it reads under your Anthropic account; saving files in the folder does not mean offline processing.",
+    "teacher_rule": "Use the prepared material and teach the complete first use in writing. Run the current procedure in this conversation and connect explanations to verified results. Wait for actual answers. Never invent execution or understanding confirmations. Opening the guide does not complete the lesson.",
+    "live_rule": "Run the function in this conversation. If a step is unavailable, explain what is missing and leave the demonstration incomplete.",
+    "optional_practice": "Practice requires a fresh run of the current procedure with the exercise files. If skipped, record it as not performed.",
+    "cues": [
+      "Connect the function to a concrete task.",
+      "Open the files and show how to request the result.",
+      "Explain the step and wait for its actual result.",
+      "Open the document and show where to start.",
+      "Pause and wait for the professional’s answer.",
+      "Let the user formulate the request and guide their attempt."
+    ]
+  },
+  "fr": {
+    "two_threads": "Une conversation écrite",
+    "pair_explanation": "Suivez la leçon par écrit dans cette conversation. L’assistant explique une étape, exécute la fonction et ouvre les résultats réels. Posez vos questions et adaptez le rythme.",
+    "timing": "L’explication et un court exercice prennent environ 5–8 minutes ; le traitement et les questions peuvent ajouter du temps.",
+    "privacy": "Les supports et la progression sont enregistrés dans le dossier connecté choisi pour la leçon. Ils ne sont pas envoyés à Mparanza. Claude traite la conversation et les fichiers lus selon votre compte Anthropic ; cet enregistrement ne signifie pas un traitement hors ligne.",
+    "teacher_rule": "Utilisez le support préparé et enseignez une première utilisation complète par écrit. Exécutez la procédure actuelle dans cette conversation et reliez les explications aux résultats vérifiés. Attendez les vraies réponses. N’inventez ni exécution ni confirmation de compréhension. Ouvrir le guide ne termine pas la leçon.",
+    "live_rule": "Exécutez la fonction dans cette conversation. Si une étape est indisponible, expliquez ce qui manque et laissez la démonstration incomplète.",
+    "optional_practice": "L’exercice nécessite une nouvelle exécution de la procédure actuelle avec les fichiers prévus. S’il est omis, notez qu’il n’a pas été effectué.",
+    "cues": [
+      "Reliez la fonction à une tâche concrète.",
+      "Ouvrez les fichiers et montrez comment demander le résultat.",
+      "Expliquez l’étape et attendez son résultat réel.",
+      "Ouvrez le document et indiquez par où commencer.",
+      "Faites une pause et attendez la réponse du professionnel.",
+      "Laissez l’utilisateur formuler la demande et accompagnez son essai."
+    ]
+  },
+  "de": {
+    "two_threads": "Ein schriftlicher Chat",
+    "pair_explanation": "Folgen Sie der Lektion schriftlich in diesem Chat. Der Assistent erklärt einen Schritt, führt die Funktion aus und öffnet die tatsächlichen Ergebnisse. Stellen Sie Fragen und passen Sie das Tempo an.",
+    "timing": "Erklärung und kurze Übung dauern etwa 5–8 Minuten; Verarbeitung und Fragen können zusätzliche Zeit benötigen.",
+    "privacy": "Materialien und Fortschritt werden im gewählten verbundenen Unterrichtsordner gespeichert. Sie werden nicht an Mparanza gesendet. Claude verarbeitet den Chat und gelesene Dateien gemäß Ihrem Anthropic-Konto; die Speicherung im Ordner bedeutet keine Offline-Verarbeitung.",
+    "teacher_rule": "Verwenden Sie das vorbereitete Material und erklären Sie eine vollständige erste Nutzung schriftlich. Führen Sie das aktuelle Verfahren in diesem Chat aus und beziehen Sie Erklärungen auf geprüfte Ergebnisse. Warten Sie auf echte Antworten. Erfinden Sie weder Ausführungen noch Verständnisbestätigungen. Das Öffnen der Anleitung schließt die Lektion nicht ab.",
+    "live_rule": "Führen Sie die Funktion in diesem Chat aus. Ist ein Schritt nicht verfügbar, erklären Sie den fehlenden Teil und lassen Sie die Demonstration unvollständig.",
+    "optional_practice": "Die Übung erfordert eine neue Ausführung des aktuellen Verfahrens mit den Übungsdateien. Wird sie übersprungen, halten Sie sie als nicht durchgeführt fest.",
+    "cues": [
+      "Verbinden Sie die Funktion mit einer konkreten Aufgabe.",
+      "Öffnen Sie die Dateien und zeigen Sie die Anfrage.",
+      "Erklären Sie den Schritt und warten Sie auf das tatsächliche Ergebnis.",
+      "Öffnen Sie das Dokument und zeigen Sie den Einstieg.",
+      "Machen Sie eine Pause und warten Sie auf die Antwort.",
+      "Lassen Sie den Nutzer die Anfrage formulieren und begleiten Sie den Versuch."
+    ]
+  },
+  "es": {
+    "two_threads": "Una conversación escrita",
+    "pair_explanation": "Sigue la lección por escrito en esta conversación. El asistente explica un paso, ejecuta la función y abre los resultados reales. Haz preguntas y adapta el ritmo.",
+    "timing": "La explicación y un ejercicio breve duran unos 5–8 minutos; el procesamiento y las preguntas pueden añadir tiempo.",
+    "privacy": "Los materiales y el progreso se guardan en la carpeta conectada elegida para la lección. No se envían a Mparanza. Claude procesa la conversación y los archivos que lee según tu cuenta de Anthropic; guardarlos en la carpeta no implica procesamiento sin conexión.",
+    "teacher_rule": "Utiliza el material preparado y enseña un primer uso completo por escrito. Ejecuta el procedimiento actual en esta conversación y vincula las explicaciones a resultados verificados. Espera respuestas reales. No inventes ejecuciones ni confirmaciones de comprensión. Abrir la guía no completa la lección.",
+    "live_rule": "Ejecuta la función en esta conversación. Si un paso no está disponible, explica qué falta y deja la demostración incompleta.",
+    "optional_practice": "La práctica requiere una nueva ejecución del procedimiento actual con los archivos del ejercicio. Si se omite, regístrala como no realizada.",
+    "cues": [
+      "Relaciona la función con una tarea concreta.",
+      "Abre los archivos y muestra cómo pedir el resultado.",
+      "Explica el paso y espera su resultado real.",
+      "Abre el documento e indica por dónde empezar.",
+      "Haz una pausa y espera la respuesta del profesional.",
+      "Deja que el usuario formule la solicitud y guía su intento."
+    ]
+  }
+}
