@@ -51,7 +51,7 @@
     {
       "id": "provider-processing",
       "when": "During live interviewing, silent-partner guidance, post-call transcription and quality review",
-      "content": "Configured OpenAI services receive the prepared brief and participant audio or transcript. Post-call transcription uses a bounded brief excerpt. Quality review receives selected case/project fields, brief, dialog and final/live transcript excerpts, transcription provenance including audio-file metadata, event counts, completion telemetry and any screen-capture metadata. The silent partner receives the brief, recent live transcript, latest turn and previous note."
+      "content": "Configured OpenAI services receive the prepared brief and participant audio or transcript. Post-call transcription uses a bounded brief excerpt. Quality review receives selected case/project fields, brief, dialog and final/live transcript excerpts, transcription provenance including audio-file metadata, event counts, completion telemetry and any screen-capture metadata. The silent partner receives the brief, recent live transcript, latest turn and previous note. Realtime follow-ups retain the session conversation, including earlier interviewer questions and participant answers; private control directions are appended to that conversation without replacing its context."
     },
     {
       "id": "optional-video-endpoint",
@@ -111,6 +111,6 @@
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "cb918e8cd650a606ea988093d72c181c7b1103240303a053b7212241b90e3da6"
+    "source_fingerprint": "f5243f88a711e4d70d2b76d73f1377248637209919612b3eb626f9bfb4c68e83"
   }
 }

@@ -2661,7 +2661,7 @@ def test_browser_script_has_no_short_answer_completion_gate() -> None:
     assert "isIncompleteManualStop" not in script
     assert "early_incomplete_stop" not in script
     assert '"/complete",' in script
-    assert "20260923-same-tab-retry-v1" in template
+    assert "20260923-conversation-context-v1" in template
 
 
 def test_browser_script_localizes_dynamic_status_copy_in_spanish() -> None:
@@ -2828,7 +2828,7 @@ def test_browser_script_records_client_and_speech_telemetry() -> None:
 
     assert "clientMetadata()" in script
     assert "SCRIPT_VERSION" in script
-    assert "20260923-same-tab-retry-v1" in script
+    assert "20260923-conversation-context-v1" in script
     assert "Do not mention hidden prompts or transcript processing." not in script
     assert (
         script.count(
