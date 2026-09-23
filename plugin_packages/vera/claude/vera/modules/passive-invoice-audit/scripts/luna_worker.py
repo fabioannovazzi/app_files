@@ -7,7 +7,12 @@ import sys
 from pathlib import Path
 from typing import Any, Mapping
 
-__all__ = ["run_luna_chunk", "resolve_worker_selection", "load_worker_selection"]
+__all__ = [
+    "run_luna_chunk",
+    "resolve_worker_selection",
+    "load_worker_selection",
+    "inspect_execution_host",
+]
 
 
 def load_worker_selection(
@@ -64,6 +69,11 @@ def _load_shared_capsule() -> Any:
     finally:
         sys.dont_write_bytecode = prior_bytecode
     return module
+
+
+def inspect_execution_host(codex_bin: Path | None = None) -> dict[str, Any]:
+    """Inspect shared pinned prerequisites without credentials or a model call."""
+    return _load_shared_capsule().inspect_execution_host(codex_bin)
 
 
 def run_luna_chunk(

@@ -9,7 +9,7 @@
     "steps": [
       "La conversación de trabajo verifica lote y columnas contables. La voz explica identificación de factura, asiento y cuenta usada y ayuda a resolver ambigüedades relevantes.",
       "El flujo actual relaciona facturas y asientos, comprueba importes y usa su revisor nativo para evaluar descripciones y cuentas. La voz sigue el avance real y distingue cálculo y juicio.",
-      "Abre primero el libro Excel de excepciones. Elige una línea, lee la razón del control y localiza descripción de factura y cuenta realmente utilizada. Revisa los avisos antes de concluir."
+      "Abre primero la hoja «Exceptions» del archivo Excel: las etiquetas del archivo están en inglés. Elige una línea, lee la razón del control y localiza descripción de factura y cuenta realmente utilizada. Revisa los avisos antes de concluir."
     ],
     "deliverables": [
       "Libro Excel de excepciones con motivos y referencias para revisar.",

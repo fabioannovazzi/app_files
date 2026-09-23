@@ -39,6 +39,7 @@
     "vera/open-item-reconciliation",
     "vera/presenza-digitale-studio",
     "vera/previdenza-inps",
+    "vera/purchase-invoice-review",
     "vera/quesito-legale-fiscale",
     "vera/registro-imprese-sari",
     "vera/sales-plan",
@@ -47,10 +48,5 @@
     "vera/variance-analysis",
     "vera/vouching"
   ],
-  "retained": {
-    "vera/purchase-invoice-review": {
-      "course_sha256": "1ba782ae454688d5ce323d92dcd88d2c13b12ed7ae45c4ce180f63c0ee2dfda8",
-      "published_version": "0.1.257"
-    }
-  }
+  "retained": {}
 }

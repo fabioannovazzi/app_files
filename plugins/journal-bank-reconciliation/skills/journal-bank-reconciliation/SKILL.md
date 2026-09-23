@@ -279,7 +279,7 @@ python scripts/semantic_review.py run-worker <output-dir>/reconciliation \
   --client-engagement <client_engagement_path>
 ```
 
-The `journal_bank.luna_seatbelt_capsule.v1` launcher is qualified only for its
+The current `journal_bank.luna_seatbelt_capsule.v2` launcher is qualified only for its
 pinned macOS build, Codex CLI version and executable hash, Seatbelt executable
 hash, canary executable hash, and deny-default profile hash. It fails closed on
 another platform or when any pin changes. It creates a mode-`0700` ephemeral
@@ -288,7 +288,11 @@ parent, uses a read-only inner sandbox, ignores project rules, and disables the
 enumerated tool-capable features as defense in depth. Before launch it proves
 that the exact schema is readable and a nonce file in the real sibling
 directory is not; the qualified boundary also denied Codex's hidden
-`view_image` path access to an outside nonce image.
+`view_image` path access to an outside nonce image. Current-host qualification
+used a working permitted-image control and denied outside-image and symlink
+controls under the outer sandbox; diagnostic helper permissions are never
+production permissions. The `journal_bank.luna_seatbelt_capsule.v1` registry
+record remains retained unchanged; it does not qualify newer hosts.
 
 The outer boundary permits the child to read only the capsule and exact Codex
 runtime files. Codex authentication is readable and outbound network access is

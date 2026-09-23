@@ -94,12 +94,12 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/semantic_review.py",
-      "sha256": "90021ed737c2914538ae2aa616ac9032177c8c0e0315e5132ab311e936db632d"
+      "sha256": "1062f41d9dad9c2cb3e36bcd9f5e9f620ac88cfcd20ee8473eaa7ab12d2ece9e"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "39cb75e89d63cce7818fc9b89ecc9a6c9bb9aae485d06e5bcf8088b9bbf00282"
+      "sha256": "97f2a210ed309273dfdd4b34b4d115233147a3de6142f7d2bd5e32332d699bb0"
     },
     {
       "path": "modules/journal-bank-reconciliation/vendor/modules/__init__.py",

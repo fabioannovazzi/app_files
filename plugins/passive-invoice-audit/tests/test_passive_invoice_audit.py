@@ -2228,3 +2228,41 @@ def test_audit_preserves_explicit_zero_gross_in_comparison_and_workpaper(
         assert workbook["Ledger Orphans"].cell(2, 6).value == "0.00"
     finally:
         workbook.close()
+
+
+@pytest.mark.parametrize(
+    "status,expected", [("prerequisites_match", 0), ("unsupported", 1)]
+)
+def test_native_dependency_check_uses_the_shared_host_profile(
+    tmp_path, monkeypatch, status, expected
+):
+    cli = _load_cli("check_dependencies")
+    import cowork_worker
+
+    monkeypatch.setattr(cowork_worker, "configured_runtime", lambda: "codex-native")
+    monkeypatch.setattr(cli.importlib.util, "find_spec", lambda name: object())
+    monkeypatch.setattr(cli.shutil, "which", lambda name: str(tmp_path / "codex"))
+    inspected = []
+
+    def inspect(path):
+        inspected.append(path)
+        return {"status": status, "worker_executed": False}
+
+    monkeypatch.setattr(luna_worker, "inspect_execution_host", inspect)
+    assert cli.main([]) == expected
+    assert inspected == [tmp_path / "codex"]
+
+
+def test_native_dependency_check_reports_inspection_failure(tmp_path, monkeypatch):
+    cli = _load_cli("check_dependencies")
+    import cowork_worker
+
+    monkeypatch.setattr(cowork_worker, "configured_runtime", lambda: "codex-native")
+    monkeypatch.setattr(cli.importlib.util, "find_spec", lambda name: object())
+    monkeypatch.setattr(cli.shutil, "which", lambda name: str(tmp_path / "codex"))
+
+    def inspect(path):
+        raise ValueError("unsupported profile")
+
+    monkeypatch.setattr(luna_worker, "inspect_execution_host", inspect)
+    assert cli.main([]) == 1
