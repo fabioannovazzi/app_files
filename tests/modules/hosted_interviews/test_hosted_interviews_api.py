@@ -701,6 +701,25 @@ def test_spanish_ai_adoption_page_uses_spanish_participant_copy(
     assert response.context["language"] == "es"
 
 
+def test_prepared_participant_introduction_preserves_question_list_lines(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setenv("HOSTED_INTERVIEWS_ROOT", str(tmp_path))
+    introduction = "Prima di iniziare.\n\n1. Hai usato Vera?\n2. Quale attività?"
+    payload = api.PreparedInterviewRequest(
+        interview_campaign_id="preparation-test-v1",
+        participant_intro=introduction,
+        background_context="Private interviewer context must stay private.",
+    )
+
+    token, record = api.create_prepared_interview(payload)
+    response = _client().get(f"/case-notes/interview/{token}")
+
+    assert record["participant_intro"] == introduction
+    assert response.context["participant_intro"] == introduction
+    assert "Private interviewer context" not in response.context["participant_intro"]
+
+
 def test_public_page_is_simple_and_does_not_show_transcript(
     tmp_path: Path, monkeypatch
 ) -> None:
