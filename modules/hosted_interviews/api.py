@@ -1759,6 +1759,14 @@ def _classify_completion_status(
 
     if _has_media_upload_failure(completion, events):
         return INTERVIEW_STATUS_FAILED_TECHNICAL, "media_upload_failed"
+    telemetry = completion.get("telemetry", {})
+    if isinstance(telemetry, Mapping) and telemetry.get("completion_reason") in {
+        "connection_issue",
+        "pagehide",
+    }:
+        # An explicit interruption is a lifecycle fact, not a content-quality rule.
+        # Preserve partial evidence while keeping the original link retryable.
+        return INTERVIEW_STATUS_INCOMPLETE, "interrupted_with_saved_evidence"
     interviewee_words = _interviewee_word_count(dialog_turns, completion)
     has_failure = _has_connection_or_transcription_failure(
         completion,
@@ -2647,7 +2655,25 @@ def public_interview_status(token: str) -> JSONResponse:
 def public_interview_session(
     token: str, payload: InterviewSessionRequest
 ) -> JSONResponse:
-    """Create a server-side Realtime session for the public interview page."""
+    """Create a session without racing completion, transcription or a retry."""
+
+    try:
+        _load_record_for_token(token, allow_completed=False)
+    except HostedInterviewError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    with _try_post_completion_task_lock(_session_dir(token)) as acquired:
+        if not acquired:
+            raise HTTPException(
+                status_code=409,
+                detail="A previous attempt is still being saved. Try again shortly.",
+            )
+        return _public_interview_session_locked(token, payload)
+
+
+def _public_interview_session_locked(
+    token: str, payload: InterviewSessionRequest
+) -> JSONResponse:
+    """Start or replace an attempt under the same lock as evidence finalisation."""
 
     try:
         record = _load_record_for_token(token, allow_completed=False)
@@ -2723,17 +2749,95 @@ def public_interview_session(
 
 
 @public_router.post("/{token}/event")
-def public_interview_event(token: str, payload: InterviewEventRequest) -> JSONResponse:
+def public_interview_event(
+    token: str, payload: InterviewEventRequest, background_tasks: BackgroundTasks
+) -> JSONResponse:
     """Autosave a public interview transcript/status event."""
 
     try:
         _active_attempt_record(token, payload.attempt_id)
         _append_event(token, payload.event_type, _safe_payload(payload.payload))
+        if payload.event_type == "pagehide":
+            background_tasks.add_task(
+                _finish_departed_interview, token, payload.attempt_id
+            )
     except HostedInterviewError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)
         ) from exc
     return JSONResponse({"ok": True})
+
+
+async def _finish_departed_interview(token: str, attempt_id: str) -> None:
+    """Save received evidence after allowing in-flight browser uploads to settle."""
+
+    await asyncio.sleep(3)
+    tasks = await asyncio.to_thread(_save_departed_interview, token, attempt_id)
+    if tasks is not None:
+        await tasks()
+
+
+def _save_departed_interview(token: str, attempt_id: str) -> BackgroundTasks | None:
+    """Complete only the departed attempt; never overwrite a retry or manual save."""
+
+    session_dir = _session_dir(token)
+    with _try_post_completion_task_lock(session_dir) as acquired:
+        if not acquired:
+            return None
+        try:
+            record = _load_record_for_token(token)
+        except HostedInterviewError:
+            return None
+        if (
+            record.get("status") != INTERVIEW_STATUS_STARTED
+            or record.get("active_attempt_id") != attempt_id
+        ):
+            return None
+        events = _events_for_current_run(_read_events_for_session(session_dir), {})
+        departure = next(
+            (
+                event
+                for event in reversed(events)
+                if event.get("event_type") == "pagehide"
+            ),
+            None,
+        )
+        if departure is None:
+            return None
+        turns = _dialog_turns_for_session(events, {})
+        user_text = "\n".join(t["text"] for t in turns if t["speaker"] == "Interviewee")
+        assistant_text = "\n".join(
+            t["text"] for t in turns if t["speaker"] == "Interviewer"
+        )
+        elapsed = max(
+            0.0,
+            (
+                _parse_iso_timestamp(departure["captured_at"])
+                - _parse_iso_timestamp(record["started_at"])
+            ).total_seconds(),
+        )
+        tasks = BackgroundTasks()
+        _public_interview_complete_locked(
+            token,
+            CompleteInterviewRequest(
+                attempt_id=attempt_id,
+                user_transcript=user_text,
+                assistant_transcript=assistant_text,
+                elapsed_seconds=elapsed,
+                transcript_words=_text_word_count(user_text),
+                audio_chunks=len(_audio_files_for_session(session_dir)),
+                video_chunks=sum(
+                    1 for p in (session_dir / "video").glob("*") if p.is_file()
+                ),
+                telemetry={
+                    "completion_reason": "pagehide",
+                    "completed_from": "saved_server_events",
+                },
+            ),
+            tasks,
+            session_dir=session_dir,
+        )
+        return tasks
 
 
 @public_router.post("/{token}/audio-chunk")

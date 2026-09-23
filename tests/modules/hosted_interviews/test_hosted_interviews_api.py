@@ -2680,7 +2680,7 @@ def test_browser_script_has_no_short_answer_completion_gate() -> None:
     assert "isIncompleteManualStop" not in script
     assert "early_incomplete_stop" not in script
     assert '"/complete",' in script
-    assert "20260923-audio-recovery-v1" in template
+    assert "20260924-connection-recovery-v1" in template
 
 
 def test_browser_script_localizes_dynamic_status_copy_in_spanish() -> None:
@@ -2847,7 +2847,7 @@ def test_browser_script_records_client_and_speech_telemetry() -> None:
 
     assert "clientMetadata()" in script
     assert "SCRIPT_VERSION" in script
-    assert "20260923-audio-recovery-v1" in script
+    assert "20260924-connection-recovery-v1" in script
     assert "Do not mention hidden prompts or transcript processing." not in script
     assert (
         script.count(
@@ -3029,3 +3029,94 @@ def test_current_run_events_ignore_previous_reused_link_attempts() -> None:
         "Current question",
         "Current answer",
     ]
+
+
+@pytest.mark.parametrize("reason", ["connection_issue", "pagehide"])
+def test_interruption_preserves_substantive_answers_and_keeps_link_retryable(
+    tmp_path: Path, monkeypatch, reason: str
+) -> None:
+    token, record = _prepare_test_interview(tmp_path, monkeypatch)
+    attempt_id = _mark_started_attempt(tmp_path, record)
+    monkeypatch.setattr(api, "_send_completion_notification", lambda *_: False)
+    response = _client().post(
+        f"/case-notes/api/interviews/{token}/complete",
+        json={
+            "attempt_id": attempt_id,
+            "user_transcript": "I used archive organisation and bank reconciliation successfully.",
+            "telemetry": {"completion_reason": reason},
+        },
+    )
+    assert response.status_code == 200
+    assert response.json()["status"] == "incomplete"
+    completion = json.loads(
+        (tmp_path / "sessions" / record["token_hash"] / "completed.json").read_text()
+    )
+    assert "bank reconciliation" in completion["user_transcript"]
+    assert completion["completion_status_reason"] == "interrupted_with_saved_evidence"
+
+
+def test_page_departure_finalises_saved_events_without_browser_completion(
+    tmp_path: Path, monkeypatch
+) -> None:
+    token, record = _prepare_test_interview(tmp_path, monkeypatch)
+    attempt_id = _mark_started_attempt(tmp_path, record)
+    monkeypatch.setattr(api, "_send_completion_notification", lambda *_: False)
+    api._append_event(
+        token, "interviewee_turn", {"text": "I need reliable bank reconciliation."}
+    )
+    response = _client().post(
+        f"/case-notes/api/interviews/{token}/event",
+        json={"attempt_id": attempt_id, "event_type": "pagehide", "payload": {}},
+    )
+    assert response.status_code == 200
+    completion = json.loads(
+        (tmp_path / "sessions" / record["token_hash"] / "completed.json").read_text()
+    )
+    assert completion["user_transcript"] == "I need reliable bank reconciliation."
+    assert completion["completion_status"] == "incomplete"
+
+
+def test_departure_finaliser_cannot_overwrite_a_new_attempt(
+    tmp_path: Path, monkeypatch
+) -> None:
+    token, record = _prepare_test_interview(tmp_path, monkeypatch)
+    attempt_id = _mark_started_attempt(
+        tmp_path, record, attempt_id="departed-old-attempt"
+    )
+    finish = api._finish_departed_interview
+
+    async def replace_before_background_save(token: str, attempt_id: str) -> None:
+        _mark_started_attempt(tmp_path, record, attempt_id="replacement")
+        await finish(token, attempt_id)
+
+    monkeypatch.setattr(
+        api, "_finish_departed_interview", replace_before_background_save
+    )
+    response = _client().post(
+        f"/case-notes/api/interviews/{token}/event",
+        json={"attempt_id": attempt_id, "event_type": "pagehide", "payload": {}},
+    )
+    assert response.status_code == 200
+    assert not (
+        tmp_path / "sessions" / record["token_hash"] / "completed.json"
+    ).exists()
+
+
+def test_retry_cannot_replace_evidence_while_completion_worker_holds_lock(
+    tmp_path: Path, monkeypatch
+) -> None:
+    token, record = _prepare_test_interview(tmp_path, monkeypatch)
+    attempt_id = _mark_started_attempt(tmp_path, record)
+    session_dir = tmp_path / "sessions" / record["token_hash"]
+    with api._try_post_completion_task_lock(session_dir) as acquired:
+        assert acquired
+        response = _client().post(
+            f"/case-notes/api/interviews/{token}/session",
+            json={"sdp": "test-offer", "replace_attempt_id": attempt_id},
+        )
+    assert response.status_code == 409
+    assert "still being saved" in response.json()["detail"]
+    assert (
+        json.loads((session_dir / "interview.json").read_text())["active_attempt_id"]
+        == attempt_id
+    )
