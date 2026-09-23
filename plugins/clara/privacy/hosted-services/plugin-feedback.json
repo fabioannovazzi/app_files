@@ -49,6 +49,11 @@
       "id": "automatic-status-poll",
       "when": "On SessionStart when stored request receipts exist",
       "content": "Change-request identifier and opaque status token for every locally stored receipt selected by the checker, including resolved requests; no original case or request text is resent by this poll."
+    },
+    {
+      "id": "interview-recovery-events",
+      "when": "During the hosted microphone interview and when the participant leaves its page",
+      "content": "Connection recovery, browser playback-blocked and microphone mute/unmute events are stored by Mparanza with the active attempt. Page departure can finalise already received transcripts and audio for post-call processing. The microphone energy meter is computed and displayed locally in the browser; no meter samples are uploaded. Interrupted evidence remains stored and retryable under the existing interview retention arrangement."
     }
   ],
   "data_returned": [
@@ -97,6 +102,6 @@
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "05a313803511b17590876e106e3e5c4692836ea6359ac56db08cec0445a48504"
+    "source_fingerprint": "31602926fb4574bc7aa8e2711e9dea3f44b52be5e9db9d51c0c7b6873f85601e"
   }
 }

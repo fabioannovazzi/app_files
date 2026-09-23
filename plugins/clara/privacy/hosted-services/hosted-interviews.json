@@ -62,6 +62,11 @@
       "id": "same-tab-retry",
       "when": "When a participant retries after reloading the same browser tab",
       "content": "The previous attempt identifier from browser sessionStorage is sent to Mparanza. A matching active attempt may be replaced; its recorded evidence is archived. A missing or mismatched identifier cannot replace a non-stale active attempt."
+    },
+    {
+      "id": "interview-recovery-events",
+      "when": "During the hosted microphone interview and when the participant leaves its page",
+      "content": "Connection recovery, browser playback-blocked and microphone mute/unmute events are stored by Mparanza with the active attempt. Page departure can finalise already received transcripts and audio for post-call processing. The microphone energy meter is computed and displayed locally in the browser; no meter samples are uploaded. Interrupted evidence remains stored and retryable under the existing interview retention arrangement."
     }
   ],
   "data_returned": [
@@ -111,6 +116,6 @@
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "ad9bbf1cbaf0d5c7b51666096bcc8ae5c3eacbea94e61d58a705a4415aecc519"
+    "source_fingerprint": "c0e1eb565b7142dcc7ba763a8f26dfc9a54a524bff13f85070635fb43c6908ea"
   }
 }
