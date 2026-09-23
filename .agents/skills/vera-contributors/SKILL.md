@@ -11,7 +11,7 @@ Use this skill when adding, updating, or reviewing a card in Vera’s Contributo
 
 “Contributors” is the section title, not a card label. Each card may contain:
 
-1. The exact person’s LinkedIn profile photo, stored as the direct image URL observed on that profile.
+1. The exact person’s LinkedIn profile photo, saved as a site-hosted image asset.
 2. Full name.
 3. Professional profile and location.
 4. A contribution description, either person-specific or a shared approved description that accurately explains the contributor's role.
@@ -24,7 +24,7 @@ Do not remove an approved contribution description merely because it is shared a
 
 For the professional profile, open the exact LinkedIn URL supplied for the person and read the person’s own headline or current professional descriptor. Normalize it into concise Italian only when this preserves the stated profession and location. Do not infer a title, employer, seniority, or specialization from the name, photo, search results, or a different profile.
 
-For the photo, inspect the exact profile page and bind the direct `media.licdn.com` image URL to that same person’s card. Do not choose an image by search-result order, array position, generic alt text, or visual similarity alone. Keep the direct LinkedIn image URL in the card so a later LinkedIn image change can be reflected by updating that URL. Verify the URL, name, profile descriptor, and photo binding together before publication.
+For the photo, inspect the exact profile page and bind the displayed image to that same person’s card. Do not choose an image by search-result order, array position, generic alt text, or visual similarity alone. Save the verified image in the site’s contributor image directory and point the card to that local asset; do not embed a `media.licdn.com` URL in the page, because LinkedIn image URLs can expire or change and do not provide a reliable live-sync contract. A site-hosted copy is a snapshot, not an automatic mirror: when a contributor changes their LinkedIn photo, refresh the local asset from the verified profile and update it through the normal site deployment workflow. Keep the LinkedIn profile URL as a separate profile link. Verify the name, profile descriptor, photo asset, and profile binding together before publication.
 
 Keep the contribution description distinct from the professional profile. A shared approved contribution description may be reused verbatim for multiple contributors; do not delete it just because it is repeated.
 
@@ -34,4 +34,4 @@ When the user asks for proposed alternatives before contributor approval, draft 
 
 The website field is optional. Add it only when a public website is supplied or verified for the exact contributor. Verify that it resolves publicly and identifies the named contributor before publication. Keep it as a separate, clearly labelled link from LinkedIn. If no verified website exists, omit the field entirely; never add a placeholder or “pending” website entry.
 
-Sort cards by surname. When a LinkedIn field is unavailable, leave it explicitly pending or omit it; never publish invented content. Verify the rendered order and the exact person-to-photo, name-to-profile, contribution, LinkedIn, and website bindings before publication.
+Sort cards by surname. When a LinkedIn field is unavailable, leave it explicitly pending or omit it; never publish invented content. Verify that each site-hosted photo asset exists, then verify the rendered order and exact person-to-photo, name-to-profile, contribution, LinkedIn, and website bindings before publication.
