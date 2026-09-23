@@ -101,7 +101,8 @@ jobs:
 
   teaching-kits:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Native course executions and the full report regressions exceed 30 minutes.
+    timeout-minutes: 60
     env:
       PYTHONDONTWRITEBYTECODE: "1"
     steps:
