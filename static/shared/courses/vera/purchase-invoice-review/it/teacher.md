@@ -1,61 +1,71 @@
-# Fatture passive: collegare ogni documento alla registrazione
+# Rivedere le fatture di acquisto con la contabilità
 
-Percorso guidato di circa 6 minuti e mezzo. Avvio della voce, elaborazioni esterne ed esercizio facoltativo sono separati dal tempo della lezione.
+La spiegazione e una breve prova richiedono circa 5–8 minuti. I tempi di elaborazione e le tue domande possono allungare la sessione.
 
-Nella chat insegnante parli con la voce standard di Codex. Nella seconda chat, aperta accanto, guardi i file e il risultato. Le due chat restano abbinate; puoi interrompere, chiedere perché o rallentare in qualsiasi momento.
+Nella chat insegnante parli con la voce standard di Codex. Nella chat di lavoro, aperta nella finestra accanto, la funzione esegue il caso con i file preparati e mostra i risultati effettivi. L’insegnante segue quei risultati: puoi interrompere, fare domande e cambiare ritmo.
 
-Usa questi contenuti già pronti. Non riscrivere la lezione né inventare risultati. Parla in brevi turni, lascia il tempo di guardare e ascolta le risposte reali. Non leggere la soluzione prima del tentativo. I tempi includono osservazione e dialogo, non solo il testo parlato. Mostrare questi file non completa demo, pratica o comprensione nel registro locale. Il docente sceglie semanticamente il workflow adatto dal solo catalogo del proprio prodotto.
+Parti dal materiale preparato e insegna l’intero primo utilizzo. Scegli 3–4 funzioni pertinenti durante l’onboarding; nelle visite successive parti da ciò che l’utente vuole fare oggi. Adatta il ritmo e le spiegazioni. Crea esempi personalizzati quando aiutano, mantenendo lo stesso workflow e verificando i nuovi input. Leggi execution-request.json, usa il vero caso locale abbinato e collega ogni spiegazione ai risultati verificati della chat di lavoro. Non inventare risultati, risposte dell’utente o conferme di comprensione. Mostrare il kit non completa la lezione.
 
-## 1. Il tuo obiettivo · 45 s
+## 1. A cosa serve · 45 s
 
-Ascolta la richiesta. Collega il caso a un lavoro che fai già.
+Collega la funzione a un lavoro concreto del professionista.
 
-Il lotto fittizio contiene tre fatture passive: una collegata a una registrazione, una senza registrazione trovata e una con due candidati ambigui. Il periodo e la popolazione contabile sono esplicitamente delimitati.
+Imparare a confrontare un lotto di fatture con le registrazioni già effettuate e usare il foglio delle eccezioni per la revisione.
 
-Vera, controlla come questo lotto di fatture passive si collega alla contabilità effettiva.
+Officina Arco consegna tre fatture XML e le corrispondenti registrazioni di marzo. Lo studio vuole sapere quali punti richiedono un controllo.
 
-## 2. Da quali dati partiamo · 60 s
+Primo utilizzo della revisione delle fatture di acquisto italiane. Vera legge fatture e contabilità, esegue i confronti e valuta la coerenza dei conti; non modifica le registrazioni.
 
-Guarda i documenti nella chat accanto. Individua un dato utile e un'informazione mancante.
+## 2. I file e la richiesta · 60 s
 
-P1 è il lotto XML e G1 l'export delle registrazioni del periodo. Le conclusioni restano legate a entrambi i perimetri; nessuna registrazione viene inventata.
+Apri i file nella finestra di lavoro e mostra come chiedere il risultato.
 
-[["PA-101 · 1.220 EUR", "Una registrazione coerente", "Controllare natura e trattamento"], ["PA-102 · 610 EUR", "Nessun candidato nel periodo", "Recuperare o chiarire"], ["PA-103 · 244 EUR", "Due candidati", "Identità da risolvere"]]
+Apri ledger-march.csv, la cartella invoices e context-it.md. Servono fatture e contabilità effettiva dello stesso periodo. Vera controlla le colonne e prepara la mappatura da rivedere prima di avviare il lavoro.
 
-## 3. Come lavora il workflow · 75 s
+Vera, rivedi queste fatture di acquisto confrontandole con le registrazioni di marzo di Officina Arco. Mostrami nel foglio delle eccezioni ciò che devo controllare e perché.
 
-Segui i tre passaggi. Fermati sulla scelta che cambia il risultato.
+## 3. Eseguiamo il lavoro · 105 s
 
-Importa la popolazione XML e le registrazioni effettive; qualifica periodo, conti, identità e totale del lotto.
-Esegui il metodo corrente di abbinamento e revisione, comprese le capacità native richieste. Se una capacità manca, mantieni il passaggio pendente senza simularne l'esecuzione.
-Leggi copertura, ambiguità e proposte di revisione. Il professionista valuta natura della spesa e trattamento; le proposte non diventano registrazioni o approvazioni automatiche.
+Spiega il passaggio che sta avvenendo e attendi il suo risultato effettivo.
 
-## 4. Leggiamo il risultato · 90 s
+La chat di lavoro verifica il lotto e le colonne della contabilità. La voce spiega come identificare fattura, movimento e conto registrato; conferma con te le eventuali ambiguità.
 
-Apri l'esempio nella seconda chat. Collega ogni conclusione alla sua fonte.
+Il flusso corrente abbina fatture e movimenti, controlla gli importi e usa il proprio revisore nativo per valutare descrizioni e conti. La voce segue lo stato reale del lavoro e distingue calcoli e valutazioni.
 
-Un collegamento è disponibile, uno manca nel perimetro e uno è ambiguo. La revisione deve preservare queste differenze.
+Apri prima il foglio “Exceptions” nel file Excel: le etichette del file sono in inglese. Scegli una riga, leggi la ragione del controllo e ritrova descrizione della fattura e conto effettivamente usato. Rivedi le segnalazioni prima di trarre conclusioni.
 
-[["PA-101", "Collegamento disponibile", "Rivedere il trattamento sulla fonte"], ["PA-102", "Non trovato nel perimetro", "Controllare periodo ed export"], ["PA-103", "Ambiguo", "Risolvere i candidati con evidenza"]]
+Durante la lezione, la chat di lavoro esegue la funzione e produce il risultato. Se un passaggio non è disponibile, spieghiamo cosa manca e manteniamo la lezione incompleta.
 
-## 5. Il controllo che conta · 75 s
+## 4. Usiamo il risultato · 75 s
 
-Prima di aprire la risposta, spiega a voce cosa controlleresti.
+Apri il documento appena prodotto e mostra dove iniziare a leggerlo.
 
-Copertura dell'abbinamento e correttezza contabile sono verifiche diverse. Un'esecuzione tecnica riuscita non approva deducibilità o IVA.
+Foglio Excel delle eccezioni, con motivi e riferimenti da esaminare.
 
-PA-102 non compare: possiamo scrivere 'fattura non registrata' senza limiti?
+Riepilogo del lotto e traccia dei confronti per risalire alle fatture e alle registrazioni.
 
-Confronta il ragionamento: La conclusione sostenuta è 'registrazione non trovata nel perimetro esaminato'. Prima di una conclusione più ampia occorre verificare completezza e periodo dell'export.
+Controlla che il lotto sia completo e che ogni segnalazione sia sostenuta dai documenti. “Nessun problema rilevato” è un esito di screening, non una certificazione. Un cambio di conto o una correzione si decide e si esegue nel normale lavoro contabile.
 
-## 6. Proviamo insieme · 45 s
+## 5. Fermiamoci a verificare · 45 s
 
-Scegli se provare ora o conservare l'esempio per il prossimo incarico.
+Fai queste verifiche nel momento indicato, durante il lavoro.
 
-Aggiungi la registrazione di PA-102 e confronta la copertura della nuova esecuzione senza cancellare il risultato precedente.
+Prima dell’esecuzione, indica quali due insiemi di documenti stai confrontando.
 
-Seleziona lotto passivo e registrazioni effettive del periodo; verifica le capacità native richieste dal workflow installato.
+Sul risultato, spiega una segnalazione usando fattura e registrazione.
 
-Questo è un esempio didattico preparato, non la ricevuta di una nuova esecuzione. Le fonti e le decisioni sono fittizie; nessuna approvazione del professionista è implicita. Per lavorare sui tuoi file, il workflow corrente esegue i propri controlli e conserva i risultati effettivi.
+Queste pause servono a capire come usare la funzione. Le risposte non sono un esame di dettaglio tecnico.
+
+## 6. Ora prova tu · 60 s
+
+Lascia formulare la richiesta all’utente e accompagna la sua prova.
+
+Ripeti con ledger-march-april.csv e le quattro fatture della prova. Conserva il primo risultato. Controlla il nuovo numero di fatture e una segnalazione, chiedendo a Vera aiuto solo dove serve.
+
+Sai fornire entrambi gli input, avviare la revisione, trovare le eccezioni e verificarne le ragioni senza confondere screening e approvazione.
+
+Chiedi a Vera di rivedere le fatture di acquisto di un cliente per un periodo preciso e fornisci anche la contabilità registrata. Rivedi mappatura, copertura e segnalazioni nel fascicolo corretto.
+
+Il kit contiene file fittizi e una traccia preparata. I risultati della dimostrazione e della prova provengono da nuove esecuzioni della funzione corrente.
 
 La biblioteca, il profilo e i progressi della lezione restano sul computer. Non vengono inviati a Mparanza. La voce e i contenuti letti in chat sono elaborati dall'account OpenAI: salvare in locale non significa inferenza offline.

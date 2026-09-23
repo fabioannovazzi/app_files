@@ -9,7 +9,7 @@
     "steps": [
       "La conversation de travail vérifie le lot et les colonnes comptables. La voix explique identification de facture, écriture et compte utilisé, puis aide à résoudre les ambiguïtés importantes.",
       "Le flux courant rapproche factures et écritures, contrôle les montants et utilise son réviseur natif pour évaluer descriptions et comptes. La voix suit l’avancement réel et distingue calcul et jugement.",
-      "Ouvrez d’abord le classeur Excel des exceptions. Choisissez une ligne, lisez le motif du contrôle et retrouvez description de facture et compte utilisé. Revoyez les constats avant toute conclusion."
+      "Ouvrez d’abord la feuille « Exceptions » du fichier Excel : les libellés du fichier sont en anglais. Choisissez une ligne, lisez le motif du contrôle et retrouvez description de facture et compte utilisé. Revoyez les constats avant toute conclusion."
     ],
     "deliverables": [
       "Classeur Excel des exceptions avec motifs et références à examiner.",

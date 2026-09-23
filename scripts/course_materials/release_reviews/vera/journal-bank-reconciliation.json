@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "journal-bank-reconciliation",
-  "course_sha256": "c7e389447a1e29050daa3902a3b93599c7e239d9426b6b68385bd4c982a29239",
+  "course_sha256": "85d95f163e029c2297515178018e13ea5d44480d553858e0a872115f75ca73f9",
   "reviewer": "Codex: source, first-use lesson, native workbook and localized review-note inspection",
   "reviewed_at": "2026-09-14T16:32:17.532432+00:00",
   "review_scope": "Prepared fictional month-end comparison only. Current CLI runs and source/value replay are verified. Worksheet headers and selected rows were visually inspected in all seven sheets of both unique workbooks; the five locale editions are byte-identical per phase. No learner, live voice, tax or professional approval is attested.",
@@ -301,5 +301,12 @@
     "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
     "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
+  },
+  "current_host_freshness_review": {
+    "reviewer": "Codex",
+    "reviewed_at": "2026-09-23T16:08:46.062542+00:00",
+    "previous_course_sha256": "c7e389447a1e29050daa3902a3b93599c7e239d9426b6b68385bd4c982a29239",
+    "source_review": "Only the shared worker host profile and its skill documentation changed for this course. The production sandbox remains identical. All ten current bank lesson executions passed; every workbook and localized review-note hash equals the retained reviewed artifact. Lesson content, source files, counts and outputs are unchanged. The new native worker qualification is recorded separately; the exact-reference teaching case does not exercise residual semantic resolution.",
+    "execution_evidence_sha256": "dc24192582fedc8b44c8b4866b41b0d859df1e390c3822e56a1fe4ef25abfe24"
   }
 }

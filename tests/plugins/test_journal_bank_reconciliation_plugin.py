@@ -1170,9 +1170,9 @@ def _write_semantic_worker_result(
         },
         "requested_worker_configuration": graph["requested_worker_configuration"],
         "boundary": {
-            "contract_id": "journal_bank.luna_seatbelt_capsule.v1",
+            "contract_id": semantic_review.WORKER_BOUNDARY_CONTRACT_ID,
             "platform": "Darwin",
-            "darwin_build": "25F84",
+            "darwin_build": semantic_review.PINNED_DARWIN_BUILD,
             "profile_sha256": semantic_review.PINNED_SEATBELT_PROFILE_SHA256,
             "codex_path": "/Applications/ChatGPT.app/Contents/Resources/codex",
             "codex_sha256": semantic_review.PINNED_CODEX_SHA256,
@@ -1191,7 +1191,7 @@ def _write_semantic_worker_result(
             "installation_id_preexisting_and_unchanged": True,
             "outbound_network_allowed": True,
             "filesystem_scope": "capsule_plus_exact_codex_runtime_files",
-            "qualification_basis": "pinned_hidden_view_image_outside_nonce_denied",
+            "qualification_basis": semantic_review._resolve_host_profile().qualification_basis,
         },
         "process": {
             "return_code": 0,
@@ -8467,7 +8467,7 @@ def test_semantic_prepare_builds_bounded_hash_bound_advisory_graph(
         "reasoning_effort": "max",
         "ephemeral": True,
         "inner_sandbox": "read-only",
-        "outer_filesystem_boundary": "journal_bank.luna_seatbelt_capsule.v1",
+        "outer_filesystem_boundary": semantic_review.WORKER_BOUNDARY_CONTRACT_ID,
         "project_rules_loaded": False,
         "global_instructions_required_empty": True,
         "working_directory": "ephemeral_worker_capsule",
@@ -9006,7 +9006,7 @@ def test_semantic_validate_applies_certainty_funnel_without_changing_strict_ledg
         "filesystem_boundary_receipt_validated": True,
         "jsonl_visibility_complete": False,
         "tool_use_absence_observed": False,
-        "trust_boundary": "journal_bank.luna_seatbelt_capsule.v1",
+        "trust_boundary": semantic_review.WORKER_BOUNDARY_CONTRACT_ID,
     }
     assert worker_run["jsonl_observation"] == {
         "visibility_complete": False,
@@ -13013,7 +13013,7 @@ def test_run_localizes_missing_evidence_requests_on_both_sides(
     )
 
 
-def test_host_profile_registry_is_single_immutable_legacy_envelope() -> None:
+def test_host_profile_registry_retains_immutable_legacy_envelope() -> None:
     """Retained authority is not a mutable runtime registration mechanism."""
     from dataclasses import FrozenInstanceError
 
@@ -13026,7 +13026,10 @@ def test_host_profile_registry_is_single_immutable_legacy_envelope() -> None:
     with pytest.raises(TypeError):
         profiles["unqualified.profile.v2"] = profile
 
-    assert tuple(profiles) == ("journal_bank.luna_seatbelt_capsule.v1",)
+    assert tuple(profiles) == (
+        "journal_bank.luna_seatbelt_capsule.v1",
+        "journal_bank.luna_seatbelt_capsule.v2",
+    )
     assert profile.provenance == "retained_legacy"
     assert profile.darwin_build == "25F84"
     assert profile.codex_version == "codex-cli 0.148.0-alpha.21"
@@ -13107,3 +13110,22 @@ def test_semantic_validate_rejects_rehashed_profile_capability_argv_tamper(
             response,
             events,
         )
+
+
+def test_current_host_profile_preserves_the_production_security_envelope() -> None:
+    """Diagnostic helper permissions never enter the normal worker boundary."""
+    semantic = load_semantic_review()
+    current = semantic._resolve_host_profile()
+    legacy = semantic._resolve_host_profile("journal_bank.luna_seatbelt_capsule.v1")
+    assert current.contract_id == "journal_bank.luna_seatbelt_capsule.v2"
+    assert current.provenance == "native_qualified"
+    assert current.darwin_build == "26A428"
+    assert current.codex_version == "codex-cli 0.155.0-alpha.16"
+    assert current.seatbelt_sha256 == legacy.seatbelt_sha256
+    assert current.disabled_features == legacy.disabled_features
+    assert semantic._redacted_worker_argv(
+        host_profile=current
+    ) == semantic._redacted_worker_argv(host_profile=legacy)
+    assert "process-fork" not in semantic.SEATBELT_PROFILE
+    assert "codex-code-mode-host" not in semantic.SEATBELT_PROFILE
+    assert "danger-full-access" not in semantic._redacted_worker_argv()

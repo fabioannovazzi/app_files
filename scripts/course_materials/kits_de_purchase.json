@@ -9,7 +9,7 @@
     "steps": [
       "Der Arbeitschat prüft Paket und Buchhaltungsspalten. Die Stimme erklärt Rechnungskennung, Buchung und verwendetes Konto und hilft, wesentliche Unklarheiten zu lösen.",
       "Der aktuelle Ablauf ordnet Rechnungen Buchungen zu, kontrolliert Beträge und nutzt seinen nativen Prüfer für Beschreibungen und Konten. Die Stimme folgt dem tatsächlichen Fortschritt und unterscheidet Berechnung und Beurteilung.",
-      "Öffnen Sie zuerst die Excel-Ausnahmeliste. Wählen Sie eine Zeile, lesen Sie den Prüfgrund und finden Sie Rechnungsbeschreibung und tatsächlich verwendetes Konto. Prüfen Sie Hinweise vor einer Schlussfolgerung."
+      "Öffnen Sie zuerst das Tabellenblatt „Exceptions“ in der Excel-Datei; die Beschriftungen der Datei sind auf Englisch. Wählen Sie eine Zeile, lesen Sie den Prüfgrund und finden Sie Rechnungsbeschreibung und tatsächlich verwendetes Konto. Prüfen Sie Hinweise vor einer Schlussfolgerung."
     ],
     "deliverables": [
       "Excel-Ausnahmeliste mit Gründen und Quellenverweisen zur Prüfung.",

@@ -187,6 +187,7 @@ jobs:
           tests/plugins/test_teaching_clara_budget_execution.py
           tests/plugins/test_cowork_teaching.py
           tests/plugins/test_teaching_browser_execution.py
+          tests/plugins/test_teaching_purchase_execution.py
           tests/plugins/test_matter_review_presentation.py
           tests/plugins/test_vera_local_onboarding.py
           --cov=plugins/_shared/vendor/modules/courseware --cov-fail-under=80
@@ -245,8 +246,8 @@ jobs:
           python -m isort --check-only scripts/course_materials/build_attribute_inputs.py tests/plugins/test_teaching_attribute_execution.py
           python -m mypy --follow-imports=skip scripts/course_materials/build_attribute_inputs.py
           python -m bandit -q scripts/course_materials/build_attribute_inputs.py
-          python -m black --check tests/plugins/test_teaching_bandi_execution.py
-          python -m isort --check-only tests/plugins/test_teaching_bandi_execution.py
+          python -m black --check tests/plugins/test_teaching_bandi_execution.py tests/plugins/test_teaching_purchase_execution.py
+          python -m isort --check-only tests/plugins/test_teaching_bandi_execution.py tests/plugins/test_teaching_purchase_execution.py
           python -m black --check plugins/bandi-agevolazioni/scripts/dossier_report.py plugins/bandi-agevolazioni/scripts/package_dossier.py tests/plugins/test_bandi_dossier_report.py
           python -m isort --check-only plugins/bandi-agevolazioni/scripts/dossier_report.py plugins/bandi-agevolazioni/scripts/package_dossier.py tests/plugins/test_bandi_dossier_report.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/bandi-agevolazioni/scripts/dossier_report.py plugins/bandi-agevolazioni/scripts/package_dossier.py

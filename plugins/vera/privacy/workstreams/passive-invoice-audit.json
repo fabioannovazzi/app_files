@@ -85,12 +85,16 @@
     {
       "id": "cowork-host-recorded-handoff",
       "control": "The packaged Cowork agent requests Haiku with Read access and instructions limited to the exact request. The engine rejects symlink handoff files, wrong request/response digests, missing invocation identity, invalid result types or incomplete invoice coverage. These checks do not independently authenticate the host or enforce an OS read sandbox. The workflow does not invent usage, timing, model identity or review completion."
+    },
+    {
+      "id": "current-host-profile-qualification",
+      "control": "The fixed source registry includes the reviewed macOS 26A428 / Codex CLI 0.155.0-alpha.16 profile. Production OS sandbox text, disabled tools, read-only CLI arguments and allowed data paths are unchanged. Qualification retains an actual normal launch and positive/negative image controls under a separately documented diagnostic envelope; those diagnostic helper/process permissions are not deployed. Dependency inspection reads this same registry and is not itself launch qualification. Unknown or changed hosts fail closed. No model payload or external destination is added."
     }
   ],
   "review": {
     "reviewed_at": "2026-09-12",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "fb82c2b191f5e8442ddd88bad3ae037e65167038d3310a047ef220b738cf968f"
+    "source_fingerprint": "b2a1e252d2acf344fdb4bc6a8b4f49f5792d8c79af79acd294b3ff1cbd986595"
   }
 }
