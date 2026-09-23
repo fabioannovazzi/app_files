@@ -1,0 +1,401 @@
+{
+  "authority": {
+    "authentication": "operator_only",
+    "consequential_actions": "confirm_at_action_time",
+    "operator_authorized": true,
+    "secret_policy": "never_request_read_store"
+  },
+  "capability_id": "teaching-package",
+  "completion": {
+    "required_outputs": [
+      "confirmation"
+    ],
+    "terminal_milestones": [
+      "prepare-package"
+    ]
+  },
+  "entry_milestone": "prepare-package",
+  "inputs": [
+    {
+      "enum_values": [],
+      "name": "client-code",
+      "purpose": "Fictional exercise client code",
+      "required": true,
+      "sensitivity": "non_sensitive",
+      "type": "text"
+    },
+    {
+      "enum_values": [
+        "Invoice",
+        "Credit note"
+      ],
+      "name": "document-type",
+      "purpose": "Fictional document type",
+      "required": true,
+      "sensitivity": "non_sensitive",
+      "type": "enum"
+    },
+    {
+      "enum_values": [],
+      "name": "reviewed",
+      "purpose": "Simulated review checkbox",
+      "required": true,
+      "sensitivity": "non_sensitive",
+      "type": "boolean"
+    }
+  ],
+  "milestones": [
+    {
+      "actions": [
+        {
+          "confirmation": "none",
+          "effect": "read_only",
+          "extract": null,
+          "id": "open-fixture",
+          "input_ref": null,
+          "intent": "open fixture",
+          "key": null,
+          "locator_candidates": [],
+          "operation": "goto",
+          "output_ref": null,
+          "path": "/",
+          "postcondition": {
+            "comparator": null,
+            "expected": null,
+            "kind": "locator_visible",
+            "locator_candidates": [
+              {
+                "exact": true,
+                "kind": "label",
+                "role": null,
+                "value": "Client code"
+              }
+            ],
+            "output_ref": null,
+            "timeout_ms": 10000,
+            "value": null
+          },
+          "target_origin": "http://127.0.0.1:57951",
+          "timeout_ms": 10000
+        },
+        {
+          "confirmation": "none",
+          "effect": "reversible",
+          "extract": null,
+          "id": "fill-client",
+          "input_ref": "client-code",
+          "intent": "fill client",
+          "key": null,
+          "locator_candidates": [
+            {
+              "exact": true,
+              "kind": "label",
+              "role": null,
+              "value": "Client code"
+            }
+          ],
+          "operation": "fill",
+          "output_ref": null,
+          "path": null,
+          "postcondition": {
+            "comparator": null,
+            "expected": null,
+            "kind": "locator_visible",
+            "locator_candidates": [
+              {
+                "exact": true,
+                "kind": "label",
+                "role": null,
+                "value": "Client code"
+              }
+            ],
+            "output_ref": null,
+            "timeout_ms": 10000,
+            "value": null
+          },
+          "target_origin": null,
+          "timeout_ms": 10000
+        },
+        {
+          "confirmation": "none",
+          "effect": "reversible",
+          "extract": null,
+          "id": "confirm-client",
+          "input_ref": null,
+          "intent": "confirm client",
+          "key": "Enter",
+          "locator_candidates": [
+            {
+              "exact": true,
+              "kind": "label",
+              "role": null,
+              "value": "Client code"
+            }
+          ],
+          "operation": "press",
+          "output_ref": null,
+          "path": null,
+          "postcondition": {
+            "comparator": null,
+            "expected": null,
+            "kind": "locator_visible",
+            "locator_candidates": [
+              {
+                "exact": true,
+                "kind": "text",
+                "role": null,
+                "value": "Client code accepted"
+              }
+            ],
+            "output_ref": null,
+            "timeout_ms": 10000,
+            "value": null
+          },
+          "target_origin": null,
+          "timeout_ms": 10000
+        },
+        {
+          "confirmation": "none",
+          "effect": "reversible",
+          "extract": null,
+          "id": "select-document",
+          "input_ref": "document-type",
+          "intent": "select document",
+          "key": null,
+          "locator_candidates": [
+            {
+              "exact": true,
+              "kind": "label",
+              "role": null,
+              "value": "Document type"
+            }
+          ],
+          "operation": "select",
+          "output_ref": null,
+          "path": null,
+          "postcondition": {
+            "comparator": null,
+            "expected": null,
+            "kind": "locator_visible",
+            "locator_candidates": [
+              {
+                "exact": true,
+                "kind": "label",
+                "role": null,
+                "value": "Document type"
+              }
+            ],
+            "output_ref": null,
+            "timeout_ms": 10000,
+            "value": null
+          },
+          "target_origin": null,
+          "timeout_ms": 10000
+        },
+        {
+          "confirmation": "none",
+          "effect": "reversible",
+          "extract": null,
+          "id": "review-simulation",
+          "input_ref": "reviewed",
+          "intent": "review simulation",
+          "key": null,
+          "locator_candidates": [
+            {
+              "exact": true,
+              "kind": "label",
+              "role": null,
+              "value": "Reviewed"
+            }
+          ],
+          "operation": "set_checked",
+          "output_ref": null,
+          "path": null,
+          "postcondition": {
+            "comparator": null,
+            "expected": null,
+            "kind": "locator_visible",
+            "locator_candidates": [
+              {
+                "exact": true,
+                "kind": "label",
+                "role": null,
+                "value": "Reviewed"
+              }
+            ],
+            "output_ref": null,
+            "timeout_ms": 10000,
+            "value": null
+          },
+          "target_origin": null,
+          "timeout_ms": 10000
+        },
+        {
+          "confirmation": "none",
+          "effect": "reversible",
+          "extract": null,
+          "id": "prepare-package",
+          "input_ref": null,
+          "intent": "prepare package",
+          "key": null,
+          "locator_candidates": [
+            {
+              "exact": true,
+              "kind": "role",
+              "role": "button",
+              "value": "Prepare package"
+            }
+          ],
+          "operation": "click",
+          "output_ref": null,
+          "path": null,
+          "postcondition": {
+            "comparator": null,
+            "expected": null,
+            "kind": "locator_visible",
+            "locator_candidates": [
+              {
+                "exact": true,
+                "kind": "text",
+                "role": null,
+                "value": "Package ready: {{document-type}}; reviewed yes"
+              }
+            ],
+            "output_ref": null,
+            "timeout_ms": 10000,
+            "value": null
+          },
+          "target_origin": null,
+          "timeout_ms": 10000
+        },
+        {
+          "confirmation": "none",
+          "effect": "read_only",
+          "extract": {
+            "dedupe_by": [],
+            "empty_allowed": false,
+            "fields": [],
+            "limit_input_ref": null,
+            "max_items": 1,
+            "mode": "text"
+          },
+          "id": "read-confirmation",
+          "input_ref": null,
+          "intent": "read confirmation",
+          "key": null,
+          "locator_candidates": [
+            {
+              "exact": true,
+              "kind": "text",
+              "role": null,
+              "value": "Package ready: {{document-type}}; reviewed yes"
+            }
+          ],
+          "operation": "extract",
+          "output_ref": "confirmation",
+          "path": null,
+          "postcondition": {
+            "comparator": null,
+            "expected": null,
+            "kind": "output_nonempty",
+            "locator_candidates": [],
+            "output_ref": "confirmation",
+            "timeout_ms": 10000,
+            "value": null
+          },
+          "target_origin": null,
+          "timeout_ms": 10000
+        }
+      ],
+      "id": "prepare-package",
+      "intent": "Prepare the selected fictional document package and verify its visible ready confirmation.",
+      "preconditions": [
+        "Supplied local fixture is running; only fictional inputs are used"
+      ],
+      "transitions": [
+        {
+          "next_milestone": null,
+          "terminal": true,
+          "when": {
+            "comparator": null,
+            "expected": null,
+            "kind": "output_nonempty",
+            "locator_candidates": [],
+            "output_ref": "confirmation",
+            "timeout_ms": 10000,
+            "value": null
+          }
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "delivery": "model_and_artifact",
+      "description": "Visible fictional package confirmation",
+      "fields": [],
+      "name": "confirmation",
+      "sensitivity": "non_sensitive",
+      "type": "summary"
+    }
+  ],
+  "privacy": {
+    "model_data": [
+      "Synthetic values, counts, action outcomes, and receipt hashes"
+    ],
+    "portable_artifact_excludes": [
+      "credentials",
+      "cookies",
+      "browser_storage",
+      "session_urls",
+      "page_html",
+      "screenshots",
+      "network_bodies",
+      "downloaded_file_bytes",
+      "observed_private_values"
+    ],
+    "private_evidence_retained": false
+  },
+  "process": {
+    "name": "Prepare a fictional document package",
+    "objective": "Prepare the selected fictional document package and verify its visible ready confirmation.",
+    "out_of_scope": [
+      "Real portals",
+      "Client data",
+      "Sending documents",
+      "Downloads"
+    ]
+  },
+  "provenance": {
+    "discovery_approval_id": "synthetic-regression-fixture-not-an-operator-approval",
+    "discovery_approved_at": "2026-09-23T00:00:00Z",
+    "discovery_record_sha256": "d92542dcfd7350cc54d25cbbbd531bdbe7d79fd5b6f213debdeed788f7ffa1fd",
+    "portable_bundle_contains_private_evidence": false,
+    "source": "authorized_live_discovery"
+  },
+  "runtime": {
+    "browser": "existing_chrome",
+    "controller": "chrome_extension",
+    "mechanical_driver": "playwright",
+    "os_fallback": "operator_handoff_on_native_gap",
+    "semantic_driver": "model"
+  },
+  "schema_version": "browser-capability/v2",
+  "site": {
+    "allowed_origins": [
+      "http://127.0.0.1:57951"
+    ],
+    "name": "Vera browser acceptance fixture",
+    "start_url": "http://127.0.0.1:57951/"
+  },
+  "status": "discovered",
+  "validation": {
+    "environment_scope": "not_validated",
+    "execution_contract_sha256": null,
+    "known_limits": [
+      "Authored regression fixture derived from the reviewed local lesson. Test authorization is synthetic and cannot authorize a learner session or real website. Headless regression receipts are unverified, never connected Chrome qualification."
+    ],
+    "receipts": []
+  },
+  "version": "0.1.0"
+}

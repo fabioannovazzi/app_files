@@ -1,0 +1,646 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "bandi-agevolazioni",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "selected_simulated_call_to_reviewable_application_dossier"
+  },
+  "sources": [
+    {
+      "path": "modules/bandi-agevolazioni/assets/dossier-labels.json",
+      "sha256": "e2520b36030f8810bab15e0a44bb82264b269fa3d2fa2fe10fbc58cc2f6df080"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/assets/icon.svg",
+      "sha256": "c7d7f2ccea0928e164523629e59c051f4a756637f1c54c1cc407e2d9852a5427"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/requirements.txt",
+      "sha256": "7e0273143c31047b73b19285da545908faf637d9ee970c3b21d536940355f544"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/schemas/application_workbench.schema.json",
+      "sha256": "34009ea04a75d93c004cd56c393856e309486151f38b47d87a2fc97607601664"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/schemas/case_intake.schema.json",
+      "sha256": "2dc8b0f94c5eed14724b1710b798a8c2a9f34c6b3ec039349bd7bf1ae64cc3ee"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/schemas/intelligence_register.schema.json",
+      "sha256": "9b3d0f7f232b6d0a1fa5f63d1d081917bcceccbac015d7662b76c4b3a55d26e7"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/schemas/opportunity_handoff.schema.json",
+      "sha256": "4f071e9f53bc08ad25cf90339096e1a8243666c4099fd70d80574d6b1b0a70f8"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/schemas/opportunity_radar.schema.json",
+      "sha256": "2ca02d9928336baa048bce408689a535b5894f1e2c72bc2e59003ca19dbdc0aa"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/schemas/review_log.schema.json",
+      "sha256": "cb416f6b9c50f97e53b7dffb84bb74898295d0721d0742e7a8efcd575a01b62c"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/schemas/run_state.schema.json",
+      "sha256": "7a5014ec410606f93789b17cbed2cba940dc1eefe2d6fce95c69e4953519dd6d"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/schemas/source_register.schema.json",
+      "sha256": "c17fa31da08a603e56a50a723e564689f9ab72c2f3fcdd4dabfeb1e68b85c86d"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/case_core.py",
+      "sha256": "9b7641848303a418138355394fac0e15c8a43f98e97bcd0f316acc20ac403f5d"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/check_dependencies.py",
+      "sha256": "0085587722513664dbc4862702c0ccfdd71cfdb6fe9dd4554ddf6f2538348acb"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/deterministic_rules.py",
+      "sha256": "8182a888c1ac1300d43e17e0f7ff18df0c68b7df5481c4a8efc555ddbf4ebbc7"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/dossier_report.py",
+      "sha256": "9d1a2f3429a82eba3d28af530c1c9b04f50582d1ead7a780c029b66f81223aa7"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/evaluate_intelligence.py",
+      "sha256": "656df2914d94cd7761697c0fa4501a5244ea2eb7c64d311bce598d28bbe466c0"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/initialize_case.py",
+      "sha256": "86b95366a38e76349689ace1a49398bfa31c3bc6cf67e05b9977fa9337ee7264"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/intelligence_contract.py",
+      "sha256": "d375820ed2c8c1faa5a682d59e0c150cf25a4788d7b003f20d931bda13b91092"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/intelligence_workflow.py",
+      "sha256": "074fccbe378ce039e35452d97cf2a0a23ae7e9a241575d2c1bf6fa79592f7513"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/link_sources.py",
+      "sha256": "27e20cf001d23308298238e19c6287963ddc13a7ef87ebca8e3c789b538a8594"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/opportunity_radar.py",
+      "sha256": "8a91f28ab7a7173216c2e60991ed46542887f2958b7aab4ecc094ee1657d749c"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/package_dossier.py",
+      "sha256": "a9e901d03f24b9e3d6412a54673a4208e53ac5790a883cab0abdc99e3fc776f2"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/record_review.py",
+      "sha256": "e6b3630db6ed69d8b1d644f4b7622e8aa21ae4e47035126026a0224e9007ff9c"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/register_source.py",
+      "sha256": "8bb39b98807489202ae59061cddcde03588363b13697782a83a931b76b0a2d86"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/schema_validation.py",
+      "sha256": "962b9ef627c2c3f4116396c7fa001ceac2e303412c4bbde57c1f89ed54582ed9"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/validate_application.py",
+      "sha256": "9c7f2c8f8411d28f37d0074913b23faed069e605aae0a9e1d88e67e319fe0fd1"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md",
+      "sha256": "d885801265d8e531d4f06d597ca4448191308e78bd31742ee605bbbe89c8d316"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/agents/openai.yaml",
+      "sha256": "8c6e48f9f0391adad001d0c6fb0a712de15195c585810e54db7238198026a532"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/acceptance-matrix.md",
+      "sha256": "80735f99f9a14500117cb7d60df5c4e1d6763557acb672a6708f148d3894937e"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/implementation-status.md",
+      "sha256": "ef8b3abfdcca7d129be551f609d0cafe2bee1a9f5025848d316375f62685d229"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/institutional-discovery.md",
+      "sha256": "2ec6a9c164304e4967bf07ef60d5258aaf8797eeb4a4841fe6bf32c7b9224dff"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/opportunity-radar.md",
+      "sha256": "53058f5a23a32954cc4e2483537fe6cb31621d13324861cb6e9c6ccbb9a5c723"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/portal-preparation.md",
+      "sha256": "5c0fedaa7e2eb81e96449a0e0be31b3bba3167b290cc7d4df3c65c294531cec0"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/product-thesis.md",
+      "sha256": "eb32e201d4b73bcf58a8ab3263d78b2dbc516d580050f99a51a482cf27ccca8a"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/source-first-discovery.md",
+      "sha256": "82b3b7cbe978d638a5020ad33d3bac493cad89485ce61856285a76bb795e9d21"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/workflow-method.md",
+      "sha256": "5e07f71b6475540996a7d4d263b0c7de05caaa7bb165e56f160f4278723a0d21"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/bandi-agevolazioni/SKILL.md",
+      "sha256": "a51156df929f2c03b1d26cbbc4d96c293db16b7b0d707cebdce60a44c79a63db"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/avviso-it.md",
+      "sha256": "5b86363147cca5f34588d35021696ab67bfc869d52bf841899484fea131e352e",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/progetto-it.md",
+      "sha256": "a91a38aed4e0839fb9ce27eb7dedfcd606ecb0f8a243ddd299a3b56c22b78858",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/preventivo-it.csv",
+      "sha256": "f135dbe1eaa0b071a37fa8ebfe233388859d64918b1fca3bfe62ff87ab3917ec",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/avviso-it.md",
+      "sha256": "5b86363147cca5f34588d35021696ab67bfc869d52bf841899484fea131e352e",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/progetto-it.md",
+      "sha256": "a91a38aed4e0839fb9ce27eb7dedfcd606ecb0f8a243ddd299a3b56c22b78858",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/preventivo-aggiornato-it.csv",
+      "sha256": "814116f13e22eb010f073ea523e1c1cfba880a61f761a74dfceaf3245d648807",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/avviso-en.md",
+      "sha256": "1f119cb48ff6408c1ddfea4485456dcd333672e341abf9d1e6f5d39e2e494d30",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/progetto-en.md",
+      "sha256": "a2c3eab2b8f540016e7127b35d5f7eca17bae039c0349ec4cd5a8fc6a898d1ae",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/preventivo-en.csv",
+      "sha256": "44c35b94df99f0aa96fdc3c5464042d9995349844ef7c401e57edc67b99842be",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/avviso-en.md",
+      "sha256": "1f119cb48ff6408c1ddfea4485456dcd333672e341abf9d1e6f5d39e2e494d30",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/progetto-en.md",
+      "sha256": "a2c3eab2b8f540016e7127b35d5f7eca17bae039c0349ec4cd5a8fc6a898d1ae",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/preventivo-aggiornato-en.csv",
+      "sha256": "6a8ac7b1fbcb11af8b95a419ad6ecdaddf52d38f4024664a464e044edab86471",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/avviso-fr.md",
+      "sha256": "a4cc5c4f6159b1a93fc9f39740579348e06041a76d5fab8c60a6dfe0ee299a64",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/progetto-fr.md",
+      "sha256": "cd7672778e73f37f76f7baeb5cf73b4d2ef7373408a6fe89743c63a44cab5e73",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/preventivo-fr.csv",
+      "sha256": "9365bff4fa5861c878be3c523f1f49fdba01135db84032742fcc931574b9eb59",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/avviso-fr.md",
+      "sha256": "a4cc5c4f6159b1a93fc9f39740579348e06041a76d5fab8c60a6dfe0ee299a64",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/progetto-fr.md",
+      "sha256": "cd7672778e73f37f76f7baeb5cf73b4d2ef7373408a6fe89743c63a44cab5e73",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/preventivo-aggiornato-fr.csv",
+      "sha256": "4597b5b489b5159d5f0cb2cf6b9fe0b16b8a7b328031fe796781453cc6135839",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/avviso-de.md",
+      "sha256": "2fa9f72cb27fc1471f95b33b01087431dcf8ad26aaaaaf13ef78ae7033fb7403",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/progetto-de.md",
+      "sha256": "3f53881f5e2545176d016f1e42ac269169eb22a6ea7bed2d9c79292bfc4cc321",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/preventivo-de.csv",
+      "sha256": "b40dc599bf5d8862433c7afaf9b66fd489a824cae306dc3a5adce7aa4ee5a8dd",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/avviso-de.md",
+      "sha256": "2fa9f72cb27fc1471f95b33b01087431dcf8ad26aaaaaf13ef78ae7033fb7403",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/progetto-de.md",
+      "sha256": "3f53881f5e2545176d016f1e42ac269169eb22a6ea7bed2d9c79292bfc4cc321",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/preventivo-aggiornato-de.csv",
+      "sha256": "f5d16d4381bd54c516aed581a12e718d5a80ab8b1623f1ae3a5d8c046a24f76d",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/avviso-es.md",
+      "sha256": "a7bf9693899f7d28549eeffc4c89eda7fc3807f145f4c40b320566947da6b534",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/progetto-es.md",
+      "sha256": "9599bccb9b6bd40f08ee22d9bc9e122383daf6d0e91436a65808bb487fce43f9",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/preventivo-es.csv",
+      "sha256": "d4754ceac0c1d8d2e9d90ca7702e042a196f898fbb4da1f346b4e0391090eb65",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/avviso-es.md",
+      "sha256": "a7bf9693899f7d28549eeffc4c89eda7fc3807f145f4c40b320566947da6b534",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/progetto-es.md",
+      "sha256": "9599bccb9b6bd40f08ee22d9bc9e122383daf6d0e91436a65808bb487fce43f9",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/preventivo-aggiornato-es.csv",
+      "sha256": "61cdf4f5215c68a720f1bd3a39ac9565700e43190cf34b9fadfd3c33e0d7caca",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Preparare un dossier per un bando con Vera",
+      "goal": "Imparare a partire da un bando selezionato, fornire i documenti dell’impresa e rivedere il dossier preparato da Vera.",
+      "scenario": "Uno studio valuta un progetto digitale per una piccola impresa. Usa un avviso interamente fittizio e documenti simulati per seguire il lavoro dalle condizioni del bando al dossier, poi aggiorna il preventivo.",
+      "scope": "Preparazione del dossier dopo la selezione di un bando: fonti, requisiti, evidenze, spese, documenti, bozza e revisione. La ricerca di opportunità è l’altra fase della funzione; qui il bando è già fornito. Le condizioni dell’esercizio non sono norme o agevolazioni reali.",
+      "inputs": "Apri avviso-it.md, progetto-it.md e preventivo-it.csv. Sono l’avviso simulato, i fatti dichiarati dell’impresa e i costi proposti. Non contengono valutazioni di ammissibilità, classificazioni di spesa o approvazioni già eseguite.",
+      "request": "Vera, prepara un dossier di esercitazione da questo avviso e dai documenti dell’impresa. Mostrami requisiti, confronto con le evidenze, spese, documenti necessari e punti che devo rivedere.",
+      "steps": [
+        "In questa conversazione Vera apre la pratica e registra i documenti. L’assistente spiega incarico, fonti e risultato. Rivedi quali documenti governano l’esercizio e quali descrivono l’impresa.",
+        "Vera propone requisiti e confronti con i fatti, esamina le spese e prepara elenco documenti e bozza. Segui un passaggio dalla fonte alla proposta e rivedi le decisioni richieste dal normale procedimento.",
+        "Apri review_dossier.html: parti dalla sintesi, poi rivedi spese, documenti e bozza del progetto. Apri una condizione per leggere valutazione e passaggio della fonte. Vera spiega la revisione ancora necessaria e i passi successivi; l’esercizio non usa portali e non invia nulla."
+      ],
+      "deliverables": [
+        "Dossier locale con requisiti, evidenze, valutazioni proposte, spese, documenti e bozza.",
+        "Controlli e registro delle revisioni con punti aperti e prossime azioni."
+      ],
+      "review": "Verifica che ogni requisito rimandi all’avviso e ogni fatto al documento corretto. Distingui disponibilità dei documenti, esito proposto e decisione dell’ente: il dossier non concede un’agevolazione.",
+      "checkpoints": [
+        "Spiega quali file e quale richiesta servono quando un bando è già selezionato.",
+        "Apri il dossier, collega una proposta alla fonte e individua ciò che resta da rivedere."
+      ],
+      "practice": "Fornisci il preventivo aggiornato dell’esercizio. Chiedi un nuovo dossier, conservando il primo, e controlla come cambiano costi, importo proposto e revisioni necessarie.",
+      "success": "Sai avviare il lavoro da un bando, rivedere il dossier e richiedere un aggiornamento senza confondere una proposta con un’approvazione.",
+      "repeat": "Fornisci bando ufficiale selezionato, allegati e documenti dell’impresa, indicando progetto e data di riferimento. Vera prepara il dossier con le normali revisioni. Se cerchi prima un’opportunità, chiedi la ricerca specificando territorio e progetto."
+    },
+    "en": {
+      "title": "Prepare a grant-application dossier with Vera",
+      "goal": "Learn to start from a selected call, supply company documents and review the dossier Vera prepares.",
+      "scenario": "An accounting firm assesses a small company’s digital project. Use a wholly fictional call and simulated documents to follow the work from call requirements to dossier, then update the quotation.",
+      "scope": "Dossier preparation after a call has been selected: sources, requirements, evidence, costs, documents, drafting and review. Opportunity discovery is the other stage of this function; this example supplies the call. Its conditions are not real law or funding.",
+      "inputs": "Open avviso-en.md, progetto-en.md and preventivo-en.csv: the simulated call, declared company facts and proposed costs. They contain no prior eligibility assessment, accepted cost classification or approval.",
+      "request": "Vera, prepare a training dossier from this call and the company documents. Show me requirements, evidence comparisons, costs, required documents and the points I need to review.",
+      "steps": [
+        "In this conversation, Vera opens the case and registers the documents. The assistant explains the assignment, sources and result. Review which documents govern the exercise and which describe the company.",
+        "Vera proposes requirements and comparisons with the facts, examines costs and prepares the checklist and draft. Follow a step from source to proposal and review the decisions required by the normal process.",
+        "Open review_dossier.html: start with the summary, then review costs, documents and the project draft. Expand one condition to read its assessment and source excerpt. Vera explains the remaining review and next steps; this exercise uses no portal and sends nothing."
+      ],
+      "deliverables": [
+        "A local dossier with requirements, evidence, proposed assessments, costs, documents and draft content.",
+        "Checks and a review record with open points and next actions."
+      ],
+      "review": "Check that each requirement links to the call and each fact to the correct document. Distinguish document availability, proposed outcome and the authority’s decision: preparing a dossier does not award funding.",
+      "checkpoints": [
+        "Explain the files and request needed when a call has already been selected.",
+        "Open the dossier, trace a proposal to its source and identify the remaining review."
+      ],
+      "practice": "Supply the exercise’s updated quotation. Request a new dossier while retaining the first, then check how costs, the proposed amount and required reviews change.",
+      "success": "You can start from a selected call, review the dossier and request an update without treating a proposal as approval.",
+      "repeat": "Supply the selected official call, annexes and company documents, with the project and reference date. Vera prepares the dossier through normal reviews. To discover an opportunity first, request a search with the territory and project."
+    },
+    "fr": {
+      "title": "Préparer un dossier de demande d’aide avec Vera",
+      "goal": "Apprendre à partir d’un appel sélectionné, fournir les documents de l’entreprise et relire le dossier préparé par Vera.",
+      "scenario": "Un cabinet examine le projet numérique d’une petite entreprise. Un appel entièrement fictif et des documents simulés permettent de suivre le travail des conditions au dossier, puis d’actualiser le devis.",
+      "scope": "Préparation après sélection d’un appel : sources, exigences, preuves, dépenses, documents, rédaction et révision. La recherche d’opportunités est l’autre étape de cette fonction ; l’appel est fourni ici. Ses conditions ne sont ni du droit ni un financement réels.",
+      "inputs": "Ouvrez avviso-fr.md, progetto-fr.md et preventivo-fr.csv : appel simulé, faits déclarés par l’entreprise et coûts proposés. Aucune évaluation d’éligibilité, classification de dépenses acceptée ou approbation n’est déjà fournie.",
+      "request": "Vera, prépare un dossier d’exercice à partir de cet appel et des documents de l’entreprise. Montre les exigences, leur rapprochement avec les preuves, les dépenses, les documents nécessaires et les points à relire.",
+      "steps": [
+        "Dans cette conversation, Vera ouvre le dossier et enregistre les documents. L’assistant explique la mission, les sources et le résultat. Vérifiez quels documents gouvernent l’exercice et lesquels décrivent l’entreprise.",
+        "Vera propose les exigences et leur rapprochement avec les faits, examine les dépenses et prépare la liste des pièces et le projet. Suivez un point de sa source à la proposition et effectuez les révisions prévues par le processus normal.",
+        "Ouvrez review_dossier.html : commencez par la synthèse, puis examinez dépenses, documents et projet de texte. Développez une condition pour lire son évaluation et l’extrait de la source. Vera explique les examens encore nécessaires et les étapes suivantes ; cet exercice n’utilise aucun portail et n’envoie rien."
+      ],
+      "deliverables": [
+        "Dossier local avec exigences, preuves, évaluations proposées, dépenses, pièces et rédaction préparatoire.",
+        "Contrôles et historique des révisions avec points ouverts et prochaines actions."
+      ],
+      "review": "Vérifiez le lien de chaque exigence à l’appel et de chaque fait au bon document. Distinguez présence des pièces, résultat proposé et décision de l’autorité : un dossier ne vaut pas attribution d’aide.",
+      "checkpoints": [
+        "Expliquez les fichiers et la demande nécessaires lorsqu’un appel est déjà sélectionné.",
+        "Ouvrez le dossier, reliez une proposition à sa source et identifiez la révision restante."
+      ],
+      "practice": "Fournissez le devis actualisé de l’exercice. Demandez un nouveau dossier en conservant le premier et examinez les changements de coûts, montant proposé et révisions nécessaires.",
+      "success": "Vous savez démarrer avec un appel sélectionné, relire le dossier et demander une mise à jour sans confondre proposition et approbation.",
+      "repeat": "Fournissez l’appel officiel sélectionné, ses annexes et les documents de l’entreprise, en précisant projet et date de référence. Vera prépare le dossier avec les révisions normales. Pour rechercher d’abord une opportunité, indiquez territoire et projet."
+    },
+    "de": {
+      "title": "Mit Vera einen Förderantrag vorbereiten",
+      "goal": "Lernen, mit einem ausgewählten Förderaufruf zu beginnen, Unternehmensunterlagen bereitzustellen und Veras Dossier zu prüfen.",
+      "scenario": "Eine Kanzlei untersucht das Digitalprojekt eines kleinen Unternehmens. Ein vollständig fiktiver Aufruf und simulierte Unterlagen zeigen den Ablauf von den Bedingungen bis zum Dossier. Anschließend wird das Angebot aktualisiert.",
+      "scope": "Dossiervorbereitung nach Auswahl eines Aufrufs: Quellen, Anforderungen, Belege, Kosten, Unterlagen, Entwurf und Prüfung. Die Suche nach Fördermöglichkeiten ist die andere Stufe dieser Funktion; hier liegt der Aufruf vor. Seine Bedingungen sind kein geltendes Recht und keine echte Förderung.",
+      "inputs": "Öffnen Sie avviso-de.md, progetto-de.md und preventivo-de.csv: simulierter Aufruf, erklärte Unternehmensfakten und vorgeschlagene Kosten. Förderfähigkeit, Kostenklassifizierung und Freigaben wurden noch nicht beurteilt.",
+      "request": "Vera, bereite aus diesem Aufruf und den Unternehmensunterlagen ein Übungsdossier vor. Zeige Anforderungen, Belegabgleich, Kosten, nötige Dokumente und meine Prüfpunkte.",
+      "steps": [
+        "In diesem Chat eröffnet Vera den Fall und registriert die Unterlagen. Schriftlich erklärt sie Auftrag, Quellen und Ergebnis. Prüfen Sie, welche Dokumente das Übungsszenario regeln und welche das Unternehmen beschreiben.",
+        "Vera schlägt Anforderungen und Faktenabgleiche vor, prüft die Kosten und erstellt Dokumentenliste und Entwurf. Verfolgen Sie einen Punkt von der Quelle zum Vorschlag und führen Sie die vorgesehenen Prüfentscheidungen durch.",
+        "Öffnen Sie review_dossier.html: Beginnen Sie mit der Zusammenfassung und prüfen Sie anschließend Kosten, Unterlagen und Projektentwurf. Klappen Sie eine Bedingung auf, um Bewertung und Quellenauszug zu lesen. Vera erklärt die noch erforderlichen Prüfungen und nächsten Schritte; die Übung nutzt kein Portal und sendet nichts."
+      ],
+      "deliverables": [
+        "Lokales Dossier mit Anforderungen, Belegen, vorgeschlagenen Bewertungen, Kosten, Unterlagen und Entwurf.",
+        "Prüfungen und Entscheidungsverlauf mit offenen Punkten und nächsten Schritten."
+      ],
+      "review": "Prüfen Sie den Quellenbezug jeder Anforderung und den Dokumentenbezug jedes Fakts. Unterscheiden Sie vollständige Unterlagen, vorgeschlagenes Ergebnis und Behördenentscheidung: Ein Dossier bewilligt keine Förderung.",
+      "checkpoints": [
+        "Erklären Sie benötigte Dateien und Anfrage bei einem bereits ausgewählten Aufruf.",
+        "Öffnen Sie das Dossier, verfolgen Sie einen Vorschlag zur Quelle und benennen Sie die offene Prüfung."
+      ],
+      "practice": "Stellen Sie das aktualisierte Übungsangebot bereit. Verlangen Sie ein neues Dossier unter Beibehaltung des ersten und prüfen Sie Änderungen an Kosten, vorgeschlagenem Betrag und nötigen Prüfungen.",
+      "success": "Sie können mit einem ausgewählten Aufruf beginnen, das Dossier prüfen und eine Aktualisierung verlangen, ohne einen Vorschlag als Freigabe zu behandeln.",
+      "repeat": "Stellen Sie offiziellen Aufruf, Anlagen und Unternehmensunterlagen bereit und nennen Sie Projekt und Stichtag. Vera bereitet das Dossier mit den normalen Prüfungen vor. Für eine vorgelagerte Fördersuche geben Sie Gebiet und Projekt an."
+    },
+    "es": {
+      "title": "Preparar un expediente de ayudas con Vera",
+      "goal": "Aprender a empezar con una convocatoria seleccionada, aportar documentos de la empresa y revisar el expediente preparado por Vera.",
+      "scenario": "Un despacho examina el proyecto digital de una pequeña empresa. Una convocatoria totalmente ficticia y documentos simulados permiten seguir el trabajo desde las condiciones hasta el expediente y actualizar después el presupuesto.",
+      "scope": "Preparación tras seleccionar una convocatoria: fuentes, requisitos, evidencias, gastos, documentos, borrador y revisión. La búsqueda de oportunidades es la otra etapa de la función; aquí ya se aporta la convocatoria. Sus condiciones no son normas ni financiación reales.",
+      "inputs": "Abre avviso-es.md, progetto-es.md y preventivo-es.csv: convocatoria simulada, hechos declarados de la empresa y costes propuestos. No incluyen una evaluación de elegibilidad, clasificación de gastos aceptada ni aprobación previa.",
+      "request": "Vera, prepara un expediente de práctica con esta convocatoria y los documentos de la empresa. Muéstrame requisitos, comparación con las evidencias, gastos, documentos necesarios y puntos que debo revisar.",
+      "steps": [
+        "En esta conversación, Vera abre el caso y registra los documentos. El asistente explica encargo, fuentes y resultado. Revisa qué documentos rigen el ejercicio y cuáles describen la empresa.",
+        "Vera propone requisitos y comparaciones con los hechos, examina gastos y prepara la lista de documentos y el borrador. Sigue un punto desde la fuente hasta la propuesta y revisa las decisiones previstas por el procedimiento normal.",
+        "Abre review_dossier.html: empieza por el resumen y después revisa gastos, documentos y borrador del proyecto. Despliega una condición para leer su evaluación y el extracto de la fuente. Vera explica las revisiones pendientes y los siguientes pasos; este ejercicio no utiliza portales ni envía nada."
+      ],
+      "deliverables": [
+        "Expediente local con requisitos, evidencias, evaluaciones propuestas, gastos, documentos y borrador.",
+        "Controles y registro de revisiones con puntos abiertos y próximas acciones."
+      ],
+      "review": "Comprueba que cada requisito remita a la convocatoria y cada hecho al documento correcto. Distingue disponibilidad documental, resultado propuesto y decisión del organismo: un expediente no concede una ayuda.",
+      "checkpoints": [
+        "Explica los archivos y la petición necesarios cuando ya hay una convocatoria seleccionada.",
+        "Abre el expediente, vincula una propuesta con su fuente e identifica la revisión pendiente."
+      ],
+      "practice": "Aporta el presupuesto actualizado del ejercicio. Pide un nuevo expediente conservando el primero y revisa cómo cambian costes, importe propuesto y revisiones necesarias.",
+      "success": "Sabes iniciar el trabajo con una convocatoria, revisar el expediente y solicitar una actualización sin confundir propuesta y aprobación.",
+      "repeat": "Aporta convocatoria oficial, anexos y documentos de la empresa, con proyecto y fecha de referencia. Vera prepara el expediente con las revisiones normales. Si primero buscas una oportunidad, indica territorio y proyecto."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "51e3e0323328e89d011671dea47a208e9c92d2ab5d40d2f9b9aa8b63f4c4b0a1"
+}

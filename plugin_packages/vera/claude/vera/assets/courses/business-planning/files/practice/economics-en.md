@@ -1,0 +1,3 @@
+# Economic assumptions
+
+Promoter hypotheses for review, not observed results: the January–March 2027 pilot assumes 20, 30 and 40 monthly orders. Net transport price EUR 45 per order, variable cost EUR 18 and fixed costs EUR 800 per month. Variable costs cover driver time, fuel and handling each booking; fixed costs cover vehicle hire, coordination and promotion. These are estimates, not binding quotations. Insurance, tax treatment, payment terms, initial investment and cash needs are unconfirmed. The CSV describes partial operating economics, not a complete financial model. Missing balances, tax and funding must not be treated as zero.

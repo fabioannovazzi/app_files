@@ -1,61 +1,71 @@
-# Antes del gráfico, establecer qué significan los datos
+# Preparar un informe a partir de datos con Clara
 
-Un recorrido guiado de unos 6 minutos y medio. La activación de voz, los procesos externos y el ejercicio opcional requieren tiempo adicional.
+La explicación y una práctica breve requieren unos 5–8 minutos. El procesamiento y tus preguntas pueden alargar la sesión.
 
-Habla con el docente mediante la voz estándar de Codex. En la segunda conversación, abierta al lado, examina los archivos y el resultado. Ambas siguen vinculadas; puedes interrumpir, preguntar por qué o reducir el ritmo cuando quieras.
+Habla con el docente mediante la voz estándar de Codex. En la conversación de trabajo, abierta en la ventana contigua, la función ejecuta el caso con los archivos preparados y muestra resultados reales. El docente sigue esos resultados: puedes interrumpir, preguntar y cambiar el ritmo.
 
-Utiliza este material preparado. No reescribas la lección ni inventes resultados. Habla en turnos breves, deja tiempo para observar y escucha respuestas reales. No muestres la solución antes del intento. Los tiempos incluyen observación y diálogo. Mostrar estos archivos no completa demostración, práctica ni comprensión en el registro local. El docente elige por pertinencia únicamente dentro del catálogo de su producto.
+Utiliza el material preparado para enseñar un primer uso completo. Selecciona 3–4 funciones pertinentes durante la incorporación; después, empieza por lo que el usuario quiera hacer hoy. Adapta el ritmo y las explicaciones. Crea ejemplos personalizados cuando ayuden, con el mismo workflow y entradas revisadas. Lee execution-request.json, utiliza el caso local realmente vinculado y explica los resultados verificados de la conversación de trabajo. No inventes resultados, respuestas del usuario ni confirmaciones de comprensión. Abrir el kit no completa la lección.
 
-## 1. Tu objetivo · 45 s
+## 1. Cuándo utilizarla · 45 s
 
-Escucha la petición. Relaciona el caso con un trabajo que ya haces.
+Relaciona la función con una tarea profesional concreta.
 
-El conjunto ficticio informa ventas netas de EUR 40.000 en enero y EUR 50.000 en febrero. Falta Discount separado. Las notas confirman que Sales ya incluye descuentos; restarlos otra vez sería incorrecto.
+Aprende a comparar resultados y presupuesto, seguir la preparación del informe y utilizar las diferencias en la revisión mensual.
 
-Clara, muestra la evolución de ventas y explica qué datos utilizas.
+Arco ha preparado sus datos de gestión de enero y febrero y el presupuesto de esos meses. El responsable quiere entender el resultado operativo y las categorías que debe investigar antes de la reunión mensual.
 
-## 2. Los datos de partida · 60 s
+El caso incluye ingresos, coste de ventas y gastos operativos en EUR. Clara elige el análisis según la pregunta y los datos; este primer uso sigue una comparación presupuestaria y permanece local.
 
-Mira los documentos en la otra conversación. Identifica un dato útil y una información que falta.
+## 2. Archivos y petición · 60 s
 
-R1 contiene dos meses; R2 define Sales como neto. Discount falta como medida separada, no consta como cero.
+Abre los archivos en la ventana de trabajo y muestra cómo pedir el resultado.
 
-[["2026-01", "EUR 40.000", "Ventas netas"], ["2026-02", "EUR 50.000", "Ventas netas"], ["Discount separado", "Ausente", "Ya reflejado en Sales"]]
+Abre actual-budget.xlsx y facts-es.md. GL contiene movimientos mensuales por cuenta y categoría; Budget contiene el plan comparable. Los ingresos son positivos y los costes negativos. Los totales de control son 53.000 EUR reales y 47.000 EUR presupuestados.
 
-## 3. Cómo trabaja el workflow · 75 s
+Clara, prepara el informe real–presupuesto de Arco para enero y febrero de 2026 con este libro. Muestra resultado operativo, desviaciones y detalle por categoría.
 
-Sigue los tres pasos. Detente en la decisión que cambia el resultado.
+## 3. Ejecutar el trabajo · 105 s
 
-Ejecuta la recepción del conjunto e inspecciona datos, perfil y notas. Revisa significado, agregación y funciones Sales, Discount y COGS; las cabeceras solas no bastan.
-Selecciona una capacidad compatible y renderiza mediante el adaptador de Clara conservando petición efectiva y prueba de salida.
-Abre el resultado y verifica valores, unidades, periodos y conclusión. Reutiliza un contrato semántico estable compatible en futuras cargas en vez de reconstruir significados cada vez.
+Explica el paso que se está ejecutando y espera su resultado real.
 
-## 4. Leer el resultado · 90 s
+Clara examina las hojas y propone las columnas de fechas, categorías e importes. Confirma enero–febrero y el criterio de signos antes de calcular.
 
-Abre el ejemplo en la segunda conversación. Vincula cada conclusión con su fuente.
+El workflow aplica la correspondencia revisada, compara resultados y presupuesto y comprueba los totales. La conversación de voz explica el paso real y cualquier información solicitada.
 
-Pasan de EUR 40.000 a EUR 50.000: EUR 10.000 o 25 % más. No están disponibles descuentos separados ni costes.
+Abre el panel y el libro producidos en la conversación de trabajo. Empieza por el resumen, sigue con la comparación mensual y después con las categorías.
 
-[["Enero", "EUR 40.000", "R1 · ventas netas"], ["Febrero", "EUR 50.000", "R1 · ventas netas"], ["Variación", "+EUR 10.000 · +25 %", "Base enero EUR 40.000"]]
+Durante la lección, la conversación de trabajo ejecuta la función y produce el resultado. Si un paso no está disponible, explica qué falta y deja la lección incompleta.
 
-## 5. La comprobación clave · 75 s
+## 4. Utilizar el resultado · 75 s
 
-Antes de mostrar la respuesta, explica qué comprobarías.
+Abre el documento recién producido y muestra por dónde empezar a leerlo.
 
-Compatibilidad técnica y corrección semántica son controles distintos. Columnas válidas pueden tener una correspondencia comercial equivocada.
+Panel: resultado del período y desviaciones absolutas y porcentuales cuando sean significativas. Elige las categorías que requieren investigación.
 
-Sin columna Discount, ¿podemos afirmar que no se concedieron descuentos?
+Libro e informe: tablas, controles y vínculos con los datos. El resumen distingue la desviación medida de su causa pendiente de comprobar.
 
-Comparar el razonamiento: No. Sales es neto y no se aporta la medida separada. La ausencia de columna no demuestra ausencia de descuentos.
+Comprueba que ambas hojas cubran los mismos meses y que los costes tengan el signo esperado. Vincula una diferencia con su categoría y mes de origen. Pide explicaciones a la empresa cuando las cifras no demuestren una causa.
 
-## 6. Probar juntos · 45 s
+## 5. Parar y comprobar · 45 s
 
-Decide si prefieres practicar ahora o guardar el ejemplo para tu próximo encargo.
+Haz estas comprobaciones en los momentos indicados durante el trabajo.
 
-Añade marzo con la misma definición de Sales y verifica reutilización del contrato y gráfico actualizado.
+Antes de calcular: localiza ambas hojas y confirma el período.
 
-Selecciona CSV, Excel o Parquet con notas de métricas. Los informes Real/Presupuesto usan la vía presupuestaria propia de Clara dentro de este workflow.
+En el resultado: encuentra la comparación global y una categoría que investigarías.
 
-Este es un ejemplo didáctico preparado, no un comprobante de una nueva ejecución. Las fuentes y decisiones son ficticias; no se presupone aprobación profesional. Con tus archivos, el workflow actual realiza sus comprobaciones y conserva los resultados reales.
+Estas pausas ayudan a aprender a utilizar la función. No son un examen de detalles técnicos.
+
+## 6. Ahora prueba tú · 60 s
+
+Deja que el usuario formule la petición y acompaña su intento.
+
+Usa actual-budget-march.xlsx para pedir una actualización hasta marzo. Formula la petición, confirma el nuevo período y compara el resultado con el informe anterior.
+
+El nuevo informe incluye marzo y conserva el anterior. Sabes localizar la comparación con el presupuesto y los datos de una categoría.
+
+Para repetirlo, aporta datos reales y plan para períodos comparables, indica período y objetivo de la reunión, revisa la interpretación de los datos y abre el informe generado.
+
+El kit contiene archivos ficticios y un guion preparado. Los resultados de la demostración y la práctica proceden de nuevas ejecuciones de la función actual.
 
 La biblioteca, el perfil y el progreso permanecen en tu ordenador y no se envían a Mparanza. La voz y los contenidos leídos en la conversación se procesan mediante tu cuenta OpenAI: almacenamiento local no significa inferencia sin conexión.

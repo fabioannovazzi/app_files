@@ -1,21 +1,28 @@
 {
-  "schema": "mparanza.course.v1",
+  "schema": "mparanza.teaching_kit.v2",
   "product": "clara",
   "workflow": "business-planning",
-  "revision": "2026-09-14.1",
+  "revision": "2026-09-14.2",
   "seconds": [
     45,
     60,
+    105,
     75,
-    90,
-    75,
-    45
+    45,
+    60
   ],
   "supported_languages": [
     "it",
     "en"
   ],
   "language_basis": "workflow_output_contract",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "assess_pilot_then_revise_same_business_case"
+  },
   "sources": [
     {
       "path": "modules/business-planning/assets/icon.svg",
@@ -293,153 +300,188 @@
       "sha256": "9b967e0c028397d9645bf731024dfe07c990d3f377a6175a5486c0dc870e9ec1"
     }
   ],
-  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
-  "files": [],
+  "files": [
+    {
+      "path": "files/input/pilot-economics.csv",
+      "sha256": "c208baa03a09a3b69ca2a6abce6861b1206c43e40ac479ee8e4325a3b67b74c3",
+      "languages": [
+        "it",
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/pilot-economics.csv",
+      "sha256": "c208baa03a09a3b69ca2a6abce6861b1206c43e40ac479ee8e4325a3b67b74c3",
+      "languages": [
+        "it",
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/proposal-it.md",
+      "sha256": "2f4d9b83eed9f921b524e5a5d7dd76c8135b2a0611ad036d9cc68a2fb51e3645",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/proposal-it.md",
+      "sha256": "2f4d9b83eed9f921b524e5a5d7dd76c8135b2a0611ad036d9cc68a2fb51e3645",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/economics-it.md",
+      "sha256": "e8811abcb21c2b8858fa62773061242d7dd738a6b81396e83566e66f9cd32c2e",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/economics-it.md",
+      "sha256": "e8811abcb21c2b8858fa62773061242d7dd738a6b81396e83566e66f9cd32c2e",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/operations-it.md",
+      "sha256": "9f321e7f7a6d8478cdae31447c11f2c1c99403481191a6df43f6a9f47589a981",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/operations-it.md",
+      "sha256": "9f321e7f7a6d8478cdae31447c11f2c1c99403481191a6df43f6a9f47589a981",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-it.md",
+      "sha256": "d5046fe8ff4597aee8618399c636dbd9e0a52e82106b9b4dcd061321fb6ef0da",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/proposal-en.md",
+      "sha256": "4eb9190682d12d155468ab6e51dd74eb3aa7c355c8b0692de9d2015ba23bf31e",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/proposal-en.md",
+      "sha256": "4eb9190682d12d155468ab6e51dd74eb3aa7c355c8b0692de9d2015ba23bf31e",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/economics-en.md",
+      "sha256": "886a6eac53a55dac853b03e0c9bda41e89d163387625296bf3a2255b4c33e049",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/economics-en.md",
+      "sha256": "886a6eac53a55dac853b03e0c9bda41e89d163387625296bf3a2255b4c33e049",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/operations-en.md",
+      "sha256": "16460a84a4f63322ca193519c010871554a2393beeef7eb4d34e7c55b606580e",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/operations-en.md",
+      "sha256": "16460a84a4f63322ca193519c010871554a2393beeef7eb4d34e7c55b606580e",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-en.md",
+      "sha256": "a08cdc87f90cd7251aa4160a1326213406ea61b34c219bed36c57ab857f60d04",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    }
+  ],
   "locales": {
     "it": {
-      "title": "Un investimento, due ipotesi da verificare",
-      "goal": "Collegare una decisione d'investimento a evidenze commerciali, ipotesi esplicite e risultati di piano.",
-      "scenario": "Arco valuta un nuovo servizio in abbonamento. Il caso assume 100 clienti medi a 50 EUR al mese e 42.000 EUR di costi annui. Il prezzo è proposto dal team; la domanda è sostenuta soltanto da cinque colloqui esplorativi.",
-      "request": "Clara, aiutami a capire quali ipotesi rendono sostenibile questo nuovo servizio.",
-      "scope": "Esempio di piano economico elementare. Ricavi e costi non bastano a stimare cassa, imposte o fabbisogno di investimento.",
-      "input_columns": [
-        "Ipotesi fittizia",
-        "Valore",
-        "Fonte"
+      "title": "Preparare un business plan con Clara",
+      "goal": "Imparare a partire da una proposta, fornire i dati disponibili e ottenere un report che aiuti a decidere cosa provare, cambiare o approfondire.",
+      "scenario": "Ciclo Arco valuta il ritiro e la riconsegna delle biciclette. Sono disponibili una proposta, ipotesi economiche e informazioni operative ancora da verificare.",
+      "scope": "Un primo business plan per decidere un pilota. Il report affronta offerta, clienti, operatività, economia, cassa, alternative e prossime azioni; dati mancanti restano espliciti.",
+      "inputs": "Apri proposal-it.md, economics-it.md, operations-it.md e pilot-economics.csv. Spiega l’idea e la decisione, allegando ciò che hai. Non occorre preparare un modello completo o scrivere file tecnici.",
+      "request": "Clara, prepara un business plan per valutare questo servizio di ritiro biciclette. Usa proposta e ipotesi fornite, distinguile dalle evidenze e mostrami cosa conviene verificare prima di avviare il pilota.",
+      "steps": [
+        "Nel thread di lavoro Clara legge la proposta e chiarisce cliente, bisogno e decisione. La voce spiega il percorso del business plan e le informazioni che aiutano a rispondere.",
+        "Clara valuta domanda, operatività, costi e alternative, calcola le economie supportate e prepara il report con il workflow corrente. La voce distingue dati, ipotesi e lacune; non inventa costi mancanti per completare la cassa.",
+        "Apri il report HTML generato. Parti dalla raccomandazione, passa a economia e operatività e segui una cifra alla sua fonte. Leggi cosa manca sulla cassa e quale prova è proposta prima di impegnarsi."
       ],
-      "input_rows": [
-        [
-          "Clienti medi paganti",
-          "100",
-          "P1 · ipotesi del team"
-        ],
-        [
-          "Prezzo mensile",
-          "50 EUR",
-          "P1 · proposta commerciale"
-        ],
-        [
-          "Costi annui",
-          "42.000 EUR",
-          "P2 · stima operativa"
-        ],
-        [
-          "Interviste esplorative",
-          "5",
-          "P3 · note; nessun ordine"
-        ]
+      "deliverables": [
+        "Un report HTML leggibile con raccomandazione, ragionamento, dati calcolati disponibili e prossime azioni.",
+        "Fonti e ipotesi accessibili nel report, con stato provvisorio e questioni da rivedere."
       ],
-      "basis": "P1 e P2 sono assunzioni esplicite del caso; P3 esplora bisogni, ma non dimostra 100 clienti acquisiti.",
-      "method": [
-        "Definisci la decisione e separa evidenze, assunzioni accettate e informazioni ancora da raccogliere.",
-        "Costruisci il piano corrente con clienti, prezzi, costi e tempi coerenti. Collega ogni ipotesi alla fonte e mantieni separate le dimensioni economiche e finanziarie.",
-        "Confronta scenari utili e presenta la decisione, le sensibilità e le azioni per ridurre l'incertezza. Il professionista rivede il piano e le ipotesi."
+      "review": "Controlla che la raccomandazione discenda dalle evidenze, che l’interesse informale non diventi domanda dimostrata e che l’economia parziale non venga presentata come fabbisogno finanziario completo. Le ipotesi e le conclusioni restano da rivedere.",
+      "checkpoints": [
+        "Prima del lavoro, indica quale decisione vuoi prendere con il business plan.",
+        "Nel report, trova la raccomandazione, una sua dipendenza e la prossima prova utile."
       ],
-      "result_title": "Il volume di clienti è l'ipotesi decisiva",
-      "conclusion": "Nello scenario base i ricavi annui sono 60.000 EUR e il margine sui costi indicati è 18.000 EUR. Con 70 clienti quel margine si azzera.",
-      "output_columns": [
-        "Scenario",
-        "Ricavi annui",
-        "Ricavi meno costi indicati"
-      ],
-      "output_rows": [
-        [
-          "100 clienti medi",
-          "60.000 EUR",
-          "18.000 EUR"
-        ],
-        [
-          "70 clienti medi",
-          "42.000 EUR",
-          "0 EUR"
-        ]
-      ],
-      "check": "Il risultato è condizionato alle ipotesi. Il margine mostrato non è utile netto né cassa; i colloqui non equivalgono a ordini.",
-      "question": "Il calcolo è esatto: possiamo confermare la sostenibilità del progetto?",
-      "answer": "Possiamo confermare l'aritmetica del caso. Servono evidenze sulla domanda e il piano completo di costi, investimenti e tempi di incasso prima della decisione.",
-      "practice": "Portiamo il prezzo a 45 EUR: confrontiamo gli scenari senza nascondere quali ipotesi sono cambiate.",
-      "next": "Seleziona un investimento o un'iniziativa concreta e raccogli preventivi, evidenze commerciali e assunzioni che sei pronto a discutere."
+      "practice": "Aggiungi update-it.md allo stesso caso e chiedi come cambia il piano con la diversa disponibilità del mezzo. Clara rivede raccomandazione, ipotesi e prove necessarie in un nuovo report collegato al precedente. Individua cosa cambia anche senza nuovi numeri.",
+      "success": "Sai avviare un business plan da ciò che hai, leggere la raccomandazione e rivedere il piano quando emerge nuova evidenza.",
+      "repeat": "Descrivi a Clara attività, clienti, decisione e vincoli; allega documenti e ipotesi. Usa il report per discutere il prossimo passo e torna nello stesso caso quando prezzi, domanda, operatività o finanziamento cambiano."
     },
     "en": {
-      "title": "One investment, two assumptions to test",
-      "goal": "Connect an investment decision to commercial evidence, explicit assumptions and plan outcomes.",
-      "scenario": "Fictional Arco considers a subscription service with 100 average paying customers at EUR 50 per month and EUR 42,000 annual costs. The price is a team proposal; demand evidence consists of five exploratory interviews, not orders.",
-      "request": "Clara, help me understand which assumptions make this service sustainable.",
-      "scope": "A basic economic scenario. Revenue less these costs does not establish cash flow, tax or investment needs.",
-      "input_columns": [
-        "Fictional assumption",
-        "Value",
-        "Source"
+      "title": "Prepare a business plan with Clara",
+      "goal": "Learn to start from a proposal, supply available information and obtain a report that helps decide what to test, change or investigate.",
+      "scenario": "Ciclo Arco is considering bicycle pickup and return. A proposal, economic assumptions and operating information are available, with important points still unverified.",
+      "scope": "A first business plan for a pilot decision. The report covers proposition, customers, operations, economics, cash, alternatives and next actions; missing information remains explicit.",
+      "inputs": "Open proposal-en.md, economics-en.md, operations-en.md and pilot-economics.csv. Explain the idea and decision and provide what you have. You need neither a complete model nor technical configuration files.",
+      "request": "Clara, prepare a business plan to assess this bicycle pickup service. Use the proposal and assumptions, distinguish them from evidence and show what should be tested before launching the pilot.",
+      "steps": [
+        "In the working chat, Clara reads the proposal and clarifies customer, need and decision. Voice explains the planning process and which information helps answer the question.",
+        "Clara assesses demand, operations, costs and alternatives, calculates supported economics and builds the report through the current workflow. Voice distinguishes evidence, assumptions and gaps without inventing missing cash costs.",
+        "Open the generated HTML report. Start with the recommendation, move to economics and operations and trace a figure to its source. Read the cash limitations and the proposed test before making commitments."
       ],
-      "input_rows": [
-        [
-          "Average paying customers",
-          "100",
-          "P1 · team assumption"
-        ],
-        [
-          "Monthly price",
-          "EUR 50",
-          "P1 · proposal"
-        ],
-        [
-          "Annual costs",
-          "EUR 42,000",
-          "P2 · operating estimate"
-        ],
-        [
-          "Exploratory interviews",
-          "5",
-          "P3 · notes; no orders"
-        ]
+      "deliverables": [
+        "One readable HTML report with recommendation, reasoning, available calculated figures and next actions.",
+        "Sources and assumptions accessible in the report, with provisional status and matters for review."
       ],
-      "basis": "P1 and P2 are explicit assumptions. P3 explores needs without proving that 100 customers will subscribe.",
-      "method": [
-        "Define the decision and separate evidence, accepted assumptions and information still needed.",
-        "Build the current plan with coherent customers, prices, costs and timing. Link assumptions to sources and distinguish economic results from cash.",
-        "Compare useful scenarios and present the decision, sensitivities and evidence-gathering actions for professional review."
+      "review": "Check that the recommendation follows from evidence, informal interest does not become proven demand, and partial economics are not presented as complete funding needs. Assumptions and conclusions remain subject to review.",
+      "checkpoints": [
+        "Before work starts, identify the decision the business plan should inform.",
+        "In the report, find the recommendation, one dependency and the next useful test."
       ],
-      "result_title": "Customer volume is the decisive assumption",
-      "conclusion": "The base scenario produces EUR 60,000 annual revenue and EUR 18,000 above the stated costs. At 70 customers, that difference is zero.",
-      "output_columns": [
-        "Scenario",
-        "Annual revenue",
-        "Revenue less stated costs"
-      ],
-      "output_rows": [
-        [
-          "100 average customers",
-          "EUR 60,000",
-          "EUR 18,000"
-        ],
-        [
-          "70 average customers",
-          "EUR 42,000",
-          "EUR 0"
-        ]
-      ],
-      "check": "These are conditional results, not net profit or cash. Interviews are not orders.",
-      "question": "The arithmetic is correct. Can we confirm project viability?",
-      "answer": "We can confirm the case arithmetic. Demand evidence and a complete cost, investment and collection-timing plan are still needed.",
-      "practice": "Reduce the price to EUR 45 and compare scenarios with the changed assumption visible.",
-      "next": "Choose a concrete investment and collect quotations, commercial evidence and assumptions to discuss."
+      "practice": "Add update-en.md to the same case and ask how the changed vehicle availability affects the plan. Clara revises recommendation, assumptions and required tests in a new report linked to the earlier one. Identify what changes even without new figures.",
+      "success": "You can start a business plan with available information, read its recommendation and revise it when new evidence arrives.",
+      "repeat": "Describe the business, customers, decision and constraints to Clara; provide documents and assumptions. Use the report to discuss the next step and return to the same case when prices, demand, operations or financing change."
     }
-  },
-  "visual": {
-    "column": 1,
-    "bars": [
-      [
-        0,
-        60000
-      ],
-      [
-        1,
-        42000
-      ]
-    ]
-  },
-  "retained_from": {
-    "course_sha256": "84cb082c91c6a4a631ff1b78edabe11a733c94956189f3d0a9329e55f5af4385",
-    "published_version": "0.1.207"
   }
 }

@@ -1,0 +1,422 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "business-planning",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en"
+  ],
+  "language_basis": "workflow_output_contract",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "assess_pilot_then_revise_same_business_case"
+  },
+  "sources": [
+    {
+      "path": "modules/business-planning/assets/icon.svg",
+      "sha256": "785402457fc534e9c558bc9320e1495957e4c825399d55db53b516d971f20c51"
+    },
+    {
+      "path": "modules/business-planning/assets/report-interaction.css",
+      "sha256": "e80e8e85ca62779557d302446c0cdaccad00be2a2220c87adb0cef02ac8cd4b7"
+    },
+    {
+      "path": "modules/business-planning/assets/report-interaction.js",
+      "sha256": "3a9809b9b3bf2396fae1ce7fcca96071b517449cb03c8c5d774887fae2485b97"
+    },
+    {
+      "path": "modules/business-planning/references/case-contract.md",
+      "sha256": "35bad35add1f43188c5b3b36ba0971a10b413f92989a813a783983ecd4bac744"
+    },
+    {
+      "path": "modules/business-planning/references/financing-assessment.md",
+      "sha256": "469061e47c4becd6233e47493ed1910b44f88c591bbd3e0e324b3b81befbf4a6"
+    },
+    {
+      "path": "modules/business-planning/references/sites-delivery.md",
+      "sha256": "b66a3e94d279639955853c6b1cb74020a845eb30d7a5a4bf3a6e521a3fb02da2"
+    },
+    {
+      "path": "modules/business-planning/requirements.txt",
+      "sha256": "9bba605fd7b6ea23038de15e5a1ae6714b3d3fb14ed2d6e6bedbfb0665ca2122"
+    },
+    {
+      "path": "modules/business-planning/scripts/business_planning_contribution.py",
+      "sha256": "ad2f1500df8ceb0127ce22aae3bd85ead8b57c84616ebd4db23022795e1f2926"
+    },
+    {
+      "path": "modules/business-planning/scripts/business_planning_core.py",
+      "sha256": "28bf6bc3bf03fc6eb7ba05ce38c66b417a6aa5461ffcd0048b5033bf96d67963"
+    },
+    {
+      "path": "modules/business-planning/scripts/check_dependencies.py",
+      "sha256": "df7d7c9ab748163f98d50d3514f859594ea89aab65b05b302bb2d7987c8410c2"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_assessment.py",
+      "sha256": "ae5f7075ccad11e35d6a7b0559d5b1a44037efcd9d9eaf3949f7c5dd8374b389"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_cli.py",
+      "sha256": "677242e2a027c0d3c3aeff6cf537cf3e879aedbfc943d2edc6cd7ae4c49874f2"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_commercial.py",
+      "sha256": "5d318e0fc442378a6ac27780e392a1435bfe0ae0f9b04c7f7e04dcdb5f3eed44"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_cycle.py",
+      "sha256": "86ea90f4c52b8b00bd012e6da49d08b337a3a8aac3ac8be072b648e8076b991e"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_decision_report.py",
+      "sha256": "26ed46e24534a99bc3772c198785021b7365b52cbb5b99a48f11ac56b6ecacd7"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_financing.py",
+      "sha256": "e6c852b3d34817a3b4a111223e7e3071430261301dfba6d509339fe60fdcd25a"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_interaction.py",
+      "sha256": "3acf8c8bc7e22042291f8050205bf2c3fcf17c5a66c9d5e3621d61cd236d63bf"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_presentation.py",
+      "sha256": "3d53a925c87ade0bd564064e10c5295709e4e2db37cbb0a5d58fc6f16ff3a55f"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_report.py",
+      "sha256": "e3c6dfa66b4614b96bc99d6ddfcccbe2961f41652a078291989d190e8bf4209b"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_site.py",
+      "sha256": "2c78c6cba31ce24603582d5b8c739c5fdabe4ed3e5eb14189331a8d69b36af7f"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_workflow.py",
+      "sha256": "44bb1a8ae6193bdea5c7e4a9173181c6cd0fb73dc0cfcc97f72fbf7d6d7ce506"
+    },
+    {
+      "path": "modules/business-planning/scripts/prepare_report_site.py",
+      "sha256": "1d49f59d6e493f658902b828048332859edd996dfa3494a7532a31a6e056f38e"
+    },
+    {
+      "path": "modules/business-planning/scripts/run_business_plan.py",
+      "sha256": "ce43cb335e342c74b5fe578d2b52558ccc2fef85678cc6ffdf07008a87c5d9c9"
+    },
+    {
+      "path": "modules/business-planning/scripts/run_strategic_plan.py",
+      "sha256": "ecf900ef1a32771f53848eac3d530bd908a95b27a0a80227f0aff7cce2cf653c"
+    },
+    {
+      "path": "modules/business-planning/scripts/strategic_planning_core.py",
+      "sha256": "7f5360c69a0441de3647e6077fe7b0a876eaa194366afc38c3bf04a7a1b5fb51"
+    },
+    {
+      "path": "modules/business-planning/skills/business-planning/SKILL.md",
+      "sha256": "ec980ebda8f3f7659c74003286b45060052c5a7a65a4218260679ec48990d28c"
+    },
+    {
+      "path": "modules/business-planning/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/business-planning/vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "modules/business-planning/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/business-planning/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/business-planning/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/business-planning/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/business-planning/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/business-planning/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/business-planning/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/business-planning/SKILL.md",
+      "sha256": "4fd7b2157714ad509567d646fe6a0ad8f996e5386e93d107f1bd80b969d54962"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/pilot-economics.csv",
+      "sha256": "c208baa03a09a3b69ca2a6abce6861b1206c43e40ac479ee8e4325a3b67b74c3",
+      "languages": [
+        "it",
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/pilot-economics.csv",
+      "sha256": "c208baa03a09a3b69ca2a6abce6861b1206c43e40ac479ee8e4325a3b67b74c3",
+      "languages": [
+        "it",
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/proposal-it.md",
+      "sha256": "2f4d9b83eed9f921b524e5a5d7dd76c8135b2a0611ad036d9cc68a2fb51e3645",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/proposal-it.md",
+      "sha256": "2f4d9b83eed9f921b524e5a5d7dd76c8135b2a0611ad036d9cc68a2fb51e3645",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/economics-it.md",
+      "sha256": "e8811abcb21c2b8858fa62773061242d7dd738a6b81396e83566e66f9cd32c2e",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/economics-it.md",
+      "sha256": "e8811abcb21c2b8858fa62773061242d7dd738a6b81396e83566e66f9cd32c2e",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/operations-it.md",
+      "sha256": "9f321e7f7a6d8478cdae31447c11f2c1c99403481191a6df43f6a9f47589a981",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/operations-it.md",
+      "sha256": "9f321e7f7a6d8478cdae31447c11f2c1c99403481191a6df43f6a9f47589a981",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-it.md",
+      "sha256": "d5046fe8ff4597aee8618399c636dbd9e0a52e82106b9b4dcd061321fb6ef0da",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/proposal-en.md",
+      "sha256": "4eb9190682d12d155468ab6e51dd74eb3aa7c355c8b0692de9d2015ba23bf31e",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/proposal-en.md",
+      "sha256": "4eb9190682d12d155468ab6e51dd74eb3aa7c355c8b0692de9d2015ba23bf31e",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/economics-en.md",
+      "sha256": "886a6eac53a55dac853b03e0c9bda41e89d163387625296bf3a2255b4c33e049",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/economics-en.md",
+      "sha256": "886a6eac53a55dac853b03e0c9bda41e89d163387625296bf3a2255b4c33e049",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/operations-en.md",
+      "sha256": "16460a84a4f63322ca193519c010871554a2393beeef7eb4d34e7c55b606580e",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/operations-en.md",
+      "sha256": "16460a84a4f63322ca193519c010871554a2393beeef7eb4d34e7c55b606580e",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-en.md",
+      "sha256": "a08cdc87f90cd7251aa4160a1326213406ea61b34c219bed36c57ab857f60d04",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Preparare un business plan con Vera",
+      "goal": "Imparare a partire da una proposta, fornire i dati disponibili e ottenere un report che aiuti a decidere cosa provare, cambiare o approfondire.",
+      "scenario": "Ciclo Arco valuta il ritiro e la riconsegna delle biciclette. Sono disponibili una proposta, ipotesi economiche e informazioni operative ancora da verificare.",
+      "scope": "Un primo business plan per decidere un pilota. Il report affronta offerta, clienti, operatività, economia, cassa, alternative e prossime azioni; dati mancanti restano espliciti.",
+      "inputs": "Apri proposal-it.md, economics-it.md, operations-it.md e pilot-economics.csv. Spiega l’idea e la decisione, allegando ciò che hai. Non occorre preparare un modello completo o scrivere file tecnici.",
+      "request": "Vera, prepara un business plan per valutare questo servizio di ritiro biciclette. Usa proposta e ipotesi fornite, distinguile dalle evidenze e mostrami cosa conviene verificare prima di avviare il pilota.",
+      "steps": [
+        "In questa conversazione Vera legge la proposta e chiarisce cliente, bisogno e decisione. L’assistente spiega per iscritto il percorso del business plan e le informazioni che aiutano a rispondere.",
+        "Vera valuta domanda, operatività, costi e alternative, calcola le economie supportate e prepara il report con il workflow corrente. L’assistente distingue dati, ipotesi e lacune; non inventa costi mancanti per completare la cassa.",
+        "Apri il report HTML generato. Parti dalla raccomandazione, passa a economia e operatività e segui una cifra alla sua fonte. Leggi cosa manca sulla cassa e quale prova è proposta prima di impegnarsi."
+      ],
+      "deliverables": [
+        "Un report HTML leggibile con raccomandazione, ragionamento, dati calcolati disponibili e prossime azioni.",
+        "Fonti e ipotesi accessibili nel report, con stato provvisorio e questioni da rivedere."
+      ],
+      "review": "Controlla che la raccomandazione discenda dalle evidenze, che l’interesse informale non diventi domanda dimostrata e che l’economia parziale non venga presentata come fabbisogno finanziario completo. Le ipotesi e le conclusioni restano da rivedere.",
+      "checkpoints": [
+        "Prima del lavoro, indica quale decisione vuoi prendere con il business plan.",
+        "Nel report, trova la raccomandazione, una sua dipendenza e la prossima prova utile."
+      ],
+      "practice": "Aggiungi update-it.md allo stesso caso e chiedi come cambia il piano con la diversa disponibilità del mezzo. Vera rivede raccomandazione, ipotesi e prove necessarie in un nuovo report collegato al precedente. Individua cosa cambia anche senza nuovi numeri.",
+      "success": "Sai avviare un business plan da ciò che hai, leggere la raccomandazione e rivedere il piano quando emerge nuova evidenza.",
+      "repeat": "Descrivi a Vera attività, clienti, decisione e vincoli; allega documenti e ipotesi. Usa il report per discutere il prossimo passo e torna nello stesso caso quando prezzi, domanda, operatività o finanziamento cambiano."
+    },
+    "en": {
+      "title": "Prepare a business plan with Vera",
+      "goal": "Learn to start from a proposal, supply available information and obtain a report that helps decide what to test, change or investigate.",
+      "scenario": "Ciclo Arco is considering bicycle pickup and return. A proposal, economic assumptions and operating information are available, with important points still unverified.",
+      "scope": "A first business plan for a pilot decision. The report covers proposition, customers, operations, economics, cash, alternatives and next actions; missing information remains explicit.",
+      "inputs": "Open proposal-en.md, economics-en.md, operations-en.md and pilot-economics.csv. Explain the idea and decision and provide what you have. You need neither a complete model nor technical configuration files.",
+      "request": "Vera, prepare a business plan to assess this bicycle pickup service. Use the proposal and assumptions, distinguish them from evidence and show what should be tested before launching the pilot.",
+      "steps": [
+        "In this conversation, Vera reads the proposal and clarifies customer, need and decision. The assistant explains the planning process and which information helps answer the question.",
+        "Vera assesses demand, operations, costs and alternatives, calculates supported economics and builds the report through the current workflow. The assistant distinguishes evidence, assumptions and gaps without inventing missing cash costs.",
+        "Open the generated HTML report. Start with the recommendation, move to economics and operations and trace a figure to its source. Read the cash limitations and the proposed test before making commitments."
+      ],
+      "deliverables": [
+        "One readable HTML report with recommendation, reasoning, available calculated figures and next actions.",
+        "Sources and assumptions accessible in the report, with provisional status and matters for review."
+      ],
+      "review": "Check that the recommendation follows from evidence, informal interest does not become proven demand, and partial economics are not presented as complete funding needs. Assumptions and conclusions remain subject to review.",
+      "checkpoints": [
+        "Before work starts, identify the decision the business plan should inform.",
+        "In the report, find the recommendation, one dependency and the next useful test."
+      ],
+      "practice": "Add update-en.md to the same case and ask how the changed vehicle availability affects the plan. Vera revises recommendation, assumptions and required tests in a new report linked to the earlier one. Identify what changes even without new figures.",
+      "success": "You can start a business plan with available information, read its recommendation and revise it when new evidence arrives.",
+      "repeat": "Describe the business, customers, decision and constraints to Vera; provide documents and assumptions. Use the report to discuss the next step and return to the same case when prices, demand, operations or financing change."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "854d72ba8b9e8c0b23e69a16edb3d6a3cf7d815e376a5c58a03d3d7882f3de2e"
+}

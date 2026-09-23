@@ -1,0 +1,73 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "business-planning",
+  "course_sha256": "854d72ba8b9e8c0b23e69a16edb3d6a3cf7d815e376a5c58a03d3d7882f3de2e",
+  "reviewer": "Codex first-use lesson and native business-plan output review",
+  "reviewed_at": "2026-09-23T11:52:59.382187+00:00",
+  "review_scope": "Reviewed both localized lessons and generated native demo/practice plans. Tests replay model-authored interpretation through the current workflow, with distinct owning-product case handling and preserved preceding plan. Chrome DOM review additionally inspected the English practice reader view. No fresh model inference, market research, learner participation, professional approval or complete financing model is claimed.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The learner starts with a proposed bicycle collection service and a decision about a pilot, provides available documents, follows the workflow and reads the resulting recommendation. It teaches the complete ordinary first-use path without requiring technical input files from the learner.",
+        "inputs_and_request": "Prepared fictional proposal, operations note, economic assumptions and CSV distinguish informal customer interest from orders. The request asks what to test before launch. Missing insurance, taxes, cash timing and investment are explicit rather than silently zeroed.",
+        "execution_and_checkpoints": "The actual current workflow calculates the supplied operating assumptions, binds the authored interpretation to sources and renders a provisional plan. Checkpoints ask for the intended decision, recommendation, one dependency and next useful test.",
+        "deliverable_and_next_action": "The generated HTML covers customers, operations, economics, cash limitations, alternatives and next actions. At EUR45 price, EUR18 variable cost and EUR800 monthly fixed cost, 20/30/40 orders produce partial results of -260/10/280 EUR. This is not represented as liquidity or financing adequacy. Source and review details remain accessible.",
+        "practice_and_repeat": "The practice adds changed vehicle availability to the same case and produces a new report linked to the earlier plan. It changes the recommendation from test to redesign and calls for Saturday customer feedback and an updated quote. The original economic assumptions remain explicitly a reference, not an invented Saturday forecast.",
+        "language_and_pacing": "Italian and English instructions use descriptive titles, a natural request and concrete output checks. The it outline totals 390 seconds; workflow processing and discussion may take longer. Codex retains teacher/working chats, while the Cowork projection teaches in writing."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_business_plan_kit_runs_and_revises_the_owning_product_case[demo-it-vera]",
+        "result_review": "The demo recommends a limited test and provides supported partial operating economics, explicit cash gaps and concrete customer/route/quote checks. The recommendation follows the supplied fictional evidence; review stays pending and no launch, investment or client commitment is authorized.",
+        "reviewed_artifacts": [
+          {
+            "name": "business_plan_review.html",
+            "sha256": "a62e63d826edd221b8de4e5d6f401dfdba07ed0f63d00a97cc7ad07865fa5be0"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_business_plan_kit_runs_and_revises_the_owning_product_case[practice-it-vera]",
+        "result_review": "The new practice report responds to the unavailable afternoon vehicle by recommending redesign, preserves the prior plan and refuses to relabel the old economic assumptions as a Saturday forecast. The recommendation follows the supplied fictional evidence; review stays pending and no launch, investment or client commitment is authorized.",
+        "reviewed_artifacts": [
+          {
+            "name": "business_plan_review.html",
+            "sha256": "a1385fda6c18fbf12070011b358ad6d5e68f0233368e32bd83c4b557c8ceae73"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The learner starts with a proposed bicycle collection service and a decision about a pilot, provides available documents, follows the workflow and reads the resulting recommendation. It teaches the complete ordinary first-use path without requiring technical input files from the learner.",
+        "inputs_and_request": "Prepared fictional proposal, operations note, economic assumptions and CSV distinguish informal customer interest from orders. The request asks what to test before launch. Missing insurance, taxes, cash timing and investment are explicit rather than silently zeroed.",
+        "execution_and_checkpoints": "The actual current workflow calculates the supplied operating assumptions, binds the authored interpretation to sources and renders a provisional plan. Checkpoints ask for the intended decision, recommendation, one dependency and next useful test.",
+        "deliverable_and_next_action": "The generated HTML covers customers, operations, economics, cash limitations, alternatives and next actions. At EUR45 price, EUR18 variable cost and EUR800 monthly fixed cost, 20/30/40 orders produce partial results of -260/10/280 EUR. This is not represented as liquidity or financing adequacy. Source and review details remain accessible.",
+        "practice_and_repeat": "The practice adds changed vehicle availability to the same case and produces a new report linked to the earlier plan. It changes the recommendation from test to redesign and calls for Saturday customer feedback and an updated quote. The original economic assumptions remain explicitly a reference, not an invented Saturday forecast.",
+        "language_and_pacing": "Italian and English instructions use descriptive titles, a natural request and concrete output checks. The en outline totals 390 seconds; workflow processing and discussion may take longer. Codex retains teacher/working chats, while the Cowork projection teaches in writing."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_business_plan_kit_runs_and_revises_the_owning_product_case[demo-en-vera]",
+        "result_review": "The demo recommends a limited test and provides supported partial operating economics, explicit cash gaps and concrete customer/route/quote checks. The recommendation follows the supplied fictional evidence; review stays pending and no launch, investment or client commitment is authorized.",
+        "reviewed_artifacts": [
+          {
+            "name": "business_plan_review.html",
+            "sha256": "9eae0ca48e7a1aa0db069a50165ff223017f00aad93cb7e3e45e8c471e1af5fa"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_business_plan_kit_runs_and_revises_the_owning_product_case[practice-en-vera]",
+        "result_review": "The new practice report responds to the unavailable afternoon vehicle by recommending redesign, preserves the prior plan and refuses to relabel the old economic assumptions as a Saturday forecast. The recommendation follows the supplied fictional evidence; review stays pending and no launch, investment or client commitment is authorized.",
+        "reviewed_artifacts": [
+          {
+            "name": "business_plan_review.html",
+            "sha256": "99b3578c2e36ab92af7fdd805dce4b4b035e5f11d110bd7f3c3c1a1e9c6dcc05"
+          }
+        ]
+      }
+    }
+  }
+}

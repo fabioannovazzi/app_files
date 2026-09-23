@@ -1,0 +1,286 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "lucia",
+  "workflow": "quesito-legale-fiscale",
+  "course_sha256": "66b9e925b2a84f0f13cc30c562d588a6aaa4a2bd17109a24425d333f635661ff",
+  "reviewer": "Codex: authored lesson, official-source and rendered native-output review",
+  "reviewed_at": "2026-09-23T11:43:24.017498+00:00",
+  "review_scope": "First-use kit, fictional request, native planning, actual authored multilingual answer, source inspection, claim review, Word packaging and preserved practice revision. Rendered all ten distinct answer texts; both products produce the same reviewed document bodies. Regression fixtures replay dated official-source evidence and model-authored judgments; they do not attest fresh model inference, learner participation, professional approval or live voice.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson starts with a professional question, audience and desired short briefing, then follows research choice, drafting, source/claim checks and the resulting Word document. It teaches the ordinary complete journey rather than a legal edge case.",
+        "inputs_and_request": "The localized fictional Imprese Arco request supplies scope, intended readers and a two-page limit. The attached original Spanish official directive and explanatory guide are starting sources, not a prewritten answer. Language is not treated as jurisdiction.",
+        "execution_and_checkpoints": "The current planning and validation helpers process the bound source files and the model-authored answer. Checkpoints ask the learner to explain the question and find a conclusion, its source and a remaining limitation. Codex retains teacher and working chats; the packaged Cowork lesson uses written instruction in one conversation.",
+        "deliverable_and_next_action": "Actual Word documents are readable and stay within two pages in every language. Citations identify the original EU text and a dated official legislative-status check. The claim audit retains national-law/current-version limitations and professional review remains pending. These general briefings do not decide an individual debt.",
+        "practice_and_repeat": "The changed request adds public-authority suppliers. A new planning and answer run in the same engagement adds the distinct public-debtor rules and preserves every earlier run file. Repeat instructions ask for facts, jurisdiction, audience and output before research.",
+        "language_and_pacing": "Italian instructions consistently describe the complete first-use journey and source review. The six outline sections total 390 seconds; research, processing, questions and user review can extend the session. No human timing is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_question_execution::test_question_kit_exports_actual_reviewed_answer[it-demo-lucia]",
+        "result_review": "The native pipeline exports a source-linked general B2B briefing with conditional late-payment interest, contractual-term limits and recovery-cost rules. All material claims have separate identity, source-support, reasoning and judgment assessments. The proposal status is a dated official-source observation, not a claim that proposed rules are enacted. The two-page render is legible without clipping or missing glyphs; professional decisions remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "validated_document.docx",
+            "sha256": "ff0404f7b5ae771bce596e4a60b6732f344fd2fd5063b35d3742cfe5fc49f5ef"
+          },
+          {
+            "name": "validated_document.md",
+            "sha256": "785bc9bbdf952885fa179fe4ccd3addd4d964abc8cb32d5dcf91da7bd305bb71"
+          },
+          {
+            "name": "claims_review.json",
+            "sha256": "bd7c4b183b83370824b72dc5856b41911c04528d71d59c76bd531a290d510fa1"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "544f94e1bcfaecf859baba24f594794face6dfea59eeef369ae6565b50785cd1"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_question_execution::test_question_kit_exports_actual_reviewed_answer[it-practice-lucia]",
+        "result_review": "The native pipeline exports a new version in the same engagement, adding the distinct public-authority rules while preserving all earlier planning and answer outputs. All material claims have separate identity, source-support, reasoning and judgment assessments. The proposal status is a dated official-source observation, not a claim that proposed rules are enacted. The two-page render is legible without clipping or missing glyphs; professional decisions remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "validated_document.docx",
+            "sha256": "46d7de928b47daabe1f18430dd2443b4810ff5332522061bb861840198e866cf"
+          },
+          {
+            "name": "validated_document.md",
+            "sha256": "6cf3badb045bc32e82047df65da194d5f1ee42a073910d15a37446b2b3039381"
+          },
+          {
+            "name": "claims_review.json",
+            "sha256": "61397a66f5d27fd663be82310e061322970d999d81b91d8b13ad93a2ea8b8333"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "1ecc2fee58a35c590a191980ab34c7e0e07654be1d6c666b0135dc48d1859089"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson starts with a professional question, audience and desired short briefing, then follows research choice, drafting, source/claim checks and the resulting Word document. It teaches the ordinary complete journey rather than a legal edge case.",
+        "inputs_and_request": "The localized fictional Imprese Arco request supplies scope, intended readers and a two-page limit. The attached original Spanish official directive and explanatory guide are starting sources, not a prewritten answer. Language is not treated as jurisdiction.",
+        "execution_and_checkpoints": "The current planning and validation helpers process the bound source files and the model-authored answer. Checkpoints ask the learner to explain the question and find a conclusion, its source and a remaining limitation. Codex retains teacher and working chats; the packaged Cowork lesson uses written instruction in one conversation.",
+        "deliverable_and_next_action": "Actual Word documents are readable and stay within two pages in every language. Citations identify the original EU text and a dated official legislative-status check. The claim audit retains national-law/current-version limitations and professional review remains pending. These general briefings do not decide an individual debt.",
+        "practice_and_repeat": "The changed request adds public-authority suppliers. A new planning and answer run in the same engagement adds the distinct public-debtor rules and preserves every earlier run file. Repeat instructions ask for facts, jurisdiction, audience and output before research.",
+        "language_and_pacing": "English instructions consistently describe the complete first-use journey and source review. The six outline sections total 390 seconds; research, processing, questions and user review can extend the session. No human timing is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_question_execution::test_question_kit_exports_actual_reviewed_answer[en-demo-lucia]",
+        "result_review": "The native pipeline exports a source-linked general B2B briefing with conditional late-payment interest, contractual-term limits and recovery-cost rules. All material claims have separate identity, source-support, reasoning and judgment assessments. The proposal status is a dated official-source observation, not a claim that proposed rules are enacted. The two-page render is legible without clipping or missing glyphs; professional decisions remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "validated_document.docx",
+            "sha256": "2e1ed578b7f04d2e6ba3a6420abe763e2c85f1b889cb96b4ecdec41f6fae55c3"
+          },
+          {
+            "name": "validated_document.md",
+            "sha256": "7ccb2ee69cc1c8ee50a6a327ca282a00f853c4e6b0edddbae6c2326dda6843db"
+          },
+          {
+            "name": "claims_review.json",
+            "sha256": "4cceb3751a78b12369401a51e4f2fa0c32862572b70342a99fd4c8285b2a0af3"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "8f4cacd5b849ad8e435618e5a0770d7034a19cbd247767f3344fafcb72c5dfdb"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_question_execution::test_question_kit_exports_actual_reviewed_answer[en-practice-lucia]",
+        "result_review": "The native pipeline exports a new version in the same engagement, adding the distinct public-authority rules while preserving all earlier planning and answer outputs. All material claims have separate identity, source-support, reasoning and judgment assessments. The proposal status is a dated official-source observation, not a claim that proposed rules are enacted. The two-page render is legible without clipping or missing glyphs; professional decisions remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "validated_document.docx",
+            "sha256": "b73418fb61d2189bb4f8953de2457418735dbbad075efc82f869d981592d2161"
+          },
+          {
+            "name": "validated_document.md",
+            "sha256": "655a69ed1ea381ee57d03a914719772481a11ab8d2742f4f9af1f6d902720edb"
+          },
+          {
+            "name": "claims_review.json",
+            "sha256": "05495669b636ce87bbd6281c55477b0c2329b1f7bf74f909a176fa04f78f7a0d"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "00bfcd8c1016f48284e02467882bd5c6bba748d8c5496fdcef50afc5a027bd31"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson starts with a professional question, audience and desired short briefing, then follows research choice, drafting, source/claim checks and the resulting Word document. It teaches the ordinary complete journey rather than a legal edge case.",
+        "inputs_and_request": "The localized fictional Imprese Arco request supplies scope, intended readers and a two-page limit. The attached original Spanish official directive and explanatory guide are starting sources, not a prewritten answer. Language is not treated as jurisdiction.",
+        "execution_and_checkpoints": "The current planning and validation helpers process the bound source files and the model-authored answer. Checkpoints ask the learner to explain the question and find a conclusion, its source and a remaining limitation. Codex retains teacher and working chats; the packaged Cowork lesson uses written instruction in one conversation.",
+        "deliverable_and_next_action": "Actual Word documents are readable and stay within two pages in every language. Citations identify the original EU text and a dated official legislative-status check. The claim audit retains national-law/current-version limitations and professional review remains pending. These general briefings do not decide an individual debt.",
+        "practice_and_repeat": "The changed request adds public-authority suppliers. A new planning and answer run in the same engagement adds the distinct public-debtor rules and preserves every earlier run file. Repeat instructions ask for facts, jurisdiction, audience and output before research.",
+        "language_and_pacing": "French instructions consistently describe the complete first-use journey and source review. The six outline sections total 390 seconds; research, processing, questions and user review can extend the session. No human timing is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_question_execution::test_question_kit_exports_actual_reviewed_answer[fr-demo-lucia]",
+        "result_review": "The native pipeline exports a source-linked general B2B briefing with conditional late-payment interest, contractual-term limits and recovery-cost rules. All material claims have separate identity, source-support, reasoning and judgment assessments. The proposal status is a dated official-source observation, not a claim that proposed rules are enacted. The two-page render is legible without clipping or missing glyphs; professional decisions remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "validated_document.docx",
+            "sha256": "9453fb321cf7650393dc8ad9b08e7057951a8f3d6fef1864c29257b7d8a06c9a"
+          },
+          {
+            "name": "validated_document.md",
+            "sha256": "059d69289870a07039e5772d38799f211ad278f5238160a2282f9ee450b6303b"
+          },
+          {
+            "name": "claims_review.json",
+            "sha256": "92a32efb07731f06a425bbcf7c692ea41d91e559e37affa50263780b34ab4f7e"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "f880550c3da65603d725b5d3cccb5a60e79e64f1deaea254d308672786844b90"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_question_execution::test_question_kit_exports_actual_reviewed_answer[fr-practice-lucia]",
+        "result_review": "The native pipeline exports a new version in the same engagement, adding the distinct public-authority rules while preserving all earlier planning and answer outputs. All material claims have separate identity, source-support, reasoning and judgment assessments. The proposal status is a dated official-source observation, not a claim that proposed rules are enacted. The two-page render is legible without clipping or missing glyphs; professional decisions remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "validated_document.docx",
+            "sha256": "60fa575f446da10c4fa0b1c84b2c8acca0fff72847b6d14fbf5e5466e8063318"
+          },
+          {
+            "name": "validated_document.md",
+            "sha256": "cbc3dfb948af84ce4338d206b4ac815af5c0a355b5b3c5b3f4f8563ac5a6fac4"
+          },
+          {
+            "name": "claims_review.json",
+            "sha256": "2cf3004433f9cfea7ffdcd6c429b460ccbd91a4fa6171c9c4e15780bcd155f56"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "b5600c39fc57f74d43738dcaf6f4f11fc42320cf65b5776ee46d88f083ccc486"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson starts with a professional question, audience and desired short briefing, then follows research choice, drafting, source/claim checks and the resulting Word document. It teaches the ordinary complete journey rather than a legal edge case.",
+        "inputs_and_request": "The localized fictional Imprese Arco request supplies scope, intended readers and a two-page limit. The attached original Spanish official directive and explanatory guide are starting sources, not a prewritten answer. Language is not treated as jurisdiction.",
+        "execution_and_checkpoints": "The current planning and validation helpers process the bound source files and the model-authored answer. Checkpoints ask the learner to explain the question and find a conclusion, its source and a remaining limitation. Codex retains teacher and working chats; the packaged Cowork lesson uses written instruction in one conversation.",
+        "deliverable_and_next_action": "Actual Word documents are readable and stay within two pages in every language. Citations identify the original EU text and a dated official legislative-status check. The claim audit retains national-law/current-version limitations and professional review remains pending. These general briefings do not decide an individual debt.",
+        "practice_and_repeat": "The changed request adds public-authority suppliers. A new planning and answer run in the same engagement adds the distinct public-debtor rules and preserves every earlier run file. Repeat instructions ask for facts, jurisdiction, audience and output before research.",
+        "language_and_pacing": "German instructions consistently describe the complete first-use journey and source review. The six outline sections total 390 seconds; research, processing, questions and user review can extend the session. No human timing is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_question_execution::test_question_kit_exports_actual_reviewed_answer[de-demo-lucia]",
+        "result_review": "The native pipeline exports a source-linked general B2B briefing with conditional late-payment interest, contractual-term limits and recovery-cost rules. All material claims have separate identity, source-support, reasoning and judgment assessments. The proposal status is a dated official-source observation, not a claim that proposed rules are enacted. The two-page render is legible without clipping or missing glyphs; professional decisions remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "validated_document.docx",
+            "sha256": "f570476ccfda2d783ed65ecdb6f1f6f6083a63483ed39a312a0c1e8f3242ffcf"
+          },
+          {
+            "name": "validated_document.md",
+            "sha256": "0429b4ea783801bae52ad887f2c678d5e6a702d1bcaf60d15c046abcfa9e5252"
+          },
+          {
+            "name": "claims_review.json",
+            "sha256": "b52f31a4ca45e6dfce808b8b6105929c63f1dca3c56fef95b8e16220c7b6c4c2"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "e7f871d6969c341789118442161839c61a2baaf00bdf8f79a27fd29d8b27c742"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_question_execution::test_question_kit_exports_actual_reviewed_answer[de-practice-lucia]",
+        "result_review": "The native pipeline exports a new version in the same engagement, adding the distinct public-authority rules while preserving all earlier planning and answer outputs. All material claims have separate identity, source-support, reasoning and judgment assessments. The proposal status is a dated official-source observation, not a claim that proposed rules are enacted. The two-page render is legible without clipping or missing glyphs; professional decisions remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "validated_document.docx",
+            "sha256": "1b1a9d89e53869616bee4578e173242e85e2005ac19881c7e391b60fa133c324"
+          },
+          {
+            "name": "validated_document.md",
+            "sha256": "49b937c94f55c7b2b718c8d8772ea86934072e4a5412cbf51c62499a79a11e57"
+          },
+          {
+            "name": "claims_review.json",
+            "sha256": "d361e2f21479133d274455fb5d9e2dd42cac8a5037f98eae79250d8674e8533f"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "d6506c78e33e393b2819bed66a1701ca0001bea1db16cb0bfd7f04002b4c043f"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson starts with a professional question, audience and desired short briefing, then follows research choice, drafting, source/claim checks and the resulting Word document. It teaches the ordinary complete journey rather than a legal edge case.",
+        "inputs_and_request": "The localized fictional Imprese Arco request supplies scope, intended readers and a two-page limit. The attached original Spanish official directive and explanatory guide are starting sources, not a prewritten answer. Language is not treated as jurisdiction.",
+        "execution_and_checkpoints": "The current planning and validation helpers process the bound source files and the model-authored answer. Checkpoints ask the learner to explain the question and find a conclusion, its source and a remaining limitation. Codex retains teacher and working chats; the packaged Cowork lesson uses written instruction in one conversation.",
+        "deliverable_and_next_action": "Actual Word documents are readable and stay within two pages in every language. Citations identify the original EU text and a dated official legislative-status check. The claim audit retains national-law/current-version limitations and professional review remains pending. These general briefings do not decide an individual debt.",
+        "practice_and_repeat": "The changed request adds public-authority suppliers. A new planning and answer run in the same engagement adds the distinct public-debtor rules and preserves every earlier run file. Repeat instructions ask for facts, jurisdiction, audience and output before research.",
+        "language_and_pacing": "Spanish instructions consistently describe the complete first-use journey and source review. The six outline sections total 390 seconds; research, processing, questions and user review can extend the session. No human timing is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_question_execution::test_question_kit_exports_actual_reviewed_answer[es-demo-lucia]",
+        "result_review": "The native pipeline exports a source-linked general B2B briefing with conditional late-payment interest, contractual-term limits and recovery-cost rules. All material claims have separate identity, source-support, reasoning and judgment assessments. The proposal status is a dated official-source observation, not a claim that proposed rules are enacted. The two-page render is legible without clipping or missing glyphs; professional decisions remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "validated_document.docx",
+            "sha256": "0ded9e4adb376ca81a5e17b0fef48efbeeb77624cf8b7d4a0fc93b0132ab1e6f"
+          },
+          {
+            "name": "validated_document.md",
+            "sha256": "c053b93a3b6be93daf22eafaf991afada1850b635bbde0208630fb1868b9b19d"
+          },
+          {
+            "name": "claims_review.json",
+            "sha256": "4747faf9954f929dad5c04d6f50335efd275b121bdb9434c9d8479f6b00273a8"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "0b5250465f1e058890f91e8fda6a4a42b3bf6a374ac23639b325a6e1eeb09512"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_question_execution::test_question_kit_exports_actual_reviewed_answer[es-practice-lucia]",
+        "result_review": "The native pipeline exports a new version in the same engagement, adding the distinct public-authority rules while preserving all earlier planning and answer outputs. All material claims have separate identity, source-support, reasoning and judgment assessments. The proposal status is a dated official-source observation, not a claim that proposed rules are enacted. The two-page render is legible without clipping or missing glyphs; professional decisions remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "validated_document.docx",
+            "sha256": "053a911ce3c1201e13999db01794be01ca76aaadbc96c00bcb5edb614f93f089"
+          },
+          {
+            "name": "validated_document.md",
+            "sha256": "67c1bf356e63181a40b91187af026d798d7a7f8e597e0c0e56199c1bcd3c775e"
+          },
+          {
+            "name": "claims_review.json",
+            "sha256": "b221e02f7e4c61dcee8e00e22e696d9e1b5f24c09f6d2b117d5ad6580ad78b73"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "7c9cbb211afd19dcb302c090bf999e4ca535de767d75ff33655c905a1d8ff6b9"
+          }
+        ]
+      }
+    }
+  }
+}

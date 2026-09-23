@@ -1,0 +1,510 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "email-cliente",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "supporting_task",
+  "parent_workflow": "new-client",
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "current_intake_review_and_client_email"
+  },
+  "sources": [
+    {
+      "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+      "sha256": "4b56449248b02f910f434804918f16c28713387b17432aea4993607a5275adf7"
+    },
+    {
+      "path": "modules/client-file-preparation/assets/icon.svg",
+      "sha256": "b4f798ec673400c5145bda9fb5cb282fff745455a56845e42feb1738d1013219"
+    },
+    {
+      "path": "modules/client-file-preparation/assets/review-workbench-adapter.json",
+      "sha256": "42af84f012b36d6d34c2646a9277b1a9aaf9eb8c4bf9287038948a56d2d401d0"
+    },
+    {
+      "path": "modules/client-file-preparation/references/workflow-reference.md",
+      "sha256": "0f8a3080bafdadf5d8aed1082908d851da3c2423c1730291f2a19dc4e10a9e71"
+    },
+    {
+      "path": "modules/client-file-preparation/requirements.txt",
+      "sha256": "52d819e8a9f405e7605de84ae65521166be565d85ad602df65adc740d5693186"
+    },
+    {
+      "path": "modules/client-file-preparation/schemas/model_handoff.schema.json",
+      "sha256": "38d7e5593d9a0ba12cbab23d7f1e8a03f239ceb230605f780b2bce4064e1d40d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/build_file_preparation_outputs.py",
+      "sha256": "5d84eb4fba8b93ae03a50108925fcaef068ffaad0263ccd0fc1a93deb08659d1"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_dependencies.py",
+      "sha256": "48d98b528325d883fbeb8d3921cb8c8883d7087c87cc8950dd77b4be711ee9c4"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_environment.py",
+      "sha256": "70f67540c705fe174163390ac2aea0582ef30235a52f2dd60f08717efd096400"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/detect_duplicates.py",
+      "sha256": "6d65563443e8be6eb08a97a89638e5e5fc035c27c34fbc0bbf793fe0e0d2ee81"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/extract_documents.py",
+      "sha256": "811ce6a6b2212c2550ab3c7c41e7c5e9d6662ce77256382b63d257a7419f87aa"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/managed_ocr_runtime.py",
+      "sha256": "664987b3e53f0b66bd1907493215f352c8487c75c7ec76347f8a41ba3336b222"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/model_handoff.py",
+      "sha256": "9c46e69ad33e0087b7d23585442c0dad425cf6eb4551f164d460ba27ec6afb5f"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fatturapa_xml.py",
+      "sha256": "27c6dc9104e04cea7bcff287dec4315951fe3bf9ef07526a89845fd5b7eb255d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fiscal_forms.py",
+      "sha256": "a18d78910d8015c4e41b2e0355724bc8df25dd5330b26b07b2785a2c24c384fe"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/review_session.py",
+      "sha256": "df5c9a8a2f47c6f6200c36f7d2a9e3c4db026f1c7c95492a734ba2f7305b1e3d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/scan_folder.py",
+      "sha256": "b4e5bb6dd0347b9c66e1e21b3f21a7e1a84805f58008401857cc613e90043789"
+    },
+    {
+      "path": "modules/client-file-preparation/skills/email-cliente/SKILL.md",
+      "sha256": "6f3aa94ca18ffb406515ec87aff28e608bb8022e71efcb808b922bf5bc469a90"
+    },
+    {
+      "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
+      "sha256": "5cb95e09970123a29a0574459d953ce03a908e69a899a68bb4374d383640a704"
+    },
+    {
+      "path": "modules/client-file-preparation/templates/memo_istruttoria.md",
+      "sha256": "d718069bee76ed6cd63e4f96b1dffb2d199ba8c3e969a7da1aaf709f6ee691dd"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/email-cliente/SKILL.md",
+      "sha256": "1f91c8bff55055a3096c648fede03212b8f3f1203e12fc6234784adff4c6cabe"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/CU-income.md",
+      "sha256": "37277e504c0c5d0a6d31cf5e52f960218118a925c93b5770d571812cb944cf1d",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/F24-first.md",
+      "sha256": "873b2e55c29b3794507acf566672426d8c38111a111ef26d55410673bcd1b565",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/CU-income.md",
+      "sha256": "37277e504c0c5d0a6d31cf5e52f960218118a925c93b5770d571812cb944cf1d",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/F24-first.md",
+      "sha256": "873b2e55c29b3794507acf566672426d8c38111a111ef26d55410673bcd1b565",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-it.md",
+      "sha256": "ef70215a3d852ea58b33e34850bff7ab0899fcc2550f16787e11ac7a24b8f1db",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-it.md",
+      "sha256": "ef70215a3d852ea58b33e34850bff7ab0899fcc2550f16787e11ac7a24b8f1db",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client-reply-it.md",
+      "sha256": "8d67dcf6816527ce371a71fa953c4d1247e5915251e9e1bdb366652a9d91091d",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-en.md",
+      "sha256": "8cbb3dd7fcb7b2b12f2261d2607b90c8d849c27866703312423c0ccd2f13d7cc",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-en.md",
+      "sha256": "8cbb3dd7fcb7b2b12f2261d2607b90c8d849c27866703312423c0ccd2f13d7cc",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client-reply-en.md",
+      "sha256": "ee6573dd62331dc839c2ca785580430ceea2917c0d3498a6bd193b340462fa77",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-fr.md",
+      "sha256": "36810aa5a0d6f95139d3c38bcdb366fd30bd2f7d7e8b1087df0aafda5d0744a5",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-fr.md",
+      "sha256": "36810aa5a0d6f95139d3c38bcdb366fd30bd2f7d7e8b1087df0aafda5d0744a5",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client-reply-fr.md",
+      "sha256": "8cc4d0c0bf7efb49a545710fc4c72bc948c2601cb406033f9b0d11c3440160f2",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-de.md",
+      "sha256": "c0db760e858e5dfdeffbff8b6cf1f6721f8d60ddc09ec4d5171959cc1a3c9995",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-de.md",
+      "sha256": "c0db760e858e5dfdeffbff8b6cf1f6721f8d60ddc09ec4d5171959cc1a3c9995",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client-reply-de.md",
+      "sha256": "c700b652f84d5f301bb36ddb1a814e5eb3bf0397966f2b8f4538bbd556c01490",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-es.md",
+      "sha256": "e0bf63ac75267e34f7dd48223c07b88bc4c1e75fe601183054dce11b860b1161",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-es.md",
+      "sha256": "e0bf63ac75267e34f7dd48223c07b88bc4c1e75fe601183054dce11b860b1161",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client-reply-es.md",
+      "sha256": "e73b1d0bafc8c5021c0a9ccc235ced1325dfcb56b48f442027817b1637d4a270",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Preparare una email per chiedere documenti al cliente",
+      "goal": "Imparare a trasformare le richieste documentali del fascicolo in una email breve, precisa e pronta per la revisione dello studio.",
+      "scenario": "Il cliente ha consegnato una CU e un F24. Lo studio deve capire se esistono altre CU e se tutti gli F24 della campagna sono già presenti. Prepariamo insieme la richiesta.",
+      "scope": "Operazione di supporto alla preparazione del fascicolo, campagna italiana 2026. Si prepara una bozza locale: invio e consulenza fiscale non fanno parte della lezione.",
+      "inputs": "Apri context-it.md, CU-income.md e F24-first.md. Il contesto indica le due conferme cercate. Vera prepara il fascicolo didattico e legge i documenti con il percorso corrente; non serve un elenco di richieste già approvate.",
+      "request": "Vera, prepara una email per chiedere al cliente se ha altre CU e se ci ha consegnato tutti gli F24 della campagna. Fammi prima rivedere le richieste sulla base di questo fascicolo.",
+      "steps": [
+        "L’assistente esegue la preparazione del fascicolo e mostra documenti ricevuti e domande proposte. L’assistente spiega quali informazioni sono già disponibili e quali conferme si cercano.",
+        "Nella pagina di revisione scegli le richieste pertinenti e restringi quelle troppo generiche alle due conferme del caso. Vera salva e applica le decisioni effettive prima di usarle nella bozza.",
+        "Vera scrive la email dalle richieste riviste. Apri la bozza, controlla oggetto, domande e tono; un’eventuale modifica viene salvata attraverso la stessa revisione, conservando il collegamento alle decisioni."
+      ],
+      "deliverables": [
+        "Bozza email locale da rivedere e usare come testo del messaggio al cliente.",
+        "Richieste documentali riviste e fascicolo di supporto, per verificare da dove proviene ogni domanda."
+      ],
+      "review": "Ogni domanda deve corrispondere a una richiesta scelta. Non chiedere di nuovo i file già ricevuti: chiedi se ne esistono altri o se il gruppo è completo. La bozza usa il riferimento cliente della procedura; destinatario e invio vanno controllati nel normale lavoro.",
+      "checkpoints": [
+        "Prima della bozza, indica quale conferma vuoi ottenere dal cliente.",
+        "Alla consegna, collega ciascuna domanda alla richiesta rivista."
+      ],
+      "practice": "Prepara un nuovo passaggio con client-reply-it.md insieme agli stessi documenti. Il cliente conferma che gli F24 sono completi. Rivedi le richieste e fai produrre una nuova bozza limitata alla conferma ancora aperta sulle CU; conserva la prima versione.",
+      "success": "Sai trovare la bozza, spiegare perché contiene ogni domanda e aggiornarla quando arriva una risposta, senza ripetere una richiesta risolta.",
+      "repeat": "Chiedi a Vera di riprendere il fascicolo e preparare la email dalle richieste riviste. Controlla domande, destinatario e allegati prima di inviarla con il normale canale dello studio."
+    },
+    "en": {
+      "title": "Prepare a client email requesting documents",
+      "goal": "Learn to turn a file’s document requests into a short, precise email for the practice to review.",
+      "scenario": "The client supplied one CU and one F24. The practice needs to know whether there are other CUs and whether all campaign F24s are present. We prepare that request together.",
+      "scope": "Supporting task within client file preparation, Italian 2026 campaign. The lesson produces a local draft; sending and tax advice are outside its scope.",
+      "inputs": "Open context-en.md, CU-income.md and F24-first.md. The context names the two confirmations sought. Vera prepares the teaching file and reads the documents through the current workflow; no pre-approved request list is needed.",
+      "request": "Vera, prepare an email asking whether the client has other CUs and has supplied all F24s for the campaign. First let me review the requests against this file.",
+      "steps": [
+        "The assistant prepares the file and shows received documents and proposed questions. The assistant explains what is already available and which confirmations are needed.",
+        "On the review page, choose relevant requests and narrow broad suggestions to the two confirmations in the case. Vera saves and applies the actual decisions before using them for the draft.",
+        "Vera writes the email from reviewed requests. Open it and check subject, questions and tone; any replacement is saved through the same review process with its link to the decisions."
+      ],
+      "deliverables": [
+        "Local email draft to review and use as the practice’s message text.",
+        "Reviewed document requests and supporting file, showing the basis of each question."
+      ],
+      "review": "Every question should match a selected request. Do not ask again for files already received: ask whether others exist or the set is complete. The draft uses the workflow’s client reference; check recipient and sending details in normal professional work.",
+      "checkpoints": [
+        "Before drafting, name the confirmation you want from the client.",
+        "At delivery, connect each question to its reviewed request."
+      ],
+      "practice": "Start a new pass with client-reply-en.md and the same documents. The client confirms that F24s are complete. Review the requests and produce a new draft limited to the remaining CU confirmation; retain the first version.",
+      "success": "You can find the draft, explain every question and update it after a reply without repeating a resolved request.",
+      "repeat": "Ask Vera to resume the file and draft from reviewed requests. Check questions, recipient and attachments before sending through the practice’s usual channel."
+    },
+    "fr": {
+      "title": "Préparer un courriel de demande de documents au client",
+      "goal": "Apprendre à transformer les demandes documentaires d’un dossier en un courriel court et précis à revoir au cabinet.",
+      "scenario": "Le client a fourni une CU et un F24. Le cabinet veut savoir s’il existe d’autres CU et si tous les F24 de la campagne sont présents. Nous préparons cette demande ensemble.",
+      "scope": "Opération de support à la préparation du dossier, campagne italienne 2026. La leçon produit un brouillon local ; l’envoi et le conseil fiscal sont hors périmètre.",
+      "inputs": "Ouvrez context-fr.md, CU-income.md et F24-first.md. Le contexte indique les deux confirmations recherchées. Vera prépare le dossier pédagogique et lit les documents avec le parcours courant ; aucune liste déjà approuvée n’est nécessaire.",
+      "request": "Vera, prépare un courriel demandant si le client possède d’autres CU et a transmis tous les F24 de la campagne. Fais-moi d’abord revoir les demandes à partir de ce dossier.",
+      "steps": [
+        "L’assistant prépare le dossier et montre documents reçus et questions proposées. L’assistant explique ce qui est disponible et les confirmations recherchées.",
+        "Sur la page de revue, choisissez les demandes pertinentes et limitez les suggestions trop larges aux deux confirmations du cas. Vera enregistre et applique les décisions effectives avant de rédiger.",
+        "Vera rédige à partir des demandes revues. Ouvrez le brouillon et vérifiez objet, questions et ton ; tout remplacement est enregistré par la même revue, avec son lien aux décisions."
+      ],
+      "deliverables": [
+        "Brouillon local à revoir et utiliser comme texte du courriel du cabinet.",
+        "Demandes documentaires revues et dossier de support pour retrouver la base de chaque question."
+      ],
+      "review": "Chaque question doit correspondre à une demande choisie. Ne redemandez pas les fichiers reçus : demandez s’il en existe d’autres ou si le groupe est complet. La procédure utilise une référence client ; destinataire et envoi restent à contrôler dans le travail réel.",
+      "checkpoints": [
+        "Avant rédaction, nommez la confirmation attendue du client.",
+        "À la livraison, reliez chaque question à la demande revue."
+      ],
+      "practice": "Effectuez un nouveau passage avec client-reply-fr.md et les mêmes documents. Le client confirme que les F24 sont complets. Revoyez les demandes et obtenez un nouveau brouillon limité à la confirmation encore ouverte sur les CU ; conservez la première version.",
+      "success": "Vous savez retrouver le brouillon, expliquer chaque question et le mettre à jour après une réponse sans répéter une demande résolue.",
+      "repeat": "Demandez à Vera de reprendre le dossier et de rédiger à partir des demandes revues. Vérifiez questions, destinataire et pièces jointes avant l’envoi par le canal habituel du cabinet."
+    },
+    "de": {
+      "title": "Eine E-Mail zur Dokumentenanforderung vorbereiten",
+      "goal": "Lernen, aus den Dokumentenanfragen einer Akte eine kurze, präzise E-Mail zur Prüfung durch die Kanzlei zu erstellen.",
+      "scenario": "Der Mandant hat eine CU und einen F24 vorgelegt. Die Kanzlei will wissen, ob weitere CU existieren und alle F24 der Kampagne vorliegen. Wir bereiten die Anfrage gemeinsam vor.",
+      "scope": "Unterstützende Aufgabe der Aktenvorbereitung, italienische Kampagne 2026. Die Lektion erstellt einen lokalen Entwurf; Versand und Steuerberatung sind nicht enthalten.",
+      "inputs": "Öffnen Sie context-de.md, CU-income.md und F24-first.md. Der Kontext nennt die beiden gesuchten Bestätigungen. Vera bereitet die Übungsakte vor und liest die Dokumente im aktuellen Ablauf; eine bereits genehmigte Anfrageliste ist nicht erforderlich.",
+      "request": "Vera, entwirf eine E-Mail mit der Frage, ob weitere CU existieren und alle F24 der Kampagne vorliegen. Lass mich die Anfragen zunächst anhand dieser Akte prüfen.",
+      "steps": [
+        "Der Assistent bereitet die Akte vor und zeigt erhaltene Dokumente und vorgeschlagene Fragen. Der Assistent erklärt, was vorliegt und welche Bestätigungen fehlen.",
+        "Wählen Sie auf der Prüfseite die passenden Anfragen und begrenzen Sie breite Vorschläge auf die beiden Bestätigungen des Falls. Vera speichert und übernimmt die tatsächlichen Entscheidungen vor dem Entwurf.",
+        "Vera schreibt aus den geprüften Anfragen. Öffnen Sie den Entwurf und prüfen Sie Betreff, Fragen und Ton; ein Ersatztext wird über dieselbe Prüfung mit Bezug zu den Entscheidungen gespeichert."
+      ],
+      "deliverables": [
+        "Lokaler E-Mail-Entwurf zur Prüfung und Verwendung als Nachrichtentext der Kanzlei.",
+        "Geprüfte Dokumentenanfragen und unterstützende Akte als Grundlage jeder Frage."
+      ],
+      "review": "Jede Frage muss einer ausgewählten Anfrage entsprechen. Bereits vorgelegte Dateien nicht erneut anfordern: Klären Sie, ob weitere existieren oder der Satz vollständig ist. Die Vorlage nutzt die Mandantenreferenz des Ablaufs; Empfänger und Versand müssen im normalen Arbeitsgang geprüft werden.",
+      "checkpoints": [
+        "Benennen Sie vor dem Entwurf die gewünschte Bestätigung.",
+        "Ordnen Sie bei der Übergabe jede Frage ihrer geprüften Anfrage zu."
+      ],
+      "practice": "Starten Sie mit client-reply-de.md und denselben Dokumenten einen neuen Durchlauf. Der Mandant bestätigt vollständige F24. Prüfen Sie die Anfragen und erstellen Sie einen neuen Entwurf nur zur offenen CU-Frage; bewahren Sie die erste Fassung auf.",
+      "success": "Sie können den Entwurf finden, jede Frage begründen und ihn nach einer Antwort aktualisieren, ohne geklärte Punkte erneut anzufragen.",
+      "repeat": "Bitten Sie Vera, die Akte fortzusetzen und aus geprüften Anfragen zu schreiben. Prüfen Sie Fragen, Empfänger und Anhänge vor dem Versand über den üblichen Kanzleikanal."
+    },
+    "es": {
+      "title": "Preparar un correo para pedir documentos al cliente",
+      "goal": "Aprender a convertir las peticiones documentales del expediente en un correo breve y preciso para revisión del despacho.",
+      "scenario": "El cliente entregó una CU y un F24. El despacho necesita saber si existen otras CU y si están todos los F24 de la campaña. Preparamos juntos esa petición.",
+      "scope": "Tarea de apoyo a la preparación del expediente, campaña italiana 2026. La lección produce un borrador local; no incluye envío ni asesoramiento fiscal.",
+      "inputs": "Abre context-es.md, CU-income.md y F24-first.md. El contexto señala las dos confirmaciones buscadas. Vera prepara el expediente didáctico y lee los documentos mediante el flujo actual; no hace falta una lista ya aprobada.",
+      "request": "Vera, prepara un correo para preguntar si el cliente tiene otras CU y ha entregado todos los F24 de la campaña. Primero déjame revisar las peticiones a partir de este expediente.",
+      "steps": [
+        "El asistente prepara el expediente y muestra documentos recibidos y preguntas propuestas. El asistente explica qué está disponible y qué confirmaciones se necesitan.",
+        "En la página de revisión, elige peticiones pertinentes y limita las sugerencias amplias a las dos confirmaciones del caso. Vera guarda y aplica las decisiones reales antes de redactar.",
+        "Vera escribe desde las peticiones revisadas. Abre el borrador y comprueba asunto, preguntas y tono; cualquier sustitución se guarda mediante la misma revisión, vinculada a las decisiones."
+      ],
+      "deliverables": [
+        "Borrador local para revisar y usar como texto del correo del despacho.",
+        "Peticiones documentales revisadas y expediente de apoyo para comprobar la base de cada pregunta."
+      ],
+      "review": "Cada pregunta debe corresponder a una petición elegida. No vuelvas a pedir archivos recibidos: pregunta si existen otros o si el conjunto está completo. El borrador usa la referencia de cliente del flujo; destinatario y envío se comprueban en el trabajo habitual.",
+      "checkpoints": [
+        "Antes de redactar, indica qué confirmación esperas del cliente.",
+        "En la entrega, relaciona cada pregunta con su petición revisada."
+      ],
+      "practice": "Realiza un nuevo paso con client-reply-es.md y los mismos documentos. El cliente confirma que los F24 están completos. Revisa las peticiones y genera un nuevo borrador limitado a la confirmación pendiente sobre las CU; conserva la primera versión.",
+      "success": "Sabes encontrar el borrador, explicar cada pregunta y actualizarlo tras una respuesta sin repetir una petición resuelta.",
+      "repeat": "Pide a Vera retomar el expediente y redactar desde las peticiones revisadas. Comprueba preguntas, destinatario y adjuntos antes de enviar por el canal habitual del despacho."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "81cb47277864d25d4b64a701104b672c69fb692e927f6b534ba30944e6164b8a"
+}

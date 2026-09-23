@@ -1,0 +1,565 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "new-client",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
+  "sources": [
+    {
+      "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+      "sha256": "4b56449248b02f910f434804918f16c28713387b17432aea4993607a5275adf7"
+    },
+    {
+      "path": "modules/client-file-preparation/assets/icon.svg",
+      "sha256": "b4f798ec673400c5145bda9fb5cb282fff745455a56845e42feb1738d1013219"
+    },
+    {
+      "path": "modules/client-file-preparation/assets/review-workbench-adapter.json",
+      "sha256": "42af84f012b36d6d34c2646a9277b1a9aaf9eb8c4bf9287038948a56d2d401d0"
+    },
+    {
+      "path": "modules/client-file-preparation/references/workflow-reference.md",
+      "sha256": "0f8a3080bafdadf5d8aed1082908d851da3c2423c1730291f2a19dc4e10a9e71"
+    },
+    {
+      "path": "modules/client-file-preparation/requirements.txt",
+      "sha256": "52d819e8a9f405e7605de84ae65521166be565d85ad602df65adc740d5693186"
+    },
+    {
+      "path": "modules/client-file-preparation/schemas/model_handoff.schema.json",
+      "sha256": "38d7e5593d9a0ba12cbab23d7f1e8a03f239ceb230605f780b2bce4064e1d40d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/build_file_preparation_outputs.py",
+      "sha256": "5d84eb4fba8b93ae03a50108925fcaef068ffaad0263ccd0fc1a93deb08659d1"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_dependencies.py",
+      "sha256": "48d98b528325d883fbeb8d3921cb8c8883d7087c87cc8950dd77b4be711ee9c4"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_environment.py",
+      "sha256": "70f67540c705fe174163390ac2aea0582ef30235a52f2dd60f08717efd096400"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/detect_duplicates.py",
+      "sha256": "6d65563443e8be6eb08a97a89638e5e5fc035c27c34fbc0bbf793fe0e0d2ee81"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/extract_documents.py",
+      "sha256": "811ce6a6b2212c2550ab3c7c41e7c5e9d6662ce77256382b63d257a7419f87aa"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/managed_ocr_runtime.py",
+      "sha256": "664987b3e53f0b66bd1907493215f352c8487c75c7ec76347f8a41ba3336b222"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/model_handoff.py",
+      "sha256": "9c46e69ad33e0087b7d23585442c0dad425cf6eb4551f164d460ba27ec6afb5f"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fatturapa_xml.py",
+      "sha256": "27c6dc9104e04cea7bcff287dec4315951fe3bf9ef07526a89845fd5b7eb255d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fiscal_forms.py",
+      "sha256": "a18d78910d8015c4e41b2e0355724bc8df25dd5330b26b07b2785a2c24c384fe"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/review_session.py",
+      "sha256": "df5c9a8a2f47c6f6200c36f7d2a9e3c4db026f1c7c95492a734ba2f7305b1e3d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/scan_folder.py",
+      "sha256": "b4e5bb6dd0347b9c66e1e21b3f21a7e1a84805f58008401857cc613e90043789"
+    },
+    {
+      "path": "modules/client-file-preparation/skills/client-file-preparation/SKILL.md",
+      "sha256": "f0cbe6a71854c019e6ba53a44dc937dcf51c2ed1786e02253ebe545bd3ae3b69"
+    },
+    {
+      "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
+      "sha256": "5cb95e09970123a29a0574459d953ce03a908e69a899a68bb4374d383640a704"
+    },
+    {
+      "path": "modules/client-file-preparation/templates/memo_istruttoria.md",
+      "sha256": "d718069bee76ed6cd63e4f96b1dffb2d199ba8c3e969a7da1aaf709f6ee691dd"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "modules/new-client/assets/icon.svg",
+      "sha256": "dc04f539bfb2f40bb739fd2bec31909c42efe188c11d967b6753190a1ffc78f5"
+    },
+    {
+      "path": "modules/new-client/assets/new-client-review-widget.html",
+      "sha256": "fb54917fff0fc2a25402eea9a419fdb25d348216bbfcc65821195d655abf0a5c"
+    },
+    {
+      "path": "modules/new-client/assets/review-workbench-adapter.json",
+      "sha256": "3d78b33524679358bf85ae40928ee4fd4e0d1e69bd250cd926f4c7ae337f7bea"
+    },
+    {
+      "path": "modules/new-client/references/research-provenance.json",
+      "sha256": "84f5a6ba412c72de20d04f8dd051538ce99f08807b55ce69def7a5724eb6f4c7"
+    },
+    {
+      "path": "modules/new-client/references/review-labels.json",
+      "sha256": "691a05d7916d82f6f50a4fa11c2d3cc5621261f6f7e2d8ae9f186dbcd4eb63b4"
+    },
+    {
+      "path": "modules/new-client/references/source-policy.md",
+      "sha256": "5a20f7b0f70ad9f8537f6f03dda88465c9dacc690a659a33a5e5d9666d0ae6b9"
+    },
+    {
+      "path": "modules/new-client/references/source-registry.json",
+      "sha256": "687015058b00562d16236afc237f044e6548c045dac493e420fcd9791561e1ce"
+    },
+    {
+      "path": "modules/new-client/references/workflow-reference.md",
+      "sha256": "ef0e43aab5c1c1ea6ca8c623be7c25e1716656feb6d321e45a0f603abcd5a8c5"
+    },
+    {
+      "path": "modules/new-client/requirements.txt",
+      "sha256": "88b5908303fea9ef638771e27c10a7010f79d7e6308c35d32854170f2ef582a8"
+    },
+    {
+      "path": "modules/new-client/schemas/new_client_input.schema.json",
+      "sha256": "3455a07c30598769690358fc2429ca74176066c9c2c5db122d32c541348f81c1"
+    },
+    {
+      "path": "modules/new-client/scripts/check_dependencies.py",
+      "sha256": "03ee5181ba86da23ce39b72a36a0c72e75155e670574c5157292e2f7b2a6cac7"
+    },
+    {
+      "path": "modules/new-client/scripts/delivery_manifest.py",
+      "sha256": "ec2003d6e59eb06466f0d5d3a7d70bbd78ece63e6acdeb3d3353a22af7f6a036"
+    },
+    {
+      "path": "modules/new-client/scripts/initialize_case.py",
+      "sha256": "6f380f2c0eaab6375dc5e773d14783852a0f999d7f500391cdfdad7d613bed06"
+    },
+    {
+      "path": "modules/new-client/scripts/new_client_core.py",
+      "sha256": "77e74fa875aca3327d86cd792d3209376c99525b983be299d95cdae64278c52e"
+    },
+    {
+      "path": "modules/new-client/scripts/package_new_client.py",
+      "sha256": "bfb939007de1e370b6389ebd7e0081da2aff923e4606a37df7e67105a568f74e"
+    },
+    {
+      "path": "modules/new-client/scripts/promote_client_file_preparation.py",
+      "sha256": "666082d5278bc5ed9cc849183589fe93e55ffe3cdfcbb00535b6bf4718e28402"
+    },
+    {
+      "path": "modules/new-client/skills/new-client/SKILL.md",
+      "sha256": "7eafc874439d09fde2a8aae978a03b70591c85cbe749d8fc7aa5e9bf4e01ea3e"
+    },
+    {
+      "path": "modules/new-client/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/new-client/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/new-client/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/new-client/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/new-client/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/new-client/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/new-client/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/new-client/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/new-client/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/new-client/SKILL.md",
+      "sha256": "23533143c7f6dd609a8469d4be48f8783217fdb6b3fb2d25a2bff3f09b0905d6"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/profile-it.md",
+      "sha256": "8acd1b34b6398f99265f1180d12778f87e55c17e8c0df119ee4b05c63b7dae34",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/profile-it.md",
+      "sha256": "8acd1b34b6398f99265f1180d12778f87e55c17e8c0df119ee4b05c63b7dae34",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/contact-update-it.md",
+      "sha256": "94ffb355ed566c660ebd46001a306bc7dc35eeec51750de5ecd292e480c37220",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/profile-en.md",
+      "sha256": "3020b4a4cc44b5b3edd03e647a3fc3e0fc684d34372f50fd3b81d0da13b10454",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/profile-en.md",
+      "sha256": "3020b4a4cc44b5b3edd03e647a3fc3e0fc684d34372f50fd3b81d0da13b10454",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/contact-update-en.md",
+      "sha256": "f7b5d95b8ef94463cae9210e5142393ee851cab363829f9eb0d788ebaf2f72ac",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/profile-fr.md",
+      "sha256": "a1825e6c664b93135b6a92fada20f91d474f95e94ba8cb1f9de72465bd90410d",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/profile-fr.md",
+      "sha256": "a1825e6c664b93135b6a92fada20f91d474f95e94ba8cb1f9de72465bd90410d",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/contact-update-fr.md",
+      "sha256": "ba64fdd98620b1f8fc9f753be41a8f920b550a8b48cc03c813a5ae55de5924f1",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/profile-de.md",
+      "sha256": "ee946fec98a07c9068a65a85dbf2d6b988ef2f4cdacdd33a1a6eb719ed026769",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/profile-de.md",
+      "sha256": "ee946fec98a07c9068a65a85dbf2d6b988ef2f4cdacdd33a1a6eb719ed026769",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/contact-update-de.md",
+      "sha256": "c85c347864cf464612534936db2e696ea94f8aca2c55ea876555064b0e439d75",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/profile-es.md",
+      "sha256": "98609cb562dacafa0054bb40a822f79a5771fda4c19550d24602a8cb71177362",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/profile-es.md",
+      "sha256": "98609cb562dacafa0054bb40a822f79a5771fda4c19550d24602a8cb71177362",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/contact-update-es.md",
+      "sha256": "077d81a5a84ba76d9b2790a4c0cb4ced52c3ae16f654c17d752299cc2235d80b",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Preparare un nuovo cliente con Vera",
+      "goal": "Imparare a trasformare le informazioni di primo contatto in un dossier di avvio da rivedere e completare con lo studio.",
+      "scenario": "Officina Arco chiede assistenza contabile continuativa. Partiamo dalla scheda del colloquio e prepariamo il dossier con soggetti, servizi richiesti, documenti da acquisire e decisioni ancora da prendere.",
+      "scope": "Avvio di un cliente italiano. Il risultato è un dossier interno per la revisione professionale, con piano documentale e di monitoraggio. La firma e l’attivazione del rapporto seguono il normale processo dello studio.",
+      "inputs": "Apri profile-it.md. La scheda contiene dati dichiarati su società, rappresentante, partecipazioni e servizi. È già ordinata e non deriva da una precedente preparazione documentale approvata: Vera deve registrarla come evidenza diretta.",
+      "request": "Vera, prepara il dossier di nuovo cliente per Officina Arco usando questa scheda. Organizza i dati, l’incarico proposto, i controlli da svolgere e i documenti da richiedere.",
+      "steps": [
+        "Vera apre la pratica didattica e collega la scheda al nuovo cliente. Se si parte da un fascicolo da ordinare, la stessa funzione comprende anche la preparazione dei documenti.",
+        "La procedura corrente organizza soggetti e servizi, prepara proposte e richieste mancanti e compone il dossier. L’assistente segue i passaggi e distingue dati dichiarati, verifiche e decisioni.",
+        "Apri la pagina di revisione del dossier. Parti dai dati del cliente e dall’incarico, poi passa ai documenti da acquisire e alle decisioni da completare. Il memo e gli altri allegati conservano i controlli di supporto."
+      ],
+      "deliverables": [
+        "Pagina di revisione e dati del caso: danno allo studio una base ordinata per il colloquio, con cliente, incarico e fonti.",
+        "Richiesta delle informazioni mancanti, piano documentale e piano di monitoraggio: indicano il lavoro successivo e gli elementi ancora da confermare."
+      ],
+      "review": "Confronta soggetti, partecipazioni e servizi con la scheda. Identità, antiriciclaggio, privacy e condizioni richiedono le normali verifiche professionali; i dati dichiarati non sono già verificati.",
+      "checkpoints": [
+        "Prima di partire, identifica cliente e servizi richiesti.",
+        "Alla consegna, trova una fonte, un documento da acquisire e una decisione ancora da prendere."
+      ],
+      "practice": "Aggiungi contact-update-it.md e chiedi una nuova versione del dossier. Sara diventa referente amministrativa per i documenti; la rappresentante indicata resta Elena.",
+      "success": "Il nuovo dossier include il referente e la fonte dell’aggiornamento, conserva la versione precedente e non gli attribuisce poteri di rappresentanza non dichiarati.",
+      "repeat": "Fornisci le informazioni e i documenti del nuovo cliente, indica i servizi richiesti e usa il dossier per completare verifiche, condizioni e revisione prima dell’avvio."
+    },
+    "en": {
+      "title": "Prepare a new client with Vera",
+      "goal": "Learn to turn first-contact information into a client-startup dossier for the practice to review and complete.",
+      "scenario": "Officina Arco requests ongoing accounting support. Starting from the interview form, we prepare a dossier covering parties, requested services, documents to obtain and decisions still needed.",
+      "scope": "Onboarding an Italian client. The result is an internal professional-review dossier, including document and monitoring plans. Signing and activating the relationship follow the practice’s normal process.",
+      "inputs": "Open profile-en.md. It records reported facts about the company, representative, ownership and services. It is already organized and does not come from an approved document-preparation run; Vera must record it as direct evidence.",
+      "request": "Vera, prepare Officina Arco’s new-client dossier from this form. Organize the facts, proposed engagement, checks to perform and documents to request.",
+      "steps": [
+        "Vera opens the teaching case and links the form to the new client. When starting from an unorganized folder, the same function also includes document preparation.",
+        "The current workflow organizes parties and services, prepares proposals and missing-information requests, and compiles the dossier. The assistant follows these steps and distinguishes reported facts, checks and decisions.",
+        "Open the dossier’s review page. Start with client facts and the engagement, then documents to obtain and decisions to complete. The memo and other attachments retain the supporting checks."
+      ],
+      "deliverables": [
+        "Review page and case facts: give the practice an organized basis for the interview, with client, engagement and sources.",
+        "Missing-information request, document plan and monitoring plan: identify subsequent work and matters still requiring confirmation."
+      ],
+      "review": "Compare parties, ownership and services with the form. Identity, AML, privacy and terms require normal professional checks; reported facts are not already verified.",
+      "checkpoints": [
+        "Before starting, identify the client and requested services.",
+        "At delivery, find a source, a document to obtain and a decision still needed."
+      ],
+      "practice": "Add contact-update-en.md and request a new dossier version. Sara becomes the administrative document contact; Elena remains the named representative.",
+      "success": "The new dossier includes the contact and update source, preserves the preceding version and does not grant representation powers that were not reported.",
+      "repeat": "Supply the new client’s information and documents, state the requested services and use the dossier to complete checks, terms and review before starting the relationship."
+    },
+    "fr": {
+      "title": "Préparer un nouveau client avec Vera",
+      "goal": "Apprendre à transformer les informations du premier contact en un dossier d’entrée en relation à revoir et compléter avec le cabinet.",
+      "scenario": "Officina Arco demande un accompagnement comptable continu. À partir de la fiche d’entretien, nous préparons le dossier : parties, services demandés, pièces à obtenir et décisions encore nécessaires.",
+      "scope": "Entrée en relation avec un client italien. Le résultat est un dossier interne de revue professionnelle, avec plans documentaire et de suivi. Signature et activation suivent le processus normal du cabinet.",
+      "inputs": "Ouvrez profile-fr.md. La fiche rassemble les faits déclarés sur société, représentante, participations et services. Elle est déjà organisée et ne provient pas d’une préparation documentaire approuvée : Vera doit l’enregistrer comme pièce directe.",
+      "request": "Vera, prépare le dossier de nouveau client d’Officina Arco à partir de cette fiche. Organise les faits, la mission proposée, les contrôles et les pièces à demander.",
+      "steps": [
+        "Vera ouvre le dossier pédagogique et relie la fiche au nouveau client. Si les fichiers doivent être organisés, cette même fonction comprend aussi leur préparation.",
+        "La procédure actuelle organise parties et services, prépare propositions et demandes manquantes, puis compose le dossier. L’assistant distingue faits déclarés, contrôles et décisions au fil du travail.",
+        "Ouvrez la page de revue du dossier. Commencez par le client et la mission, puis les pièces à obtenir et les décisions à compléter. La note et les autres annexes conservent les contrôles de support."
+      ],
+      "deliverables": [
+        "Page de revue et faits du dossier : offrent une base organisée pour l’entretien, avec client, mission et sources.",
+        "Demande d’informations, plan documentaire et plan de suivi : indiquent le travail suivant et les éléments à confirmer."
+      ],
+      "review": "Comparez parties, participations et services à la fiche. Identité, lutte contre le blanchiment, protection des données et conditions exigent les vérifications professionnelles normales ; les faits déclarés ne sont pas déjà vérifiés.",
+      "checkpoints": [
+        "Avant de commencer, identifiez client et services demandés.",
+        "À la livraison, trouvez une source, une pièce à obtenir et une décision encore nécessaire."
+      ],
+      "practice": "Ajoutez contact-update-fr.md et demandez une nouvelle version. Sara devient le contact administratif pour les documents ; Elena reste la représentante indiquée.",
+      "success": "Le nouveau dossier inclut le contact et sa source, conserve la version précédente et n’attribue aucun pouvoir de représentation non déclaré.",
+      "repeat": "Fournissez informations et documents du nouveau client, précisez les services et utilisez le dossier pour compléter contrôles, conditions et revue avant l’entrée en relation."
+    },
+    "de": {
+      "title": "Einen neuen Mandanten mit Vera vorbereiten",
+      "goal": "Lernen, Erstkontaktinformationen in ein Mandatsdossier zu überführen, das die Kanzlei prüfen und vervollständigen kann.",
+      "scenario": "Officina Arco wünscht laufende Buchhaltungsunterstützung. Aus dem Gesprächsbogen erstellen wir ein Dossier mit Beteiligten, gewünschten Leistungen, benötigten Unterlagen und offenen Entscheidungen.",
+      "scope": "Aufnahme eines italienischen Mandanten. Ergebnis ist ein internes Dossier zur fachlichen Prüfung mit Dokumenten- und Überwachungsplan. Unterschrift und Mandatsaktivierung folgen dem normalen Kanzleiprozess.",
+      "inputs": "Öffnen Sie profile-de.md. Der Bogen enthält Angaben zu Gesellschaft, Vertreterin, Beteiligungen und Leistungen. Er ist bereits geordnet und stammt nicht aus einem freigegebenen Aufbereitungslauf; Vera muss ihn als direkte Quelle erfassen.",
+      "request": "Vera, bereite Officina Arcos Dossier als neuen Mandanten aus diesem Bogen vor. Ordne die Angaben, den Mandatsvorschlag, erforderliche Prüfungen und anzufordernde Unterlagen.",
+      "steps": [
+        "Vera eröffnet den Übungsfall und verknüpft den Bogen mit dem neuen Mandanten. Bei ungeordneten Dateien umfasst dieselbe Funktion auch die Dokumentenaufbereitung.",
+        "Der aktuelle Ablauf ordnet Beteiligte und Leistungen, bereitet Vorschläge und Informationsanforderungen vor und erstellt das Dossier. Der Assistent unterscheidet dabei Angaben, Prüfungen und Entscheidungen.",
+        "Öffnen Sie die Prüfseite des Dossiers. Beginnen Sie mit Mandant und Auftrag, dann folgen benötigte Dokumente und offene Entscheidungen. Notiz und weitere Anlagen enthalten die unterstützenden Kontrollen."
+      ],
+      "deliverables": [
+        "Prüfseite und Fallangaben: bilden eine geordnete Gesprächsgrundlage mit Mandant, Auftrag und Quellen.",
+        "Informationsanforderung, Dokumentenplan und Überwachungsplan: zeigen weitere Arbeit und noch zu bestätigende Punkte."
+      ],
+      "review": "Vergleichen Sie Beteiligte, Beteiligungen und Leistungen mit dem Bogen. Identität, Geldwäscheprävention, Datenschutz und Bedingungen erfordern die üblichen fachlichen Prüfungen; gemeldete Angaben sind noch nicht verifiziert.",
+      "checkpoints": [
+        "Vor dem Start: Benennen Sie Mandant und gewünschte Leistungen.",
+        "Bei der Übergabe: Finden Sie eine Quelle, eine benötigte Unterlage und eine offene Entscheidung."
+      ],
+      "practice": "Ergänzen Sie contact-update-de.md und fordern Sie eine neue Dossierversion an. Sara wird Verwaltungskontakt für Dokumente; Elena bleibt die genannte Vertreterin.",
+      "success": "Das neue Dossier enthält Kontakt und Quelle, bewahrt die vorherige Version und weist keine nicht angegebenen Vertretungsbefugnisse zu.",
+      "repeat": "Stellen Sie Angaben und Unterlagen des neuen Mandanten bereit, nennen Sie die Leistungen und nutzen Sie das Dossier, um Prüfungen, Bedingungen und fachliche Freigabe vor Mandatsbeginn abzuschließen."
+    },
+    "es": {
+      "title": "Preparar un nuevo cliente con Vera",
+      "goal": "Aprender a convertir la información del primer contacto en un expediente de incorporación que el despacho pueda revisar y completar.",
+      "scenario": "Officina Arco solicita asistencia contable continuada. Partimos de la ficha de entrevista y preparamos un expediente con partes, servicios solicitados, documentos por obtener y decisiones pendientes.",
+      "scope": "Incorporación de un cliente italiano. El resultado es un expediente interno de revisión profesional, con planes documental y de seguimiento. Firma y activación siguen el proceso normal del despacho.",
+      "inputs": "Abre profile-es.md. La ficha recoge datos declarados sobre sociedad, representante, participaciones y servicios. Ya está ordenada y no procede de una preparación documental aprobada; Vera debe registrarla como fuente directa.",
+      "request": "Vera, prepara el expediente de nuevo cliente de Officina Arco con esta ficha. Organiza los datos, el encargo propuesto, las comprobaciones y los documentos que faltan.",
+      "steps": [
+        "Vera abre el expediente didáctico y vincula la ficha al nuevo cliente. Cuando se parte de archivos desordenados, la misma función incluye su preparación.",
+        "El procedimiento actual organiza partes y servicios, prepara propuestas y solicitudes de información y compone el expediente. El asistente distingue datos declarados, verificaciones y decisiones durante el trabajo.",
+        "Abre la página de revisión del expediente. Empieza por el cliente y el encargo; después revisa documentos por obtener y decisiones pendientes. La nota y los demás anexos conservan las comprobaciones de apoyo."
+      ],
+      "deliverables": [
+        "Página de revisión y datos del caso: ofrecen una base ordenada para la entrevista, con cliente, encargo y fuentes.",
+        "Solicitud de información, plan documental y plan de seguimiento: indican el trabajo posterior y los puntos que requieren confirmación."
+      ],
+      "review": "Compara partes, participaciones y servicios con la ficha. Identidad, prevención del blanqueo, privacidad y condiciones requieren las comprobaciones profesionales normales; los datos declarados no están ya verificados.",
+      "checkpoints": [
+        "Antes de empezar, identifica al cliente y los servicios solicitados.",
+        "En la entrega, encuentra una fuente, un documento por obtener y una decisión pendiente."
+      ],
+      "practice": "Añade contact-update-es.md y pide una versión nueva del expediente. Sara pasa a ser el contacto administrativo para los documentos; Elena sigue siendo la representante indicada.",
+      "success": "El nuevo expediente incluye contacto y fuente, conserva la versión anterior y no atribuye poderes de representación que no se han declarado.",
+      "repeat": "Facilita información y documentos del nuevo cliente, indica los servicios y usa el expediente para completar comprobaciones, condiciones y revisión antes del inicio de la relación."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "b6c961dd4f2c3c92ebb19d7c9c85dca638bcf99531815d96430726a2170bad96"
+}

@@ -2,6 +2,10 @@
 name: lucia
 description: Use this when Lucia or @lucia is explicitly invoked, or when a lawyer or law firm asks for legal research, legal-document analysis, source verification, or reviewable legal work covered by any registered Lucia workflow. Select the narrowest workflow and apply the shared Legal/Tax Answer Planner and Legal/Tax Answer Review assurance stages when relevant. Do not use it for filing, signing, sending, publication, or professional judgment reserved to the lawyer.
 ---
+## Written lessons
+
+For a request to learn or practise a supported Lucia function, read `../learn-with-lucia/SKILL.md`. Teach in writing in this conversation using the prepared kit and actual workflow results. Start only when requested.
+
 
 ## Cowork execution contract
 

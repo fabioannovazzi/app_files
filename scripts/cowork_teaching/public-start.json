@@ -1,0 +1,47 @@
+{
+  "it": {
+    "heading": "Avvia in Claude Cowork",
+    "steps": "Apri Cowork con {product} installato e una cartella collegata per la lezione. Copia e invia questa richiesta: la lezione si svolge per iscritto in una sola conversazione.",
+    "button": "Copia la richiesta per Cowork",
+    "copied": "Richiesta copiata. Incollala e inviala in Cowork.",
+    "fallback": "Seleziona e copia la richiesta, poi incollala in Cowork.",
+    "prompt": "{product}, avvia la lezione preparata «{title}» in italiano, per iscritto in questa sola conversazione Cowork. Usa i file fittizi inclusi. Spiegami ogni passaggio, esegui la funzione corrente e mostrami i risultati effettivi. Fermati per le mie domande e guidami nell’esercizio pratico. Non usare voce né una seconda chat.",
+    "unavailable": "Questa funzione non è inclusa nelle lezioni del plugin Cowork. Usa il percorso Codex indicato sopra."
+  },
+  "en": {
+    "heading": "Start in Claude Cowork",
+    "steps": "Open Cowork with {product} installed and a connected folder for the lesson. Copy and send this request: the lesson takes place in writing in one conversation.",
+    "button": "Copy request for Cowork",
+    "copied": "Request copied. Paste and send it in Cowork.",
+    "fallback": "Select and copy the request, then paste it into Cowork.",
+    "prompt": "{product}, start the prepared lesson “{title}” in English, in writing in this single Cowork conversation. Use the included fictional files. Explain each step, run the current function and show me the actual results. Pause for my questions and guide me through the practice exercise. Do not use voice or a second chat.",
+    "unavailable": "This function is not included in the Cowork plugin lessons. Use the Codex route above."
+  },
+  "fr": {
+    "heading": "Commencer dans Claude Cowork",
+    "steps": "Ouvrez Cowork avec {product} installé et un dossier connecté pour la leçon. Copiez et envoyez cette demande : la leçon se déroule par écrit dans une seule conversation.",
+    "button": "Copier la demande pour Cowork",
+    "copied": "Demande copiée. Collez-la et envoyez-la dans Cowork.",
+    "fallback": "Sélectionnez et copiez la demande, puis collez-la dans Cowork.",
+    "prompt": "{product}, commence la leçon préparée « {title} » en français, par écrit dans cette seule conversation Cowork. Utilise les fichiers fictifs inclus. Explique chaque étape, exécute la fonction actuelle et montre-moi les résultats réels. Fais des pauses pour mes questions et accompagne-moi dans l’exercice pratique. N’utilise ni la voix ni une seconde conversation.",
+    "unavailable": "Cette fonction n’est pas incluse dans les leçons du plugin Cowork. Utilisez le parcours Codex ci-dessus."
+  },
+  "de": {
+    "heading": "In Claude Cowork starten",
+    "steps": "Öffnen Sie Cowork mit installiertem {product} und einem verbundenen Ordner für die Lektion. Kopieren und senden Sie diese Anfrage: Die Lektion findet schriftlich in einem einzigen Chat statt.",
+    "button": "Anfrage für Cowork kopieren",
+    "copied": "Anfrage kopiert. Fügen Sie sie in Cowork ein und senden Sie sie ab.",
+    "fallback": "Markieren und kopieren Sie die Anfrage und fügen Sie sie in Cowork ein.",
+    "prompt": "{product}, starte die vorbereitete Lektion „{title}“ auf Deutsch, schriftlich in diesem einen Cowork-Chat. Verwende die enthaltenen fiktiven Dateien. Erkläre jeden Schritt, führe die aktuelle Funktion aus und zeige mir die tatsächlichen Ergebnisse. Warte auf meine Fragen und begleite mich durch die Übung. Verwende keine Sprachfunktion und keinen zweiten Chat.",
+    "unavailable": "Diese Funktion ist nicht in den Lektionen des Cowork-Plugins enthalten. Verwenden Sie den oben beschriebenen Weg in Codex."
+  },
+  "es": {
+    "heading": "Empezar en Claude Cowork",
+    "steps": "Abre Cowork con {product} instalado y una carpeta conectada para la lección. Copia y envía esta solicitud: la lección se desarrolla por escrito en una sola conversación.",
+    "button": "Copiar solicitud para Cowork",
+    "copied": "Solicitud copiada. Pégala y envíala en Cowork.",
+    "fallback": "Selecciona y copia la solicitud y pégala en Cowork.",
+    "prompt": "{product}, inicia la lección preparada «{title}» en español, por escrito en esta única conversación de Cowork. Usa los archivos ficticios incluidos. Explica cada paso, ejecuta la función actual y muéstrame los resultados reales. Haz pausas para mis preguntas y guíame en el ejercicio práctico. No uses voz ni un segundo chat.",
+    "unavailable": "Esta función no está incluida en las lecciones del plugin de Cowork. Utiliza el recorrido de Codex indicado arriba."
+  }
+}

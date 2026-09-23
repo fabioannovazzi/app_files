@@ -1,0 +1,458 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "financial-report-builder",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "inspect_review_tables_then_build_report"
+  },
+  "sources": [
+    {
+      "path": "modules/report-builder/assets/icon.svg",
+      "sha256": "8d92698b864f88707b957d28dc6b8b28f0b33f107fde22a742110ebdf0fa2159"
+    },
+    {
+      "path": "modules/report-builder/assets/report-builder-review-widget.html",
+      "sha256": "b4a0a954bd18c77edaa24e8a567aa1494a6463fe325886433820413aa61819cd"
+    },
+    {
+      "path": "modules/report-builder/assets/review-workbench-adapter.json",
+      "sha256": "7680804e4ae769a759a3f1d83bae58bad6f5fa90d7ece4f29da23e7432872f5c"
+    },
+    {
+      "path": "modules/report-builder/references/workflow-reference.md",
+      "sha256": "5112d137ef68cf32357f7a586b91b20daf57caa9f295a5b120e6dcf264e99804"
+    },
+    {
+      "path": "modules/report-builder/requirements.txt",
+      "sha256": "6735c9cbdb32c51d03324c6f2528b3f586b4545c54b022c1da0b0b5d44692b9a"
+    },
+    {
+      "path": "modules/report-builder/scripts/apply_review_edits.py",
+      "sha256": "fcd78bf2b90f4d45c6862e4fc98b213adea97fd165bfc7028318245524ce3f6c"
+    },
+    {
+      "path": "modules/report-builder/scripts/build_report.py",
+      "sha256": "ec1458ec55c988fae0434d46abb5a9078d0ce8a217223b70df7b9decc093bb46"
+    },
+    {
+      "path": "modules/report-builder/scripts/check_dependencies.py",
+      "sha256": "96f1c32d1a7bc660b9049d217a2a24b2c31f5c5e94ab1c29bfadb480e42af89c"
+    },
+    {
+      "path": "modules/report-builder/scripts/expand_model_context.py",
+      "sha256": "572d61a889e14fec059ae37f55fb3686698c9429b65deb43b0a90223719df255"
+    },
+    {
+      "path": "modules/report-builder/scripts/implementation_bootstrap.py",
+      "sha256": "656879eb05f496535cb23209391d74e0b286ceb15a09c28473451b7d43f88b5d"
+    },
+    {
+      "path": "modules/report-builder/scripts/implementation_contract.py",
+      "sha256": "1a95fad1881e8d3133e10292bbc80f67a39b6f77e298778f0f026226b7291a98"
+    },
+    {
+      "path": "modules/report-builder/scripts/inspect_inputs.py",
+      "sha256": "fffc80cc704e3dacabe1a071d0cf7f4056f44ec182270d5146196ae95ced8126"
+    },
+    {
+      "path": "modules/report-builder/scripts/physical_output_set.py",
+      "sha256": "bbf37f759e396ff7290902cf3bb7831bd9c0eeeed7f02351df9f7ff19989328e"
+    },
+    {
+      "path": "modules/report-builder/scripts/prepared_contract.py",
+      "sha256": "4e7faf5a8e989a6acc88bef5a332b80f9e06fb2fea92c074a2257b1fadf02b12"
+    },
+    {
+      "path": "modules/report-builder/scripts/report_builder_core.py",
+      "sha256": "32e6123a18fca2d9c8219e88406d6b986af8f1f5bb1c9dff84b85c709c292517"
+    },
+    {
+      "path": "modules/report-builder/scripts/report_builder_integrity.py",
+      "sha256": "70c995d30984ec59d16052d83ce563462585cbc3414428d75ddc727ac4139eea"
+    },
+    {
+      "path": "modules/report-builder/scripts/report_gates.py",
+      "sha256": "e6cba14b00486bffb60af393d0c769fac01f50bbfcb8e9bad758b2ab4a4f8d0b"
+    },
+    {
+      "path": "modules/report-builder/scripts/review_numeric_measures.py",
+      "sha256": "8b30b5925b125a210c25ebf63814e611fce85b3e83da3d52bc54457cc72e77ad"
+    },
+    {
+      "path": "modules/report-builder/scripts/review_session.py",
+      "sha256": "9ebf78e0c9c74db7136a455de61d993fd4092bee6ce61dfc74ade7dac635ae5b"
+    },
+    {
+      "path": "modules/report-builder/scripts/review_successor.py",
+      "sha256": "97617a6f695429d86c0163bf63bd426b8f786662eca74858458aee0605308135"
+    },
+    {
+      "path": "modules/report-builder/scripts/seal_review_integrity.py",
+      "sha256": "1fc828a48a267ed81c940c6adc6dd86720b84fad06eddaf63dd39abfe70886ad"
+    },
+    {
+      "path": "modules/report-builder/scripts/validate_review_integrity.py",
+      "sha256": "c4632f361e2fda6be0e66e3242a8093a5e43696730a9cc51ea1c41d0eea60c39"
+    },
+    {
+      "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
+      "sha256": "5200713f96bb19536a151aebf03f24eda553b52720ea9afb95e457b16ad46d53"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/financial-report-builder/SKILL.md",
+      "sha256": "434569fd134b580c483a99ac95342869e6d00914b90ceac1c3655d68aec94a86"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/january-february.xlsx",
+      "sha256": "41c5eaa252ee118a723b4b55023dad2bf33faa3bface5365c01158634b296b81",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/january-march.xlsx",
+      "sha256": "18f30e5dbe5bd6e8b9c2880ea2379e1ff2a580f2fb8a9d12a5d93e3827e7eb34",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-it.md",
+      "sha256": "e8625b701702301772f2dab03a14bfc38c73d165752c18ad4deed3296a73735a",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-it.md",
+      "sha256": "e8625b701702301772f2dab03a14bfc38c73d165752c18ad4deed3296a73735a",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-en.md",
+      "sha256": "3f2951fb734298dd868bd651c732d3b2336bf3ff660f07a27abb0de0b1264be1",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-en.md",
+      "sha256": "3f2951fb734298dd868bd651c732d3b2336bf3ff660f07a27abb0de0b1264be1",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-fr.md",
+      "sha256": "21b5ce9e521d2b3676163fd1a2e7144261fbf3333328d2bb1bebb5824ea5bd31",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-fr.md",
+      "sha256": "21b5ce9e521d2b3676163fd1a2e7144261fbf3333328d2bb1bebb5824ea5bd31",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-de.md",
+      "sha256": "a140a32f94d5a70db8f3768386502c4b29b1a41fe2adc5e1080b55c6af922a65",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-de.md",
+      "sha256": "a140a32f94d5a70db8f3768386502c4b29b1a41fe2adc5e1080b55c6af922a65",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-es.md",
+      "sha256": "134977bde125014dc8a9ba002831bf1bf3a383485aab6538ca09c2729e861ffe",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-es.md",
+      "sha256": "134977bde125014dc8a9ba002831bf1bf3a383485aab6538ca09c2729e861ffe",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Preparare un report finanziario con Vera",
+      "goal": "Imparare a trasformare prospetti contabili in una relazione leggibile, con tabelle, commenti e riferimenti ai dati da controllare.",
+      "scenario": "Officina Arco fornisce conto economico, situazione patrimoniale e flussi di cassa. Lo studio vuole una prima relazione gestionale sul periodo.",
+      "scope": "Un report gestionale dai prospetti disponibili. Questa funzione organizza dati e spiegazioni in un documento; le sezioni senza fonti restano segnalate come mancanti.",
+      "inputs": "Apri january-february.xlsx e context-it.md. Guarda i tre fogli, il periodo e la valuta. Indica a Vera destinatario, tipo di report e lingua; non serve preparare una presentazione o compilare una configurazione tecnica.",
+      "request": "Vera, prepara un report gestionale per Officina Arco dai prospetti di gennaio e febbraio. Aiutami a verificare come usi le tabelle, poi mostrami il Word e i punti da rivedere.",
+      "steps": [
+        "In questa conversazione Vera ispeziona i fogli e propone dove inserirli. L’assistente spiega per iscritto struttura della relazione e significato delle fonti, chiedendoti di confermare azienda, periodo e importi da riportare.",
+        "Vera registra la mappatura rivista, prepara commenti sostenuti dai dati ed esegue il workflow corrente. L’assistente segue i risultati effettivi e spiega eventuali sezioni prive di informazioni.",
+        "Apri il Word prodotto. Leggi la sintesi, una tabella e il relativo commento; segui un importo fino al foglio sorgente. Usa la revisione del report per registrare correzioni o richieste di chiarimento."
+      ],
+      "deliverables": [
+        "Relazione Word e versione Markdown con sezioni, tabelle e commenti.",
+        "Cartella di lavoro delle tabelle e tracce dei dati usati per verificare il documento."
+      ],
+      "review": "Controlla periodo, valuta, associazione dei fogli e fedeltà dei commenti. I subtotali non vanno contati due volte. Distingui le sezioni documentate da quelle mancanti e rivedi il testo prima dell’uso professionale.",
+      "checkpoints": [
+        "Prima della generazione, indica quali informazioni entreranno nella relazione.",
+        "Nel Word, trova una cifra e il suo prospetto sorgente, poi un punto da rivedere."
+      ],
+      "practice": "Ripeti con january-march.xlsx e chiedi un nuovo report fino a marzo, conservando il precedente. Controlla che periodo, tabelle e commenti siano aggiornati; scegli una correzione da proporre.",
+      "success": "Sai fornire i prospetti, richiedere il report, aprire il documento, verificare una fonte e ripetere il lavoro per un nuovo periodo.",
+      "repeat": "Fornisci a Vera i prospetti del cliente e specifica periodo, destinatario, lingua e tipo di relazione. Rivedi struttura, importi e commenti, poi usa il documento nel normale percorso di approvazione."
+    },
+    "en": {
+      "title": "Prepare a financial report with Vera",
+      "goal": "Learn to turn accounting statements into a readable report with tables, commentary and references for checking the figures.",
+      "scenario": "Officina Arco supplies an income statement, balance sheet and cash-flow statement. The practice wants a first management report for the period.",
+      "scope": "One management report from available statements. This function organizes data and explanations into a document; sections without sources remain explicitly missing.",
+      "inputs": "Open january-february.xlsx and context-en.md. Look at the three sheets, period and currency. Tell Vera the audience, report type and language; you do not need to prepare slides or fill in technical configuration.",
+      "request": "Vera, prepare a management report for Officina Arco from the January and February statements. Help me review how you use the tables, then show me the Word document and points to review.",
+      "steps": [
+        "In this conversation, Vera inspects the sheets and proposes their report sections. The assistant explains the structure and sources, helping you confirm company, period and amounts to report.",
+        "Vera records the reviewed mapping, prepares source-supported commentary and runs the current workflow. The assistant follows actual results and explains sections where information is missing.",
+        "Open the Word document produced. Read the summary, a table and its commentary; trace a figure to its source sheet. Use report review to record corrections or clarification requests."
+      ],
+      "deliverables": [
+        "Word report and Markdown version with sections, tables and commentary.",
+        "Table workbook and data references for checking the document."
+      ],
+      "review": "Check period, currency, sheet assignments and fidelity of commentary. Do not count subtotals twice. Distinguish supported and missing sections and review the text before professional use.",
+      "checkpoints": [
+        "Before generation, identify the information that will enter the report.",
+        "In Word, find a figure and its source statement, then a point needing review."
+      ],
+      "practice": "Repeat with january-march.xlsx and request a new report through March, preserving the earlier one. Check that period, tables and commentary are updated; choose a correction to propose.",
+      "success": "You can supply statements, request the report, open the document, verify a source and repeat the task for a new period.",
+      "repeat": "Give Vera the client statements and specify period, audience, language and report type. Review structure, amounts and commentary, then use the document in the normal approval process."
+    },
+    "fr": {
+      "title": "Préparer un rapport financier avec Vera",
+      "goal": "Apprendre à transformer des états comptables en rapport lisible, avec tableaux, commentaires et références pour vérifier les chiffres.",
+      "scenario": "Officina Arco fournit compte de résultat, bilan et flux de trésorerie. Le cabinet souhaite un premier rapport de gestion sur la période.",
+      "scope": "Un rapport de gestion à partir des états disponibles. Cette fonction organise données et explications dans un document ; les sections sans sources restent signalées comme manquantes.",
+      "inputs": "Ouvrez january-february.xlsx et context-fr.md. Regardez les trois feuilles, la période et la devise. Indiquez à Vera destinataire, type de rapport et langue ; aucune présentation ni configuration technique à préparer.",
+      "request": "Vera, prépare un rapport de gestion pour Officina Arco à partir des états de janvier et février. Aide-moi à vérifier l’utilisation des tableaux, puis montre le Word et les points à revoir.",
+      "steps": [
+        "Dans cette conversation, Vera inspecte les feuilles et propose leur place dans le rapport. L’assistant explique par écrit structure et sources et vous aide à confirmer entreprise, période et montants à reprendre.",
+        "Vera enregistre la correspondance revue, prépare des commentaires étayés et exécute la procédure courante. L’assistant suit les résultats réels et explique les sections sans informations.",
+        "Ouvrez le Word produit. Lisez synthèse, tableau et commentaire associé ; retrouvez le chiffre dans la feuille source. Utilisez la revue du rapport pour enregistrer corrections et demandes de précision."
+      ],
+      "deliverables": [
+        "Rapport Word et version Markdown avec sections, tableaux et commentaires.",
+        "Classeur des tableaux et références aux données pour vérifier le document."
+      ],
+      "review": "Vérifiez période, devise, affectation des feuilles et fidélité des commentaires. Ne comptez pas deux fois les sous-totaux. Distinguez sections documentées et manquantes et relisez avant usage professionnel.",
+      "checkpoints": [
+        "Avant la génération, identifiez les informations qui entreront dans le rapport.",
+        "Dans Word, retrouvez un chiffre et son état source, puis un point à revoir."
+      ],
+      "practice": "Recommencez avec january-march.xlsx pour un nouveau rapport jusqu’à mars, en conservant le précédent. Vérifiez actualisation de la période, des tableaux et des commentaires ; proposez une correction.",
+      "success": "Vous savez fournir les états, demander et ouvrir le rapport, vérifier une source et recommencer pour une nouvelle période.",
+      "repeat": "Fournissez les états du client et précisez période, destinataire, langue et type de rapport. Revoyez structure, montants et commentaires, puis suivez le processus habituel d’approbation."
+    },
+    "de": {
+      "title": "Einen Finanzbericht mit Vera erstellen",
+      "goal": "Lernen, wie aus Buchhaltungsaufstellungen ein lesbarer Bericht mit Tabellen, Kommentaren und prüfbaren Quellenverweisen entsteht.",
+      "scenario": "Officina Arco liefert GuV, Bilanz und Kapitalflussrechnung. Die Kanzlei möchte einen ersten Managementbericht für den Zeitraum.",
+      "scope": "Ein Managementbericht aus vorhandenen Aufstellungen. Die Funktion ordnet Daten und Erklärungen in einem Dokument; Abschnitte ohne Quellen bleiben als fehlend erkennbar.",
+      "inputs": "Öffnen Sie january-february.xlsx und context-de.md. Prüfen Sie die drei Blätter, Zeitraum und Währung. Nennen Sie Vera Zielgruppe, Berichtsart und Sprache; Folien oder technische Konfigurationen müssen Sie nicht vorbereiten.",
+      "request": "Vera, erstelle für Officina Arco einen Managementbericht aus den Aufstellungen für Januar und Februar. Hilf mir, die Tabellenzuordnung zu prüfen, und zeige mir dann Word-Dokument und offene Prüfpunkte.",
+      "steps": [
+        "In diesem Chat untersucht Vera die Blätter und schlägt Berichtsabschnitte vor. Der Assistent erklärt schriftlich Aufbau und Quellen und hilft bei der Bestätigung von Unternehmen, Zeitraum und Beträgen.",
+        "Vera hält die geprüfte Zuordnung fest, formuliert belegte Kommentare und führt den aktuellen Ablauf aus. Der Assistent folgt echten Ergebnissen und erklärt Abschnitte ohne Informationen.",
+        "Öffnen Sie das erzeugte Word-Dokument. Lesen Sie Zusammenfassung, eine Tabelle und ihren Kommentar; verfolgen Sie eine Zahl zum Quellblatt. Erfassen Sie Korrekturen oder Rückfragen in der Berichtsprüfung."
+      ],
+      "deliverables": [
+        "Word-Bericht und Markdown-Version mit Abschnitten, Tabellen und Kommentaren.",
+        "Tabellenarbeitsmappe und Datennachweise zur Prüfung des Dokuments."
+      ],
+      "review": "Prüfen Sie Zeitraum, Währung, Blattzuordnung und Quellenbindung der Kommentare. Zwischensummen nicht doppelt zählen. Unterscheiden Sie belegte und fehlende Abschnitte und prüfen Sie den Text vor fachlicher Nutzung.",
+      "checkpoints": [
+        "Benennen Sie vor der Erstellung, welche Informationen in den Bericht eingehen.",
+        "Finden Sie in Word eine Zahl mit ihrer Quelle und anschließend einen Prüfpunkt."
+      ],
+      "practice": "Wiederholen Sie mit january-march.xlsx für einen neuen Bericht bis März und behalten Sie den alten. Prüfen Sie aktualisierten Zeitraum, Tabellen und Kommentare; schlagen Sie eine Korrektur vor.",
+      "success": "Sie können Aufstellungen liefern, den Bericht anfordern und öffnen, eine Quelle prüfen und den Ablauf für einen neuen Zeitraum wiederholen.",
+      "repeat": "Geben Sie Vera die Mandantenaufstellungen und nennen Sie Zeitraum, Zielgruppe, Sprache und Berichtsart. Prüfen Sie Aufbau, Beträge und Kommentare und nutzen Sie den üblichen Freigabeprozess."
+    },
+    "es": {
+      "title": "Preparar un informe financiero con Vera",
+      "goal": "Aprender a convertir estados contables en un informe legible, con tablas, comentarios y referencias para comprobar cifras.",
+      "scenario": "Officina Arco aporta cuenta de resultados, balance y flujos de caja. El despacho quiere un primer informe de gestión del período.",
+      "scope": "Un informe de gestión con los estados disponibles. La función organiza datos y explicaciones en un documento; las secciones sin fuentes quedan señaladas como pendientes.",
+      "inputs": "Abre january-february.xlsx y context-es.md. Mira las tres hojas, período y moneda. Indica destinatario, tipo de informe e idioma; no necesitas preparar diapositivas ni una configuración técnica.",
+      "request": "Vera, prepara un informe de gestión de Officina Arco con los estados de enero y febrero. Ayúdame a revisar el uso de las tablas y muéstrame después el Word y los puntos que debo revisar.",
+      "steps": [
+        "En esta conversación, Vera inspecciona las hojas y propone sus secciones. El asistente explica por escrito estructura y fuentes y ayuda a confirmar empresa, período e importes.",
+        "Vera registra la correspondencia revisada, prepara comentarios respaldados y ejecuta el flujo actual. El asistente sigue resultados reales y explica las secciones sin información.",
+        "Abre el Word generado. Lee resumen, una tabla y su comentario; sigue una cifra hasta la hoja original. Usa la revisión del informe para registrar correcciones o aclaraciones."
+      ],
+      "deliverables": [
+        "Informe Word y versión Markdown con secciones, tablas y comentarios.",
+        "Libro de tablas y referencias a datos para comprobar el documento."
+      ],
+      "review": "Comprueba período, moneda, correspondencia de hojas y fidelidad de comentarios. No cuentes dos veces los subtotales. Distingue secciones documentadas y pendientes y revisa el texto antes del uso profesional.",
+      "checkpoints": [
+        "Antes de generar, identifica qué información entrará en el informe.",
+        "En Word, encuentra una cifra y su estado original y después un punto para revisar."
+      ],
+      "practice": "Repite con january-march.xlsx para un nuevo informe hasta marzo, conservando el anterior. Comprueba actualización del período, tablas y comentarios; elige una corrección que proponer.",
+      "success": "Sabes aportar estados, pedir y abrir el informe, verificar una fuente y repetir el trabajo para otro período.",
+      "repeat": "Aporta a Vera los estados del cliente e indica período, destinatario, idioma y tipo de informe. Revisa estructura, importes y comentarios y sigue el proceso habitual de aprobación."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "287a9913a58500cfa6750f6458e1a2992efbde97fafe3a3e8d56c0e588f26b56"
+}

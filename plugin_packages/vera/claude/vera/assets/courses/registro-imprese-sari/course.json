@@ -1,0 +1,562 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "registro-imprese-sari",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "prepare_registry_practice_then_review_updated_request"
+  },
+  "sources": [
+    {
+      "path": "modules/registro-imprese-sari/assets/icon.svg",
+      "sha256": "a5d2e28e4da27b7798be026e8a4d3f918c4c46d736530e7bd2a07c6a9ffb7a7e"
+    },
+    {
+      "path": "modules/registro-imprese-sari/assets/registro-imprese-sari-review-widget.html",
+      "sha256": "c395f518f3196656dda1e76cb090ff23f0af4e660f4d2d487164a2fc5671022d"
+    },
+    {
+      "path": "modules/registro-imprese-sari/assets/registry-display.json",
+      "sha256": "fdb112a6f37d161d4ec147391d8d226317d05efe8e0fcc0a70f083d2d68bc4a4"
+    },
+    {
+      "path": "modules/registro-imprese-sari/references/official-sources.md",
+      "sha256": "121e96d562210bf1f9b708cb002154a467a13c64a2c4a3fee6ad26a649bb0438"
+    },
+    {
+      "path": "modules/registro-imprese-sari/references/workflow-reference.md",
+      "sha256": "964fa1b4c49f8215a1ce0389ce94f14ac368ee6361eda5972d3ac7893c2faa3e"
+    },
+    {
+      "path": "modules/registro-imprese-sari/requirements.txt",
+      "sha256": "9c15089adf81045eb0bea8142a67b9352c1cf845bf174ec3e341084aa5dbabca"
+    },
+    {
+      "path": "modules/registro-imprese-sari/schemas/case_intake.schema.json",
+      "sha256": "ffefd0b80e48ce430ece92ccbd5bb9b1a23dfa12a5385129df61dab69065d0e2"
+    },
+    {
+      "path": "modules/registro-imprese-sari/schemas/practice_plan.schema.json",
+      "sha256": "f243bb743c1c062abf488fc01498913451d299ece8ce7f0d76149a23964e7289"
+    },
+    {
+      "path": "modules/registro-imprese-sari/scripts/case_core.py",
+      "sha256": "e677db02177573f41d0d51fe72fb710f1282a7fbb13f965ade01d539d4c5ed4f"
+    },
+    {
+      "path": "modules/registro-imprese-sari/scripts/check_dependencies.py",
+      "sha256": "23e3089214b188558db194e7fd5bb587462d38b28dffb5ce2d57991268eb25c3"
+    },
+    {
+      "path": "modules/registro-imprese-sari/scripts/initialize_case.py",
+      "sha256": "7ce4bb016964601e8355ff94541f878d9cfb7a87ae34748e2f724193d18aef83"
+    },
+    {
+      "path": "modules/registro-imprese-sari/scripts/inventory_case.py",
+      "sha256": "f3facdee5292f2499af3621f823f2bc11b71eb9dbc444525983629d419a0d7b2"
+    },
+    {
+      "path": "modules/registro-imprese-sari/scripts/package_practice.py",
+      "sha256": "a138ab668a1afa132a87df301c0a70301f887d744dc1bea85f78d642c6437300"
+    },
+    {
+      "path": "modules/registro-imprese-sari/scripts/register_official_source.py",
+      "sha256": "c1d6ad1aaf686f542469625cc1f129e29c01c6e19fafa0833743a17a5edb34b6"
+    },
+    {
+      "path": "modules/registro-imprese-sari/scripts/registry_display.py",
+      "sha256": "833a798fa2f72b3f5874cc81069857ec0fb7c2268e5d58a9d5655011e291a59c"
+    },
+    {
+      "path": "modules/registro-imprese-sari/scripts/sari_connector.py",
+      "sha256": "c0c44015c6ac8c56294517b99008501dacfc3c6cc44cf7631f87901e23b6aa78"
+    },
+    {
+      "path": "modules/registro-imprese-sari/scripts/validate_practice_case.py",
+      "sha256": "23ee7e4e0fa4b5820778169a9a105c9dca5004085bc6d9c0859f645dff31f0b8"
+    },
+    {
+      "path": "modules/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md",
+      "sha256": "85c90cb72a147efd4a3abf8d5039a50c62abea76d92d231f1135a93cbc4f1ddd"
+    },
+    {
+      "path": "modules/registro-imprese-sari/skills/registro-imprese-sari/agents/openai.yaml",
+      "sha256": "4a48d56eee4894d2480fce6608795daab03fb280056bcfea862dad6712524ac8"
+    },
+    {
+      "path": "modules/registro-imprese-sari/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/registro-imprese-sari/SKILL.md",
+      "sha256": "e03417bdaf7444cb50a991064205694615994ef5ebbae9bcd4e51efe84b9ab58"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/company-it.md",
+      "sha256": "94ec489f161fe6e3733dc33e81a77c7f97851e3f363308c2d92762aacda05b80",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/sources-it.md",
+      "sha256": "1fbc5c765e3713bc97ac8524e98e5e1b06c7fb5c5c1cc6b2b9f1a88a08aea74c",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-it.md",
+      "sha256": "94ec489f161fe6e3733dc33e81a77c7f97851e3f363308c2d92762aacda05b80",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/sources-it.md",
+      "sha256": "1fbc5c765e3713bc97ac8524e98e5e1b06c7fb5c5c1cc6b2b9f1a88a08aea74c",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-it.md",
+      "sha256": "2994cd1efdf76fe6762549ef85a61223e84d4b547e7fc7a7cd3358dfece2d964",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/company-en.md",
+      "sha256": "6413dbbce4346f87af16989d3c1c4e1e09eb37e3e7c716df9c7974bfee055928",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/sources-en.md",
+      "sha256": "c993bd2368401be0bb1cbbdfdf1d6571508282a59b3224a3fec86796946b6bb3",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-en.md",
+      "sha256": "6413dbbce4346f87af16989d3c1c4e1e09eb37e3e7c716df9c7974bfee055928",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/sources-en.md",
+      "sha256": "c993bd2368401be0bb1cbbdfdf1d6571508282a59b3224a3fec86796946b6bb3",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-en.md",
+      "sha256": "84f3b995bec4daad1ae50b5feddd9e6ce19155f824c847eb486f197326088e11",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/company-fr.md",
+      "sha256": "9282c588ae67322aced3fe118f3561a9d9b4ba7169ea5cfff79ede80d32a2d43",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/sources-fr.md",
+      "sha256": "2b989dabbf175d9bfa7959be65bc6ad19d5f3f669831b15d3dd00f993715d08b",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-fr.md",
+      "sha256": "9282c588ae67322aced3fe118f3561a9d9b4ba7169ea5cfff79ede80d32a2d43",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/sources-fr.md",
+      "sha256": "2b989dabbf175d9bfa7959be65bc6ad19d5f3f669831b15d3dd00f993715d08b",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-fr.md",
+      "sha256": "8f8a67bbe2dc9ecca252a59c03d8a32ff2cc667575be7d981a8b9177d12d7ae7",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/company-de.md",
+      "sha256": "f48d6c8d8ce0e855a798adbf7d79ca97a610ecda2e983ce916b32025c097b30a",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/sources-de.md",
+      "sha256": "4f02e53e25a437ede3361ee129333e8d836a8e7956bf4901ac5177abf2932749",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-de.md",
+      "sha256": "f48d6c8d8ce0e855a798adbf7d79ca97a610ecda2e983ce916b32025c097b30a",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/sources-de.md",
+      "sha256": "4f02e53e25a437ede3361ee129333e8d836a8e7956bf4901ac5177abf2932749",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-de.md",
+      "sha256": "d0a6689db9741d93f4d7d16a3e73a56325a9276e99ef846cf3746b77c6d7c190",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/company-es.md",
+      "sha256": "836a6e9245515d95b0b9cd358b648f48247172a447d209fb91e921874945c6ae",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/sources-es.md",
+      "sha256": "eb5411d14ec89735055272aaacab68af07bc215a952fb996973084ca16747ded",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-es.md",
+      "sha256": "836a6e9245515d95b0b9cd358b648f48247172a447d209fb91e921874945c6ae",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/sources-es.md",
+      "sha256": "eb5411d14ec89735055272aaacab68af07bc215a952fb996973084ca16747ded",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-es.md",
+      "sha256": "5167adce6b26485e0d5a808b01903c8d6fcb41d93261c1d07280ed5fe5aeeef0",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/source-index.json",
+      "sha256": "1cc34e9e65dd00b66dc8d8b941a3a0a4d3000bd81493113ae472af425575fc34",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/source-index.json",
+      "sha256": "1cc34e9e65dd00b66dc8d8b941a3a0a4d3000bd81493113ae472af425575fc34",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Preparare una pratica Registro Imprese con Vera",
+      "goal": "Imparare a fornire il caso, seguire le verifiche delle fonti e usare il piano della pratica e la lista dei documenti da rivedere.",
+      "scenario": "Una società chiede di aggiornare la propria PEC al Registro Imprese. Prepariamo il lavoro dello studio partendo dalla richiesta e dai dati disponibili, fino al piano da rivedere.",
+      "scope": "L’intero percorso di preparazione della pratica su un caso semplice: dati, fonti, proposta, controlli e revisione. SARI aiuta a trovare indicazioni; il risultato di Vera è un pacchetto per il professionista, senza deposito.",
+      "inputs": "Apri company-it.md: contiene richiesta, società, Camera, indirizzi e data dichiarata. sources-it.md indica le pagine pubbliche da verificare. Non servono credenziali o istruzioni tecniche.",
+      "request": "Vera, prepara la pratica Registro Imprese descritta in questo file. Verifica le fonti pertinenti e mostrami il piano, i documenti da chiedere e le proposte da rivedere. Non accedere a portali né inviare la pratica.",
+      "steps": [
+        "In questa conversazione Vera apre il caso e legge i documenti. Nella spiegazione scritta spiega quale pratica preparerà e quali dati mancano. Rivedi Camera, operazione e dati proposti.",
+        "Vera consulta le fonti ufficiali attuali e collega le proposte ai dati del caso. Se serve scegliere una scheda SARI, mostra le alternative pertinenti e attende la tua scelta. L’assistente spiega per iscritto il passaggio in corso.",
+        "Apri studio_checklist.md e il piano prodotto. Segui un dato dalla richiesta al campo proposto e alla fonte. Nella revisione puoi accettare, chiedere documenti o indicare una modifica; una richiesta di modifica resta da eseguire."
+      ],
+      "deliverables": [
+        "Piano della pratica con campi, documenti, controlli e fonti.",
+        "Checklist dello studio, eventuali dubbi formulati per SARI e scheda di revisione con punti aperti."
+      ],
+      "review": "Verifica che il piano rispecchi la richiesta. Individua un dato da confermare e la prova da acquisire. Il pacchetto è una bozza professionale: una revisione accettata non è un deposito né un accesso al portale.",
+      "checkpoints": [
+        "Indica cosa devi fornire a Vera e quale risultato ti aspetti.",
+        "Trova un campo proposto, il documento che lo sostiene e la prossima verifica del professionista."
+      ],
+      "practice": "Leggi update-it.md e chiedi la nuova versione. Controlla che indirizzo e data corrispondano alla nuova richiesta, che le prove mancanti restino visibili e che la prima versione sia conservata.",
+      "success": "Sai avviare la preparazione, orientarti nel piano e nelle fonti, rivedere le proposte e aggiornare il caso dopo una nuova richiesta.",
+      "repeat": "Fornisci richiesta del cliente, documenti disponibili, Camera e date note. Chiedi a Vera di preparare il piano e le verifiche, poi rivedi proposte e lacune prima di proseguire con il normale deposito professionale."
+    },
+    "en": {
+      "title": "Prepare a Registro Imprese practice with Vera",
+      "goal": "Learn to provide the case, follow source checks and use the practice plan and document checklist for review.",
+      "scenario": "A company asks to update its registered PEC address. Prepare the professional’s work from the request and available facts through to the plan for review.",
+      "scope": "The complete preparation process in a simple case: facts, sources, proposal, checks and review. SARI helps locate guidance; Vera produces a professional-review package without filing.",
+      "inputs": "Open company-en.md for the request, company, chamber, addresses and stated date. sources-en.md lists public pages to verify. No credentials or technical instructions are needed.",
+      "request": "Vera, prepare the Registro Imprese practice described in this file. Check relevant sources and show me the plan, documents to request and proposals to review. Do not access portals or submit the filing.",
+      "steps": [
+        "In this conversation, Vera opens the case and reads the documents. In writing, it explains the practice being prepared and missing facts. Review the chamber, operation and proposed data.",
+        "Vera checks current official sources and links proposals to case facts. If a SARI card must be selected, it shows relevant choices and waits for yours. The assistant explains the current step.",
+        "Open studio_checklist.md and the generated plan. Follow one fact from the request to a proposed field and its source. Review lets you accept, request documents or ask for a change; a requested change still needs to be carried out."
+      ],
+      "deliverables": [
+        "Practice plan with fields, documents, checks and sources.",
+        "Studio checklist, any question drafted for SARI and review handoff with open points."
+      ],
+      "review": "Check that the plan matches the request. Find a fact requiring confirmation and the evidence to obtain. This is a professional draft: accepted review is neither filing nor portal access.",
+      "checkpoints": [
+        "Explain what you give Vera and which result you expect.",
+        "Find a proposed field, its supporting document and the professional’s next check."
+      ],
+      "practice": "Read update-en.md and request the new version. Check that address and date match the updated request, missing evidence remains visible and the first version is preserved.",
+      "success": "You can start preparation, navigate the plan and sources, review proposals and update the case after a changed request.",
+      "repeat": "Provide the client’s request, available documents, chamber and known dates. Ask Vera for the plan and checks, then review proposals and gaps before the normal professional filing process."
+    },
+    "fr": {
+      "title": "Préparer un dossier Registro Imprese avec Vera",
+      "goal": "Apprendre à fournir le cas, suivre la vérification des sources et utiliser le plan du dossier et la liste des pièces à revoir.",
+      "scenario": "Une société souhaite modifier son adresse PEC inscrite au registre. Préparons le travail du cabinet à partir de la demande et des faits disponibles, jusqu’au plan à revoir.",
+      "scope": "Tout le parcours de préparation sur un cas simple : faits, sources, proposition, contrôles et révision. SARI aide à trouver les indications ; Vera produit un dossier pour le professionnel, sans dépôt.",
+      "inputs": "Ouvrez company-fr.md : demande, société, chambre, adresses et date déclarée. sources-fr.md indique les pages publiques à vérifier. Aucun identifiant de connexion ni consigne technique n’est nécessaire.",
+      "request": "Vera, prépare le dossier Registro Imprese décrit dans ce fichier. Vérifie les sources pertinentes et montre-moi le plan, les pièces à demander et les propositions à revoir. Ne te connecte pas aux portails et ne transmets rien.",
+      "steps": [
+        "Dans cette conversation, Vera ouvre le dossier et lit les documents. Par écrit, elle explique la démarche préparée et les faits manquants. Revoyez la chambre, l’opération et les données proposées.",
+        "Vera consulte les sources officielles actuelles et relie les propositions aux faits. Si une fiche SARI doit être choisie, elle présente les choix pertinents et attend le vôtre. L’assistant explique par écrit l’étape en cours.",
+        "Ouvrez studio_checklist.md et le plan produit. Suivez une donnée de la demande jusqu’au champ proposé et à sa source. La révision permet d’accepter, de demander des pièces ou une modification ; celle-ci reste à effectuer."
+      ],
+      "deliverables": [
+        "Plan du dossier avec champs, pièces, contrôles et sources.",
+        "Liste de contrôle du cabinet, éventuelle question préparée pour SARI et fiche de révision avec points ouverts."
+      ],
+      "review": "Vérifiez que le plan répond à la demande. Identifiez un fait à confirmer et la preuve à obtenir. Le dossier reste un projet professionnel : une révision acceptée ne vaut ni dépôt ni accès à un portail.",
+      "checkpoints": [
+        "Expliquez ce que vous fournissez à Vera et le résultat attendu.",
+        "Retrouvez un champ proposé, la pièce qui le justifie et le prochain contrôle du professionnel."
+      ],
+      "practice": "Lisez update-fr.md et demandez la nouvelle version. Vérifiez les nouvelles adresse et date, le maintien des preuves manquantes et la conservation de la première version.",
+      "success": "Vous savez lancer la préparation, lire le plan et les sources, revoir les propositions et actualiser le dossier après une nouvelle demande.",
+      "repeat": "Fournissez la demande du client, les pièces disponibles, la chambre et les dates connues. Demandez le plan et les contrôles, puis revoyez propositions et lacunes avant le dépôt professionnel habituel."
+    },
+    "de": {
+      "title": "Eine Registro-Imprese-Angelegenheit mit Vera vorbereiten",
+      "goal": "Lernen, den Fall bereitzustellen, die Quellenprüfung zu verfolgen und Bearbeitungsplan und Unterlagenliste zu prüfen.",
+      "scenario": "Ein Unternehmen möchte seine eingetragene PEC-Adresse ändern. Wir bereiten die Arbeit der Kanzlei vom Auftrag und den vorhandenen Angaben bis zum Prüfplan vor.",
+      "scope": "Der vollständige Vorbereitungsablauf an einem einfachen Fall: Angaben, Quellen, Vorschlag, Kontrollen und Prüfung. SARI hilft bei der Orientierung; Vera erstellt ein Paket für die Fachperson ohne Einreichung.",
+      "inputs": "Öffnen Sie company-de.md mit Auftrag, Unternehmen, Kammer, Adressen und genanntem Datum. sources-de.md nennt zu prüfende öffentliche Seiten. Zugangsdaten und technische Anweisungen sind nicht nötig.",
+      "request": "Vera, bereite die Registro-Imprese-Angelegenheit aus dieser Datei vor. Prüfe die einschlägigen Quellen und zeige mir Plan, anzufordernde Unterlagen und Vorschläge zur Prüfung. Keine Portalanmeldung oder Einreichung.",
+      "steps": [
+        "In diesem Chat eröffnet Vera den Fall und liest die Unterlagen. Schriftlich erklärt sie die geplante Vorbereitung und fehlende Angaben. Prüfen Sie Kammer, Vorgang und vorgeschlagene Daten.",
+        "Vera prüft aktuelle amtliche Quellen und verknüpft Vorschläge mit Fallangaben. Muss eine SARI-Karte ausgewählt werden, zeigt sie passende Möglichkeiten und wartet auf Ihre Wahl. Der Assistent erklärt schriftlich den laufenden Schritt.",
+        "Öffnen Sie studio_checklist.md und den erzeugten Plan. Verfolgen Sie eine Angabe vom Auftrag zum vorgeschlagenen Feld und zur Quelle. Sie können zustimmen, Unterlagen anfordern oder eine Änderung verlangen; diese muss anschließend noch umgesetzt werden."
+      ],
+      "deliverables": [
+        "Bearbeitungsplan mit Feldern, Unterlagen, Kontrollen und Quellen.",
+        "Kanzleicheckliste, gegebenenfalls eine Frage für SARI und Prüfunterlagen mit offenen Punkten."
+      ],
+      "review": "Prüfen Sie, ob der Plan zum Auftrag passt. Finden Sie eine zu bestätigende Angabe und den dafür benötigten Beleg. Es bleibt ein fachlicher Entwurf; eine angenommene Prüfung bedeutet weder Einreichung noch Portalzugriff.",
+      "checkpoints": [
+        "Erklären Sie, welche Angaben Vera braucht und welches Ergebnis Sie erwarten.",
+        "Finden Sie ein vorgeschlagenes Feld, seinen Beleg und den nächsten fachlichen Prüfschritt."
+      ],
+      "practice": "Lesen Sie update-de.md und fordern Sie die neue Version an. Prüfen Sie Adresse und Datum, weiterhin fehlende Belege und die Aufbewahrung der ersten Version.",
+      "success": "Sie können die Vorbereitung starten, Plan und Quellen lesen, Vorschläge prüfen und den Fall nach einem geänderten Auftrag aktualisieren.",
+      "repeat": "Stellen Sie Auftrag, vorhandene Unterlagen, Kammer und bekannte Daten bereit. Fordern Sie Plan und Kontrollen an und prüfen Sie Vorschläge und Lücken vor dem üblichen fachlichen Einreichungsverfahren."
+    },
+    "es": {
+      "title": "Preparar un trámite Registro Imprese con Vera",
+      "goal": "Aprender a proporcionar el caso, seguir la comprobación de fuentes y usar el plan del trámite y la lista de documentos para revisión.",
+      "scenario": "Una sociedad quiere cambiar su dirección PEC inscrita. Preparamos el trabajo del despacho desde el encargo y los datos disponibles hasta el plan que revisar.",
+      "scope": "Todo el proceso de preparación en un caso sencillo: datos, fuentes, propuesta, controles y revisión. SARI ayuda a localizar indicaciones; Vera entrega un paquete para el profesional, sin presentación registral.",
+      "inputs": "Abre company-es.md: encargo, sociedad, cámara, direcciones y fecha declarada. sources-es.md indica las páginas públicas que comprobar. No hacen falta credenciales ni instrucciones técnicas.",
+      "request": "Vera, prepara el trámite Registro Imprese descrito en este archivo. Verifica las fuentes pertinentes y muéstrame el plan, documentos que solicitar y propuestas que revisar. No accedas a portales ni presentes el trámite.",
+      "steps": [
+        "En esta conversación, Vera abre el caso y lee los documentos. Por escrito, explica qué preparará y qué datos faltan. Revisa cámara, operación y datos propuestos.",
+        "Vera consulta fuentes oficiales actuales y relaciona las propuestas con los hechos. Si hace falta seleccionar una ficha SARI, muestra las opciones pertinentes y espera tu elección. El asistente explica por escrito el paso actual.",
+        "Abre studio_checklist.md y el plan generado. Sigue un dato desde el encargo hasta el campo propuesto y su fuente. Puedes aceptar, pedir documentos o solicitar un cambio; el cambio solicitado aún debe ejecutarse."
+      ],
+      "deliverables": [
+        "Plan del trámite con campos, documentos, controles y fuentes.",
+        "Lista de comprobación del despacho, posibles preguntas preparadas para SARI y ficha de revisión con puntos abiertos."
+      ],
+      "review": "Comprueba que el plan corresponde al encargo. Localiza un dato que confirmar y su prueba pendiente. El paquete es un borrador profesional: aceptar la revisión no equivale a presentar el trámite ni acceder al portal.",
+      "checkpoints": [
+        "Explica qué proporcionas a Vera y qué resultado esperas.",
+        "Encuentra un campo propuesto, su documento de apoyo y la siguiente comprobación del profesional."
+      ],
+      "practice": "Lee update-es.md y pide la nueva versión. Comprueba dirección y fecha, las pruebas que siguen faltando y la conservación de la primera versión.",
+      "success": "Sabes iniciar la preparación, leer el plan y las fuentes, revisar propuestas y actualizar el caso después de un nuevo encargo.",
+      "repeat": "Proporciona encargo, documentos disponibles, cámara y fechas conocidas. Pide a Vera el plan y los controles y revisa propuestas y lagunas antes de la presentación profesional habitual."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "7e9f957f334a4d31432b0d99b3ad770082369330445c9a4f5fa966a6a7b5d215"
+}

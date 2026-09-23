@@ -1,0 +1,470 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "clara",
+  "workflow": "attribute-reporting",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "existing_fictional_package_to_checked_html_report"
+  },
+  "sources": [
+    {
+      "path": "modules/attribute-reporting/assets/icon.svg",
+      "sha256": "0c1edab1496be5d851dc3bf5a17cce10b612ad74d0f3a8567659b8e69027710d"
+    },
+    {
+      "path": "modules/attribute-reporting/requirements.txt",
+      "sha256": "9139674d628b35fd9a4705a55a6e6ad79f0908f7d3a64cb9868b7d16d6d1890e"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/apply_validated_mappings.py",
+      "sha256": "ffadf599c55518b99b5f25a4cc802191b272c3e8ca85613040dfeedd64f179a5"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/attribute_reporting.py",
+      "sha256": "40c3fbab3b6fc60f72d4242c780b6bd223b2da303b80cf3549e1408c659c4c65"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/bind_mapping_images.py",
+      "sha256": "e984adecac352d2281f34b741570be03b6727c1598a0cccc14655f37abbc3f82"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/brand_fit.py",
+      "sha256": "148ddb48382c027c730fcab156ef8eda562a50ef2a16f3960a02d72cfb295d67"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/browser_qa.py",
+      "sha256": "4d57596687f210359858e3a48c5205df63512f18de7a09c60400593d194a9a3b"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/check_brand_fit_report.py",
+      "sha256": "5cfc4465060ceeed8053c5248856c11399fc278266fc982d9d9475c71554abbb"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/check_dependencies.py",
+      "sha256": "f1ae4013ca0e4c709dd412bf3a71d490b67d9a22610d27a571ea8fe9c4a3b762"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/check_report.py",
+      "sha256": "a1faa5ddbf2ae31d97eb143dabd1c7483a56d2e8476953ebc529fc16b83782b6"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/create_mapping_tasks.py",
+      "sha256": "89c587b5dd4770307bc513fb282eb17f5a67f5c1349482291e143f4c8709fb07"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/hydrate_images.py",
+      "sha256": "b88fa51362b4f7f686e735c7ff869618cadd93f5c8d5fc349a5481932f6fb874"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/mapping_shards.py",
+      "sha256": "d31f25d26a3b41af63a87d11a254f28de6b66f76e731d3c94f700ab195316b38"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/prepare_brand_fit_run.py",
+      "sha256": "1b2d148c9e6ecdc102da0fbf2ebbcc6cbd5c2ed73591660aef48c2040f9b7d85"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/prepare_mapping_review.py",
+      "sha256": "8b09e0c955259a1499f055eacb325c0cf555935a5f11522c4ee7024d3d09cd42"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/prepare_run.py",
+      "sha256": "86d2c52270dcc5eeebb4412e94fcf94e542182f7163fb996ed741d932d68204a"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/project_pipeline.py",
+      "sha256": "c5ad8e78591e2304371ff7ade9dbb8a302305bfea956a4ec2e5e50730459f023"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/render_brand_fit_report.py",
+      "sha256": "de05f8f09ee5208cd92661bcaa6d13bdf367419c2496327fbe0e17345d90478c"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/render_report.py",
+      "sha256": "3862f0ebfcbf12153311d28243fdf381c93af880a68bb3c497e8958fc66bbe92"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/run_state.py",
+      "sha256": "e024d18acdfd3e83a05b40c043168a00593307348b26f7bb9357098cc6806811"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/server_bridge_client.py",
+      "sha256": "5b670cef618945c3921ed848cafa1da7e6c3f5321622aad1b2d11888d22b569c"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/validate_mapping_decisions.py",
+      "sha256": "038e6140402f908c959ca5d8c6e7906269eb6987e83d71b9828f7a2bbf5b8651"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/validate_mapping_review.py",
+      "sha256": "a7830b778e12b039b7b55fc75e50a4c34b29e068d230a6fe77c4bdc3b479bfe6"
+    },
+    {
+      "path": "modules/attribute-reporting/skills/attribute-reporting/SKILL.md",
+      "sha256": "eef39c0f659d7b802bb0c0e873c53490b59a5e839f4e75f03a2723769bab9957"
+    },
+    {
+      "path": "modules/attribute-reporting/skills/attribute-reporting/references/server-boundary.md",
+      "sha256": "baf87dbd483fb7b05c5e12078ab874367ca8433ed5b9f0269299ab5a9ed05bda"
+    },
+    {
+      "path": "modules/attribute-reporting/skills/attribute-reporting/references/workflow-reference.md",
+      "sha256": "fab708edbf3f8dc249c24cdaaa7d14ca069304de9ee0dab536ac91a171f4b8c8"
+    },
+    {
+      "path": "modules/attribute-reporting/vendor/modules/__init__.py",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": "modules/attribute-reporting/vendor/modules/pdp/attribute_report_copy.json",
+      "sha256": "8d2b2e5c1631e5d7627266c9c6d0171395dc2164ced07caf33476096e28abf0b"
+    },
+    {
+      "path": "modules/attribute-reporting/vendor/modules/pdp/attribute_table_catalog.json",
+      "sha256": "5f5a44e1ff0b3c6de6a64f0efe4886b1a103911fbb8e6ee7507a5fdbc5f6c1ad"
+    },
+    {
+      "path": "modules/attribute-reporting/vendor/modules/pdp/attribute_table_catalog.py",
+      "sha256": "db3eebe7ce9ded9acf25a9da33bf7ec70c8ee762f36c46512ccc2c471fefedc0"
+    },
+    {
+      "path": "modules/attribute-reporting/vendor/modules/pdp/attribute_table_templates.py",
+      "sha256": "4e4a46812fa6a4c04e0e78d18b9f51cfee86bfaa629827abf50e9e0cd93a33f5"
+    },
+    {
+      "path": "modules/attribute-reporting/vendor/modules/utilities/utils.py",
+      "sha256": "dfeb4543d1482650e8be2bf6ea9f5ff313abe7dde7fef0539031c95a08a5c56e"
+    },
+    {
+      "path": "scripts/check_dependencies.py",
+      "sha256": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+    },
+    {
+      "path": "scripts/managed_ocr_runtime.py",
+      "sha256": "664987b3e53f0b66bd1907493215f352c8487c75c7ec76347f8a41ba3336b222"
+    },
+    {
+      "path": "scripts/managed_python_runtime.py",
+      "sha256": "6f1e29d38fa4ff7919a507ddcb95df81d4bdf600b2ab6fc392956772d846d76d"
+    },
+    {
+      "path": "skills/attribute-reporting/SKILL.md",
+      "sha256": "69f62d12143410b3520ec48dd979be98799ac0d0045040b5abb36ff013bffe3f"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/assortment-demo-en.zip",
+      "sha256": "8994d8a093c832022a541d477068c0c5896a5518d4893fef4b8469256ecff4ad",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/brief-en.md",
+      "sha256": "4609bb9c0a6020e8e4add3fd038a0e3eabbfb090fa69d577035828f182349d1a",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assortment-practice-en.zip",
+      "sha256": "31f2df68210f5ac712360491a573aa00d183e625cf6d63c5e947b2a549b45b36",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/brief-en.md",
+      "sha256": "4609bb9c0a6020e8e4add3fd038a0e3eabbfb090fa69d577035828f182349d1a",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assortment-demo-it.zip",
+      "sha256": "54721bc089e23f620665b2afe33d8152f6336cf126ffdb01169780be3e522f2b",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/brief-it.md",
+      "sha256": "3eb5a34bfd6134063e2e60ce984fb30e802305ffa3a4783009326544d59fc6d9",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assortment-practice-it.zip",
+      "sha256": "0d689c8ea53e4f72692ad9f1e8c27d3ab51f84c79905a28b825d9cab103cad7f",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/brief-it.md",
+      "sha256": "3eb5a34bfd6134063e2e60ce984fb30e802305ffa3a4783009326544d59fc6d9",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assortment-demo-fr.zip",
+      "sha256": "2fdb6514d0252b5f9ba94eee8d76adafc14f9602eb1b9e425c3d3e653d7d7dee",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/brief-fr.md",
+      "sha256": "b0a31cba3f001e0e60da301d82da279dc56ea5682193dddcc7e1e22a238c36c4",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assortment-practice-fr.zip",
+      "sha256": "da4142b3971e38d3eb5cbc0197ba843c469bc18faa36ad94a6188ed1da9965a4",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/brief-fr.md",
+      "sha256": "b0a31cba3f001e0e60da301d82da279dc56ea5682193dddcc7e1e22a238c36c4",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assortment-demo-de.zip",
+      "sha256": "788a8d7b5904f942d0e27c94f2cdbe4a53e41011d0eee3dc6e94bae372f92355",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/brief-de.md",
+      "sha256": "a94da65c32baf7283ebac72b5e229467efd16743690e40f217a3bd5dc9ee3431",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assortment-practice-de.zip",
+      "sha256": "9abf1b0d5cda93784b6303a5931e8c179b7d37ef9adff448e4e5b7a36c8ef56c",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/brief-de.md",
+      "sha256": "a94da65c32baf7283ebac72b5e229467efd16743690e40f217a3bd5dc9ee3431",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assortment-demo-es.zip",
+      "sha256": "7d022ccd11cd4f818cce636356ea2586d0db8fc58d871e5ed2023839c076fa2d",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/brief-es.md",
+      "sha256": "74cc06a52a5d4ad6efba821b11323b73e1cab60449c5ec9adf69ef002ee32804",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assortment-practice-es.zip",
+      "sha256": "04ca9c95ba2be620b86207e4dec4cd893d98b1ff268abd3e15510bdfc1608c80",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/brief-es.md",
+      "sha256": "74cc06a52a5d4ad6efba821b11323b73e1cab60449c5ec9adf69ef002ee32804",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Creare un rapporto sull’assortimento con Clara",
+      "goal": "Imparare a fornire un pacchetto di dati commerciali già disponibile, chiedere un’analisi e usare il rapporto HTML verificato.",
+      "scenario": "Un team prodotto vuole capire l’assortimento prima della prossima riunione. Parti da un pacchetto fittizio sulla maglieria, segui la preparazione del rapporto e confronta le conclusioni con i prodotti di origine. Ripeti poi con un pacchetto aggiornato.",
+      "scope": "Primo rapporto completo da un pacchetto di dati locale esistente: acquisizione, confronto, interpretazione, revisione indipendente e consegna. Raccolta sui siti, classificazione centrale degli attributi e Brand Fit sono attività distinte e non vengono simulate.",
+      "inputs": "Apri brief-it.md e fornisci assortment-demo-it.zip. L’archivio contiene prodotti fittizi, gruppi di novità e più venduti dichiarati, confronti calcolati e controllo d’integrità. Non contiene un rapporto finito, interpretazioni approvate o ricevute del server.",
+      "request": "Clara, prepara da questo pacchetto un rapporto sull’assortimento per il team prodotto. Spiega quali dati contiene, confronta più venduti e novità con il resto e mostrami il rapporto con i suoi controlli.",
+      "steps": [
+        "Conferma rivenditore, categoria, dati forniti e destinatari. Clara apre l’archivio e ne verifica l’integrità. L’assistente spiega i prodotti di origine e il significato dei gruppi definiti dal rivenditore.",
+        "Clara prepara le normali tabelle comparative e scrive il rapporto a partire dalle evidenze. Segui un confronto dai prodotti alla tabella e alla conclusione; distingui una caratteristica dell’assortimento da quantità vendute o spiegazioni causali.",
+        "Una revisione indipendente controlla affermazioni e leggibilità; i controlli nel browser verificano l’HTML. Apri il rapporto effettivo, il giudizio e le riserve. Trova sintesi, tabelle, prodotti di supporto e prossima domanda per il team."
+      ],
+      "deliverables": [
+        "Rapporto HTML locale con confronti, interpretazione, riferimenti alle fonti e giudizio esplicito di correttezza.",
+        "Tabelle di supporto e registri di revisione che spiegano giudizio e limiti residui."
+      ],
+      "review": "Controlla dati forniti, definizione dei gruppi e supporto di una conclusione. Le novità sono il gruppo indicato nella fonte; la posizione tra i più venduti non fornisce quantità vendute. Leggi le ragioni del giudizio prima di usare il rapporto.",
+      "checkpoints": [
+        "Indica pacchetto e richiesta necessari per iniziare e spiega che cosa produrrà Clara.",
+        "Apri il rapporto e collega una conclusione alle sue evidenze e allo stato di revisione."
+      ],
+      "practice": "Fornisci assortment-practice-it.zip, che cambia il gruppo fittizio delle novità. Chiedi un nuovo rapporto per gli stessi destinatari. Conserva il primo e confronta i cambiamenti nelle evidenze e nell’interpretazione.",
+      "success": "Sai avviare un rapporto, leggerne sintesi ed evidenze, capire il giudizio e ripetere il lavoro con un altro pacchetto.",
+      "repeat": "Fornisci un pacchetto con integrità verificata e indica destinatari e domanda. Clara prepara, rivede e consegna l’HTML localmente. La richiesta di dati centrali correnti segue l’acquisizione autenticata e il relativo confine dei dati."
+    },
+    "en": {
+      "title": "Create an assortment report with Clara",
+      "goal": "Learn to supply an existing retail evidence package, request an analysis and use the checked HTML report.",
+      "scenario": "A product team wants to understand an assortment before its next review. Start with a fictional knitwear package, follow Clara’s report preparation and check the conclusions against the underlying products. Then repeat with an updated package.",
+      "scope": "A complete first report from an existing local evidence package. The example teaches intake, comparison, interpretation, independent review and delivery. Collection from retailer websites, central attribute mapping and Brand Fit are separate work; none is simulated here.",
+      "inputs": "Open brief-en.md and supply assortment-demo-en.zip. The archive contains fictional product records, explicitly assigned new-arrival and best-seller groups, computed comparisons and an integrity check. It contains no finished report, approved interpretation or server receipt.",
+      "request": "Clara, create an assortment report from this package for our product team. Explain what the data covers, compare best sellers and new arrivals with the rest, and show me the report and its checks.",
+      "steps": [
+        "Confirm the retailer/category scope, the supplied snapshot and the audience. Clara safely opens the package and checks its integrity. The assistant explains the source records and what the retailer-defined groups mean.",
+        "Clara prepares the normal comparison tables and writes the report from their evidence. Follow one comparison from products to table to conclusion; distinguish a visible assortment pattern from sales quantities or a causal explanation.",
+        "An independent review checks the claims and readability, and browser checks inspect the HTML. Open the actual report, its verdict and any caveats. Find the summary, supporting tables, product evidence and the next question for the team."
+      ],
+      "deliverables": [
+        "A local HTML report with comparisons, interpretation, source links and an explicit correctness verdict.",
+        "Supporting evidence tables and review records that explain the verdict and remaining limits."
+      ],
+      "review": "Check the supplied snapshot, group definitions and support for a conclusion. New arrivals are the source’s designated group; best-seller placement does not provide sales quantities. Read the verdict’s reasons before using the report.",
+      "checkpoints": [
+        "Identify the package and request needed to start, and explain the output Clara will produce.",
+        "Open the report and follow one conclusion to its evidence and review status."
+      ],
+      "practice": "Supply assortment-practice-en.zip, which changes the fictional new-arrival group. Ask for a new report with the same audience. Keep the first report and compare what changed in the evidence and interpretation.",
+      "success": "You can start a report, read its summary and evidence, understand the verdict and repeat the workflow with another package.",
+      "repeat": "Supply an integrity-checked evidence package and state the audience and question. Clara prepares, reviews and delivers the HTML locally. A request for current central data follows the separate authenticated intake and its stated data boundary."
+    },
+    "fr": {
+      "title": "Créer un rapport sur l’assortiment avec Clara",
+      "goal": "Apprendre à fournir un dossier de données commerciales existant, demander une analyse et utiliser le rapport HTML vérifié.",
+      "scenario": "Une équipe produit veut comprendre l’assortiment avant sa prochaine réunion. Partez d’un dossier fictif sur la maille, suivez la préparation du rapport et rapprochez les conclusions des produits sources. Recommencez avec un dossier actualisé.",
+      "scope": "Un premier rapport complet à partir d’un dossier local existant : réception, comparaison, interprétation, révision indépendante et livraison. La collecte sur les sites, le classement central des attributs et Brand Fit sont des travaux distincts, sans simulation dans cette leçon.",
+      "inputs": "Ouvrez brief-fr.md et fournissez assortment-demo-fr.zip. L’archive contient des produits fictifs, des groupes explicitement définis de nouveautés et de meilleures ventes, des comparaisons calculées et un contrôle d’intégrité. Aucun rapport final, interprétation approuvée ou reçu serveur n’est fourni.",
+      "request": "Clara, prépare un rapport sur l’assortiment à partir de ce dossier pour notre équipe produit. Explique les données couvertes, compare meilleures ventes et nouveautés au reste, puis montre le rapport et ses contrôles.",
+      "steps": [
+        "Confirmez distributeur, catégorie, données fournies et destinataires. Clara ouvre l’archive et vérifie son intégrité. L’assistant explique les produits sources et les groupes définis par le distributeur.",
+        "Clara prépare les tableaux comparatifs habituels et rédige le rapport à partir des preuves. Suivez une comparaison des produits au tableau puis à la conclusion ; distinguez une caractéristique de l’assortiment des volumes vendus ou d’une explication causale.",
+        "Une révision indépendante vérifie les affirmations et la lisibilité ; les contrôles dans le navigateur examinent l’HTML. Ouvrez le rapport réel, son verdict et ses réserves. Repérez synthèse, tableaux, produits sources et prochaine question pour l’équipe."
+      ],
+      "deliverables": [
+        "Un rapport HTML local avec comparaisons, interprétation, références et verdict explicite sur sa justesse.",
+        "Des tableaux sources et comptes rendus de révision expliquant le verdict et les limites."
+      ],
+      "review": "Vérifiez les données fournies, les groupes et les preuves d’une conclusion. Les nouveautés sont celles désignées par la source ; le classement des meilleures ventes ne donne pas les volumes vendus. Lisez les motifs du verdict avant utilisation.",
+      "checkpoints": [
+        "Identifiez le dossier et la demande nécessaires pour commencer, puis expliquez le résultat attendu.",
+        "Ouvrez le rapport et reliez une conclusion à ses preuves et à son état de révision."
+      ],
+      "practice": "Fournissez assortment-practice-fr.zip, qui modifie le groupe fictif des nouveautés. Demandez un nouveau rapport pour le même public. Conservez le premier et comparez les changements dans les preuves et l’interprétation.",
+      "success": "Vous savez lancer un rapport, lire sa synthèse et ses preuves, comprendre le verdict et recommencer avec un autre dossier.",
+      "repeat": "Fournissez un dossier dont l’intégrité a été vérifiée et précisez le public et la question. Clara prépare, révise et livre l’HTML localement. Les données centrales actuelles suivent une réception authentifiée distincte et son périmètre de données déclaré."
+    },
+    "de": {
+      "title": "Mit Clara einen Sortimentsbericht erstellen",
+      "goal": "Lernen, ein vorhandenes Handelsdatenpaket bereitzustellen, eine Analyse anzufordern und den geprüften HTML-Bericht zu verwenden.",
+      "scenario": "Ein Produktteam möchte das Sortiment vor seiner nächsten Besprechung verstehen. Beginnen Sie mit einem fiktiven Strickwarenpaket, verfolgen Sie die Berichtserstellung und prüfen Sie Aussagen anhand der Ausgangsprodukte. Wiederholen Sie den Ablauf mit einem aktualisierten Paket.",
+      "scope": "Ein vollständiger erster Bericht aus einem vorhandenen lokalen Datenpaket: Übernahme, Vergleich, Interpretation, unabhängige Prüfung und Übergabe. Website-Erhebung, zentrale Attributzuordnung und Brand Fit sind eigene Aufgaben und werden hier nicht simuliert.",
+      "inputs": "Öffnen Sie brief-de.md und stellen Sie assortment-demo-de.zip bereit. Das Archiv enthält fiktive Produkte, ausdrücklich zugewiesene Neuheiten- und Bestsellergruppen, berechnete Vergleiche und eine Integritätsprüfung. Fertiger Bericht, freigegebene Interpretation und Serverbestätigung sind nicht enthalten.",
+      "request": "Clara, erstelle aus diesem Paket einen Sortimentsbericht für unser Produktteam. Erkläre die Datenabdeckung, vergleiche Bestseller und Neuheiten mit dem übrigen Sortiment und zeige den Bericht mit seinen Prüfungen.",
+      "steps": [
+        "Bestätigen Sie Händler, Kategorie, bereitgestellten Datenstand und Zielgruppe. Clara öffnet das Archiv und prüft seine Integrität. Schriftlich erklärt Clara die Ausgangsprodukte und die vom Händler definierten Gruppen.",
+        "Clara erstellt die üblichen Vergleichstabellen und verfasst den Bericht aus den Belegen. Verfolgen Sie einen Vergleich vom Produkt über die Tabelle bis zur Aussage; unterscheiden Sie Sortimentsmerkmale von Absatzmengen und kausalen Erklärungen.",
+        "Eine unabhängige Prüfung bewertet Aussagen und Lesbarkeit; Browserprüfungen untersuchen das HTML. Öffnen Sie den tatsächlichen Bericht, sein Urteil und die Einschränkungen. Finden Sie Zusammenfassung, Tabellen, Produktbelege und nächste Frage für das Team."
+      ],
+      "deliverables": [
+        "Lokaler HTML-Bericht mit Vergleichen, Interpretation, Quellenverweisen und ausdrücklichem Korrektheitsurteil.",
+        "Belegtabellen und Prüfunterlagen, die Urteil und verbleibende Grenzen erläutern."
+      ],
+      "review": "Prüfen Sie Datenstand, Gruppendefinitionen und Belege einer Aussage. Neuheiten sind die in der Quelle festgelegte Gruppe; eine Bestsellerposition liefert keine Absatzmenge. Lesen Sie die Gründe des Urteils vor der Nutzung.",
+      "checkpoints": [
+        "Benennen Sie das benötigte Paket und die Anfrage und erklären Sie Claras Ergebnis.",
+        "Öffnen Sie den Bericht und verfolgen Sie eine Aussage bis zu den Belegen und ihrem Prüfstatus."
+      ],
+      "practice": "Stellen Sie assortment-practice-de.zip mit einer geänderten fiktiven Neuheitengruppe bereit. Fordern Sie einen neuen Bericht für dieselbe Zielgruppe an. Bewahren Sie den ersten auf und vergleichen Sie Änderungen in Belegen und Interpretation.",
+      "success": "Sie können einen Bericht starten, Zusammenfassung und Belege lesen, das Urteil verstehen und den Ablauf mit einem anderen Paket wiederholen.",
+      "repeat": "Stellen Sie ein auf Integrität geprüftes Paket bereit und nennen Sie Zielgruppe und Frage. Clara erstellt, prüft und liefert das HTML lokal. Aktuelle zentrale Daten erfordern einen eigenen authentifizierten Abruf mit den angegebenen Datengrenzen."
+    },
+    "es": {
+      "title": "Crear un informe del surtido con Clara",
+      "goal": "Aprender a aportar un paquete de datos comerciales existente, solicitar un análisis y utilizar el informe HTML verificado.",
+      "scenario": "Un equipo de producto quiere entender el surtido antes de su próxima reunión. Parte de un paquete ficticio de prendas de punto, sigue la elaboración del informe y contrasta sus conclusiones con los productos originales. Repite con un paquete actualizado.",
+      "scope": "Primer informe completo a partir de un paquete local existente: recepción, comparación, interpretación, revisión independiente y entrega. La captura web, la clasificación central de atributos y Brand Fit son trabajos distintos y no se simulan aquí.",
+      "inputs": "Abre brief-es.md y aporta assortment-demo-es.zip. El archivo contiene productos ficticios, grupos explícitos de novedades y más vendidos, comparaciones calculadas y un control de integridad. No incluye un informe terminado, interpretaciones aprobadas ni un recibo del servidor.",
+      "request": "Clara, prepara con este paquete un informe del surtido para nuestro equipo de producto. Explica qué datos cubre, compara los más vendidos y las novedades con el resto, y muéstrame el informe y sus controles.",
+      "steps": [
+        "Confirma minorista, categoría, datos aportados y destinatarios. Clara abre el archivo y comprueba su integridad. El asistente explica los productos originales y los grupos definidos por el minorista.",
+        "Clara prepara las tablas comparativas habituales y redacta el informe a partir de las evidencias. Sigue una comparación desde los productos hasta la tabla y la conclusión; distingue un rasgo del surtido de las cantidades vendidas o una explicación causal.",
+        "Una revisión independiente comprueba afirmaciones y legibilidad; los controles del navegador examinan el HTML. Abre el informe real, su dictamen y sus reservas. Localiza resumen, tablas, productos de apoyo y próxima pregunta para el equipo."
+      ],
+      "deliverables": [
+        "Informe HTML local con comparaciones, interpretación, referencias y un dictamen explícito de corrección.",
+        "Tablas de evidencia y registros de revisión que explican el dictamen y los límites pendientes."
+      ],
+      "review": "Comprueba los datos aportados, las definiciones de los grupos y el respaldo de una conclusión. Las novedades son el grupo designado por la fuente; una posición entre los más vendidos no aporta cantidades vendidas. Lee los motivos del dictamen antes de usar el informe.",
+      "checkpoints": [
+        "Identifica el paquete y la petición necesarios para empezar y explica qué producirá Clara.",
+        "Abre el informe y sigue una conclusión hasta sus evidencias y su estado de revisión."
+      ],
+      "practice": "Aporta assortment-practice-es.zip, que cambia el grupo ficticio de novedades. Solicita un nuevo informe para los mismos destinatarios. Conserva el primero y compara qué cambió en las evidencias y la interpretación.",
+      "success": "Sabes iniciar un informe, leer su resumen y evidencias, entender el dictamen y repetir el trabajo con otro paquete.",
+      "repeat": "Aporta un paquete con integridad verificada e indica destinatarios y pregunta. Clara prepara, revisa y entrega el HTML localmente. Los datos centrales actuales requieren una recepción autenticada distinta con el ámbito de datos declarado."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "b13bd3711afa16fdff0aa0653c8f99d683b1b4fd74487e17927f575d622d652c"
+}

@@ -58,3 +58,5 @@ their bounded purpose matches the requested contribution.
 Use this assurance workflow when its own trigger conditions apply. It does not
 replace a missing presentation, research, analysis, or advisory workflow.
 
+
+- `learn-with-clara`: learn an installed function in writing using prepared files, actual execution and practice in one conversation.

@@ -12,7 +12,7 @@ from pathlib import Path
 import fitz
 import pytest
 
-from tests.plugins._teaching_release import prepared_kit
+from tests.plugins._teaching_release import prepared_kit, record_native_check
 from tests.plugins.test_teaching_kit_execution import (
     _bound_case,
     _complete_teaching_case,
@@ -144,15 +144,58 @@ def _review(contract, phase):
 def test_question_kit_preserves_request_and_scope_in_native_planning(
     tmp_path, monkeypatch, product, language, phase
 ):
-    run = _bound_case(
-        tmp_path,
-        monkeypatch,
-        "quesito-legale-fiscale",
-        "prompt-optimizer",
-        phase,
-        product=product,
-        language=language,
-    )
+    _execute_planning(tmp_path, monkeypatch, product, language, phase)
+
+
+def _execute_planning(tmp_path, monkeypatch, product, language, phase, prior=None):
+    if prior is None:
+        run = _bound_case(
+            tmp_path,
+            monkeypatch,
+            "quesito-legale-fiscale",
+            "prompt-optimizer",
+            phase,
+            product=product,
+            language=language,
+        )
+    else:
+        import importlib.util
+
+        from courseware.library import CourseLibrary
+
+        root = Path(__file__).resolve().parents[2]
+        spec = importlib.util.spec_from_file_location(
+            "question_practice_ledger",
+            root / "plugins/studio-archive/scripts/client_ledger.py",
+        )
+        ledger = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(ledger)
+        context = prior["context"]
+        case = tmp_path / "case"
+        kit = CourseLibrary(
+            root / "plugins" / product, {"quesito-legale-fiscale"}
+        ).render("quesito-legale-fiscale", language, tmp_path / "practice-kit")
+        imported = [
+            ledger.import_document(
+                case, context["client_id"], context["engagement_id"], Path(p), "source"
+            )
+            for p in kit["practice_files"]
+        ]
+        version = _read(root / "plugins" / product / ".codex-plugin/plugin.json")[
+            "version"
+        ]
+        prepared = ledger.prepare_run(
+            case,
+            context["client_id"],
+            context["engagement_id"],
+            "prompt-optimizer",
+            version,
+            input_ids=[v["receipt"]["input_id"] for v in imported],
+            purpose="Revise the fictional briefing while preserving its first version",
+        )
+        run = ledger.start_run(
+            case, context["engagement_id"], prepared["run"]["run_id"]
+        )
     output = Path(run["output_dir"])
     inputs = Path(run["context"]["run_root"]) / "inputs"
     question_name = f"{'question' if phase == 'demo' else 'practice'}-{language}.md"
@@ -209,3 +252,153 @@ def test_question_kit_preserves_request_and_scope_in_native_planning(
     assert _read(output / "ui_decisions.json")["status"] == "pending_review"
     assert _read(output / "ui_decisions.json")["decision_count"] == 0
     _complete_teaching_case(run, tmp_path / "case")
+    return run
+
+
+@pytest.mark.parametrize("product", ["vera", "lucia"])
+@pytest.mark.parametrize("phase", ["demo", "practice"])
+@pytest.mark.parametrize("language", LANGUAGES)
+def test_question_kit_exports_actual_reviewed_answer(
+    tmp_path, monkeypatch, record_property, product, phase, language
+):
+    """Complete the planning-to-validation handoff with real local packaging.
+
+    All supported languages follow the same actual inspection and packaging pipeline.
+    This regression does not establish learner or professional approval.
+    """
+    prior = None
+    preserved = {}
+    if phase == "practice":
+        prior = _execute_answer(tmp_path, monkeypatch, product, "demo", language)
+        preserved = {
+            p: p.read_bytes()
+            for p in (tmp_path / "case").rglob("runs/*/**/*")
+            if p.is_file()
+        }
+        assert preserved
+    run = _execute_answer(tmp_path, monkeypatch, product, phase, language, prior)
+    if prior:
+        assert run["context"]["engagement_id"] == prior["context"]["engagement_id"]
+        assert run["context"]["run_id"] != prior["context"]["run_id"]
+        assert all(p.read_bytes() == content for p, content in preserved.items())
+    record_native_check(
+        record_property,
+        root=Path(__file__).resolve().parents[2],
+        product=product,
+        workflow="quesito-legale-fiscale",
+        language=language,
+        phase=phase,
+    )
+
+
+def _execute_answer(tmp_path, monkeypatch, product, phase, language, prior=None):
+    from tests.plugins._question_teaching import answer, review
+
+    planning = _execute_planning(tmp_path, monkeypatch, product, language, phase, prior)
+    import importlib.util
+
+    root = Path(__file__).resolve().parents[2]
+    spec = importlib.util.spec_from_file_location(
+        "question_delivery_ledger",
+        root / "plugins/studio-archive/scripts/client_ledger.py",
+    )
+    ledger = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ledger)
+    context = planning["context"]
+    case = tmp_path / "case"
+    document, _ = answer(language, phase)
+    draft = tmp_path / f"{phase}-authored-answer.md"
+    draft.write_text(document, encoding="utf-8")
+    source = next(
+        Path(v["path"])
+        for v in context["input_bindings"]
+        if v["path"].endswith("directive-original-es.pdf")
+    )
+    imported = [
+        ledger.import_document(
+            case, context["client_id"], context["engagement_id"], p, "source"
+        )
+        for p in (
+            draft,
+            source,
+            root / "tests/fixtures/teaching_question/legislative-status-2026-09-23.md",
+        )
+    ]
+    version = _read(root / "plugins" / product / ".codex-plugin/plugin.json")["version"]
+    prepared = ledger.prepare_run(
+        case,
+        context["client_id"],
+        context["engagement_id"],
+        "deep-research-validator",
+        version,
+        input_ids=[v["receipt"]["input_id"] for v in imported],
+        purpose="Actual fictional answer validation; no learner approval",
+    )
+    run = ledger.start_run(case, context["engagement_id"], prepared["run"]["run_id"])
+    output = Path(run["output_dir"])
+    bindings = run["context"]["input_bindings"]
+    answer_path = next(
+        Path(v["path"]) for v in bindings if v["path"].endswith("authored-answer.md")
+    )
+    source_path = next(Path(v["path"]) for v in bindings if v["path"].endswith(".pdf"))
+    status_path = next(
+        Path(v["path"])
+        for v in bindings
+        if v["path"].endswith("legislative-status-2026-09-23.md")
+    )
+    common = ["--client-engagement", run["context_path"], "--output-dir", output]
+    _run(
+        "plugins/deep-research-validator/scripts/inspect_document.py",
+        answer_path,
+        *common,
+    )
+    _run(
+        "plugins/deep-research-validator/scripts/inspect_sources.py",
+        output / "document_inventory.json",
+        *common,
+        "--source-file",
+        source_path,
+        "--source-file",
+        status_path,
+        "--no-fetch",
+    )
+    inventory = _read(output / "source_inventory.json")
+    official = next(
+        s
+        for s in inventory["sources"]
+        if s.get("kind") == "file" and s.get("status") == "available"
+    )
+    _write(
+        output / "claims_review_draft.json",
+        review(
+            language,
+            phase,
+            official["source_id"],
+            next(
+                s["source_id"]
+                for s in inventory["sources"]
+                if s.get("kind") == "file" and "legislative-status" in str(s)
+            ),
+        ),
+    )
+    _write(output / "answer_contract.json", _contract(language, phase))
+    _run(
+        "plugins/deep-research-validator/scripts/package_validation.py",
+        output / "document_inventory.json",
+        output / "source_inventory.json",
+        output / "claims_review_draft.json",
+        *common,
+        "--answer-contract-file",
+        output / "answer_contract.json",
+        "--docx",
+    )
+    audit = _read(output / "validation_audit.json")
+    assert audit["status"] == "record_complete", audit
+    assert (output / "validated_document.docx").is_file()
+    assert (output / "validated_document.md").read_text() == document
+    assert len(_read(output / "claims_review.json")["claims"]) == (
+        6 if phase == "practice" else 5
+    )
+    assert _read(output / "ui_decisions.json")["status"] == "pending_review"
+    _complete_teaching_case(run, case)
+    return run

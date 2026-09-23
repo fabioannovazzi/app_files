@@ -54,15 +54,18 @@ def test_installable_archive_runs_without_repository_fallback(
 
 
 @pytest.mark.parametrize("product", ["clara", "lucia"])
-def test_cowork_has_no_teaching_code_gate_assets_or_skill(product):
+def test_cowork_written_teaching_has_no_native_onboarding_gate(product):
     with ZipFile(
         ROOT / f"plugin_packages/{product}/{product}-claude-plugin.zip"
     ) as archive:
+        assert any(
+            name.endswith(f"skills/learn-with-{product}/SKILL.md")
+            for name in archive.namelist()
+        )
         for name in archive.namelist():
             assert not any(
                 part in name
                 for part in (
-                    "learn-with-",
                     "local_onboarding",
                     "local_teaching",
                     "desktop_teaching",

@@ -1,0 +1,3 @@
+# Impresa e incarico
+
+Caso interamente fittizio: Officina Arco, società italiana, una sede, dodici addetti, riparazioni di veicoli per clienti locali. Elena Bianchi dirige l’impresa e autorizza i pagamenti; Paolo Neri coordina l’officina; Sara Rossi gestisce documenti e scadenziario. Lo studio esterno registra la contabilità e prepara il riepilogo mensile, ma non gestisce gli incassi. La richiesta riguarda responsabilità, chiusura mensile e uso delle informazioni per gli incassi, al 31 marzo 2026. Non è una valutazione completa di tutti i processi aziendali. Sono forniti una procedura e un esempio operativo di febbraio. Nessun budget di tesoreria prospettico o ulteriore ciclo di chiusura è allegato.

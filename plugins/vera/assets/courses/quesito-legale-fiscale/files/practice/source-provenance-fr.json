@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "retrieved_on": "2026-09-14",
+  "guidance_url": "https://europa.eu/youreurope/business/finance-and-tax/making-receiving-payments/late-payment/index_fr.htm",
+  "guidance_html_sha256": "b1af18c05886a74be03340974406da3b260edf4fa0a73d02210a57ae9feafc05",
+  "guidance_text_sha256": "b48e314a81c8712a17b4c80278d281c5aefa69ac02d850d328382fc010c21b30",
+  "directive_url": "https://www.boe.es/doue/2011/048/L00001-00010.pdf",
+  "directive_sha256": "1b6a68e172965e8bd7cfcc74a1a892f0f32045e5f94fc339d5f1125b422bf1c8",
+  "directive_language": "es",
+  "directive_publication": "Official Journal L48, 23 February 2011, pages 1–10; original edition",
+  "current_legal_status_requires_execution_review": true
+}

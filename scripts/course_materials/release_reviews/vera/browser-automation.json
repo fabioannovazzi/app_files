@@ -1,0 +1,246 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "browser-automation",
+  "course_sha256": "a1a931b48d8e123cc46c0268280a1601770d6a561e6f9b2367bf3cc89fafbc02",
+  "reviewer": "Codex localized lesson and actual connected Chrome result review",
+  "reviewed_at": "2026-09-23T13:08:54.407318+00:00",
+  "review_scope": "Reviewed all five localized lessons and fictional input notes. Actual shipped executeCapability and executeProcess ran in connected Chrome against the supplied loopback page; two clean demo runs finalized the capability, and ten distinct process attempts cover demo/practice for each teaching language. Browser controls and native technical report are English/Italian as disclosed; language labels do not claim five browser locales. CI separately executes the shipped driver against the real HTML in headless Chromium, honestly marked unverified and ineligible for live qualification. No learner completion, professional approval, real portal access, ordinary-use performance qualification or server transfer is claimed.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson begins with a repeatable document-package task and teaches how to show Vera the procedure, inspect saved steps, approve executable authoring and check replays. Descriptive title and plain request explain the workflow before technical validation details.",
+        "inputs_and_request": "The localized task asks for fictional client DEMO-A and Invoice on the supplied local page. Controls are explicitly English and the Reviewed checkbox is explicitly simulated. No portal credentials, real clients, sends or prebuilt learner automation are required.",
+        "execution_and_checkpoints": "The teacher explains while the Codex working conversation acts; Cowork uses the written projection. Checkpoints distinguish observed, draft, approved and tested states and locate saved steps and the actual result. Native live receipts and local process reports were inspected.",
+        "deliverable_and_next_action": "The saved local process, report, capability and receipts show the actual Invoice confirmation. The two clean live replay receipts finalize only this fictional local capability; they do not qualify a real accounting portal or ordinary-use performance. The learner reviews the actual proposed procedure before authoring.",
+        "practice_and_repeat": "Practice reuses the saved procedure for DEMO-B and Credit note. The actual confirmation changes accordingly, with separate attempt directories preserving all original demo outputs. Repeat instructions ask for site, task and intended result rather than assuming an arbitrary site is supported.",
+        "language_and_pacing": "All it lesson prose and input notes were read. English page labels are disclosed. The outline totals 390 seconds; setup, actual approval, execution or questions can extend it. No claim is made that a timed learner session occurred."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_browser_execution::test_browser_kit_replays_actual_local_page[demo-it]",
+        "result_review": "Actual connected Chrome produced Package ready: Invoice; reviewed yes for DEMO-A. The native runtime completed without locator repairs. A model correctness review is saved against the exact attempt evidence. The named regression independently exercises current native dispatch and real fixture JavaScript in headless Chromium; it cannot attest connected-Chrome or learner qualification.",
+        "reviewed_artifacts": [
+          {
+            "name": "REPORT.md",
+            "sha256": "e4b5ff91aaf0bfe63c2e209730d8767d2d7d127c21f95f10c14178a7ff68a603"
+          },
+          {
+            "name": "outputs.json",
+            "sha256": "f5c64e73964e4edbc7ad2fec1b14ca45842c249bf79302caffc89769d73b7af1"
+          },
+          {
+            "name": "run.receipt.json",
+            "sha256": "0b9e4cc4144a81c1cfeaddbc213775f236552faa81af7ee8da6991d331d5a1a8"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_browser_execution::test_browser_kit_replays_actual_local_page[practice-it]",
+        "result_review": "Actual connected Chrome reused the saved capability and produced Package ready: Credit note; reviewed yes for DEMO-B, preserving the original demo. The native runtime completed without locator repairs. A model correctness review is saved against the exact attempt evidence. The named regression independently exercises current native dispatch and real fixture JavaScript in headless Chromium; it cannot attest connected-Chrome or learner qualification.",
+        "reviewed_artifacts": [
+          {
+            "name": "REPORT.md",
+            "sha256": "e7d9a86ca4a5eb5d14213d373e51aa346bc583874b8e30c8b664f188048f492f"
+          },
+          {
+            "name": "outputs.json",
+            "sha256": "e9cd2ae3a8e19ec5761a159c4e516637559459feb2284b0972b8ac41b4c40154"
+          },
+          {
+            "name": "run.receipt.json",
+            "sha256": "767f5e8ae9badbb2992bc4abf5f5a72a9a3f52d08634e623d7764d2adb447e98"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson begins with a repeatable document-package task and teaches how to show Vera the procedure, inspect saved steps, approve executable authoring and check replays. Descriptive title and plain request explain the workflow before technical validation details.",
+        "inputs_and_request": "The localized task asks for fictional client DEMO-A and Invoice on the supplied local page. Controls are explicitly English and the Reviewed checkbox is explicitly simulated. No portal credentials, real clients, sends or prebuilt learner automation are required.",
+        "execution_and_checkpoints": "The teacher explains while the Codex working conversation acts; Cowork uses the written projection. Checkpoints distinguish observed, draft, approved and tested states and locate saved steps and the actual result. Native live receipts and local process reports were inspected.",
+        "deliverable_and_next_action": "The saved local process, report, capability and receipts show the actual Invoice confirmation. The two clean live replay receipts finalize only this fictional local capability; they do not qualify a real accounting portal or ordinary-use performance. The learner reviews the actual proposed procedure before authoring.",
+        "practice_and_repeat": "Practice reuses the saved procedure for DEMO-B and Credit note. The actual confirmation changes accordingly, with separate attempt directories preserving all original demo outputs. Repeat instructions ask for site, task and intended result rather than assuming an arbitrary site is supported.",
+        "language_and_pacing": "All en lesson prose and input notes were read. English page labels are disclosed. The outline totals 390 seconds; setup, actual approval, execution or questions can extend it. No claim is made that a timed learner session occurred."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_browser_execution::test_browser_kit_replays_actual_local_page[demo-en]",
+        "result_review": "Actual connected Chrome produced Package ready: Invoice; reviewed yes for DEMO-A. The native runtime completed without locator repairs. A model correctness review is saved against the exact attempt evidence. The named regression independently exercises current native dispatch and real fixture JavaScript in headless Chromium; it cannot attest connected-Chrome or learner qualification.",
+        "reviewed_artifacts": [
+          {
+            "name": "REPORT.md",
+            "sha256": "bd3f3e44051ddd3c42ce90987a96456ba6f88e0af64aa6f947280ad4eb88f1f6"
+          },
+          {
+            "name": "outputs.json",
+            "sha256": "f5c64e73964e4edbc7ad2fec1b14ca45842c249bf79302caffc89769d73b7af1"
+          },
+          {
+            "name": "run.receipt.json",
+            "sha256": "43e2ae4f71c80e0ee9bcb638eb059d893b8754aacf38465a4121bd83a9c5c552"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_browser_execution::test_browser_kit_replays_actual_local_page[practice-en]",
+        "result_review": "Actual connected Chrome reused the saved capability and produced Package ready: Credit note; reviewed yes for DEMO-B, preserving the original demo. The native runtime completed without locator repairs. A model correctness review is saved against the exact attempt evidence. The named regression independently exercises current native dispatch and real fixture JavaScript in headless Chromium; it cannot attest connected-Chrome or learner qualification.",
+        "reviewed_artifacts": [
+          {
+            "name": "REPORT.md",
+            "sha256": "2c7e0d49624777dcf7fdc13f2619a552261248cd43754a6f5107cce39b8b636e"
+          },
+          {
+            "name": "outputs.json",
+            "sha256": "e9cd2ae3a8e19ec5761a159c4e516637559459feb2284b0972b8ac41b4c40154"
+          },
+          {
+            "name": "run.receipt.json",
+            "sha256": "bfc8995a6e6035f0969e528b580a9590afb5bf641c4133bd2a30ad953c8fd8af"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson begins with a repeatable document-package task and teaches how to show Vera the procedure, inspect saved steps, approve executable authoring and check replays. Descriptive title and plain request explain the workflow before technical validation details.",
+        "inputs_and_request": "The localized task asks for fictional client DEMO-A and Invoice on the supplied local page. Controls are explicitly English and the Reviewed checkbox is explicitly simulated. No portal credentials, real clients, sends or prebuilt learner automation are required.",
+        "execution_and_checkpoints": "The teacher explains while the Codex working conversation acts; Cowork uses the written projection. Checkpoints distinguish observed, draft, approved and tested states and locate saved steps and the actual result. Native live receipts and local process reports were inspected.",
+        "deliverable_and_next_action": "The saved local process, report, capability and receipts show the actual Invoice confirmation. The two clean live replay receipts finalize only this fictional local capability; they do not qualify a real accounting portal or ordinary-use performance. The learner reviews the actual proposed procedure before authoring.",
+        "practice_and_repeat": "Practice reuses the saved procedure for DEMO-B and Credit note. The actual confirmation changes accordingly, with separate attempt directories preserving all original demo outputs. Repeat instructions ask for site, task and intended result rather than assuming an arbitrary site is supported.",
+        "language_and_pacing": "All fr lesson prose and input notes were read. English page labels are disclosed. The outline totals 390 seconds; setup, actual approval, execution or questions can extend it. No claim is made that a timed learner session occurred."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_browser_execution::test_browser_kit_replays_actual_local_page[demo-fr]",
+        "result_review": "Actual connected Chrome produced Package ready: Invoice; reviewed yes for DEMO-A. The native runtime completed without locator repairs. A model correctness review is saved against the exact attempt evidence. The named regression independently exercises current native dispatch and real fixture JavaScript in headless Chromium; it cannot attest connected-Chrome or learner qualification.",
+        "reviewed_artifacts": [
+          {
+            "name": "REPORT.md",
+            "sha256": "efea3db85874f0dab4b68181cdc2fadbf20ea1f79fa3e2f071157d59583f0903"
+          },
+          {
+            "name": "outputs.json",
+            "sha256": "f5c64e73964e4edbc7ad2fec1b14ca45842c249bf79302caffc89769d73b7af1"
+          },
+          {
+            "name": "run.receipt.json",
+            "sha256": "189d1b4e6c3879070902cfd754f5242c997df0326e667b795d2b63054aff9718"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_browser_execution::test_browser_kit_replays_actual_local_page[practice-fr]",
+        "result_review": "Actual connected Chrome reused the saved capability and produced Package ready: Credit note; reviewed yes for DEMO-B, preserving the original demo. The native runtime completed without locator repairs. A model correctness review is saved against the exact attempt evidence. The named regression independently exercises current native dispatch and real fixture JavaScript in headless Chromium; it cannot attest connected-Chrome or learner qualification.",
+        "reviewed_artifacts": [
+          {
+            "name": "REPORT.md",
+            "sha256": "639fbab9f7d88253e614a5b4081e8821d98257ee6551e3775a8796a522329464"
+          },
+          {
+            "name": "outputs.json",
+            "sha256": "e9cd2ae3a8e19ec5761a159c4e516637559459feb2284b0972b8ac41b4c40154"
+          },
+          {
+            "name": "run.receipt.json",
+            "sha256": "fe1232b03c434cad0e8b5c7b2ea1ddd450fc93a839a7c652262e02d2de743d77"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson begins with a repeatable document-package task and teaches how to show Vera the procedure, inspect saved steps, approve executable authoring and check replays. Descriptive title and plain request explain the workflow before technical validation details.",
+        "inputs_and_request": "The localized task asks for fictional client DEMO-A and Invoice on the supplied local page. Controls are explicitly English and the Reviewed checkbox is explicitly simulated. No portal credentials, real clients, sends or prebuilt learner automation are required.",
+        "execution_and_checkpoints": "The teacher explains while the Codex working conversation acts; Cowork uses the written projection. Checkpoints distinguish observed, draft, approved and tested states and locate saved steps and the actual result. Native live receipts and local process reports were inspected.",
+        "deliverable_and_next_action": "The saved local process, report, capability and receipts show the actual Invoice confirmation. The two clean live replay receipts finalize only this fictional local capability; they do not qualify a real accounting portal or ordinary-use performance. The learner reviews the actual proposed procedure before authoring.",
+        "practice_and_repeat": "Practice reuses the saved procedure for DEMO-B and Credit note. The actual confirmation changes accordingly, with separate attempt directories preserving all original demo outputs. Repeat instructions ask for site, task and intended result rather than assuming an arbitrary site is supported.",
+        "language_and_pacing": "All de lesson prose and input notes were read. English page labels are disclosed. The outline totals 390 seconds; setup, actual approval, execution or questions can extend it. No claim is made that a timed learner session occurred."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_browser_execution::test_browser_kit_replays_actual_local_page[demo-de]",
+        "result_review": "Actual connected Chrome produced Package ready: Invoice; reviewed yes for DEMO-A. The native runtime completed without locator repairs. A model correctness review is saved against the exact attempt evidence. The named regression independently exercises current native dispatch and real fixture JavaScript in headless Chromium; it cannot attest connected-Chrome or learner qualification.",
+        "reviewed_artifacts": [
+          {
+            "name": "REPORT.md",
+            "sha256": "43a9a367a95148bc67e793e3d04a1e01403240a498040c84ba129669c2c8d0ed"
+          },
+          {
+            "name": "outputs.json",
+            "sha256": "f5c64e73964e4edbc7ad2fec1b14ca45842c249bf79302caffc89769d73b7af1"
+          },
+          {
+            "name": "run.receipt.json",
+            "sha256": "a4933bad28aba77b3c703b80118ffd7464d05f0cb978179c88168d8b144a5696"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_browser_execution::test_browser_kit_replays_actual_local_page[practice-de]",
+        "result_review": "Actual connected Chrome reused the saved capability and produced Package ready: Credit note; reviewed yes for DEMO-B, preserving the original demo. The native runtime completed without locator repairs. A model correctness review is saved against the exact attempt evidence. The named regression independently exercises current native dispatch and real fixture JavaScript in headless Chromium; it cannot attest connected-Chrome or learner qualification.",
+        "reviewed_artifacts": [
+          {
+            "name": "REPORT.md",
+            "sha256": "18d5498f89dd6a6ba6aa4079f94d6983f9ded252157ac5bb582372e6d833627e"
+          },
+          {
+            "name": "outputs.json",
+            "sha256": "e9cd2ae3a8e19ec5761a159c4e516637559459feb2284b0972b8ac41b4c40154"
+          },
+          {
+            "name": "run.receipt.json",
+            "sha256": "4102b6728fed75b7b526ce4367ff17b2f348dbca08a7606145e58cb8e8ea0cdb"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson begins with a repeatable document-package task and teaches how to show Vera the procedure, inspect saved steps, approve executable authoring and check replays. Descriptive title and plain request explain the workflow before technical validation details.",
+        "inputs_and_request": "The localized task asks for fictional client DEMO-A and Invoice on the supplied local page. Controls are explicitly English and the Reviewed checkbox is explicitly simulated. No portal credentials, real clients, sends or prebuilt learner automation are required.",
+        "execution_and_checkpoints": "The teacher explains while the Codex working conversation acts; Cowork uses the written projection. Checkpoints distinguish observed, draft, approved and tested states and locate saved steps and the actual result. Native live receipts and local process reports were inspected.",
+        "deliverable_and_next_action": "The saved local process, report, capability and receipts show the actual Invoice confirmation. The two clean live replay receipts finalize only this fictional local capability; they do not qualify a real accounting portal or ordinary-use performance. The learner reviews the actual proposed procedure before authoring.",
+        "practice_and_repeat": "Practice reuses the saved procedure for DEMO-B and Credit note. The actual confirmation changes accordingly, with separate attempt directories preserving all original demo outputs. Repeat instructions ask for site, task and intended result rather than assuming an arbitrary site is supported.",
+        "language_and_pacing": "All es lesson prose and input notes were read. English page labels are disclosed. The outline totals 390 seconds; setup, actual approval, execution or questions can extend it. No claim is made that a timed learner session occurred."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_browser_execution::test_browser_kit_replays_actual_local_page[demo-es]",
+        "result_review": "Actual connected Chrome produced Package ready: Invoice; reviewed yes for DEMO-A. The native runtime completed without locator repairs. A model correctness review is saved against the exact attempt evidence. The named regression independently exercises current native dispatch and real fixture JavaScript in headless Chromium; it cannot attest connected-Chrome or learner qualification.",
+        "reviewed_artifacts": [
+          {
+            "name": "REPORT.md",
+            "sha256": "78901f7085af9463f57ab9df3bd5ef82d6fda1d71bf8dd597482299f075c48ae"
+          },
+          {
+            "name": "outputs.json",
+            "sha256": "f5c64e73964e4edbc7ad2fec1b14ca45842c249bf79302caffc89769d73b7af1"
+          },
+          {
+            "name": "run.receipt.json",
+            "sha256": "4df047e1d54c0319fe3c639186a7a1b1a9f1b15fe72aa6a7af99e3ff0f8343b1"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_browser_execution::test_browser_kit_replays_actual_local_page[practice-es]",
+        "result_review": "Actual connected Chrome reused the saved capability and produced Package ready: Credit note; reviewed yes for DEMO-B, preserving the original demo. The native runtime completed without locator repairs. A model correctness review is saved against the exact attempt evidence. The named regression independently exercises current native dispatch and real fixture JavaScript in headless Chromium; it cannot attest connected-Chrome or learner qualification.",
+        "reviewed_artifacts": [
+          {
+            "name": "REPORT.md",
+            "sha256": "53481f62dde2c11ca978d74e4d57b1926c20a4e11ae7ba5c91d9b8be727a4302"
+          },
+          {
+            "name": "outputs.json",
+            "sha256": "e9cd2ae3a8e19ec5761a159c4e516637559459feb2284b0972b8ac41b4c40154"
+          },
+          {
+            "name": "run.receipt.json",
+            "sha256": "065096d0747217160ea46250ece0023cae8501d4d939745a152bad9149a07d8f"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,61 +1,71 @@
-# Ein Sortimentssignal ist kein Marktanteil
+# Mit Clara einen Sortimentsbericht erstellen
 
-Ein geführter Rundgang von etwa 6½ Minuten. Sprachaktivierung, externe Verarbeitung und die freiwillige Übung kommen zeitlich hinzu.
+Erklärung und kurze Übung dauern ungefähr 5–8 Minuten. Verarbeitung und Ihre Fragen können die Sitzung verlängern.
 
-Sprich mit dem Lehrchat über die Standardstimme von Codex. Im zweiten, daneben geöffneten Chat siehst du Dateien und Ergebnisse. Die Chats bleiben verbunden. Du kannst jederzeit unterbrechen, nachfragen oder langsamer fortfahren.
+Sprechen Sie im Lehrchat mit der Standardstimme von Codex. Im Arbeitschat im Fenster daneben führt die Funktion den Fall mit den vorbereiteten Dateien aus und zeigt die tatsächlichen Ergebnisse. Die Erklärung folgt diesen Ergebnissen: Sie können unterbrechen, Fragen stellen und das Tempo ändern.
 
-Verwende die vorbereiteten Inhalte. Schreibe die Lektion nicht neu und erfinde keine Ergebnisse. Sprich in kurzen Abschnitten, lass Zeit zum Anschauen und höre die tatsächlichen Antworten. Zeige die Lösung erst nach dem Versuch. Die Zeiten umfassen Anschauen und Dialog. Das Anzeigen dieser Dateien bestätigt weder Demo noch Übung oder Verständnis. Der Lehrchat beurteilt die Eignung ausschließlich anhand des Katalogs seines eigenen Produkts.
+Vermitteln Sie mit dem vorbereiteten Material eine vollständige erste Anwendung. Wählen Sie bei der Einführung 3–4 passende Funktionen; beginnen Sie später mit dem heutigen Arbeitswunsch. Passen Sie Tempo und Erklärungen an. Erstellen Sie bei Bedarf eigene Beispiele mit demselben Workflow und geprüften Eingaben. Lesen Sie execution-request.json, verwenden Sie den echten zugeordneten lokalen Fall und erklären Sie die überprüften Ergebnisse des Arbeitschats. Erfinden Sie weder Ergebnisse noch Nutzerantworten oder Verständnisbestätigungen. Das Öffnen des Materials schließt keine Lektion ab.
 
-## 1. Dein Ziel · 45 s
+## 1. Wann sie hilft · 45 s
 
-Höre die Anfrage. Stelle einen Bezug zu deiner bisherigen Arbeit her.
+Verbinden Sie die Funktion mit einer konkreten beruflichen Aufgabe.
 
-Das fiktive Händlerpaket North enthält 20 neue Produkte, davon 12 nachfüllbar, sowie 80 übrige Produkte, davon 24 nachfüllbar. Verkaufs- oder Marktanteilsdaten fehlen.
+Lernen, ein vorhandenes Handelsdatenpaket bereitzustellen, eine Analyse anzufordern und den geprüften HTML-Bericht zu verwenden.
 
-Clara, zeige, ob Nachfüllbarkeit bei neuen Produkten häufiger ist und was das bedeutet.
+Ein Produktteam möchte das Sortiment vor seiner nächsten Besprechung verstehen. Beginnen Sie mit einem fiktiven Strickwarenpaket, verfolgen Sie die Berichtserstellung und prüfen Sie Aussagen anhand der Ausgangsprodukte. Wiederholen Sie den Ablauf mit einem aktualisierten Paket.
 
-## 2. Die Ausgangsdaten · 60 s
+Ein vollständiger erster Bericht aus einem vorhandenen lokalen Datenpaket: Übernahme, Vergleich, Interpretation, unabhängige Prüfung und Übergabe. Website-Erhebung, zentrale Attributzuordnung und Brand Fit sind eigene Aufgaben und werden hier nicht simuliert.
 
-Sieh dir die Dokumente im anderen Chat an. Finde eine nützliche Angabe und eine fehlende Information.
+## 2. Dateien und Anfrage · 60 s
 
-A1 definiert Gruppen und Merkmal. Ein Vergleich von 12 mit 24 ohne ihre unterschiedlichen Bezugsgrößen wäre irreführend.
+Öffnen Sie die Dateien im Arbeitsfenster und zeigen Sie die passende Anfrage.
 
-[["Neu", "12", "20"], ["Übrige", "24", "80"]]
+Öffnen Sie brief-de.md und stellen Sie assortment-demo-de.zip bereit. Das Archiv enthält fiktive Produkte, ausdrücklich zugewiesene Neuheiten- und Bestsellergruppen, berechnete Vergleiche und eine Integritätsprüfung. Fertiger Bericht, freigegebene Interpretation und Serverbestätigung sind nicht enthalten.
 
-## 3. So arbeitet der Workflow · 75 s
+Clara, erstelle aus diesem Paket einen Sortimentsbericht für unser Produktteam. Erkläre die Datenabdeckung, vergleiche Bestseller und Neuheiten mit dem übrigen Sortiment und zeige den Bericht mit seinen Prüfungen.
 
-Folge den drei Schritten. Halte bei der Entscheidung an, die das Ergebnis verändert.
+## 3. Den Ablauf ausführen · 105 s
 
-Beginne mit einem konsistenten geprüften Paket, prüfe Merkmale anhand der Produkte und erhalte vorgeschriebene Vergleiche und Schwellen.
-Interpretiere Tabellen ohne automatische Wertung aus einem Merkmaltreffer. Verknüpfe Produktbelege und Bilder mit dem Paket.
-Erstelle den lokalen Bericht und führe unabhängige inhaltliche Prüfung, Browserkontrolle und aktuelle Richtigkeitsprüfungen aus. Nenne tatsächliches Urteil und Grenzen.
+Erklären Sie den laufenden Schritt und warten Sie auf sein tatsächliches Ergebnis.
 
-## 4. Das Ergebnis lesen · 90 s
+Bestätigen Sie Händler, Kategorie, bereitgestellten Datenstand und Zielgruppe. Clara öffnet das Archiv und prüft seine Integrität. Im Sprachchat erklärt Clara die Ausgangsprodukte und die vom Händler definierten Gruppen.
 
-Öffne das Beispiel im zweiten Chat. Ordne jede Schlussfolgerung ihrer Quelle zu.
+Clara erstellt die üblichen Vergleichstabellen und verfasst den Bericht aus den Belegen. Verfolgen Sie einen Vergleich vom Produkt über die Tabelle bis zur Aussage; unterscheiden Sie Sortimentsmerkmale von Absatzmengen und kausalen Erklärungen.
 
-Das Merkmal ist in der neuen Gruppe doppelt so häufig. Das beschreibt das beobachtete Sortiment, nicht Nachfrage oder Verkäufe.
+Eine unabhängige Prüfung bewertet Aussagen und Lesbarkeit; Browserprüfungen untersuchen das HTML. Öffnen Sie den tatsächlichen Bericht, sein Urteil und die Einschränkungen. Finden Sie Zusammenfassung, Tabellen, Produktbelege und nächste Frage für das Team.
 
-[["Neu", "12 / 20", "60 %"], ["Übrige", "24 / 80", "30 %"], ["Beispielvergleich", "60 % / 30 %", "2×"]]
+Während der Lektion führt der Arbeitschat die Funktion aus und erstellt das Ergebnis. Ist ein Schritt nicht verfügbar, erklären Sie, was fehlt, und lassen Sie die Lektion unvollständig.
 
-## 5. Die entscheidende Prüfung · 75 s
+## 4. Das Ergebnis verwenden · 75 s
 
-Erkläre vor dem Aufklappen der Antwort, was du prüfen würdest.
+Öffnen Sie das gerade erstellte Dokument und zeigen Sie den Einstieg.
 
-Erhalte Bezugsgrößen und Datum der Momentaufnahme. Produktname oder einzelnes Merkmal belegen keinen Markterfolg.
+Lokaler HTML-Bericht mit Vergleichen, Interpretation, Quellenverweisen und ausdrücklichem Korrektheitsurteil.
 
-Bedeutet 60 %, dass nachfüllbare Produkte 60 % des Umsatzes erzeugen?
+Belegtabellen und Prüfunterlagen, die Urteil und verbleibende Grenzen erläutern.
 
-Überlegungen vergleichen: Nein. Es ist der Anteil neuer Produkte mit diesem Merkmal im Paket. Umsatzdaten liegen nicht vor.
+Prüfen Sie Datenstand, Gruppendefinitionen und Belege einer Aussage. Neuheiten sind die in der Quelle festgelegte Gruppe; eine Bestsellerposition liefert keine Absatzmenge. Lesen Sie die Gründe des Urteils vor der Nutzung.
 
-## 6. Gemeinsam ausprobieren · 45 s
+## 5. Gemeinsam prüfen · 45 s
 
-Entscheide, ob du jetzt üben oder das Beispiel für den nächsten Auftrag behalten möchtest.
+Führen Sie diese Prüfungen an den angegebenen Stellen durch.
 
-Ergänze zwei neue nicht nachfüllbare Produkte und berechne den Anteil mit verändertem Nenner.
+Benennen Sie das benötigte Paket und die Anfrage und erklären Sie Claras Ergebnis.
 
-Wähle Händler, Kategorie und unterstützten Vergleich; kläre, ob die Evidenz eine Momentaufnahme oder neue Beschaffung ist.
+Öffnen Sie den Bericht und verfolgen Sie eine Aussage bis zu den Belegen und ihrem Prüfstatus.
 
-Dies ist ein vorbereitetes Lehrbeispiel, kein Nachweis einer neuen Ausführung. Quellen und Entscheidungen sind fiktiv; eine fachliche Freigabe ist nicht vorausgesetzt. Bei deinen eigenen Dateien führt der aktuelle Workflow seine Prüfungen durch und bewahrt die tatsächlichen Ergebnisse auf.
+Diese Pausen helfen beim Erlernen der Funktion. Sie sind kein Quiz über technische Einzelheiten.
 
-Bibliothek, Profil und Lernfortschritt bleiben auf deinem Computer und werden nicht an Mparanza gesendet. Sprache und im Chat gelesene Inhalte verarbeitet dein OpenAI-Konto: Lokale Speicherung bedeutet keine Offline-Inferenz.
+## 6. Selbst ausprobieren · 60 s
+
+Lassen Sie den Nutzer die Anfrage formulieren und begleiten Sie seinen Versuch.
+
+Stellen Sie assortment-practice-de.zip mit einer geänderten fiktiven Neuheitengruppe bereit. Fordern Sie einen neuen Bericht für dieselbe Zielgruppe an. Bewahren Sie den ersten auf und vergleichen Sie Änderungen in Belegen und Interpretation.
+
+Sie können einen Bericht starten, Zusammenfassung und Belege lesen, das Urteil verstehen und den Ablauf mit einem anderen Paket wiederholen.
+
+Stellen Sie ein auf Integrität geprüftes Paket bereit und nennen Sie Zielgruppe und Frage. Clara erstellt, prüft und liefert das HTML lokal. Aktuelle zentrale Daten erfordern einen eigenen authentifizierten Abruf mit den angegebenen Datengrenzen.
+
+Das Material enthält fiktive Dateien und einen vorbereiteten Ablauf. Ergebnisse der Demonstration und Übung entstehen durch neue Ausführungen der aktuellen Funktion.
+
+Bibliothek, Profil und Lernfortschritt bleiben auf Ihrem Computer und werden nicht an Mparanza gesendet. Sprache und im Chat gelesene Inhalte verarbeitet Ihr OpenAI-Konto: Lokale Speicherung bedeutet keine Offline-Inferenz.

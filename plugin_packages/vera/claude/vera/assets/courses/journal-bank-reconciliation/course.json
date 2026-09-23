@@ -1,0 +1,449 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "journal-bank-reconciliation",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
+  "sources": [
+    {
+      "path": "modules/journal-bank-reconciliation/assets/icon.svg",
+      "sha256": "654a515da1bf3f14341d3e187a59738d05aac4ade73b2c07a18cf2a47ac05f22"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/assets/journal-bank-review-widget.html",
+      "sha256": "84e8a585cf0b231c6fb8d549b89f1cccb563367c68bb2f124d9e0096b5ef4ce8"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/assets/review-workbench-adapter.json",
+      "sha256": "0a213094f62c0012cb68c790ac58607142c8dbca8f35805f70895a6009f8f793"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/references/workflow-reference.md",
+      "sha256": "ddcfeb906c16c85b85cb21c7da840046c4ae43ad3edc74edecdce47b6143e7d8"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/requirements.txt",
+      "sha256": "25e8f14e4f988c97ac50ac90f5dbacfff665f81de45a56599eaa78997aec7e03"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/scripts/apply_review_edits.py",
+      "sha256": "cbd452cc9b058fbd076ffadf3502627e9a1a53c4f5c4c94df1b2db3e3f1e8cc4"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/scripts/check_dependencies.py",
+      "sha256": "8e0ca4683edd9e4b206680817215adf608987b51911351bbcdae84f6cf1a7831"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/scripts/excel_sanitization.py",
+      "sha256": "67225af917ab3da8183bef54e3707722a98639efc277317f6e63cb7c9f47cb72"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+      "sha256": "27ed561579219bfafe22fa80319fe641f8a1b1d391ea7cf57d2df9826c947e52"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/scripts/inspect_inputs.py",
+      "sha256": "c8d21e82effa1bb10d099076773b3820bad69299f4ae3150a0a9993845e0e3d3"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
+      "sha256": "9033a34d72b5a950afd5eb7281098b4cdeda15eaf8f06d73839493a82baab12a"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/scripts/review_session.py",
+      "sha256": "e88b381a6165460e25565c26f7b8231e7da008aa656e6fe2a08b7b4b3ee5ee2a"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/scripts/run_reconciliation.py",
+      "sha256": "c4f7482818dcab5ceb328749b5456b8d397ae9281cb48820977066fcc4304961"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
+      "sha256": "e8003670eacc8bc763afb7fee7bbecb778519f92192321a13dc76f9b11c4fd4d"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
+      "sha256": "25d6a7bee065411c1c4755a693287695eca7d476b04e14d5df83de60a22e8164"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/journal-bank-reconciliation/SKILL.md",
+      "sha256": "16784537961a1effd0dec6a338d13c106b3822b961b0b3b4c9ed68fc8bd90963"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/bank-march.csv",
+      "sha256": "a7b2b7d096baeabf3e4080b5e5b5c1a185703e21f539479c4be82e156ba0db06",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/bank-ledger-march.csv",
+      "sha256": "325adf210360c76844b991a712080654eb971c9802412ed30cf9127ca6043ea7",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/case-it.md",
+      "sha256": "efe81c000341da115c9c8bbe19f6cf6ebdac40e91da16dcd262be1ad4434062a",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/case-en.md",
+      "sha256": "420c98f20d497611245579ebee9849cdebe58e49283a783601bdff484edb1f42",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/case-fr.md",
+      "sha256": "e3128ff1936cdcb0358b9e295af1897f5d3c179164a88bcb934a3dc138576de2",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/case-de.md",
+      "sha256": "a8969986cd1061550688f7309ae9c1c295865bf57112443c7c0749fbbb2df862",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/case-es.md",
+      "sha256": "f0144594271c96e7da0675a21fc19ed8de7ca084b8f143d2c2af1603da4faa21",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/bank-april.csv",
+      "sha256": "fb37a06d9d478b72f8a2da6227e87a8e4037f15a3423e863f91d15c951ec2036",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/bank-ledger-april.csv",
+      "sha256": "1df99e1405f3abd6133a551a5a37a78277e7164542eb1f782581c4e1e286c8f6",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/case-it.md",
+      "sha256": "efe81c000341da115c9c8bbe19f6cf6ebdac40e91da16dcd262be1ad4434062a",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/case-en.md",
+      "sha256": "420c98f20d497611245579ebee9849cdebe58e49283a783601bdff484edb1f42",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/case-fr.md",
+      "sha256": "e3128ff1936cdcb0358b9e295af1897f5d3c179164a88bcb934a3dc138576de2",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/case-de.md",
+      "sha256": "a8969986cd1061550688f7309ae9c1c295865bf57112443c7c0749fbbb2df862",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/case-es.md",
+      "sha256": "f0144594271c96e7da0675a21fc19ed8de7ca084b8f143d2c2af1603da4faa21",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Riconciliare un estratto conto con Vera",
+      "goal": "Imparare a confrontare i movimenti bancari con il mastro banca e usare la riconciliazione nella chiusura mensile.",
+      "scenario": "Officina Arco sta chiudendo marzo. L’estratto conto e il mastro banca dovrebbero descrivere gli stessi pagamenti. Li confrontiamo e leggiamo le carte di lavoro prodotte.",
+      "scope": "Un conto bancario in EUR, marzo 2026. Il caso usa riferimenti esatti e pagamenti singoli. Gli altri conti e periodi sono fuori dal perimetro.",
+      "inputs": "Apri bank-march.csv, bank-ledger-march.csv e case-it.md. L’estratto conto contiene i movimenti della banca; il mastro contiene quelli contabili da confrontare. Le date sono ISO e i pagamenti sono negativi in entrambi i file.",
+      "request": "Vera, riconcilia l’estratto conto di marzo di Arco con il mastro banca. Mostrami pagamenti abbinati, eventuali movimenti non abbinati e controlli da rivedere.",
+      "steps": [
+        "Vera importa i due export nella pratica didattica e ne legge la struttura. Conferma conto, date, segni degli importi e colonne dei riferimenti bancari.",
+        "Rivedi le regole proposte in termini contabili: pagamenti singoli, riferimenti e importi esatti, senza riutilizzare un movimento. La procedura corrente esegue il confronto localmente.",
+        "Apri il foglio di riconciliazione e le note prodotti. Segui un pagamento dalla banca al riferimento nel mastro, poi individua gli elenchi dei non abbinati e i controlli."
+      ],
+      "deliverables": [
+        "Cartella di riconciliazione e tabelle di dettaglio: servono a verificare gli abbinamenti e i movimenti rimasti da chiarire.",
+        "Note di revisione e controlli: spiegano copertura, regole applicate e punti che richiedono altre prove."
+      ],
+      "review": "Controlla che i file riguardino lo stesso conto e periodo. Risali da un abbinamento alle due righe di origine. Riconciliare un pagamento non determina il trattamento fiscale della fattura.",
+      "checkpoints": [
+        "Prima di partire, indica quale file proviene dalla banca e quale dalla contabilità.",
+        "Alla consegna, trova un pagamento abbinato e il punto in cui comparirebbe un movimento non abbinato."
+      ],
+      "practice": "Usa bank-april.csv e bank-ledger-april.csv per chiedere una nuova riconciliazione fino al 4 aprile. I file cumulativi aggiungono il pagamento della terza fattura; conserva il risultato di marzo.",
+      "success": "La nuova esecuzione comprende il movimento di aprile. Spiega come approfondiresti un movimento bancario assente dal mastro.",
+      "repeat": "Fornisci export bancari e contabili confrontabili, indica conto e periodo, rivedi l’interpretazione proposta e usa la riconciliazione per risolvere le differenze."
+    },
+    "en": {
+      "title": "Reconcile a bank statement with Vera",
+      "goal": "Learn to compare bank movements with the bank ledger and use the reconciliation for a month-end review.",
+      "scenario": "Officina Arco is closing March. Its bank statement and bank ledger should describe the same payments. We will compare them and inspect the resulting workpapers.",
+      "scope": "One EUR bank account, March 2026. The case uses exact transaction references and individual payments. Other accounts and periods are outside this run.",
+      "inputs": "Open bank-march.csv, bank-ledger-march.csv and case-en.md. The statement is the external movement source; the ledger is the accounting comparison. Dates are ISO dates and outgoing payments are negative in both exports.",
+      "request": "Vera, reconcile Arco’s March bank statement with its bank ledger. Show the matched payments, any unmatched movements and the checks I should review.",
+      "steps": [
+        "Vera imports both exports into the teaching case and inspects their structure. Confirm the account, dates, amount signs and transaction-reference columns.",
+        "Review the proposed matching rules in ordinary accounting terms: individual payments, exact references and amounts, with no reuse of a movement. The current pipeline performs the comparison locally.",
+        "Open the generated workbook and review notes. Follow one matched bank payment to its ledger reference, then locate the unmatched-movement lists and control results."
+      ],
+      "deliverables": [
+        "Reconciliation workbook and detailed tables: use these to inspect matched payments and any remaining movements.",
+        "Review notes and controls: explain coverage, matching rules and issues requiring further evidence."
+      ],
+      "review": "Check that both files cover the same account and period. Trace one match to both source rows. A reconciled bank movement does not itself establish the tax treatment of the underlying invoice.",
+      "checkpoints": [
+        "Before running, identify which file comes from the bank and which from accounting.",
+        "At delivery, find a matched payment and where an unmatched item would appear."
+      ],
+      "practice": "Use bank-april.csv and bank-ledger-april.csv to request a fresh reconciliation through 4 April. These cumulative files add the third invoice payment; retain the March result.",
+      "success": "The new run includes the April movement. Explain how you would investigate a bank movement missing from the ledger.",
+      "repeat": "Supply comparable bank and ledger exports, name the account and period, review the proposed interpretation and use the resulting reconciliation to resolve differences."
+    },
+    "fr": {
+      "title": "Rapprocher un relevé bancaire avec Vera",
+      "goal": "Apprendre à comparer les mouvements bancaires au grand livre et à utiliser le rapprochement pour la clôture mensuelle.",
+      "scenario": "Officina Arco clôture mars. Son relevé bancaire et son compte de banque devraient retracer les mêmes paiements. Nous les comparons puis examinons les documents produits.",
+      "scope": "Un compte bancaire en EUR, mars 2026. Le cas utilise des références exactes et des paiements individuels. Les autres comptes et périodes restent hors périmètre.",
+      "inputs": "Ouvrez bank-march.csv, bank-ledger-march.csv et case-fr.md. Le relevé fournit les mouvements bancaires ; le grand livre fournit les écritures à comparer. Les dates sont au format ISO et les décaissements sont négatifs dans les deux fichiers.",
+      "request": "Vera, rapproche le relevé bancaire de mars d’Arco avec son compte de banque. Montre les paiements rapprochés, les mouvements non rapprochés et les contrôles à examiner.",
+      "steps": [
+        "Vera importe les exports dans le dossier pédagogique et examine leur structure. Confirmez le compte, les dates, les signes des montants et les colonnes de références.",
+        "Examinez les règles proposées : paiements individuels, références et montants exacts, sans réutiliser un mouvement. La procédure actuelle réalise le rapprochement localement.",
+        "Ouvrez le classeur et les notes produits. Suivez un paiement du relevé jusqu’à sa référence comptable, puis trouvez les listes de mouvements non rapprochés et les contrôles."
+      ],
+      "deliverables": [
+        "Classeur de rapprochement et tableaux détaillés : permettent d’examiner les correspondances et les mouvements restant à expliquer.",
+        "Notes de revue et contrôles : précisent la couverture, les règles appliquées et les éléments nécessitant des justificatifs."
+      ],
+      "review": "Vérifiez que les fichiers concernent le même compte et la même période. Retrouvez les deux lignes sources d’un rapprochement. Un paiement rapproché ne détermine pas le traitement fiscal de la facture.",
+      "checkpoints": [
+        "Avant l’exécution, identifiez le fichier bancaire et le fichier comptable.",
+        "À la livraison, retrouvez un paiement rapproché et l’emplacement des mouvements non rapprochés."
+      ],
+      "practice": "Avec bank-april.csv et bank-ledger-april.csv, demandez un nouveau rapprochement jusqu’au 4 avril. Ces fichiers cumulés ajoutent le paiement de la troisième facture ; conservez le résultat de mars.",
+      "success": "La nouvelle exécution comprend le mouvement d’avril. Expliquez comment rechercher un mouvement bancaire absent du grand livre.",
+      "repeat": "Fournissez des exports comparables, indiquez le compte et la période, vérifiez leur interprétation et utilisez le rapprochement pour résoudre les écarts."
+    },
+    "de": {
+      "title": "Einen Kontoauszug mit Vera abstimmen",
+      "goal": "Lernen, Bankbewegungen mit dem Bankkonto der Buchhaltung zu vergleichen und die Abstimmung beim Monatsabschluss zu nutzen.",
+      "scenario": "Officina Arco schließt den März ab. Kontoauszug und Bankkonto sollten dieselben Zahlungen zeigen. Wir vergleichen sie und prüfen die erstellten Arbeitspapiere.",
+      "scope": "Ein Bankkonto in EUR, März 2026. Der Fall verwendet eindeutige Referenzen und einzelne Zahlungen. Andere Konten und Zeiträume bleiben außerhalb dieses Laufs.",
+      "inputs": "Öffnen Sie bank-march.csv, bank-ledger-march.csv und case-de.md. Der Kontoauszug liefert die Bankbewegungen, das Kontoblatt die Buchungen zum Vergleich. Datumswerte sind im ISO-Format; Auszahlungen sind in beiden Dateien negativ.",
+      "request": "Vera, stimme Arcos Kontoauszug für März mit dem Bankkonto der Buchhaltung ab. Zeige zugeordnete Zahlungen, offene Zuordnungen und die zu prüfenden Kontrollen.",
+      "steps": [
+        "Vera importiert beide Exporte in den Übungsfall und untersucht ihre Struktur. Bestätigen Sie Konto, Datum, Vorzeichen und Referenzspalten.",
+        "Prüfen Sie die vorgeschlagenen Regeln: einzelne Zahlungen, genaue Referenzen und Beträge sowie keine doppelte Verwendung einer Bewegung. Der aktuelle Ablauf führt den Vergleich lokal aus.",
+        "Öffnen Sie die erzeugte Arbeitsmappe und die Prüfhinweise. Verfolgen Sie eine Zahlung vom Kontoauszug zur Buchungsreferenz und finden Sie anschließend offene Zuordnungen und Kontrollergebnisse."
+      ],
+      "deliverables": [
+        "Abstimmungsmappe und Detailtabellen: dienen zur Prüfung der Zuordnungen und noch zu klärenden Bewegungen.",
+        "Prüfhinweise und Kontrollen: erläutern Abdeckung, angewandte Regeln und benötigte zusätzliche Belege."
+      ],
+      "review": "Prüfen Sie, ob beide Dateien dasselbe Konto und denselben Zeitraum betreffen. Finden Sie zu einer Zuordnung beide Quellzeilen. Die Abstimmung einer Zahlung bestimmt noch nicht die steuerliche Behandlung der Rechnung.",
+      "checkpoints": [
+        "Vor dem Start: Welche Datei stammt von der Bank, welche aus der Buchhaltung?",
+        "Bei der Übergabe: Finden Sie eine zugeordnete Zahlung und die Stelle für nicht zugeordnete Bewegungen."
+      ],
+      "practice": "Fordern Sie mit bank-april.csv und bank-ledger-april.csv eine neue Abstimmung bis zum 4. April an. Die kumulierten Dateien ergänzen die dritte Rechnungszahlung. Bewahren Sie das März-Ergebnis auf.",
+      "success": "Der neue Lauf enthält die Aprilbewegung. Erklären Sie, wie Sie eine im Kontoblatt fehlende Bankbewegung untersuchen würden.",
+      "repeat": "Stellen Sie vergleichbare Bank- und Buchhaltungsexporte bereit, nennen Sie Konto und Zeitraum, prüfen Sie die vorgeschlagene Interpretation und klären Sie Unterschiede anhand der Abstimmung."
+    },
+    "es": {
+      "title": "Conciliar un extracto bancario con Vera",
+      "goal": "Aprender a comparar los movimientos bancarios con la cuenta contable del banco y utilizar la conciliación en el cierre mensual.",
+      "scenario": "Officina Arco está cerrando marzo. El extracto y la cuenta bancaria del mayor deberían reflejar los mismos pagos. Los comparamos y examinamos los documentos generados.",
+      "scope": "Una cuenta bancaria en EUR, marzo de 2026. El caso utiliza referencias exactas y pagos individuales. Otras cuentas y periodos quedan fuera del alcance.",
+      "inputs": "Abre bank-march.csv, bank-ledger-march.csv y case-es.md. El extracto contiene los movimientos del banco; el mayor contiene los apuntes contables que se comparan. Las fechas tienen formato ISO y los pagos son negativos en ambos archivos.",
+      "request": "Vera, concilia el extracto bancario de marzo de Arco con su cuenta contable del banco. Muestra los pagos conciliados, los movimientos sin conciliar y los controles que debo revisar.",
+      "steps": [
+        "Vera importa los dos archivos en el expediente didáctico y examina su estructura. Confirma cuenta, fechas, signos de los importes y columnas de referencias.",
+        "Revisa las reglas propuestas: pagos individuales, referencias e importes exactos y sin reutilizar movimientos. El procedimiento actual realiza la comparación localmente.",
+        "Abre el libro y las notas generados. Sigue un pago desde el extracto hasta su referencia contable; después localiza los movimientos sin conciliar y los controles."
+      ],
+      "deliverables": [
+        "Libro de conciliación y tablas detalladas: permiten comprobar las correspondencias y los movimientos pendientes de aclaración.",
+        "Notas de revisión y controles: explican la cobertura, las reglas aplicadas y los puntos que necesitan más justificantes."
+      ],
+      "review": "Comprueba que los archivos correspondan a la misma cuenta y periodo. Localiza las dos filas originales de una coincidencia. Conciliar un pago no determina el tratamiento fiscal de la factura.",
+      "checkpoints": [
+        "Antes de ejecutar, identifica qué archivo procede del banco y cuál de contabilidad.",
+        "En la entrega, encuentra un pago conciliado y dónde aparecerían los movimientos sin conciliar."
+      ],
+      "practice": "Usa bank-april.csv y bank-ledger-april.csv para pedir una nueva conciliación hasta el 4 de abril. Los archivos acumulados añaden el pago de la tercera factura; conserva el resultado de marzo.",
+      "success": "La nueva ejecución incluye el movimiento de abril. Explica cómo investigarías un movimiento bancario que falta en el mayor.",
+      "repeat": "Facilita archivos bancarios y contables comparables, indica cuenta y periodo, revisa su interpretación y utiliza la conciliación para resolver diferencias."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "c7e389447a1e29050daa3902a3b93599c7e239d9426b6b68385bd4c982a29239"
+}

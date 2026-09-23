@@ -1,0 +1,473 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "lucia",
+  "workflow": "apertura-pratica",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
+  "sources": [
+    {
+      "path": "modules/apertura-pratica/assets/apertura-pratica-review-widget.html",
+      "sha256": "28054d711ef9227453716efa50e3b9320b3ed9b1671e73e2f97b1fac1c54c6fa"
+    },
+    {
+      "path": "modules/apertura-pratica/assets/apertura-pratica-review.html",
+      "sha256": "ea92ff609eb34bf1ee3d64100b1ef0e5aec53e6a1225890dc3158728b07be540"
+    },
+    {
+      "path": "modules/apertura-pratica/assets/icon.svg",
+      "sha256": "651be91e3062d9f910c1cd70dc8d484a861525266a25742bdb3001b318a1d114"
+    },
+    {
+      "path": "modules/apertura-pratica/references/display-labels.json",
+      "sha256": "fdd1de77bb31ccb37889b7a2d6aaceb1075c0f7bbea5109e1002a25f6e093f1a"
+    },
+    {
+      "path": "modules/apertura-pratica/references/source-registry.json",
+      "sha256": "09548934c2ea5bb7cc275615ca74396857b9851386a22475ad642b95ef7fb4ad"
+    },
+    {
+      "path": "modules/apertura-pratica/requirements.txt",
+      "sha256": "117bb7857e2106917057761be56b51e26df4b9c0e3ebdbcf48a992e94534c6ac"
+    },
+    {
+      "path": "modules/apertura-pratica/schemas/matter_intake.schema.json",
+      "sha256": "06243a8205d4831b240c421c5c2b13d9c57ab1d35047d64a110b1fe75d32664a"
+    },
+    {
+      "path": "modules/apertura-pratica/schemas/ui_decisions.schema.json",
+      "sha256": "b4c66a89d71d2c0628eeaea05f90796ddd36490d9779998dde2deec6cf093181"
+    },
+    {
+      "path": "modules/apertura-pratica/scripts/add_evidence.py",
+      "sha256": "e15edcdd4704b389aaf9995b9e66f7210b780b83845193c3f312430ae6a1d2b0"
+    },
+    {
+      "path": "modules/apertura-pratica/scripts/apertura_pratica_core.py",
+      "sha256": "5556386446c54b74e524f7c74cde2af2b9a6465dc8f025c86262d78c4176464f"
+    },
+    {
+      "path": "modules/apertura-pratica/scripts/apertura_pratica_display.py",
+      "sha256": "3fc9a78bf1a1212b2be86e0c021d06bbf04d6ec529ef9bacd8d8ce7fb41180f5"
+    },
+    {
+      "path": "modules/apertura-pratica/scripts/apply_review.py",
+      "sha256": "c04f6aecc0ed3abdd7b9a808049182af7a08a2482278acbef314f9c3710b221b"
+    },
+    {
+      "path": "modules/apertura-pratica/scripts/check_dependencies.py",
+      "sha256": "a10da17901307f832bd7f6e910664c25ecccea11980a3eb96cfd7a94513700be"
+    },
+    {
+      "path": "modules/apertura-pratica/scripts/initialize_workspace.py",
+      "sha256": "4f1b0ee25a77b158a54b75374132d5cadf6219b52c271b88d99d416db15023e1"
+    },
+    {
+      "path": "modules/apertura-pratica/scripts/prepare_review.py",
+      "sha256": "6010c6e679e9b979bcb90db57cdee86271e9c38731f6fee2e7714051f7895f02"
+    },
+    {
+      "path": "modules/apertura-pratica/scripts/review_server.py",
+      "sha256": "d52faa8763957f8612430fe4ba9fdce7187f6a8c6e214d2748cb06ee97b0b5c7"
+    },
+    {
+      "path": "modules/apertura-pratica/scripts/validate_run.py",
+      "sha256": "0bc0b15ddbddd9902e39177797e8bbf6d428f0f5d736eca2e1b9bde068b83235"
+    },
+    {
+      "path": "modules/apertura-pratica/skills/apertura-pratica/SKILL.md",
+      "sha256": "0f84c57ee0ba62333e933cb1f5384b7dbc8b4fa363362375c1b334a137f349c2"
+    },
+    {
+      "path": "modules/apertura-pratica/skills/apertura-pratica/agents/openai.yaml",
+      "sha256": "2b81b8a45bf1bb2fa701b1194d4301ac88b894d258750c9c271cb320064dcabd"
+    },
+    {
+      "path": "modules/apertura-pratica/skills/apertura-pratica/references/italian-professional-boundaries.md",
+      "sha256": "a5467e243f38ab457b72c3cebec02249b7705337fdf4eeff2e187a34f4524174"
+    },
+    {
+      "path": "modules/apertura-pratica/skills/apertura-pratica/references/workflow-method.md",
+      "sha256": "5563100adda1efadf59a706ce4fda24d185f7c265b68d810e1ee6474528073bf"
+    },
+    {
+      "path": "skills/apertura-pratica/SKILL.md",
+      "sha256": "ac835b948b937a4c906f8f38f79d4172674aec05d8f60caa9897abda852ad2f8"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/request-it.md",
+      "sha256": "7e57dd4fac673557030e5f45c60d6fab3cccdacd4176992ad3b01164e817e1ea",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/supply-it.md",
+      "sha256": "735d9b1b6d7d2e1f61f7bb42201eae101253181029f52682155b725d97c63e87",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/request-it.md",
+      "sha256": "7e57dd4fac673557030e5f45c60d6fab3cccdacd4176992ad3b01164e817e1ea",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/supply-it.md",
+      "sha256": "735d9b1b6d7d2e1f61f7bb42201eae101253181029f52682155b725d97c63e87",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-it.md",
+      "sha256": "1289e19415eb939b2dafe7b9b0889fdd554bf3873d8b1c12ab209d5f99d4751f",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/request-en.md",
+      "sha256": "00d87acaee57b30c1e91f3e9e6a6522d93f24d4caca5546ed0332ed1e88ba77b",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/supply-en.md",
+      "sha256": "76eec87f0afbaf087219342aefa7531524aea9a5a2a8722bc9850e07d59786e5",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/request-en.md",
+      "sha256": "00d87acaee57b30c1e91f3e9e6a6522d93f24d4caca5546ed0332ed1e88ba77b",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/supply-en.md",
+      "sha256": "76eec87f0afbaf087219342aefa7531524aea9a5a2a8722bc9850e07d59786e5",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-en.md",
+      "sha256": "f4766c684c9dc0dbe543d4180fceb402809cce222a25d244d37decb0f5b48382",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/request-fr.md",
+      "sha256": "f9b7e3fba388401ca11f80b182d62d8fa52e8ca400fb1635bbc8a1ecfe796238",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/supply-fr.md",
+      "sha256": "52199ae2e19a1d513b7f96337333aa6dff911164f9e90684328884ba3e8410f8",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/request-fr.md",
+      "sha256": "f9b7e3fba388401ca11f80b182d62d8fa52e8ca400fb1635bbc8a1ecfe796238",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/supply-fr.md",
+      "sha256": "52199ae2e19a1d513b7f96337333aa6dff911164f9e90684328884ba3e8410f8",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-fr.md",
+      "sha256": "eab6ecb5c331abe854e025bb67e96ba62f1b058f1bd641753a13460d8ef1f53d",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/request-de.md",
+      "sha256": "9d6b9b51a674229553e314789058da16cc3ebd12e0f46585f9337b3d14286463",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/supply-de.md",
+      "sha256": "7d1459053141165e53eaaaa3cc595b4c9ad8ca62cb86313e2545882d7426184e",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/request-de.md",
+      "sha256": "9d6b9b51a674229553e314789058da16cc3ebd12e0f46585f9337b3d14286463",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/supply-de.md",
+      "sha256": "7d1459053141165e53eaaaa3cc595b4c9ad8ca62cb86313e2545882d7426184e",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-de.md",
+      "sha256": "2bfe3da6a5fe935e758999920ac4e26b6d615c0269146ce23f1dc06035f076e2",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/request-es.md",
+      "sha256": "b9e50c3b94897934e50182d3d09a28ab86fc14595b341b902ff4ec64f745bc86",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/supply-es.md",
+      "sha256": "daebd05212b5ce0c43ab634972b07c9447fa6e8c08d680187612a50fd7d741c7",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/request-es.md",
+      "sha256": "b9e50c3b94897934e50182d3d09a28ab86fc14595b341b902ff4ec64f745bc86",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/supply-es.md",
+      "sha256": "daebd05212b5ce0c43ab634972b07c9447fa6e8c08d680187612a50fd7d741c7",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-es.md",
+      "sha256": "affa2ec712001a0e8c21de1a74f4bceb4e8dea276a781717cdcfdc6ab2bba32d",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/register.csv",
+      "sha256": "650a1a34d298e7f4a93545dbac60d144e6f269fe916bc75487f8de110f2eb0bf",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/register.csv",
+      "sha256": "650a1a34d298e7f4a93545dbac60d144e6f269fe916bc75487f8de110f2eb0bf",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Preparare una nuova pratica con Lucia",
+      "goal": "Impara a partire dalla richiesta e dai documenti del cliente, ottenere un fascicolo da rivedere e capire cosa manca prima dell’apertura.",
+      "scenario": "Beta Laboratorio chiede assistenza per una consegna incompleta. Abbiamo la richiesta, un riepilogo della fornitura e un piccolo registro didattico dello studio. Prepariamo la pratica per la revisione dell’avvocato.",
+      "scope": "La funzione organizza l’apertura della pratica. Le decisioni su conflitti, incarico, termini e apertura restano nel normale percorso di revisione.",
+      "inputs": "Apri request-it.md, supply-it.md e register.csv. La richiesta identifica cliente, controparte, obiettivo e urgenza riferita; la fornitura documenta il caso; il registro indica quali pratiche fittizie sono disponibili per il controllo.",
+      "request": "Lucia, prepara una nuova pratica per Beta Laboratorio sulla consegna di Gamma Forniture. Usa questi documenti e mostrami il fascicolo, le informazioni mancanti e le decisioni da rivedere prima dell’apertura.",
+      "steps": [
+        "Lucia crea il caso didattico, importa i documenti e ricostruisce cliente, parti, richiesta e cronologia. Nella spiegazione scritta segui quali informazioni vengono dalle fonti.",
+        "L’assistente prepara la scheda della pratica, i candidati per la verifica dei conflitti, il perimetro dell’incarico e gli eventuali punti sui termini. Le informazioni mancanti restano visibili.",
+        "Lucia genera il pacchetto e apre la revisione. Guarda le decisioni su conflitti, incarico, termini e apertura e come una decisione effettiva viene salvata e applicata al fascicolo."
+      ],
+      "deliverables": [
+        "Memo di apertura e richiesta di informazioni: parti da obiettivo, parti e documenti disponibili; individua cosa chiedere al cliente.",
+        "Piano delle cartelle e pagina di revisione: mostrano come organizzare il fascicolo e quali decisioni servono. Lo stato distingue un dossier preparato da una pratica pronta ad aprire."
+      ],
+      "review": "Confronta cliente e controparte con la richiesta e verifica il perimetro del registro esaminato. Leggi la proposta di incarico e i punti sui termini prima di decidere. La semplice presenza del memo non significa che l’incarico sia stato accettato.",
+      "checkpoints": [
+        "Prima della preparazione: individua cliente, controparte e risultato richiesto.",
+        "Nel fascicolo: mostra dove trovi documenti mancanti e decisioni ancora da rivedere."
+      ],
+      "practice": "Aggiungi update-it.md: Gamma propone una data per i componenti residui. Chiedi a Lucia di aggiornare il dossier con questa nuova corrispondenza, preservando la versione precedente.",
+      "success": "La nuova versione include la proposta e la sua fonte senza presumere consegna o accettazione. Sai individuare quali punti della pratica richiedono una nuova revisione.",
+      "repeat": "Per rifarlo, fornisci la richiesta, i documenti e il registro effettivamente disponibile; indica se il cliente è nuovo o esistente e rivedi il pacchetto prima di aprire la pratica."
+    },
+    "en": {
+      "title": "Prepare a new matter with Lucia",
+      "goal": "Learn to start from a client request and documents, obtain a reviewable matter file and identify what is needed before opening.",
+      "scenario": "Beta Laboratorio requests help with an incomplete delivery. We have its request, a supply summary and a small fictional firm register. We prepare the matter for the lawyer’s review.",
+      "scope": "This function organizes matter opening. Conflict, engagement, deadline and opening decisions follow the normal review process.",
+      "inputs": "Open request-en.md, supply-en.md and register.csv. The request identifies client, counterparty, objective and reported urgency; the supply record documents the case; the register shows the fictional matters available for checking.",
+      "request": "Lucia, prepare a new matter for Beta Laboratorio concerning Gamma Forniture’s delivery. Use these documents and show the matter file, missing information and decisions to review before opening.",
+      "steps": [
+        "Lucia creates the teaching case, imports documents and reconstructs the client, parties, request and timeline. The assistant follows which information comes from each source.",
+        "The assistant prepares the matter summary, conflict-check candidates, engagement scope and any deadline points. Missing information stays visible.",
+        "Lucia generates the package and opens review. Inspect the conflict, engagement, deadline and opening decisions and how a real decision is saved and applied to the file."
+      ],
+      "deliverables": [
+        "Opening memo and information request: start with objective, parties and available documents; identify what to ask the client.",
+        "Folder plan and review page: show how to organize the file and which decisions are needed. Status distinguishes a prepared dossier from a matter ready to open."
+      ],
+      "review": "Compare client and counterparty with the request and check the scope of the register examined. Read the engagement proposal and deadline points before deciding. A memo’s existence does not mean the engagement was accepted.",
+      "checkpoints": [
+        "Before preparation: identify the client, counterparty and requested outcome.",
+        "In the dossier: show where to find missing documents and decisions still awaiting review."
+      ],
+      "practice": "Add update-en.md: Gamma proposes a delivery date for the remaining components. Ask Lucia to update the dossier with this correspondence while preserving the preceding version.",
+      "success": "The new version includes the proposal and its source without assuming delivery or acceptance. You can identify which matter points need further review.",
+      "repeat": "To repeat, supply the request, documents and actually available register; state whether the client is new or existing, then review the package before opening the matter."
+    },
+    "fr": {
+      "title": "Préparer un nouveau dossier avec Lucia",
+      "goal": "Apprenez à partir de la demande et des documents du client, obtenir un dossier à revoir et identifier ce qui manque avant son ouverture.",
+      "scenario": "Beta Laboratorio demande une assistance pour une livraison incomplète. Nous disposons de sa demande, d’une synthèse de la fourniture et d’un petit registre fictif du cabinet. Préparons le dossier pour la revue de l’avocat.",
+      "scope": "La fonction organise l’ouverture du dossier. Les décisions sur conflits, mission, délais et ouverture suivent la procédure normale de revue.",
+      "inputs": "Ouvrez request-fr.md, supply-fr.md et register.csv. La demande indique client, partie adverse, objectif et urgence déclarée ; la fourniture documente le cas ; le registre précise les dossiers fictifs disponibles pour le contrôle.",
+      "request": "Lucia, prépare un nouveau dossier pour Beta Laboratorio concernant la livraison de Gamma Forniture. Utilise ces documents et montre le dossier, les informations manquantes et les décisions à revoir avant l’ouverture.",
+      "steps": [
+        "Lucia crée le cas pédagogique, importe les documents et reconstitue client, parties, demande et chronologie. L’assistant suit les informations et leurs sources.",
+        "L’assistant prépare la fiche, les candidats au contrôle des conflits, le périmètre de la mission et les points éventuels sur les délais. Les informations manquantes restent visibles.",
+        "Lucia produit le paquet et ouvre la revue. Examinez les décisions sur conflits, mission, délais et ouverture, puis la façon dont une décision réelle est enregistrée et appliquée au dossier."
+      ],
+      "deliverables": [
+        "Note d’ouverture et demande d’informations : commencez par objectif, parties et documents disponibles ; repérez ce qu’il faut demander au client.",
+        "Plan des dossiers et page de revue : organisation proposée et décisions nécessaires. Le statut distingue un dossier préparé d’un dossier prêt à ouvrir."
+      ],
+      "review": "Comparez client et partie adverse à la demande et vérifiez le périmètre du registre consulté. Lisez la proposition de mission et les points sur les délais avant de décider. Une note produite ne signifie pas que la mission est acceptée.",
+      "checkpoints": [
+        "Avant la préparation : identifiez client, partie adverse et résultat demandé.",
+        "Dans le dossier : montrez les documents manquants et les décisions encore à revoir."
+      ],
+      "practice": "Ajoutez update-fr.md : Gamma propose une date pour les composants restants. Demandez à Lucia d’actualiser le dossier avec cette correspondance en conservant la version précédente.",
+      "success": "La nouvelle version reprend la proposition et sa source sans supposer livraison ou acceptation. Vous savez quels points nécessitent une nouvelle revue.",
+      "repeat": "Pour recommencer, fournissez demande, documents et registre réellement disponible ; précisez si le client est nouveau ou existant et revoyez le paquet avant d’ouvrir le dossier."
+    },
+    "de": {
+      "title": "Eine neue Angelegenheit mit Lucia vorbereiten",
+      "goal": "Lernen Sie, aus Mandantenanfrage und Unterlagen eine prüfbare Akte zu erstellen und den Bedarf vor der Eröffnung zu erkennen.",
+      "scenario": "Beta Laboratorio bittet um Unterstützung wegen einer unvollständigen Lieferung. Vorhanden sind Anfrage, Lieferzusammenfassung und ein kleines fiktives Kanzleiregister. Wir bereiten die Angelegenheit zur anwaltlichen Prüfung vor.",
+      "scope": "Die Funktion organisiert die Akteneröffnung. Entscheidungen über Konflikte, Mandat, Fristen und Eröffnung folgen der normalen Prüfung.",
+      "inputs": "Öffnen Sie request-de.md, supply-de.md und register.csv. Die Anfrage nennt Mandant, Gegenpartei, Ziel und berichtete Dringlichkeit; die Lieferunterlage beschreibt den Fall; das Register zeigt die verfügbaren fiktiven Prüfunterlagen.",
+      "request": "Lucia, bereite eine neue Angelegenheit für Beta Laboratorio zur Lieferung von Gamma Forniture vor. Nutze diese Dokumente und zeige Akte, fehlende Informationen und Entscheidungen vor der Eröffnung.",
+      "steps": [
+        "Lucia erstellt den Übungsfall, importiert Unterlagen und rekonstruiert Mandant, Beteiligte, Anfrage und Ablauf. Der Assistent erklärt, welche Informationen aus welchen Quellen stammen.",
+        "Der Assistent bereitet Übersicht, Kandidaten zur Konfliktprüfung, Mandatsumfang und mögliche Fristpunkte vor. Fehlende Informationen bleiben sichtbar.",
+        "Lucia erstellt das Paket und öffnet die Prüfung. Sehen Sie die Entscheidungen zu Konflikten, Mandat, Fristen und Eröffnung sowie das Speichern und Anwenden einer tatsächlichen Entscheidung an."
+      ],
+      "deliverables": [
+        "Eröffnungsvermerk und Informationsanforderung: Beginnen Sie mit Ziel, Beteiligten und verfügbaren Dokumenten; erkennen Sie Rückfragen an den Mandanten.",
+        "Ordnerplan und Prüfseite: zeigen Aktenorganisation und notwendige Entscheidungen. Der Status unterscheidet eine vorbereitete Akte von einer zur Eröffnung bereiten Angelegenheit."
+      ],
+      "review": "Vergleichen Sie Mandant und Gegenpartei mit der Anfrage und prüfen Sie den Umfang des durchgesehenen Registers. Lesen Sie Mandatsvorschlag und Fristpunkte vor Ihrer Entscheidung. Ein Vermerk allein bestätigt keine Mandatsannahme.",
+      "checkpoints": [
+        "Vor der Vorbereitung: Benennen Sie Mandant, Gegenpartei und gewünschtes Ergebnis.",
+        "In der Akte: Zeigen Sie fehlende Dokumente und noch offene Entscheidungen."
+      ],
+      "practice": "Ergänzen Sie update-de.md: Gamma schlägt einen Liefertermin für die restlichen Komponenten vor. Lassen Sie Lucia die Akte mit dieser Korrespondenz aktualisieren und die vorherige Version erhalten.",
+      "success": "Die neue Version enthält Vorschlag und Quelle, ohne Lieferung oder Annahme vorauszusetzen. Sie erkennen den erneuten Prüfbedarf.",
+      "repeat": "Stellen Sie für die Wiederholung Anfrage, Unterlagen und tatsächlich verfügbares Register bereit; nennen Sie neuen oder bestehenden Mandanten und prüfen Sie das Paket vor der Eröffnung."
+    },
+    "es": {
+      "title": "Preparar un nuevo expediente con Lucia",
+      "goal": "Aprende a partir de la solicitud y los documentos del cliente, obtener un expediente revisable e identificar qué falta antes de abrirlo.",
+      "scenario": "Beta Laboratorio solicita asistencia por una entrega incompleta. Tenemos su solicitud, una síntesis del suministro y un pequeño registro ficticio del despacho. Preparamos el expediente para la revisión del abogado.",
+      "scope": "La función organiza la apertura del expediente. Las decisiones sobre conflictos, encargo, plazos y apertura siguen la revisión habitual.",
+      "inputs": "Abre request-es.md, supply-es.md y register.csv. La solicitud identifica cliente, contraparte, objetivo y urgencia comunicada; el suministro documenta el caso; el registro indica los asuntos ficticios disponibles para comprobar.",
+      "request": "Lucia, prepara un nuevo expediente para Beta Laboratorio sobre la entrega de Gamma Forniture. Usa estos documentos y muéstrame el expediente, la información que falta y las decisiones que revisar antes de abrirlo.",
+      "steps": [
+        "Lucia crea el caso didáctico, importa documentos y reconstruye cliente, partes, solicitud y cronología. El asistente sigue qué información procede de cada fuente.",
+        "El asistente prepara la ficha, candidatos para comprobar conflictos, alcance del encargo y posibles puntos sobre plazos. La información que falta permanece visible.",
+        "Lucia genera el paquete y abre la revisión. Examina las decisiones sobre conflictos, encargo, plazos y apertura y cómo una decisión real se guarda y aplica al expediente."
+      ],
+      "deliverables": [
+        "Memoria de apertura y solicitud de información: empieza por objetivo, partes y documentos disponibles; identifica qué pedir al cliente.",
+        "Plan de carpetas y página de revisión: muestran organización y decisiones necesarias. El estado distingue un dossier preparado de un expediente listo para abrir."
+      ],
+      "review": "Compara cliente y contraparte con la solicitud y comprueba el alcance del registro examinado. Lee la propuesta de encargo y los puntos sobre plazos antes de decidir. La existencia de una memoria no significa que se haya aceptado el encargo.",
+      "checkpoints": [
+        "Antes de preparar: identifica cliente, contraparte y resultado solicitado.",
+        "En el dossier: muestra los documentos que faltan y las decisiones pendientes de revisar."
+      ],
+      "practice": "Añade update-es.md: Gamma propone una fecha para los componentes restantes. Pide a Lucia actualizar el dossier con esta correspondencia, conservando la versión anterior.",
+      "success": "La nueva versión incluye propuesta y fuente sin presuponer entrega ni aceptación. Sabes identificar qué puntos necesitan nueva revisión.",
+      "repeat": "Para repetirlo, proporciona solicitud, documentos y registro realmente disponible; indica si es un cliente nuevo o existente y revisa el paquete antes de abrir el expediente."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "51dec1b5ddb98dfe0968e9be40d48491b0c66c1d03084a584e31fadcb81d75ff"
+}

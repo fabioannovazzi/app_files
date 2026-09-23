@@ -1,61 +1,71 @@
-# Enseñar un paso repetible en el navegador
+# Enseñar a Vera un procedimiento en el navegador
 
-Un recorrido guiado de unos 6 minutos y medio. La activación de voz, los procesos externos y el ejercicio opcional requieren tiempo adicional.
+La explicación y una práctica breve requieren unos 5–8 minutos. El procesamiento y tus preguntas pueden alargar la sesión.
 
-Habla con el docente mediante la voz estándar de Codex. En la segunda conversación, abierta al lado, examina los archivos y el resultado. Ambas siguen vinculadas; puedes interrumpir, preguntar por qué o reducir el ritmo cuando quieras.
+Habla con el docente mediante la voz estándar de Codex. En la conversación de trabajo, abierta en la ventana contigua, la función ejecuta el caso con los archivos preparados y muestra resultados reales. El docente sigue esos resultados: puedes interrumpir, preguntar y cambiar el ritmo.
 
-Utiliza este material preparado. No reescribas la lección ni inventes resultados. Habla en turnos breves, deja tiempo para observar y escucha respuestas reales. No muestres la solución antes del intento. Los tiempos incluyen observación y diálogo. Mostrar estos archivos no completa demostración, práctica ni comprensión en el registro local. El docente elige por pertinencia únicamente dentro del catálogo de su producto.
+Utiliza el material preparado para enseñar un primer uso completo. Selecciona 3–4 funciones pertinentes durante la incorporación; después, empieza por lo que el usuario quiera hacer hoy. Adapta el ritmo y las explicaciones. Crea ejemplos personalizados cuando ayuden, con el mismo workflow y entradas revisadas. Lee execution-request.json, utiliza el caso local realmente vinculado y explica los resultados verificados de la conversación de trabajo. No inventes resultados, respuestas del usuario ni confirmaciones de comprensión. Abrir el kit no completa la lección.
 
-## 1. Tu objetivo · 45 s
+## 1. Cuándo utilizarla · 45 s
 
-Escucha la petición. Relaciona el caso con un trabajo que ya haces.
+Relaciona la función con una tarea profesional concreta.
 
-Un portal local ficticio muestra un documento y un botón de descarga. La tarea consiste en repetir esa única descarga. La página didáctica no contiene credenciales, pagos ni documentos de clientes.
+Aprender a mostrar a Vera una tarea repetitiva, revisar el procedimiento guardado y comprender cómo se convierte en una automatización comprobada.
 
-Vera, aprende a descargar este documento del portal de prueba y muestra el archivo resultante.
+Un despacho prepara con frecuencia paquetes de documentos en una web. Utiliza la página local ficticia incluida en Vera para mostrar un ejemplo completo, revisar los pasos y probar otro tipo de documento.
 
-## 2. Los datos de partida · 60 s
+Observación de un procedimiento web, guardado local, revisión y preparación para reutilizarlo. El ejemplo utiliza la página local de prueba del plugin y no demuestra acceso a un programa profesional real. Los controles de la página están en inglés.
 
-Mira los documentos en la otra conversación. Identifica un dato útil y una información que falta.
+## 2. Archivos y petición · 60 s
 
-El procedimiento se apoya en la página observada y en el contenido realmente descargado. La presencia de un botón no prueba una descarga correcta.
+Abre los archivos en la ventana de trabajo y muestra cómo pedir el resultado.
 
-[["Lista de documentos", "Un documento llamado DEMO-01", "Contenido sintético"], ["Botón de descarga", "synthetic-download.txt", "Una operación prevista"], ["Archivo esperado", "Texto identificativo del caso", "Abrir y comprobar"]]
+Lee task-es.md: incluye cliente ficticio, tipo de documento y resultado solicitado. Vera abre su página local en la ventana de trabajo. No se necesitan credenciales, documentos de clientes ni automatizaciones preparadas.
 
-## 3. Cómo trabaja el workflow · 75 s
+Vera, muéstrame cómo enseñarte este procedimiento en el navegador. Sigue el ejemplo ficticio, guarda los pasos y explícame qué debo revisar antes de que puedas repetirlo.
 
-Sigue los tres pasos. Detente en la decisión que cambia el resultado.
+## 3. Ejecutar el trabajo · 105 s
 
-Observa el sitio y define objetivo, alcance autorizado y condiciones de parada.
-Prepara la capacidad con elementos realmente observados. Prueba en el sitio local y conserva evidencias de pasos y resultados.
-Repite el paso autorizado, abre el archivo y compara su contenido. Revisa la capacidad si cambia la página o sus controles.
+Explica el paso que se está ejecutando y espera su resultado real.
 
-## 4. Leer el resultado · 90 s
+Confirma la tarea y el resultado esperado. Vera comienza a guardar antes de actuar. Selecciona el cliente ficticio y el documento en la ventana de trabajo; la conversación de voz explica tus decisiones y lo que Vera registra.
 
-Abre el ejemplo en la segunda conversación. Vincula cada conclusión con su fuente.
+Sigue el ejemplo hasta que la página confirme que el paquete está preparado. Vera comprueba el resultado real, explica los pasos y guarda el procedimiento. Abre su resumen y compáralo con el trabajo observado.
 
-El resultado útil es el documento correcto y un procedimiento que reconoce cuándo no puede continuar.
+Revisa el procedimiento propuesto y sus límites. Con la aprobación que realmente se requiere, Vera crea la versión ejecutable y comprueba dos ejecuciones completas desde la página inicial. Distingue entre ejemplo observado, procedimiento aprobado y automatización probada.
 
-[["Seleccionar documento", "Identidad DEMO-01 en la página", "Parar e inspeccionar"], ["Descargar", "Archivo presente en el destino", "No afirmar éxito"], ["Comprobar contenido", "Texto esperado en el archivo abierto", "Informar del resultado inesperado"]]
+Durante la lección, la conversación de trabajo ejecuta la función y produce el resultado. Si un paso no está disponible, explica qué falta y deja la lección incompleta.
 
-## 5. La comprobación clave · 75 s
+## 4. Utilizar el resultado · 75 s
 
-Antes de mostrar la respuesta, explica qué comprobarías.
+Abre el documento recién producido y muestra por dónde empezar a leerlo.
 
-Un clic correcto no prueba una descarga correcta. Una página modificada exige observación, no selectores inventados ni autorizaciones omitidas.
+Procedimiento local guardado y resumen de avances para retomar el trabajo.
 
-El botón funciona, pero el archivo contiene una página de error. ¿Ha funcionado el paso?
+Borrador para revisar; tras la aprobación necesaria y las pruebas satisfactorias, procedimiento reutilizable con sus registros de ejecución.
 
-Comparar el razonamiento: No. La verificación se refiere al contenido final. Conserva la evidencia del error y detente sin afirmar que se obtuvo el documento.
+Comprueba la página inicial, los datos, las acciones y el resultado final. Un clic o un borrador guardado no demuestra que la automatización funcione. Revisa el procedimiento real antes de crear la versión ejecutable.
 
-## 6. Probar juntos · 45 s
+## 5. Parar y comprobar · 45 s
 
-Decide si prefieres practicar ahora o guardar el ejemplo para tu próximo encargo.
+Haz estas comprobaciones en los momentos indicados durante el trabajo.
 
-Ejecuta la prueba local, cambia el documento disponible y comprueba que el resultado vuelve a verificarse.
+Explica qué necesita Vera para aprender una tarea web y dónde encontrar los pasos guardados.
 
-En un sitio real, empieza por una operación autorizada y un navegador y vía de acceso disponibles.
+Muestra el resultado observado e identifica si el procedimiento es un borrador, está aprobado o ha sido probado.
 
-Este es un ejemplo didáctico preparado, no un comprobante de una nueva ejecución. Las fuentes y decisiones son ficticias; no se presupone aprobación profesional. Con tus archivos, el workflow actual realiza sus comprobaciones y conserva los resultados reales.
+Estas pausas ayudan a aprender a utilizar la función. No son un examen de detalles técnicos.
+
+## 6. Ahora prueba tú · 60 s
+
+Deja que el usuario formule la petición y acompaña su intento.
+
+Lee practice-es.md y solicita el mismo procedimiento para una nota de crédito. Pide a Vera que use los pasos guardados, revisa los cambios necesarios y observa el nuevo resultado. Conserva el primer ejemplo; una prueba solo termina con éxito cuando coinciden el documento elegido y el resultado.
+
+Sabes enseñar una tarea web delimitada, revisar los pasos guardados y pedir una repetición, reconociendo las revisiones o pruebas pendientes.
+
+Describe el sitio, la tarea y el resultado deseado. Abre la página autorizada en Chrome conectado y muestra un ejemplo. Vera registra y comprueba el procedimiento; tú lo revisas antes de reutilizar la automatización aprobada.
+
+El kit contiene archivos ficticios y un guion preparado. Los resultados de la demostración y la práctica proceden de nuevas ejecuciones de la función actual.
 
 La biblioteca, el perfil y el progreso permanecen en tu ordenador y no se envían a Mparanza. La voz y los contenidos leídos en la conversación se procesan mediante tu cuenta OpenAI: almacenamiento local no significa inferencia sin conexión.

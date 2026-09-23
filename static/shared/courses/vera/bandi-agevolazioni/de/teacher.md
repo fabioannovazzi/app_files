@@ -1,61 +1,71 @@
-# Eine passende Förderung ist noch kein belegter Anspruch
+# Mit Vera einen Förderantrag vorbereiten
 
-Ein geführter Rundgang von etwa 6½ Minuten. Sprachaktivierung, externe Verarbeitung und die freiwillige Übung kommen zeitlich hinzu.
+Erklärung und kurze Übung dauern ungefähr 5–8 Minuten. Verarbeitung und Ihre Fragen können die Sitzung verlängern.
 
-Sprich mit dem Lehrchat über die Standardstimme von Codex. Im zweiten, daneben geöffneten Chat siehst du Dateien und Ergebnisse. Die Chats bleiben verbunden. Du kannst jederzeit unterbrechen, nachfragen oder langsamer fortfahren.
+Sprechen Sie im Lehrchat mit der Standardstimme von Codex. Im Arbeitschat im Fenster daneben führt die Funktion den Fall mit den vorbereiteten Dateien aus und zeigt die tatsächlichen Ergebnisse. Die Erklärung folgt diesen Ergebnissen: Sie können unterbrechen, Fragen stellen und das Tempo ändern.
 
-Verwende die vorbereiteten Inhalte. Schreibe die Lektion nicht neu und erfinde keine Ergebnisse. Sprich in kurzen Abschnitten, lass Zeit zum Anschauen und höre die tatsächlichen Antworten. Zeige die Lösung erst nach dem Versuch. Die Zeiten umfassen Anschauen und Dialog. Das Anzeigen dieser Dateien bestätigt weder Demo noch Übung oder Verständnis. Der Lehrchat beurteilt die Eignung ausschließlich anhand des Katalogs seines eigenen Produkts.
+Vermitteln Sie mit dem vorbereiteten Material eine vollständige erste Anwendung. Wählen Sie bei der Einführung 3–4 passende Funktionen; beginnen Sie später mit dem heutigen Arbeitswunsch. Passen Sie Tempo und Erklärungen an. Erstellen Sie bei Bedarf eigene Beispiele mit demselben Workflow und geprüften Eingaben. Lesen Sie execution-request.json, verwenden Sie den echten zugeordneten lokalen Fall und erklären Sie die überprüften Ergebnisse des Arbeitschats. Erfinden Sie weder Ergebnisse noch Nutzerantworten oder Verständnisbestätigungen. Das Öffnen des Materials schließt keine Lektion ab.
 
-## 1. Dein Ziel · 45 s
+## 1. Wann sie hilft · 45 s
 
-Höre die Anfrage. Stelle einen Bezug zu deiner bisherigen Arbeit her.
+Verbinden Sie die Funktion mit einer konkreten beruflichen Aufgabe.
 
-Ein vollständig fiktiver Aufruf fördert Maschinen produzierender Unternehmen in einer bestimmten Region. Arco plant EUR 80.000 Investition. Nachweise zum Betriebsstandort und Beginn der Ausgaben fehlen.
+Lernen, mit einem ausgewählten Förderaufruf zu beginnen, Unternehmensunterlagen bereitzustellen und Veras Dossier zu prüfen.
 
-Vera, zeige, wie aus einem gefundenen Förderaufruf konkrete Prüfungen für dieses Unternehmen werden.
+Eine Kanzlei untersucht das Digitalprojekt eines kleinen Unternehmens. Ein vollständig fiktiver Aufruf und simulierte Unterlagen zeigen den Ablauf von den Bedingungen bis zum Dossier. Anschließend wird das Angebot aktualisiert.
 
-## 2. Die Ausgangsdaten · 60 s
+Dossiervorbereitung nach Auswahl eines Aufrufs: Quellen, Anforderungen, Belege, Kosten, Unterlagen, Entwurf und Prüfung. Die Suche nach Fördermöglichkeiten ist die andere Stufe dieser Funktion; hier liegt der Aufruf vor. Seine Bedingungen sind kein geltendes Recht und keine echte Förderung.
 
-Sieh dir die Dokumente im anderen Chat an. Finde eine nützliche Angabe und eine fehlende Information.
+## 2. Dateien und Anfrage · 60 s
 
-B1 definiert nur die Bedingungen des Beispiels. C1 belegt ein Vorhaben, nicht die Erfüllung aller Voraussetzungen. Eine Förderquote wird nicht erfunden.
+Öffnen Sie die Dateien im Arbeitsfenster und zeigen Sie die passende Anfrage.
 
-[["B1 · DEMO-Aufruf § 2", "Betriebsstätte in der Förderregion", "Standort nicht dokumentiert"], ["B1 · § 4", "Ausgabenbeginn nach Antragstellung", "Bestelldatum fehlt"], ["C1 · Arco-Projekt", "Maschinen: EUR 80.000", "Angebot vorhanden"]]
+Öffnen Sie avviso-de.md, progetto-de.md und preventivo-de.csv: simulierter Aufruf, erklärte Unternehmensfakten und vorgeschlagene Kosten. Förderfähigkeit, Kostenklassifizierung und Freigaben wurden noch nicht beurteilt.
 
-## 3. So arbeitet der Workflow · 75 s
+Vera, bereite aus diesem Aufruf und den Unternehmensunterlagen ein Übungsdossier vor. Zeige Anforderungen, Belegabgleich, Kosten, nötige Dokumente und meine Prüfpunkte.
 
-Folge den drei Schritten. Halte bei der Entscheidung an, die das Ergebnis verändert.
+## 3. Den Ablauf ausführen · 105 s
 
-Bestimme das Suchziel und prüfe relevante Quellen. Verknüpfe jede Gelegenheit mit ihrer genauen Quelle und Version.
-Vergleiche jede Voraussetzung mit den Unternehmensbelegen und benenne fehlende Unterlagen.
-Erstelle Förderübersicht, Prüfliste und prüfbares Dossier. Unterscheide Relevanz, belegte Voraussetzungen und Dokumentenstand; stelle keinen Antrag.
+Erklären Sie den laufenden Schritt und warten Sie auf sein tatsächliches Ergebnis.
 
-## 4. Das Ergebnis lesen · 90 s
+Im Arbeitsfenster eröffnet Vera den Fall und registriert die Unterlagen. Im Sprachchat erklärt sie Auftrag, Quellen und Ergebnis. Prüfen Sie, welche Dokumente das Übungsszenario regeln und welche das Unternehmen beschreiben.
 
-Öffne das Beispiel im zweiten Chat. Ordne jede Schlussfolgerung ihrer Quelle zu.
+Vera schlägt Anforderungen und Faktenabgleiche vor, prüft die Kosten und erstellt Dokumentenliste und Entwurf. Verfolgen Sie einen Punkt von der Quelle zum Vorschlag und führen Sie die vorgesehenen Prüfentscheidungen durch.
 
-Das Vorhaben passt zum Gegenstand des Aufrufs. Zwei entscheidende Bedingungen sind noch nicht belegt.
+Öffnen Sie review_dossier.html: Beginnen Sie mit der Zusammenfassung und prüfen Sie anschließend Kosten, Unterlagen und Projektentwurf. Klappen Sie eine Bedingung auf, um Bewertung und Quellenauszug zu lesen. Vera erklärt die noch erforderlichen Prüfungen und nächsten Schritte; die Übung nutzt kein Portal und sendet nichts.
 
-[["Investitionsbezug · B1/C1", "Maschinen beschrieben", "Technischen Vergleich vervollständigen"], ["Standort · B1 § 2", "Nicht geprüft", "Betriebsstättennachweis"], ["Ausgabenbeginn · B1 § 4", "Nicht geprüft", "Bestellung und Ausgabenchronologie"]]
+Während der Lektion führt der Arbeitschat die Funktion aus und erstellt das Ergebnis. Ist ein Schritt nicht verfügbar, erklären Sie, was fehlt, und lassen Sie die Lektion unvollständig.
 
-## 5. Die entscheidende Prüfung · 75 s
+## 4. Das Ergebnis verwenden · 75 s
 
-Erkläre vor dem Aufklappen der Antwort, was du prüfen würdest.
+Öffnen Sie das gerade erstellte Dokument und zeigen Sie den Einstieg.
 
-Relevanz beweist keine Förderfähigkeit. Eine Übersicht ersetzt nicht den amtlichen Aufruf mit Anlagen.
+Lokales Dossier mit Anforderungen, Belegen, vorgeschlagenen Bewertungen, Kosten, Unterlagen und Entwurf.
 
-Das Angebot passt perfekt. Können wir Arco als förderfähig bezeichnen?
+Prüfungen und Entscheidungsverlauf mit offenen Punkten und nächsten Schritten.
 
-Überlegungen vergleichen: Nein. Standort, Zeitpunkt und alle weiteren Bedingungen der vollständigen Quelle müssen geprüft werden. Liefere die offenen Vorbereitungspunkte.
+Prüfen Sie den Quellenbezug jeder Anforderung und den Dokumentenbezug jedes Fakts. Unterscheiden Sie vollständige Unterlagen, vorgeschlagenes Ergebnis und Behördenentscheidung: Ein Dossier bewilligt keine Förderung.
 
-## 6. Gemeinsam ausprobieren · 45 s
+## 5. Gemeinsam prüfen · 45 s
 
-Entscheide, ob du jetzt üben oder das Beispiel für den nächsten Auftrag behalten möchtest.
+Führen Sie diese Prüfungen an den angegebenen Stellen durch.
 
-Ergänze eine fiktive Bestellung vor der Antragstellung und prüfe die zeitliche Bedingung erneut.
+Erklären Sie benötigte Dateien und Anfrage bei einem bereits ausgewählten Aufruf.
 
-Wähle eine echte Förderung und ein Unternehmen; prüfe die aktuelle amtliche Quelle vor jeder Zusage.
+Öffnen Sie das Dossier, verfolgen Sie einen Vorschlag zur Quelle und benennen Sie die offene Prüfung.
 
-Dies ist ein vorbereitetes Lehrbeispiel, kein Nachweis einer neuen Ausführung. Quellen und Entscheidungen sind fiktiv; eine fachliche Freigabe ist nicht vorausgesetzt. Bei deinen eigenen Dateien führt der aktuelle Workflow seine Prüfungen durch und bewahrt die tatsächlichen Ergebnisse auf.
+Diese Pausen helfen beim Erlernen der Funktion. Sie sind kein Quiz über technische Einzelheiten.
 
-Bibliothek, Profil und Lernfortschritt bleiben auf deinem Computer und werden nicht an Mparanza gesendet. Sprache und im Chat gelesene Inhalte verarbeitet dein OpenAI-Konto: Lokale Speicherung bedeutet keine Offline-Inferenz.
+## 6. Selbst ausprobieren · 60 s
+
+Lassen Sie den Nutzer die Anfrage formulieren und begleiten Sie seinen Versuch.
+
+Stellen Sie das aktualisierte Übungsangebot bereit. Verlangen Sie ein neues Dossier unter Beibehaltung des ersten und prüfen Sie Änderungen an Kosten, vorgeschlagenem Betrag und nötigen Prüfungen.
+
+Sie können mit einem ausgewählten Aufruf beginnen, das Dossier prüfen und eine Aktualisierung verlangen, ohne einen Vorschlag als Freigabe zu behandeln.
+
+Stellen Sie offiziellen Aufruf, Anlagen und Unternehmensunterlagen bereit und nennen Sie Projekt und Stichtag. Vera bereitet das Dossier mit den normalen Prüfungen vor. Für eine vorgelagerte Fördersuche geben Sie Gebiet und Projekt an.
+
+Das Material enthält fiktive Dateien und einen vorbereiteten Ablauf. Ergebnisse der Demonstration und Übung entstehen durch neue Ausführungen der aktuellen Funktion.
+
+Bibliothek, Profil und Lernfortschritt bleiben auf Ihrem Computer und werden nicht an Mparanza gesendet. Sprache und im Chat gelesene Inhalte verarbeitet Ihr OpenAI-Konto: Lokale Speicherung bedeutet keine Offline-Inferenz.

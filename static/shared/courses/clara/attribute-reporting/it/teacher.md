@@ -1,61 +1,71 @@
-# Un segnale di assortimento non è una quota di mercato
+# Creare un rapporto sull’assortimento con Clara
 
-Percorso guidato di circa 6 minuti e mezzo. Avvio della voce, elaborazioni esterne ed esercizio facoltativo sono separati dal tempo della lezione.
+La spiegazione e una breve prova richiedono circa 5–8 minuti. I tempi di elaborazione e le tue domande possono allungare la sessione.
 
-Nella chat insegnante parli con la voce standard di Codex. Nella seconda chat, aperta accanto, guardi i file e il risultato. Le due chat restano abbinate; puoi interrompere, chiedere perché o rallentare in qualsiasi momento.
+Nella chat insegnante parli con la voce standard di Codex. Nella chat di lavoro, aperta nella finestra accanto, la funzione esegue il caso con i file preparati e mostra i risultati effettivi. L’insegnante segue quei risultati: puoi interrompere, fare domande e cambiare ritmo.
 
-Usa questi contenuti già pronti. Non riscrivere la lezione né inventare risultati. Parla in brevi turni, lascia il tempo di guardare e ascolta le risposte reali. Non leggere la soluzione prima del tentativo. I tempi includono osservazione e dialogo, non solo il testo parlato. Mostrare questi file non completa demo, pratica o comprensione nel registro locale. Il docente sceglie semanticamente il workflow adatto dal solo catalogo del proprio prodotto.
+Parti dal materiale preparato e insegna l’intero primo utilizzo. Scegli 3–4 funzioni pertinenti durante l’onboarding; nelle visite successive parti da ciò che l’utente vuole fare oggi. Adatta il ritmo e le spiegazioni. Crea esempi personalizzati quando aiutano, mantenendo lo stesso workflow e verificando i nuovi input. Leggi execution-request.json, usa il vero caso locale abbinato e collega ogni spiegazione ai risultati verificati della chat di lavoro. Non inventare risultati, risposte dell’utente o conferme di comprensione. Mostrare il kit non completa la lezione.
 
-## 1. Il tuo obiettivo · 45 s
+## 1. A cosa serve · 45 s
 
-Ascolta la richiesta. Collega il caso a un lavoro che fai già.
+Collega la funzione a un lavoro concreto del professionista.
 
-Un pacchetto fittizio del retailer Nord contiene 20 prodotti nuovi, di cui 12 con ricarica, e 80 prodotti nel resto dell'assortimento, di cui 24 con ricarica. Il pacchetto è uno snapshot: non riporta vendite né quote di mercato.
+Imparare a fornire un pacchetto di dati commerciali già disponibile, chiedere un’analisi e usare il rapporto HTML verificato.
 
-Clara, mostrami se la ricarica è più presente tra i prodotti nuovi e come leggere il segnale.
+Un team prodotto vuole capire l’assortimento prima della prossima riunione. Parti da un pacchetto fittizio sulla maglieria, segui la preparazione del rapporto e confronta le conclusioni con i prodotti di origine. Ripeti poi con un pacchetto aggiornato.
 
-## 2. Da quali dati partiamo · 60 s
+Primo rapporto completo da un pacchetto di dati locale esistente: acquisizione, confronto, interpretazione, revisione indipendente e consegna. Raccolta sui siti, classificazione centrale degli attributi e Brand Fit sono attività distinte e non vengono simulate.
 
-Guarda i documenti nella chat accanto. Individua un dato utile e un'informazione mancante.
+## 2. I file e la richiesta · 60 s
 
-A1 definisce le due coorti e l'attributo del caso. I denominatori sono diversi: confrontare 12 con 24 senza normalizzare sarebbe fuorviante.
+Apri i file nella finestra di lavoro e mostra come chiedere il risultato.
 
-[["Nuovi", "12", "20"], ["Resto", "24", "80"]]
+Apri brief-it.md e fornisci assortment-demo-it.zip. L’archivio contiene prodotti fittizi, gruppi di novità e più venduti dichiarati, confronti calcolati e controllo d’integrità. Non contiene un rapporto finito, interpretazioni approvate o ricevute del server.
 
-## 3. Come lavora il workflow · 75 s
+Clara, prepara da questo pacchetto un rapporto sull’assortimento per il team prodotto. Spiega quali dati contiene, confronta più venduti e novità con il resto e mostrami il rapporto con i suoi controlli.
 
-Segui i tre passaggi. Fermati sulla scelta che cambia il risultato.
+## 3. Eseguiamo il lavoro · 105 s
 
-Parti da un pacchetto coerente e controllato; rivedi gli attributi contro i prodotti e conserva i confronti e le soglie del contratto.
-Interpreta le tabelle senza promuovere una corrispondenza di attributo a giudizio automatico. Collega evidenze e immagini ai prodotti del pacchetto.
-Autora il report locale e completa la revisione semantica indipendente, la verifica browser e i controlli correnti. Dichiara il verdetto e i limiti effettivi.
+Spiega il passaggio che sta avvenendo e attendi il suo risultato effettivo.
 
-## 4. Leggiamo il risultato · 90 s
+Conferma rivenditore, categoria, dati forniti e destinatari. Clara apre l’archivio e ne verifica l’integrità. La conversazione vocale spiega i prodotti di origine e il significato dei gruppi definiti dal rivenditore.
 
-Apri l'esempio nella seconda chat. Collega ogni conclusione alla sua fonte.
+Clara prepara le normali tabelle comparative e scrive il rapporto a partire dalle evidenze. Segui un confronto dai prodotti alla tabella e alla conclusione; distingui una caratteristica dell’assortimento da quantità vendute o spiegazioni causali.
 
-La presenza dell'attributo è doppia nella coorte dei nuovi prodotti. È un segnale dell'assortimento osservato, non una misura di domanda o vendite.
+Una revisione indipendente controlla affermazioni e leggibilità; i controlli nel browser verificano l’HTML. Apri il rapporto effettivo, il giudizio e le riserve. Trova sintesi, tabelle, prodotti di supporto e prossima domanda per il team.
 
-[["Nuovi", "12 / 20", "60%"], ["Resto", "24 / 80", "30%"], ["Confronto illustrato", "60% / 30%", "2×"]]
+Durante la lezione, la chat di lavoro esegue la funzione e produce il risultato. Se un passaggio non è disponibile, spieghiamo cosa manca e manteniamo la lezione incompleta.
 
-## 5. Il controllo che conta · 75 s
+## 4. Usiamo il risultato · 75 s
 
-Prima di aprire la risposta, spiega a voce cosa controlleresti.
+Apri il documento appena prodotto e mostra dove iniziare a leggerlo.
 
-Mantieni denominatori e data dello snapshot. I nomi dei prodotti e un singolo attributo non provano opportunità commerciale o successo sul mercato.
+Rapporto HTML locale con confronti, interpretazione, riferimenti alle fonti e giudizio esplicito di correttezza.
 
-Il 60% significa che i prodotti con ricarica fanno il 60% delle vendite?
+Tabelle di supporto e registri di revisione che spiegano giudizio e limiti residui.
 
-Confronta il ragionamento: No. È la percentuale di prodotti nuovi con quell'attributo nel pacchetto. Non abbiamo dati sulle vendite.
+Controlla dati forniti, definizione dei gruppi e supporto di una conclusione. Le novità sono il gruppo indicato nella fonte; la posizione tra i più venduti non fornisce quantità vendute. Leggi le ragioni del giudizio prima di usare il rapporto.
 
-## 6. Proviamo insieme · 45 s
+## 5. Fermiamoci a verificare · 45 s
 
-Scegli se provare ora o conservare l'esempio per il prossimo incarico.
+Fai queste verifiche nel momento indicato, durante il lavoro.
 
-Aggiungi due nuovi prodotti senza ricarica e ricalcola la quota usando il nuovo denominatore.
+Indica pacchetto e richiesta necessari per iniziare e spiega che cosa produrrà Clara.
 
-Per il lavoro reale seleziona retailer, categoria e confronto supportato; verifica se la fonte è uno snapshot o una nuova acquisizione.
+Apri il rapporto e collega una conclusione alle sue evidenze e allo stato di revisione.
 
-Questo è un esempio didattico preparato, non la ricevuta di una nuova esecuzione. Le fonti e le decisioni sono fittizie; nessuna approvazione del professionista è implicita. Per lavorare sui tuoi file, il workflow corrente esegue i propri controlli e conserva i risultati effettivi.
+Queste pause servono a capire come usare la funzione. Le risposte non sono un esame di dettaglio tecnico.
+
+## 6. Ora prova tu · 60 s
+
+Lascia formulare la richiesta all’utente e accompagna la sua prova.
+
+Fornisci assortment-practice-it.zip, che cambia il gruppo fittizio delle novità. Chiedi un nuovo rapporto per gli stessi destinatari. Conserva il primo e confronta i cambiamenti nelle evidenze e nell’interpretazione.
+
+Sai avviare un rapporto, leggerne sintesi ed evidenze, capire il giudizio e ripetere il lavoro con un altro pacchetto.
+
+Fornisci un pacchetto con integrità verificata e indica destinatari e domanda. Clara prepara, rivede e consegna l’HTML localmente. La richiesta di dati centrali correnti segue l’acquisizione autenticata e il relativo confine dei dati.
+
+Il kit contiene file fittizi e una traccia preparata. I risultati della dimostrazione e della prova provengono da nuove esecuzioni della funzione corrente.
 
 La biblioteca, il profilo e i progressi della lezione restano sul computer. Non vengono inviati a Mparanza. La voce e i contenuti letti in chat sono elaborati dall'account OpenAI: salvare in locale non significa inferenza offline.

@@ -1,61 +1,73 @@
-# Actual versus Budget: read amounts and percentages
+# Prepare a management-control report with Vera
 
-A guided walkthrough of about 6½ minutes. Voice setup, external processing and optional practice are outside the lesson time.
+The explanation and a short practice take about 5–8 minutes. Processing and your questions can extend the session.
 
-Talk with the teacher using the standard Codex voice. In the second chat, open beside it, inspect the files and result. The chats stay paired; interrupt, ask why or slow down whenever you need.
+Speak with the teacher using the standard Codex voice. In the working chat, open in the window beside it, the function runs the case using the prepared files and shows its actual results. The teacher follows those results: interrupt, ask questions and change the pace whenever you need.
 
-Use this prepared material. Do not rewrite the lesson or invent results. Speak in short turns, allow inspection time and listen to actual answers. Do not reveal the solution before the attempt. Timings include observation and conversation, not just spoken text. Showing these files does not complete demo, practice or understanding records. The teacher judges relevance using only its own product's catalog.
+Start from the prepared material and teach the complete first use. Select 3–4 relevant functions during onboarding; on later visits start with what the user wants to do today. Adapt pace and explanations. Create custom examples when helpful, using the same workflow and checking new inputs. Read execution-request.json, use the real paired local case, and connect explanations to verified working-chat results. Never invent results, user answers or understanding confirmations. Opening the kit does not complete the lesson.
 
-## 1. Your objective · 45 s
+## 1. When to use it · 45 s
 
-Listen to the request. Connect this case to work you already do.
+Connect the function to a concrete professional task.
 
-Fictional Arco compares January and February. Actual revenue is EUR 150,000 versus Budget 140,000; included costs are 60,000 versus 59,000. No open-item schedules or later-month forecasts are supplied.
+Learn to compare actual performance with budget, follow report preparation and use the differences in a monthly review.
 
-Vera, show where the result differs from Budget in the two closed months.
+Arco has prepared January and February management accounts and a budget for the same months. The manager wants to understand operating performance and which categories explain the difference from plan before the monthly meeting.
 
-## 2. The starting evidence · 60 s
+The case includes revenue, cost of goods sold and operating expenses in EUR. The report separates observed figures from explanations requiring company evidence.
 
-Look at the documents in the other chat. Find one useful fact and one missing item.
+## 2. Files and request · 60 s
 
-M1 and M2 describe the same two complete months. Category meaning and cost signs are reviewed before comparison.
+Open the files in the working window and show how to request the result.
 
-[["Revenue", "EUR 150,000", "EUR 140,000"], ["Included costs", "EUR 60,000", "EUR 59,000"], ["Margin on included items", "EUR 90,000", "EUR 81,000"]]
+Open actual-budget.xlsx and facts-en.md. GL contains monthly movements by account and category; Budget contains the comparable plan. Revenue is positive and costs are negative. The case declares periods, meanings and control totals: actual EUR 53,000 and budget EUR 47,000.
 
-## 3. How the workflow works · 75 s
+Vera, prepare Arco’s actual-versus-budget report for January and February 2026 from this workbook. Show operating performance, variances and category detail.
 
-Follow the three steps. Pause at the decision that changes the result.
+## 3. Run the workflow · 105 s
 
-Inspect exports and review roles, columns, categories, signs, currency, period and cutoff. Confirm control totals.
-Run the local pack and read metrics and limitations. Show absolute and percentage changes, withholding misleading percentages on zero or negative bases.
-Explain the main contributions while separating observations from hypotheses. Optional sections require adequate inputs and commentary remains reviewable.
+Explain the step happening now and wait for its actual result.
 
-## 4. Read the result · 90 s
+Vera imports the data into the client-bound teaching case. The management-control pack also accepts other exports; here we learn the complete actual-versus-budget reporting journey.
 
-Open the example in the second chat. Connect each conclusion to its source.
+The assistant inspects the sheets and proposes which columns contain dates, categories and amounts. Confirm January–February and the sign convention before calculation.
 
-Extra revenue adds EUR 10,000 and higher costs absorb EUR 1,000. Margin rises from EUR 81,000 to EUR 90,000: +11.11%.
+The workflow applies the reviewed mapping, compares actual with budget and checks totals. The voice chat explains the actual step and any requested information.
 
-[["Revenue", "+10,000", "+7.14%"], ["Costs", "+1,000", "+1.69% · unfavorable"], ["Margin", "+9,000", "+11.11%"]]
+Vera prepares a short commentary tied to the figures and a question for the meeting. Open the report, dashboard and workbook in the working chat: read the period summary, switch to the monthly comparison and find the category detail.
 
-## 5. The check that matters · 75 s
+During the lesson, the working chat runs the function and produces the result. If a step is unavailable, explain what is missing and keep the lesson incomplete.
 
-Before revealing the answer, say what you would check.
+## 4. Use the result · 75 s
 
-A positive cost change is not favorable. Check comparable periods and categories before explaining a commercial cause.
+Open the document just produced and show where to start reading.
 
-What do we retain when an item's Budget is zero?
+Dashboard: shows period performance and absolute and percentage variances where meaningful. Use it to decide which categories to investigate.
 
-Compare your reasoning: Retain the EUR difference and mark the percentage unavailable. Do not display infinity or an invented percentage.
+Workbook and report: retain tables, controls and links to the data. The summary distinguishes the measured variance from its cause, which may need investigation.
 
-## 6. Try it together · 45 s
+Check that both sheets cover the same months and that costs use the expected sign. Trace one difference to its source category and month. Ask the company for explanations when the figures do not establish a cause.
 
-Choose whether to try now or keep the example for your next assignment.
+## 5. Pause and check · 45 s
 
-Add a complete month to both exports and rerun with the new cutoff.
+Make these checks at the indicated points during the work.
 
-Select coherent accounting and Budget exports. Add aging or forecast inputs when they belong to the assignment and are available.
+Before calculation: find the two sheets and confirm the reporting period.
 
-This is a prepared teaching example, not a receipt for a new execution. Sources and decisions are fictional; no professional approval is implied. For your own files, the current workflow performs its checks and preserves the actual outputs.
+At the result: locate the overall comparison and one category you would investigate.
+
+These pauses help you learn how to use the function. They are not a technical detail quiz.
+
+## 6. Try it yourself · 60 s
+
+Let the user formulate the request and guide their attempt.
+
+Use actual-budget-march.xlsx to request an update through March. Formulate the request, confirm the new period and compare the result with the preceding report.
+
+The new report must include March and preserve the preceding version. You can find the budget comparison and trace one category to its data.
+
+To repeat at work, supply actuals and plan for comparable periods, specify the period and meeting purpose, review the interpretation of the inputs and open the generated report.
+
+The kit contains fictional files and a prepared outline. Demonstration and practice results come from fresh runs of the current function.
 
 The lesson library, profile and progress stay on your computer. They are not sent to Mparanza. Voice and content read in chat are processed by your OpenAI account: local storage does not mean offline inference.

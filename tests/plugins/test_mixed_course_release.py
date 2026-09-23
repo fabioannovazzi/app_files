@@ -14,7 +14,7 @@ import pytest
 from tests.plugins.test_prepared_courses import ROOT, builder
 
 sys.path.insert(0, str(ROOT / "plugins/_shared/vendor/modules"))
-from courseware.library import CourseLibrary
+from courseware.library import CourseError, CourseLibrary
 
 PLAN = json.loads((ROOT / "scripts/course_materials/release_plan.json").read_text())
 RETAINED = [
@@ -25,6 +25,81 @@ RETAINED = [
         (ROOT / f"scripts/course_materials/published/{key}/course.json").read_text()
     )["supported_languages"]
 ]
+
+
+@pytest.fixture(
+    params=[
+        ("vera", "browser-automation"),
+        ("clara", "attribute-reporting"),
+        ("lucia", "quesito-legale-fiscale"),
+    ]
+)
+def historical_installation(request, tmp_path, monkeypatch):
+    """Keep reader compatibility independent of the current release selection.
+
+    Historical lesson text is exercised against a synthetic installed method.
+    This fixture is not current editorial or workflow execution evidence.
+    """
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
+    product, workflow = request.param
+    root = tmp_path / "installed"
+    manifest = root / ".codex-plugin/plugin.json"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text(json.dumps({"name": product}))
+    method = root / f"skills/{workflow}/SKILL.md"
+    method.parent.mkdir(parents=True)
+    method.write_text("Synthetic historical method for reader compatibility.")
+    course = json.loads(
+        (
+            ROOT
+            / f"scripts/course_materials/published/{product}/{workflow}/course.json"
+        ).read_text()
+    )
+    course["sources"] = [
+        {
+            "path": method.relative_to(root).as_posix(),
+            "sha256": hashlib.sha256(method.read_bytes()).hexdigest(),
+        }
+    ]
+    path = root / f"assets/courses/{workflow}/course.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(course, ensure_ascii=False))
+    index = {
+        "product": product,
+        "courses": {
+            workflow: {
+                "path": f"{workflow}/course.json",
+                "languages": course["supported_languages"],
+                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            }
+        },
+    }
+    (path.parent.parent / "index.json").write_text(json.dumps(index))
+    return CourseLibrary(root, {workflow}), workflow, method
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_historical_reader_remains_usable_after_all_courses_are_upgraded(
+    historical_installation, language, tmp_path
+):
+    library, workflow, _ = historical_installation
+    destination = tmp_path / language
+    library.render(workflow, language, destination)
+    assert (destination / "course.html").is_file()
+    assert (destination / "teacher.md").is_file()
+    assert (destination / "input.csv").is_file()
+    assert not (destination / "execution-request.json").exists()
+    original = (destination / "course.html").read_bytes()
+    with pytest.raises(CourseError, match="fresh course directory"):
+        library.render(workflow, language, destination)
+    assert (destination / "course.html").read_bytes() == original
+
+
+def test_historical_reader_rejects_changed_installed_method(historical_installation):
+    library, workflow, method = historical_installation
+    method.write_text("Changed method needs an editorial review.")
+    with pytest.raises(CourseError, match="editorial refresh"):
+        library.load(workflow, "en")
 
 
 @pytest.mark.parametrize("product,workflow,language", RETAINED)

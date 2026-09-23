@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import html
+import json
+from pathlib import Path
 
 __all__ = ["add_course_start"]
 
@@ -80,7 +82,9 @@ COPY = {
 }
 
 
-def add_course_start(document: str, product: str, title: str, language: str) -> str:
+def add_course_start(
+    document: str, product: str, title: str, language: str, workflow: str = ""
+) -> str:
     """Add localized, copyable entry instructions to a public lesson page."""
     copy = COPY[language]
     name = product.title()
@@ -90,14 +94,34 @@ def add_course_start(document: str, product: str, title: str, language: str) -> 
     prompt = html.escape(copy["prompt"].format(product=name, title=title))
     section = (
         '<section class="course-start" aria-labelledby="course-start-heading">'
-        f'<h2 id="course-start-heading">{html.escape(copy["heading"])}</h2><ol>{steps}</ol>'
+        f'<h2 id="course-start-heading">{html.escape(copy["heading"])}</h2><h3>Codex</h3><ol>{steps}</ol>'
         f'<label for="course-start-request">{html.escape(copy["label"].format(product=name))}</label>'
         f'<textarea id="course-start-request" readonly rows="7">{prompt}</textarea>'
-        f'<button type="button" id="course-start-copy" data-copied="{html.escape(copy["copied"], quote=True)}" '
+        f'<button type="button" id="course-start-copy" data-copy-target="course-start-request" data-copy-status="course-start-status" data-copied="{html.escape(copy["copied"], quote=True)}" '
         f'data-fallback="{html.escape(copy["fallback"], quote=True)}">{html.escape(copy["button"])}</button>'
         '<p id="course-start-status" role="status" aria-live="polite"></p>'
         f'<p class="course-start-note">{html.escape(copy["note"])}</p></section>'
     )
+    cowork = json.loads(
+        (Path(__file__).parents[1] / "cowork_teaching/public-start.json").read_text(
+            encoding="utf-8"
+        )
+    )[language]
+    section += (
+        '<section class="course-start" aria-labelledby="cowork-start-heading">'
+        + f'<h2 id="cowork-start-heading">{html.escape(cowork["heading"])}</h2>'
+    )
+    if product == "clara" and workflow in {"deck-correction", "transcribe"}:
+        section += f'<p>{html.escape(cowork["unavailable"])}</p>'
+    else:
+        section += (
+            f'<p>{html.escape(cowork["steps"].format(product=name))}</p>'
+            f'<label for="cowork-start-request">{html.escape(copy["label"].format(product=name))}</label>'
+            f'<textarea id="cowork-start-request" readonly rows="6">{html.escape(cowork["prompt"].format(product=name, title=title))}</textarea>'
+            f'<button type="button" data-copy-target="cowork-start-request" data-copy-status="cowork-start-status" data-copied="{html.escape(cowork["copied"], quote=True)}" data-fallback="{html.escape(cowork["fallback"], quote=True)}">{html.escape(cowork["button"])}</button>'
+            '<p id="cowork-start-status" role="status" aria-live="polite"></p>'
+        )
+    section += "</section>"
     marker = "<aside class='paired'>"
     if marker not in document:
         raise ValueError("Expected a lesson introduction before startup instructions")

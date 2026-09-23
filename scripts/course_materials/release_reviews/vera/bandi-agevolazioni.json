@@ -1,0 +1,166 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "bandi-agevolazioni",
+  "course_sha256": "51e3e0323328e89d011671dea47a208e9c92d2ab5d40d2f9b9aa8b63f4c4b0a1",
+  "reviewer": "Codex localized lesson and native dossier review",
+  "reviewed_at": "2026-09-23T11:55:24.295421+00:00",
+  "review_scope": "Reviewed five localized first-use kits and ten generated reader-facing HTML dossiers. Native integration tests replay explicitly synthetic source/intelligence acceptance fixtures and authored assessments, not professional approval or learner participation. The selected fictional call avoids hosted discovery and real applications. HTML reader labels are localized; the technical Markdown register retains Italian labels. No signature, submission, external contact or funding eligibility decision is claimed.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The learner begins with a selected call, company project and quotation, asks for an application dossier, follows how conditions and documents are related, reads the proposed project and costs, and then revises the quotation. The focus is the complete preparation workflow.",
+        "inputs_and_request": "The call and company are explicitly fictional in each language. Thirteen numbered clauses, a four-person digital-booking project and itemised software/training/hardware quotation are source inputs, not a prewritten dossier. No real funding programme or application portal is used.",
+        "execution_and_checkpoints": "The current workflow registers the sources, creates source-linked requirements and assessments, checks cost arithmetic and produces the review dossier. Checkpoints ask the learner to locate a condition, its evidence, proposed costs and the next review action. Fixture source/intelligence acceptance does not certify human judgments.",
+        "deliverable_and_next_action": "The localized HTML presents summary, proposed costs, required documents, expandable call conditions, draft project and sources. Proposed eligible software and training total EUR8000 out of EUR11000 project cost; the fictional 50 percent grant is EUR4000. Hardware remains in total project cost but outside the proposed eligible base. Assessments stay proposed and readiness remains review_required with ready_to_file false.",
+        "practice_and_repeat": "The revised software quotation increases project cost to EUR13000, the proposed eligible base to EUR10000 and the hypothetical grant to EUR5000. The native workflow updates the same engagement, retains the preceding run and keeps interpretation and document review open. Repeat instructions explain which selected call and company evidence to supply.",
+        "language_and_pacing": "The it course and primary HTML dossier are localized, with a descriptive title and ordinary first-use request. The outline totals 390 seconds; actual execution and review can extend it. The technical Markdown register has Italian structural labels and is not the teaching reader view. Codex dual-window teaching and Cowork written instruction remain supported."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_bandi_execution::test_selected_call_kit_produces_native_review_dossier[demo-it]",
+        "result_review": "The native demo dossier proposes EUR4000 grant on EUR8000 eligible expenditure within EUR11000 total costs. The HTML explains classifications with source-linked clauses, includes the project draft and required documents, and leaves every professional assessment for review. No portal operation, signing or submission is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "review_dossier.html",
+            "sha256": "f4ab834dd7986125360b69ecfe97d6f64d606db889042eec35d8bf890cbb033c"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_bandi_execution::test_selected_call_kit_produces_native_review_dossier[practice-it]",
+        "result_review": "The native practice dossier responds to the new quotation with EUR5000 grant on EUR10000 eligible expenditure within EUR13000 total costs, while preserving the prior version. The HTML explains classifications with source-linked clauses, includes the project draft and required documents, and leaves every professional assessment for review. No portal operation, signing or submission is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "review_dossier.html",
+            "sha256": "61c86978594a530b53f83ee588e3fd8d930e321551a4477395e5acc1fd1a6759"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The learner begins with a selected call, company project and quotation, asks for an application dossier, follows how conditions and documents are related, reads the proposed project and costs, and then revises the quotation. The focus is the complete preparation workflow.",
+        "inputs_and_request": "The call and company are explicitly fictional in each language. Thirteen numbered clauses, a four-person digital-booking project and itemised software/training/hardware quotation are source inputs, not a prewritten dossier. No real funding programme or application portal is used.",
+        "execution_and_checkpoints": "The current workflow registers the sources, creates source-linked requirements and assessments, checks cost arithmetic and produces the review dossier. Checkpoints ask the learner to locate a condition, its evidence, proposed costs and the next review action. Fixture source/intelligence acceptance does not certify human judgments.",
+        "deliverable_and_next_action": "The localized HTML presents summary, proposed costs, required documents, expandable call conditions, draft project and sources. Proposed eligible software and training total EUR8000 out of EUR11000 project cost; the fictional 50 percent grant is EUR4000. Hardware remains in total project cost but outside the proposed eligible base. Assessments stay proposed and readiness remains review_required with ready_to_file false.",
+        "practice_and_repeat": "The revised software quotation increases project cost to EUR13000, the proposed eligible base to EUR10000 and the hypothetical grant to EUR5000. The native workflow updates the same engagement, retains the preceding run and keeps interpretation and document review open. Repeat instructions explain which selected call and company evidence to supply.",
+        "language_and_pacing": "The en course and primary HTML dossier are localized, with a descriptive title and ordinary first-use request. The outline totals 390 seconds; actual execution and review can extend it. The technical Markdown register has Italian structural labels and is not the teaching reader view. Codex dual-window teaching and Cowork written instruction remain supported."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_bandi_execution::test_selected_call_kit_produces_native_review_dossier[demo-en]",
+        "result_review": "The native demo dossier proposes EUR4000 grant on EUR8000 eligible expenditure within EUR11000 total costs. The HTML explains classifications with source-linked clauses, includes the project draft and required documents, and leaves every professional assessment for review. No portal operation, signing or submission is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "review_dossier.html",
+            "sha256": "d85b17a9a6ecac06feb80346dd6b9aa9a3eb55749f18dcbfc8aae2a26994476f"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_bandi_execution::test_selected_call_kit_produces_native_review_dossier[practice-en]",
+        "result_review": "The native practice dossier responds to the new quotation with EUR5000 grant on EUR10000 eligible expenditure within EUR13000 total costs, while preserving the prior version. The HTML explains classifications with source-linked clauses, includes the project draft and required documents, and leaves every professional assessment for review. No portal operation, signing or submission is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "review_dossier.html",
+            "sha256": "191d1695638d61bd144720e602b6212bc0083d291e468677ffb53e5e32c0e3cd"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The learner begins with a selected call, company project and quotation, asks for an application dossier, follows how conditions and documents are related, reads the proposed project and costs, and then revises the quotation. The focus is the complete preparation workflow.",
+        "inputs_and_request": "The call and company are explicitly fictional in each language. Thirteen numbered clauses, a four-person digital-booking project and itemised software/training/hardware quotation are source inputs, not a prewritten dossier. No real funding programme or application portal is used.",
+        "execution_and_checkpoints": "The current workflow registers the sources, creates source-linked requirements and assessments, checks cost arithmetic and produces the review dossier. Checkpoints ask the learner to locate a condition, its evidence, proposed costs and the next review action. Fixture source/intelligence acceptance does not certify human judgments.",
+        "deliverable_and_next_action": "The localized HTML presents summary, proposed costs, required documents, expandable call conditions, draft project and sources. Proposed eligible software and training total EUR8000 out of EUR11000 project cost; the fictional 50 percent grant is EUR4000. Hardware remains in total project cost but outside the proposed eligible base. Assessments stay proposed and readiness remains review_required with ready_to_file false.",
+        "practice_and_repeat": "The revised software quotation increases project cost to EUR13000, the proposed eligible base to EUR10000 and the hypothetical grant to EUR5000. The native workflow updates the same engagement, retains the preceding run and keeps interpretation and document review open. Repeat instructions explain which selected call and company evidence to supply.",
+        "language_and_pacing": "The fr course and primary HTML dossier are localized, with a descriptive title and ordinary first-use request. The outline totals 390 seconds; actual execution and review can extend it. The technical Markdown register has Italian structural labels and is not the teaching reader view. Codex dual-window teaching and Cowork written instruction remain supported."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_bandi_execution::test_selected_call_kit_produces_native_review_dossier[demo-fr]",
+        "result_review": "The native demo dossier proposes EUR4000 grant on EUR8000 eligible expenditure within EUR11000 total costs. The HTML explains classifications with source-linked clauses, includes the project draft and required documents, and leaves every professional assessment for review. No portal operation, signing or submission is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "review_dossier.html",
+            "sha256": "f28566dfa6afb235c251ac0a00918cfe661faa83936d0da0eec5afd24e29745e"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_bandi_execution::test_selected_call_kit_produces_native_review_dossier[practice-fr]",
+        "result_review": "The native practice dossier responds to the new quotation with EUR5000 grant on EUR10000 eligible expenditure within EUR13000 total costs, while preserving the prior version. The HTML explains classifications with source-linked clauses, includes the project draft and required documents, and leaves every professional assessment for review. No portal operation, signing or submission is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "review_dossier.html",
+            "sha256": "68231420d1ed287510aa16451de769762fce377febcadeaeb7dbfe3847619293"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The learner begins with a selected call, company project and quotation, asks for an application dossier, follows how conditions and documents are related, reads the proposed project and costs, and then revises the quotation. The focus is the complete preparation workflow.",
+        "inputs_and_request": "The call and company are explicitly fictional in each language. Thirteen numbered clauses, a four-person digital-booking project and itemised software/training/hardware quotation are source inputs, not a prewritten dossier. No real funding programme or application portal is used.",
+        "execution_and_checkpoints": "The current workflow registers the sources, creates source-linked requirements and assessments, checks cost arithmetic and produces the review dossier. Checkpoints ask the learner to locate a condition, its evidence, proposed costs and the next review action. Fixture source/intelligence acceptance does not certify human judgments.",
+        "deliverable_and_next_action": "The localized HTML presents summary, proposed costs, required documents, expandable call conditions, draft project and sources. Proposed eligible software and training total EUR8000 out of EUR11000 project cost; the fictional 50 percent grant is EUR4000. Hardware remains in total project cost but outside the proposed eligible base. Assessments stay proposed and readiness remains review_required with ready_to_file false.",
+        "practice_and_repeat": "The revised software quotation increases project cost to EUR13000, the proposed eligible base to EUR10000 and the hypothetical grant to EUR5000. The native workflow updates the same engagement, retains the preceding run and keeps interpretation and document review open. Repeat instructions explain which selected call and company evidence to supply.",
+        "language_and_pacing": "The de course and primary HTML dossier are localized, with a descriptive title and ordinary first-use request. The outline totals 390 seconds; actual execution and review can extend it. The technical Markdown register has Italian structural labels and is not the teaching reader view. Codex dual-window teaching and Cowork written instruction remain supported."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_bandi_execution::test_selected_call_kit_produces_native_review_dossier[demo-de]",
+        "result_review": "The native demo dossier proposes EUR4000 grant on EUR8000 eligible expenditure within EUR11000 total costs. The HTML explains classifications with source-linked clauses, includes the project draft and required documents, and leaves every professional assessment for review. No portal operation, signing or submission is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "review_dossier.html",
+            "sha256": "cec6b62bb17eb4d3198fdb2bf5307794462ada0327d4f80f8dd7e3790acc24a0"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_bandi_execution::test_selected_call_kit_produces_native_review_dossier[practice-de]",
+        "result_review": "The native practice dossier responds to the new quotation with EUR5000 grant on EUR10000 eligible expenditure within EUR13000 total costs, while preserving the prior version. The HTML explains classifications with source-linked clauses, includes the project draft and required documents, and leaves every professional assessment for review. No portal operation, signing or submission is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "review_dossier.html",
+            "sha256": "fe377dde2e0ab524bdcfb5b339ea7de14cd96c6431de9211cff612f5551dec8b"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The learner begins with a selected call, company project and quotation, asks for an application dossier, follows how conditions and documents are related, reads the proposed project and costs, and then revises the quotation. The focus is the complete preparation workflow.",
+        "inputs_and_request": "The call and company are explicitly fictional in each language. Thirteen numbered clauses, a four-person digital-booking project and itemised software/training/hardware quotation are source inputs, not a prewritten dossier. No real funding programme or application portal is used.",
+        "execution_and_checkpoints": "The current workflow registers the sources, creates source-linked requirements and assessments, checks cost arithmetic and produces the review dossier. Checkpoints ask the learner to locate a condition, its evidence, proposed costs and the next review action. Fixture source/intelligence acceptance does not certify human judgments.",
+        "deliverable_and_next_action": "The localized HTML presents summary, proposed costs, required documents, expandable call conditions, draft project and sources. Proposed eligible software and training total EUR8000 out of EUR11000 project cost; the fictional 50 percent grant is EUR4000. Hardware remains in total project cost but outside the proposed eligible base. Assessments stay proposed and readiness remains review_required with ready_to_file false.",
+        "practice_and_repeat": "The revised software quotation increases project cost to EUR13000, the proposed eligible base to EUR10000 and the hypothetical grant to EUR5000. The native workflow updates the same engagement, retains the preceding run and keeps interpretation and document review open. Repeat instructions explain which selected call and company evidence to supply.",
+        "language_and_pacing": "The es course and primary HTML dossier are localized, with a descriptive title and ordinary first-use request. The outline totals 390 seconds; actual execution and review can extend it. The technical Markdown register has Italian structural labels and is not the teaching reader view. Codex dual-window teaching and Cowork written instruction remain supported."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_bandi_execution::test_selected_call_kit_produces_native_review_dossier[demo-es]",
+        "result_review": "The native demo dossier proposes EUR4000 grant on EUR8000 eligible expenditure within EUR11000 total costs. The HTML explains classifications with source-linked clauses, includes the project draft and required documents, and leaves every professional assessment for review. No portal operation, signing or submission is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "review_dossier.html",
+            "sha256": "18c5277277225aa4a3d6664813e5b8bd22162835ad1b6638bef0cd097404ff1c"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_bandi_execution::test_selected_call_kit_produces_native_review_dossier[practice-es]",
+        "result_review": "The native practice dossier responds to the new quotation with EUR5000 grant on EUR10000 eligible expenditure within EUR13000 total costs, while preserving the prior version. The HTML explains classifications with source-linked clauses, includes the project draft and required documents, and leaves every professional assessment for review. No portal operation, signing or submission is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "review_dossier.html",
+            "sha256": "70eb68c747f7f44e14c538f2955fbd83ae55b8ff4a4e944bd4a4128fbc77609f"
+          }
+        ]
+      }
+    }
+  }
+}

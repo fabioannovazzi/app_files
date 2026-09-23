@@ -227,3 +227,5 @@ or validates the professional reason. Keep `/data-handling` global rather than
 recreating a central function register.
 
 - `treasury-forecast`: prepare and maintain a dated cash forecast from the documented bank, outstanding-item, planned-flow, allocation and adjustment tables. Review expected dates, preserve applicable decisions, compare successive accepted forecasts and produce Excel/HTML workpapers. Required missing data stops this workflow; optional supplied XML is invoice evidence, not payment proof. No business-planning dependency or automatic Agenzia download.
+
+- `learn-with-vera`: learn an installed function in writing using prepared files, actual execution and practice in one conversation.
