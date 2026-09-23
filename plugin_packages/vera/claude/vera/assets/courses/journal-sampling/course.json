@@ -302,7 +302,7 @@
       "inputs": "Apri journal-march.csv e context-it.md. Trova data, registrazione, riga, conto, dare e avere. Il file originale resta conservato nel fascicolo didattico.",
       "request": "Vera, estrai dal giornale di marzo di Officina Arco un campione casuale di 5 righe con seme 42. Prima fammi verificare le colonne e poi mostrami il campione e i controlli sul giornale.",
       "steps": [
-        "Vera apre il giornale nella chat di lavoro. La voce ti accompagna nel controllo di colonne, periodo e significato degli importi; Vera registra la mappatura effettivamente rivista.",
+        "Vera apre il giornale in questa conversazione. L’assistente ti accompagna per iscritto nel controllo di colonne, periodo e significato degli importi; Vera registra la mappatura effettivamente rivista.",
         "La procedura prepara il giornale e controlla che le righe e gli importi siano conservati. Se la preparazione non passa, chiarisci il problema prima di selezionare il campione.",
         "Vera esegue il campionamento e apre il risultato Excel. Individua una riga scelta e torna alla stessa riga nel giornale; rivedi insieme dimensione della popolazione, metodo e numero di righe estratte."
       ],
@@ -327,7 +327,7 @@
       "inputs": "Open journal-march.csv and context-en.md. Find date, posting, line, account, debit and credit. The original remains preserved in the teaching case.",
       "request": "Vera, select 5 random rows from Officina Arco’s March journal using seed 42. First let me check the columns, then show me the sample and journal preparation checks.",
       "steps": [
-        "Vera opens the journal in the working chat. Voice guides you through columns, period and amount meanings; Vera records the mapping actually reviewed.",
+        "Vera opens the journal in this conversation. The assistant guides you through columns, period and amount meanings; Vera records the mapping actually reviewed.",
         "The workflow prepares the journal and checks that rows and amounts are preserved. If preparation fails, resolve the issue before selecting a sample.",
         "Vera runs the sampling and opens the Excel result. Find one selected row and trace it to the journal; review population size, method and number of sampled rows together."
       ],
@@ -352,7 +352,7 @@
       "inputs": "Ouvrez journal-march.csv et context-fr.md. Repérez date, écriture, ligne, compte, débit et crédit. L’original reste conservé dans le dossier pédagogique.",
       "request": "Vera, sélectionne 5 lignes aléatoires du journal de mars d’Officina Arco, avec la graine 42. Fais-moi d’abord vérifier les colonnes, puis montre l’échantillon et les contrôles de préparation.",
       "steps": [
-        "Vera ouvre le journal dans la conversation de travail. La voix accompagne la vérification des colonnes, de la période et des montants ; Vera enregistre la correspondance effectivement revue.",
+        "Vera ouvre le journal dans cette conversation. L’assistant accompagne par écrit la vérification des colonnes, de la période et des montants ; Vera enregistre la correspondance effectivement revue.",
         "La procédure prépare le journal et vérifie la conservation des lignes et montants. Si la préparation échoue, résolvez le problème avant la sélection.",
         "Vera exécute le tirage et ouvre le résultat Excel. Retrouvez une ligne choisie dans le journal ; vérifiez ensemble population, méthode et nombre de lignes sélectionnées."
       ],
@@ -377,7 +377,7 @@
       "inputs": "Öffnen Sie journal-march.csv und context-de.md. Finden Sie Datum, Buchung, Zeile, Konto, Soll und Haben. Das Original bleibt in der Übungsakte erhalten.",
       "request": "Vera, ziehe aus dem Märzjournal von Officina Arco 5 zufällige Zeilen mit Startwert 42. Lass mich zuerst die Spalten prüfen und zeige anschließend Stichprobe und Aufbereitungskontrollen.",
       "steps": [
-        "Vera öffnet das Journal im Arbeitschat. Die Stimme begleitet die Prüfung von Spalten, Zeitraum und Betragsbedeutung; Vera speichert die tatsächlich geprüfte Zuordnung.",
+        "Vera öffnet das Journal in diesem Chat. Der Assistent begleitet schriftlich die Prüfung von Spalten, Zeitraum und Betragsbedeutung; Vera speichert die tatsächlich geprüfte Zuordnung.",
         "Der Ablauf bereitet das Journal auf und prüft die Erhaltung von Zeilen und Beträgen. Klären Sie fehlgeschlagene Aufbereitungskontrollen vor der Stichprobe.",
         "Vera zieht die Stichprobe und öffnet die Excel-Datei. Verfolgen Sie eine ausgewählte Zeile zum Journal zurück und prüfen Sie gemeinsam Grundgesamtheit, Methode und Anzahl der gezogenen Zeilen."
       ],
@@ -402,9 +402,9 @@
       "inputs": "Abre journal-march.csv y context-es.md. Localiza fecha, asiento, línea, cuenta, debe y haber. El original se conserva en el expediente didáctico.",
       "request": "Vera, extrae 5 líneas aleatorias del diario de marzo de Officina Arco con semilla 42. Primero déjame comprobar las columnas y después muestra la muestra y los controles de preparación.",
       "steps": [
-        "Vera abre el diario en la conversación de trabajo. La voz acompaña la revisión de columnas, período y significado de importes; Vera registra la correspondencia realmente revisada.",
+        "Vera abre el diario en esta conversación. El asistente acompaña la revisión de columnas, período y significado de importes; Vera registra la correspondencia realmente revisada.",
         "El flujo prepara el diario y comprueba que conserva líneas e importes. Si falla la preparación, resuelve el problema antes de extraer la muestra.",
-        "Vera ejecuta el muestreo y abre el resultado Excel. Encuentra una línea seleccionada en el diario; revisa con la voz población, método y número de líneas extraídas."
+        "Vera ejecuta el muestreo y abre el resultado Excel. Encuentra una línea seleccionada en el diario; revisa con el asistente la población, método y número de líneas extraídas."
       ],
       "deliverables": [
         "Muestra Excel y CSV con referencias a las líneas originales.",

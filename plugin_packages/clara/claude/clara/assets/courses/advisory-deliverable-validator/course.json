@@ -411,7 +411,7 @@
       "request": "Clara, rivedi questo memo rispetto all’incarico e alle note fornite. Spiega se è utilizzabile, che cosa va corretto e quali decisioni restano alla titolare.",
       "steps": [
         "Clara definisce il perimetro della revisione, conserva il memo e prepara l’inventario dei contenuti e delle fonti selezionate.",
-        "Il flusso corrente esamina perimetro, affermazioni, ragionamento, raccomandazione, limiti e stato di consegna. La chat vocale collega i rilievi ai passaggi esatti del memo e delle note.",
+        "Il flusso corrente esamina perimetro, affermazioni, ragionamento, raccomandazione, limiti e stato di consegna. L’assistente collega i rilievi ai passaggi esatti del memo e delle note.",
         "Apri il pacchetto di revisione. Leggi esito complessivo, rilievi sostanziali e correzioni proposte. L’originale resta intatto; un memo corretto richiede una propria revisione."
       ],
       "deliverables": [
@@ -436,7 +436,7 @@
       "request": "Clara, review this memo against the assignment and supplied notes. Explain whether it is usable, what needs correction and which decisions remain with the owner.",
       "steps": [
         "Clara establishes the review contract, preserves the memo and prepares an inventory of its contents and the selected evidence.",
-        "The current review workflow examines scope, claims, reasoning, recommendation, limitations and readiness. The voice thread connects findings to the exact memo passages and source notes.",
+        "The current review workflow examines scope, claims, reasoning, recommendation, limitations and readiness. The assistant connects findings to the exact memo passages and source notes.",
         "Open the review package. Read the overall delivery status, material findings and proposed corrections. The original stays intact; a revised memo requires its own review."
       ],
       "deliverables": [
@@ -461,7 +461,7 @@
       "request": "Clara, revois cette note par rapport à la mission et aux sources fournies. Explique si elle est utilisable, ce qui doit être corrigé et les décisions qui restent à la dirigeante.",
       "steps": [
         "Clara définit le périmètre de revue, préserve la note et prépare l’inventaire de ses contenus et des sources sélectionnées.",
-        "Le flux actuel examine périmètre, affirmations, raisonnement, recommandation, limites et état de remise. La conversation vocale relie les constats aux passages exacts de la note et des sources.",
+        "Le flux actuel examine périmètre, affirmations, raisonnement, recommandation, limites et état de remise. L’assistant relie les constats aux passages exacts de la note et des sources.",
         "Ouvrez le dossier de revue. Lisez l’état global, les constats importants et les corrections proposées. L’original reste intact ; une note corrigée demande sa propre revue."
       ],
       "deliverables": [
@@ -486,7 +486,7 @@
       "request": "Clara, prüfe dieses Memo anhand des Auftrags und der Notizen. Erkläre, ob es verwendbar ist, was korrigiert werden muss und welche Entscheidungen bei der Inhaberin bleiben.",
       "steps": [
         "Clara legt den Prüfauftrag fest, bewahrt das Memo unverändert auf und erstellt ein Inventar seiner Inhalte und der ausgewählten Quellen.",
-        "Der aktuelle Ablauf prüft Umfang, Aussagen, Begründung, Empfehlung, Grenzen und Auslieferungsstatus. Der Sprachchat verbindet Befunde mit den genauen Stellen im Memo und in den Notizen.",
+        "Der aktuelle Ablauf prüft Umfang, Aussagen, Begründung, Empfehlung, Grenzen und Auslieferungsstatus. Der Assistent verbindet Befunde mit den genauen Stellen im Memo und in den Notizen.",
         "Öffnen Sie das Prüfungspaket. Lesen Sie Gesamtstatus, wesentliche Befunde und Korrekturvorschläge. Das Original bleibt erhalten; ein korrigiertes Memo benötigt eine eigene Prüfung."
       ],
       "deliverables": [
@@ -511,7 +511,7 @@
       "request": "Clara, revisa este informe frente al encargo y las notas. Explica si es utilizable, qué debe corregirse y qué decisiones siguen correspondiendo a la propietaria.",
       "steps": [
         "Clara define la revisión, conserva el informe y prepara un inventario de contenidos y fuentes seleccionadas.",
-        "El flujo actual examina alcance, afirmaciones, razonamiento, recomendación, límites y estado de entrega. La conversación de voz conecta hallazgos con los pasajes exactos del informe y las notas.",
+        "El flujo actual examina alcance, afirmaciones, razonamiento, recomendación, límites y estado de entrega. El asistente conecta hallazgos con los pasajes exactos del informe y las notas.",
         "Abre el paquete de revisión. Lee estado general, hallazgos importantes y correcciones propuestas. El original queda intacto; un informe corregido requiere su propia revisión."
       ],
       "deliverables": [

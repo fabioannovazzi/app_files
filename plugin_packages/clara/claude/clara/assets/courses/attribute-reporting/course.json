@@ -347,7 +347,7 @@
       "inputs": "Apri brief-it.md e fornisci assortment-demo-it.zip. L’archivio contiene prodotti fittizi, gruppi di novità e più venduti dichiarati, confronti calcolati e controllo d’integrità. Non contiene un rapporto finito, interpretazioni approvate o ricevute del server.",
       "request": "Clara, prepara da questo pacchetto un rapporto sull’assortimento per il team prodotto. Spiega quali dati contiene, confronta più venduti e novità con il resto e mostrami il rapporto con i suoi controlli.",
       "steps": [
-        "Conferma rivenditore, categoria, dati forniti e destinatari. Clara apre l’archivio e ne verifica l’integrità. La conversazione vocale spiega i prodotti di origine e il significato dei gruppi definiti dal rivenditore.",
+        "Conferma rivenditore, categoria, dati forniti e destinatari. Clara apre l’archivio e ne verifica l’integrità. L’assistente spiega i prodotti di origine e il significato dei gruppi definiti dal rivenditore.",
         "Clara prepara le normali tabelle comparative e scrive il rapporto a partire dalle evidenze. Segui un confronto dai prodotti alla tabella e alla conclusione; distingui una caratteristica dell’assortimento da quantità vendute o spiegazioni causali.",
         "Una revisione indipendente controlla affermazioni e leggibilità; i controlli nel browser verificano l’HTML. Apri il rapporto effettivo, il giudizio e le riserve. Trova sintesi, tabelle, prodotti di supporto e prossima domanda per il team."
       ],
@@ -372,7 +372,7 @@
       "inputs": "Open brief-en.md and supply assortment-demo-en.zip. The archive contains fictional product records, explicitly assigned new-arrival and best-seller groups, computed comparisons and an integrity check. It contains no finished report, approved interpretation or server receipt.",
       "request": "Clara, create an assortment report from this package for our product team. Explain what the data covers, compare best sellers and new arrivals with the rest, and show me the report and its checks.",
       "steps": [
-        "Confirm the retailer/category scope, the supplied snapshot and the audience. Clara safely opens the package and checks its integrity. The voice chat explains the source records and what the retailer-defined groups mean.",
+        "Confirm the retailer/category scope, the supplied snapshot and the audience. Clara safely opens the package and checks its integrity. The assistant explains the source records and what the retailer-defined groups mean.",
         "Clara prepares the normal comparison tables and writes the report from their evidence. Follow one comparison from products to table to conclusion; distinguish a visible assortment pattern from sales quantities or a causal explanation.",
         "An independent review checks the claims and readability, and browser checks inspect the HTML. Open the actual report, its verdict and any caveats. Find the summary, supporting tables, product evidence and the next question for the team."
       ],
@@ -397,7 +397,7 @@
       "inputs": "Ouvrez brief-fr.md et fournissez assortment-demo-fr.zip. L’archive contient des produits fictifs, des groupes explicitement définis de nouveautés et de meilleures ventes, des comparaisons calculées et un contrôle d’intégrité. Aucun rapport final, interprétation approuvée ou reçu serveur n’est fourni.",
       "request": "Clara, prépare un rapport sur l’assortiment à partir de ce dossier pour notre équipe produit. Explique les données couvertes, compare meilleures ventes et nouveautés au reste, puis montre le rapport et ses contrôles.",
       "steps": [
-        "Confirmez distributeur, catégorie, données fournies et destinataires. Clara ouvre l’archive et vérifie son intégrité. La conversation vocale explique les produits sources et les groupes définis par le distributeur.",
+        "Confirmez distributeur, catégorie, données fournies et destinataires. Clara ouvre l’archive et vérifie son intégrité. L’assistant explique les produits sources et les groupes définis par le distributeur.",
         "Clara prépare les tableaux comparatifs habituels et rédige le rapport à partir des preuves. Suivez une comparaison des produits au tableau puis à la conclusion ; distinguez une caractéristique de l’assortiment des volumes vendus ou d’une explication causale.",
         "Une révision indépendante vérifie les affirmations et la lisibilité ; les contrôles dans le navigateur examinent l’HTML. Ouvrez le rapport réel, son verdict et ses réserves. Repérez synthèse, tableaux, produits sources et prochaine question pour l’équipe."
       ],
@@ -422,7 +422,7 @@
       "inputs": "Öffnen Sie brief-de.md und stellen Sie assortment-demo-de.zip bereit. Das Archiv enthält fiktive Produkte, ausdrücklich zugewiesene Neuheiten- und Bestsellergruppen, berechnete Vergleiche und eine Integritätsprüfung. Fertiger Bericht, freigegebene Interpretation und Serverbestätigung sind nicht enthalten.",
       "request": "Clara, erstelle aus diesem Paket einen Sortimentsbericht für unser Produktteam. Erkläre die Datenabdeckung, vergleiche Bestseller und Neuheiten mit dem übrigen Sortiment und zeige den Bericht mit seinen Prüfungen.",
       "steps": [
-        "Bestätigen Sie Händler, Kategorie, bereitgestellten Datenstand und Zielgruppe. Clara öffnet das Archiv und prüft seine Integrität. Im Sprachchat erklärt Clara die Ausgangsprodukte und die vom Händler definierten Gruppen.",
+        "Bestätigen Sie Händler, Kategorie, bereitgestellten Datenstand und Zielgruppe. Clara öffnet das Archiv und prüft seine Integrität. Schriftlich erklärt Clara die Ausgangsprodukte und die vom Händler definierten Gruppen.",
         "Clara erstellt die üblichen Vergleichstabellen und verfasst den Bericht aus den Belegen. Verfolgen Sie einen Vergleich vom Produkt über die Tabelle bis zur Aussage; unterscheiden Sie Sortimentsmerkmale von Absatzmengen und kausalen Erklärungen.",
         "Eine unabhängige Prüfung bewertet Aussagen und Lesbarkeit; Browserprüfungen untersuchen das HTML. Öffnen Sie den tatsächlichen Bericht, sein Urteil und die Einschränkungen. Finden Sie Zusammenfassung, Tabellen, Produktbelege und nächste Frage für das Team."
       ],
@@ -447,7 +447,7 @@
       "inputs": "Abre brief-es.md y aporta assortment-demo-es.zip. El archivo contiene productos ficticios, grupos explícitos de novedades y más vendidos, comparaciones calculadas y un control de integridad. No incluye un informe terminado, interpretaciones aprobadas ni un recibo del servidor.",
       "request": "Clara, prepara con este paquete un informe del surtido para nuestro equipo de producto. Explica qué datos cubre, compara los más vendidos y las novedades con el resto, y muéstrame el informe y sus controles.",
       "steps": [
-        "Confirma minorista, categoría, datos aportados y destinatarios. Clara abre el archivo y comprueba su integridad. La conversación de voz explica los productos originales y los grupos definidos por el minorista.",
+        "Confirma minorista, categoría, datos aportados y destinatarios. Clara abre el archivo y comprueba su integridad. El asistente explica los productos originales y los grupos definidos por el minorista.",
         "Clara prepara las tablas comparativas habituales y redacta el informe a partir de las evidencias. Sigue una comparación desde los productos hasta la tabla y la conclusión; distingue un rasgo del surtido de las cantidades vendidas o una explicación causal.",
         "Una revisión independiente comprueba afirmaciones y legibilidad; los controles del navegador examinan el HTML. Abre el informe real, su dictamen y sus reservas. Localiza resumen, tablas, productos de apoyo y próxima pregunta para el equipo."
       ],

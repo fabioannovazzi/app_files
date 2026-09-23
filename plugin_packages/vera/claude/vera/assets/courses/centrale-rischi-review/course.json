@@ -210,10 +210,10 @@
       "inputs": "Apri caso.md e centrale-rischi-gen-mar.csv. Il primo descrive società, obiettivo e significato delle colonne; il secondo contiene i rapporti bancari di gennaio, febbraio e marzo. Mostra che una riga identifica banca, categoria e mese. Per il primo utilizzo non devi preparare codice o conoscere i nomi interni della procedura.",
       "request": "Vera, analizza la Centrale Rischi di Officina Arco usando questo export. Prepara il quadro a marzo 2026, confrontalo con gennaio e febbraio e mostrami cruscotto, Excel e sintesi per l’incontro con il cliente.",
       "steps": [
-        "Nella chat di lavoro Vera importa i file nel caso didattico e ne esamina contenuto e mesi disponibili. La chat vocale spiega quali file servirebbero per un tuo cliente e dove finiranno i risultati.",
+        "In questa conversazione Vera importa i file nel caso didattico e ne esamina contenuto e mesi disponibili. L’assistente spiega quali file servirebbero per un tuo cliente e dove finiranno i risultati.",
         "Vera propone il collegamento fra colonne e significati e conferma società, euro e mese corrente. Guarda la proposta: le durate originaria e residua hanno ruoli diversi. Basta riconoscere la scelta e sapere quando chiedere una correzione.",
         "Dopo la verifica dei significati, il workflow calcola l’esposizione per banca, categoria e durata, controlla i totali e confronta i mesi. L’insegnante aspetta i risultati effettivi e spiega eventuali richieste o problemi mostrati dalla procedura.",
-        "Vera produce gli output previsti e scrive una sintesi collegata ai risultati verificati. Nella finestra di lavoro apri il cruscotto appena creato; passa poi al prospetto Excel e alle questioni aperte."
+        "Vera produce gli output previsti e scrive una sintesi collegata ai risultati verificati. In questa conversazione apri il cruscotto appena creato; passa poi al prospetto Excel e alle questioni aperte."
       ],
       "deliverables": [
         "Cruscotto HTML: parti dal mese corrente e dal totale utilizzato; passa agli indicatori per categoria e al confronto con il mese precedente. Usalo per orientare la conversazione con il cliente.",
@@ -223,7 +223,7 @@
       "review": "Controlla prima società, periodo e totale utilizzato. Poi scegli una banca e collega il suo dato alle righe di origine. Il caso non fornisce bilancio o flussi: un indicatore non calcolabile deve restare tale. Il commento prepara il tuo giudizio; puoi chiedere una revisione o un approfondimento specifico.",
       "checkpoints": [
         "Prima del calcolo: individua i file di partenza e conferma che il quadro corrente deve riferirsi a marzo. Se vuoi un altro obiettivo, formulalo qui.",
-        "Quando appare il cruscotto: apri il risultato e indica dove leggere la situazione corrente e dove trovare il dettaglio. La chat vocale verifica che tu stia guardando l’output appena prodotto.",
+        "Quando appare il cruscotto: apri il risultato e indica dove leggere la situazione corrente e dove trovare il dettaglio. L’assistente verifica che tu stia guardando l’output appena prodotto.",
         "Prima di concludere: spiega quali file forniresti per il tuo cliente e quale parte del risultato rivedresti prima dell’incontro."
       ],
       "practice": "Ora chiedi a Vera di aggiornare la stessa analisi ad aprile usando centrale-rischi-gen-apr.csv e prova.md. Formula tu la richiesta, conferma il nuovo mese e apri il risultato della nuova esecuzione.",

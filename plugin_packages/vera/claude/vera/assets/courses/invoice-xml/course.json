@@ -215,7 +215,7 @@
       "inputs": "Fornisci invoice-data.txt. La scheda contiene fornitore, cliente, prestazione, numero, data, importi e dati di recapito del file, tutti fittizi. Indica anche che si tratta di una nuova bozza e che nel caso didattico non esistono emissioni o esportazioni precedenti.",
       "request": "Vera, prepara una bozza di fattura XML da questa scheda fittizia. Mostrami anteprima, fonti e controlli. Fammi rivedere la versione esatta prima di esportare il file sul computer.",
       "steps": [
-        "Nella chat di lavoro Vera legge la fonte scelta, registra lo scopo e individua i dati della fattura. La chat vocale mostra quali informazioni occorre fornire e risponde alle domande durante la lettura.",
+        "In questa conversazione Vera legge la fonte scelta, registra lo scopo e individua i dati della fattura. L’assistente mostra quali informazioni occorre fornire e risponde alle domande durante la lettura.",
         "Il workflow corrente prepara la bozza e apre la sua anteprima effettiva. Confronta fornitore, cliente, numero, data, prestazione, IVA e totale con la scheda. Chiedi di correggere ciò che non corrisponde: una correzione produce una nuova versione.",
         "Rivedi la versione mostrata. Solo dopo la tua approvazione esplicita di quella versione Vera esegue i controlli di esportazione e crea l’XML locale. Apri il rapporto di esportazione e trova il file XML. Se non approvi, la bozza resta disponibile senza esportazione."
       ],
@@ -240,7 +240,7 @@
       "inputs": "Provide invoice-data.txt. It contains the fictional supplier, customer, service, number, date, amounts and file-routing data. It also states that this is a new draft and that no previous issue or export exists in the fictional case.",
       "request": "Vera, prepare a draft invoice XML from this fictional data sheet. Show me the preview, sources and checks. Let me review the exact version before exporting the file locally.",
       "steps": [
-        "In the working chat Vera reads the selected source, records the preparation purpose and identifies the invoice fields. The voice chat shows what information you need to provide and answers questions while the source is checked.",
+        "In this conversation Vera reads the selected source, records the preparation purpose and identifies the invoice fields. The assistant shows what information you need to provide and answers questions while the source is checked.",
         "The current workflow prepares the draft and opens its actual preview. Compare supplier, customer, number, date, service, VAT and total with the data sheet. Ask Vera to correct anything that does not match; corrections produce a new version.",
         "Review the version on screen. Only after your explicit approval of that version does Vera run the export checks and create the local XML. Open the export report and find the XML file. If you do not approve, the draft remains available and no XML is exported."
       ],
@@ -265,7 +265,7 @@
       "inputs": "Fournissez invoice-data.txt. La fiche contient fournisseur, client, prestation, numéro, date, montants et données d’acheminement fictifs. Elle précise qu’il s’agit d’un nouveau brouillon et qu’aucune émission ni exportation antérieure n’existe dans le cas pédagogique.",
       "request": "Vera, prépare un brouillon de facture XML à partir de cette fiche fictive. Montre l’aperçu, les sources et les contrôles. Laisse-moi revoir la version exacte avant d’exporter le fichier sur l’ordinateur.",
       "steps": [
-        "Dans le fil de travail, Vera lit la source, précise le but de la préparation et identifie les données. Le fil vocal montre les informations à fournir et répond aux questions pendant la lecture.",
+        "Dans cette conversation, Vera lit la source, précise le but de la préparation et identifie les données. L’assistant montre les informations à fournir et répond aux questions pendant la lecture.",
         "Le workflow courant prépare le brouillon et ouvre son aperçu réel. Comparez fournisseur, client, numéro, date, prestation, TVA et total à la fiche. Demandez les corrections nécessaires ; chacune produit une nouvelle version.",
         "Revoyez la version affichée. Vera n’effectue les contrôles d’export et ne crée le XML local qu’après votre approbation explicite de cette version. Ouvrez le rapport d’export et retrouvez le fichier XML. Sans approbation, le brouillon reste disponible sans export."
       ],
@@ -290,7 +290,7 @@
       "inputs": "Stellen Sie invoice-data.txt bereit. Das Blatt enthält fiktive Lieferanten- und Kundendaten, Leistung, Nummer, Datum, Beträge und Empfängerdaten für die Datei. Es nennt einen neuen Entwurf ohne vorherige Ausstellung oder Export im Übungsfall.",
       "request": "Vera, bereite aus diesem fiktiven Datenblatt einen Rechnungs-XML-Entwurf vor. Zeige Vorschau, Quellen und Prüfungen. Lass mich die genaue Fassung prüfen, bevor du die Datei lokal exportierst.",
       "steps": [
-        "Im Arbeitschat liest Vera die Quelle, hält den Vorbereitungszweck fest und ermittelt die Rechnungsfelder. Der Sprachchat zeigt die benötigten Angaben und beantwortet Fragen während der Prüfung.",
+        "In diesem Chat liest Vera die Quelle, hält den Vorbereitungszweck fest und ermittelt die Rechnungsfelder. Der Assistent zeigt die benötigten Angaben und beantwortet Fragen während der Prüfung.",
         "Der aktuelle Workflow erstellt den Entwurf und öffnet seine tatsächliche Vorschau. Vergleichen Sie Lieferant, Kunde, Nummer, Datum, Leistung, Umsatzsteuer und Gesamtbetrag mit dem Blatt. Lassen Sie Abweichungen korrigieren; eine Korrektur erzeugt eine neue Fassung.",
         "Prüfen Sie die angezeigte Fassung. Erst nach Ihrer ausdrücklichen Freigabe dieser Fassung führt Vera die Exportprüfungen aus und erstellt die lokale XML-Datei. Öffnen Sie den Exportbericht und finden Sie die XML-Datei. Ohne Freigabe bleibt der Entwurf ohne Export erhalten."
       ],
@@ -315,7 +315,7 @@
       "inputs": "Proporciona invoice-data.txt. Contiene proveedor, cliente, servicio, número, fecha, importes y datos de encaminamiento ficticios. Indica que es un nuevo borrador y que no existe emisión ni exportación previa en el caso didáctico.",
       "request": "Vera, prepara un borrador de factura XML con esta ficha ficticia. Muéstrame vista previa, fuentes y controles. Déjame revisar la versión exacta antes de exportar el archivo al ordenador.",
       "steps": [
-        "En el hilo de trabajo Vera lee la fuente, registra el propósito e identifica los datos de la factura. El hilo de voz muestra qué información aportar y responde durante la lectura.",
+        "En esta conversación Vera lee la fuente, registra el propósito e identifica los datos de la factura. El asistente muestra qué información aportar y responde durante la lectura.",
         "El workflow actual prepara el borrador y abre su vista previa real. Compara proveedor, cliente, número, fecha, servicio, IVA y total con la ficha. Pide corregir las diferencias; cada corrección genera una nueva versión.",
         "Revisa la versión mostrada. Solo después de tu aprobación explícita de esa versión Vera ejecuta los controles de exportación y crea el XML local. Abre el informe de exportación y localiza el archivo XML. Sin aprobación, el borrador sigue disponible sin exportar."
       ],

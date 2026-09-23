@@ -58,3 +58,10 @@ The builder now uses slash-separated archive names and explicit UTF-8 for
 localized templates on every OS. A regression exercises Windows and POSIX path
 types with a Windows default decoder; both pass locally. Final Windows
 CI remains required before merge. No workflow or sandbox boundary was changed.
+
+Cowork also projects the authored teacher/working-chat labels inside lesson prose
+into written, single-conversation wording. The literal localized replacements
+leave canonical Codex instructions, source inputs, calculations and practice
+unchanged. Package tests render every supported Cowork lesson/language and reject
+stale voice-chat or working-window instructions. Accounting uses of “voce” and
+“abstimmen” are preserved; this is host wording, not a content classifier.

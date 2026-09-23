@@ -335,8 +335,8 @@
       "inputs": "Apri january-february.xlsx e context-it.md. Guarda i tre fogli, il periodo e la valuta. Indica a Vera destinatario, tipo di report e lingua; non serve preparare una presentazione o compilare una configurazione tecnica.",
       "request": "Vera, prepara un report gestionale per Officina Arco dai prospetti di gennaio e febbraio. Aiutami a verificare come usi le tabelle, poi mostrami il Word e i punti da rivedere.",
       "steps": [
-        "Nel thread di lavoro Vera ispeziona i fogli e propone dove inserirli. La voce spiega struttura della relazione e significato delle fonti, chiedendoti di confermare azienda, periodo e importi da riportare.",
-        "Vera registra la mappatura rivista, prepara commenti sostenuti dai dati ed esegue il workflow corrente. La voce segue i risultati effettivi e spiega eventuali sezioni prive di informazioni.",
+        "In questa conversazione Vera ispeziona i fogli e propone dove inserirli. L’assistente spiega per iscritto struttura della relazione e significato delle fonti, chiedendoti di confermare azienda, periodo e importi da riportare.",
+        "Vera registra la mappatura rivista, prepara commenti sostenuti dai dati ed esegue il workflow corrente. L’assistente segue i risultati effettivi e spiega eventuali sezioni prive di informazioni.",
         "Apri il Word prodotto. Leggi la sintesi, una tabella e il relativo commento; segui un importo fino al foglio sorgente. Usa la revisione del report per registrare correzioni o richieste di chiarimento."
       ],
       "deliverables": [
@@ -360,8 +360,8 @@
       "inputs": "Open january-february.xlsx and context-en.md. Look at the three sheets, period and currency. Tell Vera the audience, report type and language; you do not need to prepare slides or fill in technical configuration.",
       "request": "Vera, prepare a management report for Officina Arco from the January and February statements. Help me review how you use the tables, then show me the Word document and points to review.",
       "steps": [
-        "In the working chat, Vera inspects the sheets and proposes their report sections. Voice explains the structure and sources, helping you confirm company, period and amounts to report.",
-        "Vera records the reviewed mapping, prepares source-supported commentary and runs the current workflow. Voice follows actual results and explains sections where information is missing.",
+        "In this conversation, Vera inspects the sheets and proposes their report sections. The assistant explains the structure and sources, helping you confirm company, period and amounts to report.",
+        "Vera records the reviewed mapping, prepares source-supported commentary and runs the current workflow. The assistant follows actual results and explains sections where information is missing.",
         "Open the Word document produced. Read the summary, a table and its commentary; trace a figure to its source sheet. Use report review to record corrections or clarification requests."
       ],
       "deliverables": [
@@ -385,8 +385,8 @@
       "inputs": "Ouvrez january-february.xlsx et context-fr.md. Regardez les trois feuilles, la période et la devise. Indiquez à Vera destinataire, type de rapport et langue ; aucune présentation ni configuration technique à préparer.",
       "request": "Vera, prépare un rapport de gestion pour Officina Arco à partir des états de janvier et février. Aide-moi à vérifier l’utilisation des tableaux, puis montre le Word et les points à revoir.",
       "steps": [
-        "Dans la conversation de travail, Vera inspecte les feuilles et propose leur place dans le rapport. La voix explique structure et sources et vous aide à confirmer entreprise, période et montants à reprendre.",
-        "Vera enregistre la correspondance revue, prépare des commentaires étayés et exécute la procédure courante. La voix suit les résultats réels et explique les sections sans informations.",
+        "Dans cette conversation, Vera inspecte les feuilles et propose leur place dans le rapport. L’assistant explique par écrit structure et sources et vous aide à confirmer entreprise, période et montants à reprendre.",
+        "Vera enregistre la correspondance revue, prépare des commentaires étayés et exécute la procédure courante. L’assistant suit les résultats réels et explique les sections sans informations.",
         "Ouvrez le Word produit. Lisez synthèse, tableau et commentaire associé ; retrouvez le chiffre dans la feuille source. Utilisez la revue du rapport pour enregistrer corrections et demandes de précision."
       ],
       "deliverables": [
@@ -410,8 +410,8 @@
       "inputs": "Öffnen Sie january-february.xlsx und context-de.md. Prüfen Sie die drei Blätter, Zeitraum und Währung. Nennen Sie Vera Zielgruppe, Berichtsart und Sprache; Folien oder technische Konfigurationen müssen Sie nicht vorbereiten.",
       "request": "Vera, erstelle für Officina Arco einen Managementbericht aus den Aufstellungen für Januar und Februar. Hilf mir, die Tabellenzuordnung zu prüfen, und zeige mir dann Word-Dokument und offene Prüfpunkte.",
       "steps": [
-        "Im Arbeitschat untersucht Vera die Blätter und schlägt Berichtsabschnitte vor. Die Stimme erklärt Aufbau und Quellen und hilft bei der Bestätigung von Unternehmen, Zeitraum und Beträgen.",
-        "Vera hält die geprüfte Zuordnung fest, formuliert belegte Kommentare und führt den aktuellen Ablauf aus. Die Stimme folgt echten Ergebnissen und erklärt Abschnitte ohne Informationen.",
+        "In diesem Chat untersucht Vera die Blätter und schlägt Berichtsabschnitte vor. Der Assistent erklärt schriftlich Aufbau und Quellen und hilft bei der Bestätigung von Unternehmen, Zeitraum und Beträgen.",
+        "Vera hält die geprüfte Zuordnung fest, formuliert belegte Kommentare und führt den aktuellen Ablauf aus. Der Assistent folgt echten Ergebnissen und erklärt Abschnitte ohne Informationen.",
         "Öffnen Sie das erzeugte Word-Dokument. Lesen Sie Zusammenfassung, eine Tabelle und ihren Kommentar; verfolgen Sie eine Zahl zum Quellblatt. Erfassen Sie Korrekturen oder Rückfragen in der Berichtsprüfung."
       ],
       "deliverables": [
@@ -435,8 +435,8 @@
       "inputs": "Abre january-february.xlsx y context-es.md. Mira las tres hojas, período y moneda. Indica destinatario, tipo de informe e idioma; no necesitas preparar diapositivas ni una configuración técnica.",
       "request": "Vera, prepara un informe de gestión de Officina Arco con los estados de enero y febrero. Ayúdame a revisar el uso de las tablas y muéstrame después el Word y los puntos que debo revisar.",
       "steps": [
-        "En la conversación de trabajo, Vera inspecciona las hojas y propone sus secciones. La voz explica estructura y fuentes y ayuda a confirmar empresa, período e importes.",
-        "Vera registra la correspondencia revisada, prepara comentarios respaldados y ejecuta el flujo actual. La voz sigue resultados reales y explica las secciones sin información.",
+        "En esta conversación, Vera inspecciona las hojas y propone sus secciones. El asistente explica por escrito estructura y fuentes y ayuda a confirmar empresa, período e importes.",
+        "Vera registra la correspondencia revisada, prepara comentarios respaldados y ejecuta el flujo actual. El asistente sigue resultados reales y explica las secciones sin información.",
         "Abre el Word generado. Lee resumen, una tabla y su comentario; sigue una cifra hasta la hoja original. Usa la revisión del informe para registrar correcciones o aclaraciones."
       ],
       "deliverables": [

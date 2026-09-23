@@ -451,8 +451,8 @@
       "inputs": "Apri company-it.md, procedure-it.md e operation-it.md. Spiega a Vera impresa, incarico e data: 31 marzo 2026. Fornisci esempi di lavoro svolto insieme alle procedure scritte.",
       "request": "Vera, valuta gli assetti di Officina Arco per responsabilità, chiusura mensile e gestione delle informazioni sugli incassi. Usa questi documenti e mostrami valutazione, limiti e azioni da discutere.",
       "steps": [
-        "Nel thread di lavoro Vera ricostruisce il funzionamento dell’impresa e propone il perimetro. La voce spiega perché una procedura e un esempio della sua applicazione sono entrambi utili.",
-        "Vera confronta responsabilità, scadenze, consegne e decisioni, verifica le fonti professionali pertinenti e prepara rilievi proporzionati. La voce segue le evidenze effettive e le domande che possono cambiare il giudizio.",
+        "In questa conversazione Vera ricostruisce il funzionamento dell’impresa e propone il perimetro. L’assistente spiega per iscritto perché una procedura e un esempio della sua applicazione sono entrambi utili.",
+        "Vera confronta responsabilità, scadenze, consegne e decisioni, verifica le fonti professionali pertinenti e prepara rilievi proporzionati. L’assistente segue le evidenze effettive e le domande che possono cambiare il giudizio.",
         "Apri il memo prodotto. Leggi prima la valutazione complessiva, poi un rilievo, la sua fonte e l’azione collegata. Distingui chi e quando sono proposti da impegni già accettati."
       ],
       "deliverables": [
@@ -476,8 +476,8 @@
       "inputs": "Open company-en.md, procedure-en.md and operation-en.md. State company, assignment and date: 31 March 2026. Provide operating examples alongside written procedures.",
       "request": "Vera, assess Officina Arco’s arrangements for responsibilities, monthly closing and collection information. Use these documents and show the assessment, limits and actions to discuss.",
       "steps": [
-        "In the working chat, Vera reconstructs how the company operates and proposes scope. Voice explains why both a procedure and an example of its use are useful.",
-        "Vera compares responsibilities, deadlines, deliveries and decisions, verifies relevant professional sources and prepares proportionate findings. Voice follows actual evidence and questions that could change the assessment.",
+        "In this conversation, Vera reconstructs how the company operates and proposes scope. The assistant explains why both a procedure and an example of its use are useful.",
+        "Vera compares responsibilities, deadlines, deliveries and decisions, verifies relevant professional sources and prepares proportionate findings. The assistant follows actual evidence and questions that could change the assessment.",
         "Open the generated memo. Read the overall assessment first, then one finding, its source and linked action. Distinguish proposed owners and timing from accepted commitments."
       ],
       "deliverables": [
@@ -501,8 +501,8 @@
       "inputs": "Ouvrez company-fr.md, procedure-fr.md et operation-fr.md. Précisez entreprise, mission et date : 31 mars 2026. Fournissez des exemples de travail avec les procédures écrites.",
       "request": "Vera, évalue les dispositifs d’Officina Arco pour responsabilités, clôture mensuelle et informations de recouvrement. Utilise ces documents et montre évaluation, limites et actions à discuter.",
       "steps": [
-        "Dans la conversation de travail, Vera reconstitue le fonctionnement et propose le périmètre. La voix explique l’utilité conjointe d’une procédure et d’un exemple de son application.",
-        "Vera compare responsabilités, échéances, livraisons et décisions, vérifie les sources professionnelles pertinentes et prépare des constats proportionnés. La voix suit les preuves réelles et questions pouvant modifier le jugement.",
+        "Dans cette conversation, Vera reconstitue le fonctionnement et propose le périmètre. L’assistant explique par écrit l’utilité conjointe d’une procédure et d’un exemple de son application.",
+        "Vera compare responsabilités, échéances, livraisons et décisions, vérifie les sources professionnelles pertinentes et prépare des constats proportionnés. L’assistant suit les preuves réelles et questions pouvant modifier le jugement.",
         "Ouvrez le mémo produit. Lisez l’évaluation globale, puis un constat, sa source et l’action liée. Distinguez responsables et délais proposés des engagements acceptés."
       ],
       "deliverables": [
@@ -526,8 +526,8 @@
       "inputs": "Öffnen Sie company-de.md, procedure-de.md und operation-de.md. Nennen Sie Unternehmen, Auftrag und Stichtag: 31. März 2026. Liefern Sie Betriebsbeispiele neben schriftlichen Verfahren.",
       "request": "Vera, beurteile bei Officina Arco Zuständigkeiten, Monatsabschluss und Informationen zum Forderungseinzug. Nutze diese Unterlagen und zeige Beurteilung, Grenzen und zu besprechende Maßnahmen.",
       "steps": [
-        "Im Arbeitschat rekonstruiert Vera die Abläufe und schlägt den Umfang vor. Die Stimme erklärt, warum Verfahren und Anwendungsbeispiel gemeinsam nützlich sind.",
-        "Vera vergleicht Zuständigkeiten, Fristen, Übergaben und Entscheidungen, prüft relevante Fachquellen und erarbeitet verhältnismäßige Feststellungen. Die Stimme folgt den tatsächlichen Nachweisen und entscheidungsrelevanten Fragen.",
+        "In diesem Chat rekonstruiert Vera die Abläufe und schlägt den Umfang vor. Der Assistent erklärt schriftlich, warum Verfahren und Anwendungsbeispiel gemeinsam nützlich sind.",
+        "Vera vergleicht Zuständigkeiten, Fristen, Übergaben und Entscheidungen, prüft relevante Fachquellen und erarbeitet verhältnismäßige Feststellungen. Der Assistent folgt den tatsächlichen Nachweisen und entscheidungsrelevanten Fragen.",
         "Öffnen Sie das Memo. Lesen Sie zuerst Gesamtbeurteilung, dann eine Feststellung mit Quelle und Maßnahme. Unterscheiden Sie vorgeschlagene Zuständige und Termine von vereinbarten Zusagen."
       ],
       "deliverables": [
@@ -551,8 +551,8 @@
       "inputs": "Abre company-es.md, procedure-es.md y operation-es.md. Indica empresa, encargo y fecha: 31 de marzo de 2026. Aporta ejemplos operativos junto a procedimientos escritos.",
       "request": "Vera, evalúa los mecanismos de Officina Arco para responsabilidades, cierre mensual e información de cobros. Usa estos documentos y muestra evaluación, límites y acciones que discutir.",
       "steps": [
-        "En la conversación de trabajo, Vera reconstruye el funcionamiento y propone alcance. La voz explica por qué son útiles tanto procedimiento como ejemplo de aplicación.",
-        "Vera compara responsabilidades, plazos, entregas y decisiones, verifica fuentes profesionales pertinentes y prepara hallazgos proporcionados. La voz sigue pruebas reales y preguntas que pueden cambiar la evaluación.",
+        "En esta conversación, Vera reconstruye el funcionamiento y propone alcance. El asistente explica por escrito por qué son útiles tanto procedimiento como ejemplo de aplicación.",
+        "Vera compara responsabilidades, plazos, entregas y decisiones, verifica fuentes profesionales pertinentes y prepara hallazgos proporcionados. El asistente sigue pruebas reales y preguntas que pueden cambiar la evaluación.",
         "Abre el memo generado. Lee primero la evaluación global, después un hallazgo, su fuente y acción vinculada. Distingue responsables y fechas propuestos de compromisos aceptados."
       ],
       "deliverables": [

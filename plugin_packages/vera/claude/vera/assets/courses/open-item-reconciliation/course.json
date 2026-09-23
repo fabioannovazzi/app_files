@@ -391,7 +391,7 @@
       "request": "Vera, verifica queste partite fornitori al 31 marzo 2026. Usa le prove di pagamento bancario per mostrare cosa risulta pagato, cosa resta aperto e cosa devo rivedere.",
       "steps": [
         "Vera importa i file, identifica la popolazione iniziale e propone ruolo e significato degli importi di ciascuna fonte. Conferma data di riferimento e trattamento dei pagamenti successivi.",
-        "La procedura corrente collega fatture e prove di pagamento, distingue le partite chiuse da quelle irrisolte e prepara il pacchetto di revisione. La chat vocale spiega l’avanzamento e gli eventuali documenti mancanti.",
+        "La procedura corrente collega fatture e prove di pagamento, distingue le partite chiuse da quelle irrisolte e prepara il pacchetto di revisione. L’assistente spiega l’avanzamento e gli eventuali documenti mancanti.",
         "Apri la pagina locale di revisione e le carte di lavoro. Segui una fattura dall’importo segnalato come aperto alla prova di pagamento e all’esito proposto. Le decisioni restano da prendere finché non vengono espresse."
       ],
       "deliverables": [
@@ -416,7 +416,7 @@
       "request": "Vera, review these reported supplier open items at 31 March 2026. Use the bank payment evidence to show what is paid, what remains open and what needs review.",
       "steps": [
         "Vera imports the files, identifies the starting population and proposes the role and monetary meaning of each source. Confirm the cut-off and the treatment of later payments.",
-        "The current workflow links invoices and payment evidence, distinguishes closed from unresolved items and prepares the review package. The voice chat explains progress and any missing evidence.",
+        "The current workflow links invoices and payment evidence, distinguishes closed from unresolved items and prepares the review package. The assistant explains progress and any missing evidence.",
         "Open the local review page and workpapers. Follow an invoice from its reported open amount to the payment evidence and proposed status. Review decisions stay pending until actually made."
       ],
       "deliverables": [
@@ -441,7 +441,7 @@
       "request": "Vera, vérifie ces postes fournisseurs au 31 mars 2026. Utilise les preuves de paiement bancaire pour montrer ce qui est payé, ce qui reste ouvert et ce qui demande une revue.",
       "steps": [
         "Vera importe les fichiers, identifie la population initiale et propose le rôle et le sens des montants de chaque source. Confirmez la date d’arrêté et le traitement des paiements ultérieurs.",
-        "La procédure actuelle relie factures et preuves de paiement, distingue les postes soldés des postes non résolus et prépare le dossier de revue. La conversation vocale explique l’avancement et les justificatifs manquants.",
+        "La procédure actuelle relie factures et preuves de paiement, distingue les postes soldés des postes non résolus et prépare le dossier de revue. L’assistant explique l’avancement et les justificatifs manquants.",
         "Ouvrez la page locale de revue et les documents de travail. Suivez une facture depuis le montant déclaré ouvert jusqu’au justificatif de paiement et au résultat proposé. Les décisions restent en attente tant qu’elles ne sont pas réellement prises."
       ],
       "deliverables": [
@@ -466,7 +466,7 @@
       "request": "Vera, prüfe diese offenen Lieferantenposten zum 31. März 2026. Zeige anhand der Bankzahlungsnachweise, was bezahlt ist, was offen bleibt und was geprüft werden muss.",
       "steps": [
         "Vera importiert die Dateien, bestimmt den Ausgangsbestand und schlägt Rolle und Betragsbedeutung jeder Quelle vor. Bestätigen Sie Stichtag und Umgang mit späteren Zahlungen.",
-        "Der aktuelle Ablauf verknüpft Rechnungen mit Zahlungsnachweisen, unterscheidet ausgeglichene von ungeklärten Posten und erstellt das Prüfungspaket. Der Sprachchat erklärt Fortschritt und fehlende Unterlagen.",
+        "Der aktuelle Ablauf verknüpft Rechnungen mit Zahlungsnachweisen, unterscheidet ausgeglichene von ungeklärten Posten und erstellt das Prüfungspaket. Der Assistent erklärt Fortschritt und fehlende Unterlagen.",
         "Öffnen Sie die lokale Prüfseite und die Arbeitspapiere. Verfolgen Sie eine Rechnung vom gemeldeten offenen Betrag über den Zahlungsnachweis zum vorgeschlagenen Ergebnis. Prüfentscheidungen bleiben ausstehend, bis sie tatsächlich getroffen werden."
       ],
       "deliverables": [
@@ -491,7 +491,7 @@
       "request": "Vera, revisa estas partidas de proveedores a 31 de marzo de 2026. Usa las pruebas de pago bancario para mostrar qué está pagado, qué sigue abierto y qué debo revisar.",
       "steps": [
         "Vera importa los archivos, identifica la población inicial y propone el papel y el significado monetario de cada fuente. Confirma la fecha de corte y el tratamiento de pagos posteriores.",
-        "El procedimiento actual relaciona facturas y pruebas de pago, distingue partidas saldadas de partidas sin resolver y prepara el paquete de revisión. El chat de voz explica el avance y la documentación que falta.",
+        "El procedimiento actual relaciona facturas y pruebas de pago, distingue partidas saldadas de partidas sin resolver y prepara el paquete de revisión. El asistente explica el avance y la documentación que falta.",
         "Abre la página local de revisión y los papeles de trabajo. Sigue una factura desde el importe declarado abierto hasta la prueba de pago y el resultado propuesto. Las decisiones permanecen pendientes hasta que realmente se toman."
       ],
       "deliverables": [

@@ -271,7 +271,7 @@
       "inputs": "Apri lucia-studio-it.md. Contiene destinatari, attività, contatto e orari. Scegli questo file per la lezione e una cartella didattica. Logo e fotografie non sono necessari; i dati assenti restano assenti.",
       "request": "Lucia, prepara il primo sito di Studio Arco da queste informazioni: presentazione, attività e contatti in una pagina leggibile da computer e telefono. Mostrami una versione locale da rivedere.",
       "steps": [
-        "La chat di lavoro registra il materiale scelto e prepara il progetto. Lucia riassume quali fatti userà e propone ordine dei contenuti, caratteri e colori; la chat vocale collega queste scelte alle informazioni che un visitatore cerca.",
+        "L’assistente registra il materiale scelto e prepara il progetto. Lucia riassume quali fatti userà e propone ordine dei contenuti, caratteri e colori; l’assistente collega queste scelte alle informazioni che un visitatore cerca.",
         "Il flusso realizza la pagina HTML con i suoi stili e controlla file e collegamenti. Apri il sito funzionante e percorri presentazione, attività e contatti, osservando cosa è stato scritto dalle fonti.",
         "Rivedi la pagina a larghezza desktop e telefono, con le immagini di verifica. Controlla identità e testi, leggibilità e collegamenti. Lucia mostra stato dei controlli e ciò che manca prima di una pubblicazione reale."
       ],
@@ -296,7 +296,7 @@
       "inputs": "Open lucia-studio-en.md with the audience, activities, contact and hours. Select it for the lesson and choose a teaching folder. A logo or photographs are not required; missing facts stay missing.",
       "request": "Lucia, prepare Studio Arco’s first website from this information: introduction, activities and contact on one page readable on desktop and phone. Show a local version for review.",
       "steps": [
-        "The working chat records the selected material and prepares the project. Lucia summarises the facts to use and proposes content order, typography and colours; the voice chat links these choices to the visitor’s questions.",
+        "The assistant records the selected material and prepares the project. Lucia summarises the facts to use and proposes content order, typography and colours; the assistant links these choices to the visitor’s questions.",
         "The workflow implements HTML and styles and checks files and links. Open the working site and move through introduction, activities and contact, checking how the source information became copy.",
         "Review the page at desktop and phone widths with its captured images. Check identity and claims, readability and links. Lucia shows validation status and what remains before real publication."
       ],
@@ -321,7 +321,7 @@
       "inputs": "Ouvrez lucia-studio-fr.md : public, activités, contact et horaires. Sélectionnez ce fichier pour la leçon et un dossier pédagogique. Logo et photos ne sont pas indispensables ; les faits absents restent absents.",
       "request": "Lucia, prépare le premier site de Studio Arco avec ces informations : présentation, activités et contact sur une page lisible sur ordinateur et téléphone. Montre une version locale à revoir.",
       "steps": [
-        "La conversation de travail enregistre le matériel choisi et prépare le projet. Lucia résume les faits et propose ordre, typographie et couleurs ; la conversation vocale relie ces choix aux questions du visiteur.",
+        "L’assistant enregistre le matériel choisi et prépare le projet. Lucia résume les faits et propose ordre, typographie et couleurs ; l’assistant relie ces choix aux questions du visiteur.",
         "Le processus réalise la page HTML et ses styles, puis vérifie fichiers et liens. Ouvrez le site fonctionnel et parcourez présentation, activités et contact en comparant le texte aux sources.",
         "Revoyez la page aux largeurs ordinateur et téléphone, avec les captures. Vérifiez identité, informations, lisibilité et liens. Lucia montre les contrôles et ce qui manque avant une publication réelle."
       ],
@@ -346,7 +346,7 @@
       "inputs": "Öffnen Sie lucia-studio-de.md mit Zielgruppe, Tätigkeiten, Kontakt und Zeiten. Wählen Sie die Datei für die Lektion und einen Übungsordner. Logo und Fotos sind nicht erforderlich; fehlende Angaben bleiben offen.",
       "request": "Lucia, erstelle aus diesen Angaben die erste Website von Studio Arco: Vorstellung, Tätigkeiten und Kontakt auf einer am Computer und Telefon lesbaren Seite. Zeige eine lokale Fassung zur Prüfung.",
       "steps": [
-        "Der Arbeitschat erfasst das ausgewählte Material und bereitet das Projekt vor. Lucia fasst Fakten zusammen und schlägt Reihenfolge, Schrift und Farben vor; der Sprachchat erklärt den Bezug zu den Besucherfragen.",
+        "Der Assistent erfasst das ausgewählte Material und bereitet das Projekt vor. Lucia fasst Fakten zusammen und schlägt Reihenfolge, Schrift und Farben vor; der Assistent erklärt den Bezug zu den Besucherfragen.",
         "Der Ablauf erstellt HTML und Gestaltung und prüft Dateien und Links. Öffnen Sie die funktionierende Seite und vergleichen Sie Vorstellung, Tätigkeiten und Kontakt mit den Quellen.",
         "Prüfen Sie die Seite in Desktop- und Telefonbreite anhand der Aufnahmen. Kontrollieren Sie Identität, Aussagen, Lesbarkeit und Links. Lucia zeigt Prüfstatus und offene Punkte vor einer echten Veröffentlichung."
       ],
@@ -371,7 +371,7 @@
       "inputs": "Abre lucia-studio-es.md con público, actividades, contacto y horario. Selecciónalo para la lección y elige una carpeta didáctica. No hacen falta logotipo ni fotos; los datos ausentes quedan pendientes.",
       "request": "Lucia, prepara el primer sitio de Studio Arco con esta información: presentación, actividades y contacto en una página legible en ordenador y teléfono. Muestra una versión local para revisar.",
       "steps": [
-        "La conversación de trabajo registra el material elegido y prepara el proyecto. Lucia resume los hechos y propone orden, tipografía y colores; la conversación de voz relaciona las decisiones con las preguntas del visitante.",
+        "El asistente registra el material elegido y prepara el proyecto. Lucia resume los hechos y propone orden, tipografía y colores; el asistente relaciona las decisiones con las preguntas del visitante.",
         "El flujo crea HTML y estilos y comprueba archivos y enlaces. Abre el sitio funcional y recorre presentación, actividades y contacto comparando el texto con las fuentes.",
         "Revisa la página en anchura de ordenador y teléfono con sus capturas. Comprueba identidad, información, legibilidad y enlaces. Lucia muestra controles y pendientes antes de una publicación real."
       ],

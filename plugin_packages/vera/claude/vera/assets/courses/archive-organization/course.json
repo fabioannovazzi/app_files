@@ -467,7 +467,7 @@
       "inputs": "Apri client e osserva Da archiviare e Download. Leggi accordo e verbale. Vera copia questi file in un cliente didattico separato e usa la politica di cartelle dello studio prevista dal flusso.",
       "request": "Vera, proponi il riordino di questa cartella di Ciclo Arco. Fammi vedere documenti, destinazioni e copie duplicate prima di spostare qualcosa.",
       "steps": [
-        "La chat di lavoro crea il cliente didattico e acquisisce una fotografia dei file. Vera legge gli elementi necessari e propone categorie e destinazioni sulla base del contenuto.",
+        "L’assistente crea il cliente didattico e acquisisce una fotografia dei file. Vera legge gli elementi necessari e propone categorie e destinazioni sulla base del contenuto.",
         "Apri la pagina di revisione generata. Esamina ogni proposta, conserva o correggi la destinazione e scegli come trattare la copia esatta. Il piano resta una proposta finché non viene approvato.",
         "Dopo le decisioni, Vera mostra gli spostamenti previsti e chiede separatamente se applicarli. Se approvi sulla copia didattica, esegue il piano e mostra cartelle risultanti e registro delle operazioni."
       ],
@@ -492,7 +492,7 @@
       "inputs": "Open client and inspect Da archiviare and Download. Read the agreement and meeting note. Vera copies them into a separate teaching client and uses the workflow’s studio folder policy. Default folder labels are Italian.",
       "request": "Vera, propose how to organise this Ciclo Arco folder. Show documents, destinations and duplicate copies before moving anything.",
       "steps": [
-        "The working chat creates the teaching client and captures its file snapshot. Vera reads the necessary evidence and proposes categories and destinations from the contents.",
+        "The assistant creates the teaching client and captures its file snapshot. Vera reads the necessary evidence and proposes categories and destinations from the contents.",
         "Open the generated review page. Inspect every proposal, keep or edit the destination and decide how to handle the exact copy. The plan remains proposed until reviewed.",
         "After those decisions, Vera summarises planned moves and separately asks whether to apply them. If you approve the teaching-copy changes, it executes the plan and shows the resulting folders and operation journal."
       ],
@@ -517,7 +517,7 @@
       "inputs": "Ouvrez client et observez Da archiviare et Download. Lisez accord et note. Vera les copie dans un client pédagogique séparé et utilise la politique de classement du flux. Les dossiers par défaut portent des noms italiens.",
       "request": "Vera, propose le rangement de ce dossier de Ciclo Arco. Montre documents, destinations et doublons avant de déplacer quoi que ce soit.",
       "steps": [
-        "La conversation de travail crée le client pédagogique et capture l’état des fichiers. Vera lit les éléments nécessaires et propose catégories et destinations selon le contenu.",
+        "L’assistant crée le client pédagogique et capture l’état des fichiers. Vera lit les éléments nécessaires et propose catégories et destinations selon le contenu.",
         "Ouvrez la page de revue générée. Examinez chaque proposition, conservez ou corrigez la destination et décidez du traitement de la copie exacte. Le plan reste proposé jusqu’à sa revue.",
         "Après ces décisions, Vera résume les déplacements et demande séparément s’il faut les appliquer. Si vous approuvez sur la copie pédagogique, elle exécute le plan et montre dossiers obtenus et journal."
       ],
@@ -542,7 +542,7 @@
       "inputs": "Öffnen Sie client und betrachten Sie Da archiviare und Download. Lesen Sie Vereinbarung und Notiz. Vera kopiert sie zu einem separaten Übungskunden und nutzt die Ordnungsrichtlinie des Ablaufs. Standardordner haben italienische Namen.",
       "request": "Vera, schlage eine Ordnung für diesen Ciclo-Arco-Ordner vor. Zeige Dokumente, Zielorte und identische Kopien, bevor du etwas verschiebst.",
       "steps": [
-        "Der Arbeitschat erstellt den Übungskunden und erfasst den Dateistand. Vera liest die nötigen Belege und schlägt Kategorien und Zielorte anhand des Inhalts vor.",
+        "Der Assistent erstellt den Übungskunden und erfasst den Dateistand. Vera liest die nötigen Belege und schlägt Kategorien und Zielorte anhand des Inhalts vor.",
         "Öffnen Sie die erzeugte Prüfseite. Prüfen Sie jeden Vorschlag, behalten oder ändern Sie den Zielort und entscheiden Sie über die identische Kopie. Bis zur Prüfung bleibt der Plan ein Vorschlag.",
         "Danach fasst Vera die geplanten Verschiebungen zusammen und fragt gesondert nach ihrer Anwendung. Bei Ihrer Zustimmung für die Übungskopie führt sie den Plan aus und zeigt neue Ordner und Vorgangsprotokoll."
       ],
@@ -567,7 +567,7 @@
       "inputs": "Abre client y observa Da archiviare y Download. Lee acuerdo y acta. Vera los copia a un cliente didáctico separado y usa la política de carpetas del flujo. Las carpetas predeterminadas tienen nombres italianos.",
       "request": "Vera, propón cómo ordenar esta carpeta de Ciclo Arco. Muéstrame documentos, destinos y copias duplicadas antes de mover nada.",
       "steps": [
-        "La conversación de trabajo crea el cliente didáctico y registra el estado de sus archivos. Vera lee las pruebas necesarias y propone categorías y destinos según el contenido.",
+        "El asistente crea el cliente didáctico y registra el estado de sus archivos. Vera lee las pruebas necesarias y propone categorías y destinos según el contenido.",
         "Abre la página de revisión generada. Examina cada propuesta, conserva o cambia el destino y decide qué hacer con la copia exacta. El plan sigue siendo una propuesta hasta su revisión.",
         "Tras esas decisiones, Vera resume los movimientos y pregunta por separado si debe aplicarlos. Si apruebas los cambios en la copia didáctica, ejecuta el plan y muestra carpetas resultantes y registro."
       ],

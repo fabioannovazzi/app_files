@@ -439,8 +439,8 @@
       "inputs": "Apri company-it.md: contiene richiesta, società, Camera, indirizzi e data dichiarata. sources-it.md indica le pagine pubbliche da verificare. Non servono credenziali o istruzioni tecniche.",
       "request": "Vera, prepara la pratica Registro Imprese descritta in questo file. Verifica le fonti pertinenti e mostrami il piano, i documenti da chiedere e le proposte da rivedere. Non accedere a portali né inviare la pratica.",
       "steps": [
-        "Nel thread di lavoro Vera apre il caso e legge i documenti. Nella chat vocale spiega quale pratica preparerà e quali dati mancano. Rivedi Camera, operazione e dati proposti.",
-        "Vera consulta le fonti ufficiali attuali e collega le proposte ai dati del caso. Se serve scegliere una scheda SARI, mostra le alternative pertinenti e attende la tua scelta. La voce spiega il passaggio in corso.",
+        "In questa conversazione Vera apre il caso e legge i documenti. Nella spiegazione scritta spiega quale pratica preparerà e quali dati mancano. Rivedi Camera, operazione e dati proposti.",
+        "Vera consulta le fonti ufficiali attuali e collega le proposte ai dati del caso. Se serve scegliere una scheda SARI, mostra le alternative pertinenti e attende la tua scelta. L’assistente spiega per iscritto il passaggio in corso.",
         "Apri studio_checklist.md e il piano prodotto. Segui un dato dalla richiesta al campo proposto e alla fonte. Nella revisione puoi accettare, chiedere documenti o indicare una modifica; una richiesta di modifica resta da eseguire."
       ],
       "deliverables": [
@@ -464,8 +464,8 @@
       "inputs": "Open company-en.md for the request, company, chamber, addresses and stated date. sources-en.md lists public pages to verify. No credentials or technical instructions are needed.",
       "request": "Vera, prepare the Registro Imprese practice described in this file. Check relevant sources and show me the plan, documents to request and proposals to review. Do not access portals or submit the filing.",
       "steps": [
-        "In the working chat, Vera opens the case and reads the documents. In the voice chat, it explains the practice being prepared and missing facts. Review the chamber, operation and proposed data.",
-        "Vera checks current official sources and links proposals to case facts. If a SARI card must be selected, it shows relevant choices and waits for yours. Voice explains the current step.",
+        "In this conversation, Vera opens the case and reads the documents. In writing, it explains the practice being prepared and missing facts. Review the chamber, operation and proposed data.",
+        "Vera checks current official sources and links proposals to case facts. If a SARI card must be selected, it shows relevant choices and waits for yours. The assistant explains the current step.",
         "Open studio_checklist.md and the generated plan. Follow one fact from the request to a proposed field and its source. Review lets you accept, request documents or ask for a change; a requested change still needs to be carried out."
       ],
       "deliverables": [
@@ -489,8 +489,8 @@
       "inputs": "Ouvrez company-fr.md : demande, société, chambre, adresses et date déclarée. sources-fr.md indique les pages publiques à vérifier. Aucun identifiant de connexion ni consigne technique n’est nécessaire.",
       "request": "Vera, prépare le dossier Registro Imprese décrit dans ce fichier. Vérifie les sources pertinentes et montre-moi le plan, les pièces à demander et les propositions à revoir. Ne te connecte pas aux portails et ne transmets rien.",
       "steps": [
-        "Dans le fil de travail, Vera ouvre le dossier et lit les documents. Dans le fil vocal, elle explique la démarche préparée et les faits manquants. Revoyez la chambre, l’opération et les données proposées.",
-        "Vera consulte les sources officielles actuelles et relie les propositions aux faits. Si une fiche SARI doit être choisie, elle présente les choix pertinents et attend le vôtre. La voix explique l’étape en cours.",
+        "Dans cette conversation, Vera ouvre le dossier et lit les documents. Par écrit, elle explique la démarche préparée et les faits manquants. Revoyez la chambre, l’opération et les données proposées.",
+        "Vera consulte les sources officielles actuelles et relie les propositions aux faits. Si une fiche SARI doit être choisie, elle présente les choix pertinents et attend le vôtre. L’assistant explique par écrit l’étape en cours.",
         "Ouvrez studio_checklist.md et le plan produit. Suivez une donnée de la demande jusqu’au champ proposé et à sa source. La révision permet d’accepter, de demander des pièces ou une modification ; celle-ci reste à effectuer."
       ],
       "deliverables": [
@@ -514,8 +514,8 @@
       "inputs": "Öffnen Sie company-de.md mit Auftrag, Unternehmen, Kammer, Adressen und genanntem Datum. sources-de.md nennt zu prüfende öffentliche Seiten. Zugangsdaten und technische Anweisungen sind nicht nötig.",
       "request": "Vera, bereite die Registro-Imprese-Angelegenheit aus dieser Datei vor. Prüfe die einschlägigen Quellen und zeige mir Plan, anzufordernde Unterlagen und Vorschläge zur Prüfung. Keine Portalanmeldung oder Einreichung.",
       "steps": [
-        "Im Arbeitschat eröffnet Vera den Fall und liest die Unterlagen. Im Sprachchat erklärt sie die geplante Vorbereitung und fehlende Angaben. Prüfen Sie Kammer, Vorgang und vorgeschlagene Daten.",
-        "Vera prüft aktuelle amtliche Quellen und verknüpft Vorschläge mit Fallangaben. Muss eine SARI-Karte ausgewählt werden, zeigt sie passende Möglichkeiten und wartet auf Ihre Wahl. Die Stimme erklärt den laufenden Schritt.",
+        "In diesem Chat eröffnet Vera den Fall und liest die Unterlagen. Schriftlich erklärt sie die geplante Vorbereitung und fehlende Angaben. Prüfen Sie Kammer, Vorgang und vorgeschlagene Daten.",
+        "Vera prüft aktuelle amtliche Quellen und verknüpft Vorschläge mit Fallangaben. Muss eine SARI-Karte ausgewählt werden, zeigt sie passende Möglichkeiten und wartet auf Ihre Wahl. Der Assistent erklärt schriftlich den laufenden Schritt.",
         "Öffnen Sie studio_checklist.md und den erzeugten Plan. Verfolgen Sie eine Angabe vom Auftrag zum vorgeschlagenen Feld und zur Quelle. Sie können zustimmen, Unterlagen anfordern oder eine Änderung verlangen; diese muss anschließend noch umgesetzt werden."
       ],
       "deliverables": [
@@ -539,8 +539,8 @@
       "inputs": "Abre company-es.md: encargo, sociedad, cámara, direcciones y fecha declarada. sources-es.md indica las páginas públicas que comprobar. No hacen falta credenciales ni instrucciones técnicas.",
       "request": "Vera, prepara el trámite Registro Imprese descrito en este archivo. Verifica las fuentes pertinentes y muéstrame el plan, documentos que solicitar y propuestas que revisar. No accedas a portales ni presentes el trámite.",
       "steps": [
-        "En el hilo de trabajo, Vera abre el caso y lee los documentos. En el hilo de voz explica qué preparará y qué datos faltan. Revisa cámara, operación y datos propuestos.",
-        "Vera consulta fuentes oficiales actuales y relaciona las propuestas con los hechos. Si hace falta seleccionar una ficha SARI, muestra las opciones pertinentes y espera tu elección. La voz explica el paso actual.",
+        "En esta conversación, Vera abre el caso y lee los documentos. Por escrito, explica qué preparará y qué datos faltan. Revisa cámara, operación y datos propuestos.",
+        "Vera consulta fuentes oficiales actuales y relaciona las propuestas con los hechos. Si hace falta seleccionar una ficha SARI, muestra las opciones pertinentes y espera tu elección. El asistente explica por escrito el paso actual.",
         "Abre studio_checklist.md y el plan generado. Sigue un dato desde el encargo hasta el campo propuesto y su fuente. Puedes aceptar, pedir documentos o solicitar un cambio; el cambio solicitado aún debe ejecutarse."
       ],
       "deliverables": [

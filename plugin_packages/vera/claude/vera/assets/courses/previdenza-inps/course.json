@@ -539,8 +539,8 @@
       "inputs": "Apri case-it.md, employment-it.md, record-context-it.md e contribution-periods-it.csv. Nota chi è interessato, il periodo e cosa chiede. La scheda è fittizia, non un export ufficiale.",
       "request": "Vera, esamina questo caso INPS dal primo gennaio a fine giugno 2025. Spiegami cosa mostrano i documenti, verifica le fonti ufficiali pertinenti e prepara una bozza con punti da chiarire e documenti da chiedere.",
       "steps": [
-        "Nel thread di lavoro Vera legge i file e riepiloga domanda, periodo e quadro italiano da confermare. La voce spiega il percorso e ti fa distinguere le informazioni disponibili dalle domande ancora aperte.",
-        "Vera organizza fatti e cronologia, collega ogni fatto al documento, ricerca il quadro pertinente e prepara il dossier con il workflow corrente. La voce segue le evidenze e i risultati effettivi, senza anticipare una conclusione.",
+        "In questa conversazione Vera legge i file e riepiloga domanda, periodo e quadro italiano da confermare. L’assistente spiega per iscritto il percorso e ti fa distinguere le informazioni disponibili dalle domande ancora aperte.",
+        "Vera organizza fatti e cronologia, collega ogni fatto al documento, ricerca il quadro pertinente e prepara il dossier con il workflow corrente. L’assistente segue le evidenze e i risultati effettivi, senza anticipare una conclusione.",
         "Apri il memo generato, la cronologia e le richieste documentali. Parti dalla risposta alla domanda, segui un fatto alla sua fonte e controlla quali conclusioni restano da rivedere."
       ],
       "deliverables": [
@@ -564,8 +564,8 @@
       "inputs": "Open case-en.md, employment-en.md, record-context-en.md and contribution-periods-en.csv. Identify the person, period and question. The teaching record is fictional, not an official export.",
       "request": "Vera, review this INPS case for January through June 2025. Explain what the documents show, check relevant official sources and prepare a draft with questions and documents to request.",
       "steps": [
-        "In the working chat Vera reads the files and summarizes question, period and Italian framework for confirmation. Voice explains the process and helps separate available information from open questions.",
-        "Vera organizes facts and chronology, links facts to documents, researches the relevant framework and prepares the file through the current workflow. Voice follows actual evidence and results without anticipating a conclusion.",
+        "In this conversation Vera reads the files and summarizes question, period and Italian framework for confirmation. The assistant explains the process and helps separate available information from open questions.",
+        "Vera organizes facts and chronology, links facts to documents, researches the relevant framework and prepares the file through the current workflow. The assistant follows actual evidence and results without anticipating a conclusion.",
         "Open the generated memo, chronology and document requests. Start with the answer to the question, trace a fact to its source and check what remains for review."
       ],
       "deliverables": [
@@ -589,8 +589,8 @@
       "inputs": "Ouvrez case-fr.md, employment-fr.md, record-context-fr.md et contribution-periods-fr.csv. Repérez personne, période et question. Le relevé est fictif, pas un export officiel.",
       "request": "Vera, examine ce dossier INPS de janvier à juin 2025. Explique ce que montrent les documents, vérifie les sources officielles pertinentes et prépare un projet avec les questions et pièces à demander.",
       "steps": [
-        "Dans le fil de travail, Vera lit les fichiers et résume question, période et cadre italien à confirmer. La voix explique le parcours et distingue informations disponibles et questions ouvertes.",
-        "Vera organise faits et chronologie, les relie aux documents, recherche le cadre pertinent et prépare le dossier avec le workflow courant. La voix suit les preuves et résultats réels, sans anticiper la conclusion.",
+        "Dans cette conversation, Vera lit les fichiers et résume question, période et cadre italien à confirmer. L’assistant explique par écrit le parcours et distingue informations disponibles et questions ouvertes.",
+        "Vera organise faits et chronologie, les relie aux documents, recherche le cadre pertinent et prépare le dossier avec le workflow courant. L’assistant suit les preuves et résultats réels, sans anticiper la conclusion.",
         "Ouvrez le mémo, la chronologie et les demandes de pièces produits. Partez de la réponse, suivez un fait jusqu’à sa source et vérifiez ce qui reste à revoir."
       ],
       "deliverables": [
@@ -614,8 +614,8 @@
       "inputs": "Öffnen Sie case-de.md, employment-de.md, record-context-de.md und contribution-periods-de.csv. Bestimmen Sie Person, Zeitraum und Frage. Die Lehrübersicht ist fiktiv, kein offizieller Export.",
       "request": "Vera, prüfe diesen INPS-Fall von Januar bis Juni 2025. Erkläre die Unterlagen, prüfe passende offizielle Quellen und erstelle einen Entwurf mit offenen Fragen und anzufordernden Dokumenten.",
       "steps": [
-        "Im Arbeitschat liest Vera die Dateien und fasst Frage, Zeitraum und italienischen Rahmen zur Bestätigung zusammen. Die Stimme erklärt den Ablauf und trennt vorhandene Informationen von offenen Fragen.",
-        "Vera ordnet Fakten und Chronologie, verknüpft Fakten mit Dokumenten, recherchiert den passenden Rahmen und erstellt die Akte mit dem aktuellen Workflow. Die Stimme folgt tatsächlichen Belegen und Ergebnissen ohne vorweggenommene Schlussfolgerung.",
+        "In diesem Chat liest Vera die Dateien und fasst Frage, Zeitraum und italienischen Rahmen zur Bestätigung zusammen. Der Assistent erklärt schriftlich den Ablauf und trennt vorhandene Informationen von offenen Fragen.",
+        "Vera ordnet Fakten und Chronologie, verknüpft Fakten mit Dokumenten, recherchiert den passenden Rahmen und erstellt die Akte mit dem aktuellen Workflow. Der Assistent folgt tatsächlichen Belegen und Ergebnissen ohne vorweggenommene Schlussfolgerung.",
         "Öffnen Sie Memo, Chronologie und Dokumentenanforderungen. Beginnen Sie mit der Antwort, verfolgen Sie einen Fakt zur Quelle und prüfen Sie offene fachliche Punkte."
       ],
       "deliverables": [
@@ -639,8 +639,8 @@
       "inputs": "Abre case-es.md, employment-es.md, record-context-es.md y contribution-periods-es.csv. Identifica persona, periodo y pregunta. El registro es ficticio, no una exportación oficial.",
       "request": "Vera, examina este caso INPS de enero a junio de 2025. Explica qué muestran los documentos, verifica fuentes oficiales pertinentes y prepara un borrador con preguntas y documentos que solicitar.",
       "steps": [
-        "En el hilo de trabajo Vera lee los archivos y resume pregunta, periodo y marco italiano para confirmar. La voz explica el recorrido y distingue información disponible de preguntas abiertas.",
-        "Vera organiza hechos y cronología, los vincula a documentos, investiga el marco pertinente y prepara el expediente con el workflow actual. La voz sigue evidencias y resultados reales sin anticipar conclusiones.",
+        "En esta conversación Vera lee los archivos y resume pregunta, periodo y marco italiano para confirmar. El asistente explica por escrito el recorrido y distingue información disponible de preguntas abiertas.",
+        "Vera organiza hechos y cronología, los vincula a documentos, investiga el marco pertinente y prepara el expediente con el workflow actual. El asistente sigue evidencias y resultados reales sin anticipar conclusiones.",
         "Abre el memo, la cronología y las solicitudes generadas. Empieza por la respuesta, sigue un hecho hasta su fuente y comprueba qué queda por revisar."
       ],
       "deliverables": [

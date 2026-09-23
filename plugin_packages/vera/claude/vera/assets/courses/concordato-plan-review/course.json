@@ -379,9 +379,9 @@
       "inputs": "Apri demo-it.xlsx e management-demo-it.pdf. Excel presenta incarico, creditori e piano annuale; le due pagine della direzione aggiungono posizioni dichiarate, stima di liquidazione e calendario trimestrale. Sono fonti fittizie da esaminare, non conclusioni approvate.",
       "request": "Vera, rivedi la proposta e il piano di concordato preventivo di Officina Riva in questi due file. Prepara un dossier con trattamento dei creditori, fonti e impieghi, liquidità, documenti mancanti e questioni da risolvere.",
       "steps": [
-        "Nel thread di lavoro Vera legge i file e riassume incarico, data, fase e documenti disponibili. Nella chat vocale spiega il percorso e ti chiede di confermare o correggere il perimetro.",
+        "In questa conversazione Vera legge i file e riassume incarico, data, fase e documenti disponibili. Nella spiegazione scritta spiega il percorso e ti chiede di confermare o correggere il perimetro.",
         "Vera ricostruisce il caso dalle fonti, verifica il quadro pertinente e prepara le valutazioni da rivedere. Passa in rassegna proposta, piano, creditori, confronto con liquidazione, cassa e lacune. Tu rivedi le interpretazioni e le ipotesi prima della conferma richiesta dal workflow.",
-        "Il workflow corrente produce i prospetti e i documenti reali. Apri il riepilogo e poi Excel: individua cosa ricevono i creditori, come è distribuita la cassa e quali documenti servono. Segui una questione fino alla pagina o cella di origine e scegli la prossima azione. Nella chat vocale Vera spiega i risultati effettivi e risponde alle domande senza leggere tutto il rapporto."
+        "Il workflow corrente produce i prospetti e i documenti reali. Apri il riepilogo e poi Excel: individua cosa ricevono i creditori, come è distribuita la cassa e quali documenti servono. Segui una questione fino alla pagina o cella di origine e scegli la prossima azione. Nella spiegazione scritta Vera spiega i risultati effettivi e risponde alle domande senza leggere tutto il rapporto."
       ],
       "deliverables": [
         "Relazione Word e riepilogo leggibile della revisione, con limiti e questioni aperte.",
@@ -404,9 +404,9 @@
       "inputs": "Open demo-en.xlsx and management-demo-en.pdf. Excel contains the assignment, creditors and annual plan; the two management pages add declared positions, the liquidation estimate and quarterly cash timing. These are fictional sources to examine, not approved conclusions.",
       "request": "Vera, review Officina Riva’s concordato preventivo proposal and plan in these two files. Prepare a review file covering creditor treatment, sources and uses, liquidity, missing documents and questions to resolve.",
       "steps": [
-        "In the working thread Vera reads the files and summarizes assignment, date, stage and available documents. In the voice chat it explains the process and asks you to confirm or correct the scope.",
+        "In this conversation Vera reads the files and summarizes assignment, date, stage and available documents. In writing, it explains the process and asks you to confirm or correct the scope.",
         "Vera reconstructs the case from sources, checks the relevant framework and prepares interpretations for review. It considers the proposal, plan, creditors, liquidation comparison, cash and evidence gaps. You review interpretations and assumptions before the confirmation required by the workflow.",
-        "The current workflow produces actual schedules and review documents. Open the summary, then Excel: find what creditors receive, how cash is timed and which documents are needed. Trace one issue to its source page or cell and choose the next action. In the voice chat Vera explains actual results and answers questions without reading the entire report aloud."
+        "The current workflow produces actual schedules and review documents. Open the summary, then Excel: find what creditors receive, how cash is timed and which documents are needed. Trace one issue to its source page or cell and choose the next action. In writing, Vera explains actual results and answers questions without reproducing the entire report."
       ],
       "deliverables": [
         "A Word report and readable review summary with limitations and open questions.",
@@ -429,9 +429,9 @@
       "inputs": "Ouvrez demo-fr.xlsx et management-demo-fr.pdf. Excel présente mission, créanciers et plan annuel ; les deux pages de la direction ajoutent positions déclarées, estimation de liquidation et calendrier trimestriel. Ce sont des sources fictives à examiner, pas des conclusions approuvées.",
       "request": "Vera, examine la proposition et le plan de concordato preventivo d’Officina Riva dans ces deux fichiers. Prépare un dossier couvrant traitement des créanciers, ressources et emplois, trésorerie, pièces manquantes et questions à résoudre.",
       "steps": [
-        "Dans le fil de travail, Vera lit les fichiers et résume mission, date, étape et documents disponibles. Dans le fil vocal, elle explique le parcours et vous demande de confirmer ou corriger le périmètre.",
+        "Dans cette conversation, Vera lit les fichiers et résume mission, date, étape et documents disponibles. Par écrit, elle explique le parcours et vous demande de confirmer ou corriger le périmètre.",
         "Vera reconstitue le cas à partir des sources, vérifie le cadre pertinent et prépare les interprétations à revoir. Elle examine proposition, plan, créanciers, comparaison avec la liquidation, trésorerie et lacunes. Vous revoyez interprétations et hypothèses avant la confirmation requise par le workflow.",
-        "Le workflow actuel produit les tableaux et documents réels. Ouvrez la synthèse puis Excel : repérez ce que reçoivent les créanciers, le calendrier de trésorerie et les pièces nécessaires. Remontez une question à sa page ou cellule source et choisissez la prochaine action. Dans le fil vocal, Vera explique les résultats réels et répond aux questions sans lire tout le rapport."
+        "Le workflow actuel produit les tableaux et documents réels. Ouvrez la synthèse puis Excel : repérez ce que reçoivent les créanciers, le calendrier de trésorerie et les pièces nécessaires. Remontez une question à sa page ou cellule source et choisissez la prochaine action. Par écrit, Vera explique les résultats réels et répond aux questions sans lire tout le rapport."
       ],
       "deliverables": [
         "Rapport Word et résumé lisible de la revue, avec limites et questions ouvertes.",
@@ -454,9 +454,9 @@
       "inputs": "Öffnen Sie demo-de.xlsx und management-demo-de.pdf. Excel enthält Auftrag, Gläubiger und Jahresplan; die zwei Seiten der Geschäftsführung ergänzen angegebene Positionen, Liquidationsschätzung und Quartalsliquidität. Dies sind fiktive Prüfungsquellen, keine freigegebenen Schlussfolgerungen.",
       "request": "Vera, prüfe den Concordato-preventivo-Vorschlag und Plan von Officina Riva in diesen beiden Dateien. Erstelle eine Prüfungsakte zu Gläubigerbehandlung, Mittelherkunft und -verwendung, Liquidität, fehlenden Unterlagen und offenen Fragen.",
       "steps": [
-        "Im Arbeitschat liest Vera die Dateien und fasst Auftrag, Datum, Phase und Unterlagen zusammen. Im Sprachchat erklärt sie den Ablauf und bittet um Bestätigung oder Korrektur des Umfangs.",
+        "In diesem Chat liest Vera die Dateien und fasst Auftrag, Datum, Phase und Unterlagen zusammen. Schriftlich erklärt sie den Ablauf und bittet um Bestätigung oder Korrektur des Umfangs.",
         "Vera rekonstruiert den Fall anhand der Quellen, prüft den passenden Rahmen und bereitet Interpretationen zur Prüfung vor. Sie betrachtet Vorschlag, Plan, Gläubiger, Liquidationsvergleich, Liquidität und Beleglücken. Sie prüfen Interpretationen und Annahmen vor der vom Workflow verlangten Bestätigung.",
-        "Der aktuelle Workflow erstellt echte Aufstellungen und Prüfungsdokumente. Öffnen Sie Zusammenfassung und Excel: Finden Sie Gläubigerzahlungen, Liquiditätsverlauf und benötigte Unterlagen. Verfolgen Sie eine offene Frage bis zur Quellseite oder Zelle und wählen Sie die nächste Handlung. Im Sprachchat erklärt Vera tatsächliche Ergebnisse und beantwortet Fragen, ohne den gesamten Bericht vorzulesen."
+        "Der aktuelle Workflow erstellt echte Aufstellungen und Prüfungsdokumente. Öffnen Sie Zusammenfassung und Excel: Finden Sie Gläubigerzahlungen, Liquiditätsverlauf und benötigte Unterlagen. Verfolgen Sie eine offene Frage bis zur Quellseite oder Zelle und wählen Sie die nächste Handlung. Schriftlich erklärt Vera tatsächliche Ergebnisse und beantwortet Fragen, ohne den gesamten Bericht vorzulesen."
       ],
       "deliverables": [
         "Word-Bericht und lesbare Prüfungszusammenfassung mit Grenzen und offenen Fragen.",
@@ -479,9 +479,9 @@
       "inputs": "Abre demo-es.xlsx y management-demo-es.pdf. Excel presenta encargo, acreedores y plan anual; las dos páginas de la dirección añaden posiciones declaradas, estimación de liquidación y calendario trimestral. Son fuentes ficticias que examinar, no conclusiones aprobadas.",
       "request": "Vera, revisa la propuesta y el plan de concordato preventivo de Officina Riva en estos dos archivos. Prepara un expediente sobre tratamiento de acreedores, fuentes y usos, liquidez, documentos pendientes y cuestiones por resolver.",
       "steps": [
-        "En el hilo de trabajo Vera lee los archivos y resume encargo, fecha, fase y documentos. En el hilo de voz explica el recorrido y pide confirmar o corregir el alcance.",
+        "En esta conversación Vera lee los archivos y resume encargo, fecha, fase y documentos. Por escrito, explica el recorrido y pide confirmar o corregir el alcance.",
         "Vera reconstruye el caso desde las fuentes, verifica el marco pertinente y prepara interpretaciones para revisar. Examina propuesta, plan, acreedores, comparación con liquidación, caja y lagunas. Revisas interpretaciones y supuestos antes de la confirmación exigida por el workflow.",
-        "El workflow actual genera los cuadros y documentos reales. Abre el resumen y después Excel: localiza qué reciben los acreedores, el calendario de caja y los documentos necesarios. Sigue una cuestión hasta su página o celda de origen y elige la próxima acción. En el hilo de voz, Vera explica resultados reales y responde preguntas sin leer todo el informe."
+        "El workflow actual genera los cuadros y documentos reales. Abre el resumen y después Excel: localiza qué reciben los acreedores, el calendario de caja y los documentos necesarios. Sigue una cuestión hasta su página o celda de origen y elige la próxima acción. Por escrito, Vera explica resultados reales y responde preguntas sin leer todo el informe."
       ],
       "deliverables": [
         "Informe Word y resumen legible de la revisión, con límites y preguntas abiertas.",

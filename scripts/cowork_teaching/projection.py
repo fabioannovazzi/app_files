@@ -5,12 +5,26 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+from typing import Any
 
 __all__ = ["add_written_teaching"]
 
 
 def _json(value: object) -> bytes:
     return (json.dumps(value, ensure_ascii=False, indent=2) + "\n").encode()
+
+
+def _written_copy(value: Any, replacements: list[list[str]]) -> Any:
+    """Apply authored host wording only; preserve each workflow's method and data."""
+    if isinstance(value, str):
+        for native, written in replacements:
+            value = value.replace(native, written)
+        return value
+    if isinstance(value, list):
+        return [_written_copy(item, replacements) for item in value]
+    if isinstance(value, dict):
+        return {key: _written_copy(item, replacements) for key, item in value.items()}
+    return value
 
 
 def add_written_teaching(
@@ -21,6 +35,9 @@ def add_written_teaching(
     source_index = json.loads(source[assets + "index.json"])
     if source_index["product"] != product:
         raise ValueError("Foreign course catalogue")
+    wording = json.loads(
+        (root / "scripts/cowork_teaching/written-copy.json").read_text(encoding="utf-8")
+    )
     courses = {}
     for workflow, original in source_index["courses"].items():
         skill = f"skills/{workflow}/SKILL.md"
@@ -52,6 +69,8 @@ def add_written_teaching(
             projected_sources.append(
                 {"path": skill, "sha256": hashlib.sha256(entries[skill]).hexdigest()}
             )
+        for language, locale in course.get("locales", {}).items():
+            course["locales"][language] = _written_copy(locale, wording[language])
         course["sources"] = projected_sources
         course["host"] = "cowork-written-single-conversation"
         course["canonical_course_sha256"] = original["sha256"]

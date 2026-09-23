@@ -269,8 +269,8 @@
       "inputs": "Apri actual-budget.xlsx e facts-it.md. Il foglio GL contiene movimenti mensili per conto e categoria; Budget contiene il piano comparabile. I ricavi sono positivi e i costi negativi. Il caso indica periodo, significati e totali di controllo: consuntivo EUR 53.000 e budget EUR 47.000.",
       "steps": [
         "L’assistente esamina i fogli e propone quali colonne rappresentano date, categorie e importi. Conferma il periodo gennaio–febbraio e la convenzione dei segni prima del calcolo.",
-        "Il workflow applica la mappatura verificata, confronta consuntivo e budget e controlla i totali. La chat vocale spiega il passaggio effettivo e le eventuali informazioni richieste.",
-        "Apri il cruscotto e il workbook prodotti nella chat di lavoro. Parti dalla sintesi del periodo, passa al confronto mensile e poi al dettaglio delle categorie."
+        "Il workflow applica la mappatura verificata, confronta consuntivo e budget e controlla i totali. L’assistente spiega il passaggio effettivo e le eventuali informazioni richieste.",
+        "Apri il cruscotto e il workbook prodotti in questa conversazione. Parti dalla sintesi del periodo, passa al confronto mensile e poi al dettaglio delle categorie."
       ],
       "deliverables": [
         "Cruscotto: mostra risultato del periodo e scostamenti assoluti e percentuali dove significativi. Usalo per scegliere quali voci approfondire.",
@@ -294,8 +294,8 @@
       "inputs": "Open actual-budget.xlsx and facts-en.md. GL contains monthly movements by account and category; Budget contains the comparable plan. Revenue is positive and costs are negative. The case declares periods, meanings and control totals: actual EUR 53,000 and budget EUR 47,000.",
       "steps": [
         "The assistant inspects the sheets and proposes which columns contain dates, categories and amounts. Confirm January–February and the sign convention before calculation.",
-        "The workflow applies the reviewed mapping, compares actual with budget and checks totals. The voice chat explains the actual step and any requested information.",
-        "Open the dashboard and workbook produced in the working chat. Start with the period summary, then the monthly comparison and category detail."
+        "The workflow applies the reviewed mapping, compares actual with budget and checks totals. The assistant explains the actual step and any requested information.",
+        "Open the dashboard and workbook produced in this conversation. Start with the period summary, then the monthly comparison and category detail."
       ],
       "deliverables": [
         "Dashboard: shows period performance and absolute and percentage variances where meaningful. Use it to decide which categories to investigate.",
@@ -321,8 +321,8 @@
       "request": "Clara, prépare le rapport réel–budget d’Arco pour janvier et février 2026 avec ce classeur. Montre le résultat opérationnel, les écarts et le détail par catégorie.",
       "steps": [
         "Clara examine les feuilles et propose les colonnes de dates, catégories et montants. Confirmez janvier–février et le sens des signes avant le calcul.",
-        "La procédure applique la correspondance vérifiée, compare réel et budget et contrôle les totaux. La conversation vocale explique l’étape réelle et les informations éventuellement demandées.",
-        "Ouvrez le tableau de bord et le classeur produits dans la conversation de travail. Commencez par la synthèse, puis passez au comparatif mensuel et aux catégories."
+        "La procédure applique la correspondance vérifiée, compare réel et budget et contrôle les totaux. L’assistant explique l’étape réelle et les informations éventuellement demandées.",
+        "Ouvrez le tableau de bord et le classeur produits dans cette conversation. Commencez par la synthèse, puis passez au comparatif mensuel et aux catégories."
       ],
       "deliverables": [
         "Tableau de bord : résultat de la période, écarts en valeur et en pourcentage lorsque cela a un sens. Repérez les catégories à approfondir.",
@@ -346,8 +346,8 @@
       "request": "Clara, erstelle aus dieser Arbeitsmappe Arcos Ist-Budget-Bericht für Januar und Februar 2026. Zeige operatives Ergebnis, Abweichungen und Kategorien.",
       "steps": [
         "Clara untersucht die Tabellen und schlägt die Spalten für Datum, Kategorie und Betrag vor. Bestätigen Sie Januar–Februar und die Vorzeichen vor der Berechnung.",
-        "Der Workflow verwendet die geprüfte Zuordnung, vergleicht Ist und Budget und kontrolliert die Summen. Der Sprachchat erklärt den tatsächlichen Schritt und etwaige Rückfragen.",
-        "Öffnen Sie Dashboard und Arbeitsmappe aus dem Arbeitschat. Beginnen Sie bei der Zusammenfassung, danach Monatsvergleich und Kategorien."
+        "Der Workflow verwendet die geprüfte Zuordnung, vergleicht Ist und Budget und kontrolliert die Summen. Der Assistent erklärt den tatsächlichen Schritt und etwaige Rückfragen.",
+        "Öffnen Sie Dashboard und Arbeitsmappe aus diesem Chat. Beginnen Sie bei der Zusammenfassung, danach Monatsvergleich und Kategorien."
       ],
       "deliverables": [
         "Dashboard: Ergebnis des Zeitraums sowie absolute und sinnvolle prozentuale Abweichungen. Wählen Sie daraus Kategorien zur weiteren Untersuchung.",
@@ -371,8 +371,8 @@
       "request": "Clara, prepara el informe real–presupuesto de Arco para enero y febrero de 2026 con este libro. Muestra resultado operativo, desviaciones y detalle por categoría.",
       "steps": [
         "Clara examina las hojas y propone las columnas de fechas, categorías e importes. Confirma enero–febrero y el criterio de signos antes de calcular.",
-        "El workflow aplica la correspondencia revisada, compara resultados y presupuesto y comprueba los totales. La conversación de voz explica el paso real y cualquier información solicitada.",
-        "Abre el panel y el libro producidos en la conversación de trabajo. Empieza por el resumen, sigue con la comparación mensual y después con las categorías."
+        "El workflow aplica la correspondencia revisada, compara resultados y presupuesto y comprueba los totales. El asistente explica el paso real y cualquier información solicitada.",
+        "Abre el panel y el libro producidos en esta conversación. Empieza por el resumen, sigue con la comparación mensual y después con las categorías."
       ],
       "deliverables": [
         "Panel: resultado del período y desviaciones absolutas y porcentuales cuando sean significativas. Elige las categorías que requieren investigación.",

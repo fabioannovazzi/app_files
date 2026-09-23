@@ -598,8 +598,8 @@
       "inputs": "Apri january-february.csv e context-it.md. Individua Scenario (PL budget, AC consuntivo), Month, Category e Amount. La nota chiarisce segni e totali di controllo. Vera prepara una copia nel fascicolo didattico.",
       "request": "Vera, confronta il risultato operativo effettivo di gennaio e febbraio 2026 con il budget di Officina Arco, in euro. Mostrami il report e spiegami quali voci contribuiscono allo scostamento.",
       "steps": [
-        "Nella chat di lavoro Vera legge il file e propone il confronto. La chat vocale ti aiuta a verificare mesi, budget di partenza, consuntivo, valuta e significato dei costi negativi prima del calcolo.",
-        "La procedura corrente calcola gli scostamenti e genera tabelle, grafici e bozza del report. Mentre lavora, la voce spiega il percorso e risponde alle domande senza anticipare risultati non ancora prodotti.",
+        "In questa conversazione Vera legge il file e propone il confronto. L’assistente ti aiuta a verificare mesi, budget di partenza, consuntivo, valuta e significato dei costi negativi prima del calcolo.",
+        "La procedura corrente calcola gli scostamenti e genera tabelle, grafici e bozza del report. Mentre lavora, l’assistente spiega il percorso e risponde alle domande senza anticipare risultati non ancora prodotti.",
         "Apri il report e il grafico principale effettivi. Parti dal risultato complessivo, poi leggi il contributo di ricavi e costi e un dettaglio mensile. Vera collega ciascun commento ai dati calcolati e salva le decisioni di revisione effettive."
       ],
       "deliverables": [
@@ -623,8 +623,8 @@
       "inputs": "Open january-february.csv and context-en.md. Find Scenario (PL budget, AC actual), Month, Category and Amount. The note explains signs and control totals. Vera stages a copy in the teaching case.",
       "request": "Vera, compare Officina Arco’s actual operating profit for January and February 2026 with budget, in euros. Show me the report and explain which categories contribute to the difference.",
       "steps": [
-        "In the working chat, Vera reads the file and proposes the comparison. The voice chat helps you check months, starting budget, actual results, currency and negative cost signs before calculation.",
-        "The current workflow calculates variances and creates tables, charts and a report draft. While it runs, the voice explains the process and answers questions without anticipating results that have not been produced.",
+        "In this conversation, Vera reads the file and proposes the comparison. The assistant helps you check months, starting budget, actual results, currency and negative cost signs before calculation.",
+        "The current workflow calculates variances and creates tables, charts and a report draft. While it runs, the assistant explains the process and answers questions without anticipating results that have not been produced.",
         "Open the actual report and main chart. Start with the overall result, then read revenue and cost contributions and one monthly detail. Vera connects each comment to calculated data and saves actual review decisions."
       ],
       "deliverables": [
@@ -648,8 +648,8 @@
       "inputs": "Ouvrez january-february.csv et context-fr.md. Repérez Scenario (PL budget, AC réalisé), Month, Category et Amount. La note explique signes et totaux de contrôle. Vera prépare une copie dans le dossier pédagogique.",
       "request": "Vera, compare le résultat opérationnel réel d’Officina Arco de janvier et février 2026 au budget, en euros. Montre-moi le rapport et explique les rubriques qui contribuent à l’écart.",
       "steps": [
-        "Dans la conversation de travail, Vera lit le fichier et propose la comparaison. La voix vous aide à vérifier mois, budget de départ, réalisé, devise et signe négatif des charges avant le calcul.",
-        "La procédure courante calcule les écarts et produit tableaux, graphiques et brouillon du rapport. Pendant l’exécution, la voix explique le parcours et répond sans anticiper des résultats non encore produits.",
+        "Dans cette conversation, Vera lit le fichier et propose la comparaison. L’assistant vous aide à vérifier mois, budget de départ, réalisé, devise et signe négatif des charges avant le calcul.",
+        "La procédure courante calcule les écarts et produit tableaux, graphiques et brouillon du rapport. Pendant l’exécution, l’assistant explique le parcours et répond sans anticiper des résultats non encore produits.",
         "Ouvrez le rapport et le graphique principal effectivement créés. Commencez par le résultat global, puis les contributions des produits et charges et un détail mensuel. Vera relie ses commentaires aux données calculées et enregistre les décisions de revue effectives."
       ],
       "deliverables": [
@@ -673,8 +673,8 @@
       "inputs": "Öffnen Sie january-february.csv und context-de.md. Suchen Sie Scenario (PL Budget, AC Ist), Month, Category und Amount. Die Notiz erklärt Vorzeichen und Kontrollsummen. Vera legt eine Kopie in der Übungsakte ab.",
       "request": "Vera, vergleiche das tatsächliche operative Ergebnis von Officina Arco für Januar und Februar 2026 mit dem Budget in Euro. Zeige mir den Bericht und erkläre, welche Positionen zur Abweichung beitragen.",
       "steps": [
-        "Im Arbeitschat liest Vera die Datei und schlägt den Vergleich vor. Der Sprachchat hilft, Monate, Ausgangsbudget, Ist, Währung und negative Kostenvorzeichen vor der Berechnung zu prüfen.",
-        "Der aktuelle Ablauf berechnet Abweichungen und erstellt Tabellen, Diagramme und einen Berichtsentwurf. Währenddessen erklärt die Stimme den Ablauf und beantwortet Fragen, ohne noch nicht erzeugte Ergebnisse vorwegzunehmen.",
+        "In diesem Chat liest Vera die Datei und schlägt den Vergleich vor. Der Assistent hilft, Monate, Ausgangsbudget, Ist, Währung und negative Kostenvorzeichen vor der Berechnung zu prüfen.",
+        "Der aktuelle Ablauf berechnet Abweichungen und erstellt Tabellen, Diagramme und einen Berichtsentwurf. Währenddessen erklärt der Assistent den Ablauf und beantwortet Fragen, ohne noch nicht erzeugte Ergebnisse vorwegzunehmen.",
         "Öffnen Sie den tatsächlich erstellten Bericht und das Hauptdiagramm. Beginnen Sie beim Gesamtergebnis, betrachten Sie dann Erlös- und Kostenbeiträge und ein Monatsdetail. Vera verbindet Kommentare mit berechneten Daten und speichert tatsächliche Prüfentscheidungen."
       ],
       "deliverables": [
@@ -698,8 +698,8 @@
       "inputs": "Abre january-february.csv y context-es.md. Localiza Scenario (PL presupuesto, AC real), Month, Category y Amount. La nota explica signos y totales de control. Vera prepara una copia en el expediente didáctico.",
       "request": "Vera, compara el resultado operativo real de Officina Arco de enero y febrero de 2026 con el presupuesto, en euros. Muéstrame el informe y explica qué partidas contribuyen a la desviación.",
       "steps": [
-        "En la conversación de trabajo, Vera lee el archivo y propone la comparación. La voz ayuda a comprobar meses, presupuesto inicial, real, moneda y signos negativos de costes antes del cálculo.",
-        "El flujo actual calcula las desviaciones y genera tablas, gráficos y un borrador del informe. Mientras se ejecuta, la voz explica el proceso y responde sin anticipar resultados aún no producidos.",
+        "En esta conversación, Vera lee el archivo y propone la comparación. El asistente ayuda por escrito a comprobar meses, presupuesto inicial, real, moneda y signos negativos de costes antes del cálculo.",
+        "El flujo actual calcula las desviaciones y genera tablas, gráficos y un borrador del informe. Mientras se ejecuta, el asistente explica el proceso y responde sin anticipar resultados aún no producidos.",
         "Abre el informe y el gráfico principal realmente generados. Empieza por el resultado global, después los aportes de ingresos y costes y un detalle mensual. Vera vincula sus comentarios con datos calculados y guarda las decisiones reales de revisión."
       ],
       "deliverables": [

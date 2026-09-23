@@ -1,0 +1,452 @@
+{
+  "en": [
+    [
+      "In the working chat",
+      "In this conversation"
+    ],
+    [
+      "In the working thread",
+      "In this conversation"
+    ],
+    [
+      "In the working window",
+      "In this conversation"
+    ],
+    [
+      "The working chat",
+      "The assistant"
+    ],
+    [
+      "The working thread",
+      "The assistant"
+    ],
+    [
+      "in the working chat",
+      "in this conversation"
+    ],
+    [
+      "in the working thread",
+      "in this conversation"
+    ],
+    [
+      "in the working window",
+      "for this lesson"
+    ],
+    [
+      "In the voice chat,",
+      "In writing,"
+    ],
+    [
+      "In the voice chat ",
+      "In writing, "
+    ],
+    [
+      "in the voice chat",
+      "in writing"
+    ],
+    [
+      "The voice chat",
+      "The assistant"
+    ],
+    [
+      "the voice chat",
+      "the assistant"
+    ],
+    [
+      "The voice explanation",
+      "The written explanation"
+    ],
+    [
+      "the voice explanation",
+      "the written explanation"
+    ],
+    [
+      "Voice explains",
+      "The assistant explains"
+    ],
+    [
+      "Voice helps",
+      "The assistant helps"
+    ],
+    [
+      "Voice guides",
+      "The assistant guides"
+    ],
+    [
+      "including by native voice conversation",
+      "in this conversation"
+    ],
+    [
+      "without reading the entire report aloud",
+      "without reproducing the entire report"
+    ],
+    [
+      "The voice thread",
+      "The assistant"
+    ],
+    [
+      "the voice thread",
+      "the assistant"
+    ],
+    [
+      "Voice follows",
+      "The assistant follows"
+    ],
+    [
+      "Voice distinguishes",
+      "The assistant distinguishes"
+    ],
+    [
+      "the voice explains",
+      "the assistant explains"
+    ]
+  ],
+  "it": [
+    [
+      "Nella chat di lavoro",
+      "In questa conversazione"
+    ],
+    [
+      "Nella finestra di lavoro",
+      "In questa conversazione"
+    ],
+    [
+      "Nel thread di lavoro",
+      "In questa conversazione"
+    ],
+    [
+      "La chat di lavoro",
+      "L’assistente"
+    ],
+    [
+      "nella chat di lavoro",
+      "in questa conversazione"
+    ],
+    [
+      "nella finestra di lavoro",
+      "in questa conversazione"
+    ],
+    [
+      "nel thread di lavoro",
+      "in questa conversazione"
+    ],
+    [
+      "Nella chat vocale",
+      "Nella spiegazione scritta"
+    ],
+    [
+      "nella chat vocale",
+      "nella spiegazione scritta"
+    ],
+    [
+      "La chat vocale",
+      "L’assistente"
+    ],
+    [
+      "la chat vocale",
+      "l’assistente"
+    ],
+    [
+      "La conversazione vocale",
+      "L’assistente"
+    ],
+    [
+      "la conversazione vocale",
+      "l’assistente"
+    ],
+    [
+      "La voce spiega",
+      "L’assistente spiega per iscritto"
+    ],
+    [
+      "La voce ti accompagna",
+      "L’assistente ti accompagna per iscritto"
+    ],
+    [
+      "la voce risponde",
+      "l’assistente risponde per iscritto"
+    ],
+    [
+      "La voce segue",
+      "L’assistente segue"
+    ],
+    [
+      "La voce distingue",
+      "L’assistente distingue"
+    ],
+    [
+      "la voce spiega",
+      "l’assistente spiega"
+    ],
+    [
+      "Il thread di lavoro",
+      "L’assistente"
+    ],
+    [
+      "il thread di lavoro",
+      "l’assistente"
+    ]
+  ],
+  "fr": [
+    [
+      "Dans le fil de travail",
+      "Dans cette conversation"
+    ],
+    [
+      "Dans la conversation de travail",
+      "Dans cette conversation"
+    ],
+    [
+      "Dans la fenêtre de travail",
+      "Dans cette conversation"
+    ],
+    [
+      "La conversation de travail",
+      "L’assistant"
+    ],
+    [
+      "dans la conversation de travail",
+      "dans cette conversation"
+    ],
+    [
+      "dans le fil de travail",
+      "dans cette conversation"
+    ],
+    [
+      "dans la fenêtre de travail",
+      "dans cette conversation"
+    ],
+    [
+      "Dans la conversation vocale,",
+      "Par écrit,"
+    ],
+    [
+      "Dans la conversation vocale ",
+      "Par écrit, "
+    ],
+    [
+      "La conversation vocale",
+      "L’assistant"
+    ],
+    [
+      "la conversation vocale",
+      "l’assistant"
+    ],
+    [
+      "La voix explique",
+      "L’assistant explique par écrit"
+    ],
+    [
+      "La voix aide",
+      "L’assistant aide par écrit"
+    ],
+    [
+      "La voix accompagne",
+      "L’assistant accompagne par écrit"
+    ],
+    [
+      "Le fil de travail",
+      "L’assistant"
+    ],
+    [
+      "Dans le fil vocal,",
+      "Par écrit,"
+    ],
+    [
+      "Dans le fil vocal ",
+      "Par écrit, "
+    ],
+    [
+      "L’explication vocale",
+      "L’explication écrite"
+    ],
+    [
+      "La voix suit",
+      "L’assistant suit"
+    ],
+    [
+      "La voix distingue",
+      "L’assistant distingue"
+    ],
+    [
+      "La voix vous",
+      "L’assistant vous"
+    ],
+    [
+      "la voix explique",
+      "l’assistant explique"
+    ],
+    [
+      "Le fil vocal",
+      "L’assistant"
+    ]
+  ],
+  "de": [
+    [
+      "Im Arbeitschat",
+      "In diesem Chat"
+    ],
+    [
+      "Im Arbeitsfenster",
+      "In diesem Chat"
+    ],
+    [
+      "Der Arbeitschat",
+      "Der Assistent"
+    ],
+    [
+      "im Arbeitschat",
+      "in diesem Chat"
+    ],
+    [
+      "im Arbeitsfenster",
+      "in diesem Chat"
+    ],
+    [
+      "Im Sprachchat",
+      "Schriftlich"
+    ],
+    [
+      "im Sprachchat",
+      "schriftlich"
+    ],
+    [
+      "Der Sprachchat",
+      "Der Assistent"
+    ],
+    [
+      "der Sprachchat",
+      "der Assistent"
+    ],
+    [
+      "Die Stimme erklärt",
+      "Der Assistent erklärt schriftlich"
+    ],
+    [
+      "Die Stimme hilft",
+      "Der Assistent hilft schriftlich"
+    ],
+    [
+      "Die Stimme begleitet",
+      "Der Assistent begleitet schriftlich"
+    ],
+    [
+      "Im Arbeitsthread",
+      "In diesem Chat"
+    ],
+    [
+      "im Arbeitsthread",
+      "in diesem Chat"
+    ],
+    [
+      "Die Spracherklärung",
+      "Die schriftliche Erklärung"
+    ],
+    [
+      "Die Stimme folgt",
+      "Der Assistent folgt"
+    ],
+    [
+      "die Stimme",
+      "der Assistent"
+    ],
+    [
+      "aus dem Arbeitschat",
+      "aus diesem Chat"
+    ]
+  ],
+  "es": [
+    [
+      "En el hilo de trabajo",
+      "En esta conversación"
+    ],
+    [
+      "En la conversación de trabajo",
+      "En esta conversación"
+    ],
+    [
+      "En la ventana de trabajo",
+      "En esta conversación"
+    ],
+    [
+      "La conversación de trabajo",
+      "El asistente"
+    ],
+    [
+      "en la conversación de trabajo",
+      "en esta conversación"
+    ],
+    [
+      "en el hilo de trabajo",
+      "en esta conversación"
+    ],
+    [
+      "en la ventana de trabajo",
+      "en esta conversación"
+    ],
+    [
+      "En la conversación de voz",
+      "Por escrito"
+    ],
+    [
+      "La conversación de voz",
+      "El asistente"
+    ],
+    [
+      "la conversación de voz",
+      "el asistente"
+    ],
+    [
+      "La voz explica",
+      "El asistente explica por escrito"
+    ],
+    [
+      "La voz ayuda",
+      "El asistente ayuda por escrito"
+    ],
+    [
+      "La voz guía",
+      "El asistente guía por escrito"
+    ],
+    [
+      "El hilo de trabajo",
+      "El asistente"
+    ],
+    [
+      "En el hilo de voz,",
+      "Por escrito,"
+    ],
+    [
+      "En el hilo de voz ",
+      "Por escrito, "
+    ],
+    [
+      "La voz sigue",
+      "El asistente sigue"
+    ],
+    [
+      "La voz distingue",
+      "El asistente distingue"
+    ],
+    [
+      "La voz acompaña",
+      "El asistente acompaña"
+    ],
+    [
+      "la voz explica",
+      "el asistente explica"
+    ],
+    [
+      "con la voz población",
+      "con el asistente la población"
+    ],
+    [
+      "El hilo de voz",
+      "El asistente"
+    ],
+    [
+      "El chat de voz",
+      "El asistente"
+    ]
+  ]
+}

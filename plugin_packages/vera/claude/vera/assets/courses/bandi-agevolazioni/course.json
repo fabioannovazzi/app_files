@@ -523,7 +523,7 @@
       "inputs": "Apri avviso-it.md, progetto-it.md e preventivo-it.csv. Sono l’avviso simulato, i fatti dichiarati dell’impresa e i costi proposti. Non contengono valutazioni di ammissibilità, classificazioni di spesa o approvazioni già eseguite.",
       "request": "Vera, prepara un dossier di esercitazione da questo avviso e dai documenti dell’impresa. Mostrami requisiti, confronto con le evidenze, spese, documenti necessari e punti che devo rivedere.",
       "steps": [
-        "Nella finestra di lavoro Vera apre la pratica e registra i documenti. La conversazione vocale spiega incarico, fonti e risultato. Rivedi quali documenti governano l’esercizio e quali descrivono l’impresa.",
+        "In questa conversazione Vera apre la pratica e registra i documenti. L’assistente spiega incarico, fonti e risultato. Rivedi quali documenti governano l’esercizio e quali descrivono l’impresa.",
         "Vera propone requisiti e confronti con i fatti, esamina le spese e prepara elenco documenti e bozza. Segui un passaggio dalla fonte alla proposta e rivedi le decisioni richieste dal normale procedimento.",
         "Apri review_dossier.html: parti dalla sintesi, poi rivedi spese, documenti e bozza del progetto. Apri una condizione per leggere valutazione e passaggio della fonte. Vera spiega la revisione ancora necessaria e i passi successivi; l’esercizio non usa portali e non invia nulla."
       ],
@@ -548,7 +548,7 @@
       "inputs": "Open avviso-en.md, progetto-en.md and preventivo-en.csv: the simulated call, declared company facts and proposed costs. They contain no prior eligibility assessment, accepted cost classification or approval.",
       "request": "Vera, prepare a training dossier from this call and the company documents. Show me requirements, evidence comparisons, costs, required documents and the points I need to review.",
       "steps": [
-        "In the working window, Vera opens the case and registers the documents. The voice chat explains the assignment, sources and result. Review which documents govern the exercise and which describe the company.",
+        "In this conversation, Vera opens the case and registers the documents. The assistant explains the assignment, sources and result. Review which documents govern the exercise and which describe the company.",
         "Vera proposes requirements and comparisons with the facts, examines costs and prepares the checklist and draft. Follow a step from source to proposal and review the decisions required by the normal process.",
         "Open review_dossier.html: start with the summary, then review costs, documents and the project draft. Expand one condition to read its assessment and source excerpt. Vera explains the remaining review and next steps; this exercise uses no portal and sends nothing."
       ],
@@ -573,7 +573,7 @@
       "inputs": "Ouvrez avviso-fr.md, progetto-fr.md et preventivo-fr.csv : appel simulé, faits déclarés par l’entreprise et coûts proposés. Aucune évaluation d’éligibilité, classification de dépenses acceptée ou approbation n’est déjà fournie.",
       "request": "Vera, prépare un dossier d’exercice à partir de cet appel et des documents de l’entreprise. Montre les exigences, leur rapprochement avec les preuves, les dépenses, les documents nécessaires et les points à relire.",
       "steps": [
-        "Dans la fenêtre de travail, Vera ouvre le dossier et enregistre les documents. La conversation vocale explique la mission, les sources et le résultat. Vérifiez quels documents gouvernent l’exercice et lesquels décrivent l’entreprise.",
+        "Dans cette conversation, Vera ouvre le dossier et enregistre les documents. L’assistant explique la mission, les sources et le résultat. Vérifiez quels documents gouvernent l’exercice et lesquels décrivent l’entreprise.",
         "Vera propose les exigences et leur rapprochement avec les faits, examine les dépenses et prépare la liste des pièces et le projet. Suivez un point de sa source à la proposition et effectuez les révisions prévues par le processus normal.",
         "Ouvrez review_dossier.html : commencez par la synthèse, puis examinez dépenses, documents et projet de texte. Développez une condition pour lire son évaluation et l’extrait de la source. Vera explique les examens encore nécessaires et les étapes suivantes ; cet exercice n’utilise aucun portail et n’envoie rien."
       ],
@@ -598,7 +598,7 @@
       "inputs": "Öffnen Sie avviso-de.md, progetto-de.md und preventivo-de.csv: simulierter Aufruf, erklärte Unternehmensfakten und vorgeschlagene Kosten. Förderfähigkeit, Kostenklassifizierung und Freigaben wurden noch nicht beurteilt.",
       "request": "Vera, bereite aus diesem Aufruf und den Unternehmensunterlagen ein Übungsdossier vor. Zeige Anforderungen, Belegabgleich, Kosten, nötige Dokumente und meine Prüfpunkte.",
       "steps": [
-        "Im Arbeitsfenster eröffnet Vera den Fall und registriert die Unterlagen. Im Sprachchat erklärt sie Auftrag, Quellen und Ergebnis. Prüfen Sie, welche Dokumente das Übungsszenario regeln und welche das Unternehmen beschreiben.",
+        "In diesem Chat eröffnet Vera den Fall und registriert die Unterlagen. Schriftlich erklärt sie Auftrag, Quellen und Ergebnis. Prüfen Sie, welche Dokumente das Übungsszenario regeln und welche das Unternehmen beschreiben.",
         "Vera schlägt Anforderungen und Faktenabgleiche vor, prüft die Kosten und erstellt Dokumentenliste und Entwurf. Verfolgen Sie einen Punkt von der Quelle zum Vorschlag und führen Sie die vorgesehenen Prüfentscheidungen durch.",
         "Öffnen Sie review_dossier.html: Beginnen Sie mit der Zusammenfassung und prüfen Sie anschließend Kosten, Unterlagen und Projektentwurf. Klappen Sie eine Bedingung auf, um Bewertung und Quellenauszug zu lesen. Vera erklärt die noch erforderlichen Prüfungen und nächsten Schritte; die Übung nutzt kein Portal und sendet nichts."
       ],
@@ -623,7 +623,7 @@
       "inputs": "Abre avviso-es.md, progetto-es.md y preventivo-es.csv: convocatoria simulada, hechos declarados de la empresa y costes propuestos. No incluyen una evaluación de elegibilidad, clasificación de gastos aceptada ni aprobación previa.",
       "request": "Vera, prepara un expediente de práctica con esta convocatoria y los documentos de la empresa. Muéstrame requisitos, comparación con las evidencias, gastos, documentos necesarios y puntos que debo revisar.",
       "steps": [
-        "En la ventana de trabajo, Vera abre el caso y registra los documentos. La conversación de voz explica encargo, fuentes y resultado. Revisa qué documentos rigen el ejercicio y cuáles describen la empresa.",
+        "En esta conversación, Vera abre el caso y registra los documentos. El asistente explica encargo, fuentes y resultado. Revisa qué documentos rigen el ejercicio y cuáles describen la empresa.",
         "Vera propone requisitos y comparaciones con los hechos, examina gastos y prepara la lista de documentos y el borrador. Sigue un punto desde la fuente hasta la propuesta y revisa las decisiones previstas por el procedimiento normal.",
         "Abre review_dossier.html: empieza por el resumen y después revisa gastos, documentos y borrador del proyecto. Despliega una condición para leer su evaluación y el extracto de la fuente. Vera explica las revisiones pendientes y los siguientes pasos; este ejercicio no utiliza portales ni envía nada."
       ],

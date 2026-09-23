@@ -527,8 +527,8 @@
       "inputs": "Apri question-it.md per leggere richiesta, pubblico, perimetro e formato. sources-it.md presenta la guida e il testo ufficiale allegati. Non devi preparare istruzioni tecniche né scegliere i passaggi interni.",
       "request": "Lucia, rispondi al quesito di Imprese Arco in questo file. Prepara la breve nota richiesta, verifica le fonti e la risposta e mostrami il documento e le questioni da rivedere.",
       "steps": [
-        "Nel thread di lavoro Lucia legge il quesito e prepara obiettivo, fonti, lingua e quadro giuridico. La voce spiega che cosa verrà risposto. Correggi eventuali incomprensioni e rispondi solo alle domande che cambiano il lavoro.",
-        "Scegli la ricerca ordinaria o Deep Research se disponibile; il workflow conserva una scelta già fatta per questo quesito. Il thread di lavoro ricerca e redige la risposta. La voce spiega il progresso effettivo e risponde alle tue domande.",
+        "In questa conversazione Lucia legge il quesito e prepara obiettivo, fonti, lingua e quadro giuridico. L’assistente spiega per iscritto che cosa verrà risposto. Correggi eventuali incomprensioni e rispondi solo alle domande che cambiano il lavoro.",
+        "Scegli la ricerca ordinaria o Deep Research se disponibile; il workflow conserva una scelta già fatta per questo quesito. L’assistente ricerca e redige la risposta. L’assistente spiega per iscritto il progresso effettivo e risponde alle tue domande.",
         "Lucia verifica la risposta rispetto al quesito, alle fonti e al ragionamento, correggendo quanto necessario. Apri la nota Word, osserva come sono esposte le conclusioni e rintraccia una fonte. Rivedi limiti e questioni aperte prima di utilizzarla."
       ],
       "deliverables": [
@@ -552,8 +552,8 @@
       "inputs": "Open question-en.md for the request, audience, scope and format. sources-en.md introduces the attached guidance and official text. You do not need to write technical instructions or choose internal stages.",
       "request": "Lucia, answer Imprese Arco’s question in this file. Prepare the requested short briefing, check the sources and answer, and show me the document and matters requiring review.",
       "steps": [
-        "In the working thread, Lucia reads the question and prepares its objective, source plan, language and legal framework. The voice chat explains what the answer will cover. Correct misunderstandings and answer only questions that affect the work.",
-        "Choose ordinary research or Deep Research when available; the workflow preserves a choice already made for this question. The working thread researches and drafts the answer. The voice explanation follows real progress and takes your questions.",
+        "In this conversation, Lucia reads the question and prepares its objective, source plan, language and legal framework. The assistant explains what the answer will cover. Correct misunderstandings and answer only questions that affect the work.",
+        "Choose ordinary research or Deep Research when available; the workflow preserves a choice already made for this question. The assistant researches and drafts the answer. The written explanation follows real progress and takes your questions.",
         "Lucia checks the answer against the question, sources and reasoning, making necessary corrections. Open the Word briefing, see how conclusions are presented and trace one source. Review limitations and unresolved points before use."
       ],
       "deliverables": [
@@ -577,8 +577,8 @@
       "inputs": "Ouvre question-fr.md pour la demande, le public, le périmètre et le format. sources-fr.md présente le guide et le texte officiel joints. Tu n’as pas à rédiger d’instructions techniques ni à choisir les étapes internes.",
       "request": "Lucia, réponds à la question d’Imprese Arco dans ce fichier. Prépare la courte note demandée, vérifie sources et réponse, puis montre-moi le document et les points à revoir.",
       "steps": [
-        "Dans le fil de travail, Lucia lit la question et prépare objectif, sources, langue et cadre juridique. La conversation vocale explique le contenu visé. Corrige les incompréhensions et réponds seulement aux questions qui influent sur le travail.",
-        "Choisis la recherche ordinaire ou Deep Research si disponible ; le workflow conserve un choix déjà fait pour cette question. Le fil de travail recherche et rédige la réponse. La voix suit le progrès réel et répond à tes questions.",
+        "Dans cette conversation, Lucia lit la question et prépare objectif, sources, langue et cadre juridique. L’assistant explique le contenu visé. Corrige les incompréhensions et réponds seulement aux questions qui influent sur le travail.",
+        "Choisis la recherche ordinaire ou Deep Research si disponible ; le workflow conserve un choix déjà fait pour cette question. L’assistant recherche et rédige la réponse. L’assistant suit le progrès réel et répond à tes questions.",
         "Lucia vérifie la réponse par rapport à la demande, aux sources et au raisonnement et apporte les corrections nécessaires. Ouvre la note Word, repère les conclusions et retrouve une source. Revois limites et points ouverts avant utilisation."
       ],
       "deliverables": [
@@ -602,8 +602,8 @@
       "inputs": "Öffne question-de.md für Anfrage, Zielgruppe, Umfang und Format. sources-de.md stellt Leitfaden und offiziellen Text vor. Du musst keine technischen Anweisungen verfassen oder interne Schritte auswählen.",
       "request": "Lucia, beantworte die Frage von Imprese Arco in dieser Datei. Erstelle die gewünschte kurze Notiz, prüfe Quellen und Antwort und zeige mir das Dokument und die noch zu prüfenden Punkte.",
       "steps": [
-        "Im Arbeitsthread liest Lucia die Frage und bereitet Ziel, Quellenplan, Sprache und Rechtsrahmen vor. Der Sprachchat erklärt den vorgesehenen Inhalt. Korrigiere Missverständnisse und beantworte nur Fragen, die die Arbeit beeinflussen.",
-        "Wähle gewöhnliche Recherche oder Deep Research, falls verfügbar; eine bereits für diese Frage getroffene Wahl bleibt erhalten. Im Arbeitsthread entstehen Recherche und Antwort. Die Spracherklärung folgt dem tatsächlichen Fortschritt und nimmt deine Fragen auf.",
+        "In diesem Chat liest Lucia die Frage und bereitet Ziel, Quellenplan, Sprache und Rechtsrahmen vor. Der Assistent erklärt den vorgesehenen Inhalt. Korrigiere Missverständnisse und beantworte nur Fragen, die die Arbeit beeinflussen.",
+        "Wähle gewöhnliche Recherche oder Deep Research, falls verfügbar; eine bereits für diese Frage getroffene Wahl bleibt erhalten. In diesem Chat entstehen Recherche und Antwort. Die schriftliche Erklärung folgt dem tatsächlichen Fortschritt und nimmt deine Fragen auf.",
         "Lucia prüft die Antwort anhand von Frage, Quellen und Begründung und korrigiert nötigenfalls. Öffne die Word-Notiz, sieh dir die Schlussfolgerungen an und verfolge eine Quelle. Prüfe Grenzen und offene Punkte vor der Verwendung."
       ],
       "deliverables": [
@@ -627,8 +627,8 @@
       "inputs": "Abre question-es.md para ver encargo, público, alcance y formato. sources-es.md presenta la guía y el texto oficial adjuntos. No necesitas preparar instrucciones técnicas ni elegir etapas internas.",
       "request": "Lucia, responde a la cuestión de Imprese Arco en este archivo. Prepara la nota breve solicitada, verifica fuentes y respuesta y muéstrame el documento y los puntos que requieren revisión.",
       "steps": [
-        "En el hilo de trabajo, Lucia lee la pregunta y prepara objetivo, fuentes, idioma y marco jurídico. La voz explica qué abarcará la respuesta. Corrige malentendidos y responde solo a las preguntas que cambian el trabajo.",
-        "Elige investigación ordinaria o Deep Research si está disponible; el workflow conserva una elección ya hecha para esta pregunta. El hilo de trabajo investiga y redacta. La voz sigue el progreso real y responde a tus preguntas.",
+        "En esta conversación, Lucia lee la pregunta y prepara objetivo, fuentes, idioma y marco jurídico. El asistente explica por escrito qué abarcará la respuesta. Corrige malentendidos y responde solo a las preguntas que cambian el trabajo.",
+        "Elige investigación ordinaria o Deep Research si está disponible; el workflow conserva una elección ya hecha para esta pregunta. El asistente investiga y redacta. El asistente sigue el progreso real y responde a tus preguntas.",
         "Lucia verifica la respuesta frente al encargo, las fuentes y el razonamiento y corrige lo necesario. Abre la nota Word, observa las conclusiones y localiza una fuente. Revisa límites y puntos abiertos antes de usarla."
       ],
       "deliverables": [

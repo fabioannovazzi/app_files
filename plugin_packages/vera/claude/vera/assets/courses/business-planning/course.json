@@ -374,8 +374,8 @@
       "inputs": "Apri proposal-it.md, economics-it.md, operations-it.md e pilot-economics.csv. Spiega l’idea e la decisione, allegando ciò che hai. Non occorre preparare un modello completo o scrivere file tecnici.",
       "request": "Vera, prepara un business plan per valutare questo servizio di ritiro biciclette. Usa proposta e ipotesi fornite, distinguile dalle evidenze e mostrami cosa conviene verificare prima di avviare il pilota.",
       "steps": [
-        "Nel thread di lavoro Vera legge la proposta e chiarisce cliente, bisogno e decisione. La voce spiega il percorso del business plan e le informazioni che aiutano a rispondere.",
-        "Vera valuta domanda, operatività, costi e alternative, calcola le economie supportate e prepara il report con il workflow corrente. La voce distingue dati, ipotesi e lacune; non inventa costi mancanti per completare la cassa.",
+        "In questa conversazione Vera legge la proposta e chiarisce cliente, bisogno e decisione. L’assistente spiega per iscritto il percorso del business plan e le informazioni che aiutano a rispondere.",
+        "Vera valuta domanda, operatività, costi e alternative, calcola le economie supportate e prepara il report con il workflow corrente. L’assistente distingue dati, ipotesi e lacune; non inventa costi mancanti per completare la cassa.",
         "Apri il report HTML generato. Parti dalla raccomandazione, passa a economia e operatività e segui una cifra alla sua fonte. Leggi cosa manca sulla cassa e quale prova è proposta prima di impegnarsi."
       ],
       "deliverables": [
@@ -399,8 +399,8 @@
       "inputs": "Open proposal-en.md, economics-en.md, operations-en.md and pilot-economics.csv. Explain the idea and decision and provide what you have. You need neither a complete model nor technical configuration files.",
       "request": "Vera, prepare a business plan to assess this bicycle pickup service. Use the proposal and assumptions, distinguish them from evidence and show what should be tested before launching the pilot.",
       "steps": [
-        "In the working chat, Vera reads the proposal and clarifies customer, need and decision. Voice explains the planning process and which information helps answer the question.",
-        "Vera assesses demand, operations, costs and alternatives, calculates supported economics and builds the report through the current workflow. Voice distinguishes evidence, assumptions and gaps without inventing missing cash costs.",
+        "In this conversation, Vera reads the proposal and clarifies customer, need and decision. The assistant explains the planning process and which information helps answer the question.",
+        "Vera assesses demand, operations, costs and alternatives, calculates supported economics and builds the report through the current workflow. The assistant distinguishes evidence, assumptions and gaps without inventing missing cash costs.",
         "Open the generated HTML report. Start with the recommendation, move to economics and operations and trace a figure to its source. Read the cash limitations and the proposed test before making commitments."
       ],
       "deliverables": [

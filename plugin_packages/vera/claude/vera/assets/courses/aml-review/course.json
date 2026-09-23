@@ -447,8 +447,8 @@
       "inputs": "Apri client-it.md, ownership-it.md e loan-it.md. Indica cliente, incarico e data della revisione: 31 agosto 2026. I documenti sono dichiarazioni e riferimenti del caso, non controlli già completati.",
       "request": "Vera, prepara una revisione antiriciclaggio di Officina Arco al 31 agosto da questi documenti. Mostrami fatti supportati, punti da chiarire e valutazione proposta per la mia revisione.",
       "steps": [
-        "Nel thread di lavoro Vera legge i documenti e ricostruisce persone, proprietà, attività e operazione. La voce spiega a cosa serve la revisione e distingue dichiarazioni, riscontri e informazioni mancanti.",
-        "Vera confronta le evidenze, verifica le fonti professionali attuali pertinenti e formula domande mirate. La voce segue le questioni effettive; non inventa sospetti o risultati di screening.",
+        "In questa conversazione Vera legge i documenti e ricostruisce persone, proprietà, attività e operazione. L’assistente spiega per iscritto a cosa serve la revisione e distingue dichiarazioni, riscontri e informazioni mancanti.",
+        "Vera confronta le evidenze, verifica le fonti professionali attuali pertinenti e formula domande mirate. L’assistente segue le questioni effettive; non inventa sospetti o risultati di screening.",
         "Apri il memo prodotto e il collegamento a una fonte. Leggi valutazione, motivi e documenti ancora necessari. Il record conserva la proposta; le decisioni professionali si registrano solo quando espresse."
       ],
       "deliverables": [
@@ -472,8 +472,8 @@
       "inputs": "Open client-en.md, ownership-en.md and loan-en.md. State client, engagement and review date: 31 August 2026. The documents are case statements and references, not completed checks.",
       "request": "Vera, prepare an AML review of Officina Arco at 31 August using these documents. Show supported facts, points to clarify and the proposed assessment for my review.",
       "steps": [
-        "In the working chat, Vera reads the documents and reconstructs people, ownership, activity and transaction. Voice explains the review’s purpose and distinguishes statements, corroboration and missing information.",
-        "Vera compares evidence, verifies relevant current professional sources and asks focused questions. Voice follows the actual issues without inventing suspicion or screening results.",
+        "In this conversation, Vera reads the documents and reconstructs people, ownership, activity and transaction. The assistant explains the review’s purpose and distinguishes statements, corroboration and missing information.",
+        "Vera compares evidence, verifies relevant current professional sources and asks focused questions. The assistant follows the actual issues without inventing suspicion or screening results.",
         "Open the generated memo and a source link. Read the assessment, reasons and evidence still needed. The record preserves the proposal; professional decisions are recorded only when actually expressed."
       ],
       "deliverables": [
@@ -497,8 +497,8 @@
       "inputs": "Ouvrez client-fr.md, ownership-fr.md et loan-fr.md. Précisez client, mission et date de revue : 31 août 2026. Les documents sont des déclarations et références du cas, pas des contrôles achevés.",
       "request": "Vera, prépare une revue antiblanchiment d’Officina Arco au 31 août avec ces documents. Présente faits étayés, points à éclaircir et évaluation proposée pour ma revue.",
       "steps": [
-        "Dans la conversation de travail, Vera lit les documents et reconstitue personnes, propriété, activité et opération. La voix explique la finalité et distingue déclarations, corroborations et informations manquantes.",
-        "Vera compare les preuves, vérifie les sources professionnelles actuelles pertinentes et formule des questions ciblées. La voix suit les vrais points sans inventer soupçons ni résultats de filtrage.",
+        "Dans cette conversation, Vera lit les documents et reconstitue personnes, propriété, activité et opération. L’assistant explique par écrit la finalité et distingue déclarations, corroborations et informations manquantes.",
+        "Vera compare les preuves, vérifie les sources professionnelles actuelles pertinentes et formule des questions ciblées. L’assistant suit les vrais points sans inventer soupçons ni résultats de filtrage.",
         "Ouvrez le mémo produit et un lien source. Lisez évaluation, motifs et preuves encore nécessaires. La version enregistrée conserve la proposition ; les décisions professionnelles ne sont enregistrées que lorsqu’elles sont exprimées."
       ],
       "deliverables": [
@@ -522,8 +522,8 @@
       "inputs": "Öffnen Sie client-de.md, ownership-de.md und loan-de.md. Nennen Sie Mandant, Auftrag und Prüfdatum: 31. August 2026. Die Unterlagen enthalten Angaben und Belege des Falles, keine abgeschlossenen Prüfungen.",
       "request": "Vera, bereite mit diesen Unterlagen eine Geldwäscheprüfung von Officina Arco zum 31. August vor. Zeige belegte Fakten, Klärungsbedarf und die vorgeschlagene Beurteilung zur Prüfung.",
       "steps": [
-        "Im Arbeitschat liest Vera die Unterlagen und rekonstruiert Beteiligte, Eigentum, Tätigkeit und Vorgang. Die Stimme erklärt den Zweck und unterscheidet Angaben, Bestätigungen und fehlende Informationen.",
-        "Vera vergleicht Belege, prüft relevante aktuelle Fachquellen und stellt gezielte Fragen. Die Stimme folgt den tatsächlichen Punkten, ohne Verdacht oder Screening-Ergebnisse zu erfinden.",
+        "In diesem Chat liest Vera die Unterlagen und rekonstruiert Beteiligte, Eigentum, Tätigkeit und Vorgang. Der Assistent erklärt schriftlich den Zweck und unterscheidet Angaben, Bestätigungen und fehlende Informationen.",
+        "Vera vergleicht Belege, prüft relevante aktuelle Fachquellen und stellt gezielte Fragen. Der Assistent folgt den tatsächlichen Punkten, ohne Verdacht oder Screening-Ergebnisse zu erfinden.",
         "Öffnen Sie das erzeugte Memo und einen Quellenlink. Lesen Sie Beurteilung, Gründe und fehlende Nachweise. Der Datensatz bewahrt den Vorschlag; fachliche Entscheidungen werden erst nach tatsächlicher Äußerung erfasst."
       ],
       "deliverables": [
@@ -547,8 +547,8 @@
       "inputs": "Abre client-es.md, ownership-es.md y loan-es.md. Indica cliente, encargo y fecha: 31 de agosto de 2026. Los documentos son declaraciones y referencias del caso, no comprobaciones terminadas.",
       "request": "Vera, prepara una revisión antiblanqueo de Officina Arco al 31 de agosto con estos documentos. Muéstrame hechos respaldados, puntos por aclarar y evaluación propuesta para revisar.",
       "steps": [
-        "En la conversación de trabajo, Vera lee documentos y reconstruye personas, propiedad, actividad y operación. La voz explica la finalidad y distingue declaraciones, corroboración e información ausente.",
-        "Vera compara pruebas, verifica fuentes profesionales actuales pertinentes y plantea preguntas concretas. La voz sigue las cuestiones reales sin inventar sospechas ni resultados de cribado.",
+        "En esta conversación, Vera lee documentos y reconstruye personas, propiedad, actividad y operación. El asistente explica por escrito la finalidad y distingue declaraciones, corroboración e información ausente.",
+        "Vera compara pruebas, verifica fuentes profesionales actuales pertinentes y plantea preguntas concretas. El asistente sigue las cuestiones reales sin inventar sospechas ni resultados de cribado.",
         "Abre el memo generado y un enlace a fuente. Lee evaluación, motivos y pruebas pendientes. El registro conserva la propuesta; las decisiones profesionales se guardan solo cuando se expresan realmente."
       ],
       "deliverables": [

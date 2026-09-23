@@ -271,8 +271,8 @@
       "inputs": "Apri brief-it.md. Indica pubblico, scopo e messaggio della riunione: discutere la proposta, non annunciare una procedura già adottata.",
       "request": "Clara, prepara una breve presentazione HTML da queste note per la riunione del personale. Spiega problema, proposta, ruoli e decisione da prendere. Tieni visibile che è una proposta e aggiungi note per chi presenta.",
       "steps": [
-        "Nel thread di lavoro Clara legge le note e propone il filo della presentazione. La voce spiega come chiarire pubblico e obiettivo e ti fa controllare l’ordine dei messaggi.",
-        "Clara compone le slide con il workflow corrente e verifica leggibilità, contenuto e navigazione. La voce segue i risultati effettivi e risponde mentre la presentazione viene preparata.",
+        "In questa conversazione Clara legge le note e propone il filo della presentazione. L’assistente spiega per iscritto come chiarire pubblico e obiettivo e ti fa controllare l’ordine dei messaggi.",
+        "Clara compone le slide con il workflow corrente e verifica leggibilità, contenuto e navigazione. L’assistente segue i risultati effettivi e risponde mentre la presentazione viene preparata.",
         "Apri la presentazione generata. Scorri con le frecce, apri le note del relatore e confronta una slide con il documento iniziale. Individua la proposta e la decisione richiesta."
       ],
       "deliverables": [
@@ -296,8 +296,8 @@
       "inputs": "Open brief-en.md. State audience, purpose and meeting message: discuss the proposal, rather than announce an adopted procedure.",
       "request": "Clara, make a short HTML presentation from these notes for the staff meeting. Explain the problem, proposal, roles and decision. Keep its proposed status visible and add speaker notes.",
       "steps": [
-        "In the working chat Clara reads the notes and proposes the presentation sequence. Voice explains how to specify audience and purpose and helps you check the order of the messages.",
-        "Clara composes slides through the current workflow and checks readability, content and navigation. Voice follows actual results and answers questions while the presentation is prepared.",
+        "In this conversation Clara reads the notes and proposes the presentation sequence. The assistant explains how to specify audience and purpose and helps you check the order of the messages.",
+        "Clara composes slides through the current workflow and checks readability, content and navigation. The assistant follows actual results and answers questions while the presentation is prepared.",
         "Open the generated presentation. Use the arrow keys, open speaker notes and compare a slide with the original document. Identify the proposal and requested decision."
       ],
       "deliverables": [
@@ -321,8 +321,8 @@
       "inputs": "Ouvrez brief-fr.md. Précisez public, objectif et message : discuter la proposition, sans annoncer une procédure déjà adoptée.",
       "request": "Clara, prépare une courte présentation HTML à partir de ces notes pour la réunion du personnel. Explique le problème, la proposition, les rôles et la décision attendue. Garde le statut de proposition visible et ajoute des notes de présentation.",
       "steps": [
-        "Dans le fil de travail, Clara lit les notes et propose le déroulé. La voix explique comment préciser public et objectif et vous aide à vérifier l’ordre des messages.",
-        "Clara compose les diapositives avec le workflow courant et vérifie lisibilité, contenu et navigation. La voix suit les résultats réels et répond pendant la préparation.",
+        "Dans cette conversation, Clara lit les notes et propose le déroulé. L’assistant explique par écrit comment préciser public et objectif et vous aide à vérifier l’ordre des messages.",
+        "Clara compose les diapositives avec le workflow courant et vérifie lisibilité, contenu et navigation. L’assistant suit les résultats réels et répond pendant la préparation.",
         "Ouvrez la présentation produite. Utilisez les flèches, ouvrez les notes et comparez une diapositive au document initial. Repérez la proposition et la décision attendue."
       ],
       "deliverables": [
@@ -346,8 +346,8 @@
       "inputs": "Öffnen Sie brief-de.md. Nennen Sie Publikum, Zweck und Botschaft: den Vorschlag besprechen, kein bereits eingeführtes Verfahren ankündigen.",
       "request": "Clara, erstelle aus diesen Notizen eine kurze HTML-Präsentation für das Team. Erkläre Problem, Vorschlag, Rollen und anstehende Entscheidung. Kennzeichne den Vorschlag und ergänze Sprechernotizen.",
       "steps": [
-        "Im Arbeitschat liest Clara die Notizen und schlägt den Ablauf vor. Die Stimme erklärt, wie Sie Publikum und Zweck angeben, und hilft bei der Reihenfolge der Aussagen.",
-        "Clara erstellt die Folien mit dem aktuellen Workflow und prüft Lesbarkeit, Inhalt und Navigation. Die Stimme folgt den tatsächlichen Ergebnissen und beantwortet Fragen während der Erstellung.",
+        "In diesem Chat liest Clara die Notizen und schlägt den Ablauf vor. Der Assistent erklärt schriftlich, wie Sie Publikum und Zweck angeben, und hilft bei der Reihenfolge der Aussagen.",
+        "Clara erstellt die Folien mit dem aktuellen Workflow und prüft Lesbarkeit, Inhalt und Navigation. Der Assistent folgt den tatsächlichen Ergebnissen und beantwortet Fragen während der Erstellung.",
         "Öffnen Sie die erzeugte Präsentation. Nutzen Sie Pfeiltasten und Sprechernotizen und vergleichen Sie eine Folie mit der Quelle. Finden Sie Vorschlag und gewünschte Entscheidung."
       ],
       "deliverables": [
@@ -371,8 +371,8 @@
       "inputs": "Abre brief-es.md. Indica público, objetivo y mensaje: debatir la propuesta, sin anunciar un procedimiento ya adoptado.",
       "request": "Clara, prepara una presentación HTML breve con estas notas para la reunión del personal. Explica problema, propuesta, funciones y decisión. Mantén visible que es una propuesta y añade notas para presentar.",
       "steps": [
-        "En el hilo de trabajo Clara lee las notas y propone la secuencia. La voz explica cómo precisar público y objetivo y ayuda a revisar el orden de los mensajes.",
-        "Clara compone las diapositivas con el workflow actual y revisa legibilidad, contenido y navegación. La voz sigue resultados reales y responde durante la preparación.",
+        "En esta conversación Clara lee las notas y propone la secuencia. El asistente explica por escrito cómo precisar público y objetivo y ayuda a revisar el orden de los mensajes.",
+        "Clara compone las diapositivas con el workflow actual y revisa legibilidad, contenido y navegación. El asistente sigue resultados reales y responde durante la preparación.",
         "Abre la presentación generada. Usa las flechas, abre las notas y compara una diapositiva con el documento inicial. Identifica propuesta y decisión solicitada."
       ],
       "deliverables": [

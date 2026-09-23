@@ -255,7 +255,7 @@
       "request": "Vera, prepara la prima lettura di questa comunicazione per Marco Prova. Riassumi la richiesta, i riferimenti, le date da verificare e i documenti da recuperare.",
       "steps": [
         "Vera importa la comunicazione nella pratica didattica e ne esegue lettura ed estrazione. Controlla che il testo sia leggibile e che la classificazione corrisponda al contenuto.",
-        "La procedura prepara la nota di prima lettura e l’elenco dei riferimenti. La voce spiega quali elementi provengono dalla lettera e quali informazioni restano mancanti.",
+        "La procedura prepara la nota di prima lettura e l’elenco dei riferimenti. L’assistente spiega per iscritto quali elementi provengono dalla lettera e quali informazioni restano mancanti.",
         "Apri i risultati e confrontali con la comunicazione. Individua richiesta documentale, protocollo, date riportate e prossime verifiche."
       ],
       "deliverables": [
@@ -280,7 +280,7 @@
       "request": "Vera, prepare a first-intake note for Marco Prova’s communication. Summarize the request, references, dates to verify and documents to collect.",
       "steps": [
         "Vera imports the communication into the teaching case and runs reading and extraction. Check that the text is readable and its classification fits the contents.",
-        "The workflow prepares the intake note and reference list. The voice chat explains which elements come from the letter and which information remains missing.",
+        "The workflow prepares the intake note and reference list. The assistant explains which elements come from the letter and which information remains missing.",
         "Open the results and compare them with the communication. Locate the document request, reference number, stated dates and next checks."
       ],
       "deliverables": [
@@ -305,7 +305,7 @@
       "request": "Vera, prépare une première note sur cette communication destinée à Marco Prova. Résume la demande, les références, les dates à vérifier et les documents à récupérer.",
       "steps": [
         "Vera importe la communication dans le dossier pédagogique puis exécute lecture et extraction. Vérifiez la lisibilité du texte et la cohérence de sa classification avec son contenu.",
-        "La procédure prépare la note et la liste des références. La conversation vocale distingue les éléments tirés de la lettre des informations encore manquantes.",
+        "La procédure prépare la note et la liste des références. L’assistant distingue les éléments tirés de la lettre des informations encore manquantes.",
         "Ouvrez les résultats et comparez-les à la communication. Retrouvez pièces demandées, référence, dates indiquées et prochaines vérifications."
       ],
       "deliverables": [
@@ -330,7 +330,7 @@
       "request": "Vera, erstelle eine erste Arbeitsnotiz zu diesem Schreiben für Marco Prova. Fasse Anforderung, Referenzen, zu prüfende Daten und benötigte Unterlagen zusammen.",
       "steps": [
         "Vera importiert das Schreiben in den Übungsfall und führt Lesen und Extraktion aus. Prüfen Sie Lesbarkeit und Übereinstimmung der Dokumentklassifikation mit dem Inhalt.",
-        "Der Ablauf erstellt die Arbeitsnotiz und Referenzliste. Der Sprachchat erklärt, welche Angaben aus dem Schreiben stammen und welche noch fehlen.",
+        "Der Ablauf erstellt die Arbeitsnotiz und Referenzliste. Der Assistent erklärt, welche Angaben aus dem Schreiben stammen und welche noch fehlen.",
         "Öffnen Sie die Ergebnisse und vergleichen Sie diese mit dem Schreiben. Finden Sie Dokumentenanforderung, Referenz, genannte Daten und nächste Prüfungen."
       ],
       "deliverables": [
@@ -355,7 +355,7 @@
       "request": "Vera, prepara una primera nota de esta comunicación para Marco Prova. Resume la solicitud, las referencias, las fechas que debo verificar y los documentos que faltan.",
       "steps": [
         "Vera importa la comunicación al expediente didáctico y ejecuta lectura y extracción. Comprueba que el texto sea legible y que su clasificación corresponda al contenido.",
-        "El procedimiento prepara la nota y la lista de referencias. El chat de voz explica qué elementos proceden de la carta y qué información sigue faltando.",
+        "El procedimiento prepara la nota y la lista de referencias. El asistente explica qué elementos proceden de la carta y qué información sigue faltando.",
         "Abre los resultados y compáralos con la comunicación. Localiza la solicitud documental, la referencia, las fechas indicadas y las siguientes comprobaciones."
       ],
       "deliverables": [

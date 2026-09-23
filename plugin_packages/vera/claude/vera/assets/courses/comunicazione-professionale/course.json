@@ -567,8 +567,8 @@
       "inputs": "Apri brief-it.md per leggere l’incarico e il formato richiesto. Apri source-it.md per vedere la guida ufficiale selezionata. Lo studio è fittizio e parte senza comunicazioni precedenti.",
       "request": "Vera, prepara una FAQ per le piccole imprese clienti di Studio Riva sulla gestione delle richieste di accesso ai dati. Usa questo brief e questa fonte. Fammi rivedere contenuti e formato, poi prepara il pacchetto locale senza inviarlo o pubblicarlo.",
       "steps": [
-        "Nel thread di lavoro Vera chiarisce pubblico, obiettivo, lingua e canale e prepara lo spazio locale dello studio. Nella chat vocale spiega che cosa produrremo. Confermi il perimetro e il luogo in cui salvare il lavoro.",
-        "Vera esamina la fonte, decide quali informazioni sono utili e prepara la FAQ e il formato proposto. Il workflow corrente verifica separatamente affermazioni e qualità editoriale. La voce ti accompagna attraverso i risultati effettivi; se una verifica richiede correzioni, vedi la revisione.",
+        "In questa conversazione Vera chiarisce pubblico, obiettivo, lingua e canale e prepara lo spazio locale dello studio. Nella spiegazione scritta spiega che cosa produrremo. Confermi il perimetro e il luogo in cui salvare il lavoro.",
+        "Vera esamina la fonte, decide quali informazioni sono utili e prepara la FAQ e il formato proposto. Il workflow corrente verifica separatamente affermazioni e qualità editoriale. L’assistente ti accompagna per iscritto attraverso i risultati effettivi; se una verifica richiede correzioni, vedi la revisione.",
         "Rivedi la comunicazione, le fonti e il formato. Dopo le conferme previste dal workflow, apri il pacchetto realmente generato e controlla come usarne i file. Un eventuale invio o pubblicazione è un’azione successiva, separata."
       ],
       "deliverables": [
@@ -592,8 +592,8 @@
       "inputs": "Open brief-en.md for the assignment and requested format. Open source-en.md to inspect the selected official guide. The fictional firm starts without previous communications.",
       "request": "Vera, prepare a FAQ for Studio Riva’s small business clients about handling data access requests. Use this brief and source. Let me review the content and format, then prepare the local package without sending or publishing it.",
       "steps": [
-        "In the working thread, Vera establishes the audience, objective, language and channel and prepares the firm’s local workspace. In the voice chat, it explains what we will produce. You confirm the scope and where the work will be saved.",
-        "Vera examines the source, decides what is useful and drafts the FAQ and proposed format. The current workflow checks claims and editorial quality separately. The voice explanation follows actual results, including any revision a check requires.",
+        "In this conversation, Vera establishes the audience, objective, language and channel and prepares the firm’s local workspace. In writing, it explains what we will produce. You confirm the scope and where the work will be saved.",
+        "Vera examines the source, decides what is useful and drafts the FAQ and proposed format. The current workflow checks claims and editorial quality separately. The written explanation follows actual results, including any revision a check requires.",
         "Review the communication, sources and format. After the confirmations required by the workflow, open the actual generated package and find out how to use its files. Sending or publishing is a separate subsequent action."
       ],
       "deliverables": [
@@ -617,8 +617,8 @@
       "inputs": "Ouvre brief-fr.md pour la mission et le format demandé, puis source-fr.md pour consulter le guide officiel sélectionné. Le cabinet fictif commence sans communications antérieures.",
       "request": "Vera, prépare une FAQ pour les petites entreprises clientes de Studio Riva sur le traitement des demandes d’accès aux données. Utilise ce brief et cette source. Fais-moi revoir contenu et format, puis prépare le dossier local sans l’envoyer ni le publier.",
       "steps": [
-        "Dans le fil de travail, Vera précise public, objectif, langue et canal et prépare l’espace local du cabinet. Dans la conversation vocale, elle explique le résultat visé. Tu confirmes le périmètre et le lieu d’enregistrement.",
-        "Vera examine la source, choisit les informations utiles et rédige la FAQ et le format proposé. Le workflow actuel vérifie séparément les affirmations et la qualité éditoriale. L’explication vocale suit les résultats réels, y compris les corrections demandées.",
+        "Dans cette conversation, Vera précise public, objectif, langue et canal et prépare l’espace local du cabinet. Par écrit, elle explique le résultat visé. Tu confirmes le périmètre et le lieu d’enregistrement.",
+        "Vera examine la source, choisit les informations utiles et rédige la FAQ et le format proposé. Le workflow actuel vérifie séparément les affirmations et la qualité éditoriale. L’explication écrite suit les résultats réels, y compris les corrections demandées.",
         "Revois la communication, les sources et le format. Après les confirmations prévues, ouvre le dossier effectivement généré et repère comment utiliser ses fichiers. Un envoi ou une publication constitue une action ultérieure distincte."
       ],
       "deliverables": [
@@ -642,8 +642,8 @@
       "inputs": "Öffne brief-de.md für Auftrag und Formatwünsche sowie source-de.md für den ausgewählten offiziellen Leitfaden. Die fiktive Kanzlei startet ohne frühere Mitteilungen.",
       "request": "Vera, erstelle eine FAQ zum Umgang mit Auskunftsanfragen für die kleinen Unternehmenskunden von Studio Riva. Nutze diesen Auftrag und diese Quelle. Lass mich Inhalt und Format prüfen und erstelle das lokale Paket ohne Versand oder Veröffentlichung.",
       "steps": [
-        "Im Arbeitsthread klärt Vera Zielgruppe, Ziel, Sprache und Kanal und bereitet den lokalen Arbeitsbereich der Kanzlei vor. Im Sprachchat erklärt sie das geplante Ergebnis. Du bestätigst Umfang und Speicherort.",
-        "Vera prüft die Quelle, wählt nützliche Inhalte und entwirft FAQ und Format. Der aktuelle Workflow kontrolliert Aussagen und redaktionelle Qualität getrennt. Die Spracherklärung folgt den tatsächlichen Ergebnissen und nötigen Überarbeitungen.",
+        "In diesem Chat klärt Vera Zielgruppe, Ziel, Sprache und Kanal und bereitet den lokalen Arbeitsbereich der Kanzlei vor. Schriftlich erklärt sie das geplante Ergebnis. Du bestätigst Umfang und Speicherort.",
+        "Vera prüft die Quelle, wählt nützliche Inhalte und entwirft FAQ und Format. Der aktuelle Workflow kontrolliert Aussagen und redaktionelle Qualität getrennt. Die schriftliche Erklärung folgt den tatsächlichen Ergebnissen und nötigen Überarbeitungen.",
         "Prüfe Mitteilung, Quellen und Format. Öffne nach den vorgesehenen Bestätigungen das tatsächlich erzeugte Paket und orientiere dich in den verwendbaren Dateien. Versand oder Veröffentlichung sind spätere, separate Schritte."
       ],
       "deliverables": [
@@ -667,8 +667,8 @@
       "inputs": "Abre brief-es.md para conocer el encargo y formato solicitado, y source-es.md para consultar la guía oficial seleccionada. El despacho ficticio empieza sin comunicaciones anteriores.",
       "request": "Vera, prepara una FAQ sobre la gestión de solicitudes de acceso a datos para las pequeñas empresas clientes de Studio Riva. Usa este brief y esta fuente. Déjame revisar contenido y formato; después prepara el paquete local sin enviarlo ni publicarlo.",
       "steps": [
-        "En el hilo de trabajo, Vera concreta público, objetivo, idioma y canal y prepara el espacio local del despacho. En la conversación de voz explica qué produciremos. Confirmas el alcance y dónde guardar el trabajo.",
-        "Vera examina la fuente, selecciona la información útil y prepara la FAQ y el formato propuesto. El workflow actual comprueba por separado las afirmaciones y la calidad editorial. La voz sigue los resultados reales y las correcciones necesarias.",
+        "En esta conversación, Vera concreta público, objetivo, idioma y canal y prepara el espacio local del despacho. Por escrito explica qué produciremos. Confirmas el alcance y dónde guardar el trabajo.",
+        "Vera examina la fuente, selecciona la información útil y prepara la FAQ y el formato propuesto. El workflow actual comprueba por separado las afirmaciones y la calidad editorial. El asistente sigue los resultados reales y las correcciones necesarias.",
         "Revisa comunicación, fuentes y formato. Tras las confirmaciones previstas, abre el paquete realmente generado y aprende a utilizar sus archivos. Enviarlo o publicarlo es una acción posterior independiente."
       ],
       "deliverables": [

@@ -391,8 +391,8 @@
       "inputs": "Apri la cartella archive: contiene Ciclo Arco e Delta, ciascuno con il proprio accordo. Vera prepara una copia didattica e un indice locale separato; le impostazioni del tuo archivio di studio restano quelle esistenti.",
       "request": "Vera, cerca nei documenti di Ciclo Arco l’accordo con Tecnica Esempio. Quale servizio è previsto e fino a quando? Mostrami i passaggi che sostengono la risposta.",
       "steps": [
-        "Nella chat di lavoro Vera prepara la cartella didattica, ne verifica l’accesso e indicizza i documenti leggibili. Se serve la scelta della cartella, seleziona quella dell’esercizio.",
-        "Seleziona Ciclo Arco. Il flusso corrente cerca nell’ambito di quel cliente e apre le fonti pertinenti; la voce spiega come passare dai risultati di ricerca al documento.",
+        "In questa conversazione Vera prepara la cartella didattica, ne verifica l’accesso e indicizza i documenti leggibili. Se serve la scelta della cartella, seleziona quella dell’esercizio.",
+        "Seleziona Ciclo Arco. Il flusso corrente cerca nell’ambito di quel cliente e apre le fonti pertinenti; l’assistente spiega come passare dai risultati di ricerca al documento.",
         "Leggi la risposta e apri le citazioni. Verifica che riportino cliente, servizio mensile e periodo dell’accordo. Individua anche eventuali limiti di lettura o documenti non indicizzati."
       ],
       "deliverables": [
@@ -416,8 +416,8 @@
       "inputs": "Open archive: it contains Ciclo Arco and Delta, each with its own agreement. Vera prepares a teaching copy and separate local index while retaining your existing studio archive settings.",
       "request": "Vera, find Ciclo Arco’s agreement with Tecnica Esempio. What service is provided and until when? Show the passages supporting your answer.",
       "steps": [
-        "In the working chat, Vera prepares the teaching folder, checks access and indexes readable documents. If a folder selection is needed, choose the exercise folder.",
-        "Select Ciclo Arco. The current workflow searches within that client and opens relevant sources; the voice chat explains the move from a search result to its document.",
+        "In this conversation, Vera prepares the teaching folder, checks access and indexes readable documents. If a folder selection is needed, choose the exercise folder.",
+        "Select Ciclo Arco. The current workflow searches within that client and opens relevant sources; the assistant explains the move from a search result to its document.",
         "Read the answer and open its citations. Check the client, monthly service and stated period. Locate any extraction limits or documents that were not indexed."
       ],
       "deliverables": [
@@ -441,8 +441,8 @@
       "inputs": "Ouvrez archive : Ciclo Arco et Delta ont chacun leur accord. Vera prépare une copie pédagogique et un index local séparé, en conservant les paramètres de votre archive habituelle.",
       "request": "Vera, retrouve l’accord de Ciclo Arco avec Tecnica Esempio. Quel service est prévu et jusqu’à quand ? Montre les passages qui étayent la réponse.",
       "steps": [
-        "Dans la conversation de travail, Vera prépare le dossier pédagogique, vérifie l’accès et indexe les documents lisibles. Si un dossier doit être choisi, sélectionnez celui de l’exercice.",
-        "Sélectionnez Ciclo Arco. Le flux actuel cherche dans ce client et ouvre les sources pertinentes ; la conversation vocale explique le passage du résultat de recherche au document.",
+        "Dans cette conversation, Vera prépare le dossier pédagogique, vérifie l’accès et indexe les documents lisibles. Si un dossier doit être choisi, sélectionnez celui de l’exercice.",
+        "Sélectionnez Ciclo Arco. Le flux actuel cherche dans ce client et ouvre les sources pertinentes ; l’assistant explique le passage du résultat de recherche au document.",
         "Lisez la réponse et ouvrez les citations. Vérifiez client, service mensuel et période indiquée. Repérez les limites de lecture ou documents non indexés."
       ],
       "deliverables": [
@@ -466,8 +466,8 @@
       "inputs": "Öffnen Sie archive: Ciclo Arco und Delta haben jeweils ihre eigene Vereinbarung. Vera erstellt eine Übungskopie und einen getrennten lokalen Index; Ihre bestehenden Archiveinstellungen bleiben erhalten.",
       "request": "Vera, finde die Vereinbarung von Ciclo Arco mit Tecnica Esempio. Welcher Service ist vorgesehen und bis wann? Zeige die Belegstellen für deine Antwort.",
       "steps": [
-        "Im Arbeitschat bereitet Vera den Übungsordner vor, prüft den Zugriff und indexiert lesbare Dokumente. Falls eine Ordnerauswahl erforderlich ist, wählen Sie den Übungsordner.",
-        "Wählen Sie Ciclo Arco. Der aktuelle Ablauf sucht nur bei diesem Kunden und öffnet passende Quellen. Der Sprachchat erklärt den Weg vom Suchtreffer zum Dokument.",
+        "In diesem Chat bereitet Vera den Übungsordner vor, prüft den Zugriff und indexiert lesbare Dokumente. Falls eine Ordnerauswahl erforderlich ist, wählen Sie den Übungsordner.",
+        "Wählen Sie Ciclo Arco. Der aktuelle Ablauf sucht nur bei diesem Kunden und öffnet passende Quellen. Der Assistent erklärt den Weg vom Suchtreffer zum Dokument.",
         "Lesen Sie die Antwort und öffnen Sie die Quellenverweise. Prüfen Sie Kunde, monatlichen Service und Zeitraum sowie mögliche Leselücken oder nicht indexierte Dokumente."
       ],
       "deliverables": [
@@ -491,8 +491,8 @@
       "inputs": "Abre archive: contiene Ciclo Arco y Delta, cada uno con su acuerdo. Vera prepara una copia didáctica y un índice local separado, manteniendo los ajustes del archivo habitual.",
       "request": "Vera, busca el acuerdo de Ciclo Arco con Tecnica Esempio. ¿Qué servicio se prevé y hasta cuándo? Muéstrame los pasajes que respaldan la respuesta.",
       "steps": [
-        "En la conversación de trabajo, Vera prepara la carpeta didáctica, comprueba el acceso e indexa los documentos legibles. Si hay que elegir una carpeta, selecciona la del ejercicio.",
-        "Selecciona Ciclo Arco. El flujo actual busca dentro de ese cliente y abre las fuentes pertinentes; la conversación de voz explica cómo pasar del resultado al documento.",
+        "En esta conversación, Vera prepara la carpeta didáctica, comprueba el acceso e indexa los documentos legibles. Si hay que elegir una carpeta, selecciona la del ejercicio.",
+        "Selecciona Ciclo Arco. El flujo actual busca dentro de ese cliente y abre las fuentes pertinentes; el asistente explica cómo pasar del resultado al documento.",
         "Lee la respuesta y abre las citas. Comprueba cliente, servicio mensual y periodo indicado. Localiza también límites de lectura o documentos no indexados."
       ],
       "deliverables": [

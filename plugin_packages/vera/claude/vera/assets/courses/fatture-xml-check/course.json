@@ -343,7 +343,7 @@
       "request": "Vera, controlla le fatture XML di marzo in questa cartella. Mostrami quali documenti abbiamo ricevuto, il riepilogo degli importi e gli eventuali punti da verificare.",
       "steps": [
         "Vera prende in carico la cartella nel caso didattico e legge gli XML con il parser della funzione. Guarda quali file vengono inclusi.",
-        "Nella chat di lavoro il workflow estrae numero, data, soggetti e importi, controlla la forma e segnala eventuali anomalie o duplicati candidati.",
+        "In questa conversazione il workflow estrae numero, data, soggetti e importi, controlla la forma e segnala eventuali anomalie o duplicati candidati.",
         "Apri il riepilogo appena prodotto. Vera collega le segnalazioni ai file e prepara le verifiche utili prima del passaggio successivo."
       ],
       "deliverables": [
@@ -368,7 +368,7 @@
       "request": "Vera, check the March XML invoices in this folder. Show the documents received, their amounts and anything that needs review.",
       "steps": [
         "Vera imports the folder into the teaching case and reads the XML files through the function’s parser. Check which files are included.",
-        "In the working chat, the workflow extracts numbers, dates, parties and amounts, checks structure and reports anomalies or possible duplicates.",
+        "In this conversation, the workflow extracts numbers, dates, parties and amounts, checks structure and reports anomalies or possible duplicates.",
         "Open the new summary. Vera links findings to the source files and identifies useful checks before the next step."
       ],
       "deliverables": [
@@ -393,7 +393,7 @@
       "request": "Vera, contrôle les factures XML de mars dans ce dossier. Montre les documents reçus, leurs montants et les points à vérifier.",
       "steps": [
         "Vera importe le dossier dans le cas pédagogique et lit les XML avec le parseur de la fonction. Regardez quels fichiers sont inclus.",
-        "Dans la conversation de travail, la procédure extrait numéros, dates, parties et montants, contrôle la structure et signale anomalies ou doublons possibles.",
+        "Dans cette conversation, la procédure extrait numéros, dates, parties et montants, contrôle la structure et signale anomalies ou doublons possibles.",
         "Ouvrez le nouveau récapitulatif. Vera relie les constats aux fichiers et indique les vérifications utiles avant la suite."
       ],
       "deliverables": [
@@ -418,7 +418,7 @@
       "request": "Vera, prüfe die XML-Rechnungen für März in diesem Ordner. Zeige die eingegangenen Dokumente, ihre Beträge und die offenen Prüfpunkte.",
       "steps": [
         "Vera importiert den Ordner in den Übungsfall und liest die XML-Dateien mit dem Parser der Funktion. Prüfen Sie, welche Dateien enthalten sind.",
-        "Im Arbeitschat extrahiert der Workflow Nummern, Daten, Beteiligte und Beträge, prüft die Struktur und meldet Auffälligkeiten oder mögliche Dubletten.",
+        "In diesem Chat extrahiert der Workflow Nummern, Daten, Beteiligte und Beträge, prüft die Struktur und meldet Auffälligkeiten oder mögliche Dubletten.",
         "Öffnen Sie die neue Übersicht. Vera verknüpft Feststellungen mit den Quelldateien und nennt sinnvolle Prüfungen vor dem nächsten Schritt."
       ],
       "deliverables": [
@@ -443,7 +443,7 @@
       "request": "Vera, comprueba las facturas XML de marzo de esta carpeta. Muéstrame los documentos recibidos, sus importes y los puntos que necesitan revisión.",
       "steps": [
         "Vera importa la carpeta al caso didáctico y lee los XML con el analizador de la función. Comprueba qué archivos se incluyen.",
-        "En la conversación de trabajo, el workflow extrae números, fechas, partes e importes, comprueba la estructura y señala anomalías o posibles duplicados.",
+        "En esta conversación, el workflow extrae números, fechas, partes e importes, comprueba la estructura y señala anomalías o posibles duplicados.",
         "Abre el nuevo resumen. Vera vincula los hallazgos con los archivos y señala las comprobaciones útiles antes del siguiente paso."
       ],
       "deliverables": [

@@ -14,7 +14,14 @@ projected procedure. It includes only courses whose own-product specialist skill
 is packaged. Clara's Deck Correction and Transcribe courses therefore remain
 absent; the existing hosted-course exclusions also remain. The native course
 renderer is reused with the Claude manifest path and written, localized UI copy.
-The Codex lesson runtime remains unchanged.
+The Codex lesson runtime remains unchanged. `written-copy.json` contains authored
+literal replacements for teacher/working-chat references inside lesson prose.
+The projection applies these only to localized lesson text, preserving the
+workflow, fictional inputs, numeric checks and practice. It does not infer or
+translate new material. Review these labels when adding or changing a lesson;
+the installed-course test checks every supported language for stale native-chat
+instructions. Accounting uses of Italian “voce” and German “abstimmen” remain
+unchanged.
 
 Never edit generated package files. Rebuild with `scripts/build_product_release.py`.
 A changed canonical procedure with stale course fingerprints fails the Cowork

@@ -311,11 +311,11 @@
       "goal": "Imparare a mantenere una valutazione di lavoro fondata sulle fonti e aggiornare le prossime azioni quando arrivano nuove informazioni.",
       "scenario": "Ciclo Arco deve valutare un servizio di ritiro biciclette. I commenti dei clienti indicano un possibile interesse; le note operative descrivono una possibilità limitata di provarlo.",
       "scope": "Un caso di consulenza locale basato sulle note fornite. Il risultato è una valutazione di lavoro, non una previsione economica né un’autorizzazione all’avvio.",
-      "inputs": "Apri assignment-it.md e notes-it.md: contengono decisione, commenti dei clienti e disponibilità del mezzo. La chat di lavoro crea il caso durante la lezione.",
+      "inputs": "Apri assignment-it.md e notes-it.md: contengono decisione, commenti dei clienti e disponibilità del mezzo. L’assistente crea il caso durante la lezione.",
       "request": "Clara, sviluppa questo caso. Dammi la tua raccomandazione attuale, le fonti e i limiti su cui si basa e il prossimo lavoro utile alla decisione della titolare.",
       "steps": [
         "Clara definisce l’incarico e crea un caso locale. Registra i materiali e formula una prima risposta con le sue condizioni.",
-        "Il flusso corrente registra ragionamento e collegamenti alle fonti, poi salva la valutazione. La chat vocale spiega raccomandazione e questioni aperte.",
+        "Il flusso corrente registra ragionamento e collegamenti alle fonti, poi salva la valutazione. L’assistente spiega raccomandazione e questioni aperte.",
         "Apri il documento di lavoro e la mappa delle fonti. Segui una conclusione fino alla fonte e discuti quale verifica potrebbe cambiare la risposta."
       ],
       "deliverables": [
@@ -336,11 +336,11 @@
       "goal": "Learn to maintain an evidence-based working answer and update the next actions when new information arrives.",
       "scenario": "Ciclo Arco needs an initial view on a bicycle collection service. Customer comments suggest possible interest; operating notes describe a limited way to test it.",
       "scope": "One local advisory case using supplied notes. The output is a working assessment, not a financial forecast or authorization to launch.",
-      "inputs": "Open assignment-en.md and notes-en.md. They establish the decision, customer comments and vehicle availability. The working chat creates the case during the lesson.",
+      "inputs": "Open assignment-en.md and notes-en.md. They establish the decision, customer comments and vehicle availability. The assistant creates the case during the lesson.",
       "request": "Clara, develop this case. Give me your current recommendation, the evidence and limits behind it, and the next work that would help the owner decide.",
       "steps": [
         "Clara establishes the assignment and creates a local case. It registers the supplied materials and states a provisional answer with its conditions.",
-        "The current workflow records the reasoning and evidence relationships, then saves the working assessment. The voice thread explains the recommendation and unresolved questions.",
+        "The current workflow records the reasoning and evidence relationships, then saves the working assessment. The assistant explains the recommendation and unresolved questions.",
         "Open the current workpaper and evidence map. Follow a material conclusion to its source and discuss which next check could change the answer."
       ],
       "deliverables": [
@@ -361,11 +361,11 @@
       "goal": "Apprendre à maintenir une analyse fondée sur les sources et à actualiser les prochaines actions lorsque de nouvelles informations arrivent.",
       "scenario": "Ciclo Arco évalue un service de collecte de vélos. Les commentaires clients suggèrent un intérêt possible ; les notes opérationnelles décrivent une possibilité limitée de l’essayer.",
       "scope": "Un dossier local fondé sur les notes fournies. Le résultat est une analyse de travail, pas une prévision financière ni une autorisation de lancement.",
-      "inputs": "Ouvrez assignment-fr.md et notes-fr.md : décision, commentaires clients et disponibilité du véhicule. La conversation de travail crée le dossier pendant la leçon.",
+      "inputs": "Ouvrez assignment-fr.md et notes-fr.md : décision, commentaires clients et disponibilité du véhicule. L’assistant crée le dossier pendant la leçon.",
       "request": "Clara, développe ce dossier. Donne ta recommandation actuelle, ses sources et ses limites, puis le prochain travail utile à la décision de la dirigeante.",
       "steps": [
         "Clara cadre la mission et crée un dossier local. Elle enregistre les documents et formule une première réponse avec ses conditions.",
-        "Le flux actuel enregistre le raisonnement et ses liens avec les sources, puis sauvegarde l’analyse. La conversation vocale explique recommandation et questions ouvertes.",
+        "Le flux actuel enregistre le raisonnement et ses liens avec les sources, puis sauvegarde l’analyse. L’assistant explique recommandation et questions ouvertes.",
         "Ouvrez le document de travail et la carte des sources. Remontez d’une conclusion à sa source et discutez de la vérification qui pourrait changer la réponse."
       ],
       "deliverables": [
@@ -386,11 +386,11 @@
       "goal": "Lernen, eine quellenbasierte Arbeitseinschätzung zu pflegen und nächste Schritte bei neuen Informationen anzupassen.",
       "scenario": "Ciclo Arco bewertet einen Fahrrad-Abholservice. Kundenkommentare zeigen mögliches Interesse; Betriebsnotizen beschreiben eine begrenzte Erprobungsmöglichkeit.",
       "scope": "Ein lokaler Beratungsfall mit den bereitgestellten Notizen. Das Ergebnis ist eine Arbeitseinschätzung, keine Finanzprognose oder Startfreigabe.",
-      "inputs": "Öffnen Sie assignment-de.md und notes-de.md: Entscheidung, Kundenkommentare und Fahrzeugverfügbarkeit. Der Arbeitschat legt den Fall während der Lektion an.",
+      "inputs": "Öffnen Sie assignment-de.md und notes-de.md: Entscheidung, Kundenkommentare und Fahrzeugverfügbarkeit. Der Assistent legt den Fall während der Lektion an.",
       "request": "Clara, entwickle diesen Fall. Nenne deine aktuelle Empfehlung, ihre Quellen und Grenzen sowie die nächste Arbeit, die der Inhaberin bei der Entscheidung hilft.",
       "steps": [
         "Clara klärt den Auftrag und legt einen lokalen Fall an. Sie registriert die Unterlagen und formuliert eine erste Antwort mit Bedingungen.",
-        "Der aktuelle Ablauf dokumentiert Begründung und Quellenbeziehungen und speichert die Einschätzung. Der Sprachchat erklärt Empfehlung und offene Fragen.",
+        "Der aktuelle Ablauf dokumentiert Begründung und Quellenbeziehungen und speichert die Einschätzung. Der Assistent erklärt Empfehlung und offene Fragen.",
         "Öffnen Sie Arbeitspapier und Quellenübersicht. Verfolgen Sie eine Schlussfolgerung bis zur Quelle und besprechen Sie, welche Prüfung die Antwort ändern könnte."
       ],
       "deliverables": [
@@ -411,11 +411,11 @@
       "goal": "Aprender a mantener una valoración basada en fuentes y actualizar las próximas acciones cuando llega nueva información.",
       "scenario": "Ciclo Arco evalúa un servicio de recogida de bicicletas. Los comentarios sugieren posible interés; las notas operativas describen una forma limitada de probarlo.",
       "scope": "Un caso local con las notas suministradas. El resultado es una valoración de trabajo, no una previsión financiera ni autorización para lanzar el servicio.",
-      "inputs": "Abre assignment-es.md y notes-es.md: decisión, comentarios y disponibilidad del vehículo. La conversación de trabajo crea el caso durante la lección.",
+      "inputs": "Abre assignment-es.md y notes-es.md: decisión, comentarios y disponibilidad del vehículo. El asistente crea el caso durante la lección.",
       "request": "Clara, desarrolla este caso. Dame tu recomendación actual, las fuentes y límites que la sustentan y el próximo trabajo útil para la decisión de la propietaria.",
       "steps": [
         "Clara define el encargo y crea un caso local. Registra los materiales y formula una primera respuesta con sus condiciones.",
-        "El flujo actual registra el razonamiento y sus vínculos con las fuentes, y guarda la valoración. La conversación de voz explica recomendación y preguntas abiertas.",
+        "El flujo actual registra el razonamiento y sus vínculos con las fuentes, y guarda la valoración. El asistente explica recomendación y preguntas abiertas.",
         "Abre el documento de trabajo y el mapa de fuentes. Sigue una conclusión hasta su fuente y comenta qué comprobación podría cambiar la respuesta."
       ],
       "deliverables": [

@@ -311,8 +311,8 @@
       "inputs": "Apri balances-february.csv e context-it.md. Indica società, data, EUR e definizione richiesta. La nota spiega cosa rappresentano i saldi: Vera prepara la struttura tecnica dopo la revisione, senza chiederti di programmare.",
       "request": "Vera, prepara l’analisi della posizione finanziaria netta di Officina Arco al 28 febbraio con questo prospetto e la definizione nella nota. Guidami nelle scelte e mostrami risultato, dettaglio e controlli.",
       "steps": [
-        "Nel thread di lavoro Vera identifica l’analisi adatta e propone la classificazione delle voci. La voce spiega che cosa viene misurato e ti aiuta a rivedere importi, data, inclusioni ed esclusioni.",
-        "Dopo la revisione effettiva, Vera registra le scelte e avvia il calcolo corrente. La voce segue l’esecuzione e distingue un controllo aritmetico dalla completezza dei dati ricevuti.",
+        "In questa conversazione Vera identifica l’analisi adatta e propone la classificazione delle voci. L’assistente spiega per iscritto che cosa viene misurato e ti aiuta a rivedere importi, data, inclusioni ed esclusioni.",
+        "Dopo la revisione effettiva, Vera registra le scelte e avvia il calcolo corrente. L’assistente segue l’esecuzione e distingue un controllo aritmetico dalla completezza dei dati ricevuti.",
         "Leggi la sintesi e apri il dettaglio prodotto. Segui finanziamento e liquidità fino alle righe sorgenti, poi individua le voci escluse, i controlli e le questioni ancora aperte."
       ],
       "deliverables": [
@@ -336,8 +336,8 @@
       "inputs": "Open balances-february.csv and context-en.md. State company, date, EUR and the requested definition. The note explains the balances; Vera prepares technical structures after review, without asking you to program them.",
       "request": "Vera, prepare Officina Arco’s net-debt analysis at 28 February using this statement and the definition in the note. Guide me through the choices and show the result, detail and controls.",
       "steps": [
-        "In the working chat, Vera identifies the relevant analysis and proposes item classifications. Voice explains what is measured and helps you review amounts, date, inclusions and exclusions.",
-        "After the actual review, Vera records choices and runs the current calculation. Voice follows execution and distinguishes an arithmetic check from completeness of the supplied data.",
+        "In this conversation, Vera identifies the relevant analysis and proposes item classifications. The assistant explains what is measured and helps you review amounts, date, inclusions and exclusions.",
+        "After the actual review, Vera records choices and runs the current calculation. The assistant follows execution and distinguishes an arithmetic check from completeness of the supplied data.",
         "Read the delivery summary and open the generated detail. Trace loan and cash to source rows, then find excluded items, calculation controls and questions still open."
       ],
       "deliverables": [
@@ -361,8 +361,8 @@
       "inputs": "Ouvrez balances-february.csv et context-fr.md. Précisez société, date, EUR et définition demandée. La note explique les soldes ; Vera prépare la structure technique après revue, sans vous demander de programmer.",
       "request": "Vera, prépare la dette nette d’Officina Arco au 28 février avec ce tableau et la définition de la note. Guide-moi dans les choix puis montre résultat, détail et contrôles.",
       "steps": [
-        "Dans la conversation de travail, Vera identifie l’analyse adaptée et propose le classement des postes. La voix explique la mesure et accompagne la revue des montants, date, inclusions et exclusions.",
-        "Après la revue réelle, Vera enregistre les choix et exécute le calcul courant. La voix suit l’exécution et distingue contrôle arithmétique et exhaustivité des données reçues.",
+        "Dans cette conversation, Vera identifie l’analyse adaptée et propose le classement des postes. L’assistant explique par écrit la mesure et accompagne la revue des montants, date, inclusions et exclusions.",
+        "Après la revue réelle, Vera enregistre les choix et exécute le calcul courant. L’assistant suit l’exécution et distingue contrôle arithmétique et exhaustivité des données reçues.",
         "Lisez la synthèse de livraison et ouvrez le détail produit. Retrouvez emprunt et trésorerie dans les lignes sources, puis les postes exclus, contrôles et questions ouvertes."
       ],
       "deliverables": [
@@ -386,8 +386,8 @@
       "inputs": "Öffnen Sie balances-february.csv und context-de.md. Nennen Sie Unternehmen, Stichtag, EUR und gewünschte Definition. Die Notiz erklärt Bestände; Vera erstellt nach der Prüfung die technischen Strukturen, ohne dass Sie programmieren müssen.",
       "request": "Vera, bereite die Nettoverschuldung von Officina Arco zum 28. Februar mit dieser Aufstellung und der Definition in der Notiz vor. Führe mich durch die Entscheidungen und zeige Ergebnis, Details und Kontrollen.",
       "steps": [
-        "Im Arbeitschat wählt Vera die passende Analyse und schlägt die Einordnung der Posten vor. Die Stimme erklärt die Messgröße und hilft bei Beträgen, Stichtag, Einbeziehung und Ausschlüssen.",
-        "Nach der tatsächlichen Prüfung hält Vera Entscheidungen fest und startet die aktuelle Berechnung. Die Stimme folgt dem Ablauf und unterscheidet Rechenkontrolle und Vollständigkeit der gelieferten Daten.",
+        "In diesem Chat wählt Vera die passende Analyse und schlägt die Einordnung der Posten vor. Der Assistent erklärt schriftlich die Messgröße und hilft bei Beträgen, Stichtag, Einbeziehung und Ausschlüssen.",
+        "Nach der tatsächlichen Prüfung hält Vera Entscheidungen fest und startet die aktuelle Berechnung. Der Assistent folgt dem Ablauf und unterscheidet Rechenkontrolle und Vollständigkeit der gelieferten Daten.",
         "Lesen Sie die Ergebnisübersicht und öffnen Sie die erzeugten Details. Verfolgen Sie Darlehen und Guthaben zu Quellzeilen und finden Sie ausgeschlossene Posten, Kontrollen und offene Fragen."
       ],
       "deliverables": [
@@ -411,8 +411,8 @@
       "inputs": "Abre balances-february.csv y context-es.md. Indica empresa, fecha, EUR y definición solicitada. La nota explica saldos; Vera prepara estructuras técnicas tras la revisión sin pedirte que programes.",
       "request": "Vera, prepara la deuda neta de Officina Arco al 28 de febrero con este estado y la definición de la nota. Guíame por las decisiones y muestra resultado, detalle y controles.",
       "steps": [
-        "En la conversación de trabajo, Vera identifica el análisis adecuado y propone clasificar las partidas. La voz explica la medida y ayuda a revisar importes, fecha, inclusiones y exclusiones.",
-        "Tras la revisión real, Vera registra decisiones y ejecuta el cálculo actual. La voz sigue la ejecución y distingue comprobación aritmética e integridad de los datos aportados.",
+        "En esta conversación, Vera identifica el análisis adecuado y propone clasificar las partidas. El asistente explica por escrito la medida y ayuda a revisar importes, fecha, inclusiones y exclusiones.",
+        "Tras la revisión real, Vera registra decisiones y ejecuta el cálculo actual. El asistente sigue la ejecución y distingue comprobación aritmética e integridad de los datos aportados.",
         "Lee el resumen de entrega y abre el detalle generado. Sigue préstamo y caja hasta las filas originales y encuentra partidas excluidas, controles y preguntas pendientes."
       ],
       "deliverables": [

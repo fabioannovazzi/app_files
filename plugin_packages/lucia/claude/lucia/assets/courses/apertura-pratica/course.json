@@ -350,8 +350,8 @@
       "inputs": "Apri request-it.md, supply-it.md e register.csv. La richiesta identifica cliente, controparte, obiettivo e urgenza riferita; la fornitura documenta il caso; il registro indica quali pratiche fittizie sono disponibili per il controllo.",
       "request": "Lucia, prepara una nuova pratica per Beta Laboratorio sulla consegna di Gamma Forniture. Usa questi documenti e mostrami il fascicolo, le informazioni mancanti e le decisioni da rivedere prima dell’apertura.",
       "steps": [
-        "Lucia crea il caso didattico, importa i documenti e ricostruisce cliente, parti, richiesta e cronologia. Nella chat vocale segui quali informazioni vengono dalle fonti.",
-        "La chat di lavoro prepara la scheda della pratica, i candidati per la verifica dei conflitti, il perimetro dell’incarico e gli eventuali punti sui termini. Le informazioni mancanti restano visibili.",
+        "Lucia crea il caso didattico, importa i documenti e ricostruisce cliente, parti, richiesta e cronologia. Nella spiegazione scritta segui quali informazioni vengono dalle fonti.",
+        "L’assistente prepara la scheda della pratica, i candidati per la verifica dei conflitti, il perimetro dell’incarico e gli eventuali punti sui termini. Le informazioni mancanti restano visibili.",
         "Lucia genera il pacchetto e apre la revisione. Guarda le decisioni su conflitti, incarico, termini e apertura e come una decisione effettiva viene salvata e applicata al fascicolo."
       ],
       "deliverables": [
@@ -375,8 +375,8 @@
       "inputs": "Open request-en.md, supply-en.md and register.csv. The request identifies client, counterparty, objective and reported urgency; the supply record documents the case; the register shows the fictional matters available for checking.",
       "request": "Lucia, prepare a new matter for Beta Laboratorio concerning Gamma Forniture’s delivery. Use these documents and show the matter file, missing information and decisions to review before opening.",
       "steps": [
-        "Lucia creates the teaching case, imports documents and reconstructs the client, parties, request and timeline. The voice chat follows which information comes from each source.",
-        "The working chat prepares the matter summary, conflict-check candidates, engagement scope and any deadline points. Missing information stays visible.",
+        "Lucia creates the teaching case, imports documents and reconstructs the client, parties, request and timeline. The assistant follows which information comes from each source.",
+        "The assistant prepares the matter summary, conflict-check candidates, engagement scope and any deadline points. Missing information stays visible.",
         "Lucia generates the package and opens review. Inspect the conflict, engagement, deadline and opening decisions and how a real decision is saved and applied to the file."
       ],
       "deliverables": [
@@ -400,8 +400,8 @@
       "inputs": "Ouvrez request-fr.md, supply-fr.md et register.csv. La demande indique client, partie adverse, objectif et urgence déclarée ; la fourniture documente le cas ; le registre précise les dossiers fictifs disponibles pour le contrôle.",
       "request": "Lucia, prépare un nouveau dossier pour Beta Laboratorio concernant la livraison de Gamma Forniture. Utilise ces documents et montre le dossier, les informations manquantes et les décisions à revoir avant l’ouverture.",
       "steps": [
-        "Lucia crée le cas pédagogique, importe les documents et reconstitue client, parties, demande et chronologie. La conversation vocale suit les informations et leurs sources.",
-        "La conversation de travail prépare la fiche, les candidats au contrôle des conflits, le périmètre de la mission et les points éventuels sur les délais. Les informations manquantes restent visibles.",
+        "Lucia crée le cas pédagogique, importe les documents et reconstitue client, parties, demande et chronologie. L’assistant suit les informations et leurs sources.",
+        "L’assistant prépare la fiche, les candidats au contrôle des conflits, le périmètre de la mission et les points éventuels sur les délais. Les informations manquantes restent visibles.",
         "Lucia produit le paquet et ouvre la revue. Examinez les décisions sur conflits, mission, délais et ouverture, puis la façon dont une décision réelle est enregistrée et appliquée au dossier."
       ],
       "deliverables": [
@@ -425,8 +425,8 @@
       "inputs": "Öffnen Sie request-de.md, supply-de.md und register.csv. Die Anfrage nennt Mandant, Gegenpartei, Ziel und berichtete Dringlichkeit; die Lieferunterlage beschreibt den Fall; das Register zeigt die verfügbaren fiktiven Prüfunterlagen.",
       "request": "Lucia, bereite eine neue Angelegenheit für Beta Laboratorio zur Lieferung von Gamma Forniture vor. Nutze diese Dokumente und zeige Akte, fehlende Informationen und Entscheidungen vor der Eröffnung.",
       "steps": [
-        "Lucia erstellt den Übungsfall, importiert Unterlagen und rekonstruiert Mandant, Beteiligte, Anfrage und Ablauf. Der Sprachchat erklärt, welche Informationen aus welchen Quellen stammen.",
-        "Der Arbeitschat bereitet Übersicht, Kandidaten zur Konfliktprüfung, Mandatsumfang und mögliche Fristpunkte vor. Fehlende Informationen bleiben sichtbar.",
+        "Lucia erstellt den Übungsfall, importiert Unterlagen und rekonstruiert Mandant, Beteiligte, Anfrage und Ablauf. Der Assistent erklärt, welche Informationen aus welchen Quellen stammen.",
+        "Der Assistent bereitet Übersicht, Kandidaten zur Konfliktprüfung, Mandatsumfang und mögliche Fristpunkte vor. Fehlende Informationen bleiben sichtbar.",
         "Lucia erstellt das Paket und öffnet die Prüfung. Sehen Sie die Entscheidungen zu Konflikten, Mandat, Fristen und Eröffnung sowie das Speichern und Anwenden einer tatsächlichen Entscheidung an."
       ],
       "deliverables": [
@@ -450,8 +450,8 @@
       "inputs": "Abre request-es.md, supply-es.md y register.csv. La solicitud identifica cliente, contraparte, objetivo y urgencia comunicada; el suministro documenta el caso; el registro indica los asuntos ficticios disponibles para comprobar.",
       "request": "Lucia, prepara un nuevo expediente para Beta Laboratorio sobre la entrega de Gamma Forniture. Usa estos documentos y muéstrame el expediente, la información que falta y las decisiones que revisar antes de abrirlo.",
       "steps": [
-        "Lucia crea el caso didáctico, importa documentos y reconstruye cliente, partes, solicitud y cronología. La conversación de voz sigue qué información procede de cada fuente.",
-        "La conversación de trabajo prepara la ficha, candidatos para comprobar conflictos, alcance del encargo y posibles puntos sobre plazos. La información que falta permanece visible.",
+        "Lucia crea el caso didáctico, importa documentos y reconstruye cliente, partes, solicitud y cronología. El asistente sigue qué información procede de cada fuente.",
+        "El asistente prepara la ficha, candidatos para comprobar conflictos, alcance del encargo y posibles puntos sobre plazos. La información que falta permanece visible.",
         "Lucia genera el paquete y abre la revisión. Examina las decisiones sobre conflictos, encargo, plazos y apertura y cómo una decisión real se guarda y aplica al expediente."
       ],
       "deliverables": [

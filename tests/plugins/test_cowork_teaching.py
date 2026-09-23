@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -63,6 +64,15 @@ def test_installed_cowork_prepares_every_supported_course_and_language(installed
             assert "not executed" in (destination / "lesson-progress.md").read_text()
             guide = (destination / "course.html").read_text()
             assert "OpenAI" not in guide
+            assert not re.search(
+                r"voice (chat|thread)|working (chat|thread|window)|chat vocale|"
+                r"conversazione vocale|chat di lavoro|thread di lavoro|finestra di lavoro|"
+                r"conversation vocale|fil vocal|Sprachchat|Arbeitschat|"
+                r"Arbeitsfenster|Arbeitsthread|conversación de voz|"
+                r"hilo de voz|chat de voz|ventana de trabajo",
+                guide,
+                flags=re.IGNORECASE,
+            ), (product, workflow, language)
             assert "Codex" not in guide
             assert "Anthropic" in guide
             assert (

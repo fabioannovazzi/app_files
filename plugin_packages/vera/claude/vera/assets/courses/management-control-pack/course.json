@@ -257,8 +257,8 @@
       "steps": [
         "Vera importa i dati nel caso didattico collegato al cliente. Il pacchetto di controllo di gestione può includere anche altri export; qui impariamo il percorso completo del confronto economico con il budget.",
         "L’assistente esamina i fogli e propone quali colonne rappresentano date, categorie e importi. Conferma il periodo gennaio–febbraio e la convenzione dei segni prima del calcolo.",
-        "Il workflow applica la mappatura verificata, confronta consuntivo e budget e controlla i totali. La chat vocale spiega il passaggio effettivo e le eventuali informazioni richieste.",
-        "Vera prepara un breve commento collegato ai numeri e una domanda da discutere in riunione. Apri report, cruscotto e workbook nella chat di lavoro: leggi la sintesi del periodo, passa al confronto mensile e trova il dettaglio delle categorie."
+        "Il workflow applica la mappatura verificata, confronta consuntivo e budget e controlla i totali. L’assistente spiega il passaggio effettivo e le eventuali informazioni richieste.",
+        "Vera prepara un breve commento collegato ai numeri e una domanda da discutere in riunione. Apri report, cruscotto e workbook in questa conversazione: leggi la sintesi del periodo, passa al confronto mensile e trova il dettaglio delle categorie."
       ],
       "deliverables": [
         "Cruscotto: mostra risultato del periodo e scostamenti assoluti e percentuali dove significativi. Usalo per scegliere quali voci approfondire.",
@@ -283,8 +283,8 @@
       "steps": [
         "Vera imports the data into the client-bound teaching case. The management-control pack also accepts other exports; here we learn the complete actual-versus-budget reporting journey.",
         "The assistant inspects the sheets and proposes which columns contain dates, categories and amounts. Confirm January–February and the sign convention before calculation.",
-        "The workflow applies the reviewed mapping, compares actual with budget and checks totals. The voice chat explains the actual step and any requested information.",
-        "Vera prepares a short commentary tied to the figures and a question for the meeting. Open the report, dashboard and workbook in the working chat: read the period summary, switch to the monthly comparison and find the category detail."
+        "The workflow applies the reviewed mapping, compares actual with budget and checks totals. The assistant explains the actual step and any requested information.",
+        "Vera prepares a short commentary tied to the figures and a question for the meeting. Open the report, dashboard and workbook in this conversation: read the period summary, switch to the monthly comparison and find the category detail."
       ],
       "deliverables": [
         "Dashboard: shows period performance and absolute and percentage variances where meaningful. Use it to decide which categories to investigate.",

@@ -314,7 +314,7 @@
       "inputs": "Apri caso.md e i sei CSV. accounts contiene il saldo effettivo; open_items i residui da incassare o pagare; planned_flows le altre uscite previste. Gli altri tre prospetti sono vuoti nella prima previsione e servono negli aggiornamenti a spiegare movimenti e regolamenti.",
       "request": "Vera, prepara la previsione di cassa di Officina Arco dal 31 marzo al 31 maggio usando questi saldi, partite e flussi. Mostrami le date da rivedere e le disponibilità per settimana.",
       "steps": [
-        "Vera importa le tabelle nel caso didattico, verifica società, euro, saldo iniziale e periodo. La chat vocale mostra quali dati dovrai procurarti per un tuo cliente.",
+        "Vera importa le tabelle nel caso didattico, verifica società, euro, saldo iniziale e periodo. L’assistente mostra quali dati dovrai procurarti per un tuo cliente.",
         "Il workflow prepara gli eventi e apre la pagina di revisione. Guarda incassi e pagamenti con la loro data e il motivo: puoi chiedere una correzione prima di ricalcolare.",
         "Dopo il ricalcolo, apri il prospetto giornaliero e settimanale e il workbook. Vera conserva la versione e distingue una bozza da una previsione accettata dal professionista."
       ],

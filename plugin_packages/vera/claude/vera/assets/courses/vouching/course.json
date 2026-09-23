@@ -383,8 +383,8 @@
       "inputs": "Apri invoice-journal.csv, context-it.md e le tre fatture XML. La nota indica il conto 2100 e il campione didattico di due righe. Vera gestisce il passaggio dal campione ai documenti; non devi scegliere file tecnici interni.",
       "request": "Vera, prepara un campione casuale di due righe del conto fornitori 2100, con seme 42, e verifica le righe con queste fatture XML. Mostrami i risultati e aiutami a rivederli.",
       "steps": [
-        "La chat di lavoro prepara davvero il campione. La voce spiega quali righe verranno controllate e ti fa verificare il perimetro prima di passare alle fatture.",
-        "Vera collega il campione appena prodotto alle tre fatture selezionate e avvia Verifica documentale. La voce spiega il confronto fra registrazione e documento seguendo l’avanzamento reale.",
+        "L’assistente prepara davvero il campione. L’assistente spiega per iscritto quali righe verranno controllate e ti fa verificare il perimetro prima di passare alle fatture.",
+        "Vera collega il campione appena prodotto alle tre fatture selezionate e avvia Verifica documentale. L’assistente spiega per iscritto il confronto fra registrazione e documento seguendo l’avanzamento reale.",
         "Apri il foglio dei risultati e una riga con il documento collegato. Controlla riferimento, data, importo e soggetto; rivedi le richieste di chiarimento. Vera conserva le decisioni effettive e i collegamenti alle fonti."
       ],
       "deliverables": [
@@ -408,8 +408,8 @@
       "inputs": "Open invoice-journal.csv, context-en.md and the three XML invoices. The note specifies account 2100 and a two-row teaching sample. Vera handles the sample-to-document handoff; you do not select internal technical files.",
       "request": "Vera, create a random sample of two rows from supplier account 2100 with seed 42, then check them against these XML invoices. Show me the results and help me review them.",
       "steps": [
-        "The working chat produces the actual sample. Voice explains which rows will be checked and helps confirm scope before moving to invoices.",
-        "Vera connects the newly produced sample to the three selected invoices and starts Vouching. Voice explains the entry-to-document comparison from actual progress.",
+        "The assistant produces the actual sample. The assistant explains which rows will be checked and helps confirm scope before moving to invoices.",
+        "Vera connects the newly produced sample to the three selected invoices and starts Vouching. The assistant explains the entry-to-document comparison from actual progress.",
         "Open the results workbook and a row with its linked document. Check reference, date, amount and party, then review clarification requests. Vera preserves actual decisions and source links."
       ],
       "deliverables": [
@@ -433,8 +433,8 @@
       "inputs": "Ouvrez invoice-journal.csv, context-fr.md et les trois factures XML. La note précise le compte 2100 et un échantillon pédagogique de deux lignes. Vera gère le passage aux pièces ; aucun fichier technique interne à choisir.",
       "request": "Vera, crée un échantillon aléatoire de deux lignes du compte fournisseur 2100, graine 42, puis contrôle-les avec ces factures XML. Montre les résultats et accompagne ma revue.",
       "steps": [
-        "La conversation de travail produit réellement l’échantillon. La voix explique quelles lignes seront contrôlées et aide à confirmer le périmètre avant les factures.",
-        "Vera relie l’échantillon produit aux trois factures sélectionnées et lance le Contrôle sur pièces. La voix explique la comparaison à partir de l’avancement effectif.",
+        "L’assistant produit réellement l’échantillon. L’assistant explique par écrit quelles lignes seront contrôlées et aide à confirmer le périmètre avant les factures.",
+        "Vera relie l’échantillon produit aux trois factures sélectionnées et lance le Contrôle sur pièces. L’assistant explique par écrit la comparaison à partir de l’avancement effectif.",
         "Ouvrez le classeur des résultats et une ligne avec sa pièce liée. Vérifiez référence, date, montant et partie, puis les demandes de clarification. Vera conserve décisions effectives et liens aux sources."
       ],
       "deliverables": [
@@ -458,8 +458,8 @@
       "inputs": "Öffnen Sie invoice-journal.csv, context-de.md und die drei XML-Rechnungen. Die Notiz nennt Konto 2100 und eine Übungsstichprobe von zwei Zeilen. Vera übernimmt die Übergabe; interne technische Dateien müssen Sie nicht auswählen.",
       "request": "Vera, ziehe zwei zufällige Zeilen aus Lieferantenkonto 2100 mit Startwert 42 und prüfe sie anhand dieser XML-Rechnungen. Zeige mir die Ergebnisse und begleite die Prüfung.",
       "steps": [
-        "Der Arbeitschat erzeugt die tatsächliche Stichprobe. Die Stimme erklärt die zu prüfenden Zeilen und hilft, den Umfang vor dem Belegvergleich zu bestätigen.",
-        "Vera verbindet die neue Stichprobe mit den drei ausgewählten Rechnungen und startet die Belegprüfung. Die Stimme erklärt den Vergleich anhand des tatsächlichen Fortschritts.",
+        "Der Assistent erzeugt die tatsächliche Stichprobe. Der Assistent erklärt schriftlich die zu prüfenden Zeilen und hilft, den Umfang vor dem Belegvergleich zu bestätigen.",
+        "Vera verbindet die neue Stichprobe mit den drei ausgewählten Rechnungen und startet die Belegprüfung. Der Assistent erklärt schriftlich den Vergleich anhand des tatsächlichen Fortschritts.",
         "Öffnen Sie die Ergebnismappe und eine Zeile mit verknüpftem Beleg. Prüfen Sie Referenz, Datum, Betrag und Partei sowie offene Rückfragen. Vera erhält tatsächliche Entscheidungen und Quellenverknüpfungen."
       ],
       "deliverables": [
@@ -483,8 +483,8 @@
       "inputs": "Abre invoice-journal.csv, context-es.md y las tres facturas XML. La nota indica la cuenta 2100 y una muestra didáctica de dos líneas. Vera gestiona la conexión; no tienes que elegir archivos técnicos internos.",
       "request": "Vera, crea una muestra aleatoria de dos líneas de la cuenta de proveedores 2100, semilla 42, y verifícalas con estas facturas XML. Muéstrame los resultados y acompaña mi revisión.",
       "steps": [
-        "La conversación de trabajo produce la muestra real. La voz explica qué líneas se comprobarán y ayuda a confirmar el alcance antes de pasar a las facturas.",
-        "Vera conecta la muestra generada con las tres facturas seleccionadas e inicia la Verificación documental. La voz explica la comparación según el avance real.",
+        "El asistente produce la muestra real. El asistente explica por escrito qué líneas se comprobarán y ayuda a confirmar el alcance antes de pasar a las facturas.",
+        "Vera conecta la muestra generada con las tres facturas seleccionadas e inicia la Verificación documental. El asistente explica por escrito la comparación según el avance real.",
         "Abre el libro de resultados y una línea con su documento asociado. Comprueba referencia, fecha, importe y parte, y revisa las aclaraciones pendientes. Vera conserva decisiones reales y vínculos a las fuentes."
       ],
       "deliverables": [

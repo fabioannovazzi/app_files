@@ -443,7 +443,7 @@
       "request": "Vera, prepara il dossier di nuovo cliente per Officina Arco usando questa scheda. Organizza i dati, l’incarico proposto, i controlli da svolgere e i documenti da richiedere.",
       "steps": [
         "Vera apre la pratica didattica e collega la scheda al nuovo cliente. Se si parte da un fascicolo da ordinare, la stessa funzione comprende anche la preparazione dei documenti.",
-        "La procedura corrente organizza soggetti e servizi, prepara proposte e richieste mancanti e compone il dossier. La voce segue i passaggi e distingue dati dichiarati, verifiche e decisioni.",
+        "La procedura corrente organizza soggetti e servizi, prepara proposte e richieste mancanti e compone il dossier. L’assistente segue i passaggi e distingue dati dichiarati, verifiche e decisioni.",
         "Apri la pagina di revisione del dossier. Parti dai dati del cliente e dall’incarico, poi passa ai documenti da acquisire e alle decisioni da completare. Il memo e gli altri allegati conservano i controlli di supporto."
       ],
       "deliverables": [
@@ -468,7 +468,7 @@
       "request": "Vera, prepare Officina Arco’s new-client dossier from this form. Organize the facts, proposed engagement, checks to perform and documents to request.",
       "steps": [
         "Vera opens the teaching case and links the form to the new client. When starting from an unorganized folder, the same function also includes document preparation.",
-        "The current workflow organizes parties and services, prepares proposals and missing-information requests, and compiles the dossier. The voice chat follows these steps and distinguishes reported facts, checks and decisions.",
+        "The current workflow organizes parties and services, prepares proposals and missing-information requests, and compiles the dossier. The assistant follows these steps and distinguishes reported facts, checks and decisions.",
         "Open the dossier’s review page. Start with client facts and the engagement, then documents to obtain and decisions to complete. The memo and other attachments retain the supporting checks."
       ],
       "deliverables": [
@@ -493,7 +493,7 @@
       "request": "Vera, prépare le dossier de nouveau client d’Officina Arco à partir de cette fiche. Organise les faits, la mission proposée, les contrôles et les pièces à demander.",
       "steps": [
         "Vera ouvre le dossier pédagogique et relie la fiche au nouveau client. Si les fichiers doivent être organisés, cette même fonction comprend aussi leur préparation.",
-        "La procédure actuelle organise parties et services, prépare propositions et demandes manquantes, puis compose le dossier. La voix distingue faits déclarés, contrôles et décisions au fil du travail.",
+        "La procédure actuelle organise parties et services, prépare propositions et demandes manquantes, puis compose le dossier. L’assistant distingue faits déclarés, contrôles et décisions au fil du travail.",
         "Ouvrez la page de revue du dossier. Commencez par le client et la mission, puis les pièces à obtenir et les décisions à compléter. La note et les autres annexes conservent les contrôles de support."
       ],
       "deliverables": [
@@ -518,7 +518,7 @@
       "request": "Vera, bereite Officina Arcos Dossier als neuen Mandanten aus diesem Bogen vor. Ordne die Angaben, den Mandatsvorschlag, erforderliche Prüfungen und anzufordernde Unterlagen.",
       "steps": [
         "Vera eröffnet den Übungsfall und verknüpft den Bogen mit dem neuen Mandanten. Bei ungeordneten Dateien umfasst dieselbe Funktion auch die Dokumentenaufbereitung.",
-        "Der aktuelle Ablauf ordnet Beteiligte und Leistungen, bereitet Vorschläge und Informationsanforderungen vor und erstellt das Dossier. Der Sprachchat unterscheidet dabei Angaben, Prüfungen und Entscheidungen.",
+        "Der aktuelle Ablauf ordnet Beteiligte und Leistungen, bereitet Vorschläge und Informationsanforderungen vor und erstellt das Dossier. Der Assistent unterscheidet dabei Angaben, Prüfungen und Entscheidungen.",
         "Öffnen Sie die Prüfseite des Dossiers. Beginnen Sie mit Mandant und Auftrag, dann folgen benötigte Dokumente und offene Entscheidungen. Notiz und weitere Anlagen enthalten die unterstützenden Kontrollen."
       ],
       "deliverables": [
@@ -543,7 +543,7 @@
       "request": "Vera, prepara el expediente de nuevo cliente de Officina Arco con esta ficha. Organiza los datos, el encargo propuesto, las comprobaciones y los documentos que faltan.",
       "steps": [
         "Vera abre el expediente didáctico y vincula la ficha al nuevo cliente. Cuando se parte de archivos desordenados, la misma función incluye su preparación.",
-        "El procedimiento actual organiza partes y servicios, prepara propuestas y solicitudes de información y compone el expediente. La voz distingue datos declarados, verificaciones y decisiones durante el trabajo.",
+        "El procedimiento actual organiza partes y servicios, prepara propuestas y solicitudes de información y compone el expediente. El asistente distingue datos declarados, verificaciones y decisiones durante el trabajo.",
         "Abre la página de revisión del expediente. Empieza por el cliente y el encargo; después revisa documentos por obtener y decisiones pendientes. La nota y los demás anexos conservan las comprobaciones de apoyo."
       ],
       "deliverables": [

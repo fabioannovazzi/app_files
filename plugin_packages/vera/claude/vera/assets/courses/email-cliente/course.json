@@ -387,7 +387,7 @@
       "inputs": "Apri context-it.md, CU-income.md e F24-first.md. Il contesto indica le due conferme cercate. Vera prepara il fascicolo didattico e legge i documenti con il percorso corrente; non serve un elenco di richieste già approvate.",
       "request": "Vera, prepara una email per chiedere al cliente se ha altre CU e se ci ha consegnato tutti gli F24 della campagna. Fammi prima rivedere le richieste sulla base di questo fascicolo.",
       "steps": [
-        "La chat di lavoro esegue la preparazione del fascicolo e mostra documenti ricevuti e domande proposte. La chat vocale spiega quali informazioni sono già disponibili e quali conferme si cercano.",
+        "L’assistente esegue la preparazione del fascicolo e mostra documenti ricevuti e domande proposte. L’assistente spiega quali informazioni sono già disponibili e quali conferme si cercano.",
         "Nella pagina di revisione scegli le richieste pertinenti e restringi quelle troppo generiche alle due conferme del caso. Vera salva e applica le decisioni effettive prima di usarle nella bozza.",
         "Vera scrive la email dalle richieste riviste. Apri la bozza, controlla oggetto, domande e tono; un’eventuale modifica viene salvata attraverso la stessa revisione, conservando il collegamento alle decisioni."
       ],
@@ -412,7 +412,7 @@
       "inputs": "Open context-en.md, CU-income.md and F24-first.md. The context names the two confirmations sought. Vera prepares the teaching file and reads the documents through the current workflow; no pre-approved request list is needed.",
       "request": "Vera, prepare an email asking whether the client has other CUs and has supplied all F24s for the campaign. First let me review the requests against this file.",
       "steps": [
-        "The working chat prepares the file and shows received documents and proposed questions. The voice chat explains what is already available and which confirmations are needed.",
+        "The assistant prepares the file and shows received documents and proposed questions. The assistant explains what is already available and which confirmations are needed.",
         "On the review page, choose relevant requests and narrow broad suggestions to the two confirmations in the case. Vera saves and applies the actual decisions before using them for the draft.",
         "Vera writes the email from reviewed requests. Open it and check subject, questions and tone; any replacement is saved through the same review process with its link to the decisions."
       ],
@@ -437,7 +437,7 @@
       "inputs": "Ouvrez context-fr.md, CU-income.md et F24-first.md. Le contexte indique les deux confirmations recherchées. Vera prépare le dossier pédagogique et lit les documents avec le parcours courant ; aucune liste déjà approuvée n’est nécessaire.",
       "request": "Vera, prépare un courriel demandant si le client possède d’autres CU et a transmis tous les F24 de la campagne. Fais-moi d’abord revoir les demandes à partir de ce dossier.",
       "steps": [
-        "La conversation de travail prépare le dossier et montre documents reçus et questions proposées. La conversation vocale explique ce qui est disponible et les confirmations recherchées.",
+        "L’assistant prépare le dossier et montre documents reçus et questions proposées. L’assistant explique ce qui est disponible et les confirmations recherchées.",
         "Sur la page de revue, choisissez les demandes pertinentes et limitez les suggestions trop larges aux deux confirmations du cas. Vera enregistre et applique les décisions effectives avant de rédiger.",
         "Vera rédige à partir des demandes revues. Ouvrez le brouillon et vérifiez objet, questions et ton ; tout remplacement est enregistré par la même revue, avec son lien aux décisions."
       ],
@@ -462,7 +462,7 @@
       "inputs": "Öffnen Sie context-de.md, CU-income.md und F24-first.md. Der Kontext nennt die beiden gesuchten Bestätigungen. Vera bereitet die Übungsakte vor und liest die Dokumente im aktuellen Ablauf; eine bereits genehmigte Anfrageliste ist nicht erforderlich.",
       "request": "Vera, entwirf eine E-Mail mit der Frage, ob weitere CU existieren und alle F24 der Kampagne vorliegen. Lass mich die Anfragen zunächst anhand dieser Akte prüfen.",
       "steps": [
-        "Der Arbeitschat bereitet die Akte vor und zeigt erhaltene Dokumente und vorgeschlagene Fragen. Der Sprachchat erklärt, was vorliegt und welche Bestätigungen fehlen.",
+        "Der Assistent bereitet die Akte vor und zeigt erhaltene Dokumente und vorgeschlagene Fragen. Der Assistent erklärt, was vorliegt und welche Bestätigungen fehlen.",
         "Wählen Sie auf der Prüfseite die passenden Anfragen und begrenzen Sie breite Vorschläge auf die beiden Bestätigungen des Falls. Vera speichert und übernimmt die tatsächlichen Entscheidungen vor dem Entwurf.",
         "Vera schreibt aus den geprüften Anfragen. Öffnen Sie den Entwurf und prüfen Sie Betreff, Fragen und Ton; ein Ersatztext wird über dieselbe Prüfung mit Bezug zu den Entscheidungen gespeichert."
       ],
@@ -487,7 +487,7 @@
       "inputs": "Abre context-es.md, CU-income.md y F24-first.md. El contexto señala las dos confirmaciones buscadas. Vera prepara el expediente didáctico y lee los documentos mediante el flujo actual; no hace falta una lista ya aprobada.",
       "request": "Vera, prepara un correo para preguntar si el cliente tiene otras CU y ha entregado todos los F24 de la campaña. Primero déjame revisar las peticiones a partir de este expediente.",
       "steps": [
-        "La conversación de trabajo prepara el expediente y muestra documentos recibidos y preguntas propuestas. La conversación de voz explica qué está disponible y qué confirmaciones se necesitan.",
+        "El asistente prepara el expediente y muestra documentos recibidos y preguntas propuestas. El asistente explica qué está disponible y qué confirmaciones se necesitan.",
         "En la página de revisión, elige peticiones pertinentes y limita las sugerencias amplias a las dos confirmaciones del caso. Vera guarda y aplica las decisiones reales antes de redactar.",
         "Vera escribe desde las peticiones revisadas. Abre el borrador y comprueba asunto, preguntas y tono; cualquier sustitución se guarda mediante la misma revisión, vinculada a las decisiones."
       ],
