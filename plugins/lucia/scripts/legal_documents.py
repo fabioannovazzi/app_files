@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator
+from legal_docx import inspect_docx
 from lxml import etree as ET
 
 __all__ = [
@@ -36,6 +37,7 @@ WORKFLOWS = (
     "confronto-documenti",
     "revisione-documentale",
     "redazione-da-modello",
+    "controllo-documento",
 )
 STATUSES = ("supported", "not-stated", "unreadable", "not-reviewed")
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
@@ -120,28 +122,34 @@ def _extract(path: Path) -> tuple[list[dict[str, Any]], list[str]]:
             "PDF text extraction does not verify layout, images, signatures or reading order; inspect the original."
         )
     elif suffix == ".docx":
-        with zipfile.ZipFile(path) as archive:
-            for name in _docx_parts(archive):
-                root = _parse_xml(archive.read(name))
-                for number, paragraph in enumerate(root.iter(W + "p"), 1):
-                    value = _text(paragraph)
-                    if value.strip():
-                        units.append({"anchor": f"{name}#p{number}", "text": value})
-                if any(
-                    element.tag in (W + "ins", W + "del", W + "moveFrom", W + "moveTo")
-                    for element in root.iter()
-                ):
-                    warnings.append(
-                        f"{name}: tracked changes retained as mixed text; inspect revisions in the original before interpreting."
-                    )
-                if any(
-                    element.tag
-                    in (W + "drawing", W + "object", W + "pict", W + "altChunk")
-                    for element in root.iter()
-                ):
-                    warnings.append(
-                        f"{name}: images, objects or embedded content are not extracted."
-                    )
+        inspection = inspect_docx(path)
+        warnings.extend(inspection["warnings"])
+        for paragraph in inspection["paragraphs"]:
+            anchor = paragraph["anchor"]
+            units.append({"anchor": anchor, "text": paragraph["text"]})
+            if paragraph["original_text"] != paragraph["text"]:
+                units.append(
+                    {
+                        "anchor": anchor + "/original",
+                        "text": paragraph["original_text"],
+                        "view": "original",
+                    }
+                )
+            units.append(
+                {
+                    "anchor": anchor + "/structure",
+                    "text": json.dumps(paragraph, ensure_ascii=False),
+                    "view": "structure",
+                }
+            )
+        for key in ("styles", "style_defaults", "numbering", "comments", "properties"):
+            units.append(
+                {
+                    "anchor": "package/" + key,
+                    "text": json.dumps(inspection.get(key, []), ensure_ascii=False),
+                    "view": "structure",
+                }
+            )
     else:
         raise ValueError(
             f"Unsupported format {suffix or '(none)'}; supply PDF, DOCX, UTF-8 TXT or Markdown."
@@ -261,6 +269,13 @@ def read_pack(run_dir: Path) -> dict[str, Any]:
     ):
         raise ValueError("Extracted evidence changed; prepare a new run.")
     pack = _load(evidence)
+    if "playbook" in pack:
+        selected = pack["playbook"]
+        if (
+            selected["snapshot"] != "playbook.json"
+            or _hash((run_dir / "playbook.json").read_bytes()) != selected["sha256"]
+        ):
+            raise ValueError("Selected firm workflow changed; prepare a new run.")
     for source in pack["sources"]:
         path = (run_dir / source["snapshot"]).resolve()
         if not path.is_relative_to((run_dir / "originals").resolve()):
@@ -270,20 +285,41 @@ def read_pack(run_dir: Path) -> dict[str, Any]:
     return pack
 
 
-def compare(run_dir: Path, before: str, after: str) -> Path:
+def compare(run_dir: Path, before: str, after: str, view: str = "final") -> Path:
     """Produce a literal text diff; moved clauses and legal significance need model review."""
+    if view not in {"final", "original"}:
+        raise ValueError("Choose final or original revision text.")
     sources = {source["id"]: source for source in read_pack(run_dir)["sources"]}
     if before == after or before not in sources or after not in sources:
         raise ValueError("Choose two different source IDs from this run.")
     for key in (before, after):
         if sources[key]["error"] or not sources[key]["units"]:
             raise ValueError(f"Cannot compare unreadable source: {key}")
-    texts = [
-        [unit["text"] + "\n" for unit in sources[key]["units"]]
-        for key in (before, after)
-    ]
+    texts = []
+    for key in (before, after):
+        units = sources[key]["units"]
+        originals = {
+            unit["anchor"].removesuffix("/original"): unit["text"]
+            for unit in units
+            if unit.get("view") == "original"
+        }
+        texts.append(
+            [
+                (
+                    originals.get(unit["anchor"], unit["text"])
+                    if view == "original"
+                    else unit["text"]
+                )
+                + "\n"
+                for unit in units
+                if unit.get("view", "final") == "final"
+            ]
+        )
     diff = "".join(difflib.unified_diff(*texts, fromfile=before, tofile=after))
-    target = run_dir / f"comparison-{before}-{after}.diff"
+    target = (
+        run_dir
+        / f"comparison-{before}-{after}{'-original' if view == 'original' else ''}.diff"
+    )
     target.write_text(
         diff
         or "No differences in extracted text. This does not establish identical formatting or files.\n",
@@ -768,6 +804,7 @@ def main(argv: list[str] | None = None) -> int:
     diff.add_argument("--run-dir", type=Path, required=True)
     diff.add_argument("--before", required=True)
     diff.add_argument("--after", required=True)
+    diff.add_argument("--view", choices=("final", "original"), default="final")
     review = sub.add_parser("render")
     review.add_argument("--run-dir", type=Path, required=True)
     review.add_argument("--review", type=Path, required=True)
@@ -783,7 +820,7 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "compare":
             LOGGER.info(
                 "Literal text comparison: %s",
-                compare(args.run_dir, args.before, args.after),
+                compare(args.run_dir, args.before, args.after, args.view),
             )
         elif args.command == "render":
             LOGGER.info("Review: %s", render(args.run_dir, args.review))

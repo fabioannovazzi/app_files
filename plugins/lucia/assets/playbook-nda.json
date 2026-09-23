@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "lucia-nda-example",
+  "version": 1,
+  "derived_from": null,
+  "name": "Revisione NDA — esempio da adattare",
+  "workflow": "revisione-contratti",
+  "language": "it",
+  "purpose": "Esaminare l'accordo di riservatezza per la parte rappresentata e proporre modifiche motivate.",
+  "columns": ["Informazioni riservate", "Durata", "Responsabilità", "Legge applicabile", "Foro"],
+  "questions": ["Quale parte rappresentiamo?", "Quali informazioni saranno condivise e per quale operazione?"],
+  "firm_positions": "Esempio da rivedere prima dell'uso: segnalare una legge applicabile diversa da quella italiana e spiegare l'effetto per la parte rappresentata. Nessun limite economico o termine è stato approvato dallo studio.",
+  "source_requirements": ["Testo completo dell'NDA e allegati richiamati", "Istruzioni della parte rappresentata; fonti giuridiche pertinenti solo per le proposizioni che le richiedono"],
+  "template_name": "",
+  "outputs": ["html", "xlsx"],
+  "tracked_changes": false
+}

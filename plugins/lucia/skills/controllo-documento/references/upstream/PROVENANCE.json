@@ -1,0 +1,20 @@
+{
+  "repository": "https://github.com/open-legal-products/mike-workflows",
+  "commit": "ce62e6a2d3f47e1d3567a4f2edc61898cfe9e78a",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2026 Mike",
+  "files": [
+    {
+      "bundled_file": "proofread.md",
+      "upstream_path": "assistant-workflows/proofread/SKILL.md",
+      "sha256": "b150359faad74fdc7ff280928d3126184b07b95d25d096bab32b7a4263419643"
+    },
+    {
+      "bundled_file": "LICENSE",
+      "upstream_path": "LICENSE",
+      "sha256": "6e7c22106722c151ffc66d0faf2035155eca1ad91931f5679c6773891c08deef"
+    }
+  ],
+  "adaptation": "Original snapshots retained for attribution; Lucia owns the Italian instructions, evidence contract and host-document handoff. No Mike backend.",
+  "update_policy": "Review upstream changes deliberately; no runtime downloads or automatic replacement."
+}

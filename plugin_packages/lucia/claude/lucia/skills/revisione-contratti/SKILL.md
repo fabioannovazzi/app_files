@@ -30,6 +30,10 @@ Check definitions, cross-references, conflicting clauses, dates and schedules.
 Populate the review and render the evidence-linked HTML and spreadsheet. Deliver
 the few decisions that matter most, the full issue list and coverage limitations.
 Proposed wording is a proposal, not a silent modification of the contract.
+When the lawyer requests a redline or comments in Word, read
+`references/word-handoff.md` and use the host Documents/Word skill to produce and
+verify a new DOCX with native revisions. Carry the quoted clause, proposed wording
+and reason into that handoff; preserve the original and earlier reviewers' edits.
 Do not label a quote match as legal verification. If a conclusion depends on law
 not supplied, state that it needs separate source-backed research; reuse the
 existing legal-question workflow only when the user requests that wider work.

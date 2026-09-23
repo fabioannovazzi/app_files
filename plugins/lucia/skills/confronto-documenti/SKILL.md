@@ -15,6 +15,12 @@ baseline is ambiguous. Never infer that the last file supplied is the latest.
 For versions, run the local `compare` helper for each relevant pair. Its literal
 diff is a reading aid; it does not detect legal significance, prove equivalence,
 resolve renumbering or account for layout/images. Read the source texts too.
+Word paragraph anchors use the proposed/final text view; `/original` anchors
+preserve previous wording. The helper's `--view original` option compares original
+text instead. Establish the intended view and explain existing unaccepted changes;
+never treat combined deleted/inserted words as a single operative clause. For a
+requested Word comparison/redline use the host Documents/Word skill following
+`../revisione-contratti/references/word-handoff.md`.
 
 Use a topic-by-document comparison with one column per document and a separate
 explanation of the difference. Cover the material similarities as well as changes

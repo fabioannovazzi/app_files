@@ -40,6 +40,14 @@ whole request semantically and select the narrowest registered workflow:
 
 | Outcome | Required route |
 | --- | --- |
+| Systematic checks of names, definitions, amounts, cross-references and formatting | Read `../controllo-documento/SKILL.md` completely and follow it. |
+| A table of terms and clauses from one contract | Read `../estrazione-clausole/SKILL.md` completely and follow it. |
+| Reusable firm instructions to edit, export, reopen or apply | Read `../metodo-studio/SKILL.md` completely and follow it. |
+| Italian legal citations in a document to verify against acquired authorities | Read `../verifica-citazioni/SKILL.md` completely and follow it. |
+| Civil litigation chronology, allegations, evidence and pleading preparation | Read `../contenzioso-civile/SKILL.md` completely and follow it. |
+| M&A review, due diligence, SPA issues and disclosure cross-check | Read `../operazioni-ma/SKILL.md` completely and follow it. |
+| Employment evidence, chronology, contracts and explicit calculations | Read `../lavoro/SKILL.md` completely and follow it. |
+| Debt evidence, payments, explicit interest calculations and recovery drafts | Read `../recupero-crediti/SKILL.md` completely and follow it. |
 | Preparation of the question or answer plan only, without executing research | Read `../legal-tax-answer-planner/SKILL.md` completely and follow it. |
 | A legal, tax-law, or compliance question to take from the initial request to a reviewed answer | Read `../quesito-legale-fiscale/SKILL.md` completely and follow it. |
 | An opposing examination of a concrete position, or an explicit request for an opposing opinion | Read `../adversarial-opinion/SKILL.md` completely and follow the shared method. Informational research ends after validation; respect an instruction to omit the stage. |
@@ -85,9 +93,18 @@ for client, engagement, immutable input, and run lifecycle; its legal intake
 schema, conflict and deadline boundaries, validator, and review receipts remain
 specific to Lucia.
 
-The four document workflows use selected files and a new local output folder. They
+The document and practice workflows use selected files and a new output folder. They
 require no Studio Archive, MCP service, Mike server or separate model API. Follow
-their shared local document contract.
+their shared document contract. For Word authoring, native revisions, comments
+and rendering, use the host's available document skill and
+`../revisione-contratti/references/word-handoff.md`; do not assume a Codex cache
+path or create a second editing engine. For calculations use the host spreadsheet
+capability with explicit inputs and formulas. If a required capability is absent,
+continue independent analysis and identify the affected file as unfinished.
+Preserve missing-information questions and dependent stages with
+`../revisione-contratti/references/matter-progress.md`. The standalone firm editor
+starts no server. If the host cannot open it, deliver the file for the lawyer to
+open and retain the UI verification limitation.
 
 For the other workflows requiring client and engagement setup, read `../studio-archive/SKILL.md` completely
 and use the packaged `luciaStudioArchive` MCP service. Prepare and start the

@@ -30,7 +30,8 @@
       "revisione-contratti": "Revisione contratti",
       "confronto-documenti": "Confronto documenti",
       "revisione-documentale": "Revisione documentale",
-      "redazione-da-modello": "Redazione da modello"
+      "redazione-da-modello": "Redazione da modello",
+      "controllo-documento": "Controllo di errori e incoerenze"
     },
     "difference": "Differenza e conseguenza",
     "complete": "Da rivedere con l’avvocato",
@@ -92,7 +93,8 @@
       "revisione-contratti": "Contract review",
       "confronto-documenti": "Document comparison",
       "revisione-documentale": "Structured document review",
-      "redazione-da-modello": "Draft from a template"
+      "redazione-da-modello": "Draft from a template",
+      "controllo-documento": "Document errors and inconsistencies"
     },
     "difference": "Difference and implication",
     "complete": "For lawyer review",
@@ -154,7 +156,8 @@
       "revisione-contratti": "Revue de contrats",
       "confronto-documenti": "Comparaison de documents",
       "revisione-documentale": "Revue documentaire",
-      "redazione-da-modello": "Rédaction à partir d’un modèle"
+      "redazione-da-modello": "Rédaction à partir d’un modèle",
+      "controllo-documento": "Erreurs et incohérences du document"
     },
     "difference": "Différence et conséquence",
     "complete": "Pour revue de l’avocat",
@@ -216,7 +219,8 @@
       "revisione-contratti": "Vertragsprüfung",
       "confronto-documenti": "Dokumentenvergleich",
       "revisione-documentale": "Dokumentenprüfung",
-      "redazione-da-modello": "Entwurf aus einer Vorlage"
+      "redazione-da-modello": "Entwurf aus einer Vorlage",
+      "controllo-documento": "Fehler und Widersprüche im Dokument"
     },
     "difference": "Unterschied und Folge",
     "complete": "Zur anwaltlichen Prüfung",
@@ -278,7 +282,8 @@
       "revisione-contratti": "Revisión de contratos",
       "confronto-documenti": "Comparación de documentos",
       "revisione-documentale": "Revisión documental",
-      "redazione-da-modello": "Redacción desde plantilla"
+      "redazione-da-modello": "Redacción desde plantilla",
+      "controllo-documento": "Errores e incoherencias del documento"
     },
     "difference": "Diferencia y consecuencia",
     "complete": "Para revisión del abogado",
