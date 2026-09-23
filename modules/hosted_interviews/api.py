@@ -2655,7 +2655,25 @@ def public_interview_status(token: str) -> JSONResponse:
 def public_interview_session(
     token: str, payload: InterviewSessionRequest
 ) -> JSONResponse:
-    """Create a server-side Realtime session for the public interview page."""
+    """Create a session without racing completion, transcription or a retry."""
+
+    try:
+        _load_record_for_token(token, allow_completed=False)
+    except HostedInterviewError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    with _try_post_completion_task_lock(_session_dir(token)) as acquired:
+        if not acquired:
+            raise HTTPException(
+                status_code=409,
+                detail="A previous attempt is still being saved. Try again shortly.",
+            )
+        return _public_interview_session_locked(token, payload)
+
+
+def _public_interview_session_locked(
+    token: str, payload: InterviewSessionRequest
+) -> JSONResponse:
+    """Start or replace an attempt under the same lock as evidence finalisation."""
 
     try:
         record = _load_record_for_token(token, allow_completed=False)

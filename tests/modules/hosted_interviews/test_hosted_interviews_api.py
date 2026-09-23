@@ -3086,3 +3086,23 @@ def test_departure_finaliser_cannot_overwrite_a_new_attempt(
     assert not (
         tmp_path / "sessions" / record["token_hash"] / "completed.json"
     ).exists()
+
+
+def test_retry_cannot_replace_evidence_while_completion_worker_holds_lock(
+    tmp_path: Path, monkeypatch
+) -> None:
+    token, record = _prepare_test_interview(tmp_path, monkeypatch)
+    attempt_id = _mark_started_attempt(tmp_path, record)
+    session_dir = tmp_path / "sessions" / record["token_hash"]
+    with api._try_post_completion_task_lock(session_dir) as acquired:
+        assert acquired
+        response = _client().post(
+            f"/case-notes/api/interviews/{token}/session",
+            json={"sdp": "test-offer", "replace_attempt_id": attempt_id},
+        )
+    assert response.status_code == 409
+    assert "still being saved" in response.json()["detail"]
+    assert (
+        json.loads((session_dir / "interview.json").read_text())["active_attempt_id"]
+        == attempt_id
+    )

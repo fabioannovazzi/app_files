@@ -1676,8 +1676,8 @@
       if (response.status === 409) {
         throw new Error(
           language === "it"
-            ? "Una precedente sessione risulta ancora attiva. Chiudi le altre schede dell’intervista e riprova tra qualche minuto con questo stesso link."
-            : "A previous interview session is still active. Close other interview tabs and retry this same link in a few minutes."
+            ? "Una precedente sessione è ancora attiva o in salvataggio. Chiudi le altre schede dell’intervista e riprova tra poco con questo stesso link."
+            : "A previous interview session is still active or being saved. Close other interview tabs and retry this same link shortly."
         );
       }
       throw new Error(errorText);
