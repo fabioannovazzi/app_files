@@ -1,0 +1,5 @@
+# Imprese Arco
+
+Caso ficticio para aprender el workflow. La asociación y el encargo son inventados; las fuentes públicas adjuntas son auténticas.
+
+La asociación ficticia Imprese Arco prepara una reunión introductoria para pequeñas empresas que venden bienes o servicios a otras empresas de la Unión Europea. El profesional necesita una nota de dos páginas como máximo sobre las reglas comunes de la UE contra la morosidad: ámbito, condiciones de los intereses, plazos contractuales y compensación de los costes de cobro. Añade una lista de los documentos necesarios antes de examinar un crédito concreto. Se pide información general, no un dictamen sobre el derecho de un acreedor determinado. No hay facturas, contratos ni litigios reales. No calcules intereses ni tramites el cobro. Distingue el marco de la UE y su transposición nacional, que deberá comprobarse para el derecho del contrato. Idioma: español. Fecha del encargo ficticio: 14 de septiembre de 2026. Usa fuentes oficiales, verifica actualizaciones y muestra referencias y límites. La guía de la Comisión y la directiva son fuentes iniciales para examinar, no conclusiones ya validadas.

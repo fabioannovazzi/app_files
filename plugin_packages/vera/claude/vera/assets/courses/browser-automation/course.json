@@ -1,0 +1,454 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "browser-automation",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "observe_local_browser_procedure_then_review_and_replay"
+  },
+  "sources": [
+    {
+      "path": "modules/browser-automation/assets/icon.svg",
+      "sha256": "de9b1ea1fb9dbd8e6dbaf4137c90cfe2299c6a4f8c7be4c6104d38a2573cc722"
+    },
+    {
+      "path": "modules/browser-automation/references/agenzia-acquisition.md",
+      "sha256": "84cb163ccb79706e88bbdcf0aeee3cacf91a5c4e8b27f1eb10d9a728661f4962"
+    },
+    {
+      "path": "modules/browser-automation/references/agenzia-download.md",
+      "sha256": "cc7876f3fe839046086221cba592a12533f6ed8684731d2740f6dfa160fb1f84"
+    },
+    {
+      "path": "modules/browser-automation/references/batch-review.md",
+      "sha256": "f4eea599d4535c24b3d029cf0c49e5e8726f3d2ae5f9b9fb76ea1f1f5a9b60b5"
+    },
+    {
+      "path": "modules/browser-automation/references/browser-session.md",
+      "sha256": "4eab21285e97a02bbec52ec09743fb1a34fe7df3abb1a773cb3eadcccd03a7f4"
+    },
+    {
+      "path": "modules/browser-automation/references/capability-contract.md",
+      "sha256": "e154f07e345161c3b633fb3a2602b09a6176448788c2b6c8805b469ac76873a4"
+    },
+    {
+      "path": "modules/browser-automation/references/development-request.md",
+      "sha256": "f706ff4543f8422f2a7ffce036d90cf4f08e4d0f65397e464149a6ef20cfbd1c"
+    },
+    {
+      "path": "modules/browser-automation/references/discovery-playbook.md",
+      "sha256": "55669e6494580890b652302914db9feb183afe37500e213ac78a289ff47e7abc"
+    },
+    {
+      "path": "modules/browser-automation/references/econs-review.md",
+      "sha256": "8c5b74d912bffa3b3877647705edad0b46f4d8be7055cade2bc030fbbf8a2855"
+    },
+    {
+      "path": "modules/browser-automation/references/ordinary-use.md",
+      "sha256": "aafc8899c8ddd0473a0b053c763c0520e3dd4298ed010b3cd0cd5e082a084244"
+    },
+    {
+      "path": "modules/browser-automation/references/passive-invoice-procedure.md",
+      "sha256": "c508b155748e8ead93283ef698faaf891052950d0d199c669ffe1ab6150f4e6d"
+    },
+    {
+      "path": "modules/browser-automation/references/process-lifecycle.md",
+      "sha256": "09fbf8ae7c7c924f4b0af0586e240f805bde1b863ab130da880dbca319f5b5be"
+    },
+    {
+      "path": "modules/browser-automation/references/production-skills.md",
+      "sha256": "6b723c2fae1e36cc9f1bcd6671537b2ac1c3a4264f32accd865b4078cf1f8e60"
+    },
+    {
+      "path": "modules/browser-automation/references/teaching-checkpoint.md",
+      "sha256": "d8227739dcd5dce2fa1b074c3bf2f8cd0f06ef3593b94f140477ea3e73f10612"
+    },
+    {
+      "path": "modules/browser-automation/requirements.txt",
+      "sha256": "d36b6c93da07433088beef4ef02f6d34dc9eba2ee88baa91f88720f1ccaf9366"
+    },
+    {
+      "path": "modules/browser-automation/scripts/acceptance_fixture.py",
+      "sha256": "e24928b0a984ed45fc3acb08439d7a4451bfc8d57be043efb601215f9481d13a"
+    },
+    {
+      "path": "modules/browser-automation/scripts/agenzia_acquisition.mjs",
+      "sha256": "685220a935fb728194d3cb3c1a676c1e50d1eace5351efe97b4c38a29ca22135"
+    },
+    {
+      "path": "modules/browser-automation/scripts/agenzia_artifacts.mjs",
+      "sha256": "dbe4ee98cfce1071b12d8184eda4833405a783e466dc5a669b0630623019dcc3"
+    },
+    {
+      "path": "modules/browser-automation/scripts/agenzia_download.mjs",
+      "sha256": "2f760930a0246ffc962af626f42f40e6216610fb5c09fcde9376b826abe35567"
+    },
+    {
+      "path": "modules/browser-automation/scripts/batch_review.py",
+      "sha256": "1f1e348b1cdcbd2c0a56f67d74e27c527ada36c0b053f09c0c04fe9e42feb56e"
+    },
+    {
+      "path": "modules/browser-automation/scripts/browser_session.mjs",
+      "sha256": "a919c4b3dc43236352fb4dc0783eba39ea26f6f877828acf3ca8130994fdc5fd"
+    },
+    {
+      "path": "modules/browser-automation/scripts/capability_pipeline.py",
+      "sha256": "13906be8a42923dacb0e501434bc86e0d9fe81a902fb0b2c974fe110656f855a"
+    },
+    {
+      "path": "modules/browser-automation/scripts/capability_runtime.mjs",
+      "sha256": "fe3052420fd1795f6f834a0928f7c7c6bf51478fb87acbe5896b4ecf67314a11"
+    },
+    {
+      "path": "modules/browser-automation/scripts/check_dependencies.py",
+      "sha256": "6d61daf36ee61458017a312ce5748a9a22f9f3ff2fcc6569873eddc457523e6e"
+    },
+    {
+      "path": "modules/browser-automation/scripts/check_installation.py",
+      "sha256": "5692e46244d6999f860fdb1aa3907d1a7a95dc6363038d07176acaee9ad63ded"
+    },
+    {
+      "path": "modules/browser-automation/scripts/development_request.py",
+      "sha256": "c7dbbe2e707b9b0892e3ad6fcb2c514461c296776268e79e83d5095b1f6dc418"
+    },
+    {
+      "path": "modules/browser-automation/scripts/discovery_pack.py",
+      "sha256": "14060a623ec3b8a211379747d397084fb6a7fe938c9b40a30469f78acadc3544"
+    },
+    {
+      "path": "modules/browser-automation/scripts/discovery_runtime.mjs",
+      "sha256": "d0b57d2c373943f583e8e2c18ed3b77e8a9c784b3831efa3aca73e26c7c40c09"
+    },
+    {
+      "path": "modules/browser-automation/scripts/download_directory.mjs",
+      "sha256": "e515c5c8985f861ed063c14de40aa8868cb0c1e6073338415ec16b305cd37f47"
+    },
+    {
+      "path": "modules/browser-automation/scripts/econs_processing.mjs",
+      "sha256": "9115b543d05a83757d6efb54eaecf6282774cefe678db7b48916e7b70875ccc5"
+    },
+    {
+      "path": "modules/browser-automation/scripts/econs_review.mjs",
+      "sha256": "0e4e06e1966090ed7affa5613d33671870d1c6316d7c52a4ea548064fcf4d557"
+    },
+    {
+      "path": "modules/browser-automation/scripts/econs_setup.mjs",
+      "sha256": "0a7362f8cc36fc2644ee86f4eb7717953d22022a52866daa7a1da37a6ead91df"
+    },
+    {
+      "path": "modules/browser-automation/scripts/process_lifecycle.py",
+      "sha256": "49483cbeaf4a00bf78c132e3de2131e7be82fd208f870240bbf421dc833e08c3"
+    },
+    {
+      "path": "modules/browser-automation/scripts/process_runtime.mjs",
+      "sha256": "eb3185effa0f068676f2c15bf13cd86a9ec18192dbebe6c88724c70258b57553"
+    },
+    {
+      "path": "modules/browser-automation/scripts/process_skills.py",
+      "sha256": "b7465fd97cef25824b186e16a4930c1da3feb919739a1c405be7ce34bfa604cd"
+    },
+    {
+      "path": "modules/browser-automation/scripts/teaching_checkpoint.py",
+      "sha256": "25d266b4e1162b6df2e0e9e0e6f91fe63355d5f205d872f7002b018246ecf0da"
+    },
+    {
+      "path": "modules/browser-automation/skills/browser-automation/SKILL.md",
+      "sha256": "755001c4e67727767a8df08000a3bb8a02b3d093df4b8d6dde17e7e42d52417c"
+    },
+    {
+      "path": "skills/browser-automation/SKILL.md",
+      "sha256": "7a1a86b459d5f360774229270af502d946d34eeadcae05fa789c66745d3d85a3"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/task-en.md",
+      "sha256": "01d7ec4e900dec831ae44758cb64e09bd09553eb23afd8ac7f61a91d9cf24f8f",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/practice-en.md",
+      "sha256": "e1c58eb8610f9dc0c9541f08978f17174a44e4db8e7aad91c85f6d82e3583529",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/task-it.md",
+      "sha256": "f9a88b7a33632d84e7c98102b26b030be4a70bc1fe863cf55b50ee610d211489",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/practice-it.md",
+      "sha256": "65a713f027ba268c63b37fcd650500a4014b4375bbd463a8a43d8f622665eedb",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/task-fr.md",
+      "sha256": "0ea2c84a411746e7b7bd726106052c2441e5d718fa2e7a9f1de59d878d45c2de",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/practice-fr.md",
+      "sha256": "8826fa47a98aaa8f77a510aec6e27781e9054a9f666bba856c63b8367917693e",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/task-de.md",
+      "sha256": "899071eb5bbc3d7c22f8e6400ff0d95dbcb076c15ea98a57d96b087d62b82873",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/practice-de.md",
+      "sha256": "e64d251dd974ee068f79b836a0e330b2c851e3ff7012a534c185521d018ed1c5",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/task-es.md",
+      "sha256": "f017cb7eff06eafd1ee31ddcc0ea0a0f2171735bde1c72dab0b9dfe42a7c3e1f",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/practice-es.md",
+      "sha256": "14297233f803d189485e4b5155fdf6e2af573363e721c57f5126975d413f351d",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Insegnare a Vera una procedura nel browser",
+      "goal": "Imparare a mostrare a Vera un lavoro ripetitivo nel browser, rivedere la procedura salvata e capire come diventa un’automazione verificata.",
+      "scenario": "Uno studio prepara spesso pacchetti di documenti su un sito. Usa la pagina locale fittizia fornita da Vera per mostrare un esempio completo, rivedere quanto appreso e provare un altro tipo di documento.",
+      "scope": "Apprendimento di una procedura web, salvataggio locale, revisione e percorso verso il riutilizzo. L’esempio usa la pagina di prova locale del plugin; non dimostra l’accesso a un gestionale reale. I comandi della pagina sono in inglese.",
+      "inputs": "Leggi task-it.md: contiene cliente fittizio, tipo di documento e risultato richiesto. Vera avvia la propria pagina locale in questa conversazione. Non servono credenziali, documenti di clienti o automazioni già preparate.",
+      "request": "Vera, mostrami come insegnarti questa procedura nel browser. Segui l’esempio fittizio, salva i passaggi e spiegami che cosa devo rivedere prima che tu possa ripeterla.",
+      "steps": [
+        "Conferma il lavoro e il risultato atteso. Vera avvia il salvataggio prima di agire. In questa conversazione seleziona cliente fittizio e tipo di documento; l’assistente spiega le scelte dell’utente e ciò che Vera registra.",
+        "Segui l’esempio finché la pagina conferma che il pacchetto è pronto. Vera controlla il risultato effettivo, spiega i passaggi e salva la procedura. Apri il riepilogo e confronta la sequenza registrata con il lavoro appena visto.",
+        "Rivedi la procedura proposta e i suoi limiti. Con l’approvazione effettivamente richiesta, Vera crea la versione eseguibile e verifica due esecuzioni complete dalla pagina iniziale. Distingui esempio osservato, procedura approvata e automazione verificata."
+      ],
+      "deliverables": [
+        "Procedura locale salvata e riepilogo dei progressi, da cui riprendere.",
+        "Bozza da rivedere; dopo l’approvazione richiesta e le prove riuscite, procedura riutilizzabile con i registri delle esecuzioni."
+      ],
+      "review": "Controlla pagina iniziale, dati, azioni e risultato finale. Un clic o una bozza salvata non dimostrano che l’automazione funzioni. Rivedi la procedura effettiva prima della creazione della versione eseguibile.",
+      "checkpoints": [
+        "Spiega che cosa serve a Vera per imparare un lavoro nel browser e dove trovare i passaggi salvati.",
+        "Mostra il risultato osservato e indica se la procedura è in bozza, approvata o verificata."
+      ],
+      "practice": "Leggi practice-it.md e richiedi la stessa procedura per una nota di credito. Chiedi a Vera di usare quanto salvato, rivedi gli eventuali cambiamenti e osserva il nuovo risultato. Conserva il primo esempio; la prova riesce solo se documento scelto e risultato coincidono.",
+      "success": "Sai insegnare un lavoro circoscritto nel browser, leggere la procedura salvata e richiederne la ripetizione, riconoscendo revisioni o prove ancora da completare.",
+      "repeat": "Descrivi sito, lavoro e risultato desiderato. Apri la pagina autorizzata in Chrome collegato e mostra un esempio. Vera registra e controlla la procedura; tu la rivedi prima di riutilizzare l’automazione approvata."
+    },
+    "en": {
+      "title": "Teach Vera a browser procedure",
+      "goal": "Learn to show Vera a repeatable browser task, review the saved procedure and understand how it becomes tested automation.",
+      "scenario": "An accounting firm repeatedly prepares document packages on a website. Use Vera’s supplied fictional local page to show one complete example, review what was learned, then try a different document type.",
+      "scope": "Browser procedure discovery, a saved local procedure, review and the route to reusable automation. The example uses the plugin’s local test page; it does not demonstrate access to a real accounting portal. The page controls use English labels.",
+      "inputs": "Read task-en.md. It gives the fictional client, document type and intended result. Vera starts its supplied local page and opens it for this lesson. No login, client documents or prebuilt automation are needed.",
+      "request": "Vera, show me how to teach you this browser procedure. Follow the fictional example, save the steps and show me what I must review before you can repeat it.",
+      "steps": [
+        "Confirm the task and intended result. Vera starts a local recording before acting. In this conversation, select the fictional client and document type; the assistant explains which choices belong to the user and what Vera records.",
+        "Follow the example until the page confirms the package is ready. Vera checks the actual result, explains each step and saves the procedure. Open its progress report and compare the recorded sequence with the work just observed.",
+        "Review the proposed reusable procedure and its limits. With the required actual approval, Vera creates the executable version and checks two clean runs from the starting page. Explain the difference between an observed example, an approved procedure and a successfully tested automation."
+      ],
+      "deliverables": [
+        "A saved local procedure and progress report that can be resumed.",
+        "A draft for review; after the required approval and successful replays, a reusable capability with its actual run records."
+      ],
+      "review": "Check the starting page, inputs, actions and final result. A click or a saved draft is not proof that the automation works. Review the actual procedure before its executable version is created.",
+      "checkpoints": [
+        "Explain what Vera needs to learn a browser task and where its saved steps are found.",
+        "Show the observed result and identify whether the procedure is a draft, approved or tested."
+      ],
+      "practice": "Read practice-en.md and request the same process for a credit note. Ask Vera to use the saved procedure, review any necessary change and show the new result. Retain the first example; a replay counts as successful only when the selected document and result agree.",
+      "success": "You can teach a bounded browser task, inspect the saved procedure and ask for a repeat while recognising unfinished review or replay checks.",
+      "repeat": "Describe the website, task and result you want. Open the authorised page in connected Chrome and demonstrate one example. Vera records and checks the procedure; you review it before approved automation is reused."
+    },
+    "fr": {
+      "title": "Apprendre à Vera une procédure dans le navigateur",
+      "goal": "Apprendre à montrer une tâche répétitive à Vera, relire la procédure enregistrée et comprendre comment elle devient une automatisation vérifiée.",
+      "scenario": "Un cabinet prépare régulièrement des dossiers de documents sur un site. Utilisez la page locale fictive fournie par Vera pour montrer un exemple complet, relire les étapes et essayer un autre type de document.",
+      "scope": "Observation d’une procédure web, enregistrement local, révision et préparation de sa réutilisation. L’exemple utilise la page locale de test du plugin et ne démontre aucun accès à un logiciel métier réel. Les commandes de la page sont en anglais.",
+      "inputs": "Lisez task-fr.md : client fictif, type de document et résultat demandé. Vera lance sa page locale dans cette conversation. Aucun identifiant, document client ou automatisme déjà préparé n’est nécessaire.",
+      "request": "Vera, montre-moi comment t’apprendre cette procédure dans le navigateur. Suis l’exemple fictif, enregistre les étapes et explique ce que je dois relire avant que tu puisses la répéter.",
+      "steps": [
+        "Confirmez la tâche et le résultat attendu. Vera commence l’enregistrement avant d’agir. Sélectionnez le client fictif et le document dans cette conversation ; l’assistant explique les choix de l’utilisateur et ce que Vera enregistre.",
+        "Suivez l’exemple jusqu’à la confirmation que le dossier est prêt. Vera vérifie le résultat réel, explique les étapes et enregistre la procédure. Ouvrez son compte rendu et comparez-le au travail observé.",
+        "Relisez la procédure proposée et ses limites. Après l’approbation effectivement requise, Vera crée la version exécutable et vérifie deux exécutions complètes depuis la page de départ. Distinguez exemple observé, procédure approuvée et automatisation testée."
+      ],
+      "deliverables": [
+        "Une procédure locale enregistrée et un compte rendu permettant de reprendre le travail.",
+        "Un projet à relire ; après l’approbation requise et les essais réussis, une procédure réutilisable avec ses traces d’exécution."
+      ],
+      "review": "Vérifiez la page de départ, les données, les actions et le résultat final. Un clic ou un projet enregistré ne prouve pas que l’automatisation fonctionne. Relisez la procédure réelle avant la création de sa version exécutable.",
+      "checkpoints": [
+        "Expliquez ce dont Vera a besoin pour apprendre une tâche web et où trouver les étapes enregistrées.",
+        "Montrez le résultat observé et indiquez si la procédure est un projet, approuvée ou testée."
+      ],
+      "practice": "Lisez practice-fr.md et demandez la même procédure pour un avoir. Faites reprendre la procédure enregistrée, relisez les modifications nécessaires et observez le nouveau résultat. Conservez le premier exemple ; un essai ne réussit que si le document choisi et le résultat concordent.",
+      "success": "Vous savez montrer une tâche web délimitée, relire les étapes enregistrées et demander une nouvelle exécution en reconnaissant les révisions ou essais manquants.",
+      "repeat": "Décrivez le site, la tâche et le résultat souhaité. Ouvrez la page autorisée dans Chrome connecté et montrez un exemple. Vera enregistre et vérifie la procédure ; vous la relisez avant de réutiliser l’automatisation approuvée."
+    },
+    "de": {
+      "title": "Vera einen Ablauf im Browser beibringen",
+      "goal": "Lernen, Vera eine wiederkehrende Browseraufgabe zu zeigen, den gespeicherten Ablauf zu prüfen und den Weg zur getesteten Automatisierung zu verstehen.",
+      "scenario": "Eine Kanzlei stellt auf einer Website regelmäßig Dokumentenpakete zusammen. Zeigen Sie auf Veras mitgelieferter fiktiver lokaler Seite ein vollständiges Beispiel, prüfen Sie den gespeicherten Ablauf und versuchen Sie eine andere Dokumentart.",
+      "scope": "Einen Browserablauf erfassen, lokal speichern, prüfen und zur Wiederverwendung vorbereiten. Das Beispiel nutzt die lokale Testseite des Plugins und belegt keinen Zugang zu einer echten Kanzleisoftware. Die Bedienelemente der Seite sind auf Englisch.",
+      "inputs": "Lesen Sie task-de.md mit fiktivem Mandanten, Dokumentart und gewünschtem Ergebnis. Vera öffnet die mitgelieferte lokale Seite in diesem Chat. Zugangsdaten, echte Mandantendokumente und vorbereitete Automatisierungen sind nicht erforderlich.",
+      "request": "Vera, zeige mir, wie ich dir diesen Browserablauf beibringe. Führe das fiktive Beispiel durch, speichere die Schritte und erkläre, was ich vor einer Wiederholung prüfen muss.",
+      "steps": [
+        "Bestätigen Sie Aufgabe und Ziel. Vera beginnt vor der ersten Aktion mit dem Speichern. Wählen Sie in diesem Chat den fiktiven Mandanten und die Dokumentart; schriftlich erklärt Vera Ihre Entscheidungen und die aufgezeichneten Schritte.",
+        "Verfolgen Sie das Beispiel bis zur Bestätigung, dass das Paket bereitsteht. Vera prüft das tatsächliche Ergebnis, erklärt die Schritte und speichert den Ablauf. Öffnen Sie den Fortschrittsbericht und vergleichen Sie ihn mit der beobachteten Arbeit.",
+        "Prüfen Sie den vorgeschlagenen Ablauf und seine Grenzen. Nach der tatsächlich erforderlichen Freigabe erstellt Vera die ausführbare Version und prüft zwei vollständige Durchläufe ab der Startseite. Unterscheiden Sie beobachtetes Beispiel, freigegebenen Ablauf und getestete Automatisierung."
+      ],
+      "deliverables": [
+        "Lokal gespeicherter Ablauf mit Fortschrittsbericht zum späteren Fortsetzen.",
+        "Ein Entwurf zur Prüfung; nach erforderlicher Freigabe und erfolgreichen Tests ein wiederverwendbarer Ablauf mit Ausführungsnachweisen."
+      ],
+      "review": "Prüfen Sie Startseite, Eingaben, Aktionen und Endergebnis. Ein Klick oder gespeicherter Entwurf beweist keine funktionierende Automatisierung. Prüfen Sie den tatsächlichen Ablauf vor Erstellung der ausführbaren Version.",
+      "checkpoints": [
+        "Erklären Sie, welche Angaben Vera für eine Browseraufgabe braucht und wo die gespeicherten Schritte liegen.",
+        "Zeigen Sie das beobachtete Ergebnis und benennen Sie den Stand: Entwurf, freigegeben oder getestet."
+      ],
+      "practice": "Lesen Sie practice-de.md und verlangen Sie denselben Ablauf für eine Gutschrift. Lassen Sie Vera die gespeicherten Schritte verwenden, prüfen Sie nötige Änderungen und betrachten Sie das neue Ergebnis. Bewahren Sie das erste Beispiel auf; ein Durchlauf ist nur erfolgreich, wenn Dokumentauswahl und Ergebnis übereinstimmen.",
+      "success": "Sie können Vera eine begrenzte Browseraufgabe zeigen, den gespeicherten Ablauf prüfen und eine Wiederholung anfordern, ohne offene Prüfungen mit erfolgreichen Tests zu verwechseln.",
+      "repeat": "Beschreiben Sie Website, Aufgabe und Ziel. Öffnen Sie die berechtigte Seite im verbundenen Chrome und zeigen Sie ein Beispiel. Vera speichert und prüft den Ablauf; Sie prüfen ihn vor der Wiederverwendung der freigegebenen Automatisierung."
+    },
+    "es": {
+      "title": "Enseñar a Vera un procedimiento en el navegador",
+      "goal": "Aprender a mostrar a Vera una tarea repetitiva, revisar el procedimiento guardado y comprender cómo se convierte en una automatización comprobada.",
+      "scenario": "Un despacho prepara con frecuencia paquetes de documentos en una web. Utiliza la página local ficticia incluida en Vera para mostrar un ejemplo completo, revisar los pasos y probar otro tipo de documento.",
+      "scope": "Observación de un procedimiento web, guardado local, revisión y preparación para reutilizarlo. El ejemplo utiliza la página local de prueba del plugin y no demuestra acceso a un programa profesional real. Los controles de la página están en inglés.",
+      "inputs": "Lee task-es.md: incluye cliente ficticio, tipo de documento y resultado solicitado. Vera abre su página local en esta conversación. No se necesitan credenciales, documentos de clientes ni automatizaciones preparadas.",
+      "request": "Vera, muéstrame cómo enseñarte este procedimiento en el navegador. Sigue el ejemplo ficticio, guarda los pasos y explícame qué debo revisar antes de que puedas repetirlo.",
+      "steps": [
+        "Confirma la tarea y el resultado esperado. Vera comienza a guardar antes de actuar. Selecciona el cliente ficticio y el documento en esta conversación; el asistente explica tus decisiones y lo que Vera registra.",
+        "Sigue el ejemplo hasta que la página confirme que el paquete está preparado. Vera comprueba el resultado real, explica los pasos y guarda el procedimiento. Abre su resumen y compáralo con el trabajo observado.",
+        "Revisa el procedimiento propuesto y sus límites. Con la aprobación que realmente se requiere, Vera crea la versión ejecutable y comprueba dos ejecuciones completas desde la página inicial. Distingue entre ejemplo observado, procedimiento aprobado y automatización probada."
+      ],
+      "deliverables": [
+        "Procedimiento local guardado y resumen de avances para retomar el trabajo.",
+        "Borrador para revisar; tras la aprobación necesaria y las pruebas satisfactorias, procedimiento reutilizable con sus registros de ejecución."
+      ],
+      "review": "Comprueba la página inicial, los datos, las acciones y el resultado final. Un clic o un borrador guardado no demuestra que la automatización funcione. Revisa el procedimiento real antes de crear la versión ejecutable.",
+      "checkpoints": [
+        "Explica qué necesita Vera para aprender una tarea web y dónde encontrar los pasos guardados.",
+        "Muestra el resultado observado e identifica si el procedimiento es un borrador, está aprobado o ha sido probado."
+      ],
+      "practice": "Lee practice-es.md y solicita el mismo procedimiento para una nota de crédito. Pide a Vera que use los pasos guardados, revisa los cambios necesarios y observa el nuevo resultado. Conserva el primer ejemplo; una prueba solo termina con éxito cuando coinciden el documento elegido y el resultado.",
+      "success": "Sabes enseñar una tarea web delimitada, revisar los pasos guardados y pedir una repetición, reconociendo las revisiones o pruebas pendientes.",
+      "repeat": "Describe el sitio, la tarea y el resultado deseado. Abre la página autorizada en Chrome conectado y muestra un ejemplo. Vera registra y comprueba el procedimiento; tú lo revisas antes de reutilizar la automatización aprobada."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "a1a931b48d8e123cc46c0268280a1601770d6a561e6f9b2367bf3cc89fafbc02"
+}

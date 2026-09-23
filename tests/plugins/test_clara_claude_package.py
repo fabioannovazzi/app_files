@@ -15,6 +15,7 @@ BUILD_SCRIPT = ROOT / "scripts" / "build_claude_plugin_zip.py"
 CLARA_SOURCE_MANIFEST = ROOT / "plugins" / "clara" / ".codex-plugin" / "plugin.json"
 CLARA_CLAUDE_MANIFEST = ROOT / "plugins" / "clara" / ".claude-plugin" / "plugin.json"
 EXPECTED_ROOT_SKILLS = {
+    "learn-with-clara",
     "advisory-deliverable-validator",
     "advisory-brief-planner",
     "advisory-case-director",

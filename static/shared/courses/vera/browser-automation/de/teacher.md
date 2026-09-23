@@ -1,61 +1,71 @@
-# Einen wiederholbaren Browserschritt beibringen
+# Vera einen Ablauf im Browser beibringen
 
-Ein geführter Rundgang von etwa 6½ Minuten. Sprachaktivierung, externe Verarbeitung und die freiwillige Übung kommen zeitlich hinzu.
+Erklärung und kurze Übung dauern ungefähr 5–8 Minuten. Verarbeitung und Ihre Fragen können die Sitzung verlängern.
 
-Sprich mit dem Lehrchat über die Standardstimme von Codex. Im zweiten, daneben geöffneten Chat siehst du Dateien und Ergebnisse. Die Chats bleiben verbunden. Du kannst jederzeit unterbrechen, nachfragen oder langsamer fortfahren.
+Sprechen Sie im Lehrchat mit der Standardstimme von Codex. Im Arbeitschat im Fenster daneben führt die Funktion den Fall mit den vorbereiteten Dateien aus und zeigt die tatsächlichen Ergebnisse. Die Erklärung folgt diesen Ergebnissen: Sie können unterbrechen, Fragen stellen und das Tempo ändern.
 
-Verwende die vorbereiteten Inhalte. Schreibe die Lektion nicht neu und erfinde keine Ergebnisse. Sprich in kurzen Abschnitten, lass Zeit zum Anschauen und höre die tatsächlichen Antworten. Zeige die Lösung erst nach dem Versuch. Die Zeiten umfassen Anschauen und Dialog. Das Anzeigen dieser Dateien bestätigt weder Demo noch Übung oder Verständnis. Der Lehrchat beurteilt die Eignung ausschließlich anhand des Katalogs seines eigenen Produkts.
+Vermitteln Sie mit dem vorbereiteten Material eine vollständige erste Anwendung. Wählen Sie bei der Einführung 3–4 passende Funktionen; beginnen Sie später mit dem heutigen Arbeitswunsch. Passen Sie Tempo und Erklärungen an. Erstellen Sie bei Bedarf eigene Beispiele mit demselben Workflow und geprüften Eingaben. Lesen Sie execution-request.json, verwenden Sie den echten zugeordneten lokalen Fall und erklären Sie die überprüften Ergebnisse des Arbeitschats. Erfinden Sie weder Ergebnisse noch Nutzerantworten oder Verständnisbestätigungen. Das Öffnen des Materials schließt keine Lektion ab.
 
-## 1. Dein Ziel · 45 s
+## 1. Wann sie hilft · 45 s
 
-Höre die Anfrage. Stelle einen Bezug zu deiner bisherigen Arbeit her.
+Verbinden Sie die Funktion mit einer konkreten beruflichen Aufgabe.
 
-Ein fiktives lokales Portal zeigt ein Dokument und eine Download-Schaltfläche. Wiederholt werden soll genau dieser Download. Die Übungsseite enthält keine Zugangsdaten, Zahlungen oder Mandantenunterlagen.
+Lernen, Vera eine wiederkehrende Browseraufgabe zu zeigen, den gespeicherten Ablauf zu prüfen und den Weg zur getesteten Automatisierung zu verstehen.
 
-Vera, lerne dieses Dokument aus dem Testportal herunterzuladen und zeige die entstandene Datei.
+Eine Kanzlei stellt auf einer Website regelmäßig Dokumentenpakete zusammen. Zeigen Sie auf Veras mitgelieferter fiktiver lokaler Seite ein vollständiges Beispiel, prüfen Sie den gespeicherten Ablauf und versuchen Sie eine andere Dokumentart.
 
-## 2. Die Ausgangsdaten · 60 s
+Einen Browserablauf erfassen, lokal speichern, prüfen und zur Wiederverwendung vorbereiten. Das Beispiel nutzt die lokale Testseite des Plugins und belegt keinen Zugang zu einer echten Kanzleisoftware. Die Bedienelemente der Seite sind auf Englisch.
 
-Sieh dir die Dokumente im anderen Chat an. Finde eine nützliche Angabe und eine fehlende Information.
+## 2. Dateien und Anfrage · 60 s
 
-Der Ablauf beruht auf der beobachteten Seite und dem tatsächlichen Dateiinhalt. Eine vorhandene Schaltfläche belegt keinen erfolgreichen Download.
+Öffnen Sie die Dateien im Arbeitsfenster und zeigen Sie die passende Anfrage.
 
-[["Dokumentenliste", "Ein Dokument namens DEMO-01", "Synthetischer Inhalt"], ["Download-Schaltfläche", "synthetic-download.txt", "Ein vorgesehener Vorgang"], ["Erwartete Datei", "Kennzeichnender Text des Beispiels", "Öffnen und prüfen"]]
+Lesen Sie task-de.md mit fiktivem Mandanten, Dokumentart und gewünschtem Ergebnis. Vera öffnet die mitgelieferte lokale Seite im Arbeitsfenster. Zugangsdaten, echte Mandantendokumente und vorbereitete Automatisierungen sind nicht erforderlich.
 
-## 3. So arbeitet der Workflow · 75 s
+Vera, zeige mir, wie ich dir diesen Browserablauf beibringe. Führe das fiktive Beispiel durch, speichere die Schritte und erkläre, was ich vor einer Wiederholung prüfen muss.
 
-Folge den drei Schritten. Halte bei der Entscheidung an, die das Ergebnis verändert.
+## 3. Den Ablauf ausführen · 105 s
 
-Beobachte die Website und definiere Ziel, erlaubten Umfang und Abbruchbedingungen.
-Erstelle die Fähigkeit anhand tatsächlich beobachteter Elemente. Teste lokal und bewahre Belege der Schritte und Ergebnisse auf.
-Wiederhole den erlaubten Schritt, öffne die Datei und vergleiche ihren Inhalt. Bei Änderungen an Seite oder Bedienelementen muss die Fähigkeit überprüft werden.
+Erklären Sie den laufenden Schritt und warten Sie auf sein tatsächliches Ergebnis.
 
-## 4. Das Ergebnis lesen · 90 s
+Bestätigen Sie Aufgabe und Ziel. Vera beginnt vor der ersten Aktion mit dem Speichern. Wählen Sie im Arbeitsfenster den fiktiven Mandanten und die Dokumentart; im Sprachchat erklärt Vera Ihre Entscheidungen und die aufgezeichneten Schritte.
 
-Öffne das Beispiel im zweiten Chat. Ordne jede Schlussfolgerung ihrer Quelle zu.
+Verfolgen Sie das Beispiel bis zur Bestätigung, dass das Paket bereitsteht. Vera prüft das tatsächliche Ergebnis, erklärt die Schritte und speichert den Ablauf. Öffnen Sie den Fortschrittsbericht und vergleichen Sie ihn mit der beobachteten Arbeit.
 
-Das Ergebnis ist das richtige Dokument und ein Ablauf, der erkennt, wann er nicht fortfahren kann.
+Prüfen Sie den vorgeschlagenen Ablauf und seine Grenzen. Nach der tatsächlich erforderlichen Freigabe erstellt Vera die ausführbare Version und prüft zwei vollständige Durchläufe ab der Startseite. Unterscheiden Sie beobachtetes Beispiel, freigegebenen Ablauf und getestete Automatisierung.
 
-[["Dokument auswählen", "DEMO-01 auf der Seite identifiziert", "Stoppen und prüfen"], ["Herunterladen", "Datei am Ziel vorhanden", "Keinen Erfolg behaupten"], ["Inhalt prüfen", "Erwarteter Text in geöffneter Datei", "Abweichendes Ergebnis melden"]]
+Während der Lektion führt der Arbeitschat die Funktion aus und erstellt das Ergebnis. Ist ein Schritt nicht verfügbar, erklären Sie, was fehlt, und lassen Sie die Lektion unvollständig.
 
-## 5. Die entscheidende Prüfung · 75 s
+## 4. Das Ergebnis verwenden · 75 s
 
-Erkläre vor dem Aufklappen der Antwort, was du prüfen würdest.
+Öffnen Sie das gerade erstellte Dokument und zeigen Sie den Einstieg.
 
-Ein erfolgreicher Klick belegt keinen richtigen Download. Eine veränderte Seite verlangt neue Beobachtung, keine erfundenen Selektoren oder übersprungene Freigabe.
+Lokal gespeicherter Ablauf mit Fortschrittsbericht zum späteren Fortsetzen.
 
-Die Schaltfläche funktioniert, die Datei enthält aber eine Fehlerseite. War der Schritt erfolgreich?
+Ein Entwurf zur Prüfung; nach erforderlicher Freigabe und erfolgreichen Tests ein wiederverwendbarer Ablauf mit Ausführungsnachweisen.
 
-Überlegungen vergleichen: Nein. Entscheidend ist der tatsächliche Inhalt. Bewahre den Fehlerbeleg auf und stoppe, ohne den Dokumentenerwerb als erfolgreich zu melden.
+Prüfen Sie Startseite, Eingaben, Aktionen und Endergebnis. Ein Klick oder gespeicherter Entwurf beweist keine funktionierende Automatisierung. Prüfen Sie den tatsächlichen Ablauf vor Erstellung der ausführbaren Version.
 
-## 6. Gemeinsam ausprobieren · 45 s
+## 5. Gemeinsam prüfen · 45 s
 
-Entscheide, ob du jetzt üben oder das Beispiel für den nächsten Auftrag behalten möchtest.
+Führen Sie diese Prüfungen an den angegebenen Stellen durch.
 
-Nutze die Testseite, ändere danach das verfügbare Dokument und prüfe, ob das Ergebnis erneut kontrolliert wird.
+Erklären Sie, welche Angaben Vera für eine Browseraufgabe braucht und wo die gespeicherten Schritte liegen.
 
-Beginne auf einer echten Website mit genau einem erlaubten Vorgang und einem tatsächlich verfügbaren Browserzugang.
+Zeigen Sie das beobachtete Ergebnis und benennen Sie den Stand: Entwurf, freigegeben oder getestet.
 
-Dies ist ein vorbereitetes Lehrbeispiel, kein Nachweis einer neuen Ausführung. Quellen und Entscheidungen sind fiktiv; eine fachliche Freigabe ist nicht vorausgesetzt. Bei deinen eigenen Dateien führt der aktuelle Workflow seine Prüfungen durch und bewahrt die tatsächlichen Ergebnisse auf.
+Diese Pausen helfen beim Erlernen der Funktion. Sie sind kein Quiz über technische Einzelheiten.
 
-Bibliothek, Profil und Lernfortschritt bleiben auf deinem Computer und werden nicht an Mparanza gesendet. Sprache und im Chat gelesene Inhalte verarbeitet dein OpenAI-Konto: Lokale Speicherung bedeutet keine Offline-Inferenz.
+## 6. Selbst ausprobieren · 60 s
+
+Lassen Sie den Nutzer die Anfrage formulieren und begleiten Sie seinen Versuch.
+
+Lesen Sie practice-de.md und verlangen Sie denselben Ablauf für eine Gutschrift. Lassen Sie Vera die gespeicherten Schritte verwenden, prüfen Sie nötige Änderungen und betrachten Sie das neue Ergebnis. Bewahren Sie das erste Beispiel auf; ein Durchlauf ist nur erfolgreich, wenn Dokumentauswahl und Ergebnis übereinstimmen.
+
+Sie können Vera eine begrenzte Browseraufgabe zeigen, den gespeicherten Ablauf prüfen und eine Wiederholung anfordern, ohne offene Prüfungen mit erfolgreichen Tests zu verwechseln.
+
+Beschreiben Sie Website, Aufgabe und Ziel. Öffnen Sie die berechtigte Seite im verbundenen Chrome und zeigen Sie ein Beispiel. Vera speichert und prüft den Ablauf; Sie prüfen ihn vor der Wiederverwendung der freigegebenen Automatisierung.
+
+Das Material enthält fiktive Dateien und einen vorbereiteten Ablauf. Ergebnisse der Demonstration und Übung entstehen durch neue Ausführungen der aktuellen Funktion.
+
+Bibliothek, Profil und Lernfortschritt bleiben auf Ihrem Computer und werden nicht an Mparanza gesendet. Sprache und im Chat gelesene Inhalte verarbeitet Ihr OpenAI-Konto: Lokale Speicherung bedeutet keine Offline-Inferenz.

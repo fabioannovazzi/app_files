@@ -1,0 +1,434 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "financial-analysis",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "review_net_debt_then_run_registered_pack"
+  },
+  "sources": [
+    {
+      "path": "modules/financial-analysis/assets/icon.svg",
+      "sha256": "39d15fb5dfe55dc7237a606f9cffd495093288f926f326074b0161f447efb4c9"
+    },
+    {
+      "path": "modules/financial-analysis/requirements.txt",
+      "sha256": "229e735e279e36bed2d189bc11684a11343e7b16671306c5784987419e20639e"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/check_dependencies.py",
+      "sha256": "249a5ae4cd2f1df11779655795fdf11a66e843f6addbd78b4ced78d293c0f3e3"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/managed_case_inputs.py",
+      "sha256": "7a948bfa5a8d4aa645e88b2826322330ccf425794b5cddf35a3f2d8fde30e3a3"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/model_use.py",
+      "sha256": "d223af560909535843180a9fa631681896d59cf78633a50358095995b2d19ee4"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/preparation_contract_kernel.py",
+      "sha256": "2518145f44eb5b1d1bf814fa16065768de5e8e81cf33a2614cace607b33a535c"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/prepare_customer_concentration_case.py",
+      "sha256": "88200f94e649794f4d7751813ce2eb06a375907b718795663ec22f9a57c4915d"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/prepare_fdd_case.py",
+      "sha256": "9f21ab922174b11dc5e0d72a7611dc6b11c6a3ffa2f2295855a584ba648f9bea"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/prepare_monthly_pnl_case.py",
+      "sha256": "10ddf9204a2e6914d3cbf94ffa3409a195243ce0d00e6a4153befd696c42c4d9"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/prepare_working_capital_case.py",
+      "sha256": "938fce98d40f0b797a305802af422c5f3980fe53254d3f87bef787bb94f29c43"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/run_pack.py",
+      "sha256": "9e328729f528e0ef8af93cc27d1234c24eef0c7abc5e754d63ee780903e57612"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/validate_case_contracts.py",
+      "sha256": "93b67dad98b701c09cfd2f856d6505a9319a9f1f280ea0921bec6aba110a6c32"
+    },
+    {
+      "path": "modules/financial-analysis/skills/financial-analysis/SKILL.md",
+      "sha256": "bc871632b55d07ed3b7613249511a618aebc0c7f5885b6805d38d7b57f8de1a5"
+    },
+    {
+      "path": "modules/financial-analysis/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/financial-analysis/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/financial-analysis/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/financial-analysis/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/financial-analysis/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/financial-analysis/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/financial-analysis/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/financial-analysis/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/financial-analysis/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "modules/financial-analysis/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "modules/financial-analysis/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "modules/financial-analysis/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "modules/financial-analysis/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "skills/financial-analysis/SKILL.md",
+      "sha256": "078b4a2f56bede3377afd01dee3b24b1604ec754b889126f7f5b1c8040e2c999"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/balances-february.csv",
+      "sha256": "697e04d13ac6ea1218189901024b31f56128cb62def466c5a2c9ccee8d5efb03",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/balances-march.csv",
+      "sha256": "13826e5509bc5e0d152e15fb42ac87975dcc29720e242a8f34667d517e1ae3c7",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-it.md",
+      "sha256": "2d0c71ba982b223c0e513fc63cb08a834ad91eb812c4ff0d47bdfc011f206234",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-it.md",
+      "sha256": "2d0c71ba982b223c0e513fc63cb08a834ad91eb812c4ff0d47bdfc011f206234",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-en.md",
+      "sha256": "801b35b5c04c71df93c9c17d97e698b26a8b538947a08684953b81e2c18dd55a",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-en.md",
+      "sha256": "801b35b5c04c71df93c9c17d97e698b26a8b538947a08684953b81e2c18dd55a",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-fr.md",
+      "sha256": "ee4ecdeba3a0c9c5321fad6fd8f9af6cf8e1223de573e8f984a8528ea6421606",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-fr.md",
+      "sha256": "ee4ecdeba3a0c9c5321fad6fd8f9af6cf8e1223de573e8f984a8528ea6421606",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-de.md",
+      "sha256": "d85c2dc90f93b53f9feead29832d7e8f792cd9736b003b1710f12fc0acc1f862",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-de.md",
+      "sha256": "d85c2dc90f93b53f9feead29832d7e8f792cd9736b003b1710f12fc0acc1f862",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-es.md",
+      "sha256": "d9ad33bb398c07db874829f09fed084cc84f3bc11ee26b7f10cae6c6318070c5",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-es.md",
+      "sha256": "d9ad33bb398c07db874829f09fed084cc84f3bc11ee26b7f10cae6c6318070c5",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Preparare un’analisi finanziaria con Vera",
+      "goal": "Imparare a richiedere un’analisi precisa, fornire i dati, rivedere le scelte e utilizzare risultati finanziari verificabili.",
+      "scenario": "Officina Arco vuole conoscere la propria posizione finanziaria netta a fine febbraio. Il prospetto elenca finanziamento, liquidità e altre due voci da classificare.",
+      "scope": "Financial Analysis prepara analisi contabili e calcoli di due diligence su dati rivisti. La prima prova completa riguarda la posizione finanziaria netta a una data; le altre analisi richiedono i propri dati e scelte.",
+      "inputs": "Apri balances-february.csv e context-it.md. Indica società, data, EUR e definizione richiesta. La nota spiega cosa rappresentano i saldi: Vera prepara la struttura tecnica dopo la revisione, senza chiederti di programmare.",
+      "request": "Vera, prepara l’analisi della posizione finanziaria netta di Officina Arco al 28 febbraio con questo prospetto e la definizione nella nota. Guidami nelle scelte e mostrami risultato, dettaglio e controlli.",
+      "steps": [
+        "In questa conversazione Vera identifica l’analisi adatta e propone la classificazione delle voci. L’assistente spiega per iscritto che cosa viene misurato e ti aiuta a rivedere importi, data, inclusioni ed esclusioni.",
+        "Dopo la revisione effettiva, Vera registra le scelte e avvia il calcolo corrente. L’assistente segue l’esecuzione e distingue un controllo aritmetico dalla completezza dei dati ricevuti.",
+        "Leggi la sintesi e apri il dettaglio prodotto. Segui finanziamento e liquidità fino alle righe sorgenti, poi individua le voci escluse, i controlli e le questioni ancora aperte."
+      ],
+      "deliverables": [
+        "Risultato dell’analisi e dettaglio delle voci incluse ed escluse, presentati nella consegna.",
+        "Pacchetto di dati, controlli e riferimenti alle scelte e alle fonti per la revisione professionale."
+      ],
+      "review": "Verifica che la definizione corrisponda alla richiesta e che tutti i saldi abbiano la stessa data. Il calcolo riproducibile non dimostra da solo completezza o correttezza contabile. Rivedi fonti e conclusioni prima di usare il risultato.",
+      "checkpoints": [
+        "Prima del calcolo, spiega cosa vuoi misurare e quali dati servono.",
+        "Nel risultato, identifica un saldo incluso, uno escluso e il relativo motivo."
+      ],
+      "practice": "Usa balances-march.csv per una nuova analisi al 31 marzo, mantenendo la stessa definizione. Conserva febbraio e individua quali saldi e quale risultato cambiano.",
+      "success": "Sai scegliere l’analisi, fornire il prospetto, rivedere le scelte, trovare risultato e dettaglio e aggiornare il lavoro a una nuova data.",
+      "repeat": "Descrivi a Vera la domanda finanziaria, società, data o periodo e dati disponibili. Rivedi l’analisi proposta e le scelte sostanziali, poi controlla il pacchetto prodotto prima dell’uso professionale."
+    },
+    "en": {
+      "title": "Prepare financial analysis with Vera",
+      "goal": "Learn to request a specific analysis, provide the data, review the choices and use financial results you can check.",
+      "scenario": "Officina Arco wants its net debt at the end of February. Its statement lists a loan, available cash and two other items to classify.",
+      "scope": "Financial Analysis prepares accounting analyses and due-diligence calculations from reviewed inputs. This complete first run calculates net debt at one date; other analyses need their own inputs and decisions.",
+      "inputs": "Open balances-february.csv and context-en.md. State company, date, EUR and the requested definition. The note explains the balances; Vera prepares technical structures after review, without asking you to program them.",
+      "request": "Vera, prepare Officina Arco’s net-debt analysis at 28 February using this statement and the definition in the note. Guide me through the choices and show the result, detail and controls.",
+      "steps": [
+        "In this conversation, Vera identifies the relevant analysis and proposes item classifications. The assistant explains what is measured and helps you review amounts, date, inclusions and exclusions.",
+        "After the actual review, Vera records choices and runs the current calculation. The assistant follows execution and distinguishes an arithmetic check from completeness of the supplied data.",
+        "Read the delivery summary and open the generated detail. Trace loan and cash to source rows, then find excluded items, calculation controls and questions still open."
+      ],
+      "deliverables": [
+        "Analysis result and included/excluded line items presented in the delivery.",
+        "Data package, controls and references to choices and sources for professional review."
+      ],
+      "review": "Check that the definition matches the request and all balances have the same date. Reproducible arithmetic alone does not establish completeness or accounting correctness. Review sources and conclusions before using the result.",
+      "checkpoints": [
+        "Before calculation, explain what you want to measure and which inputs it needs.",
+        "In the result, identify an included balance, an excluded balance and their reasons."
+      ],
+      "practice": "Use balances-march.csv for a new analysis at 31 March with the same definition. Preserve February and identify which balances and result change.",
+      "success": "You can select the analysis, supply the statement, review choices, find the result and detail and update the work to a new date.",
+      "repeat": "Describe the financial question, company, date or period and available data to Vera. Review the proposed analysis and substantive choices, then check the generated package before professional use."
+    },
+    "fr": {
+      "title": "Préparer une analyse financière avec Vera",
+      "goal": "Apprendre à demander une analyse précise, fournir les données, revoir les choix et utiliser des résultats financiers vérifiables.",
+      "scenario": "Officina Arco veut connaître sa dette nette fin février. Le tableau présente emprunt, trésorerie disponible et deux autres postes à classer.",
+      "scope": "Financial Analysis prépare analyses comptables et calculs de due diligence à partir de données revues. Cette première exécution complète calcule la dette nette à une date ; les autres analyses nécessitent leurs propres données et choix.",
+      "inputs": "Ouvrez balances-february.csv et context-fr.md. Précisez société, date, EUR et définition demandée. La note explique les soldes ; Vera prépare la structure technique après revue, sans vous demander de programmer.",
+      "request": "Vera, prépare la dette nette d’Officina Arco au 28 février avec ce tableau et la définition de la note. Guide-moi dans les choix puis montre résultat, détail et contrôles.",
+      "steps": [
+        "Dans cette conversation, Vera identifie l’analyse adaptée et propose le classement des postes. L’assistant explique par écrit la mesure et accompagne la revue des montants, date, inclusions et exclusions.",
+        "Après la revue réelle, Vera enregistre les choix et exécute le calcul courant. L’assistant suit l’exécution et distingue contrôle arithmétique et exhaustivité des données reçues.",
+        "Lisez la synthèse de livraison et ouvrez le détail produit. Retrouvez emprunt et trésorerie dans les lignes sources, puis les postes exclus, contrôles et questions ouvertes."
+      ],
+      "deliverables": [
+        "Résultat de l’analyse et détail des postes inclus et exclus présentés à la livraison.",
+        "Données, contrôles et références aux choix et sources pour la revue professionnelle."
+      ],
+      "review": "Vérifiez la définition demandée et la date commune des soldes. Un calcul reproductible ne prouve seul ni exhaustivité ni exactitude comptable. Revoyez sources et conclusions avant utilisation.",
+      "checkpoints": [
+        "Avant le calcul, expliquez la mesure souhaitée et les données nécessaires.",
+        "Dans le résultat, identifiez un solde inclus, un solde exclu et leurs motifs."
+      ],
+      "practice": "Utilisez balances-march.csv pour une nouvelle analyse au 31 mars avec la même définition. Conservez février et repérez les soldes et le résultat qui changent.",
+      "success": "Vous savez choisir l’analyse, fournir le tableau, revoir les choix, retrouver résultat et détail et actualiser à une nouvelle date.",
+      "repeat": "Décrivez à Vera question financière, société, date ou période et données disponibles. Revoyez analyse proposée et choix de fond, puis contrôlez le dossier produit avant usage professionnel."
+    },
+    "de": {
+      "title": "Eine Finanzanalyse mit Vera vorbereiten",
+      "goal": "Lernen, eine konkrete Analyse anzufordern, Daten bereitzustellen, Entscheidungen zu prüfen und nachvollziehbare Finanzergebnisse zu nutzen.",
+      "scenario": "Officina Arco möchte die Nettoverschuldung Ende Februar kennen. Die Aufstellung zeigt Darlehen, verfügbare Liquidität und zwei weitere einzuordnende Posten.",
+      "scope": "Financial Analysis bereitet Buchhaltungsanalysen und Due-Diligence-Berechnungen aus geprüften Eingaben vor. Dieser vollständige erste Ablauf berechnet Nettoverschuldung zu einem Stichtag; andere Analysen benötigen eigene Daten und Entscheidungen.",
+      "inputs": "Öffnen Sie balances-february.csv und context-de.md. Nennen Sie Unternehmen, Stichtag, EUR und gewünschte Definition. Die Notiz erklärt Bestände; Vera erstellt nach der Prüfung die technischen Strukturen, ohne dass Sie programmieren müssen.",
+      "request": "Vera, bereite die Nettoverschuldung von Officina Arco zum 28. Februar mit dieser Aufstellung und der Definition in der Notiz vor. Führe mich durch die Entscheidungen und zeige Ergebnis, Details und Kontrollen.",
+      "steps": [
+        "In diesem Chat wählt Vera die passende Analyse und schlägt die Einordnung der Posten vor. Der Assistent erklärt schriftlich die Messgröße und hilft bei Beträgen, Stichtag, Einbeziehung und Ausschlüssen.",
+        "Nach der tatsächlichen Prüfung hält Vera Entscheidungen fest und startet die aktuelle Berechnung. Der Assistent folgt dem Ablauf und unterscheidet Rechenkontrolle und Vollständigkeit der gelieferten Daten.",
+        "Lesen Sie die Ergebnisübersicht und öffnen Sie die erzeugten Details. Verfolgen Sie Darlehen und Guthaben zu Quellzeilen und finden Sie ausgeschlossene Posten, Kontrollen und offene Fragen."
+      ],
+      "deliverables": [
+        "Analyseergebnis und Details einbezogener und ausgeschlossener Posten bei der Übergabe.",
+        "Datenpaket, Kontrollen und Verweise auf Entscheidungen und Quellen zur fachlichen Prüfung."
+      ],
+      "review": "Prüfen Sie Definition und gemeinsamen Stichtag. Reproduzierbare Rechnung belegt allein weder Vollständigkeit noch buchhalterische Richtigkeit. Prüfen Sie Quellen und Schlussfolgerungen vor Nutzung.",
+      "checkpoints": [
+        "Erklären Sie vor der Berechnung die gewünschte Messgröße und benötigte Daten.",
+        "Benennen Sie im Ergebnis einen einbezogenen und einen ausgeschlossenen Bestand mit Begründung."
+      ],
+      "practice": "Nutzen Sie balances-march.csv für eine neue Analyse zum 31. März mit derselben Definition. Bewahren Sie Februar auf und erkennen Sie geänderte Bestände und Ergebnisse.",
+      "success": "Sie können Analyse und Daten wählen, Entscheidungen prüfen, Ergebnis und Details finden und den Ablauf zu einem neuen Stichtag wiederholen.",
+      "repeat": "Beschreiben Sie Vera Finanzfrage, Unternehmen, Stichtag oder Zeitraum und vorhandene Daten. Prüfen Sie vorgeschlagene Analyse und fachliche Entscheidungen, dann das erzeugte Paket vor professioneller Nutzung."
+    },
+    "es": {
+      "title": "Preparar un análisis financiero con Vera",
+      "goal": "Aprender a solicitar un análisis concreto, aportar datos, revisar decisiones y utilizar resultados financieros comprobables.",
+      "scenario": "Officina Arco quiere conocer su deuda neta al cierre de febrero. El estado muestra préstamo, caja disponible y otras dos partidas por clasificar.",
+      "scope": "Financial Analysis prepara análisis contables y cálculos de due diligence con datos revisados. Esta primera ejecución completa calcula deuda neta a una fecha; los demás análisis requieren sus propios datos y decisiones.",
+      "inputs": "Abre balances-february.csv y context-es.md. Indica empresa, fecha, EUR y definición solicitada. La nota explica saldos; Vera prepara estructuras técnicas tras la revisión sin pedirte que programes.",
+      "request": "Vera, prepara la deuda neta de Officina Arco al 28 de febrero con este estado y la definición de la nota. Guíame por las decisiones y muestra resultado, detalle y controles.",
+      "steps": [
+        "En esta conversación, Vera identifica el análisis adecuado y propone clasificar las partidas. El asistente explica por escrito la medida y ayuda a revisar importes, fecha, inclusiones y exclusiones.",
+        "Tras la revisión real, Vera registra decisiones y ejecuta el cálculo actual. El asistente sigue la ejecución y distingue comprobación aritmética e integridad de los datos aportados.",
+        "Lee el resumen de entrega y abre el detalle generado. Sigue préstamo y caja hasta las filas originales y encuentra partidas excluidas, controles y preguntas pendientes."
+      ],
+      "deliverables": [
+        "Resultado y detalle de partidas incluidas y excluidas presentados en la entrega.",
+        "Paquete de datos, controles y referencias a decisiones y fuentes para revisión profesional."
+      ],
+      "review": "Comprueba definición solicitada y fecha común de los saldos. Un cálculo reproducible por sí solo no prueba integridad ni corrección contable. Revisa fuentes y conclusiones antes del uso.",
+      "checkpoints": [
+        "Antes de calcular, explica qué quieres medir y qué datos necesitas.",
+        "En el resultado, identifica un saldo incluido, otro excluido y sus motivos."
+      ],
+      "practice": "Usa balances-march.csv para un análisis nuevo al 31 de marzo con la misma definición. Conserva febrero e identifica los saldos y el resultado que cambian.",
+      "success": "Sabes elegir análisis, aportar el estado, revisar decisiones, encontrar resultado y detalle y actualizar el trabajo a otra fecha.",
+      "repeat": "Describe a Vera pregunta financiera, empresa, fecha o período y datos disponibles. Revisa análisis propuesto y decisiones sustanciales, y comprueba el paquete generado antes del uso profesional."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "3fbdfdb1c6a77563d7bf0476df663d2bb1c7ca1bd560d1e70c0f3463172492a1"
+}

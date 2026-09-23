@@ -1,0 +1,425 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "journal-sampling",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
+  "sources": [
+    {
+      "path": "modules/journal-sampling/assets/icon.svg",
+      "sha256": "5d326ae58e0cf649cf21f071b2ea482c14d1a43318808ebab4219e4fd60091b9"
+    },
+    {
+      "path": "modules/journal-sampling/assets/journal-sampling-review-widget.html",
+      "sha256": "8e252809fd6e429ba4fd783bfa577e1e9632f3c1b962fb8aa931c72f0f637a48"
+    },
+    {
+      "path": "modules/journal-sampling/assets/review-workbench-adapter.json",
+      "sha256": "3c433e46a5cb624f3f5bf6e4871acd43a7b833b66802a4b7b22e5b0dcfaf1fb7"
+    },
+    {
+      "path": "modules/journal-sampling/references/workflow-reference.md",
+      "sha256": "a391727f7217fe2f6968c3dec55766c5e441d878fc84214c08c466ab54093c49"
+    },
+    {
+      "path": "modules/journal-sampling/requirements.txt",
+      "sha256": "884f4a5849cac35ee7ad5b35b4d130f029d038d9a458b410a580824ef8cebc7f"
+    },
+    {
+      "path": "modules/journal-sampling/scripts/check_dependencies.py",
+      "sha256": "d4c7a6ff11fa22af2c0f2ac32333d904dbc3051840affe99d742d64dda34039c"
+    },
+    {
+      "path": "modules/journal-sampling/scripts/implementation_bootstrap.py",
+      "sha256": "6d4c3337bedf0a352805622f8aebe562f6b39bde5c2e219b8ee0a5b432de81d6"
+    },
+    {
+      "path": "modules/journal-sampling/scripts/inspect_journal.py",
+      "sha256": "a8388a3304af52b7f5e3a6b8cf66c1e1441354f36da95663e4cdf2f3c51342ca"
+    },
+    {
+      "path": "modules/journal-sampling/scripts/journal_sampling_core.py",
+      "sha256": "b2a8ce641bdb5c231968afc522a2e1ea6af98a4e2f637da949014929992afaff"
+    },
+    {
+      "path": "modules/journal-sampling/scripts/normalize_journal.py",
+      "sha256": "715660b350d57cc7c8bbcb7764aab52edd64ca982dadf195d06287144d33d8ba"
+    },
+    {
+      "path": "modules/journal-sampling/scripts/replay_normalization.py",
+      "sha256": "7f37baf7b6fd4f5b47c2424005210c3de34dcb144175e326fd422fbdce4afedd"
+    },
+    {
+      "path": "modules/journal-sampling/scripts/review_session.py",
+      "sha256": "46755d2e786348997802ee3d30ed8d3d679c45ac3db975da56cd6711d98ebd73"
+    },
+    {
+      "path": "modules/journal-sampling/scripts/review_successor.py",
+      "sha256": "f753ddf73cd26639c593a01eed15e5d6188e1f492a05977fcedfd850710bc57a"
+    },
+    {
+      "path": "modules/journal-sampling/scripts/run_sample.py",
+      "sha256": "97659943d2e52bde9c6df65bd09c4dfa508fb2a99b11b92865b8bb9fec8d2a23"
+    },
+    {
+      "path": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
+      "sha256": "41bab2f43dbbe907baaf0e22c819db0712cafb31f079017d7f1cee9e8fb988a1"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/journal-sampling/SKILL.md",
+      "sha256": "9acc3071377f39ad291955c5d9bb7305e99280d652154a80f2b76ef3e57f2cfa"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/journal-march.csv",
+      "sha256": "9700cf19ad337acb2b838e7116099c8144a3b2a7a16766494ad9a38bf2f72c54",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/journal-april.csv",
+      "sha256": "ec676b6ea02c63a6bb0fd38a8275c993e2e51ffcf89db5a13d307a2a2d4bb7f9",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-it.md",
+      "sha256": "546790b8dd25a0815e4fd562407ef2e62cc175f25fdb346c19101d55b17fade9",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-it.md",
+      "sha256": "546790b8dd25a0815e4fd562407ef2e62cc175f25fdb346c19101d55b17fade9",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-en.md",
+      "sha256": "44d80693a5bbc34e70e98f0af1b52fb8dcf50bdd3e9b54306c7464a94ec74684",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-en.md",
+      "sha256": "44d80693a5bbc34e70e98f0af1b52fb8dcf50bdd3e9b54306c7464a94ec74684",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-fr.md",
+      "sha256": "da027487021328aca7c118a1f7a658d1c07a07d256d9ecb2953752fdd4e853bb",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-fr.md",
+      "sha256": "da027487021328aca7c118a1f7a658d1c07a07d256d9ecb2953752fdd4e853bb",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-de.md",
+      "sha256": "240b49794569e69accccf04056a2a236e9db30c114abef64cfa09c3744319129",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-de.md",
+      "sha256": "240b49794569e69accccf04056a2a236e9db30c114abef64cfa09c3744319129",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-es.md",
+      "sha256": "43ebbf1a3fa08e8bbe38b1df644a918a2c3835756c8b7af78601c209ebcfa5ed",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-es.md",
+      "sha256": "43ebbf1a3fa08e8bbe38b1df644a918a2c3835756c8b7af78601c209ebcfa5ed",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Estrarre un campione dal giornale contabile",
+      "goal": "Imparare a consegnare un giornale, verificare come viene letto e ottenere le righe selezionate per il successivo controllo.",
+      "scenario": "Lo studio deve scegliere alcune righe del giornale di Officina Arco da esaminare. Usiamo un piccolo file fittizio per seguire ogni passaggio.",
+      "scope": "Prima esecuzione di Journal Sampling: campione casuale di 5 righe, seme 42. La lezione insegna l’uso; il piano di revisione stabilisce metodo e numerosità nel lavoro reale.",
+      "inputs": "Apri journal-march.csv e context-it.md. Trova data, registrazione, riga, conto, dare e avere. Il file originale resta conservato nel fascicolo didattico.",
+      "request": "Vera, estrai dal giornale di marzo di Officina Arco un campione casuale di 5 righe con seme 42. Prima fammi verificare le colonne e poi mostrami il campione e i controlli sul giornale.",
+      "steps": [
+        "Vera apre il giornale in questa conversazione. L’assistente ti accompagna per iscritto nel controllo di colonne, periodo e significato degli importi; Vera registra la mappatura effettivamente rivista.",
+        "La procedura prepara il giornale e controlla che le righe e gli importi siano conservati. Se la preparazione non passa, chiarisci il problema prima di selezionare il campione.",
+        "Vera esegue il campionamento e apre il risultato Excel. Individua una riga scelta e torna alla stessa riga nel giornale; rivedi insieme dimensione della popolazione, metodo e numero di righe estratte."
+      ],
+      "deliverables": [
+        "Campione in Excel e CSV, con riferimenti alle righe originali.",
+        "Giornale preparato, controlli e riepilogo delle scelte per riprodurre l’estrazione."
+      ],
+      "review": "Verifica che il campione provenga dal periodo e dai conti richiesti e contenga il numero di righe previsto. I controlli di preparazione non certificano le registrazioni o l’adeguatezza del campione. Per controllare i documenti si prosegue con Verifica documentale.",
+      "checkpoints": [
+        "Prima dell’estrazione, spiega quale popolazione stai campionando.",
+        "Sul risultato, ritrova una riga campionata nel file sorgente."
+      ],
+      "practice": "Ripeti con journal-april.csv, che aggiunge un pagamento di aprile. Mantieni il campione casuale di 5 righe e conserva il primo risultato. Verifica la nuova popolazione e individua una riga del nuovo campione.",
+      "success": "Sai preparare la richiesta, trovare il campione e collegare una riga al giornale, senza modificare a mano le righe estratte.",
+      "repeat": "Indica a Vera cliente, giornale, periodo ed eventuali filtri, metodo e numerosità previsti dal tuo piano. Chiedi Verifica documentale quando vuoi confrontare il campione con i documenti."
+    },
+    "en": {
+      "title": "Select a sample from an accounting journal",
+      "goal": "Learn to provide a journal, check how it is read and obtain selected rows for subsequent examination.",
+      "scenario": "The practice needs to select some Officina Arco journal rows for review. A small fictional file lets us follow every step.",
+      "scope": "First Journal Sampling run: 5 random rows, seed 42. This teaches operation; the real audit plan determines method and sample size.",
+      "inputs": "Open journal-march.csv and context-en.md. Find date, posting, line, account, debit and credit. The original remains preserved in the teaching case.",
+      "request": "Vera, select 5 random rows from Officina Arco’s March journal using seed 42. First let me check the columns, then show me the sample and journal preparation checks.",
+      "steps": [
+        "Vera opens the journal in this conversation. The assistant guides you through columns, period and amount meanings; Vera records the mapping actually reviewed.",
+        "The workflow prepares the journal and checks that rows and amounts are preserved. If preparation fails, resolve the issue before selecting a sample.",
+        "Vera runs the sampling and opens the Excel result. Find one selected row and trace it to the journal; review population size, method and number of sampled rows together."
+      ],
+      "deliverables": [
+        "Excel and CSV sample with references to original rows.",
+        "Prepared journal, checks and sampling choices for reproducing the selection."
+      ],
+      "review": "Check that the sample covers the requested period and accounts and has the expected row count. Preparation checks do not certify postings or sample sufficiency. Continue with Vouching to check supporting documents.",
+      "checkpoints": [
+        "Before selection, explain which population you are sampling.",
+        "In the result, trace a sampled row to the source file."
+      ],
+      "practice": "Repeat with journal-april.csv, which adds an April payment. Keep the random sample of 5 rows and preserve the first result. Check the new population and identify one row in the new sample.",
+      "success": "You can make the request, find the sample and trace a row to the journal without manually replacing selected rows.",
+      "repeat": "Tell Vera the client, journal, period, any filters, and the method and size in your audit plan. Ask for Vouching when you want to compare the sample with supporting documents."
+    },
+    "fr": {
+      "title": "Extraire un échantillon du journal comptable",
+      "goal": "Apprendre à fournir un journal, vérifier sa lecture et obtenir les lignes sélectionnées pour un contrôle ultérieur.",
+      "scenario": "Le cabinet doit sélectionner des lignes du journal d’Officina Arco à examiner. Un petit fichier fictif permet de suivre chaque étape.",
+      "scope": "Première exécution de Journal Sampling : 5 lignes aléatoires, graine 42. La leçon enseigne l’utilisation ; le plan d’audit réel détermine méthode et taille.",
+      "inputs": "Ouvrez journal-march.csv et context-fr.md. Repérez date, écriture, ligne, compte, débit et crédit. L’original reste conservé dans le dossier pédagogique.",
+      "request": "Vera, sélectionne 5 lignes aléatoires du journal de mars d’Officina Arco, avec la graine 42. Fais-moi d’abord vérifier les colonnes, puis montre l’échantillon et les contrôles de préparation.",
+      "steps": [
+        "Vera ouvre le journal dans cette conversation. L’assistant accompagne par écrit la vérification des colonnes, de la période et des montants ; Vera enregistre la correspondance effectivement revue.",
+        "La procédure prépare le journal et vérifie la conservation des lignes et montants. Si la préparation échoue, résolvez le problème avant la sélection.",
+        "Vera exécute le tirage et ouvre le résultat Excel. Retrouvez une ligne choisie dans le journal ; vérifiez ensemble population, méthode et nombre de lignes sélectionnées."
+      ],
+      "deliverables": [
+        "Échantillon Excel et CSV avec références aux lignes originales.",
+        "Journal préparé, contrôles et choix de tirage pour reproduire la sélection."
+      ],
+      "review": "Vérifiez période, comptes et nombre de lignes attendu. Les contrôles de préparation ne certifient ni les écritures ni la suffisance de l’échantillon. Le Contrôle sur pièces permet ensuite de vérifier les justificatifs.",
+      "checkpoints": [
+        "Avant le tirage, expliquez quelle population est échantillonnée.",
+        "Dans le résultat, retrouvez une ligne sélectionnée dans la source."
+      ],
+      "practice": "Recommencez avec journal-april.csv, qui ajoute un paiement d’avril. Gardez 5 lignes aléatoires et conservez le premier résultat. Vérifiez la nouvelle population et repérez une ligne du nouvel échantillon.",
+      "success": "Vous savez formuler la demande, retrouver l’échantillon et relier une ligne au journal sans remplacer manuellement les lignes tirées.",
+      "repeat": "Indiquez client, journal, période, filtres éventuels, méthode et taille prévues par le plan d’audit. Demandez un Contrôle sur pièces pour comparer l’échantillon aux justificatifs."
+    },
+    "de": {
+      "title": "Eine Stichprobe aus dem Buchungsjournal ziehen",
+      "goal": "Lernen, ein Journal bereitzustellen, seine Einlesung zu prüfen und ausgewählte Zeilen für die weitere Prüfung zu erhalten.",
+      "scenario": "Die Kanzlei möchte Journalzeilen von Officina Arco zur Prüfung auswählen. Eine kleine fiktive Datei macht jeden Schritt nachvollziehbar.",
+      "scope": "Erster Einsatz von Journal Sampling: 5 zufällige Zeilen, Startwert 42. Die Lektion erklärt die Bedienung; im echten Auftrag bestimmt der Prüfungsplan Methode und Umfang.",
+      "inputs": "Öffnen Sie journal-march.csv und context-de.md. Finden Sie Datum, Buchung, Zeile, Konto, Soll und Haben. Das Original bleibt in der Übungsakte erhalten.",
+      "request": "Vera, ziehe aus dem Märzjournal von Officina Arco 5 zufällige Zeilen mit Startwert 42. Lass mich zuerst die Spalten prüfen und zeige anschließend Stichprobe und Aufbereitungskontrollen.",
+      "steps": [
+        "Vera öffnet das Journal in diesem Chat. Der Assistent begleitet schriftlich die Prüfung von Spalten, Zeitraum und Betragsbedeutung; Vera speichert die tatsächlich geprüfte Zuordnung.",
+        "Der Ablauf bereitet das Journal auf und prüft die Erhaltung von Zeilen und Beträgen. Klären Sie fehlgeschlagene Aufbereitungskontrollen vor der Stichprobe.",
+        "Vera zieht die Stichprobe und öffnet die Excel-Datei. Verfolgen Sie eine ausgewählte Zeile zum Journal zurück und prüfen Sie gemeinsam Grundgesamtheit, Methode und Anzahl der gezogenen Zeilen."
+      ],
+      "deliverables": [
+        "Stichprobe als Excel und CSV mit Verweisen auf Originalzeilen.",
+        "Aufbereitetes Journal, Kontrollen und Auswahlparameter zur Wiederholung der Ziehung."
+      ],
+      "review": "Prüfen Sie Zeitraum, Konten und erwartete Zeilenzahl. Aufbereitungskontrollen bestätigen weder korrekte Buchungen noch einen ausreichenden Stichprobenumfang. Mit der Belegprüfung werden anschließend Belege verglichen.",
+      "checkpoints": [
+        "Erklären Sie vor der Ziehung die ausgewählte Grundgesamtheit.",
+        "Finden Sie eine gezogene Zeile in der Quelldatei wieder."
+      ],
+      "practice": "Wiederholen Sie mit journal-april.csv, das eine Aprilzahlung ergänzt. Behalten Sie 5 zufällige Zeilen und das erste Ergebnis bei. Prüfen Sie die neue Grundgesamtheit und finden Sie eine Zeile der neuen Stichprobe.",
+      "success": "Sie können den Auftrag formulieren, die Stichprobe finden und eine Zeile zum Journal zurückverfolgen, ohne gezogene Zeilen von Hand auszutauschen.",
+      "repeat": "Nennen Sie Vera Mandant, Journal, Zeitraum, gegebenenfalls Filter sowie Methode und Umfang aus Ihrem Prüfungsplan. Bitten Sie um Belegprüfung, um die Stichprobe mit Belegen zu vergleichen."
+    },
+    "es": {
+      "title": "Extraer una muestra del diario contable",
+      "goal": "Aprender a aportar un diario, comprobar su lectura y obtener líneas seleccionadas para el control posterior.",
+      "scenario": "El despacho necesita seleccionar líneas del diario de Officina Arco para examinarlas. Un pequeño archivo ficticio permite seguir todos los pasos.",
+      "scope": "Primera ejecución de Journal Sampling: 5 líneas aleatorias, semilla 42. La lección enseña el uso; el plan de auditoría real determina método y tamaño.",
+      "inputs": "Abre journal-march.csv y context-es.md. Localiza fecha, asiento, línea, cuenta, debe y haber. El original se conserva en el expediente didáctico.",
+      "request": "Vera, extrae 5 líneas aleatorias del diario de marzo de Officina Arco con semilla 42. Primero déjame comprobar las columnas y después muestra la muestra y los controles de preparación.",
+      "steps": [
+        "Vera abre el diario en esta conversación. El asistente acompaña la revisión de columnas, período y significado de importes; Vera registra la correspondencia realmente revisada.",
+        "El flujo prepara el diario y comprueba que conserva líneas e importes. Si falla la preparación, resuelve el problema antes de extraer la muestra.",
+        "Vera ejecuta el muestreo y abre el resultado Excel. Encuentra una línea seleccionada en el diario; revisa con el asistente la población, método y número de líneas extraídas."
+      ],
+      "deliverables": [
+        "Muestra Excel y CSV con referencias a las líneas originales.",
+        "Diario preparado, controles y parámetros para reproducir la selección."
+      ],
+      "review": "Comprueba período, cuentas y número esperado de líneas. Los controles de preparación no certifican los asientos ni la suficiencia de la muestra. La Verificación documental permite después revisar los justificantes.",
+      "checkpoints": [
+        "Antes de extraer, explica qué población se muestrea.",
+        "En el resultado, localiza una línea seleccionada en el archivo fuente."
+      ],
+      "practice": "Repite con journal-april.csv, que añade un pago de abril. Conserva las 5 líneas aleatorias y el primer resultado. Comprueba la nueva población e identifica una línea de la nueva muestra.",
+      "success": "Sabes formular la petición, encontrar la muestra y rastrear una línea al diario sin sustituir manualmente las líneas seleccionadas.",
+      "repeat": "Indica a Vera cliente, diario, período, filtros si procede, método y tamaño previstos en tu plan de auditoría. Pide Verificación documental para comparar la muestra con los justificantes."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "994a01738537e8adc48bde798ac052161f256dd8ce43311173e241f3062eef53"
+}

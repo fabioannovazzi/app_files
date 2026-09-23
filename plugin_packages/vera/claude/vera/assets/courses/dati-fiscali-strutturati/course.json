@@ -1,0 +1,401 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "dati-fiscali-strutturati",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "supporting_task",
+  "parent_workflow": "new-client",
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
+  "sources": [
+    {
+      "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+      "sha256": "4b56449248b02f910f434804918f16c28713387b17432aea4993607a5275adf7"
+    },
+    {
+      "path": "modules/client-file-preparation/assets/icon.svg",
+      "sha256": "b4f798ec673400c5145bda9fb5cb282fff745455a56845e42feb1738d1013219"
+    },
+    {
+      "path": "modules/client-file-preparation/assets/review-workbench-adapter.json",
+      "sha256": "42af84f012b36d6d34c2646a9277b1a9aaf9eb8c4bf9287038948a56d2d401d0"
+    },
+    {
+      "path": "modules/client-file-preparation/references/workflow-reference.md",
+      "sha256": "0f8a3080bafdadf5d8aed1082908d851da3c2423c1730291f2a19dc4e10a9e71"
+    },
+    {
+      "path": "modules/client-file-preparation/requirements.txt",
+      "sha256": "52d819e8a9f405e7605de84ae65521166be565d85ad602df65adc740d5693186"
+    },
+    {
+      "path": "modules/client-file-preparation/schemas/model_handoff.schema.json",
+      "sha256": "38d7e5593d9a0ba12cbab23d7f1e8a03f239ceb230605f780b2bce4064e1d40d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/build_file_preparation_outputs.py",
+      "sha256": "5d84eb4fba8b93ae03a50108925fcaef068ffaad0263ccd0fc1a93deb08659d1"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_dependencies.py",
+      "sha256": "48d98b528325d883fbeb8d3921cb8c8883d7087c87cc8950dd77b4be711ee9c4"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_environment.py",
+      "sha256": "70f67540c705fe174163390ac2aea0582ef30235a52f2dd60f08717efd096400"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/detect_duplicates.py",
+      "sha256": "6d65563443e8be6eb08a97a89638e5e5fc035c27c34fbc0bbf793fe0e0d2ee81"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/extract_documents.py",
+      "sha256": "811ce6a6b2212c2550ab3c7c41e7c5e9d6662ce77256382b63d257a7419f87aa"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/managed_ocr_runtime.py",
+      "sha256": "664987b3e53f0b66bd1907493215f352c8487c75c7ec76347f8a41ba3336b222"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/model_handoff.py",
+      "sha256": "9c46e69ad33e0087b7d23585442c0dad425cf6eb4551f164d460ba27ec6afb5f"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fatturapa_xml.py",
+      "sha256": "27c6dc9104e04cea7bcff287dec4315951fe3bf9ef07526a89845fd5b7eb255d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fiscal_forms.py",
+      "sha256": "a18d78910d8015c4e41b2e0355724bc8df25dd5330b26b07b2785a2c24c384fe"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/review_session.py",
+      "sha256": "df5c9a8a2f47c6f6200c36f7d2a9e3c4db026f1c7c95492a734ba2f7305b1e3d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/scan_folder.py",
+      "sha256": "b4e5bb6dd0347b9c66e1e21b3f21a7e1a84805f58008401857cc613e90043789"
+    },
+    {
+      "path": "modules/client-file-preparation/skills/dati-fiscali-strutturati/SKILL.md",
+      "sha256": "06605d2421c4bc26c73351aab99a176b4a5de42176917c7d6be71d156d380462"
+    },
+    {
+      "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
+      "sha256": "5cb95e09970123a29a0574459d953ce03a908e69a899a68bb4374d383640a704"
+    },
+    {
+      "path": "modules/client-file-preparation/templates/memo_istruttoria.md",
+      "sha256": "d718069bee76ed6cd63e4f96b1dffb2d199ba8c3e969a7da1aaf709f6ee691dd"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/dati-fiscali-strutturati/SKILL.md",
+      "sha256": "4fd5cc71f00ab770870b3040021cb6e75eb2402b34fb4ad07e422385dbf4b3ed"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/CU-income.md",
+      "sha256": "37277e504c0c5d0a6d31cf5e52f960218118a925c93b5770d571812cb944cf1d",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/F24-first.md",
+      "sha256": "873b2e55c29b3794507acf566672426d8c38111a111ef26d55410673bcd1b565",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/CU-income.md",
+      "sha256": "37277e504c0c5d0a6d31cf5e52f960218118a925c93b5770d571812cb944cf1d",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/F24-first.md",
+      "sha256": "873b2e55c29b3794507acf566672426d8c38111a111ef26d55410673bcd1b565",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/F24-second.md",
+      "sha256": "13a039e7120c38ee08a289ea2e831a2731e7bf4fcb8995dcd638f6579e34c3da",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Estrarre dati fiscali dai documenti con Vera",
+      "goal": "Imparare a trasformare documenti fiscali leggibili in un elenco di campi verificabili sulle fonti.",
+      "scenario": "Lo studio deve preparare i dati di Marco Prova. Ha una CU e un F24 fittizi e vuole leggere i valori senza ricopiarli manualmente.",
+      "scope": "Estrazione da documenti italiani, con spiegazioni nella lingua scelta. I valori estratti descrivono le fonti; non costituiscono una dichiarazione o un calcolo delle imposte.",
+      "inputs": "Apri CU-income.md e F24-first.md: sono trascrizioni didattiche leggibili, con redditi, ritenute e campi di versamento inventati. Indica la campagna 2026 e distingui anno del documento e periodo d’imposta.",
+      "request": "Vera, estrai i dati fiscali da questi documenti di Marco Prova per la campagna 2026. Mostra i campi, la fonte di ogni valore e ciò che devo controllare.",
+      "steps": [
+        "Vera importa i documenti nella pratica didattica ed esegue la preparazione e l’estrazione correnti. Segui quali file riesce a leggere e come ne identifica il tipo.",
+        "La procedura produce i campi strutturati e la sintesi. Se il tipo di documento è incerto, Vera verifica il contenuto e registra l’interpretazione nel normale percorso di revisione.",
+        "Apri la sintesi e il CSV prodotti. Trova redditi e ritenute della CU, poi anno, codice e importo dell’F24, risalendo al testo di origine."
+      ],
+      "deliverables": [
+        "Sintesi dei dati fiscali: raccoglie i campi per documento e segnala le limitazioni.",
+        "CSV dei campi e rapporto di estrazione: permettono di controllare valori, fonti e documenti non elaborati."
+      ],
+      "review": "Confronta i valori con entrambe le fonti, inclusi anno e valuta. Controlla anche i documenti senza campi: un’estrazione vuota non prova che siano privi di informazioni utili.",
+      "checkpoints": [
+        "Prima di partire, identifica i due documenti e la campagna.",
+        "Alla consegna, collega un valore estratto alla sua fonte e trova eventuali limitazioni."
+      ],
+      "practice": "Aggiungi F24-second.md ai due documenti iniziali e chiedi una nuova estrazione. Il secondo F24 è aggiuntivo: conserva il primo risultato e non sostituire il primo documento.",
+      "success": "Il nuovo elenco distingue entrambi gli F24 e le rispettive fonti. Sai ritrovare anno e importo prima di riutilizzare un dato.",
+      "repeat": "Fornisci i documenti leggibili, indica paese e campagna, chiedi l’estrazione e verifica campi e fonti prima dell’uso professionale."
+    },
+    "en": {
+      "title": "Extract tax data from documents with Vera",
+      "goal": "Learn to turn readable tax documents into a field list that you can verify against its sources.",
+      "scenario": "The practice is preparing Marco Prova’s data. It has a fictional Italian CU income certificate and F24 payment form and wants to read their values without manually retyping them.",
+      "scope": "Italian source documents, explained in the chosen language. Extracted values describe the documents; they are not a tax return or a tax calculation.",
+      "inputs": "Open CU-income.md and F24-first.md. These are readable teaching transcriptions with invented income, withholding and payment fields. Specify the 2026 filing campaign and distinguish document year from tax period.",
+      "request": "Vera, extract the tax data from Marco Prova’s documents for the 2026 filing campaign. Show the fields, each value’s source and what I need to check.",
+      "steps": [
+        "Vera imports the documents into the teaching case and runs current preparation and extraction. Follow which files it can read and how their document types are identified.",
+        "The workflow produces structured fields and a summary. If a document type is uncertain, Vera checks its content and records its interpretation through the normal review process.",
+        "Open the new summary and CSV. Find income and withholding in the CU, then year, code and amount in the F24, tracing them back to the source text."
+      ],
+      "deliverables": [
+        "Tax-data summary: groups fields by document and states limitations.",
+        "Field CSV and extraction report: let you check values, sources and documents that were not processed."
+      ],
+      "review": "Compare values with both sources, including year and currency. Also inspect documents with no extracted fields: an empty result does not establish that the document contains no useful information.",
+      "checkpoints": [
+        "Before starting, identify the two documents and filing campaign.",
+        "At delivery, trace one extracted value to its source and find any extraction limitations."
+      ],
+      "practice": "Add F24-second.md to the two initial documents and request a fresh extraction. The second F24 is additional; retain the preceding result and original document.",
+      "success": "The new list distinguishes both F24 documents and their sources. You can find the year and amount before reusing a value.",
+      "repeat": "Supply readable documents, specify country and filing campaign, request extraction and verify fields against their sources before professional use."
+    },
+    "fr": {
+      "title": "Extraire des données fiscales avec Vera",
+      "goal": "Apprendre à transformer des documents fiscaux lisibles en une liste de champs vérifiables dans les sources.",
+      "scenario": "Le cabinet prépare les données de Marco Prova. Il dispose d’une attestation de revenus CU et d’un formulaire F24 italiens fictifs et souhaite lire leurs valeurs sans les ressaisir.",
+      "scope": "Documents sources italiens, expliqués dans la langue choisie. Les valeurs extraites décrivent les documents ; elles ne constituent ni déclaration ni calcul d’impôt.",
+      "inputs": "Ouvrez CU-income.md et F24-first.md : ces transcriptions pédagogiques contiennent des revenus, retenues et champs de paiement inventés. Indiquez la campagne déclarative 2026 et distinguez année du document et période fiscale.",
+      "request": "Vera, extrais les données fiscales des documents de Marco Prova pour la campagne 2026. Montre les champs, la source de chaque valeur et les vérifications nécessaires.",
+      "steps": [
+        "Vera importe les documents dans le dossier pédagogique puis exécute la préparation et l’extraction actuelles. Suivez les fichiers lisibles et l’identification de leur type.",
+        "La procédure produit les champs structurés et la synthèse. Si le type est incertain, Vera examine le contenu et enregistre son interprétation dans le parcours normal de revue.",
+        "Ouvrez la nouvelle synthèse et le CSV. Retrouvez revenus et retenues de la CU, puis année, code et montant du F24, en remontant au texte source."
+      ],
+      "deliverables": [
+        "Synthèse fiscale : regroupe les champs par document et indique les limites.",
+        "CSV des champs et rapport d’extraction : permettent de vérifier valeurs, sources et documents non traités."
+      ],
+      "review": "Comparez les valeurs aux deux sources, y compris année et devise. Examinez aussi les documents sans champs extraits : un résultat vide ne prouve pas l’absence d’informations utiles.",
+      "checkpoints": [
+        "Avant de commencer, identifiez les deux documents et la campagne.",
+        "À la livraison, reliez une valeur extraite à sa source et trouvez les éventuelles limites."
+      ],
+      "practice": "Ajoutez F24-second.md aux deux documents initiaux et demandez une nouvelle extraction. Ce second F24 est supplémentaire : conservez le premier résultat et le document initial.",
+      "success": "La nouvelle liste distingue les deux F24 et leurs sources. Vous savez retrouver année et montant avant de réutiliser une donnée.",
+      "repeat": "Fournissez des documents lisibles, précisez pays et campagne, demandez l’extraction et vérifiez champs et sources avant utilisation professionnelle."
+    },
+    "de": {
+      "title": "Steuerdaten mit Vera aus Dokumenten extrahieren",
+      "goal": "Lernen, lesbare Steuerunterlagen in eine Feldliste zu überführen und die Werte anhand ihrer Quellen zu prüfen.",
+      "scenario": "Die Kanzlei bereitet Marco Provas Daten vor. Eine fiktive italienische CU-Einkommensbescheinigung und ein F24-Zahlungsformular liegen vor; ihre Werte sollen ohne manuelles Abtippen übernommen werden.",
+      "scope": "Italienische Quelldokumente mit Erläuterungen in der gewählten Sprache. Extrahierte Werte beschreiben die Unterlagen; sie sind weder Steuererklärung noch Steuerberechnung.",
+      "inputs": "Öffnen Sie CU-income.md und F24-first.md. Die lesbaren Übungstranskriptionen enthalten erfundene Einkommens-, Einbehalts- und Zahlungsangaben. Nennen Sie die Erklärungskampagne 2026 und unterscheiden Sie Dokumentjahr und Steuerzeitraum.",
+      "request": "Vera, extrahiere die Steuerdaten aus Marco Provas Unterlagen für die Erklärungskampagne 2026. Zeige die Felder, die Quelle jedes Wertes und den Prüfbedarf.",
+      "steps": [
+        "Vera importiert die Dokumente in den Übungsfall und führt die aktuelle Aufbereitung und Extraktion aus. Verfolgen Sie, welche Dateien lesbar sind und wie ihr Dokumenttyp bestimmt wird.",
+        "Der Ablauf erzeugt strukturierte Felder und eine Zusammenfassung. Bei unklarem Dokumenttyp prüft Vera den Inhalt und hält ihre Interpretation im üblichen Prüfprozess fest.",
+        "Öffnen Sie die neue Zusammenfassung und CSV-Datei. Finden Sie Einkommen und Einbehalte der CU sowie Jahr, Code und Betrag des F24 und verfolgen Sie diese zum Quelltext zurück."
+      ],
+      "deliverables": [
+        "Steuerdatenübersicht: ordnet die Felder nach Dokument und nennt Einschränkungen.",
+        "Feld-CSV und Extraktionsbericht: ermöglichen die Prüfung von Werten, Quellen und nicht verarbeiteten Dokumenten."
+      ],
+      "review": "Vergleichen Sie die Werte mit beiden Quellen, einschließlich Jahr und Währung. Prüfen Sie auch Dokumente ohne extrahierte Felder: Ein leeres Ergebnis beweist nicht, dass sie keine nützlichen Angaben enthalten.",
+      "checkpoints": [
+        "Vor dem Start: Benennen Sie beide Dokumente und die Erklärungskampagne.",
+        "Bei der Übergabe: Verfolgen Sie einen Wert zur Quelle und finden Sie mögliche Einschränkungen."
+      ],
+      "practice": "Ergänzen Sie F24-second.md zu den beiden ursprünglichen Dokumenten und fordern Sie eine neue Extraktion an. Das zweite F24 ist zusätzlich; bewahren Sie das erste Ergebnis und Originaldokument auf.",
+      "success": "Die neue Liste unterscheidet beide F24-Dokumente und ihre Quellen. Sie können Jahr und Betrag vor der Weiterverwendung eines Wertes finden.",
+      "repeat": "Stellen Sie lesbare Unterlagen bereit, nennen Sie Land und Erklärungskampagne, fordern Sie die Extraktion an und prüfen Sie Felder und Quellen vor der fachlichen Verwendung."
+    },
+    "es": {
+      "title": "Extraer datos fiscales de documentos con Vera",
+      "goal": "Aprender a convertir documentos fiscales legibles en una lista de campos verificables en las fuentes.",
+      "scenario": "El despacho prepara los datos de Marco Prova. Tiene un certificado de ingresos CU y un formulario F24 italianos ficticios y quiere leer sus valores sin copiarlos manualmente.",
+      "scope": "Documentos originales italianos, explicados en el idioma elegido. Los valores extraídos describen los documentos; no constituyen una declaración ni un cálculo de impuestos.",
+      "inputs": "Abre CU-income.md y F24-first.md: son transcripciones didácticas legibles con ingresos, retenciones y campos de pago inventados. Indica la campaña de declaración 2026 y distingue el año del documento del periodo fiscal.",
+      "request": "Vera, extrae los datos fiscales de los documentos de Marco Prova para la campaña 2026. Muestra los campos, la fuente de cada valor y lo que debo comprobar.",
+      "steps": [
+        "Vera importa los documentos al expediente didáctico y ejecuta la preparación y extracción actuales. Sigue qué archivos puede leer y cómo identifica su tipo.",
+        "El procedimiento genera los campos estructurados y el resumen. Si el tipo documental es incierto, Vera revisa el contenido y registra su interpretación mediante el proceso normal de revisión.",
+        "Abre el nuevo resumen y el CSV. Encuentra ingresos y retenciones de la CU, después año, código e importe del F24, volviendo al texto de origen."
+      ],
+      "deliverables": [
+        "Resumen fiscal: agrupa campos por documento e indica las limitaciones.",
+        "CSV de campos e informe de extracción: permiten comprobar valores, fuentes y documentos no procesados."
+      ],
+      "review": "Compara los valores con las dos fuentes, incluidos año y moneda. Revisa también los documentos sin campos extraídos: un resultado vacío no demuestra que carezcan de información útil.",
+      "checkpoints": [
+        "Antes de empezar, identifica los dos documentos y la campaña.",
+        "En la entrega, relaciona un valor extraído con su fuente y encuentra las posibles limitaciones."
+      ],
+      "practice": "Añade F24-second.md a los dos documentos iniciales y pide una nueva extracción. El segundo F24 es adicional: conserva el primer resultado y el documento original.",
+      "success": "La nueva lista distingue los dos F24 y sus fuentes. Sabes encontrar año e importe antes de reutilizar un dato.",
+      "repeat": "Facilita documentos legibles, indica país y campaña, solicita la extracción y comprueba campos y fuentes antes del uso profesional."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "b0f0be34abdcfc412707c7b8936e23788a5ebaa3b3ab999b8424443c964abddb"
+}

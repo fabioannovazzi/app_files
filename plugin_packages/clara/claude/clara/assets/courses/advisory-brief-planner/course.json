@@ -1,0 +1,433 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "clara",
+  "workflow": "advisory-brief-planner",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
+  "sources": [
+    {
+      "path": "contracts/advisory_contract.v1.schema.json",
+      "sha256": "f4e09400874f39edddaa473453e829d269a224a0aa6644a8713517d70e8ed078"
+    },
+    {
+      "path": "scripts/check_dependencies.py",
+      "sha256": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+    },
+    {
+      "path": "scripts/managed_ocr_runtime.py",
+      "sha256": "664987b3e53f0b66bd1907493215f352c8487c75c7ec76347f8a41ba3336b222"
+    },
+    {
+      "path": "scripts/managed_python_runtime.py",
+      "sha256": "6f1e29d38fa4ff7919a507ddcb95df81d4bdf600b2ab6fc392956772d846d76d"
+    },
+    {
+      "path": "scripts/validate_advisory_contract.py",
+      "sha256": "e4d5b2f7cb0bccba36454510bd6cf554e04b3b003eedb6755a25047152f10ac0"
+    },
+    {
+      "path": "skills/advisory-brief-planner/SKILL.md",
+      "sha256": "2fdc225a1e7cda271354dc4e786c3891d3b2d27d6cf88b5499256b4f8274b97a"
+    },
+    {
+      "path": "skills/advisory-brief-planner/references/advisory-contract.md",
+      "sha256": "7e87617d089443530c384c7713a09e78ef1f64d5c6b04e5d890d89e4e47391a6"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/assignment-it.md",
+      "sha256": "4a007cb48b0f718504e633dfff996823a739810cea7c4e4b7c8a8013c2ba6978",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/notes-it.md",
+      "sha256": "5a4921c49a21aaa1749eb79477e0b5ef4ab3d7acdac915c70f8c141478993724",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assignment-it.md",
+      "sha256": "4a007cb48b0f718504e633dfff996823a739810cea7c4e4b7c8a8013c2ba6978",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/notes-it.md",
+      "sha256": "5a4921c49a21aaa1749eb79477e0b5ef4ab3d7acdac915c70f8c141478993724",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-it.md",
+      "sha256": "a599116ddbffabd623c998837779209fff52d8673c83905d94d9ab1c07a745fc",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assignment-en.md",
+      "sha256": "b82d4b916c260ac81e66fb64888f0d645a9c35a1bd86f32620db5f815ff83571",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/notes-en.md",
+      "sha256": "03cf0a00073274ea8817ab632505aca5c94008fcc89d90b4b29aac71f5c0dbe9",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assignment-en.md",
+      "sha256": "b82d4b916c260ac81e66fb64888f0d645a9c35a1bd86f32620db5f815ff83571",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/notes-en.md",
+      "sha256": "03cf0a00073274ea8817ab632505aca5c94008fcc89d90b4b29aac71f5c0dbe9",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-en.md",
+      "sha256": "a31453bcfbc933c681f99a4406e0318f90b80ae32bf4493f10d166160c5abfb8",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assignment-fr.md",
+      "sha256": "abc3c900bae063479709775ef1ab6b92973917192e50d13433e009b28eaf2529",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/notes-fr.md",
+      "sha256": "0d65e1a705756ef1c9d4194372586c4b7c5340ee04b9aca45023d2038d67a504",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assignment-fr.md",
+      "sha256": "abc3c900bae063479709775ef1ab6b92973917192e50d13433e009b28eaf2529",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/notes-fr.md",
+      "sha256": "0d65e1a705756ef1c9d4194372586c4b7c5340ee04b9aca45023d2038d67a504",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-fr.md",
+      "sha256": "e2b00c3a2339dfd913b8bfa03ed427da9db57f8da33a8a9e86913d7ea156f8fc",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assignment-de.md",
+      "sha256": "1a61c7bb653687dcc3c6e3b54b12ba0c174e6563d5e6599701c4b2bf70566c58",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/notes-de.md",
+      "sha256": "d3ab12e88268758a3a3eee9ecc1a64cc4f809ae3c0dff4742a3eaa9a2a9f8585",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assignment-de.md",
+      "sha256": "1a61c7bb653687dcc3c6e3b54b12ba0c174e6563d5e6599701c4b2bf70566c58",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/notes-de.md",
+      "sha256": "d3ab12e88268758a3a3eee9ecc1a64cc4f809ae3c0dff4742a3eaa9a2a9f8585",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-de.md",
+      "sha256": "90f0981b19520d2e51edae37b12994415158108ada466c14e6a8564c6f1ec516",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assignment-es.md",
+      "sha256": "3f3aa30ee3ce0b3447c32fbef8dcf0db5ef9714fa8d09e46a4cb5a8b8f443728",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/notes-es.md",
+      "sha256": "7edda147e20f7b5f33faab0eee7a55bd67a400ef1bcb3b79c32d48ca2856251b",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assignment-es.md",
+      "sha256": "3f3aa30ee3ce0b3447c32fbef8dcf0db5ef9714fa8d09e46a4cb5a8b8f443728",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/notes-es.md",
+      "sha256": "7edda147e20f7b5f33faab0eee7a55bd67a400ef1bcb3b79c32d48ca2856251b",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-es.md",
+      "sha256": "832e12c7a7d71a8e4b3ebc2459de73b16ed1f097e32dc6487f7df395ef4ce2e6",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/revised-assignment-it.md",
+      "sha256": "d67cc5308cbf09330b970be305653878652ecfa14b3b7226adf9cffe1edd8885",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/revised-assignment-en.md",
+      "sha256": "4701aa3e32d218c15728584b6215cd2c9dbfdbb94a7fbbb0b5c660e3bc101535",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/revised-assignment-fr.md",
+      "sha256": "7e831badde0463a66f00c3e89f5eb40b53f064597f9950e1c675d2b6527f694d",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/revised-assignment-de.md",
+      "sha256": "7abecdf27b3b3eff590de4b28be366409128de741890985f635a649ec8f1b4d8",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/revised-assignment-es.md",
+      "sha256": "4eb57eb5b41a29a13373ddbce3d5b7f127e43eec70098bacca00eb96b34522bb",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Impostare un incarico di consulenza con Clara",
+      "goal": "Imparare a trasformare una richiesta in un incarico chiaro: decisione, fonti, risultato e lavoro da svolgere.",
+      "scenario": "Ciclo Arco sta valutando un servizio di ritiro biciclette. Prima di preparare la consulenza, definiamo ciò che chiede la titolare e ciò che le note disponibili permettono di valutare.",
+      "scope": "Impostazione iniziale dell’incarico con le note fittizie fornite. La lezione termina con il passaggio al lavoro successivo; la raccomandazione sul servizio verrà elaborata da quel flusso.",
+      "inputs": "Apri assignment-it.md e notes-it.md. Il primo indica decisione, destinataria e limiti; il secondo contiene dichiarazioni dei clienti e informazioni operative.",
+      "request": "Clara, imposta questo incarico. Mostrami la decisione da sostenere, il risultato previsto, le fonti disponibili, le lacune e come organizzare il lavoro.",
+      "steps": [
+        "Clara legge richiesta e note, individua eventuali chiarimenti sostanziali e propone l’incarico in termini comprensibili.",
+        "Rivedi decisione, perimetro, risultato e informazioni mancanti. Clara registra il piano e lo verifica rispetto alle fonti esatte con il flusso corrente.",
+        "Leggi il riepilogo e il passaggio di consegne. Individua il flusso Clara disponibile che proseguirebbe il lavoro e gli elementi da mantenere."
+      ],
+      "deliverables": [
+        "Definizione dell’incarico e riepilogo leggibile: scopo, confini e risultato atteso.",
+        "Verifica del piano e consegne operative: se il lavoro può proseguire e che cosa riceverà il flusso successivo."
+      ],
+      "review": "Controlla che la destinataria resti la titolare, che il piano confronti le opzioni richieste e che non inventi prezzi, domanda o autorizzazioni a contattare persone. Il piano non è ancora una raccomandazione eseguita.",
+      "checkpoints": [
+        "Prima della stesura, identifica decisione e destinataria.",
+        "Alla consegna, spiega il risultato successivo e quali informazioni mancano."
+      ],
+      "practice": "Usa i file della prova, compresi revised-assignment-it.md e update-it.md, per impostare la nuova richiesta più circoscritta: una lista di azioni per verificare la fattibilità del pilota. Conserva il piano iniziale.",
+      "success": "Il nuovo piano riflette obiettivo e risultato modificati. Indica il risultato da produrre e una condizione da verificare prima di avviare il pilota.",
+      "repeat": "Descrivi decisione, destinatario, risultato desiderato e file disponibili. Rivedi perimetro e piano delle fonti prima dell’esecuzione del flusso selezionato."
+    },
+    "en": {
+      "title": "Plan an advisory assignment with Clara",
+      "goal": "Learn to turn a request into a clear assignment: the decision, evidence, deliverable and next work.",
+      "scenario": "Ciclo Arco is considering a bicycle collection service. Before producing advice, we need to establish what the owner wants and what the available notes can support.",
+      "scope": "An initial assignment plan using the supplied fictional notes. The lesson ends at the handoff; the service recommendation belongs to the next workflow.",
+      "inputs": "Open assignment-en.md and notes-en.md. The first specifies the decision, reader and limits; the second contains customer statements and operational information.",
+      "request": "Clara, plan this advisory assignment. Show what we need to decide, the proposed output, evidence we have, gaps and how the work should proceed.",
+      "steps": [
+        "Clara reads the request and selected notes, identifies any material clarification, and proposes the assignment in ordinary language.",
+        "Review the decision, scope, deliverable and missing evidence. Clara records the plan and checks it against the exact sources using the current planning workflow.",
+        "Read the summary and handoff. Identify the supported Clara workflow that would continue the assignment and what it must preserve."
+      ],
+      "deliverables": [
+        "Assignment contract and readable summary: what the work is for, its boundaries and intended output.",
+        "Validation report and handoff: whether the plan can proceed and what the next workflow should receive."
+      ],
+      "review": "Check that the plan keeps the owner as reader, compares the requested options and does not invent prices, demand or authority to contact people. A valid plan is not an executed recommendation.",
+      "checkpoints": [
+        "Before drafting, identify the decision and intended reader.",
+        "At delivery, explain what will be produced next and which evidence remains missing."
+      ],
+      "practice": "Use the practice files, including revised-assignment-en.md and update-en.md, to plan the owner’s narrower request: an action list for checking pilot feasibility. Keep the original plan.",
+      "success": "The new plan reflects the changed objective and deliverable. Name the output and one condition that must be checked before a pilot can run.",
+      "repeat": "Describe the decision, reader, desired output and available files. Review Clara’s scope and evidence plan before the selected workflow executes it."
+    },
+    "fr": {
+      "title": "Définir une mission de conseil avec Clara",
+      "goal": "Apprendre à transformer une demande en mission claire : décision, sources, livrable et travail à réaliser.",
+      "scenario": "Ciclo Arco envisage un service de collecte de vélos. Avant de préparer le conseil, nous précisons la demande de la dirigeante et ce que les notes permettent d’évaluer.",
+      "scope": "Cadrage initial à partir des notes fictives fournies. La leçon se termine par la transmission au travail suivant ; la recommandation sur le service relève de ce prochain flux.",
+      "inputs": "Ouvrez assignment-fr.md et notes-fr.md. Le premier précise décision, destinataire et limites ; le second contient déclarations clients et informations opérationnelles.",
+      "request": "Clara, définis cette mission de conseil. Présente la décision à éclairer, le livrable, les sources disponibles, les lacunes et l’organisation du travail.",
+      "steps": [
+        "Clara lit la demande et les notes, repère les clarifications importantes et propose une mission dans un langage courant.",
+        "Revoyez décision, périmètre, livrable et éléments manquants. Clara enregistre le plan et le vérifie par rapport aux sources exactes avec le flux actuel.",
+        "Lisez le résumé et les consignes de transmission. Identifiez le flux Clara disponible qui poursuivrait la mission et les éléments à préserver."
+      ],
+      "deliverables": [
+        "Contrat de mission et résumé lisible : objectif, limites et livrable attendu.",
+        "Rapport de vérification et consignes : possibilité de poursuivre et éléments transmis au flux suivant."
+      ],
+      "review": "Vérifiez que la dirigeante reste destinataire, que les options demandées sont comparées et qu’aucun prix, demande ou droit de contacter des personnes n’est inventé. Un plan valide n’est pas encore une recommandation exécutée.",
+      "checkpoints": [
+        "Avant la rédaction, identifiez décision et destinataire.",
+        "À la remise, expliquez le prochain livrable et les informations encore manquantes."
+      ],
+      "practice": "Utilisez les fichiers d’exercice, dont revised-assignment-fr.md et update-fr.md, pour cadrer la nouvelle demande plus limitée : une liste d’actions pour vérifier la faisabilité du pilote. Conservez le premier plan.",
+      "success": "Le nouveau plan reflète l’objectif et le livrable modifiés. Nommez le résultat attendu et une condition à vérifier avant le pilote.",
+      "repeat": "Décrivez décision, destinataire, livrable souhaité et fichiers disponibles. Revoyez périmètre et sources avant l’exécution du flux sélectionné."
+    },
+    "de": {
+      "title": "Einen Beratungsauftrag mit Clara planen",
+      "goal": "Lernen, aus einer Anfrage einen klaren Auftrag mit Entscheidung, Quellen, Ergebnis und nächsten Arbeitsschritten zu machen.",
+      "scenario": "Ciclo Arco erwägt einen Fahrrad-Abholservice. Vor der Beratung klären wir den Wunsch der Inhaberin und welche Einschätzung die vorliegenden Notizen erlauben.",
+      "scope": "Erste Auftragsplanung anhand der fiktiven Notizen. Die Lektion endet bei der Übergabe; die Empfehlung zum Service entsteht im anschließenden Arbeitsablauf.",
+      "inputs": "Öffnen Sie assignment-de.md und notes-de.md. Die erste Datei nennt Entscheidung, Adressatin und Grenzen; die zweite enthält Kundenaussagen und Betriebsinformationen.",
+      "request": "Clara, plane diesen Beratungsauftrag. Zeige die zu unterstützende Entscheidung, das geplante Ergebnis, vorhandene Quellen, Lücken und das weitere Vorgehen.",
+      "steps": [
+        "Clara liest Anfrage und Notizen, erkennt wesentliche Rückfragen und schlägt den Auftrag in verständlicher Sprache vor.",
+        "Prüfen Sie Entscheidung, Umfang, Ergebnis und fehlende Informationen. Clara dokumentiert den Plan und prüft ihn im aktuellen Ablauf anhand der genauen Quellen.",
+        "Lesen Sie Zusammenfassung und Übergabe. Erkennen Sie den verfügbaren Clara-Arbeitsablauf für die Fortsetzung und die Vorgaben, die er beibehalten muss."
+      ],
+      "deliverables": [
+        "Auftragsdefinition und lesbare Zusammenfassung: Zweck, Grenzen und erwartetes Ergebnis.",
+        "Prüfbericht und Übergabe: ob die Arbeit fortgesetzt werden kann und was der nächste Ablauf erhält."
+      ],
+      "review": "Prüfen Sie, ob die Inhaberin Adressatin bleibt und die gewünschten Optionen verglichen werden. Preise, Nachfrage und Kontaktbefugnisse dürfen nicht erfunden werden. Ein gültiger Plan ist noch keine ausgearbeitete Empfehlung.",
+      "checkpoints": [
+        "Benennen Sie vor dem Entwurf Entscheidung und Adressatin.",
+        "Erklären Sie bei der Übergabe das nächste Ergebnis und die fehlenden Informationen."
+      ],
+      "practice": "Planen Sie mit den Übungsdateien einschließlich revised-assignment-de.md und update-de.md den enger gefassten neuen Auftrag: eine Aufgabenliste zur Prüfung der Pilotmachbarkeit. Bewahren Sie den ersten Plan auf.",
+      "success": "Der neue Plan berücksichtigt das geänderte Ziel und Ergebnis. Benennen Sie das Ergebnis und eine Voraussetzung, die vor dem Pilotstart geprüft werden muss.",
+      "repeat": "Beschreiben Sie Entscheidung, Adressat, gewünschtes Ergebnis und vorhandene Dateien. Prüfen Sie Umfang und Quellenplan vor der Ausführung des ausgewählten Ablaufs."
+    },
+    "es": {
+      "title": "Planificar un encargo de consultoría con Clara",
+      "goal": "Aprender a convertir una petición en un encargo claro: decisión, fuentes, entregable y trabajo siguiente.",
+      "scenario": "Ciclo Arco valora un servicio de recogida de bicicletas. Antes de preparar el asesoramiento, definimos qué pide la propietaria y qué permiten evaluar las notas disponibles.",
+      "scope": "Planificación inicial con las notas ficticias suministradas. La lección termina con el traspaso al trabajo siguiente; la recomendación sobre el servicio corresponde a ese flujo.",
+      "inputs": "Abre assignment-es.md y notes-es.md. El primero indica decisión, destinataria y límites; el segundo contiene declaraciones de clientes e información operativa.",
+      "request": "Clara, planifica este encargo. Muéstrame la decisión que debemos apoyar, el entregable previsto, las fuentes, las carencias y cómo organizar el trabajo.",
+      "steps": [
+        "Clara lee petición y notas, identifica aclaraciones importantes y propone el encargo en lenguaje sencillo.",
+        "Revisa decisión, alcance, entregable e información pendiente. Clara registra el plan y lo comprueba con las fuentes exactas mediante el flujo actual.",
+        "Lee el resumen y las instrucciones de traspaso. Identifica el flujo disponible de Clara que continuaría el trabajo y los elementos que debe preservar."
+      ],
+      "deliverables": [
+        "Definición del encargo y resumen legible: propósito, límites y resultado esperado.",
+        "Informe de comprobación y traspaso: posibilidad de continuar y elementos que recibirá el siguiente flujo."
+      ],
+      "review": "Comprueba que la propietaria siga siendo destinataria, que se comparen las opciones pedidas y que no se inventen precios, demanda o permiso para contactar. Un plan válido todavía no es una recomendación ejecutada.",
+      "checkpoints": [
+        "Antes del borrador, identifica decisión y destinataria.",
+        "En la entrega, explica el próximo resultado y la información que falta."
+      ],
+      "practice": "Usa los archivos de práctica, incluidos revised-assignment-es.md y update-es.md, para planificar la petición más limitada: una lista de acciones para comprobar la viabilidad del piloto. Conserva el plan inicial.",
+      "success": "El nuevo plan refleja el objetivo y entregable modificados. Nombra el resultado y una condición que debe comprobarse antes del piloto.",
+      "repeat": "Describe decisión, destinatario, entregable y archivos disponibles. Revisa alcance y fuentes antes de ejecutar el flujo seleccionado."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "35484690c3f74d102293b7cc315ca041f9b3010f239a7b1e0c1b98c67bd289d1"
+}

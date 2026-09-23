@@ -1,61 +1,71 @@
-# Von einer allgemeinen Frage zu einer prüfbaren Antwort
+# Eine geprüfte Antwort mit Lucia erhalten
 
-Ein geführter Rundgang von etwa 6½ Minuten. Sprachaktivierung, externe Verarbeitung und die freiwillige Übung kommen zeitlich hinzu.
+Erklärung und kurze Übung dauern ungefähr 5–8 Minuten. Verarbeitung und Ihre Fragen können die Sitzung verlängern.
 
-Sprich mit dem Lehrchat über die Standardstimme von Codex. Im zweiten, daneben geöffneten Chat siehst du Dateien und Ergebnisse. Die Chats bleiben verbunden. Du kannst jederzeit unterbrechen, nachfragen oder langsamer fortfahren.
+Sprechen Sie im Lehrchat mit der Standardstimme von Codex. Im Arbeitschat im Fenster daneben führt die Funktion den Fall mit den vorbereiteten Dateien aus und zeigt die tatsächlichen Ergebnisse. Die Erklärung folgt diesen Ergebnissen: Sie können unterbrechen, Fragen stellen und das Tempo ändern.
 
-Verwende die vorbereiteten Inhalte. Schreibe die Lektion nicht neu und erfinde keine Ergebnisse. Sprich in kurzen Abschnitten, lass Zeit zum Anschauen und höre die tatsächlichen Antworten. Zeige die Lösung erst nach dem Versuch. Die Zeiten umfassen Anschauen und Dialog. Das Anzeigen dieser Dateien bestätigt weder Demo noch Übung oder Verständnis. Der Lehrchat beurteilt die Eignung ausschließlich anhand des Katalogs seines eigenen Produkts.
+Vermitteln Sie mit dem vorbereiteten Material eine vollständige erste Anwendung. Wählen Sie bei der Einführung 3–4 passende Funktionen; beginnen Sie später mit dem heutigen Arbeitswunsch. Passen Sie Tempo und Erklärungen an. Erstellen Sie bei Bedarf eigene Beispiele mit demselben Workflow und geprüften Eingaben. Lesen Sie execution-request.json, verwenden Sie den echten zugeordneten lokalen Fall und erklären Sie die überprüften Ergebnisse des Arbeitschats. Erfinden Sie weder Ergebnisse noch Nutzerantworten oder Verständnisbestätigungen. Das Öffnen des Materials schließt keine Lektion ab.
 
-## 1. Dein Ziel · 45 s
+## 1. Wann sie hilft · 45 s
 
-Höre die Anfrage. Stelle einen Bezug zu deiner bisherigen Arbeit her.
+Verbinden Sie die Funktion mit einer konkreten beruflichen Aufgabe.
 
-Ein fiktiver Mandant fragt nach der Abzugsfähigkeit eines Aufwands. Eine Rechnung beschreibt eine Leistung; Rechtsträger, Periode, steuerliche Regelung und tatsächliche Nutzung fehlen. Die Lektion grenzt die Frage ein, ohne ein Steuergutachten zu liefern.
+Lernen, eine fachliche Frage zu stellen, Recherche und Prüfungen zu verfolgen und die Antwort mit Quellen und offenen Punkten zu verwenden.
 
-Lucia, zeige, wie du diese Frage in eine quellengestützte Antwort überführst.
+Imprese Arco bittet um eine kurze Notiz zu den EU-Regeln gegen Zahlungsverzug. Wir beginnen mit der schriftlichen Anfrage und den Ausgangsquellen und erstellen über den Workflow eine tatsächliche Antwort.
 
-## 2. Die Ausgangsdaten · 60 s
+Der vollständige Weg von der Frage zur geprüften Antwort. Eine allgemeine Informationsnotiz dient als einfaches Beispiel; ein Gutachten zu einer konkreten Position kann zusätzlich die Prüfung einer Gegenposition erfordern.
 
-Sieh dir die Dokumente im anderen Chat an. Finde eine nützliche Angabe und eine fehlende Information.
+## 2. Dateien und Anfrage · 60 s
 
-Q1 belegt eine Dokumentenbeschreibung, nicht die steuerlichen Voraussetzungen. Fehlende Fakten können Recherche und Schlussfolgerung ändern.
+Öffnen Sie die Dateien im Arbeitsfenster und zeigen Sie die passende Anfrage.
 
-[["Rechnung Q1", "Leistungsbeschreibung und Betrag", "Tatsächliche Nutzung"], ["Mandantenfrage", "Interesse am Abzug", "Rechtsträger, Regelung und Periode"], ["Rechtsquellen", "Im kleinen Beispiel noch nicht ausgewählt", "Einschlägiger Rahmen nach Klärung"]]
+Öffne question-de.md für Anfrage, Zielgruppe, Umfang und Format. sources-de.md stellt Leitfaden und offiziellen Text vor. Du musst keine technischen Anweisungen verfassen oder interne Schritte auswählen.
 
-## 3. So arbeitet der Workflow · 75 s
+Lucia, beantworte die Frage von Imprese Arco in dieser Datei. Erstelle die gewünschte kurze Notiz, prüfe Quellen und Antwort und zeige mir das Dokument und die noch zu prüfenden Punkte.
 
-Folge den drei Schritten. Halte bei der Entscheidung an, die das Ergebnis verändert.
+## 3. Den Ablauf ausführen · 105 s
 
-Bestimme Frage, Entscheidung und wesentliche Fakten. Frage nur nach Informationen, die vorhandene Belege nicht klären.
-Folge dem aktuellen Planungs-, Recherche- und Antwortweg. Prüfe Autorität, Version und Anwendbarkeit der Quellen und trenne Fakten von Zitaten.
-Prüfe Aussagen und relevante Alternativen und führe die vorgeschriebene Gegenprüfung aus. Liefere Antwort, Grundlagen und Restfragen zur fachlichen Prüfung.
+Erklären Sie den laufenden Schritt und warten Sie auf sein tatsächliches Ergebnis.
 
-## 4. Das Ergebnis lesen · 90 s
+Im Arbeitsthread liest Lucia die Frage und bereitet Ziel, Quellenplan, Sprache und Rechtsrahmen vor. Der Sprachchat erklärt den vorgesehenen Inhalt. Korrigiere Missverständnisse und beantworte nur Fragen, die die Arbeit beeinflussen.
 
-Öffne das Beispiel im zweiten Chat. Ordne jede Schlussfolgerung ihrer Quelle zu.
+Wähle gewöhnliche Recherche oder Deep Research, falls verfügbar; eine bereits für diese Frage getroffene Wahl bleibt erhalten. Im Arbeitsthread entstehen Recherche und Antwort. Die Spracherklärung folgt dem tatsächlichen Fortschritt und nimmt deine Fragen auf.
 
-Die Frage muss Rechtsträger, Periode, Regelung und Leistungsnutzung bestimmen. Ohne diese Angaben wäre ein kategorisches Ja oder Nein verfrüht.
+Lucia prüft die Antwort anhand von Frage, Quellen und Begründung und korrigiert nötigenfalls. Öffne die Word-Notiz, sieh dir die Schlussfolgerungen an und verfolge eine Quelle. Prüfe Grenzen und offene Punkte vor der Verwendung.
 
-[["Eingrenzung", "Frage und bestätigte Fakten", "Quelle für jeden Fakt"], ["Recherche", "Einschlägige Quellen", "Version, Autorität und Fundstelle"], ["Geprüfte Antwort", "Schlussfolgerung mit Bedingungen und Alternativen", "Keine erfundenen Zitate"]]
+Während der Lektion führt der Arbeitschat die Funktion aus und erstellt das Ergebnis. Ist ein Schritt nicht verfügbar, erklären Sie, was fehlt, und lassen Sie die Lektion unvollständig.
 
-## 5. Die entscheidende Prüfung · 75 s
+## 4. Das Ergebnis verwenden · 75 s
 
-Erkläre vor dem Aufklappen der Antwort, was du prüfen würdest.
+Öffnen Sie das gerade erstellte Dokument und zeigen Sie den Einstieg.
 
-Ein echtes Zitat kann trotzdem unzutreffend sein. Prüfe Quellentext und Bezug zu den Fallfakten.
+Word-Notiz und geprüfter Antworttext mit Quellen und Grenzen.
 
-Reicht eine Seite zum Thema Abzugsfähigkeit für die Antwort?
+Prüfpaket, das die Kontrolle der Aussagen und verbleibende Prüfaufgaben nachvollziehbar macht.
 
-Überlegungen vergleichen: Nein. Autorität, Zeitraum, Fakten und Voraussetzungen sind zu prüfen. Ein gemeinsames Thema belegt keine Anwendbarkeit.
+Prüfe, ob die Notiz die Frage im gewünschten Umfang und in der gewünschten Sprache beantwortet. Vergleiche eine Aussage mit ihrer Quelle. Unterscheide allgemeine Regeln und ihre Anwendung auf einen Mandanten; Prüfungen ersetzen kein fachliches Urteil.
 
-## 6. Gemeinsam ausprobieren · 45 s
+## 5. Gemeinsam prüfen · 45 s
 
-Entscheide, ob du jetzt üben oder das Beispiel für den nächsten Auftrag behalten möchtest.
+Führen Sie diese Prüfungen an den angegebenen Stellen durch.
 
-Ergänze Rechtsträger, Periode und Nutzung und formuliere die genaue Recherchefrage.
+Erkläre Frage, Zielgruppe und Rechtsrahmen.
 
-Benenne die benötigte Entscheidung und wähle relevante Unterlagen. Lucia führt die internen Stufen ohne einzelne Skill-Auswahl.
+Finde eine Schlussfolgerung, ihre Quelle und eine Grenze oder ausstehende Prüfung.
 
-Dies ist ein vorbereitetes Lehrbeispiel, kein Nachweis einer neuen Ausführung. Quellen und Entscheidungen sind fiktiv; eine fachliche Freigabe ist nicht vorausgesetzt. Bei deinen eigenen Dateien führt der aktuelle Workflow seine Prüfungen durch und bewahrt die tatsächlichen Ergebnisse auf.
+Diese Pausen helfen beim Erlernen der Funktion. Sie sind kein Quiz über technische Einzelheiten.
 
-Bibliothek, Profil und Lernfortschritt bleiben auf deinem Computer und werden nicht an Mparanza gesendet. Sprache und im Chat gelesene Inhalte verarbeitet dein OpenAI-Konto: Lokale Speicherung bedeutet keine Offline-Inferenz.
+## 6. Selbst ausprobieren · 60 s
+
+Lassen Sie den Nutzer die Anfrage formulieren und begleiten Sie seinen Versuch.
+
+Lies practice-de.md und fordere eine neue Fassung für die Einführung mit Lieferanten öffentlicher Stellen an. Bewahre die erste Version, verfolge neue Recherche und Prüfung und erläutere die Verwendung des Vergleichs.
+
+Du kannst eine vollständige Frage formulieren, den Rechercheweg wählen, Antwort und Prüfungen einordnen und die Arbeit bei einer geänderten Anfrage aktualisieren.
+
+Nenne Lucia Frage, verfügbare Fakten, Land oder Rechtsrahmen, Zielgruppe und gewünschtes Ergebnis. Prüfe Umfang, Quellen, Schlussfolgerungen und offene Punkte im erstellten Dokument.
+
+Das Material enthält fiktive Dateien und einen vorbereiteten Ablauf. Ergebnisse der Demonstration und Übung entstehen durch neue Ausführungen der aktuellen Funktion.
+
+Bibliothek, Profil und Lernfortschritt bleiben auf Ihrem Computer und werden nicht an Mparanza gesendet. Sprache und im Chat gelesene Inhalte verarbeitet Ihr OpenAI-Konto: Lokale Speicherung bedeutet keine Offline-Inferenz.

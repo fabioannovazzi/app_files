@@ -1,0 +1,398 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "sales-plan",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "review_sales_assumptions_then_run_plan"
+  },
+  "sources": [
+    {
+      "path": "modules/sales-plan/assets/icon.svg",
+      "sha256": "b9e7561917f8514332dd4fc0402d0da114b3498d69d9d422ac885b4a8d563146"
+    },
+    {
+      "path": "modules/sales-plan/requirements.txt",
+      "sha256": "9504911e33c896d67c78b10994b23916863f0ccb6496907c97521554bc8aba3c"
+    },
+    {
+      "path": "modules/sales-plan/scripts/check_dependencies.py",
+      "sha256": "8b08dcc85f7ff8e36e4496e9d4cedd64663540281839ffe3a6073b771e9fe138"
+    },
+    {
+      "path": "modules/sales-plan/scripts/model_use.py",
+      "sha256": "a0930f5a5321885eae9c4885eeb7e8e604194f4a928a58eaa9b80453bedb8408"
+    },
+    {
+      "path": "modules/sales-plan/scripts/plan_contract_kernel.py",
+      "sha256": "e3c8dc36fbf616b45ac6192de68ef93aadd9a0e56ed2fc93fceb3c05b0257661"
+    },
+    {
+      "path": "modules/sales-plan/scripts/prepare_sales_plan_case.py",
+      "sha256": "aa23f7f2d6fbbeb61ae2408bfa34cc01985051adadca6403f33bf4777f3f0433"
+    },
+    {
+      "path": "modules/sales-plan/scripts/run_plan.py",
+      "sha256": "ef97fda91c08cb9592c3fe7e492ddb0a6d1a83cf17a9066099c3233388a1d44d"
+    },
+    {
+      "path": "modules/sales-plan/skills/sales-plan/SKILL.md",
+      "sha256": "5b4706af345ac47647dae77b53221ef391b103367bf170139a18488d6b22ad4a"
+    },
+    {
+      "path": "modules/sales-plan/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/sales-plan/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/sales-plan/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/sales-plan/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/sales-plan/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/sales-plan/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/sales-plan/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/sales-plan/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/sales-plan/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/sales-plan/SKILL.md",
+      "sha256": "a7f8a4f0dcab70f2c4b661642e7cb2a94ff81f898ee8965a6397b0c5ff456bbf"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/actual-sales.csv",
+      "sha256": "9bece5429595ea5e805f47d6c19094401b6d0233863c97eb40ed424e62adef0b",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/actual-sales.csv",
+      "sha256": "9bece5429595ea5e805f47d6c19094401b6d0233863c97eb40ed424e62adef0b",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assumptions-it.md",
+      "sha256": "6339b7572e6f71c89cae2d8a855e6971551d3c51cc9365c7699170cfaa4882b2",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assumptions-it.md",
+      "sha256": "768e88d64ad5d00eb093e063284f674e770f1bd997e12e1a0c77d3b56b28f18d",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assumptions-en.md",
+      "sha256": "8cf5b47ad63938ce72544acb5264ceb0fb13f8d3d0e3af58aa1b62555a20f7ca",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assumptions-en.md",
+      "sha256": "45490f81c5e21f2ac26a54fdb0e23e4afd18bf7bb9cedb02f665a51a566675f9",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assumptions-fr.md",
+      "sha256": "1961b12826e08c49f24da8f91c7e26f880aad0a87b3b582ff8a964167cf91039",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assumptions-fr.md",
+      "sha256": "c87366b5654b4e7c3440d1683ebde122b0b2242e7d005c3f0b5600c461a65132",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assumptions-de.md",
+      "sha256": "98c74c3e62858b6540df441bb2f02c372e088296991d9ca91eafcfc61459dfc2",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assumptions-de.md",
+      "sha256": "e8d68b2a2ea96c7686a82b39953c3d4c9f48c1f91385d9eaf705ee33c86044c9",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/assumptions-es.md",
+      "sha256": "dbb78b42715d77f2d3ca94fbfaaba3c77cfc6c5fed3e967344b05863d17ddfa0",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/assumptions-es.md",
+      "sha256": "b3309bbb6d6c7f3b3335316ed0153e130e066afbe52e7c179483d2041833c59f",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Preparare un piano vendite con Vera",
+      "goal": "Imparare a trasformare vendite consuntive e ipotesi commerciali in uno scenario futuro, controllando cosa è cambiato e perché.",
+      "scenario": "Ciclo Arco vuole pianificare le vendite di gennaio e febbraio del prossimo anno. Abbiamo il consuntivo degli stessi mesi e un’ipotesi di maggiori unità.",
+      "scope": "Un piano vendite per due prodotti e due mesi. Il workflow applica ipotesi riviste; non dimostra che la domanda aumenterà e non completa un business plan.",
+      "inputs": "Apri actual-sales.csv e assumptions-it.md. Identifica mesi, prodotti, unità, vendite, sconti e costi. La nota indica gli stessi mesi dell’anno successivo e una crescita delle unità, non dei prezzi.",
+      "request": "Vera, prepara gennaio e febbraio 2027 di Ciclo Arco dai consuntivi forniti, con unità in aumento del 10%. Prima riepiloga le ipotesi da confermare, poi mostrami piano e confronto con la base.",
+      "steps": [
+        "In questa conversazione Vera ispeziona i dati e presenta una breve tabella delle ipotesi. L’assistente spiega per iscritto quali mesi e prodotti cambiano e ti fa confermare il significato della richiesta.",
+        "Con le ipotesi effettivamente confermate, Vera esegue il piano corrente e i controlli. L’assistente segue la creazione del risultato, senza confondere uno scenario con una previsione dimostrata.",
+        "Apri il riepilogo prodotto e il dettaglio dello scenario. Confronta base e piano, poi segui un prodotto attraverso unità, vendite, sconti e costi e trova l’ipotesi applicata."
+      ],
+      "deliverables": [
+        "Scenario vendite in CSV e riepilogo per esaminare gli importi pianificati.",
+        "Elenco delle ipotesi applicate e controlli per capire e ripetere il calcolo."
+      ],
+      "review": "Controlla il significato delle ipotesi, i mesi confrontati e cosa rimane invariato. Leggi variazioni in importo e percentuale nel contesto dei valori di base. Il piano e le ipotesi richiedono la normale revisione professionale.",
+      "checkpoints": [
+        "Prima del calcolo, spiega se il cambiamento riguarda unità o prezzi.",
+        "Nel risultato, trova una riga e l’ipotesi che ne determina il valore."
+      ],
+      "practice": "Usa gli input di pratica e chiedi un nuovo scenario con unità +5%, conservando quello al +10%. Conferma la nuova ipotesi e confronta i riepiloghi; spiega perché i risultati differiscono.",
+      "success": "Sai fornire il consuntivo, precisare e confermare ipotesi, leggere piano e controlli e confrontare un’alternativa.",
+      "repeat": "Indica a Vera dati consuntivi, mesi da pianificare, valuta e ipotesi commerciali. Rivedi la lettura prima del calcolo e utilizza i risultati come scenario condizionato alle ipotesi."
+    },
+    "en": {
+      "title": "Prepare a sales plan with Vera",
+      "goal": "Learn to turn actual sales and commercial assumptions into a future scenario, checking what changed and why.",
+      "scenario": "Ciclo Arco wants to plan January and February sales next year. We have actuals for the same months and an assumption of higher unit sales.",
+      "scope": "One sales plan for two products and two months. The workflow applies reviewed assumptions; it does not prove demand growth or complete a business plan.",
+      "inputs": "Open actual-sales.csv and assumptions-en.md. Identify months, products, units, sales, discounts and costs. The note specifies the same months next year and unit growth, not higher prices.",
+      "request": "Vera, plan January and February 2027 for Ciclo Arco from these actuals, with units up 10%. First summarize the assumptions for confirmation, then show the plan and comparison with the base.",
+      "steps": [
+        "In this conversation, Vera inspects data and presents a short assumption table. The assistant explains which months and products change and helps you confirm the request’s meaning.",
+        "With the assumptions actually confirmed, Vera runs the current plan and checks. The assistant follows result generation without confusing a scenario with evidenced future demand.",
+        "Open the generated summary and scenario detail. Compare base and plan, then trace a product through units, sales, discounts and costs and find its applied assumption."
+      ],
+      "deliverables": [
+        "Sales scenario CSV and summary for reviewing planned amounts.",
+        "Applied-assumption ledger and controls for understanding and repeating the calculation."
+      ],
+      "review": "Check assumption meaning, comparable months and unchanged factors. Read amount and percentage changes in the context of base values. The plan and assumptions need normal professional review.",
+      "checkpoints": [
+        "Before calculation, explain whether the change concerns units or prices.",
+        "In the result, find a row and the assumption determining its value."
+      ],
+      "practice": "Use the practice inputs to request a new scenario with units up 5%, preserving the 10% scenario. Confirm the new assumption and compare summaries; explain why results differ.",
+      "success": "You can supply actuals, specify and confirm assumptions, read the plan and checks and compare an alternative.",
+      "repeat": "Tell Vera the actuals, target months, currency and commercial assumptions. Review the interpretation before calculation and use the result as a scenario conditional on those assumptions."
+    },
+    "fr": {
+      "title": "Préparer un plan de ventes avec Vera",
+      "goal": "Apprendre à transformer réalisé et hypothèses commerciales en scénario futur, en vérifiant ce qui change et pourquoi.",
+      "scenario": "Ciclo Arco veut planifier janvier et février de l’an prochain. Le réalisé des mêmes mois et une hypothèse de hausse des unités sont disponibles.",
+      "scope": "Un plan pour deux produits et deux mois. La procédure applique des hypothèses revues ; elle ne prouve pas la demande future et ne constitue pas un business plan complet.",
+      "inputs": "Ouvrez actual-sales.csv et assumptions-fr.md. Repérez mois, produits, unités, ventes, remises et coûts. La note vise les mêmes mois de l’année suivante et une hausse des unités, pas des prix.",
+      "request": "Vera, planifie janvier et février 2027 pour Ciclo Arco avec ce réalisé et des unités en hausse de 10 %. Reformule d’abord les hypothèses à confirmer, puis montre le plan et sa comparaison à la base.",
+      "steps": [
+        "Dans cette conversation, Vera inspecte les données et présente une courte table d’hypothèses. L’assistant explique par écrit les mois et produits concernés et accompagne la confirmation du sens de la demande.",
+        "Après confirmation réelle, Vera exécute le plan courant et ses contrôles. L’assistant suit la production sans assimiler scénario et demande future établie.",
+        "Ouvrez synthèse et détail produits. Comparez base et plan puis suivez un produit : unités, ventes, remises, coûts et hypothèse appliquée."
+      ],
+      "deliverables": [
+        "Scénario des ventes en CSV et synthèse pour examiner les montants planifiés.",
+        "Journal des hypothèses appliquées et contrôles pour comprendre et répéter le calcul."
+      ],
+      "review": "Vérifiez sens des hypothèses, mois comparables et paramètres inchangés. Lisez écarts en montant et pourcentage avec leurs bases. Plan et hypothèses nécessitent la revue professionnelle habituelle.",
+      "checkpoints": [
+        "Avant le calcul, expliquez si le changement porte sur unités ou prix.",
+        "Dans le résultat, retrouvez une ligne et son hypothèse."
+      ],
+      "practice": "Avec les données de pratique, demandez un nouveau scénario à +5 % d’unités en conservant celui à +10 %. Confirmez l’hypothèse, comparez les synthèses et expliquez la différence.",
+      "success": "Vous savez fournir le réalisé, préciser et confirmer les hypothèses, lire résultats et contrôles et comparer une alternative.",
+      "repeat": "Indiquez à Vera réalisé, mois cibles, devise et hypothèses. Revoyez l’interprétation avant calcul et utilisez le résultat comme scénario conditionnel."
+    },
+    "de": {
+      "title": "Einen Absatzplan mit Vera erstellen",
+      "goal": "Lernen, Istverkäufe und kommerzielle Annahmen in ein Zukunftsszenario umzusetzen und Änderungen nachzuvollziehen.",
+      "scenario": "Ciclo Arco plant Januar und Februar des nächsten Jahres. Istwerte derselben Monate und eine Annahme höherer Stückzahlen liegen vor.",
+      "scope": "Ein Absatzplan für zwei Produkte und Monate. Der Ablauf wendet geprüfte Annahmen an; er belegt keine künftige Nachfrage und ersetzt keinen vollständigen Businessplan.",
+      "inputs": "Öffnen Sie actual-sales.csv und assumptions-de.md. Finden Sie Monate, Produkte, Mengen, Umsatz, Rabatte und Kosten. Die Notiz betrifft dieselben Monate im Folgejahr und Mengenwachstum, keine Preiserhöhung.",
+      "request": "Vera, plane Januar und Februar 2027 für Ciclo Arco aus diesen Istwerten mit 10 % mehr Menge. Fasse zuerst die Annahmen zur Bestätigung zusammen und zeige dann Plan und Basisvergleich.",
+      "steps": [
+        "In diesem Chat prüft Vera die Daten und zeigt eine kurze Annahmentabelle. Der Assistent erklärt schriftlich betroffene Monate und Produkte und hilft, die Bedeutung der Anfrage zu bestätigen.",
+        "Nach tatsächlicher Bestätigung führt Vera den aktuellen Plan und Kontrollen aus. Der Assistent folgt der Erstellung, ohne Szenario und belegte künftige Nachfrage gleichzusetzen.",
+        "Öffnen Sie erzeugte Übersicht und Szenariodetails. Vergleichen Sie Basis und Plan und verfolgen Sie bei einem Produkt Menge, Umsatz, Rabatte, Kosten und angewandte Annahme."
+      ],
+      "deliverables": [
+        "Absatzszenario als CSV und Übersicht zur Prüfung geplanter Beträge.",
+        "Angewandte Annahmen und Kontrollen zum Verstehen und Wiederholen der Rechnung."
+      ],
+      "review": "Prüfen Sie Annahmen, vergleichbare Monate und unveränderte Faktoren. Lesen Sie absolute und prozentuale Änderungen mit ihren Basiswerten. Plan und Annahmen benötigen die übliche fachliche Prüfung.",
+      "checkpoints": [
+        "Erklären Sie vor der Rechnung, ob sich Mengen oder Preise ändern.",
+        "Finden Sie im Ergebnis eine Zeile und ihre bestimmende Annahme."
+      ],
+      "practice": "Fordern Sie mit den Übungsdateien ein neues Szenario mit 5 % mehr Menge an und bewahren Sie das mit 10 %. Bestätigen Sie die Änderung und vergleichen Sie die Übersichten mit Begründung.",
+      "success": "Sie können Istwerte liefern, Annahmen präzisieren und bestätigen, Plan und Kontrollen lesen und eine Alternative vergleichen.",
+      "repeat": "Nennen Sie Vera Istwerte, Zielmonate, Währung und kommerzielle Annahmen. Prüfen Sie die Interpretation vor der Rechnung und nutzen Sie das Ergebnis als bedingtes Szenario."
+    },
+    "es": {
+      "title": "Preparar un plan de ventas con Vera",
+      "goal": "Aprender a convertir ventas realizadas e hipótesis comerciales en un escenario futuro y comprobar qué cambia y por qué.",
+      "scenario": "Ciclo Arco quiere planificar enero y febrero del próximo año. Hay datos de esos mismos meses y una hipótesis de más unidades vendidas.",
+      "scope": "Un plan de dos productos y dos meses. El flujo aplica hipótesis revisadas; no demuestra demanda futura ni completa un plan de negocio.",
+      "inputs": "Abre actual-sales.csv y assumptions-es.md. Identifica meses, productos, unidades, ventas, descuentos y costes. La nota pide los mismos meses del año siguiente y más unidades, no precios mayores.",
+      "request": "Vera, planifica enero y febrero de 2027 para Ciclo Arco con estos datos y unidades un 10 % mayores. Resume primero las hipótesis para confirmar y muestra después plan y comparación con la base.",
+      "steps": [
+        "En esta conversación, Vera inspecciona datos y presenta una tabla breve de hipótesis. El asistente explica por escrito meses y productos afectados y ayuda a confirmar el significado de la petición.",
+        "Con hipótesis realmente confirmadas, Vera ejecuta el plan actual y los controles. El asistente sigue la creación sin confundir escenario y demanda futura probada.",
+        "Abre el resumen y detalle generados. Compara base y plan y sigue un producto por unidades, ventas, descuentos, costes e hipótesis aplicada."
+      ],
+      "deliverables": [
+        "Escenario de ventas CSV y resumen para revisar importes planificados.",
+        "Registro de hipótesis aplicadas y controles para entender y repetir el cálculo."
+      ],
+      "review": "Comprueba significado de hipótesis, meses comparables y factores sin cambio. Lee variaciones absolutas y porcentuales con sus bases. Plan e hipótesis requieren la revisión profesional habitual.",
+      "checkpoints": [
+        "Antes del cálculo, explica si cambian unidades o precios.",
+        "En el resultado, encuentra una fila y la hipótesis que determina su valor."
+      ],
+      "practice": "Con los archivos de práctica pide otro escenario con unidades +5 %, conservando el de +10 %. Confirma la nueva hipótesis, compara resúmenes y explica la diferencia.",
+      "success": "Sabes aportar datos, precisar y confirmar hipótesis, leer plan y controles y comparar una alternativa.",
+      "repeat": "Indica a Vera datos de partida, meses objetivo, moneda e hipótesis. Revisa la interpretación antes del cálculo y usa el resultado como escenario condicionado."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "5cbd381ce6bc267141f187f4cab4e30be5fe758e4f74b8129010e1436370708c"
+}

@@ -1,15 +1,15 @@
 {
-  "schema": "mparanza.course.v1",
+  "schema": "mparanza.teaching_kit.v2",
   "product": "clara",
   "workflow": "reporting-engine",
-  "revision": "2026-09-14.1",
+  "revision": "2026-09-14.2",
   "seconds": [
     45,
     60,
+    105,
     75,
-    90,
-    75,
-    45
+    45,
+    60
   ],
   "supported_languages": [
     "it",
@@ -19,6 +19,12 @@
     "es"
   ],
   "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
   "sources": [
     {
       "path": "modules/reporting-engine/references/semantic_layer.md",
@@ -266,366 +272,237 @@
       "sha256": "9b967e0c028397d9645bf731024dfe07c990d3f377a6175a5486c0dc870e9ec1"
     }
   ],
-  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
   "files": [
     {
-      "path": "files/executed-starter/actual-budget.xlsx",
-      "sha256": "8d6512c94dc0157476844eed608082feac49d89156d832c127525f82b19a839a"
+      "path": "files/input/actual-budget.xlsx",
+      "sha256": "5540ffaa5d8dad4b30de5899f15ccef6c83100b2c673acfeaef6a209b7aba8f0",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
     },
     {
-      "path": "files/executed-starter/management_control_dashboard.html",
-      "sha256": "d2a4b71ba9a789eb70e250c8ff13608f01b16892a88330d81a3e73e2bd25cbb3"
+      "path": "files/input/facts-it.md",
+      "sha256": "e6d453933c55d15d78115894ed39bb9f742f0903fcdd78a37d37746f15eb29eb",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
     },
     {
-      "path": "files/executed-starter/management_control_pack.json",
-      "sha256": "c569d486044ab3697ddf90045ba55e57810b2f3a59348eeae143a334028d3c26"
+      "path": "files/input/facts-en.md",
+      "sha256": "86137c1a1ae2f0eac6736f1749f75d166d32b41aa2a412aa6e404cb0e9ded4cd",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
     },
     {
-      "path": "files/executed-starter/management_control_pack.xlsx",
-      "sha256": "e1fea33a4c014685350c7f200b31f51b38b1c73a8f410d4dcdd4200a64c37e71"
+      "path": "files/input/facts-fr.md",
+      "sha256": "5a7ca46664211fff5cc0cb2b3688b0c0a18d05bbd197dbd1df5b071d7b337783",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
     },
     {
-      "path": "files/executed-starter/provenance.json",
-      "sha256": "3601699418996c2b1cbdf2fa2afdf0e2fb6d9dee17d70f68d228666873df98b7"
+      "path": "files/input/facts-de.md",
+      "sha256": "709a7b6d3af2e093fc805cf5f1fe11143200cd199038f1fe7d20b84392b855a6",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/facts-es.md",
+      "sha256": "1f6654330b5ea977ec4e0ff68feedd3c3b48b57998e979a2d1d43417301ebde6",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/actual-budget-march.xlsx",
+      "sha256": "526cea3fe0d3befacee14153e4edf63c78cd7e2b9c13a2e2fcca791f64d7a675",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/facts-it.md",
+      "sha256": "e6d453933c55d15d78115894ed39bb9f742f0903fcdd78a37d37746f15eb29eb",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/facts-en.md",
+      "sha256": "86137c1a1ae2f0eac6736f1749f75d166d32b41aa2a412aa6e404cb0e9ded4cd",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/facts-fr.md",
+      "sha256": "5a7ca46664211fff5cc0cb2b3688b0c0a18d05bbd197dbd1df5b071d7b337783",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/facts-de.md",
+      "sha256": "709a7b6d3af2e093fc805cf5f1fe11143200cd199038f1fe7d20b84392b855a6",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/facts-es.md",
+      "sha256": "1f6654330b5ea977ec4e0ff68feedd3c3b48b57998e979a2d1d43417301ebde6",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
     }
   ],
   "locales": {
     "it": {
-      "title": "Prima del grafico, il significato dei dati",
-      "goal": "Passare da un dataset a un confronto leggibile usando ruoli e metriche riveduti.",
-      "scenario": "Il dataset fittizio riporta vendite nette: gennaio 40.000 EUR e febbraio 50.000 EUR. Un campo 'Discount' non è presente. Le note della fonte confermano che Sales è già al netto degli sconti, quindi sottrarli ancora sarebbe errato.",
-      "request": "Clara, mostrami l'andamento delle vendite e spiegami quali dati stai usando.",
-      "scope": "Intake, significato delle metriche e confronto temporale. La lezione non trasforma l'assenza di una misura in zero né attribuisce capacità di Clara a Vera.",
-      "input_columns": [
-        "Periodo fittizio",
-        "Sales",
-        "Nota della fonte"
+      "goal": "Impara a confrontare consuntivo e budget, seguire la preparazione del report e usare le differenze per la revisione mensile.",
+      "scenario": "Arco ha preparato i dati economici di gennaio e febbraio e il budget degli stessi mesi. Il responsabile vuole capire il risultato operativo e quali categorie spiegano la differenza dal piano, prima della riunione mensile.",
+      "scope": "Il caso comprende ricavi, costo del venduto e costi operativi in euro. Il report distingue i dati osservati dalle spiegazioni che richiedono informazioni dell’azienda. Clara sceglie l’analisi in base alla domanda e ai dati; questo primo utilizzo segue il confronto con il budget. Il report della lezione resta locale.",
+      "inputs": "Apri actual-budget.xlsx e facts-it.md. Il foglio GL contiene movimenti mensili per conto e categoria; Budget contiene il piano comparabile. I ricavi sono positivi e i costi negativi. Il caso indica periodo, significati e totali di controllo: consuntivo EUR 53.000 e budget EUR 47.000.",
+      "steps": [
+        "L’assistente esamina i fogli e propone quali colonne rappresentano date, categorie e importi. Conferma il periodo gennaio–febbraio e la convenzione dei segni prima del calcolo.",
+        "Il workflow applica la mappatura verificata, confronta consuntivo e budget e controlla i totali. La chat vocale spiega il passaggio effettivo e le eventuali informazioni richieste.",
+        "Apri il cruscotto e il workbook prodotti nella chat di lavoro. Parti dalla sintesi del periodo, passa al confronto mensile e poi al dettaglio delle categorie."
       ],
-      "input_rows": [
-        [
-          "2026-01",
-          "40.000 EUR",
-          "Vendite nette"
-        ],
-        [
-          "2026-02",
-          "50.000 EUR",
-          "Vendite nette"
-        ],
-        [
-          "Discount separato",
-          "Assente",
-          "Già incorporato in Sales"
-        ]
+      "deliverables": [
+        "Cruscotto: mostra risultato del periodo e scostamenti assoluti e percentuali dove significativi. Usalo per scegliere quali voci approfondire.",
+        "Workbook e report: conservano prospetti, controlli e collegamenti ai dati. La sintesi distingue la misura dello scostamento dalla sua causa da verificare."
       ],
-      "basis": "R1 contiene due mesi; R2 definisce Sales come vendite nette. Il ruolo Discount è assente come misura separata in questo dataset, non un importo pari a zero.",
-      "method": [
-        "Esegui l'intake e leggi dati, profilo e note. Rivedi significato, aggregazione e ruoli Sales, Discount e COGS; un'intestazione non basta.",
-        "Seleziona una capacità compatibile con le metriche rivedute e genera il grafico attraverso l'adapter di Clara. Conserva richiesta e prove dell'output.",
-        "Apri il risultato, verifica valori, unità, periodi e conclusione. Per upload successivi riusa il contratto semantico stabile quando compatibile, senza reinventarlo a ogni file."
+      "review": "Controlla che i due fogli coprano gli stessi mesi e che i costi abbiano il segno previsto. Collega una differenza alla categoria e al mese di origine. Chiedi spiegazioni all’azienda quando i numeri non documentano la causa.",
+      "checkpoints": [
+        "Prima del calcolo: trova i due fogli e conferma il periodo del report.",
+        "Sul risultato: indica il confronto complessivo e poi una categoria che approfondiresti."
       ],
-      "result_title": "Vendite nette: +10.000 EUR tra gennaio e febbraio",
-      "conclusion": "Le vendite nette passano da 40.000 a 50.000 EUR: +10.000 EUR, pari a +25%. Non disponiamo di una misura separata degli sconti o dei costi.",
-      "output_columns": [
-        "Indicatore",
-        "Valore",
-        "Base"
-      ],
-      "output_rows": [
-        [
-          "Gennaio",
-          "40.000 EUR",
-          "R1 · vendite nette"
-        ],
-        [
-          "Febbraio",
-          "50.000 EUR",
-          "R1 · vendite nette"
-        ],
-        [
-          "Variazione",
-          "+10.000 EUR · +25%",
-          "Base gennaio 40.000 EUR"
-        ]
-      ],
-      "check": "Compatibilità tecnica e corretto significato della metrica sono controlli diversi. Un dataset può avere colonne valide e una mappatura semanticamente sbagliata.",
-      "question": "Non c'è Discount: possiamo dire che non sono stati concessi sconti?",
-      "answer": "No. La fonte dice che Sales è netto; non fornisce una misura separata. L'assenza della colonna non dimostra assenza di sconti.",
-      "practice": "Aggiungi marzo con la stessa definizione di Sales e verifica il riuso del contratto e l'aggiornamento del grafico.",
-      "next": "Seleziona CSV, Excel o Parquet e le note che spiegano le metriche. Per Actual/Budget Clara usa la propria route di budget nello stesso workflow."
+      "practice": "Usa actual-budget-march.xlsx per chiedere un aggiornamento fino a marzo. Formula la richiesta, conferma il nuovo periodo e confronta il risultato con il report precedente.",
+      "success": "Il nuovo report deve includere marzo e conservare il precedente. Sai trovare il confronto con il budget e risalire ai dati di una categoria.",
+      "repeat": "Per rifarlo, fornisci consuntivo e piano con periodi comparabili, indica il periodo e lo scopo della riunione, rivedi la lettura dei dati e apri il report generato.",
+      "title": "Preparare un report dai dati con Clara",
+      "request": "Clara, prepara il report consuntivo–budget di Arco per gennaio e febbraio 2026 da questo workbook. Mostrami risultato operativo, scostamenti e dettaglio per categoria."
     },
     "en": {
-      "title": "Before the chart, establish what the data means",
-      "goal": "Move from a dataset to a readable comparison using reviewed roles and metrics.",
-      "scenario": "The fictional dataset reports net sales of EUR 40,000 in January and EUR 50,000 in February. There is no separate Discount field. Source notes confirm that Sales already includes discounts, so subtracting them again would be wrong.",
-      "request": "Clara, show the sales trend and explain which data you are using.",
-      "scope": "Intake, metric meaning and a time comparison. Missing measures are not zero, and Clara's capability is not presented as Vera's.",
-      "input_columns": [
-        "Fictional period",
-        "Sales",
-        "Source note"
+      "goal": "Learn to compare actual performance with budget, follow report preparation and use the differences in a monthly review.",
+      "scenario": "Arco has prepared January and February management accounts and a budget for the same months. The manager wants to understand operating performance and which categories explain the difference from plan before the monthly meeting.",
+      "scope": "The case includes revenue, cost of goods sold and operating expenses in EUR. The report separates observed figures from explanations requiring company evidence. Clara selects the analysis from the question and data; this first use follows a budget comparison. The teaching report stays local.",
+      "inputs": "Open actual-budget.xlsx and facts-en.md. GL contains monthly movements by account and category; Budget contains the comparable plan. Revenue is positive and costs are negative. The case declares periods, meanings and control totals: actual EUR 53,000 and budget EUR 47,000.",
+      "steps": [
+        "The assistant inspects the sheets and proposes which columns contain dates, categories and amounts. Confirm January–February and the sign convention before calculation.",
+        "The workflow applies the reviewed mapping, compares actual with budget and checks totals. The voice chat explains the actual step and any requested information.",
+        "Open the dashboard and workbook produced in the working chat. Start with the period summary, then the monthly comparison and category detail."
       ],
-      "input_rows": [
-        [
-          "2026-01",
-          "EUR 40,000",
-          "Net sales"
-        ],
-        [
-          "2026-02",
-          "EUR 50,000",
-          "Net sales"
-        ],
-        [
-          "Separate Discount",
-          "Absent",
-          "Already reflected in Sales"
-        ]
+      "deliverables": [
+        "Dashboard: shows period performance and absolute and percentage variances where meaningful. Use it to decide which categories to investigate.",
+        "Workbook and report: retain tables, controls and links to the data. The summary distinguishes the measured variance from its cause, which may need investigation."
       ],
-      "basis": "R1 has two months; R2 defines Sales as net. Discount is absent as a separate measure, not a recorded zero.",
-      "method": [
-        "Run dataset intake and inspect data, profile and notes. Review metric meaning, aggregation and Sales, Discount and COGS roles; headers alone are insufficient.",
-        "Select a compatible capability and render through Clara's adapter, preserving the effective request and output proof.",
-        "Open the result and verify values, units, periods and conclusion. Reuse a compatible stable semantic contract on subsequent uploads rather than recreating meaning every time."
+      "review": "Check that both sheets cover the same months and that costs use the expected sign. Trace one difference to its source category and month. Ask the company for explanations when the figures do not establish a cause.",
+      "checkpoints": [
+        "Before calculation: find the two sheets and confirm the reporting period.",
+        "At the result: locate the overall comparison and one category you would investigate."
       ],
-      "result_title": "Net sales rise by EUR 10,000",
-      "conclusion": "Net sales move from EUR 40,000 to EUR 50,000, a EUR 10,000 or 25% increase. Separate discounts and costs are unavailable.",
-      "output_columns": [
-        "Indicator",
-        "Value",
-        "Basis"
-      ],
-      "output_rows": [
-        [
-          "January",
-          "EUR 40,000",
-          "R1 · net sales"
-        ],
-        [
-          "February",
-          "EUR 50,000",
-          "R1 · net sales"
-        ],
-        [
-          "Change",
-          "+EUR 10,000 · +25%",
-          "January base EUR 40,000"
-        ]
-      ],
-      "check": "Technical compatibility and semantic correctness are different checks. Valid columns can still have a wrong business mapping.",
-      "question": "With no Discount column, can we state that no discounts were granted?",
-      "answer": "No. Sales is net and no separate discount measure is supplied. Column absence does not establish absence of discounts.",
-      "practice": "Add March under the same Sales definition, then verify contract reuse and the refreshed chart.",
-      "next": "Select CSV, Excel or Parquet with metric notes. Actual/Budget reports use Clara's own budget route within this workflow."
+      "practice": "Use actual-budget-march.xlsx to request an update through March. Formulate the request, confirm the new period and compare the result with the preceding report.",
+      "success": "The new report must include March and preserve the preceding version. You can find the budget comparison and trace one category to its data.",
+      "repeat": "To repeat at work, supply actuals and plan for comparable periods, specify the period and meeting purpose, review the interpretation of the inputs and open the generated report.",
+      "title": "Prepare a report from data with Clara",
+      "request": "Clara, prepare Arco’s actual-versus-budget report for January and February 2026 from this workbook. Show operating performance, variances and category detail."
     },
     "fr": {
-      "title": "Avant le graphique, le sens des données",
-      "goal": "Passer d'un dataset à un comparatif lisible avec des rôles et métriques revus.",
-      "scenario": "Le dataset fictif indique 40 000 EUR de ventes nettes en janvier et 50 000 en février. Il n'a pas de champ Discount séparé. Les notes confirment que Sales comprend déjà les remises : les retrancher encore serait erroné.",
-      "request": "Clara, montre l'évolution des ventes et explique les données utilisées.",
-      "scope": "Intake, sens des métriques et comparaison temporelle. Une mesure absente n'est pas zéro ; cette capacité de Clara n'est pas présentée comme celle de Vera.",
-      "input_columns": [
-        "Période fictive",
-        "Sales",
-        "Note source"
+      "title": "Préparer un rapport à partir des données avec Clara",
+      "goal": "Apprenez à comparer les résultats au budget, suivre la préparation du rapport et utiliser les écarts lors d’une revue mensuelle.",
+      "scenario": "Arco a préparé ses comptes de gestion de janvier et février et le budget des mêmes mois. Le responsable veut comprendre le résultat opérationnel et les catégories à approfondir avant la réunion mensuelle.",
+      "scope": "Le cas comprend chiffre d’affaires, coût des ventes et charges opérationnelles en EUR. Clara choisit l’analyse selon la question et les données ; ce premier parcours utilise une comparaison au budget et reste local.",
+      "inputs": "Ouvrez actual-budget.xlsx et facts-fr.md. GL contient les mouvements mensuels par compte et catégorie ; Budget contient le plan comparable. Les revenus sont positifs, les charges négatives. Les totaux de contrôle sont 53 000 EUR au réel et 47 000 EUR au budget.",
+      "request": "Clara, prépare le rapport réel–budget d’Arco pour janvier et février 2026 avec ce classeur. Montre le résultat opérationnel, les écarts et le détail par catégorie.",
+      "steps": [
+        "Clara examine les feuilles et propose les colonnes de dates, catégories et montants. Confirmez janvier–février et le sens des signes avant le calcul.",
+        "La procédure applique la correspondance vérifiée, compare réel et budget et contrôle les totaux. La conversation vocale explique l’étape réelle et les informations éventuellement demandées.",
+        "Ouvrez le tableau de bord et le classeur produits dans la conversation de travail. Commencez par la synthèse, puis passez au comparatif mensuel et aux catégories."
       ],
-      "input_rows": [
-        [
-          "2026-01",
-          "40 000 EUR",
-          "Ventes nettes"
-        ],
-        [
-          "2026-02",
-          "50 000 EUR",
-          "Ventes nettes"
-        ],
-        [
-          "Discount séparé",
-          "Absent",
-          "Déjà compris dans Sales"
-        ]
+      "deliverables": [
+        "Tableau de bord : résultat de la période, écarts en valeur et en pourcentage lorsque cela a un sens. Repérez les catégories à approfondir.",
+        "Classeur et rapport : tableaux, contrôles et liens vers les données. La synthèse distingue la mesure de l’écart de sa cause à vérifier."
       ],
-      "basis": "R1 contient deux mois et R2 définit les ventes nettes. Discount est absent comme mesure séparée, pas égal à zéro.",
-      "method": [
-        "Exécute l'intake et lis données, profil et notes. Revois sens, agrégation et rôles Sales, Discount et COGS ; les en-têtes ne suffisent pas.",
-        "Choisis une capacité compatible et produis le graphique via l'adapter Clara en conservant demande effective et preuve du résultat.",
-        "Ouvre et vérifie valeurs, unités, périodes et conclusion. Réutilise un contrat sémantique stable compatible lors des imports suivants."
+      "review": "Vérifiez que les feuilles couvrent les mêmes mois et que les charges ont le signe attendu. Reliez un écart à sa catégorie et à son mois d’origine. Demandez des explications à l’entreprise lorsque les chiffres ne prouvent pas la cause.",
+      "checkpoints": [
+        "Avant le calcul : repérez les deux feuilles et confirmez la période.",
+        "Sur le résultat : trouvez le comparatif global et une catégorie à approfondir."
       ],
-      "result_title": "Les ventes nettes progressent de 10 000 EUR",
-      "conclusion": "Les ventes nettes passent de 40 000 à 50 000 EUR : +10 000 EUR, soit +25 %. Remises séparées et coûts ne sont pas disponibles.",
-      "output_columns": [
-        "Indicateur",
-        "Valeur",
-        "Base"
-      ],
-      "output_rows": [
-        [
-          "Janvier",
-          "40 000 EUR",
-          "R1 · ventes nettes"
-        ],
-        [
-          "Février",
-          "50 000 EUR",
-          "R1 · ventes nettes"
-        ],
-        [
-          "Écart",
-          "+10 000 EUR · +25 %",
-          "Base janvier 40 000 EUR"
-        ]
-      ],
-      "check": "Compatibilité technique et exactitude du sens sont différentes. Des colonnes valides peuvent avoir un mauvais mapping métier.",
-      "question": "L'absence de Discount permet-elle d'affirmer qu'aucune remise n'a été accordée ?",
-      "answer": "Non. Sales est net et aucune mesure distincte n'est fournie. L'absence de colonne ne prouve pas l'absence de remises.",
-      "practice": "Ajoute mars avec la même définition et vérifie réutilisation du contrat et actualisation du graphique.",
-      "next": "Sélectionne CSV, Excel ou Parquet et les notes des métriques. Actual/Budget utilise la route budgétaire propre à Clara dans ce workflow."
+      "practice": "Utilisez actual-budget-march.xlsx pour demander une mise à jour jusqu’en mars. Formulez la demande, confirmez la nouvelle période et comparez avec le rapport précédent.",
+      "success": "Le nouveau rapport inclut mars et préserve le précédent. Vous savez trouver la comparaison au budget et remonter aux données d’une catégorie.",
+      "repeat": "Pour recommencer, fournissez réel et budget sur des périodes comparables, précisez la période et le but de la réunion, revoyez l’interprétation des données et ouvrez le rapport généré."
     },
     "de": {
-      "title": "Vor der Grafik klären, was die Daten bedeuten",
-      "goal": "Aus einem Datensatz einen lesbaren Vergleich mit geprüften Rollen und Kennzahlen erstellen.",
-      "scenario": "Der fiktive Datensatz zeigt Nettoumsatz von EUR 40.000 im Januar und EUR 50.000 im Februar. Ein separates Discount-Feld fehlt. Quellennotizen bestätigen, dass Sales Rabatte bereits berücksichtigt; ein erneuter Abzug wäre falsch.",
-      "request": "Clara, zeige den Umsatzverlauf und erkläre die verwendeten Daten.",
-      "scope": "Datenaufnahme, Kennzahlenbedeutung und Zeitvergleich. Fehlende Größen sind nicht null; Claras Fähigkeit wird nicht als Veras ausgegeben.",
-      "input_columns": [
-        "Fiktive Periode",
-        "Sales",
-        "Quellennotiz"
+      "title": "Einen Bericht aus Daten mit Clara erstellen",
+      "goal": "Lernen Sie, Ist und Budget zu vergleichen, die Berichtserstellung zu verfolgen und die Abweichungen bei der Monatsbesprechung zu nutzen.",
+      "scenario": "Arco hat die Managementzahlen für Januar und Februar und das Budget derselben Monate vorbereitet. Die Leitung möchte das operative Ergebnis und die zu untersuchenden Kategorien vor der Monatsbesprechung verstehen.",
+      "scope": "Der Fall umfasst Umsatz, Wareneinsatz und Betriebsaufwand in EUR. Clara wählt die Analyse anhand von Frage und Daten; diese erste Anwendung zeigt einen Budgetvergleich und bleibt lokal.",
+      "inputs": "Öffnen Sie actual-budget.xlsx und facts-de.md. GL enthält monatliche Bewegungen nach Konto und Kategorie, Budget den vergleichbaren Plan. Umsätze sind positiv, Kosten negativ. Die Kontrollsummen betragen 53.000 EUR im Ist und 47.000 EUR im Budget.",
+      "request": "Clara, erstelle aus dieser Arbeitsmappe Arcos Ist-Budget-Bericht für Januar und Februar 2026. Zeige operatives Ergebnis, Abweichungen und Kategorien.",
+      "steps": [
+        "Clara untersucht die Tabellen und schlägt die Spalten für Datum, Kategorie und Betrag vor. Bestätigen Sie Januar–Februar und die Vorzeichen vor der Berechnung.",
+        "Der Workflow verwendet die geprüfte Zuordnung, vergleicht Ist und Budget und kontrolliert die Summen. Der Sprachchat erklärt den tatsächlichen Schritt und etwaige Rückfragen.",
+        "Öffnen Sie Dashboard und Arbeitsmappe aus dem Arbeitschat. Beginnen Sie bei der Zusammenfassung, danach Monatsvergleich und Kategorien."
       ],
-      "input_rows": [
-        [
-          "2026-01",
-          "EUR 40.000",
-          "Nettoumsatz"
-        ],
-        [
-          "2026-02",
-          "EUR 50.000",
-          "Nettoumsatz"
-        ],
-        [
-          "Separates Discount",
-          "Fehlt",
-          "Bereits in Sales berücksichtigt"
-        ]
+      "deliverables": [
+        "Dashboard: Ergebnis des Zeitraums sowie absolute und sinnvolle prozentuale Abweichungen. Wählen Sie daraus Kategorien zur weiteren Untersuchung.",
+        "Arbeitsmappe und Bericht: Tabellen, Kontrollen und Datenbezüge. Die Zusammenfassung unterscheidet die gemessene Abweichung von ihrer noch zu prüfenden Ursache."
       ],
-      "basis": "R1 enthält zwei Monate; R2 definiert Sales als netto. Discount fehlt als eigene Kennzahl und ist kein erfasster Nullwert.",
-      "method": [
-        "Führe die Datenaufnahme aus und prüfe Daten, Profil und Notizen. Prüfe Bedeutung, Aggregation sowie Sales-, Discount- und COGS-Rollen; Spaltennamen allein reichen nicht.",
-        "Wähle eine kompatible Fähigkeit und rendere über Claras Adapter unter Erhalt des tatsächlichen Auftrags und Ausgabenachweises.",
-        "Öffne das Ergebnis und prüfe Werte, Einheiten, Perioden und Schlussfolgerung. Verwende bei späteren Uploads einen passenden stabilen Bedeutungsvertrag erneut."
+      "review": "Prüfen Sie gleiche Monate in beiden Tabellen und die erwarteten Vorzeichen der Kosten. Verfolgen Sie eine Differenz zu Kategorie und Ursprungsmonat. Fragen Sie das Unternehmen nach Erklärungen, wenn die Zahlen keine Ursache belegen.",
+      "checkpoints": [
+        "Vor der Berechnung: Finden Sie beide Tabellen und bestätigen Sie den Zeitraum.",
+        "Beim Ergebnis: Zeigen Sie Gesamtvergleich und eine näher zu untersuchende Kategorie."
       ],
-      "result_title": "Nettoumsatz steigt um EUR 10.000",
-      "conclusion": "Nettoumsatz steigt von EUR 40.000 auf EUR 50.000: EUR 10.000 oder 25 % mehr. Separate Rabatte und Kosten sind nicht verfügbar.",
-      "output_columns": [
-        "Kennzahl",
-        "Wert",
-        "Grundlage"
-      ],
-      "output_rows": [
-        [
-          "Januar",
-          "EUR 40.000",
-          "R1 · Nettoumsatz"
-        ],
-        [
-          "Februar",
-          "EUR 50.000",
-          "R1 · Nettoumsatz"
-        ],
-        [
-          "Veränderung",
-          "+EUR 10.000 · +25 %",
-          "Januarbasis EUR 40.000"
-        ]
-      ],
-      "check": "Technische Kompatibilität und inhaltliche Richtigkeit sind verschiedene Prüfungen. Gültige Spalten können geschäftlich falsch zugeordnet sein.",
-      "question": "Dürfen wir ohne Discount-Spalte sagen, es seien keine Rabatte gewährt worden?",
-      "answer": "Nein. Sales ist netto, ein eigener Rabattwert fehlt. Eine fehlende Spalte beweist nicht das Fehlen von Rabatten.",
-      "practice": "Ergänze März mit derselben Sales-Definition und prüfe Wiederverwendung des Vertrags und aktualisierte Grafik.",
-      "next": "Wähle CSV, Excel oder Parquet mit Kennzahlennotizen. Ist-/Budget-Berichte nutzen Claras eigenen Budgetweg innerhalb dieses Workflows."
+      "practice": "Fordern Sie mit actual-budget-march.xlsx eine Aktualisierung bis März an. Formulieren Sie die Anfrage, bestätigen Sie den Zeitraum und vergleichen Sie mit dem vorherigen Bericht.",
+      "success": "Der neue Bericht enthält März und bewahrt die vorherige Version. Sie finden den Budgetvergleich und die Ursprungsdaten einer Kategorie.",
+      "repeat": "Für die Wiederholung stellen Sie Ist und Plan für vergleichbare Zeiträume bereit, nennen Zeitraum und Besprechungsziel, prüfen die Interpretation der Daten und öffnen den erstellten Bericht."
     },
     "es": {
-      "title": "Antes del gráfico, establecer qué significan los datos",
-      "goal": "Pasar de un conjunto de datos a una comparación legible con funciones y métricas revisadas.",
-      "scenario": "El conjunto ficticio informa ventas netas de EUR 40.000 en enero y EUR 50.000 en febrero. Falta Discount separado. Las notas confirman que Sales ya incluye descuentos; restarlos otra vez sería incorrecto.",
-      "request": "Clara, muestra la evolución de ventas y explica qué datos utilizas.",
-      "scope": "Recepción, significado de métricas y comparación temporal. Las medidas ausentes no son cero y la capacidad de Clara no se presenta como de Vera.",
-      "input_columns": [
-        "Periodo ficticio",
-        "Sales",
-        "Nota de fuente"
+      "title": "Preparar un informe a partir de datos con Clara",
+      "goal": "Aprende a comparar resultados y presupuesto, seguir la preparación del informe y utilizar las diferencias en la revisión mensual.",
+      "scenario": "Arco ha preparado sus datos de gestión de enero y febrero y el presupuesto de esos meses. El responsable quiere entender el resultado operativo y las categorías que debe investigar antes de la reunión mensual.",
+      "scope": "El caso incluye ingresos, coste de ventas y gastos operativos en EUR. Clara elige el análisis según la pregunta y los datos; este primer uso sigue una comparación presupuestaria y permanece local.",
+      "inputs": "Abre actual-budget.xlsx y facts-es.md. GL contiene movimientos mensuales por cuenta y categoría; Budget contiene el plan comparable. Los ingresos son positivos y los costes negativos. Los totales de control son 53.000 EUR reales y 47.000 EUR presupuestados.",
+      "request": "Clara, prepara el informe real–presupuesto de Arco para enero y febrero de 2026 con este libro. Muestra resultado operativo, desviaciones y detalle por categoría.",
+      "steps": [
+        "Clara examina las hojas y propone las columnas de fechas, categorías e importes. Confirma enero–febrero y el criterio de signos antes de calcular.",
+        "El workflow aplica la correspondencia revisada, compara resultados y presupuesto y comprueba los totales. La conversación de voz explica el paso real y cualquier información solicitada.",
+        "Abre el panel y el libro producidos en la conversación de trabajo. Empieza por el resumen, sigue con la comparación mensual y después con las categorías."
       ],
-      "input_rows": [
-        [
-          "2026-01",
-          "EUR 40.000",
-          "Ventas netas"
-        ],
-        [
-          "2026-02",
-          "EUR 50.000",
-          "Ventas netas"
-        ],
-        [
-          "Discount separado",
-          "Ausente",
-          "Ya reflejado en Sales"
-        ]
+      "deliverables": [
+        "Panel: resultado del período y desviaciones absolutas y porcentuales cuando sean significativas. Elige las categorías que requieren investigación.",
+        "Libro e informe: tablas, controles y vínculos con los datos. El resumen distingue la desviación medida de su causa pendiente de comprobar."
       ],
-      "basis": "R1 contiene dos meses; R2 define Sales como neto. Discount falta como medida separada, no consta como cero.",
-      "method": [
-        "Ejecuta la recepción del conjunto e inspecciona datos, perfil y notas. Revisa significado, agregación y funciones Sales, Discount y COGS; las cabeceras solas no bastan.",
-        "Selecciona una capacidad compatible y renderiza mediante el adaptador de Clara conservando petición efectiva y prueba de salida.",
-        "Abre el resultado y verifica valores, unidades, periodos y conclusión. Reutiliza un contrato semántico estable compatible en futuras cargas en vez de reconstruir significados cada vez."
+      "review": "Comprueba que ambas hojas cubran los mismos meses y que los costes tengan el signo esperado. Vincula una diferencia con su categoría y mes de origen. Pide explicaciones a la empresa cuando las cifras no demuestren una causa.",
+      "checkpoints": [
+        "Antes de calcular: localiza ambas hojas y confirma el período.",
+        "En el resultado: encuentra la comparación global y una categoría que investigarías."
       ],
-      "result_title": "Las ventas netas suben EUR 10.000",
-      "conclusion": "Pasan de EUR 40.000 a EUR 50.000: EUR 10.000 o 25 % más. No están disponibles descuentos separados ni costes.",
-      "output_columns": [
-        "Indicador",
-        "Valor",
-        "Base"
-      ],
-      "output_rows": [
-        [
-          "Enero",
-          "EUR 40.000",
-          "R1 · ventas netas"
-        ],
-        [
-          "Febrero",
-          "EUR 50.000",
-          "R1 · ventas netas"
-        ],
-        [
-          "Variación",
-          "+EUR 10.000 · +25 %",
-          "Base enero EUR 40.000"
-        ]
-      ],
-      "check": "Compatibilidad técnica y corrección semántica son controles distintos. Columnas válidas pueden tener una correspondencia comercial equivocada.",
-      "question": "Sin columna Discount, ¿podemos afirmar que no se concedieron descuentos?",
-      "answer": "No. Sales es neto y no se aporta la medida separada. La ausencia de columna no demuestra ausencia de descuentos.",
-      "practice": "Añade marzo con la misma definición de Sales y verifica reutilización del contrato y gráfico actualizado.",
-      "next": "Selecciona CSV, Excel o Parquet con notas de métricas. Los informes Real/Presupuesto usan la vía presupuestaria propia de Clara dentro de este workflow."
+      "practice": "Usa actual-budget-march.xlsx para pedir una actualización hasta marzo. Formula la petición, confirma el nuevo período y compara el resultado con el informe anterior.",
+      "success": "El nuevo informe incluye marzo y conserva el anterior. Sabes localizar la comparación con el presupuesto y los datos de una categoría.",
+      "repeat": "Para repetirlo, aporta datos reales y plan para períodos comparables, indica período y objetivo de la reunión, revisa la interpretación de los datos y abre el informe generado."
     }
-  },
-  "visual": {
-    "column": 1,
-    "bars": [
-      [
-        0,
-        40000
-      ],
-      [
-        1,
-        50000
-      ]
-    ]
-  },
-  "retained_from": {
-    "course_sha256": "e2232b30ed48dd9b0f8ed7dca1c3b48ddae3434deeff61b88754c658193aa922",
-    "published_version": "0.1.207"
   }
 }

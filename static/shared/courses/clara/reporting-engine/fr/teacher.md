@@ -1,61 +1,71 @@
-# Avant le graphique, le sens des données
+# Préparer un rapport à partir des données avec Clara
 
-Un parcours guidé d'environ 6 minutes et demie. L'activation de la voix, les traitements externes et l'exercice facultatif ne sont pas compris.
+L’explication et un court exercice prennent environ 5–8 minutes. Le traitement et vos questions peuvent prolonger la séance.
 
-Parle avec l'enseignant en utilisant la voix standard de Codex. Dans la seconde conversation, ouverte à côté, examine les fichiers et le résultat. Les conversations restent associées ; tu peux interrompre, demander pourquoi ou ralentir à tout moment.
+Parlez avec l’enseignant en utilisant la voix standard de Codex. Dans la conversation de travail, ouverte dans la fenêtre voisine, la fonction traite le cas avec les fichiers préparés et affiche ses résultats réels. L’enseignant suit ces résultats : vous pouvez interrompre, poser des questions et changer de rythme.
 
-Utilise ces contenus préparés. Ne réécris pas la leçon et n'invente pas de résultats. Parle brièvement, laisse observer et écoute les réponses réelles. Ne dévoile pas la solution avant l'essai. Les durées comprennent observation et dialogue. Montrer ces fichiers ne valide ni démonstration, ni pratique, ni compréhension dans le suivi local. L'enseignant choisit le workflow pertinent uniquement dans le catalogue de son produit.
+Utilisez le matériel préparé pour enseigner une première utilisation complète. Choisissez 3–4 fonctions pertinentes lors de l’intégration ; ensuite, partez de ce que l’utilisateur souhaite faire aujourd’hui. Adaptez le rythme et les explications. Créez des exemples personnalisés si cela aide, avec le même workflow et des données vérifiées. Lisez execution-request.json, utilisez le véritable cas local associé et reliez les explications aux résultats vérifiés de la conversation de travail. N’inventez ni résultats, ni réponses de l’utilisateur, ni confirmation de compréhension. Ouvrir le kit ne termine pas la leçon.
 
-## 1. Ton objectif · 45 s
+## 1. Quand l’utiliser · 45 s
 
-Écoute la demande. Rapproche ce cas d'un travail que tu fais déjà.
+Reliez la fonction à une tâche professionnelle concrète.
 
-Le dataset fictif indique 40 000 EUR de ventes nettes en janvier et 50 000 en février. Il n'a pas de champ Discount séparé. Les notes confirment que Sales comprend déjà les remises : les retrancher encore serait erroné.
+Apprenez à comparer les résultats au budget, suivre la préparation du rapport et utiliser les écarts lors d’une revue mensuelle.
 
-Clara, montre l'évolution des ventes et explique les données utilisées.
+Arco a préparé ses comptes de gestion de janvier et février et le budget des mêmes mois. Le responsable veut comprendre le résultat opérationnel et les catégories à approfondir avant la réunion mensuelle.
 
-## 2. Les données de départ · 60 s
+Le cas comprend chiffre d’affaires, coût des ventes et charges opérationnelles en EUR. Clara choisit l’analyse selon la question et les données ; ce premier parcours utilise une comparaison au budget et reste local.
 
-Regarde les documents dans l'autre conversation. Repère une donnée utile et une information manquante.
+## 2. Les fichiers et la demande · 60 s
 
-R1 contient deux mois et R2 définit les ventes nettes. Discount est absent comme mesure séparée, pas égal à zéro.
+Ouvrez les fichiers dans la fenêtre de travail et montrez comment demander le résultat.
 
-[["2026-01", "40 000 EUR", "Ventes nettes"], ["2026-02", "50 000 EUR", "Ventes nettes"], ["Discount séparé", "Absent", "Déjà compris dans Sales"]]
+Ouvrez actual-budget.xlsx et facts-fr.md. GL contient les mouvements mensuels par compte et catégorie ; Budget contient le plan comparable. Les revenus sont positifs, les charges négatives. Les totaux de contrôle sont 53 000 EUR au réel et 47 000 EUR au budget.
 
-## 3. La méthode du workflow · 75 s
+Clara, prépare le rapport réel–budget d’Arco pour janvier et février 2026 avec ce classeur. Montre le résultat opérationnel, les écarts et le détail par catégorie.
 
-Suis les trois étapes. Arrête-toi sur la décision qui change le résultat.
+## 3. Exécuter le travail · 105 s
 
-Exécute l'intake et lis données, profil et notes. Revois sens, agrégation et rôles Sales, Discount et COGS ; les en-têtes ne suffisent pas.
-Choisis une capacité compatible et produis le graphique via l'adapter Clara en conservant demande effective et preuve du résultat.
-Ouvre et vérifie valeurs, unités, périodes et conclusion. Réutilise un contrat sémantique stable compatible lors des imports suivants.
+Expliquez l’étape en cours et attendez son résultat réel.
 
-## 4. Lire le résultat · 90 s
+Clara examine les feuilles et propose les colonnes de dates, catégories et montants. Confirmez janvier–février et le sens des signes avant le calcul.
 
-Ouvre l'exemple dans la seconde conversation. Relie chaque conclusion à sa source.
+La procédure applique la correspondance vérifiée, compare réel et budget et contrôle les totaux. La conversation vocale explique l’étape réelle et les informations éventuellement demandées.
 
-Les ventes nettes passent de 40 000 à 50 000 EUR : +10 000 EUR, soit +25 %. Remises séparées et coûts ne sont pas disponibles.
+Ouvrez le tableau de bord et le classeur produits dans la conversation de travail. Commencez par la synthèse, puis passez au comparatif mensuel et aux catégories.
 
-[["Janvier", "40 000 EUR", "R1 · ventes nettes"], ["Février", "50 000 EUR", "R1 · ventes nettes"], ["Écart", "+10 000 EUR · +25 %", "Base janvier 40 000 EUR"]]
+Pendant la leçon, la conversation de travail exécute la fonction et produit le résultat. Si une étape est indisponible, expliquez ce qui manque et laissez la leçon inachevée.
 
-## 5. Le contrôle essentiel · 75 s
+## 4. Utiliser le résultat · 75 s
 
-Avant d'afficher la réponse, explique ce que tu vérifierais.
+Ouvrez le document qui vient d’être produit et montrez par où commencer.
 
-Compatibilité technique et exactitude du sens sont différentes. Des colonnes valides peuvent avoir un mauvais mapping métier.
+Tableau de bord : résultat de la période, écarts en valeur et en pourcentage lorsque cela a un sens. Repérez les catégories à approfondir.
 
-L'absence de Discount permet-elle d'affirmer qu'aucune remise n'a été accordée ?
+Classeur et rapport : tableaux, contrôles et liens vers les données. La synthèse distingue la mesure de l’écart de sa cause à vérifier.
 
-Comparer le raisonnement: Non. Sales est net et aucune mesure distincte n'est fournie. L'absence de colonne ne prouve pas l'absence de remises.
+Vérifiez que les feuilles couvrent les mêmes mois et que les charges ont le signe attendu. Reliez un écart à sa catégorie et à son mois d’origine. Demandez des explications à l’entreprise lorsque les chiffres ne prouvent pas la cause.
 
-## 6. Essayer ensemble · 45 s
+## 5. Faire le point · 45 s
 
-Choisis de faire l'exercice maintenant ou de garder l'exemple pour une prochaine mission.
+Faites ces vérifications aux moments indiqués pendant le travail.
 
-Ajoute mars avec la même définition et vérifie réutilisation du contrat et actualisation du graphique.
+Avant le calcul : repérez les deux feuilles et confirmez la période.
 
-Sélectionne CSV, Excel ou Parquet et les notes des métriques. Actual/Budget utilise la route budgétaire propre à Clara dans ce workflow.
+Sur le résultat : trouvez le comparatif global et une catégorie à approfondir.
 
-Cet exemple pédagogique a été préparé à l'avance. Il ne prouve pas une nouvelle exécution. Les sources et décisions sont fictives ; aucune validation professionnelle n'est implicite. Sur tes propres fichiers, le workflow actuel effectue ses contrôles et conserve les résultats réels.
+Ces pauses aident à apprendre à utiliser la fonction. Ce ne sont pas des questions sur des détails techniques.
 
-La bibliothèque, le profil et la progression restent sur ton ordinateur et ne sont pas envoyés à Mparanza. La voix et les contenus lus dans la conversation sont traités par ton compte OpenAI : stockage local ne signifie pas traitement hors ligne.
+## 6. À vous d’essayer · 60 s
+
+Laissez l’utilisateur formuler la demande et accompagnez son essai.
+
+Utilisez actual-budget-march.xlsx pour demander une mise à jour jusqu’en mars. Formulez la demande, confirmez la nouvelle période et comparez avec le rapport précédent.
+
+Le nouveau rapport inclut mars et préserve le précédent. Vous savez trouver la comparaison au budget et remonter aux données d’une catégorie.
+
+Pour recommencer, fournissez réel et budget sur des périodes comparables, précisez la période et le but de la réunion, revoyez l’interprétation des données et ouvrez le rapport généré.
+
+Le kit contient des fichiers fictifs et un plan préparé. Les résultats de la démonstration et de l’exercice proviennent de nouvelles exécutions de la fonction actuelle.
+
+La bibliothèque, le profil et la progression restent sur votre ordinateur et ne sont pas envoyés à Mparanza. La voix et les contenus lus dans la conversation sont traités par votre compte OpenAI : stockage local ne signifie pas traitement hors ligne.

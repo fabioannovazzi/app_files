@@ -506,7 +506,7 @@ def test_cli_unicode_separate_process_and_invalid_input(teaching, tmp_path, caps
     assert json.loads(capsys.readouterr().out)["session"]["phase"] == "paused"
 
 
-def test_openai_packages_include_teaching_and_cowork_omits_it():
+def test_openai_packages_keep_paired_teaching_and_cowork_uses_written_lessons():
     source = (SCRIPTS / "local_teaching.py").read_bytes()
     for name, prefix in [
         ("vera-plugin.zip", "vera-codex-plugin/plugins/vera/"),
@@ -516,18 +516,19 @@ def test_openai_packages_include_teaching_and_cowork_omits_it():
             assert archive.read(prefix + "scripts/local_teaching.py") == source
             assert prefix + "skills/learn-with-vera/SKILL.md" in archive.namelist()
     with ZipFile(ROOT / "plugin_packages/vera/vera-claude-plugin.zip") as archive:
-        assert not any(
-            "learn-with-vera" in name or "local_teaching" in name
-            for name in archive.namelist()
-        )
+        assert not any("local_teaching" in name for name in archive.namelist())
+        assert "scripts/local_courses.py" in archive.namelist()
+        lesson = archive.read("skills/learn-with-vera/SKILL.md").decode("utf-8")
+        assert "Teach in writing in this conversation" in lesson
+        assert "Do not request voice, create a second" in lesson
         router = archive.read("skills/vera/SKILL.md").decode()
-        assert "learn-with-vera" not in router
+        assert "learn-with-vera" in router
         catalog = archive.read("skills/vera/references/workflow-catalog.md").decode()
         registry = archive.read(
             "skills/vera/references/workflow-registry.json"
         ).decode()
-        assert "learn-with-vera" not in catalog
-        assert "learn-with-vera" not in registry
+        assert "learn-with-vera" in catalog
+        assert "learn-with-vera" in registry
 
 
 def test_first_onboarding_pause_retains_progress_and_revokes_worker(teaching, tmp_path):

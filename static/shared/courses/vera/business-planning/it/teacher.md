@@ -1,61 +1,71 @@
-# Un investimento, due ipotesi da verificare
+# Preparare un business plan con Vera
 
-Percorso guidato di circa 6 minuti e mezzo. Avvio della voce, elaborazioni esterne ed esercizio facoltativo sono separati dal tempo della lezione.
+La spiegazione e una breve prova richiedono circa 5–8 minuti. I tempi di elaborazione e le tue domande possono allungare la sessione.
 
-Nella chat insegnante parli con la voce standard di Codex. Nella seconda chat, aperta accanto, guardi i file e il risultato. Le due chat restano abbinate; puoi interrompere, chiedere perché o rallentare in qualsiasi momento.
+Nella chat insegnante parli con la voce standard di Codex. Nella chat di lavoro, aperta nella finestra accanto, la funzione esegue il caso con i file preparati e mostra i risultati effettivi. L’insegnante segue quei risultati: puoi interrompere, fare domande e cambiare ritmo.
 
-Usa questi contenuti già pronti. Non riscrivere la lezione né inventare risultati. Parla in brevi turni, lascia il tempo di guardare e ascolta le risposte reali. Non leggere la soluzione prima del tentativo. I tempi includono osservazione e dialogo, non solo il testo parlato. Mostrare questi file non completa demo, pratica o comprensione nel registro locale. Il docente sceglie semanticamente il workflow adatto dal solo catalogo del proprio prodotto.
+Parti dal materiale preparato e insegna l’intero primo utilizzo. Scegli 3–4 funzioni pertinenti durante l’onboarding; nelle visite successive parti da ciò che l’utente vuole fare oggi. Adatta il ritmo e le spiegazioni. Crea esempi personalizzati quando aiutano, mantenendo lo stesso workflow e verificando i nuovi input. Leggi execution-request.json, usa il vero caso locale abbinato e collega ogni spiegazione ai risultati verificati della chat di lavoro. Non inventare risultati, risposte dell’utente o conferme di comprensione. Mostrare il kit non completa la lezione.
 
-## 1. Il tuo obiettivo · 45 s
+## 1. A cosa serve · 45 s
 
-Ascolta la richiesta. Collega il caso a un lavoro che fai già.
+Collega la funzione a un lavoro concreto del professionista.
 
-Arco valuta un nuovo servizio in abbonamento. Il caso assume 100 clienti medi a 50 EUR al mese e 42.000 EUR di costi annui. Il prezzo è proposto dal team; la domanda è sostenuta soltanto da cinque colloqui esplorativi.
+Imparare a partire da una proposta, fornire i dati disponibili e ottenere un report che aiuti a decidere cosa provare, cambiare o approfondire.
 
-Vera, aiutami a capire quali ipotesi rendono sostenibile questo nuovo servizio.
+Ciclo Arco valuta il ritiro e la riconsegna delle biciclette. Sono disponibili una proposta, ipotesi economiche e informazioni operative ancora da verificare.
 
-## 2. Da quali dati partiamo · 60 s
+Un primo business plan per decidere un pilota. Il report affronta offerta, clienti, operatività, economia, cassa, alternative e prossime azioni; dati mancanti restano espliciti.
 
-Guarda i documenti nella chat accanto. Individua un dato utile e un'informazione mancante.
+## 2. I file e la richiesta · 60 s
 
-P1 e P2 sono assunzioni esplicite del caso; P3 esplora bisogni, ma non dimostra 100 clienti acquisiti.
+Apri i file nella finestra di lavoro e mostra come chiedere il risultato.
 
-[["Clienti medi paganti", "100", "P1 · ipotesi del team"], ["Prezzo mensile", "50 EUR", "P1 · proposta commerciale"], ["Costi annui", "42.000 EUR", "P2 · stima operativa"], ["Interviste esplorative", "5", "P3 · note; nessun ordine"]]
+Apri proposal-it.md, economics-it.md, operations-it.md e pilot-economics.csv. Spiega l’idea e la decisione, allegando ciò che hai. Non occorre preparare un modello completo o scrivere file tecnici.
 
-## 3. Come lavora il workflow · 75 s
+Vera, prepara un business plan per valutare questo servizio di ritiro biciclette. Usa proposta e ipotesi fornite, distinguile dalle evidenze e mostrami cosa conviene verificare prima di avviare il pilota.
 
-Segui i tre passaggi. Fermati sulla scelta che cambia il risultato.
+## 3. Eseguiamo il lavoro · 105 s
 
-Definisci la decisione e separa evidenze, assunzioni accettate e informazioni ancora da raccogliere.
-Costruisci il piano corrente con clienti, prezzi, costi e tempi coerenti. Collega ogni ipotesi alla fonte e mantieni separate le dimensioni economiche e finanziarie.
-Confronta scenari utili e presenta la decisione, le sensibilità e le azioni per ridurre l'incertezza. Il professionista rivede il piano e le ipotesi.
+Spiega il passaggio che sta avvenendo e attendi il suo risultato effettivo.
 
-## 4. Leggiamo il risultato · 90 s
+Nel thread di lavoro Vera legge la proposta e chiarisce cliente, bisogno e decisione. La voce spiega il percorso del business plan e le informazioni che aiutano a rispondere.
 
-Apri l'esempio nella seconda chat. Collega ogni conclusione alla sua fonte.
+Vera valuta domanda, operatività, costi e alternative, calcola le economie supportate e prepara il report con il workflow corrente. La voce distingue dati, ipotesi e lacune; non inventa costi mancanti per completare la cassa.
 
-Nello scenario base i ricavi annui sono 60.000 EUR e il margine sui costi indicati è 18.000 EUR. Con 70 clienti quel margine si azzera.
+Apri il report HTML generato. Parti dalla raccomandazione, passa a economia e operatività e segui una cifra alla sua fonte. Leggi cosa manca sulla cassa e quale prova è proposta prima di impegnarsi.
 
-[["100 clienti medi", "60.000 EUR", "18.000 EUR"], ["70 clienti medi", "42.000 EUR", "0 EUR"]]
+Durante la lezione, la chat di lavoro esegue la funzione e produce il risultato. Se un passaggio non è disponibile, spieghiamo cosa manca e manteniamo la lezione incompleta.
 
-## 5. Il controllo che conta · 75 s
+## 4. Usiamo il risultato · 75 s
 
-Prima di aprire la risposta, spiega a voce cosa controlleresti.
+Apri il documento appena prodotto e mostra dove iniziare a leggerlo.
 
-Il risultato è condizionato alle ipotesi. Il margine mostrato non è utile netto né cassa; i colloqui non equivalgono a ordini.
+Un report HTML leggibile con raccomandazione, ragionamento, dati calcolati disponibili e prossime azioni.
 
-Il calcolo è esatto: possiamo confermare la sostenibilità del progetto?
+Fonti e ipotesi accessibili nel report, con stato provvisorio e questioni da rivedere.
 
-Confronta il ragionamento: Possiamo confermare l'aritmetica del caso. Servono evidenze sulla domanda e il piano completo di costi, investimenti e tempi di incasso prima della decisione.
+Controlla che la raccomandazione discenda dalle evidenze, che l’interesse informale non diventi domanda dimostrata e che l’economia parziale non venga presentata come fabbisogno finanziario completo. Le ipotesi e le conclusioni restano da rivedere.
 
-## 6. Proviamo insieme · 45 s
+## 5. Fermiamoci a verificare · 45 s
 
-Scegli se provare ora o conservare l'esempio per il prossimo incarico.
+Fai queste verifiche nel momento indicato, durante il lavoro.
 
-Portiamo il prezzo a 45 EUR: confrontiamo gli scenari senza nascondere quali ipotesi sono cambiate.
+Prima del lavoro, indica quale decisione vuoi prendere con il business plan.
 
-Seleziona un investimento o un'iniziativa concreta e raccogli preventivi, evidenze commerciali e assunzioni che sei pronto a discutere.
+Nel report, trova la raccomandazione, una sua dipendenza e la prossima prova utile.
 
-Questo è un esempio didattico preparato, non la ricevuta di una nuova esecuzione. Le fonti e le decisioni sono fittizie; nessuna approvazione del professionista è implicita. Per lavorare sui tuoi file, il workflow corrente esegue i propri controlli e conserva i risultati effettivi.
+Queste pause servono a capire come usare la funzione. Le risposte non sono un esame di dettaglio tecnico.
+
+## 6. Ora prova tu · 60 s
+
+Lascia formulare la richiesta all’utente e accompagna la sua prova.
+
+Aggiungi update-it.md allo stesso caso e chiedi come cambia il piano con la diversa disponibilità del mezzo. Vera rivede raccomandazione, ipotesi e prove necessarie in un nuovo report collegato al precedente. Individua cosa cambia anche senza nuovi numeri.
+
+Sai avviare un business plan da ciò che hai, leggere la raccomandazione e rivedere il piano quando emerge nuova evidenza.
+
+Descrivi a Vera attività, clienti, decisione e vincoli; allega documenti e ipotesi. Usa il report per discutere il prossimo passo e torna nello stesso caso quando prezzi, domanda, operatività o finanziamento cambiano.
+
+Il kit contiene file fittizi e una traccia preparata. I risultati della dimostrazione e della prova provengono da nuove esecuzioni della funzione corrente.
 
 La biblioteca, il profilo e i progressi della lezione restano sul computer. Non vengono inviati a Mparanza. La voce e i contenuti letti in chat sono elaborati dall'account OpenAI: salvare in locale non significa inferenza offline.

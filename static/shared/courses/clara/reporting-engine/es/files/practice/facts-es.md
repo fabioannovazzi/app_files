@@ -1,0 +1,7 @@
+# Arco — cuentas de gestión mensuales ficticias
+
+Moneda EUR. La hoja GL contiene movimientos mensuales de resultados, no saldos de cierre acumulados. Revenue es positivo; COGS y Operating expenses son negativos. La cuenta 4000 representa ingresos, 5000 coste de ventas y 6000 gastos operativos. Budget usa las mismas categorías y signos. Las fechas son cierres mensuales de 2026; el ejercicio empieza en enero. El caso no incluye otras partidas operativas, amortizaciones, intereses ni impuestos: el resultado aquí es EBITDA, no beneficio neto. Los datos son ficticios y no son cuentas estatutarias.
+
+El primer informe cubre enero–febrero con fecha de corte 28 de febrero de 2026. El total de control de GL es EUR 53.000 y el de presupuesto EUR 47.000. La práctica de marzo añade un mes sin sustituir las filas anteriores: los totales acumulados pasan a EUR 85.000 para GL y EUR 77.000 para Budget. Ambas hojas contienen los mismos periodos y categorías. El ejercicio trata de preparar y leer un informe; las cifras no establecen las causas de las desviaciones.
+
+Para el Management Control Pack y el presupuesto de Clara, tras revisar las hojas, asignar Revenue a revenue, COGS a cogs y Operating expenses a operating_expense. Las demás funciones deben seguir sus propios requisitos de preparación y entrada. Esta nota explica el significado de los datos del caso; no es una receta técnica ya revisada ni una aprobación profesional.

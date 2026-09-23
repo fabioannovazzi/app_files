@@ -101,7 +101,8 @@ jobs:
 
   teaching-kits:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Native course executions and the full report regressions exceed 30 minutes.
+    timeout-minutes: 60
     env:
       PYTHONDONTWRITEBYTECODE: "1"
     steps:
@@ -150,6 +151,8 @@ jobs:
           -r plugins/studio-archive/requirements.txt
           -r plugins/treasury-forecast/requirements.txt
           -r plugins/variance-analysis/requirements.txt
+      - name: Install Chromium for the local browser teaching regression
+        run: python -m playwright install --with-deps chromium
       - name: Build the checksum-verified official taxonomy for local OIC execution
         shell: bash
         run: |
@@ -182,6 +185,8 @@ jobs:
           tests/plugins/test_teaching_communication_execution.py
           tests/plugins/test_teaching_management_execution.py
           tests/plugins/test_teaching_clara_budget_execution.py
+          tests/plugins/test_cowork_teaching.py
+          tests/plugins/test_teaching_browser_execution.py
           tests/plugins/test_matter_review_presentation.py
           tests/plugins/test_vera_local_onboarding.py
           --cov=plugins/_shared/vendor/modules/courseware --cov-fail-under=80

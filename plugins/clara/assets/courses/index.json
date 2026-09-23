@@ -88,7 +88,7 @@
     },
     "attribute-reporting": {
       "path": "attribute-reporting/course.json",
-      "sha256": "00de26ddbc812b1641c430620cedc352f6d02165eb57a58803e16e7ed6b64c15",
+      "sha256": "b13bd3711afa16fdff0aa0653c8f99d683b1b4fd74487e17927f575d622d652c",
       "languages": [
         "it",
         "en",
@@ -100,24 +100,23 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Un segnale di assortimento non è una quota di mercato",
-        "en": "An assortment signal is not market share",
-        "fr": "Un signal d'assortiment n'est pas une part de marché",
-        "de": "Ein Sortimentssignal ist kein Marktanteil",
-        "es": "Una señal de surtido no es cuota de mercado"
+        "it": "Creare un rapporto sull’assortimento con Clara",
+        "en": "Create an assortment report with Clara",
+        "fr": "Créer un rapport sur l’assortiment avec Clara",
+        "de": "Mit Clara einen Sortimentsbericht erstellen",
+        "es": "Crear un informe del surtido con Clara"
       },
       "goals": {
-        "it": "Leggere un confronto Retailer Signals mantenendo coorti, denominatori e limiti del campione.",
-        "en": "Read Retailer Signals while preserving cohorts, denominators and snapshot limitations.",
-        "fr": "Lire Retailer Signals en conservant cohortes, dénominateurs et limites du relevé.",
-        "de": "Retailer Signals mit klaren Gruppen, Bezugsgrößen und Grenzen der Momentaufnahme lesen.",
-        "es": "Leer Retailer Signals conservando grupos, denominadores y límites de la instantánea."
-      },
-      "material": "retained"
+        "it": "Imparare a fornire un pacchetto di dati commerciali già disponibile, chiedere un’analisi e usare il rapporto HTML verificato.",
+        "en": "Learn to supply an existing retail evidence package, request an analysis and use the checked HTML report.",
+        "fr": "Apprendre à fournir un dossier de données commerciales existant, demander une analyse et utiliser le rapport HTML vérifié.",
+        "de": "Lernen, ein vorhandenes Handelsdatenpaket bereitzustellen, eine Analyse anzufordern und den geprüften HTML-Bericht zu verwenden.",
+        "es": "Aprender a aportar un paquete de datos comerciales existente, solicitar un análisis y utilizar el informe HTML verificado."
+      }
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "cc629bd771c0aa7f1f0559362545694fe934a08a9b4d1b1f8d82da14dd5532d9",
+      "sha256": "7d2673f495a14c968f41eeeca03b64ddc40deab7d21e32a315f1551486a56fbb",
       "languages": [
         "it",
         "en"
@@ -126,14 +125,13 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Un investimento, due ipotesi da verificare",
-        "en": "One investment, two assumptions to test"
+        "it": "Preparare un business plan con Clara",
+        "en": "Prepare a business plan with Clara"
       },
       "goals": {
-        "it": "Collegare una decisione d'investimento a evidenze commerciali, ipotesi esplicite e risultati di piano.",
-        "en": "Connect an investment decision to commercial evidence, explicit assumptions and plan outcomes."
-      },
-      "material": "retained"
+        "it": "Imparare a partire da una proposta, fornire i dati disponibili e ottenere un report che aiuti a decidere cosa provare, cambiare o approfondire.",
+        "en": "Learn to start from a proposal, supply available information and obtain a report that helps decide what to test, change or investigate."
+      }
     },
     "deck-correction": {
       "path": "deck-correction/course.json",
@@ -193,7 +191,7 @@
     },
     "reporting-engine": {
       "path": "reporting-engine/course.json",
-      "sha256": "23f48977a05023b4f9d8fa1a45b59b598108f25c098cf1ab0baade41eb8b0045",
+      "sha256": "6f792148421640a7761b325031d14abed77952092b99898ebf132cca2df6de1e",
       "languages": [
         "it",
         "en",
@@ -205,20 +203,19 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Prima del grafico, il significato dei dati",
-        "en": "Before the chart, establish what the data means",
-        "fr": "Avant le graphique, le sens des données",
-        "de": "Vor der Grafik klären, was die Daten bedeuten",
-        "es": "Antes del gráfico, establecer qué significan los datos"
+        "it": "Preparare un report dai dati con Clara",
+        "en": "Prepare a report from data with Clara",
+        "fr": "Préparer un rapport à partir des données avec Clara",
+        "de": "Einen Bericht aus Daten mit Clara erstellen",
+        "es": "Preparar un informe a partir de datos con Clara"
       },
       "goals": {
-        "it": "Passare da un dataset a un confronto leggibile usando ruoli e metriche riveduti.",
-        "en": "Move from a dataset to a readable comparison using reviewed roles and metrics.",
-        "fr": "Passer d'un dataset à un comparatif lisible avec des rôles et métriques revus.",
-        "de": "Aus einem Datensatz einen lesbaren Vergleich mit geprüften Rollen und Kennzahlen erstellen.",
-        "es": "Pasar de un conjunto de datos a una comparación legible con funciones y métricas revisadas."
-      },
-      "material": "retained"
+        "it": "Impara a confrontare consuntivo e budget, seguire la preparazione del report e usare le differenze per la revisione mensile.",
+        "en": "Learn to compare actual performance with budget, follow report preparation and use the differences in a monthly review.",
+        "fr": "Apprenez à comparer les résultats au budget, suivre la préparation du rapport et utiliser les écarts lors d’une revue mensuelle.",
+        "de": "Lernen Sie, Ist und Budget zu vergleichen, die Berichtserstellung zu verfolgen und die Abweichungen bei der Monatsbesprechung zu nutzen.",
+        "es": "Aprende a comparar resultados y presupuesto, seguir la preparación del informe y utilizar las diferencias en la revisión mensual."
+      }
     },
     "transcribe": {
       "path": "transcribe/course.json",

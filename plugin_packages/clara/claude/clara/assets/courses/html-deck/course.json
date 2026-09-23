@@ -1,0 +1,394 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "clara",
+  "workflow": "html-deck",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "author_standalone_talk_then_build_and_review"
+  },
+  "sources": [
+    {
+      "path": "scripts/advisory_delivery.py",
+      "sha256": "877d87df4bc1d5b2322e3b96bfc86fd86d6fdb1a7a288ca84f439e104d2c71e8"
+    },
+    {
+      "path": "scripts/advisory_evidence_lineage.py",
+      "sha256": "958a516f4341bafecd8fabafa4e848fed2e7b52d3bbf8f3f07292048261e3009"
+    },
+    {
+      "path": "scripts/advisory_lineage_labels.py",
+      "sha256": "2ad7c96dee1bd61d76f578bfef1dac2f90d3b7ab8d72e0a355dce4ebed44d934"
+    },
+    {
+      "path": "scripts/case_store.py",
+      "sha256": "46f7c0295caadc811e36a341404ff6f1d7bee5b803dc0c18281a9be24bb64dc1"
+    },
+    {
+      "path": "scripts/check_dependencies.py",
+      "sha256": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+    },
+    {
+      "path": "scripts/managed_ocr_runtime.py",
+      "sha256": "664987b3e53f0b66bd1907493215f352c8487c75c7ec76347f8a41ba3336b222"
+    },
+    {
+      "path": "scripts/managed_python_runtime.py",
+      "sha256": "6f1e29d38fa4ff7919a507ddcb95df81d4bdf600b2ab6fc392956772d846d76d"
+    },
+    {
+      "path": "scripts/verify_advisory_html_delivery.py",
+      "sha256": "771dec6416bb5bd0eb2453caed09fbd9644c1386dab1c187c1d2b859e377d8ef"
+    },
+    {
+      "path": "skills/html-deck/SKILL.md",
+      "sha256": "9b6fef76a9214845af17d8981ba93a04ab6dbf3ed8695ccbd4753ecb6295206d"
+    },
+    {
+      "path": "skills/html-deck/references/evidence-bindings.md",
+      "sha256": "d8f83b25430898ff126ee98d67fff63c49b19b965d775e8d8e86d09345c86827"
+    },
+    {
+      "path": "skills/html-deck/references/quality-bar.md",
+      "sha256": "77424a8af1eb619d3b50f2ee31673c340822dc57b0bccfdcf68abc5f5b281604"
+    },
+    {
+      "path": "skills/html-deck/references/revision-workflow.md",
+      "sha256": "f7bef902a6d909b4991f4c536e5a740d08770a9bdd9f16d0aa6c32b3cc2ee6e3"
+    },
+    {
+      "path": "skills/html-deck/references/static-compatibility.md",
+      "sha256": "678e5e7ba40b572c72b80c1a37cea8b0e3ef9d9c9f231e01372c39fdf1ecb3c2"
+    },
+    {
+      "path": "skills/html-deck/references/structured-authoring.md",
+      "sha256": "536273cfba96d4b11639208eec5843eb61ee5673d10beb2b354c27b873b570a7"
+    },
+    {
+      "path": "skills/html-deck/scripts/browser_qa_html_deck.py",
+      "sha256": "91be95f050c8b245c4dedc4c045cee5a69d706808cb31a377acc540f0cf1d5ce"
+    },
+    {
+      "path": "skills/html-deck/scripts/build_html_deck.py",
+      "sha256": "b797e5a2487d9c43a3a5a595be791d1c4d9ed76b3f04a14f49265c2519fff2d1"
+    },
+    {
+      "path": "skills/html-deck/scripts/build_layout_gallery.py",
+      "sha256": "30f99ae7546d5d5ffbdadbd31094210224d4f032b9c0ff03d569eb9594aa79e5"
+    },
+    {
+      "path": "skills/html-deck/scripts/compare_html_deck_revision.py",
+      "sha256": "190549f12c819fc860b0e96eb5408ec59855e15a80c57d714054670ca109db9c"
+    },
+    {
+      "path": "skills/html-deck/scripts/compose_html_deck.py",
+      "sha256": "7d2d6ea4926e8ec6532236bc35c757936cf11b983332e0488839b911daff28fe"
+    },
+    {
+      "path": "skills/html-deck/scripts/content_ledger.py",
+      "sha256": "b5037e72556596b3a201cc310fa724aa80552d663ade1da258d7415c9d8a3b38"
+    },
+    {
+      "path": "skills/html-deck/scripts/data_visuals.py",
+      "sha256": "68a195e3ea68be169994b16a79ee5dcf76573e2def869071884176394b62c9b5"
+    },
+    {
+      "path": "skills/html-deck/scripts/evidence_bindings.py",
+      "sha256": "c4c08750d2dd79cbf6b4961a8647664491299f336e91480fb8fbba15685d7266"
+    },
+    {
+      "path": "skills/html-deck/scripts/html_deck_revision.py",
+      "sha256": "ace7f2144b416258d4ca00d14ebb333133674529ca7f0e1f0305595435f9e7bf"
+    },
+    {
+      "path": "skills/html-deck/scripts/init_html_deck.py",
+      "sha256": "5c47bd53b7aac2f64844f377aac475179109392b672a4c934707c7a74865e94c"
+    },
+    {
+      "path": "skills/html-deck/scripts/inspect_html_deck.py",
+      "sha256": "52759a5789f5b063620610970461992521353c2fda61de53908b31c3d5a732cd"
+    },
+    {
+      "path": "skills/html-deck/scripts/validate_html_deck.py",
+      "sha256": "225c3bb0f0f1ba5a4c59ecf73222f9a78c9bc5cac371e633f655c0c9bdced335"
+    },
+    {
+      "path": "skills/html-deck/scripts/validate_revision_map.py",
+      "sha256": "321e8228f54bb51902d6f20c3cfc085c2974bc38e0abddb99d9b84dcb4ec097c"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/brief-it.md",
+      "sha256": "3ad43754e87524cfd4499d41bca74f57dead5a1de8565739630cea00b401dd3d",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/brief-it.md",
+      "sha256": "3ad43754e87524cfd4499d41bca74f57dead5a1de8565739630cea00b401dd3d",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/new-audience-it.md",
+      "sha256": "dfe476a603d7763de8993eb3c492df8c2f4e5d3936a9bb1e59900ef923bcdb5b",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/brief-en.md",
+      "sha256": "9aa41c3024759e369dcaf2cb6a39df7df42a76193c47600ce7f62aeeaa2bed03",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/brief-en.md",
+      "sha256": "9aa41c3024759e369dcaf2cb6a39df7df42a76193c47600ce7f62aeeaa2bed03",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/new-audience-en.md",
+      "sha256": "c6d3c87b44f519d71be124031a9fbc916f730efc34e58909ae7edc96300f4e47",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/brief-fr.md",
+      "sha256": "a74522e513cd23a5a7b8cd881654989eefde8ccdd4cac5b5f4eb4d41722c7ad0",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/brief-fr.md",
+      "sha256": "a74522e513cd23a5a7b8cd881654989eefde8ccdd4cac5b5f4eb4d41722c7ad0",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/new-audience-fr.md",
+      "sha256": "12b92fdf7d3fa4b7813240c265b5177bd519929e4e96a8622b57dcee3b9ecf00",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/brief-de.md",
+      "sha256": "b47d06b9b6d40ea5d5f6d79dcfad8bc46a9b331691146353b4dd43cb5c96a196",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/brief-de.md",
+      "sha256": "b47d06b9b6d40ea5d5f6d79dcfad8bc46a9b331691146353b4dd43cb5c96a196",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/new-audience-de.md",
+      "sha256": "fd3b207376188d826a3379b9f9b8988a05d9b1bd506f6ff9a27efcd70286236d",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/brief-es.md",
+      "sha256": "b1b8205441cc395b4e6c401f31a54d712e4922292254d1356d37b5a54d2f5514",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/brief-es.md",
+      "sha256": "b1b8205441cc395b4e6c401f31a54d712e4922292254d1356d37b5a54d2f5514",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/new-audience-es.md",
+      "sha256": "eda87d791933f9365d474773884682c1e73473881cbe5a81812460dee1ea4b88",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Creare una presentazione HTML con Clara",
+      "goal": "Imparare a trasformare documenti e una richiesta in slide utilizzabili, controllare ciò che viene detto e presentarle dal browser.",
+      "scenario": "Officina Arco deve spiegare al personale una proposta di accoglienza delle richieste. Partiamo dalle note della riunione.",
+      "scope": "Una presentazione interna basata sulle note, con slide e note del relatore. La procedura resta una proposta; non aggiungiamo risultati o grafici non documentati.",
+      "inputs": "Apri brief-it.md. Indica pubblico, scopo e messaggio della riunione: discutere la proposta, non annunciare una procedura già adottata.",
+      "request": "Clara, prepara una breve presentazione HTML da queste note per la riunione del personale. Spiega problema, proposta, ruoli e decisione da prendere. Tieni visibile che è una proposta e aggiungi note per chi presenta.",
+      "steps": [
+        "In questa conversazione Clara legge le note e propone il filo della presentazione. L’assistente spiega per iscritto come chiarire pubblico e obiettivo e ti fa controllare l’ordine dei messaggi.",
+        "Clara compone le slide con il workflow corrente e verifica leggibilità, contenuto e navigazione. L’assistente segue i risultati effettivi e risponde mentre la presentazione viene preparata.",
+        "Apri la presentazione generata. Scorri con le frecce, apri le note del relatore e confronta una slide con il documento iniziale. Individua la proposta e la decisione richiesta."
+      ],
+      "deliverables": [
+        "Presentazione HTML autonoma da aprire nel browser, con note e navigazione.",
+        "Pacchetto della presentazione, materiali modificabili e verifiche della versione prodotta."
+      ],
+      "review": "Controlla che le slide rappresentino le note, distinguano proposta e realtà e siano leggibili. Una buona impaginazione non autorizza a inventare risultati. Verifica anche la slide finale e le note.",
+      "checkpoints": [
+        "Prima di creare le slide, indica a chi parli e cosa deve decidere.",
+        "Nella presentazione, trova un messaggio e la nota da cui proviene."
+      ],
+      "practice": "Aggiungi new-audience-it.md e chiedi una nuova versione per i nuovi colleghi con l’esempio di richiesta incompleta. Conserva la prima e spiega come pubblico e scopo hanno cambiato la presentazione.",
+      "success": "Sai fornire fonti e obiettivo, leggere e presentare il risultato e chiedere una versione adatta a un altro pubblico.",
+      "repeat": "Chiedi a Clara una presentazione HTML, allega i materiali e indica pubblico, obiettivo, lingua e messaggi da conservare. Per cambiare una presentazione esistente puoi invocare anche la correzione delle slide."
+    },
+    "en": {
+      "title": "Create an HTML presentation with Clara",
+      "goal": "Learn to turn documents and a clear request into usable slides, check their message and present them in a browser.",
+      "scenario": "Officina Arco needs to explain a proposed intake process to staff. Start with the meeting notes.",
+      "scope": "An internal presentation based on the notes, with slides and speaker notes. The procedure remains a proposal; no undocumented results or charts are added.",
+      "inputs": "Open brief-en.md. State audience, purpose and meeting message: discuss the proposal, rather than announce an adopted procedure.",
+      "request": "Clara, make a short HTML presentation from these notes for the staff meeting. Explain the problem, proposal, roles and decision. Keep its proposed status visible and add speaker notes.",
+      "steps": [
+        "In this conversation Clara reads the notes and proposes the presentation sequence. The assistant explains how to specify audience and purpose and helps you check the order of the messages.",
+        "Clara composes slides through the current workflow and checks readability, content and navigation. The assistant follows actual results and answers questions while the presentation is prepared.",
+        "Open the generated presentation. Use the arrow keys, open speaker notes and compare a slide with the original document. Identify the proposal and requested decision."
+      ],
+      "deliverables": [
+        "A standalone HTML presentation with notes and navigation, ready to open in a browser.",
+        "The presentation package, editable materials and checks for the version produced."
+      ],
+      "review": "Check that slides reflect the notes, distinguish proposal from current practice and remain readable. Attractive layout does not justify invented results. Check the final slide and speaker notes too.",
+      "checkpoints": [
+        "Before creating slides, identify your audience and the decision they should make.",
+        "In the presentation, find a message and the note that supports it."
+      ],
+      "practice": "Add new-audience-en.md and request a new version for new colleagues with the incomplete-request example. Preserve the first and explain how audience and purpose changed the presentation.",
+      "success": "You can supply sources and an objective, read and present the result and request a version for another audience.",
+      "repeat": "Ask Clara for an HTML presentation, attach your materials and state audience, purpose, language and messages to preserve. You can also invoke deck correction for an existing presentation."
+    },
+    "fr": {
+      "title": "Créer une présentation HTML avec Clara",
+      "goal": "Apprendre à transformer des documents et une demande en diapositives utilisables, vérifier leur message et les présenter dans le navigateur.",
+      "scenario": "Officina Arco doit expliquer une proposition d’accueil au personnel. Le point de départ est la note de réunion.",
+      "scope": "Une présentation interne fondée sur les notes, avec diapositives et notes du présentateur. La procédure reste proposée ; aucun résultat ni graphique non documenté n’est ajouté.",
+      "inputs": "Ouvrez brief-fr.md. Précisez public, objectif et message : discuter la proposition, sans annoncer une procédure déjà adoptée.",
+      "request": "Clara, prépare une courte présentation HTML à partir de ces notes pour la réunion du personnel. Explique le problème, la proposition, les rôles et la décision attendue. Garde le statut de proposition visible et ajoute des notes de présentation.",
+      "steps": [
+        "Dans cette conversation, Clara lit les notes et propose le déroulé. L’assistant explique par écrit comment préciser public et objectif et vous aide à vérifier l’ordre des messages.",
+        "Clara compose les diapositives avec le workflow courant et vérifie lisibilité, contenu et navigation. L’assistant suit les résultats réels et répond pendant la préparation.",
+        "Ouvrez la présentation produite. Utilisez les flèches, ouvrez les notes et comparez une diapositive au document initial. Repérez la proposition et la décision attendue."
+      ],
+      "deliverables": [
+        "Une présentation HTML autonome avec notes et navigation, à ouvrir dans le navigateur.",
+        "Le paquet de présentation, les matériaux modifiables et les vérifications de la version produite."
+      ],
+      "review": "Vérifiez fidélité aux notes, distinction entre proposition et pratique actuelle et lisibilité. Une belle mise en page ne justifie pas des résultats inventés. Examinez aussi la conclusion et les notes.",
+      "checkpoints": [
+        "Avant la création, indiquez le public et la décision qu’il doit prendre.",
+        "Dans la présentation, retrouvez un message et sa note source."
+      ],
+      "practice": "Ajoutez new-audience-fr.md et demandez une nouvelle version pour les nouveaux collègues, avec l’exemple de demande incomplète. Gardez la première et expliquez comment public et objectif ont modifié la présentation.",
+      "success": "Vous savez fournir sources et objectif, lire et présenter le résultat et demander une version pour un autre public.",
+      "repeat": "Demandez à Clara une présentation HTML, joignez les documents et précisez public, objectif, langue et messages à conserver. Pour modifier une présentation existante, vous pouvez invoquer la correction de diapositives."
+    },
+    "de": {
+      "title": "Eine HTML-Präsentation mit Clara erstellen",
+      "goal": "Lernen Sie, aus Dokumenten und einer klaren Anfrage brauchbare Folien zu erstellen, Aussagen zu prüfen und im Browser zu präsentieren.",
+      "scenario": "Officina Arco möchte dem Team einen Vorschlag zur Auftragsannahme erklären. Ausgangspunkt sind die Besprechungsnotizen.",
+      "scope": "Eine interne Präsentation auf Grundlage der Notizen mit Folien und Sprechernotizen. Das Verfahren bleibt ein Vorschlag; unbelegte Ergebnisse oder Diagramme werden nicht ergänzt.",
+      "inputs": "Öffnen Sie brief-de.md. Nennen Sie Publikum, Zweck und Botschaft: den Vorschlag besprechen, kein bereits eingeführtes Verfahren ankündigen.",
+      "request": "Clara, erstelle aus diesen Notizen eine kurze HTML-Präsentation für das Team. Erkläre Problem, Vorschlag, Rollen und anstehende Entscheidung. Kennzeichne den Vorschlag und ergänze Sprechernotizen.",
+      "steps": [
+        "In diesem Chat liest Clara die Notizen und schlägt den Ablauf vor. Der Assistent erklärt schriftlich, wie Sie Publikum und Zweck angeben, und hilft bei der Reihenfolge der Aussagen.",
+        "Clara erstellt die Folien mit dem aktuellen Workflow und prüft Lesbarkeit, Inhalt und Navigation. Der Assistent folgt den tatsächlichen Ergebnissen und beantwortet Fragen während der Erstellung.",
+        "Öffnen Sie die erzeugte Präsentation. Nutzen Sie Pfeiltasten und Sprechernotizen und vergleichen Sie eine Folie mit der Quelle. Finden Sie Vorschlag und gewünschte Entscheidung."
+      ],
+      "deliverables": [
+        "Eine eigenständige HTML-Präsentation mit Notizen und Navigation für den Browser.",
+        "Präsentationspaket, bearbeitbare Materialien und Prüfungen der erstellten Fassung."
+      ],
+      "review": "Prüfen Sie Quellentreue, Lesbarkeit und die Unterscheidung zwischen Vorschlag und heutiger Praxis. Gute Gestaltung rechtfertigt keine erfundenen Ergebnisse. Prüfen Sie auch Schlussfolie und Notizen.",
+      "checkpoints": [
+        "Benennen Sie vor der Erstellung Publikum und anstehende Entscheidung.",
+        "Finden Sie in der Präsentation eine Aussage und die zugehörige Quellennotiz."
+      ],
+      "practice": "Ergänzen Sie new-audience-de.md und bitten Sie um eine neue Fassung für neue Teammitglieder mit dem Beispiel der unvollständigen Anfrage. Behalten Sie die erste und erklären Sie den Einfluss von Publikum und Zweck.",
+      "success": "Sie können Quellen und Ziel nennen, das Ergebnis prüfen und präsentieren und eine Fassung für ein anderes Publikum anfordern.",
+      "repeat": "Bitten Sie Clara um eine HTML-Präsentation, fügen Sie Materialien bei und nennen Sie Publikum, Ziel, Sprache und zu erhaltende Aussagen. Für vorhandene Präsentationen können Sie auch die Folienkorrektur aufrufen."
+    },
+    "es": {
+      "title": "Crear una presentación HTML con Clara",
+      "goal": "Aprender a transformar documentos y una petición clara en diapositivas útiles, comprobar sus mensajes y presentarlas en el navegador.",
+      "scenario": "Officina Arco debe explicar al personal una propuesta de recepción. Partimos de las notas de la reunión.",
+      "scope": "Una presentación interna basada en las notas, con diapositivas y notas del ponente. El procedimiento sigue siendo una propuesta; no se añaden resultados ni gráficos sin documentar.",
+      "inputs": "Abre brief-es.md. Indica público, objetivo y mensaje: debatir la propuesta, sin anunciar un procedimiento ya adoptado.",
+      "request": "Clara, prepara una presentación HTML breve con estas notas para la reunión del personal. Explica problema, propuesta, funciones y decisión. Mantén visible que es una propuesta y añade notas para presentar.",
+      "steps": [
+        "En esta conversación Clara lee las notas y propone la secuencia. El asistente explica por escrito cómo precisar público y objetivo y ayuda a revisar el orden de los mensajes.",
+        "Clara compone las diapositivas con el workflow actual y revisa legibilidad, contenido y navegación. El asistente sigue resultados reales y responde durante la preparación.",
+        "Abre la presentación generada. Usa las flechas, abre las notas y compara una diapositiva con el documento inicial. Identifica propuesta y decisión solicitada."
+      ],
+      "deliverables": [
+        "Una presentación HTML autónoma con notas y navegación para abrir en el navegador.",
+        "El paquete, materiales editables y verificaciones de la versión producida."
+      ],
+      "review": "Comprueba fidelidad a las notas, legibilidad y distinción entre propuesta y práctica actual. Un diseño atractivo no justifica resultados inventados. Revisa también conclusión y notas.",
+      "checkpoints": [
+        "Antes de crear las diapositivas, identifica público y decisión esperada.",
+        "En la presentación, encuentra un mensaje y la nota que lo respalda."
+      ],
+      "practice": "Añade new-audience-es.md y pide una nueva versión para compañeros nuevos con el ejemplo de solicitud incompleta. Conserva la primera y explica cómo público y objetivo cambiaron la presentación.",
+      "success": "Sabes aportar fuentes y objetivo, leer y presentar el resultado y pedir una versión para otro público.",
+      "repeat": "Pide a Clara una presentación HTML, adjunta materiales e indica público, objetivo, idioma y mensajes que conservar. También puedes invocar la corrección de diapositivas para una presentación existente."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "83c411764aa6d3b3b55e43a4d02e195664fb5a9803013efca4d280c21dc8b78b"
+}

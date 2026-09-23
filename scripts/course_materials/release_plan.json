@@ -2,10 +2,27 @@
   "schema": "mparanza.teaching_mixed_release.v1",
   "published_base": "07689c38e04036109b8867a0c297372abb19698b",
   "prepared": [
+    "clara/advisory-brief-planner",
+    "clara/advisory-case-director",
+    "clara/advisory-deliverable-validator",
+    "clara/attribute-reporting",
+    "clara/business-planning",
+    "clara/deck-correction",
+    "clara/html-deck",
+    "clara/reporting-engine",
+    "clara/transcribe",
+    "lucia/apertura-pratica",
+    "lucia/comunicazione-professionale",
+    "lucia/presenza-digitale-studio",
+    "lucia/quesito-legale-fiscale",
     "vera/adeguati-assetti",
     "vera/aml-review",
     "vera/archive-organization",
     "vera/avviso-intake",
+    "vera/bandi-agevolazioni",
+    "vera/bilancio-oic",
+    "vera/browser-automation",
+    "vera/business-planning",
     "vera/centrale-rischi-review",
     "vera/comunicazione-professionale",
     "vera/concordato-plan-review",
@@ -17,70 +34,23 @@
     "vera/invoice-xml",
     "vera/journal-bank-reconciliation",
     "vera/journal-sampling",
+    "vera/management-control-pack",
     "vera/new-client",
     "vera/open-item-reconciliation",
     "vera/presenza-digitale-studio",
     "vera/previdenza-inps",
+    "vera/quesito-legale-fiscale",
     "vera/registro-imprese-sari",
     "vera/sales-plan",
     "vera/studio-archive",
     "vera/treasury-forecast",
     "vera/variance-analysis",
-    "vera/vouching",
-    "clara/advisory-brief-planner",
-    "clara/advisory-case-director",
-    "clara/advisory-deliverable-validator",
-    "clara/deck-correction",
-    "clara/html-deck",
-    "clara/transcribe",
-    "lucia/apertura-pratica",
-    "lucia/comunicazione-professionale",
-    "lucia/presenza-digitale-studio"
+    "vera/vouching"
   ],
   "retained": {
-    "vera/bandi-agevolazioni": {
-      "course_sha256": "f9bfb06cea5dab6f136ab94b3dddcc19bf48c0b278c9c95e69d9e763b8648728",
-      "published_version": "0.1.257"
-    },
-    "vera/bilancio-oic": {
-      "course_sha256": "d1c08218616d6dd4456994cb2e4bf38f656309ab91c0220eed7b6a843c9eb175",
-      "published_version": "0.1.257"
-    },
-    "vera/browser-automation": {
-      "course_sha256": "de3c45ea506bf0e9779a02d6d6b6e9d2b16546a561fc5738c8168e1fe661381f",
-      "published_version": "0.1.257"
-    },
-    "vera/business-planning": {
-      "course_sha256": "bb03814c0e8a61cab8e07d4a82ddc1912d1788b291064f31db97c32735501b57",
-      "published_version": "0.1.257"
-    },
-    "vera/management-control-pack": {
-      "course_sha256": "a4bd63f91c3b5dffe9c534742e64d4269597998c5e6d6de91b1cebc44357ece8",
-      "published_version": "0.1.257"
-    },
     "vera/purchase-invoice-review": {
       "course_sha256": "1ba782ae454688d5ce323d92dcd88d2c13b12ed7ae45c4ce180f63c0ee2dfda8",
       "published_version": "0.1.257"
-    },
-    "vera/quesito-legale-fiscale": {
-      "course_sha256": "71af217566d69f1c212190a2ea3a57200861b1ecdf908d1fe87756872bea725b",
-      "published_version": "0.1.257"
-    },
-    "clara/attribute-reporting": {
-      "course_sha256": "f9b789c9607a886ad7588d41c79331a694a8c6bba592e2eef63f0a2fe27cb8d8",
-      "published_version": "0.1.207"
-    },
-    "clara/business-planning": {
-      "course_sha256": "84cb082c91c6a4a631ff1b78edabe11a733c94956189f3d0a9329e55f5af4385",
-      "published_version": "0.1.207"
-    },
-    "clara/reporting-engine": {
-      "course_sha256": "e2232b30ed48dd9b0f8ed7dca1c3b48ddae3434deeff61b88754c658193aa922",
-      "published_version": "0.1.207"
-    },
-    "lucia/quesito-legale-fiscale": {
-      "course_sha256": "9e178814c8ba9d9137ea749002e61ab451533d54131282e62501f8be096e8a08",
-      "published_version": "0.1.49"
     }
   }
 }

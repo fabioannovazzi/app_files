@@ -75,18 +75,16 @@ print(json.dumps({'workflows': len(index['courses']), 'locales': count}))
 
 
 @pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
-def test_cowork_archive_has_no_native_course_library(product):
+def test_cowork_archive_has_written_course_library(product):
     with ZipFile(
         ROOT / f"plugin_packages/{product}/{product}-claude-plugin.zip"
     ) as archive:
         names = archive.namelist()
-    assert not any(
-        part in name
-        for name in names
-        for part in (
-            "courseware/",
-            "assets/courses/",
-            "local_courses.py",
-            "learn-with-",
-        )
-    )
+    for suffix in (
+        "vendor/modules/courseware/library.py",
+        "assets/courses/index.json",
+        "scripts/local_courses.py",
+        f"skills/learn-with-{product}/SKILL.md",
+    ):
+        assert any(name.endswith(suffix) for name in names)
+    assert not any("desktop_teaching/" in name for name in names)

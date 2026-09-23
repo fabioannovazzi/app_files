@@ -1,0 +1,236 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "centrale-rischi-review",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it"
+  ],
+  "language_basis": "workflow_output_contract",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
+  "sources": [
+    {
+      "path": "modules/centrale-rischi-review/assets/icon.svg",
+      "sha256": "17d69cbf74c3b40f93f9373f0241c24a9cc158a764a5108f1a87e38f0ad1cd60"
+    },
+    {
+      "path": "modules/centrale-rischi-review/requirements.txt",
+      "sha256": "d6e4b026c6ac70c8ff80a95ba2a59ea7f58606985de36fe7341609822e79e949"
+    },
+    {
+      "path": "modules/centrale-rischi-review/scripts/centrale_rischi_core.py",
+      "sha256": "61edde3234ab4a0645e2d11515307a88ec70226ddba0c9a11c2d5095d3c52002"
+    },
+    {
+      "path": "modules/centrale-rischi-review/scripts/centrale_rischi_pdf.py",
+      "sha256": "3f8fef26a92cfba9f2d3431ca48c04bef4641e3b91f5b1d2a686436f8cf21061"
+    },
+    {
+      "path": "modules/centrale-rischi-review/scripts/check_dependencies.py",
+      "sha256": "c27a8044cca383f8d431575eeb6e1ca877dc6a3543c524f2e7320be2cff557b1"
+    },
+    {
+      "path": "modules/centrale-rischi-review/scripts/evaluate_pdf_corpus.py",
+      "sha256": "1eb22ca456a932324474a5a57a2ef796ea55e0caae9d9febe44823af619929a2"
+    },
+    {
+      "path": "modules/centrale-rischi-review/scripts/finalize_analysis.py",
+      "sha256": "0e431dd0f42e3aa006b55b0e2c759363fa4c22439ef16b051306987d4c5a5505"
+    },
+    {
+      "path": "modules/centrale-rischi-review/scripts/inspect_inputs.py",
+      "sha256": "6c9352d76d77ec84ede4a67c1766a473a38dc8431f1f2ed3198dadc179c1a220"
+    },
+    {
+      "path": "modules/centrale-rischi-review/scripts/run_analysis.py",
+      "sha256": "b25a8f5a815094c5b9e874842213d1ef20ee145d15a079efa21f347aa717242a"
+    },
+    {
+      "path": "modules/centrale-rischi-review/scripts/run_gold_benchmark.py",
+      "sha256": "b422819dff3827e74e902559ee02be0ef09ff027e0c67b8286e81de04b79e092"
+    },
+    {
+      "path": "modules/centrale-rischi-review/skills/centrale-rischi-review/SKILL.md",
+      "sha256": "d1b2d28865f8e2f29b8e6f796f9065171a84e109ed7791a39124185a4f992196"
+    },
+    {
+      "path": "modules/centrale-rischi-review/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/centrale-rischi-review/SKILL.md",
+      "sha256": "53ec1cba2002b739702e6cfe92ba9933944bf5124fed96ddc6f81296edc61b88"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/centrale-rischi-gen-mar.csv",
+      "sha256": "a58fb4b8c1d26612f68fe1780726c0d7922ca1829157bac2394bdbb1cf5390e9",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/caso.md",
+      "sha256": "888b777bcc3d085dc19b22d363faf25fc96e37d0fc5a47cf134a694f21a93aa7",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/centrale-rischi-gen-apr.csv",
+      "sha256": "111dbb8c22538e12277cc6a13bf835f0a30c4975a2eadfde9fe058f5258ecd0c",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/prova.md",
+      "sha256": "95b21cf7c7efc42b369592d534c9cc394ab31a7a97332873015b47ce991d8c59",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Analizzare una Centrale Rischi con Vera",
+      "goal": "Impara a partire da una Centrale Rischi, ottenere un’analisi verificabile e usarla per preparare il confronto con il cliente.",
+      "scenario": "Officina Arco Srl deve rivedere la propria situazione bancaria con il commercialista. Abbiamo tre mesi di rapporti con due banche: vogliamo capire affidamenti, utilizzi e andamento, e preparare una sintesi leggibile per l’incontro.",
+      "scope": "Seguiamo un export già normalizzato. Con i tuoi clienti puoi partire anche dal PDF digitale originale della Banca d’Italia: Vera lo esamina prima di analizzarlo. Il risultato è una base documentata per la tua revisione professionale.",
+      "inputs": "Apri caso.md e centrale-rischi-gen-mar.csv. Il primo descrive società, obiettivo e significato delle colonne; il secondo contiene i rapporti bancari di gennaio, febbraio e marzo. Mostra che una riga identifica banca, categoria e mese. Per il primo utilizzo non devi preparare codice o conoscere i nomi interni della procedura.",
+      "request": "Vera, analizza la Centrale Rischi di Officina Arco usando questo export. Prepara il quadro a marzo 2026, confrontalo con gennaio e febbraio e mostrami cruscotto, Excel e sintesi per l’incontro con il cliente.",
+      "steps": [
+        "In questa conversazione Vera importa i file nel caso didattico e ne esamina contenuto e mesi disponibili. L’assistente spiega quali file servirebbero per un tuo cliente e dove finiranno i risultati.",
+        "Vera propone il collegamento fra colonne e significati e conferma società, euro e mese corrente. Guarda la proposta: le durate originaria e residua hanno ruoli diversi. Basta riconoscere la scelta e sapere quando chiedere una correzione.",
+        "Dopo la verifica dei significati, il workflow calcola l’esposizione per banca, categoria e durata, controlla i totali e confronta i mesi. L’insegnante aspetta i risultati effettivi e spiega eventuali richieste o problemi mostrati dalla procedura.",
+        "Vera produce gli output previsti e scrive una sintesi collegata ai risultati verificati. In questa conversazione apri il cruscotto appena creato; passa poi al prospetto Excel e alle questioni aperte."
+      ],
+      "deliverables": [
+        "Cruscotto HTML: parti dal mese corrente e dal totale utilizzato; passa agli indicatori per categoria e al confronto con il mese precedente. Usalo per orientare la conversazione con il cliente.",
+        "Prospetto Excel: apri Esposizioni per ritrovare rapporti e banche, Serie mensile per i tre mesi e Controlli per il riscontro dei totali. Torna alle righe dell’export quando un dato richiede verifica.",
+        "Sintesi e questioni aperte: leggi cosa è sostenuto dai dati e quali informazioni aggiuntive servirebbero. Gli output strutturati e le ricevute conservano la tracciabilità del lavoro."
+      ],
+      "review": "Controlla prima società, periodo e totale utilizzato. Poi scegli una banca e collega il suo dato alle righe di origine. Il caso non fornisce bilancio o flussi: un indicatore non calcolabile deve restare tale. Il commento prepara il tuo giudizio; puoi chiedere una revisione o un approfondimento specifico.",
+      "checkpoints": [
+        "Prima del calcolo: individua i file di partenza e conferma che il quadro corrente deve riferirsi a marzo. Se vuoi un altro obiettivo, formulalo qui.",
+        "Quando appare il cruscotto: apri il risultato e indica dove leggere la situazione corrente e dove trovare il dettaglio. L’assistente verifica che tu stia guardando l’output appena prodotto.",
+        "Prima di concludere: spiega quali file forniresti per il tuo cliente e quale parte del risultato rivedresti prima dell’incontro."
+      ],
+      "practice": "Ora chiedi a Vera di aggiornare la stessa analisi ad aprile usando centrale-rischi-gen-apr.csv e prova.md. Formula tu la richiesta, conferma il nuovo mese e apri il risultato della nuova esecuzione.",
+      "success": "La prova è riuscita quando il nuovo risultato riguarda aprile, il risultato di marzo è conservato e sai trovare il confronto con il mese precedente. Se manca un passaggio, lo ripetiamo insieme; la sola apertura del kit non completa la prova.",
+      "repeat": "Per rifarlo sul lavoro: scegli il cliente, allega il PDF digitale originale o un export verificato, indica periodo e obiettivo, rivedi le scelte proposte e apri gli output. Puoi richiamare “Impara con Vera” in qualsiasi momento e fare altre domande."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "d47fbc19abc7ef63c22b6167f2ccc05c9fe5ee7699549ddea2a40c1dec56817d"
+}

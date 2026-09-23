@@ -2,6 +2,10 @@
 name: vera
 description: Use whenever Vera is explicitly invoked, including through @vera, for professional accounting-studio work, and to show or reopen the privacy report of a Vera run. Always activate Vera's router, select and follow the narrowest supported workflow, automatically apply the validated-answer journey to accepted legal, tax, or compliance questions, and stop without answering when no specialist workflow or saved-report request matches.
 ---
+## Written lessons
+
+For a request to learn or practise a supported Vera function, read `../learn-with-vera/SKILL.md`. Teach in writing in this conversation using the prepared kit and actual workflow results. Start only when requested.
+
 
 ## Cowork execution contract
 

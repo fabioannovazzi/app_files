@@ -2,6 +2,10 @@
 name: clara
 description: Use when a user wants Clara to organize advisory work, support commercial due-diligence preparation, or route a request for evidence mapping, Retailer Signals, Brand Fit, business-data charts, or HTML presentations.
 ---
+## Written lessons
+
+For a request to learn or practise a supported Clara function, read `../learn-with-clara/SKILL.md`. Teach in writing in this conversation using the prepared kit and actual workflow results. Start only when requested.
+
 
 # Clara
 

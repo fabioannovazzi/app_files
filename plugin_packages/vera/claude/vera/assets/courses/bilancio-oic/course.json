@@ -1,0 +1,484 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "bilancio-oic",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en"
+  ],
+  "language_basis": "workflow_output_contract",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "prepare_oic_draft_then_update_trial_balance"
+  },
+  "sources": [
+    {
+      "path": "modules/bilancio-xbrl-it/assets/icon.svg",
+      "sha256": "2e30e45c5c10c485d2fac9f51917ca2f39611ddc0b2afde7ef1525e04543ead7"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/requirements.txt",
+      "sha256": "2200117061197f175771c6e43ce38f3dfbdf4321590bb0c889a728591ec1d051"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/disclosures-2026.1.json",
+      "sha256": "953bf9a81a72c6e246362428248d5e2bfb903c46b022f074e07e8d9c55dacfcf"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/filing-instructions-2026.1.json",
+      "sha256": "25654ebba9663f5906cc14ff90543111d9fe6bc8ae5d92db0a8971453256a577"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/oic-2016-2023.1.json",
+      "sha256": "5723f8d42405dfbd67eff8b00e7f7ec53b3ffb764f6693a3f7dbdec2502199d2"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/oic-2024-2025.1.json",
+      "sha256": "fbfdd7f0fce393179e9b42203387b795be364ab0dee7fe3a4c276d3dfed3e052"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/oic-2026.1.json",
+      "sha256": "70dd926e175ff1c50874cbd6b856eabfdeab9308d2e27674a9c4d46cb493084b"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/schedule-taxonomy-2026.1.json",
+      "sha256": "030f62d38592dc7cd4a497c2695bed271246bc3aa149806c24ce1361397aa599"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/statutory-forms-2016.1.json",
+      "sha256": "70a790eb4386cbe0f4a29760648699109202bf2b77fd4451a279540ad7393cf7"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/statutory-forms-2026.1.json",
+      "sha256": "fa95e4d5e45e124a40f1345609615808ba95565da7a202ed0ee4476f04f8ad35"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/statutory-presentation-2026.1.json",
+      "sha256": "d7d8b189b36a5177c24954a1956253b89f9b14d2d39fbd0174b9a5df4a73b857"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/access_control.py",
+      "sha256": "54a4edef94be0d42c12db7dcea115b436f7984d0683cc50c1aa4254ca25d7e66"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/accounts_preview.py",
+      "sha256": "c8eaea824538c8614460819495984fece5c578b877a37df4cec7b55bb4ab155b"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/accounts_preview_text.py",
+      "sha256": "8e8fe0cb8142e464404fb818dd0bebdfd15776545c39abb79d78798eaae90e03"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/artifact_delivery.py",
+      "sha256": "ca6fc5a66f8e1dc1c2a9a28cd8e46865b1fdf1447030161b6839a5af956a946f"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/audit_schedule_taxonomy.py",
+      "sha256": "fdd2600156675ca603ab707bb58ff8c91a40c3a290707e032d53755bb0d8ecc1"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/audit_statutory_presentation.py",
+      "sha256": "f2d0f8d937feee6befd4dcbf24dff59115c71bf0b6c251c40ec167073467b299"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/benchmark_performance.py",
+      "sha256": "7493967a8fa125206907c81654a2b714bef765a1d361bb318280d16fdd44e442"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/build_taxonomy_catalogue.py",
+      "sha256": "cd04908a9fb1eb3cfed5aa704ea033cbde4abba135cb8690a66e6db5561bff46"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/case_service.py",
+      "sha256": "684119a771b286afd447a7c6c19ea8b4d6774231baa9fdbdcb2a13126fef0603"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/check_dependencies.py",
+      "sha256": "201715e9e92d79069cfed8ddbb88d6b7916b7c7bb05e0371051c2102b1486f55"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/check_review_invariants.py",
+      "sha256": "84a6e2bbc71ca8c6c4e45454aeb9d6cd717462abf8cc30d6b952dccc3f1391d2"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/client_history.py",
+      "sha256": "44577069791d4cefe0d2b2b6b2812f081ce963843c4434f8a2e8fe16a11f9a60"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/disclosure_engine.py",
+      "sha256": "8d5563caf5094e5205420b69f24aa3d1aa7660c2767b1305a5089e3f36252f48"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/evaluate_intelligence_quality.py",
+      "sha256": "41d0a6d643736eaf5b43733ebacaea4f2fcb254e64d9cde6ba54582169f12a67"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/external_validation.py",
+      "sha256": "9ca430dbbc87883876799ae7a7f51380067d79c25de4fb03b19bc33eb38725d1"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/file_security.py",
+      "sha256": "5c912217c2c4e7fa8c89c74b056b5da48dfe867dbb135dad20c77c15bee467cc"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/http_api.py",
+      "sha256": "d913c5e8d39e991642b97e3b2b94697341edd36f0bb75a05a443d62cb3ac9604"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/intelligence_contract.py",
+      "sha256": "b51e335025e68e7ace102fd223d7bda0dee93245fedd3f02704bdb7f636d39b6"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/intelligence_runner.py",
+      "sha256": "4a3c33e9d0bbade046bd570fa82b7f615ce78884db4019dec10a64940e54b416"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/managed_ocr_runtime.py",
+      "sha256": "70145e61f1e5f1c5ef3183f1d18a14e426f0fe5280ffe3d158795f4a271841a3"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/mapping_memory.py",
+      "sha256": "0e24fc16436a6433c01598d33ec195d173d3b15e5d6355c3e74f3072f3f422e8"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/pdf_trial_balance.py",
+      "sha256": "5caa32d249c1b46d887166ab70e36275d483e439093d2d31832562e3b5aecd9e"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/prior_xbrl.py",
+      "sha256": "222a87638fdf62607db37fb69bdd8be5acb9c670074c8a7a01649cd00d227a51"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/review_views.py",
+      "sha256": "ac817c27964b56ed4f70b2ca206692e93b478701af2585d7bcd860353536a77c"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/run_background_job.py",
+      "sha256": "b07506c54157247aacbd360add7c76868b668b565b8c38dabdb14f50ec0dd224"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/run_golden_cases.py",
+      "sha256": "b421f3576aaf66b153d81e646814638ccf68e3a2ec3827ed9839db3768411ac4"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/run_xbrl_conformance.py",
+      "sha256": "7291ff6e1392e7e5c8fdd5423e14343b813c46abcd541b73f3355d26fa45ba25"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/schedule_engine.py",
+      "sha256": "860fe2e0a06ce99f6c720d7a5efcece29e0022d39d144811e6e545892b4ee20d"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/schedule_taxonomy_adapter.py",
+      "sha256": "369d8a385424a22d626fb6e0cc1b30ea74cb11e960574253444637cab4ba9e08"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/service_bridge.py",
+      "sha256": "895e8e35d212617f7c0bf1b47c4db2bceeeea38e25869b178687ed9960430d30"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/statutory_presentation.py",
+      "sha256": "95849bd91501a034bb3eb530213a48d63daa3352d17b4fb9e32c9c351f30a1bc"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/validate_xbrl.py",
+      "sha256": "63ca86dd240de7d99a3026596564fb9b68a8aff380b8f53498c907b276d07b83"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/xbrl_case.py",
+      "sha256": "fa35555b918f80358085dc9e955a2304745d800a904753584d4365b3069f863b"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
+      "sha256": "12967297f5bcf113c03cb2e1e167a4010ed68f258adb92f9934770b7c1056731"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/agents/openai.yaml",
+      "sha256": "cde9b4f80adceba6c596c6954649291c44fcd4e71980bc8e41b7cd97deb5e966"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/acceptance-matrix.md",
+      "sha256": "8d16a690b95209a25a029d30f4d5e1184a66155c6d8fa3e94a5628ad245acd66"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/conformance-evidence.md",
+      "sha256": "9d1f26c85afc803f1e46fec8ea89be62cb5a3a3be1047d95b168212a0c68be8b"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/implementation-status.md",
+      "sha256": "d2829c74154d35a27ce6f84c7bd81ceec02057763e6b25025acabe20b8859a15"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/performance-evidence.md",
+      "sha256": "ff05d92f60c697bbfc6465b7255c2198a780e37954c741b52c16d9ee705c6e72"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/product-thesis.md",
+      "sha256": "0ef0a8323bc2fcc8e7f79fb80696b17ba5a3ce0c2fc4e26d61852d317d9ad7f0"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/taxonomy-spike.md",
+      "sha256": "d2404a29d14a50e593bbb1d6f9018880c3e29149b5323d49000529d99ebdfa5a"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/taxonomy/PCI_2018-11-04.registry.json",
+      "sha256": "7c23343a0644363b5b171df8d2731c2c51e0df259052770055684e3511eba6ba"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/taxonomy/XBRL_2.1_CONFORMANCE_2025-07-16.registry.json",
+      "sha256": "cc4dd4be40839c02ae686f303ff71dbb064aefa7b0aaf2e2bcd28d1a8a7fb6f5"
+    },
+    {
+      "path": "scripts/check_dependencies.py",
+      "sha256": "d8fe58ac68e4cb0e05783256d829fbffc2a29c802c83902ee3102ff432764b69"
+    },
+    {
+      "path": "scripts/managed_python_runtime.py",
+      "sha256": "ccc8f805bc8807b1c16a2a92dc43533571cb341bc20a68d850d25af04c879e69"
+    },
+    {
+      "path": "skills/bilancio-oic/SKILL.md",
+      "sha256": "1bb27e8b4b902cd4a3f0fa6cdfd8c3bb0f87335552cbd8dd07b722a7fc718303"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/company-it.md",
+      "sha256": "8a185e0e875fe6570b838f62b0e42210a988a94b876bd177d8a81e4bcf6a0e98",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/trial-balance-it.csv",
+      "sha256": "d0beca7af4dd82ebd974f6359ef92cd8d2c3fa6c5119897a908e6e9f6ffd01ed",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-it.md",
+      "sha256": "8a185e0e875fe6570b838f62b0e42210a988a94b876bd177d8a81e4bcf6a0e98",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/trial-balance-updated-it.csv",
+      "sha256": "48761d143f8c222a76b9e143a213f5fd14297350f54aaed8bae8dba3c0db9257",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-it.md",
+      "sha256": "1db255c129364b3caccb941291f7e00e04e0b5e5aa57cd709c62388157bbd882",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/company-en.md",
+      "sha256": "6487101087839a49037e5a8a3bdf4ee0371628b3faf258c06b55ab287c88ee07",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/trial-balance-en.csv",
+      "sha256": "ae5e4fec987297d72fe7a2a0c46fed1888e57845a987c1aa338285465c97064e",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-en.md",
+      "sha256": "6487101087839a49037e5a8a3bdf4ee0371628b3faf258c06b55ab287c88ee07",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/trial-balance-updated-en.csv",
+      "sha256": "a8eacb2af676e5bee22a9fed8415519c7483f9b426d3810f436c81fa9a58f70d",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-en.md",
+      "sha256": "5ecbc0d578e1707788364317d0437e5080688bd3eb90177daba11e0e53a1ec68",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/year-end-it.txt",
+      "sha256": "b9620311fbb8253972eeb4410dca3509829ae3906d2a53f3abd439045d756574",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/year-end-updated-it.txt",
+      "sha256": "059836612d502a565bc2e2ef405ee81ee736a2a637aa1a4fecef6c2e9dc4536e",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/year-end-en.txt",
+      "sha256": "0e0298f967fe3e96788932e5e43fa5beebdf6743588018def7e863b425e6e59e",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/year-end-updated-en.txt",
+      "sha256": "566879705c40e99c07b0030d16079011aa3136c8398b0deda862e4398cc9d909",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Preparare una bozza di bilancio con Vera",
+      "goal": "Imparare a fornire i documenti, rivedere le proposte di Vera e leggere una bozza di bilancio con prospetti, informazioni di supporto e controlli.",
+      "scenario": "Uno studio prepara il primo bilancio di una piccola società di servizi. Seguiamo il lavoro dai file del cliente ai prospetti e alla revisione, poi aggiorniamo la bozza con una fattura dimenticata.",
+      "scope": "Preparazione di un bilancio individuale OIC italiano per una piccola società al primo esercizio. Segui il lavoro dai documenti alla bozza e alla verifica locale del candidato XBRL. La revisione e l’approvazione professionale restano il passo successivo.",
+      "inputs": "Apri company-it.md, trial-balance-it.csv e year-end-it.txt. Contengono i dati della società, nove conti con movimenti e saldi e le informazioni di fine esercizio. Sono documenti di fantasia da elaborare, senza un bilancio già pronto. Le imposte sono un dato fornito dal prospetto fiscale esterno.",
+      "request": "Vera, prepara una bozza del bilancio OIC da questi file. Guidami nella revisione della forma e delle classificazioni, poi mostrami il bilancio, le sue fonti e i controlli prima dell’approvazione.",
+      "steps": [
+        "In questa conversazione Vera apre il caso, importa i tre file e mostra come ha letto i saldi. Nella spiegazione scritta spiega che cosa preparerà e quale file serve a ciascun passaggio. Confronta l’interpretazione dei movimenti con il CSV e confermala quando è corretta.",
+        "Rivedi la forma proposta e le classificazioni dei nove conti. Soffermati su una proposta e sulla sua fonte; l’assistente risponde per iscritto alle tue domande senza leggere tutte le righe. Vera calcola i prospetti, presenta il risultato nel patrimonio netto e usa le informazioni di fine esercizio per preparare i dettagli e le informazioni in calce. Le decisioni restano visibili in questa conversazione.",
+        "Apri la bozza generata e trova attivo, debiti, patrimonio netto e risultato dell’esercizio. Segui un importo fino al file originale, poi guarda le informazioni in calce e l’esito dei controlli. Vera esegue anche la verifica locale del candidato XBRL. L’assistente spiega per iscritto il risultato effettivo e il prossimo passo: rivedere il bilancio prima dell’approvazione. Se il workflow segnala un problema, mostrane la richiesta concreta e come proseguire."
+      ],
+      "deliverables": [
+        "Bozza di bilancio con prospetti, informazioni in calce, dettagli di supporto e fonti consultabili.",
+        "Controlli del caso e verifica locale del candidato XBRL, con stato della revisione."
+      ],
+      "review": "Trova il risultato dell’esercizio e la sua presenza nel patrimonio netto. Verifica un importo nel file originale e leggi l’esito dei controlli. Spiega quale revisione rimane prima dell’approvazione: un controllo tecnico superato non è una delibera del bilancio.",
+      "checkpoints": [
+        "Indica quali tre file hai fornito e dove rivedi le proposte di Vera.",
+        "Trova il risultato, una fonte e lo stato dei controlli; spiega quale passo viene dopo la bozza."
+      ],
+      "practice": "Leggi update-it.md e fornisci trial-balance-updated-it.csv e year-end-updated-it.txt come sostituzioni dei corrispondenti file. Chiedi: «Aggiorna questa bozza nella stessa pratica, conservando la versione precedente». Apri il nuovo risultato e spiega l’effetto della fattura aggiunta e delle imposte aggiornate. Verifica che la prima versione sia ancora disponibile.",
+      "success": "Sai quali documenti fornire, come avviare il bilancio e rivedere le proposte, dove leggere prospetti e controlli e come ottenere una nuova versione nella stessa pratica.",
+      "repeat": "Fornisci situazione contabile, dati della società, periodo e documenti disponibili. Chiedi la preparazione del bilancio, rivedi le proposte e completa le integrazioni segnalate prima di approvazione ed esportazione."
+    },
+    "en": {
+      "title": "Prepare draft annual accounts with Vera",
+      "goal": "Learn to supply the documents, review Vera’s proposals and read draft annual accounts with statements, supporting information and checks.",
+      "scenario": "An accounting firm prepares the first annual accounts for a small service company. Follow the work from client files to statements and review, then update the draft after a missing invoice is recorded.",
+      "scope": "Prepare individual Italian OIC annual accounts for a small company in its first year. Follow the work from documents to the draft and local validation of an XBRL candidate. Professional review and approval remain the next step.",
+      "inputs": "Open company-en.md, trial-balance-en.csv and year-end-en.txt. They contain the company details, nine accounts with movements and balances, and year-end information. These are fictional documents to process, with no finished accounts. Tax is an input supplied by the external tax workpaper.",
+      "request": "Vera, prepare draft OIC annual accounts from these files. Guide me through review of the form and classifications, then show the accounts, their sources and the checks before approval.",
+      "steps": [
+        "In this conversation, Vera opens the case, imports the three files and shows how it read the balances. In writing, it explains what it will prepare and which file supports each step. Compare the movement interpretation with the CSV and confirm it when correct.",
+        "Review the proposed form and classifications for the nine accounts. Pause on one proposal and its source; the assistant answers questions without reading every row. Vera calculates the statements, presents the result within equity and uses the year-end information for supporting schedules and statutory footnotes. Decisions remain visible for this lesson.",
+        "Open the generated draft and find assets, debts, equity and the result for the year. Follow one amount back to its original file, then read the footnotes and check results. Vera also runs local validation of the XBRL candidate. The assistant explains the actual outcome and next step: review the accounts before approval. If the workflow identifies a problem, show its concrete evidence request and how to continue."
+      ],
+      "deliverables": [
+        "Draft annual accounts with statements, statutory footnotes, supporting schedules and inspectable sources.",
+        "Case checks and local validation of the XBRL candidate, with the review status."
+      ],
+      "review": "Find the result for the year and its place in equity. Check one amount against the original file and read the check results. Explain what review remains before approval: passing a technical check does not approve the annual accounts.",
+      "checkpoints": [
+        "Name the three files you supplied and show where you review Vera’s proposals.",
+        "Find the result, one source and the check status; explain the next step after the draft."
+      ],
+      "practice": "Read update-en.md and supply trial-balance-updated-en.csv and year-end-updated-en.txt as replacements for the corresponding files. Ask: “Update this draft in the same engagement, keeping the previous version.” Open the new result and explain the effect of the additional invoice and updated tax input. Check that the first version remains available.",
+      "success": "You know which documents to provide, how to start the accounts and review proposals, where to read the statements and checks, and how to obtain a new version in the same engagement.",
+      "repeat": "Supply the trial balance, company details, period and available supporting documents. Ask for annual-accounts preparation, review the proposals and complete the outstanding evidence before approval and export."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "dc9a1820a2ab57ed39a1299a4d33554dd112fcadd81d411eec23c07809ed0d7f"
+}

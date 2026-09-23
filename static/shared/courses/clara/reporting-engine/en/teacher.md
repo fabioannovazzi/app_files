@@ -1,61 +1,71 @@
-# Before the chart, establish what the data means
+# Prepare a report from data with Clara
 
-A guided walkthrough of about 6½ minutes. Voice setup, external processing and optional practice are outside the lesson time.
+The explanation and a short practice take about 5–8 minutes. Processing and your questions can extend the session.
 
-Talk with the teacher using the standard Codex voice. In the second chat, open beside it, inspect the files and result. The chats stay paired; interrupt, ask why or slow down whenever you need.
+Speak with the teacher using the standard Codex voice. In the working chat, open in the window beside it, the function runs the case using the prepared files and shows its actual results. The teacher follows those results: interrupt, ask questions and change the pace whenever you need.
 
-Use this prepared material. Do not rewrite the lesson or invent results. Speak in short turns, allow inspection time and listen to actual answers. Do not reveal the solution before the attempt. Timings include observation and conversation, not just spoken text. Showing these files does not complete demo, practice or understanding records. The teacher judges relevance using only its own product's catalog.
+Start from the prepared material and teach the complete first use. Select 3–4 relevant functions during onboarding; on later visits start with what the user wants to do today. Adapt pace and explanations. Create custom examples when helpful, using the same workflow and checking new inputs. Read execution-request.json, use the real paired local case, and connect explanations to verified working-chat results. Never invent results, user answers or understanding confirmations. Opening the kit does not complete the lesson.
 
-## 1. Your objective · 45 s
+## 1. When to use it · 45 s
 
-Listen to the request. Connect this case to work you already do.
+Connect the function to a concrete professional task.
 
-The fictional dataset reports net sales of EUR 40,000 in January and EUR 50,000 in February. There is no separate Discount field. Source notes confirm that Sales already includes discounts, so subtracting them again would be wrong.
+Learn to compare actual performance with budget, follow report preparation and use the differences in a monthly review.
 
-Clara, show the sales trend and explain which data you are using.
+Arco has prepared January and February management accounts and a budget for the same months. The manager wants to understand operating performance and which categories explain the difference from plan before the monthly meeting.
 
-## 2. The starting evidence · 60 s
+The case includes revenue, cost of goods sold and operating expenses in EUR. The report separates observed figures from explanations requiring company evidence. Clara selects the analysis from the question and data; this first use follows a budget comparison. The teaching report stays local.
 
-Look at the documents in the other chat. Find one useful fact and one missing item.
+## 2. Files and request · 60 s
 
-R1 has two months; R2 defines Sales as net. Discount is absent as a separate measure, not a recorded zero.
+Open the files in the working window and show how to request the result.
 
-[["2026-01", "EUR 40,000", "Net sales"], ["2026-02", "EUR 50,000", "Net sales"], ["Separate Discount", "Absent", "Already reflected in Sales"]]
+Open actual-budget.xlsx and facts-en.md. GL contains monthly movements by account and category; Budget contains the comparable plan. Revenue is positive and costs are negative. The case declares periods, meanings and control totals: actual EUR 53,000 and budget EUR 47,000.
 
-## 3. How the workflow works · 75 s
+Clara, prepare Arco’s actual-versus-budget report for January and February 2026 from this workbook. Show operating performance, variances and category detail.
 
-Follow the three steps. Pause at the decision that changes the result.
+## 3. Run the workflow · 105 s
 
-Run dataset intake and inspect data, profile and notes. Review metric meaning, aggregation and Sales, Discount and COGS roles; headers alone are insufficient.
-Select a compatible capability and render through Clara's adapter, preserving the effective request and output proof.
-Open the result and verify values, units, periods and conclusion. Reuse a compatible stable semantic contract on subsequent uploads rather than recreating meaning every time.
+Explain the step happening now and wait for its actual result.
 
-## 4. Read the result · 90 s
+The assistant inspects the sheets and proposes which columns contain dates, categories and amounts. Confirm January–February and the sign convention before calculation.
 
-Open the example in the second chat. Connect each conclusion to its source.
+The workflow applies the reviewed mapping, compares actual with budget and checks totals. The voice chat explains the actual step and any requested information.
 
-Net sales move from EUR 40,000 to EUR 50,000, a EUR 10,000 or 25% increase. Separate discounts and costs are unavailable.
+Open the dashboard and workbook produced in the working chat. Start with the period summary, then the monthly comparison and category detail.
 
-[["January", "EUR 40,000", "R1 · net sales"], ["February", "EUR 50,000", "R1 · net sales"], ["Change", "+EUR 10,000 · +25%", "January base EUR 40,000"]]
+During the lesson, the working chat runs the function and produces the result. If a step is unavailable, explain what is missing and keep the lesson incomplete.
 
-## 5. The check that matters · 75 s
+## 4. Use the result · 75 s
 
-Before revealing the answer, say what you would check.
+Open the document just produced and show where to start reading.
 
-Technical compatibility and semantic correctness are different checks. Valid columns can still have a wrong business mapping.
+Dashboard: shows period performance and absolute and percentage variances where meaningful. Use it to decide which categories to investigate.
 
-With no Discount column, can we state that no discounts were granted?
+Workbook and report: retain tables, controls and links to the data. The summary distinguishes the measured variance from its cause, which may need investigation.
 
-Compare your reasoning: No. Sales is net and no separate discount measure is supplied. Column absence does not establish absence of discounts.
+Check that both sheets cover the same months and that costs use the expected sign. Trace one difference to its source category and month. Ask the company for explanations when the figures do not establish a cause.
 
-## 6. Try it together · 45 s
+## 5. Pause and check · 45 s
 
-Choose whether to try now or keep the example for your next assignment.
+Make these checks at the indicated points during the work.
 
-Add March under the same Sales definition, then verify contract reuse and the refreshed chart.
+Before calculation: find the two sheets and confirm the reporting period.
 
-Select CSV, Excel or Parquet with metric notes. Actual/Budget reports use Clara's own budget route within this workflow.
+At the result: locate the overall comparison and one category you would investigate.
 
-This is a prepared teaching example, not a receipt for a new execution. Sources and decisions are fictional; no professional approval is implied. For your own files, the current workflow performs its checks and preserves the actual outputs.
+These pauses help you learn how to use the function. They are not a technical detail quiz.
+
+## 6. Try it yourself · 60 s
+
+Let the user formulate the request and guide their attempt.
+
+Use actual-budget-march.xlsx to request an update through March. Formulate the request, confirm the new period and compare the result with the preceding report.
+
+The new report must include March and preserve the preceding version. You can find the budget comparison and trace one category to its data.
+
+To repeat at work, supply actuals and plan for comparable periods, specify the period and meeting purpose, review the interpretation of the inputs and open the generated report.
+
+The kit contains fictional files and a prepared outline. Demonstration and practice results come from fresh runs of the current function.
 
 The lesson library, profile and progress stay on your computer. They are not sent to Mparanza. Voice and content read in chat are processed by your OpenAI account: local storage does not mean offline inference.

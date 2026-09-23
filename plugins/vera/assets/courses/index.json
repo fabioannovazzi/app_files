@@ -116,7 +116,7 @@
     },
     "bandi-agevolazioni": {
       "path": "bandi-agevolazioni/course.json",
-      "sha256": "530856c9241eb637ed0ce19d6ff72a71b94af43d8714adcb17166e4f87037603",
+      "sha256": "51e3e0323328e89d011671dea47a208e9c92d2ab5d40d2f9b9aa8b63f4c4b0a1",
       "languages": [
         "it",
         "en",
@@ -128,24 +128,23 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Un'opportunità interessante è già candidabile?",
-        "en": "An interesting opportunity is not yet an eligible application",
-        "fr": "Une opportunité pertinente est-elle déjà recevable ?",
-        "de": "Eine passende Förderung ist noch kein belegter Anspruch",
-        "es": "Una oportunidad interesante no acredita la elegibilidad"
+        "it": "Preparare un dossier per un bando con Vera",
+        "en": "Prepare a grant-application dossier with Vera",
+        "fr": "Préparer un dossier de demande d’aide avec Vera",
+        "de": "Mit Vera einen Förderantrag vorbereiten",
+        "es": "Preparar un expediente de ayudas con Vera"
       },
       "goals": {
-        "it": "Separare la scoperta di un bando dall'istruttoria documentale per un'impresa concreta.",
-        "en": "Separate grant discovery from evidence-based preparation for a specific enterprise.",
-        "fr": "Distinguer découverte d'une aide et préparation documentée pour une entreprise précise.",
-        "de": "Fördersuche und beleggestützte Vorbereitung für ein bestimmtes Unternehmen unterscheiden.",
-        "es": "Distinguir la búsqueda de ayudas de la preparación documentada para una empresa concreta."
-      },
-      "material": "retained"
+        "it": "Imparare a partire da un bando selezionato, fornire i documenti dell’impresa e rivedere il dossier preparato da Vera.",
+        "en": "Learn to start from a selected call, supply company documents and review the dossier Vera prepares.",
+        "fr": "Apprendre à partir d’un appel sélectionné, fournir les documents de l’entreprise et relire le dossier préparé par Vera.",
+        "de": "Lernen, mit einem ausgewählten Förderaufruf zu beginnen, Unternehmensunterlagen bereitzustellen und Veras Dossier zu prüfen.",
+        "es": "Aprender a empezar con una convocatoria seleccionada, aportar documentos de la empresa y revisar el expediente preparado por Vera."
+      }
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "a528cea8b962b5313d0c16ab969a5fcba6a096f5633e23af245e4a3f00203ea0",
+      "sha256": "dc9a1820a2ab57ed39a1299a4d33554dd112fcadd81d411eec23c07809ed0d7f",
       "languages": [
         "it",
         "en"
@@ -154,18 +153,17 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Dal prospetto contabile alla bozza di bilancio",
-        "en": "From accounting balances to a draft financial statement"
+        "it": "Preparare una bozza di bilancio con Vera",
+        "en": "Prepare draft annual accounts with Vera"
       },
       "goals": {
-        "it": "Capire come lettura dei saldi, mappatura e controlli accompagnano la preparazione di un bilancio OIC/XBRL da rivedere.",
-        "en": "Understand how source reading, mapping and checks support a reviewable OIC statement and XBRL output."
-      },
-      "material": "retained"
+        "it": "Imparare a fornire i documenti, rivedere le proposte di Vera e leggere una bozza di bilancio con prospetti, informazioni di supporto e controlli.",
+        "en": "Learn to supply the documents, review Vera’s proposals and read draft annual accounts with statements, supporting information and checks."
+      }
     },
     "browser-automation": {
       "path": "browser-automation/course.json",
-      "sha256": "831cddbf713c6f492f3d739fb9bcc307b44c667cd6963c8210e871cb31c10f80",
+      "sha256": "a1a931b48d8e123cc46c0268280a1601770d6a561e6f9b2367bf3cc89fafbc02",
       "languages": [
         "it",
         "en",
@@ -177,24 +175,23 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Insegnare un passaggio ripetibile nel browser",
-        "en": "Teach a repeatable browser step",
-        "fr": "Apprendre un geste répétable dans le navigateur",
-        "de": "Einen wiederholbaren Browserschritt beibringen",
-        "es": "Enseñar un paso repetible en el navegador"
+        "it": "Insegnare a Vera una procedura nel browser",
+        "en": "Teach Vera a browser procedure",
+        "fr": "Apprendre à Vera une procédure dans le navigateur",
+        "de": "Vera einen Ablauf im Browser beibringen",
+        "es": "Enseñar a Vera un procedimiento en el navegador"
       },
       "goals": {
-        "it": "Comprendere come una procedura osservata diventa una capacità locale verificabile, con limiti e arresti espliciti.",
-        "en": "Turn an observed procedure into a locally verifiable capability with explicit stopping conditions.",
-        "fr": "Transformer une procédure observée en capacité locale vérifiable, avec des conditions d'arrêt explicites.",
-        "de": "Aus einem beobachteten Ablauf eine lokal prüfbare Fähigkeit mit klaren Abbruchbedingungen entwickeln.",
-        "es": "Transformar un procedimiento observado en una capacidad verificable localmente y con condiciones de parada."
-      },
-      "material": "retained"
+        "it": "Imparare a mostrare a Vera un lavoro ripetitivo nel browser, rivedere la procedura salvata e capire come diventa un’automazione verificata.",
+        "en": "Learn to show Vera a repeatable browser task, review the saved procedure and understand how it becomes tested automation.",
+        "fr": "Apprendre à montrer une tâche répétitive à Vera, relire la procédure enregistrée et comprendre comment elle devient une automatisation vérifiée.",
+        "de": "Lernen, Vera eine wiederkehrende Browseraufgabe zu zeigen, den gespeicherten Ablauf zu prüfen und den Weg zur getesteten Automatisierung zu verstehen.",
+        "es": "Aprender a mostrar a Vera una tarea repetitiva, revisar el procedimiento guardado y comprender cómo se convierte en una automatización comprobada."
+      }
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "3af4e0c0f5a6bc9757cb5d6b9873263197379b53fa93f188542e18f1c9af10da",
+      "sha256": "854d72ba8b9e8c0b23e69a16edb3d6a3cf7d815e376a5c58a03d3d7882f3de2e",
       "languages": [
         "it",
         "en"
@@ -203,14 +200,13 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Un investimento, due ipotesi da verificare",
-        "en": "One investment, two assumptions to test"
+        "it": "Preparare un business plan con Vera",
+        "en": "Prepare a business plan with Vera"
       },
       "goals": {
-        "it": "Collegare una decisione d'investimento a evidenze commerciali, ipotesi esplicite e risultati di piano.",
-        "en": "Connect an investment decision to commercial evidence, explicit assumptions and plan outcomes."
-      },
-      "material": "retained"
+        "it": "Imparare a partire da una proposta, fornire i dati disponibili e ottenere un report che aiuti a decidere cosa provare, cambiare o approfondire.",
+        "en": "Learn to start from a proposal, supply available information and obtain a report that helps decide what to test, change or investigate."
+      }
     },
     "centrale-rischi-review": {
       "path": "centrale-rischi-review/course.json",
@@ -510,7 +506,7 @@
     },
     "management-control-pack": {
       "path": "management-control-pack/course.json",
-      "sha256": "e43840f25610674f11fffc09421242f5563c2450930294e98329bc2d35b6e818",
+      "sha256": "179efcc5ad4ac42f9541ecc76cd9b4fa94521c105a1309606e23c381c4c471b6",
       "languages": [
         "it",
         "en"
@@ -519,14 +515,13 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Actual e Budget: leggere importi e percentuali",
-        "en": "Actual versus Budget: read amounts and percentages"
+        "it": "Preparare il controllo di gestione con Vera",
+        "en": "Prepare a management-control report with Vera"
       },
       "goals": {
-        "it": "Interpretare un report di controllo di gestione a partire da periodo, segni e categorie rivedute.",
-        "en": "Interpret a management report using reviewed periods, signs and categories."
-      },
-      "material": "retained"
+        "it": "Impara a confrontare consuntivo e budget, seguire la preparazione del report e usare le differenze per la revisione mensile.",
+        "en": "Learn to compare actual performance with budget, follow report preparation and use the differences in a monthly review."
+      }
     },
     "new-client": {
       "path": "new-client/course.json",
@@ -671,7 +666,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "412710489bd1fad6ad756e034f0d02e04e59f785cc9f469d5a7160891e208ddd",
+      "sha256": "64500bf6ecdd77a47c45d277d4fc0798473c4310af5de08d1089d439d1b417ce",
       "languages": [
         "it",
         "en",
@@ -683,20 +678,19 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Da una domanda generica a una risposta che si può verificare",
-        "en": "From a broad question to a verifiable answer",
-        "fr": "D'une question générale à une réponse vérifiable",
-        "de": "Von einer allgemeinen Frage zu einer prüfbaren Antwort",
-        "es": "De una pregunta general a una respuesta verificable"
+        "it": "Ottenere una risposta verificata con Vera",
+        "en": "Get a checked answer with Vera",
+        "fr": "Obtenir une réponse vérifiée avec Vera",
+        "de": "Eine geprüfte Antwort mit Vera erhalten",
+        "es": "Obtener una respuesta verificada con Vera"
       },
       "goals": {
-        "it": "Capire come fatti, fonti, alternative e revisione formano un unico percorso di risposta professionale.",
-        "en": "Understand how facts, sources, alternatives and review form one professional answer workflow.",
-        "fr": "Comprendre comment faits, sources, alternatives et revue forment un parcours professionnel unique.",
-        "de": "Verstehen, wie Fakten, Quellen, Alternativen und Prüfung einen fachlichen Antwortprozess bilden.",
-        "es": "Entender cómo hechos, fuentes, alternativas y revisión forman un único proceso de respuesta profesional."
-      },
-      "material": "retained"
+        "it": "Imparare a porre un quesito professionale, seguire ricerca e verifiche e utilizzare la risposta con le sue fonti e i punti ancora aperti.",
+        "en": "Learn to ask a professional question, follow research and checks, and use the answer with its sources and unresolved points.",
+        "fr": "Apprendre à poser une question professionnelle, suivre la recherche et les vérifications et utiliser la réponse avec ses sources et points ouverts.",
+        "de": "Lernen, eine fachliche Frage zu stellen, Recherche und Prüfungen zu verfolgen und die Antwort mit Quellen und offenen Punkten zu verwenden.",
+        "es": "Aprender a plantear una cuestión profesional, seguir la investigación y las comprobaciones y usar la respuesta con sus fuentes y puntos abiertos."
+      }
     },
     "registro-imprese-sari": {
       "path": "registro-imprese-sari/course.json",
