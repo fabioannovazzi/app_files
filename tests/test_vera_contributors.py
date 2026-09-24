@@ -41,3 +41,32 @@ def test_vera_contributor_photo_is_present_and_bound_to_its_name() -> None:
         assert photo.get("alt") == f"Foto di {name}", (
             f"{name}'s profile photo must be labelled with the same contributor name."
         )
+
+
+def test_anna_vivoli_card_uses_her_linkedin_photo_and_approved_details() -> None:
+    html = CONTRIBUTORS_PAGE.read_text(encoding="utf-8")
+    soup = BeautifulSoup(html, "html.parser")
+    cards = soup.select("#contributors .contributor-list > li")
+    anna_cards = [
+        card
+        for card in cards
+        if card.select_one(".contributor-name")
+        and card.select_one(".contributor-name").get_text(" ", strip=True)
+        == "Anna Vivoli"
+    ]
+
+    assert len(anna_cards) == 1, "Anna Vivoli must appear exactly once."
+    anna_card = anna_cards[0]
+    assert anna_card.select_one("a.contributor-row").get("href") == (
+        "https://www.linkedin.com/in/anna-vivoli-333b84355/"
+    )
+    assert anna_card.select_one(".contributor-profile").get_text(" ", strip=True) == (
+        "Consulente in Business Continuity e analisi pre-crisi per PMI · Mestre, Veneto"
+    )
+    assert anna_card.select_one(".contributor-role").get_text(" ", strip=True) == (
+        "Mette alla prova Vera su controlli contabili e riconciliazioni, "
+        "partendo da casi concreti."
+    )
+    assert anna_card.select_one(".contributor-mark img").get("src") == (
+        "/static/shared/vera/images/contributors/anna-vivoli.jpg"
+    )
