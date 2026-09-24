@@ -8,12 +8,12 @@
   const PLUGIN_IMPROVEMENT_MODE = "plugin_improvement_interview";
   const isPluginImprovementInterview =
     interviewMode === PLUGIN_IMPROVEMENT_MODE;
-  const SCRIPT_VERSION = "20260924-connection-recovery-v1";
+  const SCRIPT_VERSION = "20260924-audio-upload-retry-v1";
   const attemptStorageKey = `hosted-interview-attempt:${token}`;
   const CONNECTION_RECOVERY_MS = 15000;
   const FINAL_TRANSCRIPT_SETTLE_MS = 2500;
   const UPLOAD_REQUEST_TIMEOUT_MS = 8000;
-  const FINAL_UPLOAD_SETTLE_TIMEOUT_MS = 10000;
+  const FINAL_UPLOAD_SETTLE_TIMEOUT_MS = 30000;
   const IMPROVEMENT_ANSWER_SETTLE_MS = 1200;
   const SILENCE_NUDGE_SECONDS = 35;
   const SILENCE_SIMPLIFY_SECONDS = 75;
@@ -549,34 +549,41 @@
     form.append("attempt_id", activeAttemptId);
     form.append("chunk_index", String(chunkIndex));
     form.append("file", blob, `chunk-${String(chunkIndex).padStart(6, "0")}.${extension}`);
-    const upload = fetchUpload("/audio-chunk", {
-      method: "POST",
-      body: form,
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error(`Audio upload failed: ${response.status}`);
-        audioChunksUploaded += 1;
-      })
-      .catch((error) => {
-        if (error?.name === "AbortError") {
-          uploadSettleTimedOut = true;
-          console.warn("Audio chunk upload timed out", error);
-          postEvent("audio_chunk_upload_timeout", {
+    // Retry the same numbered bytes: a timeout may mean only the reply was lost.
+    const upload = (async () => {
+      for (let attempt = 0; attempt < 3; attempt += 1) {
+        try {
+          const response = await fetchUpload("/audio-chunk", {
+            method: "POST",
+            body: form,
+          });
+          if (!response.ok) {
+            const error = new Error(`Audio upload failed: ${response.status}`);
+            error.permanent = response.status >= 400 && response.status < 500 &&
+              ![408, 429].includes(response.status);
+            throw error;
+          }
+          audioChunksUploaded += 1;
+          return;
+        } catch (error) {
+          if (attempt < 2 && !error.permanent) {
+            await delay(1000 * (attempt + 1));
+            continue;
+          }
+          console.warn("Could not upload audio chunk after retries", error);
+          uploadErrors.push({
+            type: "audio",
             chunk_index: chunkIndex,
+            message: error.message || String(error),
+          });
+          postEvent("audio_chunk_upload_error", {
+            chunk_index: chunkIndex,
+            message: error.message || String(error),
           });
           return;
         }
-        console.warn("Could not upload audio chunk", error);
-        uploadErrors.push({
-          type: "audio",
-          chunk_index: chunkIndex,
-          message: error.message || String(error),
-        });
-        postEvent("audio_chunk_upload_error", {
-          chunk_index: chunkIndex,
-          message: error.message || String(error),
-        });
-      });
+      }
+    })();
     return queueUpload(upload);
   }
 
@@ -1801,6 +1808,7 @@
             script_version: SCRIPT_VERSION,
             peer_connection_state: lastPeerConnectionState,
             data_channel_state: lastDataChannelState,
+            expected_audio_chunks: audioChunkIndex,
             upload_errors: uploadErrors,
             upload_settle_timed_out: uploadSettleTimedOut,
           },

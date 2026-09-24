@@ -66,7 +66,7 @@
     {
       "id": "interview-recovery-events",
       "when": "During the hosted microphone interview and when the participant leaves its page",
-      "content": "Connection recovery, browser playback-blocked and microphone mute/unmute events are stored by Mparanza with the active attempt. Page departure can finalise already received transcripts and audio for post-call processing. The microphone energy meter is computed and displayed locally in the browser; no meter samples are uploaded. Interrupted evidence remains stored and retryable under the existing interview retention arrangement."
+      "content": "Connection recovery, browser playback-blocked and microphone mute/unmute events are stored by Mparanza with the active attempt. Page departure can finalise already received transcripts and audio for post-call processing. The microphone energy meter is computed and displayed locally in the browser; no meter samples are uploaded. Interrupted evidence remains stored and retryable under the existing interview retention arrangement. Timed-out microphone uploads retry the same numbered bytes up to three times. Completion includes the expected audio chunk count; detected recording gaps preserve the live transcript instead of submitting incomplete audio for transcription."
     }
   ],
   "data_returned": [
@@ -116,6 +116,6 @@
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "33d559536a67b7d3a54674dfafd691ba71d4f2cc642e15ce117c6ead6f63e47a"
+    "source_fingerprint": "80b4978a5f41b4fbb0039159d384422e3c12b9cd491c0e60c1b4ae30fbfa4e91"
   }
 }
