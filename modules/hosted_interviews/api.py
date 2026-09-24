@@ -1875,6 +1875,25 @@ def _transcribe_interviewee_audio_chunks(
     session_dir: Path,
 ) -> dict[str, Any]:
     audio_files = _audio_files_for_session(session_dir)
+    indices = [
+        int(Path(item["file_name"]).stem.removeprefix("chunk-")) for item in audio_files
+    ]
+    completion = _read_json(_completion_path(session_dir))
+    expected = completion.get("telemetry", {}).get("expected_audio_chunks")
+    first_missing = next(
+        (index for index, actual in enumerate(indices) if index != actual),
+        len(indices),
+    )
+    missing_tail = (
+        isinstance(expected, int)
+        and not isinstance(expected, bool)
+        and expected > len(indices)
+    )
+    if first_missing < len(indices) or missing_tail:
+        raise VoiceSessionError(
+            "Interview microphone recording is incomplete; first missing audio chunk: "
+            f"{first_missing}. The live transcript is preserved."
+        )
     workspace = session_dir / job_state.AUDIO_WORK_DIRECTORY
     if workspace.is_symlink():
         raise OSError("Interview audio workspace must not be a symbolic link")
@@ -2869,23 +2888,36 @@ async def public_interview_audio_chunk(
         extension = ".webm"
     chunk_name = f"chunk-{chunk_index:06d}{extension}"
     chunk_path = audio_dir / chunk_name
-    if chunk_path.exists():
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Audio chunk already exists for this attempt.",
+    # Share the completion lock and recheck after reading the request body:
+    # a delayed upload must never write into a replacement attempt.
+    with _try_post_completion_task_lock(session_dir) as acquired:
+        if not acquired:
+            raise HTTPException(
+                status_code=503, detail="Interview audio is busy; retry."
+            )
+        try:
+            _active_attempt_record(token, attempt_id)
+        except HostedInterviewError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        if chunk_path.exists():
+            if chunk_path.read_bytes() == content:
+                return JSONResponse({"ok": True, "filename": chunk_name})
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Different audio already exists for this chunk.",
+            )
+        chunk_path.write_bytes(content)
+        _append_event(
+            token,
+            "audio_chunk",
+            {
+                "chunk_index": chunk_index,
+                "filename": chunk_name,
+                "content_type": file.content_type or "",
+                "bytes": len(content),
+            },
         )
-    chunk_path.write_bytes(content)
-    _append_event(
-        token,
-        "audio_chunk",
-        {
-            "chunk_index": chunk_index,
-            "filename": chunk_name,
-            "content_type": file.content_type or "",
-            "bytes": len(content),
-        },
-    )
-    return JSONResponse({"ok": True, "filename": chunk_name})
+        return JSONResponse({"ok": True, "filename": chunk_name})
 
 
 @public_router.post("/{token}/video-chunk")
