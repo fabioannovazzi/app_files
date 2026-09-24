@@ -40,7 +40,7 @@
     {
       "path": "modules/invoice-xml/references/proposal-contract.md",
       "repository_path": "plugins/invoice-xml/references/proposal-contract.md",
-      "sha256": "06eaec533ad6b42d027ce8ace455c57632ff932945ce34eae526c15d6ed98ff8"
+      "sha256": "be0158e124fbb87a0ee2b2b466f10eb7b31e41baceb2d83888bce3f08f148cd5"
     },
     {
       "path": "modules/invoice-xml/references/xsd/Schema_VFPR12_v1.2.3.xsd",
@@ -70,7 +70,7 @@
     {
       "path": "modules/invoice-xml/scripts/invoice_checks.py",
       "repository_path": "plugins/invoice-xml/scripts/invoice_checks.py",
-      "sha256": "d36b1e851a8791762762ccf7d6d38494093b91947dad2577aab2016b9a73e3eb"
+      "sha256": "3f7d16ce9845b5d8c604af825d626bda551218b0a26907fbe7aff3e101dda057"
     },
     {
       "path": "modules/invoice-xml/scripts/invoice_schema.py",
@@ -80,7 +80,7 @@
     {
       "path": "modules/invoice-xml/scripts/invoice_workflow.py",
       "repository_path": "plugins/invoice-xml/scripts/invoice_workflow.py",
-      "sha256": "c37c1e4082f365ba6326dacee21673916faca211fb1585e3264ceb80fdd31cdb"
+      "sha256": "2dd809070a4340bb897d5eade9689c0fdf8ff5028aa31f70d34c769dc9c8b185"
     },
     {
       "path": "modules/invoice-xml/scripts/source_evidence.py",
@@ -90,7 +90,7 @@
     {
       "path": "modules/invoice-xml/skills/invoice-xml/SKILL.md",
       "repository_path": "plugins/invoice-xml/skills/invoice-xml/SKILL.md",
-      "sha256": "709ccbf228357a20429d012d40a7435166259b54825e87fc9699bd889234e5e5"
+      "sha256": "720a4e1f6596671f8f745db7bd1ea223c1cd8cacbe5dde49aa5315cab29883ab"
     },
     {
       "path": "modules/invoice-xml/vendor/modules/__init__.py",

@@ -157,6 +157,14 @@ delete information, change the tax treatment or split a source to bypass it.
    missing facts needed to progress. Do not infer tax IDs, regime, routing code,
    numbering, dates, quantity or unit price from a plausible default.
 
+For any SdI or gateway rejection follow-up, inspect the newest supplied
+notification or screenshot before answering. Record every currently visible
+error code and message, compare the exact referenced XML fields with the current
+artifact, and retain an unresolved-discrepancy checklist across successive
+rejections. Do not carry forward an earlier diagnosis as the current one and do
+not describe a correction as resolved until the exact latest control passes
+against the corrected artifact.
+
 ## Review and export
 
 Run `scripts/invoice_workflow.py prepare --proposal <output>/proposal.json

@@ -37,7 +37,7 @@
     },
     {
       "path": "modules/invoice-xml/references/proposal-contract.md",
-      "sha256": "0ca151f9927e677e41a4a2a92bd7b04e3607bd97f1a32cc603983622ee479160"
+      "sha256": "733c871045946505eba97da2bfec106b690b5286abe0fa877253826dbadd8eb4"
     },
     {
       "path": "modules/invoice-xml/references/xsd/Schema_VFPR12_v1.2.3.xsd",
@@ -61,7 +61,7 @@
     },
     {
       "path": "modules/invoice-xml/scripts/invoice_checks.py",
-      "sha256": "d36b1e851a8791762762ccf7d6d38494093b91947dad2577aab2016b9a73e3eb"
+      "sha256": "3f7d16ce9845b5d8c604af825d626bda551218b0a26907fbe7aff3e101dda057"
     },
     {
       "path": "modules/invoice-xml/scripts/invoice_schema.py",
@@ -69,7 +69,7 @@
     },
     {
       "path": "modules/invoice-xml/scripts/invoice_workflow.py",
-      "sha256": "c37c1e4082f365ba6326dacee21673916faca211fb1585e3264ceb80fdd31cdb"
+      "sha256": "2dd809070a4340bb897d5eade9689c0fdf8ff5028aa31f70d34c769dc9c8b185"
     },
     {
       "path": "modules/invoice-xml/scripts/source_evidence.py",
@@ -77,7 +77,7 @@
     },
     {
       "path": "modules/invoice-xml/skills/invoice-xml/SKILL.md",
-      "sha256": "c1cccb4994d918b1e344fb8429d97e3bb9abbaeb356b91deec08f2e551000736"
+      "sha256": "a4bbd0e740b289fb3823f631e50c1182c89d9b83edbd162d9ef86fba4b11d45e"
     },
     {
       "path": "modules/invoice-xml/vendor/modules/__init__.py",
@@ -334,5 +334,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "e4ac49ffda9e25f44b9b0658998b0366182bc4f3bece83801d16abac8c2308ce"
+  "canonical_course_sha256": "c552ecb6aab723edb10dcdefc2b79534d2683d637083f2501af771e4f0d3dd72"
 }

@@ -110,9 +110,10 @@ def _proposal(tmp_path: Path, document_type: str = "TD01") -> tuple[dict, Path]:
             {"IdDocumento": "FOREIGN-1", "Data": "2026-08-31"}
         ]
     proposal = {
-        "schema_version": 1,
+        "schema_version": 2,
         "draft_id": "synthetic-1",
         "route": "foreign_integration" if foreign else "domestic",
+        "transmission_mode": "intermediary" if foreign else "supplier_direct",
         "invoice": invoice,
         "sources": [
             {
@@ -303,7 +304,9 @@ def test_foreign_supplier_not_swapped_with_italian_customer(tmp_path: Path) -> N
     header = proposal["invoice"]["FatturaElettronicaHeader"]
     header["CedentePrestatore"]["DatiAnagrafici"]["IdFiscaleIVA"]["IdPaese"] = "IT"
 
-    issues = check_invoice(proposal["invoice"], proposal["route"])
+    issues = check_invoice(
+        proposal["invoice"], proposal["route"], proposal["transmission_mode"]
+    )
 
     assert any("supplier's foreign identifier" in issue for issue in issues)
 
@@ -335,7 +338,9 @@ def test_duplicate_bodies_are_blocked(tmp_path: Path) -> None:
     bodies = proposal["invoice"]["FatturaElettronicaBody"]
     bodies.append(copy.deepcopy(bodies[0]))
 
-    issues = check_invoice(proposal["invoice"], proposal["route"])
+    issues = check_invoice(
+        proposal["invoice"], proposal["route"], proposal["transmission_mode"]
+    )
 
     assert any("duplicate invoice identity" in issue for issue in issues)
 
@@ -349,9 +354,194 @@ def test_exempt_invoice_requires_consistent_nature_and_zero_tax(tmp_path: Path) 
         AliquotaIVA="0.00", Natura="N4", Imposta="0.00"
     )
 
-    issues = check_invoice(proposal["invoice"], proposal["route"])
+    issues = check_invoice(
+        proposal["invoice"], proposal["route"], proposal["transmission_mode"]
+    )
 
     assert issues == []
+
+
+def test_export_blocks_invalid_supplier_fiscal_code_control_character(
+    tmp_path: Path,
+) -> None:
+    proposal, inputs = _proposal(tmp_path)
+    supplier = proposal["invoice"]["FatturaElettronicaHeader"]["CedentePrestatore"][
+        "DatiAnagrafici"
+    ]
+    supplier["CodiceFiscale"] = "RSSMRA80A01H501X"
+    _refresh_evidence(proposal)
+
+    revision = prepare_draft(
+        proposal, input_root=inputs, output_dir=tmp_path / "output"
+    )
+
+    report = json.loads((revision / "validation.json").read_text())
+    assert report["status"] == "blocked"
+    assert any("fiscal code" in issue for issue in report["mechanical_errors"])
+
+
+def test_valid_personal_fiscal_code_passes_fixed_control_character_check(
+    tmp_path: Path,
+) -> None:
+    proposal, _ = _proposal(tmp_path)
+    supplier = proposal["invoice"]["FatturaElettronicaHeader"]["CedentePrestatore"][
+        "DatiAnagrafici"
+    ]
+    supplier["CodiceFiscale"] = "RSSMRA80A01H501U"
+
+    issues = check_invoice(
+        proposal["invoice"], proposal["route"], proposal["transmission_mode"]
+    )
+
+    assert not any("fiscal code" in issue for issue in issues)
+
+
+def test_export_blocks_invalid_italian_vat_check_digit(tmp_path: Path) -> None:
+    proposal, inputs = _proposal(tmp_path)
+    proposal["invoice"]["FatturaElettronicaHeader"]["CedentePrestatore"][
+        "DatiAnagrafici"
+    ]["IdFiscaleIVA"]["IdCodice"] = "01234567898"
+    proposal["invoice"]["FatturaElettronicaHeader"]["DatiTrasmissione"][
+        "IdTrasmittente"
+    ]["IdCodice"] = "01234567898"
+    _refresh_evidence(proposal)
+
+    revision = prepare_draft(
+        proposal, input_root=inputs, output_dir=tmp_path / "output"
+    )
+
+    report = json.loads((revision / "validation.json").read_text())
+    assert report["status"] == "blocked"
+    assert any("VAT number" in issue for issue in report["mechanical_errors"])
+
+
+def test_export_blocks_truncated_customer_fiscal_code_from_latest_rejection(
+    tmp_path: Path,
+) -> None:
+    proposal, inputs = _proposal(tmp_path)
+    customer = proposal["invoice"]["FatturaElettronicaHeader"][
+        "CessionarioCommittente"
+    ]["DatiAnagrafici"]
+    customer["CodiceFiscale"] = "RSSMRA80A01H501"
+    _refresh_evidence(proposal)
+
+    revision = prepare_draft(
+        proposal, input_root=inputs, output_dir=tmp_path / "output"
+    )
+
+    report = json.loads((revision / "validation.json").read_text())
+    assert report["status"] == "blocked"
+    assert any("fiscal code" in issue for issue in report["mechanical_errors"])
+
+
+def test_export_allows_distinct_valid_italian_vat_and_numeric_fiscal_code(
+    tmp_path: Path,
+) -> None:
+    proposal, inputs = _proposal(tmp_path)
+    customer = proposal["invoice"]["FatturaElettronicaHeader"][
+        "CessionarioCommittente"
+    ]["DatiAnagrafici"]
+    customer["CodiceFiscale"] = "01234567897"
+    _refresh_evidence(proposal)
+    revision = prepare_draft(
+        proposal, input_root=inputs, output_dir=tmp_path / "output"
+    )
+
+    result = export_invoice(revision, _review(proposal), input_root=inputs)
+
+    assert result["sdi_acceptance"] == "not_tested"
+
+
+@pytest.mark.parametrize("transmission_mode", ["supplier_direct", "intermediary"])
+def test_export_accepts_personal_transmitter_fiscal_code(
+    tmp_path: Path, transmission_mode: str
+) -> None:
+    proposal, inputs = _proposal(tmp_path)
+    proposal["transmission_mode"] = transmission_mode
+    header = proposal["invoice"]["FatturaElettronicaHeader"]
+    header["DatiTrasmissione"]["IdTrasmittente"]["IdCodice"] = "RSSMRA80A01H501U"
+    if transmission_mode == "supplier_direct":
+        header["CedentePrestatore"]["DatiAnagrafici"][
+            "CodiceFiscale"
+        ] = "RSSMRA80A01H501U"
+    _refresh_evidence(proposal)
+    revision = prepare_draft(
+        proposal, input_root=inputs, output_dir=tmp_path / "output"
+    )
+
+    result = export_invoice(revision, _review(proposal), input_root=inputs)
+
+    assert result["xml_path"] == "ITRSSMRA80A01H501U_00001.xml"
+
+
+@pytest.mark.parametrize("code", ["RSSMRA80A01H501X", "RSSMRA80A01H501", "01234567898"])
+def test_invalid_transmitter_identifier_blocks_draft(tmp_path: Path, code: str) -> None:
+    proposal, inputs = _proposal(tmp_path)
+    proposal["transmission_mode"] = "intermediary"
+    proposal["invoice"]["FatturaElettronicaHeader"]["DatiTrasmissione"][
+        "IdTrasmittente"
+    ]["IdCodice"] = code
+    _refresh_evidence(proposal)
+
+    revision = prepare_draft(
+        proposal, input_root=inputs, output_dir=tmp_path / "output"
+    )
+
+    report = json.loads((revision / "validation.json").read_text())
+    assert report["status"] == "blocked"
+    assert any("Transmitter:" in issue for issue in report["mechanical_errors"])
+
+
+def test_direct_transmission_requires_supplier_as_transmitter(tmp_path: Path) -> None:
+    proposal, inputs = _proposal(tmp_path)
+    proposal["invoice"]["FatturaElettronicaHeader"]["DatiTrasmissione"][
+        "IdTrasmittente"
+    ]["IdCodice"] = "09876543217"
+    _refresh_evidence(proposal)
+
+    revision = prepare_draft(
+        proposal, input_root=inputs, output_dir=tmp_path / "output"
+    )
+
+    report = json.loads((revision / "validation.json").read_text())
+    assert report["status"] == "blocked"
+    assert any("Direct transmission" in issue for issue in report["mechanical_errors"])
+
+
+def test_uncertain_fiscal_identity_blocks_export(tmp_path: Path) -> None:
+    proposal, inputs = _proposal(tmp_path)
+    pointer = "/FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/IdFiscaleIVA/IdCodice"
+    proposal["field_evidence"][pointer]["uncertain"] = True
+
+    revision = prepare_draft(
+        proposal, input_root=inputs, output_dir=tmp_path / "output"
+    )
+
+    report = json.loads((revision / "validation.json").read_text())
+    assert report["status"] == "blocked"
+    assert any(pointer in issue for issue in report["issues"])
+
+
+def test_export_uses_sdi_transmitter_and_progressive_filename(tmp_path: Path) -> None:
+    proposal, inputs = _proposal(tmp_path)
+    revision = prepare_draft(
+        proposal, input_root=inputs, output_dir=tmp_path / "output"
+    )
+
+    result = export_invoice(revision, _review(proposal), input_root=inputs)
+
+    assert result["xml_path"] == "IT01234567897_00001.xml"
+
+
+def test_workflow_requires_latest_gateway_evidence_review() -> None:
+    skill = (
+        Path(__file__).resolve().parents[1] / "skills/invoice-xml/SKILL.md"
+    ).read_text()
+    normalized = " ".join(skill.split())
+
+    assert "inspect the newest supplied notification or screenshot" in normalized
+    assert "every currently visible error code and message" in normalized
+    assert "exact latest control passes" in normalized
 
 
 def test_unsupported_optional_block_is_retained_and_blocks_export(
@@ -545,7 +735,9 @@ def test_multirate_invoice_reconciles_separate_vat_groups(tmp_path: Path) -> Non
     )
     body["DatiGenerali"]["DatiGeneraliDocumento"]["ImportoTotaleDocumento"] = "177.00"
 
-    issues = check_invoice(proposal["invoice"], proposal["route"])
+    issues = check_invoice(
+        proposal["invoice"], proposal["route"], proposal["transmission_mode"]
+    )
 
     assert issues == []
 
@@ -564,7 +756,9 @@ def test_line_discount_applies_before_quantity(tmp_path: Path) -> None:
     )
     body["DatiGenerali"]["DatiGeneraliDocumento"]["ImportoTotaleDocumento"] = "219.60"
 
-    issues = check_invoice(proposal["invoice"], proposal["route"])
+    issues = check_invoice(
+        proposal["invoice"], proposal["route"], proposal["transmission_mode"]
+    )
 
     assert issues == []
 
