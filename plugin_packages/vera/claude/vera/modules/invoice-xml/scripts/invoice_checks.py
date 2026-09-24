@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from collections import defaultdict
 from decimal import ROUND_HALF_UP, Decimal, InvalidOperation, localcontext
 from typing import Any
@@ -10,6 +11,100 @@ __all__ = ["check_invoice"]
 
 CENT = Decimal("0.01")
 ZERO = Decimal("0")
+
+_FISCAL_CODE_ODD_VALUES = {
+    character: value
+    for character, value in zip(
+        "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        (
+            1,
+            0,
+            5,
+            7,
+            9,
+            13,
+            15,
+            17,
+            19,
+            21,
+            1,
+            0,
+            5,
+            7,
+            9,
+            13,
+            15,
+            17,
+            19,
+            21,
+            2,
+            4,
+            18,
+            20,
+            11,
+            3,
+            6,
+            8,
+            12,
+            14,
+            16,
+            10,
+            22,
+            25,
+            24,
+            23,
+        ),
+        strict=True,
+    )
+}
+
+
+def _valid_italian_numeric_code(value: str) -> bool:
+    """Verify the statutory check digit for an 11-digit Italian fiscal ID."""
+    if not re.fullmatch(r"\d{11}", value):
+        return False
+    total = sum(int(value[index]) for index in range(0, 10, 2))
+    for index in range(1, 10, 2):
+        doubled = int(value[index]) * 2
+        total += doubled if doubled < 10 else doubled - 9
+    return int(value[-1]) == (10 - total % 10) % 10
+
+
+def _valid_italian_fiscal_code(value: str) -> bool:
+    """Verify the fixed control character without inferring registry identity."""
+    if re.fullmatch(r"\d{11}", value):
+        return _valid_italian_numeric_code(value)
+    if not re.fullmatch(r"[A-Z0-9]{15}[A-Z]", value):
+        return False
+    total = 0
+    for index, character in enumerate(value[:15], start=1):
+        total += (
+            _FISCAL_CODE_ODD_VALUES[character]
+            if index % 2
+            else int(character) if character.isdigit() else ord(character) - ord("A")
+        )
+    return value[-1] == chr(ord("A") + total % 26)
+
+
+def _check_italian_party_identity(
+    party: dict[str, Any], label: str, issues: list[str]
+) -> None:
+    """Apply only mechanically verifiable fiscal-ID and local-coherence rules."""
+    vat = party.get("IdFiscaleIVA")
+    fiscal_code = party.get("CodiceFiscale")
+    italian_vat = vat if isinstance(vat, dict) and vat.get("IdPaese") == "IT" else None
+    if italian_vat is not None and not _valid_italian_numeric_code(
+        italian_vat.get("IdCodice", "")
+    ):
+        issues.append(
+            f"{label}: Italian VAT number has invalid structure or check digit"
+        )
+    if fiscal_code is not None and (
+        not isinstance(fiscal_code, str) or not _valid_italian_fiscal_code(fiscal_code)
+    ):
+        issues.append(
+            f"{label}: Italian fiscal code has invalid structure or check character"
+        )
 
 
 def _rows(value: Any) -> list[dict[str, Any]]:
@@ -49,7 +144,9 @@ def _vat_consistency(
         )
 
 
-def check_invoice(invoice: dict[str, Any], route: str) -> list[str]:
+def check_invoice(
+    invoice: dict[str, Any], route: str, transmission_mode: str
+) -> list[str]:
     """Check schema-valid fields without choosing tax codes or changing amounts.
 
     Decimal arithmetic is required for reproducible money. The cent tolerance is
@@ -60,6 +157,33 @@ def check_invoice(invoice: dict[str, Any], route: str) -> list[str]:
     issues: list[str] = []
     header = invoice["FatturaElettronicaHeader"]
     transmission = header["DatiTrasmissione"]
+    transmitter = transmission["IdTrasmittente"]
+    if transmitter["IdPaese"] == "IT" and not _valid_italian_fiscal_code(
+        transmitter["IdCodice"]
+    ):
+        issues.append(
+            "Transmitter: Italian fiscal identifier has invalid structure or check digit"
+        )
+    supplier = header["CedentePrestatore"]["DatiAnagrafici"]
+    customer = header["CessionarioCommittente"]["DatiAnagrafici"]
+    _check_italian_party_identity(supplier, "Supplier", issues)
+    _check_italian_party_identity(customer, "Customer", issues)
+    if transmission_mode not in {"supplier_direct", "intermediary"}:
+        issues.append("Select supplier_direct or intermediary transmission mode")
+    elif transmission_mode == "supplier_direct":
+        supplier_vat = supplier["IdFiscaleIVA"]
+        # A local equality check binds the reviewed transmitter to the supplier;
+        # it does not establish the VAT/tax-code association in the tax registry.
+        supplier_code = supplier.get("CodiceFiscale")
+        expected = (
+            {"IdPaese": "IT", "IdCodice": supplier_code}
+            if supplier_vat["IdPaese"] == "IT" and supplier_code
+            else supplier_vat
+        )
+        if transmitter != expected:
+            issues.append(
+                "Direct transmission requires IdTrasmittente to match the supplier fiscal identity"
+            )
     if transmission["FormatoTrasmissione"] != "FPR12":
         issues.append("Only ordinary private-recipient FPR12 export is qualified")
     if len(transmission["CodiceDestinatario"]) != 7:

@@ -1,6 +1,6 @@
 {
   "name": "invoice-xml",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Prepara fatture elettroniche XML da PDF, foto e dati confermati, con revisione prima di esportare.",
   "author": {
     "name": "Mparanza",

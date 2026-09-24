@@ -422,7 +422,7 @@
     },
     "invoice-xml": {
       "path": "invoice-xml/course.json",
-      "sha256": "e4ac49ffda9e25f44b9b0658998b0366182bc4f3bece83801d16abac8c2308ce",
+      "sha256": "c552ecb6aab723edb10dcdefc2b79534d2683d637083f2501af771e4f0d3dd72",
       "languages": [
         "it",
         "en",

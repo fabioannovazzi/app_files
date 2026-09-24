@@ -30,7 +30,7 @@
       {
         "id": "draft-and-professional-review",
         "purpose": "Review extracted fields, fiscal proposals, missing facts, corrections and final export status",
-        "content": "Normalized invoice fields, per-field source references, uncertainties, professional decisions and user confirmations; domestic or foreign operation facts, VAT and date basis, original-invoice linkage, conversion evidence, schema and arithmetic errors, preview content and final export report. The same native model performs this work without a separate worker service.",
+        "content": "Normalized invoice fields, per-field source references, uncertainties, professional decisions and user confirmations; domestic or foreign operation facts, VAT and date basis, original-invoice linkage, conversion evidence, schema and arithmetic errors, preview content and final export report. The same native model performs this work without a separate worker service. Reviewed transmission mode, local fiscal-identifier validation errors, and the currently supplied gateway notification or screenshot may also enter context during rejection diagnosis. No identifier is sent to a registry by the local validator.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -75,9 +75,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-14",
+    "reviewed_at": "2026-09-24",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "18de28d301da07d877270768c059b2e574eb44b2995c7e6637e508fb271ad6cf"
+    "source_fingerprint": "73e09ae526ef61a5c819e3b2f710b4a7fb31c3c6036468c3197b2890c33aa0af"
   }
 }
