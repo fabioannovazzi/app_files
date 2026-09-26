@@ -1,0 +1,30 @@
+.product-social {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 24px;
+}
+
+.product-social a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--blue);
+  text-decoration: none;
+}
+
+.product-social a:hover {
+  color: var(--navy);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.product-social a:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+.product-social svg {
+  flex: none;
+}
