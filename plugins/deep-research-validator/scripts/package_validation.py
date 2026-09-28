@@ -316,7 +316,10 @@ ALLOWED_DOCUMENT_REVISION_STATUSES = {
 
 def _language_code(value: object | None) -> str:
     text = str(value or "en").strip().lower().replace("_", "-")
-    return "es" if text.startswith("es") else "en"
+    return next(
+        (code for code in ("it", "es") if text == code or text.startswith(code + "-")),
+        "en",
+    )
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -1186,7 +1189,9 @@ def _package_markdown(
     audit: dict[str, Any],
     validated_document: str,
 ) -> str:
-    spanish = _language_code(claims_review.get("language")) == "es"
+    language = _language_code(claims_review.get("language"))
+    spanish = language == "es"
+    italian = language == "it"
     claims = claims_review.get("claims", [])
     claim_lines: list[str] = []
     if isinstance(claims, list):
@@ -1214,7 +1219,27 @@ def _package_markdown(
             source_checks = claim.get("source_checks")
             issues = claim.get("issues")
             claim_index = claim.get("claim_index", position)
-            if spanish:
+            if italian:
+                lines = [
+                    f"### Affermazione {claim_index}",
+                    f"**Testo:** {_clean_text(claim.get('claim_text'))}",
+                    f"**Posizione:** {_clean_text(claim.get('claim_location'))}",
+                    f"**Rilevanza:** {_clean_text(claim.get('materiality'))}",
+                    "#### Identità e accesso alle fonti",
+                    json.dumps(source_checks, ensure_ascii=False, indent=2),
+                    f"#### Riscontro nelle fonti — {_clean_text(support.get('status'))}",
+                    _clean_text(support.get("analysis")),
+                    f"#### Ragionamento — {_clean_text(reasoning.get('status'))}",
+                    _clean_text(reasoning.get("analysis")),
+                    f"#### Giudizio professionale — {_clean_text(judgment.get('status'))}",
+                    _clean_text(judgment.get("analysis")),
+                    "#### Problemi e trattamento",
+                    json.dumps(issues, ensure_ascii=False, indent=2),
+                    f"#### Esito della revisione — {_clean_text(disposition.get('status'))}",
+                    _clean_text(disposition.get("analysis")),
+                    f"**Correzione proposta:** {_clean_text(claim.get('proposed_fix'))}",
+                ]
+            elif spanish:
                 lines = [
                     f"### Afirmación {claim_index}",
                     f"**Texto:** {_clean_text(claim.get('claim_text'))}",
@@ -1255,7 +1280,48 @@ def _package_markdown(
                     f"**Proposed fix:** {_clean_text(claim.get('proposed_fix'))}",
                 ]
             claim_lines.append("\n\n".join(lines).strip())
-    if spanish:
+    if italian:
+        sections = [
+            "# Registro di verifica della risposta",
+            f"Integrità del registro: {audit.get('record_integrity_status')}",
+            f"Stato per la consegna: {audit.get('delivery_readiness')}",
+            f"Affermazioni esaminate: {audit.get('claim_count')}",
+            f"Fonti esaminate: {audit.get('source_count')}",
+            "## Limiti della verifica",
+            json.dumps(audit.get("assurance_boundary"), ensure_ascii=False, indent=2),
+            "## Requisiti della risposta",
+            json.dumps(audit.get("answer_contract"), ensure_ascii=False, indent=2),
+            "## Verifica dei requisiti della risposta",
+            json.dumps(
+                claims_review.get("contract_review"), ensure_ascii=False, indent=2
+            ),
+            "## Copertura della verifica",
+            json.dumps(
+                claims_review.get("coverage_review"), ensure_ascii=False, indent=2
+            ),
+            "## Inventario del documento",
+            f"Parole: {document_inventory.get('word_count', 0)}",
+            f"URL: {document_inventory.get('urls', [])}",
+            "## Inventario delle fonti",
+            json.dumps(source_inventory, ensure_ascii=False, indent=2),
+            "## Controlli automatici sulle fonti",
+            json.dumps(audit.get("claim_observations"), ensure_ascii=False, indent=2),
+            "## Valutazione delle affermazioni",
+            (
+                "\n\n".join(claim_lines)
+                if claim_lines
+                else "Nessuna affermazione esaminata."
+            ),
+            "## Valutazione complessiva",
+            json.dumps(
+                claims_review.get("overall_assessment"), ensure_ascii=False, indent=2
+            ),
+            "## Stato della revisione del documento",
+            json.dumps(
+                claims_review.get("document_revision"), ensure_ascii=False, indent=2
+            ),
+        ]
+    elif spanish:
         sections = [
             "# Registro de validación de la respuesta",
             f"Integridad del registro: {audit.get('record_integrity_status')}",
@@ -1337,9 +1403,13 @@ def _package_markdown(
         sections.extend(
             [
                 (
-                    "## Respuesta revisada o corregida"
-                    if spanish
-                    else "## Reviewed or Corrected Answer"
+                    "## Risposta rivista o corretta"
+                    if italian
+                    else (
+                        "## Respuesta revisada o corregida"
+                        if spanish
+                        else "## Reviewed or Corrected Answer"
+                    )
                 ),
                 validated_document.strip(),
             ]
@@ -1365,26 +1435,143 @@ def render_validation_package(
     )
 
 
+def _docx_inline(paragraph: Any, text: str) -> None:
+    """Render supported inline Markdown without activating non-web targets."""
+    from urllib.parse import urlsplit
+
+    from docx.opc.constants import RELATIONSHIP_TYPE
+    from docx.oxml import OxmlElement
+    from docx.oxml.ns import qn
+
+    tokens = re.compile(
+        r"\[([^\]]+)\]\(((?:[^()\s]|\([^()\s]*\))*)\)" r"|\*\*([^*]+)\*\*|`([^`]+)`"
+    )
+    position = 0
+    for match in tokens.finditer(text):
+        paragraph.add_run(text[position : match.start()])
+        label, target, bold, code = match.groups()
+        if target is not None:
+            try:
+                parsed = urlsplit(target)
+                is_web = parsed.scheme.lower() in {"http", "https"} and bool(
+                    parsed.hostname
+                )
+            except ValueError:
+                is_web = False
+            if is_web:
+                link = OxmlElement("w:hyperlink")
+                link.set(
+                    qn("r:id"),
+                    paragraph.part.relate_to(
+                        target, RELATIONSHIP_TYPE.HYPERLINK, is_external=True
+                    ),
+                )
+                run = OxmlElement("w:r")
+                properties = OxmlElement("w:rPr")
+                color = OxmlElement("w:color")
+                color.set(qn("w:val"), "1F4E79")
+                properties.append(color)
+                run.append(properties)
+                node = OxmlElement("w:t")
+                node.text = label
+                run.append(node)
+                link.append(run)
+                paragraph._p.append(link)
+            else:
+                paragraph.add_run(label)
+        elif bold is not None:
+            paragraph.add_run(bold).bold = True
+        else:
+            paragraph.add_run(code).font.name = "Consolas"
+        position = match.end()
+    paragraph.add_run(text[position:])
+
+
 def _write_docx_fallback(markdown_text: str, output_path: Path) -> bool:
+    """Export readable notes and comparison tables when Pandoc is unavailable."""
     if Document is None:
         return False
+    from docx.oxml import OxmlElement
+    from docx.oxml.ns import qn
+    from docx.shared import Cm, Pt, RGBColor
+
     document = Document()
-    for raw_line in markdown_text.splitlines():
-        line = raw_line.strip()
+    for section in document.sections:
+        section.page_width, section.page_height = Cm(21), Cm(29.7)
+        section.top_margin = section.bottom_margin = Cm(2)
+        section.left_margin = section.right_margin = Cm(2.1)
+    for name, size in (
+        ("Normal", 11),
+        ("Title", 17),
+        ("Heading 1", 13),
+        ("Heading 2", 12),
+        ("Heading 3", 11),
+    ):
+        style = document.styles[name]
+        style.font.name = "Calibri"
+        style.font.size = Pt(size)
+        style.font.color.rgb = RGBColor(0, 0, 0)
+        style.paragraph_format.space_after = Pt(7)
+        style.paragraph_format.line_spacing = 1.08
+        if name != "Normal":
+            style.font.bold = True
+            style.paragraph_format.space_before = Pt(10)
+        if style.element.pPr is not None:
+            for border in list(style.element.pPr.findall(qn("w:pBdr"))):
+                style.element.pPr.remove(border)
+
+    lines = markdown_text.splitlines()
+    index = 0
+    while index < len(lines):
+        line = lines[index].strip()
+        index += 1
         if not line:
             continue
+        # A delimiter row distinguishes a table from prose containing pipes.
+        if "|" in line and index < len(lines):
+            delimiter = lines[index].strip().strip("|")
+            if re.fullmatch(r"\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+", delimiter):
+                headers = [cell.strip() for cell in line.strip("|").split("|")]
+                table = document.add_table(rows=1, cols=len(headers))
+                table.style = "Table Grid"
+                repeat = OxmlElement("w:tblHeader")
+                table.rows[0]._tr.get_or_add_trPr().append(repeat)
+                for cell, text in zip(table.rows[0].cells, headers):
+                    _docx_inline(cell.paragraphs[0], text)
+                    for run in cell.paragraphs[0].runs:
+                        run.bold = True
+                index += 1
+                while index < len(lines) and "|" in lines[index]:
+                    values = [
+                        cell.strip()
+                        for cell in lines[index].strip().strip("|").split("|")
+                    ]
+                    if len(values) != len(headers):
+                        break
+                    for cell, text in zip(table.add_row().cells, values):
+                        _docx_inline(cell.paragraphs[0], text)
+                    index += 1
+                continue
         heading_match = re.match(r"^(#{1,4})\s+(.*)$", line)
         if heading_match:
-            document.add_heading(
-                heading_match.group(2).strip(),
-                level=min(len(heading_match.group(1)), 4),
+            level = len(heading_match.group(1))
+            paragraph = document.add_paragraph(
+                style="Title" if level == 1 else f"Heading {level - 1}"
             )
+            _docx_inline(paragraph, heading_match.group(2).strip())
             continue
         bullet_match = re.match(r"^[-*]\s+(.*)$", line)
         if bullet_match:
-            document.add_paragraph(bullet_match.group(1).strip(), style="List Bullet")
+            _docx_inline(
+                document.add_paragraph(style="List Bullet"),
+                bullet_match.group(1).strip(),
+            )
             continue
-        document.add_paragraph(line)
+        paragraph = document.add_paragraph()
+        previous = paragraph._p.getprevious()
+        if previous is not None and previous.tag == qn("w:tbl"):
+            paragraph.paragraph_format.space_before = Pt(7)
+        _docx_inline(paragraph, line)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     document.save(output_path)
     return True

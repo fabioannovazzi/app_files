@@ -30,7 +30,7 @@ Explain the step happening now and wait for its actual result.
 
 The working chat prepares the file and shows received documents and proposed questions. The voice chat explains what is already available and which confirmations are needed.
 
-On the review page, choose relevant requests and narrow broad suggestions to the two confirmations in the case. Vera saves and applies the actual decisions before using them for the draft.
+In the review, open “Client requests” and read the proposed text. To narrow it, choose “Request documents” and enter the precise confirmation in “Requested documents”. Reject the internal classification question. Save and apply the decisions before drafting.
 
 Vera writes the email from reviewed requests. Open it and check subject, questions and tone; any replacement is saved through the same review process with its link to the decisions.
 

@@ -11,7 +11,7 @@ JSON with a file-writing tool; do not interpolate it into shell commands.
 root. Normal users omit it. `status` is read-only and returns the current profile,
 chat pair and example summaries. Add `--session <id>` for one full checkpoint.
 
-`begin --input <json>` starts one session after the optional introduction is complete. Reuse or
+`begin --input <json>` starts a requested session without requiring the optional introduction. An unfinished introduction stays unfinished; no profile or understanding is invented. Reuse or
 pause the current active session before starting another. Paused sessions remain
 in the library. Its input is:
 
@@ -21,8 +21,9 @@ in the library. Its input is:
 
 Use `mode: together` for guided work. An optional `example_id` selects a completed
 session ID or `onboarding:<workflow-id>` as the intent for a fresh run. This copies
-no previous result or user approval. The session starts with native voice as the
-preference and the last saved pair. Verify that pair through native host tools
+no previous result or user approval. For first use without a saved pair, include `pair` with the actual distinct
+`teacher_thread_id` and `worker_thread_id` returned by native host tools. The
+session starts with native voice as the preference and that pair, or the last saved pair. Verify that pair through native host tools
 before dispatch; update with `pair` if needed.
 
 Every update uses the latest returned revision:

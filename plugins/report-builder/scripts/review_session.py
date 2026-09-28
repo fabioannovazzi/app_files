@@ -65,11 +65,11 @@ DOCX_REQUIRED_TEXT: dict[str, dict[str, str]] = {
         "es": "Secciones asignadas",
     },
     "missing_sections": {
-        "en": "Missing sections",
-        "it": "Sezioni mancanti",
-        "fr": "Sections manquantes",
-        "de": "Fehlende Abschnitte",
-        "es": "Secciones pendientes",
+        "en": "Sections without a source table",
+        "it": "Sezioni senza tabella fonte",
+        "fr": "Sections sans tableau source",
+        "de": "Abschnitte ohne Quelltabelle",
+        "es": "Secciones sin tabla fuente",
     },
     "source": {
         "en": "Source",
@@ -379,7 +379,24 @@ def _section_items(analysis: dict[str, Any], language: str) -> list[dict[str, An
                 "unassigned": "sin asignar",
             }.get(status, status)
         else:
-            display_status = status
+            display_status = (
+                {
+                    "it": {
+                        "assigned": "tabella collegata",
+                        "unassigned": "senza tabella collegata",
+                    },
+                    "fr": {
+                        "assigned": "tableau associé",
+                        "unassigned": "sans tableau associé",
+                    },
+                    "de": {
+                        "assigned": "Tabelle zugeordnet",
+                        "unassigned": "ohne zugeordnete Tabelle",
+                    },
+                }
+                .get(language, {})
+                .get(status, status)
+            )
         source_parts = [
             _clean_text(section.get("source_file")),
             _clean_text(section.get("sheet_name")),
@@ -481,7 +498,11 @@ def _table_evidence_items(
                 (
                     f"Tabla de evidencias para {title}"
                     if _is_spanish(language)
-                    else f"Evidence table for {title}"
+                    else {
+                        "it": f"Tabella di supporto: {title}",
+                        "fr": f"Tableau justificatif : {title}",
+                        "de": f"Belegtabelle: {title}",
+                    }.get(language, f"Evidence table for {title}")
                 ),
                 source_path=table_id,
                 output_path="report_tables.json",
@@ -522,10 +543,15 @@ def _table_evidence_items(
                     "source_file": section.get("source_file"),
                     "source_table": section.get("sheet_name") or table_id,
                     "record_id": section_key,
-                    "reason": (
-                        "La persona revisora marcó la tabla de origen asignada como poco clara o insuficiente."
-                        if _is_spanish(language)
-                        else "Reviewer marked the mapped source table as unclear or insufficient."
+                    "reason": {
+                        "en": "Check whether this source table supports the report section.",
+                        "it": "Verifica se questa tabella supporta la sezione del report.",
+                        "fr": "Vérifiez si ce tableau justifie la section du rapport.",
+                        "de": "Prüfen Sie, ob diese Quelltabelle den Berichtsabschnitt belegt.",
+                        "es": "Compruebe si esta tabla respalda la sección del informe.",
+                    }.get(
+                        language,
+                        "Check whether this source table supports the report section.",
                     ),
                     "numeric_columns": (section.get("numeric_columns") or [])[:8],
                     "numeric_measure_candidates": (

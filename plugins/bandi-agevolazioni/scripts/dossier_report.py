@@ -245,18 +245,24 @@ def render_dossier_html(
         for item in workbench.get("consistency_checks", [])
     ]
     body.append(section("consistency", "".join(consistency) or empty()))
-    issues = [
-        f'<article class="record" id="{_anchor(item["issue_id"])}">'
-        + paragraph(item.get("detail"))
-        + paragraph(label(item.get("status")), "muted")
-        + metadata(item)
-        + refs(item.get("related_ids", []))
-        + "</article>"
-        for item in workbench.get("issues", [])
-    ]
-    body.append(
-        section("issues", "".join(issues) or paragraph(labels["no_issues"], "muted"))
-    )
+    for group in ("issues", "informational_notes"):
+        issues = [
+            f'<article class="record" id="{_anchor(item["issue_id"])}">'
+            + paragraph(item.get("detail"))
+            + paragraph(label(item.get("status")), "muted")
+            + metadata(item)
+            + refs(item.get("related_ids", []))
+            + "</article>"
+            for item in workbench.get("issues", [])
+            if (item.get("severity") == "informational")
+            == (group == "informational_notes")
+        ]
+        if issues or group == "issues":
+            body.append(
+                section(
+                    group, "".join(issues) or paragraph(labels["no_issues"], "muted")
+                )
+            )
     sources_html = []
     for source in sources.get("sources", []):
         sources_html.append(
@@ -319,7 +325,15 @@ def render_dossier_html(
     )
     limits = [
         *workbench["dossier"].get("limitations", []),
-        *audit.get("limitations", []),
+        *(
+            (
+                labels["mechanical_validation_limit"]
+                if value
+                == "Mechanical validation does not establish source authority, legal interpretation, eligibility, cost admissibility, or filing readiness."
+                else value
+            )
+            for value in audit.get("limitations", [])
+        ),
     ]
     controls = paragraph(labels["technical_note"])
     controls += (

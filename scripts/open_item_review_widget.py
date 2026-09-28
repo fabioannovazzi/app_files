@@ -71,7 +71,7 @@ def customize_review(html: str) -> str:
     )
     html = html.replace(
         '<div class="action-buttons">',
-        '<p id="desk-save-help"></p><div class="action-buttons">',
+        '<p id="desk-read-only" role="status"></p><p id="desk-save-help"></p><div class="action-buttons">',
         1,
     )
     html = html.replace(

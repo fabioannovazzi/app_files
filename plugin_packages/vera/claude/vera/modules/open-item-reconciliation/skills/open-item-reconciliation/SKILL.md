@@ -172,6 +172,12 @@ or the contents of an accounting file.
    execution inputs as `Vera/engagements/<engagement-id>/runs/<run-id>/inputs`
    and the only permitted output path as the sibling `outputs` directory in
    the selected customer folder. Never substitute a freely chosen directory.
+   When the host also requires run-level disclosure artifacts, pass
+   `--output-subdirectory reconciliation` for a new run and every regeneration.
+   This uses only the fixed `outputs/reconciliation/` child for the exact native
+   assurance package; retain disclosures in the owning `outputs/` directory.
+   Open review and validate assurance against the returned native output path.
+   Declare every file in both locations when finalizing the owning archive run.
 4. Stop when the context, input receipt, execution copy, lifecycle, or customer
    manifest is stale or edited. Do not copy, merge, or relabel another
    customer's files to make validation pass.

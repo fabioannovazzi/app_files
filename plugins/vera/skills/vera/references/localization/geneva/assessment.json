@@ -1,6 +1,6 @@
 {
   "schema": "vera.localization.assessment.v1",
-  "catalogue_fingerprint": "a5d6b853e848c53b6f748b71c5921d8b7db3702a0453be84ade958a3b146aae9",
+  "catalogue_fingerprint": "c67f7fab34c777ebe928d7b1ef5e6d6d1c40784b24b203dc191545b04a5a0306",
   "assessment_date": "2026-09-28",
   "target": {
     "id": "CH-GE",
@@ -861,5 +861,16 @@
       "basis": "Historical directive: supports existence of local restructuring work only. Not relied on as a complete current procedural rulebook.",
       "consulted": "2026-09-27"
     }
+  },
+  "course_qa_release_binding": {
+    "reviewed_at": "2026-09-28T09:31:31.050351+00:00",
+    "previous_version": "0.1.272",
+    "source_version": "0.1.273",
+    "previous_catalogue_fingerprint": "a5d6b853e848c53b6f748b71c5921d8b7db3702a0453be84ade958a3b146aae9",
+    "changed_skills": [
+      "learn-with-vera",
+      "open-item-reconciliation"
+    ],
+    "review": "Single-course startup no longer requires an interview; teaching accurately discloses model-context reads. Open-item instructions separate the sealed native reconciliation output from the run-level model-data disclosure, without weakening its assurance boundary. Existing Geneva dispositions, jurisdiction boundaries and unanswered professional-fit questions are preserved. This is catalogue identity integration, not a new Geneva professional acceptance."
   }
 }

@@ -12,6 +12,7 @@ from urllib.parse import urlparse
 
 from apertura_pratica_core import (
     ValidationError,
+    _validate_decisions,
     load_json,
     prepare_review,
     review_payload_hash,
@@ -21,6 +22,25 @@ from apertura_pratica_core import (
 
 ASSET = Path(__file__).resolve().parents[1] / "assets" / "apertura-pratica-review.html"
 MAX_REQUEST_BYTES = 512 * 1024
+
+
+def saved_review(
+    run_dir: Path, review: dict[str, Any]
+) -> tuple[dict[str, Any] | None, str]:
+    """Restore only decisions bound to the current intake and review content."""
+    path = run_dir / "pending_review_decisions.json"
+    if not path.exists():
+        return None, "none"
+    try:
+        pending = load_json(path)
+        _validate_decisions(
+            pending,
+            intake=load_json(run_dir / "matter_intake.json"),
+            review_payload=review,
+        )
+    except ValidationError:
+        return None, "unavailable"
+    return pending, "current"
 
 
 class ReviewHandler(BaseHTTPRequestHandler):
@@ -63,11 +83,14 @@ class ReviewHandler(BaseHTTPRequestHandler):
             except ValidationError as exc:
                 self._json(HTTPStatus.CONFLICT, {"error": str(exc)})
                 return
+            pending, pending_status = saved_review(self.run_dir, payload)
             self._json(
                 HTTPStatus.OK,
                 {
                     "review": payload,
                     "review_payload_sha256": review_payload_hash(payload),
+                    "pending_review": pending,
+                    "pending_review_status": pending_status,
                 },
             )
             return
@@ -100,15 +123,20 @@ class ReviewHandler(BaseHTTPRequestHandler):
             pending = {
                 "schema_version": "1.0",
                 "workflow": "apertura-pratica",
-                "run_id": review["run_id"],
-                "intake_sha256": review["intake_sha256"],
-                "review_payload_sha256": review_payload_hash(review),
+                "run_id": submitted.get("run_id"),
+                "intake_sha256": submitted.get("intake_sha256"),
+                "review_payload_sha256": submitted.get("review_payload_sha256"),
                 "reviewer": reviewer,
                 "decision_source": "local_workbench",
                 "confirmed_by_user": True,
                 "saved_at": utc_now(),
                 "decisions": submitted["decisions"],
             }
+            _validate_decisions(
+                pending,
+                intake=load_json(self.run_dir / "matter_intake.json"),
+                review_payload=review,
+            )
             write_json(self.run_dir / "pending_review_decisions.json", pending)
         except (json.JSONDecodeError, ValidationError, OSError) as exc:
             self._json(HTTPStatus.BAD_REQUEST, {"error": str(exc)})

@@ -30,7 +30,7 @@ Spiega il passaggio che sta avvenendo e attendi il suo risultato effettivo.
 
 La chat di lavoro esegue la preparazione del fascicolo e mostra documenti ricevuti e domande proposte. La chat vocale spiega quali informazioni sono già disponibili e quali conferme si cercano.
 
-Nella pagina di revisione scegli le richieste pertinenti e restringi quelle troppo generiche alle due conferme del caso. Vera salva e applica le decisioni effettive prima di usarle nella bozza.
+Nella revisione apri «Richieste al cliente» e leggi il testo proposto. Per restringerlo, scegli «Richiedi documenti» e scrivi la conferma precisa nel campo «Documenti richiesti». Rifiuta la domanda sulla classificazione interna. Salva e applica le decisioni prima della bozza.
 
 Vera scrive la email dalle richieste riviste. Apri la bozza, controlla oggetto, domande e tono; un’eventuale modifica viene salvata attraverso la stessa revisione, conservando il collegamento alle decisioni.
 

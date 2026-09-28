@@ -32,7 +32,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/assets/open-item-reconciliation-review-widget.html",
-      "sha256": "7c43a622ab997141d104485cf39614103b1047921dcf0846a48925e8b994cdfd"
+      "sha256": "a6118730be994a0d26e105517c3bdb971f7934109d078820d7d36843d008dd4b"
     },
     {
       "path": "modules/open-item-reconciliation/assets/review-workbench-adapter.json",
@@ -64,7 +64,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "4a5652bc44b43f4a6e96acc83e681cbbd4f762e4ad985647ba56bc2baf88db68"
+      "sha256": "725c3e849156088e71217dc1604441faa0a2bb47569b847f432997c52819bf1b"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -84,7 +84,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
-      "sha256": "e966d9303681e230138678f221c96d235913901b23e5a3696b98f919cd102683"
+      "sha256": "98cae1b52a8bd17eb477f3343d0a71d6e1026a298e3893dc15ae6e53ff80e096"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
@@ -92,7 +92,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/accountant_report.source",
-      "sha256": "44a45471e7d90c68e912e871f3aa7f635614249afe66027c508a23370a5408a5"
+      "sha256": "1214da80bf08f041c99bab31d3440ea978030cf025af52b3578c6b45c49c890f"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/locale_support.source",
@@ -112,11 +112,11 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/review_server.py",
-      "sha256": "2ad8e1097f8f04fc6e0d7f39452d3798ba7514966955092365f3a7a78d1059e0"
+      "sha256": "7fd05f523aecca085a549f497dab25a9e74b889c610766996aa98eed37072b7b"
     },
     {
       "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
-      "sha256": "c66ee509000a0b9b86b041e8cd1bc70ce5c1c92b85d622f6f5614c95ce37a874"
+      "sha256": "9c18270f318f6a1ddeca6eb448071a5242577a12e4f8f77edd86d047c30d51e1"
     },
     {
       "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/references/geneva.md",
@@ -164,7 +164,7 @@
     },
     {
       "path": "skills/open-item-reconciliation/SKILL.md",
-      "sha256": "e0b214ca6b9406b1a84e9b2ff45f1edf3717aac0ca2757b6e2e54abd2afd19e5"
+      "sha256": "9118d496998511b83f940cf432b3e24799708fdaf79d93cf2df17c5d1b27e843"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -521,5 +521,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d1f8580b0e8fede9483bf1991f43a4109d04def574b196155bada8bd95a97565"
+  "canonical_course_sha256": "3af1708e9686a4829c35510bd6367c52374f34f8f07f3446aca615af195af96a"
 }

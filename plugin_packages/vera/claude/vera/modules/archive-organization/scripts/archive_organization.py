@@ -221,7 +221,7 @@ def _add_vendor_path() -> None:
     raise ArchiveOrganizationError("The required vera_assurance module is unavailable.")
 
 
-def _load_context(path: Path) -> dict[str, Any]:
+def _load_context(path: Path, *, read_only: bool = False) -> dict[str, Any]:
     _add_vendor_path()
     try:
         from vera_assurance import load_client_engagement_context_file
@@ -229,6 +229,11 @@ def _load_context(path: Path) -> dict[str, Any]:
         context = load_client_engagement_context_file(
             path,
             expected_workflow_id=WORKFLOW_ID,
+            allowed_statuses=(
+                ("running", "ready_for_review", "completed")
+                if read_only
+                else ("running",)
+            ),
         )
     except (ImportError, OSError, ValueError, RuntimeError) as exc:
         raise ArchiveOrganizationError(
@@ -2255,7 +2260,8 @@ def _parser() -> argparse.ArgumentParser:
     managed_context = argparse.ArgumentParser(add_help=False)
     managed_context.add_argument("--client-engagement", type=Path, required=True)
     subparsers = parser.add_subparsers(dest="command", required=True)
-    subparsers.add_parser("preflight", parents=[managed_context])
+    preflight = subparsers.add_parser("preflight", parents=[managed_context])
+    preflight.add_argument("--read-only", action="store_true")
     prepare = subparsers.add_parser("prepare-review", parents=[managed_context])
     prepare.add_argument("--proposals", type=Path, required=True)
     prepare.add_argument("--policy", type=Path)
@@ -2279,12 +2285,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
         if args.command == "preflight":
-            context = _load_context(args.client_engagement)
+            context = _load_context(args.client_engagement, read_only=args.read_only)
             result = {
                 "status": "valid",
                 "run_id": context["run_id"],
                 "client_id": context["client_id"],
                 "output_dir": context["output_dir"],
+                "write_enabled": _read_json(
+                    Path(context["run_manifest_path"]), label="run manifest"
+                )["status"]
+                == "running",
                 "source_archive_mutated": False,
             }
         elif args.command == "prepare-review":

@@ -37,6 +37,30 @@ All case IDs are synthetic; do not replace them with a real client's identity.
 The helper creates a new attempt per invocation; after interruption reuse the
 saved `tutorial_case.json` and ledger state instead of starting another attempt.
 
+Before executing a component helper, read the managed-runtime instructions in
+`../SKILL.md`. A component's short `python scripts/...` example describes the
+helper and arguments; it does not select the shell's Python for a Vera lesson.
+From the Vera root, run component helpers through:
+
+```text
+python3 scripts/managed_python_runtime.py --module <component> run scripts/<helper>.py <arguments>
+```
+
+If installation is excluded, first use the same launcher with `status` and
+reuse the existing ready environment. If it is not ready, report that concrete
+state before any setup; do not provision dependencies or try an arbitrary
+system interpreter. A missing import in the ambient Python does not establish
+that the managed environment lacks the package. After a failed attempt, inspect
+its run and reuse it when resumable; do not create another case just to retry.
+
+Launch the local review server with that same ready managed Python as well.
+When repository source uses the shared `scripts/serve_review_workbench.py`
+fallback, invoke it with the exact interpreter returned by runtime status.
+Starting the web server in system Python may render successfully while its
+later Save/Apply helper fails from missing component dependencies. The shared
+server forwards its interpreter to the Node bridge by default; an explicit
+`PYTHON` override must point to the selected ready component environment.
+
 Follow the specialist's documented commands using these returned values. For
 an intake wrapper the actual ledger workflow is `client-file-preparation`.
 For XML use the bound execution-input directory, not the original fixture
@@ -44,6 +68,17 @@ folder. For journal sampling, inspection and normalization use the run's
 `normalization` output child and sampling uses its `sample` child. Inspect and
 confirm the recipe before normalization. For variance, inspect columns,
 review the proposed recipe against the small file, then run the analysis.
+
+Write assistant-authored review and model-data input files with the run’s normal
+owner-only permissions (0600 for files) before sealing. A later read-only review
+uses those same files; do not relax its ownership checks to reopen a result.
+
+When the lesson includes saving or applying a review decision, stop at the live
+review checkpoint while the run is still running. Finalize only after those
+normal review writes and their validation. A finalized result can be reopened
+for reading, but its Save/Apply controls cannot update that sealed run; explain
+this and use a new normal run for later changes. Never unseal a completed
+demonstration just to exercise its review controls.
 
 Retain specialist validation, model-data reports and the usual ledger finalization
 and professional review stages. The portable `client_ledger` implementation

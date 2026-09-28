@@ -18,6 +18,86 @@ preview_text = _preview_text_module.preview_text
 preview_reason = _preview_text_module.preview_reason
 
 
+@pytest.mark.parametrize("language", ["it", "en"])
+def test_preview_distinguishes_capital_from_profit_and_shows_verified_totals(
+    tmp_path, language
+):
+    case = _prepared_case(tmp_path)
+    case["output_language"] = language
+    case["entity"]["first_financial_year"] = True
+    case["currency"] = "EUR"
+    case["statements"]["facts"] = [
+        {
+            "key": "Patrimonio netto",
+            "statement_section": "LIABILITIES_EQUITY",
+            "xbrl_concept": "itcc-ci:PatrimonioNettoCapitale",
+            "current_value": "-10000",
+            "xbrl_sign_multiplier": "-1",
+            "currency": "EUR",
+        },
+        {
+            "key": "Patrimonio netto",
+            "statement_section": "EQUITY_RESULT",
+            "xbrl_concept": "itcc-ci:PatrimonioNettoUtilePerditaEsercizio",
+            "current_value": "150",
+            "xbrl_sign_multiplier": "-1",
+            "currency": "EUR",
+        },
+    ]
+    case["statutory_presentation"] = {
+        "status": "COMPLETE",
+        "output_facts": [
+            {"xbrl_concept": "itcc-ci:TotalePatrimonioNetto", "current_value": "9850"},
+            {"xbrl_concept": "itcc-ci:TotaleAttivo", "current_value": "10000"},
+        ],
+    }
+    before = deepcopy(case)
+    doc = etree.HTML(xbrl_case.render_preview_html(case))
+    items = doc.xpath(
+        '//section[@aria-labelledby="statements-heading"]//tbody/tr/td[2]/text()'
+    )
+    assert items == (
+        ["Capitale sociale", "Utile (perdita) dell’esercizio nel patrimonio netto"]
+        if language == "it"
+        else ["Share capital", "Profit (loss) for the year in equity"]
+    )
+    amounts = doc.xpath(
+        '//section[@aria-labelledby="statements-heading"]//tbody/tr/td[3]/text()'
+    )
+    assert amounts[-1] == ("-150,00" if language == "it" else "-150.00")
+    totals = doc.xpath(
+        '//section[@aria-labelledby="totals-heading"]//tbody/tr/td[2]/text()'
+    )
+    assert totals == (
+        ["10.000,00", "9.850,00"] if language == "it" else ["10,000.00", "9,850.00"]
+    )
+    assert not doc.xpath(
+        '//section[@aria-labelledby="totals-heading"]//td[text()="0,00"]'
+    )
+    assert case == before
+    case["statutory_presentation"]["status"] = "INCOMPLETE"
+    assert b'id="totals-heading"' not in xbrl_case.render_preview_html(case)
+
+
+def test_generated_schedule_questions_and_missing_schedule_message_are_localized():
+    for kind, label in (
+        ("EQUITY", "patrimonio netto"),
+        ("PAYABLES", "debiti"),
+        ("RECEIVABLES", "crediti"),
+        ("TAXES", "imposte"),
+    ):
+        title = f"Provide the required {kind.lower()} schedule"
+        assert preview_text(title, "it") == f"Fornisci il prospetto richiesto: {label}"
+        assert preview_text(title, "en") == title
+    reason = "Accepted statement facts or the selected statutory form activate this supporting schedule."
+    assert preview_reason(reason, "it") != reason
+    issue = {"message": "Required schedules are missing: EQUITY, PAYABLES, NEW_TYPE"}
+    assert preview_check_message(issue, {}, "it") == (
+        "Mancano i prospetti richiesti: patrimonio netto, debiti, NEW_TYPE"
+    )
+    assert preview_check_message(issue, {}, "en") == issue["message"]
+
+
 def test_all_shipped_rule_pack_questions_have_italian_display_text():
     root = Path(__file__).resolve().parents[2] / "plugins/bilancio-xbrl-it/rulepacks"
 

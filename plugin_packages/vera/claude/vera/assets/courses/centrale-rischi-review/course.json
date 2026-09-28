@@ -32,7 +32,7 @@
     },
     {
       "path": "modules/centrale-rischi-review/scripts/centrale_rischi_core.py",
-      "sha256": "61edde3234ab4a0645e2d11515307a88ec70226ddba0c9a11c2d5095d3c52002"
+      "sha256": "bdeaef4f79912337d513b67999a11f2f82d9a11e450382938eb661b97285307e"
     },
     {
       "path": "modules/centrale-rischi-review/scripts/centrale_rischi_pdf.py",
@@ -64,7 +64,7 @@
     },
     {
       "path": "modules/centrale-rischi-review/skills/centrale-rischi-review/SKILL.md",
-      "sha256": "d1b2d28865f8e2f29b8e6f796f9065171a84e109ed7791a39124185a4f992196"
+      "sha256": "9055222bbf61c4d22e46cfd3732b5e90b2d3b465666d673374468714cb1ac470"
     },
     {
       "path": "modules/centrale-rischi-review/vendor/modules/__init__.py",
@@ -240,5 +240,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "e72098f19e10b64a998a3846acb9d129c573dd0a5d9f70a9b0e8b903d49b2896"
+  "canonical_course_sha256": "ea642a3fa6f36164c9af30571d32ce9d4f2e0b645140fef98642463dd1c17893"
 }

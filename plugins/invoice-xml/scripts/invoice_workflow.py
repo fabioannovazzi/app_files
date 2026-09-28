@@ -227,8 +227,22 @@ def _preview(proposal: dict[str, Any], report: dict[str, Any]) -> str:
             f"<tr><th scope='row'>{escape(pointer.split('/')[-1])}<small>{escape(pointer)}</small></th><td>{escape(value or 'Da completare')}</td><td>{escape(str(basis.get('basis', 'Evidenza mancante')))}<small>{escape(refs)}</small></td></tr>"
         )
     questions = "".join(f"<li>{escape(issue)}</li>" for issue in report["issues"])
+    decision_labels = {
+        "source_grouping": "Documenti della fattura",
+        "source_completeness": "Completezza e leggibilità delle fonti",
+        "parties": "Fornitore e cliente",
+        "document_type": "Tipo di documento",
+        "tax_treatment": "Trattamento fiscale",
+        "numbering_and_date": "Numero e data",
+        "routing": "Dati di recapito del file",
+        "duplicate_and_issue_status": "Precedente emissione o esportazione",
+        "operation_facts": "Operazione documentata",
+        "date_basis": "Criterio della data",
+        "original_invoice_reference": "Fattura originaria",
+        "currency_conversion": "Conversione della valuta",
+    }
     decisions = "".join(
-        f"<dt>{escape(name.replace('_', ' '))}</dt><dd>{escape(value['assessment'])}</dd>"
+        f"<dt>{escape(decision_labels.get(name, name.replace('_', ' ')))}</dt><dd>{escape(value['assessment'])}</dd>"
         for name, value in proposal["decisions"].items()
     )
     invoice = proposal["invoice"]

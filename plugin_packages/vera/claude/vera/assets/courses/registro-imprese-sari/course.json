@@ -33,7 +33,7 @@
     },
     {
       "path": "modules/registro-imprese-sari/assets/registro-imprese-sari-review-widget.html",
-      "sha256": "c395f518f3196656dda1e76cb090ff23f0af4e660f4d2d487164a2fc5671022d"
+      "sha256": "df4a4f000a127956a98784ed9babd30397c853e58a3263033838e0e80fa167cb"
     },
     {
       "path": "modules/registro-imprese-sari/assets/registry-display.json",
@@ -570,5 +570,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "88e4077251e480e4f439e812baca2cb54137200d98a8288e3cbef820fc0dad59"
+  "canonical_course_sha256": "b1dabcc03fa825ce4f3770fd6a38a922a7eebda74bb92cba24bead7ded3ddf37"
 }

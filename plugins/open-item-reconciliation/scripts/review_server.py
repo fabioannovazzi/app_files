@@ -114,7 +114,10 @@ except ImportError:  # pragma: no cover - direct script/importlib support
         validate_assurance_run,
     )
 
-from vera_assurance import load_client_workflow_context_for_output
+from vera_assurance import (
+    load_client_engagement_context_file,
+    load_client_workflow_context_for_output,
+)
 
 __all__ = [
     "apply_decisions",
@@ -281,26 +284,78 @@ def _validate_review_payload(review_payload: Any) -> dict[str, Any]:
     return review_payload
 
 
-def build_session_payload(output_dir: str | Path) -> dict[str, Any]:
+def _readable_client_context(directory: Path) -> dict[str, Any]:
+    output_root = next(
+        (
+            ancestor
+            for ancestor in (directory, *directory.parents)
+            if ancestor.name == "outputs"
+            and (ancestor.parent / "context.json").is_file()
+        ),
+        None,
+    )
+    if output_root is None:
+        raise ValueError("Review is not inside a portable customer-folder run")
+    return load_client_engagement_context_file(
+        output_root.parent / "context.json",
+        expected_workflow_id="open-item-reconciliation",
+        output_dir=directory,
+        allowed_statuses=("running", "ready_for_review", "completed"),
+    )
+
+
+def build_session_payload(
+    output_dir: str | Path, *, for_display: bool = False
+) -> dict[str, Any]:
     """Load the review payload served to the local browser page."""
 
     directory = _output_dir(output_dir)
     run_intake = _read_json_object(directory / "run_intake.json", required=True)
+    read_only = False
+    if for_display and run_intake.get("path_reference") == "run_root_relative":
+        context = _readable_client_context(directory)
+        run = _read_json_object(Path(context["run_root"]) / "run.json", required=True)
+        read_only = run.get("status") != "running"
     review_payload = _validate_review_payload(
         _read_json_object(directory / "review_payload.json", required=True)
     )
     ui_decisions = _read_json_object(directory / "ui_decisions.json")
+    applied_decisions = _read_json_object(directory / "applied_decisions.json")
     final_artifacts = _read_json_object(directory / "final_artifacts.json")
     if (
         run_intake.get("run_id")
         and run_intake.get("run_id") != review_payload["run_id"]
     ):
         raise ValueError("run_intake.run_id must match review_payload.run_id")
+    if applied_decisions and (
+        applied_decisions.get("run_id") != review_payload["run_id"]
+        or applied_decisions.get("plugin") != PLUGIN_NAME
+    ):
+        raise ValueError("applied_decisions must belong to the current review run")
+    # Native regeneration recreates an uncollected decision template. The
+    # separately persisted applied decisions remain the saved review baseline.
+    # Do not replace an explicit later Save, including an empty one.
+    if (
+        applied_decisions
+        and ui_decisions.get("decision_source") == "not_collected"
+        and ui_decisions.get("decided_at") is None
+        and not ui_decisions.get("decisions")
+    ):
+        decisions = applied_decisions.get("decisions", [])
+        ui_decisions = {
+            **ui_decisions,
+            "decisions": decisions,
+            "decision_count": len(decisions),
+            "decided_at": applied_decisions.get("applied_at"),
+            "decision_source": "applied_decisions",
+        }
     return {
         "widget_type": "open_item_reconciliation_review",
+        "local_review_read_only": read_only,
         "run_intake": run_intake,
         "review_payload": review_payload,
         "ui_decisions": ui_decisions or _empty_ui_decisions(review_payload),
+        "applied_decisions": applied_decisions or None,
         "final_artifacts": final_artifacts or None,
         "decision_policy": {
             "save_tool": TOOL_SAVE,
@@ -493,6 +548,13 @@ def save_decisions(
     """Persist browser decisions under an exact whole-tree transaction."""
 
     directory = _output_dir(output_dir)
+    if (
+        _read_json_object(directory / "run_intake.json").get("path_reference")
+        == "run_root_relative"
+    ):
+        load_client_workflow_context_for_output(
+            directory, expected_workflow_id=PLUGIN_NAME
+        )
     return run_review_output_transaction(
         directory,
         lambda working_dir: _save_decisions_in_place(working_dir, input_args),
@@ -1275,6 +1337,13 @@ def apply_decisions(
     """Apply browser decisions under an exact whole-tree transaction."""
 
     directory = _output_dir(output_dir)
+    if (
+        _read_json_object(directory / "run_intake.json").get("path_reference")
+        == "run_root_relative"
+    ):
+        load_client_workflow_context_for_output(
+            directory, expected_workflow_id=PLUGIN_NAME
+        )
     return run_review_output_transaction(
         directory,
         lambda working_dir: _apply_decisions_in_place(working_dir, input_args),
@@ -1294,7 +1363,7 @@ def _widget_html(output_dir: Path) -> str:
     )
     html = widget_path.read_text(encoding="utf-8")
     payload_json = json.dumps(
-        build_session_payload(output_dir),
+        build_session_payload(output_dir, for_display=True),
         ensure_ascii=False,
         default=str,
     )
@@ -1334,7 +1403,9 @@ def _widget_html(output_dir: Path) -> str:
   """
     needle = "  <script>\n    const CONFIG = "
     if needle not in html:
-        raise ValueError("open-item reconciliation widget script insertion point not found")
+        raise ValueError(
+            "open-item reconciliation widget script insertion point not found"
+        )
     return html.replace(needle, bridge + needle, 1)
 
 
@@ -1348,7 +1419,7 @@ def _tool_result(output_dir: Path, payload: dict[str, Any]) -> dict[str, Any]:
     name = _bounded_optional_string(payload.get("name"), "name")
     args = payload.get("args") if isinstance(payload.get("args"), dict) else {}
     if name == TOOL_VALIDATE:
-        session = build_session_payload(output_dir)
+        session = build_session_payload(output_dir, for_display=True)
         return {
             "ok": True,
             "validation_type": "open_item_reconciliation_review",
@@ -1359,7 +1430,7 @@ def _tool_result(output_dir: Path, payload: dict[str, Any]) -> dict[str, Any]:
             "review_payload": session["review_payload"],
         }
     if name == TOOL_RENDER:
-        return build_session_payload(output_dir)
+        return build_session_payload(output_dir, for_display=True)
     if name == TOOL_SAVE:
         return save_decisions(output_dir, args)
     if name == TOOL_APPLY:
@@ -1404,10 +1475,12 @@ def _handler(output_dir: Path) -> type[BaseHTTPRequestHandler]:
                     self._html_response(_widget_html(output_dir))
                     return
                 if route == "/api/session":
-                    self._json_response(build_session_payload(output_dir))
+                    self._json_response(
+                        build_session_payload(output_dir, for_display=True)
+                    )
                     return
                 if route == "/api/health":
-                    session = build_session_payload(output_dir)
+                    session = build_session_payload(output_dir, for_display=True)
                     self._json_response(
                         {
                             "ok": True,
@@ -1460,11 +1533,8 @@ def serve_review(
 
     directory = _output_dir(output_dir)
     safe_host = _validate_loopback_host(host)
-    load_client_workflow_context_for_output(
-        directory,
-        expected_workflow_id="open-item-reconciliation",
-    )
-    build_session_payload(directory)
+    _readable_client_context(directory)
+    build_session_payload(directory, for_display=True)
     httpd = ThreadingHTTPServer((safe_host, port), _handler(directory))
     actual_port = httpd.server_address[1]
     url = f"http://{safe_host}:{actual_port}/review"

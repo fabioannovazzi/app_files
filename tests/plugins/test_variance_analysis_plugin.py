@@ -2223,6 +2223,36 @@ def test_root_cause_drilldown_chart_uses_drilldown_title(tmp_path: Path) -> None
         assert image.convert("RGB").getpixel((617, 160)) == (255, 255, 255)
 
 
+@pytest.mark.parametrize("complete", [False, True])
+def test_client_report_does_not_explain_parent_with_residual_subset(tmp_path, complete):
+    report = load_root_cause_client_report()
+    pl.DataFrame({"Month": ["2026-01"], "variance_amount": [12000.0]}).write_csv(
+        tmp_path / "root_cause_bridge_alt_1.csv"
+    )
+    rows = {
+        "Category": ["COGS", "Operating expenses"],
+        "variance_amount": [-7000.0, -1000.0],
+    }
+    if complete:
+        rows["Category"].append("Revenue")
+        rows["variance_amount"].append(20000.0)
+    pl.DataFrame(rows).write_csv(
+        tmp_path / "root_cause_bridge_alt_1_drilldown_row_1.csv"
+    )
+    detail = report._drilldown_rows(tmp_path, 1, 1)
+    assert bool(detail) is complete
+    assert bool(report._best_product_line_items(tmp_path, 1, 1)) is complete
+    assert (
+        bool(
+            report._drilldown_finding_rows(
+                tmp_path, {"alternative_result": 1}, report._text("it")
+            )
+        )
+        is complete
+    )
+    assert (tmp_path / "root_cause_bridge_alt_1_drilldown_row_1.csv").exists()
+
+
 def test_root_cause_client_report_uses_period_comparison_labels(
     tmp_path: Path,
 ) -> None:

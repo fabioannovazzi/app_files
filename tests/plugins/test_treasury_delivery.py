@@ -612,7 +612,13 @@ def test_http_assets_state_download_and_saved_alternative(tmp_path):
             connection.request("GET", route, headers=headers)
             response = connection.getresponse()
             assert response.status == 200
-            assert response.read()
+            content = response.read()
+            assert content
+            if route == "/api/state":
+                payload = json.loads(content)
+                assert payload["weekly"] == record["weekly"]
+                assert payload["daily"] == record["daily"]
+                assert payload["record_sha256"] == record["record_sha256"]
         connection.request("GET", "/api/state?offset=-1", headers=headers)
         response = connection.getresponse()
         assert response.status == 409

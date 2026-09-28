@@ -4,6 +4,7 @@ import importlib.util
 import sys
 from pathlib import Path
 
+import pytest
 from openpyxl import load_workbook
 
 SCRIPTS = (
@@ -172,3 +173,27 @@ def test_perimeter_rejected_candidate_has_no_numeric_difference_or_high_confiden
     assert detail[0]["confidenza"] == "Bassa"
     assert detail[0]["differenza"] == "N/A - perimetro non coerente"
     assert main[0]["differenza importo"] == "N/A - perimetro non coerente"
+
+
+@pytest.mark.parametrize(
+    "difference,expected",
+    [
+        ("0.00", "NO"),
+        ("-0.00", "NO"),
+        ("0,00", "NO"),
+        ("0.01", "SI"),
+        ("-0.01", "SI"),
+        ("N/A - perimetro non coerente", "SI"),
+    ],
+)
+def test_exact_payment_is_not_marked_unexplained_for_zero_difference(
+    difference, expected
+):
+    report = load_accountant_report()
+    result = report.main_row_from_detail(
+        row_id="R0001",
+        row={"reconciliation_status": "closed", "evidence_level": "strong_external"},
+        details=[{"tipo evidenza": "Bonifico bancario", "differenza": difference}],
+    )
+    assert result["confidenza"] == "Alta"
+    assert result["non capita"] == expected

@@ -74,11 +74,11 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/accounts_preview.py",
-      "sha256": "c8eaea824538c8614460819495984fece5c578b877a37df4cec7b55bb4ab155b"
+      "sha256": "98033e337d2ea0b63e2c5ed670089be23a978c6dd2a83639c843107c05b2a152"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/accounts_preview_text.py",
-      "sha256": "8e8fe0cb8142e464404fb818dd0bebdfd15776545c39abb79d78798eaae90e03"
+      "sha256": "f9324e3158dd90e6f09d5d99a4aa095762538b3e585d006703caaeced3e7515e"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/artifact_delivery.py",
@@ -202,7 +202,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/xbrl_case.py",
-      "sha256": "fa35555b918f80358085dc9e955a2304745d800a904753584d4365b3069f863b"
+      "sha256": "c05f03a0ee4647f67d3df3f250031bd1c3617b0e5050551bfb816a06402f3eb6"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
@@ -492,5 +492,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d309db101265042dc056993cab3606897d165d311aeadb487906bb8daf56af72"
+  "canonical_course_sha256": "b32000c4fcf5523fc8816a28acdcb84e8438c12337c578df8babfeca32a7171b"
 }

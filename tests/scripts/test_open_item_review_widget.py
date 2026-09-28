@@ -78,6 +78,11 @@ def test_accounting_desk_separates_documents_and_withholds_unproven_settlement(
     assert.deepEqual(filteredItems().map(item=>item.id),["doc"]);
     state.selectedType="exceptions";
     assert.deepEqual(filteredItems().map(item=>item.id),["check"]);
+    const pending={id:"pending",item_type:"check_exception",data:{check:"codex_review_completed",actual:3,note:"technical-row-identifiers"}};
+    assert.equal(deskTitle(pending),deskText("reviewPendingTitle"));
+    assert.ok(detailsHtml(pending).includes(esc(deskText("reviewPendingFinding").replace("{count}","3"))));
+    assert.ok(decisionImpactHtml(pending,"accept").includes(esc(deskText("reviewPendingEffect"))));
+    assert.ok(!detailsHtml(pending).includes('<dd>technical-row-identifiers</dd>'));
     assert.ok(detailsHtml({...base,data:{...base.data,document_no:"<img src=x onerror=alert(1)>"}}).includes("&lt;img"));
     const elements={"save-status":{},"review-checkpoint":{value:"",focus(){}},"checkpoint-details":{open:false}};
     const document={getElementById(id){return elements[id];}};

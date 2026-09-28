@@ -44,8 +44,10 @@ route directly to the requested specialist. A tutorial setup or recovery error
 must never prevent that transition. Never reset a completed
 profile or use repeated teaching to manufacture onboarding completion.
 
-For a completed profile, read `references/local-sessions.md`, then run
-`local_teaching.py status`. Read the current profile explicitly in Codex and
+For a directly requested course, read `references/local-sessions.md`, then run
+`local_teaching.py status`. The optional introduction need not be complete:
+start the requested session with the actual native chat pair and preserve any
+unfinished introduction, without inventing a profile or confirmed understanding. Read the current profile explicitly in Codex and
 local ChatGPT Work on the same OS account. Use the user's current request over
 stored preferences. Verify actual local access; a cloud sandbox is not the
 user's computer. Start this two-thread voice journey in Codex desktop. Local

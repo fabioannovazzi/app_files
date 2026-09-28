@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "reporting-engine",
-  "course_sha256": "6f792148421640a7761b325031d14abed77952092b99898ebf132cca2df6de1e",
+  "course_sha256": "6ad903edcf59b869b6626f88f9592baa850976096922e8745090405db537350c",
   "reviewer": "Codex lesson and actual generated report review",
   "reviewed_at": "2026-09-23T11:51:00.788201+00:00",
   "review_scope": "Reviewed localized lessons, prepared workbook meanings and generated demo/practice narratives and tables. Current native execution checks recalculate the workbook and retain the previous report. Authored commentary is replayed as a fixture, not represented as fresh model inference. The shared Italian dashboard was also inspected in Chrome and its February selector verified. No learner participation, professional approval, live voice or all-locale visual inspection is claimed.",
@@ -162,5 +162,73 @@
         ]
       }
     }
+  },
+  "codex_course_qa_20260928": {
+    "status": "passed",
+    "course": 40,
+    "product": "clara",
+    "workflow": "reporting-engine",
+    "scope": "Italian Codex simulated learner demonstration and independent practice; actual native dashboards, workbook and report views, sources and saved reopening",
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "session_id": "010122d19eb6049a2dbd968fdab658fd",
+    "phase": "paused",
+    "revision": 4,
+    "profile": null,
+    "onboarding_phase": "interview",
+    "runs": {
+      "demo": {
+        "html": "/private/tmp/teaching-acceptance-20260926/codex/clara-budget-reporting/teaching/sessions/010122d19eb6049a2dbd968fdab658fd/files/demo-8d3810f74bb7da1f/explained-report/management_control_dashboard.html",
+        "sha256": "bb2a86d59f96c5987e5c6c67db657d7dc29a8dcad11f49bd62782c812d5fa430",
+        "execution_sha256": "a6c04b3dbe541216598b8dc893566196af2fdfef744a4bfda723115d2dc8dbfb",
+        "target": "2026-01 through 2026-02",
+        "native_preservation": "passed",
+        "browser_review": "/private/tmp/teaching-acceptance-20260926/clara-budget-demo-browser-review.json"
+      },
+      "practice": {
+        "html": "/private/tmp/teaching-acceptance-20260926/codex/clara-budget-reporting/teaching/sessions/010122d19eb6049a2dbd968fdab658fd/files/practice-3eee091683921560/explained-report/management_control_dashboard.html",
+        "sha256": "9cd4edc9a7296833a185dd328dc2f2b05eb22244dad3811481bdd9c0fc45ace6",
+        "execution_sha256": "45229537c2a345425d1045aea61aa2b7a6243ca708f4e17fee88d8a83e1dca6a",
+        "target": "2026-01 through 2026-03",
+        "native_preservation": "passed",
+        "browser_review": "/private/tmp/teaching-acceptance-20260926/clara-budget-practice-browser-review.json"
+      }
+    },
+    "demo_files_preserved": 35,
+    "repairs": [
+      "Own receipt-checked local dashboard preview with active month controls; teaching instructions route dashboard and documents correctly",
+      "Removed internal QA status from learner guide"
+    ],
+    "limitations": [
+      "Native voice and physical two-window placement unverified",
+      "Other-language live journeys pending",
+      "Installed Clara unavailable; current local source tested",
+      "Print button clicked but native print dialog/output not observed; actual Codex UI checks cover month and cumulative controls, report and workbook reading"
+    ],
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-27T23:12:51.754941+00:00"
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "6f792148421640a7761b325031d14abed77952092b99898ebf132cca2df6de1e",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-40.md",
+    "italian_course_qa_sha256": "fb8f02cf805512c3dbd4364d5b5414d474736b30eb26c87be60a48c270dc042f",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   }
 }

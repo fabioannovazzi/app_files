@@ -80,12 +80,12 @@
     {
       "path": "modules/deep-research-validator/scripts/package_validation.py",
       "repository_path": "plugins/deep-research-validator/scripts/package_validation.py",
-      "sha256": "a58a0000f9f3d3a7121bfcbef56fb95a8bd0b318935a333a715ffb1c8a9af468"
+      "sha256": "750fe665e45574a0b64ef73640ace37fb7999d6e8f830d3ddfc2f13688d93ebb"
     },
     {
       "path": "modules/deep-research-validator/scripts/review_session.py",
       "repository_path": "plugins/deep-research-validator/scripts/review_session.py",
-      "sha256": "f13e38eb17dd1ca4ded3846379928a6c03987eb7e1a482b22ea3b5fb7af06573"
+      "sha256": "01c42382b53ef90b1b0beebfbb0cf24d8e256f6fc61c4620caaf15ecfd2f32df"
     },
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md",
@@ -190,12 +190,12 @@
     {
       "path": "vendor/modules/courseware/assets/course.css",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
-      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      "sha256": "5b28ac597f0a3deaf4cfc907b8a33bb40aae21719206ad0c976b605950f89dc7"
     },
     {
       "path": "vendor/modules/courseware/assets/languages.json",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      "sha256": "507967ae7dcf07ae4e138fff4333adb5fd709484731dcef45d531152c54ede45"
     },
     {
       "path": "vendor/modules/courseware/assets/legacy-course.css",
@@ -208,9 +208,24 @@
       "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
     },
     {
+      "path": "vendor/modules/courseware/deck_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/deck_view.py",
+      "sha256": "96f75ea3078c9e0c6e509cdefb0beeb876677e2e7884777d213d9b03c6c27b80"
+    },
+    {
+      "path": "vendor/modules/courseware/document_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/document_view.py",
+      "sha256": "9982c9d6ce83e7feb26165308fa9a136a744891a7e623ce23ff9bb778e6b7403"
+    },
+    {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
       "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/html_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/html_view.py",
+      "sha256": "57280e82460bd8c7982294c4be6e0cff7da969800d4282e6da15059571cce0b1"
     },
     {
       "path": "vendor/modules/courseware/legacy.py",
@@ -220,7 +235,7 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "22c5ea8d39a6ffa376c63f12bd31e3282b435a913e8027ee44c4261a5e704a74"
+      "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
     },
     {
       "path": "vendor/modules/courseware/policy.py",
@@ -230,7 +245,17 @@
     {
       "path": "vendor/modules/courseware/preview.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/preview.py",
-      "sha256": "36ff10a3d93772a927765c395eb19c5073664c1447b0b267cf9bd9455c4ad6f3"
+      "sha256": "1a6e56141cdd554a6510100f47745f7b31472c9d22f45407f4f86ac7981aee10"
+    },
+    {
+      "path": "vendor/modules/courseware/sales_plan_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/sales_plan_view.py",
+      "sha256": "115977d03c034ed5f363d6fd5c8c82648ed1349067ac61e48d0701b10caa7e7b"
+    },
+    {
+      "path": "vendor/modules/courseware/website_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/website_view.py",
+      "sha256": "f230f86272201bae7bc34f1868d8cb6013b47ce9ccc8b876acdfb0bc257637d5"
     },
     {
       "path": "vendor/modules/reporting_table.py",
@@ -327,7 +352,7 @@
     },
     {
       "path": "files/input/guide-it.md",
-      "sha256": "a68c5a5b24e694d5546b58a493e521ed0957f92cc1a82f8507a62d0da3100a63",
+      "sha256": "4980f464edea93a96a8497206e614ac2d213cfebf2d9d7912a757511f976872c",
       "languages": [
         "it"
       ],
@@ -335,7 +360,7 @@
     },
     {
       "path": "files/input/source-provenance-it.json",
-      "sha256": "4991c54a144a4407a00665c5e8539980084ba2e8eac54b9a48c56b24fc930212",
+      "sha256": "eb85bc6b20216283d72eb52328bbcbc6fb67d7c1d80434eea3a1eff231d1a184",
       "languages": [
         "it"
       ],
@@ -359,7 +384,7 @@
     },
     {
       "path": "files/practice/guide-it.md",
-      "sha256": "a68c5a5b24e694d5546b58a493e521ed0957f92cc1a82f8507a62d0da3100a63",
+      "sha256": "4980f464edea93a96a8497206e614ac2d213cfebf2d9d7912a757511f976872c",
       "languages": [
         "it"
       ],
@@ -367,7 +392,7 @@
     },
     {
       "path": "files/practice/source-provenance-it.json",
-      "sha256": "4991c54a144a4407a00665c5e8539980084ba2e8eac54b9a48c56b24fc930212",
+      "sha256": "eb85bc6b20216283d72eb52328bbcbc6fb67d7c1d80434eea3a1eff231d1a184",
       "languages": [
         "it"
       ],

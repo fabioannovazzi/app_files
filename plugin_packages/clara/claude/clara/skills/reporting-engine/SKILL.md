@@ -56,6 +56,14 @@ normal dependency check below (`requirements.txt` includes openpyxl).
    This replays the original sources, rejects stale commentary and writes the
    explained dashboard, `management_control_report.md`, the numeric workbook
    and an execution receipt. Keep the earlier calculation folder intact.
+   Open the native interactive dashboard locally with
+   `python scripts/budget_report_preview.py --report <new-explained-report-folder>/management_control_dashboard.html`
+   and open its returned loopback URL in the Claude browser. This receipt-checked,
+   read-only preview keeps month and cumulative-view controls working; it does
+   not publish or need a Vera client engagement. Keep the server running while
+   reviewing. Use the course document reader for the workbook and Markdown
+   report, not for the interactive HTML; opening HTML as a source file is not
+   a rendered-dashboard check.
 5. If the user requests Sites: `python scripts/budget_report.py site --input <exports.xlsx> --recipe <reviewed.json> --pack <management_control_pack.json> --commentary <commentary.json> --audience <client> --output-dir <new-site-folder>`.
 
 Repeat `--input` for separate exports. The optional `forecast` role uses the same

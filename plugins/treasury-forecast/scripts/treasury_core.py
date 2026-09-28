@@ -357,7 +357,7 @@ def _events(
             decision = decisions.get(event_id)
             origin, basis, expected_date = (
                 "source",
-                row.get("basis", "Supplied due date"),
+                row.get("basis", "Scadenza indicata nella fonte"),
                 source_date,
             )
             old = prior_events.get(event_id)

@@ -293,7 +293,7 @@ jobs:
         run: python scripts/course_materials/build_concordato_support.py --check
       - name: Check Concordato reasoning and localized deliverables
         run: >-
-          python -m pytest -q
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_concordato_plan_review_plugin.py
           tests/plugins/test_concordato_preventivo_semantics.py
           tests/plugins/test_teaching_concordato_execution.py

@@ -285,13 +285,45 @@ def test_repeated_show_library_fresh_session_and_profile_identity(store):
     assert store.path.read_bytes() == original_profile
 
 
-def test_repeated_cannot_bypass_first_interview(store):
+def test_first_course_requires_real_chat_pair_before_creating_state(store):
     session = teaching.TeachingStore(store.root, plugin_root=store.plugin_root)
-    with pytest.raises(onboarding.OnboardingError, match="Repeated tutorial sessions"):
+    with pytest.raises(onboarding.OnboardingError, match="Bind the two native chats"):
         session.begin(
             {"workflow_id": WORKFLOWS[store.product][0], "title": "Try", "goal": "Try"}
         )
     assert not store.root.exists()
+
+
+def test_requested_first_course_preserves_unfinished_onboarding(store):
+    session = teaching.TeachingStore(store.root, plugin_root=store.plugin_root)
+    result = session.begin(
+        {
+            "workflow_id": WORKFLOWS[store.product][0],
+            "title": "Requested course",
+            "goal": "Inspect an actual result",
+            "pair": {"teacher_thread_id": "teacher", "worker_thread_id": "worker"},
+        }
+    )
+    original = store.path.read_bytes()
+    assert result["onboarding_phase"] == "interview"
+    assert result["profile"] is None
+    assert store.status()["lessons"] == []
+    assert worker(session)["local_only"]
+    change(session, "pause", next_step="Resume the actual unfinished example")
+    change(session, "resume", next_step="Continue from the same inputs")
+    assert worker(session)["profile"] is None
+    assert store.path.read_bytes() == original
+
+
+def test_requested_course_preserves_existing_interview_and_plan(store):
+    prepare(store)
+    original = store.path.read_bytes()
+    session = teaching.TeachingStore(store.root, plugin_root=store.plugin_root)
+    session.begin(
+        {"workflow_id": WORKFLOWS[store.product][0], "title": "Try", "goal": "Learn"}
+    )
+    assert worker(session)["local_only"]
+    assert store.path.read_bytes() == original
 
 
 def test_pause_repair_pair_focus_and_file_tampering(store):
@@ -682,3 +714,50 @@ def test_lucia_website_prepares_project_without_a_false_ledger_context(tmp_path)
     assert Path(result["inputs"][0]["path"]).read_bytes() == source.read_bytes()
     assert Path(result["output_dir"]).is_relative_to(store.root)
     assert not (Path(result["directory"]) / "Vera").exists()
+
+
+def test_lucia_question_tutorial_starts_a_context_accepted_by_planner(tmp_path):
+    product = ROOT / "plugins/lucia"
+    session_store = teaching.TeachingStore(tmp_path / "lucia", plugin_root=product)
+    session = session_store.begin(
+        {
+            "workflow_id": "quesito-legale-fiscale",
+            "title": "Question journey fixture",
+            "goal": "Prepare the real answer-planning stage",
+            "mode": "show",
+            "pair": {"teacher_thread_id": "teacher", "worker_thread_id": "worker"},
+        }
+    )["session"]
+    source = (
+        product / "assets/courses/quesito-legale-fiscale/files/input/question-it.md"
+    )
+    result = cases.prepare_case(
+        session_store,
+        thread_id="worker",
+        workflow="quesito-legale-fiscale",
+        token=session["worker_token"],
+        phase="demo",
+        sources=[source],
+    )
+    bound = Path(result["context"]["input_bindings"][0]["path"])
+    inspected = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "plugins/prompt-optimizer/scripts/inspect_question.py"),
+            str(bound),
+            "--client-engagement",
+            result["context_path"],
+            "--output-dir",
+            result["output_dir"],
+            "--language",
+            "it",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert inspected.returncode == 0, inspected.stdout + inspected.stderr
+    assert result["workflow_id"] == "quesito-legale-fiscale"
+    assert result["context"]["workflow_id"] == "prompt-optimizer"
+    assert result["run"]["workflow_id"] == "prompt-optimizer"
+    assert bound.read_bytes() == source.read_bytes()
+    assert (Path(result["output_dir"]) / "question_inventory.json").is_file()

@@ -11,13 +11,19 @@ JSON with a file-writing tool; do not interpolate it into shell commands.
 root. Normal users omit it. `status` is read-only and returns the current profile,
 chat pair and example summaries. Add `--session <id>` for one full checkpoint.
 
-`begin --input <json>` starts one session after the optional introduction is complete. Reuse or
+`begin --input <json>` starts one requested course, including before the optional introduction. Reuse or
 pause the current active session before starting another. Paused sessions remain
 in the library. Its input is:
 
 ```json
 {"workflow_id":"fatture-xml-check","title":"Controllo delle fatture XML","goal":"Capire quali dati e anomalie controllare","mode":"show"}
 ```
+
+On first use, include `pair` with the actual `teacher_thread_id` and
+`worker_thread_id`. The helper creates local storage and its local-only marker,
+without inventing a professional profile or marking the introduction complete.
+An existing unfinished introduction and its lessons remain unchanged. A worker
+may receive `profile: null`; explain using the current request in that case.
 
 Use `mode: together` for guided work. An optional `example_id` selects a completed
 session ID or `onboarding:<workflow-id>` as the intent for a fresh run. This copies
@@ -72,6 +78,14 @@ omits `--session`. The same genuine managed-case setup and specialist commands i
 attempt; inspect `tutorial_case.json` and reuse an interrupted attempt first.
 
 Only the teacher records progress. The worker returns actual artifacts and state.
+A working chat becoming idle is not proof that its step ran. Check its returned
+file paths and native run state. If it only acknowledges the request or reports
+an unperformed prerequisite, give it the next concrete bounded step and inspect
+that result before continuing. Reuse the current case and run; do not repeat
+imports or create another attempt just because a reply omitted a field. A worker
+handoff must identify what actually ran, its current review state and the next
+required action. Do not ask the learner to diagnose these internal handoffs or
+count a promise to run as teaching evidence.
 Pausing, rebinding, resuming and entering real work revoke the previous token.
 They do not cancel an already running host task. A changed input, missing file,
 changed result, wrong workflow/worker, stale revision or corrupt local state

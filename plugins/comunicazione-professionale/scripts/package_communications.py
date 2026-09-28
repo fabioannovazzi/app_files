@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from workflow_core import (
+    PLUGIN_ROOT,
     atomic_write_json,
     atomic_write_text,
     file_digest,
@@ -64,6 +65,9 @@ LABELS = {
         "no_publish": "No se recomienda publicar",
     },
 }
+
+
+PACKAGE_LABELS = load_json(PLUGIN_ROOT / "assets" / "package-labels.json")
 
 
 def _language_key(language: str) -> str:
@@ -292,38 +296,41 @@ def _technical_basis(
     answer_contract: dict[str, Any],
     claim_assurance: dict[str, Any],
     editorial_assessment: dict[str, Any],
+    *,
+    language: str,
 ) -> str:
+    labels = PACKAGE_LABELS[_language_key(language)]
     source_by_id = {
         row["id"]: row
         for row in [*source_register["sources"], *source_register["history"]]
     }
     lines = [
-        "# Technical and editorial basis",
+        f"# {labels['basis']}",
         "",
-        f"Recommendation: **{contribution['recommendation']}**",
+        f"{labels['recommendation']}: **{contribution['recommendation']}**",
         "",
-        "## Answer contract",
+        f"## {labels['contract']}",
         "",
-        f"Purpose: {answer_contract['purpose']}",
+        f"{labels['purpose']}: {answer_contract['purpose']}",
         "",
-        f"Audience: {answer_contract['audience']}",
+        f"{labels['audience']}: {answer_contract['audience']}",
         "",
-        f"Jurisdiction: {answer_contract['jurisdiction']} ({answer_contract['jurisdiction_status']})",
+        f"{labels['jurisdiction']}: {answer_contract['jurisdiction']} ({answer_contract['jurisdiction_status']})",
         "",
-        f"Validation scope: `{answer_contract['validation_scope']}`",
+        f"{labels['validation_scope']}: `{answer_contract['validation_scope']}`",
         "",
-        "## Independent claim assurance",
+        f"## {labels['assurance']}",
         "",
         claim_assurance["overall_assessment"]["analysis"],
         "",
-        f"Outcome: `{claim_assurance['overall_assessment']['outcome']}`",
+        f"{labels['outcome']}: `{claim_assurance['overall_assessment']['outcome']}`",
         "",
-        "## Editorial value",
+        f"## {labels['editorial']}",
         "",
     ]
     for key, value in contribution["editorial_value"].items():
-        lines.extend((f"### {key.replace('_', ' ').title()}", "", value, ""))
-    lines.extend(("## Independent editorial assessment", ""))
+        lines.extend((f"### {labels.get(key, key)}", "", value, ""))
+    lines.extend((f"## {labels['assessment']}", ""))
     for key, value in editorial_assessment.items():
         if key in {
             "schema_version",
@@ -331,15 +338,19 @@ def _technical_basis(
             "assessed_contribution_digest",
             "channel_assessments",
             "slide_assessments",
+            "assessment_protocol",
+            "claim_assurance_digest",
         }:
             continue
-        heading = key.replace("_", " ").title()
+        heading = labels.get(key, key)
+        if not value:
+            continue
         if isinstance(value, list):
-            rendered = "\n".join(f"- {item}" for item in value) or "- None"
+            rendered = "\n".join(f"- {item}" for item in value) or f"- {labels['none']}"
         else:
             rendered = str(value)
         lines.extend((f"### {heading}", "", rendered, ""))
-    lines.extend(("## Sources", ""))
+    lines.extend((f"## {labels['sources']}", ""))
     for assessment in contribution["source_assessments"]:
         source = source_by_id[assessment["source_id"]]
         title = (
@@ -351,16 +362,16 @@ def _technical_basis(
             (
                 f"### {assessment['source_id']} · {title}",
                 "",
-                f"Role: `{assessment['semantic_role']}`",
+                f"{labels['role']}: `{assessment['semantic_role']}`",
                 "",
                 assessment["authority_assessment"],
                 "",
-                f"Limitations: {assessment['limitations'] or 'None recorded.'}",
+                f"{labels['limitations']}: {assessment['limitations'] or labels['none']}",
                 "",
             )
         )
     if contribution["claims"]:
-        lines.extend(("## Claims", ""))
+        lines.extend((f"## {labels['claims']}", ""))
         for claim in contribution["claims"]:
             lines.extend(
                 (
@@ -368,13 +379,13 @@ def _technical_basis(
                     "",
                     claim["statement"],
                     "",
-                    f"Sources: {', '.join(claim['source_ids'])}",
+                    f"{labels['sources']}: {', '.join(claim['source_ids'])}",
                     "",
-                    f"Temporal qualification: {claim['temporal_qualification']}",
+                    f"{labels['temporal']}: {claim['temporal_qualification']}",
                     "",
-                    f"Uncertainty: {claim['uncertainty'] or 'None recorded.'}",
+                    f"{labels['uncertainty']}: {claim['uncertainty'] or labels['none']}",
                     "",
-                    f"Professional judgment: {claim['professional_judgment'] or 'None recorded.'}",
+                    f"{labels['judgment']}: {claim['professional_judgment'] or labels['none']}",
                     "",
                 )
             )
@@ -407,6 +418,7 @@ def _package_communications_locked(root: Path) -> Path:
     workbench = load_json(root / "content_workbench.json")
     recompute_contribution_digest(root)
     contribution = workbench["contribution"]
+    labels = PACKAGE_LABELS[_language_key(intake["language"])]
     decisions = require_accepted_reviews(root, workbench["required_review_scopes"])
     source_register = load_json(root / "source_register.json")
     artifacts: list[dict[str, Any]] = []
@@ -420,6 +432,7 @@ def _package_communications_locked(root: Path) -> Path:
             workbench["answer_contract"],
             workbench["claim_assurance"],
             workbench["editorial_assessment"],
+            language=intake["language"],
         ),
     )
     artifacts.append(
@@ -428,12 +441,12 @@ def _package_communications_locked(root: Path) -> Path:
             basis_path,
             kind="technical_basis",
             required_text=[
-                "# Technical and editorial basis",
-                "## Answer contract",
-                "## Independent claim assurance",
-                "## Editorial value",
-                "## Independent editorial assessment",
-                "## Sources",
+                f"# {labels['basis']}",
+                f"## {labels['contract']}",
+                f"## {labels['assurance']}",
+                f"## {labels['editorial']}",
+                f"## {labels['assessment']}",
+                f"## {labels['sources']}",
             ],
         )
     )
@@ -599,15 +612,16 @@ def _package_communications_locked(root: Path) -> Path:
     handoff_path = root / "artifact_card.md"
     atomic_write_text(
         handoff_path,
-        "# Professional communication artifact card\n\n"
-        f"- Run: `{intake['run_id']}`\n"
-        f"- Validation target: **{target_status}**\n"
-        f"- Recommendation: **{contribution['recommendation']}**\n"
-        f"- Studio: {intake['brand_profile']['studio_name']}\n"
-        f"- Channels: {', '.join(intake['requested_channels'])}\n"
-        f"- Accepted review scopes: {', '.join(sorted(decisions))}\n\n"
-        "## Boundaries\n\n"
-        "The commercialista retains the technical position, audience judgment, recipient selection, and final send or publication decision.\n",
+        f"# {labels['card']}\n\n"
+        f"{labels['pending']}\n\n"
+        f"- {labels['run']}: `{intake['run_id']}`\n"
+        f"- {labels['target']}: **{target_status}**\n"
+        f"- {labels['recommendation']}: **{contribution['recommendation']}**\n"
+        f"- {labels['studio']}: {intake['brand_profile']['studio_name']}\n"
+        f"- {labels['channels']}: {', '.join(intake['requested_channels'])}\n"
+        f"- {labels['accepted']}: {', '.join(sorted(decisions))}\n\n"
+        f"## {labels['boundaries']}\n\n"
+        f"{labels['boundary_text']}\n",
     )
     artifacts.append(
         _artifact(
@@ -615,8 +629,8 @@ def _package_communications_locked(root: Path) -> Path:
             handoff_path,
             kind="artifact_card",
             required_text=[
-                "# Professional communication artifact card",
-                "## Boundaries",
+                f"# {labels['card']}",
+                f"## {labels['boundaries']}",
             ],
         )
     )

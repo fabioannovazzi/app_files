@@ -163,12 +163,11 @@ TARGETS: list[dict[str, Any]] = [
                 "title": "Journal Entry",
                 "variant": "ledger",
                 "fields": [
-                    "prepared_entry_id",
-                    "source_qualification_id",
                     "movement_number",
                     "entry_date",
                     "account",
                     "beneficiary_expected",
+                    "amount_signed",
                     "amount_abs",
                     "source_file",
                     "source_sheet",
@@ -186,7 +185,6 @@ TARGETS: list[dict[str, Any]] = [
                     "matched_pdf",
                     "matched_support",
                     "support_type",
-                    "support_artifact_id",
                     "support_match_status",
                     "support_match_signals",
                     "filename",
@@ -510,13 +508,28 @@ TARGETS: list[dict[str, Any]] = [
             {
                 "title": "Required Evidence",
                 "variant": "checklist",
-                "fields": ["requested_document", "reason", "status", "confidence"],
+                "fields": [
+                    "request_text",
+                    "requested_document",
+                    "reason",
+                    "reasons",
+                    "label",
+                    "value",
+                    "status",
+                    "confidence",
+                ],
                 "empty": "No required-evidence fields.",
             },
             {
                 "title": "Memo / Email Impact",
                 "variant": "draft",
-                "fields": ["memo_section", "email_text", "review_notes", "reason"],
+                "fields": [
+                    "preview",
+                    "memo_section",
+                    "email_text",
+                    "review_notes",
+                    "reason",
+                ],
                 "empty": "No draft impact.",
             },
         ],
@@ -905,11 +918,14 @@ TARGETS: list[dict[str, Any]] = [
                 "title": "Extracted Journal Row",
                 "variant": "ledger",
                 "fields": [
-                    "entry",
+                    "movement_number",
+                    "line_number",
                     "entry_date",
                     "account",
-                    "description",
-                    "amount",
+                    "line_desc",
+                    "amount_signed",
+                    "debit",
+                    "credit",
                     "status",
                 ],
                 "empty": "No journal row fields.",
@@ -921,10 +937,10 @@ TARGETS: list[dict[str, Any]] = [
                     "method",
                     "reason",
                     "sample_size",
-                    "population_size",
+                    "population_size_after_filters",
                     "seed",
                 ],
-                "empty": "No sampling basis.",
+                "empty": "See the sampling control for method and population.",
             },
             {
                 "title": "Output Trace",
@@ -1014,13 +1030,25 @@ TARGETS: list[dict[str, Any]] = [
             {
                 "title": "Journal Entry",
                 "variant": "ledger",
-                "fields": ["entry", "entry_date", "account", "counterparty", "amount"],
+                "fields": [
+                    "journal_date",
+                    "journal_amount",
+                    "journal_description",
+                    "entry",
+                    "entry_date",
+                    "account",
+                    "counterparty",
+                    "amount",
+                ],
                 "empty": "No journal fields.",
             },
             {
                 "title": "Bank Statement",
                 "variant": "ledger",
                 "fields": [
+                    "bank_date",
+                    "bank_amount",
+                    "bank_description",
                     "bank_line",
                     "statement_date",
                     "counterparty",
@@ -1034,6 +1062,11 @@ TARGETS: list[dict[str, Any]] = [
                 "variant": "finding",
                 "fields": [
                     "status",
+                    "stage",
+                    "shared_references",
+                    "amount_delta",
+                    "date_diff_days",
+                    "review_note",
                     "match_basis",
                     "requested_document",
                     "reason",
@@ -1124,13 +1157,27 @@ TARGETS: list[dict[str, Any]] = [
             {
                 "title": "Draft Section",
                 "variant": "draft",
-                "fields": ["section", "draft_text", "prompt", "status"],
+                "fields": [
+                    "section",
+                    "codex_comment",
+                    "draft_text",
+                    "prompt",
+                    "status",
+                ],
                 "empty": "No draft text.",
             },
             {
                 "title": "Source Table",
                 "variant": "source",
-                "fields": ["source_table", "source_path", "metric", "period", "amount"],
+                "fields": [
+                    "source_table",
+                    "source_path",
+                    "sheet_name",
+                    "preview_rows",
+                    "metric",
+                    "period",
+                    "amount",
+                ],
                 "empty": "No source table fields.",
             },
             {
@@ -2515,10 +2562,14 @@ GROUP_I18N: dict[str, dict[str, str]] = {
         "Exception": "Eccezione",
         "Extracted Journal Row": "Riga contabile estratta",
         "Sampling Basis": "Base campionamento",
+        "See the sampling control for method and population.": "Metodo e popolazione sono nella voce Parametri campione.",
         "Output Trace": "Traccia output",
         "Bank Statement": "Estratto conto",
         "Match Result": "Esito match",
         "Draft Section": "Sezione bozza",
+        "No draft text.": "Nessun testo di bozza per questa voce.",
+        "No source table fields.": "Nessuna tabella fonte indicata per questa voce.",
+        "No revision note.": "Nessuna nota di revisione.",
         "Source Table": "Tabella fonte",
         "Revision Note": "Nota revisione",
         "Prompt Section": "Sezione prompt",
@@ -2650,7 +2701,7 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "reviewTitle": "Verifica documentale",
             "queueTitle": "Scritture",
             "detailTitle": "Scrittura e supporto",
-            "detailHelp": "Confronta scrittura, PDF di supporto e rilievo prima della decisione.",
+            "detailHelp": "Confronta la registrazione con la fattura XML o il PDF collegato e rivedi i punti ancora da chiarire.",
             "search": "Cerca movimento, PDF, stato, anomalia, beneficiario",
         },
         "fr": {
@@ -4191,7 +4242,7 @@ TEMPLATE = """<!doctype html>
     function esc(value) {{
       return String(value ?? \"\").replace(/[&<>\"']/g, (char) => ({{ \"&\": \"&amp;\", \"<\": \"&lt;\", \">\": \"&gt;\", '\"': \"&quot;\", \"'\": \"&#39;\" }})[char]);
     }}
-    const IT_METADATA_LABELS = {{"matched_pair": "Movimenti abbinati", "unmatched_bank": "Movimento bancario non abbinato", "unmatched_journal": "Registrazione non abbinata", "entry": "Registrazione", "counterparty": "Controparte", "amount": "Importo", "date": "Data", "description": "Descrizione", "status": "Stato", "reference": "Riferimento", "match_method": "Metodo di abbinamento", "bank_amount": "Importo bancario", "journal_amount": "Importo contabile", "difference": "Differenza", "source_path": "Documento di origine", "output_path": "Documento prodotto", "artifact": "Documento prodotto", "report_artifact": "Report", "chart_artifact": "Grafico", "evidence": "Evidenza", "account": "Conto", "currency": "Valuta", "debit": "Dare", "credit": "Avere", "invoice_number": "Numero fattura", "exact": "Esatto", "matched": "Abbinato", "unmatched": "Non abbinato"}};
+    const IT_METADATA_LABELS = {{"matched_pair": "Movimenti abbinati", "unmatched_bank": "Movimento bancario non abbinato", "unmatched_journal": "Registrazione non abbinata", "entry": "Registrazione", "counterparty": "Controparte", "amount": "Importo", "date": "Data", "description": "Descrizione", "status": "Stato", "reference": "Riferimento", "match_method": "Metodo di abbinamento", "bank_amount": "Importo bancario", "journal_amount": "Importo contabile", "difference": "Differenza", "source_path": "Documento di origine", "output_path": "Documento prodotto", "artifact": "Documento prodotto", "report_artifact": "Report", "chart_artifact": "Grafico", "evidence": "Evidenza", "account": "Conto", "currency": "Valuta", "debit": "Dare", "credit": "Avere", "invoice_number": "Numero fattura", "exact": "Esatto", "matched": "Abbinato", "unmatched": "Non abbinato", "sampling_control": "Parametri campione", "sampled_entry": "Riga estratta", "sample_artifact": "Campione", "review_artifact": "Tracciato", "entry_date": "Data registrazione", "movement_number": "Registrazione", "line_number": "Riga", "line_desc": "Descrizione", "amount_signed": "Importo con segno", "amount_abs": "Importo assoluto", "method": "Metodo", "sample_size": "Righe estratte", "requested_size": "Righe richieste", "population_size_after_filters": "Righe nella popolazione", "seed": "Seme casuale", "source_file": "File sorgente", "source_row": "Riga sorgente", "needs_review": "Da rivedere", "reported_increment": "Precisione importi", "filters": "Filtri", "population_proof": "Controlli sulla popolazione", "sampling_parameters": "Parametri di estrazione", "kind": "Tipo", "manual_review": "Da rivedere", "matched_support": "Documento abbinato", "support_type": "Tipo documento", "support_artifact_id": "Identificativo tecnico del documento", "support_match_status": "Abbinamento", "support_match_signals": "Elementi di confronto", "amount_found": "Importo nel documento", "date_found": "Data nel documento", "checks_run": "Controlli eseguiti", "mismatches": "Punti da chiarire", "review_notes": "Note di revisione", "evidence_facts": "Dati estratti dal documento", "professional_conclusion": "Conclusione professionale", "assurance_gate_status": "Stato dei controlli", "deterministic_checks": "Confronti automatici", "value": "Valore", "pending_review": "In attesa di revisione", "fatturapa_xml": "Fattura XML", "party_perimeter_requires_review": "Soggetto da confermare", "direction_requires_review": "Segno contabile da confermare", "missing_direction": "Confronto del segno non ancora concluso", "reconciliation_failed": "Confronto da completare", "semantic_review_withheld": "Giudizio professionale in attesa", "party_perimeter": "Soggetto", "report_section": "Sezione del report", "table_evidence": "Tabella di supporto", "review_issue": "Punto da rivedere", "section": "Sezione", "draft_text": "Testo della bozza", "codex_comment": "Testo attuale", "preview_rows": "Anteprima delle righe", "sheet_name": "Foglio", "source_table": "Tabella fonte", "metric": "Misura", "period": "Periodo", "reason": "Motivo", "blocker": "Impedimento", "proposed_fix": "Modifica proposta"}};
     function humanize(value) {{
       const key = String(value || \"\");
       if (activeLanguage() === \"it\" && IT_METADATA_LABELS[key]) return IT_METADATA_LABELS[key];
@@ -4201,6 +4252,8 @@ TEMPLATE = """<!doctype html>
       if (value == null || value === \"\") return \"\";
       if (typeof value === \"boolean\") return value ? uiText(\"yes\", \"Yes\") : uiText(\"no\", \"No\");
       if (typeof value === \"number\") return Number.isInteger(value) ? String(value) : value.toLocaleString(undefined, {{ maximumFractionDigits: 2 }});
+      if (typeof value === \"object\") return JSON.stringify(value);
+      if (activeLanguage() === \"it\" && CONFIG.plugin === \"check-entries\") return String(value).split(/([,;])/).map((part) => IT_METADATA_LABELS[part] || part).join(\"\");
       return String(value);
     }}
     function reviewPayload() {{ return state.payload.review_payload || FALLBACK.review_payload; }}
@@ -4653,10 +4706,20 @@ TEMPLATE = """<!doctype html>
       if (!record || typeof record !== \"object\" || Array.isArray(record)) return [];
       return keys.filter((key) => Object.prototype.hasOwnProperty.call(record, key)).map((key) => [key, record[key]]).filter(([, value]) => value != null && value !== \"\");
     }}
+    function evidenceValueHtml(value) {{
+      if (typeof value === \"string\" && value.length < 100000 && /^[{{[]/.test(value.trim())) {{
+        try {{ const parsed = JSON.parse(value); if (parsed && typeof parsed === \"object\") value = parsed; }} catch (_) {{}}
+      }}
+      if (value && typeof value === \"object\") {{
+        const label = ({{it: \"Dettagli tecnici\", en: \"Technical details\", fr: \"Détails techniques\", es: \"Detalles técnicos\", de: \"Technische Details\"}})[activeLanguage()];
+        return `<details><summary>${{esc(label)}}</summary><pre style=\"white-space:pre-wrap;overflow-wrap:anywhere\">${{esc(JSON.stringify(value, null, 2))}}</pre></details>`;
+      }}
+      return esc(formatValue(value));
+    }}
     function kvHtml(record, keys) {{
       const entries = entriesFor(record, keys);
       if (!entries.length) return `<div class=\"empty\">${{esc(uiText(\"noFields\", \"No fields.\"))}}</div>`;
-      return `<div class=\"kv\">${{entries.map(([key, value]) => `<div>${{esc(humanize(key))}}</div><div>${{esc(formatValue(value))}}</div>`).join(\"\")}}</div>`;
+      return `<div class=\"kv\">${{entries.map(([key, value]) => `<div>${{esc(humanize(key))}}</div><div>${{CONFIG.plugin === "report-builder" && key === "preview_rows" ? sourcePreviewHtml(value) : evidenceValueHtml(value)}}</div>`).join(\"\")}}</div>`;
     }}
     function valueForField(item, field) {{
       const data = item.data || {{}};
@@ -4665,6 +4728,7 @@ TEMPLATE = """<!doctype html>
         if (!root || typeof root !== \"object\") continue;
         if (!Object.prototype.hasOwnProperty.call(root, field)) continue;
         const value = root[field];
+        if (CONFIG.plugin === "report-builder" && field === "preview_rows" && Array.isArray(value)) return value;
         if (value == null || value === \"\") continue;
         if (Array.isArray(value)) return value.map(formatValue).join(\", \");
         if (typeof value === \"object\") return JSON.stringify(value);
@@ -4677,11 +4741,16 @@ TEMPLATE = """<!doctype html>
         .map((field) => [field, valueForField(item, field)])
         .filter(([, value]) => value != null && value !== \"\");
     }}
+    function sourcePreviewHtml(rows) {{
+      if (!Array.isArray(rows) || !rows.length || !rows.every(row => row && typeof row === "object" && !Array.isArray(row))) return evidenceValueHtml(rows);
+      const columns = [...new Set(rows.flatMap(row => Object.keys(row)))];
+      return `<div style="overflow-x:auto"><table><thead><tr>${{columns.map(key => `<th>${{esc(key)}}</th>`).join("")}}</tr></thead><tbody>${{rows.map(row => `<tr>${{columns.map(key => `<td>${{esc(row[key] ?? "")}}</td>`).join("")}}</tr>`).join("")}}</tbody></table></div>`;
+    }}
     function workflowCardHtml(item, group) {{
       const entries = groupEntries(item, group);
       const variant = group.variant || \"default\";
       const body = entries.length
-        ? `<div class=\"kv\">${{entries.map(([key, value]) => `<div>${{esc(humanize(key))}}</div><div>${{esc(formatValue(value))}}</div>`).join(\"\")}}</div>`
+        ? `<div class=\"kv\">${{entries.map(([key, value]) => `<div>${{esc(humanize(key))}}</div><div>${{CONFIG.plugin === "report-builder" && key === "preview_rows" ? sourcePreviewHtml(value) : evidenceValueHtml(value)}}</div>`).join(\"\")}}</div>`
         : `<div class=\"empty\">${{esc(groupEmpty(group))}}</div>`;
       return `<section class=\"workflow-card workflow-card--${{esc(variant)}}\"><h5>${{esc(groupTitle(group))}}</h5>${{body}}</section>`;
     }}
@@ -5166,7 +5235,7 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
       const requestedDocuments = Array.isArray(current.requested_documents) && current.requested_documents.length
         ? current.requested_documents
         : (nextAction === "request_more_documents" ? requestedDocumentHints(item) : []);
-      state.decisions[item.id] = { item_id: item.id, action: nextAction, reviewer_note: current.reviewer_note || "", edit_value: current.edit_value || "", requested_documents: requestedDocuments };
+      state.decisions[item.id] = { item_id: item.id, action: nextAction, reviewer_note: current.reviewer_note || "", edit_value: current.edit_value ?? (CONFIG.plugin === "report-builder" && nextAction === "edit" ? String(item.data?.[item.data?.target_field] ?? "") : ""), requested_documents: requestedDocuments };
       return state.decisions[item.id];
     }
     function setDecisionAction(item, action) { if (!item || !action) return; ensureDecision(item, action); persistWidgetState(); renderRows(); }
@@ -5773,6 +5842,20 @@ def render_target(target: dict[str, Any]) -> str:
         schema_version_json=json.dumps(target.get("schemaVersion", "1.0")),
         **_widget_snippets(target),
     )
+    if target["plugin"] == "journal-bank-reconciliation":
+        if __package__:
+            from scripts.journal_bank_review_widget import customize_review
+        else:
+            from journal_bank_review_widget import customize_review
+
+        return customize_review(html)
+    if target["plugin"] == "client-file-preparation":
+        if __package__:
+            from scripts.client_file_review_widget import customize_review
+        else:
+            from client_file_review_widget import customize_review
+
+        return customize_review(html)
     if target["plugin"] == "archive-organization":
         if __package__:
             from scripts.archive_organization_review_widget import customize_review

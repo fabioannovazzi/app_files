@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "advisory-brief-planner",
-  "course_sha256": "35484690c3f74d102293b7cc315ca041f9b3010f239a7b1e0c1b98c67bd289d1",
+  "course_sha256": "3ed6f1caabb93c62067b60c4a4ee4d5a49af4551863d457a6490ae9d9254f2ca",
   "reviewer": "Codex: five-language first-use planning material and actual native contract review",
   "reviewed_at": "2026-09-14T20:43:47.929955+00:00",
   "review_scope": "Read every localized lesson outline and the fictional assignment, customer/operating notes, revised assignment and vehicle update. Read all ten delivered readable plans and reviewed their source statements, constraints and changed objectives against those inputs. Verified all local source, canonical contract, validation and review-note links. The current native packager checks the actual contracts and exact source anchors. All 25 advisory regression cases pass; ten distinct planner cases bind this kit and its five languages. Each practice retains the initial plan and creates a separate revised plan. These are Markdown and JSON material checks, not proof of live voice, learner understanding, native GUI presentation or professional approval. The authored regression interpretations are outside the shipped kits.",
@@ -384,5 +384,74 @@
     "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
     "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
+  },
+  "codex_course_qa_20260927": {
+    "status": "passed",
+    "course": 33,
+    "product": "clara",
+    "workflow": "advisory-brief-planner",
+    "scope": "Italian functional Codex simulated learner journey: repaired first startup, prepared inputs, actual current native planner, rendered assignment summary and source/handoff links, distinct practice and saved reopening",
+    "actor": "Codex simulated QA",
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "session_id": "95a925c1c4933bd4f261748c94f90e74",
+    "phase": "paused",
+    "revision": 4,
+    "profile": null,
+    "onboarding_phase": "interview",
+    "runs": {
+      "demo": {
+        "directory": "/private/tmp/teaching-acceptance-20260926/codex/clara-advisory-brief-planner/teaching/sessions/95a925c1c4933bd4f261748c94f90e74/files/demo-8d6cf8180ae49b98",
+        "contract_sha256": "6892fd6baaf0594ff689bb11847f051461bbbed0d50e2a2e505bb02ab02038b1",
+        "validation": "passed",
+        "inputs": 2,
+        "outputs": 4,
+        "workflow_selected": "clara:advisory-case-director",
+        "deliverable": "Breve memo in italiano con raccomandazione, motivi, limiti e prossimo passo; in questa fase si produce soltanto il piano dell’incarico."
+      },
+      "practice": {
+        "directory": "/private/tmp/teaching-acceptance-20260926/codex/clara-advisory-brief-planner/teaching/sessions/95a925c1c4933bd4f261748c94f90e74/files/practice-3cfebc5b56c231d3",
+        "contract_sha256": "acc00faa789e20642d393f45ace26ca466ae068f9dde5011488e3e7e546c10ae",
+        "validation": "passed",
+        "inputs": 4,
+        "outputs": 4,
+        "workflow_selected": "clara:advisory-case-director",
+        "deliverable": "Breve lista di azioni per verificare la fattibilità del pilota su prenotazione; non un memo o una raccomandazione di lancio. Questa fase produce il piano per tale lista, non esegue le azioni."
+      }
+    },
+    "demo_files_preserved": 11,
+    "demo_file_set_unchanged": true,
+    "limitations": [
+      "Native microphone/voice not tested",
+      "Physical two-window positioning not tested",
+      "Other-language live journeys not tested",
+      "Planning only; downstream advice not executed or professionally approved"
+    ],
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-27T19:37:37.497766+00:00"
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "35484690c3f74d102293b7cc315ca041f9b3010f239a7b1e0c1b98c67bd289d1",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources",
+      "files"
+    ],
+    "content_review": "The five practice source headings now identify a revised practice assignment instead of demo. All source body text is unchanged.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-33.md",
+    "italian_course_qa_sha256": "04fb0f8c947933335fe96f648a32fc6f1f5aa6bbae4ef611a0cb9ab14d8decb1",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   }
 }

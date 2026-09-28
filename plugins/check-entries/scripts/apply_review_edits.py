@@ -147,6 +147,7 @@ from vera_assurance import (  # noqa: E402
     build_assurance_envelope,
     build_reviewed_decision_receipt,
     canonical_json_sha256,
+    load_client_engagement_context_file,
     load_client_workflow_context_for_output,
     validate_artifact_receipt,
     validate_assurance_envelope,
@@ -2138,13 +2139,42 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Replay persisted assurance before any review artifacts are written.",
     )
+    parser.add_argument(
+        "--read-only",
+        action="store_true",
+        help="Allow assurance inspection of an archived run; never authorize writes.",
+    )
     args = parser.parse_args(argv)
+    if args.read_only and (
+        not args.preflight_only
+        or args.client_run_preflight_only
+        or args.applied_decisions is not None
+        or args.final_artifacts is not None
+        or args.canonical_output_dir is not None
+    ):
+        parser.error("--read-only is only valid for an unstaged assurance preflight")
     client_output_dir = args.canonical_output_dir or args.output_dir
     try:
-        client_context = load_client_workflow_context_for_output(
-            client_output_dir.expanduser().resolve(),
-            expected_workflow_id="check-entries",
-        )
+        if args.read_only:
+            checked_output = _validate_output_tree(client_output_dir)
+            if (
+                checked_output.name != "checks"
+                or checked_output.parent.name != "outputs"
+            ):
+                raise AssuranceContractError(
+                    "Read-only review requires the native checks directory"
+                )
+            client_context = load_client_engagement_context_file(
+                checked_output.parent.parent / "context.json",
+                expected_workflow_id="check-entries",
+                output_dir=checked_output,
+                allowed_statuses=("running", "ready_for_review", "completed"),
+            )
+        else:
+            client_context = load_client_workflow_context_for_output(
+                client_output_dir.expanduser().resolve(),
+                expected_workflow_id="check-entries",
+            )
     except AssuranceContractError as exc:
         parser.error(str(exc))
     if args.client_run_preflight_only:

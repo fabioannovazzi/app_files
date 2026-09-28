@@ -19,8 +19,12 @@ def customize_review(html: str) -> str:
         "    const NEW_CLIENT_LABELS = "
         + json.dumps(labels, ensure_ascii=True)
         + ";\n"
-        + """
+        + r"""
     function newClientLabels() { return NEW_CLIENT_LABELS[activeLanguage()] || NEW_CLIENT_LABELS.en; }
+    function newClientError(message) {
+      const match = String(message || "").match(/^New Client temporal validity expired on (\d{4}-\d{2}-\d{2}); regenerate the package before Apply$/);
+      return match ? newClientLabels().expired.replace("{date}", match[1]) : message;
+    }
     function newClientValue(value, key) {
       if (value == null || value === "") return newClientLabels().missing;
       if (Array.isArray(value)) {
@@ -36,7 +40,7 @@ def customize_review(html: str) -> str:
         const entries = Object.entries(value).sort(([a], [b]) => (first.includes(a) ? first.indexOf(a) : first.length) - (first.includes(b) ? first.indexOf(b) : first.length));
         return `<dl class="new-client-facts">${entries.map(([field, entry]) => `<dt>${esc(humanize(field))}</dt><dd>${newClientValue(entry, field)}</dd>`).join("")}</dl>`;
       }
-      const coded = /(?:status|type|kind|role|code|outcome)$/.test(key);
+      const coded = /(?:status(?:es)?|types?|kinds?|roles?|codes?|outcomes?)$/.test(key);
       const display = coded ? (newClientLabels().fields[String(value)] || newClientLabels().values[String(value)] || formatValue(value)) : formatValue(value);
       return esc(display);
     }
@@ -46,6 +50,54 @@ def customize_review(html: str) -> str:
 """
     )
     changes = [
+        (
+            '      node.textContent = message || "";',
+            '      node.textContent = newClientError(message) || "";',
+        ),
+        (
+            '    function setRecoveryIssue(kind, title, body, toolName = "", errorMessage = "") {',
+            """    function setRecoveryIssue(kind, title, body, toolName = "", errorMessage = "") {
+      const localized = newClientError(errorMessage);
+      if (localized !== errorMessage) {
+        body = localized;
+        errorMessage = localized;
+      }""",
+        ),
+        (
+            "    function normalizedDecisionRecord(decision) {",
+            """    function normalizedDecisionRecord(decision) {
+      if (decision?.reuse_saved_details === true) {
+        const saved = state.payload.ui_decisions?.decisions?.find(entry => entry.item_id === decision.item_id && entry.action === decision.action);
+        if (saved) decision = saved;
+      }""",
+        ),
+        (
+            "      const result = parseToolResult(await window.openai.callTool(saveTool, saveToolArgs()));",
+            "      const submittedDecisions = collectDecisionInputs();\n"
+            "      const result = parseToolResult(await window.openai.callTool(saveTool, saveToolArgs()));",
+        ),
+        (
+            "      if (result.ui_decisions) state.payload.ui_decisions = result.ui_decisions;\n      return result;",
+            """      if (result.ui_decisions) {
+        state.payload.ui_decisions = result.ui_decisions;
+        const current = collectDecisionInputs();
+        for (const submitted of submittedDecisions) {
+          const live = current.find(decision => decision.item_id === submitted.item_id);
+          if (live && decisionSignature([live]) === decisionSignature([submitted])) {
+            state.decisions[submitted.item_id].reuse_saved_details = true;
+          }
+        }
+      }
+      return result;""",
+        ),
+        (
+            "      const draftCount = state.recovery?.draftDecisionCount || 0;",
+            "      const draftCount = hasUnsaved ? (state.recovery?.draftDecisionCount || 0) : 0;",
+        ),
+        (
+            '        setSaveStatus(result.message || uiText("decisionsSaved", "Decisions saved."), "ok");',
+            '        setSaveStatus(uiText("decisionsSaved", "Decisions saved."), "ok");',
+        ),
         ("    function humanize(value) {", helpers + "    function humanize(value) {"),
         (
             '      const key = String(value || "");',

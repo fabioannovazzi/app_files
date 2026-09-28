@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "comunicazione-professionale",
-  "course_sha256": "11bfb6860a191b4c7e0f99ba01a695f1d90ed226b69e794c620cc04bd626fc58",
+  "course_sha256": "cb3b30702ca1ccb5fcba93763821e8c594afa25acaf757dd21cfec5e338cc74f",
   "reviewer": "Codex: first-use/source/output inspection; independent claim session 01a0a0b8-d623-7cd0-870c-ec3921855b09 and independent editorial session /root/communication_editorial_isolated_07",
   "reviewed_at": "2026-09-14T17:03:02.450310+00:00",
   "review_scope": "Actual current local native packaging with explicitly synthetic professional-review transitions. Exact revised contributions and all 220 claims across both products were independently assessed, followed by a fresh editorial session separate from generation, source assurance and benchmark qualification. The final FAQs preserve the exact reviewed bodies once; root inspected the native packaging and all ten practice emails. Host identities are operator attestations, not API receipts. The outputs are Markdown FAQs and text emails; no HTML, rendered palette, professional approval, sending, real learner, or voice/two-window acceptance is claimed.",
@@ -319,5 +319,114 @@
     "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
     "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
+  },
+  "codex_course_qa_20260928": {
+    "status": "passed",
+    "scope": "Italian Codex simulated-learner current native demonstration and distinct covering-email practice, including source navigation and saved reopening",
+    "tester": "Codex",
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "session_id": "838d283efd5a0739219895d18955d59a",
+    "state": "paused",
+    "state_revision": 5,
+    "runs": {
+      "demo": {
+        "run_id": "course43-demo-current-source",
+        "run_dir": "/private/tmp/teaching-acceptance-20260926/codex/lucia-communication/teaching/sessions/838d283efd5a0739219895d18955d59a/files/studio-riva-communications/runs/course43-demo-current-source",
+        "package_digest": "c5dd879ab28f7bd9acc827b8a5121006c8494d038d946eeac6b6808d77f85142",
+        "receipt_digest": "88ad91e4b18bd6a76b5c4f715539e7e1ad8cb9e6cbe80e4842818cb1a8bdf660",
+        "outputs": [
+          {
+            "path": "studio-riva-communications/runs/course43-demo-current-source/drafts/faq.md",
+            "sha256": "e6f6a410a55f38bbd580d02791aa4db02e1d348f452d08b399faae8ca47d6f07"
+          },
+          {
+            "path": "studio-riva-communications/runs/course43-demo-current-source/technical_basis.md",
+            "sha256": "947f32a758f0c4b4c78b690e7745ea47d1d854c93e4002d33fce08465b187c5c"
+          },
+          {
+            "path": "studio-riva-communications/runs/course43-demo-current-source/artifact_card.md",
+            "sha256": "0f03eeb53540e61c62d82dc2d2dc8330a18150656ac44e7fad05406c18367015"
+          }
+        ]
+      },
+      "practice": {
+        "run_id": "course43-practice-faq-email",
+        "run_dir": "/private/tmp/teaching-acceptance-20260926/codex/lucia-communication/teaching/sessions/838d283efd5a0739219895d18955d59a/files/studio-riva-communications/runs/course43-practice-faq-email",
+        "package_digest": "d95579f6f725aee2d32bcb886805a9e53539d62dcbdab5ce597d1530892ca29f",
+        "receipt_digest": "b460e5e1ec4e2326415fbaf1a92f4f2c15dce0775ed20223dc4c3d4be8fb4b39",
+        "outputs": [
+          {
+            "path": "studio-riva-communications/runs/course43-practice-faq-email/drafts/client_email.txt",
+            "sha256": "7c0b03eba7c6511b0fd9ab05782d330ef73c89f3c521d43520b535621a38bc49"
+          },
+          {
+            "path": "studio-riva-communications/runs/course43-practice-faq-email/drafts/faq.md",
+            "sha256": "24535b21f9d6edb187680267d4cad4e3d91f814ac2048f0ab8acf2dd7dd90182"
+          },
+          {
+            "path": "studio-riva-communications/runs/course43-practice-faq-email/technical_basis.md",
+            "sha256": "347a09c6658d073095ff3694ae3dd6abade08bc4f1e01d63d1edc3f97c522c51"
+          },
+          {
+            "path": "studio-riva-communications/runs/course43-practice-faq-email/artifact_card.md",
+            "sha256": "256f973663574e26f92625ce4486af0234867f0c0c51f441a5675037ad527252"
+          }
+        ]
+      }
+    },
+    "original_demo_files_unchanged": 55,
+    "saved_urls": {
+      "demo_opened": true,
+      "demo_url": "http://127.0.0.1:51890/course.html",
+      "practice_opened": true,
+      "evidence": "lucia-communication-demo-saved-visible.txt",
+      "scope": "Actual Codex browser saved-demo and saved-practice opening; captured visible evidence verified",
+      "practice_url": "http://127.0.0.1:52288/course.html",
+      "practice_evidence": "lucia-communication-practice-saved-visible.txt"
+    },
+    "repairs": [
+      "Exact native answer-contract audience binding in teaching instructions",
+      "Separate editorial qualification and live review sessions explained",
+      "Full claim validation before editorial packet creation catches incomplete contract reviews and professional-judgment routing before further model work",
+      "Supporting package headings localized in five languages, product-neutral responsibility, technical protocol retained in audit JSON rather than prose"
+    ],
+    "tests": [
+      "Actual independent generation and minimized claim/editorial passes for each run",
+      "Actual Codex browser FAQ/email/support/source inspection and saved reopening",
+      "Native package and input integrity; exact fictional-QA review records; prior demo bytes preserved",
+      "Focused claim-gate regressions, five localized package validations and twenty prepared communication executions"
+    ],
+    "unverified": [
+      "native microphone/voice",
+      "physical two-window placement",
+      "other-language interactive lessons",
+      "installed package equivalence"
+    ],
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-28T01:17:14.916850+00:00"
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "11bfb6860a191b4c7e0f99ba01a695f1d90ed226b69e794c620cc04bd626fc58",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-43.md",
+    "italian_course_qa_sha256": "445da066a04617152fb65ba1d2bff667dfc7bc4d3707d3677a54beb10ece0a0d",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   }
 }

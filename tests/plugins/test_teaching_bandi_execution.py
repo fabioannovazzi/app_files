@@ -149,6 +149,14 @@ def test_selected_call_kit_produces_native_review_dossier(
         assert updated["context"]["run_id"] != context["run_id"]
         assert all(path.read_bytes() == value for path, value in original.items())
         results.append({"phase": "practice", "run": updated})
+    from courseware.html_view import passive_html_body
+
+    for result in results:
+        native_html = Path(result["run"]["output_dir"]) / "review_dossier.html"
+        readable = passive_html_body(native_html.read_text(encoding="utf-8"))
+        assert "href='#html-result-costs'" in readable
+        assert "id='html-result-costs'" in readable
+        assert "<table" in readable and "<details" in readable
     _write(tmp_path / "execution.json", {"language": language, "results": results})
     record_native_check(
         record_property,

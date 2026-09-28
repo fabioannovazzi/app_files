@@ -137,7 +137,7 @@
     },
     {
       "path": "modules/attribute-reporting/vendor/modules/pdp/attribute_report_copy.json",
-      "sha256": "8d2b2e5c1631e5d7627266c9c6d0171395dc2164ced07caf33476096e28abf0b"
+      "sha256": "f4b688de9b8927efc9319c2b6b3c80fefb70903e73270d07cd4327f7cbb32063"
     },
     {
       "path": "modules/attribute-reporting/vendor/modules/pdp/attribute_table_catalog.json",
@@ -466,5 +466,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b13bd3711afa16fdff0aa0653c8f99d683b1b4fd74487e17927f575d622d652c"
+  "canonical_course_sha256": "3820e69f1b2234f6a2e0fc5b918db50bac32b6c5a8df3f44cf10b0d86fe1b9ff"
 }

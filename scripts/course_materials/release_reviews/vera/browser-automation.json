@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "browser-automation",
-  "course_sha256": "11f676dfe5d9daaaf834c59710f7518d0bb6eda08ebe9aa3627569bf49cb85b4",
+  "course_sha256": "0fe770de0889c2ca0b5de103d3c4184c5a29aa198564b34ba349cd078d2aa965",
   "reviewer": "Codex localized lesson and actual connected Chrome result review",
   "reviewed_at": "2026-09-23T13:08:54.407318+00:00",
   "review_scope": "Reviewed all five localized lessons and fictional input notes. Actual shipped executeCapability and executeProcess ran in connected Chrome against the supplied loopback page; two clean demo runs finalized the capability, and ten distinct process attempts cover demo/practice for each teaching language. Browser controls and native technical report are English/Italian as disclosed; language labels do not claim five browser locales. CI separately executes the shipped driver against the real HTML in headless Chromium, honestly marked unverified and ineligible for live qualification. No learner completion, professional approval, real portal access, ordinary-use performance qualification or server transfer is claimed.",
@@ -243,6 +243,55 @@
       }
     }
   },
+  "codex_course_qa_20260927": {
+    "workflow": "browser-automation",
+    "language": "it",
+    "native_clean_replays": 4,
+    "demo_original_files_preserved": 23,
+    "session_id": "74952e07fa9ad126e40eb5c663e40c3d",
+    "teacher_thread_id": "01a094c2-9765-7cb0-aa59-8ea07eba3d51",
+    "worker_thread_id": "01a0aed5-2332-7c00-9fca-f63e35f4aecc",
+    "saved_state_revision": 7,
+    "human_approval": false,
+    "understanding_confirmed": false,
+    "archived_reopen": {
+      "demo": "http://127.0.0.1:54362/course.html",
+      "practice": "http://127.0.0.1:54367/course.html",
+      "observed": true
+    },
+    "host_limits": [
+      "native voice hardware unverified",
+      "physical two-window arrangement unverified"
+    ],
+    "functional_italian_journey": "passed",
+    "ordered_list_regression": "passed; live reader DOM and screenshot retested",
+    "prepared_course_suite": "passed",
+    "reviewed_at": "2026-09-27T15:08:51.800699+00:00",
+    "scope": "Current Italian functional Codex learner journey only; earlier multilingual release evidence retained as historical. No new publication or installation claim."
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "a1a931b48d8e123cc46c0268280a1601770d6a561e6f9b2367bf3cc89fafbc02",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-25.md",
+    "italian_course_qa_sha256": "a1b42c00e6a980626f022986a7aa26aa7a9116ea35bf032d9e4bb5b9ed0e5ccc",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
+  },
   "geneva_release_refresh": {
     "reviewer": "Codex /root",
     "reviewed_at": "2026-09-28T08:17:18.379368+00:00",
@@ -252,5 +301,15 @@
     "source_review": "The common-core Geneva release adds explicit jurisdiction and source handling, French/CHF presentation where applicable, and the source-bound adapters described in docs/releases/2026-09-28-vera-geneva.md. This course retains its existing professional purpose and sample jurisdiction; adding Geneva capability does not relabel an Italian exercise as Swiss. Exact changed bindings are recorded by kit in docs/releases/2026-09-28-vera-geneva-course-review.json.",
     "native_evidence": "GitHub Actions run 36393675234, job 108834959892, commit 989e523529fccd09a60a8ed29dc63d87b863d21e: native teaching stage passed 998 tests with 3 explicit skips and 89.73% courseware coverage. New Client, Geneva adapters and annual-account stages also passed. The later editorial-fingerprint check failed; this is not a claim that the full run passed. Fresh CI must independently validate all required demo/practice identities and current course hashes.",
     "limits": "This is a bounded release-source refresh, not a new independent editorial, visual, professional or learner review. Earlier artifact hashes remain historical evidence. No Geneva lesson acceptance, real-client acceptance or installed-runtime update is claimed."
+  },
+  "combined_geneva_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-28T08:57:49.109533+00:00",
+    "previous_course_sha256": "06fadf014027ef8d2e114492eb4640a8d879b2ca6d61b8e4409f4c84105684cb",
+    "course_qa_commit": "1b9883c484ad7c877bd304914c53c277f7a71ab2",
+    "integrated_main_commit": "655c5a7ea",
+    "content_review": "The complete authored course object is unchanged from the verified course QA commit when source bindings are excluded. Retains both the prior Italian Codex QA record and the Geneva source-bound review from main. No new lesson, language-journey acceptance or professional approval is asserted.",
+    "source_review": "Integrated additive Geneva jurisdiction/currency adapters and French presentation from PR #692; course QA source/result readers, saved-review controls, parser hardening and teacher/working roles are preserved. Generated assets and packages are rebuilt from this combined source.",
+    "native_execution_requirement": "The combined candidate must pass the unchanged required native demo/practice checks and dedicated Geneva regressions before deployment."
   }
 }

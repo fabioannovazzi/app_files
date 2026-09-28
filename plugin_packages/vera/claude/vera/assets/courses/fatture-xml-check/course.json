@@ -28,7 +28,7 @@
   "sources": [
     {
       "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
-      "sha256": "4b56449248b02f910f434804918f16c28713387b17432aea4993607a5275adf7"
+      "sha256": "b9bd5e14e415cec52e6a3bc1be5c5bb2bffa1e930d19e2a627a68bf4df08ff88"
     },
     {
       "path": "modules/client-file-preparation/assets/icon.svg",
@@ -36,7 +36,7 @@
     },
     {
       "path": "modules/client-file-preparation/assets/review-workbench-adapter.json",
-      "sha256": "42af84f012b36d6d34c2646a9277b1a9aaf9eb8c4bf9287038948a56d2d401d0"
+      "sha256": "932b3b69030360e3ba849d4c6c20dca6ec8c247a147e4a451725c517d1b57382"
     },
     {
       "path": "modules/client-file-preparation/references/workflow-reference.md",
@@ -52,7 +52,7 @@
     },
     {
       "path": "modules/client-file-preparation/scripts/build_file_preparation_outputs.py",
-      "sha256": "5d84eb4fba8b93ae03a50108925fcaef068ffaad0263ccd0fc1a93deb08659d1"
+      "sha256": "e081fb3f478db184476627dcb92f9c9e194daa6e2cd9b1b2ce8cd6b673dc2418"
     },
     {
       "path": "modules/client-file-preparation/scripts/check_dependencies.py",
@@ -469,5 +469,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "3088fb489c8fa4cb7b18d59c96608ae2a0e45fd3b5c9757210fe00cfd629aa07"
+  "canonical_course_sha256": "4a2f39a1d14d0f73e306cd942458df02347c18fb34e0c5772e757249798323bb"
 }

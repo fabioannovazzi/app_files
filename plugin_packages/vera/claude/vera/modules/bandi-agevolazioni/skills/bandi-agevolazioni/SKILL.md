@@ -493,7 +493,10 @@ python scripts/intelligence_workflow.py \
 
    `rejected` and `returned` are also explicit terminal decisions. Accepted
    contributions enter `application_workbench.json` only as `proposed`; they
-   never overwrite confirmed or blocked work. Any change to intake, sources, or
+   never overwrite confirmed or blocked work. Proposed `ready` or
+   `not_applicable` readiness is normalized to `verify`: neither can certify
+   professional review, and the proposed outcome and rationale are preserved.
+   Any change to intake, sources, or
    workbench makes an undecided run stale. Deterministic scripts validate shape,
    identity, references, exact arithmetic, review hashes, status consistency,
    and prohibited portal controls; they do not interpret the call.

@@ -42,6 +42,12 @@ example, `demo-execution.json`, and pass that path as `execution_record` when
 recording progress. Preserve the demo's files and record a new execution for
 practice. Do not overwrite a retained execution record.
 
+For a validation workflow, an unchanged reviewed draft remains an input copy,
+even when the semantic review accepts it. Retain it as a source; select the
+newly generated Word document and actual review package as lesson outputs.
+Do not alter accepted text merely to change its hash or omit the consumed
+draft from the inputs to bypass the execution check.
+
 The tracker checks product/workflow/phase, paired worker, the current owning
 skill hash, all file hashes, and exclusion of prepared material or input copies.
 It rechecks the retained execution before completion and when opening a saved

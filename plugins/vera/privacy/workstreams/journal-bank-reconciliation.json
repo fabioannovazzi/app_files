@@ -72,7 +72,7 @@
     },
     {
       "id": "component-private-review-transport",
-      "control": "MCP validation can load the sibling review JSON inside the local server and returns only a non-identifying index plus a random four-hour reference. Rendering exposes the complete validated payload only in tool-result _meta, which is component-only, while model-visible content and structuredContent contain the index. The widget hydrates from toolResponseMetadata and retains the complete human review surface."
+      "control": "MCP validation can load the sibling review JSON inside the local server and returns only a non-identifying index plus a random four-hour reference. Rendering exposes the complete validated payload only in tool-result _meta, which is component-only, while model-visible content and structuredContent contain the index. The widget hydrates from toolResponseMetadata and retains the complete human review surface. The local widget displays the existing native bank and journal dates and amounts, shared references and deltas with localized labels. Read-only reopening resolves and validates the owning portable run, including nested result folders. Archived results show a read-only notice and disabled save/apply buttons; server write authority still requires a running run. This adds no model payload or external route."
     },
     {
       "id": "bounded-selected-case-projection",
@@ -120,9 +120,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-28",
+    "reviewed_at": "2026-09-26",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "4c7b0ba7d68fe4c145e8791d5f65825fb17858040fc6d48f1832bbffd2ff3c05"
+    "source_fingerprint": "458b03026aec0b064d910448cbc6f99862506d6ee298a4c4162a34d4ce982b5f"
   }
 }

@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "plugins/vera",
-  "version": "0.1.272",
-  "captured_at": "2026-09-28T05:58:32.901320+00:00",
-  "catalogue_fingerprint": "a5d6b853e848c53b6f748b71c5921d8b7db3702a0453be84ade958a3b146aae9",
-  "manifest_sha256": "e8b7310faacbf0a660480761f55ffdb0952fbfa6fe336b2bed1758855a4dda94",
+  "version": "0.1.273",
+  "captured_at": "2026-09-28T09:31:31.049621+00:00",
+  "catalogue_fingerprint": "c67f7fab34c777ebe928d7b1ef5e6d6d1c40784b24b203dc191545b04a5a0306",
+  "manifest_sha256": "e4920658f3d908e6e6451999c714cddae22973647ab32e8dc6ed3a5845fabd94",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -114,7 +114,7 @@
     {
       "function_id": "learn-with-vera",
       "skill_path": "skills/learn-with-vera/SKILL.md",
-      "sha256": "d0b941006f3c9c1534ee650c2c3fdb2b3d37cbfb2eb156e662c56837b1054fe5"
+      "sha256": "7234efa621e18944a9154e59daa0db39c525bd460d515b5bed1e32ae92c3870f"
     },
     {
       "function_id": "legal-tax-answer-planner",
@@ -139,7 +139,7 @@
     {
       "function_id": "open-item-reconciliation",
       "skill_path": "skills/open-item-reconciliation/SKILL.md",
-      "sha256": "f301d083f39dd65ba4f8dd80e05cc52391634bf1ee9b210cb6a7a12f8f9028d6"
+      "sha256": "88b9e2b6afc2479588dca8d02c7864ad89535ffb411597a739c5ca47bf83f388"
     },
     {
       "function_id": "presenza-digitale-studio",

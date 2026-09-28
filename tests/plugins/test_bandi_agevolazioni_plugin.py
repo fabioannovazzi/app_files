@@ -2644,3 +2644,124 @@ def test_preparation_requires_current_approval_and_allowed_actions(
     )
 
     assert audit["status"] == "failed"
+
+
+@pytest.mark.parametrize("suggested_readiness", ["ready", "not_applicable"])
+def test_model_document_cannot_make_review_dossier_unpackageable(
+    tmp_path: Path, suggested_readiness: str
+) -> None:
+    """A proposed availability judgment must remain reviewable, not claim review."""
+    scripts, workspace = _initialized_case(tmp_path)
+    args = {
+        "output_dir": workspace["output_dir"],
+        "client_engagement": workspace["context_path"],
+    }
+    packet = scripts["intelligence"].create_intelligence_packet(
+        **args,
+        task="EVIDENCE_MAPPING",
+        subject_ids=["SRC-CALL-001"],
+        model_session_ref="SESSION-READINESS-001",
+    )
+    response = _model_output(
+        _recommendation(
+            action="CREATE",
+            collection="document_checklist",
+            target_id="DOC-PROPOSED-001",
+            payload={
+                "document_id": "DOC-PROPOSED-001",
+                "title": "Documento disponibile da rivedere",
+                "requirement_ids": [],
+                "material_source_ids": ["SRC-CALL-001"],
+                "readiness": suggested_readiness,
+                "rationale": "Proposta di disponibilità, non revisione professionale.",
+                "review_status": "confirmed",
+            },
+            evidence_refs=["SRC-CALL-001"],
+        )
+    )
+    recorded = scripts["intelligence"].record_intelligence(
+        **args,
+        model_output=response,
+        expected_packet_sha256=scripts[
+            "intelligence_contract"
+        ].intelligence_packet_hash(packet),
+        provider="synthetic-regression",
+        model="authored-regression-fixture",
+        prompt_template_version="bandi-intelligence-v2",
+        recorded_by="synthetic-regression",
+        idempotency_key="readiness-001",
+        model_session_ref="SESSION-READINESS-001",
+        task="EVIDENCE_MAPPING",
+        subject_ids=["SRC-CALL-001"],
+    )
+    scripts["intelligence"].decide_intelligence(
+        **args,
+        intelligence_run_id=recorded["intelligence_run_id"],
+        decision="accepted",
+        reviewer_id="synthetic-review-fixture",
+        reviewer_role="regression fixture",
+        confirmed_by_user=True,
+        notes="Synthetic control test, no actual professional approval.",
+    )
+    audit = scripts["validate"].validate_application(**args)
+    assert audit["status"] == "passed", audit["issues"]
+    delivery = scripts["package"].package_dossier(**args)
+    assert delivery["report"].is_file()
+    workbench = _read(workspace["output_dir"] / "application_workbench.json")
+    document = workbench["document_checklist"][0]
+    assert document["review_status"] == "proposed"
+    assert document["readiness"] == "verify"
+    assert document["title"] == "Documento disponibile da rivedere"
+    assert document["material_source_ids"] == ["SRC-CALL-001"]
+    assert workbench["dossier"]["ready_to_file"] is False
+    assert (
+        response["recommendations"][0]["proposed_payload"]["readiness"]
+        == suggested_readiness
+    )
+
+
+@pytest.mark.parametrize("collection", ["consistency_checks", "authority_simulation"])
+@pytest.mark.parametrize(
+    "rationale", ["", "La fonte fittizia non prevede questa operazione."]
+)
+def test_proposed_not_applicable_check_is_reviewable_but_never_ready(
+    tmp_path: Path, collection: str, rationale: str
+) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    _reviewable_workbench(workspace["output_dir"])
+    path = workspace["output_dir"] / "application_workbench.json"
+    wb = _read(path)
+    wb["dossier"]["disposition"] = "review_required"
+    checks = (
+        wb[collection]["checks"]
+        if collection == "authority_simulation"
+        else wb[collection]
+    )
+    checks[0].update(
+        outcome="not_applicable", review_status="proposed", rationale=rationale
+    )
+    if collection == "authority_simulation":
+        wb[collection].update(status="proposed", overall_outcome="verify")
+    _write(path, wb)
+    args = dict(
+        output_dir=workspace["output_dir"], client_engagement=workspace["context_path"]
+    )
+    audit = scripts["validate"].validate_application(**args)
+    codes = {x["code"] for x in audit["issues"]}
+    if not rationale:
+        assert "not_applicable_requires_rationale" in codes
+        return
+    assert audit["status"] == "passed", audit["issues"]
+    assert scripts["package"].package_dossier(**args)["report"].is_file()
+    assert _read(path) == wb
+    assert wb["dossier"]["ready_to_file"] is False
+    wb["dossier"]["disposition"] = "ready_for_authorized_review"
+    _write(path, wb)
+    audit = scripts["validate"].validate_application(**args)
+    codes = {x["code"] for x in audit["issues"]}
+    expected = (
+        "ready_disposition_has_unreviewed_authority_simulation"
+        if collection == "authority_simulation"
+        else "ready_disposition_has_unresolved_consistency"
+    )
+    assert expected in codes

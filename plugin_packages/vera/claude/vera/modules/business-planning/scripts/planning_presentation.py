@@ -17,6 +17,7 @@ __all__ = [
     "language",
     "label",
     "format_number",
+    "format_unit",
     "validate_presentation",
     "render_tables",
     "comparison_rows",
@@ -129,6 +130,15 @@ def label(text: str, lang: str) -> str:
     from planning_french import FRENCH
 
     return {"it": ITALIAN, "fr": FRENCH}.get(lang, {}).get(text, text)
+
+
+def format_unit(unit: str, lang: str) -> str:
+    """Localize display units without changing the canonical calculation record."""
+    if lang != "it":
+        return unit
+    if unit.endswith("/unit"):
+        return unit.removesuffix("/unit") + "/unità"
+    return {"unit": "unità", "units": "unità", "months": "mesi"}.get(unit, unit)
 
 
 def format_number(

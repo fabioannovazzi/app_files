@@ -117,7 +117,7 @@
     },
     {
       "id": "phase-specific-model-input-packets",
-      "control": "Generation receives selected current-source snapshots and only the independently cleared pseudonymized history derivatives. Before claim assurance, editorial assessment or visual assessment, a deterministic builder writes one digest-bound allow-list of exact file paths, sizes and SHA-256 hashes for that phase. Claim assurance receives the answer contract, proposed contribution and selected current sources; editorial assessment receives the contribution and completed assurance; visual assessment receives accepted copy, the exact manifest and rendered files. The corresponding recorders fail on a missing, stale, changed or mismatched packet. Every downstream packet rejects history derivatives, history records, identity maps, stripped inputs and history-session packets."
+      "control": "Generation receives selected current-source snapshots and only the independently cleared pseudonymized history derivatives. Before claim assurance, editorial assessment or visual assessment, a deterministic builder writes one digest-bound allow-list of exact file paths, sizes and SHA-256 hashes for that phase. Claim assurance receives the answer contract, proposed contribution and selected current sources; editorial assessment receives the contribution and completed assurance; visual assessment receives accepted copy, the exact manifest and rendered files. The corresponding recorders fail on a missing, stale, changed or mismatched packet. Every downstream packet rejects history derivatives, history records, identity maps, stripped inputs and history-session packets. Editorial packet preparation validates the completed claim assurance, including answer-contract conformity and explicit professional-judgment routing, before writing or replacing the packet."
     },
     {
       "id": "exhaustive-artifact-and-secret-field-validation",
@@ -145,9 +145,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-12",
+    "reviewed_at": "2026-09-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "52b6cf930c90b559eaf38739bba3972abebd2c56904a22c4c0c57785b3b20924"
+    "source_fingerprint": "a0eda30ad0112c652a44ead1e950d82c07e1fe56a1d3949d3f7efdf5dc8307f4"
   }
 }

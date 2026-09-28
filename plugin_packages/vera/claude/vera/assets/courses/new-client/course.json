@@ -28,7 +28,7 @@
   "sources": [
     {
       "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
-      "sha256": "4b56449248b02f910f434804918f16c28713387b17432aea4993607a5275adf7"
+      "sha256": "b9bd5e14e415cec52e6a3bc1be5c5bb2bffa1e930d19e2a627a68bf4df08ff88"
     },
     {
       "path": "modules/client-file-preparation/assets/icon.svg",
@@ -36,7 +36,7 @@
     },
     {
       "path": "modules/client-file-preparation/assets/review-workbench-adapter.json",
-      "sha256": "42af84f012b36d6d34c2646a9277b1a9aaf9eb8c4bf9287038948a56d2d401d0"
+      "sha256": "932b3b69030360e3ba849d4c6c20dca6ec8c247a147e4a451725c517d1b57382"
     },
     {
       "path": "modules/client-file-preparation/references/workflow-reference.md",
@@ -52,7 +52,7 @@
     },
     {
       "path": "modules/client-file-preparation/scripts/build_file_preparation_outputs.py",
-      "sha256": "5d84eb4fba8b93ae03a50108925fcaef068ffaad0263ccd0fc1a93deb08659d1"
+      "sha256": "e081fb3f478db184476627dcb92f9c9e194daa6e2cd9b1b2ce8cd6b673dc2418"
     },
     {
       "path": "modules/client-file-preparation/scripts/check_dependencies.py",
@@ -152,7 +152,7 @@
     },
     {
       "path": "modules/new-client/assets/new-client-review-widget.html",
-      "sha256": "fb54917fff0fc2a25402eea9a419fdb25d348216bbfcc65821195d655abf0a5c"
+      "sha256": "137e1e3c9de12ffbafb2d09bf4b8838da97b9617e678c6ca8fd3dc3b6988a185"
     },
     {
       "path": "modules/new-client/assets/review-workbench-adapter.json",
@@ -164,7 +164,7 @@
     },
     {
       "path": "modules/new-client/references/review-labels.json",
-      "sha256": "691a05d7916d82f6f50a4fa11c2d3cc5621261f6f7e2d8ae9f186dbcd4eb63b4"
+      "sha256": "8e49c111c99e38def226d1789426ca09114a83e64e60553beab4ced018a4f808"
     },
     {
       "path": "modules/new-client/references/source-policy.md",
@@ -208,7 +208,7 @@
     },
     {
       "path": "modules/new-client/scripts/package_new_client.py",
-      "sha256": "bfb939007de1e370b6389ebd7e0081da2aff923e4606a37df7e67105a568f74e"
+      "sha256": "d8b7547a21080ea77cce8d4b6500ae94e06be0de30855053d9054dee881e95ea"
     },
     {
       "path": "modules/new-client/scripts/promote_client_file_preparation.py",
@@ -581,5 +581,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "18fdace8a59add8d56af2b72e238c39fc98e6ffa9991b966520d164be2a8f580"
+  "canonical_course_sha256": "14b80672bdc4be7c0132b3ccec33f6c1f3c93e25f18f3d199d2b74b21e3c7776"
 }

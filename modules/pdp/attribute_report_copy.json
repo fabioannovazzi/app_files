@@ -117,7 +117,14 @@
     "Findings": "Findings",
     "No blocking mechanical or semantic findings.": "No blocking mechanical or semantic findings.",
     "Privacy": "Privacy",
-    "The HTML report, report semantic review, browser QA, and correctness artifacts remain in this local output folder and were not uploaded. Only approved structured mapping artifacts may have crossed the authenticated server boundary.": "The HTML report, report semantic review, browser QA, and correctness artifacts remain in this local output folder and were not uploaded. Only approved structured mapping artifacts may have crossed the authenticated server boundary."
+    "The HTML report, report semantic review, browser QA, and correctness artifacts remain in this local output folder and were not uploaded. Only approved structured mapping artifacts may have crossed the authenticated server boundary.": "The HTML report, report semantic review, browser QA, and correctness artifacts remain in this local output folder and were not uploaded. Only approved structured mapping artifacts may have crossed the authenticated server boundary.",
+    "Top-seller and recent-product overlap": "Combinations in best sellers and new arrivals",
+    "Top-seller comparison": "Best-seller comparison",
+    "Recent-product comparison": "New-arrival comparison",
+    "Both comparisons": "Both comparisons",
+    "Top-seller comparison only": "Best-seller comparison only",
+    "Recent-product comparison only": "New-arrival comparison only",
+    "Side-by-side comparison membership; presence in both sources does not establish signal eligibility or commercial significance.": "Side-by-side comparison membership; presence in both sources does not establish signal eligibility or commercial significance."
   },
   "it": {
     "Assortment report · private local file": "Rapporto sull’assortimento · file locale privato",
@@ -237,7 +244,14 @@
     "Findings": "Risultati delle verifiche",
     "No blocking mechanical or semantic findings.": "Nessun problema bloccante nelle verifiche automatiche o dei contenuti.",
     "Privacy": "Riservatezza",
-    "The HTML report, report semantic review, browser QA, and correctness artifacts remain in this local output folder and were not uploaded. Only approved structured mapping artifacts may have crossed the authenticated server boundary.": "Il rapporto HTML, la revisione dei contenuti, le verifiche nel browser e gli esiti restano in questa cartella locale e non sono stati caricati. Solo i file strutturati di classificazione approvati possono essere stati trasmessi al server autenticato."
+    "The HTML report, report semantic review, browser QA, and correctness artifacts remain in this local output folder and were not uploaded. Only approved structured mapping artifacts may have crossed the authenticated server boundary.": "Il rapporto HTML, la revisione dei contenuti, le verifiche nel browser e gli esiti restano in questa cartella locale e non sono stati caricati. Solo i file strutturati di classificazione approvati possono essere stati trasmessi al server autenticato.",
+    "Top-seller and recent-product overlap": "Combinazioni tra best seller e nuovi arrivi",
+    "Top-seller comparison": "Confronto dei best seller",
+    "Recent-product comparison": "Confronto dei nuovi arrivi",
+    "Both comparisons": "Entrambi i confronti",
+    "Top-seller comparison only": "Solo confronto dei best seller",
+    "Recent-product comparison only": "Solo confronto dei nuovi arrivi",
+    "Side-by-side comparison membership; presence in both sources does not establish signal eligibility or commercial significance.": "Presenza nei confronti affiancati: comparire in entrambe le fonti non dimostra che la combinazione soddisfi i criteri del segnale o abbia rilevanza commerciale."
   },
   "fr": {
     "Assortment report · private local file": "Rapport sur l’assortiment · fichier local privé",
@@ -357,7 +371,14 @@
     "Findings": "Résultats des vérifications",
     "No blocking mechanical or semantic findings.": "Aucun problème bloquant dans les contrôles automatiques ou du contenu.",
     "Privacy": "Confidentialité",
-    "The HTML report, report semantic review, browser QA, and correctness artifacts remain in this local output folder and were not uploaded. Only approved structured mapping artifacts may have crossed the authenticated server boundary.": "Le rapport HTML, la revue du contenu, les vérifications dans le navigateur et les résultats restent dans ce dossier local et n’ont pas été téléversés. Seuls les fichiers structurés de classification approuvés peuvent avoir été transmis au serveur authentifié."
+    "The HTML report, report semantic review, browser QA, and correctness artifacts remain in this local output folder and were not uploaded. Only approved structured mapping artifacts may have crossed the authenticated server boundary.": "Le rapport HTML, la revue du contenu, les vérifications dans le navigateur et les résultats restent dans ce dossier local et n’ont pas été téléversés. Seuls les fichiers structurés de classification approuvés peuvent avoir été transmis au serveur authentifié.",
+    "Top-seller and recent-product overlap": "Combinaisons parmi les meilleures ventes et les nouveautés",
+    "Top-seller comparison": "Comparaison des meilleures ventes",
+    "Recent-product comparison": "Comparaison des nouveautés",
+    "Both comparisons": "Les deux comparaisons",
+    "Top-seller comparison only": "Comparaison des meilleures ventes uniquement",
+    "Recent-product comparison only": "Comparaison des nouveautés uniquement",
+    "Side-by-side comparison membership; presence in both sources does not establish signal eligibility or commercial significance.": "Présence dans les comparaisons côte à côte : figurer dans les deux sources ne prouve ni le respect des critères du signal ni son importance commerciale."
   },
   "de": {
     "Assortment report · private local file": "Sortimentsbericht · private lokale Datei",
@@ -477,7 +498,14 @@
     "Findings": "Prüffeststellungen",
     "No blocking mechanical or semantic findings.": "Keine blockierenden Feststellungen aus den automatischen Prüfungen oder der Inhaltsprüfung.",
     "Privacy": "Datenschutz",
-    "The HTML report, report semantic review, browser QA, and correctness artifacts remain in this local output folder and were not uploaded. Only approved structured mapping artifacts may have crossed the authenticated server boundary.": "HTML-Bericht, Inhaltsprüfung, Browserprüfung und Prüfergebnisse bleiben in diesem lokalen Ordner und wurden nicht hochgeladen. Nur freigegebene strukturierte Zuordnungsdateien können an den authentifizierten Server übertragen worden sein."
+    "The HTML report, report semantic review, browser QA, and correctness artifacts remain in this local output folder and were not uploaded. Only approved structured mapping artifacts may have crossed the authenticated server boundary.": "HTML-Bericht, Inhaltsprüfung, Browserprüfung und Prüfergebnisse bleiben in diesem lokalen Ordner und wurden nicht hochgeladen. Nur freigegebene strukturierte Zuordnungsdateien können an den authentifizierten Server übertragen worden sein.",
+    "Top-seller and recent-product overlap": "Kombinationen bei Bestsellern und Neuheiten",
+    "Top-seller comparison": "Bestsellervergleich",
+    "Recent-product comparison": "Neuheitenvergleich",
+    "Both comparisons": "Beide Vergleiche",
+    "Top-seller comparison only": "Nur Bestsellervergleich",
+    "Recent-product comparison only": "Nur Neuheitenvergleich",
+    "Side-by-side comparison membership; presence in both sources does not establish signal eligibility or commercial significance.": "Zugehörigkeit zu den nebeneinander dargestellten Vergleichen: Ein Vorkommen in beiden Quellen belegt weder die Erfüllung der Signalkriterien noch die kommerzielle Bedeutung."
   },
   "es": {
     "Assortment report · private local file": "Informe del surtido · archivo local privado",
@@ -597,6 +625,13 @@
     "Findings": "Resultados de las comprobaciones",
     "No blocking mechanical or semantic findings.": "Sin problemas que impidan continuar en las comprobaciones automáticas o del contenido.",
     "Privacy": "Privacidad",
-    "The HTML report, report semantic review, browser QA, and correctness artifacts remain in this local output folder and were not uploaded. Only approved structured mapping artifacts may have crossed the authenticated server boundary.": "El informe HTML, la revisión del contenido, las comprobaciones del navegador y los resultados permanecen en esta carpeta local y no se han subido. Solo los archivos estructurados de clasificación aprobados pueden haberse transmitido al servidor autenticado."
+    "The HTML report, report semantic review, browser QA, and correctness artifacts remain in this local output folder and were not uploaded. Only approved structured mapping artifacts may have crossed the authenticated server boundary.": "El informe HTML, la revisión del contenido, las comprobaciones del navegador y los resultados permanecen en esta carpeta local y no se han subido. Solo los archivos estructurados de clasificación aprobados pueden haberse transmitido al servidor autenticado.",
+    "Top-seller and recent-product overlap": "Combinaciones entre más vendidos y novedades",
+    "Top-seller comparison": "Señales entre los más vendidos",
+    "Recent-product comparison": "Señales entre las novedades",
+    "Both comparisons": "Ambos grupos",
+    "Top-seller comparison only": "Solo comparación de más vendidos",
+    "Recent-product comparison only": "Solo comparación de novedades",
+    "Side-by-side comparison membership; presence in both sources does not establish signal eligibility or commercial significance.": "Presencia en las comparaciones paralelas: aparecer en ambas fuentes no demuestra que se cumplan los criterios de la señal ni que exista relevancia comercial."
   }
 }

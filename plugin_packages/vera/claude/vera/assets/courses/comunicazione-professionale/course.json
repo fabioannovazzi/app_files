@@ -48,6 +48,10 @@
       "sha256": "9cad267791094a6a9b20ff3a4c7e44d730bc7e05de4d40e7865931392e7803b4"
     },
     {
+      "path": "modules/comunicazione-professionale/assets/package-labels.json",
+      "sha256": "20037aadccc71638347356ae903084da35c4a155438b1ad7808ed34cfe18d88d"
+    },
+    {
       "path": "modules/comunicazione-professionale/requirements.txt",
       "sha256": "4376e39d90f829be0b643d59c8df0c2ac265409071947ee64265207daae4c2e7"
     },
@@ -93,7 +97,7 @@
     },
     {
       "path": "modules/comunicazione-professionale/schemas/model_contribution.schema.json",
-      "sha256": "468d2884b8542964a1470b88a6b3dac1799e3a2cfc20b758085e43bdc329dd86"
+      "sha256": "f596f244613885b9ebe056a59856585abc08f3796d9fa7d29e3d7ba621bda61a"
     },
     {
       "path": "modules/comunicazione-professionale/schemas/review_bundle.schema.json",
@@ -121,7 +125,7 @@
     },
     {
       "path": "modules/comunicazione-professionale/scripts/package_communications.py",
-      "sha256": "15f877e32d62c99849d798dab0602014953a434d15950b4621e24cada117994a"
+      "sha256": "b71677ef0500fca3770bb501d5e4f2ff68a5b1ae0077a8389d81c70eb705d60b"
     },
     {
       "path": "modules/comunicazione-professionale/scripts/prepare_creative_direction_handoff.py",
@@ -129,7 +133,7 @@
     },
     {
       "path": "modules/comunicazione-professionale/scripts/prepare_model_phase.py",
-      "sha256": "72bbc6bd7349e51017a7c10b2bb234fda9307c29420313f96b638e86354d0043"
+      "sha256": "9514479d1043407f024af9e2333fbcc6a36f580d24ce7b6ee3ea0e44315e731d"
     },
     {
       "path": "modules/comunicazione-professionale/scripts/prepare_run.py",
@@ -690,5 +694,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ad0f6db8aaf1949426880d7e7714c75c49a97e5fad7caebea922427ccd0c80bb"
+  "canonical_course_sha256": "69c0bec0790302da920a9c9cff1ca42e99cb051c96ac4d0c2faa4fd400c5ad8c"
 }

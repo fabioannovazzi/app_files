@@ -122,6 +122,39 @@ def test_report_escapes_untrusted_content_and_keeps_multiple_assessments(tmp_pat
     assert_local_report_links(report)
 
 
+def test_informational_notes_do_not_look_like_unresolved_case_defects(tmp_path):
+    renderer, records = _records(tmp_path)
+    records["workbench"]["issues"] = [
+        {
+            "issue_id": "NOTE-001",
+            "detail": "Caso interamente fittizio.",
+            "severity": "informational",
+            "status": "open",
+            "review_status": "proposed",
+            "related_ids": [],
+        },
+        {
+            "issue_id": "QUESTION-001",
+            "detail": "Chiarire il collegamento della formazione al software.",
+            "severity": "review_required",
+            "status": "open",
+            "review_status": "proposed",
+            "related_ids": [],
+        },
+    ]
+    original = copy.deepcopy(records)
+    report = renderer.render_dossier_html(**records)
+    questions = report.split('<section id="issues">', 1)[1].split("</section>", 1)[0]
+    notes = report.split('<section id="informational_notes">', 1)[1].split(
+        "</section>", 1
+    )[0]
+    assert "QUESTION-001" in questions and "NOTE-001" not in questions
+    assert "NOTE-001" in notes and "QUESTION-001" not in notes
+    assert "Note sul dossier" in notes
+    assert records == original
+    assert_local_report_links(report)
+
+
 @pytest.mark.parametrize("submitted", [True, False])
 def test_report_describes_actual_action_flags_without_claiming_authorization(
     tmp_path, submitted

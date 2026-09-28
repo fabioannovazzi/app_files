@@ -98,12 +98,16 @@
     {
       "id": "sites-source-replay",
       "control": "The preparation helper rebuilds the pack from the hashed inventory and reviewed recipe, requires exact equality with the supplied pack and matching audience, rejects blocked or unsupported reports and requires a new output directory. The HTML is rendered from those checked values. This checks declared audience equality, not the suitability of the audience for private content."
+    },
+    {
+      "id": "receipt-bound-loopback-preview",
+      "control": "The read-only preview requires a valid current or completed management-control archive context and the exact native commentary receipt and report hash. It serves only pinned report bytes at an unguessable loopback route, revalidates on each request, and exposes no directory or write endpoint. Content Security Policy permits only the bundled report script by exact SHA-256 and blocks external resources, forms and framing."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-28",
+    "reviewed_at": "2026-09-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a98edd7c53d7bb67b874c5362ab341e0f198b910aeaf885bd1435b5d4eb46a3c"
+    "source_fingerprint": "4702eddae2061803ce6830325a63dfd2a7c401bde8a2c8ace15f98e182f861d4"
   }
 }

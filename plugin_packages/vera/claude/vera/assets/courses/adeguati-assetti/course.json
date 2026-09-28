@@ -41,7 +41,7 @@
     },
     {
       "path": "modules/adeguati-assetti/references/record-contract.md",
-      "sha256": "e03b60374390c2a383f42a28ceb91ffebd50ab3604ee40e729f710b31fced5d4"
+      "sha256": "fabf39bcc17b547eb2a71d2cd67fdb2882e6db254e5ac537b6593f06995b9403"
     },
     {
       "path": "modules/adeguati-assetti/requirements.txt",
@@ -582,5 +582,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "3c8e15382e5bc4ccbc082e83744ceaca4baccaa0a2dbe550c9b116b246287695"
+  "canonical_course_sha256": "6c06178888fce4c7fbc572aae6ea6ec93962ea916ffc5375084d2e712e8b2711"
 }

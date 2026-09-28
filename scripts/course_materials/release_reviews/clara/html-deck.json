@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "html-deck",
-  "course_sha256": "83c411764aa6d3b3b55e43a4d02e195664fb5a9803013efca4d280c21dc8b78b",
+  "course_sha256": "23dd34f863d47720ab7d378dfba8a9b9714c1fdaa82f224352f8bf588e7a6ed4",
   "reviewer": "Codex: first-use teaching-kit editorial review",
   "reviewed_at": "2026-09-14T21:09:24.777351+00:00",
   "review_scope": "Prepared lesson, fictional inputs and actual outputs from source-bound regression cases, including visual review. Fixed model contributions are test-only. This is not human learner acceptance, native voice/two-window acceptance, or professional approval. Source dependency refresh after the localized advisory evidence-map repair: 35 current presentation/transcript checks pass in clara-teaching-source-refresh-02. All 60 recorded primary/supporting artifacts across these three kits are byte-identical to the previously inspected versions; the parity manifest retains actual paths. Existing editorial and visual judgments are preserved for unchanged material. No new voice, learner or GUI acceptance is asserted.",
@@ -435,5 +435,72 @@
     "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
     "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
+  },
+  "codex_course_qa_20260928": {
+    "status": "passed",
+    "course": 39,
+    "product": "clara",
+    "workflow": "html-deck",
+    "scope": "Italian Codex simulated learner demonstration and independent practice; actual rendered native presentations, sources and saved reopening",
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "session_id": "dc4bfafdb3d365ff0322e5065e256b52",
+    "phase": "paused",
+    "revision": 4,
+    "profile": null,
+    "onboarding_phase": "interview",
+    "runs": {
+      "demo": {
+        "html": "/private/tmp/teaching-acceptance-20260926/codex/clara-html-reporting/teaching/sessions/dc4bfafdb3d365ff0322e5065e256b52/files/demo-2fb1490d9395cac2/built/f6e96ee4cc0a24d8cc4022348b266437b64594e0c7d39a973f8708debfbfce69/index.html",
+        "sha256": "f6e96ee4cc0a24d8cc4022348b266437b64594e0c7d39a973f8708debfbfce69",
+        "execution_sha256": "2d372a6d0711d5c7660f74dcd427f19d076a65181ddb531089b96279ef469f50",
+        "target": "staff-meeting",
+        "native_preservation": "passed",
+        "browser_review": "/private/tmp/teaching-acceptance-20260926/clara-html-demo-browser-review.json"
+      },
+      "practice": {
+        "html": "/private/tmp/teaching-acceptance-20260926/codex/clara-html-reporting/teaching/sessions/dc4bfafdb3d365ff0322e5065e256b52/files/practice-3514f7b6b70439dc/built/beb846e127c27116fc326b5a1e0783f502c33d69d49fe3f6ad0bc37c92e2fcea/index.html",
+        "sha256": "beb846e127c27116fc326b5a1e0783f502c33d69d49fe3f6ad0bc37c92e2fcea",
+        "execution_sha256": "e4ef2237d8e5c2c6ecd2d94a660e6a99860863e14a39613408dfd12f778b7217",
+        "target": "new-colleagues",
+        "native_preservation": "passed",
+        "browser_review": "/private/tmp/teaching-acceptance-20260926/clara-html-practice-browser-review.json"
+      }
+    },
+    "demo_files_preserved": 34,
+    "repairs": [
+      "Process-step markers fit their supported label text; native deck rebuilt and actual Codex view retested; affected five-language prepared presentation baselines regenerated"
+    ],
+    "limitations": [
+      "Native voice and physical two-window placement unverified",
+      "Other-language live journeys pending",
+      "Installed Clara unavailable; current local source tested",
+      "Native automated browser_qa script, print, reduced-motion setting, fullscreen and touch not exercised; actual Codex UI observations retained instead"
+    ],
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-27T22:46:27.915249+00:00"
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "83c411764aa6d3b3b55e43a4d02e195664fb5a9803013efca4d280c21dc8b78b",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-39.md",
+    "italian_course_qa_sha256": "37ded6e107a779bd55d195acd45112bbe2e372e7f01118268c95d92060782425",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   }
 }

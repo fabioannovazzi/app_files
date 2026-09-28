@@ -1365,6 +1365,46 @@ def test_website_teaching_prepares_private_project_for_current_specialist(
     assert not (Path(result["directory"]) / "Vera").exists()
 
 
+def test_question_teaching_starts_preparation_with_bound_original_inputs(
+    store, module, tmp_path
+):
+    store.begin()
+    change(store, "profile", confirmed_by_user=True, profile=profile())
+    change(
+        store,
+        "plan",
+        lessons=[
+            {"workflow_id": wf, "reason": "Fictional fixture", "goal": "Learn answers"}
+            for wf in (
+                "quesito-legale-fiscale",
+                "fatture-xml-check",
+                "variance-analysis",
+            )
+        ],
+    )
+    change(store, "pair", teacher_thread_id="teacher", worker_thread_id="worker")
+    started = change(store, "start", workflow_id="quesito-legale-fiscale")
+    question = tmp_path / "question.md"
+    question.write_text("Prepare a two-page informational briefing for businesses.")
+    source = tmp_path / "source.md"
+    source.write_text("Fictional source note; verify current official authority.")
+    result = load("local_onboarding_case").prepare_case(
+        store,
+        thread_id="worker",
+        workflow="quesito-legale-fiscale",
+        token=started["lessons"][0]["worker_token"],
+        sources=[question, source],
+        phase="demo",
+    )
+    assert result["workflow_id"] == "quesito-legale-fiscale"
+    assert result["run"]["workflow_id"] == "prompt-optimizer"
+    assert result["context"]["workflow_id"] == "prompt-optimizer"
+    bindings = result["context"]["input_bindings"]
+    assert len(bindings) == 2
+    assert Path(bindings[0]["path"]).read_bytes() == question.read_bytes()
+    assert Path(bindings[1]["path"]).read_bytes() == source.read_bytes()
+
+
 def test_sampling_teaching_binds_one_journal_and_separate_context_note(
     store, module, tmp_path
 ):

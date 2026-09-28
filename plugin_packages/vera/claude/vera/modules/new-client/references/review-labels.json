@@ -71,7 +71,37 @@
       "factors": "Fattori",
       "factor_id": "Fattore",
       "triggers": "Indicatori",
-      "trigger_id": "Indicatore"
+      "trigger_id": "Indicatore",
+      "declared_address": "Sede dichiarata",
+      "declared_business": "Attività",
+      "needs_review": "Da rivedere",
+      "aml_trigger": "Indicatore antiriciclaggio",
+      "applicability": "Applicabilità",
+      "beneficial_owner": "Titolare effettivo",
+      "engagement_terms": "Condizioni dell’incarico",
+      "identity_document": "Documento di identità",
+      "party_fact": "Dato del soggetto",
+      "representative": "Rappresentante",
+      "representative_posture": "Rappresentanza da verificare",
+      "screening_result": "Esito delle verifiche sul soggetto",
+      "tax_fact": "Dato fiscale",
+      "aml_scores_missing": "Punteggi antiriciclaggio da valutare",
+      "applicability_unclear": "Applicabilità da determinare",
+      "engagement_terms_incomplete": "Condizioni dell’incarico da completare",
+      "identity_verification_status_unknown": "Identità da verificare",
+      "mandatory_trigger_status_unknown": "Indicatori obbligatori da verificare",
+      "privacy_processing_decision_pending": "Decisione sul trattamento dei dati in attesa",
+      "professional_resolution_pending": "Valutazione professionale in attesa",
+      "representative_or_executor_posture_pending": "Poteri del rappresentante o dell’esecutore da verificare",
+      "supporting_evidence_not_verified": "Documenti di supporto da verificare",
+      "table_1_status_unknown": "Applicabilità della Tabella 1 da valutare",
+      "verification_status_reported": "Dati dichiarati da verificare",
+      "verification_status_unknown": "Verifica da svolgere",
+      "control_basis": "Criterio di titolarità dichiarato",
+      "document_number": "Documento di identità",
+      "owner_reference": "Riferimento del titolare",
+      "authority_basis": "Base dei poteri dichiarati",
+      "representative_reference": "Riferimento del rappresentante"
     },
     "values": {
       "unknown": "Da verificare",
@@ -86,10 +116,13 @@
       "pending": "In attesa",
       "incomplete": "Da completare",
       "undetermined": "Da determinare",
-      "missing_information": "Informazioni mancanti"
+      "missing_information": "Informazioni mancanti",
+      "owners_recorded": "Titolari indicati, da verificare",
+      "legal_representative": "Rappresentante legale"
     },
     "missing": "Non fornito",
-    "none": "Nessuno registrato"
+    "none": "Nessuno registrato",
+    "expired": "La validità del dossier è scaduta il {date}. Aggiorna le evidenze e le fonti scadute, poi genera un nuovo dossier prima di applicare le decisioni."
   },
   "en": {
     "fields": {
@@ -163,7 +196,15 @@
       "factors": "Factors",
       "factor_id": "Factor",
       "triggers": "Indicators",
-      "trigger_id": "Indicator"
+      "trigger_id": "Indicator",
+      "declared_address": "Reported address",
+      "declared_business": "Activity",
+      "needs_review": "Needs review",
+      "control_basis": "Reported ownership basis",
+      "document_number": "Identity document",
+      "owner_reference": "Owner reference",
+      "authority_basis": "Reported authority basis",
+      "representative_reference": "Representative reference"
     },
     "values": {
       "unknown": "To verify",
@@ -178,10 +219,13 @@
       "pending": "Pending",
       "incomplete": "Incomplete",
       "undetermined": "Undetermined",
-      "missing_information": "Missing information"
+      "missing_information": "Missing information",
+      "owners_recorded": "Owners recorded, verification pending",
+      "legal_representative": "Legal representative"
     },
     "missing": "Not supplied",
-    "none": "None recorded"
+    "none": "None recorded",
+    "expired": "The dossier expired on {date}. Refresh expired evidence and sources, then generate a new dossier before applying decisions."
   },
   "fr": {
     "fields": {
@@ -255,7 +299,15 @@
       "factors": "Facteurs",
       "factor_id": "Facteur",
       "triggers": "Indicateurs",
-      "trigger_id": "Indicateur"
+      "trigger_id": "Indicateur",
+      "declared_address": "Adresse déclarée",
+      "declared_business": "Activité",
+      "needs_review": "À revoir",
+      "control_basis": "Fondement déclaré de la détention",
+      "document_number": "Pièce d’identité",
+      "owner_reference": "Référence du bénéficiaire",
+      "authority_basis": "Fondement déclaré des pouvoirs",
+      "representative_reference": "Référence du représentant"
     },
     "values": {
       "unknown": "À vérifier",
@@ -270,10 +322,13 @@
       "pending": "En attente",
       "incomplete": "À compléter",
       "undetermined": "À déterminer",
-      "missing_information": "Informations manquantes"
+      "missing_information": "Informations manquantes",
+      "owners_recorded": "Bénéficiaires indiqués, à vérifier",
+      "legal_representative": "Représentant légal"
     },
     "missing": "Non fourni",
-    "none": "Aucun enregistré"
+    "none": "Aucun enregistré",
+    "expired": "La validité du dossier a expiré le {date}. Actualisez les justificatifs et sources expirés, puis générez un nouveau dossier avant d’appliquer les décisions."
   },
   "de": {
     "fields": {
@@ -347,7 +402,15 @@
       "factors": "Faktoren",
       "factor_id": "Faktor",
       "triggers": "Hinweise",
-      "trigger_id": "Hinweis"
+      "trigger_id": "Hinweis",
+      "declared_address": "Angegebene Anschrift",
+      "declared_business": "Tätigkeit",
+      "needs_review": "Zu prüfen",
+      "control_basis": "Angegebene Grundlage der Beteiligung",
+      "document_number": "Ausweisdokument",
+      "owner_reference": "Referenz des wirtschaftlich Berechtigten",
+      "authority_basis": "Angegebene Vertretungsgrundlage",
+      "representative_reference": "Referenz der Vertretung"
     },
     "values": {
       "unknown": "Zu prüfen",
@@ -362,10 +425,13 @@
       "pending": "Ausstehend",
       "incomplete": "Unvollständig",
       "undetermined": "Zu bestimmen",
-      "missing_information": "Fehlende Angaben"
+      "missing_information": "Fehlende Angaben",
+      "owners_recorded": "Berechtigte erfasst, Prüfung ausstehend",
+      "legal_representative": "Gesetzlicher Vertreter"
     },
     "missing": "Nicht angegeben",
-    "none": "Keine erfasst"
+    "none": "Keine erfasst",
+    "expired": "Die Gültigkeit des Dossiers endete am {date}. Aktualisieren Sie abgelaufene Nachweise und Quellen und erstellen Sie ein neues Dossier, bevor Sie Entscheidungen anwenden."
   },
   "es": {
     "fields": {
@@ -439,7 +505,15 @@
       "factors": "Factores",
       "factor_id": "Factor",
       "triggers": "Indicadores",
-      "trigger_id": "Indicador"
+      "trigger_id": "Indicador",
+      "declared_address": "Domicilio declarado",
+      "declared_business": "Actividad",
+      "needs_review": "Por revisar",
+      "control_basis": "Fundamento declarado de la titularidad",
+      "document_number": "Documento de identidad",
+      "owner_reference": "Referencia del titular",
+      "authority_basis": "Fundamento declarado de los poderes",
+      "representative_reference": "Referencia del representante"
     },
     "values": {
       "unknown": "Por verificar",
@@ -454,9 +528,12 @@
       "pending": "Pendiente",
       "incomplete": "Por completar",
       "undetermined": "Por determinar",
-      "missing_information": "Información pendiente"
+      "missing_information": "Información pendiente",
+      "owners_recorded": "Titulares indicados, por verificar",
+      "legal_representative": "Representante legal"
     },
     "missing": "No aportado",
-    "none": "Ninguno registrado"
+    "none": "Ninguno registrado",
+    "expired": "La validez del expediente venció el {date}. Actualice las pruebas y fuentes caducadas y genere un nuevo expediente antes de aplicar las decisiones."
   }
 }

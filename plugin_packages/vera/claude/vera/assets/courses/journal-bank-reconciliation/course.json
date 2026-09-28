@@ -32,11 +32,11 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/assets/journal-bank-review-widget.html",
-      "sha256": "84e8a585cf0b231c6fb8d549b89f1cccb563367c68bb2f124d9e0096b5ef4ce8"
+      "sha256": "3daac965fa3ec6e12192f7f7a7e158f2e951cea26d671cdd16e0268cb62d51c2"
     },
     {
       "path": "modules/journal-bank-reconciliation/assets/review-workbench-adapter.json",
-      "sha256": "0a213094f62c0012cb68c790ac58607142c8dbca8f35805f70895a6009f8f793"
+      "sha256": "fdab17b97b76a98f7e5d8b5dd02217ff09644fbf91a975859cd37a1a13ec67f3"
     },
     {
       "path": "modules/journal-bank-reconciliation/references/workflow-reference.md",
@@ -457,5 +457,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "3b77f9310ff45d32b37095e0f67da9c5133fec13bfc06685fa183a43293f4380"
+  "canonical_course_sha256": "34a9f687bdfbc0df3401e99a01365e6f66bb53888e4d189a1955d0b6130ba9ba"
 }

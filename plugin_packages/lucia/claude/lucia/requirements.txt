@@ -1,5 +1,6 @@
 # Union of Lucia's shared assurance, communication, website, and private
 # lifecycle workflows.
+defusedxml>=0.7.1,<1
 fonttools>=4.55,<5
 jsonschema>=4.23,<5
 lxml>=5.0,<7,!=6.0.0

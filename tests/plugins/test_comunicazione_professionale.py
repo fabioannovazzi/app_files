@@ -2909,8 +2909,6 @@ def test_claim_assurance_blocks_unsupported_live_claim(
         "status": "not_supported",
         "analysis": "La fonte registrata non contiene il perimetro affermato e il claim richiede una revisione sostanziale prima dell'uso.",
     }
-    assessment = _editorial_assessment(contribution)
-    assessment["claim_assurance_digest"] = _canonical_digest(claim_assurance)
     contribution_path = _write_json(
         tmp_path / "unsupported-contribution.json", contribution
     )
@@ -2920,39 +2918,27 @@ def test_claim_assurance_blocks_unsupported_live_claim(
     assurance_path = _write_json(
         tmp_path / "unsupported-claim-assurance.json", claim_assurance
     )
-    assessment_path = _write_json(tmp_path / "unsupported-editorial.json", assessment)
-    _prepare_model_phases(run_dir, contribution_path, answer_path, assurance_path)
-
-    completed = _run_result(
-        "record_contribution.py",
+    _run(
+        "prepare_model_phase.py",
         "--run-dir",
         str(run_dir),
+        "--phase",
+        "claim_assurance",
         "--contribution",
         str(contribution_path),
         "--answer-contract",
         str(answer_path),
+    )
+    completed = _run_result(
+        "prepare_model_phase.py",
+        "--run-dir",
+        str(run_dir),
+        "--phase",
+        "editorial_assessment",
+        "--contribution",
+        str(contribution_path),
         "--claim-assurance",
         str(assurance_path),
-        "--editorial-assessment",
-        str(assessment_path),
-        "--provider",
-        "test-provider",
-        "--model",
-        "test-model",
-        "--template-version",
-        "professional-communication-v3",
-        "--generation-session-id",
-        "test-generation-session-001",
-        "--recorded-by",
-        "test-operator",
-        "--assessment-provider",
-        "test-provider",
-        "--assessment-model",
-        "test-editor-model",
-        "--claim-assessment-provider",
-        "test-provider",
-        "--claim-assessment-model",
-        "test-claim-model",
     )
 
     assert completed.returncode == 1
@@ -3865,6 +3851,55 @@ def test_circular_rejects_contact_rail_that_cannot_fit(
     assert not (run_dir / "visuals" / "circolare-clienti.pdf").exists()
 
 
+@pytest.mark.parametrize("defect", ["contract_attention", "unrouted_judgment"])
+def test_editorial_packet_rejects_incomplete_claim_review_before_replacement(
+    tmp_path: Path, defect: str
+) -> None:
+    _, run_dir, contribution = _recorded_publish_run(
+        tmp_path, channels=["client_email"], visual_requested=False
+    )
+    packet = run_dir / "model-phase-packets" / "editorial_assessment.json"
+    original_packet = packet.read_bytes()
+    answer = _answer_contract(contribution)
+    assurance = _claim_assurance(contribution, answer)
+    if defect == "contract_attention":
+        assurance["contract_review"]["evidence_display"]["status"] = "attention"
+        expected = "unresolved answer-contract defect"
+    else:
+        assurance["claims"][0]["issues"] = []
+        expected = "must route judgment to professional review"
+    contribution_path = _write_json(tmp_path / "new-contribution.json", contribution)
+    answer_path = _write_json(tmp_path / "new-answer.json", answer)
+    assurance_path = _write_json(tmp_path / "incomplete-assurance.json", assurance)
+    _run(
+        "prepare_model_phase.py",
+        "--run-dir",
+        str(run_dir),
+        "--phase",
+        "claim_assurance",
+        "--contribution",
+        str(contribution_path),
+        "--answer-contract",
+        str(answer_path),
+    )
+
+    completed = _run_result(
+        "prepare_model_phase.py",
+        "--run-dir",
+        str(run_dir),
+        "--phase",
+        "editorial_assessment",
+        "--contribution",
+        str(contribution_path),
+        "--claim-assurance",
+        str(assurance_path),
+    )
+
+    assert completed.returncode == 1
+    assert expected in completed.stderr
+    assert packet.read_bytes() == original_packet
+
+
 def test_claim_assurance_must_review_every_answer_contract_dimension(
     tmp_path: Path,
 ) -> None:
@@ -3997,3 +4032,43 @@ def test_claim_issue_representation_preserves_defect_and_judgment_gates(
     else:
         assert completed.returncode != 0
         assert expected_error in completed.stderr
+
+
+@pytest.mark.parametrize(
+    "language,card_heading,basis_heading",
+    [
+        ("it", "Riepilogo della comunicazione", "Base tecnica e revisione editoriale"),
+        ("en", "Communication summary", "Technical and editorial basis"),
+        ("fr", "Résumé de la communication", "Base technique et révision éditoriale"),
+        (
+            "de",
+            "Zusammenfassung der Kommunikation",
+            "Fachliche Grundlage und redaktionelle Prüfung",
+        ),
+        ("es", "Resumen de la comunicación", "Base técnica y revisión editorial"),
+    ],
+)
+def test_package_supporting_documents_use_selected_language_and_keep_audit_record(
+    tmp_path: Path, language: str, card_heading: str, basis_heading: str
+) -> None:
+    _, run_dir, _ = _recorded_publish_run(
+        tmp_path, channels=["client_email"], visual_requested=False, language=language
+    )
+    _accept_required_reviews(run_dir)
+
+    _run("package_communications.py", "--run-dir", str(run_dir))
+
+    card = (run_dir / "artifact_card.md").read_text()
+    basis = (run_dir / "technical_basis.md").read_text()
+    assessment = json.loads((run_dir / "editorial_assessment_record.json").read_text())
+    assert card.startswith("# " + card_heading)
+    assert basis.startswith("# " + basis_heading)
+    assert "commercialista" not in card
+    assert "assessment_template_version" not in basis
+    assert assessment["assessment"]["assessment_protocol"]["assessor_session_id"]
+    _accept_packaged_output(run_dir)
+    _run("validate_run.py", "--run-dir", str(run_dir))
+    assert (
+        json.loads((run_dir / "final_artifacts.json").read_text())["status"]
+        == "final_ready"
+    )

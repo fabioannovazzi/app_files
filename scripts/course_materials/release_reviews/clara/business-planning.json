@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "business-planning",
-  "course_sha256": "3031a3d4323e5548da7d413485c6ffbce6818446f8adf5559507df9c8a93785a",
+  "course_sha256": "c7caa4ffef84c83e74479289e7569932e66a5a745fc6c6405dc88fc4387badf6",
   "reviewer": "Codex first-use lesson and native business-plan output review",
   "reviewed_at": "2026-09-23T11:52:59.406972+00:00",
   "review_scope": "Reviewed both localized lessons and generated native demo/practice plans. Tests replay model-authored interpretation through the current workflow, with distinct owning-product case handling and preserved preceding plan. Chrome DOM review additionally inspected the English practice reader view. No fresh model inference, market research, learner participation, professional approval or complete financing model is claimed.",
@@ -70,6 +70,85 @@
       }
     }
   },
+  "codex_course_qa_20260927": {
+    "status": "passed",
+    "course": 37,
+    "product": "clara",
+    "workflow": "business-planning",
+    "scope": "Italian Codex simulated learner demo and linked changed-evidence practice in same native advisory case, with actual report/source navigation and saved reopening",
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "session_id": "c0a4903342bfc9a2664977daadf7ef7f",
+    "phase": "paused",
+    "revision": 4,
+    "profile": null,
+    "onboarding_phase": "interview",
+    "runs": {
+      "demo": {
+        "report": "/private/tmp/teaching-acceptance-20260926/codex/clara-business-reporting/teaching/sessions/c0a4903342bfc9a2664977daadf7ef7f/files/demo-0adda480d4acddf1/advisory-workspace/business-plan/demo-localized/business_plan_review.html",
+        "report_sha256": "e6822aaa1e6a7f35aaf1b4f341dfedceaee40e2a63af8c50a9150e036b8d91b8",
+        "plan_sha256": "5dff5a8b5cc91641296a2e26c6d08d4c2380fd23f7e916488580d8ab64350681",
+        "execution_sha256": "c67d4f0316c9b6b4b24f6dbb2efaa5640930267df83f90a97333144845f61be3",
+        "native_status": "partial",
+        "canonical_replay": "passed",
+        "case_id": "ciclo-arco-transport-pilot",
+        "cycle_id": "demo-initial",
+        "calculations": 18
+      },
+      "practice": {
+        "report": "/private/tmp/teaching-acceptance-20260926/codex/clara-business-reporting/teaching/sessions/c0a4903342bfc9a2664977daadf7ef7f/files/demo-0adda480d4acddf1/advisory-workspace/business-plan/practice-saturday-final/business_plan_review.html",
+        "report_sha256": "6f2beee2196117082772db720de6ff9e5984d518ea93652f5907b945860b923c",
+        "plan_sha256": "8b6eff3f0bf82fd301d24ac2ad722a90e44894f827887d78486d8cbe10655e94",
+        "execution_sha256": "701b64d7b74d91f15b82a4ada8b8b477f22eba4ac5a89d709852d16866ce3ba0",
+        "native_status": "partial",
+        "canonical_replay": "passed",
+        "case_id": "ciclo-arco-transport-pilot",
+        "cycle_id": "practice-saturday",
+        "calculations": 18
+      }
+    },
+    "demo_files_preserved": 34,
+    "same_case_and_workspace": true,
+    "actual_parent_registered": true,
+    "commercial_assumptions_unchanged": true,
+    "carried_narratives_reassessed": true,
+    "repairs": [
+      "Italian display units in native compiler; canonical calculations unchanged",
+      "Passive course reader accepts stripped business-report audit metadata while retaining figure navigation and original bytes",
+      "Execution handoff lists consumed sources without duplicate staging copies"
+    ],
+    "limitations": [
+      "Native voice hardware not tested",
+      "Physical two-window placement not verified",
+      "Other-language live journeys not tested",
+      "Installed Clara path unavailable; actual current local source tested"
+    ],
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-27T21:55:22.334277+00:00"
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "7d2673f495a14c968f41eeeca03b64ddc40deab7d21e32a315f1551486a56fbb",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-37.md",
+    "italian_course_qa_sha256": "bffd0748e73a218b10228236fc0c659f7782fc005d076325da5b8204e5bc4899",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
+  },
   "geneva_release_refresh": {
     "reviewer": "Codex /root",
     "reviewed_at": "2026-09-28T08:17:18.379368+00:00",
@@ -79,5 +158,15 @@
     "source_review": "The common-core Geneva release adds explicit jurisdiction and source handling, French/CHF presentation where applicable, and the source-bound adapters described in docs/releases/2026-09-28-vera-geneva.md. This course retains its existing professional purpose and sample jurisdiction; adding Geneva capability does not relabel an Italian exercise as Swiss. Exact changed bindings are recorded by kit in docs/releases/2026-09-28-vera-geneva-course-review.json.",
     "native_evidence": "GitHub Actions run 36393675234, job 108834959892, commit 989e523529fccd09a60a8ed29dc63d87b863d21e: native teaching stage passed 998 tests with 3 explicit skips and 89.73% courseware coverage. New Client, Geneva adapters and annual-account stages also passed. The later editorial-fingerprint check failed; this is not a claim that the full run passed. Fresh CI must independently validate all required demo/practice identities and current course hashes.",
     "limits": "This is a bounded release-source refresh, not a new independent editorial, visual, professional or learner review. Earlier artifact hashes remain historical evidence. No Geneva lesson acceptance, real-client acceptance or installed-runtime update is claimed."
+  },
+  "combined_geneva_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-28T08:57:49.443314+00:00",
+    "previous_course_sha256": "7b92e4198ad3845a878b4d986edec2798a2a359daa0b04ad2e2ca0bd7a8f1c2f",
+    "course_qa_commit": "1b9883c484ad7c877bd304914c53c277f7a71ab2",
+    "integrated_main_commit": "655c5a7ea",
+    "content_review": "The complete authored course object is unchanged from the verified course QA commit when source bindings are excluded. Retains both the prior Italian Codex QA record and the Geneva source-bound review from main. No new lesson, language-journey acceptance or professional approval is asserted.",
+    "source_review": "Integrated additive Geneva jurisdiction/currency adapters and French presentation from PR #692; course QA source/result readers, saved-review controls, parser hardening and teacher/working roles are preserved. Generated assets and packages are rebuilt from this combined source.",
+    "native_execution_requirement": "The combined candidate must pass the unchanged required native demo/practice checks and dedicated Geneva regressions before deployment."
   }
 }

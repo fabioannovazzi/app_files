@@ -1082,24 +1082,9 @@ def _memo_lines(
         "",
         text["introduction"],
         "",
-        f"## {text['facts']}",
+        f"## {text['conclusions']}",
         "",
     ]
-    for fact in _fact_rows(case_records):
-        state = str(fact.get("review_status", ""))
-        lines.append(
-            f"- **{fact.get('fact_id', '')}** [{text.get(state, state)}]: {fact.get('statement', '')}"
-        )
-    lines.extend(["", f"## {text['timeline']}", ""])
-    timeline = _timeline_rows(case_records)
-    for event in timeline:
-        lines.append(
-            f"- **{event.get('date', '')}** — {event.get('description', '')} "
-            f"({text['fact_refs']}: {', '.join(map(str, event.get('source_fact_ids', [])))})"
-        )
-    if not timeline:
-        lines.append(f"- {text['no_events']}")
-    lines.extend(["", f"## {text['conclusions']}", ""])
     for claim in claims:
         state = str(claim.get("verdict", ""))
         lines.extend(
@@ -1120,6 +1105,35 @@ def _memo_lines(
                 "",
             ]
         )
+    lines.extend(["", f"## {text['missing']}", ""])
+    lines.extend(f"- {item}" for item in (missing or [text["no_missing"]]))
+    lines.extend(["", f"## {text['facts']}", ""])
+    for fact in _fact_rows(case_records):
+        state = str(fact.get("review_status", ""))
+        lines.append(
+            f"- **{fact.get('fact_id', '')}** [{text.get(state, state)}]: {fact.get('statement', '')}"
+        )
+        references = []
+        for anchor in fact.get("evidence", []):
+            locator = anchor.get("locator", {})
+            reference = (
+                f"{anchor.get('document_id', '')}#"
+                f"{locator.get('kind', '')}-{locator.get('value', '')}"
+            )
+            if reference not in references:
+                references.append(reference)
+        if references:
+            lines.append(f"  {text['sources']}: {', '.join(references)}")
+    lines.extend(["", f"## {text['timeline']}", ""])
+    timeline = _timeline_rows(case_records)
+    for event in timeline:
+        lines.append(
+            f"- **{event.get('date', '')}** — {event.get('description', '')} "
+            f"({text['fact_refs']}: {', '.join(map(str, event.get('source_fact_ids', [])))})"
+        )
+    if not timeline:
+        lines.append(f"- {text['no_events']}")
+    lines.append("")
     lines.extend([f"## {text['calculations']}", ""])
     for row in calculations:
         state = str(row.get("status", ""))
@@ -1129,8 +1143,6 @@ def _memo_lines(
         )
     if not calculations:
         lines.append(f"- {text['no_calculations']}")
-    lines.extend(["", f"## {text['missing']}", ""])
-    lines.extend(f"- {item}" for item in (missing or [text["no_missing"]]))
     lines.extend(["", f"## {text['limits']}", ""])
     lines.extend(
         f"- {text[key]}"

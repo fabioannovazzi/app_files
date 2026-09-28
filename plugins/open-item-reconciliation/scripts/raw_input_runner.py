@@ -3076,6 +3076,7 @@ def run_raw_input_reconciliation(
     narrative: str = "",
     language: str = "it",
     expected_predecessor_checkpoint: str | None = None,
+    output_subdirectory: str | None = None,
 ) -> dict[str, Any]:
     try:
         client_engagement = validate_client_engagement_context(
@@ -3090,6 +3091,8 @@ def run_raw_input_reconciliation(
     ):
         raise ValueError("Prepared client engagement does not match this audit run.")
     validate_run_output_dir(client_engagement["output_dir"], input_dir=input_dir)
+    if output_subdirectory not in {None, "reconciliation"}:
+        raise ValueError("Output subdirectory must be reconciliation when provided.")
     requested_language = normalize_language(
         (assumptions or {}).get("locale") or language
     )
@@ -3112,6 +3115,8 @@ def run_raw_input_reconciliation(
     out_dir = validate_run_output_dir(
         client_engagement["output_dir"], input_dir=input_dir
     )
+    if output_subdirectory:
+        out_dir = out_dir / output_subdirectory
     out_dir.mkdir(parents=True, exist_ok=True)
 
     extracted = extract_normalized_records(input_dir, active, output_dir=out_dir)
@@ -3345,6 +3350,7 @@ def run_raw_input_reconciliation(
         **extracted,
         "client_engagement": client_engagement,
         "manifest": manifest,
+        "run_output_dir": str(out_dir),
         "missing_evidence_requests_path": str(missing_evidence_requests_path),
         "missing_evidence_request_pack": missing_evidence_pack,
     }
@@ -3362,6 +3368,7 @@ def _cli_parser() -> Any:
     parser.add_argument("--narrative", default="")
     parser.add_argument("--language", default="it")
     parser.add_argument("--expected-predecessor-checkpoint")
+    parser.add_argument("--output-subdirectory", choices=["reconciliation"])
     return parser
 
 
@@ -3386,6 +3393,7 @@ def main(argv: list[str] | None = None) -> int:
             narrative=args.narrative,
             language=args.language,
             expected_predecessor_checkpoint=args.expected_predecessor_checkpoint,
+            output_subdirectory=args.output_subdirectory,
         )
     except (OSError, ValueError) as exc:
         sys.stderr.write(f"Open-item Reconciliation failed: {exc}\n")
@@ -3393,12 +3401,8 @@ def main(argv: list[str] | None = None) -> int:
     summary = {
         "status": "ready_for_review",
         "client_engagement": result["client_engagement"],
-        "run_manifest_path": str(
-            Path(result["client_engagement"]["output_dir"]) / "run_manifest.json"
-        ),
-        "artifact_card_path": str(
-            Path(result["client_engagement"]["output_dir"]) / "artifact_card.md"
-        ),
+        "run_manifest_path": str(Path(result["run_output_dir"]) / "run_manifest.json"),
+        "artifact_card_path": str(Path(result["run_output_dir"]) / "artifact_card.md"),
     }
     sys.stdout.write(json.dumps(summary, ensure_ascii=False, sort_keys=True) + "\n")
     return 0

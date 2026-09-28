@@ -15,6 +15,118 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 @pytest.mark.parametrize(
+    "language,label",
+    [
+        ("it", "Importo contabile"),
+        ("en", "Journal amount"),
+        ("fr", "Montant comptable"),
+        ("de", "Buchungsbetrag"),
+        ("es", "Importe contable"),
+    ],
+)
+def test_bank_review_displays_native_match_fields(language, label):
+    widget = (
+        ROOT
+        / "plugins/journal-bank-reconciliation/assets/journal-bank-review-widget.html"
+    )
+    program = r"""
+const fs = require('node:fs'), vm = require('node:vm');
+const html = fs.readFileSync(process.argv[1], 'utf8');
+const config = JSON.parse(html.match(/const CONFIG = (.*);/)[1]);
+const escape = html.slice(html.indexOf('    function esc(value)'), html.indexOf('    const IT_METADATA_LABELS'));
+const formatting = html.slice(html.indexOf('    const JOURNAL_BANK_LABELS'), html.indexOf('    function reviewPayload()'));
+const renderer = html.slice(html.indexOf('    function evidenceValueHtml(value)'), html.indexOf('    function evidenceHtml(item)'));
+const context = {CONFIG: config, activeLanguage: () => process.argv[2], IT_METADATA_LABELS: {},
+ uiText: (key, fallback) => fallback, workflowText: (key, fallback) => fallback,
+ groupTitle: group => group.title, groupEmpty: group => group.empty,
+ item: {item_type: 'matched_pair', data: {bank_date: '2026-03-18', journal_date: '2026-03-18',
+ bank_amount: '-1220', journal_amount: '-1220', bank_description: '<script>unsafe</script>',
+ status: 'matched', stage: 'reference', shared_references: 'trn001', amount_delta: '0', date_diff_days: 0}}};
+vm.createContext(context);
+process.stdout.write(vm.runInContext(escape + formatting + renderer + '\nworkflowDetailHtml(item)', context));
+"""
+    result = subprocess.run(
+        [_bundled_node_or_skip(), "-e", program, str(widget), language],
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=True,
+    ).stdout
+    assert label in result
+    assert result.count("-1220") == 2
+    assert result.count("2026-03-18") == 2
+    assert "trn001" in result
+    assert "No journal fields" not in result
+    assert "No bank fields" not in result
+    assert "&lt;script&gt;unsafe&lt;/script&gt;" in result
+    assert "<script>unsafe</script>" not in result
+
+
+@pytest.mark.parametrize(
+    "language,label",
+    [
+        ("it", "Richiesta proposta"),
+        ("en", "Proposed request"),
+        ("fr", "Demande proposée"),
+        ("de", "Vorgeschlagene Anfrage"),
+        ("es", "Solicitud propuesta"),
+    ],
+)
+def test_intake_review_shows_real_request_and_draft_payload_fields(language, label):
+    """Exercise the detail renderer against the intake producer's field contract."""
+    widget = (
+        ROOT
+        / "plugins/client-file-preparation/assets/client-file-preparation-review-widget.html"
+    )
+    program = r"""
+const fs = require('node:fs');
+const vm = require('node:vm');
+const html = fs.readFileSync(process.argv[1], 'utf8');
+const config = JSON.parse(html.match(/const CONFIG = (.*);/)[1]);
+const escape = html.slice(html.indexOf('    function esc(value)'), html.indexOf('    const IT_METADATA_LABELS'));
+const formatting = html.slice(html.indexOf('    function humanize(value)'), html.indexOf('    function normalizeLanguage('));
+const renderer = html.slice(html.indexOf('    function valueForField(item, field)'), html.indexOf('    function evidenceHtml(item)'));
+const context = {CONFIG: config, state: {payload: {}}, activeLanguage: () => process.argv[2], IT_METADATA_LABELS: {},
+ uiText: (key, fallback) => fallback, workflowText: (key, fallback) => fallback,
+ groupTitle: group => group.title, groupEmpty: group => group.empty,
+ item: {item_type: 'missing_document_request', data: {request_text: 'Confermare altre CU <script>unsafe</script>'}},
+ draft: {item_type: 'draft_client_email', data: {preview: 'Oggetto: Conferma documenti\n\nBuongiorno CLIENT-001'}}};
+vm.createContext(context);
+const original = vm.runInContext(escape + formatting + renderer + '\nworkflowDetailHtml(item) + workflowDetailHtml(draft)', context);
+context.draft.id = 'draft-client-email';
+context.draft.output_path = '04_bozza_email_cliente.md';
+context.state.payload.applied_decisions = {effects: [{item_id: 'draft-client-email', applied: true,
+ artifact_update: 'target_artifact_updated', target_artifact: '04_bozza_email_cliente.md', edit_value: 'Reviewed replacement <script>unsafe</script>'}]};
+const applied = vm.runInContext('workflowDetailHtml(draft)', context);
+context.state.payload.applied_decisions.effects[0].applied = false;
+const failed = vm.runInContext('workflowDetailHtml(draft)', context);
+process.stdout.write(JSON.stringify({original, applied, failed}));
+"""
+    result = subprocess.run(
+        [_bundled_node_or_skip(), "-e", program, str(widget), language],
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=True,
+    ).stdout
+    rendered = json.loads(result)
+    assert label in rendered["original"]
+    assert (
+        "Confermare altre CU &lt;script&gt;unsafe&lt;/script&gt;"
+        in rendered["original"]
+    )
+    assert "Oggetto: Conferma documenti" in rendered["original"]
+    assert "Buongiorno CLIENT-001" in rendered["original"]
+    assert (
+        "Reviewed replacement &lt;script&gt;unsafe&lt;/script&gt;"
+        in rendered["applied"]
+    )
+    assert "Oggetto: Conferma documenti" not in rendered["applied"]
+    assert "Reviewed replacement" not in rendered["failed"]
+    assert "<script>unsafe</script>" not in result
+
+
+@pytest.mark.parametrize(
     "language,heading",
     [
         ("it", "Dati ricevuti"),
@@ -34,13 +146,15 @@ const html = fs.readFileSync(process.argv[1], 'utf8');
 const helpers = html.slice(html.indexOf('    const NEW_CLIENT_LABELS'), html.indexOf('    function reviewPayload()'));
 const renderer = html.slice(html.indexOf('    function workflowDetailHtml(item)'), html.indexOf('    function evidenceHtml(item)'));
 const escape = html.slice(html.indexOf('    function esc(value)'), html.indexOf('    const IT_METADATA_LABELS'));
-const context = {activeLanguage: () => process.argv[2], IT_METADATA_LABELS: {}, uiText: (key, fallback) => fallback};
+const context = {activeLanguage: () => process.argv[2], CONFIG: {plugin: 'new-client'}, IT_METADATA_LABELS: {}, uiText: (key, fallback) => fallback};
 vm.createContext(context);
 const item = {title: 'Officina Arco', data: {party_facts: [
   {fact_code: 'registered_identity', value: 'Officina Arco Srl', verification_status: 'reported'},
   {fact_code: 'representative_reported', value: 'Elena <script>alert(1)</script>', verification_status: 'reported'},
   {fact_code: 'custom_case_detail', value: null, verification_status: 'unknown'}
-], services: [{description: 'Bookkeeping 2026', assessment_status: 'proposed'}]}};
+], services: [{description: 'Bookkeeping 2026', assessment_status: 'proposed'}],
+owner_identity_statuses: ['unknown'], owner_verification_statuses: ['reported'],
+representative_roles: ['legal_representative'], ownership_status: 'owners_recorded'}};
 context.item = item;
 const result = vm.runInContext(escape + helpers + renderer + '\nworkflowDetailHtml(item)', context);
 process.stdout.write(result);
@@ -59,6 +173,10 @@ process.stdout.write(result);
     assert "&lt;script&gt;" in result
     assert "<script>" not in result
     assert "[object Object]" not in result
+    assert ">unknown<" not in result
+    assert ">reported<" not in result
+    assert ">legal_representative<" not in result
+    assert ">owners_recorded<" not in result
 
 
 def _bundled_node_or_skip() -> str:
@@ -2536,3 +2654,41 @@ process.stdout.write(JSON.stringify(result));
         "ui_decisions",
         "final_artifacts",
     }.isdisjoint(request)
+
+
+def test_report_editor_shows_current_narrative_and_prefills_native_field():
+    widget = ROOT / "plugins/report-builder/assets/report-builder-review-widget.html"
+    program = r"""
+const fs = require('node:fs'), vm = require('node:vm');
+const html = fs.readFileSync(process.argv[1], 'utf8');
+const CONFIG = JSON.parse(html.match(/const CONFIG = (.*);/)[1]);
+const esc = html.slice(html.indexOf('    function esc(value)'), html.indexOf('    const IT_METADATA_LABELS'));
+const format = html.slice(html.indexOf('    function humanize(value)'), html.indexOf('    function normalizeLanguage('));
+const render = html.slice(html.indexOf('    function evidenceValueHtml(value)'), html.indexOf('    function evidenceHtml(item)'));
+const decide = html.slice(html.indexOf('    function ensureDecision(item'), html.indexOf('    function setDecisionAction(item'));
+const context = {CONFIG, state: {payload: {}, decisions: {}}, activeLanguage: () => 'it', IT_METADATA_LABELS: {},
+ uiText: (key, fallback) => fallback, workflowText: (key, fallback) => fallback,
+ groupTitle: group => group.title, groupEmpty: group => group.empty,
+ item: {id: 'section', item_type: 'report_section', data: {target_field: 'codex_comment',
+ codex_comment: 'Real narrative <script>unsafe</script>', sheet_name: 'Income Statement',
+ preview_rows: [{Line: 'Revenue', 'Amount EUR': '230000'}]}}};
+vm.createContext(context);
+const result = vm.runInContext(esc + format + render + decide + '\nJSON.stringify({html: workflowDetailHtml(item), decision: ensureDecision(item, "edit")})', context);
+process.stdout.write(result);
+"""
+    result = json.loads(
+        subprocess.run(
+            [_bundled_node_or_skip(), "-e", program, str(widget)],
+            capture_output=True,
+            text=True,
+            timeout=15,
+            check=True,
+        ).stdout
+    )
+    assert "Real narrative &lt;script&gt;unsafe&lt;/script&gt;" in result["html"]
+    assert "Income Statement" in result["html"]
+    assert "<th>Line</th>" in result["html"]
+    assert "<td>230000</td>" in result["html"]
+    assert "Revenue" in result["html"] and "230000" in result["html"]
+    assert "<script>unsafe</script>" not in result["html"]
+    assert result["decision"]["edit_value"] == "Real narrative <script>unsafe</script>"

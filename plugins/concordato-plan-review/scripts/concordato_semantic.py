@@ -2355,6 +2355,26 @@ def _write_markdown(
     ]
     if case_model is not None:
         procedure = case_model["procedure"]
+        framework = case_model["legal_framework"]
+        lines.extend(
+            [
+                "",
+                f"## {display_label('legal_framework', language)}",
+                "",
+                f"- {framework['framework_name']}",
+                f"- {display_label('legal_text_as_of', language)}: {framework['as_of_date']}",
+                f"- {display_label('judgment_basis', language)}: {framework['judgment_basis']}",
+            ]
+        )
+        for authority in framework["authority_refs"]:
+            lines.append(
+                f"- {display_label('legal_authorities', language)}: {authority['title']} — {authority['url']}"
+                + (
+                    "; " + "; ".join(authority["provisions"])
+                    if authority["provisions"]
+                    else ""
+                )
+            )
         lines.extend(
             [
                 "",
@@ -2455,6 +2475,24 @@ def _write_summary_docx(
     summary_table = None
     if case_model is not None:
         procedure = case_model["procedure"]
+        framework = case_model["legal_framework"]
+        document.add_heading(display_label("legal_framework", language), level=1)
+        document.add_paragraph(framework["framework_name"])
+        document.add_paragraph(
+            f"{display_label('legal_text_as_of', language)}: {framework['as_of_date']}"
+        )
+        document.add_paragraph(
+            f"{display_label('judgment_basis', language)}: {framework['judgment_basis']}"
+        )
+        for authority in framework["authority_refs"]:
+            document.add_paragraph(
+                f"{display_label('legal_authorities', language)}: {authority['title']} — {authority['url']}"
+                + (
+                    "; " + "; ".join(authority["provisions"])
+                    if authority["provisions"]
+                    else ""
+                )
+            )
         document.add_heading(text["procedure"], level=1)
         procedure_table = document.add_table(rows=0, cols=2)
         procedure_table.style = "Table Grid"

@@ -1513,7 +1513,7 @@ def _is_review_transaction_output(output_dir: Path, run_root: Path) -> bool:
     return (
         output_dir.name == "working"
         and output_dir.parent.name.startswith(".audit-review-transaction-")
-        and output_dir.parent.parent == run_root
+        and output_dir.parent.parent in {run_root, run_root / "outputs"}
     )
 
 
@@ -1535,10 +1535,14 @@ def _current_client_engagement(
 
     out_dir = Path(output_dir).resolve()
     context_candidates = [out_dir.parent / "context.json"]
+    if out_dir.name == "reconciliation" and out_dir.parent.name == "outputs":
+        context_candidates.append(out_dir.parent.parent / "context.json")
     if out_dir.name == "working" and out_dir.parent.name.startswith(
         ".audit-review-transaction-"
     ):
         context_candidates.append(out_dir.parent.parent / "context.json")
+        if out_dir.parent.parent.name == "outputs":
+            context_candidates.append(out_dir.parent.parent.parent / "context.json")
     if allow_snapshot and _is_review_snapshot_output(out_dir):
         # A caller-anchored predecessor may be nested in retained history. Recover
         # only the matching managed run, then exact-compare its portable identity.
@@ -1570,6 +1574,7 @@ def _current_client_engagement(
     current_run_root = Path(current["run_root"]).resolve()
     if (
         out_dir != current_output
+        and out_dir != current_output / "reconciliation"
         and not _is_review_transaction_output(out_dir, current_run_root)
         and not (
             allow_snapshot
@@ -1610,6 +1615,7 @@ def _validated_client_engagement(
     requested_output = Path(output_dir).resolve()
     if (
         requested_output != normalized_output
+        and requested_output != normalized_output / "reconciliation"
         and not _is_review_transaction_output(requested_output, normalized_run_root)
         and not (
             allow_snapshot

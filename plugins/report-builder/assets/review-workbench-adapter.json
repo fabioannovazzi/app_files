@@ -13,6 +13,7 @@
       "variant": "draft",
       "fields": [
         "section",
+        "codex_comment",
         "draft_text",
         "prompt",
         "status"
@@ -25,6 +26,8 @@
       "fields": [
         "source_table",
         "source_path",
+        "sheet_name",
+        "preview_rows",
         "metric",
         "period",
         "amount"

@@ -63,7 +63,7 @@
     },
     {
       "id": "purpose-scoped-review-preview",
-      "control": "After candidate classification, routine high-confidence document rows retain metadata and exact source references without repeated text previews; previews remain for exceptions, and fiscal evidence plus draft text remain available where professional review needs them."
+      "control": "After candidate classification, routine high-confidence document rows retain metadata and exact source references without repeated text previews; previews remain for exceptions, and fiscal evidence plus draft text remain available where professional review needs them. The local review renders the existing request_text and draft preview before a decision. Reload restores the same-run applied record through the existing path sanitization; an applied draft replacement is shown only when its recorded effect updated that exact artifact. These views do not send email or add an external route. Read-only local rendering accepts validated running, review-ready and completed contexts; Save/Apply still require a running context. Nested result folders resolve the owning portable run and validate the exact requested descendant before rendering. Archived views also show a localized read-only notice and disable Save/Apply; server-side write validation remains authoritative."
     },
     {
       "id": "purpose-shaped-model-handoff",
@@ -87,9 +87,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-28",
+    "reviewed_at": "2026-09-26",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a06af38c9b55906899eb8298d61e817fbabe6c9dcdd55a09f6bc59044cb62e2d"
+    "source_fingerprint": "8c9a14d53d511c39d4aa385dd7c65d2e422e29704d9127e071df6267f27b2448"
   }
 }

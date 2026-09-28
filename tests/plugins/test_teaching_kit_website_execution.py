@@ -359,3 +359,102 @@ def test_website_kit_builds_bound_local_page_and_preserves_predecessor(
         language=language,
         phase=phase,
     )
+
+
+@pytest.mark.parametrize("product", ["vera", "lucia"])
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_website_result_preserves_validated_html_and_asset_paths(
+    tmp_path, monkeypatch, product, language
+):
+    """The learner must open the real site, not the passive report reader."""
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
+    from courseware.library import CourseLibrary
+
+    library = CourseLibrary(ROOT / "plugins" / product, {"presenza-digitale-studio"})
+    lesson = tmp_path / "lesson"
+    kit = library.render("presenza-digitale-studio", language, lesson / "kit")
+    result = execute_website_fixture(
+        lesson / "native", product, language, kit, stop_after="demo"
+    )[0]
+    run = Path(result["run"])
+    validation = json.loads((run / "site_validation.json").read_text())
+    register = json.loads((run / "source_register.json").read_text())
+
+    def rec(path):
+        return {
+            "path": path.relative_to(lesson).as_posix(),
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        }
+
+    execution = {
+        "schema": "mparanza.teaching_execution.v1",
+        "evidence_kind": "host_attested_local_execution",
+        "product": product,
+        "workflow_id": "presenza-digitale-studio",
+        "phase": "demo",
+        "worker_thread_id": "fictional-test-worker",
+        "outcome": "review_required",
+        "skill_sha256": hashlib.sha256(
+            (
+                ROOT / "plugins" / product / "skills/presenza-digitale-studio/SKILL.md"
+            ).read_bytes()
+        ).hexdigest(),
+        "inputs": [rec(run / item["snapshot_path"]) for item in register["sources"]],
+        "native_records": [rec(run / "site_validation.json")],
+        "outputs": [
+            rec(run / "work/site" / item["path"])
+            for item in validation["inventory"]
+            if Path(item["path"]).suffix in {".html", ".css"}
+        ],
+    }
+    _write(lesson / "execution.json", execution)
+    destination = tmp_path / "results"
+    library.results(
+        "presenza-digitale-studio", language, lesson, "execution.json", destination
+    )
+    page = (destination / "course.html").read_text()
+    assert "href='website/index.html'" in page
+    assert "href='website/site.css'" in page
+    assert "source-01.html" in page
+    assert "<pre class='source-text'>" not in page
+    for item in validation["inventory"]:
+        assert (destination / "website" / item["path"]).read_bytes() == (
+            run / "work/site" / item["path"]
+        ).read_bytes()
+    # Omitting an authored page cannot be disguised as asset reuse.
+    execution["outputs"] = [
+        item for item in execution["outputs"] if not item["path"].endswith("index.html")
+    ]
+    _write(lesson / "incomplete.json", execution)
+    with pytest.raises(ValueError, match="every exact validated"):
+        library.results(
+            "presenza-digitale-studio",
+            language,
+            lesson,
+            "incomplete.json",
+            tmp_path / "incomplete",
+        )
+    assert not (tmp_path / "incomplete").exists()
+    # Reused CSS need not claim execution credit, but its bytes must still match.
+    execution = json.loads((lesson / "execution.json").read_text())
+    execution["outputs"] = [
+        item for item in execution["outputs"] if not item["path"].endswith("site.css")
+    ]
+    _write(lesson / "reused-css.json", execution)
+    library.results(
+        "presenza-digitale-studio",
+        language,
+        lesson,
+        "reused-css.json",
+        tmp_path / "reused-css",
+    )
+    (run / "work/site/site.css").write_text("changed after validation")
+    with pytest.raises(ValueError, match="every exact validated"):
+        library.results(
+            "presenza-digitale-studio",
+            language,
+            lesson,
+            "reused-css.json",
+            tmp_path / "changed-css",
+        )
+    assert not (tmp_path / "changed-css").exists()
