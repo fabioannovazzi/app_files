@@ -2814,6 +2814,11 @@ def _lucia_package_entries(
             "constraints-shared-macos-py312.txt",
         }:
             entries[name] = content
+    # The shared archive skill calls these helpers; ship the same canonical
+    # bytes with the shared component instead of dangling Vera-only references.
+    for helper in ("studio_archive_session.py", "studio_archive_windows.ps1"):
+        name = f"scripts/{helper}"
+        entries[name] = vera_entries[name]
     entries["README.md"] = LUCIA_COWORK_README.encode("utf-8")
     if "assets/icon.svg" in source_entries:
         entries["assets/icon.svg"] = source_entries["assets/icon.svg"]

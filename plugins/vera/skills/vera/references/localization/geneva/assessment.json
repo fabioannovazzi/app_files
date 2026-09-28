@@ -1,6 +1,6 @@
 {
   "schema": "vera.localization.assessment.v1",
-  "catalogue_fingerprint": "c67f7fab34c777ebe928d7b1ef5e6d6d1c40784b24b203dc191545b04a5a0306",
+  "catalogue_fingerprint": "d2bbc3b715b98c3309dc76014391d8e8df789dbac607246de2e3e7303707c6b5",
   "assessment_date": "2026-09-28",
   "target": {
     "id": "CH-GE",
@@ -872,5 +872,9 @@
       "open-item-reconciliation"
     ],
     "review": "Single-course startup no longer requires an interview; teaching accurately discloses model-context reads. Open-item instructions separate the sealed native reconciliation output from the run-level model-data disclosure, without weakening its assurance boundary. Existing Geneva dispositions, jurisdiction boundaries and unanswered professional-fit questions are preserved. This is catalogue identity integration, not a new Geneva professional acceptance."
+  },
+  "release_revalidation": {
+    "version": "0.1.274",
+    "scope": "All skill entrypoint hashes are unchanged from the preceding snapshot. Release manifest identity refreshed for the Cowork archive startup and session fix; existing jurisdiction assessments are unchanged."
   }
 }

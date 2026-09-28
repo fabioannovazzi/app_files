@@ -588,7 +588,13 @@ def test_cowork_projects_user_facing_artifact_names_and_review_actor(
             ".yml",
         }
     }
-    combined = "\n".join(projected_text.values())
+    # Shared courseware retains cross-product filenames and translation keys;
+    # the separate emission regression below checks actual Cowork artifacts.
+    combined = "\n".join(
+        content
+        for name, content in projected_text.items()
+        if not name.startswith("vendor/modules/courseware/")
+    )
 
     assert "07_scheda_codex_per_studio.md" not in combined
     assert "codex_run_review.md" not in combined

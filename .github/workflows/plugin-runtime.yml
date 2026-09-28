@@ -471,6 +471,7 @@ jobs:
           tests/plugins/test_single_shared_runtime.py
           tests/plugins/test_shared_runtime_launchers.py
           tests/plugins/test_python_bootstrap.py
+          tests/plugins/test_cowork_archive_session.py
 
   managed-runtime-quality:
     runs-on: ubuntu-latest
@@ -487,6 +488,8 @@ jobs:
         run: python scripts/build_vera_workflow_registry.py --check
       - name: Exercise installation, concurrency and failure recovery
         run: python -m pytest --confcutdir=tests/plugins tests/plugins/test_managed_plugin_python_runtime.py tests/plugins/test_single_shared_runtime.py tests/plugins/test_shared_runtime_launchers.py tests/plugins/test_python_bootstrap.py --cov --cov-config=tests/plugin_runtime.coveragerc --cov-report=term-missing
+      - name: Check Cowork archive session coverage
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_cowork_archive_session.py --cov --cov-config=tests/cowork_archive_session.coveragerc --cov-report=term-missing
       - name: Check changed plugin kernels without the application's error suppression
         run: python -m mypy --config-file=tests/plugin_runtime.mypy.ini
       - name: Reject medium and high severity findings in changed plugin kernels
