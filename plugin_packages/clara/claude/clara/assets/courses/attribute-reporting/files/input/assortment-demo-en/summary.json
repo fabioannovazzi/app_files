@@ -1,0 +1,21 @@
+{
+  "retailer": "fictional",
+  "retailer_label": "Fictional retailer",
+  "category_key": "teaching-knitwear",
+  "category_label": "Knitwear",
+  "product_count": 20,
+  "recent_products": 4,
+  "top_seller_products": 4,
+  "recent_definition": "The new-arrivals cohort explicitly assigned in this fictional source matrix.",
+  "top_seller_definition": "The best-seller cohort explicitly assigned in this fictional source matrix; no sales quantities are supplied.",
+  "diagnostic_warnings": [
+    {
+      "code": "fictional_teaching_data",
+      "message": "Fictional teaching input: no retailer, market observation, web collection or server receipt is represented."
+    },
+    {
+      "code": "no_consumer_reviews",
+      "message": "Consumer reviews and product images are not included in this package."
+    }
+  ]
+}

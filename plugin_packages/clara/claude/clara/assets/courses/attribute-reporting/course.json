@@ -178,8 +178,112 @@
   ],
   "files": [
     {
-      "path": "files/input/assortment-demo-en.zip",
-      "sha256": "8994d8a093c832022a541d477068c0c5896a5518d4893fef4b8469256ecff4ad",
+      "path": "files/input/assortment-demo-en/innovation_pairs.csv",
+      "sha256": "2d035f08724cd81d987fa679bcddf2422982dd302e8f3c76019b0494ff7d75d5",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-en/innovation_triples.csv",
+      "sha256": "bb5ea8c249c9d938cd8a29b35360cd182598860af23845d8d6641e085813317e",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-en/pack_manifest.json",
+      "sha256": "5b7f3309158a3c206a830e650ff0e84cc1e18d4c1853a9b29d3df4400f17030b",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-en/package_integrity.json",
+      "sha256": "59551d5d5b6158b311fc624124292eda5d960a03b94eb6c274e8da9b79260ada",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-en/product_filter_matrix.csv",
+      "sha256": "bf8726d31c736401c0d5eaa57ebd05fe979b4993cc13ae5df0cc71d4b84c2ec6",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-en/recent_products.csv",
+      "sha256": "a20628ac2ce4c4ab11832c053a637c5381fc56ae157657c563d12268669f7c91",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-en/sale_pressure_pairs.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-en/sale_pressure_products.csv",
+      "sha256": "9ce40c52a6e95cbfbf1abebdd8e7343bd7709295bfe59705de269b96ca9f3b8d",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-en/sale_pressure_triples.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-en/summary.json",
+      "sha256": "da57b53626b96ec7b22b9c5ee37e04fad5fd9e6f3168383909d497132f54e074",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-en/top_seller_brand_comparison.csv",
+      "sha256": "d0b429aea0e6ed58c5580e309f0d9a481c89defbe6e139803aa3ed2f920f130e",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-en/top_seller_pairs.csv",
+      "sha256": "ebc7aaaa5286125d86eda1d0cd964c03791b9655ba85267e18319a0b692d756b",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-en/top_seller_products.csv",
+      "sha256": "dc00cc6dc34fc526c6c1a1c695a573a0e9546d529a6013416ad6d5387819c95e",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-en/top_seller_triples.csv",
+      "sha256": "8417935c6cd88e163b12622e029006480fd5aa55ecacd2c5f7c8f87d0c3148fd",
       "languages": [
         "en"
       ],
@@ -194,8 +298,112 @@
       "role": "source"
     },
     {
-      "path": "files/practice/assortment-practice-en.zip",
-      "sha256": "31f2df68210f5ac712360491a573aa00d183e625cf6d63c5e947b2a549b45b36",
+      "path": "files/practice/assortment-practice-en/innovation_pairs.csv",
+      "sha256": "114407dfeb83ffbfa116688c8c9b34cc224cd044798912ef48de9eb6eb6ab0b9",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-en/innovation_triples.csv",
+      "sha256": "bb5ea8c249c9d938cd8a29b35360cd182598860af23845d8d6641e085813317e",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-en/pack_manifest.json",
+      "sha256": "5b7f3309158a3c206a830e650ff0e84cc1e18d4c1853a9b29d3df4400f17030b",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-en/package_integrity.json",
+      "sha256": "59551d5d5b6158b311fc624124292eda5d960a03b94eb6c274e8da9b79260ada",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-en/product_filter_matrix.csv",
+      "sha256": "f6eaffd0cda11d6db6feaa619dbc380ae7d5f5f5052cb6efafda4489b4fef23d",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-en/recent_products.csv",
+      "sha256": "9026eef362e075239c456ae034b333cfa1658a8965ab39ee8404a11cbb0cfabc",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-en/sale_pressure_pairs.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-en/sale_pressure_products.csv",
+      "sha256": "9ce40c52a6e95cbfbf1abebdd8e7343bd7709295bfe59705de269b96ca9f3b8d",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-en/sale_pressure_triples.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-en/summary.json",
+      "sha256": "da57b53626b96ec7b22b9c5ee37e04fad5fd9e6f3168383909d497132f54e074",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-en/top_seller_brand_comparison.csv",
+      "sha256": "d0b429aea0e6ed58c5580e309f0d9a481c89defbe6e139803aa3ed2f920f130e",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-en/top_seller_pairs.csv",
+      "sha256": "ebc7aaaa5286125d86eda1d0cd964c03791b9655ba85267e18319a0b692d756b",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-en/top_seller_products.csv",
+      "sha256": "203d83129e323e60e9512a9187b0676b780c084a3bb5c8040bd6c35dd9895383",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-en/top_seller_triples.csv",
+      "sha256": "8417935c6cd88e163b12622e029006480fd5aa55ecacd2c5f7c8f87d0c3148fd",
       "languages": [
         "en"
       ],
@@ -210,8 +418,112 @@
       "role": "practice"
     },
     {
-      "path": "files/input/assortment-demo-it.zip",
-      "sha256": "54721bc089e23f620665b2afe33d8152f6336cf126ffdb01169780be3e522f2b",
+      "path": "files/input/assortment-demo-it/innovation_pairs.csv",
+      "sha256": "d921ac1f6caed3c134f16bdebcba05a601ed8662c1ddfcef91aa66ccff1b5167",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-it/innovation_triples.csv",
+      "sha256": "bb5ea8c249c9d938cd8a29b35360cd182598860af23845d8d6641e085813317e",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-it/pack_manifest.json",
+      "sha256": "5b7f3309158a3c206a830e650ff0e84cc1e18d4c1853a9b29d3df4400f17030b",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-it/package_integrity.json",
+      "sha256": "59551d5d5b6158b311fc624124292eda5d960a03b94eb6c274e8da9b79260ada",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-it/product_filter_matrix.csv",
+      "sha256": "5dd9d40149f500ae53cf102eeac0e3a4633cf67af061db4d4e86fc4772a880c4",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-it/recent_products.csv",
+      "sha256": "5a51d06b7ffef27844cfa7a35957a108cea1c3668b74a57713ccf284ff9c39c2",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-it/sale_pressure_pairs.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-it/sale_pressure_products.csv",
+      "sha256": "9ce40c52a6e95cbfbf1abebdd8e7343bd7709295bfe59705de269b96ca9f3b8d",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-it/sale_pressure_triples.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-it/summary.json",
+      "sha256": "1cc114c603d6c4bbe775cccea001150111a048085563a19c9a13da60ecb34000",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-it/top_seller_brand_comparison.csv",
+      "sha256": "d0b429aea0e6ed58c5580e309f0d9a481c89defbe6e139803aa3ed2f920f130e",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-it/top_seller_pairs.csv",
+      "sha256": "f62aa811e16adaf6b75ef2a6bb790ed2bf2129ff26e90b953ba06ad0a0b35f0e",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-it/top_seller_products.csv",
+      "sha256": "2a6f81b1b5698b6767dd3d9213ca13d08d8a55e7b8452251b56043c0567643ed",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-it/top_seller_triples.csv",
+      "sha256": "8417935c6cd88e163b12622e029006480fd5aa55ecacd2c5f7c8f87d0c3148fd",
       "languages": [
         "it"
       ],
@@ -226,8 +538,112 @@
       "role": "source"
     },
     {
-      "path": "files/practice/assortment-practice-it.zip",
-      "sha256": "0d689c8ea53e4f72692ad9f1e8c27d3ab51f84c79905a28b825d9cab103cad7f",
+      "path": "files/practice/assortment-practice-it/innovation_pairs.csv",
+      "sha256": "5aa9eca79137bf4fec20d3823188b643d43f71a0153e3d83e7cb9c039e142659",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-it/innovation_triples.csv",
+      "sha256": "bb5ea8c249c9d938cd8a29b35360cd182598860af23845d8d6641e085813317e",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-it/pack_manifest.json",
+      "sha256": "5b7f3309158a3c206a830e650ff0e84cc1e18d4c1853a9b29d3df4400f17030b",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-it/package_integrity.json",
+      "sha256": "59551d5d5b6158b311fc624124292eda5d960a03b94eb6c274e8da9b79260ada",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-it/product_filter_matrix.csv",
+      "sha256": "9268e30002cfabc13ce400001d0cacbb12836b44385f3432343e8c277c9b5015",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-it/recent_products.csv",
+      "sha256": "4646ed7c217e07348df12c814d7666450cddc4c454ce41d6aafb5fa38528a1bc",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-it/sale_pressure_pairs.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-it/sale_pressure_products.csv",
+      "sha256": "9ce40c52a6e95cbfbf1abebdd8e7343bd7709295bfe59705de269b96ca9f3b8d",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-it/sale_pressure_triples.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-it/summary.json",
+      "sha256": "1cc114c603d6c4bbe775cccea001150111a048085563a19c9a13da60ecb34000",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-it/top_seller_brand_comparison.csv",
+      "sha256": "d0b429aea0e6ed58c5580e309f0d9a481c89defbe6e139803aa3ed2f920f130e",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-it/top_seller_pairs.csv",
+      "sha256": "f62aa811e16adaf6b75ef2a6bb790ed2bf2129ff26e90b953ba06ad0a0b35f0e",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-it/top_seller_products.csv",
+      "sha256": "07b5ed205aa7a0feac2c93cfaf76f35c2e17b4c4941d6b4deafb66b7bcd495f0",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-it/top_seller_triples.csv",
+      "sha256": "8417935c6cd88e163b12622e029006480fd5aa55ecacd2c5f7c8f87d0c3148fd",
       "languages": [
         "it"
       ],
@@ -242,8 +658,112 @@
       "role": "practice"
     },
     {
-      "path": "files/input/assortment-demo-fr.zip",
-      "sha256": "2fdb6514d0252b5f9ba94eee8d76adafc14f9602eb1b9e425c3d3e653d7d7dee",
+      "path": "files/input/assortment-demo-fr/innovation_pairs.csv",
+      "sha256": "b5d503ddf61017e6cb866f988c6bc1ca78c7fa3e9b0cac3fc68e29ab9c9ac43b",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-fr/innovation_triples.csv",
+      "sha256": "bb5ea8c249c9d938cd8a29b35360cd182598860af23845d8d6641e085813317e",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-fr/pack_manifest.json",
+      "sha256": "5b7f3309158a3c206a830e650ff0e84cc1e18d4c1853a9b29d3df4400f17030b",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-fr/package_integrity.json",
+      "sha256": "59551d5d5b6158b311fc624124292eda5d960a03b94eb6c274e8da9b79260ada",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-fr/product_filter_matrix.csv",
+      "sha256": "4e5ae58cc7607d4ad6f1b548d8b470014cc92c179b6035e6957a102cd8bd874f",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-fr/recent_products.csv",
+      "sha256": "47f1bfdb17bd51c63a136da79436aa45ada65acde7bdf342b0ce0fdd341a06b6",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-fr/sale_pressure_pairs.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-fr/sale_pressure_products.csv",
+      "sha256": "9ce40c52a6e95cbfbf1abebdd8e7343bd7709295bfe59705de269b96ca9f3b8d",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-fr/sale_pressure_triples.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-fr/summary.json",
+      "sha256": "9e5489ddc5de737c1d9dedbc5a3ce89bf6b4a76f4352e7740bda77b0810ee0dc",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-fr/top_seller_brand_comparison.csv",
+      "sha256": "d0b429aea0e6ed58c5580e309f0d9a481c89defbe6e139803aa3ed2f920f130e",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-fr/top_seller_pairs.csv",
+      "sha256": "01dc816343265352a77188028221c5edd3bfe2f17512698ac8321dcbca35eae0",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-fr/top_seller_products.csv",
+      "sha256": "7756f7a8ed6499e0b3da9fcf8f6dd75dc20b8730c14af7a34e634f5cc1af25f2",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-fr/top_seller_triples.csv",
+      "sha256": "8417935c6cd88e163b12622e029006480fd5aa55ecacd2c5f7c8f87d0c3148fd",
       "languages": [
         "fr"
       ],
@@ -258,8 +778,112 @@
       "role": "source"
     },
     {
-      "path": "files/practice/assortment-practice-fr.zip",
-      "sha256": "da4142b3971e38d3eb5cbc0197ba843c469bc18faa36ad94a6188ed1da9965a4",
+      "path": "files/practice/assortment-practice-fr/innovation_pairs.csv",
+      "sha256": "f5551a19045a871b571b9c83d439f3442c8e0b1634f795678eaf911110f6c6f3",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-fr/innovation_triples.csv",
+      "sha256": "bb5ea8c249c9d938cd8a29b35360cd182598860af23845d8d6641e085813317e",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-fr/pack_manifest.json",
+      "sha256": "5b7f3309158a3c206a830e650ff0e84cc1e18d4c1853a9b29d3df4400f17030b",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-fr/package_integrity.json",
+      "sha256": "59551d5d5b6158b311fc624124292eda5d960a03b94eb6c274e8da9b79260ada",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-fr/product_filter_matrix.csv",
+      "sha256": "587ca7e60b7ab16e6b598de34144109d4fe0859d0a2cd25dcb0dce54858ed4fd",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-fr/recent_products.csv",
+      "sha256": "042d890a59ce0b2ce9d47682fcfea9ceb791d68bb0a95197dca88f3dff5194d6",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-fr/sale_pressure_pairs.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-fr/sale_pressure_products.csv",
+      "sha256": "9ce40c52a6e95cbfbf1abebdd8e7343bd7709295bfe59705de269b96ca9f3b8d",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-fr/sale_pressure_triples.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-fr/summary.json",
+      "sha256": "9e5489ddc5de737c1d9dedbc5a3ce89bf6b4a76f4352e7740bda77b0810ee0dc",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-fr/top_seller_brand_comparison.csv",
+      "sha256": "d0b429aea0e6ed58c5580e309f0d9a481c89defbe6e139803aa3ed2f920f130e",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-fr/top_seller_pairs.csv",
+      "sha256": "01dc816343265352a77188028221c5edd3bfe2f17512698ac8321dcbca35eae0",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-fr/top_seller_products.csv",
+      "sha256": "ac9700613c3fb961e81432db03b61012880525ed24145d487115b53c6c02bd48",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-fr/top_seller_triples.csv",
+      "sha256": "8417935c6cd88e163b12622e029006480fd5aa55ecacd2c5f7c8f87d0c3148fd",
       "languages": [
         "fr"
       ],
@@ -274,8 +898,112 @@
       "role": "practice"
     },
     {
-      "path": "files/input/assortment-demo-de.zip",
-      "sha256": "788a8d7b5904f942d0e27c94f2cdbe4a53e41011d0eee3dc6e94bae372f92355",
+      "path": "files/input/assortment-demo-de/innovation_pairs.csv",
+      "sha256": "e6d6b4b3274e2903266c5a5e1794cbbeef704f0c5e72eebbd6ce391133de1dac",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-de/innovation_triples.csv",
+      "sha256": "bb5ea8c249c9d938cd8a29b35360cd182598860af23845d8d6641e085813317e",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-de/pack_manifest.json",
+      "sha256": "5b7f3309158a3c206a830e650ff0e84cc1e18d4c1853a9b29d3df4400f17030b",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-de/package_integrity.json",
+      "sha256": "59551d5d5b6158b311fc624124292eda5d960a03b94eb6c274e8da9b79260ada",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-de/product_filter_matrix.csv",
+      "sha256": "261811ac76d59d31f78fc2e888011819aa18602ae1738d99f42d7e094e6a3eb4",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-de/recent_products.csv",
+      "sha256": "1897644209e653158e139899aa95b0b56786ec8d012bf625736ed48df7d385fd",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-de/sale_pressure_pairs.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-de/sale_pressure_products.csv",
+      "sha256": "9ce40c52a6e95cbfbf1abebdd8e7343bd7709295bfe59705de269b96ca9f3b8d",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-de/sale_pressure_triples.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-de/summary.json",
+      "sha256": "2c3566c867986c868d048f36136893a23bda66305e4d967b44b7b38285a07839",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-de/top_seller_brand_comparison.csv",
+      "sha256": "d0b429aea0e6ed58c5580e309f0d9a481c89defbe6e139803aa3ed2f920f130e",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-de/top_seller_pairs.csv",
+      "sha256": "35dd4037edf39ca67b81513ebc11005814f748dd8743d557fabff1ef882faf45",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-de/top_seller_products.csv",
+      "sha256": "f5e2c06aeea7d3c4e0636a247f2e22d7ccc5bce71b06bde553a2c0508ab7963e",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-de/top_seller_triples.csv",
+      "sha256": "8417935c6cd88e163b12622e029006480fd5aa55ecacd2c5f7c8f87d0c3148fd",
       "languages": [
         "de"
       ],
@@ -290,8 +1018,112 @@
       "role": "source"
     },
     {
-      "path": "files/practice/assortment-practice-de.zip",
-      "sha256": "9abf1b0d5cda93784b6303a5931e8c179b7d37ef9adff448e4e5b7a36c8ef56c",
+      "path": "files/practice/assortment-practice-de/innovation_pairs.csv",
+      "sha256": "52d65c959359d258c073f3e91946d68cd3214a4842dd4cb73fec8c62da1cb7d0",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-de/innovation_triples.csv",
+      "sha256": "bb5ea8c249c9d938cd8a29b35360cd182598860af23845d8d6641e085813317e",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-de/pack_manifest.json",
+      "sha256": "5b7f3309158a3c206a830e650ff0e84cc1e18d4c1853a9b29d3df4400f17030b",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-de/package_integrity.json",
+      "sha256": "59551d5d5b6158b311fc624124292eda5d960a03b94eb6c274e8da9b79260ada",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-de/product_filter_matrix.csv",
+      "sha256": "110e9ea5cee64c4f1149af700406c7354f5158b6455aa89d786ef31ad0a6d080",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-de/recent_products.csv",
+      "sha256": "c170dafb24799fa566f508da515f6fb74318de7241592e85db7041429de89ead",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-de/sale_pressure_pairs.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-de/sale_pressure_products.csv",
+      "sha256": "9ce40c52a6e95cbfbf1abebdd8e7343bd7709295bfe59705de269b96ca9f3b8d",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-de/sale_pressure_triples.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-de/summary.json",
+      "sha256": "2c3566c867986c868d048f36136893a23bda66305e4d967b44b7b38285a07839",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-de/top_seller_brand_comparison.csv",
+      "sha256": "d0b429aea0e6ed58c5580e309f0d9a481c89defbe6e139803aa3ed2f920f130e",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-de/top_seller_pairs.csv",
+      "sha256": "35dd4037edf39ca67b81513ebc11005814f748dd8743d557fabff1ef882faf45",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-de/top_seller_products.csv",
+      "sha256": "1641bc09550d81a68460fc7a182322588b050b6bf9d2dc549080805cd78cb999",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-de/top_seller_triples.csv",
+      "sha256": "8417935c6cd88e163b12622e029006480fd5aa55ecacd2c5f7c8f87d0c3148fd",
       "languages": [
         "de"
       ],
@@ -306,8 +1138,112 @@
       "role": "practice"
     },
     {
-      "path": "files/input/assortment-demo-es.zip",
-      "sha256": "7d022ccd11cd4f818cce636356ea2586d0db8fc58d871e5ed2023839c076fa2d",
+      "path": "files/input/assortment-demo-es/innovation_pairs.csv",
+      "sha256": "c658e47a730a717a2efd49b8b38e1c1535faf8f6e7a7a28af6cfaf573149f90f",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-es/innovation_triples.csv",
+      "sha256": "bb5ea8c249c9d938cd8a29b35360cd182598860af23845d8d6641e085813317e",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-es/pack_manifest.json",
+      "sha256": "5b7f3309158a3c206a830e650ff0e84cc1e18d4c1853a9b29d3df4400f17030b",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-es/package_integrity.json",
+      "sha256": "59551d5d5b6158b311fc624124292eda5d960a03b94eb6c274e8da9b79260ada",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-es/product_filter_matrix.csv",
+      "sha256": "221b5191d30602f8322cf3a95c6529bcd79199f72a007065e5a149cd1ca413e6",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-es/recent_products.csv",
+      "sha256": "ff3768d78c240e23ded7086c7b78918e6605cb57bd045cad87c1d65d3646ede4",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-es/sale_pressure_pairs.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-es/sale_pressure_products.csv",
+      "sha256": "9ce40c52a6e95cbfbf1abebdd8e7343bd7709295bfe59705de269b96ca9f3b8d",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-es/sale_pressure_triples.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-es/summary.json",
+      "sha256": "3177bc72fc5ec4d49c54861fa857280358f8505303ae2e00a8ea62c7ee818690",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-es/top_seller_brand_comparison.csv",
+      "sha256": "d0b429aea0e6ed58c5580e309f0d9a481c89defbe6e139803aa3ed2f920f130e",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-es/top_seller_pairs.csv",
+      "sha256": "894be07fc8bc7ad3b1f22761330b5560991c6ddf53f37b87d61e4c4b186a53df",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-es/top_seller_products.csv",
+      "sha256": "b1432fb1a240ac33804deaebab67db4c71a11319f032867c35494a766d9721e8",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/assortment-demo-es/top_seller_triples.csv",
+      "sha256": "8417935c6cd88e163b12622e029006480fd5aa55ecacd2c5f7c8f87d0c3148fd",
       "languages": [
         "es"
       ],
@@ -322,8 +1258,112 @@
       "role": "source"
     },
     {
-      "path": "files/practice/assortment-practice-es.zip",
-      "sha256": "04ca9c95ba2be620b86207e4dec4cd893d98b1ff268abd3e15510bdfc1608c80",
+      "path": "files/practice/assortment-practice-es/innovation_pairs.csv",
+      "sha256": "007b53759eeba8a3759f2e8c3547d7d517f70af876eef42c8d6750a3a7e65ec0",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-es/innovation_triples.csv",
+      "sha256": "bb5ea8c249c9d938cd8a29b35360cd182598860af23845d8d6641e085813317e",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-es/pack_manifest.json",
+      "sha256": "5b7f3309158a3c206a830e650ff0e84cc1e18d4c1853a9b29d3df4400f17030b",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-es/package_integrity.json",
+      "sha256": "59551d5d5b6158b311fc624124292eda5d960a03b94eb6c274e8da9b79260ada",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-es/product_filter_matrix.csv",
+      "sha256": "364896fa33ee1a01359adfaae7d771d7b81f5d6bf8a133f0d662c44dbbb6f66b",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-es/recent_products.csv",
+      "sha256": "580c8aa97c1af558a3b4a2592f80cc94ea22d481eedb9972f1569609fd44f152",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-es/sale_pressure_pairs.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-es/sale_pressure_products.csv",
+      "sha256": "9ce40c52a6e95cbfbf1abebdd8e7343bd7709295bfe59705de269b96ca9f3b8d",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-es/sale_pressure_triples.csv",
+      "sha256": "16fb31851852d020c6731cbeb2ba18b103e1fdd5993f643ec8251e05cee63204",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-es/summary.json",
+      "sha256": "3177bc72fc5ec4d49c54861fa857280358f8505303ae2e00a8ea62c7ee818690",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-es/top_seller_brand_comparison.csv",
+      "sha256": "d0b429aea0e6ed58c5580e309f0d9a481c89defbe6e139803aa3ed2f920f130e",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-es/top_seller_pairs.csv",
+      "sha256": "894be07fc8bc7ad3b1f22761330b5560991c6ddf53f37b87d61e4c4b186a53df",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-es/top_seller_products.csv",
+      "sha256": "3ac4eab89ce45c4ea051a7b02c9044e2a2e76cba2b49c275fa45b7e3d9132281",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/assortment-practice-es/top_seller_triples.csv",
+      "sha256": "8417935c6cd88e163b12622e029006480fd5aa55ecacd2c5f7c8f87d0c3148fd",
       "languages": [
         "es"
       ],
@@ -344,7 +1384,7 @@
       "goal": "Imparare a fornire un pacchetto di dati commerciali già disponibile, chiedere un’analisi e usare il rapporto HTML verificato.",
       "scenario": "Un team prodotto vuole capire l’assortimento prima della prossima riunione. Parti da un pacchetto fittizio sulla maglieria, segui la preparazione del rapporto e confronta le conclusioni con i prodotti di origine. Ripeti poi con un pacchetto aggiornato.",
       "scope": "Primo rapporto completo da un pacchetto di dati locale esistente: acquisizione, confronto, interpretazione, revisione indipendente e consegna. Raccolta sui siti, classificazione centrale degli attributi e Brand Fit sono attività distinte e non vengono simulate.",
-      "inputs": "Apri brief-it.md e fornisci assortment-demo-it.zip. L’archivio contiene prodotti fittizi, gruppi di novità e più venduti dichiarati, confronti calcolati e controllo d’integrità. Non contiene un rapporto finito, interpretazioni approvate o ricevute del server.",
+      "inputs": "Apri brief-it.md e fornisci assortment-demo-it/. L’archivio contiene prodotti fittizi, gruppi di novità e più venduti dichiarati, confronti calcolati e controllo d’integrità. Non contiene un rapporto finito, interpretazioni approvate o ricevute del server.",
       "request": "Clara, prepara da questo pacchetto un rapporto sull’assortimento per il team prodotto. Spiega quali dati contiene, confronta più venduti e novità con il resto e mostrami il rapporto con i suoi controlli.",
       "steps": [
         "Conferma rivenditore, categoria, dati forniti e destinatari. Clara apre l’archivio e ne verifica l’integrità. L’assistente spiega i prodotti di origine e il significato dei gruppi definiti dal rivenditore.",
@@ -360,7 +1400,7 @@
         "Indica pacchetto e richiesta necessari per iniziare e spiega che cosa produrrà Clara.",
         "Apri il rapporto e collega una conclusione alle sue evidenze e allo stato di revisione."
       ],
-      "practice": "Fornisci assortment-practice-it.zip, che cambia il gruppo fittizio delle novità. Chiedi un nuovo rapporto per gli stessi destinatari. Conserva il primo e confronta i cambiamenti nelle evidenze e nell’interpretazione.",
+      "practice": "Fornisci assortment-practice-it/, che cambia il gruppo fittizio delle novità. Chiedi un nuovo rapporto per gli stessi destinatari. Conserva il primo e confronta i cambiamenti nelle evidenze e nell’interpretazione.",
       "success": "Sai avviare un rapporto, leggerne sintesi ed evidenze, capire il giudizio e ripetere il lavoro con un altro pacchetto.",
       "repeat": "Fornisci un pacchetto con integrità verificata e indica destinatari e domanda. Clara prepara, rivede e consegna l’HTML localmente. La richiesta di dati centrali correnti segue l’acquisizione autenticata e il relativo confine dei dati."
     },
@@ -369,7 +1409,7 @@
       "goal": "Learn to supply an existing retail evidence package, request an analysis and use the checked HTML report.",
       "scenario": "A product team wants to understand an assortment before its next review. Start with a fictional knitwear package, follow Clara’s report preparation and check the conclusions against the underlying products. Then repeat with an updated package.",
       "scope": "A complete first report from an existing local evidence package. The example teaches intake, comparison, interpretation, independent review and delivery. Collection from retailer websites, central attribute mapping and Brand Fit are separate work; none is simulated here.",
-      "inputs": "Open brief-en.md and supply assortment-demo-en.zip. The archive contains fictional product records, explicitly assigned new-arrival and best-seller groups, computed comparisons and an integrity check. It contains no finished report, approved interpretation or server receipt.",
+      "inputs": "Open brief-en.md and supply assortment-demo-en/. The archive contains fictional product records, explicitly assigned new-arrival and best-seller groups, computed comparisons and an integrity check. It contains no finished report, approved interpretation or server receipt.",
       "request": "Clara, create an assortment report from this package for our product team. Explain what the data covers, compare best sellers and new arrivals with the rest, and show me the report and its checks.",
       "steps": [
         "Confirm the retailer/category scope, the supplied snapshot and the audience. Clara safely opens the package and checks its integrity. The assistant explains the source records and what the retailer-defined groups mean.",
@@ -385,7 +1425,7 @@
         "Identify the package and request needed to start, and explain the output Clara will produce.",
         "Open the report and follow one conclusion to its evidence and review status."
       ],
-      "practice": "Supply assortment-practice-en.zip, which changes the fictional new-arrival group. Ask for a new report with the same audience. Keep the first report and compare what changed in the evidence and interpretation.",
+      "practice": "Supply assortment-practice-en/, which changes the fictional new-arrival group. Ask for a new report with the same audience. Keep the first report and compare what changed in the evidence and interpretation.",
       "success": "You can start a report, read its summary and evidence, understand the verdict and repeat the workflow with another package.",
       "repeat": "Supply an integrity-checked evidence package and state the audience and question. Clara prepares, reviews and delivers the HTML locally. A request for current central data follows the separate authenticated intake and its stated data boundary."
     },
@@ -394,7 +1434,7 @@
       "goal": "Apprendre à fournir un dossier de données commerciales existant, demander une analyse et utiliser le rapport HTML vérifié.",
       "scenario": "Une équipe produit veut comprendre l’assortiment avant sa prochaine réunion. Partez d’un dossier fictif sur la maille, suivez la préparation du rapport et rapprochez les conclusions des produits sources. Recommencez avec un dossier actualisé.",
       "scope": "Un premier rapport complet à partir d’un dossier local existant : réception, comparaison, interprétation, révision indépendante et livraison. La collecte sur les sites, le classement central des attributs et Brand Fit sont des travaux distincts, sans simulation dans cette leçon.",
-      "inputs": "Ouvrez brief-fr.md et fournissez assortment-demo-fr.zip. L’archive contient des produits fictifs, des groupes explicitement définis de nouveautés et de meilleures ventes, des comparaisons calculées et un contrôle d’intégrité. Aucun rapport final, interprétation approuvée ou reçu serveur n’est fourni.",
+      "inputs": "Ouvrez brief-fr.md et fournissez assortment-demo-fr/. L’archive contient des produits fictifs, des groupes explicitement définis de nouveautés et de meilleures ventes, des comparaisons calculées et un contrôle d’intégrité. Aucun rapport final, interprétation approuvée ou reçu serveur n’est fourni.",
       "request": "Clara, prépare un rapport sur l’assortiment à partir de ce dossier pour notre équipe produit. Explique les données couvertes, compare meilleures ventes et nouveautés au reste, puis montre le rapport et ses contrôles.",
       "steps": [
         "Confirmez distributeur, catégorie, données fournies et destinataires. Clara ouvre l’archive et vérifie son intégrité. L’assistant explique les produits sources et les groupes définis par le distributeur.",
@@ -410,7 +1450,7 @@
         "Identifiez le dossier et la demande nécessaires pour commencer, puis expliquez le résultat attendu.",
         "Ouvrez le rapport et reliez une conclusion à ses preuves et à son état de révision."
       ],
-      "practice": "Fournissez assortment-practice-fr.zip, qui modifie le groupe fictif des nouveautés. Demandez un nouveau rapport pour le même public. Conservez le premier et comparez les changements dans les preuves et l’interprétation.",
+      "practice": "Fournissez assortment-practice-fr/, qui modifie le groupe fictif des nouveautés. Demandez un nouveau rapport pour le même public. Conservez le premier et comparez les changements dans les preuves et l’interprétation.",
       "success": "Vous savez lancer un rapport, lire sa synthèse et ses preuves, comprendre le verdict et recommencer avec un autre dossier.",
       "repeat": "Fournissez un dossier dont l’intégrité a été vérifiée et précisez le public et la question. Clara prépare, révise et livre l’HTML localement. Les données centrales actuelles suivent une réception authentifiée distincte et son périmètre de données déclaré."
     },
@@ -419,7 +1459,7 @@
       "goal": "Lernen, ein vorhandenes Handelsdatenpaket bereitzustellen, eine Analyse anzufordern und den geprüften HTML-Bericht zu verwenden.",
       "scenario": "Ein Produktteam möchte das Sortiment vor seiner nächsten Besprechung verstehen. Beginnen Sie mit einem fiktiven Strickwarenpaket, verfolgen Sie die Berichtserstellung und prüfen Sie Aussagen anhand der Ausgangsprodukte. Wiederholen Sie den Ablauf mit einem aktualisierten Paket.",
       "scope": "Ein vollständiger erster Bericht aus einem vorhandenen lokalen Datenpaket: Übernahme, Vergleich, Interpretation, unabhängige Prüfung und Übergabe. Website-Erhebung, zentrale Attributzuordnung und Brand Fit sind eigene Aufgaben und werden hier nicht simuliert.",
-      "inputs": "Öffnen Sie brief-de.md und stellen Sie assortment-demo-de.zip bereit. Das Archiv enthält fiktive Produkte, ausdrücklich zugewiesene Neuheiten- und Bestsellergruppen, berechnete Vergleiche und eine Integritätsprüfung. Fertiger Bericht, freigegebene Interpretation und Serverbestätigung sind nicht enthalten.",
+      "inputs": "Öffnen Sie brief-de.md und stellen Sie assortment-demo-de/ bereit. Das Archiv enthält fiktive Produkte, ausdrücklich zugewiesene Neuheiten- und Bestsellergruppen, berechnete Vergleiche und eine Integritätsprüfung. Fertiger Bericht, freigegebene Interpretation und Serverbestätigung sind nicht enthalten.",
       "request": "Clara, erstelle aus diesem Paket einen Sortimentsbericht für unser Produktteam. Erkläre die Datenabdeckung, vergleiche Bestseller und Neuheiten mit dem übrigen Sortiment und zeige den Bericht mit seinen Prüfungen.",
       "steps": [
         "Bestätigen Sie Händler, Kategorie, bereitgestellten Datenstand und Zielgruppe. Clara öffnet das Archiv und prüft seine Integrität. Schriftlich erklärt Clara die Ausgangsprodukte und die vom Händler definierten Gruppen.",
@@ -435,7 +1475,7 @@
         "Benennen Sie das benötigte Paket und die Anfrage und erklären Sie Claras Ergebnis.",
         "Öffnen Sie den Bericht und verfolgen Sie eine Aussage bis zu den Belegen und ihrem Prüfstatus."
       ],
-      "practice": "Stellen Sie assortment-practice-de.zip mit einer geänderten fiktiven Neuheitengruppe bereit. Fordern Sie einen neuen Bericht für dieselbe Zielgruppe an. Bewahren Sie den ersten auf und vergleichen Sie Änderungen in Belegen und Interpretation.",
+      "practice": "Stellen Sie assortment-practice-de/ mit einer geänderten fiktiven Neuheitengruppe bereit. Fordern Sie einen neuen Bericht für dieselbe Zielgruppe an. Bewahren Sie den ersten auf und vergleichen Sie Änderungen in Belegen und Interpretation.",
       "success": "Sie können einen Bericht starten, Zusammenfassung und Belege lesen, das Urteil verstehen und den Ablauf mit einem anderen Paket wiederholen.",
       "repeat": "Stellen Sie ein auf Integrität geprüftes Paket bereit und nennen Sie Zielgruppe und Frage. Clara erstellt, prüft und liefert das HTML lokal. Aktuelle zentrale Daten erfordern einen eigenen authentifizierten Abruf mit den angegebenen Datengrenzen."
     },
@@ -444,7 +1484,7 @@
       "goal": "Aprender a aportar un paquete de datos comerciales existente, solicitar un análisis y utilizar el informe HTML verificado.",
       "scenario": "Un equipo de producto quiere entender el surtido antes de su próxima reunión. Parte de un paquete ficticio de prendas de punto, sigue la elaboración del informe y contrasta sus conclusiones con los productos originales. Repite con un paquete actualizado.",
       "scope": "Primer informe completo a partir de un paquete local existente: recepción, comparación, interpretación, revisión independiente y entrega. La captura web, la clasificación central de atributos y Brand Fit son trabajos distintos y no se simulan aquí.",
-      "inputs": "Abre brief-es.md y aporta assortment-demo-es.zip. El archivo contiene productos ficticios, grupos explícitos de novedades y más vendidos, comparaciones calculadas y un control de integridad. No incluye un informe terminado, interpretaciones aprobadas ni un recibo del servidor.",
+      "inputs": "Abre brief-es.md y aporta assortment-demo-es/. El archivo contiene productos ficticios, grupos explícitos de novedades y más vendidos, comparaciones calculadas y un control de integridad. No incluye un informe terminado, interpretaciones aprobadas ni un recibo del servidor.",
       "request": "Clara, prepara con este paquete un informe del surtido para nuestro equipo de producto. Explica qué datos cubre, compara los más vendidos y las novedades con el resto, y muéstrame el informe y sus controles.",
       "steps": [
         "Confirma minorista, categoría, datos aportados y destinatarios. Clara abre el archivo y comprueba su integridad. El asistente explica los productos originales y los grupos definidos por el minorista.",
@@ -460,7 +1500,7 @@
         "Identifica el paquete y la petición necesarios para empezar y explica qué producirá Clara.",
         "Abre el informe y sigue una conclusión hasta sus evidencias y su estado de revisión."
       ],
-      "practice": "Aporta assortment-practice-es.zip, que cambia el grupo ficticio de novedades. Solicita un nuevo informe para los mismos destinatarios. Conserva el primero y compara qué cambió en las evidencias y la interpretación.",
+      "practice": "Aporta assortment-practice-es/, que cambia el grupo ficticio de novedades. Solicita un nuevo informe para los mismos destinatarios. Conserva el primero y compara qué cambió en las evidencias y la interpretación.",
       "success": "Sabes iniciar un informe, leer su resumen y evidencias, entender el dictamen y repetir el trabajo con otro paquete.",
       "repeat": "Aporta un paquete con integridad verificada e indica destinatarios y pregunta. Clara prepara, revisa y entrega el HTML localmente. Los datos centrales actuales requieren una recepción autenticada distinta con el ámbito de datos declarado."
     }
