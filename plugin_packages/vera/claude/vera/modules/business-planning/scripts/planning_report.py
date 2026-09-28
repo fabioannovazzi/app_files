@@ -559,13 +559,21 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
             rendered_narrative.add(identifier)
         n = narrative.get(identifier)
         if n is None:
-            return '<p class="limitation">This conclusion is withheld pending correction of its supporting claims.</p>'
+            return (
+                '<p class="limitation">'
+                + tr(
+                    "This conclusion is withheld pending correction of its supporting claims."
+                )
+                + "</p>"
+            )
         prose = e(n["text"])
         for key, claim in n["claims"].items():
             if "calculation_id" in claim:
                 c = plan["calculations"][claim["calculation_id"]]
                 display_value = (
-                    format_number(c["value"], lang, 2) if lang == "it" else c["value"]
+                    format_number(c["value"], lang, 2)
+                    if lang in {"it", "fr"}
+                    else c["value"]
                 )
                 rendered = f'<a class="figure-ref" href="#reader-sources" data-calculation-id="{e(c["id"])}">{e(display_value)} {e(c["unit"])}</a>'
             else:
@@ -577,17 +585,17 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
             if n["provisional"]
             else "Reviewed interpretation"
         )
-        basis = ", ".join(n["basis_ids"]) or "Explicit evidence gap"
+        basis = ", ".join(n["basis_ids"]) or tr("Explicit evidence gap")
         attr = "" if repeat else f' id="narrative-{e(identifier)}"'
         return f'<article{attr}><p>{prose}</p><details><summary>{tr("Basis and review")}</summary><p>{e(tr(status))}. {e(basis)}</p></details></article>'
 
     horizon = (
         f'{e(case["periods"][0])} — {e(case["periods"][-1])}'
         if case["periods"]
-        else "Forecast horizon not yet established"
+        else tr("Forecast horizon not yet established")
     )
     parts = [
-        f'<header><p class="eyebrow">Business plan · {tr("Audience")}: {e(tr(case["audience"]))}</p><h1>{e(case["entity_name"])}</h1><p class="lead">{e(case["planning_objective"])}</p><p>{e(case["company_stage"])} · {e(case["reporting_currency"] or "Currency not established")} · {horizon}</p></header>'
+        f'<header><p class="eyebrow">{tr("Business plan")} · {tr("Audience")}: {e(tr(case["audience"]))}</p><h1>{e(case["entity_name"])}</h1><p class="lead">{e(case["planning_objective"])}</p><p>{e(tr(case["company_stage"]))} · {e(case["reporting_currency"] or tr("Currency not established"))} · {horizon}</p></header>'
     ]
     assessment = case.get("assessment")
     # A rejected calculation basis cannot support the submitted assessment as a
@@ -662,7 +670,13 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
             parts.append("</section>")
     else:
         parts.append(
-            "<section><h2>Business assessment incomplete</h2><p>The available calculations and notes do not yet constitute a business plan. A recommendation and the business questions still need to be addressed.</p></section>"
+            "<section><h2>"
+            + tr("Business assessment incomplete")
+            + "</h2><p>"
+            + tr(
+                "The available calculations and notes do not yet constitute a business plan. A recommendation and the business questions still need to be addressed."
+            )
+            + "</p></section>"
         )
     from planning_decision_report import render_financing
 
@@ -679,21 +693,23 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
         + "</summary>"
     )
     parts.append(
-        f'<p>Validation status: {e(plan["status"])}. Checks establish internal consistency and file identity, not whether a business is viable.</p>'
+        f'<p>{tr("Validation status")}: {e(plan["status"])}. {tr("Checks establish internal consistency and file identity, not whether a business is viable.")}</p>'
     )
     parts.append(
-        "<h2>Unresolved matters</h2><ul>"
+        "<h2>"
+        + tr("Unresolved matters")
+        + "</h2><ul>"
         + "".join(f"<li>{e(i)}</li>" for i in plan["unresolved_matters"])
         + "</ul>"
     )
     if not assessment and plan["status"] != "blocked":
         parts.extend(paragraph(i) for i in narrative)
-        parts.extend(_svg(c) for c in plan["charts"])
+        parts.extend(_svg(c, lang) for c in plan["charts"])
     for r in refs.values():
         parts.append(
             f'<p id="evidence-{e(r["id"])}"><strong>{e(r["id"])}</strong>: {e(r["description"])}</p>'
         )
-    parts.append("<section><h2>Cross-source figure comparison</h2>")
+    parts.append("<section><h2>" + tr("Cross-source figure comparison") + "</h2>")
     for c in plan["comparisons"]:
         parts.append(
             f'<h3>{e(c["calculation_id"])}</h3><p>Accepted observation: {e(str(c["accepted_observation_id"]))} · Material: {c["material"]}</p>'

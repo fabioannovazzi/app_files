@@ -241,7 +241,7 @@ def _invoices(manifest: dict[str, Any], root: Path) -> list[dict[str, Any]]:
                     "document_type",
                 )
             )
-            if not all(identity) or invoice["currency"] != "EUR":
+            if not all(identity) or invoice["currency"] != manifest["currency"]:
                 raise TreasuryError("Invoice identity or currency is unsupported")
             if identity in identities:
                 raise TreasuryError(

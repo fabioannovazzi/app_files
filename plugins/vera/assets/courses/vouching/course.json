@@ -65,12 +65,12 @@
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
       "repository_path": "plugins/check-entries/scripts/check_entries_core.py",
-      "sha256": "c4218b1b3f684126c899dcf30d5b7358f10c4a7c25504ee356d62c9d8098f651"
+      "sha256": "87dd56765642c6f1e8e9dd32e957bbc0ab155e22cbbbe7c8218ed2596f364c08"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
       "repository_path": "plugins/check-entries/scripts/implementation_bootstrap.py",
-      "sha256": "134993676b211553c0ca76eedb0628d7138d7f69ab4e09fb6014c272e80bd29a"
+      "sha256": "f0c9bed9fd831429054287cc75cc6e55da04b79cbb8ef0afc898d2a3cbd3c277"
     },
     {
       "path": "modules/check-entries/scripts/implementation_contract.py",
@@ -110,7 +110,12 @@
     {
       "path": "modules/check-entries/skills/vouching/SKILL.md",
       "repository_path": "plugins/check-entries/skills/vouching/SKILL.md",
-      "sha256": "c3697473608f24f0c7ed171b29c9bb05c3d5820b36122ea608f64a9f436768f1"
+      "sha256": "d30cf88c340df29f65dbf7d8f6f9ccbea928001b68fe8ce7553cfded3e256754"
+    },
+    {
+      "path": "modules/check-entries/skills/vouching/references/geneva.md",
+      "repository_path": "plugins/check-entries/skills/vouching/references/geneva.md",
+      "sha256": "a9966d9e54e61b449596741ef6281846bf7104d35c584110b85b3a75bfa79f64"
     },
     {
       "path": "modules/check-entries/vendor/modules/__init__.py",
@@ -125,7 +130,7 @@
     {
       "path": "modules/check-entries/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_assurance/decisions.py",
@@ -136,6 +141,11 @@
       "path": "modules/check-entries/vendor/modules/vera_assurance/envelope.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/check-entries/vendor/modules/vera_assurance/jurisdiction.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_assurance/money.py",
@@ -160,7 +170,7 @@
     {
       "path": "skills/vouching/SKILL.md",
       "repository_path": "plugins/vera/skills/vouching/SKILL.md",
-      "sha256": "125f9120dcd760b06b19d38b670a0058635fca5d7202f883e28b927bd9f6660e"
+      "sha256": "ab9f9562e91b118969b52fd83348c2c314b30cf6eb9a5da6f860f9075cdfbb0a"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -245,7 +255,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -256,6 +266,11 @@
       "path": "vendor/modules/vera_assurance/envelope.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",

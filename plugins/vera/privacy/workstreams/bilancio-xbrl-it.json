@@ -45,6 +45,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "geneva-adaptation",
+        "purpose": "Prepare the existing professional deliverable under an explicit CH-GE mandate",
+        "content": "The CH-GE local accounts adapter may place selected source trial-balance evidence, entity identity, current/prior amounts, account mappings, Swiss framework assessment, note requirements, cited legal sources and professional decisions in the parent runtime context. It is a separate local presentation adapter within the same accounts workflow; it does not use the Italian server, taxonomy, bounded suggestion packets or XBRL approval/export route described below. The selected model may read the exact imported documents needed to author the adapter input. It makes no network or model call itself.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -198,12 +207,16 @@
     {
       "id": "review-and-audit-integrity",
       "control": "Structural blockers cannot be overridden; professional overrides are limited to HIGH issues and bind the exact issue fingerprint and reviewer reason. Material audit events record tenant, case, revision, actor, originating interface, and before/after content hashes."
+    },
+    {
+      "id": "geneva-source-binding",
+      "control": "The Geneva adapter requires a running Studio Archive context and exact imported source hashes, complete one-to-one reviewed mappings and balanced current/prior trial balances. Decisions bind the workflow, client, engagement, exact proposal and arithmetic. Outputs are content-addressed private drafts, never statutory approval or filing-ready artifacts. The Italy-specific authenticated service and XBRL controls do not apply to this local adapter."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-12",
+    "reviewed_at": "2026-09-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ad8a353a9f859ee7ba3785a6dbd7168311863a769a6be0543349b7e5d8dbc6a4"
+    "source_fingerprint": "cf9161927cdde68cb6bcdfbabdb401992c3477e0290b62f49c4a0c12564b4a72"
   }
 }

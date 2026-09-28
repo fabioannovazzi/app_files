@@ -1,6 +1,6 @@
 ---
 name: treasury-forecast
-description: Prepare and update one company's EUR cash forecast from fixed bank, outstanding-item, settlement, adjustment and planned-flow tables; review dates, retain decisions and explain changes between accepted forecasts.
+description: Prepare and update one company's EUR or CHF cash forecast from fixed bank, outstanding-item, settlement, adjustment and planned-flow tables; review dates, retain decisions and explain changes between accepted forecasts.
 ---
 
 ## Cowork execution contract
@@ -94,6 +94,11 @@ override this Cowork contract.
 
 # Budget di tesoreria
 
+## Jurisdiction and Geneva
+
+For a CH-GE mandate, read `references/geneva.md` before the steps below. It specifies the Geneva input, source and output adaptations within this existing function. Choose governing jurisdiction independently of output language; the ordinary Italian path remains available for IT.
+
+
 Never write run outputs inside this Git workspace or a published folder.
 Use the selected Studio Archive client's engagement run inputs and outputs.
 Read `references/input-contract.md` completely before preparing data.
@@ -110,7 +115,7 @@ session's immutable forecast versions contain the actual decisions it consumes.
 ## Eligibility and intake
 
 Accept only the documented CSV headers or equivalent XLSX sheets, for one
-company, EUR and a declared bank-account population. Required missing data or
+company, one explicit reporting currency (EUR or CHF) and a declared bank-account population. Do not mix currencies or perform implicit FX conversion. Required missing data or
 unsupported formats stop this workflow. Do not generate a generic extractor,
 infer outstanding balances from invoices, invent collection dates, or ask the
 professional to program adapters or edit JSON. State the specific missing source.

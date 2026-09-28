@@ -77,7 +77,7 @@
     },
     {
       "path": "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
-      "sha256": "af471aa7a524bd47c5c7a1ba3766bdcfbf98ea814a64df527d9b9ed9981f2fd7"
+      "sha256": "6d96e124c00a8466e5ee1a212ec1c57044fb54138742293362042139c7bf4b1b"
     },
     {
       "path": "modules/concordato-plan-review/scripts/output_closure.py",
@@ -117,7 +117,7 @@
     },
     {
       "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
     },
     {
       "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/decisions.py",
@@ -126,6 +126,10 @@
     {
       "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/money.py",
@@ -161,7 +165,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -170,6 +174,10 @@
     {
       "path": "vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",
@@ -498,5 +506,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "5dfbf0965bbb5200a51727948f65a73b5bf45a8385fcdc0918e5628ec180ca4a"
+  "canonical_course_sha256": "248b74abf03f809655316fd136a3ed39996d06d006ce53769a4d4e47d36c3966"
 }

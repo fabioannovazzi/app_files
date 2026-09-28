@@ -52,7 +52,7 @@ def digest(value: Any) -> str:
 def money(value: Any) -> Decimal:
     """Cent precision is directly verifiable; never round or infer separators."""
     if not isinstance(value, str) or not re.fullmatch(r"-?\d+(?:\.\d{1,2})?", value):
-        raise TreasuryError(f"Expected decimal-text EUR amount, received {value!r}")
+        raise TreasuryError(f"Expected decimal-text amount, received {value!r}")
     try:
         result = Decimal(value)
     except InvalidOperation as exc:
@@ -130,12 +130,18 @@ def _validate_dataset(data: dict[str, Any]) -> dict[str, dict[str, Any]]:
         raise TreasuryError("Unsupported treasury inputs")
     for key in ("client_id", "engagement_id", "company_id", "company_name", "coverage"):
         _text(data[key], key)
-    if data["currency"] != "EUR":
-        raise TreasuryError("The first treasury version accepts EUR only")
+    if data["currency"] not in {"EUR", "CHF"}:
+        raise TreasuryError("Treasury accepts one reporting currency: EUR or CHF")
     start, end = _date(data["as_of"]), _date(data["horizon_end"])
     if not 1 <= (end - start).days <= 366:
         raise TreasuryError("Forecast horizon must be between 1 and 366 days")
     tables = {name: _index(data[name], key) for name, key in TABLE_KEYS.items()}
+    for rows in tables.values():
+        for row in rows.values():
+            if row.get("currency", data["currency"]) != data["currency"]:
+                raise TreasuryError(
+                    "Mixed currencies require separately reviewed forecasts"
+                )
     if not tables["accounts"]:
         raise TreasuryError("At least one bank account is required")
     for account in tables["accounts"].values():

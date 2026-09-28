@@ -29,6 +29,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "geneva-adaptation",
+        "purpose": "Prepare the existing professional deliverable under an explicit CH-GE mandate",
+        "content": "A Geneva case additionally records the competent Swiss institution, mandate, period and jurisdiction basis. Local contribution evidence uses the existing facts, chronology, authored claims and reviewed arithmetic. The INPS browser and portal-export routes remain specific to Italy; the Geneva adaptation introduces no Swiss portal access or connector.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -105,9 +114,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-12",
+    "reviewed_at": "2026-09-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5321fc68a34071c54c3ebca85e19647ccfc83128c94af01fbfbe7e28278f007b"
+    "source_fingerprint": "dc78fb689534f88b45f985e72c02813063d012b721e4fc8a5de38d5c5fbb30fa"
   }
 }

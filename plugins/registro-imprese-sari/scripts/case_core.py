@@ -47,6 +47,10 @@ ITALIAN_TAX_CODE_RE = re.compile(
 ITALIAN_VAT_RE = re.compile(r"(?<!\d)\d{11}(?!\d)")
 PHONE_RE = re.compile(r"(?<!\w)(?:\+?39[ .-]?)?(?:0\d{1,3}|3\d{2})[ .-]?\d{5,8}(?!\w)")
 OFFICIAL_EXACT_HOSTS = {
+    "www.ge.ch",
+    "ge.ch",
+    "www.fedlex.admin.ch",
+    "www.zefix.admin.ch",
     "www.registroimprese.it",
     "supportospecialisticori.infocamere.it",
     "registroimprese.infocamere.it",
@@ -195,7 +199,7 @@ def validate_iso_date(value: object, *, field: str) -> str:
 
 
 def validate_official_source_url(value: object) -> str:
-    """Allow only known Italian institutional HTTPS source hosts."""
+    """Allow only inspected institutional HTTPS source hosts, not arbitrary destinations."""
 
     text = str(value or "").strip()
     parsed = urllib.parse.urlsplit(text)

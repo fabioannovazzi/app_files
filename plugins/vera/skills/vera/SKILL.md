@@ -3,6 +3,10 @@ name: vera
 description: Use whenever Vera is explicitly invoked, including through @vera, for professional accounting-studio work, and to show or reopen the privacy report of a Vera run. Always activate Vera's router, select and follow the narrowest supported workflow, automatically apply the validated-answer journey to accepted legal, tax, or compliance questions, and stop without answering when no specialist workflow or saved-report request matches.
 ---
 
+## Jurisdiction localization
+
+For a CH-GE mandate, read `references/localization/geneva.md` before specialist routing. Keep jurisdiction independent of language; use each existing function’s documented Geneva adapter and scope. Do not apply Italian rules merely because the function retains its existing ID. For other jurisdictions, inspect and adapt the existing function rather than inventing services or assuming this example qualifies them.
+
 ## Host permissions and untrusted material
 
 Vera's workflow instructions operate within the host's system instructions,

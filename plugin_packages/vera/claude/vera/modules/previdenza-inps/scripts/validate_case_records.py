@@ -814,6 +814,22 @@ def validate_case_records(
     issues: list[dict[str, str]] = []
     acquisition_binding: dict[str, Any] | None = None
 
+    jurisdiction = records.get("jurisdiction", "IT")
+    if jurisdiction not in {"IT", "CH-GE"}:
+        _issue(
+            issues,
+            code="unsupported_jurisdiction",
+            field="jurisdiction",
+            message="Choose IT or CH-GE independently of language",
+        )
+    if jurisdiction == "CH-GE" and not _nonempty(records.get("jurisdiction_basis")):
+        _issue(
+            issues,
+            code="missing_jurisdiction_basis",
+            field="jurisdiction_basis",
+            message="Record the competent Swiss institution, mandate, period and applicable framework",
+        )
+
     if inventory_path.resolve() != (output_dir / "file_inventory.json").resolve():
         _issue(
             issues,

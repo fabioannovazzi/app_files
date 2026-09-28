@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "journal-bank-reconciliation",
-  "course_sha256": "85d95f163e029c2297515178018e13ea5d44480d553858e0a872115f75ca73f9",
+  "course_sha256": "3b77f9310ff45d32b37095e0f67da9c5133fec13bfc06685fa183a43293f4380",
   "reviewer": "Codex: source, first-use lesson, native workbook and localized review-note inspection",
   "reviewed_at": "2026-09-14T16:32:17.532432+00:00",
   "review_scope": "Prepared fictional month-end comparison only. Current CLI runs and source/value replay are verified. Worksheet headers and selected rows were visually inspected in all seven sheets of both unique workbooks; the five locale editions are byte-identical per phase. No learner, live voice, tax or professional approval is attested.",
@@ -308,5 +308,15 @@
     "previous_course_sha256": "c7e389447a1e29050daa3902a3b93599c7e239d9426b6b68385bd4c982a29239",
     "source_review": "Only the shared worker host profile and its skill documentation changed for this course. The production sandbox remains identical. All ten current bank lesson executions passed; every workbook and localized review-note hash equals the retained reviewed artifact. Lesson content, source files, counts and outputs are unchanged. The new native worker qualification is recorded separately; the exact-reference teaching case does not exercise residual semantic resolution.",
     "execution_evidence_sha256": "dc24192582fedc8b44c8b4866b41b0d859df1e390c3822e56a1fe4ef25abfe24"
+  },
+  "geneva_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-28T08:17:18.379368+00:00",
+    "previous_course_sha256": "85d95f163e029c2297515178018e13ea5d44480d553858e0a872115f75ca73f9",
+    "previous_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "content_review": "Compared the complete course object with the exact previously reviewed baseline. All authored locale content, input definitions, requests, checkpoints, practice, timing and other non-source fields are unchanged. Only source bindings differ. Original editorial judgments and historical artifact reviews are retained.",
+    "source_review": "The common-core Geneva release adds explicit jurisdiction and source handling, French/CHF presentation where applicable, and the source-bound adapters described in docs/releases/2026-09-28-vera-geneva.md. This course retains its existing professional purpose and sample jurisdiction; adding Geneva capability does not relabel an Italian exercise as Swiss. Exact changed bindings are recorded by kit in docs/releases/2026-09-28-vera-geneva-course-review.json.",
+    "native_evidence": "GitHub Actions run 36393675234, job 108834959892, commit 989e523529fccd09a60a8ed29dc63d87b863d21e: native teaching stage passed 998 tests with 3 explicit skips and 89.73% courseware coverage. New Client, Geneva adapters and annual-account stages also passed. The later editorial-fingerprint check failed; this is not a claim that the full run passed. Fresh CI must independently validate all required demo/practice identities and current course hashes.",
+    "limits": "This is a bounded release-source refresh, not a new independent editorial, visual, professional or learner review. Earlier artifact hashes remain historical evidence. No Geneva lesson acceptance, real-client acceptance or installed-runtime update is claimed."
   }
 }

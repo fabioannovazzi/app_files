@@ -684,6 +684,7 @@ def test_calculation_receipt_binds_formula_sign_period_sources_and_candidates(
         ("implementation", "scripts/run_concordato_review.py"),
         ("assurance_implementation", "__init__.py"),
         ("assurance_implementation", "contracts.py"),
+        ("assurance_implementation", "jurisdiction.py"),
         ("assurance_implementation", "decisions.py"),
         ("assurance_implementation", "envelope.py"),
         ("assurance_implementation", "money.py"),

@@ -216,6 +216,11 @@ JOURNAL_SAMPLING_IMPLEMENTATION_SPECS = (
     ),
     (
         "assurance_implementation",
+        "jurisdiction.py",
+        "implementation.vera_assurance_jurisdiction",
+    ),
+    (
+        "assurance_implementation",
         "decisions.py",
         "implementation.vera_assurance_decisions",
     ),

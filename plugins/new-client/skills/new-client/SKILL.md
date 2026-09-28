@@ -32,6 +32,11 @@ partial directory as a result.
 
 # New Client
 
+## Jurisdiction and Geneva
+
+For a CH-GE mandate, read `references/geneva.md` before the steps below. It specifies the Geneva input, source and output adaptations within this existing function. Choose governing jurisdiction independently of output language; the ordinary Italian path remains available for IT.
+
+
 Run one New Client journey. Phase one prepares incoming documents through the
 subordinate `client-file-preparation` engine; later phases prepare the
 professional relationship for review. Generated files never mean the

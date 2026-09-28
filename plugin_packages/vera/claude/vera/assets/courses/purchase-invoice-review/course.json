@@ -41,7 +41,7 @@
     },
     {
       "path": "modules/passive-invoice-audit/scripts/audit_core.py",
-      "sha256": "7b528a511539ace0d2cd26952ec2f4c4503628bf3e37a4f9fd710712a704f8bc"
+      "sha256": "96566fd3a11a13bbdc5bbd97346d7dbe0f02b90a6e030b02a6e1ca2fbae14035"
     },
     {
       "path": "modules/passive-invoice-audit/scripts/check_dependencies.py",
@@ -60,6 +60,10 @@
       "sha256": "6444e6f41e7fd9daa39e4b2d094e77c4104d1c261538a2efd22968e62367a408"
     },
     {
+      "path": "modules/passive-invoice-audit/scripts/reviewed_invoices.py",
+      "sha256": "d1a1bef0efd4bd8a9df8b4167596c7cc2982eeb87eb118e49d866b1b97971f73"
+    },
+    {
       "path": "modules/passive-invoice-audit/scripts/run_audit.py",
       "sha256": "41a1649cedc2360dd4e38435a92fc04e43a6b9881b20a63946be1ed875fcf83d"
     },
@@ -72,6 +76,10 @@
       "sha256": "143d9dfa04625ca520db57b10f6826c7681a12d5dc6b4a678afd57c0addecaf9"
     },
     {
+      "path": "modules/passive-invoice-audit/skills/purchase-invoice-review/references/geneva.md",
+      "sha256": "e18ddd3d01fb7edf100179868b04bd22dcc414bafb222fdbb037dde0c599b19b"
+    },
+    {
       "path": "modules/passive-invoice-audit/vendor/modules/__init__.py",
       "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
     },
@@ -81,7 +89,7 @@
     },
     {
       "path": "modules/passive-invoice-audit/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
     },
     {
       "path": "modules/passive-invoice-audit/vendor/modules/vera_assurance/decisions.py",
@@ -90,6 +98,10 @@
     {
       "path": "modules/passive-invoice-audit/vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/passive-invoice-audit/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "modules/passive-invoice-audit/vendor/modules/vera_assurance/money.py",
@@ -125,7 +137,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -134,6 +146,10 @@
     {
       "path": "vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",
@@ -490,5 +506,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "8c666a194c4332e886b5ccc324c8fa056833358327aa4369b442e7e9f9825557"
+  "canonical_course_sha256": "0b19c09fc6f8c4023891573a437c49b9347ae6a941f6cd9879f9319eda982fb0"
 }

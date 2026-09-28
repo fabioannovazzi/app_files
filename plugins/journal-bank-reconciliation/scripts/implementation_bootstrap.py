@@ -49,6 +49,7 @@ IMPLEMENTATION_CONTRACT = (
     ("shared_assurance", "contracts.py"),
     ("shared_assurance", "decisions.py"),
     ("shared_assurance", "envelope.py"),
+    ("shared_assurance", "jurisdiction.py"),
     ("shared_assurance", "money.py"),
     ("shared_assurance", "relationships.py"),
     ("shared_assurance", "review_output_transaction.cjs"),

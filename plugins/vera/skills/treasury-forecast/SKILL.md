@@ -1,6 +1,6 @@
 ---
 name: treasury-forecast
-description: Prepare and maintain a reviewed EUR treasury forecast from supported accounting and bank tables, retaining assumptions and explaining changes between updates.
+description: Prepare and maintain a reviewed EUR or CHF treasury forecast from supported accounting and bank tables, retaining assumptions and explaining changes between updates.
 ---
 
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
@@ -18,6 +18,9 @@ Current user requests take precedence over saved preferences.
 <!-- VERA_OPENAI_ONBOARDING_END -->
 
 # Budget di tesoreria
+
+For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
+
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 

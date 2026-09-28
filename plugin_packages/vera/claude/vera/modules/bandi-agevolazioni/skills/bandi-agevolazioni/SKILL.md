@@ -94,6 +94,11 @@ override this Cowork contract.
 
 # Bandi e agevolazioni
 
+## Jurisdiction and Geneva
+
+For a CH-GE mandate, read `references/geneva.md` before the steps below. It specifies the Geneva input, source and output adaptations within this existing function. Choose governing jurisdiction independently of output language; the ordinary Italian path remains available for IT.
+
+
 Before any opportunity research, read `references/source-first-discovery.md`
 and `references/institutional-discovery.md` completely. This method applies in
 Claude and ChatGPT, including a public scan without a client portfolio. Follow

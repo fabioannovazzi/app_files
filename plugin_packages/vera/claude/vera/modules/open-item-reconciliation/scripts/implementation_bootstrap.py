@@ -46,6 +46,7 @@ IMPLEMENTATION_CONTRACT = (
     ("plugin", "scripts/review_server.py"),
     ("shared_assurance", "__init__.py"),
     ("shared_assurance", "contracts.py"),
+    ("shared_assurance", "jurisdiction.py"),
     ("shared_assurance", "decisions.py"),
     ("shared_assurance", "envelope.py"),
     ("shared_assurance", "money.py"),
@@ -183,7 +184,7 @@ def validate_implementation_tree(
         )
     if observed_files != set(IMPLEMENTATION_CONTRACT):
         raise RuntimeError(
-            "implementation filesystem does not match the exact 25-file contract"
+            "implementation filesystem does not match the exact 26-file contract"
         )
     if observed_directories != _expected_directories():
         raise RuntimeError("implementation directories do not match the exact contract")

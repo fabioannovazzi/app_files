@@ -11,6 +11,11 @@ choose a sibling output folder.
 
 # Open-item Reconciliation
 
+## Jurisdiction and Geneva
+
+For a CH-GE mandate, read `references/geneva.md` before the steps below. It specifies the Geneva input, source and output adaptations within this existing function. Choose governing jurisdiction independently of output language; the ordinary Italian path remains available for IT.
+
+
 Use this skill when the starting population is a list of items reported as open
 at a cut-off. Determine which items are closed, partly closed, or still open
 from the available accounting evidence, then document residuals, exceptions,
@@ -30,7 +35,7 @@ Before running helper scripts or write-heavy work, identify material choices tha
 
 Default output policy: produce the richest normal package for the workflow. DOCX/Word, Excel/CSV, JSON audit, diagnostics, charts, packaged reports, review notes, and Codex-written review files are not choices to propose when they are natural outputs of that plugin; generate them whenever dependencies and source data permit. Ask only when an output is technically impossible, unsafe, or the user explicitly requests a reduced/debug run.
 
-Default currency policy: use Euro (`EUR`) unless the user or source file explicitly states another currency. Do not ask for currency when it is otherwise unresolved; record `EUR` as the assumption.
+Currency: carry the currency evidenced by the source or confirmed for the engagement (including CHF). Never infer currency from output language or silently default to EUR. If unresolved, obtain the currency before computing or matching amounts. Keep different currencies separate; conversion requires an explicit reviewed rate, date and basis.
 
 Keep progress and handoff concise. Use a checklist, Run Intake table, Decision
 Table, or Artifact Card when it helps the user review complex work; their chat

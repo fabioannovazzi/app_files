@@ -94,6 +94,11 @@ override this Cowork contract.
 
 # Bilancio intelligente
 
+## Jurisdiction and Geneva
+
+For a CH-GE mandate, read `references/geneva.md` before the steps below. It specifies the Geneva input, source and output adaptations within this existing function. Choose governing jurisdiction independently of output language; the ordinary Italian path remains available for IT.
+
+
 
 
 Before operating or describing this workflow, read
