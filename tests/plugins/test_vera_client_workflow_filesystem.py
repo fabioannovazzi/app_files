@@ -153,6 +153,7 @@ CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     ("variance-analysis", "inspect_column_values.py"),
     ("variance-analysis", "model_use.py"),
     ("management-control-pack", "check_dependencies.py"),
+    ("management-control-pack", "preview_report.py"),
     ("centrale-rischi-review", "check_dependencies.py"),
     ("centrale-rischi-review", "evaluate_pdf_corpus.py"),
     ("centrale-rischi-review", "run_gold_benchmark.py"),
