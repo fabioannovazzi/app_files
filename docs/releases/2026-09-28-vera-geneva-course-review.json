@@ -1,0 +1,2781 @@
+{
+  "schema": "vera.geneva_course_source_review.v1",
+  "reviewer": "Codex /root",
+  "reviewed_at": "2026-09-28T08:17:18.379368+00:00",
+  "baseline_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+  "candidate_commit": "989e523529fccd09a60a8ed29dc63d87b863d21e",
+  "comparison": "Complete JSON equality after excluding only the top-level sources array; the prior course bytes match the recorded review digest for every listed kit.",
+  "runtime_evidence": "https://github.com/fabioannovazzi/app_files/actions/runs/36393675234/job/108834959892",
+  "kits": [
+    {
+      "kit": "clara/business-planning",
+      "previous_course_sha256": "7d2673f495a14c968f41eeeca03b64ddc40deab7d21e32a315f1551486a56fbb",
+      "current_course_sha256": "3031a3d4323e5548da7d413485c6ffbce6818446f8adf5559507df9c8a93785a",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/business-planning/references/case-contract.md",
+          "before": {
+            "path": "modules/business-planning/references/case-contract.md",
+            "repository_path": "plugins/business-planning/references/case-contract.md",
+            "sha256": "c3255a4770c410162029bc07222693e4d12617a91ef77df38455b39c920512a1"
+          },
+          "after": {
+            "path": "modules/business-planning/references/case-contract.md",
+            "repository_path": "plugins/business-planning/references/case-contract.md",
+            "sha256": "d26e907e314b421fb72b3d58e9e9bc81f292072ab199eae48dcbe2d558a5ed67"
+          }
+        },
+        {
+          "path": "modules/business-planning/scripts/planning_french.py",
+          "before": null,
+          "after": {
+            "path": "modules/business-planning/scripts/planning_french.py",
+            "repository_path": "plugins/business-planning/scripts/planning_french.py",
+            "sha256": "3ad166b7f13337280aa13de20da6e56d3167b1ac0f882e763a1f963b338e9780"
+          }
+        },
+        {
+          "path": "modules/business-planning/scripts/planning_presentation.py",
+          "before": {
+            "path": "modules/business-planning/scripts/planning_presentation.py",
+            "repository_path": "plugins/business-planning/scripts/planning_presentation.py",
+            "sha256": "3d53a925c87ade0bd564064e10c5295709e4e2db37cbb0a5d58fc6f16ff3a55f"
+          },
+          "after": {
+            "path": "modules/business-planning/scripts/planning_presentation.py",
+            "repository_path": "plugins/business-planning/scripts/planning_presentation.py",
+            "sha256": "18b01eecff841c9a094def18f10b8d25403a5766aa8554e286d9eeaf4b5c8177"
+          }
+        },
+        {
+          "path": "modules/business-planning/scripts/planning_report.py",
+          "before": {
+            "path": "modules/business-planning/scripts/planning_report.py",
+            "repository_path": "plugins/business-planning/scripts/planning_report.py",
+            "sha256": "e3c6dfa66b4614b96bc99d6ddfcccbe2961f41652a078291989d190e8bf4209b"
+          },
+          "after": {
+            "path": "modules/business-planning/scripts/planning_report.py",
+            "repository_path": "plugins/business-planning/scripts/planning_report.py",
+            "sha256": "bb9b7828c3edb562c5d478c30ada3c6072d99bebaaf3f393b1947c01fbd8b022"
+          }
+        },
+        {
+          "path": "modules/business-planning/skills/business-planning/SKILL.md",
+          "before": {
+            "path": "modules/business-planning/skills/business-planning/SKILL.md",
+            "repository_path": "plugins/business-planning/skills/business-planning/SKILL.md",
+            "sha256": "8b49c11af9caf9df64b7b4b85d03e83eaf89fe72c94c231ed7961d4b57d37f7b"
+          },
+          "after": {
+            "path": "modules/business-planning/skills/business-planning/SKILL.md",
+            "repository_path": "plugins/business-planning/skills/business-planning/SKILL.md",
+            "sha256": "76a7c1d31a6be7be73eb917b33784f513211d6feeae04b8a72584f996c681aea"
+          }
+        },
+        {
+          "path": "modules/business-planning/skills/business-planning/references/geneva.md",
+          "before": null,
+          "after": {
+            "path": "modules/business-planning/skills/business-planning/references/geneva.md",
+            "repository_path": "plugins/business-planning/skills/business-planning/references/geneva.md",
+            "sha256": "dcc3568a18a17179f0c4b3092beaac512e426e102e1a3ec122094b0619cd3acb"
+          }
+        },
+        {
+          "path": "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/business-planning/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/business-planning/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "lucia/quesito-legale-fiscale",
+      "previous_course_sha256": "66b9e925b2a84f0f13cc30c562d588a6aaa4a2bd17109a24425d333f635661ff",
+      "current_course_sha256": "405e64e7a4bbdfbafb93db2dfa596421220c40c93078933f9bd416a9b15dfe5e",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/deep-research-validator/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/deep-research-validator/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/adeguati-assetti",
+      "previous_course_sha256": "c42bb45e382cbaef9185d5f477582b300f3c6649e1f58186daa5557e775030c3",
+      "current_course_sha256": "3c8e15382e5bc4ccbc082e83744ceaca4baccaa0a2dbe550c9b116b246287695",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/adeguati-assetti/references/record-contract.md",
+          "before": {
+            "path": "modules/adeguati-assetti/references/record-contract.md",
+            "repository_path": "plugins/adeguati-assetti/references/record-contract.md",
+            "sha256": "c44ccc49a3187cd64c0a4192f8ff1d1517cb4138cb162d4a9dec315f0059bf2a"
+          },
+          "after": {
+            "path": "modules/adeguati-assetti/references/record-contract.md",
+            "repository_path": "plugins/adeguati-assetti/references/record-contract.md",
+            "sha256": "fe3a339c87fb6926907e1b9c8434d1095f7a53d682b6a561973d77522a9cf2ae"
+          }
+        },
+        {
+          "path": "modules/adeguati-assetti/scripts/assetti_review.py",
+          "before": {
+            "path": "modules/adeguati-assetti/scripts/assetti_review.py",
+            "repository_path": "plugins/adeguati-assetti/scripts/assetti_review.py",
+            "sha256": "706f1bc9cbe67bcbd0c34958a97ecba6c0571d2fb23cf400d040d800beee89f7"
+          },
+          "after": {
+            "path": "modules/adeguati-assetti/scripts/assetti_review.py",
+            "repository_path": "plugins/adeguati-assetti/scripts/assetti_review.py",
+            "sha256": "f4324e901b79ec491a4d485bb295e66e708cfe16259ceb4c66acd38491bfcb78"
+          }
+        },
+        {
+          "path": "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
+          "before": {
+            "path": "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
+            "repository_path": "plugins/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
+            "sha256": "e899b5b5352a63249a6ad86ed92978f0710b030655f96c1e929ca3c91921e3e9"
+          },
+          "after": {
+            "path": "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
+            "repository_path": "plugins/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
+            "sha256": "de40193b9a50083a698dc1cdf14b7d40795cd979ecc68cf8b3ac0fcd17e6d736"
+          }
+        },
+        {
+          "path": "modules/adeguati-assetti/skills/adeguati-assetti/references/geneva.md",
+          "before": null,
+          "after": {
+            "path": "modules/adeguati-assetti/skills/adeguati-assetti/references/geneva.md",
+            "repository_path": "plugins/adeguati-assetti/skills/adeguati-assetti/references/geneva.md",
+            "sha256": "0a9bab22286c005493656b9443f05264eb43ec23ddfbdc1745ea1a108d105a77"
+          }
+        },
+        {
+          "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "skills/adeguati-assetti/SKILL.md",
+          "before": {
+            "path": "skills/adeguati-assetti/SKILL.md",
+            "repository_path": "plugins/vera/skills/adeguati-assetti/SKILL.md",
+            "sha256": "3979b63d8ad3058c4747b70947599efb4f989e8a4e65c5ac98d36c25795bcf20"
+          },
+          "after": {
+            "path": "skills/adeguati-assetti/SKILL.md",
+            "repository_path": "plugins/vera/skills/adeguati-assetti/SKILL.md",
+            "sha256": "36784a969f013cced40be83232646924d901adcd01f83c944ad3b59a6c1a1f24"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/aml-review",
+      "previous_course_sha256": "323d7e49bb63ef9b87d3365790dc9169cff02875514f424bf669b8a57416bcb2",
+      "current_course_sha256": "9166ab0ed0e4e2f0d9f6a647fa5a384cb0cb00bf47e2d8aaf0e1d99b779d66b5",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/aml-review/references/record-contract.md",
+          "before": {
+            "path": "modules/aml-review/references/record-contract.md",
+            "repository_path": "plugins/aml-review/references/record-contract.md",
+            "sha256": "cb5d3b6e30e16dcdbf1b7a6ea480a6d21dace0cb7fc72873d79d05f4a66f8b57"
+          },
+          "after": {
+            "path": "modules/aml-review/references/record-contract.md",
+            "repository_path": "plugins/aml-review/references/record-contract.md",
+            "sha256": "174cfef54fa211c50b1318dc1b6aa08810e118216410bb3b50bebb2652aaece3"
+          }
+        },
+        {
+          "path": "modules/aml-review/scripts/aml_review.py",
+          "before": {
+            "path": "modules/aml-review/scripts/aml_review.py",
+            "repository_path": "plugins/aml-review/scripts/aml_review.py",
+            "sha256": "04bffe9c96c8dc2967b45cb6801f093b9725509d400dd1831fd9d533bb4a8f1a"
+          },
+          "after": {
+            "path": "modules/aml-review/scripts/aml_review.py",
+            "repository_path": "plugins/aml-review/scripts/aml_review.py",
+            "sha256": "2e7bfacc07293f44ba99118714ee9033ce54ed319fbe11b432bb1fabd77fb4aa"
+          }
+        },
+        {
+          "path": "modules/aml-review/skills/aml-review/SKILL.md",
+          "before": {
+            "path": "modules/aml-review/skills/aml-review/SKILL.md",
+            "repository_path": "plugins/aml-review/skills/aml-review/SKILL.md",
+            "sha256": "852cd17187b2dd3dfe4ec4f61f169ec0ad842a9535cdbed378ad6eb9c66147df"
+          },
+          "after": {
+            "path": "modules/aml-review/skills/aml-review/SKILL.md",
+            "repository_path": "plugins/aml-review/skills/aml-review/SKILL.md",
+            "sha256": "e7daff03c5441493f0b0ba834f8bdc818dec4217634a8743b73008ffe776f836"
+          }
+        },
+        {
+          "path": "modules/aml-review/skills/aml-review/references/geneva.md",
+          "before": null,
+          "after": {
+            "path": "modules/aml-review/skills/aml-review/references/geneva.md",
+            "repository_path": "plugins/aml-review/skills/aml-review/references/geneva.md",
+            "sha256": "74292a06a5713cca332d3d957a563cc35641fb76bfb47ae12699ef334be3049e"
+          }
+        },
+        {
+          "path": "modules/aml-review/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/aml-review/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/aml-review/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/aml-review/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/aml-review/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "skills/aml-review/SKILL.md",
+          "before": {
+            "path": "skills/aml-review/SKILL.md",
+            "repository_path": "plugins/vera/skills/aml-review/SKILL.md",
+            "sha256": "354905ff8eb6cf1dbbdd6006547c9e73b7cfa70fcfcde4b689fa8e6365aef76f"
+          },
+          "after": {
+            "path": "skills/aml-review/SKILL.md",
+            "repository_path": "plugins/vera/skills/aml-review/SKILL.md",
+            "sha256": "d25fab11300e60cd729a772ec08b3824cfe5feea3a577c90955102ffe4b2de12"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/archive-organization",
+      "previous_course_sha256": "8f56444c5f7ebec51997a0855aa331e6acb7ceb8db1424a7e623c9deb2ebf451",
+      "current_course_sha256": "765d43135e4248b80dde3d03f0b8c2e6afb4c5e39dc733ff35810e53630cb342",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/archive-organization/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/archive-organization/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/archive-organization/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/archive-organization/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/archive-organization/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/avviso-intake",
+      "previous_course_sha256": "ce740c0b4525279fbf5cb4620dd97c7ee4ac8f4c7c2bb30fd06baa959d6e1ba4",
+      "current_course_sha256": "a6260258a0404b0308209b0886af483ea1ad3270c9223afd1798c9fb2302a7cd",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/bandi-agevolazioni",
+      "previous_course_sha256": "51e3e0323328e89d011671dea47a208e9c92d2ab5d40d2f9b9aa8b63f4c4b0a1",
+      "current_course_sha256": "f8f92b683dca0564c437136c9cffd26e1e05fdca2a04ebe4d2598fcbd0d8c036",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md",
+          "before": {
+            "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md",
+            "repository_path": "plugins/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md",
+            "sha256": "19a7c5c61db651ebd3ece10b2ca1c5e6ae5225a6b78f3ca3628c994aa3c6f9ab"
+          },
+          "after": {
+            "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md",
+            "repository_path": "plugins/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md",
+            "sha256": "f8a6eefd5d619cc5ec6913f5dfd3e5651465935ab4aaca681b5d37ac6a57fb9a"
+          }
+        },
+        {
+          "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/geneva.md",
+          "before": null,
+          "after": {
+            "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/geneva.md",
+            "repository_path": "plugins/bandi-agevolazioni/skills/bandi-agevolazioni/references/geneva.md",
+            "sha256": "37f2df81c546f1c6d514c3f290dd647d3b58c1ced6bfc4846f44485ef2e4b1ca"
+          }
+        },
+        {
+          "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "skills/bandi-agevolazioni/SKILL.md",
+          "before": {
+            "path": "skills/bandi-agevolazioni/SKILL.md",
+            "repository_path": "plugins/vera/skills/bandi-agevolazioni/SKILL.md",
+            "sha256": "ff850fd4589a2bc5ed79eee3890f201b5dff36d47b132f36bebf9818ebb9d134"
+          },
+          "after": {
+            "path": "skills/bandi-agevolazioni/SKILL.md",
+            "repository_path": "plugins/vera/skills/bandi-agevolazioni/SKILL.md",
+            "sha256": "33172fef23c99abf6ec0bdb8a5616d12e10e266671e9120e27c908def8a83359"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/bilancio-oic",
+      "previous_course_sha256": "dc9a1820a2ab57ed39a1299a4d33554dd112fcadd81d411eec23c07809ed0d7f",
+      "current_course_sha256": "d309db101265042dc056993cab3606897d165d311aeadb487906bb8daf56af72",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/bilancio-xbrl-it/scripts/jurisdiction_accounts.py",
+          "before": null,
+          "after": {
+            "path": "modules/bilancio-xbrl-it/scripts/jurisdiction_accounts.py",
+            "repository_path": "plugins/bilancio-xbrl-it/scripts/jurisdiction_accounts.py",
+            "sha256": "ebf4563ce0865589a161b3916778bab812ddd12c4b9da704c5d692514f53fba0"
+          }
+        },
+        {
+          "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
+          "before": {
+            "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
+            "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
+            "sha256": "c2149c2ae0103b8bb109c9e1cb724e9b3b55e365885449a5d15e143cce836701"
+          },
+          "after": {
+            "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
+            "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
+            "sha256": "5b6bdc3ba2c95d0baf864e16d6e293b961dd80c75db89065dd03e1300623fcc5"
+          }
+        },
+        {
+          "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/geneva.md",
+          "before": null,
+          "after": {
+            "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/geneva.md",
+            "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/references/geneva.md",
+            "sha256": "589a28b0f1d9c172cbb9755b1a5e5f37af65a716053d03773b31725cfad942c6"
+          }
+        },
+        {
+          "path": "skills/bilancio-oic/SKILL.md",
+          "before": {
+            "path": "skills/bilancio-oic/SKILL.md",
+            "repository_path": "plugins/vera/skills/bilancio-oic/SKILL.md",
+            "sha256": "26038579e71b919a0a0b2f92dd7a998ebc6cbf39b3f36d58c7f36b275244abd7"
+          },
+          "after": {
+            "path": "skills/bilancio-oic/SKILL.md",
+            "repository_path": "plugins/vera/skills/bilancio-oic/SKILL.md",
+            "sha256": "b339252e07264f7fefb7f4996aeff7334112f44816c05e7ce50c991197ee2ec5"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/browser-automation",
+      "previous_course_sha256": "a1a931b48d8e123cc46c0268280a1601770d6a561e6f9b2367bf3cc89fafbc02",
+      "current_course_sha256": "11f676dfe5d9daaaf834c59710f7518d0bb6eda08ebe9aa3627569bf49cb85b4",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/business-planning",
+      "previous_course_sha256": "854d72ba8b9e8c0b23e69a16edb3d6a3cf7d815e376a5c58a03d3d7882f3de2e",
+      "current_course_sha256": "ca093bc1dbdbf10f6e54e547946b944ce019c681032374a799d8eeb3dffb287c",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/business-planning/references/case-contract.md",
+          "before": {
+            "path": "modules/business-planning/references/case-contract.md",
+            "repository_path": "plugins/business-planning/references/case-contract.md",
+            "sha256": "c3255a4770c410162029bc07222693e4d12617a91ef77df38455b39c920512a1"
+          },
+          "after": {
+            "path": "modules/business-planning/references/case-contract.md",
+            "repository_path": "plugins/business-planning/references/case-contract.md",
+            "sha256": "d26e907e314b421fb72b3d58e9e9bc81f292072ab199eae48dcbe2d558a5ed67"
+          }
+        },
+        {
+          "path": "modules/business-planning/scripts/planning_french.py",
+          "before": null,
+          "after": {
+            "path": "modules/business-planning/scripts/planning_french.py",
+            "repository_path": "plugins/business-planning/scripts/planning_french.py",
+            "sha256": "3ad166b7f13337280aa13de20da6e56d3167b1ac0f882e763a1f963b338e9780"
+          }
+        },
+        {
+          "path": "modules/business-planning/scripts/planning_presentation.py",
+          "before": {
+            "path": "modules/business-planning/scripts/planning_presentation.py",
+            "repository_path": "plugins/business-planning/scripts/planning_presentation.py",
+            "sha256": "3d53a925c87ade0bd564064e10c5295709e4e2db37cbb0a5d58fc6f16ff3a55f"
+          },
+          "after": {
+            "path": "modules/business-planning/scripts/planning_presentation.py",
+            "repository_path": "plugins/business-planning/scripts/planning_presentation.py",
+            "sha256": "18b01eecff841c9a094def18f10b8d25403a5766aa8554e286d9eeaf4b5c8177"
+          }
+        },
+        {
+          "path": "modules/business-planning/scripts/planning_report.py",
+          "before": {
+            "path": "modules/business-planning/scripts/planning_report.py",
+            "repository_path": "plugins/business-planning/scripts/planning_report.py",
+            "sha256": "e3c6dfa66b4614b96bc99d6ddfcccbe2961f41652a078291989d190e8bf4209b"
+          },
+          "after": {
+            "path": "modules/business-planning/scripts/planning_report.py",
+            "repository_path": "plugins/business-planning/scripts/planning_report.py",
+            "sha256": "bb9b7828c3edb562c5d478c30ada3c6072d99bebaaf3f393b1947c01fbd8b022"
+          }
+        },
+        {
+          "path": "modules/business-planning/skills/business-planning/SKILL.md",
+          "before": {
+            "path": "modules/business-planning/skills/business-planning/SKILL.md",
+            "repository_path": "plugins/business-planning/skills/business-planning/SKILL.md",
+            "sha256": "8b49c11af9caf9df64b7b4b85d03e83eaf89fe72c94c231ed7961d4b57d37f7b"
+          },
+          "after": {
+            "path": "modules/business-planning/skills/business-planning/SKILL.md",
+            "repository_path": "plugins/business-planning/skills/business-planning/SKILL.md",
+            "sha256": "76a7c1d31a6be7be73eb917b33784f513211d6feeae04b8a72584f996c681aea"
+          }
+        },
+        {
+          "path": "modules/business-planning/skills/business-planning/references/geneva.md",
+          "before": null,
+          "after": {
+            "path": "modules/business-planning/skills/business-planning/references/geneva.md",
+            "repository_path": "plugins/business-planning/skills/business-planning/references/geneva.md",
+            "sha256": "dcc3568a18a17179f0c4b3092beaac512e426e102e1a3ec122094b0619cd3acb"
+          }
+        },
+        {
+          "path": "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/business-planning/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/business-planning/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/centrale-rischi-review",
+      "previous_course_sha256": "d47fbc19abc7ef63c22b6167f2ccc05c9fe5ee7699549ddea2a40c1dec56817d",
+      "current_course_sha256": "e72098f19e10b64a998a3846acb9d129c573dd0a5d9f70a9b0e8b903d49b2896",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/comunicazione-professionale",
+      "previous_course_sha256": "61ea0ec5466a6952270b69a7a1ff84549e32412dac2685eaca0c9f966d5da617",
+      "current_course_sha256": "ad0f6db8aaf1949426880d7e7714c75c49a97e5fad7caebea922427ccd0c80bb",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/concordato-plan-review",
+      "previous_course_sha256": "5dfbf0965bbb5200a51727948f65a73b5bf45a8385fcdc0918e5628ec180ca4a",
+      "current_course_sha256": "248b74abf03f809655316fd136a3ed39996d06d006ce53769a4d4e47d36c3966",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
+          "before": {
+            "path": "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/concordato-plan-review/scripts/implementation_bootstrap.py",
+            "sha256": "af471aa7a524bd47c5c7a1ba3766bdcfbf98ea814a64df527d9b9ed9981f2fd7"
+          },
+          "after": {
+            "path": "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/concordato-plan-review/scripts/implementation_bootstrap.py",
+            "sha256": "6d96e124c00a8466e5ee1a212ec1c57044fb54138742293362042139c7bf4b1b"
+          }
+        },
+        {
+          "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/dati-fiscali-strutturati",
+      "previous_course_sha256": "b0f0be34abdcfc412707c7b8936e23788a5ebaa3b3ab999b8424443c964abddb",
+      "current_course_sha256": "aab5d158b52d3e756c12090abdb3d3ad39ba2a8e09f06b1dd2d252fcc560cdf3",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/email-cliente",
+      "previous_course_sha256": "81cb47277864d25d4b64a701104b672c69fb692e927f6b534ba30944e6164b8a",
+      "current_course_sha256": "fb3c2a3def38efe35f5b66fe5fac7c0157c171f6792adafe12a5e9df024228e9",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/fatture-xml-check",
+      "previous_course_sha256": "bec185744fe238b4ce8a43728da6be90efccef9c8ae0feef34115a8c79c55830",
+      "current_course_sha256": "3088fb489c8fa4cb7b18d59c96608ae2a0e45fd3b5c9757210fe00cfd629aa07",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/financial-analysis",
+      "previous_course_sha256": "3fbdfdb1c6a77563d7bf0476df663d2bb1c7ca1bd560d1e70c0f3463172492a1",
+      "current_course_sha256": "8ae11e7875b570ae80b135430b9dc893446e3c491591cf172bf1c5f3934fbd25",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/financial-analysis/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/financial-analysis/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/financial-analysis/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/financial-analysis/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/financial-analysis/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/financial-report-builder",
+      "previous_course_sha256": "287a9913a58500cfa6750f6458e1a2992efbde97fafe3a3e8d56c0e588f26b56",
+      "current_course_sha256": "d2b10fae60a254de49457d73470f904303dd648a14f15c3951ab78a639afec15",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/report-builder/scripts/implementation_bootstrap.py",
+          "before": {
+            "path": "modules/report-builder/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/report-builder/scripts/implementation_bootstrap.py",
+            "sha256": "656879eb05f496535cb23209391d74e0b286ceb15a09c28473451b7d43f88b5d"
+          },
+          "after": {
+            "path": "modules/report-builder/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/report-builder/scripts/implementation_bootstrap.py",
+            "sha256": "27d620df59440f8f26a06d1043bcd5bbab728bedb49bbfe835b8ac3112cf3087"
+          }
+        },
+        {
+          "path": "modules/report-builder/scripts/implementation_contract.py",
+          "before": {
+            "path": "modules/report-builder/scripts/implementation_contract.py",
+            "repository_path": "plugins/report-builder/scripts/implementation_contract.py",
+            "sha256": "1a95fad1881e8d3133e10292bbc80f67a39b6f77e298778f0f026226b7291a98"
+          },
+          "after": {
+            "path": "modules/report-builder/scripts/implementation_contract.py",
+            "repository_path": "plugins/report-builder/scripts/implementation_contract.py",
+            "sha256": "d219e3b1e24ad3c3d80de4f954629324ba2c6b9e45178ad6f778906bd7eb9bb6"
+          }
+        },
+        {
+          "path": "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/report-builder/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/report-builder/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/invoice-xml",
+      "previous_course_sha256": "e4ac49ffda9e25f44b9b0658998b0366182bc4f3bece83801d16abac8c2308ce",
+      "current_course_sha256": "b9d51772b89ff07941058ee23529ed467f3e4d856e140a50d8099736adfa6a97",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/invoice-xml/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/invoice-xml/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/invoice-xml/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/invoice-xml/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/invoice-xml/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/journal-bank-reconciliation",
+      "previous_course_sha256": "85d95f163e029c2297515178018e13ea5d44480d553858e0a872115f75ca73f9",
+      "current_course_sha256": "3b77f9310ff45d32b37095e0f67da9c5133fec13bfc06685fa183a43293f4380",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+          "before": {
+            "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+            "sha256": "27ed561579219bfafe22fa80319fe641f8a1b1d391ea7cf57d2df9826c947e52"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+            "sha256": "dc232232896529e1d0cac2d2e8991ada216389c701b80519fe11fbe7961ebdd4"
+          }
+        },
+        {
+          "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
+          "before": {
+            "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/journal_bank_core.py",
+            "sha256": "9033a34d72b5a950afd5eb7281098b4cdeda15eaf8f06d73839493a82baab12a"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/journal_bank_core.py",
+            "sha256": "363f569a3c27cf2b7bc01cf7d7b9a2cfac8c0b4d852dad48e9577c5852ad09b2"
+          }
+        },
+        {
+          "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
+          "before": {
+            "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
+            "repository_path": "plugins/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
+            "sha256": "97f2a210ed309273dfdd4b34b4d115233147a3de6142f7d2bd5e32332d699bb0"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
+            "repository_path": "plugins/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
+            "sha256": "bdf9c5652dd6e2edad0f75d8a6a95cf6da53ded9ace131f33beb01bad1391826"
+          }
+        },
+        {
+          "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/references/geneva.md",
+          "before": null,
+          "after": {
+            "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/references/geneva.md",
+            "repository_path": "plugins/journal-bank-reconciliation/skills/journal-bank-reconciliation/references/geneva.md",
+            "sha256": "7788345fe6866665419162ad025904570e4b709547df3105827ee2b2686ca2f3"
+          }
+        },
+        {
+          "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "skills/journal-bank-reconciliation/SKILL.md",
+          "before": {
+            "path": "skills/journal-bank-reconciliation/SKILL.md",
+            "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
+            "sha256": "b471d0d6351cdc97fa0a980a0fd7ce1ec938067ec2ba8be9128b23f5ef418c47"
+          },
+          "after": {
+            "path": "skills/journal-bank-reconciliation/SKILL.md",
+            "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
+            "sha256": "5a1e731cc547ea844a4f7ee17f650c23f607de089d5230f448272486265ad0df"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/journal-sampling",
+      "previous_course_sha256": "994a01738537e8adc48bde798ac052161f256dd8ce43311173e241f3062eef53",
+      "current_course_sha256": "d85fef43f4c6d32d2f9f174bc21574092908497f4ff3f2317db9d793a05b46f7",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/journal-sampling/scripts/implementation_bootstrap.py",
+          "before": {
+            "path": "modules/journal-sampling/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/journal-sampling/scripts/implementation_bootstrap.py",
+            "sha256": "6d4c3337bedf0a352805622f8aebe562f6b39bde5c2e219b8ee0a5b432de81d6"
+          },
+          "after": {
+            "path": "modules/journal-sampling/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/journal-sampling/scripts/implementation_bootstrap.py",
+            "sha256": "fc54756ac2acd0ab3e52fe61102bdff60fb3701ae50afc67a84008ac89188905"
+          }
+        },
+        {
+          "path": "modules/journal-sampling/scripts/journal_sampling_core.py",
+          "before": {
+            "path": "modules/journal-sampling/scripts/journal_sampling_core.py",
+            "repository_path": "plugins/journal-sampling/scripts/journal_sampling_core.py",
+            "sha256": "38002e7b53cc6c4382ee0f20253e1de93439e678b34942617ae521499883f0de"
+          },
+          "after": {
+            "path": "modules/journal-sampling/scripts/journal_sampling_core.py",
+            "repository_path": "plugins/journal-sampling/scripts/journal_sampling_core.py",
+            "sha256": "9567ffd87c9227d2bd04bff431bf03c997b4930dab1f83290321906a7123cb5d"
+          }
+        },
+        {
+          "path": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
+          "before": {
+            "path": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
+            "repository_path": "plugins/journal-sampling/skills/journal-sampling/SKILL.md",
+            "sha256": "3b52f91367bda51748c817010c8202c8c079e148ff6ca4d9fbdb8355159b81b6"
+          },
+          "after": {
+            "path": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
+            "repository_path": "plugins/journal-sampling/skills/journal-sampling/SKILL.md",
+            "sha256": "4569776dced570e926b2c588164c579a16ebe1fe1ccbca8121ddb311ab6f41fd"
+          }
+        },
+        {
+          "path": "modules/journal-sampling/skills/journal-sampling/references/geneva.md",
+          "before": null,
+          "after": {
+            "path": "modules/journal-sampling/skills/journal-sampling/references/geneva.md",
+            "repository_path": "plugins/journal-sampling/skills/journal-sampling/references/geneva.md",
+            "sha256": "06182be0db9a0b48c07098516f048eb74d0b773b72c179e8c12af9b498dc455d"
+          }
+        },
+        {
+          "path": "modules/journal-sampling/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/journal-sampling/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/journal-sampling/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/journal-sampling/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/journal-sampling/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "skills/journal-sampling/SKILL.md",
+          "before": {
+            "path": "skills/journal-sampling/SKILL.md",
+            "repository_path": "plugins/vera/skills/journal-sampling/SKILL.md",
+            "sha256": "e5f21cad5b41df588cc3df48d304bbff39c8aa56e2d6a6876169a0e959d173d5"
+          },
+          "after": {
+            "path": "skills/journal-sampling/SKILL.md",
+            "repository_path": "plugins/vera/skills/journal-sampling/SKILL.md",
+            "sha256": "757f8c43e9a2fe31da7bf871c68569f414c5bbaeeb3d99af747e4d1bc149dfc5"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/management-control-pack",
+      "previous_course_sha256": "179efcc5ad4ac42f9541ecc76cd9b4fa94521c105a1309606e23c381c4c471b6",
+      "current_course_sha256": "f119fdf4c301c0c7b3d7ea170e30bc12cef9fa0fe4f163314c4295e7976a0a67",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/management-control-pack/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/management-control-pack/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/management-control-pack/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/management-control-pack/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/management-control-pack/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/new-client",
+      "previous_course_sha256": "b6c961dd4f2c3c92ebb19d7c9c85dca638bcf99531815d96430726a2170bad96",
+      "current_course_sha256": "18fdace8a59add8d56af2b72e238c39fc98e6ffa9991b966520d164be2a8f580",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "modules/new-client/scripts/jurisdiction_setup.py",
+          "before": null,
+          "after": {
+            "path": "modules/new-client/scripts/jurisdiction_setup.py",
+            "repository_path": "plugins/new-client/scripts/jurisdiction_setup.py",
+            "sha256": "2a1ca4d0f07417dae0c1470edb7bd2ba56b3d391162ef9eb5ff12ff6f7427b68"
+          }
+        },
+        {
+          "path": "modules/new-client/skills/new-client/SKILL.md",
+          "before": {
+            "path": "modules/new-client/skills/new-client/SKILL.md",
+            "repository_path": "plugins/new-client/skills/new-client/SKILL.md",
+            "sha256": "4fe99e1e8bb2b1c1607a1f1b91e458fbff017073e1b57e720a3ff6a07d7f583c"
+          },
+          "after": {
+            "path": "modules/new-client/skills/new-client/SKILL.md",
+            "repository_path": "plugins/new-client/skills/new-client/SKILL.md",
+            "sha256": "a92fbf551d5f4af7ee635abbdb5474bf1f422ff18ec2b1914017a80f0f0b81d7"
+          }
+        },
+        {
+          "path": "modules/new-client/skills/new-client/references/geneva.md",
+          "before": null,
+          "after": {
+            "path": "modules/new-client/skills/new-client/references/geneva.md",
+            "repository_path": "plugins/new-client/skills/new-client/references/geneva.md",
+            "sha256": "28288589efa41022e1ca3714c2b4ac728f1d2914e5f7a4989ba66cf93385ff38"
+          }
+        },
+        {
+          "path": "modules/new-client/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/new-client/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/new-client/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/new-client/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/new-client/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "skills/new-client/SKILL.md",
+          "before": {
+            "path": "skills/new-client/SKILL.md",
+            "repository_path": "plugins/vera/skills/new-client/SKILL.md",
+            "sha256": "4e283f6c6144a9e48dc2ecebc3255a1ab6e4deb5088c846b7cd6d51e70d8b5db"
+          },
+          "after": {
+            "path": "skills/new-client/SKILL.md",
+            "repository_path": "plugins/vera/skills/new-client/SKILL.md",
+            "sha256": "e1e745a38b4614c29213717bc0dc03186966afec9978a5f26c4ba947d21842ef"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/open-item-reconciliation",
+      "previous_course_sha256": "3322875f3cebbbf2df516be38f59b536ed8e5f460918efb4d41c02a31a8a9554",
+      "current_course_sha256": "d1f8580b0e8fede9483bf1991f43a4109d04def574b196155bada8bd95a97565",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/open-item-reconciliation/scripts/implementation_bootstrap.py",
+          "before": {
+            "path": "modules/open-item-reconciliation/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/open-item-reconciliation/scripts/implementation_bootstrap.py",
+            "sha256": "4327849aca244cf4f47bc1abcfadbbd048eb4eab2c619ea6203860a521a47445"
+          },
+          "after": {
+            "path": "modules/open-item-reconciliation/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/open-item-reconciliation/scripts/implementation_bootstrap.py",
+            "sha256": "38860335562bd5c8272da0a34f27b50ebfecbe9782499305a8785c2cf80f53f1"
+          }
+        },
+        {
+          "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
+          "before": {
+            "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
+            "repository_path": "plugins/open-item-reconciliation/scripts/raw_input_runner.py",
+            "sha256": "a24c352e97bb67d08936fd5150596899ae0d618e6de2c6c901fdb5eedd1f2b0e"
+          },
+          "after": {
+            "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
+            "repository_path": "plugins/open-item-reconciliation/scripts/raw_input_runner.py",
+            "sha256": "e966d9303681e230138678f221c96d235913901b23e5a3696b98f919cd102683"
+          }
+        },
+        {
+          "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
+          "before": {
+            "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
+            "repository_path": "plugins/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
+            "sha256": "934d1f006a941bcbc951c63d39f7f4356fb90fcef609010c3df399ed53e806b2"
+          },
+          "after": {
+            "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
+            "repository_path": "plugins/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
+            "sha256": "75d1d854f8f177292c1e988d4141fd85b1154b495853b127c57ed96092030bc8"
+          }
+        },
+        {
+          "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/references/geneva.md",
+          "before": null,
+          "after": {
+            "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/references/geneva.md",
+            "repository_path": "plugins/open-item-reconciliation/skills/open-item-reconciliation/references/geneva.md",
+            "sha256": "320903ab9b48328e38b7032622e4e57d7cf3606eb373150cf1221b23c1bfbaf7"
+          }
+        },
+        {
+          "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "skills/open-item-reconciliation/SKILL.md",
+          "before": {
+            "path": "skills/open-item-reconciliation/SKILL.md",
+            "repository_path": "plugins/vera/skills/open-item-reconciliation/SKILL.md",
+            "sha256": "31527f2b5a6774a22adac211fe7e96bf8ad1f1298e0450d05d33266a96b353b9"
+          },
+          "after": {
+            "path": "skills/open-item-reconciliation/SKILL.md",
+            "repository_path": "plugins/vera/skills/open-item-reconciliation/SKILL.md",
+            "sha256": "f301d083f39dd65ba4f8dd80e05cc52391634bf1ee9b210cb6a7a12f8f9028d6"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/presenza-digitale-studio",
+      "previous_course_sha256": "8f6a7b958b2cb9c236ba1376513b1ad315cd996aa5f3f86cdf76d7e85f11b12b",
+      "current_course_sha256": "14ddf9154a4ae4a130416a8373f3c59adae1c9b8b4e47ce6fd3c71118bfd9369",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/previdenza-inps",
+      "previous_course_sha256": "4e52cfa332932135305e8effd4a35ab15367ce3358df873291f26eefcc343e01",
+      "current_course_sha256": "d237bdff3d6fb2ae1df53b0514e1bea9ef6e67890ef3f9760cff438acc508a84",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/previdenza-inps/schemas/case_records.schema.json",
+          "before": {
+            "path": "modules/previdenza-inps/schemas/case_records.schema.json",
+            "repository_path": "plugins/previdenza-inps/schemas/case_records.schema.json",
+            "sha256": "bcb172275b979e1450ab9678421b2dd59a61a531e97cd6f40ea881596d9a8d3a"
+          },
+          "after": {
+            "path": "modules/previdenza-inps/schemas/case_records.schema.json",
+            "repository_path": "plugins/previdenza-inps/schemas/case_records.schema.json",
+            "sha256": "0c7550c48e3696292c1d43c489d874ee2872eb8f3cf8a5d355d6ec3dcac6cf61"
+          }
+        },
+        {
+          "path": "modules/previdenza-inps/scripts/package_case.py",
+          "before": {
+            "path": "modules/previdenza-inps/scripts/package_case.py",
+            "repository_path": "plugins/previdenza-inps/scripts/package_case.py",
+            "sha256": "e9cfcdb94bf6de03fcc67fcd83f4e28eaa4c1b1c053f9ab42177a01ce46d04b7"
+          },
+          "after": {
+            "path": "modules/previdenza-inps/scripts/package_case.py",
+            "repository_path": "plugins/previdenza-inps/scripts/package_case.py",
+            "sha256": "9d790444b3ae01d79ceccaae39317eaa090fd4580c14be792f6b6e4f70041585"
+          }
+        },
+        {
+          "path": "modules/previdenza-inps/scripts/validate_case_records.py",
+          "before": {
+            "path": "modules/previdenza-inps/scripts/validate_case_records.py",
+            "repository_path": "plugins/previdenza-inps/scripts/validate_case_records.py",
+            "sha256": "556de80f2deac4cd14848052a201fa869de190d08ea2dc23ced5a2724920f6fa"
+          },
+          "after": {
+            "path": "modules/previdenza-inps/scripts/validate_case_records.py",
+            "repository_path": "plugins/previdenza-inps/scripts/validate_case_records.py",
+            "sha256": "7c6fbade21bf4f80621c0e9c3fbf3eb1f0d53ad6100118a60d49f5028792f752"
+          }
+        },
+        {
+          "path": "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
+          "before": {
+            "path": "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
+            "repository_path": "plugins/previdenza-inps/skills/previdenza-inps/SKILL.md",
+            "sha256": "d537ffee9d7b0363c734e298831393ac5504482157dfcc29ebe3969fc5bfdfec"
+          },
+          "after": {
+            "path": "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
+            "repository_path": "plugins/previdenza-inps/skills/previdenza-inps/SKILL.md",
+            "sha256": "759708ff5921b11274a4834e368ffb2c655ff720ea4a5f5c374c42cfc1932998"
+          }
+        },
+        {
+          "path": "modules/previdenza-inps/skills/previdenza-inps/references/geneva.md",
+          "before": null,
+          "after": {
+            "path": "modules/previdenza-inps/skills/previdenza-inps/references/geneva.md",
+            "repository_path": "plugins/previdenza-inps/skills/previdenza-inps/references/geneva.md",
+            "sha256": "68007a094ccf047c8cf388dea65cc2971ea7e98ebb4c803b8cb89203c953f667"
+          }
+        },
+        {
+          "path": "modules/previdenza-inps/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/previdenza-inps/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/previdenza-inps/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/previdenza-inps/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/previdenza-inps/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "skills/previdenza-inps/SKILL.md",
+          "before": {
+            "path": "skills/previdenza-inps/SKILL.md",
+            "repository_path": "plugins/vera/skills/previdenza-inps/SKILL.md",
+            "sha256": "081afa5f1f8e5abf2ec366693b3e3b564d13a70c3a67fe36cff9c6d218f90631"
+          },
+          "after": {
+            "path": "skills/previdenza-inps/SKILL.md",
+            "repository_path": "plugins/vera/skills/previdenza-inps/SKILL.md",
+            "sha256": "d3b9b08f5724c7c5583f67317dbee66a1f36b76ffb42d3df49a5c41bf1c92f91"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/purchase-invoice-review",
+      "previous_course_sha256": "8c666a194c4332e886b5ccc324c8fa056833358327aa4369b442e7e9f9825557",
+      "current_course_sha256": "0b19c09fc6f8c4023891573a437c49b9347ae6a941f6cd9879f9319eda982fb0",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/passive-invoice-audit/scripts/audit_core.py",
+          "before": {
+            "path": "modules/passive-invoice-audit/scripts/audit_core.py",
+            "repository_path": "plugins/passive-invoice-audit/scripts/audit_core.py",
+            "sha256": "35e01647f6d8ae2d48d489bf7fc3f3bf00ddd48378f0ccbd7771ca0ddb21c754"
+          },
+          "after": {
+            "path": "modules/passive-invoice-audit/scripts/audit_core.py",
+            "repository_path": "plugins/passive-invoice-audit/scripts/audit_core.py",
+            "sha256": "a159782e899e421808f2012b76b081205501dfdb13f526c269aea9a881ef065d"
+          }
+        },
+        {
+          "path": "modules/passive-invoice-audit/scripts/reviewed_invoices.py",
+          "before": null,
+          "after": {
+            "path": "modules/passive-invoice-audit/scripts/reviewed_invoices.py",
+            "repository_path": "plugins/passive-invoice-audit/scripts/reviewed_invoices.py",
+            "sha256": "d1a1bef0efd4bd8a9df8b4167596c7cc2982eeb87eb118e49d866b1b97971f73"
+          }
+        },
+        {
+          "path": "modules/passive-invoice-audit/skills/purchase-invoice-review/SKILL.md",
+          "before": {
+            "path": "modules/passive-invoice-audit/skills/purchase-invoice-review/SKILL.md",
+            "repository_path": "plugins/passive-invoice-audit/skills/purchase-invoice-review/SKILL.md",
+            "sha256": "346d208a0a42022763bd25668b77582ec63c89246f9ee79e7d97e7733463c81a"
+          },
+          "after": {
+            "path": "modules/passive-invoice-audit/skills/purchase-invoice-review/SKILL.md",
+            "repository_path": "plugins/passive-invoice-audit/skills/purchase-invoice-review/SKILL.md",
+            "sha256": "74d54c225af4643b80ae0437a53208451f7c534caf794732e962f3a040748330"
+          }
+        },
+        {
+          "path": "modules/passive-invoice-audit/skills/purchase-invoice-review/references/geneva.md",
+          "before": null,
+          "after": {
+            "path": "modules/passive-invoice-audit/skills/purchase-invoice-review/references/geneva.md",
+            "repository_path": "plugins/passive-invoice-audit/skills/purchase-invoice-review/references/geneva.md",
+            "sha256": "62fe433f0c7e4b8e040d89cb2523db35b0a9385222d6202b1be4d1f4f46b020d"
+          }
+        },
+        {
+          "path": "modules/passive-invoice-audit/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/passive-invoice-audit/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/passive-invoice-audit/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/passive-invoice-audit/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/passive-invoice-audit/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "skills/purchase-invoice-review/SKILL.md",
+          "before": {
+            "path": "skills/purchase-invoice-review/SKILL.md",
+            "repository_path": "plugins/vera/skills/purchase-invoice-review/SKILL.md",
+            "sha256": "bcbeb9a1c412bb81a9e84e9292b700dd4089815fdae64a373f7a2d3ac3d96c7b"
+          },
+          "after": {
+            "path": "skills/purchase-invoice-review/SKILL.md",
+            "repository_path": "plugins/vera/skills/purchase-invoice-review/SKILL.md",
+            "sha256": "41ec8d67a0e1ef3fc8d2d34f1cc530f1e2040ac97be7e4b7e924c4253f0663b1"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/quesito-legale-fiscale",
+      "previous_course_sha256": "64500bf6ecdd77a47c45d277d4fc0798473c4310af5de08d1089d439d1b417ce",
+      "current_course_sha256": "a2190c49dd3bc649294c499f0b8af68085db508b6c2ebc0c9685346175c41ba2",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/deep-research-validator/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/deep-research-validator/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/registro-imprese-sari",
+      "previous_course_sha256": "7e9f957f334a4d31432b0d99b3ad770082369330445c9a4f5fa966a6a7b5d215",
+      "current_course_sha256": "88e4077251e480e4f439e812baca2cb54137200d98a8288e3cbef820fc0dad59",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/registro-imprese-sari/schemas/case_intake.schema.json",
+          "before": {
+            "path": "modules/registro-imprese-sari/schemas/case_intake.schema.json",
+            "repository_path": "plugins/registro-imprese-sari/schemas/case_intake.schema.json",
+            "sha256": "ffefd0b80e48ce430ece92ccbd5bb9b1a23dfa12a5385129df61dab69065d0e2"
+          },
+          "after": {
+            "path": "modules/registro-imprese-sari/schemas/case_intake.schema.json",
+            "repository_path": "plugins/registro-imprese-sari/schemas/case_intake.schema.json",
+            "sha256": "05ced08ea52b10983eef3953d31425155bd9276ce78766229416dffe2319adf4"
+          }
+        },
+        {
+          "path": "modules/registro-imprese-sari/schemas/practice_plan.schema.json",
+          "before": {
+            "path": "modules/registro-imprese-sari/schemas/practice_plan.schema.json",
+            "repository_path": "plugins/registro-imprese-sari/schemas/practice_plan.schema.json",
+            "sha256": "f243bb743c1c062abf488fc01498913451d299ece8ce7f0d76149a23964e7289"
+          },
+          "after": {
+            "path": "modules/registro-imprese-sari/schemas/practice_plan.schema.json",
+            "repository_path": "plugins/registro-imprese-sari/schemas/practice_plan.schema.json",
+            "sha256": "f36ed2075b55e2b1be84aa711f89d6aba9d6ae55ead2cbc033ac3438832b23be"
+          }
+        },
+        {
+          "path": "modules/registro-imprese-sari/scripts/case_core.py",
+          "before": {
+            "path": "modules/registro-imprese-sari/scripts/case_core.py",
+            "repository_path": "plugins/registro-imprese-sari/scripts/case_core.py",
+            "sha256": "e677db02177573f41d0d51fe72fb710f1282a7fbb13f965ade01d539d4c5ed4f"
+          },
+          "after": {
+            "path": "modules/registro-imprese-sari/scripts/case_core.py",
+            "repository_path": "plugins/registro-imprese-sari/scripts/case_core.py",
+            "sha256": "ca437c7a4a68d3c2e65fd8aeedc5173a3e15806e6e456b5893c7ebad6fcbeedd"
+          }
+        },
+        {
+          "path": "modules/registro-imprese-sari/scripts/initialize_case.py",
+          "before": {
+            "path": "modules/registro-imprese-sari/scripts/initialize_case.py",
+            "repository_path": "plugins/registro-imprese-sari/scripts/initialize_case.py",
+            "sha256": "7ce4bb016964601e8355ff94541f878d9cfb7a87ae34748e2f724193d18aef83"
+          },
+          "after": {
+            "path": "modules/registro-imprese-sari/scripts/initialize_case.py",
+            "repository_path": "plugins/registro-imprese-sari/scripts/initialize_case.py",
+            "sha256": "19f65b53bb2e30def75a52c79a003e72524493e45d86a2016681a739d07b78c8"
+          }
+        },
+        {
+          "path": "modules/registro-imprese-sari/scripts/package_practice.py",
+          "before": {
+            "path": "modules/registro-imprese-sari/scripts/package_practice.py",
+            "repository_path": "plugins/registro-imprese-sari/scripts/package_practice.py",
+            "sha256": "a138ab668a1afa132a87df301c0a70301f887d744dc1bea85f78d642c6437300"
+          },
+          "after": {
+            "path": "modules/registro-imprese-sari/scripts/package_practice.py",
+            "repository_path": "plugins/registro-imprese-sari/scripts/package_practice.py",
+            "sha256": "61ee5198d6490d827481f1d248a52f3ff7585e3163b0922ddc778d16f26bba74"
+          }
+        },
+        {
+          "path": "modules/registro-imprese-sari/scripts/registry_display.py",
+          "before": {
+            "path": "modules/registro-imprese-sari/scripts/registry_display.py",
+            "repository_path": "plugins/registro-imprese-sari/scripts/registry_display.py",
+            "sha256": "833a798fa2f72b3f5874cc81069857ec0fb7c2268e5d58a9d5655011e291a59c"
+          },
+          "after": {
+            "path": "modules/registro-imprese-sari/scripts/registry_display.py",
+            "repository_path": "plugins/registro-imprese-sari/scripts/registry_display.py",
+            "sha256": "86a0667f55f69bb501acf10303f900ccc21c125c7ab38384c96e9f8ae2e7882b"
+          }
+        },
+        {
+          "path": "modules/registro-imprese-sari/scripts/validate_practice_case.py",
+          "before": {
+            "path": "modules/registro-imprese-sari/scripts/validate_practice_case.py",
+            "repository_path": "plugins/registro-imprese-sari/scripts/validate_practice_case.py",
+            "sha256": "23ee7e4e0fa4b5820778169a9a105c9dca5004085bc6d9c0859f645dff31f0b8"
+          },
+          "after": {
+            "path": "modules/registro-imprese-sari/scripts/validate_practice_case.py",
+            "repository_path": "plugins/registro-imprese-sari/scripts/validate_practice_case.py",
+            "sha256": "bce6a669b88a6502735be4b3bcd329392f8f5f72dfe2cfc618468623fe522848"
+          }
+        },
+        {
+          "path": "modules/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md",
+          "before": {
+            "path": "modules/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md",
+            "repository_path": "plugins/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md",
+            "sha256": "e2ea6665ba7eba4792cce882eab6e6b55d10567edf71bad9387126cb6222fd93"
+          },
+          "after": {
+            "path": "modules/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md",
+            "repository_path": "plugins/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md",
+            "sha256": "f0397d9448713e5fbb0f093332cbc8018f62d27f33d0cc33d79227977a77826f"
+          }
+        },
+        {
+          "path": "modules/registro-imprese-sari/skills/registro-imprese-sari/references/geneva.md",
+          "before": null,
+          "after": {
+            "path": "modules/registro-imprese-sari/skills/registro-imprese-sari/references/geneva.md",
+            "repository_path": "plugins/registro-imprese-sari/skills/registro-imprese-sari/references/geneva.md",
+            "sha256": "51e088e33aed337c01741bad8594738a4d1b2c2b973c709c8f6e7273b44cb382"
+          }
+        },
+        {
+          "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "skills/registro-imprese-sari/SKILL.md",
+          "before": {
+            "path": "skills/registro-imprese-sari/SKILL.md",
+            "repository_path": "plugins/vera/skills/registro-imprese-sari/SKILL.md",
+            "sha256": "ff979814b993b2c3a8f61cc92029a13f59634374a9033779f99051a0bdd925ef"
+          },
+          "after": {
+            "path": "skills/registro-imprese-sari/SKILL.md",
+            "repository_path": "plugins/vera/skills/registro-imprese-sari/SKILL.md",
+            "sha256": "09e6ed3df38a76215f53aae5e1d212ea89f92a597334ae1bb16203c2ab54a433"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/sales-plan",
+      "previous_course_sha256": "5cbd381ce6bc267141f187f4cab4e30be5fe758e4f74b8129010e1436370708c",
+      "current_course_sha256": "6dfec9b5de01fc5af0465f5058d1d4d5ceca0bf67bf4ead0599057b738530441",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/sales-plan/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/sales-plan/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/sales-plan/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/sales-plan/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/sales-plan/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/studio-archive",
+      "previous_course_sha256": "3ff4cf7685e58dba1440bfcbe9f1dade217121409f0da625d6ccb9a899dad126",
+      "current_course_sha256": "33f87c034957c12845885538b49a1251aab41b0c028918752c7c90288edfcc47",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/studio-archive/scripts/archive_core.py",
+          "before": {
+            "path": "modules/studio-archive/scripts/archive_core.py",
+            "repository_path": "plugins/studio-archive/scripts/archive_core.py",
+            "sha256": "ac91f4e73ba4994ac44328e1924c888aec6cd59fd1f39808d66596315be763e0"
+          },
+          "after": {
+            "path": "modules/studio-archive/scripts/archive_core.py",
+            "repository_path": "plugins/studio-archive/scripts/archive_core.py",
+            "sha256": "072de23afde43840b861fecec52ebd257f7bae7d81106de486fc8bb1f23b4a2c"
+          }
+        },
+        {
+          "path": "modules/studio-archive/scripts/studio_archive.py",
+          "before": {
+            "path": "modules/studio-archive/scripts/studio_archive.py",
+            "repository_path": "plugins/studio-archive/scripts/studio_archive.py",
+            "sha256": "5b6b94827523c276528f712bb87ecb1bc79d0b99ef93a96c57d6c8458b01f9d2"
+          },
+          "after": {
+            "path": "modules/studio-archive/scripts/studio_archive.py",
+            "repository_path": "plugins/studio-archive/scripts/studio_archive.py",
+            "sha256": "eabd25d050c726a55d8975fa626ac8ceab265788bbb891fdc516488a19a34089"
+          }
+        },
+        {
+          "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
+          "before": {
+            "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
+            "repository_path": "plugins/studio-archive/skills/studio-archive/SKILL.md",
+            "sha256": "205383bd830bcb0418a2629e74d9388c27e2e76381cc6ae169ae02105051582f"
+          },
+          "after": {
+            "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
+            "repository_path": "plugins/studio-archive/skills/studio-archive/SKILL.md",
+            "sha256": "42d5f78f1b8db4f8b2e5f00d60f139f55fccc988223055c0946f91bc67fcb229"
+          }
+        },
+        {
+          "path": "modules/studio-archive/skills/studio-archive/references/geneva.md",
+          "before": null,
+          "after": {
+            "path": "modules/studio-archive/skills/studio-archive/references/geneva.md",
+            "repository_path": "plugins/studio-archive/skills/studio-archive/references/geneva.md",
+            "sha256": "a2ebdb373a74fb7a76ba8d3a311d42c973941a86bbe7537e51d979ce76b15ff0"
+          }
+        },
+        {
+          "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/studio-archive/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/studio-archive/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "skills/studio-archive/SKILL.md",
+          "before": {
+            "path": "skills/studio-archive/SKILL.md",
+            "repository_path": "plugins/vera/skills/studio-archive/SKILL.md",
+            "sha256": "306a444e741de64feb191115c4192b519833d200e0f5c4ffa3afbb7647f5dc76"
+          },
+          "after": {
+            "path": "skills/studio-archive/SKILL.md",
+            "repository_path": "plugins/vera/skills/studio-archive/SKILL.md",
+            "sha256": "b2f8ad59567a7e390f0fb4afbfdb339f0f8d11b3576ff37497de55cc4172d7f3"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/treasury-forecast",
+      "previous_course_sha256": "0cdda8c07e64b5cf89c37d0d78fc9f42f212bf151444f10f6a3af87f75e91f14",
+      "current_course_sha256": "3e186283c239070a1fdae6ac16b07b41ca8435c6e662cd88ac6a35d3f22d5cef",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/treasury-forecast/assets/review.html",
+          "before": {
+            "path": "modules/treasury-forecast/assets/review.html",
+            "repository_path": "plugins/treasury-forecast/assets/review.html",
+            "sha256": "d68370ac38dcfe1b7313cdf2f6a29a86a012f7021ce8491164921a4214ee7876"
+          },
+          "after": {
+            "path": "modules/treasury-forecast/assets/review.html",
+            "repository_path": "plugins/treasury-forecast/assets/review.html",
+            "sha256": "5a96b81a204e13aa09760f482cb9449a8afe1f1fa948fa73183c8709f862ff84"
+          }
+        },
+        {
+          "path": "modules/treasury-forecast/assets/review.js",
+          "before": {
+            "path": "modules/treasury-forecast/assets/review.js",
+            "repository_path": "plugins/treasury-forecast/assets/review.js",
+            "sha256": "be178bb4d3b249f46e856be7a8cc3ab697da169b7a100f4dc046f193702a2c97"
+          },
+          "after": {
+            "path": "modules/treasury-forecast/assets/review.js",
+            "repository_path": "plugins/treasury-forecast/assets/review.js",
+            "sha256": "bb78aa03833b0340e23a11286bb9acb61ee935fab7b8a13908c6886328c3a00d"
+          }
+        },
+        {
+          "path": "modules/treasury-forecast/references/input-contract.md",
+          "before": {
+            "path": "modules/treasury-forecast/references/input-contract.md",
+            "repository_path": "plugins/treasury-forecast/references/input-contract.md",
+            "sha256": "c2ebd94e8e9f61bdef8d2c2c5d441f25865b91f694220a939b26ae516284a3fa"
+          },
+          "after": {
+            "path": "modules/treasury-forecast/references/input-contract.md",
+            "repository_path": "plugins/treasury-forecast/references/input-contract.md",
+            "sha256": "0630c0dd314e67fd2f73faa4ddf30d7feaa42d0e07a256588f4c200148c082b1"
+          }
+        },
+        {
+          "path": "modules/treasury-forecast/scripts/treasury_core.py",
+          "before": {
+            "path": "modules/treasury-forecast/scripts/treasury_core.py",
+            "repository_path": "plugins/treasury-forecast/scripts/treasury_core.py",
+            "sha256": "8a44c0f6c03afdbf3571578f79b861fdd9c1392e8e82bd4c868030ef345ec4f3"
+          },
+          "after": {
+            "path": "modules/treasury-forecast/scripts/treasury_core.py",
+            "repository_path": "plugins/treasury-forecast/scripts/treasury_core.py",
+            "sha256": "e7af1f55b4cf2374ac49d0cf56de39265242f45fdb33527183995698e9dbf67e"
+          }
+        },
+        {
+          "path": "modules/treasury-forecast/scripts/treasury_inputs.py",
+          "before": {
+            "path": "modules/treasury-forecast/scripts/treasury_inputs.py",
+            "repository_path": "plugins/treasury-forecast/scripts/treasury_inputs.py",
+            "sha256": "9f9ff0c2856d6ca6377d16f6feeb325a8822553db0bb4bbd90016b028a4dde33"
+          },
+          "after": {
+            "path": "modules/treasury-forecast/scripts/treasury_inputs.py",
+            "repository_path": "plugins/treasury-forecast/scripts/treasury_inputs.py",
+            "sha256": "420dc8e9943f6ed743b88b9c32ee7f1da892950c3d71fa7708bfb5f10ba03713"
+          }
+        },
+        {
+          "path": "modules/treasury-forecast/scripts/treasury_report.py",
+          "before": {
+            "path": "modules/treasury-forecast/scripts/treasury_report.py",
+            "repository_path": "plugins/treasury-forecast/scripts/treasury_report.py",
+            "sha256": "475757fa6dac424da29c8fdd72659211120a0abd1d6ad203e1fc6596f71521ae"
+          },
+          "after": {
+            "path": "modules/treasury-forecast/scripts/treasury_report.py",
+            "repository_path": "plugins/treasury-forecast/scripts/treasury_report.py",
+            "sha256": "7583af8b8ecfa3653dad21cd122a53d3da4541eda4c932919a7f598057844ec8"
+          }
+        },
+        {
+          "path": "modules/treasury-forecast/scripts/treasury_server.py",
+          "before": {
+            "path": "modules/treasury-forecast/scripts/treasury_server.py",
+            "repository_path": "plugins/treasury-forecast/scripts/treasury_server.py",
+            "sha256": "7d4e77d0d90be820b8d013f1c8325e41fec566b375d79c9b4e5c31d98d0c8dd0"
+          },
+          "after": {
+            "path": "modules/treasury-forecast/scripts/treasury_server.py",
+            "repository_path": "plugins/treasury-forecast/scripts/treasury_server.py",
+            "sha256": "17425fde5b642c4fee26144f87c27ee7fc31b488347a51beb821b18bfff407cd"
+          }
+        },
+        {
+          "path": "modules/treasury-forecast/skills/treasury-forecast/SKILL.md",
+          "before": {
+            "path": "modules/treasury-forecast/skills/treasury-forecast/SKILL.md",
+            "repository_path": "plugins/treasury-forecast/skills/treasury-forecast/SKILL.md",
+            "sha256": "dbf0ec6c863137f5e85ce2c14296757b48b2a666ef2a8a71300a850467d9cbb6"
+          },
+          "after": {
+            "path": "modules/treasury-forecast/skills/treasury-forecast/SKILL.md",
+            "repository_path": "plugins/treasury-forecast/skills/treasury-forecast/SKILL.md",
+            "sha256": "c6e31c262da16ec98c588296fdf3ac90c4e189abc74eeea6c87dc90cd952765b"
+          }
+        },
+        {
+          "path": "modules/treasury-forecast/skills/treasury-forecast/references/geneva.md",
+          "before": null,
+          "after": {
+            "path": "modules/treasury-forecast/skills/treasury-forecast/references/geneva.md",
+            "repository_path": "plugins/treasury-forecast/skills/treasury-forecast/references/geneva.md",
+            "sha256": "a63133f37450e0efe2141324594682277f20b12252e641931c18012469fddc2e"
+          }
+        },
+        {
+          "path": "modules/treasury-forecast/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/treasury-forecast/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/treasury-forecast/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/treasury-forecast/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/treasury-forecast/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "skills/treasury-forecast/SKILL.md",
+          "before": {
+            "path": "skills/treasury-forecast/SKILL.md",
+            "repository_path": "plugins/vera/skills/treasury-forecast/SKILL.md",
+            "sha256": "459a6232861683b9bbd7b9e264551c7469368d2c991d995c6930687ef76db20b"
+          },
+          "after": {
+            "path": "skills/treasury-forecast/SKILL.md",
+            "repository_path": "plugins/vera/skills/treasury-forecast/SKILL.md",
+            "sha256": "d485e58b1bd3013e5b2721af9bac77e69d7254c830a7c8be335507681a63cc64"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/variance-analysis",
+      "previous_course_sha256": "b0426c7cebb0a721172147b5e9133372a3fe5a11caa7257c229b53203021a767",
+      "current_course_sha256": "b039eaf254d2f3b37ea4d1314745ce211f44386a0443882d314a86e064b6049e",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/variance-analysis/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/variance-analysis/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/variance-analysis/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/variance-analysis/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/variance-analysis/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/vouching",
+      "previous_course_sha256": "02f5f97305dad11218183b224fd0966b12b39157b655e052c675288ebcbc38b3",
+      "current_course_sha256": "1fdd899f6b6294c58dcd9bf6b414c6a5f14bccabb90ea73cfab20ceac7850ce0",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/check-entries/scripts/check_entries_core.py",
+          "before": {
+            "path": "modules/check-entries/scripts/check_entries_core.py",
+            "repository_path": "plugins/check-entries/scripts/check_entries_core.py",
+            "sha256": "c4218b1b3f684126c899dcf30d5b7358f10c4a7c25504ee356d62c9d8098f651"
+          },
+          "after": {
+            "path": "modules/check-entries/scripts/check_entries_core.py",
+            "repository_path": "plugins/check-entries/scripts/check_entries_core.py",
+            "sha256": "87dd56765642c6f1e8e9dd32e957bbc0ab155e22cbbbe7c8218ed2596f364c08"
+          }
+        },
+        {
+          "path": "modules/check-entries/scripts/implementation_bootstrap.py",
+          "before": {
+            "path": "modules/check-entries/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/check-entries/scripts/implementation_bootstrap.py",
+            "sha256": "134993676b211553c0ca76eedb0628d7138d7f69ab4e09fb6014c272e80bd29a"
+          },
+          "after": {
+            "path": "modules/check-entries/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/check-entries/scripts/implementation_bootstrap.py",
+            "sha256": "f0c9bed9fd831429054287cc75cc6e55da04b79cbb8ef0afc898d2a3cbd3c277"
+          }
+        },
+        {
+          "path": "modules/check-entries/skills/vouching/SKILL.md",
+          "before": {
+            "path": "modules/check-entries/skills/vouching/SKILL.md",
+            "repository_path": "plugins/check-entries/skills/vouching/SKILL.md",
+            "sha256": "c3697473608f24f0c7ed171b29c9bb05c3d5820b36122ea608f64a9f436768f1"
+          },
+          "after": {
+            "path": "modules/check-entries/skills/vouching/SKILL.md",
+            "repository_path": "plugins/check-entries/skills/vouching/SKILL.md",
+            "sha256": "d30cf88c340df29f65dbf7d8f6f9ccbea928001b68fe8ce7553cfded3e256754"
+          }
+        },
+        {
+          "path": "modules/check-entries/skills/vouching/references/geneva.md",
+          "before": null,
+          "after": {
+            "path": "modules/check-entries/skills/vouching/references/geneva.md",
+            "repository_path": "plugins/check-entries/skills/vouching/references/geneva.md",
+            "sha256": "a9966d9e54e61b449596741ef6281846bf7104d35c584110b85b3a75bfa79f64"
+          }
+        },
+        {
+          "path": "modules/check-entries/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/check-entries/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "modules/check-entries/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "modules/check-entries/vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "modules/check-entries/vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        },
+        {
+          "path": "skills/vouching/SKILL.md",
+          "before": {
+            "path": "skills/vouching/SKILL.md",
+            "repository_path": "plugins/vera/skills/vouching/SKILL.md",
+            "sha256": "125f9120dcd760b06b19d38b670a0058635fca5d7202f883e28b927bd9f6660e"
+          },
+          "after": {
+            "path": "skills/vouching/SKILL.md",
+            "repository_path": "plugins/vera/skills/vouching/SKILL.md",
+            "sha256": "ab9f9562e91b118969b52fd83348c2c314b30cf6eb9a5da6f860f9075cdfbb0a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/jurisdiction.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/vera_assurance/jurisdiction.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+            "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+          }
+        }
+      ]
+    }
+  ]
+}
