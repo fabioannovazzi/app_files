@@ -69,11 +69,11 @@
     },
     {
       "path": "modules/deep-research-validator/scripts/package_validation.py",
-      "sha256": "d305e856cc9bd889e5fee69726a4b08ff062a73b6f197c3525dfc12601bae575"
+      "sha256": "cf99f33ccf373a8d6816cb72304912bc1995f576e708155746e0c89649d58d37"
     },
     {
       "path": "modules/deep-research-validator/scripts/review_session.py",
-      "sha256": "beb7e88a185a41cd169742fadc5970db66468d787c464a3f0d809f4c8c676a0d"
+      "sha256": "d37dc93f9ca7d1ff2944835f3c76a1b8eded864b7206955b3f3b785210bbfa5c"
     },
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md",
@@ -211,7 +211,7 @@
     },
     {
       "path": "files/input/guide-it.md",
-      "sha256": "a68c5a5b24e694d5546b58a493e521ed0957f92cc1a82f8507a62d0da3100a63",
+      "sha256": "4980f464edea93a96a8497206e614ac2d213cfebf2d9d7912a757511f976872c",
       "languages": [
         "it"
       ],
@@ -219,7 +219,7 @@
     },
     {
       "path": "files/input/source-provenance-it.json",
-      "sha256": "4991c54a144a4407a00665c5e8539980084ba2e8eac54b9a48c56b24fc930212",
+      "sha256": "eb85bc6b20216283d72eb52328bbcbc6fb67d7c1d80434eea3a1eff231d1a184",
       "languages": [
         "it"
       ],
@@ -243,7 +243,7 @@
     },
     {
       "path": "files/practice/guide-it.md",
-      "sha256": "a68c5a5b24e694d5546b58a493e521ed0957f92cc1a82f8507a62d0da3100a63",
+      "sha256": "4980f464edea93a96a8497206e614ac2d213cfebf2d9d7912a757511f976872c",
       "languages": [
         "it"
       ],
@@ -251,7 +251,7 @@
     },
     {
       "path": "files/practice/source-provenance-it.json",
-      "sha256": "4991c54a144a4407a00665c5e8539980084ba2e8eac54b9a48c56b24fc930212",
+      "sha256": "eb85bc6b20216283d72eb52328bbcbc6fb67d7c1d80434eea3a1eff231d1a184",
       "languages": [
         "it"
       ],
@@ -706,5 +706,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "64500bf6ecdd77a47c45d277d4fc0798473c4310af5de08d1089d439d1b417ce"
+  "canonical_course_sha256": "8dbd71a6972379405f115ce0acb0ff572651557f3c8152dabc0745168defb693"
 }

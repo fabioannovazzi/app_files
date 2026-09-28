@@ -162,5 +162,50 @@
         ]
       }
     }
+  },
+  "codex_course_qa_20260928": {
+    "status": "passed",
+    "course": 40,
+    "product": "clara",
+    "workflow": "reporting-engine",
+    "scope": "Italian Codex simulated learner demonstration and independent practice; actual native dashboards, workbook and report views, sources and saved reopening",
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "session_id": "010122d19eb6049a2dbd968fdab658fd",
+    "phase": "paused",
+    "revision": 4,
+    "profile": null,
+    "onboarding_phase": "interview",
+    "runs": {
+      "demo": {
+        "html": "/private/tmp/teaching-acceptance-20260926/codex/clara-budget-reporting/teaching/sessions/010122d19eb6049a2dbd968fdab658fd/files/demo-8d3810f74bb7da1f/explained-report/management_control_dashboard.html",
+        "sha256": "bb2a86d59f96c5987e5c6c67db657d7dc29a8dcad11f49bd62782c812d5fa430",
+        "execution_sha256": "a6c04b3dbe541216598b8dc893566196af2fdfef744a4bfda723115d2dc8dbfb",
+        "target": "2026-01 through 2026-02",
+        "native_preservation": "passed",
+        "browser_review": "/private/tmp/teaching-acceptance-20260926/clara-budget-demo-browser-review.json"
+      },
+      "practice": {
+        "html": "/private/tmp/teaching-acceptance-20260926/codex/clara-budget-reporting/teaching/sessions/010122d19eb6049a2dbd968fdab658fd/files/practice-3eee091683921560/explained-report/management_control_dashboard.html",
+        "sha256": "9cd4edc9a7296833a185dd328dc2f2b05eb22244dad3811481bdd9c0fc45ace6",
+        "execution_sha256": "45229537c2a345425d1045aea61aa2b7a6243ca708f4e17fee88d8a83e1dca6a",
+        "target": "2026-01 through 2026-03",
+        "native_preservation": "passed",
+        "browser_review": "/private/tmp/teaching-acceptance-20260926/clara-budget-practice-browser-review.json"
+      }
+    },
+    "demo_files_preserved": 35,
+    "repairs": [
+      "Own receipt-checked local dashboard preview with active month controls; teaching instructions route dashboard and documents correctly",
+      "Removed internal QA status from learner guide"
+    ],
+    "limitations": [
+      "Native voice and physical two-window placement unverified",
+      "Other-language live journeys pending",
+      "Installed Clara unavailable; current local source tested",
+      "Print button clicked but native print dialog/output not observed; actual Codex UI checks cover month and cumulative controls, report and workbook reading"
+    ],
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-27T23:12:51.754941+00:00"
   }
 }

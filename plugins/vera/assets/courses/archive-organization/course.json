@@ -30,7 +30,7 @@
     {
       "path": "modules/archive-organization/assets/archive-organization-review-widget.html",
       "repository_path": "plugins/archive-organization/assets/archive-organization-review-widget.html",
-      "sha256": "9a13d527e93d12b3bc8a3804198508cc6f3af8e7310b92f11545877f7843b0fd"
+      "sha256": "3e5d3018a063fee4989f86d4540eb72c7065461c93e61166cf166cf0c1a1f35f"
     },
     {
       "path": "modules/archive-organization/assets/icon.svg",
@@ -70,7 +70,7 @@
     {
       "path": "modules/archive-organization/scripts/archive_organization.py",
       "repository_path": "plugins/archive-organization/scripts/archive_organization.py",
-      "sha256": "c113b6ad9f82f16424c2a509c8eb8806b39293394299f4ae8c7d868deefd2fa6"
+      "sha256": "7a6ff25a01163a828a8673e6e522291695cab75302b91f1dfa0ac81b8b4b8063"
     },
     {
       "path": "modules/archive-organization/scripts/check_dependencies.py",
@@ -165,12 +165,12 @@
     {
       "path": "vendor/modules/courseware/assets/course.css",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
-      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      "sha256": "5b28ac597f0a3deaf4cfc907b8a33bb40aae21719206ad0c976b605950f89dc7"
     },
     {
       "path": "vendor/modules/courseware/assets/languages.json",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      "sha256": "507967ae7dcf07ae4e138fff4333adb5fd709484731dcef45d531152c54ede45"
     },
     {
       "path": "vendor/modules/courseware/assets/legacy-course.css",
@@ -183,9 +183,24 @@
       "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
     },
     {
+      "path": "vendor/modules/courseware/deck_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/deck_view.py",
+      "sha256": "96f75ea3078c9e0c6e509cdefb0beeb876677e2e7884777d213d9b03c6c27b80"
+    },
+    {
+      "path": "vendor/modules/courseware/document_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/document_view.py",
+      "sha256": "9982c9d6ce83e7feb26165308fa9a136a744891a7e623ce23ff9bb778e6b7403"
+    },
+    {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
       "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/html_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/html_view.py",
+      "sha256": "57280e82460bd8c7982294c4be6e0cff7da969800d4282e6da15059571cce0b1"
     },
     {
       "path": "vendor/modules/courseware/legacy.py",
@@ -195,7 +210,7 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "22c5ea8d39a6ffa376c63f12bd31e3282b435a913e8027ee44c4261a5e704a74"
+      "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
     },
     {
       "path": "vendor/modules/courseware/policy.py",
@@ -205,7 +220,17 @@
     {
       "path": "vendor/modules/courseware/preview.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/preview.py",
-      "sha256": "36ff10a3d93772a927765c395eb19c5073664c1447b0b267cf9bd9455c4ad6f3"
+      "sha256": "1a6e56141cdd554a6510100f47745f7b31472c9d22f45407f4f86ac7981aee10"
+    },
+    {
+      "path": "vendor/modules/courseware/sales_plan_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/sales_plan_view.py",
+      "sha256": "115977d03c034ed5f363d6fd5c8c82648ed1349067ac61e48d0701b10caa7e7b"
+    },
+    {
+      "path": "vendor/modules/courseware/website_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/website_view.py",
+      "sha256": "f230f86272201bae7bc34f1868d8cb6013b47ce9ccc8b876acdfb0bc257637d5"
     },
     {
       "path": "vendor/modules/reporting_table.py",

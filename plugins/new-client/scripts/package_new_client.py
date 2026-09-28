@@ -1386,11 +1386,16 @@ _PROFILE_LABELS = {
 def _profile_lines(intake: Mapping[str, Any]) -> list[str]:
     """Display supplied fields and exact statuses, without interpreting identity."""
     words = _PROFILE_LABELS[str(intake["language"])]
+    aliases = {
+        "declared_address": "registered_address",
+        "declared_business": "business_activity",
+    }
     lines = [f"## {words['heading']}", "", words["note"], ""]
     for fact in intake["party_facts"]:
         # Known field names have display translations; custom fact codes remain
         # identifiable rather than being omitted or assigned a guessed meaning.
-        label = words.get(fact["fact_code"], fact["fact_code"].replace("_", " "))
+        code = aliases.get(fact["fact_code"], fact["fact_code"])
+        label = words.get(code, code.replace("_", " "))
         value = (
             str(fact["value"]).replace("\n", " ") if fact["value"] is not None else "—"
         )

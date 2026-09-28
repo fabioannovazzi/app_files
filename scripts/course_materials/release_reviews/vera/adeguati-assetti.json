@@ -366,5 +366,11 @@
     "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
     "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
+  },
+  "codex_course_qa_20260927": {
+    "scope": "Italian native Codex teacher/working demo and same-dossier April follow-up, actual source/memo reading, saved reopening.",
+    "fix": "Readable Markdown document title; clickable verified previous JSON input; follow-up instructions retain every material prior-action requirement. Model review corrections preserve absent-evidence limits, actual lateness versus still-open review window, formal-agreement qualification and unresolved weekly-control requirement.",
+    "evidence": "Local codex-course-21.md; demo/practice 6 archived files each, 11/13 execution hashes verified; exact predecessor and unchanged demo confirmed.",
+    "limits": "Simulated QA learner, not professional approval or human understanding. Other languages, native voice hardware and physical windows unverified. No deployment or publication."
   }
 }

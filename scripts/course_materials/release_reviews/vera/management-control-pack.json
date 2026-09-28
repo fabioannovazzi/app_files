@@ -69,5 +69,11 @@
         ]
       }
     }
+  },
+  "codex_course_qa_20260927": {
+    "scope": "Italian actual Codex teacher/working demo and distinct practice, native dashboard and workbook/Markdown reading, archived reopening.",
+    "fix": "Native receipt-bound interactive loopback preview; shared stored workbook percentages corrected; teacher guidance routes interactive and document results separately.",
+    "evidence": "codex-course-16.md;21archivefiles and14verified evidence hashes per phase;60native and54sharedview tests pass.",
+    "limits": "English learner journey and physical voice/window behavior unverified. No professional approval or real learner completion; no install/deploy/publish."
   }
 }

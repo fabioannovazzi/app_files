@@ -105,7 +105,7 @@
     },
     {
       "id": "phase-specific-model-input-packets",
-      "control": "Claim, editorial and visual phases each use a digest-bound allow-list of exact files and hashes. Their recorders reject missing, stale or changed packets, and every packet excludes prior communications, identity maps and history records."
+      "control": "Claim, editorial and visual phases each use a digest-bound allow-list of exact files and hashes. Their recorders reject missing, stale or changed packets, and every packet excludes prior communications, identity maps and history records. Editorial packet preparation validates the completed claim assurance, including answer-contract conformity and explicit professional-judgment routing, before writing or replacing the packet."
     },
     {
       "id": "lawyer-profile-and-professional-review",
@@ -117,9 +117,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-23",
+    "reviewed_at": "2026-09-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "b0acc9f5d9f98befcf072c0babfbc71428b89d0ece03f10ce1e710c3bf41edf9"
+    "source_fingerprint": "99c74d6080a78648ade7ba187083ef2e90b98e6995d43a7c7b166a1b67b65141"
   }
 }

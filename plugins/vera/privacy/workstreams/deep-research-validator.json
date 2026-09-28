@@ -105,14 +105,14 @@
     },
     {
       "id": "local-browser-private-review-payload",
-      "control": "The local review server requests component-only private review metadata only for the registered render tool. The browser receives that payload locally; normal MCP callers continue to receive structuredContent. This is transport separation, not anonymization of data selected for model review."
+      "control": "The local review server requests component-only private review metadata only for the registered render tool. The browser receives that payload locally; normal MCP callers continue to receive structuredContent. This is transport separation, not anonymization of data selected for model review. Reload restores the persisted applied decisions for the same plugin and run through the existing browser path sanitization. It does not apply decisions again or change the external routes. Read-only local rendering accepts validated running, review-ready and completed contexts; Save/Apply still require a running context. Nested result folders resolve the owning portable run and validate the exact requested descendant before rendering. Archived views also show a localized read-only notice and disable Save/Apply; server-side write validation remains authoritative."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-15",
+    "reviewed_at": "2026-09-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "79ba0e3a61720e3baf0c7e3b1eed3e135bc3a70369ff9ce9429c1e8d6613cce6"
+    "source_fingerprint": "57a0b26827baab40907c1a2249777e3f6e4fdec7ff1847ed3ded8228d2599461"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/quesito-legale-fiscale/SKILL.md",

@@ -836,7 +836,22 @@ def _drilldown_rows(
         output_dir
         / f"root_cause_bridge_alt_{alternative}_drilldown_row_{selected_row}.csv"
     )
-    return frame.to_dicts() if not frame.is_empty() else []
+    rows = frame.to_dicts() if not frame.is_empty() else []
+    parents = _bridge_rows(output_dir, alternative)
+    if not rows or not 1 <= selected_row <= len(parents):
+        return []
+    # Legacy detail snapshots can contain only the remaining residual rows.
+    # Do not present that subset as the explanation of the full parent amount.
+    try:
+        parent = float(parents[selected_row - 1]["variance_amount"])
+        total = math.fsum(float(row["variance_amount"]) for row in rows)
+    except (KeyError, TypeError, ValueError, OverflowError):
+        return []
+    if not math.isfinite(parent) or not math.isclose(
+        total, parent, rel_tol=1e-9, abs_tol=0.01
+    ):
+        return []
+    return rows
 
 
 def _selected_amounts(row: dict[str, Any]) -> list[float]:
@@ -1876,19 +1891,23 @@ def _build_payload(
             chart_kind="root_cause",
         ).lines(),
     )
-    drilldown_chart = _write_localized_chart(
-        output_dir / f"root_cause_bridge_alt_{summary_alt}_drilldown_row_1.png",
-        output_dir / "root_cause_client_report_drilldown.png",
-        labels["chart_drilldown_title"].format(label=summary_label),
-        labels["chart_drilldown_subtitle"].format(**comparison),
-        labels["chart_footer"],
-        title_lines=build_ibcs_title(
-            recipe,
-            chart_kind="root_cause_drilldown",
-            selection_label=summary_label,
-        ).lines(),
+    drilldown_chart = (
+        _write_localized_chart(
+            output_dir / f"root_cause_bridge_alt_{summary_alt}_drilldown_row_1.png",
+            output_dir / "root_cause_client_report_drilldown.png",
+            labels["chart_drilldown_title"].format(label=summary_label),
+            labels["chart_drilldown_subtitle"].format(**comparison),
+            labels["chart_footer"],
+            title_lines=build_ibcs_title(
+                recipe,
+                chart_kind="root_cause_drilldown",
+                selection_label=summary_label,
+            ).lines(),
+        )
+        if product_items
+        else None
     )
-    has_drilldown = bool(product_items) or drilldown_chart is not None
+    has_drilldown = bool(product_items)
     mixed_text = ", ".join(mixed_items) if mixed_items else summary_label
     subtitle = (
         f"{Path(str(recipe.get('source_file') or '')).stem or labels.get('sales', 'Sales')} | "

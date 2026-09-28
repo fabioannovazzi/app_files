@@ -4408,6 +4408,9 @@ def test_finalize_hosted_transcript_records_local_attribution_and_audio_pointer(
     assert backup_path.read_text(encoding="utf-8") == raw_text
     assert transcript["path"] == str(attributed_path.resolve())
     assert transcript["material_type"] == "transcript"
+    assert transcript["source_metadata"]["attributed_transcript"] == str(
+        attributed_path.relative_to(case_dir)
+    )
     assert (
         transcript["source_metadata"]["speaker_attribution"]
         == finalizer.DEFAULT_SPEAKER_ATTRIBUTION_NOTE
@@ -4444,17 +4447,21 @@ def test_finalize_hosted_transcript_records_local_attribution_and_audio_pointer(
     assert "Family interview [transcript, indexed]" in brief
     assert "Audio interview pointer [source, indexed]" in brief
 
+    evidence_path = case_dir / "advisory_evidence_register.json"
+    original_evidence = evidence_path.read_bytes()
     result_again = finalizer.finalize_hosted_transcript(
         case_dir,
         imported.material_id,
         attributed_path,
         audio_pointer_path=audio_pointer_path,
         audio_pointer_title="Audio interview pointer",
-        now=fixed_now(),
+        now=datetime(2026, 1, 3, 12, 0, tzinfo=timezone.utc),
     )
     registry_again = json.loads((case_dir / "material_registry.json").read_text())
 
     assert result_again.audio_pointer_material_id == pointer["id"]
+    assert result_again.evidence_receipt_id == result.evidence_receipt_id
+    assert evidence_path.read_bytes() == original_evidence
     assert [material["path"] for material in registry_again["materials"]].count(
         str(audio_pointer_path.resolve())
     ) == 1
@@ -4462,6 +4469,22 @@ def test_finalize_hosted_transcript_records_local_attribution_and_audio_pointer(
         audio_pointer_path.read_text(encoding="utf-8").count("## Trascrizione Clara")
         == 1
     )
+
+    # Reusing timestamps must not weaken the immutable source binding.
+    different_path = attributed_path.with_name("different-location.md")
+    different_path.write_bytes(attributed_path.read_bytes())
+    registry_before_conflict = (case_dir / "material_registry.json").read_bytes()
+    with pytest.raises(ValueError, match="already exists with different content"):
+        finalizer.finalize_hosted_transcript(
+            case_dir,
+            imported.material_id,
+            different_path,
+            now=datetime(2026, 1, 4, 12, 0, tzinfo=timezone.utc),
+        )
+    assert evidence_path.read_bytes() == original_evidence
+    assert (
+        case_dir / "material_registry.json"
+    ).read_bytes() == registry_before_conflict
 
 
 def test_finalize_hosted_transcript_rolls_back_when_receipt_commit_fails(

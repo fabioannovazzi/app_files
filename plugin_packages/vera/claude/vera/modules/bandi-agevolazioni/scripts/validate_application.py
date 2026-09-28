@@ -161,6 +161,21 @@ def _readiness(item: dict[str, Any], *, path: str, issues: list[dict[str, str]])
     return readiness
 
 
+def _check_not_applicable_outcome(
+    item: dict[str, Any], *, path: str, issues: list[dict[str, str]]
+) -> None:
+    # A proposed check outcome is not documentary readiness. It must be possible
+    # to package it for review without falsely confirming the professional's
+    # decision. Ready-disposition checks below still require confirmed outcomes.
+    if not str(item.get("rationale") or "").strip():
+        _issue(
+            issues,
+            "not_applicable_requires_rationale",
+            path,
+            "not_applicable check outcomes require a rationale",
+        )
+
+
 def _latest_review_state(
     output_dir: Path,
     *,
@@ -676,15 +691,7 @@ def _validate_application_locked(
         outcome = item.get("outcome")
         consistency_conflict = consistency_conflict or outcome == "conflict"
         if outcome == "not_applicable":
-            _readiness(
-                {
-                    "readiness": "not_applicable",
-                    "rationale": item.get("rationale"),
-                    "review_status": item.get("review_status"),
-                },
-                path=path,
-                issues=issues,
-            )
+            _check_not_applicable_outcome(item, path=path, issues=issues)
 
     related_ids = (
         source_ids
@@ -753,15 +760,7 @@ def _validate_application_locked(
             issues=issues,
         )
         if item.get("outcome") == "not_applicable":
-            _readiness(
-                {
-                    "readiness": "not_applicable",
-                    "rationale": item.get("rationale"),
-                    "review_status": item.get("review_status"),
-                },
-                path=path,
-                issues=issues,
-            )
+            _check_not_applicable_outcome(item, path=path, issues=issues)
 
     open_blockers = [
         item

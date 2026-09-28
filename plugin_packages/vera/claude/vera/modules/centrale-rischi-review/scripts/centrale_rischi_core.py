@@ -1031,6 +1031,12 @@ def build_analysis(
         limitations.append(
             "Le evidenze pregiudizievoli non sono disponibili perché non è stata fornita una colonna proveniente da una fonte separata e confermata."
         )
+    elif not prejudicial:
+        limitations.append(
+            "La colonna delle evidenze pregiudizievoli è vuota per il mese corrente: "
+            "non è stata fornita evidenza da esaminare. Il campo vuoto non dimostra "
+            "l'assenza di eventi pregiudizievoli."
+        )
     if category_movement_summary:
         limitations.append(
             "Il confronto per categoria mostra variazioni aggregate tra i due periodi più recenti; senza una riconciliazione per singolo rapporto non prova che una specifica posizione sia stata riclassificata."
@@ -1096,9 +1102,7 @@ def build_analysis(
             "information_requests": (
                 "available" if information_requests_available else "unavailable"
             ),
-            "pregiudizievoli": (
-                "available" if columns.get("prejudicial_event") else "unavailable"
-            ),
+            "pregiudizievoli": "available" if prejudicial else "unavailable",
             "multiple_months": "available" if len(months) > 1 else "unavailable",
             "trend_analysis": "available" if len(months) > 1 else "unavailable",
             "previous_records": "available" if previous_rows else "unavailable",

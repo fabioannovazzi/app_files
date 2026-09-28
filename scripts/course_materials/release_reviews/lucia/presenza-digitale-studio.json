@@ -539,5 +539,124 @@
     "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
     "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
+  },
+  "codex_course_qa_20260928": {
+    "status": "passed",
+    "course": 44,
+    "product": "lucia",
+    "workflow": "presenza-digitale-studio",
+    "scope": "Italian Codex simulated learner journey, real native demo and distinct site update practice, source drilldown and saved reopening",
+    "runs": {
+      "demo": {
+        "run": "/private/tmp/teaching-acceptance-20260926/codex/lucia-website/teaching/sessions/3faa17fba4bc54d8d46257d4f0c5d7c8/files/demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T012216Z-5d2e6f29ca",
+        "native": {
+          "schema_version": 1,
+          "run_id": "20260928T012216Z-5d2e6f29ca",
+          "status": "quality_ready",
+          "site_digest": "95706f604126d0155b6910b09094c5d643da05716b988dc53ed3f09ec74d93e8",
+          "issues": [],
+          "valid": true
+        },
+        "saved_reopening": {
+          "passed": true,
+          "url": "http://127.0.0.1:52678/course.html",
+          "observed": "Studio Arco, two legal services, Monday–Thursday 09:00–12:00, email and fixed heading; no Friday yet; corrected phone caption; native saved result opened in Codex",
+          "human_approval": false
+        },
+        "outputs": [
+          {
+            "path": "demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T012216Z-5d2e6f29ca/work/site/index.html",
+            "sha256": "9844efd06f1ab3012669e9faf4fc60628588a9ada69a8405ca00c7a1dfaad354"
+          },
+          {
+            "path": "demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T012216Z-5d2e6f29ca/work/site/styles.css",
+            "sha256": "ff6878640137bb4b829901b3e496609827f718c45c3e863c9278a4615bb93a62"
+          },
+          {
+            "path": "demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T012216Z-5d2e6f29ca/artifact_card.md",
+            "sha256": "d79da8dfb65cf3a893e6b4194fac0496c578e4d4f75b8488d44c86e1886d0f01"
+          },
+          {
+            "path": "demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T012216Z-5d2e6f29ca/reviews/browser/desktop.jpg",
+            "sha256": "c518de23e9a48a348256bf85b78fc9a8aa72326add426e66110e534dc2453fd9"
+          },
+          {
+            "path": "demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T012216Z-5d2e6f29ca/reviews/browser/phone.jpg",
+            "sha256": "a571f8e15eb96c0ff15a9550e93c5cb2881048b2193eef6492bcf3c5bd83a416"
+          }
+        ]
+      },
+      "practice": {
+        "run": "/private/tmp/teaching-acceptance-20260926/codex/lucia-website/teaching/sessions/3faa17fba4bc54d8d46257d4f0c5d7c8/files/demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T013351Z-a2111028d5",
+        "native": {
+          "schema_version": 1,
+          "run_id": "20260928T013351Z-a2111028d5",
+          "status": "quality_ready",
+          "site_digest": "2cf56577e48a98413a8dd67bfedf1d966857f1ce366924c6485fafabf3640635",
+          "issues": [],
+          "valid": true
+        },
+        "saved_reopening": {
+          "passed": true,
+          "url": "http://127.0.0.1:52856/course.html",
+          "observed": "Actual saved site opens in Codex. Friday 14:00–16:00 added; Monday–Thursday 09:00–12:00, both legal services, fictional email and corrected heading retained. Labeled screenshot previews and updated review readable.",
+          "human_approval": false
+        },
+        "outputs": [
+          {
+            "path": "demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T013351Z-a2111028d5/work/site/index.html",
+            "sha256": "5933fe4624f5b13c32b279f51e8bb94c7c575255b99098d3d6828c65c3354e99"
+          },
+          {
+            "path": "demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T013351Z-a2111028d5/artifact_card.md",
+            "sha256": "67de9435aae19d78ee88ee568bfc1e8bcf1d0a4ce4d73d7211cb4f03791fb757"
+          },
+          {
+            "path": "demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T013351Z-a2111028d5/reviews/browser/desktop.jpg",
+            "sha256": "02f82ba89ea17813cb45930ec26cbc419df70dc8e86f4bc35fd494914a5decd6"
+          },
+          {
+            "path": "demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T013351Z-a2111028d5/reviews/browser/phone.jpg",
+            "sha256": "80e5f7ccd34387b16d22eadda3c02a9d80ad2dd79158d4f192f9826f84da2529"
+          }
+        ]
+      }
+    },
+    "demo_files_preserved": 31,
+    "session_id": "3faa17fba4bc54d8d46257d4f0c5d7c8",
+    "session_phase": "paused",
+    "repairs": [
+      "Restored whitespace around a responsive heading line break in generated demo, then retested desktop and phone before acceptance",
+      "Localized phone.jpg screenshot caption in five supported languages"
+    ],
+    "checkpoint": {
+      "question": "Se vedo questa pagina, è già online? E posso aggiungere un indirizzo che manca nel file?",
+      "answer": "No: questa pagina è aperta in una prova locale sul computer e non è stata pubblicata online. Per pubblicarla servirebbero una destinazione scelta e le approvazioni sulla versione esatta. Un indirizzo che manca nel file va prima fornito e verificato per l’uso nel sito: non lo aggiungiamo per supposizione.",
+      "participant": "Codex simulated QA; not Fabio",
+      "actual_human_participation_claimed": false,
+      "source": "Explicit teacher simulated-test checkpoint",
+      "state_basis": {
+        "external_routes": "all unselected",
+        "packages_created": false,
+        "deliveries": [],
+        "source_has_address": false
+      }
+    },
+    "checks": [
+      "Actual Codex IAB1280x720 and390x844 full-page renders and contact navigation",
+      "Native workflow validation, exact screenshot hashes, independent source expectations",
+      "Five supported-language owning-kit checks",
+      "Previous demonstration byte preservation and separate saved-result reopening"
+    ],
+    "limitations": [
+      "Native microphone and voice untested",
+      "Physical two-window placement untested",
+      "Other-language interactive lessons untested",
+      "Current source checkout, no claim of installed-package equivalence"
+    ],
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-28T01:39:38.349882+00:00"
   }
 }

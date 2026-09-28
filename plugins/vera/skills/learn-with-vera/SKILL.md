@@ -39,20 +39,27 @@ actual input/output contract fits. Read that contract before making the choice.
 ## Start from the user's goal
 
 Read `../vera/references/local-onboarding.md` and use its installed-root discovery
-and shared OS-user profile. For this user-requested tutorial, if onboarding is
-unfinished, explain the optional introduction and follow its interview and 3–4
-lesson plan only if the user chooses it. If they decline or want ordinary work,
+and shared OS-user profile. Start a specifically requested course directly using
+the single-course route below. For an open introduction request, explain the
+optional interview and 3–4 lesson plan and follow it only if the user chooses it.
+If they decline or want ordinary work,
 route directly to the requested specialist. A tutorial setup or recovery error
 must never prevent that transition. Never reset a completed
 profile or use repeated teaching to manufacture onboarding completion.
 
-For a completed profile, read `references/local-sessions.md`, then run
+For a requested single course, including first use, read `references/local-sessions.md`, then run
 `local_teaching.py status`. Read the current profile explicitly in Codex and
 local ChatGPT Work on the same OS account. Use the user's current request over
 stored preferences. Verify actual local access; a cloud sandbox is not the
 user's computer. Start this two-thread voice journey in Codex desktop. Local
 Work may reuse its saved profile and sessions when the required native controls
 and local execution are actually available. Cowork receives no teaching skill.
+
+A single requested course does not require a completed introduction, a profile
+interview or a three-course plan. Start it with `local_teaching.py begin`, passing
+the verified native pair when none is saved. A missing profile stays unset; use
+the current request to choose the language and pace. Do not manufacture profile
+confirmation, onboarding completion or extra lessons to unlock this course.
 
 When the request is open, ask “Che cosa vorresti fare oggi?” If the user says
 “Non so cosa chiederti”, offer two or three concrete outcomes relevant to their
@@ -87,7 +94,14 @@ quiz after the explanation. Never simulate the user's answers or participation.
 
 When the worker produces the normal deliverables, open those actual files in its
 window. Explain where to start, what the main sections mean, how a finding links
-to the inputs and what the user can do next. Rendering the outline produces no
+to the inputs and what the user can do next. Apply the existing model-data report
+contract to the actual reading and explanation of results as well as execution.
+Do not infer "no case data reached the model" merely because the parser ran
+locally: invoice fields or other results already read in chat are model context.
+This does not authorize any additional source access, copying or transmission.
+If a report predates later reads, state that limit; preserve a sealed run and
+record any correction locally outside it through the existing review procedure.
+Rendering the outline produces no
 execution evidence and completes no demo. A retained course may include an
 `example.html` specimen; explain that it is prepared material, not this session’s
 result. When no execution request is supplied, use its `teacher.md`, authored

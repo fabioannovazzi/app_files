@@ -39,6 +39,7 @@ from centrale_rischi_core import (  # noqa: E402
     finalize_commentary,
     load_source_tables,
     render_html,
+    render_markdown,
     write_excel,
 )
 from centrale_rischi_pdf import (  # noqa: E402
@@ -1589,13 +1590,22 @@ def test_renderers_create_reviewable_html_and_excel(tmp_path: Path) -> None:
     assert "Non disponibile" in workbook["Garanti intestatario"]["A2"].value
 
 
-def test_reports_distinguish_unavailable_evidence_from_zero(tmp_path: Path) -> None:
+@pytest.mark.parametrize("empty_column", [False, True])
+def test_reports_distinguish_unavailable_evidence_from_zero(
+    tmp_path: Path, empty_column: bool
+) -> None:
     source = tmp_path / "cr.xlsx"
     _write_source(source)
+    if empty_column:
+        workbook = load_workbook(source)
+        for row in workbook.active.iter_rows(min_row=2):
+            row[10].value = None
+        workbook.save(source)
     tables = load_source_tables([source])
     inspection, _, _ = build_inspection(tables)
     recipe = _reviewed_recipe(inspection)
-    recipe["columns"]["prejudicial_event"] = ""
+    if not empty_column:
+        recipe["columns"]["prejudicial_event"] = ""
     analysis = build_analysis(tables, recipe)
 
     rendered = render_html(analysis)
@@ -1610,6 +1620,9 @@ def test_reports_distinguish_unavailable_evidence_from_zero(tmp_path: Path) -> N
         "popolazione." in rendered
     )
     assert "Non disponibile" in workbook["Pregiudizievoli"]["A2"].value
+    if empty_column:
+        assert "Il campo vuoto non dimostra" in rendered
+        assert "Il campo vuoto non dimostra" in render_markdown(analysis)
 
 
 def test_vera_launcher_uses_the_complete_component_registry() -> None:

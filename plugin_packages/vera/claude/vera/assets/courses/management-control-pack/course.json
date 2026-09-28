@@ -80,12 +80,16 @@
       "sha256": "17c9c3296fd152848ab4299347be4806c1a0062367cc27b6c37f173fd2510d3b"
     },
     {
+      "path": "modules/management-control-pack/scripts/preview_report.py",
+      "sha256": "7bf3850456f4f673eb384424fe1898b180cf51f72f720f7abdbf9233ebb864f4"
+    },
+    {
       "path": "modules/management-control-pack/scripts/run_pack.py",
       "sha256": "69ef1cbde7526f347c45bf51758f9356796cb583c64a484bacaa04014d266fdd"
     },
     {
       "path": "modules/management-control-pack/skills/management-control-pack/SKILL.md",
-      "sha256": "b26c4dc8a8841687f3cab26070d02c9d6052fee4dfcc91efde78d1d865c9bf5b"
+      "sha256": "eb50ed6752fc8d437f1d3c3d7630c4c8c454a3f94e88702d1a6c6277117b3464"
     },
     {
       "path": "modules/management-control-pack/skills/management-control-pack/references/sites-delivery.md",
@@ -303,5 +307,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "179efcc5ad4ac42f9541ecc76cd9b4fa94521c105a1309606e23c381c4c471b6"
+  "canonical_course_sha256": "6bd5f3e0d8f4b782bab3f91b9fa87c26aeb5f5006e95179a35ef4891d39dd7d2"
 }

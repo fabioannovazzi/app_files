@@ -108,3 +108,54 @@ def test_changed_text_rejects_previous_document_kind_review(
         parser.parse_structured_fiscal_fields(
             [source], tmp_path, kind_decisions=reviewed_cover_letter()
         )
+
+
+@pytest.mark.parametrize(
+    "language,reference_label",
+    [
+        ("it", "Riferimenti a F24"),
+        ("en", "References to F24"),
+        ("fr", "références aux formulaires F24"),
+        ("de", "Hinweise auf F24"),
+        ("es", "referencias a formularios F24"),
+    ],
+)
+def test_notice_mention_does_not_claim_f24_documents_received(
+    monkeypatch, tmp_path, language, reference_label
+):
+    script = SCRIPT.parent / "build_file_preparation_outputs.py"
+    monkeypatch.syspath_prepend(str(script.parent))
+    spec = importlib.util.spec_from_file_location("notice_intake_test", script)
+    module = importlib.util.module_from_spec(spec)
+    monkeypatch.setitem(sys.modules, spec.name, module)
+    spec.loader.exec_module(module)
+    source = tmp_path / "sources"
+    source.mkdir()
+    text = "Comunicazione Agenzia delle Entrate. Inviare quietanze F24 per il periodo 2025.\n"
+    (source / "avviso.md").write_text(text)
+    output = tmp_path / "intake"
+    result = module.build_file_preparation_outputs(
+        source,
+        2025,
+        output,
+        enable_ocr=False,
+        language=language,
+        kind_decisions={
+            "avviso.md": {
+                "kind": "unsupported",
+                "basis": "model_review",
+                "text_sha256": hashlib.sha256(text.encode()).hexdigest(),
+            }
+        },
+    )
+    assert result.structured_field_count == 0
+    missing = (output / "02_documenti_mancanti_o_incerti.md").read_text()
+    assert reference_label in missing
+    forbidden = [
+        "F24 presenti",
+        "F24 forms are present",
+        "formulaires F24 sont présents",
+        "F24-Formulare sind vorhanden",
+        "Hay formularios F24",
+    ]
+    assert not any(phrase in missing for phrase in forbidden)

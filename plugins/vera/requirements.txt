@@ -1,1 +1,2 @@
 # Vera delegates runtime dependencies to the selected specialist module.
+defusedxml>=0.7.1,<1

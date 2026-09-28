@@ -33,3 +33,11 @@ courseware module. No additional external recipient is introduced.
 
 Browser preview reviewed 2026-09-17 against courseware/preview.py.
 Browser preview is a separate optional local server: it binds only 127.0.0.1 on a free port, serves the rendered kit and relative assets, rejects resolved paths outside the kit and directory listings, and runs only for the lesson preview. It does not upload files, save access logs, change profiles or record completion. Browser/model inspection remains ordinary native model processing; loopback serving is not authentication against other local processes.
+
+Question-journey startup reviewed 2026-09-28 against desktop_teaching/cases.py.
+The `quesito-legale-fiscale` lesson prepares the existing `prompt-optimizer`
+ledger stage before answer review, keeping the Lucia lesson identity and its
+selected local input bindings. This routing correction introduces no separate
+workstream, external recipient, model call or completion decision.
+
+Result reading reviewed 2026-09-28 against the shared courseware readers and preview server. Hash-verified Word and workbook files have escaped text/table views; original downloads retain their bytes. Native-validated website HTML/CSS and local assets use the passive CSP sandbox that blocks scripts, forms and external loads. Exact input references and result hashes govern reopening; these views add no hosted recipient or model call. The native teacher may read the selected material, and this is ordinary OpenAI processing. Unchanged reviewed drafts remain input evidence rather than being relabelled as generated outputs.

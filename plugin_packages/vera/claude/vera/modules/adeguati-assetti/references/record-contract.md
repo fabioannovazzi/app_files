@@ -52,6 +52,10 @@ Optional prior review:
   empty citation list when evidence is unavailable. Superseded requires nonempty
   current_action_ids identifying the replacement actions. Otherwise this list
   may be empty. A carried-forward action may keep its ID; explain any replacement.
+  Compare every material requirement of each prior action with current evidence,
+  including its completion evidence. Do not silently drop an unresolved requirement
+  when carrying the action forward or adding a new task; retain it explicitly or
+  explain a supported replacement in the disposition.
 
 Optional `professional_decision`: `{proposal_sha256, reviewer_ref, reviewed_at,
 conclusion, finding_dispositions, next_review_date, review_date_reason}`. The exact

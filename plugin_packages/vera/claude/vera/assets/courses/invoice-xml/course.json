@@ -69,7 +69,7 @@
     },
     {
       "path": "modules/invoice-xml/scripts/invoice_workflow.py",
-      "sha256": "c37c1e4082f365ba6326dacee21673916faca211fb1585e3264ceb80fdd31cdb"
+      "sha256": "684323802f9b668eda34fc36ec8821e81076dc5bd90fc82c2c9de3c158f1993d"
     },
     {
       "path": "modules/invoice-xml/scripts/source_evidence.py",
@@ -334,5 +334,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "e4ac49ffda9e25f44b9b0658998b0366182bc4f3bece83801d16abac8c2308ce"
+  "canonical_course_sha256": "1d6269700a15834cc4d26b170dd9b704cdf80e951752ff2975ccdd5f667a3de7"
 }

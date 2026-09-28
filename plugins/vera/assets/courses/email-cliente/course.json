@@ -30,7 +30,7 @@
     {
       "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
       "repository_path": "plugins/client-file-preparation/assets/client-file-preparation-review-widget.html",
-      "sha256": "84264b4da1dc3b4d289f20b5ae85cd633ad7a6f56a1f797218be39bfcdf005a3"
+      "sha256": "5eb2822023458679cb31ae5e0dfdc07ccf804d07719913fb5b7c234842979235"
     },
     {
       "path": "modules/client-file-preparation/assets/icon.svg",
@@ -40,7 +40,7 @@
     {
       "path": "modules/client-file-preparation/assets/review-workbench-adapter.json",
       "repository_path": "plugins/client-file-preparation/assets/review-workbench-adapter.json",
-      "sha256": "42af84f012b36d6d34c2646a9277b1a9aaf9eb8c4bf9287038948a56d2d401d0"
+      "sha256": "932b3b69030360e3ba849d4c6c20dca6ec8c247a147e4a451725c517d1b57382"
     },
     {
       "path": "modules/client-file-preparation/references/workflow-reference.md",
@@ -60,7 +60,7 @@
     {
       "path": "modules/client-file-preparation/scripts/build_file_preparation_outputs.py",
       "repository_path": "plugins/client-file-preparation/scripts/build_file_preparation_outputs.py",
-      "sha256": "087e935240b3fe78cf98a4499a0a295175abb3aa8c2e625d160496462c1fc9bc"
+      "sha256": "270521ce0e0a07f0cdc7da8e10a9a227c6b7d5aac30f5dda891c893da1d308f7"
     },
     {
       "path": "modules/client-file-preparation/scripts/check_dependencies.py",
@@ -205,12 +205,12 @@
     {
       "path": "vendor/modules/courseware/assets/course.css",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
-      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      "sha256": "5b28ac597f0a3deaf4cfc907b8a33bb40aae21719206ad0c976b605950f89dc7"
     },
     {
       "path": "vendor/modules/courseware/assets/languages.json",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      "sha256": "507967ae7dcf07ae4e138fff4333adb5fd709484731dcef45d531152c54ede45"
     },
     {
       "path": "vendor/modules/courseware/assets/legacy-course.css",
@@ -223,9 +223,24 @@
       "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
     },
     {
+      "path": "vendor/modules/courseware/deck_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/deck_view.py",
+      "sha256": "96f75ea3078c9e0c6e509cdefb0beeb876677e2e7884777d213d9b03c6c27b80"
+    },
+    {
+      "path": "vendor/modules/courseware/document_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/document_view.py",
+      "sha256": "9982c9d6ce83e7feb26165308fa9a136a744891a7e623ce23ff9bb778e6b7403"
+    },
+    {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
       "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/html_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/html_view.py",
+      "sha256": "57280e82460bd8c7982294c4be6e0cff7da969800d4282e6da15059571cce0b1"
     },
     {
       "path": "vendor/modules/courseware/legacy.py",
@@ -235,7 +250,7 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "22c5ea8d39a6ffa376c63f12bd31e3282b435a913e8027ee44c4261a5e704a74"
+      "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
     },
     {
       "path": "vendor/modules/courseware/policy.py",
@@ -245,7 +260,17 @@
     {
       "path": "vendor/modules/courseware/preview.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/preview.py",
-      "sha256": "36ff10a3d93772a927765c395eb19c5073664c1447b0b267cf9bd9455c4ad6f3"
+      "sha256": "1a6e56141cdd554a6510100f47745f7b31472c9d22f45407f4f86ac7981aee10"
+    },
+    {
+      "path": "vendor/modules/courseware/sales_plan_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/sales_plan_view.py",
+      "sha256": "115977d03c034ed5f363d6fd5c8c82648ed1349067ac61e48d0701b10caa7e7b"
+    },
+    {
+      "path": "vendor/modules/courseware/website_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/website_view.py",
+      "sha256": "f230f86272201bae7bc34f1868d8cb6013b47ce9ccc8b876acdfb0bc257637d5"
     },
     {
       "path": "vendor/modules/reporting_table.py",
@@ -498,7 +523,7 @@
       "request": "Vera, prepara una email per chiedere al cliente se ha altre CU e se ci ha consegnato tutti gli F24 della campagna. Fammi prima rivedere le richieste sulla base di questo fascicolo.",
       "steps": [
         "La chat di lavoro esegue la preparazione del fascicolo e mostra documenti ricevuti e domande proposte. La chat vocale spiega quali informazioni sono già disponibili e quali conferme si cercano.",
-        "Nella pagina di revisione scegli le richieste pertinenti e restringi quelle troppo generiche alle due conferme del caso. Vera salva e applica le decisioni effettive prima di usarle nella bozza.",
+        "Nella revisione apri «Richieste al cliente» e leggi il testo proposto. Per restringerlo, scegli «Richiedi documenti» e scrivi la conferma precisa nel campo «Documenti richiesti». Rifiuta la domanda sulla classificazione interna. Salva e applica le decisioni prima della bozza.",
         "Vera scrive la email dalle richieste riviste. Apri la bozza, controlla oggetto, domande e tono; un’eventuale modifica viene salvata attraverso la stessa revisione, conservando il collegamento alle decisioni."
       ],
       "deliverables": [
@@ -523,7 +548,7 @@
       "request": "Vera, prepare an email asking whether the client has other CUs and has supplied all F24s for the campaign. First let me review the requests against this file.",
       "steps": [
         "The working chat prepares the file and shows received documents and proposed questions. The voice chat explains what is already available and which confirmations are needed.",
-        "On the review page, choose relevant requests and narrow broad suggestions to the two confirmations in the case. Vera saves and applies the actual decisions before using them for the draft.",
+        "In the review, open “Client requests” and read the proposed text. To narrow it, choose “Request documents” and enter the precise confirmation in “Requested documents”. Reject the internal classification question. Save and apply the decisions before drafting.",
         "Vera writes the email from reviewed requests. Open it and check subject, questions and tone; any replacement is saved through the same review process with its link to the decisions."
       ],
       "deliverables": [
@@ -548,7 +573,7 @@
       "request": "Vera, prépare un courriel demandant si le client possède d’autres CU et a transmis tous les F24 de la campagne. Fais-moi d’abord revoir les demandes à partir de ce dossier.",
       "steps": [
         "La conversation de travail prépare le dossier et montre documents reçus et questions proposées. La conversation vocale explique ce qui est disponible et les confirmations recherchées.",
-        "Sur la page de revue, choisissez les demandes pertinentes et limitez les suggestions trop larges aux deux confirmations du cas. Vera enregistre et applique les décisions effectives avant de rédiger.",
+        "Dans la revue, ouvrez « Demandes au client » et lisez le texte proposé. Choisissez l’action de demande de documents pour préciser la confirmation attendue dans le champ des documents demandés. Rejetez la question de classement interne, puis enregistrez et appliquez les décisions avant la rédaction.",
         "Vera rédige à partir des demandes revues. Ouvrez le brouillon et vérifiez objet, questions et ton ; tout remplacement est enregistré par la même revue, avec son lien aux décisions."
       ],
       "deliverables": [
@@ -573,7 +598,7 @@
       "request": "Vera, entwirf eine E-Mail mit der Frage, ob weitere CU existieren und alle F24 der Kampagne vorliegen. Lass mich die Anfragen zunächst anhand dieser Akte prüfen.",
       "steps": [
         "Der Arbeitschat bereitet die Akte vor und zeigt erhaltene Dokumente und vorgeschlagene Fragen. Der Sprachchat erklärt, was vorliegt und welche Bestätigungen fehlen.",
-        "Wählen Sie auf der Prüfseite die passenden Anfragen und begrenzen Sie breite Vorschläge auf die beiden Bestätigungen des Falls. Vera speichert und übernimmt die tatsächlichen Entscheidungen vor dem Entwurf.",
+        "Öffnen Sie in der Prüfung „Mandantenanfragen“ und lesen Sie den vorgeschlagenen Text. Wählen Sie die Aktion zum Anfordern von Dokumenten und tragen Sie die genaue Bestätigung im Feld für angeforderte Dokumente ein. Lehnen Sie die interne Einordnungsfrage ab; speichern und übernehmen Sie die Entscheidungen vor dem Entwurf.",
         "Vera schreibt aus den geprüften Anfragen. Öffnen Sie den Entwurf und prüfen Sie Betreff, Fragen und Ton; ein Ersatztext wird über dieselbe Prüfung mit Bezug zu den Entscheidungen gespeichert."
       ],
       "deliverables": [
@@ -598,7 +623,7 @@
       "request": "Vera, prepara un correo para preguntar si el cliente tiene otras CU y ha entregado todos los F24 de la campaña. Primero déjame revisar las peticiones a partir de este expediente.",
       "steps": [
         "La conversación de trabajo prepara el expediente y muestra documentos recibidos y preguntas propuestas. La conversación de voz explica qué está disponible y qué confirmaciones se necesitan.",
-        "En la página de revisión, elige peticiones pertinentes y limita las sugerencias amplias a las dos confirmaciones del caso. Vera guarda y aplica las decisiones reales antes de redactar.",
+        "En la revisión, abre «Solicitudes al cliente» y lee el texto propuesto. Elige la acción para solicitar documentos y escribe la confirmación precisa en el campo de documentos solicitados. Rechaza la pregunta de clasificación interna; guarda y aplica las decisiones antes de redactar.",
         "Vera escribe desde las peticiones revisadas. Abre el borrador y comprueba asunto, preguntas y tono; cualquier sustitución se guarda mediante la misma revisión, vinculada a las decisiones."
       ],
       "deliverables": [

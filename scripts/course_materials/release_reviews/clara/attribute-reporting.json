@@ -322,5 +322,58 @@
         ]
       }
     }
+  },
+  "codex_course_qa_20260927": {
+    "status": "passed",
+    "course": 36,
+    "product": "clara",
+    "workflow": "attribute-reporting",
+    "scope": "Italian Codex simulated learner journey with distinct native demo/practice, independent teacher review, actual rendered results/source navigation and saved reopening",
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "session_id": "5db4ac376a6122769f61307cefb8efcb",
+    "phase": "paused",
+    "revision": 4,
+    "profile": null,
+    "onboarding_phase": "interview",
+    "runs": {
+      "demo": {
+        "directory": "/private/tmp/teaching-acceptance-20260926/codex/clara-attribute-reporting/teaching/sessions/5db4ac376a6122769f61307cefb8efcb/files/demo-2c17023171801682",
+        "report": "/private/tmp/teaching-acceptance-20260926/codex/clara-attribute-reporting/teaching/sessions/5db4ac376a6122769f61307cefb8efcb/files/demo-2c17023171801682/outputs/run/report/report.html",
+        "report_sha256": "28ed849e12f449ee0c58f1922641b56df2b49052033af714f82738b0e73bb5be",
+        "review_sha256": "8147eb245c5e22e747e7257a07f8397d99606c100063fa5a3025dd01387848e2",
+        "verdict": "correct_with_caveats",
+        "claims": 7,
+        "source_zip_sha256": "54721bc089e23f620665b2afe33d8152f6336cf126ffdb01169780be3e522f2b"
+      },
+      "practice": {
+        "directory": "/private/tmp/teaching-acceptance-20260926/codex/clara-attribute-reporting/teaching/sessions/5db4ac376a6122769f61307cefb8efcb/files/practice-adc099a7379da3a4",
+        "report": "/private/tmp/teaching-acceptance-20260926/codex/clara-attribute-reporting/teaching/sessions/5db4ac376a6122769f61307cefb8efcb/files/practice-adc099a7379da3a4/outputs/run/report/report.html",
+        "report_sha256": "233597fb9dcd1b064d83b311308f89bb7d4720584963b026fa029ffd9f8186ba",
+        "review_sha256": "7edd04703cd03da8214f89d59ecf00bf1d966bc83313a43380b13ef94f8899c0",
+        "verdict": "correct_with_caveats",
+        "claims": 7,
+        "source_zip_sha256": "0d689c8ea53e4f72692ad9f1e8c27d3ab51f84c79905a28b825d9cab103cad7f"
+      }
+    },
+    "demo_files_preserved": 66,
+    "demo_file_set_unchanged": true,
+    "practice_change": "New arrivals now blue sweaters; best-seller comparison unchanged. Fictional reassignment, not temporal market growth.",
+    "repairs": [
+      "Localized current native bridge and comparison labels",
+      "Replaced stale authored pending-review sentence with verdict guidance",
+      "Passive course reader supports native report metadata/figures and omits controls/deactivates external product links",
+      "Report-first readable titles, collapsed technical disclosures, preserved table scrolling and separated text"
+    ],
+    "limitations": [
+      "Native microphone/voice not tested",
+      "Physical two-window placement not verified",
+      "Other-language live journeys not tested",
+      "Installed Clara path unavailable; local current source tested",
+      "IAB viewport override ineffective; exact inner frame dimensions measured",
+      "Browser instrumentation MutationObserver exceptions retained separately from script-free report runtime"
+    ],
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-27T21:29:32.281284+00:00"
   }
 }

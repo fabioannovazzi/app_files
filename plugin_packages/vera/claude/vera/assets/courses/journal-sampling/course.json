@@ -32,11 +32,11 @@
     },
     {
       "path": "modules/journal-sampling/assets/journal-sampling-review-widget.html",
-      "sha256": "8e252809fd6e429ba4fd783bfa577e1e9632f3c1b962fb8aa931c72f0f637a48"
+      "sha256": "6c252a857eb83d149f0954f4ccff08ec5ebc1968a94619570a8b0437affcab22"
     },
     {
       "path": "modules/journal-sampling/assets/review-workbench-adapter.json",
-      "sha256": "3c433e46a5cb624f3f5bf6e4871acd43a7b833b66802a4b7b22e5b0dcfaf1fb7"
+      "sha256": "21e8c9a626cbf2d7ad859951adb2a9f65cd3ca77528aeb6ed88f00fe043ad382"
     },
     {
       "path": "modules/journal-sampling/references/workflow-reference.md",
@@ -76,7 +76,7 @@
     },
     {
       "path": "modules/journal-sampling/scripts/review_successor.py",
-      "sha256": "f753ddf73cd26639c593a01eed15e5d6188e1f492a05977fcedfd850710bc57a"
+      "sha256": "10e374946a9b0cbbf3378e65f58688326c44ba787ce3699e65fb89b278b2e7bd"
     },
     {
       "path": "modules/journal-sampling/scripts/run_sample.py",
@@ -421,5 +421,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "994a01738537e8adc48bde798ac052161f256dd8ce43311173e241f3062eef53"
+  "canonical_course_sha256": "49b3c48027e6093b4f352aeb4a51bffc5c98d0d8630d92bc1725267db58c30ab"
 }

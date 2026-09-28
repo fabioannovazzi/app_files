@@ -69,7 +69,7 @@
     },
     {
       "id": "digest-bound-explicit-review",
-      "control": "Review decisions bind the exact intake and substantive review payload digests, require a named reviewer and explicit user confirmation, and become stale when the intake changes."
+      "control": "Review decisions bind the exact intake and substantive review payload digests, require a named reviewer and explicit confirmation, and become stale when the intake changes. The local workbench restores only valid decisions for the current review and validates submitted page bindings before replacing a saved decision file."
     },
     {
       "id": "no-automatic-file-operation-or-acceptance",
@@ -89,9 +89,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-15",
+    "reviewed_at": "2026-09-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "bd9649dab7d783792491ac745c4924f2f047310b592f8505e2da47417419cb8e"
+    "source_fingerprint": "676cbbdfd44912db1fe56c913f3c6860943c31b79ea99aa03353a3dbc0339347"
   }
 }

@@ -147,6 +147,9 @@ Normal outputs include:
 Never reproduce, estimate, or imply a bank's proprietary rating. Never treat a
 single reported month as continuous monitoring.
 
+A mapped but empty prejudicial-event column is unavailable evidence for the
+current month. It does not establish that the client has no adverse events.
+
 ## Judgment boundary
 
 Deterministic code owns file inventory, exact field extraction after reviewed

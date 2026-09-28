@@ -621,11 +621,11 @@ DOCX_COPY: dict[str, dict[str, str]] = {
         "es": "Secciones asignadas",
     },
     "missing_sections": {
-        "en": "Missing sections",
-        "it": "Sezioni mancanti",
-        "fr": "Sections manquantes",
-        "de": "Fehlende Abschnitte",
-        "es": "Secciones pendientes",
+        "en": "Sections without a source table",
+        "it": "Sezioni senza tabella fonte",
+        "fr": "Sections sans tableau source",
+        "de": "Abschnitte ohne Quelltabelle",
+        "es": "Secciones sin tabla fuente",
     },
     "model_api_calls": {
         "en": "Model API calls from scripts",

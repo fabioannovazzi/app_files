@@ -48,3 +48,20 @@ It rechecks the retained execution before completion and when opening a saved
 result for explanation. These mechanical checks do not establish the model's
 professional judgment, actual user understanding or human approval. Those still
 require the normal live explanation, participation and workflow review.
+
+## Interactive budget reports
+
+For Reporting Engine's budget route, open the actual dashboard with its own
+`scripts/budget_report_preview.py --report <report>/management_control_dashboard.html`
+from the Reporting Engine component. Give the learner the returned browser link;
+do not ask them to run a command or read HTML source. Keep the native preview
+running while using month and cumulative controls. It needs the adjacent native
+execution receipt, not a Vera engagement or a hosted publication.
+
+Use the ordinary course document view for the workbook, written report and short
+guide. If the main execution record also lists the interactive dashboard, create
+a separate document-view record from the same observed run: preserve all actual
+input and native-record bindings, retain the dashboard among native records, and
+list only the document outputs for that view. Keep the main progress execution
+record unchanged. Verify both the native dashboard and the document links before
+saving progress, and reopen both when resuming a saved lesson.

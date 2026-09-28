@@ -384,5 +384,50 @@
     "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
     "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
+  },
+  "codex_course_qa_20260927": {
+    "status": "passed",
+    "course": 33,
+    "product": "clara",
+    "workflow": "advisory-brief-planner",
+    "scope": "Italian functional Codex simulated learner journey: repaired first startup, prepared inputs, actual current native planner, rendered assignment summary and source/handoff links, distinct practice and saved reopening",
+    "actor": "Codex simulated QA",
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "session_id": "95a925c1c4933bd4f261748c94f90e74",
+    "phase": "paused",
+    "revision": 4,
+    "profile": null,
+    "onboarding_phase": "interview",
+    "runs": {
+      "demo": {
+        "directory": "/private/tmp/teaching-acceptance-20260926/codex/clara-advisory-brief-planner/teaching/sessions/95a925c1c4933bd4f261748c94f90e74/files/demo-8d6cf8180ae49b98",
+        "contract_sha256": "6892fd6baaf0594ff689bb11847f051461bbbed0d50e2a2e505bb02ab02038b1",
+        "validation": "passed",
+        "inputs": 2,
+        "outputs": 4,
+        "workflow_selected": "clara:advisory-case-director",
+        "deliverable": "Breve memo in italiano con raccomandazione, motivi, limiti e prossimo passo; in questa fase si produce soltanto il piano dell’incarico."
+      },
+      "practice": {
+        "directory": "/private/tmp/teaching-acceptance-20260926/codex/clara-advisory-brief-planner/teaching/sessions/95a925c1c4933bd4f261748c94f90e74/files/practice-3cfebc5b56c231d3",
+        "contract_sha256": "acc00faa789e20642d393f45ace26ca466ae068f9dde5011488e3e7e546c10ae",
+        "validation": "passed",
+        "inputs": 4,
+        "outputs": 4,
+        "workflow_selected": "clara:advisory-case-director",
+        "deliverable": "Breve lista di azioni per verificare la fattibilità del pilota su prenotazione; non un memo o una raccomandazione di lancio. Questa fase produce il piano per tale lista, non esegue le azioni."
+      }
+    },
+    "demo_files_preserved": 11,
+    "demo_file_set_unchanged": true,
+    "limitations": [
+      "Native microphone/voice not tested",
+      "Physical two-window positioning not tested",
+      "Other-language live journeys not tested",
+      "Planning only; downstream advice not executed or professionally approved"
+    ],
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-27T19:37:37.497766+00:00"
   }
 }

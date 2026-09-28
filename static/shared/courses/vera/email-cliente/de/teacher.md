@@ -30,7 +30,7 @@ Erklären Sie den laufenden Schritt und warten Sie auf sein tatsächliches Ergeb
 
 Der Arbeitschat bereitet die Akte vor und zeigt erhaltene Dokumente und vorgeschlagene Fragen. Der Sprachchat erklärt, was vorliegt und welche Bestätigungen fehlen.
 
-Wählen Sie auf der Prüfseite die passenden Anfragen und begrenzen Sie breite Vorschläge auf die beiden Bestätigungen des Falls. Vera speichert und übernimmt die tatsächlichen Entscheidungen vor dem Entwurf.
+Öffnen Sie in der Prüfung „Mandantenanfragen“ und lesen Sie den vorgeschlagenen Text. Wählen Sie die Aktion zum Anfordern von Dokumenten und tragen Sie die genaue Bestätigung im Feld für angeforderte Dokumente ein. Lehnen Sie die interne Einordnungsfrage ab; speichern und übernehmen Sie die Entscheidungen vor dem Entwurf.
 
 Vera schreibt aus den geprüften Anfragen. Öffnen Sie den Entwurf und prüfen Sie Betreff, Fragen und Ton; ein Ersatztext wird über dieselbe Prüfung mit Bezug zu den Entscheidungen gespeichert.
 

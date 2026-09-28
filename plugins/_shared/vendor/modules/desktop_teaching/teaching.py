@@ -175,27 +175,28 @@ class TeachingStore(Store):
         return self.sessions / _identifier(lesson["session_id"]) / "files"
 
     def begin(self, data: dict[str, Any] | None = None) -> dict[str, Any]:
-        """Start a fresh example after onboarding; repetition never reuses old results."""
+        """Start a requested course without requiring the optional introduction."""
         data = data or {}
-        if self._profile()["phase"] != "complete":
-            raise OnboardingError(
-                "Repeated tutorial sessions need the completed introduction; ordinary workflows remain available"
-            )
+        workflow = data.get("workflow_id")
+        if reason := local_unavailability(self.product, workflow):
+            raise OnboardingError(reason)
+        if workflow not in eligible_workflows(self.plugin_root):
+            raise OnboardingError("Choose a supported operational workflow")
+        title = _text(data.get("title"), "title")
+        goal = _text(data.get("goal"), "goal")
+        mode = data.get("mode", "show")
+        if mode not in {"show", "together"}:
+            raise OnboardingError("Teaching mode is show or together")
+        # Validate the native pair before creating first-use local state.
+        _pair(data.get("pair", self.status()["pair"]))
+        if self._profile()["phase"] == "required":
+            Store(self.root, plugin_root=self.plugin_root).begin()
         with self._lock():
             current = self.status()
-            if current["onboarding_phase"] != "complete":
-                raise OnboardingError(
-                    "Repeated tutorial sessions need the completed introduction; ordinary workflows remain available"
-                )
             if current["active_session"]:
                 raise OnboardingError(
                     "Resume or pause the active teaching session first"
                 )
-            workflow = data.get("workflow_id")
-            if reason := local_unavailability(self.product, workflow):
-                raise OnboardingError(reason)
-            if workflow not in eligible_workflows(self.plugin_root):
-                raise OnboardingError("Choose a supported operational workflow")
             previous = data.get("example_id")
             if previous is not None and not any(
                 e["example_id"] == previous
@@ -204,9 +205,6 @@ class TeachingStore(Store):
                 for e in current["examples"]
             ):
                 raise OnboardingError("Choose a completed example of this workflow")
-            mode = data.get("mode", "show")
-            if mode not in {"show", "together"}:
-                raise OnboardingError("Teaching mode is show or together")
             profile = self._profile()
             session_id = secrets.token_hex(16)
             state = {
@@ -217,10 +215,10 @@ class TeachingStore(Store):
                 "revision": 1,
                 "phase": "active",
                 "workflow_id": workflow,
-                "title": _text(data.get("title"), "title"),
-                "goal": _text(data.get("goal"), "goal"),
+                "title": title,
+                "goal": goal,
                 "mode": mode,
-                "pair": _pair(current["pair"]),
+                "pair": _pair(data.get("pair", current["pair"])),
                 "worker_token": secrets.token_hex(24),
                 "directory": str(self.sessions / session_id / "files"),
                 "voice_preference": "native_voice",
@@ -238,10 +236,6 @@ class TeachingStore(Store):
     def _state(self) -> dict[str, Any]:
         if not self.session_id:
             raise OnboardingError("Select --session from the local teaching library")
-        if self._profile()["phase"] != "complete":
-            raise OnboardingError(
-                "Resume the optional introduction for this tutorial; ordinary workflows remain available"
-            )
         return self._load(self.session_id, self._profile())
 
     def _verify_phase(self, state: dict[str, Any], phase: str) -> None:

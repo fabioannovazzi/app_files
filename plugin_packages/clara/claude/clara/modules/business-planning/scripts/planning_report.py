@@ -537,6 +537,7 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
     from planning_assessment import SECTIONS
     from planning_presentation import (
         format_number,
+        format_unit,
         label,
         language,
         render_actions,
@@ -567,10 +568,10 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
                 display_value = (
                     format_number(c["value"], lang, 2) if lang == "it" else c["value"]
                 )
-                rendered = f'<a class="figure-ref" href="#reader-sources" data-calculation-id="{e(c["id"])}">{e(display_value)} {e(c["unit"])}</a>'
+                rendered = f'<a class="figure-ref" href="#reader-sources" data-calculation-id="{e(c["id"])}">{e(display_value)} {e(format_unit(c["unit"], lang))}</a>'
             else:
                 r = refs[claim["evidence_id"]]
-                rendered = f'<a href="#reader-sources" data-evidence-id="{e(r["id"])}">{e(claim["value"])} {e(r["unit"])}</a>'
+                rendered = f'<a href="#reader-sources" data-evidence-id="{e(r["id"])}">{e(claim["value"])} {e(format_unit(r["unit"], lang))}</a>'
             prose = prose.replace("{{" + key + "}}", rendered)
         status = (
             "Provisional interpretation — professional review pending"

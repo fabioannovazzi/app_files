@@ -44,11 +44,11 @@
     },
     {
       "path": "modules/treasury-forecast/assets/review.html",
-      "sha256": "d68370ac38dcfe1b7313cdf2f6a29a86a012f7021ce8491164921a4214ee7876"
+      "sha256": "2c053f0cb1e32fb7779bc4b6e830dd9725eacd05d0a353b39f11663e92a8dd3a"
     },
     {
       "path": "modules/treasury-forecast/assets/review.js",
-      "sha256": "be178bb4d3b249f46e856be7a8cc3ab697da169b7a100f4dc046f193702a2c97"
+      "sha256": "42fd6df71850fe1814eb28758562b4408fb684aaaa5fe84ca37640f5b73e2629"
     },
     {
       "path": "modules/treasury-forecast/references/input-contract.md",
@@ -68,7 +68,7 @@
     },
     {
       "path": "modules/treasury-forecast/scripts/treasury_core.py",
-      "sha256": "8a44c0f6c03afdbf3571578f79b861fdd9c1392e8e82bd4c868030ef345ec4f3"
+      "sha256": "d812d83fec0181baa524480b9570ba46dc31baa42ee9010052ccfa1a5dcfe9cd"
     },
     {
       "path": "modules/treasury-forecast/scripts/treasury_inputs.py",
@@ -80,7 +80,7 @@
     },
     {
       "path": "modules/treasury-forecast/scripts/treasury_server.py",
-      "sha256": "7d4e77d0d90be820b8d013f1c8325e41fec566b375d79c9b4e5c31d98d0c8dd0"
+      "sha256": "c241500d8c1f85bd658ebddfe2dfa7294b2018eaf7a6e4075f5d5ee0dbd750d9"
     },
     {
       "path": "modules/treasury-forecast/scripts/treasury_session.py",
@@ -334,5 +334,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "0cdda8c07e64b5cf89c37d0d78fc9f42f212bf151444f10f6a3af87f75e91f14"
+  "canonical_course_sha256": "17c56e8c5b8ceff2020f0f58385fbf77ba849365b3d9bacd3eca1c3837e3fce9"
 }

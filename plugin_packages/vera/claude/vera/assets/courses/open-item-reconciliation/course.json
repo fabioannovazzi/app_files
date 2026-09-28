@@ -32,7 +32,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/assets/open-item-reconciliation-review-widget.html",
-      "sha256": "7c43a622ab997141d104485cf39614103b1047921dcf0846a48925e8b994cdfd"
+      "sha256": "d059965f62db85d8f093422e7a179a70ac3da448c4a282dadda907479e74556d"
     },
     {
       "path": "modules/open-item-reconciliation/assets/review-workbench-adapter.json",
@@ -64,7 +64,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "4a5652bc44b43f4a6e96acc83e681cbbd4f762e4ad985647ba56bc2baf88db68"
+      "sha256": "725c3e849156088e71217dc1604441faa0a2bb47569b847f432997c52819bf1b"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -84,7 +84,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
-      "sha256": "a24c352e97bb67d08936fd5150596899ae0d618e6de2c6c901fdb5eedd1f2b0e"
+      "sha256": "5b452c2df141349b946c36e904abeba84be1c7567f3fc0ab88d53972d88d3789"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
@@ -92,7 +92,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/accountant_report.source",
-      "sha256": "44a45471e7d90c68e912e871f3aa7f635614249afe66027c508a23370a5408a5"
+      "sha256": "1214da80bf08f041c99bab31d3440ea978030cf025af52b3578c6b45c49c890f"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/locale_support.source",
@@ -112,11 +112,11 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/review_server.py",
-      "sha256": "2ad8e1097f8f04fc6e0d7f39452d3798ba7514966955092365f3a7a78d1059e0"
+      "sha256": "7fd05f523aecca085a549f497dab25a9e74b889c610766996aa98eed37072b7b"
     },
     {
       "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
-      "sha256": "ceebef4ba3afe72a1fd4ae0009998c74767da455ef4738a5c7dc3aee27064031"
+      "sha256": "12d7461560235edcd173b0a04b2d622ca93246b71696cf5fe0203bd7369a6cd6"
     },
     {
       "path": "modules/open-item-reconciliation/vendor/modules/__init__.py",
@@ -156,7 +156,7 @@
     },
     {
       "path": "skills/open-item-reconciliation/SKILL.md",
-      "sha256": "053d1f74e6413b39e20e434ca972349d253fe380ab8b5851517f32b7588df9e5"
+      "sha256": "0bd5782439aa8f3f724af53e8f9f68cacf784d7d85d660dcdae0c1c91d6779b6"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -509,5 +509,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "3322875f3cebbbf2df516be38f59b536ed8e5f460918efb4d41c02a31a8a9554"
+  "canonical_course_sha256": "6ded0368813f517fcf98b07394236358b27d9bd68de98f29c763e731542bd0df"
 }

@@ -85,5 +85,10 @@
         ]
       }
     }
+  },
+  "codex_course_qa_20260927": {
+    "scope": "Italian actual Codex teacher/working-chat demo and same-case, same-engagement replacement-input practice. Rendered inputs, source drill-down, actual native statements/schedules/disclosures, local XBRL candidates and archived reopening exercised.",
+    "evidence": "Local codex-course-24.md and bilancio-final-qa-verification.json. Demo rev44 and practice rev66 pass current native and local XBRL checks without approval. Demo36/practice32 archived artifacts;43 original run files unchanged. Actual archived Codex readers53315/53575. Markdown attachment and passive HTML-reader failures repaired; native draft totals/equity labels and Italian messages repaired and retested. Stale practice mapping explanations returned and corrected before application.20 preview regressions and17 invariants pass; earlier180 engine,4 bilingual native fixture and32 shared reader checks retained.",
+    "limits": "Simulated learner; no human understanding/professional approval, microphone or physical-window acceptance claimed. English live journey pending. No installation, Cowork, deployment or publication."
   }
 }

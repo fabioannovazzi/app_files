@@ -35,6 +35,24 @@ Review the case in this order:
 10. **Issues and conclusion** — record gaps, contradictions, assumptions,
    follow-up, and responsible professional judgment.
 
+Assess missing evidence against the documented stage. For an explicitly
+unfiled draft, the absence of a court reference, voting results or homologation
+is not itself a critical defect. Record those stages as not yet reached or not
+assessed, confirm the intended route, and request procedural acts only if they
+exist. Keep missing evidence needed to support the draft (such as financing
+commitments or creditor reconciliation) separate from future procedural steps.
+
+For legal authorities, distinguish the date accessed from the version's
+effective or consolidated date. A historical text retrieved today does not
+establish today's law. State any unresolved currency or applicability question.
+
+For a revised plan, review narrative judgments and follow-up alongside every
+changed schedule. Do not retain an earlier balanced-plan or zero-cash statement
+after the source figures change. Distinguish unsupported financing from an
+arithmetic funding shortfall: evidence for the financing already assumed does
+not cover an additional gap. State the changed issue and the professional
+decision needed, without inventing available funds or a lawful revised treatment.
+
 ## Evidence contract
 
 Every semantic conclusion must state a `judgment_basis` and refer to captured

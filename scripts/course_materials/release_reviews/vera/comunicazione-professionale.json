@@ -306,5 +306,69 @@
     "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
     "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
+  },
+  "codex_course_qa_20260927": {
+    "status": "passed",
+    "scope": "Italian functional Codex simulated-learner demonstration and distinct email practice, including saved reopening",
+    "tester": "Codex",
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "session_id": "4279242d5648f7eb50c361dd34740694",
+    "state": "paused",
+    "state_revision": 6,
+    "runs": {
+      "demo": {
+        "run_id": "studio-riva-faq-demo-v2",
+        "run_dir": "/private/tmp/teaching-acceptance-20260926/codex/comunicazione-professionale/teaching/sessions/4279242d5648f7eb50c361dd34740694/files/workspace/runs/studio-riva-faq-demo-v2",
+        "package_digest": "45bf2ebc83ffa8762e5ee620199f5313963b9b2e5598aace845b337112a3e6dc",
+        "receipt_digest": "3f46b8734ae41a8120559403f1b2ba2c3b1e9c36ff51bd367fd927ea410386f4",
+        "files": [
+          "/private/tmp/teaching-acceptance-20260926/codex/comunicazione-professionale/teaching/sessions/4279242d5648f7eb50c361dd34740694/files/workspace/runs/studio-riva-faq-demo-v2/drafts/faq.md"
+        ]
+      },
+      "practice": {
+        "run_id": "studio-riva-faq-email-practice",
+        "run_dir": "/private/tmp/teaching-acceptance-20260926/codex/comunicazione-professionale/teaching/sessions/4279242d5648f7eb50c361dd34740694/files/workspace/runs/studio-riva-faq-email-practice",
+        "package_digest": "cea632ef35a9c66a70f151f263c46eafc4c51e83337ea164f0421fa581742820",
+        "receipt_digest": "536271dbc5f16b7edd17b06507eea9c7cb4b682bf0ee848b682d71ce919963bb",
+        "files": [
+          "/private/tmp/teaching-acceptance-20260926/codex/comunicazione-professionale/teaching/sessions/4279242d5648f7eb50c361dd34740694/files/workspace/runs/studio-riva-faq-email-practice/drafts/faq.md",
+          "/private/tmp/teaching-acceptance-20260926/codex/comunicazione-professionale/teaching/sessions/4279242d5648f7eb50c361dd34740694/files/workspace/runs/studio-riva-faq-email-practice/drafts/client_email.txt"
+        ]
+      }
+    },
+    "original_demo_files_unchanged": 46,
+    "saved_urls": {
+      "demo_opened": true,
+      "practice_opened": true,
+      "demo_url": "http://127.0.0.1:55712/course.html",
+      "practice_url": "http://127.0.0.1:55986/course.html",
+      "observed_at": "2026-09-27T16:23:03.800603+00:00",
+      "tester": "Codex simulated QA",
+      "human_approval": false
+    },
+    "repairs": [
+      "Avoid duplicated body and structured FAQ sections",
+      "Use actual email subject/date placeholders in proposed studio profile",
+      "Reach saved source inputs from result index",
+      "Replace irrelevant table-specific result guidance",
+      "Avoid repeating greetings and closings inserted by the saved studio profile",
+      "Show client email as readable paragraphs with a localized label"
+    ],
+    "tests": [
+      "Real independent generation, claim assurance and qualified editorial review for both runs",
+      "Actual Codex browser inspection and source drill-down",
+      "Existing communication multichannel packaging/validation regressions",
+      "Full prepared-course suite and new missing-source-navigation regression",
+      "Exact native package/input and teaching record integrity",
+      "Original demo preservation after practice"
+    ],
+    "unverified": [
+      "native microphone/voice",
+      "physical two-window placement",
+      "other-language live lessons"
+    ],
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-27T16:23:27.868875+00:00"
   }
 }

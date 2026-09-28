@@ -222,6 +222,10 @@ def prepare_case(
         if "skill" in metadata
     }
     ledger_workflow = skill_components.get(workflow, ledger_workflow)
+    if workflow == "quesito-legale-fiscale":
+        # The named answer journey starts with a real preparation run. Its
+        # closed artifacts feed answer review in the same engagement.
+        ledger_workflow = "prompt-optimizer"
     if workflow == "vouching":
         # Raw kit sources are not a prepared Vouching population. First run
         # actual Journal Sampling; its closed artifacts feed the later check.

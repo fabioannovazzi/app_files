@@ -141,7 +141,7 @@
           "channel": {"enum": ["client_email", "client_circular", "linkedin", "newsletter", "website_article", "client_alert", "faq"]},
           "title": {"type": "string", "minLength": 1, "maxLength": 500},
           "subject": {"type": "string", "maxLength": 500},
-          "body": {"type": "string", "minLength": 1, "maxLength": 50000},
+          "body": {"type": "string", "minLength": 1, "maxLength": 50000, "description": "Opening text, followed by sections in the packaged draft. When sections are present, do not repeat their headings, paragraphs or bullets here. With no sections, this holds the full draft. For client_email, the packager adds the saved Studio profile's salutation, closing and signature: do not repeat those elements in body or sections."},
           "claim_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
           "audience_note": {"type": "string", "minLength": 1, "maxLength": 2000},
           "public_source_notes": {
@@ -162,6 +162,7 @@
           "recipient_line": {"type": "string", "maxLength": 300},
           "date_line": {"type": "string", "maxLength": 200},
           "sections": {
+            "description": "Ordered sections appended after body, not an alternative representation of body. Each passage should appear once in the final communication.",
             "type": "array",
             "items": {
               "type": "object",
@@ -275,7 +276,7 @@
         "recipient_pattern": {"type": "string", "maxLength": 300},
         "circular_label": {"type": "string", "maxLength": 100},
         "numbering_pattern": {"type": "string", "maxLength": 100},
-        "date_pattern": {"type": "string", "maxLength": 100},
+        "date_pattern": {"type": "string", "maxLength": 100, "description": "Literal output template: {date} is replaced by the run reference date. Use {date} or a short labelled template, not a date-format instruction such as DD/MM/YYYY."},
         "subject_prefix": {"type": "string", "maxLength": 100},
         "section_style": {"enum": ["numbered_uppercase", "numbered_sentence", "unnumbered"]},
         "use_contact_rail": {"type": "boolean"},
@@ -290,7 +291,7 @@
       "additionalProperties": false,
       "required": ["subject_pattern", "salutation", "closing", "signature_lines", "attachment_note"],
       "properties": {
-        "subject_pattern": {"type": "string", "maxLength": 300},
+        "subject_pattern": {"type": "string", "maxLength": 300, "description": "Literal email subject template. {subject} is replaced by the reviewed draft subject, or title if absent; {title} is replaced by the draft title. Use {subject} as the default. Do not put writing instructions or proposal commentary here: they would become the actual email subject."},
         "salutation": {"type": "string", "maxLength": 300},
         "closing": {"type": "string", "maxLength": 500},
         "signature_lines": {"type": "array", "maxItems": 12, "items": {"type": "string", "maxLength": 300}},
@@ -303,7 +304,7 @@
       "required": ["byline_pattern", "date_pattern", "heading_style", "source_heading", "cta", "show_update_date"],
       "properties": {
         "byline_pattern": {"type": "string", "maxLength": 300},
-        "date_pattern": {"type": "string", "maxLength": 100},
+        "date_pattern": {"type": "string", "maxLength": 100, "description": "Literal output template: {date} is replaced by the run reference date. Use {date} or a short labelled template, not a date-format instruction such as DD/MM/YYYY."},
         "heading_style": {"enum": ["numbered", "editorial", "question_led"]},
         "source_heading": {"type": "string", "minLength": 1, "maxLength": 120},
         "cta": {"type": "string", "maxLength": 500},

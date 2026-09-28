@@ -69,5 +69,61 @@
         ]
       }
     }
+  },
+  "codex_course_qa_20260927": {
+    "status": "passed",
+    "course": 37,
+    "product": "clara",
+    "workflow": "business-planning",
+    "scope": "Italian Codex simulated learner demo and linked changed-evidence practice in same native advisory case, with actual report/source navigation and saved reopening",
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "session_id": "c0a4903342bfc9a2664977daadf7ef7f",
+    "phase": "paused",
+    "revision": 4,
+    "profile": null,
+    "onboarding_phase": "interview",
+    "runs": {
+      "demo": {
+        "report": "/private/tmp/teaching-acceptance-20260926/codex/clara-business-reporting/teaching/sessions/c0a4903342bfc9a2664977daadf7ef7f/files/demo-0adda480d4acddf1/advisory-workspace/business-plan/demo-localized/business_plan_review.html",
+        "report_sha256": "e6822aaa1e6a7f35aaf1b4f341dfedceaee40e2a63af8c50a9150e036b8d91b8",
+        "plan_sha256": "5dff5a8b5cc91641296a2e26c6d08d4c2380fd23f7e916488580d8ab64350681",
+        "execution_sha256": "c67d4f0316c9b6b4b24f6dbb2efaa5640930267df83f90a97333144845f61be3",
+        "native_status": "partial",
+        "canonical_replay": "passed",
+        "case_id": "ciclo-arco-transport-pilot",
+        "cycle_id": "demo-initial",
+        "calculations": 18
+      },
+      "practice": {
+        "report": "/private/tmp/teaching-acceptance-20260926/codex/clara-business-reporting/teaching/sessions/c0a4903342bfc9a2664977daadf7ef7f/files/demo-0adda480d4acddf1/advisory-workspace/business-plan/practice-saturday-final/business_plan_review.html",
+        "report_sha256": "6f2beee2196117082772db720de6ff9e5984d518ea93652f5907b945860b923c",
+        "plan_sha256": "8b6eff3f0bf82fd301d24ac2ad722a90e44894f827887d78486d8cbe10655e94",
+        "execution_sha256": "701b64d7b74d91f15b82a4ada8b8b477f22eba4ac5a89d709852d16866ce3ba0",
+        "native_status": "partial",
+        "canonical_replay": "passed",
+        "case_id": "ciclo-arco-transport-pilot",
+        "cycle_id": "practice-saturday",
+        "calculations": 18
+      }
+    },
+    "demo_files_preserved": 34,
+    "same_case_and_workspace": true,
+    "actual_parent_registered": true,
+    "commercial_assumptions_unchanged": true,
+    "carried_narratives_reassessed": true,
+    "repairs": [
+      "Italian display units in native compiler; canonical calculations unchanged",
+      "Passive course reader accepts stripped business-report audit metadata while retaining figure navigation and original bytes",
+      "Execution handoff lists consumed sources without duplicate staging copies"
+    ],
+    "limitations": [
+      "Native voice hardware not tested",
+      "Physical two-window placement not verified",
+      "Other-language live journeys not tested",
+      "Installed Clara path unavailable; actual current local source tested"
+    ],
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-27T21:55:22.334277+00:00"
   }
 }

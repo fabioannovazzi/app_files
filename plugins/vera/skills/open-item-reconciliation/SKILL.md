@@ -26,3 +26,12 @@ exists; otherwise resolve `../../../open-item-reconciliation` in the repository.
 Read that module's `skills/open-item-reconciliation/SKILL.md` completely and follow
 it. Treat the resolved module root as the plugin working directory for scripts,
 requirements, assets, review servers, and outputs.
+
+For a new Vera run, pass `--output-subdirectory reconciliation` to the native
+`raw_input_runner.py` command. Keep that same option on regeneration. The native
+assured package is then in the bound run's `outputs/reconciliation/`; use that
+directory for its review server and assurance validation. Write the required
+local model-data disclosure in the owning `outputs/` directory, outside the
+exact native assurance boundary. Declare both the nested package and disclosure
+when finalizing the Studio Archive run. Never add the disclosure to an already
+sealed native assurance directory or alter its receipt to make extra files pass.

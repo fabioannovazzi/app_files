@@ -526,5 +526,63 @@
     "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
     "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
+  },
+  "codex_course_qa_20260927": {
+    "status": "passed",
+    "course": 29,
+    "product": "vera",
+    "workflow": "presenza-digitale-studio",
+    "scope": "Italian functional Codex simulated learner journey, demo and distinct practice, source drill-down and saved reopening",
+    "actor": "Codex simulated QA",
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "session_id": "e629217fdff3d5b64acdd34cb9ab59d8",
+    "phase": "paused",
+    "revision": 5,
+    "runs": {
+      "demo": {
+        "run": "/private/tmp/teaching-acceptance-20260926/codex/presenza-digitale-studio/teaching/sessions/e629217fdff3d5b64acdd34cb9ab59d8/files/demo-77092932bcb74cd4/outputs/website-workspace/runs/20260927T170626Z-2d171da65a",
+        "native": {
+          "schema_version": 1,
+          "run_id": "20260927T170626Z-2d171da65a",
+          "status": "quality_ready",
+          "site_digest": "4005abb316f6fa35996003412deb51e9746d120900828c7b8e3f70c95b70d45c",
+          "issues": [],
+          "valid": true
+        },
+        "saved_url": "http://127.0.0.1:57512/website/index.html"
+      },
+      "practice": {
+        "run": "/private/tmp/teaching-acceptance-20260926/codex/presenza-digitale-studio/teaching/sessions/e629217fdff3d5b64acdd34cb9ab59d8/files/practice-b593b50829b971ef/outputs/website-workspace/runs/20260927T172343Z-6b8b103099",
+        "native": {
+          "schema_version": 1,
+          "run_id": "20260927T172343Z-6b8b103099",
+          "status": "quality_ready",
+          "site_digest": "c469cedeaff1b3c3fcef8f2a6a6b058914c9f33f9d6fa7c01e382d970c577cf5",
+          "issues": [],
+          "valid": true
+        },
+        "saved_url": "http://127.0.0.1:57586/website/index.html"
+      }
+    },
+    "demo_files_preserved": 26,
+    "regression_cases_passed": 500,
+    "worker_recovery": {
+      "reason": "Repeated read-only early completion and reported exhausted execution time in original worker",
+      "old_worker": "01a0aed5-2332-7c00-9fca-f63e35f4aecc",
+      "new_worker": "01a0e3d7-5218-7cc3-84c4-cf474b54de1a",
+      "preserved_session": "e629217fdff3d5b64acdd34cb9ab59d8",
+      "old_token_revoked": true,
+      "teacher_unchanged": true,
+      "no_course_pass_claim": true
+    },
+    "limitations": [
+      "Codex IAB resize override ineffective; actual phone390x844 tested in existing Chrome via Codex CUA",
+      "Native microphone/voice not tested",
+      "Physical two-window positioning not tested",
+      "Other-language live journeys not tested"
+    ],
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-27T17:32:26.856794+00:00"
   }
 }

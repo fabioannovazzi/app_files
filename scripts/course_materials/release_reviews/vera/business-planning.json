@@ -69,5 +69,56 @@
         ]
       }
     }
+  },
+  "codex_course_qa_20260927": {
+    "status": "passed",
+    "scope": "Italian functional Codex simulated-learner demo and distinct same-case practice",
+    "tester": "Codex",
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "session_id": "32b22e44b2ba1f9351e2b8cf82c52930",
+    "state": "paused",
+    "state_revision": 7,
+    "runs": {
+      "demo": {
+        "run_id": "run_1f9bd70b739f2713c3ca8837",
+        "engagement_id": "eng_cddda1cc1f5a13ce980d5369",
+        "case_id": "ciclo-arco-pilot",
+        "cycle": "pilot-initial",
+        "archive_files": 37,
+        "report": "/private/tmp/teaching-acceptance-20260926/codex/business-planning/teaching/sessions/32b22e44b2ba1f9351e2b8cf82c52930/files/demo-ce17450cf90867ac/Vera/engagements/eng_cddda1cc1f5a13ce980d5369/runs/run_1f9bd70b739f2713c3ca8837/outputs/plan-final-v2/business_plan_review.html"
+      },
+      "practice": {
+        "run_id": "run_9805d81b12eb766296d5ae81",
+        "engagement_id": "eng_cddda1cc1f5a13ce980d5369",
+        "case_id": "ciclo-arco-pilot",
+        "cycle": "saturday-availability-review",
+        "archive_files": 26,
+        "report": "/private/tmp/teaching-acceptance-20260926/codex/business-planning/teaching/sessions/32b22e44b2ba1f9351e2b8cf82c52930/files/demo-ce17450cf90867ac/Vera/engagements/eng_cddda1cc1f5a13ce980d5369/runs/run_9805d81b12eb766296d5ae81/outputs/plan-final-v2/business_plan_review.html"
+      }
+    },
+    "original_demo_files_unchanged": 45,
+    "saved_urls": {
+      "demo": "http://127.0.0.1:54727/course.html",
+      "practice": "http://127.0.0.1:54931/course.html"
+    },
+    "repairs": [
+      "Native HTML reader omits scripts/print controls without changing original report",
+      "Readable result label and linked exact source files",
+      "Practice preserves sourced currency, dated original assumptions and source versions while revising Saturday decision"
+    ],
+    "tests": [
+      "Full prepared-course regression suite passed",
+      "Focused business report/source-link regression passed",
+      "Actual Codex DOM and visual review of demo and corrected practice",
+      "Native archive validation and exact teaching evidence hashes passed"
+    ],
+    "unverified": [
+      "native microphone/voice",
+      "physical two-window placement",
+      "English live lesson"
+    ],
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-27T15:34:10.124663+00:00"
   }
 }

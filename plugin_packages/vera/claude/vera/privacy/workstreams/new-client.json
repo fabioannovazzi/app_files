@@ -86,13 +86,17 @@
     },
     {
       "id": "local-browser-private-review-payload",
-      "control": "The local review server requests component-only private review metadata only for the registered render tool. The browser receives that payload locally; normal MCP callers continue to receive structuredContent. This is transport separation, not anonymization of data selected for model review."
+      "control": "The local review server requests component-only private review metadata only for the registered render tool. The browser receives that payload locally; normal MCP callers continue to receive structuredContent. This is transport separation, not anonymization of data selected for model review. Reload restores the persisted applied decisions for the same plugin and run through the existing browser path sanitization. It does not apply decisions again or change the external routes. Read-only local rendering accepts validated running, review-ready and completed contexts; Save/Apply still require a running context. Nested result folders resolve the owning portable run and validate the exact requested descendant before rendering. Archived views also show a localized read-only notice and disable Save/Apply; server-side write validation remains authoritative."
+    },
+    {
+      "id": "local-browser-saved-review-details",
+      "control": "After successful native validation or saving, the loopback review server restores the persisted notes, edited values and requested-document list in the local browser. The normal MCP model response remains minimized and widget state still excludes free-text decisions. Browser payloads retain the existing path sanitization and bound-run checks. Reopening does not save or apply decisions; the native validity and professional-review gates are unchanged. Reading this local browser in Codex still puts that selected content in the model context."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-15",
+    "reviewed_at": "2026-09-26",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c85a82da3a37cdbdda7bb0a21be5f5255f8c808d5ff7a25ec354efeb73bfa5f9"
+    "source_fingerprint": "90f95f7b1928e780e3ae4f96421580f1cbf49469ea6daacc614d31fff71561e7"
   }
 }

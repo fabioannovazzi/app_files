@@ -23,6 +23,21 @@ adds a covering email to a new version. The supplied brief does not approve
 generated text or the proposed studio profile. Do not substitute a client
 ledger or send the communication from a tutorial.
 
+For that workflow's answer contract, copy `run_id`, `audience`, `jurisdiction`
+and the intake's `language` (as `output_language`) exactly from the current
+native intake. These fields bind the draft to the selected request; do not
+paraphrase them. Keep explanatory wording in the purpose and draft instead.
+Run the native phase preparation before asking the independent claim reviewer
+to assess the draft: schema validation alone does not check these bindings.
+
+Keep editorial qualification separate from the live lesson assessment. The
+native recorder requires four distinct host sessions: qualification, generation,
+claim assurance and live editorial review. A qualified provider/model/template
+combination can be reused; the qualification session itself cannot assess the
+lesson. Preserve actual session identities and review failures. If claim
+assurance changes, prepare a new editorial packet and assess that exact version
+before recording the contribution.
+
 The `quesito-legale-fiscale` kit starts with a fictional request for an
 informational briefing. Follow Lucia's complete question journey, including
 the per-answer research choice and answer validation. Source files are
@@ -90,6 +105,17 @@ Release checks validate kit files and source currency and run relevant pipeline
 checks from the packaged kit inputs. Editorial review asks whether a beginner
 can supply files, make the request, recognize progress, use the deliverable and
 repeat the workflow. Hashes and successful rendering do not answer that question.
+
+## Comparing a practice result with its previous version
+
+When the practice explanation links to a preserved demonstration document, read
+that exact document and include its path and hash among the practice execution's
+reference inputs. Keep it distinct from the new run's bound source files and
+generated outputs. The result reader can then open the verified previous file
+and preserve its original bytes. Do not present an unregistered filesystem path
+as a working browser link or copy the previous document into the new outputs as
+though the practice had generated it. Test the previous-version link in the
+rendered results before recording practice completion.
 
 ## Website workspace route
 

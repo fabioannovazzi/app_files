@@ -1064,6 +1064,126 @@ def test_package_validation_localizes_spanish_review_artifacts(tmp_path: Path) -
     assert contract_report.ok, contract_report.as_dict()
 
 
+def test_package_validation_localizes_italian_review_artifacts(tmp_path: Path) -> None:
+    package_mod = load_script(
+        "deep_research_validator_package_validation_it",
+        "package_validation.py",
+    )
+    document_inventory = tmp_path / "document_inventory.json"
+    source_inventory = tmp_path / "source_inventory.json"
+    claims_review = tmp_path / "claims_review_draft.json"
+    answer_contract = tmp_path / "answer_contract.json"
+    document_inventory.write_text(
+        json.dumps(
+            {
+                "source_name": "nota.md",
+                "character_count": 90,
+                "word_count": 14,
+                "urls": ["https://example.com/fonte"],
+            }
+        ),
+        encoding="utf-8",
+    )
+    source_inventory.write_text(
+        json.dumps(
+            {
+                "sources": [
+                    {
+                        "kind": "url",
+                        "source_id": "source-001",
+                        "url": "https://example.com/fonte",
+                        "status": "available",
+                        "excerpt": "La regola IVA si applica all’operazione.",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    claims_review.write_text(
+        json.dumps(
+            _claims_review(
+                [
+                    _claim_review(
+                        "La regola IVA si applica all’operazione.",
+                        cited_passage="La regola IVA si applica",
+                    )
+                ],
+                language="it_IT",
+                validated_document="Testo verificato.",
+            ),
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    answer_contract.write_text(
+        json.dumps(_answer_contract()),
+        encoding="utf-8",
+    )
+
+    paths = package_mod.write_validation_package(
+        document_inventory,
+        source_inventory,
+        claims_review,
+        tmp_path / "out",
+        answer_contract_path=answer_contract,
+    )
+
+    package_text = paths["validation_package"].read_text(encoding="utf-8")
+    run_intake = json.loads(
+        (tmp_path / "out" / "run_intake.json").read_text(encoding="utf-8")
+    )
+    review_payload = json.loads(
+        (tmp_path / "out" / "review_payload.json").read_text(encoding="utf-8")
+    )
+    final_artifacts = json.loads(
+        (tmp_path / "out" / "final_artifacts.json").read_text(encoding="utf-8")
+    )
+    handoff_text = (tmp_path / "out" / "review_handoff.md").read_text(encoding="utf-8")
+    claim_item = next(
+        item
+        for item in review_payload["items"]
+        if item["item_type"] == "supported_claim"
+    )
+    package_output = next(
+        output
+        for output in final_artifacts["outputs"]
+        if output["path"] == "validation_package.md"
+    )
+
+    assert "# Registro di verifica della risposta" in package_text
+    assert "## Inventario del documento" in package_text
+    assert "## Valutazione delle affermazioni" in package_text
+    assert "### Affermazione 1" in package_text
+    assert run_intake["language"] == "it"
+    assert "Codex deve eseguire" in run_intake["dependency_check"]["note"]
+    assert review_payload["language"] == "it"
+    assert review_payload["columns"][1]["label"] == "Affermazione o documento"
+    assert claim_item["title"].startswith("Affermazione 1:")
+    assert claim_item["data"]["edit_hint"].startswith("La modifica registra")
+    assert "Passaggio alla revisione" in handoff_text
+    assert "Revisione in Codex" in handoff_text
+    assert package_output["required_text"] == [
+        "# Registro di verifica della risposta",
+        "## Limiti della verifica",
+        "## Requisiti della risposta",
+        "## Verifica dei requisiti della risposta",
+        "## Copertura della verifica",
+        "## Inventario del documento",
+        "## Valutazione delle affermazioni",
+    ]
+    assert final_artifacts["caveats"][0].startswith("Identità delle fonti")
+    assert final_artifacts["next_actions"][0].startswith("Esegui")
+    contract_report = validate_contract(
+        tmp_path / "out",
+        strict_data_posture=True,
+        strict_execution_trace=True,
+        strict_output_paths=True,
+        strict_output_content=True,
+    )
+    assert contract_report.ok, contract_report.as_dict()
+
+
 def test_package_validation_flags_missing_review_fields(tmp_path: Path) -> None:
     package_mod = load_script(
         "deep_research_validator_package_validation_missing",

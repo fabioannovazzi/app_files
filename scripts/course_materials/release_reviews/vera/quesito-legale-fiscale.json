@@ -282,5 +282,47 @@
         ]
       }
     }
+  },
+  "codex_course_qa_20260927": {
+    "status": "passed",
+    "course": 31,
+    "product": "vera",
+    "workflow": "quesito-legale-fiscale",
+    "scope": "Italian functional Codex simulated learner journey: prepared inputs, two native workflow stages, demonstration, distinct practice, rendered source and Word readers, saved reopening",
+    "actor": "Codex simulated QA",
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "session_id": "8aa9a9e9bda8b283a7858f5edfc43b2b",
+    "phase": "paused",
+    "revision": 4,
+    "runs": {
+      "demo": {
+        "preparation_run": "run_94d34489949d29a9a0c60236",
+        "review_run": "run_d0b54946ba33b9cac4566a77",
+        "engagement": "eng_da00e9cd151402ae5a536120",
+        "ledger_status": "completed",
+        "docx_sha256": "c1e11f07d6a94db2158fa2bdedfb687d9ffa2e0dc26e0746965ef1b8bb3c2ec9",
+        "audit": "record_complete",
+        "professional_review": "pending"
+      },
+      "practice": {
+        "preparation_run": "run_8e07732cd265375ba48b0490",
+        "review_run": "run_ceea8476fb763c19c725415f",
+        "engagement": "eng_da00e9cd151402ae5a536120",
+        "ledger_status": "completed",
+        "docx_sha256": "9d6f08165c5b0c6f4b255ab0e6f9e0f7b141f736fa36ff6e375a92ffca7ca334",
+        "audit": "record_complete",
+        "professional_review": "pending"
+      }
+    },
+    "demo_files_preserved": 67,
+    "demo_file_set_unchanged": true,
+    "limitations": [
+      "Native microphone/voice not tested",
+      "Physical two-window positioning not tested",
+      "Other-language live journeys not tested"
+    ],
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-27T18:43:16.589764+00:00"
   }
 }

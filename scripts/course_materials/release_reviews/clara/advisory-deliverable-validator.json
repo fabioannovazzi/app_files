@@ -524,5 +524,59 @@
     "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
     "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
+  },
+  "codex_course_qa_20260927": {
+    "status": "passed",
+    "course": 35,
+    "product": "clara",
+    "workflow": "advisory-deliverable-validator",
+    "scope": "Italian Codex simulated learner journey: prepared memo and sources, actual current native prepare/model review/package, rendered findings and exact-source navigation, original preservation, distinct updated-evidence practice and saved reopening",
+    "actor": "Codex simulated QA",
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "session_id": "a4b688390fc1e0bfa1b0d029ed5252a4",
+    "phase": "paused",
+    "revision": 4,
+    "profile": null,
+    "onboarding_phase": "interview",
+    "runs": {
+      "demo": {
+        "directory": "/private/tmp/teaching-acceptance-20260926/codex/clara-advisory-deliverable-validator/teaching/sessions/a4b688390fc1e0bfa1b0d029ed5252a4/files/demo-49bdd641410462fc",
+        "review_sha256": "97f24a0ea0fa608f07fcf3fcb36cde14438f0bc7de499679388a6d5ce27e601b",
+        "package_sha256": "01c10fbe594e351cd075870388a232a245984796942ab7827d6c32fa4f0afc53",
+        "memo_sha256": "282601d9a6f22b27b030de8623c827e69a213cc02726f83e031535b6e613cd8c",
+        "audit": "record_complete",
+        "memo_delivery": "not_ready",
+        "claims": 6,
+        "dimensions": 10,
+        "inputs": 4,
+        "outputs": 3
+      },
+      "practice": {
+        "directory": "/private/tmp/teaching-acceptance-20260926/codex/clara-advisory-deliverable-validator/teaching/sessions/a4b688390fc1e0bfa1b0d029ed5252a4/files/practice-990719d6e2fdd317",
+        "review_sha256": "3db42d485f45218a403df7d8df851892b71c11b13c57e280bf99cafaa397fa20",
+        "package_sha256": "3829a7f64c965ead054dce2af89ab63d23bf23a783fb526a04b0ab604d48b478",
+        "memo_sha256": "282601d9a6f22b27b030de8623c827e69a213cc02726f83e031535b6e613cd8c",
+        "audit": "record_complete",
+        "memo_delivery": "not_ready",
+        "claims": 6,
+        "dimensions": 10,
+        "inputs": 5,
+        "outputs": 3
+      }
+    },
+    "same_memo_re_reviewed": true,
+    "vehicle_finding_changed": "partial to contradicted for planned trial period",
+    "demo_files_preserved": 21,
+    "demo_file_set_unchanged": true,
+    "repair": "Copied native extraction reclassified as prepared input; exact native collection and browser retry passed without altering protected native files or weakening guard",
+    "limitations": [
+      "Native microphone/voice not tested",
+      "Physical two-window placement not verified",
+      "Other-language live journeys not tested",
+      "Installed Clara path unavailable; local source checkout tested"
+    ],
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-27T20:38:47.818370+00:00"
   }
 }

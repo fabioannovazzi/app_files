@@ -5,6 +5,27 @@ from __future__ import annotations
 __all__ = ["display_label"]
 
 LABELS: dict[str, dict[str, str]] = {
+    "legal_framework": {
+        "it": "Quadro normativo",
+        "en": "Legal framework",
+        "fr": "Cadre juridique",
+        "de": "Rechtlicher Rahmen",
+        "es": "Marco normativo",
+    },
+    "legal_text_as_of": {
+        "it": "Data del quadro normativo esaminato",
+        "en": "Legal framework as-of date",
+        "fr": "Date du cadre juridique examiné",
+        "de": "Stand des geprüften Rechtsrahmens",
+        "es": "Fecha del marco normativo examinado",
+    },
+    "legal_authorities": {
+        "it": "Fonti normative",
+        "en": "Legal authorities",
+        "fr": "Sources juridiques",
+        "de": "Rechtsquellen",
+        "es": "Fuentes normativas",
+    },
     "debtor": {
         "it": "Debitore",
         "en": "Debtor",

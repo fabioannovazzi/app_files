@@ -104,12 +104,16 @@
     {
       "id": "exact-known-identifier-query-guard",
       "control": "Before the optional public SARI connector transmits a query, it rejects both mechanically recognizable identifier formats and exact values already recorded as the case client reference or client identity; it does not attempt semantic PII classification."
+    },
+    {
+      "id": "loopback-review-transport",
+      "control": "The optional local browser transport binds only to 127.0.0.1 on an OS-selected port and secret path, rejects foreign Host/Origin and non-JSON writes, exposes only the existing save/apply operations for one exact run-bound opaque token, and reuses native ownership/hash/lifecycle validation. Archived cases render read-only; native writes still require a running run. No remote assets or data transfer are introduced."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-12",
+    "reviewed_at": "2026-09-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d0b7094e13eb150302a2c06e919b4bccc4b6a0983d0ff0d6c0ada06a14dfae17"
+    "source_fingerprint": "620792d5e42232151792c541ba3f9d1352a3d55bf0ffbd57d1b514611ea44424"
   }
 }

@@ -1659,6 +1659,7 @@ def attach_supporting_document(
         ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         ".pdf": "application/pdf",
         ".txt": "text/plain",
+        ".md": "text/markdown",
         ".json": "application/json",
         ".xml": "application/xml",
         ".html": "text/html",

@@ -514,5 +514,67 @@
     "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
     "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
+  },
+  "codex_course_qa_20260927": {
+    "status": "passed",
+    "course": 34,
+    "product": "clara",
+    "workflow": "advisory-case-director",
+    "scope": "Italian Codex simulated learner journey: prepared sources, native demo, current recommendation and exact-source navigation, pause/reopen/resume, same-case practice, semantic correction and native retest, previous-version navigation repair, saved reopening and preservation",
+    "actor": "Codex simulated QA",
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "session_id": "1f4a0ce924c4045a7172c80c2a4202f9",
+    "phase": "paused",
+    "revision": 6,
+    "profile": null,
+    "onboarding_phase": "interview",
+    "runs": {
+      "demo": {
+        "live_case": "/private/tmp/teaching-acceptance-20260926/codex/clara-advisory-case-director/teaching/sessions/1f4a0ce924c4045a7172c80c2a4202f9/files/demo-d1f15bf97935c60f/case",
+        "snapshot_dir": "/private/tmp/teaching-acceptance-20260926/codex/clara-advisory-case-director/teaching/sessions/1f4a0ce924c4045a7172c80c2a4202f9/files/demo-d1f15bf97935c60f/outputs/demo-version",
+        "workpaper_sha256": "4f3e7582d7d88429005a4bce271968f640cfbf193268276584683588f23e12f1",
+        "execution_sha256": "86debd1da7f5c4db7b8001165bd5a9f78f30d6af9385ce9ecb113b43e1fb8d6f",
+        "validation": "passed",
+        "inputs": 2,
+        "outputs": 3
+      },
+      "practice": {
+        "live_case": "/private/tmp/teaching-acceptance-20260926/codex/clara-advisory-case-director/teaching/sessions/1f4a0ce924c4045a7172c80c2a4202f9/files/demo-d1f15bf97935c60f/case",
+        "snapshot_dir": "/private/tmp/teaching-acceptance-20260926/codex/clara-advisory-case-director/teaching/sessions/1f4a0ce924c4045a7172c80c2a4202f9/files/practice-471ee113a498fe4c/outputs/practice-version-2",
+        "workpaper_sha256": "a35163638d658df2d4ffc7f230ac3780c5bd221eb56ae07775d5898dc6cfeec3",
+        "execution_sha256": "1ffd8c2426166a8d8b3389b7160c676498b723dc5889f87a6deeae96f1673f6d",
+        "validation": "passed",
+        "inputs": 5,
+        "outputs": 5
+      }
+    },
+    "frozen_files_preserved": 40,
+    "same_case": true,
+    "native_first_demo_history_preserved": true,
+    "active_claims": [
+      "cl-interest",
+      "cl-operations-v2",
+      "cl-scope-v2",
+      "cl-recommendation-v3",
+      "cl-next-check-v3"
+    ],
+    "active_dependency_closure": true,
+    "repairs": [
+      "Stale two-source scope corrected by native supersession and dependency updates",
+      "Reader adds top result navigation and localized previous-version labels"
+    ],
+    "regressions": [
+      "470 prepared-course cases passed",
+      "10 targeted history cases passed across five languages and two native-history locations"
+    ],
+    "limitations": [
+      "Native microphone/voice not tested",
+      "Physical two-window placement not verified",
+      "Other-language live journeys not tested",
+      "Installed Clara path unavailable; local source checkout tested"
+    ],
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-27T20:10:25.376055+00:00"
   }
 }

@@ -96,7 +96,7 @@
     },
     {
       "path": "modules/variance-analysis/scripts/root_cause_client_report.py",
-      "sha256": "22b4149655ed20129c68857009e2dbc7cb82a87fe97ac7884ccf3812b2b2f234"
+      "sha256": "3db6256998f4bba74cc649a8a9770cf1a0ec15e7c353f51fc59a281c2c61f6c5"
     },
     {
       "path": "modules/variance-analysis/scripts/run_variance.py",
@@ -717,5 +717,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b0426c7cebb0a721172147b5e9133372a3fe5a11caa7257c229b53203021a767"
+  "canonical_course_sha256": "9a0dc0066ab9a9c3b95f86cd044856567e7b8422bf98e8e08a844e842874440b"
 }

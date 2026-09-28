@@ -29,7 +29,7 @@
   "sources": [
     {
       "path": "modules/bandi-agevolazioni/assets/dossier-labels.json",
-      "sha256": "e2520b36030f8810bab15e0a44bb82264b269fa3d2fa2fe10fbc58cc2f6df080"
+      "sha256": "e24e1e8837670c310120c8a7461265724a458e943c3da1e8e8ce598c56298108"
     },
     {
       "path": "modules/bandi-agevolazioni/assets/icon.svg",
@@ -85,7 +85,7 @@
     },
     {
       "path": "modules/bandi-agevolazioni/scripts/dossier_report.py",
-      "sha256": "9d1a2f3429a82eba3d28af530c1c9b04f50582d1ead7a780c029b66f81223aa7"
+      "sha256": "bae92d8c75a748ac1069bccc40e0e6bbcb7c0896144961773153110e5e479ce3"
     },
     {
       "path": "modules/bandi-agevolazioni/scripts/evaluate_intelligence.py",
@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/bandi-agevolazioni/scripts/intelligence_contract.py",
-      "sha256": "d375820ed2c8c1faa5a682d59e0c150cf25a4788d7b003f20d931bda13b91092"
+      "sha256": "ce3567cd67cb036d430fcd0f7210f4e076032e9d1665653fd3d1af026bfccb6f"
     },
     {
       "path": "modules/bandi-agevolazioni/scripts/intelligence_workflow.py",
@@ -129,11 +129,11 @@
     },
     {
       "path": "modules/bandi-agevolazioni/scripts/validate_application.py",
-      "sha256": "9c7f2c8f8411d28f37d0074913b23faed069e605aae0a9e1d88e67e319fe0fd1"
+      "sha256": "2c8b5489e1d6c01cf06483782eb0e8f24bffe0caff332bb072348242d603e97b"
     },
     {
       "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md",
-      "sha256": "d885801265d8e531d4f06d597ca4448191308e78bd31742ee605bbbe89c8d316"
+      "sha256": "f9a9ebf4f91815e52a2751ee5330c4abf9a1061290a7eaf559d1f34f3bc812f8"
     },
     {
       "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/agents/openai.yaml",
@@ -642,5 +642,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "51e3e0323328e89d011671dea47a208e9c92d2ab5d40d2f9b9aa8b63f4c4b0a1"
+  "canonical_course_sha256": "a28efd17310297ac836b5eec683efd22ed57890ae1356cf86f59036079a068e2"
 }

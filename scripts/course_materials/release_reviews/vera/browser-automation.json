@@ -242,5 +242,31 @@
         ]
       }
     }
+  },
+  "codex_course_qa_20260927": {
+    "workflow": "browser-automation",
+    "language": "it",
+    "native_clean_replays": 4,
+    "demo_original_files_preserved": 23,
+    "session_id": "74952e07fa9ad126e40eb5c663e40c3d",
+    "teacher_thread_id": "01a094c2-9765-7cb0-aa59-8ea07eba3d51",
+    "worker_thread_id": "01a0aed5-2332-7c00-9fca-f63e35f4aecc",
+    "saved_state_revision": 7,
+    "human_approval": false,
+    "understanding_confirmed": false,
+    "archived_reopen": {
+      "demo": "http://127.0.0.1:54362/course.html",
+      "practice": "http://127.0.0.1:54367/course.html",
+      "observed": true
+    },
+    "host_limits": [
+      "native voice hardware unverified",
+      "physical two-window arrangement unverified"
+    ],
+    "functional_italian_journey": "passed",
+    "ordered_list_regression": "passed; live reader DOM and screenshot retested",
+    "prepared_course_suite": "passed",
+    "reviewed_at": "2026-09-27T15:08:51.800699+00:00",
+    "scope": "Current Italian functional Codex learner journey only; earlier multilingual release evidence retained as historical. No new publication or installation claim."
   }
 }

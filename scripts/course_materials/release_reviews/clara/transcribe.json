@@ -460,5 +460,54 @@
     "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
     "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
+  },
+  "codex_course_qa_20260928": {
+    "status": "passed",
+    "course": 41,
+    "product": "clara",
+    "workflow": "transcribe",
+    "scope": "Italian Codex simulated learner local bundle import, text-only attribution/review, native registration, rendered original/reviewed comparison, same-case second-note practice, preservation and saved reopening",
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "session_id": "c789804414ba8fe964449e6e129b6e20",
+    "phase": "paused",
+    "revision": 4,
+    "profile": null,
+    "onboarding_phase": "interview",
+    "runs": {
+      "demo": {
+        "reviewed_transcript": "/private/tmp/teaching-acceptance-20260926/codex/clara-transcribe-reporting/teaching/sessions/c789804414ba8fe964449e6e129b6e20/files/demo-81e6bb8f34f1f9e2/ciclo-arco-case/voice_sessions/20260310100000Z/trascrizione-rivista.md",
+        "reviewed_sha256": "e006c1c1fa0da48b0b247ec8d8eb1edf95d622ff79554f5abebd0ef3e28337ef",
+        "raw_transcript": "/private/tmp/teaching-acceptance-20260926/codex/clara-transcribe-reporting/teaching/sessions/c789804414ba8fe964449e6e129b6e20/files/demo-81e6bb8f34f1f9e2/ciclo-arco-case/voice_sessions/20260310100000Z/raw_transcript.md",
+        "raw_sha256": "1a222d3c3d70223f54c64a2fd6d2b455482cd17ca80aba4e206879095fe401a4",
+        "execution_sha256": "904c22328d20fe138d64d71d12660063fba461116e3d3ebb7a6cff8af191c363",
+        "receipt_id": "ev-transcript-mat-0003-e006c1c1fa0d"
+      },
+      "practice": {
+        "reviewed_transcript": "/private/tmp/teaching-acceptance-20260926/codex/clara-transcribe-reporting/teaching/sessions/c789804414ba8fe964449e6e129b6e20/files/demo-81e6bb8f34f1f9e2/ciclo-arco-case/voice_sessions/20260311100000Z/trascrizione-rivista.md",
+        "reviewed_sha256": "c904f256d2630a5675907bf40552e137ee6bc65baa60f0692cf8a55250b1e57d",
+        "raw_transcript": "/private/tmp/teaching-acceptance-20260926/codex/clara-transcribe-reporting/teaching/sessions/c789804414ba8fe964449e6e129b6e20/files/demo-81e6bb8f34f1f9e2/ciclo-arco-case/voice_sessions/20260311100000Z/raw_transcript.md",
+        "raw_sha256": "cd9a588a015aea2babe482621e7680592eb0c7a5dd51454901cf010e4dd93f6c",
+        "execution_sha256": "76d7c24ef29bdc2435bb10c62f6ee6402e7be7c3f4e0f2dbfafb96fa916c5662",
+        "receipt_id": "ev-transcript-mat-0005-c904f256d263"
+      }
+    },
+    "same_case": true,
+    "demo_files_preserved": 34,
+    "previous_receipts_preserved": 2,
+    "repairs": [
+      "Repeat finalization reuses original capture timestamps while rejecting other immutable record changes",
+      "Current attributed-transcript metadata follows the reviewed file",
+      "Readable reviewed note precedes raw metadata; concise registration explanation"
+    ],
+    "limitations": [
+      "Fictional authored transcript bundle without audio; hosted recording/transcription not tested",
+      "Native voice and physical two-window placement unverified",
+      "Other-language live journeys pending; five-language native import regressions passed",
+      "Installed Clara unavailable; current local source tested",
+      "Retained native raw-source metadata headings are English"
+    ],
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-27T23:35:19.692996+00:00"
   }
 }

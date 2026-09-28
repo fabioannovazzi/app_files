@@ -140,7 +140,7 @@
     {
       "path": "scripts/finalize_hosted_transcript.py",
       "repository_path": "plugins/clara/scripts/finalize_hosted_transcript.py",
-      "sha256": "89dac1605b87374c2d046f765208abda90aae211453f38b8de2b42ec9f1f6cb6"
+      "sha256": "0682cd4747141b678a3348bcc8ea793d2e4f2c9dd54dc7d0844f36a820f57a56"
     },
     {
       "path": "scripts/html_deck_runtime.py",
@@ -240,12 +240,12 @@
     {
       "path": "vendor/modules/courseware/assets/course.css",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
-      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      "sha256": "5b28ac597f0a3deaf4cfc907b8a33bb40aae21719206ad0c976b605950f89dc7"
     },
     {
       "path": "vendor/modules/courseware/assets/languages.json",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      "sha256": "507967ae7dcf07ae4e138fff4333adb5fd709484731dcef45d531152c54ede45"
     },
     {
       "path": "vendor/modules/courseware/assets/legacy-course.css",
@@ -258,9 +258,24 @@
       "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
     },
     {
+      "path": "vendor/modules/courseware/deck_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/deck_view.py",
+      "sha256": "96f75ea3078c9e0c6e509cdefb0beeb876677e2e7884777d213d9b03c6c27b80"
+    },
+    {
+      "path": "vendor/modules/courseware/document_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/document_view.py",
+      "sha256": "9982c9d6ce83e7feb26165308fa9a136a744891a7e623ce23ff9bb778e6b7403"
+    },
+    {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
       "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/html_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/html_view.py",
+      "sha256": "57280e82460bd8c7982294c4be6e0cff7da969800d4282e6da15059571cce0b1"
     },
     {
       "path": "vendor/modules/courseware/legacy.py",
@@ -270,7 +285,7 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "22c5ea8d39a6ffa376c63f12bd31e3282b435a913e8027ee44c4261a5e704a74"
+      "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
     },
     {
       "path": "vendor/modules/courseware/policy.py",
@@ -280,7 +295,17 @@
     {
       "path": "vendor/modules/courseware/preview.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/preview.py",
-      "sha256": "36ff10a3d93772a927765c395eb19c5073664c1447b0b267cf9bd9455c4ad6f3"
+      "sha256": "1a6e56141cdd554a6510100f47745f7b31472c9d22f45407f4f86ac7981aee10"
+    },
+    {
+      "path": "vendor/modules/courseware/sales_plan_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/sales_plan_view.py",
+      "sha256": "115977d03c034ed5f363d6fd5c8c82648ed1349067ac61e48d0701b10caa7e7b"
+    },
+    {
+      "path": "vendor/modules/courseware/website_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/website_view.py",
+      "sha256": "f230f86272201bae7bc34f1868d8cb6013b47ce9ccc8b876acdfb0bc257637d5"
     },
     {
       "path": "vendor/modules/desktop_teaching/__init__.py",
@@ -290,7 +315,7 @@
     {
       "path": "vendor/modules/desktop_teaching/cases.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/cases.py",
-      "sha256": "faf8ca6bbd59f16f679796a057b027b2efbcccfc4798dfc6c5e356d3239cb602"
+      "sha256": "933e93d2d446dec29719e276eec34a8bda5c1cf5fc4747bdd1d756abe13a61c2"
     },
     {
       "path": "vendor/modules/desktop_teaching/onboarding.py",
@@ -300,13 +325,13 @@
     {
       "path": "vendor/modules/desktop_teaching/teaching.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
-      "sha256": "9b967e0c028397d9645bf731024dfe07c990d3f377a6175a5486c0dc870e9ec1"
+      "sha256": "60d54b96fb3cf96e0b3c7906ee96a804916ebfbdbd663bb81a1e3050a766ae09"
     }
   ],
   "files": [
     {
       "path": "files/input/original-deck-it.html",
-      "sha256": "ded847f03de50bf6f82cd3c316b0dc407004b86a5a16f035b8af7c86fc958d32",
+      "sha256": "b9f6302e26dc701106ce360424dca26a88c923f6b3f2516e784e5d27e27372f0",
       "languages": [
         "it"
       ],
@@ -314,7 +339,7 @@
     },
     {
       "path": "files/input/original-work-it.zip",
-      "sha256": "17f48e7ba02277f388c26bad9747a8942a87ebfad981ab8bd42090f39cdb0a92",
+      "sha256": "08f99820ee5d8b75950a39a38864f83ecf5b8a70afe6a3d16605fecdbcd138bc",
       "languages": [
         "it"
       ],
@@ -330,7 +355,7 @@
     },
     {
       "path": "files/practice/original-deck-it.html",
-      "sha256": "ded847f03de50bf6f82cd3c316b0dc407004b86a5a16f035b8af7c86fc958d32",
+      "sha256": "b9f6302e26dc701106ce360424dca26a88c923f6b3f2516e784e5d27e27372f0",
       "languages": [
         "it"
       ],
@@ -338,7 +363,7 @@
     },
     {
       "path": "files/practice/original-work-it.zip",
-      "sha256": "17f48e7ba02277f388c26bad9747a8942a87ebfad981ab8bd42090f39cdb0a92",
+      "sha256": "08f99820ee5d8b75950a39a38864f83ecf5b8a70afe6a3d16605fecdbcd138bc",
       "languages": [
         "it"
       ],
@@ -354,7 +379,7 @@
     },
     {
       "path": "files/input/original-deck-en.html",
-      "sha256": "71c15bb49dd14aca342da50ba966eb94d7219a97d91974fe4a7a47381bb71f20",
+      "sha256": "91151f34a4931111281486837b1e59b74f46c708e9fe10cfdbd25ee60bdf9768",
       "languages": [
         "en"
       ],
@@ -362,7 +387,7 @@
     },
     {
       "path": "files/input/original-work-en.zip",
-      "sha256": "034c84bfc05509c3784e6aa95764a914c5db6d13721f1a6e7276f88bf47b83d2",
+      "sha256": "9bff75b8bf7d718a4dc90684514b07e4f5abdbfbebb36340fc8f421e96839836",
       "languages": [
         "en"
       ],
@@ -378,7 +403,7 @@
     },
     {
       "path": "files/practice/original-deck-en.html",
-      "sha256": "71c15bb49dd14aca342da50ba966eb94d7219a97d91974fe4a7a47381bb71f20",
+      "sha256": "91151f34a4931111281486837b1e59b74f46c708e9fe10cfdbd25ee60bdf9768",
       "languages": [
         "en"
       ],
@@ -386,7 +411,7 @@
     },
     {
       "path": "files/practice/original-work-en.zip",
-      "sha256": "034c84bfc05509c3784e6aa95764a914c5db6d13721f1a6e7276f88bf47b83d2",
+      "sha256": "9bff75b8bf7d718a4dc90684514b07e4f5abdbfbebb36340fc8f421e96839836",
       "languages": [
         "en"
       ],
@@ -402,7 +427,7 @@
     },
     {
       "path": "files/input/original-deck-fr.html",
-      "sha256": "f56585a82d0ef50307324832680b1b21908400f9c561f976432ec2cce119aad2",
+      "sha256": "ab28e93727bed3a79c198e636eff9b576f8959d7f12ab586b10dd4043aff548f",
       "languages": [
         "fr"
       ],
@@ -410,7 +435,7 @@
     },
     {
       "path": "files/input/original-work-fr.zip",
-      "sha256": "1516421260b0ee872882ad4b37165f9acf16b313721b82d7f648d080fe34a3a5",
+      "sha256": "9dd4bd73f411f1fee6be857ef218fb1547ff56a4b162ee05a2d74738eaf279d3",
       "languages": [
         "fr"
       ],
@@ -426,7 +451,7 @@
     },
     {
       "path": "files/practice/original-deck-fr.html",
-      "sha256": "f56585a82d0ef50307324832680b1b21908400f9c561f976432ec2cce119aad2",
+      "sha256": "ab28e93727bed3a79c198e636eff9b576f8959d7f12ab586b10dd4043aff548f",
       "languages": [
         "fr"
       ],
@@ -434,7 +459,7 @@
     },
     {
       "path": "files/practice/original-work-fr.zip",
-      "sha256": "1516421260b0ee872882ad4b37165f9acf16b313721b82d7f648d080fe34a3a5",
+      "sha256": "9dd4bd73f411f1fee6be857ef218fb1547ff56a4b162ee05a2d74738eaf279d3",
       "languages": [
         "fr"
       ],
@@ -450,7 +475,7 @@
     },
     {
       "path": "files/input/original-deck-de.html",
-      "sha256": "e743524bf0fb415f739a4a256af69e4339b43acf568f7c98c43a90d711abb625",
+      "sha256": "934a98b2409fdec35dc3b3f28fa43a6de393c94a060a4c56f3056ee535140b97",
       "languages": [
         "de"
       ],
@@ -458,7 +483,7 @@
     },
     {
       "path": "files/input/original-work-de.zip",
-      "sha256": "678e1d5bdfec203d508e14df34efdcf41f06aac7366b658224c139a8c03f1379",
+      "sha256": "22346d67a3b81e94bba03408b85ddeb0958c02159398ff912c470804bf208b74",
       "languages": [
         "de"
       ],
@@ -474,7 +499,7 @@
     },
     {
       "path": "files/practice/original-deck-de.html",
-      "sha256": "e743524bf0fb415f739a4a256af69e4339b43acf568f7c98c43a90d711abb625",
+      "sha256": "934a98b2409fdec35dc3b3f28fa43a6de393c94a060a4c56f3056ee535140b97",
       "languages": [
         "de"
       ],
@@ -482,7 +507,7 @@
     },
     {
       "path": "files/practice/original-work-de.zip",
-      "sha256": "678e1d5bdfec203d508e14df34efdcf41f06aac7366b658224c139a8c03f1379",
+      "sha256": "22346d67a3b81e94bba03408b85ddeb0958c02159398ff912c470804bf208b74",
       "languages": [
         "de"
       ],
@@ -498,7 +523,7 @@
     },
     {
       "path": "files/input/original-deck-es.html",
-      "sha256": "2133148944088e09b5114964c6ae4745148ca66a320c8f9a758482d0a46647ae",
+      "sha256": "6c167b09465372dc63bd123a2e6e0ac9764aa637178c240b2ce018fd3e76b32f",
       "languages": [
         "es"
       ],
@@ -506,7 +531,7 @@
     },
     {
       "path": "files/input/original-work-es.zip",
-      "sha256": "de258660cc5577d9797b1b34e030550cfe30749a30cc400a83551c8507961c6b",
+      "sha256": "705d54be998ed36a82bbdd7a2dc82b2991a63ac04f84b605d382e2d336552ec6",
       "languages": [
         "es"
       ],
@@ -522,7 +547,7 @@
     },
     {
       "path": "files/practice/original-deck-es.html",
-      "sha256": "2133148944088e09b5114964c6ae4745148ca66a320c8f9a758482d0a46647ae",
+      "sha256": "6c167b09465372dc63bd123a2e6e0ac9764aa637178c240b2ce018fd3e76b32f",
       "languages": [
         "es"
       ],
@@ -530,7 +555,7 @@
     },
     {
       "path": "files/practice/original-work-es.zip",
-      "sha256": "de258660cc5577d9797b1b34e030550cfe30749a30cc400a83551c8507961c6b",
+      "sha256": "705d54be998ed36a82bbdd7a2dc82b2991a63ac04f84b605d382e2d336552ec6",
       "languages": [
         "es"
       ],

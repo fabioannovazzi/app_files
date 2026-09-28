@@ -282,5 +282,47 @@
         ]
       }
     }
+  },
+  "codex_course_qa_20260928": {
+    "status": "passed",
+    "course": 45,
+    "product": "lucia",
+    "workflow": "quesito-legale-fiscale",
+    "scope": "Italian functional Codex simulated learner journey: prepared inputs, two native workflow stages, demonstration, distinct practice, rendered source and Word readers, saved reopening",
+    "actor": "Codex simulated QA",
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "session_id": "a36199e8778bfb4d57f1bf564492a442",
+    "phase": "paused",
+    "revision": 4,
+    "runs": {
+      "demo": {
+        "preparation_run": "run_efecafbe9ef28e66535f7f0f",
+        "review_run": "run_468164f6b10d22ee1bae2830",
+        "engagement": "eng_fdb843a250c9f909a98bdc66",
+        "ledger_status": "completed",
+        "docx_sha256": "0f3ce300892a6f6d82e93426e3512232ead04cc817059db5a325aabdf3f2b26a",
+        "audit": "record_complete",
+        "professional_review": "pending"
+      },
+      "practice": {
+        "preparation_run": "run_b365a3cbd70acfa0af7a8bff",
+        "review_run": "run_a72da24f940e12969bfc292c",
+        "engagement": "eng_fdb843a250c9f909a98bdc66",
+        "ledger_status": "completed",
+        "docx_sha256": "a5ffe091c215d73ec79fefca07db854caf24c9b39c157628619b0f8863995868",
+        "audit": "record_complete",
+        "professional_review": "pending"
+      }
+    },
+    "demo_files_preserved": 74,
+    "demo_file_set_unchanged": true,
+    "limitations": [
+      "Native microphone/voice not tested",
+      "Physical two-window positioning not tested",
+      "Other-language live journeys not tested"
+    ],
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-28T02:19:16.887789+00:00"
   }
 }

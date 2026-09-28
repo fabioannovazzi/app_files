@@ -22,6 +22,70 @@ WORKFLOW_NAME = "deep-research-validator"
 MAX_CLAIM_ITEMS = 750
 
 _REVIEW_COPY: dict[str, dict[str, Any]] = {
+    "it": {
+        "product_title": "Verifica della risposta",
+        "handoff_title": "Passaggio alla revisione",
+        "run_id": "ID esecuzione",
+        "review_payload": "Dati della revisione",
+        "run_intake": "Dati di avvio",
+        "pending_decisions": "Decisioni da prendere",
+        "applied_decisions": "Decisioni applicate",
+        "final_artifacts": "Documenti finali",
+        "review_in_codex": "Revisione professionale",
+        "steps": (
+            "Verifica il riferimento locale e la sua impronta con `{tool}`.",
+            "Apri la schermata di revisione con il token restituito usando `{tool}`.",
+            "Salva le decisioni del revisore con `{tool}`.",
+            "Applica le decisioni del revisore con `{tool}`.",
+        ),
+        "handoff_notice": "Il salvataggio e l'applicazione persistenti richiedono la schermata MCP o il server locale. La versione HTML statica permette solo di copiare o scaricare il JSON delle decisioni.",
+        "columns": (
+            "Tipo",
+            "Affermazione o documento",
+            "Azione proposta",
+            "Fonte",
+            "Risultato",
+            "Stato",
+        ),
+        "claim": "Affermazione",
+        "untitled_claim": "Affermazione senza titolo",
+        "answer_contract_review": "Conformità ai requisiti della risposta",
+        "coverage_review": "Copertura delle affermazioni selezionate",
+        "edit_hint": "La modifica registra la correzione del revisore in proposed_fix, nel file claims_review.json, per il claim_index corrispondente. Non rigenera la risposta rivista o corretta.",
+        "artifacts": {
+            "answer_contract": "Requisiti della risposta (JSON)",
+            "claims_review": "Verifica delle affermazioni (JSON)",
+            "validation_audit": "Controlli sulla verifica (JSON)",
+            "validated_document": "Risposta verificata (Markdown)",
+            "validated_document_docx": "Risposta verificata (Word)",
+            "validation_package": "Registro della verifica (Markdown)",
+        },
+        "package_required": [
+            "# Registro di verifica della risposta",
+            "## Limiti della verifica",
+            "## Requisiti della risposta",
+            "## Verifica dei requisiti della risposta",
+            "## Copertura della verifica",
+            "## Inventario del documento",
+            "## Valutazione delle affermazioni",
+        ],
+        "dependency_note": "Claude deve eseguire scripts/check_dependencies.py prima degli script del workflow.",
+        "data_notes": [
+            "Gli script leggono gli inventari locali del documento e delle fonti e la verifica delle affermazioni.",
+            "La schermata di revisione mostra una selezione delle evidenze sulle affermazioni e sulle fonti.",
+            "Non vengono usati per impostazione predefinita connettori esterni, caricamenti, SQL remoto o notebook ospitati.",
+        ],
+        "caveats": [
+            "Identità delle fonti, riscontro semantico, ragionamento e limiti del giudizio professionale sono valutazioni del modello. I controlli automatici verificano solo struttura dei record e riscontri meccanici nella specifica copia della fonte citata.",
+            "I dati nella schermata MCP sono limitati; i file JSON e Markdown conservano tutte le evidenze della verifica.",
+            "ui_decisions.json resta in attesa finché Claude, la schermata MCP o la revisione alternativa non registrano le decisioni.",
+        ],
+        "next_actions": [
+            "Esegui validate_deep_research_review e, quando MCP è disponibile, render_deep_research_review.",
+            "Prima della consegna rivedi identità delle fonti, riscontro semantico, ragionamento, requisiti, copertura e punti soggetti al giudizio professionale.",
+            "Correggi claims_review_draft.json o answer_contract.json e rigenera il pacchetto se validation_audit.json segnala errori.",
+        ],
+    },
     "en": {
         "product_title": "Answer Validator",
         "handoff_title": "Review Handoff",
@@ -170,7 +234,10 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
 
 def _language_code(value: object | None) -> str:
     text = str(value or "en").strip().lower().replace("_", "-")
-    return "es" if text.startswith("es") else "en"
+    return next(
+        (code for code in ("it", "es") if text == code or text.startswith(code + "-")),
+        "en",
+    )
 
 
 def _copy(value: object | None) -> dict[str, Any]:
@@ -272,7 +339,7 @@ def _write_review_handoff_card(
         "",
         copy["handoff_notice"],
     ]
-    if _language_code(language) == "es":
+    if _language_code(language) != "en":
         lines.insert(1, "<!-- Review Handoff -->")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path

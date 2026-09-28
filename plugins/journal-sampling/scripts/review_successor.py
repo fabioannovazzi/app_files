@@ -108,9 +108,15 @@ def _is_ephemeral_review_working_tree(path: Path, *, run_root: Path) -> bool:
 
 
 def _load_cli_customer_run(args: argparse.Namespace) -> dict[str, object]:
+    allowed_statuses = (
+        ("running", "ready_for_review", "completed")
+        if args.command == "validate"
+        else ("running",)
+    )
     context = load_client_engagement_context_file(
         args.client_engagement,
         expected_workflow_id="journal-sampling",
+        allowed_statuses=allowed_statuses,
     )
     expected_output = Path(str(context["output_dir"]))
     persistent_output = (
@@ -126,6 +132,7 @@ def _load_cli_customer_run(args: argparse.Namespace) -> dict[str, object]:
         args.client_engagement,
         expected_workflow_id="journal-sampling",
         output_dir=persistent_output,
+        allowed_statuses=allowed_statuses,
     )
     actual_output = args.output_dir.expanduser().resolve(strict=True)
     if actual_output == expected_output or actual_output.is_relative_to(
@@ -136,6 +143,7 @@ def _load_cli_customer_run(args: argparse.Namespace) -> dict[str, object]:
             expected_workflow_id="journal-sampling",
             input_paths=[actual_output],
             output_dir=actual_output,
+            allowed_statuses=allowed_statuses,
         )
         return context
     if not _is_ephemeral_review_working_tree(

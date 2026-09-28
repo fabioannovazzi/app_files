@@ -143,6 +143,18 @@ recommendation. The learner provides the evidence and question; Clara authors
 the technical case and handles its provenance.
 
 
+## Transcript imports
+
+The local `transcribe` lesson imports authored fictional text without recording
+or uploading audio. Present the readable reviewed note before raw import
+metadata. Put each speaker's turn in a separate Markdown paragraph so the
+rendered reader preserves the visible turn boundaries. Compare the words and
+speaker labels with the original; retain unknown names as unknown. Explain how
+the note links to its source in plain language, keeping long receipt identifiers
+and hashes in the native evidence records. Inspect the rendered note and guide
+before delivery, including paragraph breaks and any visible Markdown markers.
+Preserve earlier transcript versions and their receipts when revising a note.
+
 ## Browser preview
 
 For `course.html` and a retained kit's `example.html`, serve the rendered kit

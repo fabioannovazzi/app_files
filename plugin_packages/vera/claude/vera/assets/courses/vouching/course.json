@@ -29,7 +29,7 @@
   "sources": [
     {
       "path": "modules/check-entries/assets/check-entries-review-widget.html",
-      "sha256": "357fd2ce1a2a1650a08eb5645315875006c4fe511018de3bec02163c989dbdcf"
+      "sha256": "467f3668a601182f9859aafba253254d7c471fd2f1b148794afd4da05498a9e5"
     },
     {
       "path": "modules/check-entries/assets/icon.svg",
@@ -37,7 +37,7 @@
     },
     {
       "path": "modules/check-entries/assets/review-workbench-adapter.json",
-      "sha256": "7f36af5bb0275704d739c73eae7700ab81371d2273b53c58c0c2f3f40de72ba9"
+      "sha256": "a72b62284fa90d030f1413810fa1c2c1ceed511d22d6910b72696cf291189ea4"
     },
     {
       "path": "modules/check-entries/references/workflow-reference.md",
@@ -49,7 +49,7 @@
     },
     {
       "path": "modules/check-entries/scripts/apply_review_edits.py",
-      "sha256": "6d88b150f32fbc627d2090debb536cfa49c3f51de6728fc469d5488dff9fac5e"
+      "sha256": "6f82d9385caeac9b7cc0d4b3d58b32c68ad2603b213d005cfd168a9800b49451"
     },
     {
       "path": "modules/check-entries/scripts/check_dependencies.py",
@@ -502,5 +502,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "02f5f97305dad11218183b224fd0966b12b39157b655e052c675288ebcbc38b3"
+  "canonical_course_sha256": "c23b582be0a108801602e53f81739e99ae1b873b510d2bb35aa01840315c17f2"
 }
