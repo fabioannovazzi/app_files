@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "previdenza-inps",
-  "course_sha256": "4e52cfa332932135305e8effd4a35ab15367ce3358df873291f26eefcc343e01",
+  "course_sha256": "b76aba33b68b311f3ba0ac1cece60ad2dc8c9ecff1b02b70c5ee7ac22703b492",
   "reviewer": "Codex: localized first-use outlines, fictional sources and rendered native memo review",
   "reviewed_at": "2026-09-14T15:57:44.502342+00:00",
   "review_scope": "Prepared local documentary INPS review only. All ten native memos were rendered and all twenty pages inspected, together with the localized document requests, guides and source inputs. Regression model interpretations and scope confirmations are test-only. This review does not certify a legal conclusion, live research, portal access, voice behavior, professional approval or learner understanding.",
@@ -327,5 +327,28 @@
     ],
     "no_install_deploy_publish": true,
     "verified_at": "2026-09-27T18:01:22.686635+00:00"
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "4e52cfa332932135305e8effd4a35ab15367ce3358df873291f26eefcc343e01",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-30.md",
+    "italian_course_qa_sha256": "d7082bd82aa89d894437e913ca233e7e27dfc846e5aad86f511c7a2fb30edfd7",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   }
 }

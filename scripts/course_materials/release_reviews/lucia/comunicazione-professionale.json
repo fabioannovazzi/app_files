@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "comunicazione-professionale",
-  "course_sha256": "11bfb6860a191b4c7e0f99ba01a695f1d90ed226b69e794c620cc04bd626fc58",
+  "course_sha256": "cb3b30702ca1ccb5fcba93763821e8c594afa25acaf757dd21cfec5e338cc74f",
   "reviewer": "Codex: first-use/source/output inspection; independent claim session 01a0a0b8-d623-7cd0-870c-ec3921855b09 and independent editorial session /root/communication_editorial_isolated_07",
   "reviewed_at": "2026-09-14T17:03:02.450310+00:00",
   "review_scope": "Actual current local native packaging with explicitly synthetic professional-review transitions. Exact revised contributions and all 220 claims across both products were independently assessed, followed by a fresh editorial session separate from generation, source assurance and benchmark qualification. The final FAQs preserve the exact reviewed bodies once; root inspected the native packaging and all ten practice emails. Host identities are operator attestations, not API receipts. The outputs are Markdown FAQs and text emails; no HTML, rendered palette, professional approval, sending, real learner, or voice/two-window acceptance is claimed.",
@@ -405,5 +405,28 @@
     ],
     "no_install_deploy_publish": true,
     "verified_at": "2026-09-28T01:17:14.916850+00:00"
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "11bfb6860a191b4c7e0f99ba01a695f1d90ed226b69e794c620cc04bd626fc58",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-43.md",
+    "italian_course_qa_sha256": "445da066a04617152fb65ba1d2bff667dfc7bc4d3707d3677a54beb10ece0a0d",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   }
 }

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "registro-imprese-sari",
-  "course_sha256": "7e9f957f334a4d31432b0d99b3ad770082369330445c9a4f5fa966a6a7b5d215",
+  "course_sha256": "03375d598668aefc81f16e5ffbb8d00b7a64d4ad6d14a8b4eb18d054c056ae9b",
   "reviewer": "Codex: direct lesson, source-file, native artifact and browser review",
   "reviewed_at": "2026-09-15T01:54:14.804674+00:00",
   "languages": {
@@ -488,5 +488,28 @@
     ],
     "no_install_deploy_publish": true,
     "verified_at": "2026-09-27T19:12:08.618758+00:00"
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "7e9f957f334a4d31432b0d99b3ad770082369330445c9a4f5fa966a6a7b5d215",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-32.md",
+    "italian_course_qa_sha256": "3658648cfe05ab9290d804f996d5fd54a86dd11f32bdc16192173f1bcf389d6a",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   }
 }

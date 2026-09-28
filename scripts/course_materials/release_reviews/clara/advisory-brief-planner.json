@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "advisory-brief-planner",
-  "course_sha256": "35484690c3f74d102293b7cc315ca041f9b3010f239a7b1e0c1b98c67bd289d1",
+  "course_sha256": "3ed6f1caabb93c62067b60c4a4ee4d5a49af4551863d457a6490ae9d9254f2ca",
   "reviewer": "Codex: five-language first-use planning material and actual native contract review",
   "reviewed_at": "2026-09-14T20:43:47.929955+00:00",
   "review_scope": "Read every localized lesson outline and the fictional assignment, customer/operating notes, revised assignment and vehicle update. Read all ten delivered readable plans and reviewed their source statements, constraints and changed objectives against those inputs. Verified all local source, canonical contract, validation and review-note links. The current native packager checks the actual contracts and exact source anchors. All 25 advisory regression cases pass; ten distinct planner cases bind this kit and its five languages. Each practice retains the initial plan and creates a separate revised plan. These are Markdown and JSON material checks, not proof of live voice, learner understanding, native GUI presentation or professional approval. The authored regression interpretations are outside the shipped kits.",
@@ -429,5 +429,29 @@
     ],
     "no_install_deploy_publish": true,
     "verified_at": "2026-09-27T19:37:37.497766+00:00"
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "35484690c3f74d102293b7cc315ca041f9b3010f239a7b1e0c1b98c67bd289d1",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources",
+      "files"
+    ],
+    "content_review": "The five practice source headings now identify a revised practice assignment instead of demo. All source body text is unchanged.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-33.md",
+    "italian_course_qa_sha256": "04fb0f8c947933335fe96f648a32fc6f1f5aa6bbae4ef611a0cb9ab14d8decb1",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   }
 }

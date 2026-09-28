@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "bilancio-oic",
-  "course_sha256": "dc9a1820a2ab57ed39a1299a4d33554dd112fcadd81d411eec23c07809ed0d7f",
+  "course_sha256": "78ca1b9fc074ad75a8d357e029af3882e01f5675b6425a8b37250cdbb3bb3697",
   "reviewer": "Codex lesson, generated accounts and integration evidence review",
   "reviewed_at": "2026-09-23T11:54:05.184666+00:00",
   "review_scope": "Reviewed both localized lessons and four actual generated draft accounts. Native execution uses the checksum-verified official PCI taxonomy and Arelle. Parser, mapping and disclosure decisions in automated checks are explicitly synthetic fixtures supported by the fictional declaration, not learner or professional approvals. No filing, signature, human timing or live voice is claimed.",
@@ -90,5 +90,28 @@
     "scope": "Italian actual Codex teacher/working-chat demo and same-case, same-engagement replacement-input practice. Rendered inputs, source drill-down, actual native statements/schedules/disclosures, local XBRL candidates and archived reopening exercised.",
     "evidence": "Local codex-course-24.md and bilancio-final-qa-verification.json. Demo rev44 and practice rev66 pass current native and local XBRL checks without approval. Demo36/practice32 archived artifacts;43 original run files unchanged. Actual archived Codex readers53315/53575. Markdown attachment and passive HTML-reader failures repaired; native draft totals/equity labels and Italian messages repaired and retested. Stale practice mapping explanations returned and corrected before application.20 preview regressions and17 invariants pass; earlier180 engine,4 bilingual native fixture and32 shared reader checks retained.",
     "limits": "Simulated learner; no human understanding/professional approval, microphone or physical-window acceptance claimed. English live journey pending. No installation, Cowork, deployment or publication."
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "dc9a1820a2ab57ed39a1299a4d33554dd112fcadd81d411eec23c07809ed0d7f",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-24.md",
+    "italian_course_qa_sha256": "cf3e397e811b778cfeaef01f435ed682222d4409638079d8a9ce49d0e6c69b25",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   }
 }

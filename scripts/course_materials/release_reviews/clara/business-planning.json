@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "business-planning",
-  "course_sha256": "7d2673f495a14c968f41eeeca03b64ddc40deab7d21e32a315f1551486a56fbb",
+  "course_sha256": "7b92e4198ad3845a878b4d986edec2798a2a359daa0b04ad2e2ca0bd7a8f1c2f",
   "reviewer": "Codex first-use lesson and native business-plan output review",
   "reviewed_at": "2026-09-23T11:52:59.406972+00:00",
   "review_scope": "Reviewed both localized lessons and generated native demo/practice plans. Tests replay model-authored interpretation through the current workflow, with distinct owning-product case handling and preserved preceding plan. Chrome DOM review additionally inspected the English practice reader view. No fresh model inference, market research, learner participation, professional approval or complete financing model is claimed.",
@@ -125,5 +125,28 @@
     ],
     "no_install_deploy_publish": true,
     "verified_at": "2026-09-27T21:55:22.334277+00:00"
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "7d2673f495a14c968f41eeeca03b64ddc40deab7d21e32a315f1551486a56fbb",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-37.md",
+    "italian_course_qa_sha256": "bffd0748e73a218b10228236fc0c659f7782fc005d076325da5b8204e5bc4899",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   }
 }

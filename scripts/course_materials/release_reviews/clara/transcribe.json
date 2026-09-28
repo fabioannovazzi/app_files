@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "transcribe",
-  "course_sha256": "5a0f9b43c1db25d8c9848975ad5f92b4cb0ecce55572be7d781488810b5a35d9",
+  "course_sha256": "3f79adfa141f3bf2240cf439dd8bb61e3e15b481a9b867da6c33525d5277bd97",
   "reviewer": "Codex: first-use outline, source and native transcript-output review",
   "reviewed_at": "2026-09-14T21:09:24.778646+00:00",
   "review_scope": "Local bundle import, text-only speaker review, source preservation and case registration only. Fixed regression interpretation is not a learner action, live voice test, recorded audio or hosted transcription. No advisory claims or approvals are created. Source dependency refresh after the localized advisory evidence-map repair: 35 current presentation/transcript checks pass in clara-teaching-source-refresh-02. All 60 recorded primary/supporting artifacts across these three kits are byte-identical to the previously inspected versions; the parity manifest retains actual paths. Existing editorial and visual judgments are preserved for unchanged material. No new voice, learner or GUI acceptance is asserted.",
@@ -509,5 +509,28 @@
     ],
     "no_install_deploy_publish": true,
     "verified_at": "2026-09-27T23:35:19.692996+00:00"
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "5a0f9b43c1db25d8c9848975ad5f92b4cb0ecce55572be7d781488810b5a35d9",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-41.md",
+    "italian_course_qa_sha256": "c294889087b31aae27129f5908046874262b7143b144f03b1156f560e6bf5572",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   }
 }

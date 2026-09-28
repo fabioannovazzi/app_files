@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "variance-analysis",
-  "course_sha256": "b0426c7cebb0a721172147b5e9133372a3fe5a11caa7257c229b53203021a767",
+  "course_sha256": "9a0dc0066ab9a9c3b95f86cd044856567e7b8422bf98e8e08a844e842874440b",
   "reviewer": "Codex: first-use lesson and current native variance outputs",
   "reviewed_at": "2026-09-14T19:41:43.894547+00:00",
   "review_scope": "Read both fictional monthly input populations, all five localized contexts and first-use outlines, and the current calculation and interpretation outputs. Ten current native exercises pass within 92 component/native checks, without failures or skips. Visually inspected all 55 pages of the ten native Word reports, both distinct workbooks, and the four main chart families for every locale/phase. Final chart bytes match the previously inspected revision except the Spanish practice monthly chart, which was inspected separately. Workbook cells, styles and visibility match within each phase after resolving shared strings and equal-magnitude row order. Alternative sequences were reviewed through their native rows, reconciliation and authored interpretation; no visual inspection of every alternative PNG is claimed. Reports retain technical appendices, spacious chart pages and wrapped long German labels. This accepts prepared materials and their demonstrated current output, not learner understanding, voice interaction or professional approval.",
@@ -526,5 +526,28 @@
     "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
     "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "b0426c7cebb0a721172147b5e9133372a3fe5a11caa7257c229b53203021a767",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-13.md",
+    "italian_course_qa_sha256": "6bbe42bc1ce81facec9e022cafbd512d2412cb8f21e14a8134091d3862204de6",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   }
 }

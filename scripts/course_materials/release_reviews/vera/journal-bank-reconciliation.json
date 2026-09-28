@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "journal-bank-reconciliation",
-  "course_sha256": "85d95f163e029c2297515178018e13ea5d44480d553858e0a872115f75ca73f9",
+  "course_sha256": "3acf8ae073031e403a92f7f221ffb36e1a82ec7acbf9ed6a3edc4e8cea4c6066",
   "reviewer": "Codex: source, first-use lesson, native workbook and localized review-note inspection",
   "reviewed_at": "2026-09-14T16:32:17.532432+00:00",
   "review_scope": "Prepared fictional month-end comparison only. Current CLI runs and source/value replay are verified. Worksheet headers and selected rows were visually inspected in all seven sheets of both unique workbooks; the five locale editions are byte-identical per phase. No learner, live voice, tax or professional approval is attested.",
@@ -308,5 +308,28 @@
     "previous_course_sha256": "c7e389447a1e29050daa3902a3b93599c7e239d9426b6b68385bd4c982a29239",
     "source_review": "Only the shared worker host profile and its skill documentation changed for this course. The production sandbox remains identical. All ten current bank lesson executions passed; every workbook and localized review-note hash equals the retained reviewed artifact. Lesson content, source files, counts and outputs are unchanged. The new native worker qualification is recorded separately; the exact-reference teaching case does not exercise residual semantic resolution.",
     "execution_evidence_sha256": "dc24192582fedc8b44c8b4866b41b0d859df1e390c3822e56a1fe4ef25abfe24"
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "85d95f163e029c2297515178018e13ea5d44480d553858e0a872115f75ca73f9",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-4.md",
+    "italian_course_qa_sha256": "f277c2cb2a27ab1c6dd859b820668f9be827cc95d95e0560ac79325ea440b726",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   }
 }

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "aml-review",
-  "course_sha256": "323d7e49bb63ef9b87d3365790dc9169cff02875514f424bf669b8a57416bcb2",
+  "course_sha256": "0d773b551c737587d925e338d7a96b21da18fad2aa6b8be1ea2fa0a66f335c2a",
   "reviewer": "Codex: localized teaching materials and actual native draft/follow-up evidence review",
   "reviewed_at": "2026-09-14T20:09:40.719846+00:00",
   "review_scope": "All five lesson outlines and original fictional documents were read. Reviewed all unique semantic content of the twenty native memos across these two workflows and both phases, actual output structure, local source links, saved record identity/status/predecessor and delivery/source-challenge companions. Final output comparison confirms only the intended empty-evidence-label removal after the semantic review; exact current artifact hashes are recorded. The 113 focused tests have no failures or skips. These are Markdown/JSON outputs; no browser, native GUI rendering, live voice, learner comprehension or independent professional acceptance is claimed. CNDCEC source indices were checked as research starting points, without claiming article-level legal analysis. Fixture narratives exercise the normal Codex-authored stage and are not shipped as predetermined lesson answers.",
@@ -371,5 +371,28 @@
     "scope": "Italian actual Codex teacher/worker demo and same-engagement ownership-change follow-up, native sources/memos read, links and saved reopening checked.",
     "evidence": "Local codex-course-22.md; demo and practice6archivedfiles each;11/13executionhashes; exact predecessor retained, original bytes unchanged. Shared title and JSON-source repairs exercised.",
     "limits": "Simulated learner; no human comprehension/professional decision/voicehardware/physicalwindow acceptance. Other languages pending. No deployment or publication."
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "323d7e49bb63ef9b87d3365790dc9169cff02875514f424bf669b8a57416bcb2",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-22.md",
+    "italian_course_qa_sha256": "3e9074d15db7e786381378a0ca5db0d4924b61cd8ac2969a8e7046094d013a95",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   }
 }

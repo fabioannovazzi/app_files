@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "apertura-pratica",
-  "course_sha256": "51dec1b5ddb98dfe0968e9be40d48491b0c66c1d03084a584e31fadcb81d75ff",
+  "course_sha256": "0d623f5e876c8e99d177516b187ad90cf9c84e503558f579cf6a3c9fca426aac",
   "reviewer": "Codex: five-language first-use matter-opening material and native output review",
   "reviewed_at": "2026-09-15T00:53:48.479006+00:00",
   "review_scope": "Reviewed the complete five-language outlines, fictional requests, supply summaries, three-row register and practice correspondence. Reviewed native memos, grouped information requests, handoffs, final cards and the practice changes. Actual MCP rendering, saved synthetic return decisions, native Apply/Validate, manifest consistency and normal archive completion are exercised in ten successful runs. This accepts the prepared lesson material and its native execution, not a real lawyer or learner decision. The local workbench layout was inspected in five languages under matter-visual-11, including French conflict review; a synthetic Italian save was exercised under matter-visual-10. The current generated widget passes all five whole-script rendering tests. Those views do not attest native voice, actual paired-window learner interaction, human comprehension or measured lesson timing.",
@@ -548,5 +548,28 @@
       "five_language_demo_practice": 10,
       "lucia_boundary_contract": 2
     }
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "51dec1b5ddb98dfe0968e9be40d48491b0c66c1d03084a584e31fadcb81d75ff",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-42.md",
+    "italian_course_qa_sha256": "b10e0678a949b6f66ce215b9e0aae69f6ccb1776c38f19efe4ab648171e9d20c",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   }
 }

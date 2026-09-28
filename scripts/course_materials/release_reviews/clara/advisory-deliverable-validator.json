@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "advisory-deliverable-validator",
-  "course_sha256": "5d3197ecc40793ba2317803885ed9caa489cd54fa3244b2cc95293a078612b7e",
+  "course_sha256": "c3e73d3279eb627835ae3ef641c7efd508cf47c7ceb18a610e0b90c099a96e66",
   "reviewer": "Codex: five-language whole-memo lesson and native output review",
   "reviewed_at": "2026-09-14T21:37:39.206080+00:00",
   "review_scope": "Prepared material and native local execution review. Read the five localized lesson outlines and source sets, all ten artifact cards and run-review notes, five full practice review packages and the demo-specific changed passages. Final package/card text matches the inspected run after temporary-path normalization; the final clarified run notes were read separately. Eighty-eight native advisory and validator checks pass, including ten distinct phase/language review exercises. Native voice, window presentation, human timing, learner comprehension and professional approval remain unverified. The authored fictional review interpretations are regression fixtures outside shipped kits.",
@@ -578,5 +578,28 @@
     ],
     "no_install_deploy_publish": true,
     "verified_at": "2026-09-27T20:38:47.818370+00:00"
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "5d3197ecc40793ba2317803885ed9caa489cd54fa3244b2cc95293a078612b7e",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-35.md",
+    "italian_course_qa_sha256": "3579450e306e9892f191acc2ddf6b01ffe9d4b0da2f6830ac82cddf7c10b5a0a",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   }
 }
