@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
+from zipfile import ZipFile
 
 import pytest
 
@@ -242,3 +243,23 @@ def test_windows_launcher_reports_unavailable_without_archive_writes(
     assert result.returncode != 0
     assert "archive_bootstrap_unavailable" in result.stderr
     assert not (tmp_path / ".mparanza").exists()
+
+
+@pytest.mark.parametrize("product", ["vera", "lucia"])
+def test_distributed_archive_skill_ships_callable_session_helpers(
+    tmp_path: Path, product: str
+) -> None:
+    root = tmp_path / "package"
+    with ZipFile(
+        ROOT / "plugin_packages" / product / f"{product}-claude-plugin.zip"
+    ) as archive:
+        archive.extractall(root)
+    assert (
+        root / "scripts/studio_archive_windows.ps1"
+    ).read_bytes() == WINDOWS.read_bytes()
+    assert (
+        root / "scripts/studio_archive_session.py"
+    ).read_bytes() == SOURCE.read_bytes()
+    result = invoke(root, str(uuid4()), "diagnose")
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout)["package_readable"] is True

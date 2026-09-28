@@ -131,14 +131,43 @@ capability was unavailable.
 
 ## Packaged command
 
-Resolve the installed Vera root from this skill directory. Run the portable
-ledger through its managed launcher, including the startup check:
+Resolve the installed Vera root from this skill directory, not from a guessed
+AppData path. Generate one UUID for this task and retain that exact value in
+all commands, including separate shell calls. Use a new UUID for a new task;
+never share configuration across concurrent tasks. The session helper passes
+that identity to the managed runtime and the archive subprocess.
+
+On native Windows, use PowerShell and the packaged launcher (replace the UUID
+placeholder with the one generated for this task):
+
+```powershell
+& "<installed-vera-root>\scripts\studio_archive_windows.ps1" -SessionId "<task-uuid>" diagnose
+& "<installed-vera-root>\scripts\studio_archive_windows.ps1" -SessionId "<task-uuid>" check
+& "<installed-vera-root>\scripts\studio_archive_windows.ps1" -SessionId "<task-uuid>" clients
+```
+
+The launcher probes `py -3`, `python`, and `python3`, then uses the verified
+interpreter's absolute path. `-PythonExecutable` may select an explicit existing
+interpreter. Do not copy or rename python.exe, uninstall another Python, create
+junctions, change execution policy, or change Windows security settings. If host
+policy blocks PowerShell, report the denial; do not bypass it. If bootstrap is
+unavailable, distinguish a missing/unusable interpreter from package access;
+request the exact attempted command and error, not client documents.
+
+On a Linux or macOS execution surface (including a Cowork VM), run from the
+installed Vera root using a callable Python:
 
 ```bash
-python3 scripts/check_dependencies.py --module studio-archive
-python3 scripts/managed_python_runtime.py --module studio-archive run scripts/studio_archive.py --help
-python3 scripts/managed_python_runtime.py --module studio-archive run scripts/studio_archive.py <command> [arguments]
+python3 scripts/studio_archive_session.py --session-id <task-uuid> diagnose
+python3 scripts/studio_archive_session.py --session-id <task-uuid> check
+python3 scripts/studio_archive_session.py --session-id <task-uuid> <command> [arguments]
 ```
+
+`diagnose` checks package readability without provisioning or archive writes.
+`check` prepares and checks the managed runtime. Every archive command must use
+this session helper; invoking the archive CLI without its task identity can
+select a different configuration on every process. The actual workflow remains
+`scripts/managed_python_runtime.py --module studio-archive run scripts/studio_archive.py`.
 
 The bootstrap may start under ambient Python; the workflow runs under managed
 CPython 3.12. Setup uses only published shared requirements and respects host
@@ -155,7 +184,12 @@ folders. Never infer the archive root or a client from a filename.
 1. Run `diagnose-access --archive-root <exact-connected-root>` before first
    configuration. It must confirm path resolution and listing without returning
    the private path in its result.
-2. Run `configure --archive-root <exact-connected-root>`, then `clients`.
+2. If the user has an existing archive, select that exact connected root.
+   "Not configured" means this session has no pointer; it does not mean the
+   archive was deleted. Ask for the original folder if it is not connected.
+   Do not create a replacement, move folders, or scan unrelated directories.
+   Run `configure --archive-root <exact-connected-root>`, then `recover-ledger`
+   and `clients`, all through the same session helper.
 3. At the start of a later task, if session-local configuration is absent,
    configure the same exact connected root again and run `recover-ledger`.
    Recovery reads stable identities from `Vera/client.json`; it does not invent
