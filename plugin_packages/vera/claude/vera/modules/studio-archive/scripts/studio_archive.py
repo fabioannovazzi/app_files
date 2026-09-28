@@ -222,6 +222,9 @@ def _parser() -> argparse.ArgumentParser:
     refresh = subparsers.add_parser("refresh")
     refresh.add_argument("--rebuild", action="store_true")
     refresh.add_argument("--enable-ocr", action="store_true")
+    refresh.add_argument(
+        "--ocr-language", choices=("it", "fr", "de", "en", "es"), default="it"
+    )
 
     search = subparsers.add_parser("search")
     search.add_argument("--query", required=True)
@@ -403,6 +406,7 @@ def main(argv: list[str] | None = None) -> int:
             result = refresh_archive(
                 rebuild=args.rebuild,
                 enable_ocr=args.enable_ocr,
+                ocr_language=args.ocr_language,
             )
         elif args.command == "search":
             result = search_archive(

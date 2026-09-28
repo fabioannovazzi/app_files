@@ -117,32 +117,35 @@ def _item_sources(item: dict[str, Any]) -> str:
 
 
 def _case_scope_rows(intake: dict[str, Any], *, language: str) -> list[list[object]]:
+    from functools import partial
+
+    translated = partial(text, jurisdiction=intake.get("jurisdiction", "IT"))
     """Return private case details selected for the professional workpaper."""
 
     rows: list[list[object]] = [
         [
-            text(language, "Riferimento interno"),
+            translated(language, "Riferimento interno"),
             intake["client_reference"],
-            text(language, "registrato"),
+            translated(language, "registrato"),
         ],
     ]
     identity = intake.get("client_identity")
     if not isinstance(identity, dict):
         return rows
     labels = (
-        ("name", text(language, "Cliente / soggetto")),
-        ("tax_code", text(language, "Codice fiscale")),
-        ("vat_number", text(language, "Partita IVA")),
-        ("email", text(language, "Email")),
+        ("name", translated(language, "Cliente / soggetto")),
+        ("tax_code", translated(language, "Codice fiscale")),
+        ("vat_number", translated(language, "Partita IVA")),
+        ("email", translated(language, "Email")),
         ("pec", "PEC"),
-        ("phone", text(language, "Telefono")),
-        ("address", text(language, "Indirizzo")),
+        ("phone", translated(language, "Telefono")),
+        ("address", translated(language, "Indirizzo")),
     )
     rows.extend(
         [
             label,
             identity[field],
-            text(language, "dato del fascicolo"),
+            translated(language, "dato del fascicolo"),
         ]
         for field, label in labels
         if identity.get(field)
@@ -158,23 +161,30 @@ def _checklist_markdown(
     *,
     language: str,
 ) -> str:
+    from functools import partial
+
+    translated = partial(text, jurisdiction=intake.get("jurisdiction", "IT"))
     chamber = intake["competent_chamber"]
     operation = intake["requested_operation"]
     lines = [
-        f"# {text(language, 'checklist_title')}",
+        f"# {translated(language, 'checklist_title')}",
         "",
-        text(language, DISCLAIMER),
+        translated(language, DISCLAIMER),
         "",
         plan["case_summary"],
         "",
-        text(language, "## Perimetro del caso"),
+        translated(language, "## Perimetro del caso"),
         "",
         *_markdown_table(
-            [text(language, "Voce"), text(language, "Valore"), text(language, "Stato")],
+            [
+                translated(language, "Voce"),
+                translated(language, "Valore"),
+                translated(language, "Stato"),
+            ],
             [
                 *_case_scope_rows(intake, language=language),
                 [
-                    text(language, "Camera competente"),
+                    translated(language, "Camera competente"),
                     chamber["name"],
                     status(language, chamber["confirmation_status"]),
                 ],
@@ -184,38 +194,38 @@ def _checklist_markdown(
                     status(language, chamber["confirmation_status"]),
                 ],
                 [
-                    text(language, "Forma giuridica"),
+                    translated(language, "Forma giuridica"),
                     intake["subject"]["legal_form"],
                     status(language, intake["subject"]["confirmation_status"]),
                 ],
                 [
-                    text(language, "Attività"),
+                    translated(language, "Attività"),
                     intake["activity"]["description"],
                     status(language, intake["activity"]["classification_status"]),
                 ],
                 [
-                    text(language, "Operazione"),
+                    translated(language, "Operazione"),
                     operation["description"],
                     status(language, operation["confirmation_status"]),
                 ],
                 [
-                    text(language, "Data effetto"),
+                    translated(language, "Data effetto"),
                     operation["effective_date"],
                     status(language, operation["confirmation_status"]),
                 ],
                 [
-                    text(language, "Posizioni considerate"),
+                    translated(language, "Posizioni considerate"),
                     ", ".join(operation["position_types"]),
                     status(language, operation["confirmation_status"]),
                 ],
             ],
         ),
         "",
-        text(language, "## Quesito professionale"),
+        translated(language, "## Quesito professionale"),
         "",
         intake["professional_question"],
         "",
-        (text(language, "## Fonti ufficiali selezionate")),
+        (translated(language, "## Fonti ufficiali selezionate")),
         "",
     ]
     for source in sources["sources"]:
@@ -237,17 +247,19 @@ def _checklist_markdown(
         lines.extend(
             [
                 f"- [{title}]({url})" if url else f"- {title}",
-                f"  {text(language, 'Territorio')}: {territory}; {text(language, 'Data fonte/acquisizione')}: {source_date}. ID: {source['source_id']}.",
+                f"  {translated(language, 'Territorio')}: {territory}; {translated(language, 'Data fonte/acquisizione')}: {source_date}. ID: {source['source_id']}.",
                 "",
             ]
         )
-    for key, title in [(key, text(language, title)) for key, title in PLAN_SECTIONS]:
+    for key, title in [
+        (key, translated(language, title)) for key, title in PLAN_SECTIONS
+    ]:
         lines.extend([f"## {title}", ""])
         items = plan.get(key) or []
         if not items:
             lines.extend(
                 [
-                    (text(language, "_Nessuna voce proposta._")),
+                    (translated(language, "_Nessuna voce proposta._")),
                     "",
                 ]
             )
@@ -269,26 +281,26 @@ def _checklist_markdown(
                     "",
                     *(
                         [
-                            f"{text(language, 'proposed_value')}: {item['proposed_value']}",
+                            f"{translated(language, 'proposed_value')}: {item['proposed_value']}",
                             "",
                         ]
                         if item.get("proposed_value") is not None
                         else []
                     ),
                     *(
-                        [f"- {text(language, 'Sistema/area')}: {item['system']}"]
+                        [f"- {translated(language, 'Sistema/area')}: {item['system']}"]
                         if item.get("system")
                         else []
                     ),
-                    f"- {text(language, 'Stato revisione')}: "
+                    f"- {translated(language, 'Stato revisione')}: "
                     f"{status(language, item['review_status'])}",
-                    f"- {text(language, 'Fonti')}: {_item_sources(item)}",
+                    f"- {translated(language, 'Fonti')}: {_item_sources(item)}",
                     "",
-                    f"<details><summary>{text(language, 'technical_evidence')}</summary>",
+                    f"<details><summary>{translated(language, 'technical_evidence')}</summary>",
                     "",
                     f"- ID: {item['id']}",
-                    f"- {text(language, 'Fatti del caso')}: "
-                    f"{', '.join(item.get('case_fact_ids') or []) or (text(language, 'nessuno indicato'))}",
+                    f"- {translated(language, 'Fatti del caso')}: "
+                    f"{', '.join(item.get('case_fact_ids') or []) or (translated(language, 'nessuno indicato'))}",
                     "",
                     "</details>",
                     "",
@@ -296,7 +308,7 @@ def _checklist_markdown(
             )
     lines.extend(
         [
-            (text(language, "## Domanda da inviare al supporto SARI (bozza)")),
+            (translated(language, "## Domanda da inviare al supporto SARI (bozza)")),
             "",
             plan["sari_question_draft"],
             "",
@@ -305,7 +317,7 @@ def _checklist_markdown(
     if plan["limitations"]:
         lines.extend(
             [
-                text(language, "## Limiti"),
+                translated(language, "## Limiti"),
                 "",
                 *(f"- {item}" for item in plan["limitations"]),
                 "",
@@ -313,13 +325,13 @@ def _checklist_markdown(
         )
     lines.extend(
         [
-            (text(language, "## Esito dei controlli meccanici")),
+            (translated(language, "## Esito dei controlli meccanici")),
             "",
-            f"- {text(language, 'Stato')}: {status(language, audit['status'])}",
-            f"- {text(language, 'Errori')}: {audit['error_count']}",
-            f"- {text(language, 'Blocchi')}: {audit['blocker_count']}",
+            f"- {translated(language, 'Stato')}: {status(language, audit['status'])}",
+            f"- {translated(language, 'Errori')}: {audit['error_count']}",
+            f"- {translated(language, 'Blocchi')}: {audit['blocker_count']}",
             (
-                text(
+                translated(
                     language,
                     "- Nessuna classificazione giuridica è stata scelta dagli script.",
                 )
@@ -333,21 +345,24 @@ def _checklist_markdown(
 def _sari_question_markdown(
     intake: dict[str, Any], plan: dict[str, Any], *, language: str
 ) -> str:
+    from functools import partial
+
+    translated = partial(text, jurisdiction=intake.get("jurisdiction", "IT"))
     chamber = intake["competent_chamber"]
     return "\n".join(
         [
-            (text(language, "# Quesito per il supporto SARI — bozza")),
+            (translated(language, "# Quesito per il supporto SARI — bozza")),
             "",
-            f"{text(language, 'Destinatario proposto')}: " f"{chamber['name']}",
-            f"{text(language, 'Riferimento del caso')}: "
+            f"{translated(language, 'Destinatario proposto')}: " f"{chamber['name']}",
+            f"{translated(language, 'Riferimento del caso')}: "
             f"{intake['client_reference']}",
             "",
-            text(language, "## Quesito"),
+            translated(language, "## Quesito"),
             "",
             plan["sari_question_draft"],
             "",
             (
-                text(
+                translated(
                     language,
                     "_Far approvare il testo dal professionista prima di qualsiasi invio manuale. Vera non invia il quesito._",
                 )

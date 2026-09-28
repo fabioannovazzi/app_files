@@ -27,6 +27,9 @@ using the localized wording in `../vera/SKILL.md`, and continue in ChatGPT.
 
 # Archivio dello Studio
 
+For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
+
+
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
 For the local client-work route, the customer folder is the portable source of

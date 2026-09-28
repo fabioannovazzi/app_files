@@ -175,6 +175,11 @@
       "sha256": "4a3c33e9d0bbade046bd570fa82b7f615ce78884db4019dec10a64940e54b416"
     },
     {
+      "path": "modules/bilancio-xbrl-it/scripts/jurisdiction_accounts.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/jurisdiction_accounts.py",
+      "sha256": "ebf4563ce0865589a161b3916778bab812ddd12c4b9da704c5d692514f53fba0"
+    },
+    {
       "path": "modules/bilancio-xbrl-it/scripts/managed_ocr_runtime.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/managed_ocr_runtime.py",
       "sha256": "52216b53d3501ebe79b537a5d671ae989731a874d8a7a272307c6b1443f7c42c"
@@ -247,7 +252,7 @@
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
       "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
-      "sha256": "c2149c2ae0103b8bb109c9e1cb724e9b3b55e365885449a5d15e143cce836701"
+      "sha256": "5b6bdc3ba2c95d0baf864e16d6e293b961dd80c75db89065dd03e1300623fcc5"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/agents/openai.yaml",
@@ -263,6 +268,11 @@
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/conformance-evidence.md",
       "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/references/conformance-evidence.md",
       "sha256": "b526676fc62d970a033e5969266e81ca3f7f3e520c36f333d0b3183574071e65"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/geneva.md",
+      "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/references/geneva.md",
+      "sha256": "589a28b0f1d9c172cbb9755b1a5e5f37af65a716053d03773b31725cfad942c6"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/implementation-status.md",
@@ -307,7 +317,7 @@
     {
       "path": "skills/bilancio-oic/SKILL.md",
       "repository_path": "plugins/vera/skills/bilancio-oic/SKILL.md",
-      "sha256": "26038579e71b919a0a0b2f92dd7a998ebc6cbf39b3f36d58c7f36b275244abd7"
+      "sha256": "b339252e07264f7fefb7f4996aeff7334112f44816c05e7ce50c991197ee2ec5"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -392,7 +402,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -403,6 +413,11 @@
       "path": "vendor/modules/vera_assurance/envelope.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",

@@ -110,6 +110,8 @@ TABULAR_ADAPTER_VERSION = "6"
 TABULAR_ADAPTER_ID = "journal_bank.tabular.v6"
 EXTENDED_TABULAR_ADAPTER_VERSION = "7"
 EXTENDED_TABULAR_ADAPTER_ID = "journal_bank.tabular.v7"
+FRENCH_TABULAR_ADAPTER_ID = "journal_bank.tabular.v8"
+FRENCH_TABULAR_ADAPTER_VERSION = "8"
 TEXT_PDF_ADAPTER_VERSION = "2"
 TEXT_PDF_ADAPTER_ID = "journal_bank.text_pdf.disabled.v2"
 PDF_TABLE_ADAPTER_VERSION = "1"
@@ -287,6 +289,11 @@ IMPLEMENTATION_ARTIFACT_SPECS = (
         "envelope.py",
     ),
     (
+        "implementation.shared.vera_assurance.jurisdiction_py",
+        "shared_implementation",
+        "jurisdiction.py",
+    ),
+    (
         "implementation.shared.vera_assurance.money_py",
         "shared_implementation",
         "money.py",
@@ -345,7 +352,29 @@ CANONICAL_DIRECTIONS = frozenset({"positive", "negative", "zero"})
 CSV_FIELD_DELIMITERS = (",", ";", "\t", "|")
 DEFAULT_CSV_FIELD_DELIMITER = ","
 DATE_CONVENTIONS = ("day_first", "month_first")
-DATE_LOCALES = ("it",)
+DATE_LOCALES = ("it", "fr")
+FRENCH_MONTH_NUMBERS = {
+    "janvier": 1,
+    "janv": 1,
+    "fevrier": 2,
+    "fevr": 2,
+    "mars": 3,
+    "avril": 4,
+    "avr": 4,
+    "mai": 5,
+    "juin": 6,
+    "juillet": 7,
+    "juil": 7,
+    "aout": 8,
+    "septembre": 9,
+    "sept": 9,
+    "octobre": 10,
+    "oct": 10,
+    "novembre": 11,
+    "nov": 11,
+    "decembre": 12,
+    "dec": 12,
+}
 ITALIAN_MONTH_NUMBERS = {
     "gennaio": 1,
     "febbraio": 2,
@@ -707,7 +736,7 @@ DAY_MONTH_DATE_RE = re.compile(
     r"(?P<second>\d{1,2})(?P=separator)(?P<year>\d{2}|\d{4})$"
 )
 TEXTUAL_MONTH_DATE_RE = re.compile(
-    r"^(?P<day>\d{1,2})[ \t]+(?P<month>[^\W\d_]+)" r"[ \t]+(?P<year>\d{4})$",
+    r"^(?P<day>\d{1,2})[ \t]+(?P<month>[^\W\d_]+)\.?" r"[ \t]+(?P<year>\d{4})$",
     flags=re.UNICODE,
 )
 AMOUNT_TOKEN_RE = re.compile(
@@ -1831,7 +1860,7 @@ def _date_parse_result(
     if date_convention not in {None, *DATE_CONVENTIONS}:
         raise ValueError("date_convention must be day_first, month_first, or null")
     if date_locale not in {None, *DATE_LOCALES}:
-        raise ValueError("date_locale must be it or null")
+        raise ValueError("date_locale must be it, fr or null")
     if isinstance(value, datetime):
         return "parsed", value.date()
     if isinstance(value, date):
@@ -1884,9 +1913,11 @@ def _date_parse_result(
     if textual_month_match is not None:
         if date_locale is None:
             return "locale_required", None
-        month_number = ITALIAN_MONTH_NUMBERS.get(
-            _norm_label(textual_month_match["month"])
-        )
+        if date_locale == "it" and re.search(r"\.\s+\d{4}$", token):
+            return "invalid", None
+        month_number = {"it": ITALIAN_MONTH_NUMBERS, "fr": FRENCH_MONTH_NUMBERS}[
+            date_locale
+        ].get(_norm_label(textual_month_match["month"]))
         if month_number is None:
             return "invalid", None
         parsed = _calendar_date(
@@ -2200,7 +2231,7 @@ def _normalized_date_locale(raw: object) -> tuple[str | None, list[str]]:
     if raw is None:
         return None, []
     if not isinstance(raw, str) or raw not in DATE_LOCALES:
-        return None, ["date_locale must be exactly it"]
+        return None, ["date_locale must be exactly it or fr"]
     return raw, []
 
 
@@ -2235,6 +2266,8 @@ def _tabular_adapter_binding(
     if source_file and Path(source_file).suffix.lower() == ".pdf":
         return PDF_TABLE_ADAPTER_ID, PDF_TABLE_ADAPTER_VERSION
 
+    if date_locale == "fr":
+        return FRENCH_TABULAR_ADAPTER_ID, FRENCH_TABULAR_ADAPTER_VERSION
     if date_locale is not None or non_movement_summary_labels:
         return EXTENDED_TABULAR_ADAPTER_ID, EXTENDED_TABULAR_ADAPTER_VERSION
     return TABULAR_ADAPTER_ID, TABULAR_ADAPTER_VERSION
@@ -4054,6 +4087,8 @@ def _source_qualifications(
             adapter_version = TABULAR_ADAPTER_VERSION
         elif adapter_id == EXTENDED_TABULAR_ADAPTER_ID:
             adapter_version = EXTENDED_TABULAR_ADAPTER_VERSION
+        elif adapter_id == FRENCH_TABULAR_ADAPTER_ID:
+            adapter_version = FRENCH_TABULAR_ADAPTER_VERSION
         elif adapter_id == TEXT_PDF_ADAPTER_ID:
             adapter_version = TEXT_PDF_ADAPTER_VERSION
         elif adapter_id == PDF_TABLE_ADAPTER_ID:

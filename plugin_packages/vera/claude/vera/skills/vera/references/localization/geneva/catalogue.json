@@ -1,0 +1,205 @@
+{
+  "schema": "vera.localization.catalogue.v1",
+  "root": "plugins/vera",
+  "version": "0.1.272",
+  "captured_at": "2026-09-28T05:58:32.901320+00:00",
+  "catalogue_fingerprint": "a5d6b853e848c53b6f748b71c5921d8b7db3702a0453be84ade958a3b146aae9",
+  "manifest_sha256": "e8b7310faacbf0a660480761f55ffdb0952fbfa6fe336b2bed1758855a4dda94",
+  "entries": [
+    {
+      "function_id": "adeguati-assetti",
+      "skill_path": "skills/adeguati-assetti/SKILL.md",
+      "sha256": "36784a969f013cced40be83232646924d901adcd01f83c944ad3b59a6c1a1f24"
+    },
+    {
+      "function_id": "adversarial-opinion",
+      "skill_path": "skills/adversarial-opinion/SKILL.md",
+      "sha256": "c93edffaa16a7bd094fdb70e6e2cb92ea12c2881329181af4ee4b5190ef1d45a"
+    },
+    {
+      "function_id": "aml-review",
+      "skill_path": "skills/aml-review/SKILL.md",
+      "sha256": "d25fab11300e60cd729a772ec08b3824cfe5feea3a577c90955102ffe4b2de12"
+    },
+    {
+      "function_id": "archive-organization",
+      "skill_path": "skills/archive-organization/SKILL.md",
+      "sha256": "c96310cf87ddc54d340beef57202f20881bdb2f89b1c7e1dfc90c17f82776f6f"
+    },
+    {
+      "function_id": "avviso-intake",
+      "skill_path": "skills/avviso-intake/SKILL.md",
+      "sha256": "ef00f3f82df3bc43a814ca01179a5a7f9942c25eaa1bd14e5306f107af2148cb"
+    },
+    {
+      "function_id": "bandi-agevolazioni",
+      "skill_path": "skills/bandi-agevolazioni/SKILL.md",
+      "sha256": "33172fef23c99abf6ec0bdb8a5616d12e10e266671e9120e27c908def8a83359"
+    },
+    {
+      "function_id": "bilancio-oic",
+      "skill_path": "skills/bilancio-oic/SKILL.md",
+      "sha256": "b339252e07264f7fefb7f4996aeff7334112f44816c05e7ce50c991197ee2ec5"
+    },
+    {
+      "function_id": "browser-automation",
+      "skill_path": "skills/browser-automation/SKILL.md",
+      "sha256": "2799b4e1049b7b7832f2a25006194892d030044d3b0c8ca1ebbaeec7d0ecdedf"
+    },
+    {
+      "function_id": "business-planning",
+      "skill_path": "skills/business-planning/SKILL.md",
+      "sha256": "5bdfff880bde6f66cd11c93619d3db68d0e9d94ffa99503df41d40becb2a6361"
+    },
+    {
+      "function_id": "centrale-rischi-review",
+      "skill_path": "skills/centrale-rischi-review/SKILL.md",
+      "sha256": "4548a6c4b41fb845bd260596b680ce1831f6117218e45f0d70b8786d21766da1"
+    },
+    {
+      "function_id": "comunicazione-professionale",
+      "skill_path": "skills/comunicazione-professionale/SKILL.md",
+      "sha256": "50af60a05507b119f9b51cf9bb3b1800d9cabe65a41e51bea578b2ab5ecb3cfe"
+    },
+    {
+      "function_id": "concordato-plan-review",
+      "skill_path": "skills/concordato-plan-review/SKILL.md",
+      "sha256": "1c5c11a70859724d39575a0589c07cb5d3a039226c535b61ba074ec08494a0d7"
+    },
+    {
+      "function_id": "datev-invoice-start",
+      "skill_path": "skills/datev-invoice-start/SKILL.md",
+      "sha256": "ef7e98404ba5c82e63cc0b4df1617cde19ddc04c451aad40347e7d2000ebda26"
+    },
+    {
+      "function_id": "dati-fiscali-strutturati",
+      "skill_path": "skills/dati-fiscali-strutturati/SKILL.md",
+      "sha256": "85949239c975aa8e9f3ceb75700cd2bfe930e6578c163b56be81ce8f90cf2415"
+    },
+    {
+      "function_id": "email-cliente",
+      "skill_path": "skills/email-cliente/SKILL.md",
+      "sha256": "5a1abf9e8c28aed45ea7ccf31742798546a8175f3c5ecffce0405eab2069978a"
+    },
+    {
+      "function_id": "fatture-xml-check",
+      "skill_path": "skills/fatture-xml-check/SKILL.md",
+      "sha256": "09259e844b55b8cf287cb0553c8199432c28e6b511a6c05a67aabd10219c4351"
+    },
+    {
+      "function_id": "financial-analysis",
+      "skill_path": "skills/financial-analysis/SKILL.md",
+      "sha256": "859629fe6c5d9bf48be94001b464275d5738b3c4a4069c2feb594458960f96a1"
+    },
+    {
+      "function_id": "financial-report-builder",
+      "skill_path": "skills/financial-report-builder/SKILL.md",
+      "sha256": "f6208a7e9b9b235949ff1276a1cc3614fbbf479869b0dc370e332125f7b0cf62"
+    },
+    {
+      "function_id": "invoice-xml",
+      "skill_path": "skills/invoice-xml/SKILL.md",
+      "sha256": "15f33b17c999b9c555abe1d9fd0916d29c1c59bcc5e202730c6ff901ca0b8538"
+    },
+    {
+      "function_id": "journal-bank-reconciliation",
+      "skill_path": "skills/journal-bank-reconciliation/SKILL.md",
+      "sha256": "5a1e731cc547ea844a4f7ee17f650c23f607de089d5230f448272486265ad0df"
+    },
+    {
+      "function_id": "journal-sampling",
+      "skill_path": "skills/journal-sampling/SKILL.md",
+      "sha256": "757f8c43e9a2fe31da7bf871c68569f414c5bbaeeb3d99af747e4d1bc149dfc5"
+    },
+    {
+      "function_id": "learn-with-vera",
+      "skill_path": "skills/learn-with-vera/SKILL.md",
+      "sha256": "d0b941006f3c9c1534ee650c2c3fdb2b3d37cbfb2eb156e662c56837b1054fe5"
+    },
+    {
+      "function_id": "legal-tax-answer-planner",
+      "skill_path": "skills/legal-tax-answer-planner/SKILL.md",
+      "sha256": "5d76d227fe237bce11aeca2d8e0a0a77c245520732715464865e6f1081375f18"
+    },
+    {
+      "function_id": "legal-tax-answer-review",
+      "skill_path": "skills/legal-tax-answer-review/SKILL.md",
+      "sha256": "a4a2be6a0ac6464c2ed9dadcbb8f56c34eba3d7406010b898d6b4f09f7ca5165"
+    },
+    {
+      "function_id": "management-control-pack",
+      "skill_path": "skills/management-control-pack/SKILL.md",
+      "sha256": "7fb8a6ab84851546e91d357f0923faf36e2589b7d08e7b509b3c57e48b839ccf"
+    },
+    {
+      "function_id": "new-client",
+      "skill_path": "skills/new-client/SKILL.md",
+      "sha256": "e1e745a38b4614c29213717bc0dc03186966afec9978a5f26c4ba947d21842ef"
+    },
+    {
+      "function_id": "open-item-reconciliation",
+      "skill_path": "skills/open-item-reconciliation/SKILL.md",
+      "sha256": "f301d083f39dd65ba4f8dd80e05cc52391634bf1ee9b210cb6a7a12f8f9028d6"
+    },
+    {
+      "function_id": "presenza-digitale-studio",
+      "skill_path": "skills/presenza-digitale-studio/SKILL.md",
+      "sha256": "0d8dcb3a6247c34a919b2933788ef33f1d6a4f142b2b00d12245bbfa18a1e1a1"
+    },
+    {
+      "function_id": "previdenza-inps",
+      "skill_path": "skills/previdenza-inps/SKILL.md",
+      "sha256": "d3b9b08f5724c7c5583f67317dbee66a1f36b76ffb42d3df49a5c41bf1c92f91"
+    },
+    {
+      "function_id": "privacy-surface-review",
+      "skill_path": "skills/privacy-surface-review/SKILL.md",
+      "sha256": "8dab36eab3e6ca911e80702637ce0d6fb70f38e7f9e14321197761850d341ca6"
+    },
+    {
+      "function_id": "purchase-invoice-review",
+      "skill_path": "skills/purchase-invoice-review/SKILL.md",
+      "sha256": "41ec8d67a0e1ef3fc8d2d34f1cc530f1e2040ac97be7e4b7e924c4253f0663b1"
+    },
+    {
+      "function_id": "quesito-legale-fiscale",
+      "skill_path": "skills/quesito-legale-fiscale/SKILL.md",
+      "sha256": "df29d499affd919cc3a6ac71d9b5fa9bf1fd08f72052f048ea417634e19db0fb"
+    },
+    {
+      "function_id": "registro-imprese-sari",
+      "skill_path": "skills/registro-imprese-sari/SKILL.md",
+      "sha256": "09e6ed3df38a76215f53aae5e1d212ea89f92a597334ae1bb16203c2ab54a433"
+    },
+    {
+      "function_id": "sales-plan",
+      "skill_path": "skills/sales-plan/SKILL.md",
+      "sha256": "4ccc0c104086d1f90aae18a6ebb5ce1e3b9ca1b22e753b09b24b2dbe5d4a53d5"
+    },
+    {
+      "function_id": "studio-archive",
+      "skill_path": "skills/studio-archive/SKILL.md",
+      "sha256": "b2f8ad59567a7e390f0fb4afbfdb339f0f8d11b3576ff37497de55cc4172d7f3"
+    },
+    {
+      "function_id": "treasury-forecast",
+      "skill_path": "skills/treasury-forecast/SKILL.md",
+      "sha256": "d485e58b1bd3013e5b2721af9bac77e69d7254c830a7c8be335507681a63cc64"
+    },
+    {
+      "function_id": "variance-analysis",
+      "skill_path": "skills/variance-analysis/SKILL.md",
+      "sha256": "f05dd16e267bd6411c18ffc7cf8ad474659aea83447b2dce53331cb21dffcff8"
+    },
+    {
+      "function_id": "vera",
+      "skill_path": "skills/vera/SKILL.md",
+      "sha256": "62b95932ee7e4e0fd149f2ba0c1e2c2b67f9cf39116343801049fe7b5d7e4e9b"
+    },
+    {
+      "function_id": "vouching",
+      "skill_path": "skills/vouching/SKILL.md",
+      "sha256": "ab9f9562e91b118969b52fd83348c2c314b30cf6eb9a5da6f860f9075cdfbb0a"
+    }
+  ]
+}

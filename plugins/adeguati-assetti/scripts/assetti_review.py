@@ -509,9 +509,9 @@ def build_record(
     if (
         type(review["schema_version"]) is not int
         or review["schema_version"] != 1
-        or review["jurisdiction"] != "IT"
+        or review["jurisdiction"] not in {"IT", "CH-GE"}
     ):
-        raise ValueError("Expected version 1 Italian assetti review")
+        raise ValueError("Expected version 1 IT or CH-GE assetti review")
     for field in (
         "scope",
         "company_context",
@@ -521,6 +521,8 @@ def build_record(
     ):
         _text(review[field], field)
     _date(review["as_of"], "as_of")
+    if review["jurisdiction"] == "CH-GE":
+        _text(review.get("jurisdiction_basis"), "Swiss/Geneva jurisdiction basis")
     sources: dict[str, Any] = {}
     source_paths: dict[str, Path] = {}
     for source in review["sources"]:
@@ -579,6 +581,8 @@ def build_record(
             raise ValueError("Previous review belongs to another client or engagement")
         if previous_record["review"]["as_of"] > review["as_of"]:
             raise ValueError("Review date precedes previous assessment")
+        if previous_record["review"]["jurisdiction"] != review["jurisdiction"]:
+            raise ValueError("Previous review belongs to another jurisdiction")
         _text(review["changes_since_previous"], "changes since previous review")
     observation_ids: set[str] = set()
     for item in review["observations"]:
@@ -790,6 +794,8 @@ def render_memo(record: dict[str, Any]) -> str:
                     for c in action["completion_citations"]
                 ]
             )
+    if review["jurisdiction"] == "CH-GE":
+        lines.extend(["", "CH-GE", "", review["jurisdiction_basis"]])
     if review.get("previous") is not None:
         lines.extend(["", f"## {labels['prior_actions']}", ""])
         for key, value in review["prior_action_review"].items():
@@ -823,6 +829,8 @@ def render_memo(record: dict[str, Any]) -> str:
             for b in review["legal_basis"]
         ]
     )
+    if review["jurisdiction"] == "CH-GE":
+        lines.extend(["", "CH-GE", "", review["jurisdiction_basis"]])
     if review.get("previous") is not None:
         lines.extend(
             ["", f"## {labels['changes']}", "", review["changes_since_previous"]]

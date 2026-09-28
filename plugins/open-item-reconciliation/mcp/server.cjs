@@ -27,6 +27,7 @@ const IMPLEMENTATION_CONTRACT = [
   ["plugin", "scripts/review_server.py"],
   ["shared_assurance", "__init__.py"],
   ["shared_assurance", "contracts.py"],
+    ["shared_assurance", "jurisdiction.py"],
   ["shared_assurance", "decisions.py"],
   ["shared_assurance", "envelope.py"],
   ["shared_assurance", "money.py"],
@@ -144,7 +145,7 @@ function validateImplementationTree() {
   );
   if (!setEquals(files, expectedFiles)) {
     throw new Error(
-      "implementation filesystem does not match the exact 25-file contract",
+      "implementation filesystem does not match the exact 26-file contract",
     );
   }
   if (!setEquals(directories, expectedImplementationDirectories())) {

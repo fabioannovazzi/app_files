@@ -94,6 +94,9 @@ override this Cowork contract.
 
 # Vouching
 
+For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
+
+
 Use the localized public name: **Vouching** (en), **Verifica documentale** (it),
 **Contrôle sur pièces** (fr), **Belegprüfung** (de), and
 **Verificación documental** (es). Explain that the workflow compares sampled

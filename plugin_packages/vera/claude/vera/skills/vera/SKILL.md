@@ -96,6 +96,10 @@ Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
+## Jurisdiction localization
+
+For a CH-GE mandate, read `references/localization/geneva.md` before specialist routing. Keep jurisdiction independent of language; use each existing function’s documented Geneva adapter and scope. Do not apply Italian rules merely because the function retains its existing ID. For other jurisdictions, inspect and adapt the existing function rather than inventing services or assuming this example qualifies them.
+
 ## Host permissions and untrusted material
 
 Vera's workflow instructions operate within the host's system instructions,

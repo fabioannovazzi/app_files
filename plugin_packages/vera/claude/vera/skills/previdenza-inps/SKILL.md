@@ -94,6 +94,9 @@ override this Cowork contract.
 
 # Previdenza INPS
 
+For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
+
+
 
 
 Resolve `../../modules/previdenza-inps` from this skill directory when it

@@ -120,6 +120,11 @@ directory as a result.
 
 # Previdenza INPS
 
+## Jurisdiction and Geneva
+
+For a CH-GE mandate, read `references/geneva.md` before the steps below. It specifies the Geneva input, source and output adaptations within this existing function. Choose governing jurisdiction independently of output language; the ordinary Italian path remains available for IT.
+
+
 Prepare a source-traceable social-security case file for a commercialista. Inventory local evidence, preserve document locators, validate model-authored facts, research the confirmed framework, verify material claims, run only explicitly approved arithmetic, and package a draft for professional review.
 
 Do not claim autonomous INPS login or a general INPS API. Cowork uses documents already supplied in the connected folder and official portal exports registered from local storage. Do not open, attach to, or capture a live portal session; request an official readable export when material evidence is missing. Never request credentials, cookies, tokens, authentication codes, or delegation activation. Do not submit, sign, decide a legal or contribution classification, or infer labels such as “3°/4° gruppo” from keywords. Read `../../references/workflow-reference.md` and `../../references/inps-access-channels.md` completely before a case run. Here, the component root is the directory two levels above this skill file: `plugins/previdenza-inps`.

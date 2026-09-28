@@ -118,6 +118,11 @@ const IMPLEMENTATION_ARTIFACT_SPECS = [
     "envelope.py",
   ],
   [
+    "implementation.shared.vera_assurance.jurisdiction_py",
+    "shared_implementation",
+    "jurisdiction.py",
+  ],
+  [
     "implementation.shared.vera_assurance.money_py",
     "shared_implementation",
     "money.py",

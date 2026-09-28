@@ -5,6 +5,11 @@ description: Review an Italian enterprise's organizational, administrative and a
 
 # Valutazione degli assetti organizzativi, amministrativi e contabili
 
+## Jurisdiction and Geneva
+
+For a CH-GE mandate, read `references/geneva.md` before the steps below. It specifies the Geneva input, source and output adaptations within this existing function. Choose governing jurisdiction independently of output language; the ordinary Italian path remains available for IT.
+
+
 Help the professional assess whether this enterprise's responsibilities, processes
 and information support its actual activities and timely decisions. Deliver a
 sourced assessment memo, findings and an improvement plan. This is an assessment

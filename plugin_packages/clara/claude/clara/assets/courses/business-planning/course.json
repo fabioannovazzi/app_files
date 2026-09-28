@@ -38,7 +38,7 @@
     },
     {
       "path": "modules/business-planning/references/case-contract.md",
-      "sha256": "c3255a4770c410162029bc07222693e4d12617a91ef77df38455b39c920512a1"
+      "sha256": "d26e907e314b421fb72b3d58e9e9bc81f292072ab199eae48dcbe2d558a5ed67"
     },
     {
       "path": "modules/business-planning/references/financing-assessment.md",
@@ -89,16 +89,20 @@
       "sha256": "e6c852b3d34817a3b4a111223e7e3071430261301dfba6d509339fe60fdcd25a"
     },
     {
+      "path": "modules/business-planning/scripts/planning_french.py",
+      "sha256": "3ad166b7f13337280aa13de20da6e56d3167b1ac0f882e763a1f963b338e9780"
+    },
+    {
       "path": "modules/business-planning/scripts/planning_interaction.py",
       "sha256": "3acf8c8bc7e22042291f8050205bf2c3fcf17c5a66c9d5e3621d61cd236d63bf"
     },
     {
       "path": "modules/business-planning/scripts/planning_presentation.py",
-      "sha256": "3d53a925c87ade0bd564064e10c5295709e4e2db37cbb0a5d58fc6f16ff3a55f"
+      "sha256": "18b01eecff841c9a094def18f10b8d25403a5766aa8554e286d9eeaf4b5c8177"
     },
     {
       "path": "modules/business-planning/scripts/planning_report.py",
-      "sha256": "e3c6dfa66b4614b96bc99d6ddfcccbe2961f41652a078291989d190e8bf4209b"
+      "sha256": "bb9b7828c3edb562c5d478c30ada3c6072d99bebaaf3f393b1947c01fbd8b022"
     },
     {
       "path": "modules/business-planning/scripts/planning_site.py",
@@ -126,7 +130,11 @@
     },
     {
       "path": "modules/business-planning/skills/business-planning/SKILL.md",
-      "sha256": "65c0c2babfeb6999d3009c9ec43b9601cfc39c8530339ee6ef03341062152e18"
+      "sha256": "b42f5f6f0a837b428ca2bb2adc0cd8cc04129f3a6d107b3179f97527dd944bd6"
+    },
+    {
+      "path": "modules/business-planning/skills/business-planning/references/geneva.md",
+      "sha256": "dcc3568a18a17179f0c4b3092beaac512e426e102e1a3ec122094b0619cd3acb"
     },
     {
       "path": "modules/business-planning/vendor/modules/__init__.py",
@@ -142,7 +150,7 @@
     },
     {
       "path": "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
     },
     {
       "path": "modules/business-planning/vendor/modules/vera_assurance/decisions.py",
@@ -151,6 +159,10 @@
     {
       "path": "modules/business-planning/vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/business-planning/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "modules/business-planning/vendor/modules/vera_assurance/money.py",
@@ -362,5 +374,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "7d2673f495a14c968f41eeeca03b64ddc40deab7d21e32a315f1551486a56fbb"
+  "canonical_course_sha256": "3031a3d4323e5548da7d413485c6ffbce6818446f8adf5559507df9c8a93785a"
 }

@@ -29,6 +29,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "geneva-adaptation",
+        "purpose": "Prepare the existing professional deliverable under an explicit CH-GE mandate",
+        "content": "The Geneva setup adapter reads imported identity, mandate, ownership, AML-applicability and privacy-role evidence, source passages and locators, a requested/received/missing document plan, official legal references, limitations and declared professional decisions. These authored data may enter the parent runtime context. The local adapter makes no network or model call; it does not use the Italian AML score. Existing Italy-specific UI and promotion controls below describe the ordinary Italian route.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -87,12 +96,16 @@
     {
       "id": "local-browser-private-review-payload",
       "control": "The local review server requests component-only private review metadata only for the registered render tool. The browser receives that payload locally; normal MCP callers continue to receive structuredContent. This is transport separation, not anonymization of data selected for model review."
+    },
+    {
+      "id": "geneva-source-binding",
+      "control": "Geneva setup requires the exact running Studio Archive context and imported source hashes. Decisions bind the proposal, calculated result, workflow, client and engagement. Content-addressed JSON and Markdown retain prior drafts and reject changed artifacts; a declared reviewer is not independently authenticated."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-15",
+    "reviewed_at": "2026-09-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c85a82da3a37cdbdda7bb0a21be5f5255f8c808d5ff7a25ec354efeb73bfa5f9"
+    "source_fingerprint": "a5ae47d09be1c9e2ffe31ab01b72be3a340a833880a6480e1638fe4b07e8233b"
   }
 }

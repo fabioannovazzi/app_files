@@ -5,6 +5,11 @@ description: Use when Vera must screen a large population of Italian passive Fat
 
 # Intelligent Passive-Invoice Audit
 
+## Jurisdiction and Geneva
+
+For a CH-GE mandate, read `references/geneva.md` before the steps below. It specifies the Geneva input, source and output adaptations within this existing function. Choose governing jurisdiction independently of output language; the ordinary Italian path remains available for IT.
+
+
 ## Output Location Rule
 
 Never write run outputs inside this Git workspace or a published folder. Use
@@ -185,8 +190,11 @@ consent-based Plugin Improvement Feedback process for any transmission.
 
 ## Quali dati arrivano al modello
 
-Per questa funzione arrivano al modello selezionato, tramite l'ambiente Codex
-già attivo, soltanto i pacchetti compatti delle fatture abbinate. Il modello
+Il modello principale può leggere intestazioni contabili, campioni e documenti
+originali selezionati per preparare e rivedere la mappatura. Nel percorso CH-GE
+può leggere le fatture originali per estrarne campi e riferimenti verificabili.
+Al modello subordinato arrivano soltanto i pacchetti compatti delle fatture
+abbinate, tramite il runtime Codex o Cowork selezionato. Il modello
 predefinito è GPT-5.6 Luna; un'alternativa richiede una decisione di selezione
 revisionata. I pacchetti contengono: identificativo
 e riferimenti della fattura, fornitore, data e numero, descrizioni e valori delle

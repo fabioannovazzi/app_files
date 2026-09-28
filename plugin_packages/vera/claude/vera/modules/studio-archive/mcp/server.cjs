@@ -52,6 +52,7 @@ const TOOL_NAMES = {
   matchEmail: "match_studio_archive_email",
 };
 const VERA_CLIENT_WORKFLOW_IDS = Object.freeze([
+  "treasury-forecast",
   "aml-review",
   "adeguati-assetti",
   "open-item-reconciliation",
@@ -62,6 +63,7 @@ const VERA_CLIENT_WORKFLOW_IDS = Object.freeze([
   "check-entries",
   "journal-bank-reconciliation",
   "passive-invoice-audit",
+  "invoice-xml",
   "sales-plan",
   "business-planning",
   "variance-analysis",
@@ -75,6 +77,7 @@ const VERA_CLIENT_WORKFLOW_IDS = Object.freeze([
   "previdenza-inps",
   "registro-imprese-sari",
   "bandi-agevolazioni",
+  "bilancio-xbrl-it",
 ]);
 const CLIENT_WORKFLOW_IDS = Object.freeze([
   ...VERA_CLIENT_WORKFLOW_IDS,
@@ -581,6 +584,11 @@ function toolDefinitions() {
         rebuild: {
           type: "boolean",
           description: "Discard and rebuild the derived local index.",
+        },
+        ocr_language: {
+          type: "string",
+          enum: ["it", "fr", "de", "en", "es"],
+          description: "Explicit document OCR language, independent of jurisdiction. Defaults to it.",
         },
         enable_ocr: {
           type: "boolean",
@@ -1330,11 +1338,14 @@ function commandForTool(name, rawArgs) {
     ];
   }
   if (name === TOOL_NAMES.refresh) {
-    assertOnlyKeys(args, new Set(["rebuild", "enable_ocr"]));
+    assertOnlyKeys(args, new Set(["rebuild", "enable_ocr", "ocr_language"]));
     const command = ["refresh"];
     if (optionalBoolean(args.rebuild, "rebuild")) command.push("--rebuild");
     if (optionalBoolean(args.enable_ocr, "enable_ocr")) {
       command.push("--enable-ocr");
+    }
+    if (args.ocr_language !== undefined) {
+      command.push("--ocr-language", requireString(args.ocr_language, "ocr_language"));
     }
     return command;
   }

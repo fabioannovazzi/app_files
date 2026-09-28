@@ -1173,6 +1173,9 @@ def _normalize_tax_identifiers(values: Sequence[str]) -> tuple[str, ...]:
         if not isinstance(value, str):
             raise ArchiveError("Client tax identifiers must be strings.")
         identifier = re.sub(r"\s+", "", value).upper()
+        # Swiss IDE punctuation is presentation only; keep one canonical identity.
+        if re.fullmatch(r"CHE-?\d{3}\.?\d{3}\.?\d{3}", identifier):
+            identifier = identifier.replace("-", "").replace(".", "")
         if re.fullmatch(r"[A-Z0-9]{5,32}", identifier) is None:
             raise ArchiveError(
                 "Client tax identifiers must contain 5 to 32 letters or digits."
@@ -4547,7 +4550,9 @@ def _ensure_vendor_import_path() -> None:
             sys.path.insert(0, str(candidate))
 
 
-def _run_local_ocr(image_bytes: bytes) -> tuple[str, tuple[str, ...], bool]:
+def _run_local_ocr(
+    image_bytes: bytes, *, language: str = "it"
+) -> tuple[str, tuple[str, ...], bool]:
     _ensure_vendor_import_path()
     try:
         from vera_ocr import extract_text_from_image_bytes
@@ -4555,7 +4560,7 @@ def _run_local_ocr(image_bytes: bytes) -> tuple[str, tuple[str, ...], bool]:
         return "", ("ocr_runtime_unavailable",), False
     result = extract_text_from_image_bytes(
         image_bytes,
-        language="it",
+        language=language,
         allow_model_download=False,
     )
     if result.network_used:
@@ -4603,7 +4608,9 @@ def _page_chunks(
     )
 
 
-def _extract_pdf(path: Path, *, enable_ocr: bool) -> ExtractionResult:
+def _extract_pdf(
+    path: Path, *, enable_ocr: bool, ocr_language: str = "it"
+) -> ExtractionResult:
     if path.stat().st_size > MAX_PDF_BYTES:
         return ExtractionResult((), "pdf", "error", False, ("pdf_too_large",))
     from pypdf import PdfReader
@@ -4669,7 +4676,9 @@ def _extract_pdf(path: Path, *, enable_ocr: bool) -> ExtractionResult:
                 ):
                     limitations.append(f"page_{page_number}_ocr_render_unavailable")
                 else:
-                    ocr_text, warnings, succeeded = _run_local_ocr(image_bytes)
+                    ocr_text, warnings, succeeded = _run_local_ocr(
+                        image_bytes, language=ocr_language
+                    )
                     limitations.extend(
                         f"page_{page_number}_{warning}" for warning in warnings
                     )
@@ -4747,7 +4756,9 @@ def _image_frames(path: Path) -> tuple[tuple[bytes, ...], bool]:
     return tuple(frames), source_frame_count > MAX_IMAGE_FRAMES
 
 
-def _extract_image(path: Path, *, enable_ocr: bool) -> ExtractionResult:
+def _extract_image(
+    path: Path, *, enable_ocr: bool, ocr_language: str = "it"
+) -> ExtractionResult:
     if not enable_ocr:
         return ExtractionResult((), "image", "partial", True, ("ocr_disabled",))
     chunks: list[ExtractedChunk] = []
@@ -4766,7 +4777,7 @@ def _extract_image(path: Path, *, enable_ocr: bool) -> ExtractionResult:
     if frames_truncated:
         limitations.append(f"image_frame_limit_reached:{MAX_IMAGE_FRAMES}")
     for page_number, image_bytes in enumerate(frames, start=1):
-        text, warnings, succeeded = _run_local_ocr(image_bytes)
+        text, warnings, succeeded = _run_local_ocr(image_bytes, language=ocr_language)
         limitations.extend(f"page_{page_number}_{warning}" for warning in warnings)
         if succeeded and text:
             limitations.append(
@@ -4792,13 +4803,15 @@ def _extract_image(path: Path, *, enable_ocr: bool) -> ExtractionResult:
     )
 
 
-def _extract_document(path: Path, *, enable_ocr: bool) -> ExtractionResult:
+def _extract_document(
+    path: Path, *, enable_ocr: bool, ocr_language: str = "it"
+) -> ExtractionResult:
     suffix = path.suffix.lower()
     try:
         if suffix in TEXT_SUFFIXES:
             return _extract_plain_text(path)
         if suffix in PDF_SUFFIXES:
-            return _extract_pdf(path, enable_ocr=enable_ocr)
+            return _extract_pdf(path, enable_ocr=enable_ocr, ocr_language=ocr_language)
         if suffix in DOCX_SUFFIXES:
             return _extract_docx(path)
         if suffix in XLSX_SUFFIXES:
@@ -4806,7 +4819,9 @@ def _extract_document(path: Path, *, enable_ocr: bool) -> ExtractionResult:
         if suffix in EMAIL_SUFFIXES:
             return _extract_eml(path)
         if suffix in IMAGE_SUFFIXES:
-            return _extract_image(path, enable_ocr=enable_ocr)
+            return _extract_image(
+                path, enable_ocr=enable_ocr, ocr_language=ocr_language
+            )
     except (
         ArchiveError,
         AttributeError,
@@ -4939,9 +4954,13 @@ def refresh_archive(
     *,
     rebuild: bool = False,
     enable_ocr: bool = False,
+    ocr_language: str = "it",
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Incrementally refresh the private local index without writing source files."""
+
+    if ocr_language not in {"it", "fr", "de", "en", "es"}:
+        raise ArchiveError("Unsupported OCR language; choose it, fr, de, en or es.")
 
     private_state = _state_dir(state_dir)
     stored_config = _load_config(private_state, validate_scope_roots=False)
@@ -4963,6 +4982,9 @@ def refresh_archive(
         previous_generation = int(_metadata_get(connection, "scan_generation") or "0")
         generation = previous_generation + 1
         fingerprint = _config_fingerprint(config)
+        ocr_language_changed = ocr_language != (
+            _metadata_get(connection, "ocr_language") or "it"
+        )
         indexed_root = _metadata_get(connection, "archive_root")
         root_changed = indexed_root is not None and indexed_root != str(
             config.archive_root
@@ -4994,7 +5016,9 @@ def refresh_archive(
             previous = existing.get(item.relative_path)
             requires_reindex = previous is not None and (
                 str(previous["status"]) == "error"
-                or (enable_ocr and bool(previous["needs_ocr"]))
+                or (
+                    enable_ocr and (bool(previous["needs_ocr"]) or ocr_language_changed)
+                )
             )
             try:
                 source_path = _resolve_source_file(
@@ -5053,7 +5077,9 @@ def refresh_archive(
                 counts["needs_ocr_files"] += int(previous["needs_ocr"])
                 continue
 
-            extraction = _extract_document(source_path, enable_ocr=enable_ocr)
+            extraction = _extract_document(
+                source_path, enable_ocr=enable_ocr, ocr_language=ocr_language
+            )
             try:
                 post_metadata = source_path.stat(follow_symlinks=False)
                 post_sha256 = _sha256_file(source_path)
@@ -5116,6 +5142,8 @@ def refresh_archive(
         _metadata_set(connection, "config_fingerprint", fingerprint)
         _metadata_set(connection, "archive_root", str(config.archive_root))
         _metadata_set(connection, "ocr_enabled_last_refresh", json.dumps(enable_ocr))
+        if enable_ocr:
+            _metadata_set(connection, "ocr_language", ocr_language)
         connection.commit()
         document_count = int(
             connection.execute("SELECT COUNT(*) AS count FROM documents").fetchone()[
@@ -5135,6 +5163,7 @@ def refresh_archive(
             "scope_configuration_changed": scopes_changed,
             "scopes": _scope_records(config),
             "ocr_enabled": enable_ocr,
+            "ocr_language": ocr_language,
             "document_count": document_count,
             "chunk_count": chunk_count,
             "recovered_client_count": len(

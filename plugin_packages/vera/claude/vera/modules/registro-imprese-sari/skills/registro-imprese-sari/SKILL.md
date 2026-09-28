@@ -117,6 +117,11 @@ partial directory as a result.
 
 # Registro Imprese e SARI
 
+## Jurisdiction and Geneva
+
+For a CH-GE mandate, read `references/geneva.md` before the steps below. It specifies the Geneva input, source and output adaptations within this existing function. Choose governing jurisdiction independently of output language; the ordinary Italian path remains available for IT.
+
+
 Prepare a reviewable practice plan from explicit case facts and current official
 sources. Keep SARI guidance, DIRE compilation, Registro Imprese/REA effects, and
 other recipient positions separate. The output is a professional-review draft,

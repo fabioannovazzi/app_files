@@ -1316,7 +1316,7 @@ def test_audit_mcp_rejects_expanded_tree_before_every_public_surface(
         )
 
     assert raised.value.stdout == ""
-    assert "exact 25-file contract" in raised.value.stderr
+    assert "exact 26-file contract" in raised.value.stderr
 
 
 @pytest.mark.parametrize(
@@ -1380,7 +1380,7 @@ def test_audit_mcp_rejects_post_start_expansion_before_next_public_surface(
 
     assert returncode != 0
     assert remaining_stdout == ""
-    assert "exact 25-file contract" in stderr
+    assert "exact 26-file contract" in stderr
 
 
 def test_open_item_reconciliation_mcp_server_localizes_spanish_runtime_feedback(

@@ -94,6 +94,9 @@ override this Cowork contract.
 
 # Journal Sampling
 
+For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
+
+
 
 
 In local Claude, use a prepared and started customer-folder run bound to one
