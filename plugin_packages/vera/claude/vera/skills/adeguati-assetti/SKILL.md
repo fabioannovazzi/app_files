@@ -94,6 +94,9 @@ override this Cowork contract.
 
 # Adeguati assetti
 
+For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
+
+
 Resolve `../../modules/adeguati-assetti` from this skill directory in the installed
 package, or `../../../adeguati-assetti` in repository source. Read that module's
 `skills/adeguati-assetti/SKILL.md` completely and follow its references. Use the

@@ -58,15 +58,20 @@ small { color:#42617d; } @media(max-width:600px) { body { margin-top:24px; paddi
 """
 
 
-def _display(amount: str) -> str:
+def _display(amount: str, currency: str = "EUR") -> str:
     return (
-        f"€ {money(amount):,.2f}".replace(",", "_").replace(".", ",").replace("_", ".")
+        f"{'€' if currency == 'EUR' else currency} {money(amount):,.2f}".replace(
+            ",", "_"
+        )
+        .replace(".", ",")
+        .replace("_", ".")
     )
 
 
 def render_markdown(record: dict[str, Any]) -> str:
     """State calculation status prominently; do not turn missing dates into safety."""
     validate_record(record)
+    display = lambda amount: _display(amount, record["currency"])
     lines = [
         f"# Budget di tesoreria — {record['company_name']}",
         "",
@@ -80,8 +85,8 @@ def render_markdown(record: dict[str, Any]) -> str:
     if record["calculation_complete"]:
         lines.extend(
             [
-                f"Disponibilità iniziale: {_display(record['opening_cash'])}.",
-                f"Minimo saldo giornaliero previsto: {_display(record['minimum_daily_cash'])}.",
+                f"Disponibilità iniziale: {display(record['opening_cash'])}.",
+                f"Minimo saldo giornaliero previsto: {display(record['minimum_daily_cash'])}.",
                 f"Prima chiusura giornaliera negativa: {record['first_negative_day'] or 'nessuna nel periodo indicato'}.",
             ]
         )
@@ -96,19 +101,19 @@ def render_markdown(record: dict[str, Any]) -> str:
                 "",
                 "## Variazioni rispetto alla previsione precedente",
                 "",
-                f"Confronto fino al {comparison['through']}: {_display(comparison['closing_variance'])}.",
-                f"Differenza tra cassa effettiva iniziale e precedente previsione: {_display(comparison['opening_variance'])}.",
+                f"Confronto fino al {comparison['through']}: {display(comparison['closing_variance'])}.",
+                f"Differenza tra cassa effettiva iniziale e precedente previsione: {display(comparison['opening_variance'])}.",
             ]
         )
         for change in comparison["changes"]:
             before, after = change["previous"], change["current"]
             old = (
-                f"{_display(before['cash_amount'])} il {before['expected_date']}"
+                f"{display(before['cash_amount'])} il {before['expected_date']}"
                 if before
                 else "assente"
             )
             new = (
-                f"{_display(after['cash_amount'])} il {after['expected_date']}"
+                f"{display(after['cash_amount'])} il {after['expected_date']}"
                 if after
                 else "non più previsto"
             )
@@ -128,13 +133,13 @@ def render_markdown(record: dict[str, Any]) -> str:
     )
     for week in record["weekly"]:
         lines.append(
-            f"| {week['week_start']} | {_display(week['net_cash'])} | "
-            f"{_display(week['closing_cash'])} | {_display(week['minimum_daily_cash'])} |"
+            f"| {week['week_start']} | {display(week['net_cash'])} | "
+            f"{display(week['closing_cash'])} | {display(week['minimum_daily_cash'])} |"
         )
     lines.extend(["", "## Incassi e pagamenti attesi", ""])
     for event in record["events"]:
         lines.append(
-            f"- {event['event_id']} · {event['description']}: {_display(event['cash_amount'])} · {event['expected_date'] or 'data da definire'}. Base: {event['basis']}"
+            f"- {event['event_id']} · {event['description']}: {display(event['cash_amount'])} · {event['expected_date'] or 'data da definire'}. Base: {event['basis']}"
         )
     if record["issues"] or record["evidence_notes"]:
         lines.extend(["", "## Questioni e movimenti da esaminare", ""])
@@ -165,20 +170,21 @@ def render_markdown(record: dict[str, Any]) -> str:
 def render_html(record: dict[str, Any]) -> str:
     """Render a portable report; the separate live review saves actual decisions."""
     validate_record(record)
+    display = lambda amount: _display(amount, record["currency"])
     escape = html.escape
     if record["calculation_complete"]:
-        summary = f"<div class='summary'><div>Cassa iniziale<strong>{_display(record['opening_cash'])}</strong></div><div>Minimo giornaliero<strong>{_display(record['minimum_daily_cash'])}</strong></div><div>Prima data negativa<strong>{record['first_negative_day'] or 'Nessuna'}</strong></div></div>"
+        summary = f"<div class='summary'><div>Cassa iniziale<strong>{display(record['opening_cash'])}</strong></div><div>Minimo giornaliero<strong>{display(record['minimum_daily_cash'])}</strong></div><div>Prima data negativa<strong>{record['first_negative_day'] or 'Nessuna'}</strong></div></div>"
     else:
         summary = "<p class='notice'>Previsione incompleta: definire le date attese prima di utilizzare i saldi.</p>"
     rows = "".join(
-        f"<tr><td>{escape(row['description'])}<br><small>{escape(row['event_id'])}</small></td><td>{escape(row['expected_date'] or 'Da definire')}</td><td>{_display(row['cash_amount'])}</td><td>{escape(row['basis'])}</td></tr>"
+        f"<tr><td>{escape(row['description'])}<br><small>{escape(row['event_id'])}</small></td><td>{escape(row['expected_date'] or 'Da definire')}</td><td>{display(row['cash_amount'])}</td><td>{escape(row['basis'])}</td></tr>"
         for row in record["events"]
     )
     weeks = "".join(
         f"<tr><td>{escape(week['week_start'])}</td>"
-        f"<td>{_display(week['net_cash'])}</td>"
-        f"<td>{_display(week['closing_cash'])}</td>"
-        f"<td>{_display(week['minimum_daily_cash'])}</td></tr>"
+        f"<td>{display(week['net_cash'])}</td>"
+        f"<td>{display(week['closing_cash'])}</td>"
+        f"<td>{display(week['minimum_daily_cash'])}</td></tr>"
         for week in record["weekly"]
     )
     sections = [
@@ -194,19 +200,19 @@ def render_html(record: dict[str, Any]) -> str:
         sections.append(
             "<h2>Variazioni rispetto alla previsione precedente</h2>"
             f"<p>Confronto fino al {escape(comparison['through'])}: "
-            f"{_display(comparison['closing_variance'])}. Differenza tra cassa "
+            f"{display(comparison['closing_variance'])}. Differenza tra cassa "
             "effettiva iniziale e precedente previsione: "
-            f"{_display(comparison['opening_variance'])}.</p><ul>"
+            f"{display(comparison['opening_variance'])}.</p><ul>"
         )
         for change in comparison["changes"]:
             before, after = change["previous"], change["current"]
             old = (
-                f"{_display(before['cash_amount'])} il {before['expected_date']}"
+                f"{display(before['cash_amount'])} il {before['expected_date']}"
                 if before
                 else "assente"
             )
             new = (
-                f"{_display(after['cash_amount'])} il {after['expected_date']}"
+                f"{display(after['cash_amount'])} il {after['expected_date']}"
                 if after
                 else "non più previsto"
             )
@@ -313,10 +319,12 @@ def write_artifacts(directory: Path, record: dict[str, Any]) -> list[str]:
     summary.append(["Stato", STATUS_LABELS[record["status"]]])
     summary.append(["Data situazione", record["as_of"]])
     summary.append(["Orizzonte", record["horizon_end"]])
-    summary.append(["Cassa iniziale EUR", money(record["opening_cash"])])
+    summary.append(
+        [f"Cassa iniziale {record['currency']}", money(record["opening_cash"])]
+    )
     summary.append(
         [
-            "Minimo giornaliero EUR",
+            f"Minimo giornaliero {record['currency']}",
             (
                 money(record["minimum_daily_cash"])
                 if record["calculation_complete"]
@@ -352,7 +360,9 @@ def write_artifacts(directory: Path, record: dict[str, Any]) -> list[str]:
     for name, (rows, columns) in tables.items():
         _csv(directory / f"{name.lower()}.csv", rows, columns)
         sheet = workbook.create_sheet(name)
-        sheet.append([COLUMN_LABELS[key] for key in columns])
+        sheet.append(
+            [COLUMN_LABELS[key].replace("EUR", record["currency"]) for key in columns]
+        )
         for row in rows:
             sheet.append(
                 [

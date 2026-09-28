@@ -59,7 +59,7 @@
     {
       "path": "modules/journal-sampling/scripts/implementation_bootstrap.py",
       "repository_path": "plugins/journal-sampling/scripts/implementation_bootstrap.py",
-      "sha256": "6d4c3337bedf0a352805622f8aebe562f6b39bde5c2e219b8ee0a5b432de81d6"
+      "sha256": "fc54756ac2acd0ab3e52fe61102bdff60fb3701ae50afc67a84008ac89188905"
     },
     {
       "path": "modules/journal-sampling/scripts/inspect_journal.py",
@@ -69,7 +69,7 @@
     {
       "path": "modules/journal-sampling/scripts/journal_sampling_core.py",
       "repository_path": "plugins/journal-sampling/scripts/journal_sampling_core.py",
-      "sha256": "38002e7b53cc6c4382ee0f20253e1de93439e678b34942617ae521499883f0de"
+      "sha256": "9567ffd87c9227d2bd04bff431bf03c997b4930dab1f83290321906a7123cb5d"
     },
     {
       "path": "modules/journal-sampling/scripts/normalize_journal.py",
@@ -99,7 +99,12 @@
     {
       "path": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
       "repository_path": "plugins/journal-sampling/skills/journal-sampling/SKILL.md",
-      "sha256": "3b52f91367bda51748c817010c8202c8c079e148ff6ca4d9fbdb8355159b81b6"
+      "sha256": "4569776dced570e926b2c588164c579a16ebe1fe1ccbca8121ddb311ab6f41fd"
+    },
+    {
+      "path": "modules/journal-sampling/skills/journal-sampling/references/geneva.md",
+      "repository_path": "plugins/journal-sampling/skills/journal-sampling/references/geneva.md",
+      "sha256": "06182be0db9a0b48c07098516f048eb74d0b773b72c179e8c12af9b498dc455d"
     },
     {
       "path": "modules/journal-sampling/vendor/modules/__init__.py",
@@ -114,7 +119,7 @@
     {
       "path": "modules/journal-sampling/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
     },
     {
       "path": "modules/journal-sampling/vendor/modules/vera_assurance/decisions.py",
@@ -125,6 +130,11 @@
       "path": "modules/journal-sampling/vendor/modules/vera_assurance/envelope.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_assurance/jurisdiction.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "modules/journal-sampling/vendor/modules/vera_assurance/money.py",
@@ -149,7 +159,7 @@
     {
       "path": "skills/journal-sampling/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-sampling/SKILL.md",
-      "sha256": "e5f21cad5b41df588cc3df48d304bbff39c8aa56e2d6a6876169a0e959d173d5"
+      "sha256": "757f8c43e9a2fe31da7bf871c68569f414c5bbaeeb3d99af747e4d1bc149dfc5"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -259,7 +269,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -270,6 +280,11 @@
       "path": "vendor/modules/vera_assurance/envelope.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",

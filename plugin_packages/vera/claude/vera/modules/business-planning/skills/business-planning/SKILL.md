@@ -94,6 +94,11 @@ override this Cowork contract.
 
 # Business Planning
 
+## Jurisdiction and Geneva
+
+For a CH-GE mandate, read `references/geneva.md` before the steps below. It specifies the Geneva input, source and output adaptations within this existing function. Choose governing jurisdiction independently of output language; the ordinary Italian path remains available for IT.
+
+
 Help the user decide whether a business is worth pursuing, how it could work,
 how it could be financed, and what to test next. Planning is a repeated exercise:
 the report records the current reasoning, not the end of the work.

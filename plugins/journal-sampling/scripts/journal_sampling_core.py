@@ -210,6 +210,7 @@ IMPLEMENTATION_PLUGIN_FILES = (
 ASSURANCE_IMPLEMENTATION_FILES = (
     ("__init__.py", "implementation.vera_assurance_init"),
     ("contracts.py", "implementation.vera_assurance_contracts"),
+    ("jurisdiction.py", "implementation.vera_assurance_jurisdiction"),
     ("decisions.py", "implementation.vera_assurance_decisions"),
     ("envelope.py", "implementation.vera_assurance_envelope"),
     ("money.py", "implementation.vera_assurance_money"),

@@ -1063,7 +1063,14 @@ def _memo_lines(
     *,
     language: str,
 ) -> list[str]:
-    text = MEMO_TEXT[language]
+    text = dict(MEMO_TEXT[language])
+    if case_records.get("jurisdiction", "IT") == "CH-GE":
+        text["title"] = (
+            "Revue du relevé de cotisations"
+            if language == "fr"
+            else "Contribution record review"
+        )
+        text["introduction"] = case_records["jurisdiction_basis"]
     lines = [
         f"# {text['title']}",
         "",

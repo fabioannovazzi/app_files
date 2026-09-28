@@ -5,6 +5,11 @@ description: Use when an Italian professional accounting studio asks Vera or Cod
 
 # Bilancio intelligente
 
+## Jurisdiction and Geneva
+
+For a CH-GE mandate, read `references/geneva.md` before the steps below. It specifies the Geneva input, source and output adaptations within this existing function. Choose governing jurisdiction independently of output language; the ordinary Italian path remains available for IT.
+
+
 After substantive use, read and follow the `Plugin Improvement Feedback`
 section at the end of this skill.
 

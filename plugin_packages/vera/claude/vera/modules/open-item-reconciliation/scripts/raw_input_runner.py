@@ -3096,6 +3096,10 @@ def run_raw_input_reconciliation(
     requested_language = normalize_language(
         (assumptions or {}).get("locale") or language
     )
+    if (assumptions or {}).get("jurisdiction") == "CH-GE" and not (
+        assumptions or {}
+    ).get("currency"):
+        raise ValueError("Geneva reconciliation requires an explicit reviewed currency")
     active = {
         "scope_year": None,
         "cutoff_date": None,

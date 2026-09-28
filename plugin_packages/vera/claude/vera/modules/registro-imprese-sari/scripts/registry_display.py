@@ -15,8 +15,18 @@ def _copy() -> dict[str, dict[str, str]]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def text(language: str, key: str) -> str:
+def text(language: str, key: str, *, jurisdiction: str = "IT") -> str:
     """Look up a fixed label; never translate or classify user-authored text."""
+    if jurisdiction == "CH-GE" and _language(language) == "fr":
+        overrides = {
+            "checklist_title": "Registre du commerce — dossier de travail",
+            "Camera competente": "Autorité compétente",
+            "Codice fiscale": "Identifiant fiscal (si pertinent)",
+            "Partita IVA": "Identifiant d’entreprise (si pertinent)",
+            "# Quesito per il supporto SARI — bozza": "# Question à l’autorité compétente — projet",
+        }
+        if key in overrides:
+            return overrides[key]
     return _copy()[_language(language)][key]
 
 

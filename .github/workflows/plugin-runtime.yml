@@ -216,6 +216,11 @@ jobs:
           tests/plugins/test_non_plotting_review_workbench.py
           --cov --cov-config=tests/plugin_new_client.coveragerc
           --cov-report=term-missing --cov-fail-under=80
+      - name: Verify Geneva common-core adapters and source boundaries
+        run: |
+          python -m pytest -q -o addopts='' tests/plugins/test_vera_geneva_adaptations.py --cov=jurisdiction_setup --cov=jurisdiction_accounts --cov=vera_assurance.jurisdiction --cov-report=term-missing --cov-fail-under=80
+          python -m pytest -q -o addopts='' .agents/skills/localize-vera/scripts/test_catalogue.py
+          python .agents/skills/localize-vera/scripts/catalogue.py check --root plugins/vera --inventory plugins/vera/skills/vera/references/localization/geneva/catalogue.json --assessment plugins/vera/skills/vera/references/localization/geneva/assessment.json
       - name: Verify native annual-accounts previews and review gates
         run: |
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_bilancio_*.py tests/plugins/test_teaching_bilancio_execution.py --cov --cov-config=tests/plugin_bilancio_preview.coveragerc --cov-report=term-missing --cov-fail-under=80

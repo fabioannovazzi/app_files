@@ -29,6 +29,8 @@ from vera_assurance import (  # noqa: E402
 )
 
 CLIENT_WORKFLOW_ENTRYPOINTS = (
+    ("bilancio-xbrl-it", "jurisdiction_accounts.py"),
+    ("new-client", "jurisdiction_setup.py"),
     ("invoice-xml", "invoice_workflow.py"),
     ("invoice-xml", "source_evidence.py"),
     ("treasury-forecast", "run_treasury.py"),
@@ -125,6 +127,22 @@ CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
 
 # Maintenance, inspection and validated-report delivery do not start a workflow.
 CLIENT_WORKFLOW_CLI_ALLOWLIST = (
+    # Existing Italian accounts tools use the separate tenant/revision service
+    # lifecycle; only the Geneva adapter starts a Studio Archive workflow.
+    ("bilancio-xbrl-it", "audit_schedule_taxonomy.py"),
+    ("bilancio-xbrl-it", "audit_statutory_presentation.py"),
+    ("bilancio-xbrl-it", "benchmark_performance.py"),
+    ("bilancio-xbrl-it", "build_taxonomy_catalogue.py"),
+    ("bilancio-xbrl-it", "check_dependencies.py"),
+    ("bilancio-xbrl-it", "check_review_invariants.py"),
+    ("bilancio-xbrl-it", "evaluate_intelligence_quality.py"),
+    ("bilancio-xbrl-it", "managed_ocr_runtime.py"),
+    ("bilancio-xbrl-it", "run_background_job.py"),
+    ("bilancio-xbrl-it", "run_golden_cases.py"),
+    ("bilancio-xbrl-it", "run_xbrl_conformance.py"),
+    ("bilancio-xbrl-it", "service_bridge.py"),
+    ("bilancio-xbrl-it", "validate_xbrl.py"),
+    ("bilancio-xbrl-it", "xbrl_case.py"),
     ("invoice-xml", "check_dependencies.py"),
     ("treasury-forecast", "check_dependencies.py"),
     ("aml-review", "check_dependencies.py"),
@@ -394,7 +412,6 @@ def test_client_workflow_registry_covers_every_vera_component() -> None:
     )
 
     assert set(VERA_CLIENT_WORKFLOW_IDS) == set(components["plugins"]) - {
-        "bilancio-xbrl-it",
         "browser-automation",
         "comunicazione-professionale",
         "presenza-digitale-studio",
@@ -944,6 +961,16 @@ def test_client_workflow_entrypoint_requires_managed_context(
                 "--output-dir",
                 "missing-output",
             ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert result.returncode == 2
+        assert "required: --client-engagement" in result.stderr
+        return
+    if script_name in {"jurisdiction_accounts.py", "jurisdiction_setup.py"}:
+        result = subprocess.run(
+            [sys.executable, str(script_path), "--review", "missing.json"],
             capture_output=True,
             text=True,
             check=False,

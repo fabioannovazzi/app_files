@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "financial-analysis",
-  "course_sha256": "6a022a8ee5624124b0d7f30e2798725df3327aa6e96d8c0e764af25f4e52a0f1",
+  "course_sha256": "ed49e5ac9712783b0586e9c427c77d25b40d399f9754fa2450f4556e101d9c26",
   "reviewer": "Codex: first-use material, native financial result and localized delivery-note review",
   "reviewed_at": "2026-09-14T18:31:25.025430+00:00",
   "review_scope": "Read both fictional four-balance statements and all five localized contexts and lesson outlines. Ten current registered net-debt executions pass and finalize their source-bound runs. Reviewed the actual prepared result, metrics and line items; those native files are byte-identical across languages within each phase. Read all five February delivery notes and verified that every March note differs only in the actual date, loan, cash, excluded payable and result values. The notes exercise the skill's ordinary Codex delivery stage through a test-only authored interpretation; they are not shipped answers or a deterministic engine report. No browser presentation, learner understanding, voice or two-window acceptance is claimed.",
@@ -389,5 +389,25 @@
       "later_failure": "Editorial digest freshness; this run is not represented as fully green."
     },
     "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
+  },
+  "geneva_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-28T08:17:18.379368+00:00",
+    "previous_course_sha256": "3fbdfdb1c6a77563d7bf0476df663d2bb1c7ca1bd560d1e70c0f3463172492a1",
+    "previous_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "content_review": "Compared the complete course object with the exact previously reviewed baseline. All authored locale content, input definitions, requests, checkpoints, practice, timing and other non-source fields are unchanged. Only source bindings differ. Original editorial judgments and historical artifact reviews are retained.",
+    "source_review": "The common-core Geneva release adds explicit jurisdiction and source handling, French/CHF presentation where applicable, and the source-bound adapters described in docs/releases/2026-09-28-vera-geneva.md. This course retains its existing professional purpose and sample jurisdiction; adding Geneva capability does not relabel an Italian exercise as Swiss. Exact changed bindings are recorded by kit in docs/releases/2026-09-28-vera-geneva-course-review.json.",
+    "native_evidence": "GitHub Actions run 36393675234, job 108834959892, commit 989e523529fccd09a60a8ed29dc63d87b863d21e: native teaching stage passed 998 tests with 3 explicit skips and 89.73% courseware coverage. New Client, Geneva adapters and annual-account stages also passed. The later editorial-fingerprint check failed; this is not a claim that the full run passed. Fresh CI must independently validate all required demo/practice identities and current course hashes.",
+    "limits": "This is a bounded release-source refresh, not a new independent editorial, visual, professional or learner review. Earlier artifact hashes remain historical evidence. No Geneva lesson acceptance, real-client acceptance or installed-runtime update is claimed."
+  },
+  "combined_geneva_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-28T08:57:49.268379+00:00",
+    "previous_course_sha256": "6a022a8ee5624124b0d7f30e2798725df3327aa6e96d8c0e764af25f4e52a0f1",
+    "course_qa_commit": "1b9883c484ad7c877bd304914c53c277f7a71ab2",
+    "integrated_main_commit": "655c5a7ea",
+    "content_review": "The complete authored course object is unchanged from the verified course QA commit when source bindings are excluded. Retains both the prior Italian Codex QA record and the Geneva source-bound review from main. No new lesson, language-journey acceptance or professional approval is asserted.",
+    "source_review": "Integrated additive Geneva jurisdiction/currency adapters and French presentation from PR #692; course QA source/result readers, saved-review controls, parser hardening and teacher/working roles are preserved. Generated assets and packages are rebuilt from this combined source.",
+    "native_execution_requirement": "The combined candidate must pass the unchanged required native demo/practice checks and dedicated Geneva regressions before deployment."
   }
 }

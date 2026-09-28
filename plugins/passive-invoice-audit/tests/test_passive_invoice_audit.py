@@ -8,6 +8,7 @@ import sqlite3
 import sys
 import zipfile
 from datetime import datetime
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -2266,3 +2267,99 @@ def test_native_dependency_check_reports_inspection_failure(tmp_path, monkeypatc
 
     monkeypatch.setattr(luna_worker, "inspect_execution_host", inspect)
     assert cli.main([]) == 1
+
+
+def _reviewed_geneva_invoice(tmp_path):
+    import hashlib
+
+    source = tmp_path / "invoice.txt"
+    source.write_text(
+        "Synthetic invoice INV-1, 2026-01-31, CHF 108.10, service 100, tax 8.10"
+    )
+    payload = {
+        "schema_version": "vera.reviewed_invoices.v1",
+        "jurisdiction": "CH-GE",
+        "invoices": [
+            {
+                "source_path": source.name,
+                "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+                "locator": "line 1",
+                "fields": {
+                    "supplier_vat": "CHE-123.456.789",
+                    "supplier_name": "Exemple SA",
+                    "customer_tax_id": "",
+                    "customer_name": "Client SA",
+                    "invoice_number": "INV-1",
+                    "invoice_date": "2026-01-31",
+                    "document_type": "invoice",
+                    "currency": "CHF",
+                    "gross_amount": "108.10",
+                    "credit_note": False,
+                    "lines": [
+                        {
+                            "description": "Service",
+                            "line_total": "100.00",
+                            "locator": "line 1",
+                        }
+                    ],
+                    "vat_summaries": [
+                        {
+                            "vat_rate": "8.10",
+                            "taxable_amount": "100.00",
+                            "vat_amount": "8.10",
+                        }
+                    ],
+                },
+            }
+        ],
+    }
+    content_hash = hashlib.sha256(
+        json.dumps(
+            payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+        ).encode()
+    ).hexdigest()
+    payload["professional_review"] = {
+        "content_sha256": content_hash,
+        "reviewer_ref": "synthetic-professional",
+        "reviewer_role": "professional_reviewer",
+        "reviewed_at": "2026-09-28",
+    }
+    path = tmp_path / "reviewed.json"
+    path.write_text(json.dumps(payload))
+    return path
+
+
+def test_reviewed_geneva_invoice_reuses_matching_and_packet_lineage(tmp_path):
+    path = _reviewed_geneva_invoice(tmp_path)
+    invoices = audit_core.parse_invoice_population(path, tmp_path / "stage")
+    rows = _ledger_rows(
+        supplier_vat="CHE123456789",
+        gross="108.10",
+        taxable="100.00",
+        vat="8.10",
+        payable="-108.10",
+    )
+    for row in rows:
+        row["currency"] = "CHF"
+    items, orphans = audit_core.match_population(invoices, rows, Decimal("0.01"))
+    packet = audit_core.build_packet(items[0])
+    assert items[0]["match_state"] == "matched"
+    assert orphans == []
+    assert packet["source_format"] == "reviewed_document"
+    assert packet["invoice_lines"][0]["locator"] == "line 1"
+    assert packet["currency"] == "CHF"
+
+
+@pytest.mark.parametrize("mutation", ["source", "review"])
+def test_reviewed_geneva_invoice_rejects_modified_source_or_unreviewed_extract(
+    tmp_path, mutation
+):
+    path = _reviewed_geneva_invoice(tmp_path)
+    if mutation == "source":
+        (tmp_path / "invoice.txt").write_text("Different source")
+    else:
+        payload = json.loads(path.read_text())
+        payload["invoices"][0]["fields"]["gross_amount"] = "1.00"
+        path.write_text(json.dumps(payload))
+    with pytest.raises(ValueError):
+        audit_core.parse_invoice_population(path, tmp_path / "stage")

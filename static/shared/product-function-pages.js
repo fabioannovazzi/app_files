@@ -1901,7 +1901,16 @@
     },
   };
 
+  const genevaAccountsModelData = {
+  "it": "Nel percorso locale CH-GE, separato dal servizio OIC/XBRL descritto sopra, il modello può leggere documenti selezionati, identità, saldi correnti e comparativi, mapping, requisiti delle note, fonti svizzere e decisioni per preparare la bozza. Il codice verifica hash, copertura dei conti e quadrature, senza chiamate di rete. Questo percorso non usa i limiti dei pacchetti OIC, non genera XBRL e non certifica la completezza legale.",
+  "en": "In the local CH-GE route, separate from the OIC/XBRL service described above, the model may read selected documents, identity, current and comparative balances, mappings, note requirements, Swiss sources and decisions to prepare the draft. Code checks hashes, account coverage and reconciliations without network calls. This route does not use the OIC packet limits, generate XBRL or certify statutory completeness.",
+  "fr": "Dans le parcours local CH-GE, distinct du service OIC/XBRL décrit ci-dessus, le modèle peut lire les documents sélectionnés, l’identité, les soldes courants et comparatifs, les mappings, les exigences de l’annexe, les sources suisses et les décisions pour préparer le projet. Le code vérifie les empreintes, la couverture des comptes et les rapprochements sans appel réseau. Ce parcours n’utilise pas les limites des paquets OIC, ne génère pas de XBRL et ne certifie pas l’exhaustivité légale.",
+  "de": "Im lokalen CH-GE-Ablauf, getrennt vom oben beschriebenen OIC/XBRL-Dienst, kann das Modell ausgewählte Dokumente, Identität, aktuelle und Vergleichssalden, Zuordnungen, Anhangsanforderungen, Schweizer Quellen und Entscheidungen für den Entwurf lesen. Der Code prüft Hashes, Kontenabdeckung und Abstimmungen ohne Netzwerkaufrufe. Die OIC-Paketgrenzen gelten hier nicht; dieser Ablauf erzeugt kein XBRL und bestätigt keine gesetzliche Vollständigkeit.",
+  "es": "En el recorrido local CH-GE, separado del servicio OIC/XBRL descrito arriba, el modelo puede leer documentos seleccionados, identidad, saldos actuales y comparativos, mapeos, requisitos de notas, fuentes suizas y decisiones para preparar el borrador. El código comprueba hashes, cobertura de cuentas y conciliaciones sin llamadas de red. Este recorrido no usa los límites de paquetes OIC, no genera XBRL ni certifica la integridad legal."
+};
+
   Object.entries(bilancioModelData).forEach(([language, modelData]) => {
+    modelData.modelData += "\n\n" + genevaAccountsModelData[language];
     Object.assign(window.MPARANZA_FUNCTION_PAGES["bilancio-xbrl-it"].copy[language], modelData);
   });
 

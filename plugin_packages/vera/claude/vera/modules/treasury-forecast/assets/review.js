@@ -1,7 +1,7 @@
 'use strict';
 const token = new URLSearchParams(location.hash.slice(1)).get('token') || '';
 const $ = id => document.getElementById(id);
-const euro = value => new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(Number(value));
+const euro = value => new Intl.NumberFormat('it-IT',{style:'currency',currency:state.currency}).format(Number(value));
 let state = null;
 let offset = 0;
 let dirty = false;
@@ -25,7 +25,7 @@ function chart(){
   for(const value of new Set([low,0,high])){add('line',{x1:105,x2:875,y1:y(value),y2:y(value),stroke:value===0?'#8296ad':'#dce4ed'});add('text',{x:95,y:y(value)+4,'text-anchor':'end','font-size':13,fill:'#42617d'},euro(value));}
   add('polyline',{points:values.map((value,i)=>x(i)+','+y(value)).join(' '),fill:'none',stroke:'#006fa9','stroke-width':3});
   add('text',{x:105,y:231,'font-size':13,fill:'#42617d'},state.daily[0].date);add('text',{x:875,y:231,'text-anchor':'end','font-size':13,fill:'#42617d'},state.daily.at(-1).date);
-  $('chart-caption').textContent='Chiusure giornaliere in EUR. I dettagli per giorno e settimana sono nel prospetto Excel.';
+  $('chart-caption').textContent='Chiusure giornaliere in '+state.currency+'. I dettagli per giorno e settimana sono nel prospetto Excel.';
 }
 function cashTable(container, rows, columns){
   const table=document.createElement('table'),head=document.createElement('thead'),body=document.createElement('tbody'),titles=document.createElement('tr');
@@ -42,6 +42,7 @@ function statement(){
   cashTable('daily-statement',state.daily,[['date','Data'],['net_cash','Flusso netto EUR',true],['closing_cash','Cassa finale EUR',true]]);
 }
 function render(){
+  $('cash-heading').textContent='Flusso '+state.currency;
   $('company').textContent=state.company_name;
   $('period').textContent='Situazione al '+state.as_of+' · Previsione fino al '+state.horizon_end;
   $('coverage').textContent=state.coverage;

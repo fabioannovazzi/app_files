@@ -156,11 +156,13 @@ def build_record(
     language = review.get("language", "it")
     if not isinstance(language, str) or language not in _MEMO_LABELS:
         raise ValueError("Expected memo language it, en, fr, de or es")
-    if review["schema_version"] != 1 or review["jurisdiction"] != "IT":
-        raise ValueError("Expected version 1 Italian AML review")
+    if review["schema_version"] != 1 or review["jurisdiction"] not in {"IT", "CH-GE"}:
+        raise ValueError("Expected version 1 IT or CH-GE AML review")
     for field in ("scope", "assessment", "limitations"):
         _text(review[field], field)
     _date(review["as_of"], "as_of")
+    if review["jurisdiction"] == "CH-GE":
+        _text(review.get("jurisdiction_basis"), "Swiss/Geneva jurisdiction basis")
     sources: dict[str, Any] = {}
     source_paths: dict[str, Path] = {}
     for source in review["sources"]:
@@ -196,6 +198,16 @@ def build_record(
             _text(item[field], field)
         _references(item["citations"], sources)
     _references(review["assessment_citations"], sources)
+    if review["jurisdiction"] == "CH-GE":
+        applicability = review.get("mandate_applicability", {})
+        if applicability.get("status") not in {
+            "in_scope",
+            "out_of_scope",
+            "unresolved",
+        }:
+            raise ValueError("Record the mandate AML applicability")
+        _text(applicability.get("basis"), "mandate applicability basis")
+        _references(applicability.get("citations", []), sources)
     previous_hash = None
     previous = review.get("previous")
     if previous is not None:
@@ -217,9 +229,13 @@ def build_record(
             or previous_record["engagement_id"] != engagement_id
         ):
             raise ValueError("Previous review belongs to another client or engagement")
+        if previous_record["review"]["jurisdiction"] != review["jurisdiction"]:
+            raise ValueError("Previous review belongs to another jurisdiction")
         _text(review["changes_since_previous"], "changes since previous review")
     calculation = None
     if review.get("calculation_source_id") is not None:
+        if review["jurisdiction"] != "IT":
+            raise ValueError("Italian AML scoring is unavailable for CH-GE")
         # Reuse the complete existing validator before arithmetic, not a new rule engine.
         path = ROOT.parent / "new-client" / "scripts" / "new_client_core.py"
         spec = importlib.util.spec_from_file_location("aml_new_client", path)
@@ -230,6 +246,8 @@ def build_record(
         intake = module.validate_new_client_input(
             json.loads(source_paths[review["calculation_source_id"]].read_text())
         )
+        if intake["jurisdiction"] != review["jurisdiction"]:
+            raise ValueError("Calculation intake belongs to another jurisdiction")
         calculation = module.calculate_aml(intake["aml"])
     proposal = {k: v for k, v in review.items() if k != "professional_decision"}
     proposal_hash = digest(proposal)
@@ -307,6 +325,10 @@ def render_memo(record: dict[str, Any]) -> str:
             for b in review["legal_basis"]
         ]
     )
+    if review["jurisdiction"] == "CH-GE":
+        lines.extend(["", "CH-GE", "", review["jurisdiction_basis"]])
+        applicability = review["mandate_applicability"]
+        lines.extend(["", applicability["status"], "", applicability["basis"]])
     if review.get("previous") is not None:
         lines.extend(
             ["", f"## {labels['changes']}", "", review["changes_since_previous"]]

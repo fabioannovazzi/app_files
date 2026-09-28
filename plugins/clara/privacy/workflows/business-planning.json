@@ -33,7 +33,9 @@
     "scripts/self_relaunch.py",
     "scripts/managed_python_runtime.py",
     "scripts/_managed_python_runtime.py",
-    "requirements.txt"
+    "requirements.txt",
+    "repository/plugins/business-planning/scripts/planning_french.py",
+    "repository/plugins/business-planning/skills/business-planning/references/geneva.md"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -156,6 +158,6 @@
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "8fc52ee98a3830b1cf98af280590f4029fd6f73f601d5c4c0fd2c3dfff7624ad"
+    "source_fingerprint": "fc38b8bc896e9590850360e79e8c2fa715b2051f6f7061aa756f93c006812497"
   }
 }

@@ -74,6 +74,7 @@
         "modules/new-client/scripts/check_dependencies.py",
         "modules/new-client/scripts/delivery_manifest.py",
         "modules/new-client/scripts/initialize_case.py",
+        "modules/new-client/scripts/jurisdiction_setup.py",
         "modules/new-client/scripts/package_new_client.py",
         "modules/new-client/scripts/promote_client_file_preparation.py"
       ]
@@ -423,6 +424,7 @@
         "modules/bilancio-xbrl-it/scripts/check_dependencies.py",
         "modules/bilancio-xbrl-it/scripts/check_review_invariants.py",
         "modules/bilancio-xbrl-it/scripts/evaluate_intelligence_quality.py",
+        "modules/bilancio-xbrl-it/scripts/jurisdiction_accounts.py",
         "modules/bilancio-xbrl-it/scripts/managed_ocr_runtime.py",
         "modules/bilancio-xbrl-it/scripts/run_background_job.py",
         "modules/bilancio-xbrl-it/scripts/run_golden_cases.py",

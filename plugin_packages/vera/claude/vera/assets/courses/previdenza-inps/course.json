@@ -53,7 +53,7 @@
     },
     {
       "path": "modules/previdenza-inps/schemas/case_records.schema.json",
-      "sha256": "bcb172275b979e1450ab9678421b2dd59a61a531e97cd6f40ea881596d9a8d3a"
+      "sha256": "0c7550c48e3696292c1d43c489d874ee2872eb8f3cf8a5d355d6ec3dcac6cf61"
     },
     {
       "path": "modules/previdenza-inps/schemas/claims_review.schema.json",
@@ -81,7 +81,7 @@
     },
     {
       "path": "modules/previdenza-inps/scripts/package_case.py",
-      "sha256": "98304e05221704492ad907803cc1db3e27ecd3f1c497d0fbcce7942b1f21b5db"
+      "sha256": "6b36bda0a2cf423b5d65d3b3e4c0b1fa1b9652b16955eb5a6aafe57542776273"
     },
     {
       "path": "modules/previdenza-inps/scripts/privacy_guard.py",
@@ -97,15 +97,19 @@
     },
     {
       "path": "modules/previdenza-inps/scripts/validate_case_records.py",
-      "sha256": "556de80f2deac4cd14848052a201fa869de190d08ea2dc23ced5a2724920f6fa"
+      "sha256": "7c6fbade21bf4f80621c0e9c3fbf3eb1f0d53ad6100118a60d49f5028792f752"
     },
     {
       "path": "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
-      "sha256": "845e80a286030a588fb6a4ff9151f439d4fc9c80c5f551d095d5ae60abfdfcd8"
+      "sha256": "3d9cc333f9000eebd2974bf28339d1fb5c9901eb99f4986f0d4a548e55f2a149"
     },
     {
       "path": "modules/previdenza-inps/skills/previdenza-inps/agents/openai.yaml",
       "sha256": "bbe8ab077fed5caf28db2ff4fb6e12c5ac6ff4c5cfe5fb4b7f5d2e3b817e891f"
+    },
+    {
+      "path": "modules/previdenza-inps/skills/previdenza-inps/references/geneva.md",
+      "sha256": "304b17162da3f8db6afc0cf2fb082a473bb6d8ef6a36efc98d57162d0634c2a3"
     },
     {
       "path": "modules/previdenza-inps/vendor/modules/__init__.py",
@@ -117,7 +121,7 @@
     },
     {
       "path": "modules/previdenza-inps/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
     },
     {
       "path": "modules/previdenza-inps/vendor/modules/vera_assurance/decisions.py",
@@ -126,6 +130,10 @@
     {
       "path": "modules/previdenza-inps/vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/previdenza-inps/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "modules/previdenza-inps/vendor/modules/vera_assurance/money.py",
@@ -145,7 +153,7 @@
     },
     {
       "path": "skills/previdenza-inps/SKILL.md",
-      "sha256": "a0176a62be990fc8d5f896399da0e0c8a16c48e1e7eb9a0f211e2f3d82588cfc"
+      "sha256": "635a5c223ac6692961559e28be6b3c5ae1d45360c21fb3abce0814dc03da7361"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -161,7 +169,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -170,6 +178,10 @@
     {
       "path": "vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",
@@ -658,5 +670,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b76aba33b68b311f3ba0ac1cece60ad2dc8c9ecff1b02b70c5ee7ac22703b492"
+  "canonical_course_sha256": "b4a1e48872867226f6f21118ed4c515e292be7bb283691da4568a403404b1731"
 }

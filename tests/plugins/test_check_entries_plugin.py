@@ -9496,12 +9496,15 @@ def test_xml_supported_review_note_uses_working_language(
 
 
 @pytest.mark.parametrize(
-    ("language", "phrase"),
-    [("it", "Individuato"), ("fr", "FatturaPA"), ("de", "FatturaPA-XML")],
-)
-@pytest.mark.parametrize(
-    ("direction_reviewed", "amount", "status"),
-    [(False, "100", "manual_review"), (True, "90", "mismatch")],
+    ("language", "phrase", "direction_reviewed", "amount", "status"),
+    [
+        ("it", "Dare o in Avere", False, "100", "manual_review"),
+        ("fr", "débit ou un crédit", False, "100", "manual_review"),
+        ("de", "Soll- oder Habenbetrag", False, "100", "manual_review"),
+        ("it", "Individuato", True, "90", "mismatch"),
+        ("fr", "FatturaPA", True, "90", "mismatch"),
+        ("de", "FatturaPA-XML", True, "90", "mismatch"),
+    ],
 )
 def test_xml_unresolved_review_notes_use_working_language(
     tmp_path: Path,

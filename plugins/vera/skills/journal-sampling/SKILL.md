@@ -19,6 +19,9 @@ Current user requests take precedence over saved preferences.
 
 # Journal Sampling
 
+For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
+
+
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
 In local Codex, use a prepared and started customer-folder run bound to one

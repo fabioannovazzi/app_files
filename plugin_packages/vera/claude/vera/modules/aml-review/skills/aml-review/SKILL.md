@@ -94,6 +94,11 @@ override this Cowork contract.
 
 # AML review
 
+## Jurisdiction and Geneva
+
+For a CH-GE mandate, read `references/geneva.md` before the steps below. It specifies the Geneva input, source and output adaptations within this existing function. Choose governing jurisdiction independently of output language; the ordinary Italian path remains available for IT.
+
+
 Prepare an evidence-based antiriciclaggio review for one Italian client and
 engagement. Use this for substantive AML work on new or existing relationships.
 New Client remains the owner of whole-client onboarding; do not repeat its

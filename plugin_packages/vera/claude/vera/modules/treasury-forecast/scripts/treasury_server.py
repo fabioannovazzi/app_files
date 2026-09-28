@@ -96,6 +96,7 @@ def make_server(
                             "record_sha256",
                             "proposal_sha256",
                             "company_name",
+                            "currency",
                             "as_of",
                             "horizon_end",
                             "status",

@@ -133,7 +133,7 @@
     },
     {
       "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md",
-      "sha256": "f9a9ebf4f91815e52a2751ee5330c4abf9a1061290a7eaf559d1f34f3bc812f8"
+      "sha256": "c62972d2c1c24176287ccf33d770b58d268dacc32b934a73f9c7d92f77b4ea52"
     },
     {
       "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/agents/openai.yaml",
@@ -142,6 +142,10 @@
     {
       "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/acceptance-matrix.md",
       "sha256": "80735f99f9a14500117cb7d60df5c4e1d6763557acb672a6708f148d3894937e"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/geneva.md",
+      "sha256": "64cbc9e7768c83d3f56d24a2774beb348f28d44b7a923c8bbe7ac6bc17b6ad02"
     },
     {
       "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/implementation-status.md",
@@ -181,7 +185,7 @@
     },
     {
       "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
     },
     {
       "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/decisions.py",
@@ -190,6 +194,10 @@
     {
       "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/money.py",
@@ -209,7 +217,7 @@
     },
     {
       "path": "skills/bandi-agevolazioni/SKILL.md",
-      "sha256": "a51156df929f2c03b1d26cbbc4d96c293db16b7b0d707cebdce60a44c79a63db"
+      "sha256": "eee4f1645c8aaaaf7fe0b3ba9366dca18c7001f18da522756e5476f719aec7ee"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -225,7 +233,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -234,6 +242,10 @@
     {
       "path": "vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",
@@ -642,5 +654,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "a28efd17310297ac836b5eec683efd22ed57890ae1356cf86f59036079a068e2"
+  "canonical_course_sha256": "d4d3a5519c8299757bf8941fc2756595f0de059f11e3f241a98fbc69927d39b6"
 }

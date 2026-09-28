@@ -54,6 +54,7 @@ EXPECTED_CLIENT_WORKFLOW_IDS = (
     "previdenza-inps",
     "registro-imprese-sari",
     "bandi-agevolazioni",
+    "bilancio-xbrl-it",
 )
 
 

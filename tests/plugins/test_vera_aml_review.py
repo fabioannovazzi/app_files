@@ -287,7 +287,8 @@ def test_existing_calculator_preserves_unresolved_onboarding_inputs(
     review["calculation_source_id"] = "S2"
     record = build(review, tmp_path)
     assert record["calculation"]["professional_review_required"] is True
-    assert record["calculation"]["status"] == "blocked_unresolved_table_1"
+    assert record["calculation"]["status"] == "blocked_incomplete_scores"
+    assert record["calculation"]["table_1_resolved"] is False
     assert record["status"] == "draft_for_review"
 
 

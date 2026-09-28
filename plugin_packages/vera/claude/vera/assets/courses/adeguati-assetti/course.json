@@ -41,7 +41,7 @@
     },
     {
       "path": "modules/adeguati-assetti/references/record-contract.md",
-      "sha256": "271f0c2f6c6cd874be984036fed6fc58c617cd5eac840c5fb8cac79939bd93e3"
+      "sha256": "fabf39bcc17b547eb2a71d2cd67fdb2882e6db254e5ac537b6593f06995b9403"
     },
     {
       "path": "modules/adeguati-assetti/requirements.txt",
@@ -49,7 +49,7 @@
     },
     {
       "path": "modules/adeguati-assetti/scripts/assetti_review.py",
-      "sha256": "706f1bc9cbe67bcbd0c34958a97ecba6c0571d2fb23cf400d040d800beee89f7"
+      "sha256": "f4324e901b79ec491a4d485bb295e66e708cfe16259ceb4c66acd38491bfcb78"
     },
     {
       "path": "modules/adeguati-assetti/scripts/check_dependencies.py",
@@ -57,7 +57,11 @@
     },
     {
       "path": "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
-      "sha256": "e8d517aa143cd3436a2e5f1dad977d3804925272747ef972a0880de4d2dd454b"
+      "sha256": "cb05c9012f25c394937028a370ca9e3199db7523f3e3ddd359382bc76eb8c2cf"
+    },
+    {
+      "path": "modules/adeguati-assetti/skills/adeguati-assetti/references/geneva.md",
+      "sha256": "27ec251d36f99996d47ad5377a3ea8e96a956ff4b42e4dfa68cc444147475672"
     },
     {
       "path": "modules/adeguati-assetti/vendor/modules/__init__.py",
@@ -69,7 +73,7 @@
     },
     {
       "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
     },
     {
       "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/decisions.py",
@@ -78,6 +82,10 @@
     {
       "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/money.py",
@@ -97,7 +105,7 @@
     },
     {
       "path": "skills/adeguati-assetti/SKILL.md",
-      "sha256": "29195b5c03c7dc5f4e93d48cfac055076f4c85e72edaa539093b90d146936dc5"
+      "sha256": "769db51d763ca5f9df954fd83080d6b800db6230b106215aefb73e7949c15295"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -113,7 +121,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -122,6 +130,10 @@
     {
       "path": "vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",
@@ -570,5 +582,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "f7b37ad4838abab25a94cbd7ea0d41ff2dae6e4aa4c104ec24948a7eec616820"
+  "canonical_course_sha256": "6c06178888fce4c7fbc572aae6ea6ec93962ea916ffc5375084d2e712e8b2711"
 }

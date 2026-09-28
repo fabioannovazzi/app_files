@@ -29,6 +29,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "geneva-adaptation",
+        "purpose": "Prepare the existing professional deliverable under an explicit CH-GE mandate",
+        "content": "The Geneva setup adapter reads imported identity, mandate, ownership, AML-applicability and privacy-role evidence, source passages and locators, a requested/received/missing document plan, official legal references, limitations and declared professional decisions. These authored data may enter the parent runtime context. The local adapter makes no network or model call; it does not use the Italian AML score. Existing Italy-specific UI and promotion controls below describe the ordinary Italian route.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -91,12 +100,16 @@
     {
       "id": "local-browser-saved-review-details",
       "control": "After successful native validation or saving, the loopback review server restores the persisted notes, edited values and requested-document list in the local browser. The normal MCP model response remains minimized and widget state still excludes free-text decisions. Browser payloads retain the existing path sanitization and bound-run checks. Reopening does not save or apply decisions; the native validity and professional-review gates are unchanged. Reading this local browser in Codex still puts that selected content in the model context."
+    },
+    {
+      "id": "geneva-source-binding",
+      "control": "Geneva setup requires the exact running Studio Archive context and imported source hashes. Decisions bind the proposal, calculated result, workflow, client and engagement. Content-addressed JSON and Markdown retain prior drafts and reject changed artifacts; a declared reviewer is not independently authenticated."
     }
   ],
   "review": {
     "reviewed_at": "2026-09-26",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "f947ec0914d526b28d0b3bcb56cd895808225c18224f82e4ce049b8f8d1144fc"
+    "source_fingerprint": "32fd275fcd9756217b00e9e84372eaae19ec8677b86afef067351c5e10a352bf"
   }
 }

@@ -305,3 +305,17 @@ def test_failed_draft_removes_partial_pdf_and_records_failure(tmp_path, monkeypa
     assert receipt["pdf_error"] == "renderer interrupted"
     assert not (tmp_path / "business_plan_draft.pdf").exists()
     assert (tmp_path / "business_plan_review.html").exists()
+
+
+def test_french_chf_report_preserves_shared_calculations():
+    case = json.loads(json.dumps(presentation_case()).replace('"EUR"', '"CHF"'))
+    case["presentation"]["language"] = "fr"
+    plan = build_plan(case, source_root=FIXTURE)
+    rendered = compile_html(plan, source_root=FIXTURE)
+    assert '<html lang="fr">' in rendered
+    assert "Plan d’affaires" in rendered
+    assert "Incertitudes et limites significatives" in rendered
+    assert "Prochaines actions et responsabilités" in rendered
+    assert ">3\u202f000<" in rendered
+    assert plan["calculations"]["base/2027-01/ebitda"]["value"] == "-100"
+    assert plan["calculations"]["base/2027-01/ebitda"]["unit"] == "CHF"

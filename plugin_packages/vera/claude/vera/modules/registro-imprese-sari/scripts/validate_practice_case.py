@@ -28,6 +28,7 @@ __all__ = ["validate_practice_case", "main"]
 LOGGER = logging.getLogger(__name__)
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 ALLOWED_POSITION_TYPES = {
+    "registre_du_commerce",
     "registro_imprese",
     "rea",
     "agenzia_entrate",
@@ -187,6 +188,25 @@ def _optional_text(
 def _validate_case_intake(
     intake: dict[str, Any], *, issues: list[dict[str, Any]]
 ) -> tuple[str, set[str]]:
+    jurisdiction = intake.get("jurisdiction", "IT")
+    if jurisdiction not in {"IT", "CH-GE"}:
+        _issue(
+            issues,
+            code="unsupported_jurisdiction",
+            path="case_intake.jurisdiction",
+            message="Choose IT or CH-GE independently of language",
+        )
+    if jurisdiction == "CH-GE":
+        positions = intake.get("requested_operation", {}).get("position_types", [])
+        if any(
+            position not in {"registre_du_commerce", "other"} for position in positions
+        ):
+            _issue(
+                issues,
+                code="jurisdiction_position_mismatch",
+                path="case_intake.requested_operation.position_types",
+                message="Italian registry and agency positions do not establish a Geneva procedure",
+            )
     if intake.get("schema_version") != "1.0":
         _issue(
             issues,
@@ -943,6 +963,13 @@ def validate_practice_case(
     issues: list[dict[str, Any]] = []
     intake = load_json_object(case_intake_path)
     plan = load_json_object(practice_plan_path)
+    if plan.get("jurisdiction", "IT") != intake.get("jurisdiction", "IT"):
+        _issue(
+            issues,
+            code="jurisdiction_mismatch",
+            path="practice_plan.jurisdiction",
+            message="Plan jurisdiction must match intake independently of language",
+        )
     manifest = load_json_object(official_sources_path)
     _walk_prohibited_secrets(intake, path="case_intake", issues=issues)
     _walk_prohibited_secrets(plan, path="practice_plan", issues=issues)

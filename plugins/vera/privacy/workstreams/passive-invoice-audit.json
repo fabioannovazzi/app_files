@@ -41,6 +41,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "geneva-adaptation",
+        "purpose": "Prepare the existing professional deliverable under an explicit CH-GE mandate",
+        "content": "For Geneva, the parent runtime may read selected original invoice documents to prepare a reviewed canonical extraction, including party identifiers, dates, currency, amounts, descriptions, tax summaries and exact source locators. The subordinate worker receives the same compact matched-invoice packet, with source format, extraction hash and locators; it does not receive the raw original file. Extraction-review identities and dates remain local review declarations, not authenticated proof of professional correctness.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -89,12 +98,16 @@
     {
       "id": "current-host-profile-qualification",
       "control": "The fixed source registry includes the reviewed macOS 26A428 / Codex CLI 0.155.0-alpha.16 profile. Production OS sandbox text, disabled tools, read-only CLI arguments and allowed data paths are unchanged. Qualification retains an actual normal launch and positive/negative image controls under a separately documented diagnostic envelope; those diagnostic helper/process permissions are not deployed. Dependency inspection reads this same registry and is not itself launch qualification. Unknown or changed hosts fail closed. No model payload or external destination is added."
+    },
+    {
+      "id": "geneva-source-binding",
+      "control": "Reviewed invoice inputs require a content-bound review declaration and exact original-file hashes within the population directory. Source or extraction changes reject reuse. The existing matching, arithmetic, currency checks, job binding and native worker boundary remain active."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-12",
+    "reviewed_at": "2026-09-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "b2a1e252d2acf344fdb4bc6a8b4f49f5792d8c79af79acd294b3ff1cbd986595"
+    "source_fingerprint": "e2cedf08e3c5feb867b71d23aef2c83eccd09598f497e16a1ca05c8a51c59814"
   }
 }

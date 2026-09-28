@@ -127,7 +127,9 @@ def language(case: dict[str, Any]) -> str:
 
 
 def label(text: str, lang: str) -> str:
-    return ITALIAN.get(text, text) if lang == "it" else text
+    from planning_french import FRENCH
+
+    return {"it": ITALIAN, "fr": FRENCH}.get(lang, {}).get(text, text)
 
 
 def format_unit(unit: str, lang: str) -> str:
@@ -148,6 +150,8 @@ def format_number(
     rendered = f"{amount:,.{decimals}f}"
     if lang == "it":
         rendered = rendered.translate(str.maketrans({",": ".", ".": ","}))
+    elif lang == "fr":
+        rendered = rendered.translate(str.maketrans({",": "\u202f", ".": ","}))
     return rendered + ("%" if style == "percent" else "")
 
 
@@ -203,7 +207,7 @@ def validate_presentation(plan: dict[str, Any]) -> None:
         <= {"language", "tables", "actions", "source_notes", "comparison_groups"},
         "Unexpected presentation fields",
     )
-    require(language(plan["case"]) in {"en", "it"}, "Unsupported report language")
+    require(language(plan["case"]) in {"en", "it", "fr"}, "Unsupported report language")
     from planning_assessment import SECTIONS
 
     # Blocked reports retain submitted bindings for diagnostic validation only;
@@ -446,7 +450,10 @@ def render_tables(
             note = (
                 "Scostamento = confronto − base. Percentuale sulla base; n/d con base zero o negativa. Colori secondo la convenzione della singola voce; grigio se non definita."
                 if lang == "it"
-                else "Variance = comparison − baseline. Percent uses the baseline; n/a for zero or negative baselines. Colors follow each row's convention; gray when unspecified."
+                else label(
+                    "Variance = comparison − baseline. Percent uses the baseline; n/a for zero or negative baselines. Colors follow each row's convention; gray when unspecified.",
+                    lang,
+                )
             )
             component = render_reporting_table(
                 row_header=table["headers"][0],
