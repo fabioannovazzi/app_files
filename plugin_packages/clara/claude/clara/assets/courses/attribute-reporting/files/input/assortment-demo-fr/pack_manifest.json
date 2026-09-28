@@ -1,0 +1,21 @@
+{
+  "files": {
+    "product_filter_matrix": "product_filter_matrix.csv",
+    "recent_products": "recent_products.csv",
+    "top_seller_products": "top_seller_products.csv",
+    "sale_pressure_products": "sale_pressure_products.csv",
+    "top_seller_brand_comparison": "top_seller_brand_comparison.csv",
+    "innovation_pairs": "innovation_pairs.csv",
+    "innovation_triples": "innovation_triples.csv",
+    "top_seller_pairs": "top_seller_pairs.csv",
+    "top_seller_triples": "top_seller_triples.csv",
+    "sale_pressure_pairs": "sale_pressure_pairs.csv",
+    "sale_pressure_triples": "sale_pressure_triples.csv",
+    "summary": "summary.json",
+    "integrity": "package_integrity.json"
+  },
+  "retailer": "fictional",
+  "category_key": "teaching-knitwear",
+  "data_origin": "authored_fictional_input",
+  "server_receipts": false
+}

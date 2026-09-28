@@ -11,7 +11,9 @@ ZIPs are generated artifacts and must never be edited by hand.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
+import io
 import json
 import logging
 import re
@@ -20,7 +22,7 @@ import stat
 import sys
 import tempfile
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from types import ModuleType
 from zipfile import ZIP_DEFLATED, BadZipFile, ZipFile, ZipInfo
 
@@ -59,6 +61,68 @@ FIXED_ZIP_DATE = (1980, 1, 1, 0, 0, 0)
 LOGGER = logging.getLogger(__name__)
 
 
+def _expand_cowork_course_archives(entries: dict[str, bytes]) -> None:
+    """Ship course ZIP inputs as directories accepted by the Cowork installer."""
+    index_path = "assets/courses/index.json"
+    index = json.loads(entries[index_path])
+    for original in index["courses"].values():
+        manifest = "assets/courses/" + original["path"]
+        course = json.loads(entries[manifest])
+        files = []
+        replacements = []
+        for item in course["files"]:
+            relative = PurePosixPath(item["path"])
+            if relative.suffix.lower() != ".zip":
+                files.append(item)
+                continue
+            path = (PurePosixPath(manifest).parent / relative).as_posix()
+            content = entries.pop(path)
+            if hashlib.sha256(content).hexdigest() != item["sha256"]:
+                raise ValueError(f"Unreviewed course attachment: {path}")
+            replacements.append((relative.name, relative.stem + "/"))
+            with ZipFile(io.BytesIO(content)) as archive:
+                for member in archive.infolist():
+                    name = PurePosixPath(member.filename)
+                    if (
+                        name.is_absolute()
+                        or ".." in name.parts
+                        or "\\" in member.filename
+                        or PureWindowsPath(member.filename).drive
+                        or name.suffix.lower() == ".zip"
+                        or stat.S_ISLNK(member.external_attr >> 16)
+                    ):
+                        raise ValueError(
+                            f"Invalid course archive member: {member.filename}"
+                        )
+                    if member.is_dir():
+                        continue
+                    target = relative.with_suffix("") / name
+                    packaged = (PurePosixPath(manifest).parent / target).as_posix()
+                    if packaged in entries:
+                        raise ValueError(f"Duplicate course archive member: {packaged}")
+                    data = archive.read(member)
+                    entries[packaged] = data
+                    files.append(
+                        {
+                            **item,
+                            "path": target.as_posix(),
+                            "sha256": hashlib.sha256(data).hexdigest(),
+                        }
+                    )
+        if replacements:
+            course["files"] = files
+            locales = json.dumps(course["locales"], ensure_ascii=False)
+            for old, new in replacements:
+                locales = locales.replace(old, new)
+            course["locales"] = json.loads(locales)
+            entries[manifest] = _json_bytes(course)
+            original["sha256"] = hashlib.sha256(entries[manifest]).hexdigest()
+    entries[index_path] = _json_bytes(index)
+    nested = [name for name in entries if name.lower().endswith(".zip")]
+    if nested:
+        raise ValueError(f"Cowork cannot contain nested ZIP files: {nested}")
+
+
 def _add_written_teaching(
     product: str, source: dict[str, bytes], entries: dict[str, bytes]
 ) -> None:
@@ -69,6 +133,7 @@ def _add_written_teaching(
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     module.add_written_teaching(ROOT, product, source, entries)
+    _expand_cowork_course_archives(entries)
     if product == "vera":
         path = "skills/learn-with-vera/SKILL.md"
         entries[path] = _inject_named_execution_contract(

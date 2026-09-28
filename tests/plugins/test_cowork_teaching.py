@@ -216,3 +216,57 @@ def test_course_attachment_archive_names_are_portable(monkeypatch, path_type):
     projection.add_written_teaching(ROOT, "clara", source, entries)
     assert entries[attachment] == content
     assert not any("\\" in name for name in entries)
+
+
+@pytest.mark.parametrize("product", ["clara", "vera", "lucia"])
+def test_cowork_install_archive_has_root_manifest_and_no_nested_zips(product):
+    with ZipFile(
+        ROOT / f"plugin_packages/{product}/{product}-claude-plugin.zip"
+    ) as archive:
+        names = archive.namelist()
+    assert ".claude-plugin/plugin.json" in names
+    assert not [name for name in names if name.lower().endswith(".zip")]
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_clara_attribute_lesson_preserves_expanded_demo_and_practice(
+    tmp_path, language
+):
+    root = tmp_path / "installed"
+    with ZipFile(ROOT / "plugin_packages/clara/clara-claude-plugin.zip") as archive:
+        archive.extractall(root)
+    destination = tmp_path / "lesson"
+
+    result = run(
+        root,
+        "prepare",
+        "attribute-reporting",
+        "--language",
+        language,
+        "--output-dir",
+        destination,
+    )
+
+    assert result.returncode == 0, result.stderr
+    guide = (destination / "teacher.md").read_text()
+    for role, name in [("input", "demo"), ("practice", "practice")]:
+        stem = f"assortment-{name}-{language}"
+        original = (
+            ROOT
+            / f"plugins/clara/assets/courses/attribute-reporting/files/{role}/{stem}.zip"
+        )
+        expanded = destination / "files" / role / stem
+        with ZipFile(original) as source:
+            expected = {name: source.read(name) for name in source.namelist()}
+        actual = {
+            path.relative_to(expanded).as_posix(): path.read_bytes()
+            for path in expanded.rglob("*")
+            if path.is_file()
+        }
+        assert actual == expected
+        assert stem + "/" in guide
+        assert stem + ".zip" not in guide
+        assert (
+            json.loads((expanded / "package_integrity.json").read_text())["status"]
+            == "pass"
+        )

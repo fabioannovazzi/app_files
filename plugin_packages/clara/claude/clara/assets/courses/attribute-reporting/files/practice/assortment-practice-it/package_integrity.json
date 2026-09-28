@@ -1,0 +1,110 @@
+{
+  "status": "pass",
+  "summary": {
+    "check_count": 10,
+    "failure_count": 0,
+    "warning_count": 0,
+    "product_filter_matrix_rows": 20,
+    "unique_listing_identity_count": 20,
+    "unique_parent_product_id_count": 20,
+    "recent_products": 4,
+    "top_seller_products": 4,
+    "sale_pressure_products": 0,
+    "source_rebuild": null
+  },
+  "checks": [
+    {
+      "check_id": "product_filter_matrix_nonempty",
+      "status": "pass",
+      "product_row_count": 20
+    },
+    {
+      "check_id": "bundle_attribute_inputs_nonempty",
+      "status": "pass",
+      "configured_bundle_attribute_columns": [
+        "color",
+        "garment type"
+      ],
+      "present_bundle_attribute_columns": [
+        "color",
+        "garment type"
+      ],
+      "products_with_bundle_attributes": 20
+    },
+    {
+      "check_id": "product_filter_matrix_identity",
+      "status": "pass",
+      "product_row_count": 20,
+      "unique_listing_identity_count": 20,
+      "unique_parent_product_id_count": 20,
+      "duplicate_listing_count": 0
+    },
+    {
+      "check_id": "product_cohort_outputs_consistency",
+      "status": "pass",
+      "recent_products_expected": 4,
+      "recent_products_actual": 4,
+      "rest_products_expected": 16,
+      "top_seller_products_expected": 4,
+      "top_seller_products_actual": 4,
+      "sale_pressure_products_expected": 0,
+      "sale_pressure_products_actual": 0
+    },
+    {
+      "check_id": "innovation_pairs_recompute",
+      "status": "pass",
+      "expected_row_count": 1,
+      "actual_row_count": 1,
+      "missing_bundle_count": 0,
+      "unexpected_bundle_count": 0,
+      "metric_mismatch_count": 0
+    },
+    {
+      "check_id": "innovation_triples_recompute",
+      "status": "pass",
+      "expected_row_count": 0,
+      "actual_row_count": 0,
+      "missing_bundle_count": 0,
+      "unexpected_bundle_count": 0,
+      "metric_mismatch_count": 0
+    },
+    {
+      "check_id": "top_seller_pairs_recompute",
+      "status": "pass",
+      "expected_row_count": 1,
+      "actual_row_count": 1,
+      "missing_bundle_count": 0,
+      "unexpected_bundle_count": 0,
+      "metric_mismatch_count": 0
+    },
+    {
+      "check_id": "top_seller_triples_recompute",
+      "status": "pass",
+      "expected_row_count": 0,
+      "actual_row_count": 0,
+      "missing_bundle_count": 0,
+      "unexpected_bundle_count": 0,
+      "metric_mismatch_count": 0
+    },
+    {
+      "check_id": "sale_pressure_pairs_recompute",
+      "status": "pass",
+      "expected_row_count": 0,
+      "actual_row_count": 0,
+      "missing_bundle_count": 0,
+      "unexpected_bundle_count": 0,
+      "metric_mismatch_count": 0
+    },
+    {
+      "check_id": "sale_pressure_triples_recompute",
+      "status": "pass",
+      "expected_row_count": 0,
+      "actual_row_count": 0,
+      "missing_bundle_count": 0,
+      "unexpected_bundle_count": 0,
+      "metric_mismatch_count": 0
+    }
+  ],
+  "issues": [],
+  "teaching_input": true
+}
