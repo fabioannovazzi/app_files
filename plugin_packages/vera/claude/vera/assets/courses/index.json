@@ -254,7 +254,7 @@
     },
     "concordato-plan-review": {
       "path": "concordato-plan-review/course.json",
-      "sha256": "e2643dc8256b84e662156480cc0055bd263bbad589a2ed0e24a07d05ecbcf9c8",
+      "sha256": "629c6b34889880d264047880fd76aa8731ca94ff9968adf7e5391b0a3f4b3d7b",
       "languages": [
         "it",
         "en",
@@ -450,7 +450,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "ba578f4864aa209c94a1e4cb64df3a6df4b3b73911f50a9bc39c0ad61a245aec",
+      "sha256": "d2f2bbfb5a9416c436031d7d5d07b33f1f6ddd21a876be5219ab6cee1559013f",
       "languages": [
         "it",
         "en",
@@ -478,7 +478,7 @@
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
-      "sha256": "20a11fab8aa90b260ec11f750b9a022c026b449e0b7f0e451498edff748be675",
+      "sha256": "b46f59d886c523ec6a606b7961aa0641f2ab8ae69ffdd8f3c081e26344c1bfed",
       "languages": [
         "it",
         "en",
@@ -553,7 +553,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "32b6a19358c53bfd53a0ea045b7395dd8e9aa1a18ce379ebe6ee7df4c402390f",
+      "sha256": "68e510ea4b9d93f89c25342882340586f4bebee6df7b9a0d73b254a05ab589df",
       "languages": [
         "it",
         "en",
@@ -821,7 +821,7 @@
     },
     "vouching": {
       "path": "vouching/course.json",
-      "sha256": "696115dd0fced752763e618c7f3aa74416cd98544dcd2c6ad48bb099069b882f",
+      "sha256": "d819188b3ed32aab20542cef36efa5a8892ecc62b89ce3b5337b59f8903ca6bc",
       "languages": [
         "it",
         "en",

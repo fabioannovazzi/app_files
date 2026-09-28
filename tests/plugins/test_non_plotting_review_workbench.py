@@ -35,7 +35,7 @@ const html = fs.readFileSync(process.argv[1], 'utf8');
 const config = JSON.parse(html.match(/const CONFIG = (.*);/)[1]);
 const escape = html.slice(html.indexOf('    function esc(value)'), html.indexOf('    const IT_METADATA_LABELS'));
 const formatting = html.slice(html.indexOf('    const JOURNAL_BANK_LABELS'), html.indexOf('    function reviewPayload()'));
-const renderer = html.slice(html.indexOf('    function valueForField(item, field)'), html.indexOf('    function evidenceHtml(item)'));
+const renderer = html.slice(html.indexOf('    function evidenceValueHtml(value)'), html.indexOf('    function evidenceHtml(item)'));
 const context = {CONFIG: config, activeLanguage: () => process.argv[2], IT_METADATA_LABELS: {},
  uiText: (key, fallback) => fallback, workflowText: (key, fallback) => fallback,
  groupTitle: group => group.title, groupEmpty: group => group.empty,

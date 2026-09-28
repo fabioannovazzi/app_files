@@ -29,7 +29,7 @@
   "sources": [
     {
       "path": "modules/concordato-plan-review/assets/concordato-plan-review-widget.html",
-      "sha256": "2e7c3dbcc3c4b004226bd147057b023e92587860d4b09c4e9bf397bbb0b07fe9"
+      "sha256": "e9d11140c77aefa190a71f8d61caae2aba74d76319d53f6b167a44f69c1486a6"
     },
     {
       "path": "modules/concordato-plan-review/assets/icon.svg",
@@ -498,5 +498,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ab2e363b344121ac2b847057b7488a7f870f14cd53702be086f62ed88962a6fe"
+  "canonical_course_sha256": "adfd273a0d05ee91e953ca4c6597b366983e24cead6c31457109266c197089c7"
 }

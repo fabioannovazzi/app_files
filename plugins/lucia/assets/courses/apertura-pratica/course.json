@@ -29,7 +29,7 @@
     {
       "path": "modules/apertura-pratica/assets/apertura-pratica-review-widget.html",
       "repository_path": "plugins/apertura-pratica/assets/apertura-pratica-review-widget.html",
-      "sha256": "28054d711ef9227453716efa50e3b9320b3ed9b1671e73e2f97b1fac1c54c6fa"
+      "sha256": "412c966d8c3e1f1602cf44b4111a1c94ece51cb603424d4e440c50c0ce691eb7"
     },
     {
       "path": "modules/apertura-pratica/assets/apertura-pratica-review.html",
@@ -44,7 +44,7 @@
     {
       "path": "modules/apertura-pratica/references/display-labels.json",
       "repository_path": "plugins/apertura-pratica/references/display-labels.json",
-      "sha256": "fdd1de77bb31ccb37889b7a2d6aaceb1075c0f7bbea5109e1002a25f6e093f1a"
+      "sha256": "22e8344797b3c7ddc79195ad2fd1f1b78ed38ee0bec9c53ee17ad7956f975cce"
     },
     {
       "path": "modules/apertura-pratica/references/source-registry.json",

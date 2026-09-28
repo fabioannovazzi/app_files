@@ -32,7 +32,7 @@
     },
     {
       "path": "modules/journal-sampling/assets/journal-sampling-review-widget.html",
-      "sha256": "6c252a857eb83d149f0954f4ccff08ec5ebc1968a94619570a8b0437affcab22"
+      "sha256": "30398b103d0424b7ea3e4b86a8b246a7ae46762d4362bb72547e9749ce31486f"
     },
     {
       "path": "modules/journal-sampling/assets/review-workbench-adapter.json",
@@ -421,5 +421,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "49b3c48027e6093b4f352aeb4a51bffc5c98d0d8630d92bc1725267db58c30ab"
+  "canonical_course_sha256": "ad82af077db6be94f291352a16006ebf4b04bf0929d4676e2ef4c1bb833bd73f"
 }

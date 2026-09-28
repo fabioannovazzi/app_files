@@ -4,7 +4,7 @@
   "courses": {
     "apertura-pratica": {
       "path": "apertura-pratica/course.json",
-      "sha256": "93d1e9d96befc0aae24fc5f3ca9ff7856d7174c0bdccb324ea6882f23f438378",
+      "sha256": "2546693c1038e8321d54a501b015b4f137f497d8ab25f895d733b4efe4698d62",
       "languages": [
         "it",
         "en",
