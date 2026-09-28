@@ -749,7 +749,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "dc28df269ab547bc85c1ad1ef0706af473f4ed1feda79697a1bbccc505a77989",
+      "sha256": "e5fce7de953327179ddc80c8099e5ebc698efc9e25d72de0ee94ce424b6e7989",
       "languages": [
         "it",
         "en",
