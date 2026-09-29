@@ -24,7 +24,7 @@
       {
         "id": "valuation-evidence-and-mandate",
         "purpose": "Interpret the mandate, financial evidence, source relevance, normalizations and method selection.",
-        "content": "Selected statements, schedules, plan sources, entity and personal information, rights, mandate, dates, normalized amounts, adjustments and private forecasts may be read by the selected model. The workflow keeps document/page/cell references, facts, assumptions and hypotheses. There is no automatic anonymization or enforced minimum-context projection. The model and professional decide relevance and method suitability.",
+        "content": "Selected statements, schedules, plan sources, entity and personal information, rights, mandate, dates, normalized amounts, adjustments and private forecasts may be read by the selected model. The workflow keeps document/page/cell references, facts, assumptions and hypotheses. There is no automatic anonymization or enforced minimum-context projection. The model and professional decide relevance and method suitability. The structured mandate may include commissioning parties, recipients, engagement/report dates, expert activity, declared competencies, conflicts of interest, class-specific rights, percentage bases, agreements and restrictions, including unavailable or unconfirmed fields. These are selected client/professional evidence, not automatically verified competence or independence.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -88,7 +88,7 @@
     "reviewed_at": "2026-09-29",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "7a3e28a719ce3d8411a64ac5e4cf7e0350e066d73150ebf5109b87a813ca1f65"
+    "source_fingerprint": "6b502bfc7a79dbcbfd1ee2cf3bfb74ee66243f27b5b0491ecfb93688923750f8"
   },
   "governed_repository_paths": [
     "plugins/clara/scripts/public_http.py"

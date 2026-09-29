@@ -28,7 +28,7 @@ Required top-level fields: `schema_version=vera.business_valuation.case.v1`,
 `case_id`, `entity_name`, `currency` (one ISO-style three-letter code), `audience`,
 `synthetic` (boolean), `mandate`, `sources`, `inputs`, `methods`, `limitations`.
 Optional fields: `conclusion`, `plan_binding`, `sensitivity`, `purpose_profile`,
-`normalizations`, `claims`.
+`normalizations`, `claims`, `mandate_details`.
 Unknown fields reject.
 All monetary/rate/multiple values are canonical decimal strings, with no thousands
 separator, exponent or implicit percent conversion. Rates are fractions. Missing
@@ -40,6 +40,47 @@ significant digits. Display rounding does not change stored results.
 YYYY-MM-DD. The professional interprets the mandate; software does not infer the
 governing law or edition of a standard from a date. A later permitted cutoff
 requires an explicit mandate explanation, not automatic historical availability.
+
+### Structured mandate and rights
+
+Prepare `mandate_details` from the selected evidence. Its required fields are
+`subject_type`, `engagement_date`, `report_date`, `commissioning_party`,
+`expert_activity`, `participant_perspective`, `recipients`, `use_restrictions`,
+`competencies`, `conflicts`, and `interests`; `review` is optional. Each of the
+first ten fields is a record with `value`, `status` (`confirmed` or `proposed`),
+`source_ids` and `locator`. Unknown values and locators are `null`, not invented
+text; empty references retain the missing evidence. Dates use YYYY-MM-DD and are
+distinct from the existing valuation date and information cutoff. The subject is
+explicitly `enterprise`, `business_unit`, `equity_interest` or `specific_right`.
+Dates do not automatically select a standard, governing law or permitted scope.
+
+Each `interests` record has an `id`, `description`, `ownership_input_id`,
+`ownership_basis`, `economic_rights`, `administrative_rights`, `statutes`,
+`agreements`, `restrictions`, `thresholds`, `source_ids`, `locator` and `status`.
+All descriptive fields may be null while evidence is missing. For an equity
+interest, bind an existing ratio input between zero and one and document its
+denominator. A specific nonpercentage right may leave `ownership_input_id` null
+with an explicit `ownership_basis`. Both equity interests and specific rights
+require a rights record. Do not sum unrelated classes or infer applicability from
+keywords. A declared absence or nonapplicability needs evidenced professional
+explanation; the engine does not judge its truth. No registered percentage,
+restriction or threshold automatically changes a method's amount.
+
+The result's `mandate_assessment` identifies missing or unconfirmed fields,
+unreviewed sources, exact dependencies and the actual local attestation. Missing
+details make the case partial while preserving independently valid calculations.
+Complete fields are ready for professional review, not automatically accepted.
+The standard explicit `review` binds the whole mandate, purpose, rights, referenced
+amounts and source metadata/hashes. Changes invalidate dependent method,
+normalization, claim and conclusion reviews. An unrelated numerical input does
+not invalidate the mandate. Recording only a new mandate reviewer preserves
+unchanged arithmetic dependencies but requires a new conclusion review.
+
+A complete-case/conclusion acceptance requires a current mandate attestation as
+well as its existing method and claim reviews. This does not authenticate the
+reviewer, qualify competence or independence, establish legal validity, activate
+a purpose profile or certify PIV compliance. HTML/MD/DOCX/PDF show the same fields
+as the `Incarico` workbook sheet, `mandate.json` and `professional_review.json`.
 
 `purpose_profile` records the model/professional's explicit semantic choice with
 `id`, `selection_reason`, nonempty `source_ids` and a mandate `locator`. Select

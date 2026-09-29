@@ -19,7 +19,7 @@
     {
       "id": "evidence",
       "path": "evidence.txt",
-      "sha256": "ccd06a63185e92c704bda45ef64bafb33be1524e9b0e56510e65b43fa844ecc0",
+      "sha256": "a4532c838c3cf91a8a9671d4029cf0fb41430199adc57f8197e72112a79a6d2b",
       "description": "Synthetic numerical fixture",
       "allowed_audiences": [
         "internal"
@@ -356,5 +356,88 @@
   ],
   "limitations": [
     "Esempio sintetico di sviluppo, non benchmark corrente."
-  ]
+  ],
+  "mandate_details": {
+    "subject_type": {
+      "value": "enterprise",
+      "status": "confirmed",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt: synthetic mandate"
+    },
+    "engagement_date": {
+      "value": "2026-09-29",
+      "status": "confirmed",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt: synthetic mandate"
+    },
+    "report_date": {
+      "value": "2027-01-15",
+      "status": "confirmed",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt: synthetic mandate"
+    },
+    "commissioning_party": {
+      "value": "Gruppo interno di prova inventato",
+      "status": "confirmed",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt: synthetic mandate"
+    },
+    "expert_activity": {
+      "value": "Preparazione di sole carte di lavoro sintetiche",
+      "status": "confirmed",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt: synthetic mandate"
+    },
+    "participant_perspective": {
+      "value": "Partecipante ipotetico senza sinergie quantificate",
+      "status": "confirmed",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt: synthetic mandate"
+    },
+    "recipients": {
+      "value": "Soli revisori interni della prova",
+      "status": "confirmed",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt: synthetic mandate"
+    },
+    "use_restrictions": {
+      "value": "Nessuna operazione, deposito o affidamento professionale",
+      "status": "confirmed",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt: synthetic mandate"
+    },
+    "competencies": {
+      "value": "Dichiarazione sintetica; nessuna qualifica reale verificata",
+      "status": "confirmed",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt: synthetic mandate"
+    },
+    "conflicts": {
+      "value": "Dichiarazione sintetica di assenza di interessi nel caso inventato; indipendenza reale non verificata",
+      "status": "confirmed",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt: synthetic mandate"
+    },
+    "interests": []
+  }
 }

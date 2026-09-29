@@ -33,11 +33,17 @@ professionally enabled. Specialist extensions remain part of the proposed scope.
 
 ## Additional functional gaps retained from the specification
 
-The current case contract has a free-text mandate and selected evidenced inputs.
-It does not yet provide dedicated structured fields for every mandate date,
-commissioning party, expert activity, market-participant perspective, conflicts,
-competencies, share-class instruments and restrictions. Supporting documents and
-the skill preserve these issues for review; that is not structured completion.
+The case contract now has structured, evidence-linked engagement/report dates,
+commissioning party, expert activity, participant perspective, recipients, use
+restrictions, competencies and conflicts. Rights records retain class/description,
+ownership basis, economic/administrative rights, statute, agreements, restrictions
+and thresholds. Nulls and unconfirmed evidence make the case partial while valid
+calculations remain visible. Explicit ratio inputs never automatically scale equity
+or apply discounts. A separate current mandate attestation is required before
+case/conclusion acceptance; data changes invalidate dependent reviews. Filled
+fields and local attestations do not establish legal validity, qualifications,
+independence, semantic adequacy or human identity. Those professional decisions
+and purpose-specific acceptance remain unfinished.
 
 The structured normalization journal now records year, line, signed amount,
 reason, source, accounting/economic explanations, tax treatment, reversibility
@@ -135,8 +141,24 @@ selected row, but remained `metadata_or_value_missing`: the table's displayed
 release date does not establish its exact observation date. No date or current
 parameter adoption was invented. That live evidence proves acquisition and
 parsing, not full historical availability, professional suitability or coverage
-of other providers. The full acceptance run now has 235 passing valuation and
-shared-transport tests at 93.35% component coverage.
+of other providers. The full acceptance run now has 264 passing valuation and
+shared-transport tests at 93.69% component coverage.
+
+Mandate acceptance covers missing fields, invalid dates, source/ownership
+references, rights without a percentage, missing/out-of-range proportions,
+review invalidation and untrusted export text. The synthetic 40% interest retains
+750 EUR enterprise-equity reference output rather than multiplying it. All 75
+calculation cells match an independent LibreOffice recalculation; 19 mandate data
+rows remain visible. All six DOCX and five native PDF pages of that example were
+inspected. Both final teaching cases retain their numerical indications and 18
+artifacts but are now explicitly partial because the note is not a complete
+engagement letter. All four DOCX and three native PDF pages per teaching case were
+inspected. This is mechanical and document QA, not professional acceptance.
+The three rebuilt Vera ZIP layouts reproduce all three complete report objects
+outside the repository, including their different mandate statuses. Fifteen
+governed source files per archive match byte-for-byte; 108 focused privacy,
+teaching and package/release checks pass. Full CI and installed acceptance remain
+separate requirements.
 
 ## Purpose coverage and release evidence
 

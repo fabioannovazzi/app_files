@@ -112,6 +112,9 @@
       },
       "minItems": 0,
       "maxItems": 2000
+    },
+    "mandate_details": {
+      "$ref": "#/$defs/mandateDetails"
     }
   },
   "additionalProperties": false,
@@ -479,13 +482,18 @@
         },
         "monthly_input_ids": {
           "type": "array",
-          "items": {"$ref": "#/$defs/id"},
+          "items": {
+            "$ref": "#/$defs/id"
+          },
           "minItems": 1,
           "maxItems": 60,
           "uniqueItems": true
         },
         "flow_frequency": {
-          "enum": ["annual", "monthly"]
+          "enum": [
+            "annual",
+            "monthly"
+          ]
         },
         "selected_periods": {
           "type": "array",
@@ -508,14 +516,36 @@
       "additionalProperties": false,
       "oneOf": [
         {
-          "required": ["annual_input_ids"],
-          "properties": {"flow_frequency": {"const": "annual"}},
-          "not": {"required": ["monthly_input_ids"]}
+          "required": [
+            "annual_input_ids"
+          ],
+          "properties": {
+            "flow_frequency": {
+              "const": "annual"
+            }
+          },
+          "not": {
+            "required": [
+              "monthly_input_ids"
+            ]
+          }
         },
         {
-          "required": ["flow_frequency", "monthly_input_ids", "selected_periods"],
-          "properties": {"flow_frequency": {"const": "monthly"}},
-          "not": {"required": ["annual_input_ids"]}
+          "required": [
+            "flow_frequency",
+            "monthly_input_ids",
+            "selected_periods"
+          ],
+          "properties": {
+            "flow_frequency": {
+              "const": "monthly"
+            }
+          },
+          "not": {
+            "required": [
+              "annual_input_ids"
+            ]
+          }
         }
       ]
     },
@@ -1289,6 +1319,298 @@
           }
         }
       ]
+    },
+    "mandateInterest": {
+      "type": "object",
+      "required": [
+        "description",
+        "ownership_basis",
+        "economic_rights",
+        "administrative_rights",
+        "statutes",
+        "agreements",
+        "restrictions",
+        "thresholds",
+        "locator",
+        "id",
+        "ownership_input_id",
+        "source_ids",
+        "status"
+      ],
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ownership_basis": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "economic_rights": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "administrative_rights": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "statutes": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "agreements": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "restrictions": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "thresholds": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "locator": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "ownership_input_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_ids": {
+          "$ref": "#/$defs/references"
+        },
+        "status": {
+          "enum": [
+            "confirmed",
+            "proposed"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "mandateDetails": {
+      "type": "object",
+      "required": [
+        "subject_type",
+        "engagement_date",
+        "report_date",
+        "commissioning_party",
+        "expert_activity",
+        "participant_perspective",
+        "recipients",
+        "use_restrictions",
+        "competencies",
+        "conflicts",
+        "interests"
+      ],
+      "properties": {
+        "subject_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/mandateField"
+            },
+            {
+              "properties": {
+                "value": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "enterprise",
+                        "business_unit",
+                        "equity_interest",
+                        "specific_right"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "engagement_date": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/mandateField"
+            },
+            {
+              "properties": {
+                "value": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/date"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "report_date": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/mandateField"
+            },
+            {
+              "properties": {
+                "value": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/date"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "commissioning_party": {
+          "$ref": "#/$defs/mandateField"
+        },
+        "expert_activity": {
+          "$ref": "#/$defs/mandateField"
+        },
+        "participant_perspective": {
+          "$ref": "#/$defs/mandateField"
+        },
+        "recipients": {
+          "$ref": "#/$defs/mandateField"
+        },
+        "use_restrictions": {
+          "$ref": "#/$defs/mandateField"
+        },
+        "competencies": {
+          "$ref": "#/$defs/mandateField"
+        },
+        "conflicts": {
+          "$ref": "#/$defs/mandateField"
+        },
+        "interests": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/mandateInterest"
+          },
+          "maxItems": 100
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        }
+      },
+      "additionalProperties": false
+    },
+    "mandateField": {
+      "type": "object",
+      "required": [
+        "value",
+        "status",
+        "source_ids",
+        "locator"
+      ],
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "confirmed",
+            "proposed"
+          ]
+        },
+        "source_ids": {
+          "$ref": "#/$defs/references"
+        },
+        "locator": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
     }
   }
 }

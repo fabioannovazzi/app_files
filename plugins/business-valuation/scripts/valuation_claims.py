@@ -36,6 +36,7 @@ def build_claims(
     methods: list,
     sensitivity: list,
     normalizations: dict,
+    mandate_dependency: str,
 ) -> list[dict]:
     """Preserve missing, inconsistent or unreviewed claims as explicit workpapers."""
     amounts = {row["id"]: row for row in calculations}
@@ -185,6 +186,7 @@ def build_claims(
                 "case_id": case["case_id"],
                 "entity_name": case["entity_name"],
                 "mandate": case["mandate"],
+                "mandate_details_sha256": mandate_dependency,
                 "audience": case["audience"],
                 "currency": case["currency"],
                 "synthetic": case["synthetic"],

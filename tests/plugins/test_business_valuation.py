@@ -162,6 +162,289 @@ def review(dependency: str) -> dict:
     }
 
 
+def rights_case() -> dict:
+    """Supply a fictional 40% interest without treating it as a valuation rule."""
+    case = case_data()
+    case["mandate"].update(
+        subject="Partecipazione ordinaria sintetica",
+        rights="40% di una classe inventata; nessuna rettifica automatica del valore",
+    )
+    case["mandate_details"]["subject_type"]["value"] = "equity_interest"
+    case["mandate_details"]["subject_type"].update(
+        source_ids=["rights"], locator="rights.txt: separate interest variant"
+    )
+    case["sources"].append(
+        {
+            **case["sources"][0],
+            "id": "rights",
+            "path": "rights.txt",
+            "description": "Fictional rights variant",
+            "sha256": hashlib.sha256((FIXTURE / "rights.txt").read_bytes()).hexdigest(),
+        }
+    )
+    case["inputs"].append(
+        {
+            **case["inputs"][2],
+            "id": "ownership",
+            "value": "0.4",
+            "description": "Invented 40% ordinary share interest",
+            "source_ids": ["rights"],
+            "locator": "rights.txt: percentage and denominator",
+        }
+    )
+    case["mandate_details"]["interests"] = [
+        {
+            "id": "ordinary",
+            "description": "Classe ordinaria sintetica",
+            "ownership_input_id": "ownership",
+            "ownership_basis": "40% della classe ordinaria; denominatore dichiarato nella prova",
+            "economic_rights": "Diritti economici inventati, nessuna preferenza stimata",
+            "administrative_rights": "Voto e poteri da giudicare separatamente",
+            "statutes": "Riferimento sintetico all'articolo 1",
+            "agreements": "Nessun patto nella prova inventata",
+            "restrictions": "Vincolo sintetico di trasferimento; nessuno sconto applicato",
+            "thresholds": "Nessuna soglia quantificata nella prova",
+            "source_ids": ["rights"],
+            "locator": "rights.txt: fictional instrument terms",
+            "status": "confirmed",
+        }
+    ]
+    return case
+
+
+def test_missing_structured_mandate_keeps_calculations_but_marks_case_partial() -> None:
+    case = case_data()
+    del case["mandate_details"]
+
+    result = build_valuation(case, FIXTURE)
+
+    assert result["status"] == "partial"
+    assert result["mandate_assessment"]["details"] is None
+    assert result["mandate_assessment"]["issues"]
+    assert Decimal(
+        next(x["value"] for x in result["calculations"] if x["id"] == "fcff/equity")
+    ) == Decimal("750")
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [("value", None), ("status", "proposed"), ("source_ids", []), ("locator", None)],
+)
+def test_mandate_unknown_or_unconfirmed_field_prevents_complete_case(
+    field: str, value: object
+) -> None:
+    case = case_data()
+    case["mandate_details"]["commissioning_party"][field] = value
+
+    result = build_valuation(case, FIXTURE)
+
+    assert result["mandate_assessment"]["status"] == "partial"
+    assert result["status"] == "partial"
+    assert result["methods"][0]["status"] == "ready_for_professional_review"
+
+
+@pytest.mark.parametrize("field", ["engagement_date", "report_date"])
+def test_mandate_date_schema_rejects_invalid_date_before_source_reads(
+    field: str, tmp_path: Path
+) -> None:
+    case = case_data()
+    case["mandate_details"][field]["value"] = "2026-02-30"
+    with pytest.raises(ValuationError, match="schema"):
+        build_valuation(case, tmp_path / "missing")
+
+
+def test_mandate_unresolved_evidence_is_rejected() -> None:
+    case = case_data()
+    case["mandate_details"]["conflicts"]["source_ids"] = ["absent"]
+    with pytest.raises(ValuationError, match="Unresolved mandate evidence"):
+        build_valuation(case, FIXTURE)
+
+
+def test_unreviewed_mandate_source_prevents_method_acceptance() -> None:
+    case = case_data()
+    case["sources"][0]["status"] = "unverified"
+    result = build_valuation(case, FIXTURE)
+    assert "Mandate source review pending" in result["mandate_assessment"]["issues"]
+    assert result["mandate_assessment"]["status"] == "partial"
+    assert result["methods"][0]["status"] == "partial"
+
+
+def test_rights_and_percentage_do_not_multiply_equity_or_infer_a_discount() -> None:
+    result = build_valuation(rights_case(), FIXTURE)
+    assert result["mandate_assessment"]["input_ids"] == ["ownership"]
+    assert result["mandate_assessment"]["status"] == "ready_for_professional_review"
+    assert Decimal(
+        next(x["value"] for x in result["calculations"] if x["id"] == "fcff/equity")
+    ) == Decimal("750")
+    assert "ownership" not in result["methods"][0]["input_ids"]
+
+
+@pytest.mark.parametrize("amount", [None, "-0.1", "1.1"])
+def test_unknown_or_out_of_range_ownership_remains_partial_without_changing_values(
+    amount: str | None,
+) -> None:
+    case = rights_case()
+    case["inputs"][-1]["value"] = amount
+    result = build_valuation(case, FIXTURE)
+    assert result["mandate_assessment"]["status"] == "partial"
+    assert result["methods"][0]["status"] == "ready_for_professional_review"
+
+
+@pytest.mark.parametrize(
+    "missing", ["interests", "ownership_input_id", "economic_rights"]
+)
+def test_equity_interest_requires_evidenced_rights_and_ownership(missing: str) -> None:
+    case = rights_case()
+    if missing == "interests":
+        case["mandate_details"]["interests"] = []
+    else:
+        case["mandate_details"]["interests"][0][missing] = None
+    result = build_valuation(case, FIXTURE)
+    assert result["mandate_assessment"]["status"] == "partial"
+
+
+def test_specific_right_can_have_explicit_nonpercentage_basis() -> None:
+    case = rights_case()
+    case["mandate_details"]["subject_type"]["value"] = "specific_right"
+    case["mandate_details"]["interests"][0].update(
+        ownership_input_id=None,
+        ownership_basis="Diritto contrattuale sintetico non espresso come quota di capitale",
+    )
+    result = build_valuation(case, FIXTURE)
+    assert result["mandate_assessment"]["status"] == "ready_for_professional_review"
+    assert result["mandate_assessment"]["input_ids"] == []
+
+
+@pytest.mark.parametrize("invalid", ["duplicate", "source", "input", "unit"])
+def test_rights_references_and_units_are_explicit(invalid: str) -> None:
+    case = rights_case()
+    item = case["mandate_details"]["interests"][0]
+    if invalid == "duplicate":
+        case["mandate_details"]["interests"].append(deepcopy(item))
+    elif invalid == "source":
+        item["source_ids"] = ["absent"]
+    elif invalid == "input":
+        item["ownership_input_id"] = "absent"
+    else:
+        case["inputs"][-1]["unit"] = "EUR"
+    with pytest.raises(
+        ValuationError,
+        match="Duplicate mandate interest|Unresolved rights evidence|Unresolved ownership input|Ownership requires",
+    ):
+        build_valuation(case, FIXTURE)
+
+
+@pytest.mark.parametrize("field", ["commissioning_party", "conflicts", "report_date"])
+def test_changed_mandate_revokes_review_and_dependent_method(field: str) -> None:
+    case = case_data()
+    initial = build_valuation(case, FIXTURE)
+    case["mandate_details"]["review"] = review(
+        initial["mandate_assessment"]["dependency_sha256"]
+    )
+    case["methods"][0]["review"] = review(initial["methods"][0]["dependency_sha256"])
+    case["mandate_details"][field]["value"] = (
+        "2027-02-01" if field == "report_date" else "Changed evidenced choice"
+    )
+    result = build_valuation(case, FIXTURE)
+    assert result["mandate_assessment"]["stale_review"] is True
+    assert result["methods"][0]["stale_review"] is True
+    assert result["methods"][0]["status"] == "ready_for_professional_review"
+
+
+def test_review_only_change_preserves_arithmetic_review_but_expires_conclusion() -> (
+    None
+):
+    case = reviewed_claimed_case()
+    case["conclusion"] = {
+        "text": "Synthetic conclusion",
+        "method_ids": ["fcff"],
+        "review": None,
+    }
+    before = build_valuation(case, FIXTURE)
+    case["conclusion"]["review"] = review(before["conclusion"]["dependency_sha256"])
+    case["mandate_details"]["review"]["reviewer"] = "A different synthetic reviewer"
+
+    result = build_valuation(case, FIXTURE)
+
+    assert result["mandate_assessment"]["status"] == "accepted_workpaper"
+    assert result["methods"][0]["status"] == "accepted_workpaper"
+    assert result["conclusion"]["status"] == "draft"
+
+
+def test_mandate_change_invalidates_direct_adjustment_and_claim_attestations() -> None:
+    case = reviewed_normalized_case()
+    case["claims"] = claimed_case()["claims"]
+    prepared = build_valuation(case, FIXTURE)
+    case["claims"][0]["review"] = review(prepared["claims"][0]["dependency_sha256"])
+    case["mandate_details"]["participant_perspective"][
+        "value"
+    ] = "Different explicit perspective"
+    result = build_valuation(case, FIXTURE)
+    assert result["normalizations"][0]["adjustments"][0]["stale_review"] is True
+    assert result["claims"][0]["stale_review"] is True
+
+
+def test_unrelated_numeric_input_does_not_invalidate_mandate_review() -> None:
+    case = case_data()
+    initial = build_valuation(case, FIXTURE)
+    case["mandate_details"]["review"] = review(
+        initial["mandate_assessment"]["dependency_sha256"]
+    )
+    case["inputs"][0]["value"] = "110"
+    result = build_valuation(case, FIXTURE)
+    assert result["mandate_assessment"]["status"] == "accepted_workpaper"
+
+
+def test_complete_case_requires_mandate_review_in_addition_to_method_and_conclusion() -> (
+    None
+):
+    case = case_data()
+    initial = build_valuation(case, FIXTURE)
+    case["methods"][0]["review"] = review(initial["methods"][0]["dependency_sha256"])
+    case["conclusion"] = {
+        "text": "Synthetic conclusion",
+        "method_ids": ["fcff"],
+        "review": None,
+    }
+    draft = build_valuation(case, FIXTURE)
+    case["conclusion"]["review"] = review(draft["conclusion"]["dependency_sha256"])
+    result = build_valuation(case, FIXTURE)
+    assert result["conclusion"]["status"] == "draft"
+    assert result["status"] == "ready_for_professional_review"
+
+
+def test_mandate_exports_preserve_rights_and_escape_untrusted_text(
+    tmp_path: Path,
+) -> None:
+    from openpyxl import load_workbook
+
+    case = rights_case()
+    case["mandate_details"]["interests"][0][
+        "agreements"
+    ] = '=1+1 <script>alert("x")</script>'
+    result = build_valuation(case, FIXTURE)
+    output = tmp_path / "exports"
+    write_package(result, FIXTURE, output)
+    workbook = load_workbook(output / "valuation_workbook.xlsx")
+    values = [
+        cell
+        for row in workbook["Incarico"]
+        for cell in row
+        if cell.value == '=1+1 <script>alert("x")</script>'
+    ]
+    assert len(values) == 1
+    assert values[0].data_type == "s"
+    assert "&lt;script&gt;" in (output / "valuation_report.html").read_text()
+    assert (
+        read_json(output / "mandate.json")["data"]["assessment"]
+        == result["mandate_assessment"]
+    )
+    assert (
+        read_json(output / "professional_review.json")["data"]["mandate"]
+        == result["mandate_assessment"]
+    )
+
+
 def normalized_case() -> dict:
     """Reconcile 90 reported plus 20 minus 10 to an unchanged 100-unit income."""
     case = case_data()
@@ -398,6 +681,9 @@ def reviewed_claimed_case() -> dict:
     """Prepare explicit synthetic method and claim attestations separately."""
     case = claimed_case()
     initial = build_valuation(case, FIXTURE)
+    case["mandate_details"]["review"] = review(
+        initial["mandate_assessment"]["dependency_sha256"]
+    )
     case["methods"][0]["review"] = review(initial["methods"][0]["dependency_sha256"])
     prepared = build_valuation(case, FIXTURE)
     case["claims"][0]["review"] = review(prepared["claims"][0]["dependency_sha256"])
@@ -1031,6 +1317,9 @@ def test_conclusion_acceptance_is_bound_to_its_exact_text(
 ) -> None:
     case = case_data()
     initial = build_valuation(case, FIXTURE)
+    case["mandate_details"]["review"] = review(
+        initial["mandate_assessment"]["dependency_sha256"]
+    )
     case["methods"][0]["review"] = review(initial["methods"][0]["dependency_sha256"])
     case["conclusion"] = {
         "text": "Synthetic conclusion",
@@ -1220,6 +1509,23 @@ def test_valuation_teaching_sources_run_the_bound_workflow(
     sources = [folder / "input/caso-it.md"]
     case = case_data()
     case["entity_name"] = "Officina Arco — esercizio sintetico"
+    # The teaching note is not a complete engagement letter: preserve unknowns.
+    case["mandate_details"] = {
+        key: {"value": None, "status": "proposed", "source_ids": [], "locator": None}
+        for key in case["mandate_details"]
+        if key != "interests"
+    }
+    case["mandate_details"]["interests"] = []
+    for key, value in (
+        ("subject_type", "enterprise"),
+        ("recipients", "Soli destinatari interni della lezione"),
+    ):
+        case["mandate_details"][key] = {
+            "value": value,
+            "status": "confirmed",
+            "source_ids": ["evidence"],
+            "locator": "caso-it.md: carte interne e intera attività operativa",
+        }
     case["purpose_profile"] = {
         "id": "strategy",
         "selection_reason": "La nota richiede un confronto interno su ipotesi didattiche, senza finalità legale.",
@@ -1276,7 +1582,8 @@ def test_valuation_teaching_sources_run_the_bound_workflow(
         else Decimal("583333.3333333333333333333333333333333333")
     )
     assert abs(amounts["fcff/equity"] - expected) < Decimal("0.000001")
-    assert report["status"] == "ready_for_professional_review"
+    assert report["status"] == "partial"
+    assert report["mandate_assessment"]["status"] == "partial"
     assert report["conclusion"] is None
     assert report["purpose_coverage"]["profile"]["id"] == "strategy"
     assert report["purpose_coverage"]["coverage"]["professional_use_enabled"] is False

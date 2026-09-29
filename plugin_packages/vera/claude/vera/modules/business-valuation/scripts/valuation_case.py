@@ -368,7 +368,7 @@ def _bind_normalizations(result: dict, groups: dict) -> list[dict]:
     return dependent
 
 
-def _conclusion(case: dict, active: list, claims: list) -> dict | None:
+def _conclusion(case: dict, active: list, claims: list, mandate: dict) -> dict | None:
     """Bind separately reviewed prose to its selected methods and explicit claims."""
     candidate = case.get("conclusion")
     if not candidate:
@@ -402,6 +402,7 @@ def _conclusion(case: dict, active: list, claims: list) -> dict | None:
             "methods": dependencies,
             "claims": [by_claim[key] for key in claim_ids],
             "limitations": case["limitations"],
+            "mandate_assessment": mandate,
         }
     )
     accepted = (
@@ -411,6 +412,7 @@ def _conclusion(case: dict, active: list, claims: list) -> dict | None:
         )
         and all(by_claim[key]["status"] == "accepted_workpaper" for key in claim_ids)
         and reviewed(candidate["review"], conclusion_hash)
+        and mandate["status"] == "accepted_workpaper"
     )
     return {
         **candidate,
@@ -449,6 +451,7 @@ def build_valuation(
             "purpose_profile",
             "normalizations",
             "claims",
+            "mandate_details",
         },
     )
     require(case["schema_version"] == CASE_SCHEMA, "Unsupported valuation case schema")
@@ -490,9 +493,14 @@ def build_valuation(
 
         validate_benchmark_bindings(case, sources, source_root)
     purpose = _purpose(case, sources)
+    from valuation_mandate import build_mandate
+
+    mandate_assessment = build_mandate(case, inputs, sources)
     from valuation_normalization import build_normalizations
 
-    normalizations, calculations = build_normalizations(case, inputs, sources)
+    normalizations, calculations = build_normalizations(
+        case, inputs, sources, mandate_assessment["dependency_sha256"]
+    )
     plan_bridge = None
     if "plan_binding" in case:
         require(
@@ -504,7 +512,7 @@ def build_valuation(
         plan_bridge = bridge_plan(case, source_root, replay_parent)
     methods = indexed(case["methods"])
     require(bool(methods), "Select or explicitly exclude valuation methods")
-    outputs, issues = [], []
+    outputs, issues = [], list(mandate_assessment["issues"])
     for group in normalizations.values():
         if group["status"] != "accepted_workpaper":
             issues.append(
@@ -567,6 +575,7 @@ def build_valuation(
         source_ids = sorted(
             {ref for key in used for ref in inputs[key]["source_ids"]}
             | set((purpose["selection"] or {}).get("source_ids", []))
+            | set(mandate_assessment["source_ids"])
             | {ref for group in dependent_normalizations for ref in group["source_ids"]}
         )
         if dependent_bridge:
@@ -578,6 +587,7 @@ def build_valuation(
                 "case_id": case["case_id"],
                 "entity_name": case["entity_name"],
                 "mandate": mandate,
+                "mandate_details_sha256": mandate_assessment["dependency_sha256"],
                 "purpose": purpose,
                 "currency": case["currency"],
                 "audience": case["audience"],
@@ -698,14 +708,21 @@ def build_valuation(
     from valuation_claims import build_claims
 
     claims = build_claims(
-        case, inputs, sources, calculations, outputs, sensitivity, normalizations
+        case,
+        inputs,
+        sources,
+        calculations,
+        outputs,
+        sensitivity,
+        normalizations,
+        mandate_assessment["dependency_sha256"],
     )
     for claim in claims:
         if claim["status"] in {"blocked", "partial"}:
             issues.append(
                 f"Claim {claim['id']}: {'; '.join(claim['issues']) or 'evidence review pending'}"
             )
-    conclusion = _conclusion(case, active, claims)
+    conclusion = _conclusion(case, active, claims, mandate_assessment)
     status = "partial" if issues else "ready_for_professional_review"
     if all(row["status"] == "blocked" for row in active):
         status = "blocked"
@@ -713,6 +730,7 @@ def build_valuation(
         not issues
         and conclusion
         and conclusion["status"] == "accepted_workpaper"
+        and mandate_assessment["status"] == "accepted_workpaper"
         and all(claim["status"] == "accepted_workpaper" for claim in claims)
     ):
         status = "accepted_workpaper"
@@ -728,6 +746,7 @@ def build_valuation(
         "conclusion": conclusion,
         "issues": issues,
         "purpose_coverage": purpose,
+        "mandate_assessment": mandate_assessment,
         "normalizations": list(normalizations.values()),
         "claims": claims,
         "claim_registry_status": "explicit_bindings" if claims else "not_supplied",

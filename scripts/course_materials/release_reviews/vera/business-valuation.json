@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-valuation",
-  "course_sha256": "870360fab80631e111e2fdc4808bf573e5f9505735b7e79738967d3ac2365329",
+  "course_sha256": "5e0bb0643c5a9559820ff5efd2574417963f3e5ab9449c357b3e7c54c76a7b01",
   "reviewer": "Codex /root: source, calculation and document review",
-  "reviewed_at": "2026-09-29T20:40:10.735452+00:00",
+  "reviewed_at": "2026-09-29T21:03:18.112278+00:00",
   "review_scope": "Read both fictional notes and the entire Italian lesson. Ran the real bound workflow for demo and practice, inspected their Markdown reports and calculation registers. Seven-method DOCX was rendered and all four pages inspected; LibreOffice independently recalculated all 75 workbook calculation cells. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior is an instruction and separate archive contract, not claimed as a live learner test.",
   "languages": {
     "it": {
@@ -13,21 +13,21 @@
         "purpose_and_first_use": "The lesson explains mandate, sources, hypotheses, a DCF FCFF and the equity bridge before changing a rate. It labels all inputs as fictional and workpapers as requiring review.",
         "inputs_and_request": "One readable note supplies 100000 EUR annual and terminal FCFF, a 10% rate, zero growth, 300000 debt and 50000 excess cash. The prompt asks for a confirmation table before execution; it does not require the learner to author JSON or approve a precomputed result.",
         "execution_and_checkpoints": "The native runner used exact imported source receipts and a business-valuation context for both cases. Checkpoints ask the learner to identify assumptions and follow a bridge amount to its source. Test confirmations are synthetic fixtures, not evidence of user approval.",
-        "deliverable_and_next_action": "Both inspected reports distinguish operating value and equity, state the terminal share and preserve limitations, source hashes and no conclusion acceptance. The lesson opens HTML and the formula workbook and explains their use.",
+        "deliverable_and_next_action": "Both inspected reports distinguish operating value and equity, preserve terminal share and source hashes, and identify unavailable mandate fields. The updated lesson points to the Incarico worksheet and explains that arithmetic does not complete an engagement letter. No mandate or conclusion approval is invented.",
         "practice_and_repeat": "The separate practice note changes both rates to 12% while retaining all other assumptions. The result changes as expected; the lesson directs a separate revision and explains review invalidation. Ordinary tests also verify dependency-bound review and immutable/idempotent exports.",
         "language_and_pacing": "The complete guide and source notes are Italian, matching the fixed Italian output renderer. Six stages total 390 seconds; processing and questions may extend this. No claim about actual live teaching duration or comprehension."
       },
       "demo": {
         "test_case": "tests.plugins.test_business_valuation::test_valuation_teaching_sources_run_the_bound_workflow[demo]",
-        "result_review": "Operating value 1000000 EUR and equity 750000 EUR at 10%; terminal share 90.91%. Report states review pending and no accepted conclusion; the rate source is preserved. The current output explicitly records the Strategy and governance profile as development workpapers only, with professional use disabled.",
+        "result_review": "Operating value 1000000 EUR and equity 750000 EUR at 10%; terminal share 90.91%. Report now states incomplete because eight mandate fields are unavailable; the numerical method remains review-pending and no conclusion is accepted; the rate source is preserved. The current output explicitly records the Strategy and governance profile as development workpapers only, with professional use disabled.",
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "4bdefd31a7f71d9cc6a680d149537cb9faae518e30936189b25e17856da645e2"
+            "sha256": "8972a1267a81a666c077109a210fafa362fe284301a5d5d69eb0b67d2376bd8b"
           },
           {
             "name": "valuation.json",
-            "sha256": "a43a47f2309472a0ae1831396a627dae73c69e2bb86e26ff6d82cc793fae5d64"
+            "sha256": "5d8b6a9ccfcafe6d5af3d76119bda90af10fbdbf1eee71bca249891c71bf2d4f"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -118,20 +118,33 @@
                 "sha256": "0316cc5c243d6b23c74a1b36d7a308b711598d1e9549a6703b45f517d73bd02a"
               }
             ]
+          },
+          {
+            "reviewed_at": "2026-09-29T20:40:10.735452+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "4bdefd31a7f71d9cc6a680d149537cb9faae518e30936189b25e17856da645e2"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "a43a47f2309472a0ae1831396a627dae73c69e2bb86e26ff6d82cc793fae5d64"
+              }
+            ]
           }
         ]
       },
       "practice": {
         "test_case": "tests.plugins.test_business_valuation::test_valuation_teaching_sources_run_the_bound_workflow[practice]",
-        "result_review": "Operating value 833333.33 EUR and equity 583333.33 EUR at 12%; terminal share 89.29%. Report states review pending and no accepted conclusion; the rate source is preserved. The current output explicitly records the Strategy and governance profile as development workpapers only, with professional use disabled.",
+        "result_review": "Operating value 833333.33 EUR and equity 583333.33 EUR at 12%; terminal share 89.29%. Report now states incomplete because eight mandate fields are unavailable; the numerical method remains review-pending and no conclusion is accepted; the rate source is preserved. The current output explicitly records the Strategy and governance profile as development workpapers only, with professional use disabled.",
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "443b6f4c674cd5147b807fe1dcd4105c358b8177f47c82eb4cda4ddb70d8099b"
+            "sha256": "7d2d70534bddea93c31e85afe0edfd093a49f48a329dbe73fa649eb10d18ba2a"
           },
           {
             "name": "valuation.json",
-            "sha256": "84bad7a3243bfadff979c3670b448df36594ea179583a7f4922ff69ba2bf0791"
+            "sha256": "1ffd8e525dd2c51f3e92c316d34d2b1e078a8d5f047aa2f16e503d5b5596d794"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -222,6 +235,19 @@
                 "sha256": "715dca4e34a54054920e026dc5d0f83f3734abe9d2841a570e95e3a1755706ed"
               }
             ]
+          },
+          {
+            "reviewed_at": "2026-09-29T20:40:10.735452+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "443b6f4c674cd5147b807fe1dcd4105c358b8177f47c82eb4cda4ddb70d8099b"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "84bad7a3243bfadff979c3670b448df36594ea179583a7f4922ff69ba2bf0791"
+              }
+            ]
           }
         ]
       }
@@ -271,5 +297,12 @@
     "artifact_review": "LibreOffice independently recalculated 255 calculation, monthly bridge and linked-input cells across the final monthly and annual examples, all matching at 1e-12 relative / 1e-9 absolute tolerance. All six DOCX and five native PDF pages per example were visually inspected. The final Word contents match the rendered documents exactly; PDF headings remain with following text. Formula workbooks expose opening/closing stocks, tax links and monthly or annual flow links.",
     "privacy_review": "The extension changes local plan selection, formula lineage and report content. Existing plan evidence, assumptions and rendered outputs may be read in the selected host model context. It adds no external recipient or network call.",
     "previous_reviewed_at": "2026-09-29T19:59:46.447104+00:00"
+  },
+  "mandate_review": {
+    "scope": "Reviewed the structured mandate and rights contract, explicit source/ratio bindings and separate local mandate attestation. A missing field stays null; missing or unreviewed information marks the whole case partial while preserving independent arithmetic. Complete-case/conclusion acceptance requires a current mandate review. Changed mandate dependencies invalidate methods, adjustments, claims and conclusion; changing only the mandate reviewer preserves arithmetic reviews and expires conclusion review. No legal suitability, competence, independence or authenticated identity is inferred.",
+    "tests": "264 valuation/acquisition/shared-transport tests pass at 93.69% component coverage. Twelve scripts pass Mypy, Black, isort and Bandit; mandate references, unknowns, date shape, ownership bounds, invalidation and literal/escaped exports are covered.",
+    "artifact_review": "The separate synthetic 40% interest retains 750 EUR equity reference output without automatic multiplication. LibreOffice matches all 75 calculation cells; 19 mandate data rows remain visible. All six DOCX and five native PDF pages were inspected. Both final annual teaching reports were read fully and their final localization delta reviewed; all four DOCX and three native PDF pages per case were visually inspected. Each native run retains 18 artifacts and the expected 750000 / 583333.33 EUR indication. Both cases now remain partial because the note lacks eight structured mandate answers.",
+    "privacy_review": "Structured commissioning, competence, conflict and rights evidence may be read by the selected host model, with source identities and local review records. The feature adds local records and output fields only; no new recipient, API, external request or authorization to publish.",
+    "previous_reviewed_at": "2026-09-29T20:40:10.735452+00:00"
   }
 }

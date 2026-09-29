@@ -25,7 +25,7 @@
       {
         "id": "valuation-evidence-and-mandate",
         "purpose": "Interpret the mandate, financial evidence, source relevance, normalizations and method selection.",
-        "content": "Selected statements, schedules, plan sources, entity and personal information, rights, mandate, dates, normalized amounts, adjustments and private forecasts may be read by the selected model. The workflow keeps document/page/cell references, facts, assumptions and hypotheses. There is no automatic anonymization or enforced minimum-context projection. The model and professional decide relevance and method suitability.",
+        "content": "Selected statements, schedules, plan sources, entity and personal information, rights, mandate, dates, normalized amounts, adjustments and private forecasts may be read by the selected model. The workflow keeps document/page/cell references, facts, assumptions and hypotheses. There is no automatic anonymization or enforced minimum-context projection. The model and professional decide relevance and method suitability. The structured mandate may include commissioning parties, recipients, engagement/report dates, expert activity, declared competencies, conflicts of interest, class-specific rights, percentage bases, agreements and restrictions, including unavailable or unconfirmed fields. These are selected client/professional evidence, not automatically verified competence or independence.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -89,6 +89,6 @@
     "reviewed_at": "2026-09-29",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "f912d50b99cd93590a311ba6fb10cc988ed551d1b51e074c255dd92e5482550e"
+    "source_fingerprint": "c0b7f894e7269fdacd7b4791baa0dc5cc73ef5f8e38b211e4ddb865b807238b9"
   }
 }

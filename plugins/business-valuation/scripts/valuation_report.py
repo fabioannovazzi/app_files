@@ -52,6 +52,32 @@ CLAIM_LABELS = {
     "hypothesis": "Ipotesi",
     "opinion": "Giudizio",
 }
+MANDATE_LABELS = {
+    "subject_type": "Oggetto dell'incarico",
+    "engagement_date": "Data dell'incarico",
+    "report_date": "Data della relazione",
+    "commissioning_party": "Soggetto conferente",
+    "expert_activity": "Attività richiesta all'esperto",
+    "participant_perspective": "Prospettiva del partecipante",
+    "recipients": "Destinatari dichiarati",
+    "use_restrictions": "Limitazioni d'uso",
+    "competencies": "Competenze dichiarate e verifiche",
+    "conflicts": "Interessi e conflitti dichiarati",
+    "description": "Strumento o classe",
+    "ownership_basis": "Base della percentuale o motivo di non applicabilità",
+    "economic_rights": "Diritti patrimoniali",
+    "administrative_rights": "Diritti amministrativi",
+    "statutes": "Statuto",
+    "agreements": "Patti",
+    "restrictions": "Vincoli",
+    "thresholds": "Soglie",
+}
+SUBJECT_LABELS = {
+    "enterprise": "Azienda",
+    "business_unit": "Ramo d'azienda",
+    "equity_interest": "Partecipazione",
+    "specific_right": "Diritto specifico",
+}
 
 
 def display(value: str, places: int = 2) -> str:
@@ -62,6 +88,103 @@ def display(value: str, places: int = 2) -> str:
 def _method_label(kind: str) -> str:
     """Keep unsupported methods visible in partial reports."""
     return METHOD_LABELS.get(kind, f"Metodo non supportato: {kind}")
+
+
+def _mandate_rows(report: dict) -> list[tuple[str, str, str, str, str]]:
+    """Keep the same evidence-linked mandate fields in prose and workbook."""
+    details = report["mandate_assessment"]["details"]
+    if details is None:
+        return [("Scheda dell'incarico", "Da acquisire", "Incompleta", "", "")]
+    rows = []
+    for key, item in details.items():
+        if key in {"review", "interests"}:
+            continue
+        value = item["value"]
+        if key == "subject_type" and value is not None:
+            value = SUBJECT_LABELS[value]
+        rows.append(
+            (
+                MANDATE_LABELS[key],
+                value if value is not None else "Da acquisire",
+                "Confermato" if item["status"] == "confirmed" else "Da confermare",
+                ", ".join(item["source_ids"]),
+                item["locator"] or "Posizione da acquisire",
+            )
+        )
+    inputs = {row["id"]: row for row in report["case"]["inputs"]}
+    for item in details["interests"]:
+        status = "Confermato" if item["status"] == "confirmed" else "Da confermare"
+        refs, locator = (
+            ", ".join(item["source_ids"]),
+            item["locator"] or "Posizione da acquisire",
+        )
+        for key in (
+            "description",
+            "ownership_basis",
+            "economic_rights",
+            "administrative_rights",
+            "statutes",
+            "agreements",
+            "restrictions",
+            "thresholds",
+        ):
+            rows.append(
+                (
+                    f"{item['id']} · {MANDATE_LABELS[key]}",
+                    item[key] if item[key] is not None else "Da acquisire",
+                    status,
+                    refs,
+                    locator,
+                )
+            )
+        ref = item["ownership_input_id"]
+        if ref is not None:
+            amount = inputs[ref]
+            shown = (
+                "Da acquisire"
+                if amount["value"] is None
+                else f"{display(str(decimal(amount['value']) * 100))}% [{ref}]"
+            )
+            rows.append(
+                (
+                    f"{item['id']} · Percentuale",
+                    shown,
+                    (
+                        "Confermato"
+                        if amount["status"] == "confirmed"
+                        else "Da confermare"
+                    ),
+                    ", ".join(amount["source_ids"]),
+                    amount["locator"],
+                )
+            )
+    return rows
+
+
+def _readable_issues(report: dict) -> list[str]:
+    """Translate the fixed mandate diagnostics without interpreting supplied prose."""
+    translated = {
+        "Structured mandate details have not been collected": "Scheda dell'incarico non ancora acquisita.",
+        "Selected subject requires an explicit rights record": "L'oggetto selezionato richiede una scheda dei diritti.",
+        "Mandate source review pending": "Le fonti dell'incarico richiedono ancora revisione.",
+    }
+    for key, label in MANDATE_LABELS.items():
+        translated[f"Mandate {key}: evidence or confirmation pending"] = (
+            f"{label}: evidenza o conferma da acquisire."
+        )
+    reasons = {
+        "evidence or confirmation pending": "evidenza o conferma da acquisire",
+        "ownership ratio missing": "percentuale di partecipazione da acquisire",
+        "ownership evidence pending": "evidenza sulla percentuale da confermare",
+        "ownership ratio outside zero to one": "percentuale fuori dall'intervallo tra 0% e 100%",
+    }
+    details = report["mandate_assessment"]["details"]
+    for item in (details or {}).get("interests", []):
+        for reason, shown in reasons.items():
+            translated[f"Rights {item['id']}: {reason}"] = (
+                f"Diritti {item['id']}: {shown}."
+            )
+    return [translated.get(issue, issue) for issue in report["issues"]]
 
 
 def report_sections(report: dict) -> list[tuple[str, list[str]]]:
@@ -89,6 +212,20 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
             ],
         )
     ]
+    assessment = report["mandate_assessment"]
+    mandate_rows = [f"Revisione dell'incarico: {STATUS[assessment['status']]}"]
+    for label, value, state, refs, locator in _mandate_rows(report):
+        mandate_rows.append(f"{label}: {value} · {state}")
+        if refs or locator:
+            mandate_rows.append(f"Fonti: {refs or 'da acquisire'} · {locator}")
+    if assessment["stale_review"]:
+        mandate_rows.append(
+            "La precedente revisione dell'incarico non vale per queste dipendenze."
+        )
+    mandate_rows.append(
+        "Competenze, indipendenza, idoneità dell'incarico e significato dei diritti richiedono giudizio professionale. Le percentuali registrate non moltiplicano automaticamente il valore e non determinano premi o sconti."
+    )
+    sections.append(("Scheda dell'incarico", mandate_rows))
     purpose = report["purpose_coverage"]
     profile = purpose["profile"]
     sections.append(
@@ -309,7 +446,7 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
             [
                 mandate["professional_limitations"],
                 *case["limitations"],
-                *report["issues"],
+                *_readable_issues(report),
                 "Il DCF usa anni interi a fine anno salvo calendario esplicito del metodo. Gli importi dei periodi parziali o mensili devono essere forniti: non sono riproporzionati automaticamente. Il metodo misto resta annuale.",
                 "La registrazione del revisore è una dichiarazione locale, non autenticazione dell'identità o firma professionale.",
             ],
@@ -423,6 +560,17 @@ def write_workbook(path: Path, report: dict) -> None:
     inputs = workbook.create_sheet("Dati")
     calculations = workbook.create_sheet("Calcoli")
     sources = workbook.create_sheet("Fonti")
+    mandate_sheet = workbook.create_sheet("Incarico")
+    mandate_sheet.append(["Campo", "Valore", "Stato", "Fonti", "Posizione"])
+    mandate_sheet.append(
+        ["Revisione dell'incarico", STATUS[report["mandate_assessment"]["status"]]]
+    )
+    for row in _mandate_rows(report):
+        mandate_sheet.append(row)
+    for row in mandate_sheet:
+        for cell in row:
+            if cell.value is not None:
+                _literal(cell, str(cell.value))
     summary.append(["Valutazione d'impresa", report["case"]["entity_name"]])
     summary.append(["Stato", STATUS[report["status"]]])
     summary.append(["Uso", NOTICE])
@@ -681,6 +829,8 @@ def write_workbook(path: Path, report: dict) -> None:
         workbook["Piano FCFF"].column_dimensions["B"].width = 24
         workbook["Piano FCFF"].column_dimensions["J"].width = 28
         workbook["Piano FCFF"].column_dimensions["K"].width = 54
+    mandate_sheet.column_dimensions["B"].width = 80
+    mandate_sheet.column_dimensions["E"].width = 60
     workbook.save(path)
 
 
@@ -690,6 +840,7 @@ def _write_workpapers(directory: Path, report: dict) -> None:
     workpapers = {
         "mandate": {
             "mandate": case["mandate"],
+            "assessment": report["mandate_assessment"],
             "purpose_coverage": report["purpose_coverage"],
         },
         "evidence": {"sources": case["sources"], "inputs": case["inputs"]},
@@ -714,6 +865,7 @@ def _write_workpapers(directory: Path, report: dict) -> None:
         "professional_review": {
             "status": report["status"],
             "identity": report["review_identity"],
+            "mandate": report["mandate_assessment"],
             "methods": [
                 {
                     "method_id": row["method_id"],

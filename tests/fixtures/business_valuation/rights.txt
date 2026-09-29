@@ -1,0 +1,9 @@
+Synthetic extension to the numerical development fixture only.
+For this separate variant the requested subject is an invented ordinary-class
+equity interest: 40% of that class, with no automatic multiplication of enterprise
+or equity value. The full enterprise calculations remain reference workpapers.
+Economic rights are invented and no preference is priced. Voting powers need
+separate interpretation. A synthetic article 1 is the statute reference; no
+shareholder agreement or quantified threshold is supplied in this invented case.
+An invented transfer restriction is recorded without applying a discount.
+These are test hypotheses, not real instruments or professional legal findings.

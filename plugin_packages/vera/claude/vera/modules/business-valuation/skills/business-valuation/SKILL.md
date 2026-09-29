@@ -120,6 +120,19 @@ Record conflicts, restrictions and legal-purpose questions. Research governing
 standards and purpose-specific law through Vera's validated-answer journey when
 needed; the calculation engine does not qualify those matters.
 
+Prepare the structured `mandate_details`: distinguish engagement and report dates
+from valuation date and information cutoff; identify commissioning party, expert
+activity, participant perspective, recipients, use restrictions, competencies and
+conflicts. Bind each supplied answer to evidence and a locator; leave unavailable
+answers null and proposed. For interests or specific rights, describe each class,
+economic/administrative rights, statute, agreements, restrictions and thresholds.
+Bind any ownership ratio and explain its denominator; a percentage alone does not
+value a right. Never silently scale equity or apply discounts. Show missing facts
+in the report and `Incarico` worksheet. Record a mandate review only after an
+explicit professional decision; case/conclusion acceptance requires this separate
+current attestation. Competence and independence are not inferred from filled
+fields or an unauthenticated reviewer name.
+
 Read `references/purpose-profiles.json`. Choose one of its 21 profiles through
 semantic reasoning, record the reason and mandate source in `purpose_profile`,
 and use `custom` for an unlisted purpose. Explain the profile's intake focus in

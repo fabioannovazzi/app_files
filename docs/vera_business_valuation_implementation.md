@@ -54,7 +54,7 @@ formula comparisons; report rendering; privacy coverage and package parity.
 
 Local evidence on 29 September 2026:
 
-- 235 valuation/acquisition/shared-transport regressions pass; component coverage is 93.35%. These exercise
+- 264 valuation/acquisition/shared-transport regressions pass; component coverage is 93.69%. These exercise
   all seven methods, failure preservation, review/conclusion freshness, exact
   receipts, annual and selected-month plan replay, all 21 explicit purpose intake routes and real
   native lesson input runs. Purpose routing tests do not enable professional use.
@@ -91,8 +91,28 @@ Local evidence on 29 September 2026:
   claims remain visible without changing valid calculations. The named JSON
   workpapers project the same report hash; the helper exports 18 artifacts and
   does not fabricate the host's model-data reports.
-- Mypy passes for all eleven scripts; Bandit reports no findings. Formatting and
+- Mypy passes for all twelve scripts; Bandit reports no findings. Formatting and
   import-order checks pass.
+- Structured mandate fields now preserve the commissioning party, distinct dates,
+  expert activity, perspective, recipients, restrictions, competencies, conflicts
+  and class-specific rights with their evidence. Missing values remain null and
+  make the case partial. A separate current mandate attestation is required for
+  conclusion/case acceptance and changes invalidate dependent reviews. A synthetic
+  40% right does not scale the 750 EUR equity reference result. LibreOffice matches
+  all 75 calculation cells; the workbook retains 19 readable mandate data rows.
+  All six DOCX and five native PDF pages of this example were inspected. Both
+  fresh teaching cases preserve their 750,000 / 583,333.33 EUR indications and 18
+  artifacts, now with partial status because eight mandate fields are absent from
+  the supplied note. All four DOCX and three native PDF pages per lesson output
+  were inspected. No real expert competence, independence or case approval is
+  inferred. Evidence is in `outputs/vera-valuations-discord/mandate-acceptance`.
+- After the mandate extension, all three rebuilt Vera package layouts contain
+  fifteen byte-identical Python/schema/transport files. The extracted compilers
+  replay the rights example and both partial teaching cases outside the
+  repository with identical complete reports: nine successful case replays.
+  All 108 focused privacy, teaching and package/release checks pass. Evidence is
+  retained in `mandate-package-verification.json`; these checks do not establish
+  installed-host acceptance or replace the outstanding release gates.
 - The bundled JSON Schema validates the case envelope before nested-source reads
   and individual selected-method payloads inside partial-workpaper diagnostics.
 - The versioned NYU country-risk HTML adapter follows observed links, preserves

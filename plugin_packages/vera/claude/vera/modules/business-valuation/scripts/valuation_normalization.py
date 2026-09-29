@@ -14,7 +14,9 @@ from valuation_engine import Ledger, ValuationError
 __all__ = ["build_normalizations", "normalization_dependencies"]
 
 
-def build_normalizations(case: dict, inputs: dict, sources: dict) -> tuple[dict, list]:
+def build_normalizations(
+    case: dict, inputs: dict, sources: dict, mandate_dependency: str
+) -> tuple[dict, list]:
     """Keep reported, signed changes and asserted adjusted values independently."""
     groups = indexed(case.get("normalizations", []))
     targets: set[str] = set()
@@ -112,6 +114,7 @@ def build_normalizations(case: dict, inputs: dict, sources: dict) -> tuple[dict,
                     "case_id": case["case_id"],
                     "entity_name": case["entity_name"],
                     "mandate": case["mandate"],
+                    "mandate_details_sha256": mandate_dependency,
                     "currency": case["currency"],
                     "audience": case["audience"],
                     "synthetic": case["synthetic"],
