@@ -3880,8 +3880,8 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         in page
     )
     assert "data-vera-install-link" in page
-    assert 'href="downloads/vera-cowork-plugin.zip"' in page
-    assert "data-vera-cowork-download-link" in page
+    assert 'href="../cowork-downloads/index.html?lang=it"' in page
+    assert "data-cowork-guide-link" in page
     for localized_title in (
         "Installazione",
         "Installation",
@@ -3905,11 +3905,11 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
     ):
         assert localized_chatgpt_button in page
     for localized_cowork_button in (
-        "Scarica per Claude Cowork",
-        "Download for Claude Cowork",
-        "Télécharger pour Claude Cowork",
-        "Für Claude Cowork herunterladen",
-        "Descargar para Claude Cowork",
+        "Vai al marketplace Cowork",
+        "Go to Cowork marketplace",
+        "Aller au marketplace Cowork",
+        "Zum Cowork-Marketplace",
+        "Ir al marketplace de Cowork",
     ):
         assert localized_cowork_button in page
     for stale_snippet in (
@@ -5071,11 +5071,11 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "Installa Clara per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.",
         "Install for ChatGPT Work and Codex",
         "Installa per ChatGPT Work e Codex",
-        "Download for Claude Cowork",
-        "Scarica per Claude Cowork",
+        "Go to Cowork marketplace",
+        "Vai al marketplace Cowork",
         "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57b17fb5848191be710192d93fe03a",
         "data-clara-install-link",
-        "data-clara-cowork-download-link",
+        "data-cowork-guide-link",
         "data-function-link",
         "/?lang=${safeLang}",
     ):
@@ -5119,10 +5119,7 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "data-pro-download-link",
         "data-clara-download-link",
         "/downloads/clara",
-        "Download ZIP",
         "Scarica lo ZIP",
-        "Télécharger le ZIP",
-        "ZIP herunterladen",
         "manual fallback",
         "alternativa manuale",
         "Pro Plugin Pack",
@@ -5154,9 +5151,10 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         'data-i18n="install.button">Install for ChatGPT Work and Codex</a>'
     ) in page
     assert (
-        '<a class="button" href="downloads/clara-cowork-plugin.zip" download '
-        'data-clara-cowork-download-link data-i18n="install.coworkButton">'
-        "Download for Claude Cowork</a>"
+        '<button class="button" type="button" disabled '
+        'aria-describedby="cowork-marketplace-status" '
+        'data-cowork-marketplace-pending data-i18n="install.coworkButton">'
+        "Go to Cowork marketplace</button>"
     ) in page
     assert page.count('"hero.title": "Clara"') == 5
     assert '<h1 data-i18n="hero.title">Clara</h1>' in page

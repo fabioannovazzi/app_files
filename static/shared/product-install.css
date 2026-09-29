@@ -1,0 +1,17 @@
+/* Shared installation controls for Vera, Clara and Lucia. */
+.install-option .button:disabled,
+.install-option .button:disabled:hover {
+  color: #526375;
+  background: #f5f7fa;
+  border-color: #c5cfda;
+  cursor: not-allowed;
+  transform: none;
+  opacity: 1;
+}
+
+.install-option__guide {
+  color: var(--blue);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  text-underline-offset: 0.2em;
+}

@@ -1159,6 +1159,7 @@
     }
   </style>
   <link rel="stylesheet" href="../product-social.css?v=2026092601">
+  <link rel="stylesheet" href="../product-install.css?v=2026092901">
 </head>
 <body>
   <a class="skip-link" href="#main-content" data-i18n="skip">Vai al contenuto</a>
@@ -1221,8 +1222,9 @@
               <p class="install-option__note" data-i18n="install.zipHelp">Pacchetto per Codex e istruzioni di installazione.</p>
             </div>
             <div class="install-option">
-              <a class="button" href="downloads/vera-cowork-plugin.zip" download data-vera-cowork-download-link data-i18n="install.coworkButton">Scarica per Claude Cowork</a>
-              <p class="install-option__note" data-i18n="install.coworkHelp">Poi carica il file ZIP da Personalizza → Plugin in Claude Cowork.</p>
+              <button class="button" type="button" disabled aria-describedby="cowork-marketplace-status" data-cowork-marketplace-pending data-i18n="install.coworkButton">Vai al marketplace Cowork</button>
+              <p class="install-option__note" id="cowork-marketplace-status" data-i18n="install.coworkHelp">Abbiamo inviato il plugin al marketplace Cowork. In attesa di approvazione.</p>
+              <a class="install-option__guide" href="../cowork-downloads/index.html?lang=it" data-cowork-guide-link data-i18n="install.coworkGuide">Installa o aggiorna dal sito →</a>
             </div>
           </div>
           <a class="hero-install__video" id="vera-install-video-link" href="https://youtu.be/yAnkIabnQ1M" target="_blank" rel="noopener noreferrer" aria-label="Collega ChatGPT al computer con Codex" data-i18n-aria-label="install.video.title">
@@ -1822,8 +1824,9 @@
         "install.actions.label": "Opzioni di installazione di Vera",
         "install.button": "Installa per ChatGPT Work e Codex",
         "install.chatgptHelp": "Apre la pagina di installazione di Vera per ChatGPT Work e Codex.",
-        "install.zipButton": "Scarica ZIP", "install.zipHelp": "Pacchetto per Codex e istruzioni di installazione.", "install.coworkButton": "Scarica per Claude Cowork",
-        "install.coworkHelp": "Poi carica il file ZIP da Personalizza → Plugin in Claude Cowork.",
+        "install.zipButton": "Scarica ZIP", "install.zipHelp": "Pacchetto per Codex e istruzioni di installazione.", "install.coworkButton": "Vai al marketplace Cowork",
+        "install.coworkHelp": "Abbiamo inviato il plugin al marketplace Cowork. In attesa di approvazione.",
+        "install.coworkGuide": "Installa o aggiorna dal sito →",
         "install.video.title": "Collega ChatGPT al computer con Codex",
         "contributors.index": "Collaborazione",
         "contributors.title": "Contributors",
@@ -2037,8 +2040,9 @@
         "install.actions.label": "Vera installation options",
         "install.button": "Install for ChatGPT Work and Codex",
         "install.chatgptHelp": "Opens Vera’s installation page for ChatGPT Work and Codex.",
-        "install.zipButton": "Download ZIP", "install.zipHelp": "Codex package and installation instructions.", "install.coworkButton": "Download for Claude Cowork",
-        "install.coworkHelp": "Then upload the ZIP from Customize → Plugins in Claude Cowork.",
+        "install.zipButton": "Download ZIP", "install.zipHelp": "Codex package and installation instructions.", "install.coworkButton": "Go to Cowork marketplace",
+        "install.coworkHelp": "We have submitted the plugin to the Cowork marketplace. Awaiting approval.",
+        "install.coworkGuide": "Install or update from the website →",
         "install.video.title": "Connect ChatGPT to your computer with Codex",
         "contributors.index": "Collaboration",
         "contributors.title": "Contributors",
@@ -2252,8 +2256,9 @@
         "install.actions.label": "Options d’installation de Vera",
         "install.button": "Installer pour ChatGPT Work et Codex",
         "install.chatgptHelp": "Ouvre la page d’installation de Vera pour ChatGPT Work et Codex.",
-        "install.zipButton": "Télécharger le ZIP", "install.zipHelp": "Paquet pour Codex et instructions d’installation.", "install.coworkButton": "Télécharger pour Claude Cowork",
-        "install.coworkHelp": "Importez ensuite le fichier ZIP depuis Personnaliser → Plugins dans Claude Cowork.",
+        "install.zipButton": "Télécharger le ZIP", "install.zipHelp": "Paquet pour Codex et instructions d’installation.", "install.coworkButton": "Aller au marketplace Cowork",
+        "install.coworkHelp": "Nous avons soumis le plugin au marketplace Cowork. En attente d’approbation.",
+        "install.coworkGuide": "Installer ou mettre à jour depuis le site →",
         "install.video.title": "Connectez ChatGPT à votre ordinateur avec Codex",
         "contributors.index": "Collaboration",
         "contributors.title": "Contributeurs",
@@ -2467,8 +2472,9 @@
         "install.actions.label": "Installationsoptionen für Vera",
         "install.button": "Für ChatGPT Work und Codex installieren",
         "install.chatgptHelp": "Öffnet Veras Installationsseite für ChatGPT Work und Codex.",
-        "install.zipButton": "ZIP herunterladen", "install.zipHelp": "Paket für Codex und Installationsanleitung.", "install.coworkButton": "Für Claude Cowork herunterladen",
-        "install.coworkHelp": "Laden Sie die ZIP-Datei anschließend in Claude Cowork unter Anpassen → Plugins hoch.",
+        "install.zipButton": "ZIP herunterladen", "install.zipHelp": "Paket für Codex und Installationsanleitung.", "install.coworkButton": "Zum Cowork-Marketplace",
+        "install.coworkHelp": "Wir haben das Plugin beim Cowork-Marketplace eingereicht. Die Freigabe steht aus.",
+        "install.coworkGuide": "Von der Website installieren oder aktualisieren →",
         "install.video.title": "ChatGPT mit Codex mit Ihrem Computer verbinden",
         "contributors.index": "Zusammenarbeit",
         "contributors.title": "Mitwirkende",
@@ -2682,8 +2688,9 @@
         "install.actions.label": "Opciones de instalación de Vera",
         "install.button": "Instalar para ChatGPT Work y Codex",
         "install.chatgptHelp": "Abre la página de instalación de Vera para ChatGPT Work y Codex.",
-        "install.zipButton": "Descargar ZIP", "install.zipHelp": "Paquete para Codex e instrucciones de instalación.", "install.coworkButton": "Descargar para Claude Cowork",
-        "install.coworkHelp": "Después, sube el archivo ZIP desde Personalizar → Plugins en Claude Cowork.",
+        "install.zipButton": "Descargar ZIP", "install.zipHelp": "Paquete para Codex e instrucciones de instalación.", "install.coworkButton": "Ir al marketplace de Cowork",
+        "install.coworkHelp": "Hemos enviado el plugin al marketplace de Cowork. Pendiente de aprobación.",
+        "install.coworkGuide": "Instalar o actualizar desde el sitio →",
         "install.video.title": "Conecta ChatGPT al ordenador con Codex",
         "contributors.index": "Colaboración",
         "contributors.title": "Colaboradores",
@@ -2786,6 +2793,8 @@
       });
       document.querySelector("[data-codex-download-link]").href =
         "../plugin-downloads/index.html?product=vera&lang=" + (lang === "it" ? "it" : "en");
+      document.querySelector("[data-cowork-guide-link]").href =
+        "../cowork-downloads/index.html?lang=" + (lang === "it" ? "it" : "en");
       document.querySelectorAll("[data-current-language]").forEach((node) => {
         node.textContent = lang.toUpperCase();
       });
