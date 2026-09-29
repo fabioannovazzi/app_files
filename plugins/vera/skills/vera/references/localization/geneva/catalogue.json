@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "plugins/vera",
-  "version": "0.1.280",
-  "captured_at": "2026-09-29T19:46:07.299704+00:00",
-  "catalogue_fingerprint": "ebf9af91ab59188cb2ca0c7f162b20936b233873e877bb7341b4de1c16df82cd",
-  "manifest_sha256": "4428e65b18af14fd8758869155bb1ed4cd118b7da0c60dd1bb61d1d78d84383f",
+  "root": "/Users/fabio/.codex/worktrees/assetti-professional-review/app_files/plugins/vera",
+  "version": "0.1.283",
+  "captured_at": "2026-09-29T21:16:57.795636+00:00",
+  "catalogue_fingerprint": "a52176db774bbf6400c591108fa353427c9f937c715d0707f2a3ea4d277b81d3",
+  "manifest_sha256": "d72d431e5344cec0ad8065a2ca5a424b94ce45d9cffbea21e08b0d6631b0ec1f",
   "entries": [
     {
       "function_id": "adeguati-assetti",

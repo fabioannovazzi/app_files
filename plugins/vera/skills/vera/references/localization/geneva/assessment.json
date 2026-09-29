@@ -1,6 +1,6 @@
 {
   "schema": "vera.localization.assessment.v1",
-  "catalogue_fingerprint": "ebf9af91ab59188cb2ca0c7f162b20936b233873e877bb7341b4de1c16df82cd",
+  "catalogue_fingerprint": "a52176db774bbf6400c591108fa353427c9f937c715d0707f2a3ea4d277b81d3",
   "assessment_date": "2026-09-28",
   "target": {
     "id": "CH-GE",
@@ -950,5 +950,10 @@
     "version": "0.1.280",
     "reviewed_at": "2026-09-29",
     "review": "Combines the existing fusione-guidata P0 and synthetic-only trasformazione entries. All prior target judgments and both unresolved entries are preserved. No new professional or jurisdiction qualification is inferred."
+  },
+  "assetti_construction_release_binding": {
+    "version": "0.1.283",
+    "reviewed_at": "2026-09-29",
+    "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   }
 }

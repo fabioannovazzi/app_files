@@ -83,3 +83,7 @@ These sources support the target investigation, not an automatic rules engine. R
 - [PFPDT outsourcing and processing roles](https://www.edoeb.admin.ch/fr/externalisation-sous-traitance)
 
 See [the complete machine-readable assessment](assessment.json) for each function’s purpose, common method, original adaptation requirement, acceptance example and source references.
+
+## Assetti construction release binding
+
+The 0.1.283 refresh changes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Existing target judgments remain in place. The new assetti construction mode has not been validated for CH-GE; the earlier assessment-mode scope does not qualify that new mode.
