@@ -1,6 +1,6 @@
 {
   "schema": "vera.localization.assessment.v1",
-  "catalogue_fingerprint": "c22adf3740ee2fd9967313c36e8f8d526d78a3cdfe719a1faa96389866da898f",
+  "catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
   "assessment_date": "2026-09-28",
   "target": {
     "id": "CH-GE",
@@ -883,7 +883,7 @@
     "change": "Optional introductory single-course teaching route; professional workflow scope and Geneva dispositions unchanged. Language alone never selects jurisdiction."
   },
   "course_entry_release_binding": {
-    "version": "0.1.276",
-    "change": "Catalogue link and privacy fingerprint refresh only; skill entrypoints and Geneva dispositions unchanged."
+    "version": "0.1.277",
+    "change": "Remove redundant catalogue jump link and refresh release identity; skill entrypoints and Geneva dispositions unchanged."
   }
 }
