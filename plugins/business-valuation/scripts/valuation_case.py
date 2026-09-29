@@ -550,7 +550,14 @@ def build_valuation(
         fields(
             method,
             {"id", "kind", "selected", "rationale", "inputs", "limitations"},
-            {"bridge", "review", "timing", "income_basis", "residual_basis"},
+            {
+                "bridge",
+                "review",
+                "timing",
+                "income_basis",
+                "residual_basis",
+                "holding_basis",
+            },
         )
         text(method["rationale"], "method selection rationale")
         text(method["kind"], "method kind")
@@ -574,6 +581,14 @@ def build_valuation(
             validate_selected_method(method)
             income_basis = method.get("income_basis")
             residual_basis = method.get("residual_basis")
+            holding_basis = method.get("holding_basis")
+            holding_dependencies: dict[str, Any] = {"source_ids": [], "complete": True}
+            if holding_basis is not None:
+                from valuation_holding import holding_evidence
+
+                holding_dependencies = holding_evidence(
+                    method, mandate, case["currency"], sources
+                )
             if residual_basis is not None:
                 require(
                     set(residual_basis["source_ids"]) <= sources.keys(),
@@ -587,6 +602,16 @@ def build_valuation(
             _checked_timing(method, mandate, plan_bridge)
             result = calculate_method(method, inputs, case["currency"])
             dependent_normalizations = _bind_normalizations(result, normalizations)
+            if method["kind"] == "HOLDING_SOTP" and plan_bridge is not None:
+                require(
+                    not {
+                        ref
+                        for row in result["calculations"]
+                        for ref in row["input_ids"]
+                    }
+                    & set(plan_bridge["flow_input_ids"]),
+                    "Plan FCFF cannot be relabelled as holding values or adjustments",
+                )
             dependent_statements = statement_dependencies(
                 [ref for row in result["calculations"] for ref in row["input_ids"]],
                 statements,
@@ -625,6 +650,7 @@ def build_valuation(
             | {ref for group in dependent_statements for ref in group["source_ids"]}
             | set((income_basis or {}).get("source_ids", []))
             | set((residual_basis or {}).get("source_ids", []))
+            | set(holding_dependencies["source_ids"])
         )
         if dependent_bridge:
             source_ids = sorted(
@@ -661,6 +687,7 @@ def build_valuation(
             )
             and (income_basis is None or income_basis["status"] == "confirmed")
             and (residual_basis is None or residual_basis["status"] == "confirmed")
+            and holding_dependencies["complete"]
         )
         accepted = complete and reviewed(method.get("review"), dependency)
         result.update(
@@ -688,6 +715,8 @@ def build_valuation(
             result["income_basis"] = income_basis
         if residual_basis is not None:
             result["residual_basis"] = residual_basis
+        if holding_basis is not None:
+            result["holding_basis"] = holding_basis
         if not complete:
             issues.append(f"{method['id']}: source or assumption review pending")
         for row in result.pop("calculations"):

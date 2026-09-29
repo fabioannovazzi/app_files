@@ -2,7 +2,7 @@
 
 Vera component for source-backed PMI valuation workpapers. DCF, constant or
 finite-duration equity income, clean-surplus residual income with changing equity,
-NAV, mixed income, multiples and APV, with explicit
+NAV, mixed income, holding/SOTP composition, multiples and APV, with explicit
 professional assumptions, receipt-bound sources, exact
 calculation lineage, independent method review and existing v3 business-plan
 reuse. Outputs: HTML, Markdown, DOCX/PDF, formula XLSX, JSON and CSV.

@@ -11,6 +11,7 @@ from typing import Any
 
 from valuation_case import build_valuation, require
 from valuation_engine import decimal
+from valuation_holding import HOLDING_BASIS_LABELS, PART_BASIS_LABELS
 
 __all__ = ["write_package", "report_sections", "write_workbook", "compile_html"]
 
@@ -29,6 +30,7 @@ METHOD_LABELS = {
     "INCOME_EQUITY": "Metodo reddituale",
     "INCOME_EQUITY_FINITE": "Metodo reddituale a durata finita",
     "RESIDUAL_INCOME_EQUITY": "Reddito residuale del capitale proprio",
+    "HOLDING_SOTP": "Holding: somma delle partecipazioni",
     "NAV": "Patrimoniale rettificato",
     "MIXED_EQUITY": "Metodo misto",
     "MULTIPLE": "Multipli",
@@ -50,6 +52,33 @@ DETAIL_LABELS = {
     "pv_continuing_residual": "Valore attuale dell'eccedenza terminale",
     "owner_cashflow_value": "Riscontro con distribuzioni nette e valore terminale",
     "owner_cashflow_difference": "Differenza aritmetica del riscontro",
+    "holdings_value": "Valore delle partecipazioni detenute",
+    "parent_assets": "Attività autonome della holding",
+    "parent_liabilities": "Passività autonome della holding",
+    "holding_costs_pv": "Valore attuale dei costi holding",
+    "holding_tax_adjustment": "Rettifica fiscale holding da sottrarre",
+    "holding_eliminations": "Eliminazioni e rettifiche infragruppo con segno",
+}
+HOLDING_STATUS = {"confirmed": "Confermata", "proposed": "Da confermare"}
+HOLDING_VALUE_LABELS = {
+    "operating_enterprise": "Valore operativo prima del raccordo equity",
+    "full_equity": "Valore dell'intero capitale proprio",
+    "specific_interest": "Valore già riferito allo specifico diritto detenuto",
+}
+HOLDING_AMOUNT_LABELS = {
+    "original_id": "Valore fornito",
+    "equity_id": "Capitale proprio prima della quota",
+    "ownership_id": "Quota dichiarata",
+    "proportional_id": "Valore proporzionale esplicito",
+    "rights_adjustment_id": "Rettifica dei diritti con segno",
+    "stake_id": "Valore della partecipazione detenuta",
+}
+HOLDING_BRIDGE_LABELS = {
+    "financial_debt": "Debito finanziario della partecipata",
+    "debt_like": "Altre passività assimilate a debito",
+    "excess_cash": "Cassa eccedente della partecipata",
+    "non_operating_assets": "Attività extra-operative della partecipata",
+    "signed_adjustments": "Altre rettifiche equity con segno",
 }
 RESIDUAL_BASIS_LABELS = {
     "accounting_basis": "Base contabile e perimetro",
@@ -440,6 +469,8 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
                 )
                 rows.append(f"{DETAIL_LABELS[label]}: {shown} [{ref}]")
             rows.extend(method["limitations"])
+            if "holding_schedule" in method:
+                rows.extend(_holding_rows(method, amounts, case["currency"]))
             income_basis = method.get("income_basis")
             residual_basis = method.get("residual_basis")
             if residual_basis:
@@ -681,6 +712,162 @@ def _write_plan_bridge(workbook: Any, report: dict, input_rows: dict[str, int]) 
         workbook["Dati"].cell(input_rows[ref], 3, formula)
 
 
+def _holding_rows(method: dict, amounts: dict, currency: str) -> list[str]:
+    """Explain the supplied parts and every holding-level adjustment."""
+    basis = method["holding_basis"]
+    rows = [f"{label}: {basis[key]}" for key, label in HOLDING_BASIS_LABELS.items()]
+    rows.append(
+        f"Base holding: {HOLDING_STATUS[basis['status']]} · Fonti: {', '.join(basis['source_ids'])} · {basis['locator']}"
+    )
+    for part in method["holding_schedule"]["parts"]:
+        basis = part["basis"]
+        rows.append(
+            f"Parte {part['id']} · {basis['entity_id']} / {basis['interest_id']} · {basis['valuation_date']} · {basis['currency']} · {HOLDING_VALUE_LABELS[part['value_type']]}"
+        )
+        rows.extend(
+            f"{label}: {basis[key]}" for key, label in PART_BASIS_LABELS.items()
+        )
+        if basis["ownership_denominator_id"] is not None:
+            rows.append(
+                f"Denominatore dichiarato: {basis['ownership_denominator_id']}."
+            )
+        for key, label in HOLDING_AMOUNT_LABELS.items():
+            ref = part[key]
+            if ref is not None:
+                value = amounts[ref]
+                shown = (
+                    f"{display(str(decimal(value['value']) * 100))}%"
+                    if key == "ownership_id"
+                    else f"{display(value['value'])} {currency}"
+                )
+                rows.append(f"{label}: {shown} [{ref}].")
+        for key, ref in part["bridge_ids"].items():
+            rows.append(
+                f"{HOLDING_BRIDGE_LABELS[key]}: {display(amounts[ref]['value'])} {currency} [{ref}]."
+            )
+        rows.append(
+            f"Base della parte: {HOLDING_STATUS[basis['status']]} · Fonti: {', '.join(basis['source_ids'])} · {basis['locator']}"
+        )
+    for row in method["holding_schedule"]["eliminations"]:
+        rows.append(
+            f"Eliminazione {row['id']}: {display(amounts[row['value_id']]['value'])} {currency} con segno. {row['reason']} Importi collegati: {', '.join(row['affected_input_ids'])}. Stato: {HOLDING_STATUS[row['status']]} · Fonti: {', '.join(row['source_ids'])} · {row['locator']}."
+        )
+    rows.append(
+        "La quota si applica soltanto dove richiesta esplicitamente. Un valore già riferito al diritto detenuto non viene moltiplicato o rettificato di nuovo. Nessun premio, sconto o valore minimo è automatico. Identità, somme e collegamenti non provano correttezza dei diritti, completezza del perimetro o assenza di duplicazioni economiche."
+    )
+    return rows
+
+
+def _write_holding_sheets(workbook: Any, report: dict, row_ids: dict) -> None:
+    """Project the existing formula ledger; keep all supplied prose literal."""
+    methods = [row for row in report["methods"] if "holding_schedule" in row]
+    if not methods:
+        return
+    values = workbook.create_sheet("Partecipazioni")
+    values.append(["Metodo", "Parte", "Voce", "Valore", "Calcolo"])
+    bases = workbook.create_sheet("Base holding")
+    bases.append(
+        ["Metodo", "Parte", "Campo", "Descrizione", "Stato", "Fonti", "Posizione"]
+    )
+    eliminations = workbook.create_sheet("Eliminazioni")
+    eliminations.append(
+        [
+            "Metodo",
+            "Rettifica",
+            "Valore con segno",
+            "Input collegati",
+            "Motivo",
+            "Stato",
+            "Fonti",
+            "Posizione",
+        ]
+    )
+
+    def value_row(method_id: str, part_id: str, label: str, ref: str) -> None:
+        values.append([method_id, part_id, label, f"='Calcoli'!B{row_ids[ref]}", ref])
+
+    for method in methods:
+        method_id = method["method_id"]
+        basis = method["holding_basis"]
+        for key, label in HOLDING_BASIS_LABELS.items():
+            bases.append(
+                [
+                    method_id,
+                    "Holding",
+                    label,
+                    basis[key],
+                    HOLDING_STATUS[basis["status"]],
+                    ", ".join(basis["source_ids"]),
+                    basis["locator"],
+                ]
+            )
+        for part in method["holding_schedule"]["parts"]:
+            basis = part["basis"]
+            labels = {
+                **PART_BASIS_LABELS,
+                "entity_id": "Soggetto",
+                "interest_id": "Diritto",
+                "ownership_denominator_id": "Denominatore quota",
+                "valuation_date": "Data valutativa",
+                "currency": "Valuta",
+            }
+            for key, label in labels.items():
+                bases.append(
+                    [
+                        method_id,
+                        part["id"],
+                        label,
+                        (
+                            basis[key]
+                            if basis[key] is not None
+                            else "Non applicabile al valore già riferito al diritto"
+                        ),
+                        HOLDING_STATUS[basis["status"]],
+                        ", ".join(basis["source_ids"]),
+                        basis["locator"],
+                    ]
+                )
+            bases.append(
+                [
+                    method_id,
+                    part["id"],
+                    "Base del valore",
+                    HOLDING_VALUE_LABELS[part["value_type"]],
+                    HOLDING_STATUS[basis["status"]],
+                    ", ".join(basis["source_ids"]),
+                    basis["locator"],
+                ]
+            )
+            for key, label in HOLDING_AMOUNT_LABELS.items():
+                if part[key] is not None:
+                    value_row(method_id, part["id"], label, part[key])
+            for key, ref in part["bridge_ids"].items():
+                value_row(method_id, part["id"], HOLDING_BRIDGE_LABELS[key], ref)
+        for key, ref in method["detail_ids"].items():
+            value_row(method_id, "Holding", DETAIL_LABELS[key], ref)
+        value_row(
+            method_id, "Holding", "Capitale proprio della holding", method["value_id"]
+        )
+        for row in method["holding_schedule"]["eliminations"]:
+            eliminations.append(
+                [
+                    method_id,
+                    row["id"],
+                    f"='Calcoli'!B{row_ids[row['value_id']]}",
+                    ", ".join(row["affected_input_ids"]),
+                    row["reason"],
+                    HOLDING_STATUS[row["status"]],
+                    ", ".join(row["source_ids"]),
+                    row["locator"],
+                ]
+            )
+    for sheet, formula_column in [(values, 4), (bases, None), (eliminations, 3)]:
+        for row in sheet:
+            for cell in row:
+                if cell.row == 1 or cell.column != formula_column:
+                    _literal(cell, str(cell.value))
+
+
 def write_workbook(path: Path, report: dict) -> None:
     """Link input cells and formula nodes; prevent formula injection from labels."""
     from openpyxl import Workbook
@@ -816,6 +1003,7 @@ def write_workbook(path: Path, report: dict) -> None:
                 calculations.cell(index, column),
                 str(calculations.cell(index, column).value or ""),
             )
+    _write_holding_sheets(workbook, report, row_ids)
     residual_methods = [
         method for method in report["methods"] if "residual_basis" in method
     ]
@@ -1111,6 +1299,12 @@ def write_workbook(path: Path, report: dict) -> None:
         workbook["Piano FCFF"].column_dimensions["K"].width = 54
     mandate_sheet.column_dimensions["B"].width = 80
     mandate_sheet.column_dimensions["E"].width = 60
+    if "Partecipazioni" in workbook:
+        workbook["Base holding"].column_dimensions["D"].width = 80
+        workbook["Eliminazioni"].column_dimensions["E"].width = 80
+        for row in workbook["Partecipazioni"].iter_rows(min_row=2):
+            if row[2].value == "Quota dichiarata":
+                row[3].number_format = "0.00%"
     workbook.save(path)
 
 

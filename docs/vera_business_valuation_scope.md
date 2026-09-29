@@ -22,16 +22,38 @@ professionally enabled. Specialist extensions remain part of the proposed scope.
 | P0-02 Purpose profiles | All 21 profiles have explicit semantic intake, source binding and development-only coverage in `purpose-profiles.json` | Primary research, specialist implementation, purpose-specific synthetic and professionally reviewed case for each activated profile; none is activated |
 | P0-03 Studio Archive | Exact case and nested-source receipts, same-engagement upstream plan, immutable revisions and idempotent replay; native fixture coverage | Installed host/user acceptance; retain explicit cross-client coverage in shared archive tests |
 | P0-04 Business plan v3 | Actual compiler replays the original plan; selected contiguous whole months or complete calendar years reconcile taxes, working capital and capex; monthly amounts bind exact dated FCFF flows | Separately qualified intramonth evidence and additional professionally reviewed real-case evidence |
-| P0-05 Engine | Nine explicit Decimal variants including finite-duration equity income and clean-surplus residual income with changing equity capital; annual and explicitly dated DCF with stub/monthly/mid-period timing, ACT/365F and ACT/ACT_ISDA, flat/spot/interval-forward rates, effective annual/continuous compounding; formula ledger and EV/equity separation | Distinct dated/capital-varying mixed-income conventions, further sector models, alternative terminal conventions and curve-specific scenario comparison |
+| P0-05 Engine | Ten explicit Decimal variants including finite-duration equity income, clean-surplus residual income with changing equity capital and holding/SOTP; annual and explicitly dated DCF with stub/monthly/mid-period timing, ACT/365F and ACT/ACT_ISDA, flat/spot/interval-forward rates, effective annual/continuous compounding; formula ledger and EV/equity separation | Distinct dated/capital-varying mixed-income conventions, further sector models, alternative terminal conventions and curve-specific scenario comparison |
 | P0-06 Public sources | Versioned NYU country-risk HTML and explicitly selected ECB AAA spot CSV acquisition from observed links; immutable originals, exact percent conversion and missing-date diagnostics; parser replay for eligible imported records | ECB publication/vintage evidence and eligible binding, regional/historical workbooks and other adapters; semantic source qualification and independent historical availability |
 | P0-07 Guided experience | Native skill builds technical inputs, opens report and asks focused professional questions; user does not author JSON | Witnessed accountant completion of an end-to-end case; synthetic teacher execution does not establish this |
 | P0-08 Outputs | One replayed register produces HTML/MD/DOCX/PDF/XLSX/JSON/CSV and the named JSON workpapers; explicit claim bindings, numeric equality and review invalidation; independent LibreOffice formula comparison and visual QA | Semantic support review across actual cases and broad layout cases; recheck layout whenever report content changes |
 | P0-09 Review | Input/source/method/mandate/audience/plan dependency hashes; per-adjustment review and transitive method bindings; independent conclusion review; affected reviews expire and unrelated branches survive | Additional purpose, full statement and benchmark-revision acceptance cases; local attestations do not authenticate humans |
 | P0-10 Privacy/release | Vera privacy record, routes, Italian teaching material, component and three host package projections; dedicated CI job | Dependency-checker and page-breadcrumb corrections await owner approval; all CI gates, professional release prerequisites and authoritative existing-listing publication remain pending |
-| P1-01 Specialist methods | Intake scope and unsupported-method diagnostics are explicit | Holding/SOTP, crisis, PPA, rights/waterfalls and damages models with fixtures and specialist review |
+| P1-01 Specialist methods | Holding/SOTP composes explicitly valued interests, parent exposures and signed eliminations with evidence-bound review; unsupported-method diagnostics remain explicit | Holding professional cases and semantic duplication/rights review; circular holdings, crisis, PPA, rights/waterfalls and damages models with fixtures and specialist review |
 | P1-02 Historical regressions | Synthetic old/new acquisition snapshots preserve original bytes; later releases reject earlier cutoffs; dependent reviews expire | Authentic archived datasets, independently established availability dates and reviewed historical cases |
 
 ## Additional functional gaps retained from the specification
+
+Holding/SOTP now accepts three explicit part bases: operating enterprise value
+with a full subsidiary equity bridge, full equity with a declared ownership
+denominator/ratio and signed rights adjustment, or an already-valued specific
+interest. It adds parent-only assets and signed intragroup eliminations and
+deducts parent liabilities, cost present values and an explicitly signed tax
+adjustment. Negative equity remains visible. Common and part-specific bases
+retain source, locator, date, currency and proposed/confirmed review state.
+The workbook links `Partecipazioni`, `Base holding` and `Eliminazioni` to the
+same calculation register. Exact duplicate identities, declared over-ownership,
+second subsidiary debt deductions and reused elimination amounts are rejected.
+These structural checks do not establish complete economic perimeters,
+valuation of legal rights, tax recoverability or absence of economic duplication.
+Circular cross-holdings and rights waterfalls remain outside this workpaper.
+
+The holding extension adds 61 regression cases. The complete valuation/transport
+suite has 474 passes and 95.13% component coverage. Four synthetic examples,
+including a receipt-bound run, independently reconcile 428 calculation cells
+and 108 holding links in LibreOffice. Three fresh native workflow/lesson cases
+pass, and all 82 rendered DOCX/PDF pages across six output sets were inspected.
+Each set retains 18 hashed artifacts. This verifies local arithmetic and output
+generation, not professional activation, installed delivery or publication.
 
 The case contract now has structured, evidence-linked engagement/report dates,
 commissioning party, expert activity, participant perspective, recipients, use

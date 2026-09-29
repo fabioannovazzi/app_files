@@ -179,7 +179,7 @@ the model/professional still checks completeness, classifications and substance.
 
 Propose and explain methods according to the mandate. The implemented calculations
 are FCFF/FCFE DCF with annual or explicitly dated flows, constant or finite-duration equity income, adjusted NAV,
-constant-capital mixed income, clean-surplus residual equity income, selected EV or equity multiples, and APV composition.
+constant-capital mixed income, clean-surplus residual equity income, holding/SOTP composition, selected EV or equity multiples, and APV composition.
 Explain each selection/exclusion. The professional selects sustainable terminal
 flows, capital costs, asset values, comparable samples and multiples. Keep
 enterprise value and equity separate. Never deduct debt from FCFE or P/E again,
@@ -217,6 +217,21 @@ Inspect `Base residuale` and `Clean surplus` before recording method review.
 Do not infer a terminal value, treat plan FCFF as income, deduct debt again or
 claim that a balanced schedule establishes accounting adequacy or distributability.
 Mid-period owner transactions require a separately qualified model.
+
+For a holding, use `HOLDING_SOTP` with independently valued parts and a parent-only
+perimeter. Ask whether each amount is operating enterprise value, full equity or
+the value of a specific right already held. Convert only enterprise values through
+their own complete subsidiary bridge; apply only an explicitly supplied ownership
+ratio and evidenced signed rights adjustment. Never scale an already-valued right.
+Record dates, currencies, exact entity/interest identities and ownership
+denominators. Review aggregate ownership and overlapping economic claims rather
+than assuming distinct identifiers mean distinct assets. Explain parent assets,
+liabilities, the present value of holding costs, tax effects and each signed
+intragroup elimination with its actual affected inputs. Do not reuse consolidated
+debt or cash, silently floor negative equity, invent a holding discount, or use
+plan FCFF as a stake value. Review `Partecipazioni`, `Base holding` and
+`Eliminazioni`, and read back all bases before confirming them. This composition
+does not value waterfalls, authenticate ownership or qualify a legal purpose.
 
 For benchmarks, research official public sources with public parameter/sector/date
 queries only. The mandate authorizes necessary public research; do not include

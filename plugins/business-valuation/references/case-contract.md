@@ -135,10 +135,77 @@ is an input ID, not an inline amount. Unselected methods retain their rationale.
 | INCOME_EQUITY | normalized_equity_income, cost_equity | Positive constant equity income divided by positive Ke |
 | INCOME_EQUITY_FINITE | incomes (ordered list), residual_value | Dated equity income plus a separately evidenced equity residual at the horizon; requires timing and income_basis |
 | RESIDUAL_INCOME_EQUITY | book_equity (n+1), incomes, distributions, contributions (n each), terminal_equity_value | Dated clean-surplus common-equity model with changing book capital; requires timing and residual_basis |
+| HOLDING_SOTP | holdings, parent_assets, parent_liabilities, holding_costs_pv, tax_adjustment, eliminations | Explicit stake values plus parent-only assets, less parent-only liabilities, holding-cost PV and signed tax adjustment, plus signed eliminations; requires holding_basis |
 | NAV | assets (nonempty list), liabilities (possibly empty list), tax_adjustment | Adjusted assets less liabilities less signed tax adjustment |
 | MIXED_EQUITY | adjusted_equity, incomes (ordered list), normal_return, excess_discount | Constant adjusted equity plus discounted annual excess incomes |
 | MULTIPLE | metric, selected_multiple, kind | Positive metric times selected multiple; kind is EV_EBITDA, EV_EBIT, EV_REVENUE or P_E |
 | APV | unlevered_value, pv_tax_shields, pv_financing_costs | Supplied unlevered PV plus shield PV less financing-cost PV |
+
+### Holding company and sum of the parts
+
+`HOLDING_SOTP` produces the holding's equity reference value. It requires
+separately valued parts and a parent-only perimeter; consolidated operating value
+cannot be relabelled as a subsidiary's equity. This is a composition workpaper,
+not an automatic valuation of every subsidiary or a legal rights model.
+
+Each of 1–100 `holdings` has an `id`, `value_type`, monetary input ID `value`,
+and `basis`. The three explicit value bases are:
+
+- `operating_enterprise`: supply the complete five-input `bridge` described below
+  for that subsidiary, an `ownership` ratio and an independently evidenced signed
+  `rights_adjustment`. The helper first converts operating value to full equity,
+  then applies the expressly supplied ratio, then adds that rights adjustment.
+- `full_equity`: supply `ownership` and `rights_adjustment`, with no debt bridge.
+- `specific_interest`: the supplied value already covers the stated right or
+  interest. A bridge, ownership multiplier and further rights adjustment are
+  prohibited. No zero floor, minority discount or holding discount is inferred.
+
+Each part's `basis` requires `entity_id`, `interest_id`,
+`ownership_denominator_id`, `valuation_date`, `currency`, `description`, `scope`,
+`ownership_basis`, `rights_basis`, `source_ids`, `locator`, `status`. Its date and
+currency must match the case; no automatic date roll-forward or FX conversion.
+The denominator is an explicit stable ID for proportional parts, null for an
+already-valued specific interest. Sum of declared ratios for the same entity
+and denominator cannot exceed one. Distinct rights/classes may have distinct
+denominators; those labels do not prove that their economic claims are disjoint.
+Repeated entity/interest identities or part IDs are rejected. Negative supplied
+equity and signed rights adjustments remain signed; limited-liability or other
+rights effects require a separately supported value and professional explanation.
+
+`parent_assets` and `parent_liabilities` are explicit lists of monetary input IDs
+(0–100 each); liabilities must be nonnegative. The mandatory `holding_costs_pv`
+is a nonnegative, independently estimated present value, never an undiscounted
+annual expense. `tax_adjustment` is signed: positive reduces value and negative
+adds a separately justified benefit. All parent monetary roles require distinct
+input IDs, even for explicit zeros. Empty lists declare no included lines; they
+do not establish completeness. Do not include a subsidiary's debt or cash again
+among parent amounts unless an independently justified parent exposure exists.
+
+Each of 0–100 `eliminations` has an `id`, independent signed `amount_input`,
+nonempty `affected_input_ids`, `reason`, `source_ids`, `locator`, and `status`.
+Its amount is added with its supplied sign. Affected IDs must be monetary inputs
+actually included in the method, and the adjustment amount cannot reuse one of
+those inputs or another elimination's amount. The helper does not infer the
+elimination, insist on a zero group balance or decide tax, ownership weighting,
+reciprocal holdings, consolidated minorities or economic overlap. Separate
+input IDs alone never prove the absence of double counting.
+
+The mandatory `holding_basis` records `parent_perimeter`, `costs_basis`,
+`tax_basis`, `intragroup_basis`, `overlap_review`, `rights_scope`, `source_ids`,
+`locator` and `status`. Every basis and elimination is source-bound; proposed
+records or unreviewed evidence keep the method partial. Method review binds all
+parts, meanings, amounts and sources. Changed dependencies invalidate that review,
+while unrelated methods survive. Plan FCFF cannot be relabelled as a part value or
+adjustment. An additional method-level debt bridge or discount schedule is rejected.
+Reports, `method_decisions.json` and the formula-linked `Partecipazioni`,
+`Base holding` and `Eliminazioni` worksheets retain the same register.
+
+Primary methodological cross-check inspected 30 September 2026:
+[Damodaran, Equity Instruments I, PDF page 164](https://pages.stern.nyu.edu/adamodar/pdfiles/eqnotes/dcfallA.pdf#page=164)
+separates the parent from its holdings and converts subsidiary value to equity
+before applying ownership. The explicit rights, cost, tax and elimination records
+above implement the contributor's requested scope; this source does not establish
+PIV conformity or qualification of the particular rights and adjustments.
 
 ### Residual income with changing equity capital
 

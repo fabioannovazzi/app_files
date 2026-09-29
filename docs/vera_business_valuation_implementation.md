@@ -18,8 +18,8 @@ work. The goal is not complete and no purpose is professionally activated.
 Implement a client-bound `business-valuation` workflow for preparing reviewable
 PMI valuation workpapers. The supported methods are FCFF and FCFE DCF, constant or finite-duration
 equity income, clean-surplus residual income with changing equity capital,
-adjusted NAV, constant-capital mixed income, selected multiples,
-and APV composition. Method selection, source relevance, normalizations,
+adjusted NAV, constant-capital mixed income, holding/SOTP composition, selected
+multiples, and APV composition. Method selection, source relevance, normalizations,
 terminal sustainability, benchmark comparability and conclusion are model and
 professional judgments. Decimal arithmetic, evidence identity, formula lineage,
 receipt boundaries, audience restrictions and approval invalidation are
@@ -53,7 +53,40 @@ units, double debt deduction, terminal growth, source changes and stale review;
 real v3 plan replay; Studio Archive cross-client and receipt checks; workbook
 formula comparisons; report rendering; privacy coverage and package parity.
 
-### Current integration checkpoint — 30 September 2026
+### Holding/SOTP checkpoint — 30 September 2026
+
+Candidate source Vera `0.1.287` / component `0.1.1` adds explicit holding
+composition to the nine previous calculation variants. The full 474-case
+valuation/transport suite passes at 95.13% coverage, including 61 new holding
+cases. Black, Isort, Mypy and Bandit pass across all 16 component scripts.
+Three fresh native holding and Italian lesson runs pass. The existing lesson
+content is unchanged; only its source inventory/fingerprints changed.
+
+LibreOffice independently matches all 428 calculation cells and 108 linked
+holding cells across four examples. All 48 DOCX and 34 native PDF pages across
+six output sets were inspected, with 18 verified artifact hashes per set.
+Scenario-specific source notes and tax wording were clarified in new immutable
+example revisions; production source did not need a test-driven repair.
+
+Each of the three Vera packages contains 19 byte-identical executable/schema/
+transport files and reproduces 12 full saved report objects outside the
+repository, for 36 exact replays. Source/version/package checks pass for Vera
+`0.1.287`, Clara `0.1.221` and Lucia `0.1.61`. Both full privacy registers are
+current. All 345 workflow filesystem and website-journey checks pass.
+The package/privacy/teaching/routing suite has 551 passes, two installed-cache
+skips and the previously recorded dependency-checker `--requirements` failure.
+The checker correction remains unapplied pending owner approval under AGENTS.md.
+The combined current local matrix has 1,370 distinct passing cases, one failure
+and two skips; it is not a claim of green remote CI.
+
+This checkpoint is based on integrated main `f09267a16fc906f813de80675b2b8328f33c979d`.
+During final checks, remote main advanced to
+`8f662195f00bac3b605ac73077e1a0bd31d30253`, adding the composizione negoziata
+workflow. That newer baseline requires integration and renewed package/release
+checks before publication. No current-main alignment, merge to main, deployment,
+Marketplace publication or installed-host acceptance is claimed here.
+
+### Integration checkpoint before holding/SOTP — 30 September 2026
 
 The active valuation branch incorporates upstream main
 `f09267a16fc906f813de80675b2b8328f33c979d`, including the synthetic transformation

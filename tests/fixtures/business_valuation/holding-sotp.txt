@@ -1,0 +1,22 @@
+FICTIONAL HOLDING WORKPAPER — not financial or legal advice.
+All amounts EUR, valuation date 2026-12-31. No actual client or public price data.
+
+Alpha: operating enterprise value 1000; financial debt 200; debt-like 20;
+excess cash 50; nonoperating assets 30; other equity adjustment -10.
+Full equity is 850. Explicit 60% ownership; independently assumed rights adjustment -15.
+The held interest is 495. The rights adjustment is a synthetic input, not an automatic discount.
+Beta: full equity 400; explicit ownership 25%; explicit rights adjustment 0.
+The held interest is 100, with no additional debt bridge.
+Gamma: separately supplied value 120 for the already-held specific interest/claim bundle.
+No further ownership multiplication or rights adjustment applies to that supplied value.
+
+Parent-only cash 80 and receivable 60. Parent-only liabilities 150.
+Independently supplied present value of holding costs 30; signed tax deduction 20.
+The fictional Gamma claim bundle already includes the same parent receivable 60.
+Explicit elimination -60 references gamma-value and parent-receivable, removing that duplication once.
+Total: held interests 715 + parent assets 140 - elimination 60 - liabilities 150
+- cost present value 30 - tax deduction 20 = holding equity 595.
+
+Identities, scope, rights, cost and tax explanations are synthetic proposed economics
+marked confirmed solely to test the workpaper mechanics. No professional opinion,
+PIV conformity, actual ownership or legally effective class/waterfall is established.

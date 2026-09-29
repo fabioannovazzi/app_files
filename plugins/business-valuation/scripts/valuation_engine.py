@@ -20,6 +20,7 @@ METHODS = {
     "INCOME_EQUITY",
     "INCOME_EQUITY_FINITE",
     "RESIDUAL_INCOME_EQUITY",
+    "HOLDING_SOTP",
     "NAV",
     "MIXED_EQUITY",
     "MULTIPLE",
@@ -343,6 +344,7 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
     extras: dict[str, str] = {}
     timing_result = None
     residual_schedule = None
+    holding_schedule = None
     if "timing" in method and kind not in {
         "DCF_FCFF",
         "DCF_FCFE",
@@ -489,6 +491,21 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
         result, extras, residual_schedule = residual_income(
             ledger, args, factors, horizon
         )
+    elif kind == "HOLDING_SOTP":
+        from valuation_holding import holding_sotp
+
+        _keys(
+            args,
+            {
+                "holdings",
+                "parent_assets",
+                "parent_liabilities",
+                "holding_costs_pv",
+                "tax_adjustment",
+                "eliminations",
+            },
+        )
+        result, extras, holding_schedule = holding_sotp(ledger, args)
     elif kind == "INCOME_EQUITY":
         _keys(args, {"normalized_equity_income", "cost_equity"})
         result = ledger.add(
@@ -602,13 +619,19 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
         "equity_id": equity,
         "detail_ids": extras,
         "convention": (
-            "explicit_dated_discount"
-            if timing_result
-            else "annual_end_year_constant_explicit_discount"
+            "explicit_holding_parts"
+            if holding_schedule is not None
+            else (
+                "explicit_dated_discount"
+                if timing_result
+                else "annual_end_year_constant_explicit_discount"
+            )
         ),
         "timing": timing_result,
         "calculations": list(ledger.rows.values()),
     }
     if residual_schedule is not None:
         output["clean_surplus_schedule"] = residual_schedule
+    if holding_schedule is not None:
+        output["holding_schedule"] = holding_schedule
     return output

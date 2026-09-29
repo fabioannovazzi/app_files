@@ -1,6 +1,6 @@
 {
   "name": "business-valuation",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Prepara carte di lavoro per valutare PMI con fonti, metodi, calcoli e revisione professionale.",
   "author": {
     "name": "Mparanza",
@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "Valutazione d’impresa",
     "shortDescription": "Confronta metodi valutativi con fonti e ipotesi verificabili.",
-    "longDescription": "Prepara DCF, reddituale, patrimoniale, misto, multipli e APV da dati e ipotesi documentati. Riusa il business plan e produce relazioni e workbook per revisione professionale. Nessuna certificazione PIV automatica.",
+    "longDescription": "Prepara DCF, reddituale, patrimoniale, misto, holding/SOTP, multipli e APV da dati e ipotesi documentati. Riusa il business plan e produce relazioni e workbook per revisione professionale. Nessuna certificazione PIV automatica.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [

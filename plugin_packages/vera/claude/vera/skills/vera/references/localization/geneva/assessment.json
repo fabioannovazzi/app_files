@@ -1,6 +1,6 @@
 {
   "schema": "vera.localization.assessment.v1",
-  "catalogue_fingerprint": "a9ceba58dffbd53dcaa7f1c47cc9ebee8f005d6e71ac0f2394ce7cccc209766a",
+  "catalogue_fingerprint": "e22ee837398dea9f0fba3a3f7a257bece1091c1d00e43e10104132017f2698ae",
   "assessment_date": "2026-09-28",
   "target": {
     "id": "CH-GE",
@@ -978,5 +978,11 @@
     "version": "0.1.283",
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
+  },
+  "holding_release_binding": {
+    "reviewed_at": "2026-09-29T23:34:08.160128+00:00",
+    "version": "0.1.287",
+    "previous_catalogue_fingerprint": "a9ceba58dffbd53dcaa7f1c47cc9ebee8f005d6e71ac0f2394ce7cccc209766a",
+    "scope": "Manifest identity refresh for the holding/SOTP development workpaper; all 42 skill-entrypoint hashes match the previous catalogue. Existing dispositions including business-valuation Unresolved are preserved. No Swiss professional qualification inferred."
   }
 }
