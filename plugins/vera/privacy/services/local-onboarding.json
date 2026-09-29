@@ -44,7 +44,7 @@
   "security_controls": [
     {
       "id": "local-state-only",
-      "control": "The stdlib helper retains a confirmed work/preferences summary, language, thread IDs, lesson evidence hashes and optional feedback only in the OS user local onboarding directory. It stores no audio and implements no network transport or hosted interview. The native OpenAI host sees the conversation and the local summaries/results it reads, under the ordinary OpenAI model-processing boundary. This also applies to local ChatGPT Work; the current register calls that OpenAI account boundary openai-codex, and does not certify cloud access to local files. Repeated teaching reads the same confirmed profile and saves each session separately, with a local example collection derived from those checkpoints. The profile is not copied into a hosted teaching service. A specifically requested first course can create its local session and native chat pair without a profile interview; the profile remains unset, and no introduction or understanding is marked complete. Existing introduction records are preserved.",
+      "control": "The stdlib helper retains a confirmed work/preferences summary, language, thread IDs, lesson evidence hashes and optional feedback only in the OS user local onboarding directory. It stores no audio and implements no network transport or hosted interview. The native OpenAI host sees the conversation and the local summaries/results it reads, under the ordinary OpenAI model-processing boundary. This also applies to local ChatGPT Work; the current register calls that OpenAI account boundary openai-codex, and does not certify cloud access to local files. Repeated teaching reads the same confirmed profile and saves each session separately, with a local example collection derived from those checkpoints. The profile is not copied into a hosted teaching service. A specifically requested first course can create its local session and native chat pair without a profile interview; the profile remains unset, and no introduction or understanding is marked complete. Existing introduction records are preserved. The optional Get started with Vera introduction reuses a single supported course and its separate practice; a short resume note stays beside the lesson outputs. It does not reset or complete the separate multi-course programme or introduce a model API, hosted interview or feedback recipient.",
       "implemented_by": [
         "scripts/local_onboarding.py",
         "skills/vera/references/local-onboarding.md",
@@ -102,10 +102,10 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-28",
+    "reviewed_at": "2026-09-29",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "9babe99677cb777c16b12362146d6cbde9ddd314959ad95cdff61a8022be66aa"
+    "source_fingerprint": "3976d4e298e893486329b1d55cfbe647aedffddf36b8ba41e0ed6b8a8db88830"
   },
   "governed_repository_paths": [
     "static/shared/learn-with-vera/index.html",

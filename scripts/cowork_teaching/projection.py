@@ -114,6 +114,18 @@ def add_written_teaching(
         .replace("__NAME__", product.title())
         .encode()
     )
+    if product == "vera":
+        introduction = "skills/learn-with-vera/references/"
+        for name in ("get-started.md", "get-started.json"):
+            entries[introduction + name] = source[introduction + name]
+        entries["skills/learn-with-vera/SKILL.md"] += (
+            "\n## Get started with Vera\n\nFor a general introduction or the catalogue's "
+            "Get started with Vera request, read `references/get-started.md` and "
+            "its localized outline. Suggest 3–4 relevant courses, try one prepared "
+            "task and its practice, then choose a next course. Follow this package's "
+            "written single-conversation contract; desktop session and profile "
+            "commands in the shared reference do not apply to Cowork.\n"
+        ).encode()
     catalog_path = f"skills/{product}/references/workflow-catalog.md"
     if catalog_path in entries:
         entries[catalog_path] += (
