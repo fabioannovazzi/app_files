@@ -1,0 +1,1 @@
+FIKTIVE AKTUALISIERUNG. Der Schuldner schlägt für denselben Eingang von 100.000 EUR nun den 15. Januar 2027 vor. Kein Zahlungsnachweis und keine fachliche Zustimmung beigefügt. Sonstige Angaben bleiben wie ursprünglich geliefert.

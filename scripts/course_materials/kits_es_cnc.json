@@ -1,0 +1,27 @@
+{
+  "vera/composizione-negoziata": {
+    "title": "Seguir evidencias y cambios de una composizione negoziata",
+    "goal": "Abrir un expediente como asesor, revisar un borrador y retomarlo cuando se retrasa un cobro.",
+    "scenario": "Empresa totalmente ficticia: caja de 50.000 EUR, cobro previsto de 100.000 EUR el 15 de noviembre de 2026 y pago de 80.000 EUR el 30 de noviembre. El deudor no ha confirmado la fecha; faltan antigüedad de saldos y pedidos.",
+    "scope": "Primer recorrido: rol, carencias, análisis de tesorería ejecutado, nota y revisión tras un cambio. No es un dictamen de admisibilidad ni un expediente profesional completo.",
+    "inputs": "Abre caso-es.md para los hechos e hipótesis iniciales. actualizacion-es.md contiene solo la nueva información de la práctica.",
+    "request": "Vera, asesoro a la empresa. Examina los datos ficticios, señala carencias, ejecuta la previsión de tesorería y prepara una nota vinculada a evidencias. No presupongas decisiones aprobadas.",
+    "steps": [
+      "En la ventana de trabajo, registra el cliente ficticio y el encargo didáctico. Vera distingue rol, fuentes, hipótesis y evidencias ausentes antes de proponer la próxima actividad.",
+      "Vera ejecuta la previsión con alcance e hipótesis explícitos, vincula el resultado guardado a la nota y registra una revisión solo tras tu confirmación de esa versión. Abre el informe de datos que llegan al modelo.",
+      "Retoma el mismo expediente con la actualización. Conserva la primera nota, examina dependencias afectadas y pide un nuevo análisis. Las confirmaciones anteriores quedan como históricas."
+    ],
+    "deliverables": [
+      "Nota con evidencias, carencias, hipótesis y próxima actividad.",
+      "Previsión ejecutada, revisiones guardadas e informe de datos utilizados."
+    ],
+    "review": "Sigue el cobro desde la declaración hasta la previsión y la nota. Un archivo no prueba la cobrabilidad; una confirmación registrada no es una firma.",
+    "checkpoints": [
+      "Distingue al asesor de la empresa del experto independiente.",
+      "Identifica hipótesis no confirmadas y versiones que revisar tras el retraso."
+    ],
+    "practice": "Introduce actualizacion-es.md: el deudor propone ahora el 15 de enero de 2027. Pide un nuevo análisis y una nueva nota sin trasladar confirmaciones antiguas a la nueva versión.",
+    "success": "Sabes abrir, revisar y retomar el expediente manteniendo explícitos límites, dependencias y decisiones pendientes.",
+    "repeat": "Indica rol, encargo, fecha de referencia y documentos autorizados. Verifica las fuentes jurídicas decisivas al utilizarlas; independencia y conclusiones corresponden al profesional."
+  }
+}

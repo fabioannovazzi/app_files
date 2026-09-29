@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "treasury-forecast",
-  "course_sha256": "d791f4416b3c484e73bd0ff58b868b623ba115954a27c5321c601a7217c67b98",
+  "course_sha256": "c8b48d366d418539f4408ef9baf37cdbf4cde6915ba6c396adee1720af214d65",
   "reviewer": "Codex: Italian first-use treasury lesson, native forecast and delivery review",
   "reviewed_at": "2026-09-14T19:47:49.498130+00:00",
   "review_scope": "Read the Italian first-use outline, both fictional contexts and six source-table roles. Two current bound native teaching cases run preparation and versioned date review; practice also runs the native hypothetical-date scenario, preserving the baseline. All 62 component/native checks pass without failures or skips. Reviewed actual events, daily/weekly balances, version inventory, delivery note and exact artifact links. Visually inspected all six workbook sheets through eight views; the practice baseline workbook has identical cells, styles, widths and row heights. Read both native HTML reports as parsed source text and the Markdown report. Browser URL security policy blocked opening the local HTML report; visual browser presentation and interactive learner behavior remain unverified. Material acceptance does not claim live voice, learner understanding or professional approval.",
@@ -233,5 +233,32 @@
         "after": "291b0c14d84c2498581ba6e8da92ecbb948df5abfa329bcab9d24ef0924da9a1"
       }
     ]
+  },
+  "cnc_integration_freshness": {
+    "reviewer": "Codex /root - bounded source freshness review",
+    "reviewed_at": "2026-09-29T22:10:29.070059+00:00",
+    "comparison_commit": "d728392e712b82049b9fc8f196aa44df51cbbaed",
+    "previous_course_sha256": "8832c4e07ce6fa4c5ce45e2ac1fa1a9ebe804cfacd8a94f9c671e3e7b8f692d4",
+    "source_changes": [
+      {
+        "path": "modules/treasury-forecast/vendor/modules/vera_assurance/contracts.py",
+        "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
+        "after": "c4c791eab77b3077554dbbc40d90247a347b62b832bb7fdbdc21f73dbe679294"
+      },
+      {
+        "path": "vendor/modules/vera_assurance/contracts.py",
+        "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
+        "after": "c4c791eab77b3077554dbbc40d90247a347b62b832bb7fdbdc21f73dbe679294"
+      }
+    ],
+    "content_review": "Compared the complete compiled course with the reviewed main baseline. Every field except sources is identical, including authored locales, fictional inputs, checkpoints, practice and pacing. Original editorial explanations and inspected artifact hashes are preserved.",
+    "source_review": "Reviewed the sole shared-contract change: adding composizione-negoziata to the recognized managed workflow IDs. The Studio Archive lesson also binds the additive sealed snapshot history/read/append methods under the existing engagement lock. An AST comparison confirms that every pre-existing ledger function and class is unchanged. No existing lesson behavior or external recipient is added by these changes.",
+    "execution_evidence": "GitHub run 36633858670, job 109629617115 at 7ef49b804: 1171 native teaching tests passed, three skipped; one stale public-catalogue count assertion failed and has been corrected separately. This is not a green whole-run claim. Ten additional CNC native demo/practice cases pass locally.",
+    "limits": "Historical artifact reviews remain historical. No new independent editorial, live learner, voice, installed-host or professional acceptance is claimed. The release gate must validate current native demo/practice identities against these exact course hashes."
+  },
+  "valuation_cnc_integration": {
+    "reviewed_at": "2026-09-29T23:43:34.507624+00:00",
+    "scope": "Lesson content unchanged from HEAD, MERGE_HEAD outside the source inventory. Reviewed additive workflow-ID registration and Studio Archive immutable snapshot functions. Prior editorial/artifact acceptance and professional limits retained; native CNC and valuation execution is verified separately.",
+    "integrated_main": "8f662195f00bac3b605ac73077e1a0bd31d30253"
   }
 }

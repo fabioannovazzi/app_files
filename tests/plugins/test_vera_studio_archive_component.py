@@ -50,6 +50,7 @@ EXPECTED_CLIENT_WORKFLOW_IDS = (
     "financial-analysis",
     "report-builder",
     "concordato-plan-review",
+    "composizione-negoziata",
     "prompt-optimizer",
     "deep-research-validator",
     "previdenza-inps",

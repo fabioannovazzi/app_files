@@ -53,6 +53,40 @@ units, double debt deduction, terminal growth, source changes and stale review;
 real v3 plan replay; Studio Archive cross-client and receipt checks; workbook
 formula comparisons; report rendering; privacy coverage and package parity.
 
+### Combined CNC integration checkpoint — 30 September 2026
+
+Integrated upstream main `8f662195f00bac3b605ac73077e1a0bd31d30253` on the
+valuation feature branch. Valuation source is byte-identical to the holding
+checkpoint; the CNC component and new archive snapshot implementation are
+byte-identical to upstream. Both routes and CI jobs are retained. The merged
+catalogue has 47 kits / 211 localized kits and 43 Geneva entries. Existing
+professional and jurisdiction dispositions are preserved. Thirty-six lesson
+review records bind changed source inventories; their lesson content matches
+one or both merge parents outside those inventories.
+
+Valuation retains 474 passing cases and 95.13% coverage. CNC and shared archive
+checks have 144 passes after correcting one test-only workflow list, including
+ten native CNC lesson cases. The complete deduplicated local matrix has 1,589
+passes, five failures and three skips after test-only catalogue-count corrections.
+All correction runs and original failures are retained in the local evidence.
+
+Two failures concern the already proposed valuation dependency-checker argument
+and breadcrumb corrections, still awaiting owner approval. Three others concern
+the Fusione page's shared model-data component, run-report note and typography;
+they reproduce on an exported untouched `8f662195` source snapshot. That upstream
+snapshot also fails its breadcrumb check for Fusione. This does not waive any
+release gate or imply green remote CI. The skips are two unavailable installed
+Marketplace caches and an empty retained-published-lesson parameter set.
+
+All three product source/version/package checks pass at Vera `0.1.288`, Clara
+`0.1.225` and Lucia `0.1.65`. Each Vera package has the same 19 governed source
+files and reproduces 12 saved complete report objects outside the repository
+(36 exact replays). Both Vera and Clara privacy registers are current; Lucia's
+affected opening-matter privacy binding is verified by its package tests.
+No public push, merge to main, deployment, Marketplace publication or enabled-host
+acceptance occurred. The full contributor scope and professional activation
+remain open.
+
 ### Holding/SOTP checkpoint — 30 September 2026
 
 Candidate source Vera `0.1.287` / component `0.1.1` adds explicit holding

@@ -182,6 +182,10 @@
   ],
   "security_controls": [
     {
+      "id": "versioned-workflow-snapshots",
+      "control": "Workflow snapshots are local run artifacts linked by content digests and serialized under the existing engagement lock. Expected revisions and retry identities reject lost updates and conflicting duplicate writes. They do not authenticate authors or reviewers, establish professional validity, or provide an external tamper-proof audit log."
+    },
+    {
       "id": "private-per-user-index",
       "control": "Each professional keeps only archive configuration, the optional client identity mapping, and the derived SQLite search cache in an owner-only local state directory outside the archive. Engagements, input receipts, run contexts, lifecycle, and artifact records do not depend on that cache as their operational source of truth."
     },
@@ -258,7 +262,7 @@
     "reviewed_at": "2026-09-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5eff67f4f19bec5ba5d84f7ac8db22824abc05bea491d1cb9bca84c35cda9b6b"
+    "source_fingerprint": "ba2c5500dfc3a6aed62d3e668dfa9d88e737bf23ed8ae05bfdcaf9bdfed5d799"
   },
   "governed_repository_paths": [
     "plugins/vera/scripts/model_data_report.py",

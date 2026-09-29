@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "variance-analysis",
-  "course_sha256": "ca63d597fe711012b8e83ccff17f65abbd16d8896979c81a1839af59ae251e5f",
+  "course_sha256": "3300063ed6111cf1c8a30817e87f27876f3a685843233cc85f874d98f3bee5b4",
   "reviewer": "Codex: first-use lesson and current native variance outputs",
   "reviewed_at": "2026-09-14T19:41:43.894547+00:00",
   "review_scope": "Read both fictional monthly input populations, all five localized contexts and first-use outlines, and the current calculation and interpretation outputs. Ten current native exercises pass within 92 component/native checks, without failures or skips. Visually inspected all 55 pages of the ten native Word reports, both distinct workbooks, and the four main chart families for every locale/phase. Final chart bytes match the previously inspected revision except the Spanish practice monthly chart, which was inspected separately. Workbook cells, styles and visibility match within each phase after resolving shared strings and equal-magnitude row order. Alternative sequences were reviewed through their native rows, reconciliation and authored interpretation; no visual inspection of every alternative PNG is claimed. Reports retain technical appendices, spacious chart pages and wrapped long German labels. This accepts prepared materials and their demonstrated current output, not learner understanding, voice interaction or professional approval.",
@@ -587,5 +587,32 @@
         "after": "291b0c14d84c2498581ba6e8da92ecbb948df5abfa329bcab9d24ef0924da9a1"
       }
     ]
+  },
+  "cnc_integration_freshness": {
+    "reviewer": "Codex /root - bounded source freshness review",
+    "reviewed_at": "2026-09-29T22:10:29.080819+00:00",
+    "comparison_commit": "d728392e712b82049b9fc8f196aa44df51cbbaed",
+    "previous_course_sha256": "2d89c5aea31a12867f36596ceb12982fbd564e48720bca8a65cc03fae944ee38",
+    "source_changes": [
+      {
+        "path": "modules/variance-analysis/vendor/modules/vera_assurance/contracts.py",
+        "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
+        "after": "c4c791eab77b3077554dbbc40d90247a347b62b832bb7fdbdc21f73dbe679294"
+      },
+      {
+        "path": "vendor/modules/vera_assurance/contracts.py",
+        "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
+        "after": "c4c791eab77b3077554dbbc40d90247a347b62b832bb7fdbdc21f73dbe679294"
+      }
+    ],
+    "content_review": "Compared the complete compiled course with the reviewed main baseline. Every field except sources is identical, including authored locales, fictional inputs, checkpoints, practice and pacing. Original editorial explanations and inspected artifact hashes are preserved.",
+    "source_review": "Reviewed the sole shared-contract change: adding composizione-negoziata to the recognized managed workflow IDs. The Studio Archive lesson also binds the additive sealed snapshot history/read/append methods under the existing engagement lock. An AST comparison confirms that every pre-existing ledger function and class is unchanged. No existing lesson behavior or external recipient is added by these changes.",
+    "execution_evidence": "GitHub run 36633858670, job 109629617115 at 7ef49b804: 1171 native teaching tests passed, three skipped; one stale public-catalogue count assertion failed and has been corrected separately. This is not a green whole-run claim. Ten additional CNC native demo/practice cases pass locally.",
+    "limits": "Historical artifact reviews remain historical. No new independent editorial, live learner, voice, installed-host or professional acceptance is claimed. The release gate must validate current native demo/practice identities against these exact course hashes."
+  },
+  "valuation_cnc_integration": {
+    "reviewed_at": "2026-09-29T23:43:34.976766+00:00",
+    "scope": "Lesson content unchanged from HEAD, MERGE_HEAD outside the source inventory. Reviewed additive workflow-ID registration and Studio Archive immutable snapshot functions. Prior editorial/artifact acceptance and professional limits retained; native CNC and valuation execution is verified separately.",
+    "integrated_main": "8f662195f00bac3b605ac73077e1a0bd31d30253"
   }
 }

@@ -302,6 +302,16 @@
       ]
     },
     {
+      "component_id": "composizione-negoziata",
+      "skills": [
+        "modules/composizione-negoziata/skills/composizione-negoziata/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/composizione-negoziata/scripts/check_dependencies.py",
+        "modules/composizione-negoziata/scripts/cnc_case.py"
+      ]
+    },
+    {
       "component_id": "comunicazione-professionale",
       "skills": [
         "modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md"
@@ -509,6 +519,7 @@
     "skills/business-planning/SKILL.md",
     "skills/business-valuation/SKILL.md",
     "skills/centrale-rischi-review/SKILL.md",
+    "skills/composizione-negoziata/SKILL.md",
     "skills/comunicazione-professionale/SKILL.md",
     "skills/concordato-plan-review/SKILL.md",
     "skills/datev-invoice-start/SKILL.md",
