@@ -48,7 +48,11 @@ adapter are unimplemented. Use its specialist skill directly for P0 work.
 - `adeguati-assetti`: assess an Italian company's organizational, administrative
   and accounting arrangements using proportionate review of responsibilities,
   processes and actual reporting/operating evidence; prepare findings, improvement
-  actions and subsequent reviews. A management report alone is not an assetti
+  actions and subsequent reviews. When construction is requested, use the same
+  engagement for attributed interviews, qualified evidence, reasoned professional
+  overrides, control design, versioned manuals/registers, separate adoption and
+  sampled operating review. The numerical method is experimental; a manual does
+  not prove operation. A management report alone is not an assetti
   assessment; general legal questions remain in quesito-legale-fiscale.
 
 - `aml-review`: review Italian client AML evidence at onboarding or later review,

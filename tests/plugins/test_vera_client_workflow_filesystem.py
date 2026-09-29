@@ -36,6 +36,7 @@ CLIENT_WORKFLOW_ENTRYPOINTS = (
     ("treasury-forecast", "run_treasury.py"),
     ("aml-review", "aml_review.py"),
     ("adeguati-assetti", "assetti_review.py"),
+    ("adeguati-assetti", "assetti_construction.py"),
     ("archive-organization", "archive_organization.py"),
     ("open-item-reconciliation", "audit_assurance.py"),
     ("open-item-reconciliation", "build_missing_evidence_requests.py"),

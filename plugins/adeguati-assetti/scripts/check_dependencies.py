@@ -1,22 +1,32 @@
-"""Assetti review helpers use the Python standard library only."""
+"""Check declared manual-rendering dependencies without installing packages."""
 
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import logging
 
 __all__ = ["main"]
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Report the absence of third-party runtime requirements."""
+    """Check the existing managed runtime; never install packages during a case."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--requirements", choices=["requirements.txt"], default="requirements.txt"
     )
     parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO)
-    logging.info("Assetti review: standard library only; no installation required.")
+    missing = [
+        name for name in ("docx", "reportlab") if importlib.util.find_spec(name) is None
+    ]
+    if missing:
+        logging.error(
+            "Missing declared manual dependencies: %s; use Vera's managed runtime setup",
+            ", ".join(missing),
+        )
+        return 1
+    logging.info("Assetti dependencies are available in this runtime.")
     return 0
 
 
