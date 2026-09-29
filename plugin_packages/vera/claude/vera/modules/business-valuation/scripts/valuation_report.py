@@ -45,6 +45,12 @@ TIMING_LABELS = {
     "effective_annual": "capitalizzazione annua effettiva",
     "continuous": "capitalizzazione continua",
 }
+CLAIM_LABELS = {
+    "fact": "Fatto dichiarato",
+    "assumption": "Assunzione",
+    "hypothesis": "Ipotesi",
+    "opinion": "Giudizio",
+}
 
 
 def display(value: str, places: int = 2) -> str:
@@ -223,6 +229,38 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
                 ],
             )
         )
+    if report["claims"]:
+        rows = [
+            "I collegamenti verificano identità, importi e versioni. La corrispondenza fra testo e significato delle fonti richiede revisione professionale."
+        ]
+        for claim in report["claims"]:
+            rows.extend(
+                [
+                    f"{claim['id']} · {CLAIM_LABELS[claim['kind']]} · {STATUS[claim['status']]} · {claim['location']}",
+                    claim["text"],
+                    f"Base dichiarata: {claim['basis']}",
+                    f"Fonti: {', '.join(claim['resolved_source_ids'])}; input: {', '.join(claim['resolved_input_ids'])}; calcoli citati: {', '.join(claim['calculation_ids'])}.",
+                ]
+            )
+            for value in claim["resolved_values"]:
+                rows.append(
+                    f"Importo verificato nel registro: {display(value['value'])} {value['unit']} [{value['calculation_id']}]; importo dichiarato nell'affermazione: {value['asserted_value']} {value['asserted_unit']}."
+                )
+            rows.extend(claim["limitations"])
+            rows.extend(claim["issues"])
+            if claim["scenario_ids"]:
+                rows.append(
+                    f"Risultati condizionati degli scenari: {', '.join(claim['scenario_ids'])}; non sono intervalli statistici."
+                )
+            if claim["stale_review"]:
+                rows.append(
+                    "La precedente revisione dell'affermazione non vale per queste dipendenze."
+                )
+            if not claim["review_dependencies_ready"]:
+                rows.append(
+                    "Le evidenze o i metodi collegati richiedono ancora revisione."
+                )
+        sections.append(("Affermazioni e riscontri", rows))
     conclusion = report["conclusion"]
     sections.append(
         (
@@ -233,7 +271,18 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
                     if conclusion
                     else "Conclusione professionale non ancora registrata. I risultati dei metodi rimangono separati; non è applicata una media automatica."
                 )
-            ],
+            ]
+            + (
+                [
+                    (
+                        f"Affermazioni collegate: {', '.join(conclusion.get('claim_ids', []))}."
+                        if conclusion.get("claim_ids")
+                        else "La conclusione non contiene collegamenti strutturati al registro delle affermazioni."
+                    )
+                ]
+                if conclusion
+                else []
+            ),
         )
     )
     sections.append(
@@ -471,6 +520,56 @@ def write_workbook(path: Path, report: dict) -> None:
         for row in journal.iter_rows(min_row=2):
             for column in (0, 1, 3, 5, 6, 7, 8):
                 _literal(row[column], str(row[column].value or ""))
+    if report["claims"]:
+        claims = workbook.create_sheet("Affermazioni")
+        claims.append(
+            [
+                "ID",
+                "Testo / dato",
+                "Tipo",
+                "Stato",
+                "Valore dal registro",
+                "Base e limiti",
+                "Calcoli / input",
+                "Fonti",
+                "Revisore",
+            ]
+        )
+        for claim in report["claims"]:
+            claims.append(
+                [
+                    claim["id"],
+                    claim["text"],
+                    CLAIM_LABELS[claim["kind"]],
+                    STATUS[claim["status"]],
+                    None,
+                    "\n".join(
+                        [claim["basis"], *claim["limitations"], *claim["issues"]]
+                    ),
+                    ", ".join(
+                        [*claim["calculation_ids"], *claim["resolved_input_ids"]]
+                    ),
+                    ", ".join(claim["resolved_source_ids"]),
+                    (claim.get("review") or {}).get("reviewer", "Non registrato"),
+                ]
+            )
+            for value in claim["resolved_values"]:
+                claims.append(
+                    [
+                        claim["id"],
+                        value["calculation_id"],
+                        value["unit"],
+                        STATUS[claim["status"]],
+                        f"='Calcoli'!B{row_ids[value['calculation_id']]}",
+                        f"Dichiarato: {value['asserted_value']} {value['asserted_unit']}",
+                        value["calculation_id"],
+                        "",
+                        "",
+                    ]
+                )
+        for row in claims.iter_rows(min_row=2):
+            for column in (0, 1, 2, 3, 5, 6, 7, 8):
+                _literal(row[column], str(row[column].value or ""))
     _literal(summary["B1"], report["case"]["entity_name"])
     summary.merge_cells("B3:E3")
     summary.row_dimensions[3].height = 42
@@ -507,6 +606,66 @@ def write_workbook(path: Path, report: dict) -> None:
         for cell in journal["C"][1:]:
             cell.number_format = "0"
     workbook.save(path)
+
+
+def _write_workpapers(directory: Path, report: dict) -> None:
+    """Export named contract artifacts from the same canonical result, not copies of guesses."""
+    case = report["case"]
+    workpapers = {
+        "mandate": {
+            "mandate": case["mandate"],
+            "purpose_coverage": report["purpose_coverage"],
+        },
+        "evidence": {"sources": case["sources"], "inputs": case["inputs"]},
+        "normalizations": report["normalizations"],
+        "forecast_binding": report["plan_bridge"],
+        "method_decisions": report["methods"],
+        "benchmark_observations": [
+            {
+                "input_id": row["id"],
+                "value": row["value"],
+                "unit": row["unit"],
+                "source_ids": row["source_ids"],
+                "benchmark": row["benchmark"],
+            }
+            for row in case["inputs"]
+            if "benchmark" in row
+        ],
+        "calculations": report["calculations"],
+        "sensitivity": report["sensitivity"],
+        "valuation_conclusion": report["conclusion"],
+        "claim_registry": report["claims"],
+        "professional_review": {
+            "status": report["status"],
+            "identity": report["review_identity"],
+            "methods": [
+                {
+                    "method_id": row["method_id"],
+                    "status": row["status"],
+                    "review": row.get("review"),
+                    "dependency_sha256": row.get("dependency_sha256"),
+                }
+                for row in report["methods"]
+            ],
+            "adjustments": [
+                {"normalization_id": group["id"], "adjustments": group["adjustments"]}
+                for group in report["normalizations"]
+            ],
+            "claims": report["claims"],
+            "conclusion": report["conclusion"],
+        },
+    }
+    for name, data in workpapers.items():
+        payload = {
+            "schema_version": "vera.business_valuation.workpaper.v1",
+            "kind": name,
+            "case_sha256": report["case_sha256"],
+            "report_sha256": report["report_sha256"],
+            "data": data,
+        }
+        (directory / f"{name}.json").write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
 
 
 def _write_documents(directory: Path, report: dict) -> None:
@@ -584,6 +743,7 @@ def write_package(
     (output / "valuation.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
+    _write_workpapers(output, report)
     (output / "valuation_report.html").write_text(
         compile_html(report), encoding="utf-8"
     )

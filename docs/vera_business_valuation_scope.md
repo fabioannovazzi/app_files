@@ -25,7 +25,7 @@ professionally enabled. Specialist extensions remain part of the proposed scope.
 | P0-05 Engine | Seven Decimal methods; annual and explicitly dated DCF with stub/monthly/mid-period timing, ACT/365F and ACT/ACT_ISDA, flat/spot/interval-forward rates, effective annual/continuous compounding; formula ledger and EV/equity separation | Mixed-income dated/capital-varying variants, further income/sector models, alternative terminal conventions and curve-specific scenario comparison |
 | P0-06 Public sources | Host-led official research instructions; imported bytes/hash and explicit observation/publication/retrieval/vintage metadata; cutoff and age checks | Versioned parsers and tested observed-link acquisition, availability failures, redirects/host validation and historical revised-release cases |
 | P0-07 Guided experience | Native skill builds technical inputs, opens report and asks focused professional questions; user does not author JSON | Witnessed accountant completion of an end-to-end case; synthetic teacher execution does not establish this |
-| P0-08 Outputs | One replayed register produces HTML/MD/DOCX/PDF/XLSX/JSON/CSV; independent LibreOffice formula comparison and visual QA | Structured narrative-claim bindings and broad layout cases; recheck layout whenever report content changes |
+| P0-08 Outputs | One replayed register produces HTML/MD/DOCX/PDF/XLSX/JSON/CSV and the named JSON workpapers; explicit claim bindings, numeric equality and review invalidation; independent LibreOffice formula comparison and visual QA | Semantic support review across actual cases and broad layout cases; recheck layout whenever report content changes |
 | P0-09 Review | Input/source/method/mandate/audience/plan dependency hashes; per-adjustment review and transitive method bindings; independent conclusion review; affected reviews expire and unrelated branches survive | Additional purpose, full statement and benchmark-revision acceptance cases; local attestations do not authenticate humans |
 | P0-10 Privacy/release | Vera privacy record, routes, Italian teaching material, component and three host package projections; dedicated CI job | Dependency-checker and page-breadcrumb corrections await owner approval; all CI gates, professional release prerequisites and authoritative existing-listing publication remain pending |
 | P1-01 Specialist methods | Intake scope and unsupported-method diagnostics are explicit | Holding/SOTP, crisis, PPA, rights/waterfalls and damages models with fixtures and specialist review |
@@ -82,6 +82,26 @@ explanations, unrelated review preservation, duplicate amount prevention and
 literal/escaped exports. All 82 cells in the separate normalization workbook were
 recalculated by LibreOffice with the same tolerance; all six DOCX pages were
 visually inspected. These are synthetic mechanical cases, not field acceptance.
+
+The narrative claim registry now records explicit evidence/calculation references,
+exact stated numbers and units, dependency closure, conditional scenario identity,
+and separate claim/conclusion review. Missing or inconsistent support blocks the
+claim without altering a valid calculation. No semantic truth classifier is
+implemented. Five DOCX and four native PDF pages of the claim example were
+inspected; LibreOffice checked its 75 calculation cells and linked claim value.
+
+All named calculation workpapers in `contracts/workflow.json` are now separate
+JSON exports from the canonical report, including mandate, evidence, adjustments,
+forecast binding, method decisions, benchmarks, calculations, sensitivity,
+conclusion and professional review. The additional claim register brings the
+helper output to 18 artifacts. Actual model-data JSON/Markdown remain a separate
+host responsibility; a numerical helper cannot invent what the model read.
+
+The contributor's architecture also explicitly requests production JSON Schema
+validation using the existing runtime. Current code validates consumed fields,
+types and dependencies directly; a published case schema and its runtime
+integration remain to implement. Do not describe the Python checks as complete
+JSON Schema implementation.
 
 ## Purpose coverage and release evidence
 

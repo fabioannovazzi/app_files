@@ -121,10 +121,22 @@ immutable input and run. Read back the conclusion separately before its acceptan
 The conclusion is authored and reviewed; code does not judge its economic meaning
 or authenticate the reviewer. Check every narrative figure against calculation IDs.
 
+Use the explicit `claims` register for material narrative findings. Link each to
+selected sources, inputs, calculations or methods, explain the evidence basis and
+limitations, and distinguish fact, assumption, hypothesis and opinion. Supply exact
+numeric bindings for every material numerical statement; do not rely on matching
+a number found in prose. Check the text's meaning against the sources yourself.
+Read back claims separately before recording professional acceptance. Link the
+conclusion through `claim_ids`, then obtain its independent review. Missing or
+stale links must remain visible, including when the arithmetic still agrees.
+
 ## Delivery and privacy
 
 Deliver the HTML, DOCX/PDF, formula XLSX, JSON and calculation CSV from the same
 immutable revision. Explain the observed state and unresolved professional items.
+The helper also exports the mandate, evidence, adjustments, plan binding, method
+decisions, benchmark observations, calculations, sensitivity, claims, conclusion
+and review as separate JSON workpapers bound to the same canonical report.
 Workbook formulas recalculate when opened; exact Decimal values remain alongside
 them as audit evidence. External sharing, signing, filing and sending are separate
 actions requiring explicit authority. No remote service is called by the helpers.

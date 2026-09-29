@@ -347,6 +347,60 @@ def _bind_normalizations(result: dict, groups: dict) -> list[dict]:
     return dependent
 
 
+def _conclusion(case: dict, active: list, claims: list) -> dict | None:
+    """Bind separately reviewed prose to its selected methods and explicit claims."""
+    candidate = case.get("conclusion")
+    if not candidate:
+        return None
+    fields(candidate, {"text", "method_ids", "review"}, {"claim_ids"})
+    text(candidate["text"], "conclusion")
+    require(
+        isinstance(candidate["method_ids"], list) and bool(candidate["method_ids"]),
+        "Conclusion must name its methods",
+    )
+    by_id = {row["method_id"]: row for row in active}
+    require(
+        set(candidate["method_ids"]) <= by_id.keys(),
+        "Conclusion references an unselected method",
+    )
+    claim_ids = candidate.get("claim_ids", [])
+    require(
+        isinstance(claim_ids, list)
+        and all(isinstance(ref, str) for ref in claim_ids)
+        and len(set(claim_ids)) == len(claim_ids),
+        "Invalid conclusion claim IDs",
+    )
+    by_claim = {row["id"]: row for row in claims}
+    require(set(claim_ids) <= by_claim.keys(), "Conclusion references an unknown claim")
+    dependencies = {
+        key: by_id[key].get("dependency_sha256") for key in candidate["method_ids"]
+    }
+    conclusion_hash = digest(
+        {
+            "text": candidate["text"],
+            "methods": dependencies,
+            "claims": [by_claim[key] for key in claim_ids],
+            "limitations": case["limitations"],
+        }
+    )
+    accepted = (
+        all(
+            by_id[key]["status"] == "accepted_workpaper"
+            for key in candidate["method_ids"]
+        )
+        and all(by_claim[key]["status"] == "accepted_workpaper" for key in claim_ids)
+        and reviewed(candidate["review"], conclusion_hash)
+    )
+    return {
+        **candidate,
+        "dependency_sha256": conclusion_hash,
+        "status": "accepted_workpaper" if accepted else "draft",
+        "narrative_traceability": (
+            "explicit_claim_bindings" if claim_ids else "no_structured_claim_bindings"
+        ),
+    }
+
+
 def build_valuation(
     case: dict, source_root: Path, *, replay_parent: Path | None = None
 ) -> dict:
@@ -372,6 +426,7 @@ def build_valuation(
             "sensitivity",
             "purpose_profile",
             "normalizations",
+            "claims",
         },
     )
     require(case["schema_version"] == CASE_SCHEMA, "Unsupported valuation case schema")
@@ -556,44 +611,6 @@ def build_valuation(
         outputs.append(result)
     active = [row for row in outputs if row["status"] != "excluded"]
     require(bool(active), "At least one method must be selected")
-    conclusion = None
-    if case.get("conclusion"):
-        candidate = case["conclusion"]
-        fields(candidate, {"text", "method_ids", "review"})
-        text(candidate["text"], "conclusion")
-        require(
-            isinstance(candidate["method_ids"], list) and bool(candidate["method_ids"]),
-            "Conclusion must name its methods",
-        )
-        by_id = {row["method_id"]: row for row in active}
-        require(
-            set(candidate["method_ids"]) <= by_id.keys(),
-            "Conclusion references an unselected method",
-        )
-        dependencies = {
-            key: by_id[key].get("dependency_sha256") for key in candidate["method_ids"]
-        }
-        conclusion_hash = digest(
-            {
-                "text": candidate["text"],
-                "methods": dependencies,
-                "limitations": case["limitations"],
-            }
-        )
-        accepted = all(
-            by_id[key]["status"] == "accepted_workpaper"
-            for key in candidate["method_ids"]
-        ) and reviewed(candidate["review"], conclusion_hash)
-        conclusion = {
-            **candidate,
-            "dependency_sha256": conclusion_hash,
-            "status": "accepted_workpaper" if accepted else "draft",
-        }
-    status = "partial" if issues else "ready_for_professional_review"
-    if all(row["status"] == "blocked" for row in active):
-        status = "blocked"
-    if not issues and conclusion and conclusion["status"] == "accepted_workpaper":
-        status = "accepted_workpaper"
     sensitivity = []
     for scenario in indexed(case.get("sensitivity", [])).values():
         fields(
@@ -650,6 +667,27 @@ def build_valuation(
         sensitivity.append(
             {"id": scenario["id"], "status": "illustrative_sensitivity", **result}
         )
+    from valuation_claims import build_claims
+
+    claims = build_claims(
+        case, inputs, sources, calculations, outputs, sensitivity, normalizations
+    )
+    for claim in claims:
+        if claim["status"] in {"blocked", "partial"}:
+            issues.append(
+                f"Claim {claim['id']}: {'; '.join(claim['issues']) or 'evidence review pending'}"
+            )
+    conclusion = _conclusion(case, active, claims)
+    status = "partial" if issues else "ready_for_professional_review"
+    if all(row["status"] == "blocked" for row in active):
+        status = "blocked"
+    if (
+        not issues
+        and conclusion
+        and conclusion["status"] == "accepted_workpaper"
+        and all(claim["status"] == "accepted_workpaper" for claim in claims)
+    ):
+        status = "accepted_workpaper"
     report = {
         "schema_version": "vera.business_valuation.result.v1",
         "case_sha256": digest(case),
@@ -663,6 +701,8 @@ def build_valuation(
         "issues": issues,
         "purpose_coverage": purpose,
         "normalizations": list(normalizations.values()),
+        "claims": claims,
+        "claim_registry_status": "explicit_bindings" if claims else "not_supplied",
         "piv_conformity": "not_assessed",
         "legal_purpose_qualification": "requires_separate_professional_review",
         "review_identity": "local_attestation_not_authenticated",

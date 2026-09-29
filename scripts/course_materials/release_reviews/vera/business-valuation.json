@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-valuation",
-  "course_sha256": "8dcc6d8e11e76ca69c5006629dc1f71ec3b6a7db28c49a6f024c142ce4968d81",
+  "course_sha256": "5681fa98b2bfd9e84d854c5b446ec142157db1abf76cbd2d1bd37550590b4b21",
   "reviewer": "Codex /root: source, calculation and document review",
-  "reviewed_at": "2026-09-29T18:56:11.711307+00:00",
+  "reviewed_at": "2026-09-29T19:15:08.903348+00:00",
   "review_scope": "Read both fictional notes and the entire Italian lesson. Ran the real bound workflow for demo and practice, inspected their Markdown reports and calculation registers. Seven-method DOCX was rendered and all four pages inspected; LibreOffice independently recalculated all 75 workbook calculation cells. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior is an instruction and separate archive contract, not claimed as a live learner test.",
   "languages": {
     "it": {
@@ -23,11 +23,11 @@
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "5831545b2ee50fab11ba5da9d367a1c6eb0e00abd4d960d46504256ab9f397c6"
+            "sha256": "4c3bce5282b3b526497d2842e3748f7b55c8e541eaf9d1f46e31de69824e33c9"
           },
           {
             "name": "valuation.json",
-            "sha256": "0c4954be6a5d49a73bc9677fa34f31bd4b05ccbffbe60a7f04a1ae89dbb8fe5d"
+            "sha256": "17bf642e139b54463c4e04902837ce8dbc19adc8663d41afcb7a89f2863251ac"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -66,6 +66,19 @@
                 "sha256": "6e4f8b8d6d1971e1aa2308ad8a5bf7a69fdacc0df74f10188a2c2dc941b2dbf0"
               }
             ]
+          },
+          {
+            "reviewed_at": "2026-09-29T18:56:11.711307+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "5831545b2ee50fab11ba5da9d367a1c6eb0e00abd4d960d46504256ab9f397c6"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "0c4954be6a5d49a73bc9677fa34f31bd4b05ccbffbe60a7f04a1ae89dbb8fe5d"
+              }
+            ]
           }
         ]
       },
@@ -75,11 +88,11 @@
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "9a3c783dae646cc88d189fe4a063ad06c5cdf16f59440a9fa2036788e4338290"
+            "sha256": "5d9b0491a59e3251fc2005dcaf6a4daa7595aca1dc67ca83816f595e4b895fcc"
           },
           {
             "name": "valuation.json",
-            "sha256": "7001f1e9b1e0ce8f9d8e231a4b87630ee1a7a98dd28d47b101c02dd35b46dc21"
+            "sha256": "1f7e0bb19eac79a738d3d834ca1c69ddc13ec51285a7f25cbea2f445a0018dce"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -118,6 +131,19 @@
                 "sha256": "7337a0ad02762ad2880db23180ee468756ce15515ba161a21bf21cece611e82d"
               }
             ]
+          },
+          {
+            "reviewed_at": "2026-09-29T18:56:11.711307+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "9a3c783dae646cc88d189fe4a063ad06c5cdf16f59440a9fa2036788e4338290"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "7001f1e9b1e0ce8f9d8e231a4b87630ee1a7a98dd28d47b101c02dd35b46dc21"
+              }
+            ]
           }
         ]
       }
@@ -142,5 +168,11 @@
     "tests": "124 valuation tests pass at 93.47% coverage. Missing amounts, inconsistent reconciliation, changed review explanations, duplicate amounts and untrusted export text are covered.",
     "independent_workbook_review": "LibreOffice recalculated all 82 normalization-workbook calculation cells; all match the Decimal register at 1e-12 relative / 1e-9 absolute tolerance. The separate journal links preserve 90 reported +20 -10 =100 adjusted.",
     "previous_reviewed_at": "2026-09-29T18:42:03.899149+00:00"
+  },
+  "claim_registry_review": {
+    "scope": "Reviewed the explicit claim contract, numeric bindings and separate local attestations, plus the named JSON workpaper projections. Read both fresh annual lesson reports; results remain 750000 and 583333.33 EUR with pending review and development-only purpose coverage. Both native runs now retain all 18 numerical workpapers. The lesson has no authored claim registry and does not claim to teach that optional extension. Separate synthetic claim DOCX/PDF and workbook were inspected; no human or PIV approval is inferred.",
+    "tests": "140 valuation tests pass at 94.66% coverage, including stale claim/conclusion review, unavailable evidence, numeric mismatches, normalization tax-dependency and conditional scenario references.",
+    "artifact_review": "All five DOCX and four native PDF pages of the synthetic claim example are readable. LibreOffice independently matches its 75 calculation cells plus the linked 750 EUR claim value at 1e-12 relative / 1e-9 absolute tolerance.",
+    "previous_reviewed_at": "2026-09-29T18:56:11.711307+00:00"
   }
 }

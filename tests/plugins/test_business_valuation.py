@@ -20,6 +20,7 @@ sys.path.insert(0, str(ROOT / "plugins/_shared/vendor/modules"))
 
 import run_valuation
 import valuation_case
+import valuation_claims
 import valuation_engine
 import valuation_normalization
 import valuation_report
@@ -38,6 +39,7 @@ def restore_imports(monkeypatch: pytest.MonkeyPatch) -> None:
     for module in (
         run_valuation,
         valuation_case,
+        valuation_claims,
         valuation_engine,
         valuation_normalization,
         valuation_report,
@@ -265,6 +267,246 @@ def test_untrusted_adjustment_prose_remains_literal_in_exports(tmp_path: Path) -
     write_workbook(path, result)
     assert load_workbook(path)["Rettifiche"]["F3"].data_type == "s"
     assert "&lt;script&gt;x&lt;/script&gt;" in compile_html(result)
+
+
+def claimed_case() -> dict:
+    """Author one conditional claim; the numeric binding never validates its prose."""
+    case = case_data()
+    case["claims"] = [
+        {
+            "id": "fcff-equity",
+            "kind": "hypothesis",
+            "text": "Alle ipotesi sintetiche dichiarate il DCF FCFF indica un equity di 750 EUR.",
+            "location": "Confronto dei metodi",
+            "basis": "Raccordo esplicito dal valore operativo, debito e cassa della prova.",
+            "source_ids": [],
+            "input_ids": [],
+            "calculation_ids": ["fcff/equity"],
+            "method_ids": [],
+            "limitations": ["Dati inventati; non è una valutazione professionale."],
+            "values": [
+                {"calculation_id": "fcff/equity", "value": "750", "unit": "EUR"}
+            ],
+        }
+    ]
+    return case
+
+
+def reviewed_claimed_case() -> dict:
+    """Prepare explicit synthetic method and claim attestations separately."""
+    case = claimed_case()
+    initial = build_valuation(case, FIXTURE)
+    case["methods"][0]["review"] = review(initial["methods"][0]["dependency_sha256"])
+    prepared = build_valuation(case, FIXTURE)
+    case["claims"][0]["review"] = review(prepared["claims"][0]["dependency_sha256"])
+    return case
+
+
+def test_claim_resolves_full_numeric_evidence_without_approving_prose() -> None:
+    result = build_valuation(claimed_case(), FIXTURE)
+    claim = result["claims"][0]
+    assert Decimal(claim["resolved_values"][0]["value"]) == Decimal("750")
+    assert claim["resolved_values"][0]["calculation_id"] == "fcff/equity"
+    assert claim["resolved_values"][0]["unit"] == "EUR"
+    assert claim["resolved_source_ids"] == ["evidence"]
+    assert claim["resolved_method_ids"] == ["fcff"]
+    assert "fcff/pv_terminal" in claim["resolved_calculation_ids"]
+    assert claim["status"] == "ready_for_professional_review"
+    assert claim["review_dependencies_ready"] is False
+    assert claim["semantic_support"] == "requires_professional_review"
+
+
+def test_method_and_claim_need_separate_local_review() -> None:
+    result = build_valuation(reviewed_claimed_case(), FIXTURE)
+    assert result["claims"][0]["status"] == "accepted_workpaper"
+    assert (
+        result["claims"][0]["semantic_support"]
+        == "locally_attested_not_independently_verified"
+    )
+    assert result["piv_conformity"] == "not_assessed"
+
+
+def test_claim_acceptance_cannot_precede_its_method_review() -> None:
+    case = claimed_case()
+    prepared = build_valuation(case, FIXTURE)
+    case["claims"][0]["review"] = review(prepared["claims"][0]["dependency_sha256"])
+    result = build_valuation(case, FIXTURE)
+    assert result["claims"][0]["status"] == "ready_for_professional_review"
+    assert result["claims"][0]["review_dependencies_ready"] is False
+
+
+@pytest.mark.parametrize(("field", "value"), [("value", "751"), ("unit", "USD")])
+def test_mismatched_claim_number_blocks_claim_without_changing_calculation(
+    field: str, value: str
+) -> None:
+    case = claimed_case()
+    case["claims"][0]["values"][0][field] = value
+    result = build_valuation(case, FIXTURE)
+    assert result["claims"][0]["status"] == "blocked"
+    assert "differs" in result["claims"][0]["issues"][0]
+    assert result["methods"][0]["status"] == "ready_for_professional_review"
+    assert Decimal(
+        next(row for row in result["calculations"] if row["id"] == "fcff/equity")[
+            "value"
+        ]
+    ) == Decimal("750")
+
+
+@pytest.mark.parametrize(
+    ("field", "refs"),
+    [
+        ("calculation_ids", ["fcff/missing"]),
+        ("source_ids", ["missing"]),
+        ("input_ids", ["missing"]),
+        ("method_ids", ["missing"]),
+    ],
+)
+def test_unavailable_claim_reference_stays_visible(field: str, refs: list[str]) -> None:
+    case = claimed_case()
+    case["claims"][0][field] = refs
+    result = build_valuation(case, FIXTURE)
+    assert result["claims"][0]["status"] == "blocked"
+    assert result["claims"][0]["issues"]
+    assert result["methods"][0]["status"] == "ready_for_professional_review"
+
+
+def test_changed_claim_text_revokes_claim_and_conclusion_but_preserves_method() -> None:
+    case = reviewed_claimed_case()
+    case["conclusion"] = {
+        "text": "Conclusione sintetica condizionata.",
+        "method_ids": ["fcff"],
+        "claim_ids": ["fcff-equity"],
+        "review": None,
+    }
+    prepared = build_valuation(case, FIXTURE)
+    case["conclusion"]["review"] = review(prepared["conclusion"]["dependency_sha256"])
+    case["claims"][0]["text"] = "Un testo interpretativo diverso deve essere rivisto."
+    result = build_valuation(case, FIXTURE)
+    assert result["claims"][0]["stale_review"] is True
+    assert result["conclusion"]["status"] == "draft"
+    assert result["methods"][0]["status"] == "accepted_workpaper"
+
+
+def test_claim_based_conclusion_needs_its_own_review() -> None:
+    case = reviewed_claimed_case()
+    case["conclusion"] = {
+        "text": "Conclusione sintetica condizionata.",
+        "method_ids": ["fcff"],
+        "claim_ids": ["fcff-equity"],
+        "review": None,
+    }
+    prepared = build_valuation(case, FIXTURE)
+    case["conclusion"]["review"] = review(prepared["conclusion"]["dependency_sha256"])
+    result = build_valuation(case, FIXTURE)
+    assert result["conclusion"]["status"] == "accepted_workpaper"
+    assert result["conclusion"]["narrative_traceability"] == "explicit_claim_bindings"
+
+
+def test_direct_normalization_claim_keeps_tax_review_dependency() -> None:
+    case = reviewed_normalized_case()
+    claim = claimed_case()["claims"][0]
+    claim.update(
+        {
+            "id": "adjusted-income",
+            "text": "Reddito rettificato sintetico.",
+            "calculation_ids": ["normalization/income-2026/adjusted"],
+            "values": [
+                {
+                    "calculation_id": "normalization/income-2026/adjusted",
+                    "value": "100",
+                    "unit": "EUR",
+                }
+            ],
+        }
+    )
+    case["claims"] = [claim]
+    prepared = build_valuation(case, FIXTURE)
+    claim["review"] = review(prepared["claims"][0]["dependency_sha256"])
+    case["normalizations"][0]["adjustments"][0][
+        "tax_treatment"
+    ] = "Trattamento fiscale modificato."
+    result = build_valuation(case, FIXTURE)
+    assert result["claims"][0]["stale_review"] is True
+    assert result["claims"][0]["status"] == "partial"
+
+
+def test_source_only_claim_has_no_invented_calculation() -> None:
+    case = claimed_case()
+    case["claims"][0].update(
+        {
+            "kind": "fact",
+            "text": "Il documento è materiale di prova sintetico.",
+            "source_ids": ["evidence"],
+            "calculation_ids": [],
+            "values": [],
+        }
+    )
+    result = build_valuation(case, FIXTURE)
+    assert result["claims"][0]["resolved_calculation_ids"] == []
+    assert result["claims"][0]["resolved_values"] == []
+    assert result["claims"][0]["review_dependencies_ready"] is True
+    assert result["claims"][0]["status"] == "ready_for_professional_review"
+
+
+def test_sensitivity_claim_preserves_conditional_scenario_and_base_method() -> None:
+    case = claimed_case()
+    case["sensitivity"] = [
+        {
+            "id": "stress",
+            "method_id": "fcff",
+            "discount_rate": "rate",
+            "terminal_rate": "rate",
+            "terminal_growth": "growth",
+        }
+    ]
+    case["claims"][0]["calculation_ids"] = ["stress/equity"]
+    case["claims"][0]["values"][0]["calculation_id"] = "stress/equity"
+    result = build_valuation(case, FIXTURE)
+    assert result["claims"][0]["scenario_ids"] == ["stress"]
+    assert result["claims"][0]["resolved_method_ids"] == ["fcff"]
+    assert "Risultati condizionati degli scenari: stress" in compile_html(result)
+
+
+def test_unreconciled_adjusted_value_cannot_support_an_accepted_claim() -> None:
+    case = normalized_case()
+    next(row for row in case["inputs"] if row["id"] == "income")["value"] = "999"
+    claim = claimed_case()["claims"][0]
+    claim.update(
+        {
+            "calculation_ids": ["normalization/income-2026/adjusted"],
+            "values": [
+                {
+                    "calculation_id": "normalization/income-2026/adjusted",
+                    "value": "100",
+                    "unit": "EUR",
+                }
+            ],
+        }
+    )
+    case["claims"] = [claim]
+    result = build_valuation(case, FIXTURE)
+    assert result["claims"][0]["status"] == "blocked"
+    assert result["claims"][0]["issues"] == ["Unreconciled normalization: income-2026"]
+
+
+def test_claim_and_named_workpapers_export_from_one_canonical_register(
+    tmp_path: Path,
+) -> None:
+    from openpyxl import load_workbook
+
+    report = build_valuation(reviewed_claimed_case(), FIXTURE)
+    output = tmp_path / "claims"
+    write_package(report, FIXTURE, output)
+    registry = read_json(output / "claim_registry.json")
+    calculations = read_json(output / "calculations.json")
+    assert registry["data"] == report["claims"]
+    assert registry["report_sha256"] == report["report_sha256"]
+    assert calculations["data"] == report["calculations"]
+    assert read_json(output / "forecast_binding.json")["data"] is None
+    assert not (output / "model_data_report.json").exists()
+    workbook = load_workbook(output / "valuation_workbook.xlsx")
+    assert workbook["Affermazioni"]["E3"].value.startswith("='Calcoli'!B")
+    assert "Affermazioni e riscontri" in (output / "valuation_report.md").read_text()
 
 
 def dated_case(**timing_changes) -> dict:
@@ -775,7 +1017,26 @@ def test_export_formats_are_readable_and_preserve_status(tmp_path: Path) -> None
     report = build_valuation(case_data(), FIXTURE)
     output = tmp_path / "report"
     artifacts = write_package(report, FIXTURE, output)
-    assert len(artifacts) == 7
+    assert {item["path"] for item in artifacts} == {
+        "valuation.json",
+        "valuation_report.html",
+        "valuation_report.md",
+        "valuation_report.docx",
+        "valuation_report.pdf",
+        "valuation_workbook.xlsx",
+        "calculations.csv",
+        "mandate.json",
+        "evidence.json",
+        "normalizations.json",
+        "forecast_binding.json",
+        "method_decisions.json",
+        "benchmark_observations.json",
+        "calculations.json",
+        "sensitivity.json",
+        "valuation_conclusion.json",
+        "claim_registry.json",
+        "professional_review.json",
+    }
     assert (
         Document(output / "valuation_report.docx").paragraphs[0].text
         == "Valutazione d’impresa"

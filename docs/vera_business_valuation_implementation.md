@@ -54,7 +54,7 @@ formula comparisons; report rendering; privacy coverage and package parity.
 
 Local evidence on 29 September 2026:
 
-- 124 valuation regressions pass; component coverage is 93.47%. These exercise
+- 140 valuation regressions pass; component coverage is 94.66%. These exercise
   all seven methods, failure preservation, review/conclusion freshness, exact
   receipts, full-year plan replay, all 21 explicit purpose intake routes and real
   native lesson input runs. Purpose routing tests do not enable professional use.
@@ -67,7 +67,12 @@ Local evidence on 29 September 2026:
   review dependencies. Missing or inconsistent values block dependent methods;
   unrelated method reviews survive. It does not classify accounting treatments
   or establish a full statement balance or roll-forward.
-- Mypy passes for all seven scripts; Bandit reports no findings. Formatting and
+- Explicit claim records bind narrative, selected evidence, full calculation
+  dependency chains, exact numeric values/units and separate reviews. Invalid
+  claims remain visible without changing valid calculations. The named JSON
+  workpapers project the same report hash; the helper exports 18 artifacts and
+  does not fabricate the host's model-data reports.
+- Mypy passes for all eight scripts; Bandit reports no findings. Formatting and
   import-order checks pass.
 - LibreOffice independently recalculated all 75 cells of the seven-method
   calculation register and matched the engine within floating-point tolerance.
@@ -83,6 +88,11 @@ Local evidence on 29 September 2026:
   preserving the independent 90 +20 -10 =100 reconciliation and linked method
   formulas. All six pages of its DOCX were inspected. The complete 124-test run
   includes absent adjustment values and untrusted-prose export checks.
+- The claim example's 75 calculation cells and linked 750 EUR claim value agree
+  after LibreOffice recalculation. All five DOCX and four native PDF pages were
+  inspected. The current 140-test run adds numeric mismatch, unavailable support,
+  stale claim/conclusion review, normalization-tax dependency and conditional
+  scenario cases. Semantic support and human approval are not inferred from tests.
 - All five current rendered DOCX pages were inspected after adding purpose
   availability. The HTML function page was
   inspected in the browser in Italian and English. Public copy exists in five

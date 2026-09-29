@@ -11,7 +11,7 @@ Required top-level fields: `schema_version=vera.business_valuation.case.v1`,
 `case_id`, `entity_name`, `currency` (one ISO-style three-letter code), `audience`,
 `synthetic` (boolean), `mandate`, `sources`, `inputs`, `methods`, `limitations`.
 Optional fields: `conclusion`, `plan_binding`, `sensitivity`, `purpose_profile`,
-`normalizations`.
+`normalizations`, `claims`.
 Unknown fields reject.
 All monetary/rate/multiple values are canonical decimal strings, with no thousands
 separator, exponent or implicit percent conversion. Rates are fractions. Missing
@@ -137,6 +137,39 @@ The compiler never creates a conclusion or average. All numerical claims in pros
 require model/professional comparison against the calculation IDs. Code validates
 identity and dependencies, not semantic truth of the narrative.
 
+## Narrative claim register
+
+Optional `claims` records substantive authored statements. Each has `id`, `kind`
+(`fact`, `assumption`, `hypothesis`, `opinion`), `text`, report `location`, `basis`
+explaining evidence support, `source_ids`, `input_ids`, `calculation_ids`,
+`method_ids`, `limitations` and optional `review`. Reference arrays are explicit,
+unique and may be empty individually; at least one evidence reference is required.
+The model and professional select the kind and relevant evidence. Code does not
+classify prose or infer semantic support from a link.
+
+For each numerical assertion, supply a `values` entry with `calculation_id`,
+canonical decimal `value`, and exact `unit`. The calculation must be explicitly
+listed. Equality is checked without currency conversion, percentage scaling or
+rounding tolerance; reader-facing rounding is separate. A mismatch or unresolved
+reference blocks the claim, preserves both stated and calculated amounts, and
+does not alter a valid valuation calculation. Missing evidence is never fabricated.
+Free-text numbers are not parsed: the host must map each material numerical
+statement and review the prose against its explicit numeric bindings.
+
+The register resolves the whole arithmetic dependency chain and binds exact input,
+source, method, normalization and conditional-sensitivity versions. Claims about
+normalization calculations retain their adjustment review dependencies. A changed
+tax explanation can invalidate its claim without changing the sum. Conditional
+scenario claims retain their scenario IDs and are not statistical intervals.
+
+Claim review uses the standard explicit local attestation. Referenced methods and
+adjustments must first have their own current acceptance; this does not establish
+truth, authenticate a reviewer or activate a professional purpose. Conclusion
+`claim_ids` optionally names reviewed claim records; its separate review binds
+those exact records and the prose. Missing structured conclusion links are shown
+as missing, never inferred. Register records and their actual status appear in
+the report, `Affermazioni` workbook sheet and `claim_registry.json`.
+
 Every new case revision is imported as a new immutable input and run. Outputs use
 `valuation-<case-hash>` directories. Repeating the exact request replays the case
 and verifies every existing artifact's hash. Incomplete or changed exports are
@@ -171,6 +204,17 @@ method summaries and source provenance. Excel uses its own numeric precision;
 the authoritative exact decimal result is retained alongside each formula.
 Opening/recalculation is required to populate formula caches. Changing the workbook
 does not amend the approved JSON case or its recorded professional reviews.
+
+Named JSON workpapers project the same canonical result into `mandate.json`,
+`evidence.json`, `normalizations.json`, `forecast_binding.json`,
+`method_decisions.json`, `benchmark_observations.json`, `calculations.json`,
+`sensitivity.json`, `valuation_conclusion.json`, `professional_review.json` and
+`claim_registry.json`. Each carries `case_sha256`, `report_sha256`, `kind`,
+`schema_version=vera.business_valuation.workpaper.v1` and `data`. Unused plan or
+conclusion data stays null; absent observations remain empty. The archive manifest
+hashes all 18 exported artifacts. The host separately prepares the two model-data
+reports from its actual reading/context evidence; the numerical helper cannot
+fabricate that account from the case inputs.
 
 The function prepares workpapers. PIV conformity and purpose-specific legal
 qualification remain explicitly not assessed. No automatic signing, filing,
