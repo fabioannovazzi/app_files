@@ -20,11 +20,11 @@ jobs:
           python-version: "3.12"
       - run: python -m pip install pytest pytest-cov pypdf black==25.1.0 isort==6.0.1 mypy bandit -r plugins/business-valuation/requirements.txt -r plugins/business-planning/requirements.txt
       - name: Verify valuation calculations, evidence and plan replay
-        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_business_valuation.py --cov=plugins/business-valuation/scripts --cov-report=term-missing --cov-fail-under=80
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_business_valuation.py tests/plugins/test_business_valuation_benchmarks.py tests/plugins/test_clara_public_http.py --cov=plugins/business-valuation/scripts --cov-report=term-missing --cov-fail-under=80
       - name: Check valuation code quality
         run: |
-          python -m black --check plugins/business-valuation/scripts tests/plugins/test_business_valuation.py
-          python -m isort --check-only plugins/business-valuation/scripts tests/plugins/test_business_valuation.py
+          python -m black --check plugins/business-valuation/scripts tests/plugins/test_business_valuation.py tests/plugins/test_business_valuation_benchmarks.py
+          python -m isort --check-only plugins/business-valuation/scripts tests/plugins/test_business_valuation.py tests/plugins/test_business_valuation_benchmarks.py
           python -m mypy --follow-imports=skip plugins/business-valuation/scripts
           python -m bandit -q -r plugins/business-valuation/scripts
 

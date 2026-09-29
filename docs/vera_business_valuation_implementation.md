@@ -54,7 +54,7 @@ formula comparisons; report rendering; privacy coverage and package parity.
 
 Local evidence on 29 September 2026:
 
-- 140 valuation regressions pass; component coverage is 94.66%. These exercise
+- 214 valuation/acquisition/shared-transport regressions pass; component coverage is 93.67%. These exercise
   all seven methods, failure preservation, review/conclusion freshness, exact
   receipts, full-year plan replay, all 21 explicit purpose intake routes and real
   native lesson input runs. Purpose routing tests do not enable professional use.
@@ -72,8 +72,18 @@ Local evidence on 29 September 2026:
   claims remain visible without changing valid calculations. The named JSON
   workpapers project the same report hash; the helper exports 18 artifacts and
   does not fabricate the host's model-data reports.
-- Mypy passes for all eight scripts; Bandit reports no findings. Formatting and
+- Mypy passes for all eleven scripts; Bandit reports no findings. Formatting and
   import-order checks pass.
+- The bundled JSON Schema validates the case envelope before nested-source reads
+  and individual selected-method payloads inside partial-workpaper diagnostics.
+- The versioned NYU country-risk HTML adapter follows observed links, preserves
+  original bytes/terms/release metadata and exact percent conversion, and binds
+  imported records to parser replay. Synthetic revised-release tests preserve
+  earlier snapshots, reject look-ahead and invalidate only dependent reviews.
+  Public-host/DNS/redirect, MIME, size, archive/office rejection, missing values,
+  parser drift, reuse decisions and visible source failures are covered. The live
+  NYU run retrieved three documents but retained an unknown observation date;
+  it is not a professionally adopted benchmark or proof of other source adapters.
 - LibreOffice independently recalculated all 75 cells of the seven-method
   calculation register and matched the engine within floating-point tolerance.
 - It also recalculated three dated-model workbooks (300 calculation cells) and

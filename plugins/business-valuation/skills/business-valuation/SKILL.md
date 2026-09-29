@@ -81,8 +81,15 @@ For benchmarks, research official public sources with public parameter/sector/da
 queries only. The mandate authorizes necessary public research; do not include
 private financials or names in queries. Save permitted evidence with observation,
 publication/retrieval dates, vintage, definition, geography, selection reason and
-the professionally chosen maximum age. The helper checks dates and metadata; it
-does not download, authenticate publishers, assess relevance or choose a rate.
+the professionally chosen maximum age. The calculation helper checks dates and
+metadata without network requests; it does not authenticate publishers, assess
+relevance or choose a rate. For the NYU country-risk HTML table, read
+`references/benchmark-acquisition.md` and use the separate acquisition helper
+from links observed on the current official page. Review reuse terms before
+retaining bytes. Import its record and original table as exact evidence receipts,
+bind the selected observation and review its value. Preserve unavailable or
+incomplete observations explicitly; do not invent an observation date from a
+release date. Other publishers and formats require their own reviewed import.
 New vintages create new inputs and revisions; frozen reports remain unchanged.
 
 ## Business plan reuse
@@ -143,11 +150,15 @@ decisions, benchmark observations, calculations, sensitivity, claims, conclusion
 and review as separate JSON workpapers bound to the same canonical report.
 Workbook formulas recalculate when opened; exact Decimal values remain alongside
 them as audit evidence. External sharing, signing, filing and sending are separate
-actions requiring explicit authority. No remote service is called by the helpers.
+actions requiring explicit authority. Calculation and report compilation call no
+remote service. The separately selected benchmark-acquisition helper makes public
+HTTPS reads to its supported NYU hosts, without sending the private case.
 
 Follow Vera's run-level model-data report contract and show the report in the final
-response. Include source-reading, assumption/modeling and report-review phases:
-client documents, personal/company facts, projections, benchmarks and reviewer
+response. Include source-reading, assumption/modeling and report-review phases,
+and the public URLs and captured benchmark/terms documents when acquisition was
+used. Do not describe an incomplete acquisition as an approved parameter.
+Client documents, personal/company facts, projections, benchmarks and reviewer
 decisions may enter the selected Codex/Cowork model context. Local calculation
 does not mean local-only model processing or automatic anonymization. The helper
 creates no provider-delivery proof. Generate the shared model-data reports in the

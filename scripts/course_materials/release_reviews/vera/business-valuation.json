@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-valuation",
-  "course_sha256": "eb5af5fdbbbe796c2a442769e8607b0d9f50191e8d4fda5f1acf0344bd98a018",
+  "course_sha256": "d4d33fd273f98abeef70d2f31d6879e16808cce38dc511a4fc0fbae8623d1158",
   "reviewer": "Codex /root: source, calculation and document review",
-  "reviewed_at": "2026-09-29T19:29:57.892588+00:00",
+  "reviewed_at": "2026-09-29T19:59:46.447104+00:00",
   "review_scope": "Read both fictional notes and the entire Italian lesson. Ran the real bound workflow for demo and practice, inspected their Markdown reports and calculation registers. Seven-method DOCX was rendered and all four pages inspected; LibreOffice independently recalculated all 75 workbook calculation cells. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior is an instruction and separate archive contract, not claimed as a live learner test.",
   "languages": {
     "it": {
@@ -23,21 +23,21 @@
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "ac0631b40caa651d9bb336ddd74ae7e6f818ea2ed71e305f95a2fb6878e33478"
+            "sha256": "205782ab51e2caef992b684b450ca1b38f970788e195c21fde98ef60be0ab258"
           },
           {
             "name": "valuation.json",
-            "sha256": "9da2c8fdee8f47acbd9bb167efc001685709b19ab00dacb5da7ee0f3475b71a8"
+            "sha256": "0316cc5c243d6b23c74a1b36d7a308b711598d1e9549a6703b45f517d73bd02a"
           }
         ],
         "prior_reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "9c4519ecb4b1d1b84d9b09003ed60c3c8bf729cecfe1cede90274b7280c361c4"
+            "sha256": "ac0631b40caa651d9bb336ddd74ae7e6f818ea2ed71e305f95a2fb6878e33478"
           },
           {
             "name": "valuation.json",
-            "sha256": "593f02acc8472370d42878c5f2600f91891ab6dc10862cbb2729fbf11a98cd10"
+            "sha256": "9da2c8fdee8f47acbd9bb167efc001685709b19ab00dacb5da7ee0f3475b71a8"
           }
         ],
         "review_history": [
@@ -92,6 +92,19 @@
                 "sha256": "17bf642e139b54463c4e04902837ce8dbc19adc8663d41afcb7a89f2863251ac"
               }
             ]
+          },
+          {
+            "reviewed_at": "2026-09-29T19:29:57.892588+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "ac0631b40caa651d9bb336ddd74ae7e6f818ea2ed71e305f95a2fb6878e33478"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "9da2c8fdee8f47acbd9bb167efc001685709b19ab00dacb5da7ee0f3475b71a8"
+              }
+            ]
           }
         ]
       },
@@ -101,21 +114,21 @@
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "e2c2eff888423b1621125f39abf120c370a845d3b1778b1eb16d40412f3e2753"
+            "sha256": "d5a6dc59eccc7f858d19642e43bbc5baf27620fbc5211724fecfb7251c3c217c"
           },
           {
             "name": "valuation.json",
-            "sha256": "7a8546ead0468247ac1f1a64f1041871e80490887a3a2f0e78a359210a38a895"
+            "sha256": "715dca4e34a54054920e026dc5d0f83f3734abe9d2841a570e95e3a1755706ed"
           }
         ],
         "prior_reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "3b642d8edfac1b3e1934dcc62ca2475d02ef9fc105cb4dcf0d0d7867ba4bb9e7"
+            "sha256": "e2c2eff888423b1621125f39abf120c370a845d3b1778b1eb16d40412f3e2753"
           },
           {
             "name": "valuation.json",
-            "sha256": "e1f0e376af1fc1a7f5213e42cb0b44a139807ab2e7a1d24999b64f7bdf37ae5b"
+            "sha256": "7a8546ead0468247ac1f1a64f1041871e80490887a3a2f0e78a359210a38a895"
           }
         ],
         "review_history": [
@@ -170,6 +183,19 @@
                 "sha256": "1f7e0bb19eac79a738d3d834ca1c69ddc13ec51285a7f25cbea2f445a0018dce"
               }
             ]
+          },
+          {
+            "reviewed_at": "2026-09-29T19:29:57.892588+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "e2c2eff888423b1621125f39abf120c370a845d3b1778b1eb16d40412f3e2753"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "7a8546ead0468247ac1f1a64f1041871e80490887a3a2f0e78a359210a38a895"
+              }
+            ]
           }
         ]
       }
@@ -205,5 +231,12 @@
     "scope": "Reviewed the bundled Draft 2020-12 schema and local runtime integration. Case shape is checked before nested-source discovery; selected method payloads are checked within partial-workpaper boundaries. No external schema retrieval or professional acceptance is introduced. Read both freshly executed annual lesson reports: unchanged 750000 and 583333.33 EUR equity indications, pending review, development-only purpose coverage and 18 artifacts each. Report renderer and document layout are unchanged from the previous visual review.",
     "tests": "160 valuation tests pass at 93.72% coverage, including invalid canonical dates and numbers, bounded records, missing receipt path fields, private-value redaction, partial method/sensitivity diagnostics and excluded specialist methods.",
     "previous_reviewed_at": "2026-09-29T19:15:08.903348+00:00"
+  },
+  "benchmark_acquisition_review": {
+    "scope": "Reviewed the versioned NYU country-risk HTML adapter, separate public evidence preparation and local replay of exact imported acquisition records and documents. Both freshly executed annual teaching reports preserve 750000 / 583333.33 EUR indications, pending review, development-only purpose coverage and all 18 artifacts. The lesson does not use an acquired benchmark or claim to teach source acquisition.",
+    "tests": "214 valuation and shared public-transport tests pass at 93.67% component coverage. Exact percent-to-ratio conversion, source revisions, missing observation dates, failure persistence, historical cutoffs, review invalidation, immutable snapshots and network destination/body boundaries are covered.",
+    "artifact_review": "All five DOCX and four native PDF pages of the synthetic acquisition-bound example were visually inspected and are readable, including the separate network boundary in the final model-data section. Its original 2.50 percent observation is replayed as ratio 0.025. Existing workbook arithmetic is unchanged from the independently recalculated examples.",
+    "live_source_limit": "The live NYU HTML retrieval preserved the landing page, usage terms and data bytes. It returned metadata_or_value_missing because no observation date was established; no live source was silently adopted into a professional case. Published/last-updated and retrieved dates do not prove historical availability.",
+    "previous_reviewed_at": "2026-09-29T19:29:57.892588+00:00"
   }
 }

@@ -289,6 +289,26 @@
         "max_age_days": {
           "type": "integer",
           "minimum": 0
+        },
+        "acquisition": {
+          "type": "object",
+          "required": [
+            "record_source_id",
+            "document_source_id",
+            "observation_id"
+          ],
+          "properties": {
+            "record_source_id": {
+              "$ref": "#/$defs/id"
+            },
+            "document_source_id": {
+              "$ref": "#/$defs/id"
+            },
+            "observation_id": {
+              "$ref": "#/$defs/hash"
+            }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false

@@ -23,13 +23,13 @@ professionally enabled. Specialist extensions remain part of the proposed scope.
 | P0-03 Studio Archive | Exact case and nested-source receipts, same-engagement upstream plan, immutable revisions and idempotent replay; native fixture coverage | Installed host/user acceptance; retain explicit cross-client coverage in shared archive tests |
 | P0-04 Business plan v3 | Actual compiler replays a complete calendar-year plan; FCFF bridge reconciles monthly taxes, working capital and capex; missing tax blocks | Partial periods and additional reviewed real-case evidence |
 | P0-05 Engine | Seven Decimal methods; annual and explicitly dated DCF with stub/monthly/mid-period timing, ACT/365F and ACT/ACT_ISDA, flat/spot/interval-forward rates, effective annual/continuous compounding; formula ledger and EV/equity separation | Mixed-income dated/capital-varying variants, further income/sector models, alternative terminal conventions and curve-specific scenario comparison |
-| P0-06 Public sources | Host-led official research instructions; imported bytes/hash and explicit observation/publication/retrieval/vintage metadata; cutoff and age checks | Versioned parsers and tested observed-link acquisition, availability failures, redirects/host validation and historical revised-release cases |
+| P0-06 Public sources | Versioned NYU country-risk HTML acquisition from observed links, immutable original bytes and parser replay; explicit failures/missing dates; tested HTTPS/host/DNS/redirect, MIME/size and revised-release boundaries | ECB, regional/historical workbooks and other source-specific adapters; semantic source qualification and independent historical-availability evidence |
 | P0-07 Guided experience | Native skill builds technical inputs, opens report and asks focused professional questions; user does not author JSON | Witnessed accountant completion of an end-to-end case; synthetic teacher execution does not establish this |
 | P0-08 Outputs | One replayed register produces HTML/MD/DOCX/PDF/XLSX/JSON/CSV and the named JSON workpapers; explicit claim bindings, numeric equality and review invalidation; independent LibreOffice formula comparison and visual QA | Semantic support review across actual cases and broad layout cases; recheck layout whenever report content changes |
 | P0-09 Review | Input/source/method/mandate/audience/plan dependency hashes; per-adjustment review and transitive method bindings; independent conclusion review; affected reviews expire and unrelated branches survive | Additional purpose, full statement and benchmark-revision acceptance cases; local attestations do not authenticate humans |
 | P0-10 Privacy/release | Vera privacy record, routes, Italian teaching material, component and three host package projections; dedicated CI job | Dependency-checker and page-breadcrumb corrections await owner approval; all CI gates, professional release prerequisites and authoritative existing-listing publication remain pending |
 | P1-01 Specialist methods | Intake scope and unsupported-method diagnostics are explicit | Holding/SOTP, crisis, PPA, rights/waterfalls and damages models with fixtures and specialist review |
-| P1-02 Historical regressions | Publication/observation ordering, cutoff and explicit age policy | Historical revised datasets and preserved release vintages demonstrated end to end |
+| P1-02 Historical regressions | Synthetic old/new acquisition snapshots preserve original bytes; later releases reject earlier cutoffs; dependent reviews expire | Authentic archived datasets, independently established availability dates and reviewed historical cases |
 
 ## Additional functional gaps retained from the specification
 
@@ -64,8 +64,9 @@ variable WACC, IFRS 16/TFR/deferred taxes/shield limits, unsustainable terminal
 values, consolidated minorities, unsuitable peers, missing public sources and
 download threats. Existing tests establish bounded local input/hash/audience,
 formula-injection and HTML-escaping behavior; they do not establish every one of
-those wider scenarios. Download-threat tests become required with acquisition;
-there is currently no helper URL fetcher, archive extractor or macro executor.
+those wider scenarios. The new acquisition helper has explicit download-threat
+tests and accepts only bounded HTML from its supported NYU hosts. It rejects
+archive/office content without extracting archives or executing macros.
 
 The dated-DCF extension has independent numerical cases for stub/monthly flows,
 mid-period timing, leap-year day counts, continuous compounding and separate spot
@@ -106,6 +107,22 @@ methods retain their explanation. Only bundled internal schema references are
 used. Schema checks cover structure and explicit representations; semantic
 suitability, cross-record integrity, receipts and review freshness remain separate
 checks. Invalid review records are retained without granting acceptance.
+
+The first public-source adapter is `nyu-country-risk-html/v1`. It preserves a
+captured landing page, observed dataset link, usage terms, redirects, original
+document hash, selected row, original percent and exact ratio conversion. Raw
+files use inert `.source` names. Same-day identical retries preserve the first
+record; changed source releases receive new snapshots. Errors retain their actual
+state without falling back to old cached values. Imported observations replay
+the parser against exact Studio Archive evidence before calculation.
+
+The live 29 September NYU run retrieved all three public documents and parsed the
+selected row, but remained `metadata_or_value_missing`: the table's displayed
+release date does not establish its exact observation date. No date or current
+parameter adoption was invented. That live evidence proves acquisition and
+parsing, not full historical availability, professional suitability or coverage
+of other providers. The full acceptance run now has 214 passing valuation and
+shared-transport tests at 93.67% component coverage.
 
 ## Purpose coverage and release evidence
 
