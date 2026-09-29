@@ -33,6 +33,7 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 | datev-invoice-start | Unresolved | Existing function retained with the recorded qualification limits. |
 | dati-fiscali-strutturati | Use | Existing function retained with the recorded qualification limits. |
 | email-cliente | Use | Existing function retained with the recorded qualification limits. |
+| esg-reporting-assurance | Unresolved | New evidence foundation; Swiss/Geneva applicability and professional use have not been assessed. |
 | fatture-xml-check | Ignore for this target | Existing function retained with the recorded qualification limits. |
 | financial-analysis | Use | Existing function retained with the recorded qualification limits. |
 | financial-report-builder | Use | Existing function retained with the recorded qualification limits. |
@@ -80,3 +81,10 @@ These sources support the target investigation, not an automatic rules engine. R
 - [PFPDT outsourcing and processing roles](https://www.edoeb.admin.ch/fr/externalisation-sous-traitance)
 
 See [the complete machine-readable assessment](assessment.json) for each function’s purpose, common method, original adaptation requirement, acceptance example and source references.
+
+## ESG catalogue update — 29 September 2026
+
+Vera 0.1.282 adds the ESG evidence foundation to the catalogue. The earlier
+35-function assessment is preserved; the new function is recorded as unresolved.
+Its synthetic evidence/version tests do not establish Swiss reporting support.
+The refreshed catalogue now contains 36 functions and four internal helpers.

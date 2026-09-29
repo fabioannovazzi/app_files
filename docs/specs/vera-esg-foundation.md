@@ -104,3 +104,14 @@ These checks cover local code and packaged execution, not Marketplace Published
 status, deployed public pages, enabled host installation or professional use.
 The new CI matrix schedules the ESG tests on Linux and Windows; those results
 remain separate from the observed local macOS run. No Discord reply is sent.
+
+### CI integration follow-up
+
+Both ESG CI matrix jobs passed on Linux and Windows. The initial broader CI
+run identified omitted CLI classifications, older website inventory expectations,
+a shared-archive privacy fingerprint in Lucia, and the Geneva catalogue snapshot.
+These records are now reconciled: ESG requires its portable `--context`, the
+developer demo is classified separately, and Geneva suitability remains explicitly
+unresolved. The focused 370-test integration suite and 40-entry catalogue check
+pass. Source fingerprints and all affected packages were rebuilt; no ESG behavior
+or existing professional capability was changed to satisfy these checks.

@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "plugins/vera",
-  "version": "0.1.277",
-  "captured_at": "2026-09-29T07:37:00.039849+00:00",
-  "catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
-  "manifest_sha256": "7bc0cca29c5fb77386d0d37c89cc940b0bcab8ee9946a60ec08659a84ac9282c",
+  "version": "0.1.282",
+  "captured_at": "2026-09-29T19:11:42.338646+00:00",
+  "catalogue_fingerprint": "4cada5cd7c8fc2cba41d06580542c7fdfff911e72db079b1b1f0f2829165265d",
+  "manifest_sha256": "d5e322d480d935f772cd21d0d3dc0af976dea16cc47e616bc54aa0d411aa5a37",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -80,6 +80,11 @@
       "function_id": "email-cliente",
       "skill_path": "skills/email-cliente/SKILL.md",
       "sha256": "5a1abf9e8c28aed45ea7ccf31742798546a8175f3c5ecffce0405eab2069978a"
+    },
+    {
+      "function_id": "esg-reporting-assurance",
+      "skill_path": "skills/esg-reporting-assurance/SKILL.md",
+      "sha256": "d86f9901319e9dc16c2e4365e60960f311f9b3c26f0cb9d66702ffa3b77e6808"
     },
     {
       "function_id": "fatture-xml-check",
@@ -194,7 +199,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "62b95932ee7e4e0fd149f2ba0c1e2c2b67f9cf39116343801049fe7b5d7e4e9b"
+      "sha256": "7ec0287523458b46aa864dcfed7ce28611e81739ab006accc3ec432c0096e593"
     },
     {
       "function_id": "vouching",
