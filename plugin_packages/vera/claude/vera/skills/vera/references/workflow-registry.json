@@ -503,6 +503,7 @@
     "skills/fatture-xml-check/SKILL.md",
     "skills/financial-analysis/SKILL.md",
     "skills/financial-report-builder/SKILL.md",
+    "skills/fusione-guidata/SKILL.md",
     "skills/invoice-xml/SKILL.md",
     "skills/journal-bank-reconciliation/SKILL.md",
     "skills/journal-sampling/SKILL.md",
@@ -524,7 +525,6 @@
     "skills/treasury-forecast/SKILL.md",
     "skills/variance-analysis/SKILL.md",
     "skills/vera/SKILL.md",
-    "skills/vouching/SKILL.md",
-    "skills/fusione-guidata/SKILL.md"
+    "skills/vouching/SKILL.md"
   ]
 }
