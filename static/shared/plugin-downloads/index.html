@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Download temporanei di Vera, Clara e Lucia per Codex, con istruzioni di installazione.">
+  <meta name="theme-color" content="#ffffff">
+  <title>Download per Codex · Mparanza</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: light; --ink: #172b42; --muted: #526375; --blue: #1456a0; --line: #d8e1e9; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #fff; color: var(--ink); font-family: "Instrument Sans", sans-serif; font-size: 17px; line-height: 1.6; }
+    a { color: var(--blue); text-underline-offset: .2em; }
+    button, textarea { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    :focus-visible { outline: 3px solid #179bcb; outline-offset: 4px; }
+    .shell { width: min(100% - 48px, 940px); margin-inline: auto; }
+    header { display: flex; align-items: center; justify-content: space-between; padding: 26px 0; border-bottom: 1px solid var(--line); gap: 20px; }
+    .brand { color: var(--ink); font-size: 20px; font-weight: 700; text-decoration: none; letter-spacing: -.04em; }
+    .languages { display: flex; gap: 16px; font-size: 14px; }
+    .languages a[aria-current="page"] { color: var(--ink); font-weight: 700; text-decoration: none; }
+    main { padding-block: 60px 64px; }
+    .eyebrow { color: var(--blue); font-size: 13px; letter-spacing: .09em; text-transform: uppercase; font-weight: 600; margin: 0 0 16px; }
+    h1 { font-size: clamp(36px, 6vw, 62px); font-weight: 500; letter-spacing: -.045em; line-height: 1.08; margin: 0 0 22px; }
+    .lead { font-size: 20px; max-width: 690px; margin-bottom: 12px; }
+    .note { color: var(--muted); font-size: 14px; }
+    h2 { font-size: clamp(25px, 4vw, 32px); font-weight: 500; letter-spacing: -.025em; line-height: 1.25; margin: 0 0 14px; }
+    h3 { font-size: 18px; font-weight: 600; margin: 0 0 6px; }
+    p { margin-top: 0; }
+    .downloads { margin: 38px 0 52px; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+    .download-row { display: grid; grid-template-columns: 1fr 1fr auto; align-items: center; gap: 20px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+    .product { font-size: 25px; font-weight: 500; letter-spacing: -.025em; }
+    .version { color: var(--muted); font-size: 15px; }
+    .button { display: inline-block; border: 1px solid var(--blue); border-radius: 3px; color: var(--blue); padding: 10px 18px; font-weight: 600; text-decoration: none; cursor: pointer; background: #fff; text-align: center; }
+    .button:hover { background: #f1f6fb; }
+    .section { border-top: 1px solid var(--line); padding-top: 32px; margin-top: 44px; }
+    .steps { padding-left: 26px; max-width: 760px; }
+    .steps > li { padding-left: 10px; margin-bottom: 24px; }
+    .steps > li::marker { color: var(--blue); font-weight: 600; }
+    .steps p { margin-bottom: 8px; }
+    .prompt-panel { margin: 18px 0 10px; }
+    .product-picker { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .product-picker button { border: 1px solid var(--line); background: #fff; color: var(--ink); border-radius: 3px; padding: 7px 16px; cursor: pointer; }
+    .product-picker button[aria-pressed="true"] { color: var(--blue); border-color: var(--blue); font-weight: 600; }
+    label { display: block; font-size: 14px; margin-bottom: 6px; color: var(--muted); }
+    textarea { display: block; width: 100%; min-height: 210px; resize: vertical; border: 1px solid var(--line); border-radius: 3px; padding: 18px; color: var(--ink); background: #fafcfe; line-height: 1.5; }
+    .copy-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 12px; }
+    #copy-status { font-size: 14px; color: var(--muted); }
+    code { font-size: .86em; overflow-wrap: anywhere; }
+    details { max-width: 760px; }
+    summary { cursor: pointer; color: var(--blue); font-weight: 600; padding-block: 10px; }
+    pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #fafcfe; padding: 18px; border: 1px solid var(--line); font-size: 14px; }
+    footer { border-top: 1px solid var(--line); padding: 24px 0 40px; color: var(--muted); font-size: 14px; }
+    footer p { margin-bottom: 8px; }
+    @media (max-width: 580px) {
+      .shell { width: calc(100% - 36px); }
+      main { padding-top: 40px; }
+      .lead { font-size: 18px; }
+      .download-row { grid-template-columns: 1fr auto; gap: 4px 14px; padding-block: 18px; }
+      .download-row .product { grid-column: 1; }
+      .download-row .version { grid-column: 1; }
+      .download-row .button { grid-column: 2; grid-row: 1 / 3; padding: 9px 12px; font-size: 15px; }
+      .steps { padding-left: 21px; }
+      .steps > li { padding-left: 4px; }
+      textarea { min-height: 310px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="shell">
+    <a class="brand" href="https://mparanza.com/">Mparanza</a>
+    <nav class="languages" aria-label="Language">
+      <a href="?lang=it" lang="it" data-language="it" aria-current="page">Italiano</a>
+      <a href="?lang=en" lang="en" data-language="en">English</a>
+    </nav>
+  </header>
+  <main class="shell">
+    <p class="eyebrow" data-copy="eyebrow">Download temporanei · Codex</p>
+    <h1 data-copy="title">Installa la versione aggiornata.</h1>
+    <p class="lead" data-copy="lead">Scarica il plugin che usi e installalo in Codex sul computer. Questi pacchetti permettono di accedere alle versioni indicate mentre l’aggiornamento sul Marketplace non è disponibile.</p>
+    <p class="note" data-copy="date">Versioni verificate il 29 settembre 2026. I link puntano a questi file precisi e non cambiano automaticamente con le prossime versioni.</p>
+    <ul class="downloads" aria-label="Plugin ZIP">
+      <li class="download-row">
+        <span class="product">Vera</span><span class="version">0.1.274 · 9.4 MB</span>
+        <a class="button" href="https://raw.githubusercontent.com/fabioannovazzi/app_files/95d0b7ab19dced2510f806a81ff5b5ca652206d1/plugin_packages/vera/vera-plugin.zip" download="vera-plugin.zip" aria-label="Download Vera 0.1.274 ZIP"><span data-copy="download">Scarica ZIP</span> ↓</a>
+      </li>
+      <li class="download-row">
+        <span class="product">Clara</span><span class="version">0.1.217 · 6.3 MB</span>
+        <a class="button" href="https://raw.githubusercontent.com/fabioannovazzi/app_files/95d0b7ab19dced2510f806a81ff5b5ca652206d1/plugin_packages/clara/clara-plugin.zip" download="clara-plugin.zip" aria-label="Download Clara 0.1.217 ZIP"><span data-copy="download">Scarica ZIP</span> ↓</a>
+      </li>
+      <li class="download-row">
+        <span class="product">Lucia</span><span class="version">0.1.61 · 3.4 MB</span>
+        <a class="button" href="https://raw.githubusercontent.com/fabioannovazzi/app_files/95d0b7ab19dced2510f806a81ff5b5ca652206d1/plugin_packages/lucia/lucia-plugin.zip" download="lucia-plugin.zip" aria-label="Download Lucia 0.1.61 ZIP"><span data-copy="download">Scarica ZIP</span> ↓</a>
+      </li>
+    </ul>
+    <section aria-labelledby="install-title">
+      <h2 id="install-title" data-copy="installTitle">Come installare</h2>
+      <p data-copy="scope">Usa Codex nell’app desktop. Questi ZIP sono per Codex: non caricarli come allegati in ChatGPT web o nei plugin di Claude Cowork.</p>
+      <ol class="steps">
+        <li><h3 data-copy="step1Title">Estrai tutto lo ZIP.</h3><p data-copy="step1">Su Mac, fai doppio clic; su Windows, scegli “Estrai tutto”. Sposta la cartella estratta in una posizione stabile, per esempio Documenti/Mparanza. Conserva l’intera cartella, comprese le cartelle nascoste.</p></li>
+        <li><h3 data-copy="step2Title">Apri la cartella in Codex.</h3><p data-copy="step2">Avvia una chat locale nella cartella vera-codex-plugin, clara-codex-plugin o lucia-codex-plugin appena estratta. È la cartella che contiene “plugins” e il file LEGGIMI_INSTALLAZIONE.txt.</p></li>
+        <li>
+          <h3 data-copy="step3Title">Chiedi a Codex di installare il plugin.</h3>
+          <p data-copy="step3">Scegli il prodotto, copia la richiesta e incollala nella chat. Codex può chiederti il permesso di registrare e installare il plugin locale.</p>
+          <div class="prompt-panel">
+            <div class="product-picker" role="group" aria-label="Plugin">
+              <button type="button" data-product="vera" aria-pressed="true">Vera</button>
+              <button type="button" data-product="clara" aria-pressed="false">Clara</button>
+              <button type="button" data-product="lucia" aria-pressed="false">Lucia</button>
+            </div>
+            <label for="install-prompt" data-copy="promptLabel">Richiesta da copiare in Codex</label>
+            <textarea id="install-prompt" readonly spellcheck="false">Installa Vera 0.1.274 da questa cartella come plugin locale. Registra il catalogo locale già incluso e installa vera@mp-vera con i comandi supportati da Codex. Verifica la versione realmente installata e abilitata. Se esiste già una copia di Vera, aggiorna la registrazione locale se necessario e lascia abilitata solo questa versione dopo aver verificato che l’installazione è riuscita. Conserva i miei file di lavoro e chiedi a me eventuali approvazioni per gli hook. Dimmi quando riavviare l’app e aprire una nuova chat.</textarea>
+            <div class="copy-row"><button type="button" class="button" id="copy-prompt" data-copy="copy">Copia richiesta</button><span id="copy-status" role="status" aria-live="polite"></span></div>
+          </div>
+        </li>
+        <li><h3 data-copy="step4Title">Riavvia e verifica in una nuova chat.</h3><p data-copy="step4">Dopo l’installazione, chiudi e riapri l’app. Apri una nuova chat nella tua cartella di lavoro e chiedi a Codex di controllare che il plugin sia attivo nella versione indicata sopra e disponibile nella nuova chat. Poi descrivi il lavoro da svolgere. Una chat già aperta può conservare le vecchie istruzioni.</p></li>
+      </ol>
+      <noscript><p>Per Clara e Lucia, sostituisci nome, versione e identificativo nella richiesta: Clara 0.1.217 / clara@mp-clara; Lucia 0.1.61 / lucia@mp-lucia.</p></noscript>
+    </section>
+    <section class="section" aria-labelledby="update-title">
+      <h2 id="update-title" data-copy="updateTitle">Se hai già installato il plugin</h2>
+      <p data-copy="update">La copia locale e quella del Marketplace sono installazioni distinte. La richiesta qui sopra serve anche per passare da una versione precedente: fai verificare la nuova installazione e lascia attiva una sola copia dello stesso prodotto. Il download da solo non aggiorna il plugin.</p>
+      <p data-copy="future">Per un prossimo aggiornamento, scarica il nuovo ZIP in una cartella separata e ripeti la procedura indicando quella cartella. Conserva le cartelle dei plugin e tieni i documenti dei clienti nella tua normale cartella di lavoro.</p>
+    </section>
+    <section class="section" aria-labelledby="help-title">
+      <h2 id="help-title" data-copy="helpTitle">Se l’installazione si ferma</h2>
+      <p data-copy="help">Invia nel gruppo il nome del plugin, la versione, il sistema operativo e il testo completo dell’errore, senza allegare documenti dei clienti. In un account gestito dallo studio, l’installazione di plugin locali può richiedere l’intervento dell’amministratore.</p>
+      <details>
+        <summary data-copy="manualTitle">Comandi per l’installazione manuale</summary>
+        <p data-copy="manual">Se usi il terminale e il comando codex è disponibile, sostituisci il percorso di esempio con il percorso assoluto della cartella estratta. Esegui i comandi del prodotto selezionato sopra, poi riavvia l’app. Se il catalogo è già registrato, fai controllare a Codex a quale cartella punta prima di aggiornarlo.</p>
+        <pre><code id="commands">codex plugin marketplace add "/percorso/vera-codex-plugin"
+codex plugin add vera@mp-vera
+codex plugin list --json</code></pre>
+      </details>
+    </section>
+  </main>
+  <footer class="shell">
+    <p data-copy="footer">Pagina temporanea per la distribuzione diretta. File ospitati nel repository pubblico Mparanza su GitHub; nessun accesso GitHub richiesto. Il link è condivisibile e non è riservato al gruppo.</p>
+    <a href="https://developers.openai.com/plugins/build/plugins#install-a-local-plugin-manually" target="_blank" rel="noopener noreferrer" data-copy="docs">Documentazione OpenAI sull’installazione locale</a>
+  </footer>
+  <script>
+    const language = new URLSearchParams(window.location.search).get('lang') === 'en' ? 'en' : 'it';
+    const english = {
+      eyebrow: 'Temporary downloads · Codex', title: 'Install the updated version.',
+      lead: 'Download the plugin you use and install it in Codex on your computer. These packages provide the listed versions while the Marketplace update is unavailable.',
+      date: 'Versions verified on 29 September 2026. These links point to these exact files and do not automatically change with future releases.',
+      download: 'Download ZIP', installTitle: 'How to install',
+      scope: 'Use Codex in the desktop app. These ZIPs are for Codex: do not upload them as chat attachments in ChatGPT web or as Claude Cowork plugins.',
+      step1Title: 'Extract the entire ZIP.', step1: 'On Mac, double-click it; on Windows, choose “Extract All”. Move the extracted folder to a permanent location such as Documents/Mparanza. Keep the entire folder, including hidden folders.',
+      step2Title: 'Open the folder in Codex.', step2: 'Start a local chat in the extracted vera-codex-plugin, clara-codex-plugin or lucia-codex-plugin folder. This is the folder containing “plugins” and LEGGIMI_INSTALLAZIONE.txt.',
+      step3Title: 'Ask Codex to install the plugin.', step3: 'Choose the product, copy the request and paste it into the chat. Codex may ask for permission to register and install the local plugin.',
+      promptLabel: 'Request to paste into Codex', copy: 'Copy request',
+      step4Title: 'Restart and verify in a new chat.', step4: 'After installation, close and reopen the app. Start a new chat in your working folder and ask Codex to check that the plugin is enabled at the version listed above and available in the new chat. Then describe your task. An existing chat may retain the old instructions.',
+      updateTitle: 'If you already have the plugin', update: 'The local copy and the Marketplace copy are separate installations. The request above also handles switching from an older version: have Codex verify the new installation and leave only one copy of the same product enabled. Downloading the ZIP alone does not update the plugin.',
+      future: 'For a future update, extract the new ZIP into a separate folder and repeat the procedure using that folder. Keep the plugin folders and store client documents in your usual working folder.',
+      helpTitle: 'If installation stops', help: 'Share the plugin name, version, operating system and complete error message in the group, without client documents. On a firm-managed account, local plugin installation may require your administrator’s help.',
+      manualTitle: 'Commands for manual installation', manual: 'If you use a terminal and the codex command is available, replace the example path with the absolute path to the extracted folder. Run the commands for the product selected above, then restart the app. If the catalogue is already registered, ask Codex to check which folder it points to before updating it.',
+      footer: 'Temporary page for direct distribution. Files are hosted in the public Mparanza repository on GitHub; no GitHub sign-in required. The link is shareable and is not restricted to the group.', docs: 'OpenAI documentation for local installation'
+    };
+    if (language === 'en') {
+      document.documentElement.lang = 'en';
+      document.title = 'Codex downloads · Mparanza';
+      document.querySelector('meta[name="description"]').content = 'Temporary Codex downloads for Vera, Clara and Lucia, with installation instructions.';
+      document.querySelectorAll('[data-copy]').forEach(function (node) { node.textContent = english[node.dataset.copy]; });
+    }
+    document.querySelectorAll('[data-language]').forEach(function (link) {
+      if (link.dataset.language === language) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
+    const products = { vera: { name: 'Vera', version: '0.1.274' }, clara: { name: 'Clara', version: '0.1.217' }, lucia: { name: 'Lucia', version: '0.1.61' } };
+    const promptBox = document.getElementById('install-prompt');
+    const status = document.getElementById('copy-status');
+    function selectProduct(key) {
+      const product = products[key];
+      const identifier = key + '@mp-' + key;
+      promptBox.value = language === 'en'
+        ? 'Install ' + product.name + ' ' + product.version + ' from this folder as a local plugin. Register the included local catalogue and install ' + identifier + ' using supported Codex commands. Verify the actual installed and enabled version. If another copy of ' + product.name + ' exists, update the local registration if needed and leave only this version enabled after confirming installation succeeded. Preserve my working files and leave any hook approvals to me. Tell me when to restart the app and open a new chat.'
+        : 'Installa ' + product.name + ' ' + product.version + ' da questa cartella come plugin locale. Registra il catalogo locale già incluso e installa ' + identifier + ' con i comandi supportati da Codex. Verifica la versione realmente installata e abilitata. Se esiste già una copia di ' + product.name + ', aggiorna la registrazione locale se necessario e lascia abilitata solo questa versione dopo aver verificato che l’installazione è riuscita. Conserva i miei file di lavoro e chiedi a me eventuali approvazioni per gli hook. Dimmi quando riavviare l’app e aprire una nuova chat.';
+      document.querySelectorAll('[data-product]').forEach(function (button) { button.setAttribute('aria-pressed', String(button.dataset.product === key)); });
+      const example = language === 'en' ? '/path/to/' : '/percorso/';
+      document.getElementById('commands').textContent = 'codex plugin marketplace add "' + example + key + '-codex-plugin"\ncodex plugin add ' + identifier + '\ncodex plugin list --json';
+      status.textContent = '';
+    }
+    document.querySelectorAll('[data-product]').forEach(function (button) { button.addEventListener('click', function () { selectProduct(button.dataset.product); }); });
+    document.getElementById('copy-prompt').addEventListener('click', async function () {
+      try {
+        await navigator.clipboard.writeText(promptBox.value);
+        status.textContent = language === 'en' ? 'Copied. Paste it into Codex.' : 'Copiata. Incollala in Codex.';
+      } catch {
+        promptBox.focus(); promptBox.select();
+        status.textContent = language === 'en' ? 'Text selected. Copy it manually.' : 'Testo selezionato. Copialo manualmente.';
+      }
+    });
+    selectProduct('vera');
+  </script>
+</body>
+</html>
