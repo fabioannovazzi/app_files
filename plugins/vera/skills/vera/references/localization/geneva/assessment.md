@@ -1,8 +1,8 @@
 # Vera — Geneva localization assessment and implementation
 
-Updated 2026-09-28. Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
+Updated 2026-09-29 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
 
-This applies the common-core localization method to the complete existing catalogue: 35 professional functions and four internal helpers. The disposition records the assessment; implementation status is separate. No services absent from Vera have been added.
+This applies the common-core localization method to the complete existing catalogue: 35 professional functions, four internal helpers and one P0 case foundation. The disposition records the assessment; implementation status is separate. No services absent from Vera have been added.
 
 The release adds bounded adapters and instructions, not a blanket claim that every fiduciary mandate is supported. Original evidence and professional decisions remain necessary. No real Geneva client workflow has been accepted.
 
@@ -26,6 +26,7 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 | fatture-xml-check | Ignore for this target | Existing function retained with the recorded qualification limits. |
 | financial-analysis | Use | Existing function retained with the recorded qualification limits. |
 | financial-report-builder | Use | Existing function retained with the recorded qualification limits. |
+| fusione-guidata | Unresolved | P0 preserves multi-company evidence and review history. All legal merger branches are unsupported; Swiss/Geneva professional fit and adaptations have not been assessed. |
 | invoice-xml | Unresolved | Existing function retained with the recorded qualification limits. |
 | journal-bank-reconciliation | Adapt | Reviewed French textual dates use additive adapter v8; currencies remain explicitly source-mapped. |
 | journal-sampling | Adapt | Source-evidenced currency and Swiss export qualification instructions; no new sampling algorithm. |
@@ -51,6 +52,8 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 ## Scope that remains unresolved
 
 Centrale Rischi source equivalence, the restructuring mandate/procedure, the actual DATEV application and a Swiss structured-invoice output requirement remain unresolved. The Italian FatturaPA-only checker stays outside the domestic example, while remaining available for actual Italian files. No replacement services were invented.
+
+The 0.1.279 catalogue refresh adds `fusione-guidata` and updates its router entry. It preserves the existing professional assessments. The new foundation is unresolved for Geneva; its synthetic structural checks do not establish Swiss merger capability.
 
 ## Acceptance record
 

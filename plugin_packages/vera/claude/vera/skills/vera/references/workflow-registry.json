@@ -473,6 +473,16 @@
         "modules/trasformazione/scripts/demo.py",
         "modules/trasformazione/scripts/transform_case.py"
       ]
+    },
+    {
+      "component_id": "fusione-guidata",
+      "skills": [
+        "modules/fusione-guidata/skills/fusione-guidata/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/fusione-guidata/scripts/check_dependencies.py",
+        "modules/fusione-guidata/scripts/run_fusione.py"
+      ]
     }
   ],
   "vera_wrapper_skills": [
@@ -514,6 +524,7 @@
     "skills/treasury-forecast/SKILL.md",
     "skills/variance-analysis/SKILL.md",
     "skills/vera/SKILL.md",
-    "skills/vouching/SKILL.md"
+    "skills/vouching/SKILL.md",
+    "skills/fusione-guidata/SKILL.md"
   ]
 }

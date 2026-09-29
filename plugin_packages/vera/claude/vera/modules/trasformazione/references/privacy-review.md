@@ -42,3 +42,7 @@ represent a new audit of remote services, provider settings or legal compliance.
 The existing service claims are not expanded. The new workstream has its own
 model-context review and no external boundary. Package freshness and tests are
 separate evidence recorded in the implementation report.
+
+## Integration with merger foundation
+
+On 29 September 2026, the release incorporated main commit bbc94c37a. The six shared-service manifests differ between the two branches only in source fingerprints. Their governed runtime implementations are unchanged by this integration; the combined version, router, skill cards, catalogue and component membership now include both existing prototype routes. Their recipients, activation conditions, request fields and confirmation boundaries are preserved. The transformation helper still has no network calls, and its skill still excludes real mandates and server stamping. The merger workflow and its own boundary record come from main. Refreshes below bind the unchanged shared-service boundary assessments to this inspected metadata combination; they do not certify either prototype for professional use.

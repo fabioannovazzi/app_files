@@ -507,7 +507,18 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
     for name, content in skills.items():
         assert "## Cowork execution contract" in content, name
         assert "connected folder and supplied files first" in content, name
-        assert "never install packages at runtime" not in content, name
+        if name == "modules/fusione-guidata/skills/fusione-guidata/SKILL.md":
+            # The P0 helper has no installable dependencies; retain its narrower rule.
+            assert "standard-library-only dependencies" in " ".join(content.split())
+            requirements = vera_entries[
+                "modules/fusione-guidata/requirements.txt"
+            ].decode()
+            assert not any(
+                line.strip() and not line.lstrip().startswith("#")
+                for line in requirements.splitlines()
+            )
+        else:
+            assert "never install packages at runtime" not in content, name
         assert "scripts/check_dependencies.py --module <module>" in content, name
         assert (
             "scripts/managed_python_runtime.py --module <module> run" in content

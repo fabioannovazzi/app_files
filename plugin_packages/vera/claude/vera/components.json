@@ -31,7 +31,8 @@
     "bilancio-xbrl-it",
     "browser-automation",
     "studio-archive",
-    "trasformazione"
+    "trasformazione",
+    "fusione-guidata"
   ],
   "shared_services": [
     "run-receipt-stamping",
