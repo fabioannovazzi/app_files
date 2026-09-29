@@ -28,6 +28,7 @@ METHOD_LABELS = {
     "DCF_FCFE": "DCF sui flussi dei soci",
     "INCOME_EQUITY": "Metodo reddituale",
     "INCOME_EQUITY_FINITE": "Metodo reddituale a durata finita",
+    "RESIDUAL_INCOME_EQUITY": "Reddito residuale del capitale proprio",
     "NAV": "Patrimoniale rettificato",
     "MIXED_EQUITY": "Metodo misto",
     "MULTIPLE": "Multipli",
@@ -41,6 +42,21 @@ DETAIL_LABELS = {
     "residual_value": "Valore residuo del capitale proprio alla scadenza",
     "pv_residual": "Valore attuale del residuo",
     "residual_share": "Rapporto fra valore attuale del residuo e risultato",
+    "opening_book_equity": "Patrimonio netto iniziale",
+    "residual_income_pv": "Valore attuale dei redditi residuali",
+    "terminal_equity_value": "Valore equity terminale fornito",
+    "closing_book_equity": "Patrimonio netto finale",
+    "continuing_residual": "Eccedenza terminale rispetto al patrimonio finale",
+    "pv_continuing_residual": "Valore attuale dell'eccedenza terminale",
+    "owner_cashflow_value": "Riscontro con distribuzioni nette e valore terminale",
+    "owner_cashflow_difference": "Differenza aritmetica del riscontro",
+}
+RESIDUAL_BASIS_LABELS = {
+    "accounting_basis": "Base contabile e perimetro",
+    "clean_surplus_adjustments": "Rettifiche per clean surplus",
+    "owner_transactions": "Distribuzioni e apporti dei soci",
+    "terminal_equity_basis": "Base del valore equity terminale",
+    "capital_cost_basis": "Costo del capitale proprio e tempi",
 }
 TIMING_LABELS = {
     "end_period": "flussi a fine periodo",
@@ -425,6 +441,23 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
                 rows.append(f"{DETAIL_LABELS[label]}: {shown} [{ref}]")
             rows.extend(method["limitations"])
             income_basis = method.get("income_basis")
+            residual_basis = method.get("residual_basis")
+            if residual_basis:
+                rows.extend(
+                    [
+                        f"Base del reddito residuale: {'Confermata' if residual_basis['status'] == 'confirmed' else 'Da confermare'}",
+                        *[
+                            f"{label}: {residual_basis[key]}"
+                            for key, label in RESIDUAL_BASIS_LABELS.items()
+                        ],
+                        f"Fonti: {', '.join(residual_basis['source_ids'])} · {residual_basis['locator']}",
+                        "Ogni periodo riconcilia patrimonio iniziale + reddito + apporti − distribuzioni = patrimonio finale. La quadratura non dimostra la correttezza delle rettifiche contabili o la distribuibilità.",
+                    ]
+                )
+                for index, item in enumerate(method["clean_surplus_schedule"], 1):
+                    rows.append(
+                        f"Periodo {index}: patrimonio finale {display(amounts[item['closing_id']]['value'])}; differenza di quadratura {display(amounts[item['difference_id']]['value'])}; onere equity {display(amounts[item['equity_charge_id']]['value'])}; reddito residuale {display(amounts[item['residual_income_id']]['value'])} [{item['residual_income_id']}]."
+                    )
             if income_basis:
                 rows.extend(
                     [
@@ -442,12 +475,16 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
             if timing:
                 rows.extend(
                     [
-                        f"Tempi espliciti dalla data {timing['valuation_date']}: {timing['day_count']}; {TIMING_LABELS[timing['cash_flow_timing']].replace('flussi', 'redditi') if income_basis else TIMING_LABELS[timing['cash_flow_timing']]}; {TIMING_LABELS[timing['rate_model']]}; {TIMING_LABELS[timing['rate_compounding']]}.",
+                        f"Tempi espliciti dalla data {timing['valuation_date']}: {timing['day_count']}; {TIMING_LABELS[timing['cash_flow_timing']].replace('flussi', 'redditi') if income_basis or residual_basis else TIMING_LABELS[timing['cash_flow_timing']]}; {TIMING_LABELS[timing['rate_model']]}; {TIMING_LABELS[timing['rate_compounding']]}.",
                         timing["rationale"],
                         (
-                            "Il residuo equity è un importo autonomo alla fine dell'ultimo periodo e resta a quella scadenza anche se i redditi sono collocati a metà periodo. Non è derivato dall'ultimo reddito né da una formula di crescita perpetua."
-                            if income_basis
-                            else "Il valore terminale è una perpetuità annuale a fine periodo, stimata all'ultima data del piano. Il flusso terminale è annuale e distinto dagli eventuali flussi mensili; il tasso terminale e la crescita sono annui effettivi."
+                            "L'onere di ciascun periodo usa il patrimonio iniziale e il rendimento implicito negli stessi fattori di sconto. Il termine finale è valore equity fornito meno patrimonio finale, scontato alla medesima scadenza. Non si aggiunge nuovamente il patrimonio finale e non si deduce il debito. Distribuzioni e apporti sono collocati a fine periodo."
+                            if residual_basis
+                            else (
+                                "Il residuo equity è un importo autonomo alla fine dell'ultimo periodo e resta a quella scadenza anche se i redditi sono collocati a metà periodo. Non è derivato dall'ultimo reddito né da una formula di crescita perpetua."
+                                if income_basis
+                                else "Il valore terminale è una perpetuità annuale a fine periodo, stimata all'ultima data del piano. Il flusso terminale è annuale e distinto dagli eventuali flussi mensili; il tasso terminale e la crescita sono annui effettivi."
+                            )
                         ),
                     ]
                 )
@@ -779,6 +816,77 @@ def write_workbook(path: Path, report: dict) -> None:
                 calculations.cell(index, column),
                 str(calculations.cell(index, column).value or ""),
             )
+    residual_methods = [
+        method for method in report["methods"] if "residual_basis" in method
+    ]
+    if residual_methods:
+        basis_sheet = workbook.create_sheet("Base residuale")
+        basis_sheet.append(
+            ["Metodo", "Campo", "Descrizione", "Stato", "Fonti", "Posizione"]
+        )
+        clean_sheet = workbook.create_sheet("Clean surplus")
+        clean_sheet.append(
+            [
+                "Metodo",
+                "Periodo",
+                "Patrimonio iniziale",
+                "Reddito",
+                "Distribuzioni",
+                "Apporti",
+                "Patrimonio finale",
+                "Finale calcolato",
+                "Differenza",
+                "Costo del periodo",
+                "Onere equity",
+                "Reddito residuale",
+                "Valore attuale",
+            ]
+        )
+        for method in residual_methods:
+            basis = method["residual_basis"]
+            for key, label in RESIDUAL_BASIS_LABELS.items():
+                basis_sheet.append(
+                    [
+                        method["method_id"],
+                        label,
+                        basis[key],
+                        (
+                            "Confermata"
+                            if basis["status"] == "confirmed"
+                            else "Da confermare"
+                        ),
+                        ", ".join(basis["source_ids"]),
+                        basis["locator"],
+                    ]
+                )
+            for index, item in enumerate(method["clean_surplus_schedule"], 1):
+                period = method["timing"]["schedule"][index - 1]
+                clean_sheet.append(
+                    [
+                        method["method_id"],
+                        f"{period['start_date']} – {period['end_date']}",
+                        *[
+                            f"='Calcoli'!B{row_ids[item[key]]}"
+                            for key in (
+                                "opening_id",
+                                "income_id",
+                                "distribution_id",
+                                "contribution_id",
+                                "closing_id",
+                                "expected_closing_id",
+                                "difference_id",
+                                "period_cost_id",
+                                "equity_charge_id",
+                                "residual_income_id",
+                                "pv_residual_income_id",
+                            )
+                        ],
+                    ]
+                )
+                _literal(clean_sheet.cell(clean_sheet.max_row, 1), method["method_id"])
+        for row in basis_sheet:
+            for cell in row:
+                _literal(cell, str(cell.value))
     if report["statements"]:
         statement_sheet = workbook.create_sheet("Quadrature")
         statement_sheet.append(

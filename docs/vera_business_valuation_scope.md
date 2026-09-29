@@ -22,7 +22,7 @@ professionally enabled. Specialist extensions remain part of the proposed scope.
 | P0-02 Purpose profiles | All 21 profiles have explicit semantic intake, source binding and development-only coverage in `purpose-profiles.json` | Primary research, specialist implementation, purpose-specific synthetic and professionally reviewed case for each activated profile; none is activated |
 | P0-03 Studio Archive | Exact case and nested-source receipts, same-engagement upstream plan, immutable revisions and idempotent replay; native fixture coverage | Installed host/user acceptance; retain explicit cross-client coverage in shared archive tests |
 | P0-04 Business plan v3 | Actual compiler replays the original plan; selected contiguous whole months or complete calendar years reconcile taxes, working capital and capex; monthly amounts bind exact dated FCFF flows | Separately qualified intramonth evidence and additional professionally reviewed real-case evidence |
-| P0-05 Engine | Eight explicit Decimal variants including finite-duration equity income with an independent residual; annual and explicitly dated DCF with stub/monthly/mid-period timing, ACT/365F and ACT/ACT_ISDA, flat/spot/interval-forward rates, effective annual/continuous compounding; formula ledger and EV/equity separation | Mixed-income dated/capital-varying variants, further sector models, alternative terminal conventions and curve-specific scenario comparison |
+| P0-05 Engine | Nine explicit Decimal variants including finite-duration equity income and clean-surplus residual income with changing equity capital; annual and explicitly dated DCF with stub/monthly/mid-period timing, ACT/365F and ACT/ACT_ISDA, flat/spot/interval-forward rates, effective annual/continuous compounding; formula ledger and EV/equity separation | Distinct dated/capital-varying mixed-income conventions, further sector models, alternative terminal conventions and curve-specific scenario comparison |
 | P0-06 Public sources | Versioned NYU country-risk HTML and explicitly selected ECB AAA spot CSV acquisition from observed links; immutable originals, exact percent conversion and missing-date diagnostics; parser replay for eligible imported records | ECB publication/vintage evidence and eligible binding, regional/historical workbooks and other adapters; semantic source qualification and independent historical availability |
 | P0-07 Guided experience | Native skill builds technical inputs, opens report and asks focused professional questions; user does not author JSON | Witnessed accountant completion of an end-to-end case; synthetic teacher execution does not establish this |
 | P0-08 Outputs | One replayed register produces HTML/MD/DOCX/PDF/XLSX/JSON/CSV and the named JSON workpapers; explicit claim bindings, numeric equality and review invalidation; independent LibreOffice formula comparison and visual QA | Semantic support review across actual cases and broad layout cases; recheck layout whenever report content changes |
@@ -207,6 +207,37 @@ All seven DOCX and five native PDF pages of the annual and archive-bound example
 and four DOCX/three PDF pages per teaching case were visually inspected.
 
 ## Purpose coverage and release evidence
+
+The separate `RESIDUAL_INCOME_EQUITY` variant now handles changing common-equity
+book capital with exact clean-surplus roll-forwards. Opening/closing equity,
+income, distributions, contributions and terminal equity are supplied separately.
+The period equity charge is implied by the same discount factors used for residual
+income; terminal continuation is terminal equity less final book equity. A second
+calculation reconciles the result to net owner payments and terminal equity.
+Flat, spot and interval-forward curves, effective/continuous compounding and
+explicit short periods are covered. Owner transactions remain end-period; no
+balancing plugs, inferred OCI adjustments, automatic terminal value, FCFF relabeling
+or second debt deduction is provided. The source-bound accounting and economic
+basis needs professional review. This does not qualify a PIV purpose or substitute
+for the distinct mixed-method conventions still listed above.
+
+Forty new cases bring the valuation/acquisition/shared-transport suite to 413
+passes at 94.66% component coverage. All 15 scripts pass Black, Isort, Mypy and
+Bandit; a Mypy cache internal error was resolved by rerunning with a fresh isolated
+cache, without source or dependency changes. LibreOffice independently matches
+400 calculation and 66 linked clean-surplus cells across annual, spot and short
+period examples. All eight DOCX and six PDF pages per example and per native
+archive-bound residual case were inspected. Both fresh teaching outputs retain
+the prior text except receipt IDs and expected partial results; all four DOCX and
+three PDF pages per teaching output were inspected. These are synthetic technical
+checks, not accountant or enabled-host acceptance.
+
+The three rebuilt Vera layouts contain 18 byte-identical executable/schema/transport
+files and each reproduces six full report objects outside the repository. Full
+Vera/Clara/Lucia package alignment passes. The broader required check run has 504
+passes, two installed-Marketplace skips and the same two unresolved failures:
+dependency-checker arguments and the uncommitted-source version guard. Committing
+does not waive either the release-version decision or current-head CI.
 
 Statement acceptance adds 28 regressions, including wrong dates/perimeters/bases,
 independent opening evidence, duplicate movement prevention, negative equity,

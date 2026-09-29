@@ -179,7 +179,7 @@ the model/professional still checks completeness, classifications and substance.
 
 Propose and explain methods according to the mandate. The implemented calculations
 are FCFF/FCFE DCF with annual or explicitly dated flows, constant or finite-duration equity income, adjusted NAV,
-constant-capital mixed income, selected EV or equity multiples, and APV composition.
+constant-capital mixed income, clean-surplus residual equity income, selected EV or equity multiples, and APV composition.
 Explain each selection/exclusion. The professional selects sustainable terminal
 flows, capital costs, asset values, comparable samples and multiples. Keep
 enterprise value and equity separate. Never deduct debt from FCFE or P/E again,
@@ -203,6 +203,20 @@ Income is not automatically cash or distributable profit. Never relabel plan FCF
 as income, derive the residual from the last income, infer a perpetuity or deduct
 debt again. Review the separate `Base reddituale` worksheet and the horizon factor,
 which remains at period end even when incomes are placed at mid-period.
+
+For changing common-equity capital, the distinct `RESIDUAL_INCOME_EQUITY` contract
+requires independently supplied opening/closing book equity, clean-surplus income,
+distributions and contributions for each exact period. Prepare and review all
+accounting adjustments, including OCI or other non-owner movements, before using
+those inputs. Never insert a balancing plug. Record the source-bound accounting,
+owner-transaction, terminal-equity and cost-of-equity explanations in
+`residual_basis`. The helper reconciles the capital roll-forward and calculates
+beginning-capital charges from the same end-period discount factors. It shows the
+terminal equity value less final book equity and an owner-cash-flow cross-check.
+Inspect `Base residuale` and `Clean surplus` before recording method review.
+Do not infer a terminal value, treat plan FCFF as income, deduct debt again or
+claim that a balanced schedule establishes accounting adequacy or distributability.
+Mid-period owner transactions require a separately qualified model.
 
 For benchmarks, research official public sources with public parameter/sector/date
 queries only. The mandate authorizes necessary public research; do not include

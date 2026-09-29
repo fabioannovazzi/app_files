@@ -17,7 +17,8 @@ work. The goal is not complete and no purpose is professionally activated.
 
 Implement a client-bound `business-valuation` workflow for preparing reviewable
 PMI valuation workpapers. The supported methods are FCFF and FCFE DCF, constant or finite-duration
-equity income, adjusted NAV, constant-capital mixed income, selected multiples,
+equity income, clean-surplus residual income with changing equity capital,
+adjusted NAV, constant-capital mixed income, selected multiples,
 and APV composition. Method selection, source relevance, normalizations,
 terminal sustainability, benchmark comparability and conclusion are model and
 professional judgments. Decimal arithmetic, evidence identity, formula lineage,
@@ -35,7 +36,7 @@ register. Never average methods or apply quota discounts automatically.
 
 The function prepares valuation workpapers for professional review. It does not
 sign, file, certify PIV compliance or qualify every legal-purpose profile.
-Specialist methods, rights waterfalls, crisis distributions and legal-purpose
+Further specialist methods, rights waterfalls, crisis distributions and legal-purpose
 opinions remain outside the calculation contract. Missing evidence is visible;
 unsupported dependent calculations stop rather than substitute invented values.
 

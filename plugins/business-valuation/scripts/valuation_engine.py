@@ -19,6 +19,7 @@ METHODS = {
     "DCF_FCFE",
     "INCOME_EQUITY",
     "INCOME_EQUITY_FINITE",
+    "RESIDUAL_INCOME_EQUITY",
     "NAV",
     "MIXED_EQUITY",
     "MULTIPLE",
@@ -341,13 +342,15 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
     value_type = "equity"
     extras: dict[str, str] = {}
     timing_result = None
+    residual_schedule = None
     if "timing" in method and kind not in {
         "DCF_FCFF",
         "DCF_FCFE",
         "INCOME_EQUITY_FINITE",
+        "RESIDUAL_INCOME_EQUITY",
     }:
         raise ValuationError(
-            "Explicit dated timing requires DCF or finite equity income"
+            "Explicit dated timing requires DCF, finite equity income or residual income"
         )
 
     def sequence(refs: Any, name: str, limit: int = 100) -> list[str]:
@@ -453,6 +456,39 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
             extras["residual_share"] = ledger.add(
                 "residual_share", "divide", [residual_pv, result], "ratio"
             )
+    elif kind == "RESIDUAL_INCOME_EQUITY":
+        from valuation_residual import residual_income
+
+        _keys(
+            args,
+            {
+                "book_equity",
+                "incomes",
+                "distributions",
+                "contributions",
+                "terminal_equity_value",
+            },
+        )
+        incomes = sequence(args["incomes"], "Residual incomes", 1200)
+        timing = method.get("timing")
+        if not timing or timing["cash_flow_timing"] != "end_period":
+            raise ValuationError("Residual income requires explicit end-period timing")
+        if (
+            timing["rate_model"] == "spot_curve"
+            and timing.get("terminal_discount_rate") != timing["rate_ids"][-1]
+        ):
+            raise ValuationError(
+                "Residual income requires the final spot rate at the horizon"
+            )
+        factors, horizon, timing_result = _dated_factors(
+            ledger,
+            timing,
+            len(incomes),
+            terminal_convention="terminal_equity_less_closing_book_equity",
+        )
+        result, extras, residual_schedule = residual_income(
+            ledger, args, factors, horizon
+        )
     elif kind == "INCOME_EQUITY":
         _keys(args, {"normalized_equity_income", "cost_equity"})
         result = ledger.add(
@@ -558,7 +594,7 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
                 money(bridge["signed_adjustments"]),
             ],
         )
-    return {
+    output = {
         "method_id": method["id"],
         "kind": kind,
         "value_type": value_type,
@@ -573,3 +609,6 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
         "timing": timing_result,
         "calculations": list(ledger.rows.values()),
     }
+    if residual_schedule is not None:
+        output["clean_surplus_schedule"] = residual_schedule
+    return output

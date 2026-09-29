@@ -306,6 +306,16 @@ def _purpose(case: dict, sources: dict) -> dict:
 def _checked_timing(method: dict, mandate: dict, plan_bridge: dict | None) -> None:
     """Match exact plan flow IDs and periods; never infer a cash-flow conversion."""
     args = method["inputs"]
+    if plan_bridge is not None and method["kind"] == "RESIDUAL_INCOME_EQUITY":
+        refs = {
+            ref
+            for value in args.values()
+            for ref in (value if isinstance(value, list) else [value])
+        }
+        require(
+            not refs & set(plan_bridge["flow_input_ids"]),
+            "Plan FCFF cannot be relabelled as clean-surplus equity amounts",
+        )
     if plan_bridge is not None and method["kind"] == "INCOME_EQUITY_FINITE":
         require(
             not set([*args["incomes"], args["residual_value"]])
@@ -540,7 +550,7 @@ def build_valuation(
         fields(
             method,
             {"id", "kind", "selected", "rationale", "inputs", "limitations"},
-            {"bridge", "review", "timing", "income_basis"},
+            {"bridge", "review", "timing", "income_basis", "residual_basis"},
         )
         text(method["rationale"], "method selection rationale")
         text(method["kind"], "method kind")
@@ -563,6 +573,12 @@ def build_valuation(
         try:
             validate_selected_method(method)
             income_basis = method.get("income_basis")
+            residual_basis = method.get("residual_basis")
+            if residual_basis is not None:
+                require(
+                    set(residual_basis["source_ids"]) <= sources.keys(),
+                    "Residual-income basis requires declared evidence sources",
+                )
             if income_basis is not None:
                 require(
                     set(income_basis["source_ids"]) <= sources.keys(),
@@ -608,6 +624,7 @@ def build_valuation(
             | {ref for group in dependent_normalizations for ref in group["source_ids"]}
             | {ref for group in dependent_statements for ref in group["source_ids"]}
             | set((income_basis or {}).get("source_ids", []))
+            | set((residual_basis or {}).get("source_ids", []))
         )
         if dependent_bridge:
             source_ids = sorted(
@@ -643,6 +660,7 @@ def build_valuation(
                 for group in dependent_statements
             )
             and (income_basis is None or income_basis["status"] == "confirmed")
+            and (residual_basis is None or residual_basis["status"] == "confirmed")
         )
         accepted = complete and reviewed(method.get("review"), dependency)
         result.update(
@@ -668,6 +686,8 @@ def build_valuation(
         )
         if income_basis is not None:
             result["income_basis"] = income_basis
+        if residual_basis is not None:
+            result["residual_basis"] = residual_basis
         if not complete:
             issues.append(f"{method['id']}: source or assumption review pending")
         for row in result.pop("calculations"):

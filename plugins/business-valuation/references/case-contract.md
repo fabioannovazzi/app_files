@@ -134,10 +134,57 @@ is an input ID, not an inline amount. Unselected methods retain their rationale.
 | DCF_FCFF / DCF_FCFE | flows (ordered list), discount_rate, terminal_next_flow, terminal_growth; optional terminal_rate | Annual end-year discounting; terminal flow is supplied independently; terminal rate must exceed growth; FCFE is already equity |
 | INCOME_EQUITY | normalized_equity_income, cost_equity | Positive constant equity income divided by positive Ke |
 | INCOME_EQUITY_FINITE | incomes (ordered list), residual_value | Dated equity income plus a separately evidenced equity residual at the horizon; requires timing and income_basis |
+| RESIDUAL_INCOME_EQUITY | book_equity (n+1), incomes, distributions, contributions (n each), terminal_equity_value | Dated clean-surplus common-equity model with changing book capital; requires timing and residual_basis |
 | NAV | assets (nonempty list), liabilities (possibly empty list), tax_adjustment | Adjusted assets less liabilities less signed tax adjustment |
 | MIXED_EQUITY | adjusted_equity, incomes (ordered list), normal_return, excess_discount | Constant adjusted equity plus discounted annual excess incomes |
 | MULTIPLE | metric, selected_multiple, kind | Positive metric times selected multiple; kind is EV_EBITDA, EV_EBIT, EV_REVENUE or P_E |
 | APV | unlevered_value, pv_tax_shields, pv_financing_costs | Supplied unlevered PV plus shield PV less financing-cost PV |
+
+### Residual income with changing equity capital
+
+`RESIDUAL_INCOME_EQUITY` is distinct from the constant-capital mixed method.
+Supply `book_equity` at valuation and each period end, plus period `incomes`,
+nonnegative `distributions` and nonnegative `contributions`. All are independently
+evidenced monetary input IDs. Incomes must incorporate the professionally reviewed
+clean-surplus adjustments; do not use a balancing amount or silently omit OCI,
+currency effects, capital adjustments or owner transactions. The helper requires
+exactly `B[t] = B[t-1] + income[t] + contribution[t] - distribution[t]`.
+It does not infer missing adjustments. Negative income/book equity remain signed.
+
+The explicit timing contract supports flat, spot and interval-forward rates,
+effective annual or continuous compounding, and both documented day-count bases.
+Owner transactions and earnings are at period end. Mid-period timing requires a
+different transaction-timing model and is rejected. A spot curve must use the same
+last spot input for its horizon. The effective interval cost is
+`q[t] = D[t] / D[t-1] - 1`, with `D[0]=1`, using the same cumulative discount
+divisors as the income. No annual income is prorated for a short interval.
+
+Each residual income is `income[t] - q[t]*B[t-1]`. Equity is
+`B[0] + sum(residual_income[t]/D[t]) + (P[n]-B[n])/D[n]`, where `P[n]` is the
+separately supplied `terminal_equity_value`, not a terminal residual-income amount.
+An explicit `P[n]=B[n]` means zero continuing excess value; it is never defaulted.
+No terminal growth rate, second book-value addition or debt deduction is applied.
+The register also calculates the independent algebraic cross-check
+`sum((distributions-contributions)/D[t]) + P[n]/D[n]`. Its displayed difference
+can contain final Decimal rounding; accounting reconciliations themselves are exact.
+
+Supply a `residual_basis` with `accounting_basis`, `clean_surplus_adjustments`,
+`owner_transactions`, `terminal_equity_basis`, `capital_cost_basis`, `locator`,
+`source_ids` and `status` (`proposed` or `confirmed`). All explanations are required
+and source-bound. Proposed basis or unreviewed evidence keeps the method partial;
+changes invalidate only dependent reviews. A recorded confirmation does not prove
+accounting adequacy, legal distributability, economic consistency or human identity.
+Existing normalization and statement dependencies still apply. Bound plan FCFF
+cannot be relabelled as clean-surplus equity amounts. Reports retain the separate
+basis and a formula-linked `Clean surplus` workbook schedule.
+
+Primary methodological references inspected 30 September 2026:
+[CFA Institute, Residual Income Valuation](https://www.cfainstitute.org/insights/professional-learning/refresher-readings/2026/residual-income-valuation)
+for beginning-equity charges and the terminal equity/book difference;
+[Damodaran, Valuation Approaches and Metrics (2006), PDF page 53](https://people.stern.nyu.edu/adamodar/pdfiles/papers/valuesurvey.pdf#page=53)
+for the clean-surplus derivation. The dated factor extension above is an explicit
+algebraic contract, verified against owner cash flows; these references do not
+establish this implementation's PIV conformity or professional suitability.
 
 An enterprise-side method can supply `bridge` with input IDs `financial_debt`,
 `debt_like`, `excess_cash`, `non_operating_assets`, `signed_adjustments`.

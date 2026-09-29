@@ -857,7 +857,8 @@
         "review": {
           "$ref": "#/$defs/review"
         },
-        "income_basis": {}
+        "income_basis": {},
+        "residual_basis": {}
       },
       "additionalProperties": false
     },
@@ -1151,7 +1152,8 @@
                 "MIXED_EQUITY",
                 "MULTIPLE",
                 "APV",
-                "INCOME_EQUITY_FINITE"
+                "INCOME_EQUITY_FINITE",
+                "RESIDUAL_INCOME_EQUITY"
               ]
             },
             "bridge": {
@@ -1358,6 +1360,48 @@
             "not": {
               "required": [
                 "income_basis"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "RESIDUAL_INCOME_EQUITY"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "timing",
+              "residual_basis"
+            ],
+            "properties": {
+              "inputs": {
+                "$ref": "#/$defs/residualIncomeInputs"
+              },
+              "residual_basis": {
+                "$ref": "#/$defs/residualBasis"
+              },
+              "timing": {
+                "properties": {
+                  "cash_flow_timing": {
+                    "const": "end_period"
+                  }
+                }
+              }
+            },
+            "not": {
+              "required": [
+                "bridge"
+              ]
+            }
+          },
+          "else": {
+            "not": {
+              "required": [
+                "residual_basis"
               ]
             }
           }
@@ -1878,6 +1922,103 @@
           "$ref": "#/$defs/text"
         },
         "residual_basis": {
+          "$ref": "#/$defs/text"
+        },
+        "locator": {
+          "$ref": "#/$defs/text"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "status": {
+          "enum": [
+            "proposed",
+            "confirmed"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "residualIncomeInputs": {
+      "type": "object",
+      "required": [
+        "book_equity",
+        "incomes",
+        "distributions",
+        "contributions",
+        "terminal_equity_value"
+      ],
+      "properties": {
+        "book_equity": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 2,
+          "maxItems": 1201
+        },
+        "incomes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 1200
+        },
+        "distributions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 1200
+        },
+        "contributions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 1200
+        },
+        "terminal_equity_value": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false
+    },
+    "residualBasis": {
+      "type": "object",
+      "required": [
+        "accounting_basis",
+        "clean_surplus_adjustments",
+        "owner_transactions",
+        "terminal_equity_basis",
+        "capital_cost_basis",
+        "locator",
+        "source_ids",
+        "status"
+      ],
+      "properties": {
+        "accounting_basis": {
+          "$ref": "#/$defs/text"
+        },
+        "clean_surplus_adjustments": {
+          "$ref": "#/$defs/text"
+        },
+        "owner_transactions": {
+          "$ref": "#/$defs/text"
+        },
+        "terminal_equity_basis": {
+          "$ref": "#/$defs/text"
+        },
+        "capital_cost_basis": {
           "$ref": "#/$defs/text"
         },
         "locator": {
