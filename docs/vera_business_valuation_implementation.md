@@ -65,6 +65,12 @@ Local evidence on 29 September 2026:
 - The shared workflow ID addition changes source fingerprints in existing
   lessons. Their content and input records were compared with origin/main and
   are identical; the recorded refresh covers that registry change only.
+- Clara's `learn-with-clara` and `research-video-voice` records were refreshed
+  after reviewing their governed-source diff against `6f26f0e8241a0fe3027c162e2c2cae4d97395465`.
+  The changes add Vera valuation copy, synthetic teaching material and catalogue
+  entries, and update shared lesson fingerprints. Clara teaching/narration
+  execution, payloads, recipients and retention behavior are unchanged. The
+  complete Clara privacy register validates and all 13 focused tests pass.
 - The new Italian lesson ships fictional mandate notes and a separate 12% rate
   revision, not a preapproved case or precomputed result. Native demo/practice
   runs produce respectively 750,000 and 583,333.33 EUR equity indications and
