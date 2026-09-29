@@ -75,5 +75,5 @@ def render_introduction(root: Path, destination: Path) -> str:
         "Introduzione facoltativa, in Codex o per iscritto in Cowork.</p>"
         '<nav aria-label="Lingua del corso introduttivo">'
         + " · ".join(links)
-        + '</nav><p><a href="#vera">Corsi Vera</a></p></section>'
+        + "</nav></section>"
     )
