@@ -99,7 +99,31 @@ The generic package assertions were updated for the new component, public
 page and compact specialist contract. Existing Cowork introduction wording and
 cache-busting stylesheet URLs are checked for their actual contract rather than
 outdated literal boilerplate. The shared archive change requires aligned
-candidate bundles: Vera 0.1.279, Clara 0.1.222 and Lucia 0.1.62.
+candidate bundles: Vera 0.1.282, Clara 0.1.223 and Lucia 0.1.63, with Studio
+Archive 0.1.39. These candidates were moved above the manifest versions inspected
+in open PRs #705–#708 to avoid publishing different source under the same version.
+The candidate refresh passed source/package parity for all three products.
+Its broad package and privacy regression run had 564 passes, two skips and
+eight failures: seven lacked Node on the test command's PATH and one exposed
+a stale Lucia intake privacy fingerprint for the shared ledger. After reviewing
+the additive ledger methods, refreshing that fingerprint and using the bundled
+Node runtime, the focused rerun passed all 46 checks, including all eight failures.
+
+Live CLI inspection on 2026-09-29 identified enabled local installations
+`vera@mp-vera` 0.1.275, `clara@mp-clara` 0.1.218 and `lucia@mp-lucia` 0.1.60.
+The remote Marketplace catalogue lookup failed in that command. The candidate
+versions' installed-host acceptance is therefore not established.
+
+A subsequent repository-wide gate attempt did not pass. Black flagged 262 files
+and Isort 202 files, all unchanged by this implementation. Full pytest stopped
+during collection with 26 import errors; 24 report a SciPy native-library loader
+failure, which also reproduces with an isolated import outside the repository.
+Installed SciPy 1.15.2 matches the requirements pin and its native file matches
+the installed distribution's RECORD hash. Repository-wide source coverage was
+not established. Mypy passed on 132 source files; Bandit found 30 low-severity
+issues and zero medium/high issues. Logs and the unchanged-file comparison are
+in the recovery folder's `full-quality-gate` directory. These results do not
+replace the passing scoped checks above or establish a green complete CI run.
 
 ## Evidence boundaries
 
