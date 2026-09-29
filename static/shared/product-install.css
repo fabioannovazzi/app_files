@@ -1,4 +1,13 @@
 /* Shared installation controls for Vera, Clara and Lucia. */
+.hero-install__actions {
+  row-gap: 8px;
+}
+
+.install-option {
+  grid-row: span 4;
+  grid-template-rows: subgrid;
+}
+
 .install-option .button:disabled,
 .install-option .button:disabled:hover {
   color: #526375;
@@ -9,9 +18,22 @@
   opacity: 1;
 }
 
-.install-option__guide {
+.install-option .button.install-option__download {
+  width: calc(100% - 32px);
+  max-width: 100%;
+  min-height: 36px;
+  justify-self: start;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border-color: var(--blue);
+  background: var(--white);
   color: var(--blue);
-  font-size: 0.875rem;
-  line-height: 1.5;
-  text-underline-offset: 0.2em;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.install-option .button.install-option__download:hover {
+  background: #f1f6fb;
+  transform: none;
 }
