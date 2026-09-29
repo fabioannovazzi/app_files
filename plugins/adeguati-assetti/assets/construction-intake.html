@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; font-src data:; connect-src 'none'; img-src data:; base-uri 'none'; form-action 'none'">
+<title>Visita aziendale · __CASE_TITLE__</title>
+<style>
+/* The generator embeds the already licensed Instrument Sans file here. */
+__FONT_FACE__
+:root{font-family:'Instrument Sans',sans-serif;color:#182a3b;background:#fff;font-size:17px;line-height:1.55;--blue:#124a7e;--muted:#526577;--rule:#dce3e9}
+*{box-sizing:border-box}body{margin:0}header,main,footer{max-width:1000px;margin:auto;padding:24px clamp(22px,6vw,70px)}header{display:flex;justify-content:space-between;border-bottom:1px solid var(--rule);font-size:.9rem}header strong{color:var(--blue);letter-spacing:.04em}main{min-height:70vh;padding-top:clamp(35px,6vw,70px)}h1{font-size:clamp(2rem,4vw,3.1rem);line-height:1.12;letter-spacing:-.035em;font-weight:600;max-width:800px;margin:12px 0 24px}h2{font-size:1.35rem;line-height:1.35;margin:12px 0 22px;font-weight:600}p{max-width:650px}small,.muted{color:var(--muted)}.eyebrow{font-size:.84rem;color:var(--blue);font-weight:600}button,input,textarea{font:inherit}button{border:1px solid var(--rule);background:#fff;color:var(--blue);padding:10px 18px;cursor:pointer;border-radius:4px}button:hover{background:#f2f6f9}button.primary{background:var(--blue);color:#fff;border-color:var(--blue)}button:disabled{opacity:.5;cursor:default}button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #2785bc;outline-offset:3px}label{display:block;margin:12px 0 7px}input[type=text],textarea{display:block;width:100%;border:1px solid #aab9c7;border-radius:4px;padding:12px;color:inherit;background:#fff}textarea{min-height:180px;resize:vertical}.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}.spaced{margin:28px 0}.secondary{margin-top:28px;padding-top:22px;border-top:1px solid var(--rule)}fieldset{border:0;padding:0;margin:18px 0;display:flex;gap:18px;flex-wrap:wrap}fieldset label{margin:0;display:flex;gap:7px;align-items:center}legend{color:var(--muted);font-size:.85rem;margin-bottom:9px}details{margin-top:20px}summary{cursor:pointer;color:var(--blue)}footer{border-top:1px solid var(--rule);font-size:.8rem;color:var(--muted)}#message{min-height:28px;margin-top:20px;color:#83361d}#overview article{border-bottom:1px solid var(--rule);padding:18px 0}#overview pre{white-space:pre-wrap;font:inherit;overflow-wrap:anywhere}.hidden,[hidden]{display:none!important}.progress{font-size:.85rem;color:var(--muted)}.form-width{max-width:710px}.import-label{display:inline-block;color:var(--blue);cursor:pointer;text-decoration:underline}#import{max-width:100%;font-size:.85rem}@media(max-width:600px){header{gap:14px}h1{font-size:2rem}.row button{flex-grow:1}fieldset{gap:12px}main{padding-top:32px}}
+</style>
+</head>
+<body>
+<header><strong>VERA / ADEGUATI ASSETTI</strong><span>Visita aziendale</span></header>
+<main>
+<section id="welcome">
+<div class="eyebrow">__CASE_TITLE__</div>
+<h1>Ricostruiamo il lavoro dell’azienda</h1>
+<p id="resume">Raccogli appunti, esempi e punti da verificare. Puoi fermarti e riprendere dalla stessa scheda.</p>
+<button class="primary" id="start">Inizia la visita</button>
+<div class="secondary row"><button id="voice" type="button">Parliamo</button><button id="chat" type="button">Scrivi in conversazione</button></div>
+<p class="muted" id="mode-note" hidden></p>
+</section>
+<section id="interview" class="form-width" hidden>
+<p class="progress" id="position"></p>
+<h2 id="question" tabindex="-1"></h2>
+<label for="answer">Appunti e risposta originale</label><textarea id="answer" placeholder="Scrivi come viene svolta l’attività e un esempio concreto."></textarea>
+<fieldset><legend>Stato della risposta</legend><label><input type="radio" name="status" value="answered">Risposta raccolta</label><label><input type="radio" name="status" value="to_verify">Da verificare</label><label><input type="radio" name="status" value="unknown" checked>Non lo so</label></fieldset>
+<details><summary>Note e riferimenti ai documenti</summary><label for="notes">Note da tenere separate dalla risposta</label><textarea id="notes" style="min-height:85px"></textarea><label for="attachments">Nomi o riferimenti degli allegati, uno per riga</label><textarea id="attachments" style="min-height:70px"></textarea><small>Gli allegati restano separati e vanno consegnati con la scheda.</small></details>
+<div class="row spaced"><button id="back">Indietro</button><button id="next" class="primary">Prossima domanda</button><button id="summary">Riepilogo</button></div>
+<small>Le domande non compilate rimangono sconosciute. La raccolta non assegna voti.</small>
+</section>
+<section id="overview" hidden><h1>Riepilogo della visita</h1><p>Puoi correggere ogni risposta. Vera proporrà una sintesi separata quando restituirai il file.</p><div id="answers-list"></div><button id="resume-button" class="primary spaced">Riprendi la visita</button></section>
+<section class="secondary form-width">
+<label for="author">Chi ha raccolto gli appunti</label><input type="text" id="author" autocomplete="off" placeholder="Nome o ruolo dichiarato">
+<div class="row spaced"><button id="export">Esporta per Vera (.md)</button><div><label class="import-label" for="import">Riprendi da una bozza esportata</label><input id="import" type="file" accept=".md,text/markdown"></div></div>
+<p class="muted">I dati restano in questa pagina finché la tieni aperta. Esporta una copia prima di chiuderla. Non usiamo salvataggio nel browser, risorse remote o invii automatici.</p>
+</section>
+<p role="status" aria-live="polite" id="message"></p>
+</main>
+<footer>La compilazione conserva dichiarazioni e incertezze. Valutazione professionale, adozione aziendale e funzionamento richiedono passaggi distinti.</footer>
+<script type="application/json" id="configuration">__CONFIG_JSON__</script>
+<script>
+'use strict';
+const cfg=JSON.parse(document.getElementById('configuration').textContent);
+const byId=id=>document.getElementById(id);
+const canonical=x=>Array.isArray(x)?x.map(canonical):x&&typeof x==='object'?Object.fromEntries(Object.keys(x).sort().map(k=>[k,canonical(x[k])])):x;
+const hash=async x=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(canonical(x)))))).map(b=>b.toString(16).padStart(2,'0')).join('');
+const prefix='# Scheda di visita per Vera\n\n```assetti-intake-json\n';
+function markdown(p){const encoded=JSON.stringify(p,null,2).replace(/`/g,'\\u0060');const lines=[prefix+encoded+'\n```\n','Le risposte sono dichiarazioni da verificare; non approvano voti o esclusioni.\n'];for(const a of p.answers){lines.push('## '+a.question_id+'\n');for(const v of [a.question,a.status,a.original,a.notes,a.attachment_refs.join(', ')])lines.push(v.split('\n').map(s=>'    '+s).join('\n')+'\n');}return lines.join('\n');}
+let state={schema_version:cfg.schema_version,practice_id:cfg.practice_id,client_id:cfg.client_id,engagement_id:cfg.engagement_id,session_id:crypto.randomUUID(),revision:1,parent_sha256:null,date:new Date().toISOString(),declared_author:'',mode:'html',questionnaire_version:cfg.questionnaire_version,position:0,answers:cfg.questions.map(q=>({question_id:q.id,question:q.question,criterion_ids:q.criterion_ids,original:'',status:'unknown',attachment_refs:[],notes:''}))};
+if(cfg.saved_intake)state=structuredClone(cfg.saved_intake);
+let position=Number.isInteger(state.position)?Math.max(0,Math.min(state.position,state.answers.length-1)):0,dirty=false,lastExport=cfg.saved_intake?structuredClone(state):null;
+byId('author').value=state.declared_author;
+function notice(message){byId('message').textContent=message;}
+function save(){if(!byId('interview').hidden){const a=state.answers[position];a.original=byId('answer').value;a.notes=byId('notes').value;a.attachment_refs=byId('attachments').value.split('\n').map(s=>s.trim()).filter(Boolean);a.status=document.querySelector('input[name=status]:checked').value;}state.declared_author=byId('author').value.trim();state.position=position;}
+function show(section){for(const id of ['welcome','interview','overview'])byId(id).hidden=id!==section;}
+function render(){show('interview');const a=state.answers[position];byId('question').textContent=a.question;byId('answer').value=a.original;byId('notes').value=a.notes;byId('attachments').value=a.attachment_refs.join('\n');document.querySelectorAll('input[name=status]').forEach(r=>r.checked=r.value===a.status);byId('position').textContent='Domanda '+(position+1)+' di '+state.answers.length+' · puoi saltare e riprendere';byId('back').disabled=position===0;byId('next').textContent=position===state.answers.length-1?'Vedi riepilogo':'Prossima domanda';byId('question').focus();}
+function overview(){save();show('overview');const list=byId('answers-list');list.replaceChildren();state.answers.forEach((a,i)=>{const item=document.createElement('article');const title=document.createElement('h2');title.textContent=a.question;const status=document.createElement('p');status.className='muted';status.textContent={answered:'Risposta raccolta',to_verify:'Da verificare',unknown:'Non lo so'}[a.status];const body=document.createElement('pre');body.textContent=a.original||'Nessuna risposta raccolta';const edit=document.createElement('button');edit.textContent='Modifica risposta';edit.onclick=()=>{position=i;render();};item.append(title,status,body,edit);list.append(item);});}
+byId('start').onclick=()=>render();byId('resume-button').onclick=()=>render();
+byId('back').onclick=()=>{save();position--;render();};byId('next').onclick=()=>{save();if(position===state.answers.length-1)overview();else{position++;render();}};byId('summary').onclick=overview;
+byId('voice').onclick=()=>{byId('mode-note').hidden=false;byId('mode-note').textContent='Questa scheda non registra audio. Chiedi a Vera di verificare il servizio di registrazione e il trattamento dei dati prima di usarlo. Puoi continuare con gli appunti.';};
+byId('chat').onclick=()=>{byId('mode-note').hidden=false;byId('mode-note').textContent='Puoi rispondere nella conversazione Codex della stessa pratica. Esporta gli appunti già raccolti e allegali alla conversazione per continuare.';};
+document.querySelectorAll('textarea,input[type=text],input[type=radio]').forEach(el=>el.addEventListener('input',()=>{dirty=true;}));
+byId('answer').addEventListener('input',()=>{if(byId('answer').value.trim())document.querySelector('input[name=status][value=answered]').checked=true;});
+byId('export').onclick=async()=>{save();if(!state.declared_author){notice('Indica chi ha raccolto gli appunti prima di esportare.');byId('author').focus();return;}try{if(lastExport&&JSON.stringify(state)!==JSON.stringify(lastExport)){state.parent_sha256=await hash(lastExport);state.revision=lastExport.revision+1;state.date=new Date().toISOString();}const content=markdown(state);const blob=new Blob([content],{type:'text/markdown;charset=utf-8'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='visita-'+state.session_id+'-r'+state.revision+'.md';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);lastExport=structuredClone(state);dirty=false;notice('Copia esportata. Conservala per riprendere o restituirla a Vera.');}catch(error){notice('Esportazione non riuscita: '+error.message);}};
+byId('import').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{if(file.size>10000000)throw new Error('La bozza supera 10 MB.');const content=await file.text();if(!content.startsWith(prefix))throw new Error('Formato della scheda non riconosciuto.');const end=content.indexOf('\n```\n',prefix.length);if(end<0)throw new Error('Blocco strutturato incompleto.');const incoming=JSON.parse(content.slice(prefix.length,end));if(incoming.schema_version!==cfg.schema_version||incoming.practice_id!==cfg.practice_id||incoming.client_id!==cfg.client_id||incoming.engagement_id!==cfg.engagement_id||incoming.questionnaire_version!==cfg.questionnaire_version)throw new Error('La bozza appartiene a una pratica o versione diversa.');if(!Number.isInteger(incoming.revision)||incoming.revision<1||!Array.isArray(incoming.answers)||incoming.answers.length!==cfg.questions.length)throw new Error('Versione o domande non valide.');const ids=new Set();for(const a of incoming.answers){const q=cfg.questions.find(q=>q.id===a.question_id);if(!q||ids.has(a.question_id)||typeof a.original!=='string'||typeof a.notes!=='string'||!['answered','to_verify','unknown'].includes(a.status)||!Array.isArray(a.attachment_refs)||a.attachment_refs.some(r=>typeof r!=='string')||JSON.stringify(q.criterion_ids)!==JSON.stringify(a.criterion_ids))throw new Error('Una risposta non rispetta il formato.');ids.add(a.question_id);}if(markdown(incoming)!==content)throw new Error('Testo leggibile e dati strutturati non coincidono.');if(dirty)throw new Error('Esporta prima gli appunti modificati per non perderli.');if(lastExport&&incoming.session_id===lastExport.session_id&&incoming.revision<=lastExport.revision&&await hash(incoming)!==await hash(lastExport))throw new Error('Revisioni in conflitto. Conserva entrambe le bozze.');state=incoming;lastExport=structuredClone(state);position=Number.isInteger(state.position)?Math.max(0,Math.min(state.position,state.answers.length-1)):0;byId('author').value=state.declared_author;dirty=false;render();notice('Bozza importata. Risposte e stati sono stati ripristinati.');}catch(error){notice('Importazione non riuscita: '+error.message);}finally{e.target.value='';}};
+if(cfg.resume_summary){byId('resume').textContent=cfg.resume_summary+' '+cfg.next_step;}
+if(cfg.saved_intake||cfg.resume_summary)byId('start').textContent='Riprendi la visita';
+window.addEventListener('beforeunload',event=>{if(dirty){event.preventDefault();event.returnValue='';}});
+</script>
+</body>
+</html>
