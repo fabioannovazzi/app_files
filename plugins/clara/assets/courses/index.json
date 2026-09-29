@@ -135,7 +135,7 @@
     },
     "deck-correction": {
       "path": "deck-correction/course.json",
-      "sha256": "8745f22a60caa781ffc37cc2d78f864459edbb18de8d29038123d34709000e06",
+      "sha256": "58f64fb5a8c0aceaf1754fcbd45199b983eeebcad3ba3f193796cffc88a75dba",
       "languages": [
         "it",
         "en",
@@ -219,7 +219,7 @@
     },
     "transcribe": {
       "path": "transcribe/course.json",
-      "sha256": "3f79adfa141f3bf2240cf439dd8bb61e3e15b481a9b867da6c33525d5277bd97",
+      "sha256": "73d85a7063d2bf5ccc1c2da3958e96c3bed65e53c26be53dde2ea0ca02c44eff",
       "languages": [
         "it",
         "en",

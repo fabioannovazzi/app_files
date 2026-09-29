@@ -118,9 +118,16 @@ Italian:
 
 ```bash
 python scripts/upload_hosted_audio.py <target-folder> <audio-file> \
-  --no-case-context --no-import --language en \
+  --no-case-context --no-import --language ar \
   --magic-link-file <private-magic-link.txt>
 ```
+
+`--language` is the language spoken in the recording, not the language of the
+case or final deliverable. For an Arabic recording, use `--language ar` and
+preserve the returned Arabic transcript. A Clara case may still use English,
+Italian, French, German, or Spanish as its output language; downstream notes,
+analysis, and deliverables follow that case language. Do not silently replace
+the Arabic source transcript with a translation.
 
 The uploader saves the returned bundle under
 `<target-folder>/hosted_voice_uploads/`. Import that bundle with the ordinary

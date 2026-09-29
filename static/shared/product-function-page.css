@@ -50,6 +50,11 @@ a {
   transform: translateY(0);
 }
 
+html[dir="rtl"] .skip-link {
+  right: 8px;
+  left: auto;
+}
+
 .pf-nav {
   position: sticky;
   z-index: 30;
@@ -363,6 +368,36 @@ a {
   text-underline-offset: 4px;
 }
 
+html[dir="rtl"] .pf-product,
+html[dir="rtl"] .pf-hero__aside,
+html[dir="rtl"] .pf-fact + .pf-fact,
+html[dir="rtl"] .pf-responsibility + .pf-responsibility {
+  border-right: 1px solid var(--pf-line);
+  border-left: 0;
+}
+
+html[dir="rtl"] .pf-product {
+  padding-right: 18px;
+  padding-left: 0;
+}
+
+html[dir="rtl"] .pf-hero__aside {
+  padding-right: clamp(24px, 4vw, 48px);
+  padding-left: 0;
+  border-right-width: 2px;
+  border-right-color: var(--pf-cyan);
+}
+
+html[dir="rtl"] .pf-fact + .pf-fact {
+  padding-right: 28px;
+  padding-left: 0;
+}
+
+html[dir="rtl"] .pf-responsibility + .pf-responsibility {
+  padding-right: 34px;
+  padding-left: 0;
+}
+
 button:focus-visible,
 a:focus-visible {
   outline: 3px solid var(--pf-cyan);
@@ -416,6 +451,13 @@ a:focus-visible {
     padding: 24px 0 0;
     border-top: 2px solid var(--pf-cyan);
     border-left: 0;
+  }
+
+  html[dir="rtl"] .pf-hero__aside,
+  html[dir="rtl"] .pf-fact + .pf-fact,
+  html[dir="rtl"] .pf-responsibility + .pf-responsibility {
+    padding-right: 0;
+    border-right: 0;
   }
 
   .pf-fact {

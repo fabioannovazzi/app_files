@@ -3424,6 +3424,39 @@ def test_hosted_voice_launcher_sends_context_by_authenticated_body(
     assert "ClientCo" not in launch_url
 
 
+def test_hosted_voice_launcher_keeps_arabic_source_separate_from_english_case(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    _, case_dir = init_case(tmp_path, output_language="en")
+    launcher = load_hosted_voice_launcher()
+    captured: dict[str, Any] = {}
+
+    fake_client = types.ModuleType("upload_hosted_audio")
+    fake_client._new_opener = lambda: object()
+    fake_client.authenticate_with_magic_link = lambda *_args, **_kwargs: ""
+    fake_client.bind_session_cookie = lambda *_args, **_kwargs: None
+
+    def fake_request_context_launch_token(_opener, **kwargs):
+        captured.update(kwargs)
+        return "opaque-token"
+
+    fake_client.request_context_launch_token = fake_request_context_launch_token
+    monkeypatch.setitem(sys.modules, "upload_hosted_audio", fake_client)
+
+    launch_url, context_attached = launcher.prepare_launch_url(
+        case_dir,
+        cookie_header="auth_session=test-cookie",
+        language="ar",
+    )
+
+    manifest = json.loads((case_dir / "case_manifest.json").read_text(encoding="utf-8"))
+    assert context_attached is True
+    assert launch_url.endswith("?session=opaque-token")
+    assert captured["language"] == "ar"
+    assert manifest["output_language"] == "en"
+
+
 def test_hosted_voice_launcher_builds_clean_chrome_args(tmp_path: Path) -> None:
     launcher = load_hosted_voice_launcher()
     profile_dir = tmp_path / "chrome-profile"
@@ -4006,6 +4039,46 @@ def test_spanish_hosted_voice_import_localizes_review_artifacts(
     assert "Hosted Voice Transcript" not in raw_transcript
     assert "Pending local Clara review" not in clara_review
     assert "Speaker Attribution Task" not in attribution_task
+
+
+def test_arabic_hosted_voice_import_preserves_source_with_english_case_output(
+    tmp_path: Path,
+) -> None:
+    _, case_dir = init_case(tmp_path, output_language="en")
+    importer = load_hosted_voice_importer()
+    bundle_path = tmp_path / "case-notes-voice-ar.json"
+    arabic_transcript = "قال المستشار إن القرار يحتاج إلى دليل إضافي قبل اعتماده."
+    bundle_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "source": "case_notes_hosted_voice",
+                "captured_at": "2026-09-29T10:30:00+00:00",
+                "language": "ar",
+                "model": "gpt-transcribe",
+                "user_transcript": arabic_transcript,
+                "assistant_transcript": "",
+                "extraction_json": {
+                    "cleaned_notes_markdown": "",
+                    "entries": [],
+                    "open_questions": [],
+                },
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    result = importer.import_hosted_voice_bundle(case_dir, bundle_path)
+    raw_transcript = result.raw_transcript_path.read_text(encoding="utf-8")
+    clara_review = result.clara_review_path.read_text(encoding="utf-8")
+    manifest = json.loads((case_dir / "case_manifest.json").read_text(encoding="utf-8"))
+
+    assert raw_transcript.startswith("# Hosted Voice Transcript")
+    assert arabic_transcript in raw_transcript
+    assert clara_review.startswith("# Clara Audio Review")
+    assert arabic_transcript in clara_review
+    assert manifest["output_language"] == "en"
 
 
 def test_find_latest_hosted_voice_bundle_skips_imported_and_invalid(
@@ -4797,12 +4870,13 @@ def test_upload_hosted_audio_accepts_ordinary_folder_without_case_features(
         cookie_header="auth_session=test-cookie",
         include_case_context=False,
         import_bundle=False,
+        language="ar",
     )
 
     assert result.run_dir.parent == target_folder / "hosted_voice_uploads"
     assert result.import_result is None
     assert captured["case_context"] == ""
-    assert captured["language"] == "it"
+    assert captured["language"] == "ar"
     assert not (target_folder / "case_manifest.json").exists()
 
 

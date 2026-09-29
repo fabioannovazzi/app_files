@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "deck-correction",
-  "course_sha256": "8745f22a60caa781ffc37cc2d78f864459edbb18de8d29038123d34709000e06",
+  "course_sha256": "58f64fb5a8c0aceaf1754fcbd45199b983eeebcad3ba3f193796cffc88a75dba",
   "reviewer": "Codex: first-use teaching-kit editorial review",
-  "reviewed_at": "2026-09-14T21:09:24.778028+00:00",
+  "reviewed_at": "2026-09-29T13:36:23+00:00",
   "review_scope": "Prepared lesson, fictional inputs and actual outputs from source-bound regression cases, including visual review. Fixed model contributions are test-only. This is not human learner acceptance, native voice/two-window acceptance, or professional approval. Source dependency refresh after the localized advisory evidence-map repair: 35 current presentation/transcript checks pass in clara-teaching-source-refresh-02. All 60 recorded primary/supporting artifacts across these three kits are byte-identical to the previously inspected versions; the parity manifest retains actual paths. Existing editorial and visual judgments are preserved for unchanged material. No new voice, learner or GUI acceptance is asserted.",
   "languages": {
     "it": {
@@ -596,5 +596,16 @@
       "later_failure": "Editorial digest freshness; this run is not represented as fully green."
     },
     "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
+  },
+  "arabic_transcription_refresh_20260929": {
+    "reviewer": "Codex /root - bounded Arabic transcription dependency review authorized by Fabio",
+    "reviewed_at": "2026-09-29T13:36:23+00:00",
+    "previous_course_sha256": "8745f22a60caa781ffc37cc2d78f864459edbb18de8d29038123d34709000e06",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared every compiled Italian, English, French, German and Spanish lesson field with the prior course. Presentation inputs, requested corrections, checkpoints, deliverables and practice are unchanged; only shared voice-source fingerprints changed.",
+    "source_review": "Reviewed the deck-correction voice dependency. An explicitly Arabic recording can now be transcribed without expanding Clara's case output languages or changing the approval, copy-preservation, render, semantic-review and final-output gates used by this lesson.",
+    "limits": "This refresh does not claim an Arabic teaching locale, a live Arabic deck-feedback session, native voice acceptance, learner understanding or professional approval. Existing reviewed deck artifacts remain historical evidence; fresh CI must bind the existing five-language demo and practice cases to the current course digest."
   }
 }
