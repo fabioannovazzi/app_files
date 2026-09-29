@@ -161,6 +161,16 @@ adapter are unimplemented. Use its specialist skill directly for P0 work.
   authorized local-document, Google Drive or Shared Drive, Gmail, or
   capability-gated WhatsApp evidence routes without mixing clients.
 
+## Synthetic development prototypes
+
+Read `../../trasformazione/SKILL.md` to prepare a synthetic Italian company-transformation case,
+  import evidence, propose findings, check exact arithmetic, record explicit
+  simulated/user review and export a versioned dossier. Changed evidence reopens
+  dependent approvals. This increment does not accept real client mandates,
+  qualify legal/tax effects, compute statutory deadlines or perform external
+  actions. It has no Studio Archive adapter. Select only for an explicitly
+  requested synthetic prototype or demonstration.
+
 ## Subordinate intake workflows
 
 These skills support `new-client` and related intake work. Select them directly

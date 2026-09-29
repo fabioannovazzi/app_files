@@ -1,0 +1,15 @@
+{
+  "plugin": "trasformazione",
+  "version": 1,
+  "should_trigger": [
+    {"id": "synthetic-demo", "prompt": "Mostra il prototipo di trasformazione societaria con un caso sintetico, dalle evidenze al dossier.", "required_signals": ["trasformazione", "sintetico", "dossier"]},
+    {"id": "stale-review", "prompt": "Nel prototipo sintetico cambia la stima e mostrami quali approvazioni devono essere riesaminate.", "required_signals": ["trasformazione", "stale", "evidenze"]},
+    {"id": "independent-branch", "prompt": "Proviamo su un caso fittizio: manca la perizia, ma voglio continuare la raccolta dei creditori.", "required_signals": ["trasformazione", "blocked", "creditori"]}
+  ],
+  "should_not_trigger": [
+    {"id": "real-mandate", "prompt": "Gestisci la trasformazione reale del mio cliente da SNC a SRL."},
+    {"id": "tax-opinion", "prompt": "Qual è il regime fiscale attuale della trasformazione eterogenea?"},
+    {"id": "filing", "prompt": "Deposita la delibera di trasformazione al Registro Imprese."},
+    {"id": "merger", "prompt": "Calcola il rapporto di concambio di questa fusione."}
+  ]
+}

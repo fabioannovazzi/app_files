@@ -464,6 +464,17 @@
       ]
     },
     {
+      "component_id": "trasformazione",
+      "skills": [
+        "modules/trasformazione/skills/trasformazione/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/trasformazione/scripts/check_dependencies.py",
+        "modules/trasformazione/scripts/demo.py",
+        "modules/trasformazione/scripts/transform_case.py"
+      ]
+    },
+    {
       "component_id": "fusione-guidata",
       "skills": [
         "modules/fusione-guidata/skills/fusione-guidata/SKILL.md"
@@ -511,6 +522,7 @@
     "skills/registro-imprese-sari/SKILL.md",
     "skills/sales-plan/SKILL.md",
     "skills/studio-archive/SKILL.md",
+    "skills/trasformazione/SKILL.md",
     "skills/treasury-forecast/SKILL.md",
     "skills/variance-analysis/SKILL.md",
     "skills/vera/SKILL.md",
