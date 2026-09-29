@@ -85,8 +85,8 @@
     <p class="note" data-copy="date">Versioni verificate il 29 settembre 2026. I link puntano a questi file precisi e non cambiano automaticamente con le prossime versioni.</p>
     <ul class="downloads" aria-label="Plugin ZIP">
       <li class="download-row">
-        <span class="product">Vera</span><span class="version">0.1.277 · 9.4 MB</span>
-        <a class="button" href="https://raw.githubusercontent.com/fabioannovazzi/app_files/89ea6c054843f7d3405686cb42539e24e686b74f/plugin_packages/vera/vera-plugin.zip" download="vera-plugin.zip" aria-label="Download Vera 0.1.277 ZIP"><span data-copy="download">Scarica ZIP</span> ↓</a>
+        <span class="product">Vera</span><span class="version">0.1.280 · 9.5 MB</span>
+        <a class="button" href="https://raw.githubusercontent.com/fabioannovazzi/app_files/698ea3170dfb736e87bdcf659d0acd7a331dd7ed/plugin_packages/vera/vera-plugin.zip" download="vera-plugin.zip" aria-label="Download Vera 0.1.280 ZIP"><span data-copy="download">Scarica ZIP</span> ↓</a>
       </li>
       <li class="download-row">
         <span class="product">Clara</span><span class="version">0.1.220 · 6.3 MB</span>
@@ -113,7 +113,7 @@
               <button type="button" data-product="lucia" aria-pressed="false">Lucia</button>
             </div>
             <label for="install-prompt" data-copy="promptLabel">Richiesta da copiare in Codex</label>
-            <textarea id="install-prompt" readonly spellcheck="false">Installa Vera 0.1.277 da questa cartella come plugin locale. Registra il catalogo locale già incluso e installa vera@mp-vera con i comandi supportati da Codex. Verifica la versione realmente installata e abilitata. Se esiste già una copia di Vera, aggiorna la registrazione locale se necessario e lascia abilitata solo questa versione dopo aver verificato che l’installazione è riuscita. Conserva i miei file di lavoro e chiedi a me eventuali approvazioni per gli hook. Dimmi quando riavviare l’app e aprire una nuova chat.</textarea>
+            <textarea id="install-prompt" readonly spellcheck="false">Installa Vera 0.1.280 da questa cartella come plugin locale. Registra il catalogo locale già incluso e installa vera@mp-vera con i comandi supportati da Codex. Verifica la versione realmente installata e abilitata. Se esiste già una copia di Vera, aggiorna la registrazione locale se necessario e lascia abilitata solo questa versione dopo aver verificato che l’installazione è riuscita. Conserva i miei file di lavoro e chiedi a me eventuali approvazioni per gli hook. Dimmi quando riavviare l’app e aprire una nuova chat.</textarea>
             <div class="copy-row"><button type="button" class="button" id="copy-prompt" data-copy="copy">Copia richiesta</button><span id="copy-status" role="status" aria-live="polite"></span></div>
           </div>
         </li>
@@ -171,7 +171,7 @@ codex plugin list --json</code></pre>
       if (link.dataset.language === language) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     });
-    const products = { vera: { name: 'Vera', version: '0.1.277' }, clara: { name: 'Clara', version: '0.1.220' }, lucia: { name: 'Lucia', version: '0.1.61' } };
+    const products = { vera: { name: 'Vera', version: '0.1.280' }, clara: { name: 'Clara', version: '0.1.220' }, lucia: { name: 'Lucia', version: '0.1.61' } };
     const promptBox = document.getElementById('install-prompt');
     const status = document.getElementById('copy-status');
     function selectProduct(key) {

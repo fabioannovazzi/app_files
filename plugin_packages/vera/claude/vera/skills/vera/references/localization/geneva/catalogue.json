@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "plugins/vera",
-  "version": "0.1.279",
-  "captured_at": "2026-09-29T18:32:53.145714+00:00",
-  "catalogue_fingerprint": "500598f2e1c2bbaf1ffd4cb41f8b2eb21ae6a68fd64cc126084daa34d97dcd43",
-  "manifest_sha256": "f6afca040664d482d2f0fca8ec3f8850e29087aa4fccd08d3a7bc0c9bbb61827",
+  "version": "0.1.280",
+  "captured_at": "2026-09-29T19:46:07.299704+00:00",
+  "catalogue_fingerprint": "ebf9af91ab59188cb2ca0c7f162b20936b233873e877bb7341b4de1c16df82cd",
+  "manifest_sha256": "4428e65b18af14fd8758869155bb1ed4cd118b7da0c60dd1bb61d1d78d84383f",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -187,6 +187,11 @@
       "sha256": "b2f8ad59567a7e390f0fb4afbfdb339f0f8d11b3576ff37497de55cc4172d7f3"
     },
     {
+      "function_id": "trasformazione",
+      "skill_path": "skills/trasformazione/SKILL.md",
+      "sha256": "b36f003f163ca249f5145b6983f17695fb2391318696bd9c258ecf67a19461ca"
+    },
+    {
       "function_id": "treasury-forecast",
       "skill_path": "skills/treasury-forecast/SKILL.md",
       "sha256": "d485e58b1bd3013e5b2721af9bac77e69d7254c830a7c8be335507681a63cc64"
@@ -199,7 +204,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "29b23b4da7258fe2272da43b4ae026ff231d8ea21947fd0a7cae60d732f447a9"
+      "sha256": "f3942cb4da944899f91192b070135162c1664077e36a014f447968c9f1bc1eb6"
     },
     {
       "function_id": "vouching",
