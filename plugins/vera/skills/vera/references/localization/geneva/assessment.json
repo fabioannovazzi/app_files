@@ -1,6 +1,6 @@
 {
   "schema": "vera.localization.assessment.v1",
-  "catalogue_fingerprint": "4cada5cd7c8fc2cba41d06580542c7fdfff911e72db079b1b1f0f2829165265d",
+  "catalogue_fingerprint": "2eb152702a0a658ef920f5d983082255a2c1fc4931c004ac1718061fe87137d2",
   "assessment_date": "2026-09-28",
   "target": {
     "id": "CH-GE",
@@ -388,6 +388,26 @@
       "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance.",
       "implementation": "Existing function retained with the recorded qualification limits.",
       "implementation_status": "existing_or_unresolved_as_assessed"
+    },
+    {
+      "function_id": "fusione-guidata",
+      "name": "Merger case foundation (P0)",
+      "role": "foundation",
+      "disposition": "Unresolved",
+      "common_work": "Preserve multi-company evidence, unknown or disputed facts, exact-version review decisions and dependencies in one case.",
+      "geneva_application": "Professional fit and any required Swiss/Geneva merger adaptations have not been assessed. The P0 helper supports no legal merger branch in any jurisdiction.",
+      "required_change": "Establish the professional mandate and governing source requirements before defining a Swiss merger branch; do not treat the structural case demonstration as jurisdiction qualification.",
+      "adaptation_layers": [
+        "professional mandate qualification",
+        "Swiss/Geneva sources and rules not assessed"
+      ],
+      "acceptance_example": "A later reviewed Swiss/Geneva mandate must identify applicable source versions and professional decisions; the current P0 continues to report every legal branch as unsupported.",
+      "sources": [
+        "fusione_p0"
+      ],
+      "verification": "Inspected source and synthetic structural regressions only; no Swiss merger assessment, legal validation or client acceptance.",
+      "implementation": "Existing P0 case foundation records exact evidence, review and change history; jurisdiction-specific legal branches remain unsupported.",
+      "implementation_status": "foundation_only_jurisdiction_unassessed"
     },
     {
       "function_id": "invoice-xml",
@@ -907,6 +927,19 @@
   "esg_release_binding": {
     "source_version": "0.1.282",
     "previous_catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
-    "change": "Add esg-reporting-assurance as Unresolved. Preserve earlier assessments; no new Swiss legal conclusions or professional acceptance."
+    "change": "Add esg-reporting-assurance as Unresolved. Preserve earlier assessments; no new Swiss legal conclusions or professional acceptance. Merge current main retaining the separate fusione-guidata unresolved assessment."
+  },
+  "fusione_p0_release_binding": {
+    "version": "0.1.279",
+    "reviewed_at": "2026-09-29",
+    "previous_version": "0.1.277",
+    "previous_catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
+    "added_skills": [
+      "fusione-guidata"
+    ],
+    "changed_skills": [
+      "vera"
+    ],
+    "review": "Register the new structural P0 foundation as unresolved for CH-GE. The Vera router adds only that foundation. Existing function dispositions and source assessments are preserved; no Swiss merger capability or current legal review is established."
   }
 }

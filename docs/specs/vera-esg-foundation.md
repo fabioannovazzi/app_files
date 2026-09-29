@@ -115,3 +115,25 @@ developer demo is classified separately, and Geneva suitability remains explicit
 unresolved. The focused 370-test integration suite and 40-entry catalogue check
 pass. Source fingerprints and all affected packages were rebuilt; no ESG behavior
 or existing professional capability was changed to satisfy these checks.
+
+
+### Integration with the merger foundation
+
+Main advanced to `bbc94c37a` after the first complete 34-check CI pass on
+`bb4e4773`. The task branch incorporates that main revision, preserves both
+functions, regenerates the combined packages and keeps the unpublished candidate
+versions above main. The combined catalogue has 37 function entries and four
+helpers; both new foundations remain unresolved for Geneva professional use.
+
+The merged source passes 48 ESG tests at 88.58% coverage and 411 merger,
+Archive/filesystem, website, registry and routing tests. All three product
+packages match canonical source. All six synthetic ESG checks pass from each
+Vera archive format. CI must qualify the exact integration commit independently.
+
+A broader local Cowork test invocation exposed a pre-existing assertion requiring
+a projection note on every reference, including the unchanged source-preserved
+`learn-with-vera/references/get-started.md`. It also omitted the parent test
+fixture through `--confcutdir`; these are not evidence of an ESG runtime failure.
+The version guard compares uncommitted work with HEAD, so the pending merge
+reports the already reserved unpublished Vera candidate as unchanged. Its final
+result and the required package suite are checked again on the committed source.

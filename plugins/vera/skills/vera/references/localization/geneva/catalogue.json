@@ -2,9 +2,9 @@
   "schema": "vera.localization.catalogue.v1",
   "root": "plugins/vera",
   "version": "0.1.282",
-  "captured_at": "2026-09-29T19:11:42.338646+00:00",
-  "catalogue_fingerprint": "4cada5cd7c8fc2cba41d06580542c7fdfff911e72db079b1b1f0f2829165265d",
-  "manifest_sha256": "d5e322d480d935f772cd21d0d3dc0af976dea16cc47e616bc54aa0d411aa5a37",
+  "captured_at": "2026-09-29T20:00:16.834611+00:00",
+  "catalogue_fingerprint": "2eb152702a0a658ef920f5d983082255a2c1fc4931c004ac1718061fe87137d2",
+  "manifest_sha256": "d8c7ae23cc6734b9c83b1a2a6f0e71486116194c695c921aac32b6f21d6d3ee6",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -100,6 +100,11 @@
       "function_id": "financial-report-builder",
       "skill_path": "skills/financial-report-builder/SKILL.md",
       "sha256": "f6208a7e9b9b235949ff1276a1cc3614fbbf479869b0dc370e332125f7b0cf62"
+    },
+    {
+      "function_id": "fusione-guidata",
+      "skill_path": "skills/fusione-guidata/SKILL.md",
+      "sha256": "2c3a8adaf8386593adf8649f7b6dc45c998d5e6db05d998bb03f5d4162915129"
     },
     {
       "function_id": "invoice-xml",
@@ -199,7 +204,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "7ec0287523458b46aa864dcfed7ce28611e81739ab006accc3ec432c0096e593"
+      "sha256": "9ac2c5dde924197f78341d2d5cc06583175a3e699dc5f082cc87c8945b5fb96c"
     },
     {
       "function_id": "vouching",

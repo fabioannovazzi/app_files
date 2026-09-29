@@ -1,0 +1,38 @@
+{
+  "plugin": "fusione-guidata",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "merger-case-foundation",
+      "prompt": "Prepara un fascicolo di fusione P0 con evidenze, fatti ignoti e decisioni revisionabili.",
+      "required_signals": [
+        "fascicolo",
+        "fusione",
+        "P0"
+      ]
+    },
+    {
+      "id": "merger-change-review",
+      "prompt": "Show a synthetic merger case before and after changing an approved input, preserving approval history.",
+      "required_signals": [
+        "merger",
+        "synthetic",
+        "history"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "statutory-execution",
+      "prompt": "Calcola il concambio e deposita automaticamente questo atto di fusione."
+    },
+    {
+      "id": "annual-accounts",
+      "prompt": "Prepara il bilancio annuale OIC da questo bilancio di verifica."
+    },
+    {
+      "id": "ordinary-legal-question",
+      "prompt": "Quali norme disciplinano una fusione nel mio caso?"
+    }
+  ]
+}

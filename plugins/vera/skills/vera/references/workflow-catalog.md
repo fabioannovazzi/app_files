@@ -28,6 +28,14 @@ teaching or browser setup. This installation adaptation is separate from the
 professional course catalog below; it does not provide an unattended executor.
 <!-- VERA_OPENAI_DATEV_END -->
 
+## P0 case foundation
+
+`fusione-guidata` prepares a multi-company merger case with explicit evidence
+imports, versioned facts/sources/rules, scoped confirmation records and change
+impacts. Its own synthetic CLI demo is available. It is not a prepared onboarding
+lesson: legal branches, calculations and the live multi-company Studio Archive
+adapter are unimplemented. Use its specialist skill directly for P0 work.
+
 ## Professional workflows
 
 - `esg-reporting-assurance`: organize the first ESG evidence and decision

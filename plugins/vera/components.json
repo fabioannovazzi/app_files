@@ -31,7 +31,8 @@
     "bilancio-xbrl-it",
     "browser-automation",
     "studio-archive",
-    "esg-reporting-assurance"
+    "esg-reporting-assurance",
+    "fusione-guidata"
   ],
   "shared_services": [
     "managed-python-runtime",

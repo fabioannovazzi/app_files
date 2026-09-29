@@ -15,6 +15,14 @@ task; Vera selects the workflow. Use semantic judgment, then read the selected
 skill completely. Do not select from keywords or use a cross-cutting assurance
 skill to imitate a missing operational workflow.
 
+## P0 case foundation
+
+`fusione-guidata` prepares a multi-company merger case with explicit evidence
+imports, versioned facts/sources/rules, scoped confirmation records and change
+impacts. Its own synthetic CLI demo is available. It is not a prepared onboarding
+lesson: legal branches, calculations and the live multi-company Studio Archive
+adapter are unimplemented. Use its specialist skill directly for P0 work.
+
 ## Professional workflows
 
 - `esg-reporting-assurance`: organize the first ESG evidence and decision
