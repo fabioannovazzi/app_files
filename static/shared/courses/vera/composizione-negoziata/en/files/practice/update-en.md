@@ -1,0 +1,1 @@
+SYNTHETIC UPDATE. The debtor now proposes 15 January 2027 for the same EUR 100,000 receipt. No payment evidence or professional acceptance is attached. Other case information remains as initially supplied.
