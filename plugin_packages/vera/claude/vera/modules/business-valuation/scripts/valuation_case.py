@@ -241,6 +241,7 @@ def _inputs(case: dict, sources: dict) -> dict:
                     "max_age_days",
                     "selection_reason",
                 },
+                {"acquisition"},
             )
             for key in ("vintage", "definition", "geography", "selection_reason"):
                 text(benchmark[key], key)
@@ -466,6 +467,10 @@ def build_valuation(
     )
     sources = _sources(case, source_root)
     inputs = _inputs(case, sources)
+    if any("acquisition" in item.get("benchmark", {}) for item in inputs.values()):
+        from valuation_benchmarks import validate_benchmark_bindings
+
+        validate_benchmark_bindings(case, sources, source_root)
     purpose = _purpose(case, sources)
     from valuation_normalization import build_normalizations
 

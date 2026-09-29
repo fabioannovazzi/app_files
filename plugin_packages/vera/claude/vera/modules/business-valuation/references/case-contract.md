@@ -86,7 +86,11 @@ A benchmark input also has `benchmark` with `source_url`, `observed_on`,
 `max_age_days` and `selection_reason`. The dates must be ordered and publication
 must not exceed the information cutoff. The explicitly selected age policy must
 be satisfied. These are metadata checks, not authenticity or comparability
-checks. URLs are citations only; no URL fetcher runs inside the helper.
+checks. URLs are citations only; no URL fetcher runs inside the calculation helper.
+Optional `benchmark.acquisition` binds the input to imported acquisition and
+original-document source IDs plus an immutable observation ID; see
+`benchmark-acquisition.md`. The compiler checks hashes and replays the versioned
+parser locally. Acquisition is a separate, expressly selected public-read step.
 
 ## Methods
 

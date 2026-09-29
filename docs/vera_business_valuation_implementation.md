@@ -84,6 +84,10 @@ Local evidence on 29 September 2026:
   parser drift, reuse decisions and visible source failures are covered. The live
   NYU run retrieved three documents but retained an unknown observation date;
   it is not a professionally adopted benchmark or proof of other source adapters.
+- All five DOCX and four native PDF pages of the synthetic acquisition-bound
+  report were inspected, including source paths and the separate public-network
+  disclosure. Both fresh native teaching reports retain their expected values,
+  18 artifacts, development-only purpose coverage and pending review.
 - LibreOffice independently recalculated all 75 cells of the seven-method
   calculation register and matched the engine within floating-point tolerance.
 - It also recalculated three dated-model workbooks (300 calculation cells) and
@@ -107,9 +111,25 @@ Local evidence on 29 September 2026:
   availability. The HTML function page was
   inspected in the browser in Italian and English. Public copy exists in five
   languages and states that generated reports currently use Italian.
-- Vera 0.1.278 builds for Codex, ChatGPT upload and Cowork; packaged MCP startup
+- The earlier Vera 0.1.278 candidate built for Codex, ChatGPT upload and Cowork; packaged MCP startup
   initializes all 18 configured servers. Exact source/package parity passed
   again after the dated-DCF extension, including all three products' projections.
+- Upstream merger foundation `bbc94c37a` is now integrated without changing its
+  execution source. Both functions are retained in the combined registries,
+  router and 37-function public catalogue. The new candidate is 0.1.284, above
+  the inspected 0.1.279 main version and other open candidates through 0.1.283.
+  Geneva dispositions for both additions remain unresolved. This version is a
+  build candidate, not a claim of Marketplace publication.
+- All three 0.1.284 Vera ZIP layouts include the acquisition helper and its
+  shared HTTP transport. Fourteen Python/schema source files in each were
+  checked byte-for-byte, and the extracted helper ran in a separate directory
+  with a reference-only request, correctly preserving status without network
+  reads. The full product release alignment check passes for Vera, Clara and
+  Lucia. This is package execution evidence, not enabled-installation acceptance.
+- Reviewed service-source changes from integration consist of the combined
+  router/catalogues, new valuation lesson, version identity and source inventory.
+  Existing DATEV, runtime, feedback, update and receipt execution code is
+  unchanged. Their privacy fingerprints are refreshed for those exact changes.
 - The dated source delta adds local formulas and timing metadata, without a new
   network call or external recipient. Vera and Clara privacy registers validate
   after reviewing the affected valuation, teaching and shared page sources; all

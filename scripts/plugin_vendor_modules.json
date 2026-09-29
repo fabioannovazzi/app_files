@@ -225,6 +225,17 @@
           ]
         }
       ]
+    },
+    "fusione-guidata": {
+      "module_roots": [],
+      "overlays": [
+        {
+          "source_root": "plugins/vera/scripts",
+          "module_roots": [
+            "model_data_report.py"
+          ]
+        }
+      ]
     }
   }
 }

@@ -315,7 +315,7 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
             "Quali dati arrivano al modello",
             [
                 "Il modello può leggere i documenti selezionati, gli estratti di bilancio e piano, le ipotesi, le fonti benchmark, le rettifiche e le decisioni del professionista. Questi materiali possono contenere dati reali di clienti e persone; non vengono anonimizzati automaticamente.",
-                "Il motore locale calcola i metodi e produce il registro e le esportazioni senza chiamare servizi esterni. La scelta e l'interpretazione dei dati restano nel contesto del modello del servizio utilizzato. Le fonti pubbliche sono ricercate dal modello usando solo quesiti pubblici. Il resoconto dei dati effettivamente letti è consegnato separatamente nel report privacy del run.",
+                "Il motore locale calcola i metodi e produce il registro e le esportazioni senza chiamare servizi esterni. La scelta e l'interpretazione dei dati restano nel contesto del modello del servizio utilizzato. Le fonti pubbliche sono ricercate dal modello usando solo quesiti pubblici. L'acquisizione opzionale dei benchmark NYU invia gli URL pubblici selezionati e metadati di connessione, e conserva fonte e condizioni d'uso nel fascicolo. Il resoconto dei dati effettivamente letti è consegnato separatamente nel report privacy del run.",
             ],
         )
     )

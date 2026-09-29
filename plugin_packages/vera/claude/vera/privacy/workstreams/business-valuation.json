@@ -12,7 +12,8 @@
     "requirements.txt"
   ],
   "governed_shared_paths": [
-    "vendor/modules/vera_assurance"
+    "vendor/modules/vera_assurance",
+    "modules/business-valuation/vendor/modules/public_http.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -33,7 +34,7 @@
       {
         "id": "valuation-calculation-and-review",
         "purpose": "Explain independent method results and sensitivities, author the conclusion and record professional decisions.",
-        "content": "The local Decimal engine consumes the complete structured case and validates source bytes. It emits inputs, formulas, results, source IDs, benchmark metadata, exact dependency digests and local review attestations. The model may read these records and complete exported HTML, Markdown, DOCX, PDF, XLSX and JSON/CSV, including reviewer names and timestamps. The helper performs no model or network calls. Business-plan replay temporarily reconstructs exact mapped sources below the bound run output, removes scratch copies afterwards and preserves bridge hashes, periods, monthly/annual values and upstream calculation IDs in the durable result. All permanent case artifacts remain in the selected engagement. Local arithmetic does not mean local-only processing by the selected model runtime.",
+        "content": "The local Decimal engine consumes the complete structured case and validates source bytes. It emits inputs, formulas, results, source IDs, benchmark metadata, exact dependency digests and local review attestations. The model may read these records and complete exported HTML, Markdown, DOCX, PDF, XLSX and JSON/CSV, including reviewer names and timestamps. The helper performs no model or network calls. Business-plan replay temporarily reconstructs exact mapped sources below the bound run output, removes scratch copies afterwards and preserves bridge hashes, periods, monthly/annual values and upstream calculation IDs in the durable result. All permanent case artifacts remain in the selected engagement. Local arithmetic does not mean local-only processing by the selected model runtime. The optional acquisition request, observed URLs, raw public pages, usage terms, parsed original rows, transformations, retrieval metadata and failure records may also be read by the model. Imported acquisition records and original documents are replayed locally before their values enter the case.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -47,13 +48,14 @@
       "kind": "public_research",
       "destination": "Host-provided search and official public sources selected for the valuation, including OIV, IVSC, ECB, NYU, Banca d’Italia and statistical authorities",
       "purpose": "Verify relevant methodologies, legal-purpose requirements and dated public benchmark evidence.",
-      "content": "Public parameter, date, sector and geography queries and retrieved public evidence. The skill excludes private client names, source documents and unpublished forecasts from queries. The numerical helper does not fetch URLs or download datasets.",
+      "content": "Public parameter, date, sector and geography queries and retrieved public evidence. The skill excludes private client names, source documents and unpublished forecasts from queries. The numerical compiler does not fetch URLs. The separately selected NYU acquisition helper sends only a bodyless GET for each selected public landing, terms and dataset URL, plus ordinary network metadata and a fixed user agent; it uses no account, cookies or client-case payload.",
       "optional": true,
       "requires_confirmation": true,
       "controls": [
         "A valuation mandate or explicit research-route choice authorizes necessary public research, subject to host tool permission.",
         "Source choice and query minimization are model-led; the module does not implement a semantic privacy classifier.",
-        "No implicit communication, publishing, signing or filing route."
+        "No implicit communication, publishing, signing or filing route.",
+        "The optional versioned NYU HTML adapter requires observed landing-page links and an explicit reuse decision. It preserves bytes, retrieval and release metadata, original values and transformations; unavailable or undated observations remain visibly incomplete. Selection and semantic privacy remain host/model responsibilities."
       ],
       "runtime_profiles": [
         "openai-codex",
@@ -77,12 +79,16 @@
     {
       "id": "safe-report-rendering",
       "control": "HTML and PDF text is escaped; spreadsheet labels are forced to literal text. Formulas use a closed arithmetic vocabulary, never evaluated supplied code or formulas. JSON rejects duplicate keys and nonfinite constants."
+    },
+    {
+      "id": "bounded-public-acquisition",
+      "control": "Only standard-port HTTPS on the supported NYU hosts; revalidate every redirect and all DNS answers, reject non-public addresses, connect to vetted numeric addresses while retaining original TLS hostname validation. Existing transport disables environment proxies and applies a 20-second per-document elapsed deadline including body reads, except synchronous DNS cannot be interrupted. Enforce 2 MiB, HTML MIME and byte checks; reject archives and office files without executing scripts, macros or extracting archives. Store immutable snapshots and never fall back silently to a cached success."
     }
   ],
   "review": {
     "reviewed_at": "2026-09-29",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "4d05e0d93629fe92695b36ec5d1495ef3e36ceae4cef246c2d1272b40ceb30fa"
+    "source_fingerprint": "d372488e9865406405c1a09e08d3193b61a9bfce9add6f596b363c912a64d900"
   }
 }
