@@ -93,31 +93,43 @@ def test_public_pages_have_no_retired_clara_or_vera_download_routes() -> None:
     assert "downloads/vera-plugin.zip" not in html
 
 
-def test_vera_product_page_exposes_only_the_cowork_release_archive() -> None:
+def test_vera_product_page_routes_cowork_download_through_the_guide() -> None:
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
 
-    assert page.count('href="downloads/vera-cowork-plugin.zip"') == 1
-    assert page.count("data-vera-cowork-download-link") == 1
+    assert 'href="downloads/vera-cowork-plugin.zip"' not in page
+    assert "data-cowork-marketplace-pending" in page
+    assert 'type="button" disabled aria-describedby="cowork-marketplace-status"' in page
+    assert "../cowork-downloads/index.html?lang=" in page
+    guide = (ROOT / "static/shared/cowork-downloads/index.html").read_text()
+    assert guide.count('href="../vera/downloads/vera-cowork-plugin.zip"') == 1
 
 
-def test_clara_product_page_exposes_only_the_cowork_release_archive() -> None:
+def test_clara_product_page_routes_cowork_download_through_the_guide() -> None:
     page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
         encoding="utf-8"
     )
 
-    assert page.count('href="downloads/clara-cowork-plugin.zip"') == 1
-    assert page.count("data-clara-cowork-download-link") == 1
+    assert 'href="downloads/clara-cowork-plugin.zip"' not in page
+    assert "data-cowork-marketplace-pending" in page
+    assert 'type="button" disabled aria-describedby="cowork-marketplace-status"' in page
+    assert "../cowork-downloads/index.html?lang=" in page
+    guide = (ROOT / "static/shared/cowork-downloads/index.html").read_text()
+    assert guide.count('href="../clara/downloads/clara-cowork-plugin.zip"') == 1
 
 
-def test_lucia_product_page_exposes_only_the_cowork_release_archive() -> None:
+def test_lucia_product_page_routes_cowork_download_through_the_guide() -> None:
     page = (ROOT / "static" / "shared" / "lucia" / "index.html").read_text(
         encoding="utf-8"
     )
 
-    assert page.count('href="downloads/lucia-cowork-plugin.zip"') == 1
-    assert page.count("data-lucia-cowork-download-link") == 1
+    assert 'href="downloads/lucia-cowork-plugin.zip"' not in page
+    assert "data-cowork-marketplace-pending" in page
+    assert 'type="button" disabled aria-describedby="cowork-marketplace-status"' in page
+    assert "../cowork-downloads/index.html?lang=" in page
+    guide = (ROOT / "static/shared/cowork-downloads/index.html").read_text()
+    assert guide.count('href="../lucia/downloads/lucia-cowork-plugin.zip"') == 1
 
 
 def test_vera_cowork_release_archive_is_served() -> None:
