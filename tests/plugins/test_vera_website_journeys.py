@@ -936,7 +936,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Campionamento scritture contabili",
         "Verifica documentale",
         "Preparazione fatture XML",
-        "Audit intelligente fatture passive",
+        "Audit delle fatture passive",
         "Riconciliazione banca-contabilità",
         "Riconciliazione partite aperte",
         "Preparazione piano vendite",
@@ -1345,11 +1345,17 @@ def test_vera_hub_explains_the_automatic_run_level_model_data_report() -> None:
     assert "https://mparanza.com/data-handling?lang=it#run-evidence" in page
     assert "https://mparanza.com/data-handling?lang=${lang}" in page
     assert 'data-i18n="report.stamp"' in page
-    assert "identificativo casuale, la versione e il digest del report locale" in page
-    assert "random identifier, the version, and the local report digest" in page
+    assert (
+        "identificativo casuale, la versione di Vera e un codice calcolato dal contenuto del report locale"
+        in page
+    )
+    assert (
+        "random identifier, the Vera version, and a code calculated from the local report's contents"
+        in page
+    )
     assert "salvare come PDF" in page
-    assert "Per ogni report durevole, Vera invia automaticamente" in page
-    assert "For every durable report, Vera automatically sends" in page
+    assert "Per ogni report salvato come file, Vera invia automaticamente" in page
+    assert "For every report saved as a file, Vera automatically sends" in page
     assert "il lavoro resta completato e la richiesta rimane in attesa" in page
     assert "the work remains complete and the request stays pending" in page
     assert 'href="examples/model-data-receipt.html"' not in page
