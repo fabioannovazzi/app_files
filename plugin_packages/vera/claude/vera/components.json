@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
   "plugins": [
+    "scissione-guidata",
     "open-item-reconciliation",
     "archive-organization",
     "client-file-preparation",

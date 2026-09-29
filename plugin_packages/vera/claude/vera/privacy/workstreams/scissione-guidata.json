@@ -1,0 +1,84 @@
+{
+  "schema_version": 3,
+  "workstream": "scissione-guidata",
+  "display_name": "Scissione guidata",
+  "role": "workflow",
+  "governed_paths": [
+    ".codex-plugin/plugin.json",
+    "skills",
+    "references",
+    "scripts",
+    "assets",
+    "requirements.txt"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "operation-evidence",
+        "purpose": "Interpret the authorized operation and prepare a supported route and evidence perimeter.",
+        "content": "Selected imported company, shareholder, accounting, tax, valuation, liability and contract documents; entity permissions, identities, dates and exact locators. The host model may read complete selected files where needed. No automatic anonymization or local-only processing guarantee.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "case-review",
+        "purpose": "Review proposed facts, decisions, value schedules, missing evidence and changes.",
+        "content": "The model-authored case JSON, exact-version professional declarations, ownership, allocations and separate book, asset tax, economic and shareholder tax values; historical revisions, selected source/rule records, draft dossier and unresolved issues. CLI output contains status, digest and issue count; opening a dossier can expose the complete case. Local helpers make no model or network calls.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "delegated-official-research",
+      "kind": "public_research",
+      "destination": "Official public legal and tax sources selected through Vera legal-tax research",
+      "purpose": "Verify current sources for a proposed operation without shipping preapproved legal rules",
+      "content": "Generic topical searches and public source URLs; no client identifiers or case documents",
+      "optional": true,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use the dedicated legal-tax research workflow for current source verification.",
+        "Exclude company and shareholder names, identifiers, private documents and case narrative from public queries.",
+        "Research is read-only; no filing, signature or client communication is performed."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "archive-binding",
+      "control": "Every writer validates the running portable v2 Studio Archive context, exact input membership and receipt hashes; proposals must be inside the bound output folder. Linked paths are rejected."
+    },
+    {
+      "id": "version-binding",
+      "control": "Revision hashes and complete artifact inventories are checked before changes. Stale review requests fail; a write lock rejects concurrent writers and immutable version directories preserve historical artifacts."
+    },
+    {
+      "id": "escaped-report",
+      "control": "All case text is HTML-escaped before report rendering. The report has no remote scripts or network calls."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-09-29",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "ad735a96360dcca90ea8a1f2dda65b6eb557400df83e3e79bad1fec07c135866"
+  }
+}

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Scissione guidata | Vera</title><link rel="canonical" href="https://mparanza.com/static/shared/scissione-guidata/index.html"><link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="../plugin-page-shell.css?v=20260813-function-pages"><link rel="stylesheet" href="../vera-journey.css"><link rel="stylesheet" href="../function-model-data.css"><style>.hero{grid-template-columns:1fr;min-height:0;padding-block:4rem}.lead,.section-head p{max-width:68ch}button{font:inherit}.brand{color:#002060;font-weight:700;font-size:1.25rem}@media(max-width:600px){.nav-shell{flex-wrap:wrap;gap:1rem}}</style></head>
+<body data-vera-module="scissione-guidata"><header class="topbar"><div class="nav-shell"><a class="brand" href="../vera/index.html"><img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza"></a><div class="lang-switch" aria-label="Language"><button type="button" data-lang="it" aria-pressed="true">IT</button><button type="button" data-lang="en" aria-pressed="false">EN</button><button type="button" data-lang="fr" aria-pressed="false">FR</button><button type="button" data-lang="de" aria-pressed="false">DE</button><button type="button" data-lang="es" aria-pressed="false">ES</button></div></div></header><main class="page-shell"><section class="hero"><div><h1 data-i18n="title">Scissione guidata</h1><p class="lead" data-i18n="lead">Prepara un fascicolo versionato per una scissione parziale proporzionale italiana OIC verso una nuova beneficiaria.</p></div></section>
+<section id="inputs" class="content-section"><div class="section-head"><h2 data-i18n="inputsTitle">Documenti e perimetro autorizzato</h2><p data-i18n="inputs">Seleziona cliente e incarico in Studio Archive. Importa i documenti autorizzati delle società coinvolte e identifica soci, beni, debiti, contratti, valori e informazioni mancanti. Il professionista definisce quali evidenze sono materiali.</p></div></section>
+<section id="method" class="content-section"><div class="section-head"><h2 data-i18n="methodTitle">Decisioni su una versione precisa</h2><p data-i18n="method">Vera propone fatti e percorso. Il professionista conferma qualificazioni, ipotesi e decisioni. I calcoli mantengono separati valori contabili, fiscali, economici e costo fiscale dei soci. Le modifiche riaprono le approvazioni dipendenti e conservano lo storico.</p></div></section>
+<section id="outputs" class="content-section"><div class="section-head"><h2 data-i18n="outputsTitle">Fascicolo e prospetti da rivedere</h2><p data-i18n="outputs">Ricevi un dossier HTML e Markdown, prospetti di partecipazioni e assegnazioni, registro delle modifiche e dati strutturati. I resti di arrotondamento restano visibili per ogni socio. L'approvazione dei documenti segue la lettura dei prospetti generati.</p></div></section>
+<section id="limits" class="content-section"><div class="section-head"><h2 data-i18n="limitsTitle">Perimetro e responsabilità</h2><p data-i18n="limits">Prima implementazione per revisione: EUR, diritti omogenei e valori economici positivi. Scorporo, beneficiarie preesistenti, casi asimmetrici, IFRS ed estero non sono eseguiti. Non automatizza regole fiscali, scritture contabili o termini legali. Quadratura e test sintetici non provano completezza o validità professionale. Nessuna firma o deposito.</p></div></section>
+<section id="prompt" class="content-section"><div class="section-head"><h2 data-i18n="promptTitle">Avvia il fascicolo</h2><p data-i18n="prompt">Vera, esamina questi documenti autorizzati per la scissione. Indica cosa sappiamo, cosa manca, quali decisioni devo confermare e quali prospetti puoi preparare.</p></div></section>
+<section id="model" class="content-section" data-model-data-workflow="scissione-guidata" data-model-data-status="relevant"><div class="section-head"><h2 data-i18n="modelTitle">Quali dati arrivano al modello</h2><p data-i18n="model">Codex o Cowork può leggere i documenti selezionati, anche integralmente quando necessario, e i dati del fascicolo: società, soci, contratti, passività, valori, fonti e decisioni. Gli script verificano riferimenti, versioni e calcoli localmente, senza chiamare servizi esterni. Le ricerche legali seguono il percorso dedicato di Vera con quesiti generici privi di identificativi cliente. L'analisi del modello usa l'account OpenAI o Anthropic scelto dallo studio: nessuna anonimizzazione automatica o garanzia di trattamento esclusivamente locale. Il report dell'esecuzione registra i dati effettivamente letti.</p></div></section>
+</main><script>
+const translations = {
+  "it": {
+    "title": "Scissione guidata",
+    "lead": "Prepara un fascicolo versionato per una scissione parziale proporzionale italiana OIC verso una nuova beneficiaria.",
+    "inputsTitle": "Documenti e perimetro autorizzato",
+    "inputs": "Seleziona cliente e incarico in Studio Archive. Importa i documenti autorizzati delle società coinvolte e identifica soci, beni, debiti, contratti, valori e informazioni mancanti. Il professionista definisce quali evidenze sono materiali.",
+    "methodTitle": "Decisioni su una versione precisa",
+    "method": "Vera propone fatti e percorso. Il professionista conferma qualificazioni, ipotesi e decisioni. I calcoli mantengono separati valori contabili, fiscali, economici e costo fiscale dei soci. Le modifiche riaprono le approvazioni dipendenti e conservano lo storico.",
+    "outputsTitle": "Fascicolo e prospetti da rivedere",
+    "outputs": "Ricevi un dossier HTML e Markdown, prospetti di partecipazioni e assegnazioni, registro delle modifiche e dati strutturati. I resti di arrotondamento restano visibili per ogni socio. L'approvazione dei documenti segue la lettura dei prospetti generati.",
+    "limitsTitle": "Perimetro e responsabilità",
+    "limits": "Prima implementazione per revisione: EUR, diritti omogenei e valori economici positivi. Scorporo, beneficiarie preesistenti, casi asimmetrici, IFRS ed estero non sono eseguiti. Non automatizza regole fiscali, scritture contabili o termini legali. Quadratura e test sintetici non provano completezza o validità professionale. Nessuna firma o deposito.",
+    "promptTitle": "Avvia il fascicolo",
+    "prompt": "Vera, esamina questi documenti autorizzati per la scissione. Indica cosa sappiamo, cosa manca, quali decisioni devo confermare e quali prospetti puoi preparare.",
+    "modelTitle": "Quali dati arrivano al modello",
+    "model": "Codex o Cowork può leggere i documenti selezionati, anche integralmente quando necessario, e i dati del fascicolo: società, soci, contratti, passività, valori, fonti e decisioni. Gli script verificano riferimenti, versioni e calcoli localmente, senza chiamare servizi esterni. Le ricerche legali seguono il percorso dedicato di Vera con quesiti generici privi di identificativi cliente. L'analisi del modello usa l'account OpenAI o Anthropic scelto dallo studio: nessuna anonimizzazione automatica o garanzia di trattamento esclusivamente locale. Il report dell'esecuzione registra i dati effettivamente letti."
+  },
+  "en": {
+    "title": "Guided demerger",
+    "lead": "Prepare a versioned case file for an Italian OIC partial proportional demerger into a new beneficiary.",
+    "inputsTitle": "Documents and authorized scope",
+    "inputs": "Select the client and engagement in Studio Archive. Import authorized documents for the entities involved and identify owners, assets, debts, contracts, values and missing information. The professional defines which evidence is material.",
+    "methodTitle": "Decisions on an exact version",
+    "method": "Vera proposes facts and a route. The professional confirms classifications, assumptions and decisions. Calculations separate book, tax and economic values from shareholder tax costs. Changes reopen dependent approvals while preserving history.",
+    "outputsTitle": "Case file and schedules for review",
+    "outputs": "Receive an HTML and Markdown dossier, ownership and allocation schedules, change records and structured data. Rounding residuals remain visible for every owner. Document approval follows review of the generated schedules.",
+    "limitsTitle": "Scope and responsibility",
+    "limits": "Initial implementation for review: EUR, homogeneous rights and positive economic values. Spin-offs allocating shares to the transferring company, existing beneficiaries, asymmetric cases, IFRS and foreign jurisdictions are not executed. Tax rules, accounting entries and statutory deadlines are not automated. Reconciliation and synthetic tests do not establish completeness or professional validity. No signature or filing.",
+    "promptTitle": "Start the case file",
+    "prompt": "Vera, inspect these authorized demerger documents. Show what is known, what is missing, which decisions I need to confirm and which schedules you can prepare.",
+    "modelTitle": "What data reaches the model",
+    "model": "Codex or Cowork may read the selected documents, including complete files when needed, and case records: companies, owners, contracts, liabilities, values, sources and decisions. Scripts check references, versions and arithmetic locally without external service calls. Legal research follows Vera's dedicated workflow with generic queries without client identifiers. Model analysis uses the firm's selected OpenAI or Anthropic account, with no automatic anonymization or local-only guarantee. The run report records what was actually read."
+  },
+  "fr": {
+    "title": "Scission guidée",
+    "lead": "Prépare un dossier versionné pour une scission partielle proportionnelle italienne OIC vers une nouvelle bénéficiaire.",
+    "inputsTitle": "Documents et périmètre autorisé",
+    "inputs": "Sélectionnez le client et la mission dans Studio Archive. Importez les documents autorisés des sociétés concernées et identifiez associés, actifs, dettes, contrats, valeurs et informations manquantes. Le professionnel définit les preuves déterminantes.",
+    "methodTitle": "Décisions sur une version précise",
+    "method": "Vera propose les faits et le parcours. Le professionnel confirme qualifications, hypothèses et décisions. Les calculs distinguent valeurs comptables, fiscales et économiques et coût fiscal des associés. Les modifications rouvrent les approbations dépendantes en conservant l'historique.",
+    "outputsTitle": "Dossier et tableaux à examiner",
+    "outputs": "Vous recevez un dossier HTML et Markdown, des tableaux de participations et d'affectations, un registre des modifications et des données structurées. Les écarts d'arrondi restent visibles pour chaque associé. Les documents sont approuvés après examen des tableaux produits.",
+    "limitsTitle": "Périmètre et responsabilités",
+    "limits": "Première implémentation à examiner : EUR, droits homogènes et valeurs économiques positives. Scorporo, bénéficiaires existantes, cas asymétriques, IFRS et autres juridictions ne sont pas exécutés. Les règles fiscales, écritures comptables et délais légaux ne sont pas automatisés. Les rapprochements et essais synthétiques ne prouvent ni exhaustivité ni validité professionnelle. Aucune signature ni aucun dépôt.",
+    "promptTitle": "Ouvrir le dossier",
+    "prompt": "Vera, examine ces documents autorisés pour la scission. Indique les faits connus, les informations manquantes, les décisions à confirmer et les tableaux que tu peux préparer.",
+    "modelTitle": "Quelles données parviennent au modèle",
+    "model": "Codex ou Cowork peut lire les documents sélectionnés, intégralement si nécessaire, et les données du dossier : sociétés, associés, contrats, passifs, valeurs, sources et décisions. Les scripts vérifient références, versions et calculs localement, sans services externes. La recherche juridique suit le parcours dédié de Vera avec des requêtes génériques sans identifiants clients. L'analyse utilise le compte OpenAI ou Anthropic choisi par le cabinet, sans anonymisation automatique ni garantie de traitement exclusivement local. Le rapport d'exécution indique les données effectivement lues."
+  },
+  "de": {
+    "title": "Begleitete Spaltung",
+    "lead": "Erstellt eine versionierte Akte für eine italienische proportionale Teilspaltung nach OIC auf eine neue begünstigte Gesellschaft.",
+    "inputsTitle": "Dokumente und autorisierter Umfang",
+    "inputs": "Wählen Sie Mandant und Auftrag in Studio Archive. Importieren Sie autorisierte Dokumente der beteiligten Gesellschaften und erfassen Sie Gesellschafter, Vermögen, Schulden, Verträge, Werte und fehlende Informationen. Der Berufsträger legt die wesentlichen Nachweise fest.",
+    "methodTitle": "Entscheidungen zu einer bestimmten Version",
+    "method": "Vera schlägt Sachverhalt und Vorgehen vor. Der Berufsträger bestätigt Einordnung, Annahmen und Entscheidungen. Berechnungen trennen Buchwerte, Steuerwerte, wirtschaftliche Werte und steuerliche Beteiligungskosten. Änderungen öffnen abhängige Freigaben erneut und erhalten die Historie.",
+    "outputsTitle": "Akte und Übersichten zur Prüfung",
+    "outputs": "Sie erhalten eine Akte in HTML und Markdown, Beteiligungs- und Zuordnungsübersichten, ein Änderungsregister und strukturierte Daten. Rundungsreste bleiben für jeden Gesellschafter sichtbar. Dokumentfreigaben erfolgen nach Prüfung der erzeugten Übersichten.",
+    "limitsTitle": "Umfang und Verantwortung",
+    "limits": "Erste Implementierung zur Prüfung: EUR, homogene Rechte und positive wirtschaftliche Werte. Scorporo, bestehende Begünstigte, asymmetrische Fälle, IFRS und andere Rechtsordnungen werden nicht ausgeführt. Steuerregeln, Buchungssätze und gesetzliche Fristen werden nicht automatisiert. Abstimmungen und synthetische Tests belegen weder Vollständigkeit noch fachliche Gültigkeit. Keine Unterschrift oder Einreichung.",
+    "promptTitle": "Akte beginnen",
+    "prompt": "Vera, prüfe diese autorisierten Spaltungsunterlagen. Zeige bekannte und fehlende Fakten, zu bestätigende Entscheidungen und mögliche Übersichten.",
+    "modelTitle": "Welche Daten das Modell erreichen",
+    "model": "Codex oder Cowork kann ausgewählte Dokumente bei Bedarf vollständig und Akteninhalte lesen: Gesellschaften, Gesellschafter, Verträge, Verbindlichkeiten, Werte, Quellen und Entscheidungen. Skripte prüfen Referenzen, Versionen und Berechnungen lokal ohne externe Dienste. Rechtsrecherche erfolgt über Veras eigenen Ablauf mit allgemeinen Fragen ohne Mandantenkennungen. Die Modellanalyse nutzt das gewählte OpenAI- oder Anthropic-Konto; keine automatische Anonymisierung und keine Garantie rein lokaler Verarbeitung. Der Ausführungsbericht dokumentiert tatsächlich gelesene Daten."
+  },
+  "es": {
+    "title": "Escisión guiada",
+    "lead": "Prepara un expediente con versiones para una escisión parcial proporcional italiana OIC hacia una nueva beneficiaria.",
+    "inputsTitle": "Documentos y ámbito autorizado",
+    "inputs": "Selecciona cliente y encargo en Studio Archive. Importa documentos autorizados de las sociedades e identifica socios, activos, deudas, contratos, valores e información ausente. El profesional define las pruebas materiales.",
+    "methodTitle": "Decisiones sobre una versión precisa",
+    "method": "Vera propone hechos y recorrido. El profesional confirma calificaciones, hipótesis y decisiones. Los cálculos separan valores contables, fiscales y económicos y coste fiscal de los socios. Los cambios reabren aprobaciones dependientes conservando el historial.",
+    "outputsTitle": "Expediente y cuadros para revisar",
+    "outputs": "Recibes un expediente HTML y Markdown, cuadros de participaciones y asignaciones, registro de cambios y datos estructurados. Los residuos de redondeo permanecen visibles para cada socio. La aprobación documental sigue a la revisión de los cuadros generados.",
+    "limitsTitle": "Alcance y responsabilidad",
+    "limits": "Primera implementación para revisión: EUR, derechos homogéneos y valores económicos positivos. No ejecuta scorporo, beneficiarias existentes, casos asimétricos, IFRS u otras jurisdicciones. No automatiza reglas fiscales, asientos contables ni plazos legales. Cuadres y pruebas sintéticas no demuestran integridad ni validez profesional. Sin firma ni presentación.",
+    "promptTitle": "Iniciar el expediente",
+    "prompt": "Vera, examina estos documentos autorizados de la escisión. Indica hechos conocidos, información ausente, decisiones que debo confirmar y cuadros que puedes preparar.",
+    "modelTitle": "Qué datos llegan al modelo",
+    "model": "Codex o Cowork puede leer documentos seleccionados, completos cuando sea necesario, y datos del expediente: sociedades, socios, contratos, pasivos, valores, fuentes y decisiones. Los scripts comprueban referencias, versiones y cálculos localmente sin servicios externos. La investigación jurídica sigue el recorrido dedicado de Vera con consultas genéricas sin identificadores de clientes. El análisis utiliza la cuenta OpenAI o Anthropic elegida por el despacho, sin anonimización automática ni garantía de tratamiento exclusivamente local. El informe de ejecución registra lo que se leyó."
+  }
+};
+function setLanguage(lang){if(!translations[lang])lang="it";document.documentElement.lang=lang;document.title=translations[lang].title+" | Vera";document.querySelectorAll("[data-i18n]").forEach(el=>el.textContent=translations[lang][el.dataset.i18n]);document.querySelectorAll("[data-lang]").forEach(el=>el.setAttribute("aria-pressed",String(el.dataset.lang===lang)));document.querySelector(".brand").href="../vera/index.html?lang="+lang;const url=new URL(location.href);url.searchParams.set("lang",lang);history.replaceState(null,"",url);}document.querySelectorAll("[data-lang]").forEach(el=>el.addEventListener("click",()=>setLanguage(el.dataset.lang)));setLanguage(new URLSearchParams(location.search).get("lang")||"it");
+</script><script src="../function-model-data.js"></script></body></html>

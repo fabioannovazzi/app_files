@@ -1,0 +1,271 @@
+{
+  "schema_version": "vera.scissione.v1",
+  "operation_id": "synthetic-B",
+  "purpose": "Synthetic partial proportional example B; no real company or legal approval",
+  "as_of": "2026-09-29",
+  "currency": "EUR",
+  "entities": [
+    {
+      "id": "scissa",
+      "name": "Synthetic scissa",
+      "authorization": {
+        "confirmed_by": "synthetic-professional",
+        "confirmed_on": "2026-09-29",
+        "scope": "Only the synthetic operation and selected inputs"
+      }
+    },
+    {
+      "id": "beneficiary",
+      "name": "Synthetic beneficiary",
+      "authorization": {
+        "confirmed_by": "synthetic-professional",
+        "confirmed_on": "2026-09-29",
+        "scope": "Only the synthetic operation and selected inputs"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "id": "source",
+      "entity_ids": [
+        "scissa",
+        "beneficiary"
+      ],
+      "path": "synthetic-evidence.txt",
+      "locator": "Entire synthetic fixture",
+      "as_of": "2026-09-29",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "route_record": "route",
+  "perimeter_record": "perimeter",
+  "calculation_record": "calculation",
+  "records": [
+    {
+      "id": "route",
+      "kind": "decision",
+      "status": "known",
+      "material": true,
+      "entity_ids": [
+        "scissa",
+        "beneficiary"
+      ],
+      "evidence_ids": [
+        "source"
+      ],
+      "depends_on": [],
+      "data": {
+        "choice": "Synthetic reviewed proposal",
+        "rationale": "Synthetic case for mechanical acceptance only",
+        "alternatives": "Outside first path retained as unsupported",
+        "scope": {
+          "jurisdiction": "IT",
+          "accounting": "OIC",
+          "operation": "partial_proportional",
+          "beneficiary": "new"
+        }
+      }
+    },
+    {
+      "id": "ownership",
+      "kind": "ownership",
+      "status": "known",
+      "material": true,
+      "entity_ids": [
+        "scissa",
+        "beneficiary"
+      ],
+      "evidence_ids": [
+        "source"
+      ],
+      "depends_on": [],
+      "data": {
+        "owners": [
+          {
+            "id": "owner-a",
+            "share": "0.60",
+            "tax_cost": null
+          },
+          {
+            "id": "owner-b",
+            "share": "0.40",
+            "tax_cost": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "valuation",
+      "kind": "valuation",
+      "status": "known",
+      "material": true,
+      "entity_ids": [
+        "scissa",
+        "beneficiary"
+      ],
+      "evidence_ids": [
+        "source"
+      ],
+      "depends_on": [],
+      "data": {
+        "before": "1000000",
+        "transferred": "300000",
+        "remaining": "700000",
+        "bridge": "0",
+        "homogeneous_rights": true,
+        "reciprocal_holdings": false
+      }
+    },
+    {
+      "id": "inventory",
+      "kind": "allocation",
+      "status": "known",
+      "material": true,
+      "entity_ids": [
+        "scissa",
+        "beneficiary"
+      ],
+      "evidence_ids": [
+        "source"
+      ],
+      "depends_on": [],
+      "data": {
+        "item_id": "asset-1",
+        "from_entity": "scissa",
+        "to_entity": "beneficiary",
+        "side": "asset",
+        "book": {
+          "before": "500000",
+          "transferred": "150000",
+          "remaining": "350000"
+        },
+        "tax": {
+          "before": "400000",
+          "transferred": "120000",
+          "remaining": "280000"
+        },
+        "economic": {
+          "before": "1000000",
+          "transferred": "300000",
+          "remaining": "700000"
+        }
+      }
+    },
+    {
+      "id": "contracts",
+      "kind": "fact",
+      "status": "known",
+      "material": true,
+      "entity_ids": [
+        "scissa",
+        "beneficiary"
+      ],
+      "evidence_ids": [
+        "source"
+      ],
+      "depends_on": [],
+      "data": {
+        "value": "Synthetic contracts inspected; no open material items",
+        "basis": "Synthetic evidence only"
+      }
+    },
+    {
+      "id": "liabilities",
+      "kind": "liability",
+      "status": "known",
+      "material": true,
+      "entity_ids": [
+        "scissa",
+        "beneficiary"
+      ],
+      "evidence_ids": [
+        "source"
+      ],
+      "depends_on": [],
+      "data": {
+        "value": "Synthetic liabilities and contingent liabilities reviewed",
+        "amount": null,
+        "basis": "No completeness inference from balanced accounting"
+      }
+    },
+    {
+      "id": "calculation",
+      "kind": "decision",
+      "status": "known",
+      "material": true,
+      "entity_ids": [
+        "scissa",
+        "beneficiary"
+      ],
+      "evidence_ids": [],
+      "depends_on": [
+        "route",
+        "ownership",
+        "valuation",
+        "inventory"
+      ],
+      "data": {
+        "choice": "Synthetic reviewed proposal",
+        "rationale": "Synthetic case for mechanical acceptance only",
+        "alternatives": "Outside first path retained as unsupported",
+        "ownership_id": "ownership",
+        "valuation_id": "valuation",
+        "allocation_ids": [
+          "inventory"
+        ],
+        "new_units": "10000",
+        "unit_quantum": "1",
+        "rounding": "half_even"
+      }
+    },
+    {
+      "id": "perimeter",
+      "kind": "decision",
+      "status": "known",
+      "material": true,
+      "entity_ids": [
+        "scissa",
+        "beneficiary"
+      ],
+      "evidence_ids": [],
+      "depends_on": [
+        "contracts",
+        "liabilities",
+        "ownership",
+        "valuation",
+        "inventory"
+      ],
+      "data": {
+        "choice": "Synthetic reviewed proposal",
+        "rationale": "Synthetic case for mechanical acceptance only",
+        "alternatives": "Outside first path retained as unsupported",
+        "required_records": [
+          "contracts",
+          "liabilities",
+          "ownership",
+          "valuation",
+          "inventory"
+        ]
+      }
+    },
+    {
+      "id": "project",
+      "kind": "document",
+      "status": "known",
+      "material": true,
+      "entity_ids": [
+        "scissa",
+        "beneficiary"
+      ],
+      "evidence_ids": [],
+      "depends_on": [
+        "calculation",
+        "perimeter"
+      ],
+      "data": {
+        "status": "draft",
+        "purpose": "Draft operation memo; not an executed legal instrument"
+      }
+    }
+  ]
+}

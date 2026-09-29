@@ -812,6 +812,19 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
     }
     assert references
     for name, content in references.items():
+        if name == "skills/learn-with-vera/references/get-started.md":
+            # The written-course projection installs this shared guide after
+            # ordinary reference projection; it delegates to its parent contract.
+            assert "Follow the parent teaching skill's host contract" in content
+            assert (
+                "Follow the parent skill and selected workflow's data contract"
+                in content
+            )
+            assert (
+                "## Cowork execution contract"
+                in cowork_instruction_docs["skills/learn-with-vera/SKILL.md"]
+            )
+            continue
         assert "Cowork execution note" in content, name
         assert "Their absence never" in content, name
         assert "blocks delivery" in content, name

@@ -15,6 +15,13 @@ task; Vera selects the workflow. Use semantic judgment, then read the selected
 skill completely. Do not select from keywords or use a cross-cutting assurance
 skill to imitate a missing operational workflow.
 
+## Scissione: initial operational path
+
+For a versioned scissione dossier, read `../../scissione-guidata/SKILL.md`.
+prepare a versioned dossier and ownership/allocation schedules for an Italian OIC partial proportional scission into a new beneficiary. Require authorized entity evidence and exact-version professional decisions; preserve unknowns, separate book/tax/economic/shareholder tax values and reopen dependent approvals after changes. No automatic legal rules, accounting entries, statutory deadlines, signatures or filings. Other routes are explicitly unsupported.
+This operational path has synthetic acceptance tests but no prepared voice lesson
+yet. Do not present another lesson as a scissione execution.
+
 ## Professional workflows
 
 - `invoice-xml`: prepare ordinary FPR12 invoice XML from supplied PDFs, photos

@@ -1,0 +1,106 @@
+# Scissione guidata implementation
+
+Status: implemented first candidate for review; not deployed or published.
+Source: Discord message 1554534739514359879 in channel
+1554383368270118973, recovered 2026-09-29. Contribution attributed to Francesco
+Giraldo; ZIP SHA-256 `49d683ea9cfcce56f7f386356522e43a2d8304138571ac1ff4a2008ec3328676`.
+The original ZIP has 15 entries. Its code was inspected as text, never executed.
+Recovered files are in the primary checkout's `outputs/discord-scissione-2026-09-29`.
+
+## Acceptance scope
+
+Implement P0 (versioned evidence, decisions and dependency tracking) and the
+first P1 path: Italian OIC partial proportional scission into a new beneficiary.
+The host model proposes the route and case meaning; the professional confirms
+them. No legal rule is shipped as professionally approved. Complex cases,
+scorporo, existing beneficiaries, IFRS and cross-border operations remain
+explicitly outside this first operational path. The simple existing-beneficiary
+exchange calculation is a separate synthetic arithmetic check, not route support.
+
+The implementation must persist through Studio Archive, preserve exact historical
+versions, reject foreign inputs, keep unknown amounts distinct from zero, separate
+book/tax/economic values and shareholder tax costs, require exact-version review,
+invalidate only dependent records, and produce reviewable drafts and schedules.
+Generated documents never establish signature or filing.
+
+## Validation plan
+
+- Synthetic proportional example B: 60/40 ownership and 1,000,000 = 700,000 + 300,000.
+- T06-T08: separate arithmetic example A and rejection of unsupported assumptions.
+- T25/T29: transitive selective invalidation and preserved historical approvals.
+- T26: missing material contract keeps a balanced case incomplete.
+- T28: drafts do not acquire filed status.
+- T30: explicit rounding policy and visible residuals, with every owner retained.
+- T31: exact Studio Archive input membership and entity authorization.
+- Positive and negative portable-run integration, privacy validation and package parity.
+
+Deterministic logic is used for mechanically verifiable arithmetic, schemas,
+hashes, identity membership and dependency traversal. It does not decide legal
+applicability, economic fairness, evidence sufficiency or the correct route.
+
+## Release boundary
+
+Technical tests do not establish legal validation or installed runtime acceptance.
+No signature, filing or external communication forms part of this implementation.
+Record the exact tests, remaining limitations and package state before review.
+
+## Implemented behavior
+
+- A single authoritative case holds entity declarations, evidence locators/hashes,
+  facts, liabilities, allocations, valuations, tax positions, rules, decisions,
+  deadlines and document drafts. Derived views do not create competing registries.
+- Exact archive membership and input hashes are enforced through the real portable
+  Studio Archive contract. MCP and Python registries both expose the new workflow.
+- Each immutable revision contains its dossier, schedules, change impact and
+  artifact inventory. Reviews bind exact revisions and declared identities;
+  documents cannot be approved before schedules exist. Source/date/engine changes
+  invalidate the corresponding approvals. Independent decisions survive revisions.
+- Finalized prior revisions can continue in a new run only through a verified
+  same-engagement upstream artifact. Ordinary imported JSON cannot claim that status.
+- Decimal schedules retain every owner, explicit rounding residuals, analytical
+  allocations and separate book/tax/economic totals. Unknown shareholder tax costs
+  stay null. Unsupported routes produce an explicit result without calculations.
+- Vera routing, host skill cards, privacy manifests and five-language public
+  explanation are integrated. The function is Italy-scoped on the product page.
+  It has no prepared voice lesson in this initial candidate.
+
+## Evidence and limits
+
+Recovered six channel messages and three attachments. All fourteen hashes in the
+contributor's original file manifest match the recovered ZIP. The supplied report
+claims 55 checks; those are not presented as independently executed tests.
+
+Independent scissione acceptance: **49 tests passed**, **84.84% line coverage**.
+The tests exercise examples A/B; T06-T09, T25-T31 mechanical boundaries; unknown
+and conflicting evidence; tampered outputs; concurrent/stale writers; finalization;
+real archive continuation; and indirect dependency reviews. A required parent cannot
+hide an unreviewed input or candidate rule. T01 is covered for its arithmetic and routing only.
+No claim is made to pass all 32 proposed legal acceptance scenarios. Legal-source
+currency, case-specific applicability and actual professional approval remain
+outside these synthetic results. Entity authority and reviewer identity are
+declarations, not independently verified credentials.
+
+The combined archive, privacy, icon and original scissione suite passed 187 tests
+before the additional engine-version regression was added. Black, Isort, Mypy
+and Bandit passed for the changed Python implementation. A separate persisted
+synthetic run reached `prepared_for_review`; its filing status remains
+`not_performed` and legal validation `not_certified`.
+
+Candidate packages: Vera **0.1.281**, Clara **0.1.222**, Lucia **0.1.62**;
+Studio Archive component **0.1.38**. The latter products are rebuilt because they
+bundle the changed shared archive registry. Their professional behavior is unchanged.
+The full package/update-notification/release-alignment suite passed **458 tests**
+with **2 skips because curated Marketplace installations are absent**. All Codex/ChatGPT-upload/Cowork packages pass
+source parity and version alignment;
+Vera's 18 and Lucia's 4 packaged MCP servers initialize and list tools.
+
+Vera package SHA-256:
+
+| Distribution | SHA-256 |
+|---|---|
+| Codex | `be43b6f81c9170dffcbab80263a7a9d9444057b967cdb29df8af41bba9798d16` |
+| ChatGPT upload | `c32cef03f105518b02fe6e1795f20a5673d2e20bf171daef7527bb4cc7f5d143` |
+| Cowork | `6fc79055ebe4d510f8cfcfc372584afb87698f3b1ae4966275d0e9cd581f064c` |
+
+These are build candidates. No installed-session acceptance, Marketplace
+publication, public deployment, signature, filing or Discord reply was performed.

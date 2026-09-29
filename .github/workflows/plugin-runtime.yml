@@ -607,3 +607,24 @@ jobs:
           python -m isort --check-only plugins/treasury-forecast/scripts tests/plugins/test_treasury_forecast.py tests/plugins/test_treasury_delivery.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/treasury-forecast/scripts
           python -m bandit -q -r plugins/treasury-forecast/scripts
+
+  scissione-guidata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit
+      - name: Verify scissione arithmetic, reviews and real archive continuation
+        run: >-
+          python -m pytest --noconftest -q -o addopts=''
+          tests/plugins/test_scissione_guidata.py tests/plugins/test_scissione_archive.py
+          --cov=plugins/scissione-guidata/scripts --cov-report=term-missing --cov-fail-under=80
+      - name: Check scissione code quality
+        run: |
+          python -m black --check plugins/scissione-guidata/scripts tests/plugins/test_scissione_guidata.py tests/plugins/test_scissione_archive.py
+          python -m isort --check-only plugins/scissione-guidata/scripts tests/plugins/test_scissione_guidata.py tests/plugins/test_scissione_archive.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/scissione-guidata/scripts
+          python -m bandit -q -r plugins/scissione-guidata/scripts
