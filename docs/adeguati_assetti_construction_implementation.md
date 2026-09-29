@@ -111,8 +111,10 @@ regressions remain in `test_adeguati_assetti.py`.
 
 ## Validation evidence
 
-Focused source suite on current main: 134 passed, 90.62% coverage across the component scripts.
-Mypy passed for the six new modules; Bandit found no issues in the module scripts.
+Final CI-equivalent source and packaged assetti suite on current main: 137 passed,
+90.67% coverage across the component scripts. Strict plugin Mypy passed for all
+eight scripts; Bandit found no issues in the module scripts. The two CLI lifecycle
+checks and all 28 privacy surface tests passed.
 Browser verification used an existing Chromium binary, with desktop 1280px and
 mobile 390px views. No network requests, page errors or horizontal mobile overflow
 were observed. DOCX was rendered through the bundled LibreOffice renderer and PDF
