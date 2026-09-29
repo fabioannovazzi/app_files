@@ -15,7 +15,7 @@
       "Report HTML, Word e PDF con mandato, risultato, ipotesi e limiti.",
       "Cartella Excel con formule e registro JSON/CSV per seguire dati, calcoli e fonti."
     ],
-    "review": "Controlla sostenibilità del flusso terminale, scelta del tasso e corretto raccordo dei debiti. Il motore verifica calcoli e identità delle fonti; non dimostra l’appropriatezza delle ipotesi. La registrazione della revisione non è una firma autenticata.",
+    "review": "Controlla sostenibilità del flusso terminale, scelta del tasso e corretto raccordo dei debiti. Il profilo Strategia e governance identifica il confronto interno della nota; è disponibile solo come carte di lavoro in sviluppo. Il motore verifica calcoli e identità delle fonti; non dimostra l’appropriatezza delle ipotesi. La registrazione della revisione non è una firma autenticata e non abilita il profilo all’uso professionale.",
     "checkpoints": [
       "Prima del calcolo, identifica un fatto della nota e un’ipotesi da confermare.",
       "Nel report, spiega perché valore operativo e capitale proprio differiscono e trova la fonte di una rettifica."

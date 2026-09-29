@@ -20,7 +20,8 @@ receipted input; an upstream plan must be a finalized same-engagement artifact.
 Required top-level fields: `schema_version=vera.business_valuation.case.v1`,
 `case_id`, `entity_name`, `currency` (one ISO-style three-letter code), `audience`,
 `synthetic` (boolean), `mandate`, `sources`, `inputs`, `methods`, `limitations`.
-Optional fields: `conclusion`, `plan_binding`, `sensitivity`. Unknown fields reject.
+Optional fields: `conclusion`, `plan_binding`, `sensitivity`, `purpose_profile`.
+Unknown fields reject.
 All monetary/rate/multiple values are canonical decimal strings, with no thousands
 separator, exponent or implicit percent conversion. Rates are fractions. Missing
 values are `null`; they block only dependent methods. Internal precision is 40
@@ -31,6 +32,17 @@ significant digits. Display rounding does not change stored results.
 YYYY-MM-DD. The professional interprets the mandate; software does not infer the
 governing law or edition of a standard from a date. A later permitted cutoff
 requires an explicit mandate explanation, not automatic historical availability.
+
+`purpose_profile` records the model/professional's explicit semantic choice with
+`id`, `selection_reason`, nonempty `source_ids` and a mandate `locator`. Select
+the ID from `purpose-profiles.json`; use `custom` with the actual purpose explained
+in the mandate when necessary. No keyword classifier chooses it. If omitted,
+the report says the purpose has not been classified. The registry covers all 21
+families in the supplied proposal, with individual intake focus and explicit
+coverage states. All currently share the common development core only; no
+purpose-specific professional review or availability is claimed. Case acceptance
+cannot activate a profile. A change to the selected profile, reason or mandate
+source invalidates method/conclusion reviews that depend on that mandate.
 
 Each source has `id`, `path`, `sha256`, `description`, `allowed_audiences` (list),
 `status` (`reviewed` or `unverified`). Paths are relative to run `inputs`, including

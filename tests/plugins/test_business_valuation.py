@@ -170,6 +170,81 @@ def test_proposed_input_cannot_be_accepted_with_a_hash() -> None:
     assert result["methods"][0]["status"] == "partial"
 
 
+@pytest.mark.parametrize(
+    "profile_id",
+    [
+        "sale",
+        "contribution",
+        "transformation",
+        "merger",
+        "demerger",
+        "capital_increase",
+        "withdrawal",
+        "exclusion",
+        "inheritance",
+        "family",
+        "tax",
+        "accounting",
+        "ppa",
+        "litigation",
+        "distress",
+        "liquidation",
+        "collateral",
+        "strategy",
+        "fairness",
+        "review",
+        "custom",
+    ],
+)
+def test_explicit_purpose_intake_does_not_enable_professional_use(
+    profile_id: str,
+) -> None:
+    case = case_data()
+    case["purpose_profile"] = {
+        "id": profile_id,
+        "selection_reason": "Explicit choice for synthetic intake only",
+        "source_ids": [case["sources"][0]["id"]],
+        "locator": "Synthetic mandate paragraph 1",
+    }
+
+    result = build_valuation(case, FIXTURE)
+
+    assert result["purpose_coverage"]["profile"]["id"] == profile_id
+    assert result["purpose_coverage"]["coverage"]["professional_use_enabled"] is False
+    assert result["purpose_coverage"]["coverage"]["professional_review"] == "pending"
+    assert result["piv_conformity"] == "not_assessed"
+
+
+def test_purpose_change_invalidates_previous_method_acceptance() -> None:
+    case = case_data()
+    prior = build_valuation(case, FIXTURE)
+    case["methods"][0]["review"] = review(prior["methods"][0]["dependency_sha256"])
+    case["purpose_profile"] = {
+        "id": "withdrawal",
+        "selection_reason": "The clarified mandate concerns withdrawal rights",
+        "source_ids": [case["sources"][0]["id"]],
+        "locator": "Synthetic mandate paragraph 1",
+    }
+
+    result = build_valuation(case, FIXTURE)
+
+    assert result["methods"][0]["stale_review"] is True
+    assert result["methods"][0]["status"] == "ready_for_professional_review"
+
+
+def test_unknown_purpose_profile_is_not_guessed_from_its_name() -> None:
+    case = case_data()
+    case["purpose_profile"] = {
+        "id": "sale_and_merger",
+        "selection_reason": "Ambiguous synthetic choice",
+        "source_ids": [case["sources"][0]["id"]],
+        "locator": "Synthetic mandate paragraph 1",
+    }
+
+    with pytest.raises(ValuationError, match="Unknown purpose profile"):
+        build_valuation(case, FIXTURE)
+
+
 def test_benchmark_publication_after_cutoff_is_rejected() -> None:
     case = case_data()
     case["inputs"][2]["benchmark"] = dict(
@@ -402,6 +477,12 @@ def test_valuation_teaching_sources_run_the_bound_workflow(
     sources = [folder / "input/caso-it.md"]
     case = case_data()
     case["entity_name"] = "Officina Arco — esercizio sintetico"
+    case["purpose_profile"] = {
+        "id": "strategy",
+        "selection_reason": "La nota richiede un confronto interno su ipotesi didattiche, senza finalità legale.",
+        "source_ids": [case["sources"][0]["id"]],
+        "locator": "caso-it.md: incarico e base ipotetica per confronto interno",
+    }
     case["methods"] = [case["methods"][0]]
     case["methods"][0][
         "rationale"
@@ -454,6 +535,8 @@ def test_valuation_teaching_sources_run_the_bound_workflow(
     assert abs(amounts["fcff/equity"] - expected) < Decimal("0.000001")
     assert report["status"] == "ready_for_professional_review"
     assert report["conclusion"] is None
+    assert report["purpose_coverage"]["profile"]["id"] == "strategy"
+    assert report["purpose_coverage"]["coverage"]["professional_use_enabled"] is False
     record_property("teaching_output", output["output_dir"])
     record_native_check(
         record_property,

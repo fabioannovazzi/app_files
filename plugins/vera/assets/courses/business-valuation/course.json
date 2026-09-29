@@ -30,7 +30,12 @@
     {
       "path": "modules/business-valuation/references/case-contract.md",
       "repository_path": "plugins/business-valuation/references/case-contract.md",
-      "sha256": "b095a318a383f460ca771247e8e9300f00caa8e035095f6ee1563302cdcbb7dd"
+      "sha256": "44c4fbd3851bd3cd4e577f64723c011ef4da2d4ecb7e91c3b9c604e6e16d4b80"
+    },
+    {
+      "path": "modules/business-valuation/references/purpose-profiles.json",
+      "repository_path": "plugins/business-valuation/references/purpose-profiles.json",
+      "sha256": "7d79805d998df0fc69540ccfaf58b4093d906aad0f8a38f2844689fd5a0e06cc"
     },
     {
       "path": "modules/business-valuation/requirements.txt",
@@ -50,7 +55,7 @@
     {
       "path": "modules/business-valuation/scripts/valuation_case.py",
       "repository_path": "plugins/business-valuation/scripts/valuation_case.py",
-      "sha256": "155e99cae5feb8ff6a4d9c682cd0f6dab2ca9ff51c3bc108fdad64c699397aee"
+      "sha256": "f6413347dadcf12fc5571946686a0605e7400c55db3ea5ae2f7418b994e031f1"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_engine.py",
@@ -65,12 +70,12 @@
     {
       "path": "modules/business-valuation/scripts/valuation_report.py",
       "repository_path": "plugins/business-valuation/scripts/valuation_report.py",
-      "sha256": "bc6944e45042c71ce471eef5d9032bbadbd50dd2ccabb15e057e89dc9921eb34"
+      "sha256": "ca3fd2fb1a287be82265d347ff98e81c7705a961df45a6086eb9f0abed2fd789"
     },
     {
       "path": "modules/business-valuation/skills/business-valuation/SKILL.md",
       "repository_path": "plugins/business-valuation/skills/business-valuation/SKILL.md",
-      "sha256": "e30be3f7ac06e9d8e5e854d22b1934a74f91fe8db0a925e84aa9b0851bb76310"
+      "sha256": "5db463c2ed8cc77ed7188386e7197d3eb6cf6309fbbf6b5127bd876c588a9f4a"
     },
     {
       "path": "modules/business-valuation/vendor/modules/__init__.py",
@@ -341,7 +346,7 @@
         "Report HTML, Word e PDF con mandato, risultato, ipotesi e limiti.",
         "Cartella Excel con formule e registro JSON/CSV per seguire dati, calcoli e fonti."
       ],
-      "review": "Controlla sostenibilità del flusso terminale, scelta del tasso e corretto raccordo dei debiti. Il motore verifica calcoli e identità delle fonti; non dimostra l’appropriatezza delle ipotesi. La registrazione della revisione non è una firma autenticata.",
+      "review": "Controlla sostenibilità del flusso terminale, scelta del tasso e corretto raccordo dei debiti. Il profilo Strategia e governance identifica il confronto interno della nota; è disponibile solo come carte di lavoro in sviluppo. Il motore verifica calcoli e identità delle fonti; non dimostra l’appropriatezza delle ipotesi. La registrazione della revisione non è una firma autenticata e non abilita il profilo all’uso professionale.",
       "checkpoints": [
         "Prima del calcolo, identifica un fatto della nota e un’ipotesi da confermare.",
         "Nel report, spiega perché valore operativo e capitale proprio differiscono e trova la fonte di una rettifica."

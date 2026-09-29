@@ -267,6 +267,39 @@ def _inputs(case: dict, sources: dict) -> dict:
     return inputs
 
 
+def _purpose(case: dict, sources: dict) -> dict:
+    """Record an explicit semantic choice without enabling professional profiles."""
+    registry = read_json(
+        Path(__file__).resolve().parents[1] / "references/purpose-profiles.json"
+    )
+    selection = case.get("purpose_profile")
+    profile = None
+    if selection is not None:
+        fields(selection, {"id", "selection_reason", "source_ids", "locator"})
+        profiles = indexed(registry["profiles"])
+        text(selection["id"], "purpose profile ID")
+        require(selection["id"] in profiles, "Unknown purpose profile; use custom")
+        text(selection["selection_reason"], "purpose selection reason")
+        text(selection["locator"], "mandate source locator")
+        require(
+            isinstance(selection["source_ids"], list)
+            and bool(selection["source_ids"])
+            and all(isinstance(ref, str) for ref in selection["source_ids"])
+            and set(selection["source_ids"]) <= sources.keys(),
+            "Purpose selection requires declared mandate sources",
+        )
+        profile = profiles[selection["id"]]
+    return {
+        "profile": profile,
+        "selection": selection,
+        "coverage": registry["coverage"],
+        "status": (
+            "development_workpapers_only" if profile else "purpose_not_classified"
+        ),
+        "piv_review": "pending_primary_and_professional_review",
+    }
+
+
 def build_valuation(
     case: dict, source_root: Path, *, replay_parent: Path | None = None
 ) -> dict:
@@ -286,7 +319,7 @@ def build_valuation(
             "methods",
             "limitations",
         },
-        {"conclusion", "plan_binding", "sensitivity"},
+        {"conclusion", "plan_binding", "sensitivity", "purpose_profile"},
     )
     require(case["schema_version"] == CASE_SCHEMA, "Unsupported valuation case schema")
     for key in ("case_id", "entity_name", "audience"):
@@ -322,6 +355,7 @@ def build_valuation(
     )
     sources = _sources(case, source_root)
     inputs = _inputs(case, sources)
+    purpose = _purpose(case, sources)
     plan_bridge = None
     if "plan_binding" in case:
         require(
@@ -385,7 +419,10 @@ def build_valuation(
                 | set(case["plan_binding"]["cash_operating_taxes"].values())
                 | {case["plan_binding"]["opening_operating_nwc"]}
             )
-        source_ids = sorted({ref for key in used for ref in inputs[key]["source_ids"]})
+        source_ids = sorted(
+            {ref for key in used for ref in inputs[key]["source_ids"]}
+            | set((purpose["selection"] or {}).get("source_ids", []))
+        )
         if dependent_bridge:
             source_ids = sorted(
                 set(source_ids) | set(case["plan_binding"]["source_map"].values())
@@ -395,6 +432,7 @@ def build_valuation(
                 "case_id": case["case_id"],
                 "entity_name": case["entity_name"],
                 "mandate": mandate,
+                "purpose": purpose,
                 "currency": case["currency"],
                 "audience": case["audience"],
                 "synthetic": case["synthetic"],
@@ -532,6 +570,7 @@ def build_valuation(
         "plan_bridge": plan_bridge,
         "conclusion": conclusion,
         "issues": issues,
+        "purpose_coverage": purpose,
         "piv_conformity": "not_assessed",
         "legal_purpose_qualification": "requires_separate_professional_review",
         "review_identity": "local_attestation_not_authenticated",

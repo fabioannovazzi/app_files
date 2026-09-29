@@ -116,6 +116,15 @@ Record conflicts, restrictions and legal-purpose questions. Research governing
 standards and purpose-specific law through Vera's validated-answer journey when
 needed; the calculation engine does not qualify those matters.
 
+Read `references/purpose-profiles.json`. Choose one of its 21 profiles through
+semantic reasoning, record the reason and mandate source in `purpose_profile`,
+and use `custom` for an unlisted purpose. Explain the profile's intake focus in
+ordinary language. Every profile currently supports development workpapers only:
+PIV review, purpose-specific tests and specialist professional approval remain
+unfinished. A case review does not enable a professional profile. Preserve the
+full proposed scope; do not describe unimplemented profiles as permanently out
+of scope or represent the common core as the complete contributor proposal.
+
 Inspect supplied statements and schedules using the host's document capabilities.
 Preserve originals and page/cell locators. Separate reported facts, normalization
 adjustments, management assumptions and model hypotheses. Do not invent missing

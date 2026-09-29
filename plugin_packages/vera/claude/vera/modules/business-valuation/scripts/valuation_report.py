@@ -73,6 +73,28 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
             ],
         )
     ]
+    purpose = report["purpose_coverage"]
+    profile = purpose["profile"]
+    sections.append(
+        (
+            "Finalità e disponibilità professionale",
+            [
+                (
+                    f"Profilo: {profile['label']}"
+                    if profile
+                    else "Profilo non ancora selezionato."
+                ),
+                (
+                    profile["intake_focus"]
+                    if profile
+                    else "Chiarire la finalità concreta con il professionista."
+                ),
+                (purpose["selection"] or {}).get("selection_reason", ""),
+                "Sono disponibili il nucleo comune di calcolo e le carte di lavoro in sviluppo. La verifica PIV e la revisione specialistica del profilo non sono completate; nessun profilo è abilitato all'uso professionale.",
+                "Una revisione registrata sui calcoli del caso non abilita il profilo e non certifica la conformità della relazione.",
+            ],
+        )
+    )
     for method in report["methods"]:
         rows = [
             f"Stato: {STATUS[method['status']]}",

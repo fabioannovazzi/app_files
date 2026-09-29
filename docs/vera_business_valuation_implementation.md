@@ -10,6 +10,11 @@ the primary checkout's ignored `outputs/vera-valuations-discord` directory.
 
 ## Implementation contract
 
+This is the common development core. See
+[`vera_business_valuation_scope.md`](vera_business_valuation_scope.md) for the
+complete contributor requirements, observed coverage and unfinished acceptance
+work. The goal is not complete and no purpose is professionally activated.
+
 Implement a client-bound `business-valuation` workflow for preparing reviewable
 PMI valuation workpapers. The supported methods are FCFF and FCFE DCF, constant
 equity income, adjusted NAV, constant-capital mixed income, selected multiples,
@@ -49,14 +54,16 @@ formula comparisons; report rendering; privacy coverage and package parity.
 
 Local evidence on 29 September 2026:
 
-- 49 valuation regressions pass; component coverage is 91.05%. These exercise
+- 72 valuation regressions pass; component coverage is 91.27%. These exercise
   all seven methods, failure preservation, review/conclusion freshness, exact
-  receipts, full-year plan replay and real native lesson input runs.
+  receipts, full-year plan replay, all 21 explicit purpose intake routes and real
+  native lesson input runs. Purpose routing tests do not enable professional use.
 - Mypy passes for all six scripts; Bandit reports no findings. Formatting and
   import-order checks pass.
 - LibreOffice independently recalculated all 75 cells of the seven-method
   calculation register and matched the engine within floating-point tolerance.
-- All four rendered DOCX pages were inspected. The HTML function page was
+- All five current rendered DOCX pages were inspected after adding purpose
+  availability. The HTML function page was
   inspected in the browser in Italian and English. Public copy exists in five
   languages and states that generated reports currently use Italian.
 - Vera 0.1.278 builds for Codex, ChatGPT upload and Cowork; packaged MCP startup
@@ -71,6 +78,11 @@ Local evidence on 29 September 2026:
   entries, and update shared lesson fingerprints. Clara teaching/narration
   execution, payloads, recipients and retention behavior are unchanged. The
   complete Clara privacy register validates and all 13 focused tests pass.
+- Lucia's `apertura-pratica` privacy fingerprint also includes the shared Studio
+  Archive MCP source. Its only changed governed line adds `business-valuation`
+  to the workflow enum. No legal-matter payload, access, retention or external
+  boundary changed; the reviewed fingerprint was refreshed for that addition.
+  All 26 Lucia plugin tests pass locally.
 - The new Italian lesson ships fictional mandate notes and a separate 12% rate
   revision, not a preapproved case or precomputed result. Native demo/practice
   runs produce respectively 750,000 and 583,333.33 EUR equity indications and
@@ -82,8 +94,17 @@ Plugin / No versions yet” during this run. Vera's existing Marketplace listing
 and Published version were unavailable; no upload or publication occurred.
 Merge, deployment and installed-session acceptance remain separate steps.
 
-One release check exposed a dependency-checker integration gap: the new helper
-does not yet accept the standard `--requirements` option or enforce declared
-version ranges. A concrete correction was prepared and user approval requested
-under the repository's instruction to stop before production changes prompted
-by a failed test. Do not treat this pending check as release acceptance.
+Release checks exposed two integration gaps: the new dependency helper does not
+yet accept the standard `--requirements` option or enforce declared version
+ranges, and the valuation page lacks its work-area breadcrumb mapping. Concrete
+corrections are prepared and user approval requested under the repository's
+instruction to stop before production changes prompted by a failed test. Do not
+treat these pending checks as release acceptance.
+
+The broader page suite also fails its shared typography assertion on the existing
+`browser-automation` page. The identical failure was reproduced against untouched
+base commit `6f26f0e8241a0fe3027c162e2c2cae4d97395465` using a temporary tracked-source
+snapshot; no unrelated production page was changed. In the current focused
+privacy/Lucia/page run, 94 tests pass and these two page assertions fail. Both
+complete privacy-register validators pass. A package build is not a green full
+release gate.

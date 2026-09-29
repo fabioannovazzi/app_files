@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-valuation",
-  "course_sha256": "05d82775a2abc34568024e0942249dbcdbeb29a712339ac23007b540ec323c8d",
+  "course_sha256": "20f2a2078f4ed2864607f283eb36bdb404ed8adf8dc45892aa09b1e0e2494980",
   "reviewer": "Codex /root: source, calculation and document review",
-  "reviewed_at": "2026-09-29T17:43:56.264741+00:00",
+  "reviewed_at": "2026-09-29T18:16:00.914541+00:00",
   "review_scope": "Read both fictional notes and the entire Italian lesson. Ran the real bound workflow for demo and practice, inspected their Markdown reports and calculation registers. Seven-method DOCX was rendered and all four pages inspected; LibreOffice independently recalculated all 75 workbook calculation cells. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior is an instruction and separate archive contract, not claimed as a live learner test.",
   "languages": {
     "it": {
@@ -19,8 +19,18 @@
       },
       "demo": {
         "test_case": "tests.plugins.test_business_valuation::test_valuation_teaching_sources_run_the_bound_workflow[demo]",
-        "result_review": "Operating value 1000000 EUR and equity 750000 EUR at 10%; terminal share 90.91%. Report states review pending and no accepted conclusion; the rate source is preserved.",
+        "result_review": "Operating value 1000000 EUR and equity 750000 EUR at 10%; terminal share 90.91%. Report states review pending and no accepted conclusion; the rate source is preserved. The current output explicitly records the Strategy and governance profile as development workpapers only, with professional use disabled.",
         "reviewed_artifacts": [
+          {
+            "name": "valuation_report.md",
+            "sha256": "de6a71f284f3d273dd13ee55653576faef7b3f8f755ae8bd07eb36bdef2f321a"
+          },
+          {
+            "name": "valuation.json",
+            "sha256": "60492aeafad6e50bca50b6059190522372e4deb021e5ec836dfe0690e159d939"
+          }
+        ],
+        "prior_reviewed_artifacts": [
           {
             "name": "valuation_report.md",
             "sha256": "9c4519ecb4b1d1b84d9b09003ed60c3c8bf729cecfe1cede90274b7280c361c4"
@@ -33,8 +43,18 @@
       },
       "practice": {
         "test_case": "tests.plugins.test_business_valuation::test_valuation_teaching_sources_run_the_bound_workflow[practice]",
-        "result_review": "Operating value 833333.33 EUR and equity 583333.33 EUR at 12%; terminal share 89.29%. Report states review pending and no accepted conclusion; the rate source is preserved.",
+        "result_review": "Operating value 833333.33 EUR and equity 583333.33 EUR at 12%; terminal share 89.29%. Report states review pending and no accepted conclusion; the rate source is preserved. The current output explicitly records the Strategy and governance profile as development workpapers only, with professional use disabled.",
         "reviewed_artifacts": [
+          {
+            "name": "valuation_report.md",
+            "sha256": "5689d7888a47fb7c89c7a4e7bc460d67fabf7efe6c04e050a341f1f4e9a1069e"
+          },
+          {
+            "name": "valuation.json",
+            "sha256": "2a7590f22a1bc21dd2898c375b3aebab3edf0e543c25356fd9c56eea23c1fbb6"
+          }
+        ],
+        "prior_reviewed_artifacts": [
           {
             "name": "valuation_report.md",
             "sha256": "3b642d8edfac1b3e1934dcc62ca2475d02ef9fc105cb4dcf0d0d7867ba4bb9e7"
@@ -49,5 +69,10 @@
   },
   "source_revision_review": {
     "scope": "Inspected the final source delta after the recorded teaching runs: method kind is validated as text and unsupported methods retain a readable blocked label in partial exports. The DCF used by both lessons is unchanged. The full 49-case suite, including both teaching phases, passed after that source correction; CI will bind fresh teaching JUnit to the compiled course."
+  },
+  "purpose_coverage_review": {
+    "scope": "Reviewed all 21 explicit intake profiles, dependency binding and development-only availability. Read both fresh demo/practice Markdown reports, including the Strategy and governance profile and unchanged 750000 / 583333.33 EUR results. Rendered the fresh seven-method DOCX and inspected all five pages: readable with complete method blocks, source text and the new availability section. No professional profile approval, PIV review or live learner acceptance is implied.",
+    "tests": "72 valuation tests pass at 91.27% coverage, including both fresh native teaching phases and 21 intake profiles.",
+    "previous_reviewed_at": "2026-09-29T17:43:56.264741+00:00"
   }
 }
