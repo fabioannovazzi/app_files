@@ -7,6 +7,7 @@
     fr: { modelDataStatus: "placeholder", modelData: "Les informations spécifiques à cette fonction sont en préparation." },
     de: { modelDataStatus: "placeholder", modelData: "Funktionsspezifische Informationen werden derzeit vorbereitet." },
     es: { modelDataStatus: "placeholder", modelData: "Se está preparando la información específica de esta función." },
+    ar: { modelDataStatus: "placeholder", modelData: "يجري إعداد المعلومات الخاصة بهذه الوظيفة." },
   };
 
   const pending = (language, content) => ({ ...content, ...placeholders[language] });
@@ -1656,6 +1657,18 @@
           professionalRole: "Confirma hablantes, términos, citas, omisiones y uso del texto en el proyecto.",
           prompt: "Usa Clara para transcribir esta grabación. Idioma: [idioma]. Separa los hablantes cuando sea posible y señala nombres, términos o pasajes inciertos para mi revisión.",
         }),
+        ar: pending("ar", {
+          name: "تفريغ التسجيلات",
+          summary: "يحوّل تسجيلات الاجتماعات والمقابلات التي يجريها المستشار بالعربية إلى نص عربي محفوظ للمراجعة وإسناد المتحدثين داخل المشروع.",
+          useWhen: "استخدمها لاجتماع أو مقابلة أو إحاطة أو ملاحظة صوتية يجريها المستشار بالعربية.",
+          input: "ملف صوت أو فيديو محدد، واللغة العربية كلغة التسجيل، وأسماء المتحدثين أو أدوارهم عند توفرها، والحد الأدنى من سياق المشروع.",
+          work: "ينشئ نصاً عربياً، ويفصل المتحدثين عندما تسمح الأدلة بذلك، ويشير إلى المقاطع غير المؤكدة. لا يستبدل النص العربي تلقائياً بترجمة.",
+          output: "نص عربي قابل للمراجعة مع المقاطع الزمنية والإسنادات المتاحة ونقاط عدم اليقين. بعد المراجعة، يمكن استخدامه لإعداد ملاحظات أو تحليل أو مخرجات باللغة الإنجليزية أو بلغة الحالة المدعومة.",
+          responsibilityIntro: "قد يحتوي التفريغ على أخطاء، وتجب مراجعته قبل استخدامه مهنياً أو إعداد مخرج بلغة أخرى.",
+          productRole: "يفرّغ التسجيل ويحافظ على النص العربي الأصلي وينظم المقاطع ويبيّن الإسنادات التي تحتاج إلى تأكيد.",
+          professionalRole: "يؤكد المتحدثين والمصطلحات والاقتباسات والمحذوفات، ويقرر ما إذا كان سيُعدّ التحليل أو المخرج النهائي بالإنجليزية أو بلغة حالة أخرى.",
+          prompt: "استخدم Clara لتفريغ هذا التسجيل. لغة التسجيل: العربية. لغة الملاحظات والمخرجات: الإنجليزية. افصل المتحدثين عندما تسمح الأدلة، واحتفظ بالنص العربي الأصلي، وأشر إلى الأسماء أو المصطلحات أو المقاطع غير المؤكدة لمراجعتي.",
+        }),
       },
     },
     "clara-advisory-deliverable-validator": {
@@ -2341,6 +2354,13 @@
           "Para la atribución y revisión, Codex puede leer la transcripción sin tratar, metadatos de origen, notas útiles, lista de hablantes conocidos y versión atribuida. Se conserva el original sin atribuir y las correcciones se limitan a errores evidentes. Audio, paquetes y transcripciones permanecen en archivos locales tras la importación; usarlos en el papel de trabajo o en un entregable requiere un paso separado y registrado.",
         ],
       },
+      ar: {
+        modelDataConclusion: "تستلم الخدمة المستضافة الصوت العربي لتفريغه؛ ويتلقى Codex النص والبيانات الوصفية اللازمة للمراجعة وإعداد مخرجات بلغة الحالة المختارة.",
+        modelData: [
+          "بالنسبة إلى تسجيل موجود، تستلم الخدمة ملف الصوت والبيانات الوصفية المقدمة، مثل العنوان والتاريخ والمشاركين والمحاور ولغة التسجيل. وعند بدء تسجيل موثّق من حالة، تستلم أيضاً سياقاً موجزاً مشتقاً من `case_brief.md` داخل جسم طلب HTTPS وليس داخل عنوان URL؛ ولا يرفق المسار البديل الصريح غير الموثّق هذا الملخص. ينتج النموذج المستضاف النص العربي، لكنه لا يملك القرار النهائي في إسناد المتحدثين.",
+          "لأغراض الإسناد والمراجعة، قد يقرأ Codex النص العربي الخام والبيانات الوصفية للمصدر والملاحظات المفيدة وقائمة المتحدثين المعروفين والنسخة المنسوبة. يُحفظ النص العربي الأصلي غير المنسوب، وتقتصر التصحيحات على أخطاء التفريغ الواضحة. تبقى ملفات الصوت والحزم والنصوص في الملفات المحلية بعد الاستيراد؛ ويتطلب استخدامها في ورقة عمل أو مخرج باللغة الإنجليزية خطوة منفصلة ومسجلة.",
+        ],
+      },
     },
     "clara-documents": {
       it: {
@@ -2483,7 +2503,7 @@
       it: "Preparazione e conduzione di interviste", en: "Prepare and conduct interviews", fr: "Préparer et conduire des entretiens", de: "Interviews vorbereiten und durchführen", es: "Preparar y realizar entrevistas",
     },
     "clara-transcribe": {
-      it: "Trascrizione di registrazioni e note vocali", en: "Transcribe recordings and voice notes", fr: "Transcrire des enregistrements et notes vocales", de: "Aufnahmen und Sprachnotizen transkribieren", es: "Transcribir grabaciones y notas de voz",
+      it: "Trascrizione di registrazioni e note vocali", en: "Transcribe recordings and voice notes", fr: "Transcrire des enregistrements et notes vocales", de: "Aufnahmen und Sprachnotizen transkribieren", es: "Transcribir grabaciones y notas de voz", ar: "تفريغ التسجيلات والملاحظات الصوتية",
     },
     "clara-advisory-deliverable-validator": {
       it: "Validare un deliverable di consulenza", en: "Validate an advisory deliverable", fr: "Valider un livrable de conseil", de: "Ein Beratungsdeliverable validieren", es: "Validar un entregable de consultoría",

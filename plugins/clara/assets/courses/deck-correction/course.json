@@ -150,7 +150,7 @@
     {
       "path": "scripts/import_hosted_voice_bundle.py",
       "repository_path": "plugins/clara/scripts/import_hosted_voice_bundle.py",
-      "sha256": "77a707f2488ff2192bc7f673dbda14695f0caa81023304c010c7e9f812746886"
+      "sha256": "ed283224bad95bfb500205b7d8590df8a91eee1a4f06195bddd58d66d789af42"
     },
     {
       "path": "scripts/import_latest_hosted_voice_bundle.py",
@@ -160,7 +160,7 @@
     {
       "path": "scripts/launch_hosted_voice.py",
       "repository_path": "plugins/clara/scripts/launch_hosted_voice.py",
-      "sha256": "bc2ba93bea494b5acd8185e917d6597604730639e37a2bdb1a17d50639dbd048"
+      "sha256": "bf73a10f86a388df87737528b9debce56b453a5d1cfa9d70665b85ed688b74b6"
     },
     {
       "path": "scripts/managed_ocr_runtime.py",
@@ -200,7 +200,7 @@
     {
       "path": "scripts/upload_hosted_audio.py",
       "repository_path": "plugins/clara/scripts/upload_hosted_audio.py",
-      "sha256": "a41f78c84e9419ebe4422d1faef995edb68ab49d164cea14b7e8214e2749a18b"
+      "sha256": "439c6d0c453b51285cdc014fe7e17aec109c27fec345173930e866e4386c25c6"
     },
     {
       "path": "scripts/verify_deck_revision_output.py",

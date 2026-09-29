@@ -98,7 +98,7 @@ MAX_TRANSCRIPTION_PROMPT_GLOSSARY_TERMS = 24
 MAX_TRANSCRIPTION_PROMPT_GLOSSARY_TERM_CHARS = 96
 
 
-SUPPORTED_TRANSCRIPTION_LANGUAGES = {"it", "en", "fr", "de", "es"}
+SUPPORTED_TRANSCRIPTION_LANGUAGES = {"it", "en", "fr", "de", "es", "ar"}
 
 
 SUPPORTED_AUDIO_EXTENSIONS = {"mp3", "mp4", "mpeg", "mpga", "m4a", "wav", "webm"}

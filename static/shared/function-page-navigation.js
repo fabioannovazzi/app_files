@@ -2,7 +2,7 @@
   "use strict";
 
   const currentScript = document.currentScript;
-  const languages = new Set(["it", "en", "fr", "de", "es"]);
+  const languages = new Set(["it", "en", "fr", "de", "es", "ar"]);
   const assistantNames = { vera: "Vera", lucia: "Lucia", clara: "Clara" };
   const areaLabels = {
     vera: {
@@ -109,6 +109,7 @@
         fr: "Entretiens et enregistrements",
         de: "Interviews und Aufnahmen",
         es: "Entrevistas y grabaciones",
+        ar: "المقابلات والتسجيلات",
       },
       "area-retail": {
         it: "Analisi retail",
@@ -352,6 +353,7 @@
     fr: "Parcours de la page",
     de: "Seitenpfad",
     es: "Ruta de la página",
+    ar: "مسار الصفحة",
   };
 
   const headingLabels = {
@@ -544,6 +546,7 @@
     if (/^@(Vera|Lucia|Clara)\b/.test(trimmed)) {
       return trimmed.replace(/^@(Vera|Lucia|Clara)\b/, `@${assistant}`);
     }
+    if (currentLanguage === "ar") return `@${assistant} ${trimmed}`;
 
     const financialAnalysisOpeners = {
       it: ["Usa Vera per preparare", "Prepara"],
@@ -737,7 +740,8 @@
     breadcrumb.setAttribute("aria-label", ariaLabels[currentLanguage]);
 
     const areaLink = document.createElement("a");
-    areaLink.href = `../${product}/index.html?lang=${currentLanguage}#${area}`;
+    const productLanguage = currentLanguage === "ar" ? "en" : currentLanguage;
+    areaLink.href = `../${product}/index.html?lang=${productLanguage}#${area}`;
     areaLink.textContent = areaLabels[product][area][currentLanguage];
 
     const separator = document.createElement("span");

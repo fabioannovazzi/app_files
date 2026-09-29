@@ -44,6 +44,7 @@ from advisor_case_core import (
 
 __all__ = [
     "DEFAULT_VOICE_LAUNCH_URL",
+    "SUPPORTED_TRANSCRIPTION_LANGUAGES",
     "build_case_context",
     "build_launch_url",
     "build_voice_session_url",
@@ -58,6 +59,7 @@ __all__ = [
 LOGGER = logging.getLogger(__name__)
 
 DEFAULT_VOICE_LAUNCH_URL = "https://mparanza.com/case-notes/voice/launch"
+SUPPORTED_TRANSCRIPTION_LANGUAGES = {*SUPPORTED_LANGUAGES, "ar"}
 MAX_CASE_CONTEXT_CHARS = 2_500
 DEFAULT_CHROME_PROFILE_DIR = Path("/private/tmp/mparanza-case-notes-chrome-voice")
 _HOSTED_HOST = "mparanza.com"
@@ -213,7 +215,7 @@ def prepare_launch_url(
     resolved_language = (
         str(language or manifest.get("output_language") or "it").strip().lower()
     )
-    if resolved_language not in SUPPORTED_LANGUAGES:
+    if resolved_language not in SUPPORTED_TRANSCRIPTION_LANGUAGES:
         raise CaseWorkspaceError(f"Unsupported voice language: {resolved_language}")
     base_parts = urlsplit(launch_base_url)
     hosted_base_url = urlunsplit((base_parts.scheme, base_parts.netloc, "", "", ""))
@@ -323,7 +325,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--language",
-        choices=sorted(SUPPORTED_LANGUAGES),
+        choices=sorted(SUPPORTED_TRANSCRIPTION_LANGUAGES),
         help="Transcription language; defaults to the Clara case output language.",
     )
     parser.add_argument("--no-open", action="store_true")
