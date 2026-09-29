@@ -130,8 +130,14 @@ the exported file through the Python importer with no score promotion.
 
 Remote CI on the source-only draft confirmed release alignment stops at the stale
 generated `adeguati-assetti/course.json`; the inspected Clara package job fails on
-the same course source drift. Committing those generated artifacts remains a
-separate pending repository-policy exception.
+the same course source drift. Fabio subsequently explicitly approved retaining
+PR #710 and its worktree and committing the regenerated course/package artifacts.
+The CLI registry was regenerated from its canonical builder to fix ordering drift.
+After approval, all-product package alignment passed for Vera, Clara and Lucia,
+and all 19 previously failing assetti course/catalog/native lesson cases passed.
+The regenerated course bindings and Vera distribution artifacts are included in
+the PR. Retention of this exact PR/worktree is explicitly authorized; merging,
+deployment, publication and installed-runtime acceptance remain separate.
 
 Both document libraries already exist in all three shared runtime recipes;
 the module uses those existing supported ranges without changing runtime policy.

@@ -95,9 +95,9 @@
         "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md"
       ],
       "python_entrypoints": [
+        "modules/adeguati-assetti/scripts/assetti_construction.py",
         "modules/adeguati-assetti/scripts/assetti_review.py",
-        "modules/adeguati-assetti/scripts/check_dependencies.py",
-        "modules/adeguati-assetti/scripts/assetti_construction.py"
+        "modules/adeguati-assetti/scripts/check_dependencies.py"
       ]
     },
     {
