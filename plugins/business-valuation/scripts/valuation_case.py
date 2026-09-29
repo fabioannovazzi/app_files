@@ -452,6 +452,7 @@ def build_valuation(
             "normalizations",
             "claims",
             "mandate_details",
+            "statements",
         },
     )
     require(case["schema_version"] == CASE_SCHEMA, "Unsupported valuation case schema")
@@ -501,6 +502,12 @@ def build_valuation(
     normalizations, calculations = build_normalizations(
         case, inputs, sources, mandate_assessment["dependency_sha256"]
     )
+    from valuation_statements import build_statements, statement_dependencies
+
+    statements, statement_calculations = build_statements(
+        case, inputs, sources, normalizations, mandate_assessment["dependency_sha256"]
+    )
+    calculations.extend(statement_calculations)
     plan_bridge = None
     if "plan_binding" in case:
         require(
@@ -513,6 +520,11 @@ def build_valuation(
     methods = indexed(case["methods"])
     require(bool(methods), "Select or explicitly exclude valuation methods")
     outputs, issues = [], list(mandate_assessment["issues"])
+    for statement in statements.values():
+        if statement["status"] != "accepted_workpaper":
+            issues.append(
+                f"Statement {statement['id']}: {'; '.join(statement['issues']) or 'review pending'}"
+            )
     for group in normalizations.values():
         if group["status"] != "accepted_workpaper":
             issues.append(
@@ -547,6 +559,10 @@ def build_valuation(
             _checked_timing(method, mandate, plan_bridge)
             result = calculate_method(method, inputs, case["currency"])
             dependent_normalizations = _bind_normalizations(result, normalizations)
+            dependent_statements = statement_dependencies(
+                [ref for row in result["calculations"] for ref in row["input_ids"]],
+                statements,
+            )
         except ValuationError as exc:
             outputs.append(
                 {
@@ -560,6 +576,7 @@ def build_valuation(
             continue
         used = sorted(
             {ref for row in result["calculations"] for ref in row["input_ids"]}
+            | {ref for group in dependent_statements for ref in group["input_ids"]}
         )
         dependent_bridge = (
             plan_bridge
@@ -577,6 +594,7 @@ def build_valuation(
             | set((purpose["selection"] or {}).get("source_ids", []))
             | set(mandate_assessment["source_ids"])
             | {ref for group in dependent_normalizations for ref in group["source_ids"]}
+            | {ref for group in dependent_statements for ref in group["source_ids"]}
         )
         if dependent_bridge:
             source_ids = sorted(
@@ -597,6 +615,7 @@ def build_valuation(
                 "sources": [sources[key] for key in source_ids],
                 "plan_bridge": dependent_bridge,
                 "normalizations": dependent_normalizations,
+                "statements": dependent_statements,
             }
         )
         complete = (
@@ -605,6 +624,10 @@ def build_valuation(
             and all(
                 group["status"] == "accepted_workpaper"
                 for group in dependent_normalizations
+            )
+            and all(
+                group["status"] == "accepted_workpaper"
+                for group in dependent_statements
             )
         )
         accepted = complete and reviewed(method.get("review"), dependency)
@@ -621,6 +644,7 @@ def build_valuation(
                 "normalization_ids": [
                     group["id"] for group in dependent_normalizations
                 ],
+                "statement_ids": [group["id"] for group in dependent_statements],
                 "rationale": method["rationale"],
                 "limitations": method["limitations"],
                 "review": method.get("review"),
@@ -642,6 +666,7 @@ def build_valuation(
                     for group in dependent_normalizations
                     for ref in group["source_ids"]
                 }
+                | {ref for group in dependent_statements for ref in group["source_ids"]}
             )
             row["formula_version"] = "1"
             calculations.append(row)
@@ -682,6 +707,11 @@ def build_valuation(
             _checked_timing(method, mandate, plan_bridge)
             result = calculate_method(method, inputs, case["currency"])
             dependent_normalizations = _bind_normalizations(result, normalizations)
+            dependent_statements = statement_dependencies(
+                [ref for row in result["calculations"] for ref in row["input_ids"]],
+                statements,
+            )
+            result["statements"] = dependent_statements
         except ValuationError as exc:
             sensitivity.append(
                 {"id": scenario["id"], "status": "blocked", "reason": str(exc)}
@@ -699,6 +729,7 @@ def build_valuation(
                     for group in dependent_normalizations
                     for ref in group["source_ids"]
                 }
+                | {ref for group in dependent_statements for ref in group["source_ids"]}
             )
             row["formula_version"] = "1"
             calculations.append(row)
@@ -716,6 +747,7 @@ def build_valuation(
         sensitivity,
         normalizations,
         mandate_assessment["dependency_sha256"],
+        statements,
     )
     for claim in claims:
         if claim["status"] in {"blocked", "partial"}:
@@ -748,6 +780,7 @@ def build_valuation(
         "purpose_coverage": purpose,
         "mandate_assessment": mandate_assessment,
         "normalizations": list(normalizations.values()),
+        "statements": list(statements.values()),
         "claims": claims,
         "claim_registry_status": "explicit_bindings" if claims else "not_supplied",
         "piv_conformity": "not_assessed",

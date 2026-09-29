@@ -115,6 +115,13 @@
     },
     "mandate_details": {
       "$ref": "#/$defs/mandateDetails"
+    },
+    "statements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/statement"
+      },
+      "maxItems": 100
     }
   },
   "additionalProperties": false,
@@ -1608,6 +1615,185 @@
               "type": "null"
             }
           ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "statementRollforward": {
+      "type": "object",
+      "required": [
+        "id",
+        "description",
+        "opening_input",
+        "closing_input",
+        "movement_inputs",
+        "prior_statement_id",
+        "prior_closing_input",
+        "comparison_basis"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "opening_input": {
+          "$ref": "#/$defs/id"
+        },
+        "closing_input": {
+          "$ref": "#/$defs/id"
+        },
+        "movement_inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "prior_statement_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "prior_closing_input": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "comparison_basis": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "additionalProperties": false
+    },
+    "statement": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "period_start",
+        "period_end",
+        "perimeter_id",
+        "perimeter_description",
+        "basis",
+        "coverage",
+        "source_ids",
+        "locator",
+        "assets",
+        "liabilities",
+        "equity",
+        "bound_input_ids",
+        "rollforwards",
+        "limitations"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "$ref": "#/$defs/text"
+        },
+        "period_start": {
+          "$ref": "#/$defs/date"
+        },
+        "period_end": {
+          "$ref": "#/$defs/date"
+        },
+        "perimeter_id": {
+          "$ref": "#/$defs/id"
+        },
+        "perimeter_description": {
+          "$ref": "#/$defs/text"
+        },
+        "basis": {
+          "enum": [
+            "reported",
+            "adjusted"
+          ]
+        },
+        "coverage": {
+          "enum": [
+            "balance_only",
+            "balance_and_movements"
+          ]
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "locator": {
+          "$ref": "#/$defs/text"
+        },
+        "assets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "liabilities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "equity": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "bound_input_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "rollforwards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/statementRollforward"
+          },
+          "maxItems": 2000
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "maxItems": 200
+        },
+        "review": {
+          "$ref": "#/$defs/review"
         }
       },
       "additionalProperties": false

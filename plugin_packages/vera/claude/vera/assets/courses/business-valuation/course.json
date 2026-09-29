@@ -32,7 +32,7 @@
     },
     {
       "path": "modules/business-valuation/references/case-contract.md",
-      "sha256": "6488cdbd69e37751bde47a66038f2d8d89bdd294600b25851ba1e4802892496a"
+      "sha256": "26f8837b93bfe8f0160df7d425a175435b11e3764019f5a2a4df1dbfdf415bf1"
     },
     {
       "path": "modules/business-valuation/references/purpose-profiles.json",
@@ -40,7 +40,7 @@
     },
     {
       "path": "modules/business-valuation/references/valuation-case.schema.json",
-      "sha256": "849376c896ca2a909b1351a724a50e3bf33ad7e7c06f18e510e070a77b70d8dc"
+      "sha256": "f4e398367226c53a4b3951df3052b771c219568f89ca322a48def96208364099"
     },
     {
       "path": "modules/business-valuation/requirements.txt",
@@ -60,11 +60,11 @@
     },
     {
       "path": "modules/business-valuation/scripts/valuation_case.py",
-      "sha256": "f2dd0e42a3799bbd3831c5fd748eade88ab9dba8d99be091b2c26c17f3192e0d"
+      "sha256": "d01a290c4aa84173c3895db55d761aa116316b0e4cd7a7351060693b2e949bf0"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_claims.py",
-      "sha256": "5e910db26aca1f7ec820298cd2cc32816f37019107be1f698219c8f09f350a01"
+      "sha256": "81d95eefb26e1f25b643bfa54942010086866587d81d7c3e6d55bb2481a01894"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_download.py",
@@ -88,15 +88,19 @@
     },
     {
       "path": "modules/business-valuation/scripts/valuation_report.py",
-      "sha256": "e1d84da5de01ac67c51afb76c1d4543996668b5d6a25a56d5954050a72407d99"
+      "sha256": "89abb2393c5a453ab545204ecbf47896af8f35e46ab4dd77e5629bf94f6ae8c5"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_schema.py",
       "sha256": "0cb4917d893ee1fe4c13c503f7564b52d23272f3f8f02d8370997590d2feff35"
     },
     {
+      "path": "modules/business-valuation/scripts/valuation_statements.py",
+      "sha256": "8d6826f9c8757308d9f6e530f75014cdae633c35626211a54590726bdf9e27db"
+    },
+    {
       "path": "modules/business-valuation/skills/business-valuation/SKILL.md",
-      "sha256": "70f283e4d1b07506d2df97ddb557acb4b5bd82dcbeda70aa4c005bda08ddbb67"
+      "sha256": "78d4a873d488b0dad92b2f8308ba14ed76a23fbbf9dfb6edcc8eb396a235a2c2"
     },
     {
       "path": "modules/business-valuation/vendor/modules/__init__.py",
@@ -265,5 +269,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "5e0bb0643c5a9559820ff5efd2574417963f3e5ab9449c357b3e7c54c76a7b01"
+  "canonical_course_sha256": "3f23554c3b6532271d154d958d6d209f0b99df67e1290c0e10853a4c5b67778f"
 }

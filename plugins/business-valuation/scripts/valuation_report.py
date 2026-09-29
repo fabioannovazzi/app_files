@@ -161,6 +161,31 @@ def _mandate_rows(report: dict) -> list[tuple[str, str, str, str, str]]:
     return rows
 
 
+def _statement_issues(statement: dict, inputs: list[dict]) -> list[str]:
+    """Localize fixed check diagnostics without judging source prose."""
+    messages = {
+        "Assets do not equal liabilities plus equity": "L'attivo non coincide con passività più patrimonio netto.",
+        "Statement period is reversed": "La fine del periodo precede l'inizio.",
+        "Statement period exceeds the information cutoff": "Il periodo supera il limite temporale delle informazioni utilizzabili.",
+        "Prior statement must precede the current period": "Il bilancio precedente non precede il periodo corrente.",
+        "Prior statement must close immediately before this period": "La data di chiusura precedente non coincide con il giorno prima dell'inizio del periodo.",
+        "Continuity requires the same explicit perimeter and accounting basis": "Il confronto richiede lo stesso perimetro dichiarato e la stessa base contabile.",
+        "Prior statement is unreconciled": "Il bilancio precedente presenta una quadratura non risolta.",
+    }
+    for row in statement["rollforwards"]:
+        messages[
+            f"Roll-forward {row['id']}: opening plus movements differs from closing"
+        ] = f"{row['description']}: apertura più movimenti diversa dalla chiusura."
+        messages[f"Roll-forward {row['id']}: opening differs from prior closing"] = (
+            f"{row['description']}: apertura diversa dalla chiusura precedente."
+        )
+    for row in inputs:
+        messages[f"Missing input: {row['id']}"] = (
+            f"Importo non disponibile: {row['id']}."
+        )
+    return [messages.get(issue, issue) for issue in statement["issues"]]
+
+
 def _readable_issues(report: dict) -> list[str]:
     """Translate the fixed mandate diagnostics without interpreting supplied prose."""
     translated = {
@@ -184,6 +209,13 @@ def _readable_issues(report: dict) -> list[str]:
             translated[f"Rights {item['id']}: {reason}"] = (
                 f"Diritti {item['id']}: {shown}."
             )
+    for statement in report["statements"]:
+        translated[
+            f"Statement {statement['id']}: {'; '.join(statement['issues']) or 'review pending'}"
+        ] = f"Prospetto {statement['id']}: " + (
+            " ".join(_statement_issues(statement, report["case"]["inputs"]))
+            or "revisione da acquisire."
+        )
     return [translated.get(issue, issue) for issue in report["issues"]]
 
 
@@ -266,6 +298,46 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
             "I mesi mantengono i propri importi e le proprie scadenze. Il flusso terminale annuo è un'ipotesi distinta: non deriva dalla moltiplicazione automatica di un mese o di un periodo parziale."
         )
         sections.append(("Raccordo dal piano", rows))
+    if not report["statements"]:
+        sections.append(
+            (
+                "Quadrature e continuità",
+                [
+                    "Non sono stati forniti prospetti per verificare quadratura patrimoniale, movimenti e continuità dei saldi."
+                ],
+            )
+        )
+    for statement in report["statements"]:
+        coverage = (
+            "Sola quadratura patrimoniale; movimenti e continuità non verificati."
+            if statement["coverage"] == "balance_only"
+            else "Quadratura patrimoniale e movimenti di tutte le voci dichiarate."
+        )
+        rows = [
+            f"{statement['title']} · {statement['period_start']} – {statement['period_end']} · {STATUS[statement['status']]}",
+            f"Perimetro {statement['perimeter_id']}: {statement['perimeter_description']}",
+            f"Base: {'riportata' if statement['basis'] == 'reported' else 'rettificata'}. {coverage}",
+            f"Fonti: {', '.join(statement['source_ids'])} · {statement['locator']}",
+            f"Input valutativi collegati: {', '.join(statement['bound_input_ids'])}.",
+        ]
+        for check in statement.get("checks", []):
+            rows.append(
+                f"{check['label']}: atteso {display(amounts[check['expected_id']]['value'])}, riscontrato {display(amounts[check['actual_id']]['value'])}, differenza {display(amounts[check['difference_id']]['value'])} {case['currency']} [{check['difference_id']}]."
+            )
+        for movement in statement["rollforwards"]:
+            rows.append(
+                f"{movement['description']}: apertura [{movement['opening_input']}], movimenti con segno [{', '.join(movement['movement_inputs'])}], chiusura [{movement['closing_input']}]. {movement['comparison_basis']}"
+            )
+            if movement["prior_statement_id"] is None:
+                rows.append(
+                    "Saldo iniziale da fonte autonoma; confronto con un bilancio precedente non eseguito."
+                )
+        rows.extend(_statement_issues(statement, case["inputs"]))
+        rows.extend(statement["limitations"])
+        rows.append(
+            "La quadratura verifica gli importi dichiarati. Completezza delle voci, classificazione e significato economico richiedono revisione professionale."
+        )
+        sections.append((f"Quadrature e continuità · {statement['id']}", rows))
     for group in report["normalizations"]:
         rows = [
             f"Anno {group['year']} · {group['line']} · Stato: {STATUS[group['status']]}"
@@ -651,6 +723,50 @@ def write_workbook(path: Path, report: dict) -> None:
                 calculations.cell(index, column),
                 str(calculations.cell(index, column).value or ""),
             )
+    if report["statements"]:
+        statement_sheet = workbook.create_sheet("Quadrature")
+        statement_sheet.append(
+            [
+                "Bilancio",
+                "Periodo",
+                "Perimetro",
+                "Controllo",
+                "Atteso",
+                "Riscontrato",
+                "Differenza",
+                "Stato",
+                "Fonti",
+            ]
+        )
+        for statement in report["statements"]:
+            for check in statement.get("checks", []) or [
+                {"label": "; ".join(statement["issues"])}
+            ]:
+                statement_sheet.append(
+                    [
+                        statement["id"],
+                        f"{statement['period_start']} – {statement['period_end']}",
+                        statement["perimeter_description"],
+                        check["label"],
+                        *[
+                            (
+                                f"='Calcoli'!B{row_ids[check[key]]}"
+                                if key in check
+                                else None
+                            )
+                            for key in ("expected_id", "actual_id", "difference_id")
+                        ],
+                        STATUS[statement["status"]],
+                        ", ".join(statement["source_ids"]),
+                    ]
+                )
+                for column in (1, 2, 3, 4, 8, 9):
+                    _literal(
+                        statement_sheet.cell(statement_sheet.max_row, column),
+                        str(
+                            statement_sheet.cell(statement_sheet.max_row, column).value
+                        ),
+                    )
     for method in report["methods"]:
         value = (
             f"='Calcoli'!B{row_ids[method['value_id']]}"
@@ -843,7 +959,11 @@ def _write_workpapers(directory: Path, report: dict) -> None:
             "assessment": report["mandate_assessment"],
             "purpose_coverage": report["purpose_coverage"],
         },
-        "evidence": {"sources": case["sources"], "inputs": case["inputs"]},
+        "evidence": {
+            "sources": case["sources"],
+            "inputs": case["inputs"],
+            "statements": report["statements"],
+        },
         "normalizations": report["normalizations"],
         "forecast_binding": report["plan_bridge"],
         "method_decisions": report["methods"],
@@ -866,6 +986,7 @@ def _write_workpapers(directory: Path, report: dict) -> None:
             "status": report["status"],
             "identity": report["review_identity"],
             "mandate": report["mandate_assessment"],
+            "statements": report["statements"],
             "methods": [
                 {
                     "method_id": row["method_id"],

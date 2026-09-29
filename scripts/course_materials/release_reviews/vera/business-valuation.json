@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-valuation",
-  "course_sha256": "5e0bb0643c5a9559820ff5efd2574417963f3e5ab9449c357b3e7c54c76a7b01",
+  "course_sha256": "3f23554c3b6532271d154d958d6d209f0b99df67e1290c0e10853a4c5b67778f",
   "reviewer": "Codex /root: source, calculation and document review",
-  "reviewed_at": "2026-09-29T21:03:18.112278+00:00",
+  "reviewed_at": "2026-09-29T21:30:30.700945+00:00",
   "review_scope": "Read both fictional notes and the entire Italian lesson. Ran the real bound workflow for demo and practice, inspected their Markdown reports and calculation registers. Seven-method DOCX was rendered and all four pages inspected; LibreOffice independently recalculated all 75 workbook calculation cells. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior is an instruction and separate archive contract, not claimed as a live learner test.",
   "languages": {
     "it": {
@@ -19,15 +19,15 @@
       },
       "demo": {
         "test_case": "tests.plugins.test_business_valuation::test_valuation_teaching_sources_run_the_bound_workflow[demo]",
-        "result_review": "Operating value 1000000 EUR and equity 750000 EUR at 10%; terminal share 90.91%. Report now states incomplete because eight mandate fields are unavailable; the numerical method remains review-pending and no conclusion is accepted; the rate source is preserved. The current output explicitly records the Strategy and governance profile as development workpapers only, with professional use disabled.",
+        "result_review": "Operating value 1000000 EUR and equity 750000 EUR at 10%; terminal share 90.91%. Report now states incomplete because eight mandate fields are unavailable; the numerical method remains review-pending and no conclusion is accepted; the rate source is preserved. The current output explicitly records the Strategy and governance profile as development workpapers only, with professional use disabled. The statement section explicitly says balance, movement and continuity records were not supplied. All four DOCX and three native PDF pages were inspected after this change; no statement completion was inferred.",
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "8972a1267a81a666c077109a210fafa362fe284301a5d5d69eb0b67d2376bd8b"
+            "sha256": "758cc7eddca1d62108aaf686bf5a34427e32888a3b0488ad752f552a98aa3111"
           },
           {
             "name": "valuation.json",
-            "sha256": "5d8b6a9ccfcafe6d5af3d76119bda90af10fbdbf1eee71bca249891c71bf2d4f"
+            "sha256": "2d6302a04600ad61a372a4ba4ee2d58bdab38a9d02d0d404ad8ee4958c77e296"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -131,20 +131,33 @@
                 "sha256": "a43a47f2309472a0ae1831396a627dae73c69e2bb86e26ff6d82cc793fae5d64"
               }
             ]
+          },
+          {
+            "reviewed_at": "2026-09-29T21:03:18.112278+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "8972a1267a81a666c077109a210fafa362fe284301a5d5d69eb0b67d2376bd8b"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "5d8b6a9ccfcafe6d5af3d76119bda90af10fbdbf1eee71bca249891c71bf2d4f"
+              }
+            ]
           }
         ]
       },
       "practice": {
         "test_case": "tests.plugins.test_business_valuation::test_valuation_teaching_sources_run_the_bound_workflow[practice]",
-        "result_review": "Operating value 833333.33 EUR and equity 583333.33 EUR at 12%; terminal share 89.29%. Report now states incomplete because eight mandate fields are unavailable; the numerical method remains review-pending and no conclusion is accepted; the rate source is preserved. The current output explicitly records the Strategy and governance profile as development workpapers only, with professional use disabled.",
+        "result_review": "Operating value 833333.33 EUR and equity 583333.33 EUR at 12%; terminal share 89.29%. Report now states incomplete because eight mandate fields are unavailable; the numerical method remains review-pending and no conclusion is accepted; the rate source is preserved. The current output explicitly records the Strategy and governance profile as development workpapers only, with professional use disabled. The statement section explicitly says balance, movement and continuity records were not supplied. All four DOCX and three native PDF pages were inspected after this change; no statement completion was inferred.",
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "7d2d70534bddea93c31e85afe0edfd093a49f48a329dbe73fa649eb10d18ba2a"
+            "sha256": "8e7f42e0f84741a1817e4a09eef5cc9d29d01ee283d60ec1c5895abebd6502f8"
           },
           {
             "name": "valuation.json",
-            "sha256": "1ffd8e525dd2c51f3e92c316d34d2b1e078a8d5f047aa2f16e503d5b5596d794"
+            "sha256": "174f2ef25cc03d22225b046d67889083928a22e747d14ebc0b04fce5a4ae19bb"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -248,6 +261,19 @@
                 "sha256": "84bad7a3243bfadff979c3670b448df36594ea179583a7f4922ff69ba2bf0791"
               }
             ]
+          },
+          {
+            "reviewed_at": "2026-09-29T21:03:18.112278+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "7d2d70534bddea93c31e85afe0edfd093a49f48a329dbe73fa649eb10d18ba2a"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "1ffd8e525dd2c51f3e92c316d34d2b1e078a8d5f047aa2f16e503d5b5596d794"
+              }
+            ]
           }
         ]
       }
@@ -304,5 +330,9 @@
     "artifact_review": "The separate synthetic 40% interest retains 750 EUR equity reference output without automatic multiplication. LibreOffice matches all 75 calculation cells; 19 mandate data rows remain visible. All six DOCX and five native PDF pages were inspected. Both final annual teaching reports were read fully and their final localization delta reviewed; all four DOCX and three native PDF pages per case were visually inspected. Each native run retains 18 artifacts and the expected 750000 / 583333.33 EUR indication. Both cases now remain partial because the note lacks eight structured mandate answers.",
     "privacy_review": "Structured commissioning, competence, conflict and rights evidence may be read by the selected host model, with source identities and local review records. The feature adds local records and output fields only; no new recipient, API, external request or authorization to publish.",
     "previous_reviewed_at": "2026-09-29T20:40:10.735452+00:00"
+  },
+  "statement_review": {
+    "reviewed_at": "2026-09-29T21:30:30.700945+00:00",
+    "scope": "Reviewed the new source-bound statement arithmetic and dependency integration. The teaching inputs and instructions are unchanged; only governed-source fingerprints changed. Both native runs preserve expected 750000 / 583333.33 EUR equity indications, 18 artifacts, no accepted conclusion and partial mandate status. All output pages inspected. Separate statement fixture has 112 independently recalculated calculation cells and 24 linked reconciliation cells; seven DOCX and six native PDF pages inspected. Synthetic local attestations are not real professional approval."
   }
 }

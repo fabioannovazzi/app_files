@@ -25,7 +25,7 @@
       {
         "id": "valuation-evidence-and-mandate",
         "purpose": "Interpret the mandate, financial evidence, source relevance, normalizations and method selection.",
-        "content": "Selected statements, schedules, plan sources, entity and personal information, rights, mandate, dates, normalized amounts, adjustments and private forecasts may be read by the selected model. The workflow keeps document/page/cell references, facts, assumptions and hypotheses. There is no automatic anonymization or enforced minimum-context projection. The model and professional decide relevance and method suitability. The structured mandate may include commissioning parties, recipients, engagement/report dates, expert activity, declared competencies, conflicts of interest, class-specific rights, percentage bases, agreements and restrictions, including unavailable or unconfirmed fields. These are selected client/professional evidence, not automatically verified competence or independence.",
+        "content": "Selected statements, schedules, plan sources, entity and personal information, rights, mandate, dates, normalized amounts, adjustments and private forecasts may be read by the selected model. The workflow keeps document/page/cell references, facts, assumptions and hypotheses. There is no automatic anonymization or enforced minimum-context projection. The model and professional decide relevance and method suitability. The structured mandate may include commissioning parties, recipients, engagement/report dates, expert activity, declared competencies, conflicts of interest, class-specific rights, percentage bases, agreements and restrictions, including unavailable or unconfirmed fields. These are selected client/professional evidence, not automatically verified competence or independence. Explicit statement records also retain mapped asset, liability and equity lines, independent opening balances, signed movements, periods, declared perimeters/accounting bases, comparisons and reviewer decisions. Those records and reconciliation exceptions may enter model context; arithmetic checks do not establish completeness or classification.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -89,6 +89,6 @@
     "reviewed_at": "2026-09-29",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c0b7f894e7269fdacd7b4791baa0dc5cc73ef5f8e38b211e4ddb865b807238b9"
+    "source_fingerprint": "55aa47e8dee795c549a0fa4c38da2b74c643deaf5003c038b176b1d7ce649740"
   }
 }

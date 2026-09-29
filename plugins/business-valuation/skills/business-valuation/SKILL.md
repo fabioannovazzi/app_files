@@ -72,6 +72,20 @@ missing or inconsistent; it does not judge accounting treatment or replace a
 statement balance/roll-forward review. Mapping arbitrary financial statements
 remains reviewed preparation, not a universal automatic parser.
 
+Prepare `statements` from the actual statement rows and supporting schedules.
+Keep each period, declared perimeter, accounting basis and source locator.
+Map assets, liabilities and equity without counting subtotals and their details
+twice. Distinguish a balance-only check from a full movement reconciliation of
+every declared closing line. Opening, signed movements and closing must come from
+independent evidence: never insert a balancing plug. A prior-period comparison
+needs a separately supplied opening amount and a comparable prior closing
+statement. If that comparison is unavailable, preserve and explain that limit.
+Do not annualize interim periods or infer a bridge between different perimeters.
+Declare which valuation inputs depend on each statement, review the `Quadrature`
+worksheet and obtain the separate statement decision before method acceptance.
+The helper checks sums, dates, explicit identities and current review dependencies;
+the model/professional still checks completeness, classifications and substance.
+
 ## Methods and parameters
 
 Propose and explain methods according to the mandate. The implemented calculations

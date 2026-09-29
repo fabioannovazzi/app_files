@@ -49,9 +49,17 @@ The structured normalization journal now records year, line, signed amount,
 reason, source, accounting/economic explanations, tax treatment, reversibility
 and local reviewer attestations. Each line reconciles reported and adjusted
 inputs and feeds transitive formulas/review dependencies into affected methods.
-Missing or inconsistent amounts block those methods. Full statement balance and
-roll-forward reconciliation, linked multi-line tax effects and semantic duplicate
-treatment across flows/equity remain to implement and review. No automatic
+Missing or inconsistent amounts block those methods. Explicit statement records
+now verify assets against liabilities plus equity, all declared closing lines
+against independently supplied opening amounts and signed movements, and
+comparable prior-period closing/opening balances. Period, perimeter and basis
+checks prevent silently mixing different records. Formula, source and review
+dependencies include linked normalizations; failing statements stop dependent
+methods and sensitivities while unrelated branches survive. A balance-only check
+is labelled separately and absent statement workpapers are visible in reports.
+Complete source mapping/classification review, converted comparative perimeters,
+linked multi-line tax effects and semantic duplicate treatment across flows/equity
+remain to implement or review. No automatic
 annualization or semantic accounting classifier is provided.
 
 Rate/growth sensitivities are implemented for annual and flat dated DCF. A
@@ -141,8 +149,8 @@ selected row, but remained `metadata_or_value_missing`: the table's displayed
 release date does not establish its exact observation date. No date or current
 parameter adoption was invented. That live evidence proves acquisition and
 parsing, not full historical availability, professional suitability or coverage
-of other providers. The full acceptance run now has 264 passing valuation and
-shared-transport tests at 93.69% component coverage.
+of other providers. The full acceptance run now has 292 passing valuation and
+shared-transport tests at 94.12% component coverage.
 
 Mandate acceptance covers missing fields, invalid dates, source/ownership
 references, rights without a percentage, missing/out-of-range proportions,
@@ -161,6 +169,18 @@ teaching and package/release checks pass. Full CI and installed acceptance remai
 separate requirements.
 
 ## Purpose coverage and release evidence
+
+Statement acceptance adds 28 regressions, including wrong dates/perimeters/bases,
+independent opening evidence, duplicate movement prevention, negative equity,
+signed movements, missing/unit-invalid amounts, linked adjustments, method and
+claim review invalidation, sensitivity blocking and literal/escaped exports.
+The formula workbook independently matches the engine in 112 calculation and
+24 reconciliation cells; all seven DOCX and six native PDF pages were inspected.
+The two teaching outputs state the absence of statement checks and preserve
+their numerical indications, 18 artifacts and incomplete mandate status.
+All four DOCX and three native PDF pages per lesson output were inspected.
+These facts establish explicit arithmetic and document QA, not semantic
+completeness, a real professional review or an enabled-host acceptance case.
 
 `plugins/business-valuation/references/purpose-profiles.json` retains all 21
 source IDs, including inheritance, family and exclusion. Its shared coverage

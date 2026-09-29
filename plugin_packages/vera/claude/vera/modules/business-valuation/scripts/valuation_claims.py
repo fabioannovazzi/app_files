@@ -37,6 +37,7 @@ def build_claims(
     sensitivity: list,
     normalizations: dict,
     mandate_dependency: str,
+    statements: dict,
 ) -> list[dict]:
     """Preserve missing, inconsistent or unreviewed claims as explicit workpapers."""
     amounts = {row["id"]: row for row in calculations}
@@ -123,6 +124,15 @@ def build_claims(
             or any(ref.startswith(f"normalization/{group['id']}/") for ref in closure)
         ]
         used_inputs.update(ref for group in used_groups for ref in group["input_ids"])
+        used_statements = [
+            group
+            for group in statements.values()
+            if set(group["bound_input_ids"]) & used_inputs
+            or any(ref.startswith(f"statement/{group['id']}/") for ref in closure)
+        ]
+        used_inputs.update(
+            ref for group in used_statements for ref in group["input_ids"]
+        )
         used_sources = (
             set(selected["source_ids"])
             | {
@@ -133,6 +143,7 @@ def build_claims(
             }
             | {ref for key in closure for ref in amounts[key]["source_ids"]}
             | {ref for group in used_groups for ref in group["source_ids"]}
+            | {ref for group in used_statements for ref in group["source_ids"]}
             | {
                 ref
                 for key in used_methods
@@ -148,6 +159,9 @@ def build_claims(
         for group in used_groups:
             if group["status"] == "blocked":
                 issues.append(f"Unreconciled normalization: {group['id']}")
+        for group in used_statements:
+            if group["status"] == "blocked":
+                issues.append(f"Unreconciled statement: {group['id']}")
         values = claim.get("values", [])
         require(
             isinstance(values, list) and len(values) <= 2000,
@@ -203,6 +217,7 @@ def build_claims(
                 ],
                 "scenarios": [scenarios[ref] for ref in sorted(used_scenarios)],
                 "normalizations": used_groups,
+                "statements": used_statements,
             }
         )
         complete = (
@@ -210,6 +225,9 @@ def build_claims(
             and all(inputs[ref]["status"] == "confirmed" for ref in used_inputs)
             and all(sources[ref]["status"] == "reviewed" for ref in used_sources)
             and all(group["status"] == "accepted_workpaper" for group in used_groups)
+            and all(
+                group["status"] == "accepted_workpaper" for group in used_statements
+            )
         )
         eligible = complete and all(
             method_map[ref]["status"] == "accepted_workpaper" for ref in used_methods

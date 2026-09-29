@@ -38,7 +38,7 @@ Required top-level fields: `schema_version=vera.business_valuation.case.v1`,
 `case_id`, `entity_name`, `currency` (one ISO-style three-letter code), `audience`,
 `synthetic` (boolean), `mandate`, `sources`, `inputs`, `methods`, `limitations`.
 Optional fields: `conclusion`, `plan_binding`, `sensitivity`, `purpose_profile`,
-`normalizations`, `claims`, `mandate_details`.
+`normalizations`, `claims`, `mandate_details`, `statements`.
 Unknown fields reject.
 All monetary/rate/multiple values are canonical decimal strings, with no thousands
 separator, exponent or implicit percent conversion. Rates are fractions. Missing
@@ -161,6 +161,48 @@ selected DCF's flows and bridge, labels each result conditional, and retains
 invalid rate/growth combinations as blocked rows without inventing values.
 
 ## Review and revisions
+
+Optional `statements` retains explicitly mapped statement workpapers. Each has
+`id`, `title`, `period_start`, `period_end`, `perimeter_id`,
+`perimeter_description`, `basis` (`reported` or `adjusted`), `coverage`,
+`source_ids`, `locator`, `assets`, `liabilities`, `equity`, `bound_input_ids`,
+`rollforwards`, `limitations` and optional `review`. Category lists contain
+independent closing input IDs in the case currency. Assets and equity require
+at least one declared line; liabilities may be explicitly empty. Signed contra
+balances and negative equity are retained, not recategorized. Never include a
+subtotal and its components together or turn a missing line into an empty list.
+The helper checks `sum(assets) = sum(liabilities) + sum(equity)` exactly.
+
+`coverage: balance_only` has no roll-forwards and explicitly does not establish
+movement or continuity checks. `balance_and_movements` requires exactly one
+roll-forward for every declared closing line. Each row has `id`, `description`,
+`opening_input`, `closing_input`, nonempty `movement_inputs`, nullable
+`prior_statement_id` and `prior_closing_input`, and `comparison_basis`.
+The helper compares the independently supplied closing amount with opening plus
+signed movements. Use an evidenced zero for a known absence of movements; do
+not calculate a residual merely to force reconciliation. Missing amounts block.
+
+A prior comparison requires both prior fields, a distinct opening input,
+membership of the closing input in that prior statement, matching declared
+perimeter/basis and a prior closing date immediately before the current period.
+It compares prior closing to independently supplied opening. Without a prior
+statement the opening remains independently sourced and the report states that
+inter-statement continuity was not checked. Describe the reason explicitly.
+Statement end dates cannot exceed the information cutoff. Periods are never
+annualized. Reclassifications or changed perimeters require separately prepared
+comparable evidence; this helper does not infer a conversion.
+
+Every closing input and explicitly declared `bound_input_ids` binds affected
+methods to the workpaper. These links express an evidence/review dependency,
+not an automatic derivation of income or forecast amounts from balance totals.
+Method and claim review includes the statement, exact sources, inputs, linked
+normalizations and prior-period dependencies. Failed reconciliations block
+dependent methods and sensitivities; pending reviews preserve numerical results
+but prevent acceptance. Changes do not invalidate unrelated method branches.
+All comparisons enter the common formula register and the `Quadrature` worksheet;
+`evidence.json` and `professional_review.json` retain the same statement records.
+An absent register is stated in the report. Arithmetic equality does not prove
+statement completeness, classification, fiscal treatment or economic meaning.
 
 Optional `normalizations` is an explicit adjustment journal. Each group has a
 stable `id`, integer `year`, professionally named `line`, `reported_input`,

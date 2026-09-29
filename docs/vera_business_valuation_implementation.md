@@ -54,7 +54,7 @@ formula comparisons; report rendering; privacy coverage and package parity.
 
 Local evidence on 29 September 2026:
 
-- 264 valuation/acquisition/shared-transport regressions pass; component coverage is 93.69%. These exercise
+- 292 valuation/acquisition/shared-transport regressions pass; component coverage is 94.12%. These exercise
   all seven methods, failure preservation, review/conclusion freshness, exact
   receipts, annual and selected-month plan replay, all 21 explicit purpose intake routes and real
   native lesson input runs. Purpose routing tests do not enable professional use.
@@ -85,13 +85,43 @@ Local evidence on 29 September 2026:
   accounting/economic reasoning, tax/reversibility explanations and individual
   review dependencies. Missing or inconsistent values block dependent methods;
   unrelated method reviews survive. It does not classify accounting treatments
-  or establish a full statement balance or roll-forward.
+  or establish accounting classification or completeness. Separately supplied
+  statement records now support the balance and movement checks below.
+- Statement records preserve periods, declared perimeters/bases, independently
+  supplied opening and closing amounts, signed movements and exact evidence.
+  The helper reconciles assets with liabilities plus equity, all declared closing
+  lines with their movements, and comparable prior closing/opening balances.
+  Different periods, bases/perimeters, missing amounts and nonzero differences
+  remain visible; dependent methods/sensitivities stop while unrelated branches
+  survive. Adjustment formulas and separate statement reviews bind transitively.
+  There is no automatic annualization, balancing plug or semantic classifier.
+  LibreOffice independently reproduced 112 calculation cells and 24 linked
+  `Quadrature` cells. All seven DOCX and six native PDF pages were inspected.
+  Both fresh teaching cases retain their figures and partial status, explicitly
+  stating that no statement checks were supplied; all four DOCX and three native
+  PDF pages per teaching case were inspected. Evidence is retained in
+  `outputs/vera-valuations-discord/statement-acceptance`. These are synthetic
+  workpapers, not professional statement completeness or classification review.
+  After rebuilding, all three Vera ZIP layouts contain sixteen byte-identical
+  Python/schema/transport files. Each extracted compiler reproduces the complete
+  statement report and both fresh teaching reports outside the repository,
+  including their exact review states: nine case replays. Full source/package
+  alignment passes for Vera 0.1.284, Clara 0.1.221 and Lucia 0.1.61. Evidence is
+  in `statement-package-verification.json` and `statement-release-alignment.log`.
+  The broader current package/privacy/teaching run has 504 passes, two skips
+  (installed Marketplace cache unavailable) and two failures. All 108 focused
+  privacy/teaching/release cases in that run pass. One failure is the already
+  pending dependency-checker correction. The other is the uncommitted-source
+  version guard comparing against the previous local development commit; this
+  update retains the unpublished Vera 0.1.284 / component 0.1.0 candidate.
+  Neither failure is waived. Final release-version selection and current-head CI
+  remain required; committing work alone does not prove release acceptance.
 - Explicit claim records bind narrative, selected evidence, full calculation
   dependency chains, exact numeric values/units and separate reviews. Invalid
   claims remain visible without changing valid calculations. The named JSON
   workpapers project the same report hash; the helper exports 18 artifacts and
   does not fabricate the host's model-data reports.
-- Mypy passes for all twelve scripts; Bandit reports no findings. Formatting and
+- Mypy passes for all thirteen scripts; Bandit reports no findings. Formatting and
   import-order checks pass.
 - Structured mandate fields now preserve the commissioning party, distinct dates,
   expert activity, perspective, recipients, restrictions, competencies, conflicts

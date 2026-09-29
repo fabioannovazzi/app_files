@@ -2047,3 +2047,377 @@ def test_single_rate_sensitivity_keeps_dated_curve_semantics(model: str) -> None
 
     assert result["sensitivity"][0]["status"] == expected[model]
     assert result["methods"][0]["status"] == "ready_for_professional_review"
+
+
+def statement_case() -> dict:
+    """Two independent fictional balance sheets with separately supplied movements."""
+    case = case_data()
+    case["sources"].append(
+        {
+            "id": "statement-source",
+            "path": "statements.txt",
+            "sha256": hashlib.sha256(
+                (FIXTURE / "statements.txt").read_bytes()
+            ).hexdigest(),
+            "description": "Fictional statements and opening/movement records",
+            "allowed_audiences": ["internal"],
+            "status": "reviewed",
+        }
+    )
+    for identifier, value in {
+        "assets-prior": "900",
+        "liabilities-prior": "250",
+        "equity-prior": "650",
+        "assets-opening": "900",
+        "liabilities-opening": "250",
+        "equity-opening": "650",
+        "assets-closing": "1000",
+        "liabilities-closing": "300",
+        "equity-closing": "700",
+        "assets-movement": "100",
+        "liabilities-movement": "50",
+        "equity-movement": "50",
+    }.items():
+        case["inputs"].append(
+            {
+                **case["inputs"][0],
+                "id": identifier,
+                "value": value,
+                "description": identifier,
+                "source_ids": ["statement-source"],
+                "locator": "statements.txt, fictional balance and movement schedule",
+            }
+        )
+    base = {
+        "title": "Prospetto sintetico",
+        "perimeter_id": "standalone",
+        "perimeter_description": "Società sintetica, individuale",
+        "basis": "reported",
+        "source_ids": ["statement-source"],
+        "locator": "statements.txt",
+        "limitations": ["Totali sintetici; nessuna attestazione contabile."],
+    }
+    case["statements"] = [
+        {
+            **base,
+            "id": "prior",
+            "period_start": "2025-01-01",
+            "period_end": "2025-12-31",
+            "coverage": "balance_only",
+            "assets": ["assets-prior"],
+            "liabilities": ["liabilities-prior"],
+            "equity": ["equity-prior"],
+            "bound_input_ids": [],
+            "rollforwards": [],
+        },
+        {
+            **base,
+            "id": "current",
+            "period_start": "2026-01-01",
+            "period_end": "2026-12-31",
+            "coverage": "balance_and_movements",
+            "assets": ["assets-closing"],
+            "liabilities": ["liabilities-closing"],
+            "equity": ["equity-closing"],
+            "bound_input_ids": ["income"],
+            "rollforwards": [
+                {
+                    "id": key,
+                    "description": label,
+                    "opening_input": f"{key}-opening",
+                    "closing_input": f"{key}-closing",
+                    "movement_inputs": [f"{key}-movement"],
+                    "prior_statement_id": "prior",
+                    "prior_closing_input": f"{key}-prior",
+                    "comparison_basis": "Saldi dichiarati distintamente, stesso perimetro e base.",
+                }
+                for key, label in [
+                    ("assets", "Attivo"),
+                    ("liabilities", "Passività"),
+                    ("equity", "Patrimonio netto"),
+                ]
+            ],
+        },
+    ]
+    return case
+
+
+def reviewed_statement_case() -> dict:
+    """Record synthetic decisions in dependency order, without real approval."""
+    case = statement_case()
+    for index in range(2):
+        prepared = build_valuation(case, FIXTURE)
+        case["statements"][index]["review"] = review(
+            prepared["statements"][index]["dependency_sha256"]
+        )
+    prepared = build_valuation(case, FIXTURE)
+    for method, output in zip(case["methods"], prepared["methods"]):
+        method["review"] = review(output["dependency_sha256"])
+    return case
+
+
+def test_statements_reconcile_independent_balances_and_movements() -> None:
+    result = build_valuation(statement_case(), FIXTURE)
+    values = {row["id"]: row["value"] for row in result["calculations"]}
+    assert values["statement/current/assets"] == "1000"
+    assert values["statement/current/liabilities-equity"] == "1000"
+    assert values["statement/current/balance-difference"] == "0"
+    assert values["statement/current/equity/expected-close"] == "700"
+    assert values["statement/current/equity/difference"] == "0"
+    assert values["statement/current/equity/continuity-difference"] == "0"
+    assert result["statements"][0]["status"] == "ready_for_professional_review"
+    assert result["statements"][1]["status"] == "partial"
+    assert result["methods"][2]["status"] == "partial"
+    assert result["methods"][0]["status"] == "ready_for_professional_review"
+
+
+@pytest.mark.parametrize(
+    ("identifier", "value", "reason"),
+    [
+        ("equity-closing", "699", "Assets do not equal"),
+        ("assets-movement", "99", "opening plus movements"),
+        ("assets-opening", "899", "opening differs from prior closing"),
+        ("assets-movement", None, "Missing input"),
+        ("assets-prior", "899", "Prior statement is unreconciled"),
+    ],
+)
+def test_statement_failure_blocks_bound_method_only(
+    identifier: str, value: str | None, reason: str
+) -> None:
+    case = statement_case()
+    next(row for row in case["inputs"] if row["id"] == identifier)["value"] = value
+    result = build_valuation(case, FIXTURE)
+    assert result["statements"][1]["status"] == "blocked"
+    assert reason in "; ".join(result["statements"][1]["issues"])
+    assert result["methods"][2]["status"] == "blocked"
+    assert result["methods"][0]["status"] == "ready_for_professional_review"
+
+
+@pytest.mark.parametrize(
+    ("key", "value", "reason"),
+    [
+        ("period_start", "2026-02-01", "immediately before"),
+        ("period_start", "2027-01-01", "period is reversed"),
+        ("period_end", "2027-12-31", "information cutoff"),
+        ("perimeter_id", "different-branch", "same explicit perimeter"),
+        ("basis", "adjusted", "accounting basis"),
+    ],
+)
+def test_statement_period_and_perimeter_mismatch_stay_visible(
+    key: str, value: str, reason: str
+) -> None:
+    case = statement_case()
+    case["statements"][1][key] = value
+    result = build_valuation(case, FIXTURE)
+    assert result["statements"][1]["status"] == "blocked"
+    assert reason in "; ".join(result["statements"][1]["issues"])
+
+
+@pytest.mark.parametrize(
+    ("key", "value", "reason"),
+    [
+        ("prior_statement_id", "missing", "Unresolved prior statement"),
+        ("prior_statement_id", None, "supplied together"),
+        ("prior_closing_input", "flow", "belong to that statement"),
+        ("opening_input", "assets-prior", "independently supplied"),
+        ("opening_input", "assets-closing", "independent inputs"),
+        ("movement_inputs", ["missing"], "Unresolved statement input"),
+        (
+            "movement_inputs",
+            ["assets-movement", "assets-movement"],
+            "schema uniqueItems",
+        ),
+    ],
+)
+def test_statement_rejects_tautologies_and_invalid_references(
+    key: str, value: object, reason: str
+) -> None:
+    case = statement_case()
+    case["statements"][1]["rollforwards"][0][key] = value
+    with pytest.raises(ValuationError, match=reason):
+        build_valuation(case, FIXTURE)
+
+
+def test_statement_movement_coverage_cannot_omit_a_closing_line() -> None:
+    case = statement_case()
+    case["statements"][1]["rollforwards"].pop()
+    with pytest.raises(ValuationError, match="every declared closing line"):
+        build_valuation(case, FIXTURE)
+
+
+def test_statement_duplicate_category_input_rejects_double_counting() -> None:
+    case = statement_case()
+    case["statements"][0]["equity"] = ["assets-prior"]
+    with pytest.raises(ValuationError, match="multiple statement lines"):
+        build_valuation(case, FIXTURE)
+
+
+def test_statement_review_change_expires_only_bound_method() -> None:
+    case = reviewed_statement_case()
+    case["statements"][1]["perimeter_description"] = "Perimetro da riesaminare"
+    result = build_valuation(case, FIXTURE)
+    assert result["statements"][1]["stale_review"] is True
+    assert result["methods"][2]["stale_review"] is True
+    assert result["methods"][2]["status"] == "partial"
+    assert result["methods"][0]["status"] == "accepted_workpaper"
+
+
+def test_prior_statement_review_change_expires_current_statement() -> None:
+    case = reviewed_statement_case()
+    case["statements"][0]["review"]["reviewer"] = "Another synthetic reviewer"
+    result = build_valuation(case, FIXTURE)
+    assert result["statements"][0]["status"] == "accepted_workpaper"
+    assert result["statements"][1]["stale_review"] is True
+    assert result["methods"][0]["status"] == "accepted_workpaper"
+
+
+def test_statement_claim_cannot_accept_an_unreviewed_balance() -> None:
+    case = statement_case()
+    calculation = "statement/current/balance-difference"
+    case["claims"] = [
+        {
+            "id": "balance",
+            "kind": "fact",
+            "text": "Differenza sintetica zero",
+            "location": "Quadrature",
+            "basis": "Somma delle sole voci dichiarate",
+            "source_ids": ["statement-source"],
+            "input_ids": [],
+            "calculation_ids": [calculation],
+            "method_ids": [],
+            "limitations": [],
+            "values": [{"calculation_id": calculation, "value": "0", "unit": "EUR"}],
+        }
+    ]
+    initial = build_valuation(case, FIXTURE)
+    case["claims"][0]["review"] = review(initial["claims"][0]["dependency_sha256"])
+    result = build_valuation(case, FIXTURE)
+    assert result["claims"][0]["status"] == "partial"
+    assert result["claims"][0]["review_dependencies_ready"] is False
+
+
+def test_statement_workbook_and_evidence_export_share_the_register(
+    tmp_path: Path,
+) -> None:
+    from openpyxl import load_workbook
+
+    case = statement_case()
+    case["statements"][1]["perimeter_description"] = '=1+1 <script>alert("x")</script>'
+    result = build_valuation(case, FIXTURE)
+    output = tmp_path / "exports"
+    artifacts = write_package(result, FIXTURE, output)
+    workbook = load_workbook(output / "valuation_workbook.xlsx")
+    assert len(artifacts) == 18
+    assert workbook["Quadrature"].max_row == 9
+    assert workbook["Quadrature"]["C3"].data_type == "s"
+    assert workbook["Quadrature"]["C3"].value == '=1+1 <script>alert("x")</script>'
+    assert workbook["Quadrature"]["E3"].data_type == "f"
+    assert "&lt;script&gt;" in (output / "valuation_report.html").read_text()
+    assert (
+        read_json(output / "evidence.json")["data"]["statements"]
+        == result["statements"]
+    )
+
+
+def test_statement_signed_movements_and_negative_equity_remain_explicit() -> None:
+    case = statement_case()
+    replacements = {
+        "assets-prior": "200",
+        "assets-opening": "200",
+        "assets-closing": "150",
+        "assets-movement": "-50",
+        "equity-prior": "-50",
+        "equity-opening": "-50",
+        "equity-closing": "-150",
+        "equity-movement": "-100",
+    }
+    for row in case["inputs"]:
+        row["value"] = replacements.get(row["id"], row["value"])
+    result = build_valuation(case, FIXTURE)
+    values = {row["id"]: row["value"] for row in result["calculations"]}
+    assert values["statement/current/equity"] == "-150"
+    assert values["statement/current/equity/expected-close"] == "-150"
+    assert result["statements"][1]["issues"] == []
+
+
+def test_statement_failure_blocks_sensitivity_using_bound_flow() -> None:
+    case = statement_case()
+    case["statements"][1]["bound_input_ids"] = ["flow"]
+    next(row for row in case["inputs"] if row["id"] == "equity-closing")[
+        "value"
+    ] = "699"
+    case["sensitivity"] = [
+        {
+            "id": "higher",
+            "method_id": "fcff",
+            "discount_rate": "rate20",
+            "terminal_rate": "rate20",
+            "terminal_growth": "growth",
+        }
+    ]
+    result = build_valuation(case, FIXTURE)
+    assert result["sensitivity"][0]["status"] == "blocked"
+    assert result["methods"][2]["status"] == "ready_for_professional_review"
+
+
+def test_statement_adjusted_balance_links_normalization_formula_and_review() -> None:
+    case = statement_case()
+    case["statements"][1]["basis"] = "adjusted"
+    for row in case["statements"][1]["rollforwards"]:
+        row.update(
+            {
+                "prior_statement_id": None,
+                "prior_closing_input": None,
+                "comparison_basis": "Apertura autonoma rettificata; nessuna conversione del comparativo riportato.",
+            }
+        )
+    template = next(row for row in case["inputs"] if row["id"] == "assets-closing")
+    case["inputs"].extend(
+        [
+            {**template, "id": "reported-assets", "value": "950"},
+            {**template, "id": "asset-adjustment", "value": "50"},
+        ]
+    )
+    entry = normalized_case()["normalizations"][0]["adjustments"][0]
+    entry.update(
+        {
+            "amount_input": "asset-adjustment",
+            "source_ids": ["statement-source"],
+            "reason": "Variante sintetica 950 + 50 = 1000",
+            "accounting_check": "Rettifica attivo +50",
+            "economic_rationale": "Variante aritmetica, nessuna stima economica",
+            "tax_treatment": "Nessun effetto fiscale implicito",
+            "reversibility": "Da revisione professionale",
+            "locator": "statements.txt",
+        }
+    )
+    case["normalizations"] = [
+        {
+            "id": "assets-adjusted",
+            "year": 2026,
+            "line": "Attivo sintetico",
+            "reported_input": "reported-assets",
+            "adjusted_input": "assets-closing",
+            "adjustments": [entry],
+        }
+    ]
+    result = build_valuation(case, FIXTURE)
+    formula = next(
+        row
+        for row in result["calculations"]
+        if row["id"] == "statement/current/input/assets-closing"
+    )
+    assert formula["op"] == "sum"
+    assert formula["arguments"] == ["normalization/assets-adjusted/adjusted"]
+    assert result["statements"][1]["status"] == "partial"
+    assert "asset-adjustment" in result["methods"][2]["input_ids"]
+
+
+def test_statement_unknown_unit_blocks_amount_without_substitution() -> None:
+    case = statement_case()
+    next(row for row in case["inputs"] if row["id"] == "assets-movement")[
+        "unit"
+    ] = "ratio"
+    result = build_valuation(case, FIXTURE)
+    assert result["statements"][1]["status"] == "blocked"
+    assert "Incompatible unit" in result["statements"][1]["issues"][0]
