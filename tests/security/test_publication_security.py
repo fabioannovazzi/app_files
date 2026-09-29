@@ -89,8 +89,8 @@ def test_public_pages_have_no_retired_clara_or_vera_download_routes() -> None:
 
     assert 'href="/downloads/vera' not in html
     assert 'href="/downloads/clara' not in html
-    assert 'href="downloads/clara-plugin.zip"' not in html
-    assert 'href="downloads/vera-plugin.zip"' not in html
+    assert "downloads/clara-plugin.zip" not in html
+    assert "downloads/vera-plugin.zip" not in html
 
 
 def test_vera_product_page_exposes_only_the_cowork_release_archive() -> None:
