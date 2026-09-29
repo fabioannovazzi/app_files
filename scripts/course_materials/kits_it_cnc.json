@@ -1,0 +1,27 @@
+{
+  "vera/composizione-negoziata": {
+    "title": "Seguire evidenze e variazioni di una composizione negoziata",
+    "goal": "Avviare una pratica come advisor, rivedere una bozza e riprenderla quando cambia un incasso.",
+    "scenario": "Impresa interamente sintetica: cassa EUR 50.000, incasso previsto EUR 100.000 il 15 novembre 2026, pagamento EUR 80.000 il 30 novembre. Il debitore non ha confermato la data; non sono forniti aging né ordini.",
+    "scope": "Primo percorso operativo: ruolo, lacune, analisi di tesoreria richiamata, nota e revisione dopo una variazione. Non è una valutazione di accesso alla procedura né una pratica completa.",
+    "inputs": "Apri caso-it.md per fatti e ipotesi iniziali. aggiornamento-it.md contiene soltanto la nuova informazione da introdurre nella prova pratica.",
+    "request": "Vera, assisto l’impresa come advisor. Esamina i dati sintetici, segnala le lacune, richiama la tesoreria e prepara una prima nota collegata alle evidenze. Non assumere decisioni già approvate.",
+    "steps": [
+      "Nella finestra di lavoro, registra il cliente sintetico e l’incarico di esercitazione. Vera distingue il ruolo, le fonti, le ipotesi e le informazioni mancanti prima di proporre la prossima attività.",
+      "Vera esegue la funzione di tesoreria con copertura e ipotesi esplicite, collega il risultato salvato alla nota e registra una revisione solo dopo una tua conferma riferita a quella versione. Apri il report sui dati arrivati al modello.",
+      "Riprendi la stessa pratica con l’aggiornamento: conserva la prima nota, controlla i collegamenti da riesaminare e chiedi la nuova analisi. Una vecchia conferma resta storica."
+    ],
+    "deliverables": [
+      "Nota della pratica con evidenze, lacune, ipotesi e attività successiva.",
+      "Forecast effettivamente eseguito, revisioni salvate e report dei dati usati."
+    ],
+    "review": "Segui l’incasso dalla dichiarazione alla previsione e alla nota. La disponibilità del file non prova l’incassabilità; una registrazione di conferma non è una firma.",
+    "checkpoints": [
+      "Distingui il lavoro dell’advisor dalle verifiche dell’esperto indipendente.",
+      "Individua ipotesi non confermate e versioni da riesaminare dopo il rinvio."
+    ],
+    "practice": "Introduci aggiornamento-it.md: il debitore propone il 15 gennaio 2027. Chiedi una nuova analisi e una nuova nota, senza trasferire le vecchie conferme alla nuova versione.",
+    "success": "Sai avviare, rivedere e riprendere il caso, mantenendo espliciti limiti, dipendenze e decisioni richieste.",
+    "repeat": "Indica ruolo, incarico, data di riferimento e documenti autorizzati della pratica reale. Le fonti giuridiche decisive vanno verificate al momento; indipendenza e conclusioni restano al professionista."
+  }
+}

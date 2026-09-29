@@ -36,6 +36,7 @@ CLIENT_WORKFLOW_ENTRYPOINTS = (
     ("treasury-forecast", "run_treasury.py"),
     ("aml-review", "aml_review.py"),
     ("adeguati-assetti", "assetti_review.py"),
+    ("composizione-negoziata", "cnc_case.py"),
     ("archive-organization", "archive_organization.py"),
     ("open-item-reconciliation", "audit_assurance.py"),
     ("open-item-reconciliation", "build_missing_evidence_requests.py"),
@@ -127,6 +128,7 @@ CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
 
 # Maintenance, inspection and validated-report delivery do not start a workflow.
 CLIENT_WORKFLOW_CLI_ALLOWLIST = (
+    ("composizione-negoziata", "check_dependencies.py"),
     # Existing Italian accounts tools use the separate tenant/revision service
     # lifecycle; only the Geneva adapter starts a Studio Archive workflow.
     ("bilancio-xbrl-it", "audit_schedule_taxonomy.py"),
@@ -1014,6 +1016,9 @@ def test_client_workflow_entrypoint_requires_managed_context(
         # Both invoice CLIs share the checked loader in invoice_workflow;
         # the managed-run integration test exercises intake through export.
         loader_names.add("_context")
+    if workflow_id == "composizione-negoziata":
+        # CNC resolves the same checked loader for source and bundled execution.
+        loader_names.add("load_context")
     loader_calls = [
         node
         for node in ast.walk(tree)

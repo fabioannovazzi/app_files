@@ -809,7 +809,13 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
         name: content
         for name, content in cowork_instruction_docs.items()
         if "/references/" in name
+        and not name.startswith("skills/learn-with-vera/references/")
     }
+    introduction = cowork_instruction_docs[
+        "skills/learn-with-vera/references/get-started.md"
+    ]
+    assert "In Cowork follow the written single-conversation contract" in introduction
+    assert "Never run desktop profile/session commands there" in introduction
     assert references
     for name, content in references.items():
         assert "Cowork execution note" in content, name

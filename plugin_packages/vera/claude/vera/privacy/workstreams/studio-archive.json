@@ -185,6 +185,10 @@
   ],
   "security_controls": [
     {
+      "id": "versioned-workflow-snapshots",
+      "control": "Workflow snapshots are local run artifacts linked by content digests and serialized under the existing engagement lock. Expected revisions and retry identities reject lost updates and conflicting duplicate writes. They do not authenticate authors or reviewers, establish professional validity, or provide an external tamper-proof audit log."
+    },
+    {
       "id": "private-per-user-index",
       "control": "Each professional keeps only archive configuration, the optional client identity mapping, and the derived SQLite search cache in an owner-only local state directory outside the archive. Engagements, input receipts, run contexts, lifecycle, and artifact records do not depend on that cache as their operational source of truth."
     },
@@ -261,6 +265,6 @@
     "reviewed_at": "2026-09-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "03a749d37759c04d96dba9f32fd63bee5fd3024995091f5e80c518c3efa98d5a"
+    "source_fingerprint": "a7bd3ce7cb7422ab699ad78903764b08b1018d660e07b66ad94563aaede03497"
   }
 }
