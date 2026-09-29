@@ -82,6 +82,8 @@
             <div class="install-option">
               <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57b17fb5848191be710192d93fe03a" target="_blank" rel="noopener noreferrer" data-clara-install-link data-i18n="install.button">Install for ChatGPT Work and Codex</a>
               <p class="install-option__note" data-i18n="install.chatgptHelp">Opens Clara’s installation page for ChatGPT Work and Codex.</p>
+              <a class="button" href="../plugin-downloads/index.html?product=clara&amp;lang=en" data-codex-download-link data-i18n="install.zipButton">Download ZIP</a>
+              <p class="install-option__note" data-i18n="install.zipHelp">Codex package and installation instructions.</p>
             </div>
             <div class="install-option">
               <a class="button" href="downloads/clara-cowork-plugin.zip" download data-clara-cowork-download-link data-i18n="install.coworkButton">Download for Claude Cowork</a>
@@ -320,7 +322,7 @@
         "install.video.title": "Connect ChatGPT to your computer with Codex",
         "install.button": "Install for ChatGPT Work and Codex",
         "install.chatgptHelp": "Opens Clara’s installation page for ChatGPT Work and Codex.",
-        "install.coworkButton": "Download for Claude Cowork",
+        "install.zipButton": "Download ZIP", "install.zipHelp": "Codex package and installation instructions.", "install.coworkButton": "Download for Claude Cowork",
         "install.coworkHelp": "Then upload the ZIP from Customize → Plugins in Claude Cowork.",
       },
       it: {
@@ -470,7 +472,7 @@
         "install.video.title": "Collega ChatGPT al computer con Codex",
         "install.button": "Installa per ChatGPT Work e Codex",
         "install.chatgptHelp": "Apre la pagina di installazione di Clara per ChatGPT Work e Codex.",
-        "install.coworkButton": "Scarica per Claude Cowork",
+        "install.zipButton": "Scarica ZIP", "install.zipHelp": "Pacchetto per Codex e istruzioni di installazione.", "install.coworkButton": "Scarica per Claude Cowork",
         "install.coworkHelp": "Poi carica il file ZIP da Personalizza → Plugin in Claude Cowork.",
       },
       fr: {
@@ -620,7 +622,7 @@
         "install.video.title": "Connectez ChatGPT à votre ordinateur avec Codex",
         "install.button": "Installer pour ChatGPT Work et Codex",
         "install.chatgptHelp": "Ouvre la page d’installation de Clara pour ChatGPT Work et Codex.",
-        "install.coworkButton": "Télécharger pour Claude Cowork",
+        "install.zipButton": "Télécharger le ZIP", "install.zipHelp": "Paquet pour Codex et instructions d’installation.", "install.coworkButton": "Télécharger pour Claude Cowork",
         "install.coworkHelp": "Importez ensuite le fichier ZIP depuis Personnaliser → Plugins dans Claude Cowork.",
       },
       de: {
@@ -770,7 +772,7 @@
         "install.video.title": "ChatGPT mit Codex mit Ihrem Computer verbinden",
         "install.button": "Für ChatGPT Work und Codex installieren",
         "install.chatgptHelp": "Öffnet Claras Installationsseite für ChatGPT Work und Codex.",
-        "install.coworkButton": "Für Claude Cowork herunterladen",
+        "install.zipButton": "ZIP herunterladen", "install.zipHelp": "Paket für Codex und Installationsanleitung.", "install.coworkButton": "Für Claude Cowork herunterladen",
         "install.coworkHelp": "Laden Sie die ZIP-Datei anschließend in Claude Cowork unter Anpassen → Plugins hoch.",
       },
       es: {
@@ -920,7 +922,7 @@
         "install.video.title": "Conecta ChatGPT al ordenador con Codex",
         "install.button": "Instalar para ChatGPT Work y Codex",
         "install.chatgptHelp": "Abre la página de instalación de Clara para ChatGPT Work y Codex.",
-        "install.coworkButton": "Descargar para Claude Cowork",
+        "install.zipButton": "Descargar ZIP", "install.zipHelp": "Paquete para Codex e instrucciones de instalación.", "install.coworkButton": "Descargar para Claude Cowork",
         "install.coworkHelp": "Después, sube el archivo ZIP desde Personalizar → Plugins en Claude Cowork.",
       },
     };
@@ -968,6 +970,8 @@
       const value = activeCopy[node.dataset.i18nContent];
       if (typeof value === "string") node.setAttribute("content", value);
     });
+    document.querySelector("[data-codex-download-link]").href =
+      "../plugin-downloads/index.html?product=clara&lang=" + (safeLang === "it" ? "it" : "en");
     document.querySelectorAll("[data-current-language]").forEach((node) => {
       node.textContent = safeLang.toUpperCase();
     });
