@@ -1,6 +1,6 @@
 {
   "schema": "vera.localization.assessment.v1",
-  "catalogue_fingerprint": "161c763996ef9efc3647c1b75da8b607c09839028cebac185b0504fc9d8d8321",
+  "catalogue_fingerprint": "6b6600d71b764ee71b86cd54adcf5aa46257bf72ef43606a36dc59562d2fd5cd",
   "assessment_date": "2026-09-28",
   "target": {
     "id": "CH-GE",
@@ -756,6 +756,21 @@
       "implementation_status": "adapted_with_documented_scope"
     },
     {
+      "function_id": "trasformazione",
+      "name": "Synthetic company-transformation prototype",
+      "role": "prototype",
+      "disposition": "Unresolved",
+      "common_work": "Prepare a synthetic transformation case from evidence, proposed findings, exact calculations, version-bound review and a local dossier.",
+      "geneva_application": "Not assessed. The current increment is a synthetic Italian prototype and does not accept real mandates. No Geneva professional-use or legal-applicability claim is made.",
+      "required_change": "Before proposing Geneva use, establish the relevant professional purpose, governing sources, required inputs and professional validation. French page text and common arithmetic do not establish a Swiss adaptation.",
+      "adaptation_layers": [],
+      "acceptance_example": "A Geneva real-client transformation request is not routed into this synthetic-only prototype. An explicitly requested synthetic demonstration remains labelled as such and makes no Swiss legal-effect claim.",
+      "sources": [],
+      "verification": "Prototype source, wrapper and synthetic tests inspected; no Geneva source research or professional acceptance performed for this addition.",
+      "implementation": "Local synthetic evidence-to-dossier prototype with no filing, statutory deadline or Studio Archive adapter.",
+      "implementation_status": "synthetic_prototype_only_geneva_unassessed"
+    },
+    {
       "function_id": "treasury-forecast",
       "name": "Treasury Forecast",
       "role": "function",
@@ -937,6 +952,18 @@
     "version": "0.1.277",
     "change": "Remove redundant catalogue jump link and refresh release identity; skill entrypoints and Geneva dispositions unchanged."
   },
+  "transformation_prototype_catalogue_binding": {
+    "version": "0.1.280",
+    "reviewed_at": "2026-09-29",
+    "previous_catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
+    "added_skills": [
+      "trasformazione"
+    ],
+    "changed_skills": [
+      "vera"
+    ],
+    "review": "Adds the explicit synthetic-only transformation route and candidate manifest identity. The new row remains Unresolved for CH-GE. Existing assessment rows and their professional-evidence limits are preserved; this update is catalogue integration, not a Swiss capability release."
+  },
   "fusione_p0_release_binding": {
     "version": "0.1.279",
     "reviewed_at": "2026-09-29",
@@ -950,13 +977,18 @@
     ],
     "review": "Register the new structural P0 foundation as unresolved for CH-GE. The Vera router adds only that foundation. Existing function dispositions and source assessments are preserved; no Swiss merger capability or current legal review is established."
   },
+  "combined_release_binding": {
+    "version": "0.1.280",
+    "reviewed_at": "2026-09-29",
+    "review": "Combines the existing fusione-guidata P0 and synthetic-only trasformazione entries. All prior target judgments and both unresolved entries are preserved. No new professional or jurisdiction qualification is inferred."
+  },
   "cnc_release_binding": {
-    "version": "0.1.284",
+    "version": "0.1.285",
     "reviewed_at": "2026-09-29",
     "previous_catalogue_fingerprint": "500598f2e1c2bbaf1ffd4cb41f8b2eb21ae6a68fd64cc126084daa34d97dcd43",
     "added_skills": [
       "composizione-negoziata"
     ],
-    "review": "Add the Italian CNC workflow as unresolved for CH-GE. Preserve all prior Geneva assessments and the merger foundation; the combined release does not establish Swiss applicability."
+    "review": "Add the Italian CNC workflow as unresolved for CH-GE. Preserve all prior Geneva assessments and the merger foundation; the combined release does not establish Swiss applicability. Preserve the newly merged synthetic-only transformation prototype."
   }
 }

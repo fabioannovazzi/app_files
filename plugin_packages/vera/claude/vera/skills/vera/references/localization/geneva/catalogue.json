@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/.codex/worktrees/vera-composizione-negoziata/app_files/plugins/vera",
-  "version": "0.1.284",
-  "captured_at": "2026-09-29T20:16:41.126152+00:00",
-  "catalogue_fingerprint": "161c763996ef9efc3647c1b75da8b607c09839028cebac185b0504fc9d8d8321",
-  "manifest_sha256": "3ec67ec62e4c6cf37135e7ffdf0335db85f6050f9ab47ba7944e03b0f9b0b040",
+  "root": "plugins/vera",
+  "version": "0.1.285",
+  "captured_at": "2026-09-29T20:51:10.223554+00:00",
+  "catalogue_fingerprint": "6b6600d71b764ee71b86cd54adcf5aa46257bf72ef43606a36dc59562d2fd5cd",
+  "manifest_sha256": "8e9f746798fbf303ec9621210180e242bf77ad45236ba448b93db52e911291aa",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -192,6 +192,11 @@
       "sha256": "b2f8ad59567a7e390f0fb4afbfdb339f0f8d11b3576ff37497de55cc4172d7f3"
     },
     {
+      "function_id": "trasformazione",
+      "skill_path": "skills/trasformazione/SKILL.md",
+      "sha256": "b36f003f163ca249f5145b6983f17695fb2391318696bd9c258ecf67a19461ca"
+    },
+    {
       "function_id": "treasury-forecast",
       "skill_path": "skills/treasury-forecast/SKILL.md",
       "sha256": "d485e58b1bd3013e5b2721af9bac77e69d7254c830a7c8be335507681a63cc64"
@@ -204,7 +209,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "29b23b4da7258fe2272da43b4ae026ff231d8ea21947fd0a7cae60d732f447a9"
+      "sha256": "f3942cb4da944899f91192b070135162c1664077e36a014f447968c9f1bc1eb6"
     },
     {
       "function_id": "vouching",

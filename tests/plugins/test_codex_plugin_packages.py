@@ -16,6 +16,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 COMMERCIALISTA_MODULE_NAMES = {
+    "trasformazione",
     "fusione-guidata",
     "treasury-forecast",
     "aml-review",
@@ -1560,6 +1561,7 @@ def test_vera_routes_every_commercialista_module() -> None:
     assert set(components["plugins"]) == COMMERCIALISTA_MODULE_NAMES
     assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {
         "composizione-negoziata",
+        "trasformazione",
         "fusione-guidata",
         "invoice-xml",
         "treasury-forecast",
@@ -2295,6 +2297,15 @@ def test_all_plugin_skills_define_material_choice_intake() -> None:
             )
             continue
 
+        if plugin_name == "trasformazione":
+            assert (
+                "inspect provided synthetic inputs before asking" in lowered_skill_text
+            )
+            assert (
+                "missing fact that changes the next useful step" in lowered_skill_text
+            )
+            assert "do not route a real client mandate" in lowered_skill_text
+            continue
         if plugin_name == "fusione-guidata":
             # Check the P0 intake contract without requiring legacy template wording.
             normalized = " ".join(combined_skill_text.split())
@@ -2797,6 +2808,23 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 assert "actual model-data report" in normalized_skill_text
                 assert "read its skill and follow" in normalized_skill_text.lower()
                 assert "Never simulate saved history" in skill_text
+                continue
+            if skill_file.parent.name == "trasformazione":
+                if plugin_root.name == "vera":
+                    assert "../../modules/trasformazione" in normalized_skill_text
+                    assert "../../../trasformazione" in normalized_skill_text
+                    assert "Read the complete" in normalized_skill_text
+                    assert "working directory" in normalized_skill_text
+                else:
+                    assert (
+                        "version-bound Markdown memorandum and JSON dossier"
+                        in normalized_skill_text
+                    )
+                    assert (
+                        "Do not report a successful export as legal readiness"
+                        in normalized_skill_text
+                    )
+                    assert "Keep earlier exports" in normalized_skill_text
                 continue
             if (
                 plugin_root.name in {"vera", "clara", "lucia"}
@@ -5565,6 +5593,7 @@ def test_reporting_component_manifests_use_clara_homepage() -> None:
 
 def test_standard_family_plugin_manifests_use_family_homepages() -> None:
     expected_homepages = {
+        "trasformazione": "https://mparanza.com/static/shared/trasformazione/index.html",
         "invoice-xml": "https://mparanza.com/static/shared/invoice-xml/index.html",
         "aml-review": "https://mparanza.com/static/shared/aml-review/index.html",
         "adeguati-assetti": "https://mparanza.com/static/shared/adeguati-assetti/index.html",

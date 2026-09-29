@@ -829,6 +829,16 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
     assert "Never run desktop profile/session commands there" in introduction
     assert references
     for name, content in references.items():
+        if name == "skills/learn-with-vera/references/get-started.md":
+            # This authored cross-host introduction carries its own Cowork boundary.
+            normalized = " ".join(content.split())
+            assert (
+                "In Cowork follow the written single-conversation contract"
+                in normalized
+            )
+            assert "Never run desktop profile/session commands there" in normalized
+            assert "uses only its connected lesson folder" in normalized
+            continue
         assert "Cowork execution note" in content, name
         assert "Their absence never" in content, name
         assert "blocks delivery" in content, name

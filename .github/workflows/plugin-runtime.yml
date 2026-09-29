@@ -35,6 +35,32 @@ jobs:
           python -m mypy --config-file=tests/plugin_runtime.mypy.ini plugins/composizione-negoziata/scripts
           python -m bandit -qr plugins/composizione-negoziata/scripts -ll
 
+  transformation-prototype:
+    name: Synthetic transformation prototype
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit
+      - name: Verify case persistence, branch review and arithmetic
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_trasformazione.py --cov=plugins/trasformazione/scripts
+          --cov-report=term-missing --cov-fail-under=80
+      - name: Check prototype code quality
+        run: |
+          python -m black --check plugins/trasformazione/scripts tests/plugins/test_trasformazione.py
+          python -m isort --check-only plugins/trasformazione/scripts tests/plugins/test_trasformazione.py
+          python -m mypy --follow-imports=skip plugins/trasformazione/scripts
+          python -m bandit -qr plugins/trasformazione/scripts
+
   invoice-xml:
     runs-on: ${{ matrix.os }}
     strategy:
