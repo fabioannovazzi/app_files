@@ -14,6 +14,7 @@
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
     "vendor/modules/vera_ocr",
+    "modules/fusione-guidata/vendor/modules/model_data_report.py",
     "modules/studio-archive/vendor/modules/model_data_report.py",
     "scripts/model_data_report.py",
     "modules/studio-archive/vendor/modules/model-data-report-contract.md",
@@ -261,6 +262,6 @@
     "reviewed_at": "2026-09-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "87ad430c036b3f6f3a332a3ea0057e2372d0c9e0aab6eb8b43660a585ae80dfe"
+    "source_fingerprint": "6a0d56944faa97df2f87f6988ce7ce9384b7a54405e27e9bdb6118ba203d0819"
   }
 }

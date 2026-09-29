@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 COMMERCIALISTA_MODULE_NAMES = {
     "scissione-guidata",
+    "fusione-guidata",
     "treasury-forecast",
     "aml-review",
     "adeguati-assetti",
@@ -1559,6 +1560,7 @@ def test_vera_routes_every_commercialista_module() -> None:
     assert set(components["plugins"]) == COMMERCIALISTA_MODULE_NAMES
     assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {
         "scissione-guidata",
+        "fusione-guidata",
         "invoice-xml",
         "treasury-forecast",
         "aml-review",
@@ -2251,6 +2253,22 @@ def test_all_dependency_checkers_accept_explicit_requirements_files(
             capture_output=True,
         )
 
+        if plugin_name == "fusione-guidata":
+            # This foundation declares no pip dependencies or alternate requirement set.
+            declared = (clean_plugin / "requirements.txt").read_text()
+            assert not any(
+                line.strip() and not line.lstrip().startswith("#")
+                for line in declared.splitlines()
+            )
+            runtime = subprocess.run(
+                [sys.executable, str(checker)],
+                check=False,
+                text=True,
+                capture_output=True,
+            )
+            assert runtime.returncode == 0, runtime.stderr
+            assert "Python and SQLite are available" in runtime.stderr
+            continue
         assert "--requirements" in result.stdout, plugin_name
 
 
@@ -2266,6 +2284,17 @@ def test_all_plugin_skills_define_material_choice_intake() -> None:
         )
         lowered_skill_text = combined_skill_text.lower()
 
+        if plugin_name == "fusione-guidata":
+            # Check the P0 intake contract without requiring legacy template wording.
+            normalized = " ".join(combined_skill_text.split())
+            assert (
+                "Start from the supplied operation, company identities and selected evidence"
+                in normalized
+            )
+            assert "Ask only for missing choices that change the scope" in normalized
+            assert "Keep absent facts `unknown`" in normalized
+            assert "continue independent case preparation" in normalized
+            continue
         assert (
             "material choices" in lowered_skill_text
             or "material research-angle" in lowered_skill_text
@@ -2852,6 +2881,23 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
             }:
                 assert "Read that component's" in normalized_skill_text
                 assert "working directory" in normalized_skill_text
+                continue
+            if plugin_root.name == "fusione-guidata":
+                # P0 exports a durable case review, not a legacy workbench run report.
+                assert (
+                    "Never write run outputs inside this Git workspace or plugin source"
+                    in normalized_skill_text
+                )
+                assert "references/case-contract.md" in normalized_skill_text
+                assert "one reviewed request at a time" in normalized_skill_text
+                assert (
+                    "Show the readable report and its link with the result"
+                    in normalized_skill_text
+                )
+                assert (
+                    "professional confirmation still requires the actual named reviewer's decision"
+                    in normalized_skill_text
+                )
                 continue
             for snippet in required_snippets:
                 if (
@@ -3853,6 +3899,8 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         "../fatture-xml-check/index.html",
         "../report-enti-locali/index.html",
         "../concordato-plan-review/index.html",
+        "../fusione-guidata/index.html",
+        "../scissione-guidata/index.html",
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
     ):
@@ -3862,9 +3910,9 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 36
-    assert core.count('class="module-row"') == 36
-    assert core.count('data-jurisdiction-item="it"') == 11
+    assert core.count(" data-module-link") == 37
+    assert core.count('class="module-row"') == 37
+    assert core.count('data-jurisdiction-item="it"') == 12
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for area_id in (
@@ -5577,6 +5625,7 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         "browser-automation": (
             "https://mparanza.com/static/shared/browser-automation/index.html?lang=it"
         ),
+        "fusione-guidata": "https://mparanza.com/static/shared/fusione-guidata/index.html?lang=it",
         "studio-archive": ("https://mparanza.com/static/shared/vera/index.html"),
         "vera": ("https://mparanza.com/static/shared/vera/index.html?lang=it"),
         "clara": ("https://mparanza.com/static/shared/clara/index.html?lang=en"),

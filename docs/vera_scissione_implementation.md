@@ -121,13 +121,23 @@ fresh-JUnit identity gate remains subject to CI. The five later teaching steps
 also passed locally; their four test groups passed 136, 61, 71 and 13 tests, with
 coverage from 80.65% to 89.75%.
 
+All **33 CI checks passed** on commit `194ea571f`. The branch then integrated
+main `bbc94c37a`, which adds the independently developed fusione P0 foundation.
+Both functions, their distinct catalogue sections and their unresolved Geneva
+assessments are preserved; the combined catalogue has 41 skill entries. The
+scissione engine is unchanged. The combined integration suite passed 325 tests;
+its one Node-dependent skip was subsequently executed successfully with the
+bundled Node runtime. All 36 teaching-review gate regressions also passed.
+The merged revision requires a fresh CI run; the earlier green rollup does not
+certify the merged source. Vera packages were rebuilt from that combined source.
+
 Vera package SHA-256:
 
 | Distribution | SHA-256 |
 |---|---|
-| Codex | `48ce154e3da9dfde6f0378ae553aa529e4dca66a62e65ee417d7bcedbe3b5c4a` |
-| ChatGPT upload | `a320d58d2bed041a413c03fb2e908aa00041eee0cd66b3faa6e76c0da90b54c4` |
-| Cowork | `b0749b153736a176afa2f31d74d5e5ec7f84effdb3a1b4df9a00f65eaf855c48` |
+| Codex | `39b66789c0e9c28de22e3aa1cc928409dc07c5234075c75d17cc6ae116e20169` |
+| ChatGPT upload | `aa8016b6674861c44dc6677e192302c49d82a6f7bf673784470e8bba7f05c4cd` |
+| Cowork | `a68cdf69f992e2fea354bf14d042f2229ad81295c3014b7e0181be8ec786bcf8` |
 
 These are build candidates. No installed-session acceptance, Marketplace
 publication, public deployment, signature, filing or Discord reply was performed.

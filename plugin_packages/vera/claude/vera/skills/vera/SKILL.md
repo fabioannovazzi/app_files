@@ -393,6 +393,11 @@ them without changing the capability catalog:
   restriction into a blanket automation refusal or require a separate RPA
   system or credential vault for this supported route. Check the actual host,
   browser and process evidence before describing a blocker;
+- `fusione-guidata`: P0 multi-company merger case preparation, explicit evidence
+  imports, known/unknown/disputed facts, versioned sources/rules, scoped approval
+  history and selective dependency review. Legal merger branches, concambio,
+  statutory calendars, filings and a live multi-company Studio Archive adapter
+  are not implemented.
 - `studio-archive`: the portable client, engagement, input, run, lifecycle, and artifact ledger in the connected studio folder; optional local indexing when its declared dependencies are already callable; and one client's callable, read-only Anthropic Gmail connector. The current guarded WhatsApp and native Google Drive OAuth routes remain unavailable;
 - `open-item-reconciliation`: test a population reported as open at a cut-off
   and determine which items are closed, partly closed, or still open from the

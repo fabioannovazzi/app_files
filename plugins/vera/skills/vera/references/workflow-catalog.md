@@ -35,7 +35,16 @@ prepare a versioned dossier and ownership/allocation schedules for an Italian OI
 This operational path has synthetic acceptance tests but no prepared voice lesson
 yet. Do not present another lesson as a scissione execution.
 
+## P0 case foundation
+
+`fusione-guidata` prepares a multi-company merger case with explicit evidence
+imports, versioned facts/sources/rules, scoped confirmation records and change
+impacts. Its own synthetic CLI demo is available. It is not a prepared onboarding
+lesson: legal branches, calculations and the live multi-company Studio Archive
+adapter are unimplemented. Use its specialist skill directly for P0 work.
+
 ## Professional workflows
+
 
 - `invoice-xml`: prepare ordinary FPR12 invoice XML from supplied PDFs, photos
   or confirmed structured data; combine source views, retain field evidence,

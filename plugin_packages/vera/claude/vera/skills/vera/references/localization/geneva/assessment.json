@@ -1,6 +1,6 @@
 {
   "schema": "vera.localization.assessment.v1",
-  "catalogue_fingerprint": "5d48aaa1376eb17fc5bf66dcff63a9072f822f651aa45aad2fa6e4b71bbc4c8c",
+  "catalogue_fingerprint": "38e2e2a8aa11bb402597c39d2a5f928eb24ab3b294b1cde26904f9870c66aeef",
   "assessment_date": "2026-09-28",
   "target": {
     "id": "CH-GE",
@@ -370,6 +370,26 @@
       "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance.",
       "implementation": "Existing function retained with the recorded qualification limits.",
       "implementation_status": "existing_or_unresolved_as_assessed"
+    },
+    {
+      "function_id": "fusione-guidata",
+      "name": "Merger case foundation (P0)",
+      "role": "foundation",
+      "disposition": "Unresolved",
+      "common_work": "Preserve multi-company evidence, unknown or disputed facts, exact-version review decisions and dependencies in one case.",
+      "geneva_application": "Professional fit and any required Swiss/Geneva merger adaptations have not been assessed. The P0 helper supports no legal merger branch in any jurisdiction.",
+      "required_change": "Establish the professional mandate and governing source requirements before defining a Swiss merger branch; do not treat the structural case demonstration as jurisdiction qualification.",
+      "adaptation_layers": [
+        "professional mandate qualification",
+        "Swiss/Geneva sources and rules not assessed"
+      ],
+      "acceptance_example": "A later reviewed Swiss/Geneva mandate must identify applicable source versions and professional decisions; the current P0 continues to report every legal branch as unsupported.",
+      "sources": [
+        "fusione_p0"
+      ],
+      "verification": "Inspected source and synthetic structural regressions only; no Swiss merger assessment, legal validation or client acceptance.",
+      "implementation": "Existing P0 case foundation records exact evidence, review and change history; jurisdiction-specific legal branches remain unsupported.",
+      "implementation_status": "foundation_only_jurisdiction_unassessed"
     },
     {
       "function_id": "invoice-xml",
@@ -891,6 +911,12 @@
       ],
       "basis": "Inspected scope and unsupported-route tests establish IT/OIC/EUR boundaries; no Swiss professional applicability or equivalence is inferred.",
       "consulted": "2026-09-29"
+    },
+    "fusione_p0": {
+      "title": "Fusione guidata P0 source and requirement map",
+      "path": "docs/vera-fusione-p0.md",
+      "basis": "Internal implementation evidence for a structural case foundation; supplies no Swiss merger law or professional acceptance.",
+      "consulted": "2026-09-29"
     }
   },
   "course_qa_release_binding": {
@@ -929,5 +955,25 @@
       "vera"
     ],
     "review": "Adds the Italian OIC partial proportional/new-beneficiary workflow and its router entry. Its runtime supports IT/OIC/EUR only; CH-GE applicability and adaptation have not been established. Existing Geneva dispositions and their dated evidence are preserved. This refresh records catalogue identity and the new unresolved entry, not a new Swiss professional acceptance."
+  },
+  "fusione_p0_release_binding": {
+    "version": "0.1.279",
+    "reviewed_at": "2026-09-29",
+    "previous_version": "0.1.277",
+    "previous_catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
+    "added_skills": [
+      "fusione-guidata"
+    ],
+    "changed_skills": [
+      "vera"
+    ],
+    "review": "Register the new structural P0 foundation as unresolved for CH-GE. The Vera router adds only that foundation. Existing function dispositions and source assessments are preserved; no Swiss merger capability or current legal review is established."
+  },
+  "combined_catalogue_release_binding": {
+    "reviewed_at": "2026-09-29",
+    "source_version": "0.1.281",
+    "integrated_main_commit": "bbc94c37a20e59a6fd5fe2834b4ece6be7fef163",
+    "previous_main_version": "0.1.279",
+    "review": "Combine the scissione operational path with the separately merged fusione P0 foundation. Preserve both authored unresolved CH-GE entries and every earlier assessment. The 41-entry catalogue identity is refreshed without establishing Swiss professional applicability or acceptance."
   }
 }

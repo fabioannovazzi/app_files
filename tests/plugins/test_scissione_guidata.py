@@ -12,6 +12,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "plugins/scissione-guidata/scripts"))
+import scissione_core
 from scissione_core import ScissioneError, build_revision, decimal, simple_exchange
 
 
@@ -208,8 +209,6 @@ def test_stale_review_is_rejected():
 
 
 def test_changed_calculation_engine_reopens_prior_reviews(monkeypatch):
-    import scissione_core
-
     previous = accepted()
     monkeypatch.setattr(scissione_core, "ENGINE_VERSION", "next-test-version")
     result = build_revision(case(), previous=previous)
