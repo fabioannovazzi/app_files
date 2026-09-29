@@ -16,6 +16,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 COMMERCIALISTA_MODULE_NAMES = {
+    "esg-reporting-assurance",
     "treasury-forecast",
     "aml-review",
     "adeguati-assetti",
@@ -1556,6 +1557,7 @@ def test_vera_routes_every_commercialista_module() -> None:
     assert components["schema_version"] == 1
     assert set(components["plugins"]) == COMMERCIALISTA_MODULE_NAMES
     assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {
+        "esg-reporting-assurance",
         "invoice-xml",
         "treasury-forecast",
         "aml-review",
@@ -3851,8 +3853,8 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 35
-    assert core.count('class="module-row"') == 35
+    assert core.count(" data-module-link") == 36
+    assert core.count('class="module-row"') == 36
     assert core.count('data-jurisdiction-item="it"') == 10
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
@@ -5493,6 +5495,7 @@ def test_reporting_component_manifests_use_clara_homepage() -> None:
 
 def test_standard_family_plugin_manifests_use_family_homepages() -> None:
     expected_homepages = {
+        "esg-reporting-assurance": "https://mparanza.com/static/shared/esg-reporting-assurance/index.html",
         "invoice-xml": "https://mparanza.com/static/shared/invoice-xml/index.html",
         "aml-review": "https://mparanza.com/static/shared/aml-review/index.html",
         "adeguati-assetti": "https://mparanza.com/static/shared/adeguati-assetti/index.html",

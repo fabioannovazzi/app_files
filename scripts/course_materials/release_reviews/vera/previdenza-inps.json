@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "previdenza-inps",
-  "course_sha256": "b4a1e48872867226f6f21118ed4c515e292be7bb283691da4568a403404b1731",
+  "course_sha256": "015074c1b8b7fca71e1e164397473827ff02d6971c58a982502d498196339ad8",
   "reviewer": "Codex: localized first-use outlines, fictional sources and rendered native memo review",
   "reviewed_at": "2026-09-14T15:57:44.502342+00:00",
   "review_scope": "Prepared local documentary INPS review only. All ten native memos were rendered and all twenty pages inspected, together with the localized document requests, guides and source inputs. Regression model interpretations and scope confirmations are test-only. This review does not certify a legal conclusion, live research, portal access, voice behavior, professional approval or learner understanding.",
@@ -370,5 +370,16 @@
     "content_review": "The complete authored course object is unchanged from the verified course QA commit when source bindings are excluded. Retains both the prior Italian Codex QA record and the Geneva source-bound review from main. No new lesson, language-journey acceptance or professional approval is asserted.",
     "source_review": "Integrated additive Geneva jurisdiction/currency adapters and French presentation from PR #692; course QA source/result readers, saved-review controls, parser hardening and teacher/working roles are preserved. Generated assets and packages are rebuilt from this combined source.",
     "native_execution_requirement": "The combined candidate must pass the unchanged required native demo/practice checks and dedicated Geneva regressions before deployment."
+  },
+  "esg_source_refresh_20260929": {
+    "reviewer": "Codex /root - bounded source review",
+    "reviewed_at": "2026-09-29T18:26:42.517707+00:00",
+    "baseline_commit": "6f26f0e8241a0fe3027c162e2c2cae4d97395465",
+    "previous_course_sha256": "b4a1e48872867226f6f21118ed4c515e292be7bb283691da4568a403404b1731",
+    "current_course_sha256": "015074c1b8b7fca71e1e164397473827ff02d6971c58a982502d498196339ad8",
+    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
+    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
+    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
+    "detail": "docs/releases/2026-09-29-vera-esg-course-source-review.json"
   }
 }

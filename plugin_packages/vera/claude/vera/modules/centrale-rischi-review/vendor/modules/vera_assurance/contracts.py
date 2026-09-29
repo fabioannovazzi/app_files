@@ -123,6 +123,7 @@ _RUN_TRANSITIONS = {
 # engine at the product layer, but receives its own run folder because it emits
 # an independently reviewed package that New Client consumes.
 VERA_CLIENT_WORKFLOW_IDS = (
+    "esg-reporting-assurance",
     "treasury-forecast",
     "aml-review",
     "adeguati-assetti",

@@ -30,7 +30,8 @@
     "bandi-agevolazioni",
     "bilancio-xbrl-it",
     "browser-automation",
-    "studio-archive"
+    "studio-archive",
+    "esg-reporting-assurance"
   ],
   "shared_services": [
     "managed-python-runtime",

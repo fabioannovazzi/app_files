@@ -99,6 +99,9 @@ environment does not isolate modules or client matters from one another.
 
 The shared specialist workflows cover:
 
+- ESG case evidence, version-specific decisions and partial Markdown/JSON drafts
+  through `esg-reporting-assurance`; complete reporting and assurance remain unimplemented;
+
 - new-client file preparation, evidence gaps, identity, engagement, privacy,
   AML, document planning, and monitoring;
 - accounting evidence reconciliation, journal sampling, entry checks, and

@@ -17,6 +17,13 @@ skill to imitate a missing operational workflow.
 
 ## Professional workflows
 
+- `esg-reporting-assurance`: organize the first ESG evidence and decision
+  foundation inside an existing client engagement; bind CSV cells or text lines,
+  retain versions and decisions, flag stale dependencies and export partial drafts.
+  It does not yet produce complete ESG reports, ESRS/taxonomy assessments or
+  assurance opinions. Use the dedicated skill and state those limits.
+
+
 - `invoice-xml`: prepare ordinary FPR12 invoice XML from supplied PDFs, photos
   or confirmed structured data; combine source views, retain field evidence,
   surface missing or uncertain facts, review domestic or foreign TD17/18/19
