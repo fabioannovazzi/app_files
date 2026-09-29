@@ -83,14 +83,16 @@ class CaseStore:
         root.mkdir(mode=0o700)
         path = root / "case.sqlite"
         with sqlite3.connect(path) as db:
-            db.executescript("""
+            db.executescript(
+                """
                 CREATE TABLE metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL);
                 CREATE TABLE records (id TEXT NOT NULL, version INTEGER NOT NULL, record TEXT NOT NULL, PRIMARY KEY (id, version));
                 CREATE TABLE grants (sequence INTEGER PRIMARY KEY, actor TEXT NOT NULL, grant_json TEXT NOT NULL);
                 CREATE TABLE blobs (sha256 TEXT PRIMARY KEY, content BLOB NOT NULL);
                 CREATE TRIGGER immutable_record_update BEFORE UPDATE ON records BEGIN SELECT RAISE(ABORT, 'immutable revisions'); END;
                 CREATE TRIGGER immutable_record_delete BEFORE DELETE ON records BEGIN SELECT RAISE(ABORT, 'immutable revisions'); END;
-            """)
+            """
+            )
             metadata = {
                 "schema_version": 1,
                 "operation_id": "op_" + uuid.uuid4().hex,

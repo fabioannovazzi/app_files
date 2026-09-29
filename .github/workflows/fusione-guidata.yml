@@ -32,6 +32,7 @@ jobs:
           --cov=plugins/fusione-guidata/scripts --cov-report=term-missing
           --cov-fail-under=80
       - name: Check foundation code quality
+        shell: bash
         run: |
           python plugins/fusione-guidata/scripts/check_dependencies.py
           python -m black --check plugins/fusione-guidata/scripts tests/plugins/test_fusione_guidata.py
