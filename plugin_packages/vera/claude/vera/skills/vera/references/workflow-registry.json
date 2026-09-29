@@ -462,6 +462,16 @@
         "modules/studio-archive/scripts/check_dependencies.py",
         "modules/studio-archive/scripts/studio_archive.py"
       ]
+    },
+    {
+      "component_id": "fusione-guidata",
+      "skills": [
+        "modules/fusione-guidata/skills/fusione-guidata/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/fusione-guidata/scripts/check_dependencies.py",
+        "modules/fusione-guidata/scripts/run_fusione.py"
+      ]
     }
   ],
   "vera_wrapper_skills": [
@@ -482,6 +492,7 @@
     "skills/fatture-xml-check/SKILL.md",
     "skills/financial-analysis/SKILL.md",
     "skills/financial-report-builder/SKILL.md",
+    "skills/fusione-guidata/SKILL.md",
     "skills/invoice-xml/SKILL.md",
     "skills/journal-bank-reconciliation/SKILL.md",
     "skills/journal-sampling/SKILL.md",
