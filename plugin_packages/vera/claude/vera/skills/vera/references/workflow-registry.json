@@ -22,6 +22,16 @@
   },
   "components": [
     {
+      "component_id": "scissione-guidata",
+      "skills": [
+        "modules/scissione-guidata/skills/scissione-guidata/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/scissione-guidata/scripts/check_dependencies.py",
+        "modules/scissione-guidata/scripts/run_scissione.py"
+      ]
+    },
+    {
       "component_id": "open-item-reconciliation",
       "skills": [
         "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md"
@@ -498,6 +508,7 @@
     "skills/quesito-legale-fiscale/SKILL.md",
     "skills/registro-imprese-sari/SKILL.md",
     "skills/sales-plan/SKILL.md",
+    "skills/scissione-guidata/SKILL.md",
     "skills/studio-archive/SKILL.md",
     "skills/treasury-forecast/SKILL.md",
     "skills/variance-analysis/SKILL.md",

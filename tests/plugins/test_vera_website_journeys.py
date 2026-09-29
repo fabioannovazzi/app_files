@@ -779,23 +779,39 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
         roles.get(component, {}).get("skill", component)
         for component in re.findall(r'data-vera-workflow="([^"]+)"', core)
     }
+    initial_section = catalog.split("## Scissione: initial operational path", 1)[
+        1
+    ].split("## Professional workflows", 1)[0]
+    initial_skills = set(
+        re.findall(r"`\.\./\.\./([a-z0-9-]+)/SKILL\.md`", initial_section)
+    )
+    assert initial_skills == {"scissione-guidata"}
+    assert "no prepared voice lesson" in initial_section
 
     # Exact identity closure is mechanically verifiable and prevents public
     # inventory drift. Page component IDs resolve to the current skill names.
-    assert directory_skills == (
-        set(re.findall(r"^- `([^`]+)`:", catalog, re.MULTILINE))
-        - _catalog_workflow_names(
-            catalog, "Learning and discovery", "Professional workflows"
+    assert (
+        directory_skills
+        == (
+            set(re.findall(r"^- `([^`]+)`:", catalog, re.MULTILINE))
+            - _catalog_workflow_names(
+                catalog, "Learning and discovery", "Professional workflows"
+            )
+            - _catalog_workflow_names(
+                catalog,
+                "Subordinate intake workflows",
+                "Cross-cutting answer assurance",
+            )
+            - _catalog_workflow_names(
+                catalog,
+                "Cross-cutting answer assurance",
+                "Run-wide model-data evidence",
+            )
+            - _catalog_workflow_names(
+                catalog, "Developer governance", "Public process explanations"
+            )
         )
-        - _catalog_workflow_names(
-            catalog, "Subordinate intake workflows", "Cross-cutting answer assurance"
-        )
-        - _catalog_workflow_names(
-            catalog, "Cross-cutting answer assurance", "Run-wide model-data evidence"
-        )
-        - _catalog_workflow_names(
-            catalog, "Developer governance", "Public process explanations"
-        )
+        | initial_skills
     )
     assert set(
         re.findall(r'data-vera-subordinate-workflow="([^"]+)"', core)
@@ -815,7 +831,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    expected_module_count = 35
+    expected_module_count = 36
     module_hrefs = re.findall(
         r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
     )
@@ -824,7 +840,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     assert len(module_hrefs) == expected_module_count
     assert len(module_hrefs) == len(set(module_hrefs))
     assert core.count('data-primary-workflow-link="') == 2
-    assert core.count('data-jurisdiction-item="it"') == 10
+    assert core.count('data-jurisdiction-item="it"') == 11
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for expected_href in (
@@ -848,6 +864,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
         "../sales-plan/index.html",
         "../business-planning/index.html",
         "../variance-analysis/index.html",
+        "../scissione-guidata/index.html",
         "../treasury-forecast/index.html",
         "../management-control-pack/index.html",
         "../centrale-rischi-review/index.html",
@@ -943,6 +960,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Preparare un business plan",
         "Analisi scostamenti",
         "Adeguati assetti",
+        "Scissione guidata",
         "Budget di tesoreria",
         "Pacchetto controllo di gestione",
         "Analisi Centrale Rischi",
@@ -971,6 +989,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "module.businessPlanning.title": "Preparare un business plan",
         "module.variance.title": "Analisi scostamenti",
         "module.assetti.title": "Adeguati assetti",
+        "module.scissione.title": "Scissione guidata",
         "module.treasury.title": "Budget di tesoreria",
         "module.managementPack.title": "Pacchetto controllo di gestione",
         "module.centraleRischi.title": "Analisi Centrale Rischi",
@@ -1016,6 +1035,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "variance-analysis": "Analisi scostamenti",
         "studio-archive": "Archiviazione e ricerca nel fascicolo cliente",
         "treasury-forecast": "Budget di tesoreria",
+        "scissione-guidata": "Scissione guidata",
     }
     marketplace_cards = json.loads(
         (VERA_PLUGIN_ROOT / "marketplace_skill_instructions.json").read_text(
@@ -1024,7 +1044,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 35
+    assert len(labels) == 36
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
@@ -1563,7 +1583,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 35
+    expected_module_link_count = 36
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',

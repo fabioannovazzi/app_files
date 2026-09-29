@@ -94,13 +94,22 @@ with **2 skips because curated Marketplace installations are absent**. All Codex
 source parity and version alignment;
 Vera's 18 and Lucia's 4 packaged MCP servers initialize and list tools.
 
+The dedicated scissione CI job passed on the first candidate. Broader CI found
+two stale test inventories, the missing generated workflow-registry entry, and
+Lucia's stale privacy fingerprint for the shared archive workflow enumeration.
+The inventories now include this workflow and its two CLI entrypoints; the
+registry is regenerated from canonical source, and the shared boundary was
+reviewed before refreshing the fingerprint and rebuilding affected packages.
+The complete website/lifecycle suites passed **344 tests**, and the runtime/Lucia
+suites passed **184 tests**. These overlapping suite counts are not added together.
+
 Vera package SHA-256:
 
 | Distribution | SHA-256 |
 |---|---|
-| Codex | `be43b6f81c9170dffcbab80263a7a9d9444057b967cdb29df8af41bba9798d16` |
-| ChatGPT upload | `c32cef03f105518b02fe6e1795f20a5673d2e20bf171daef7527bb4cc7f5d143` |
-| Cowork | `6fc79055ebe4d510f8cfcfc372584afb87698f3b1ae4966275d0e9cd581f064c` |
+| Codex | `3228d4f88ed1330d5b4713bb65ab02a4efe0467af28f83a378560a765e749966` |
+| ChatGPT upload | `a3f5792f2f3fd0b3c6df3a5d9c59fa7ba9564bdd243684c257a7341ba2ea6087` |
+| Cowork | `2a115d895fa6f035e78392e8cba1d1e5d616ef55b26b9d9d902d4d913a246d05` |
 
 These are build candidates. No installed-session acceptance, Marketplace
 publication, public deployment, signature, filing or Discord reply was performed.

@@ -29,6 +29,7 @@ from vera_assurance import (  # noqa: E402
 )
 
 CLIENT_WORKFLOW_ENTRYPOINTS = (
+    ("scissione-guidata", "run_scissione.py"),
     ("bilancio-xbrl-it", "jurisdiction_accounts.py"),
     ("new-client", "jurisdiction_setup.py"),
     ("invoice-xml", "invoice_workflow.py"),
@@ -127,6 +128,7 @@ CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
 
 # Maintenance, inspection and validated-report delivery do not start a workflow.
 CLIENT_WORKFLOW_CLI_ALLOWLIST = (
+    ("scissione-guidata", "check_dependencies.py"),
     # Existing Italian accounts tools use the separate tenant/revision service
     # lifecycle; only the Geneva adapter starts a Studio Archive workflow.
     ("bilancio-xbrl-it", "audit_schedule_taxonomy.py"),
