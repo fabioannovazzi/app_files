@@ -43,10 +43,17 @@ amounts, annualize interim data silently, or hide adjustments inside EBITDA.
 Import the reviewed statement/normalization evidence into the engagement. The
 model prepares the documented case; never ask the professional to write JSON.
 
-Each amount has a source, locator, unit, meaning and confirmation state. Record
-normalization calculations explicitly in the supporting evidence and obtain
-professional confirmation of the resulting input. Mapping arbitrary financial
-statements is reviewed preparation, not a universal automatic parser.
+Each amount has a source, locator, unit, meaning and confirmation state. Use the
+`normalizations` journal to keep reported and adjusted values separate. For every
+signed adjustment record year, line, reason, accounting reconciliation, economic
+substance, source/locator, tax treatment and reversibility. Read each choice back
+for professional review before recording its exact dependency attestation. Show
+both increases and decreases when supported; never select only adjustments that
+raise EBITDA. Tax effects on other lines require separate evidenced amounts.
+The helper reconciles each line and blocks dependent methods when an amount is
+missing or inconsistent; it does not judge accounting treatment or replace a
+statement balance/roll-forward review. Mapping arbitrary financial statements
+remains reviewed preparation, not a universal automatic parser.
 
 ## Methods and parameters
 

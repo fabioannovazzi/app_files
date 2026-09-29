@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-valuation",
-  "course_sha256": "477eb0fb01e7e51630ce7448a2f52ba926160f5ea1c156bcd375808119bdb27b",
+  "course_sha256": "8dcc6d8e11e76ca69c5006629dc1f71ec3b6a7db28c49a6f024c142ce4968d81",
   "reviewer": "Codex /root: source, calculation and document review",
-  "reviewed_at": "2026-09-29T18:42:03.899149+00:00",
+  "reviewed_at": "2026-09-29T18:56:11.711307+00:00",
   "review_scope": "Read both fictional notes and the entire Italian lesson. Ran the real bound workflow for demo and practice, inspected their Markdown reports and calculation registers. Seven-method DOCX was rendered and all four pages inspected; LibreOffice independently recalculated all 75 workbook calculation cells. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior is an instruction and separate archive contract, not claimed as a live learner test.",
   "languages": {
     "it": {
@@ -23,11 +23,11 @@
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "b62f2574c2080e4f1c4c25702a0efd93562d402a4acad3667c4de209cc36296d"
+            "sha256": "5831545b2ee50fab11ba5da9d367a1c6eb0e00abd4d960d46504256ab9f397c6"
           },
           {
             "name": "valuation.json",
-            "sha256": "6e4f8b8d6d1971e1aa2308ad8a5bf7a69fdacc0df74f10188a2c2dc941b2dbf0"
+            "sha256": "0c4954be6a5d49a73bc9677fa34f31bd4b05ccbffbe60a7f04a1ae89dbb8fe5d"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -53,6 +53,19 @@
                 "sha256": "60492aeafad6e50bca50b6059190522372e4deb021e5ec836dfe0690e159d939"
               }
             ]
+          },
+          {
+            "reviewed_at": "2026-09-29T18:42:03.899149+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "b62f2574c2080e4f1c4c25702a0efd93562d402a4acad3667c4de209cc36296d"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "6e4f8b8d6d1971e1aa2308ad8a5bf7a69fdacc0df74f10188a2c2dc941b2dbf0"
+              }
+            ]
           }
         ]
       },
@@ -62,11 +75,11 @@
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "74a501c8e6ddb426ea900fdee8282f732372bb051ad466e91ed58dc840571ee9"
+            "sha256": "9a3c783dae646cc88d189fe4a063ad06c5cdf16f59440a9fa2036788e4338290"
           },
           {
             "name": "valuation.json",
-            "sha256": "7337a0ad02762ad2880db23180ee468756ce15515ba161a21bf21cece611e82d"
+            "sha256": "7001f1e9b1e0ce8f9d8e231a4b87630ee1a7a98dd28d47b101c02dd35b46dc21"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -92,6 +105,19 @@
                 "sha256": "2a7590f22a1bc21dd2898c375b3aebab3edf0e543c25356fd9c56eea23c1fbb6"
               }
             ]
+          },
+          {
+            "reviewed_at": "2026-09-29T18:42:03.899149+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "74a501c8e6ddb426ea900fdee8282f732372bb051ad466e91ed58dc840571ee9"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "7337a0ad02762ad2880db23180ee468756ce15515ba161a21bf21cece611e82d"
+              }
+            ]
           }
         ]
       }
@@ -110,5 +136,11 @@
     "tests": "103 valuation tests pass at 92.66% coverage, including both fresh native teaching phases, dated numerical cases, invalid timing, annual plan relabelling rejection and curve sensitivity boundaries.",
     "independent_workbook_review": "Three dated workbooks (monthly continuous, spot mid-period and interval-forward mid-period) were independently recalculated by LibreOffice. All 300 calculation cells match the Decimal ledger within 1e-12 relative / 1e-9 absolute tolerance.",
     "previous_reviewed_at": "2026-09-29T18:16:00.914541+00:00"
+  },
+  "normalization_review": {
+    "scope": "Reviewed the structured signed-adjustment journal and its reported-to-adjusted reconciliation, explicit accounting/economic/tax/reversibility explanations, exact local review dependencies and transitive method formulas. Read both fresh native teaching reports: the unchanged annual lesson retains the expected values and review-pending state. Inspected all six pages of the separate normalization DOCX; no clipped text or hidden adjustment status was observed. The journal is not used as an invented professional review or an automatic accounting classifier.",
+    "tests": "124 valuation tests pass at 93.47% coverage. Missing amounts, inconsistent reconciliation, changed review explanations, duplicate amounts and untrusted export text are covered.",
+    "independent_workbook_review": "LibreOffice recalculated all 82 normalization-workbook calculation cells; all match the Decimal register at 1e-12 relative / 1e-9 absolute tolerance. The separate journal links preserve 90 reported +20 -10 =100 adjusted.",
+    "previous_reviewed_at": "2026-09-29T18:42:03.899149+00:00"
   }
 }

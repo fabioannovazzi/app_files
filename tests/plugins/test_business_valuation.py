@@ -21,6 +21,7 @@ sys.path.insert(0, str(ROOT / "plugins/_shared/vendor/modules"))
 import run_valuation
 import valuation_case
 import valuation_engine
+import valuation_normalization
 import valuation_report
 from valuation_case import build_valuation, digest, read_json
 from valuation_engine import ValuationError, decimal, evaluate
@@ -34,7 +35,13 @@ def restore_imports(monkeypatch: pytest.MonkeyPatch) -> None:
     """Keep isolated component imports available after repository test cleanup."""
     monkeypatch.syspath_prepend(str(SCRIPTS))
     monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
-    for module in (run_valuation, valuation_case, valuation_engine, valuation_report):
+    for module in (
+        run_valuation,
+        valuation_case,
+        valuation_engine,
+        valuation_normalization,
+        valuation_report,
+    ):
         monkeypatch.setitem(sys.modules, module.__name__, module)
 
 
@@ -49,6 +56,215 @@ def review(dependency: str) -> dict:
         "reviewer": "Synthetic reviewer",
         "reviewed_at": "2026-09-29T17:00:00+02:00",
     }
+
+
+def normalized_case() -> dict:
+    """Reconcile 90 reported plus 20 minus 10 to an unchanged 100-unit income."""
+    case = case_data()
+    income = next(row for row in case["inputs"] if row["id"] == "income")
+    case["inputs"].extend(
+        [
+            {**income, "id": "reported-income", "value": "90"},
+            {**income, "id": "signed-addition", "value": "20"},
+            {**income, "id": "signed-deduction", "value": "-10"},
+        ]
+    )
+    entry = {
+        "id": "one-off",
+        "amount_input": "signed-addition",
+        "reason": "Synthetic positive adjustment for arithmetic testing.",
+        "accounting_check": "90 plus 20 minus 10 equals 100 in the fictional schedule.",
+        "economic_rationale": "Invented test case; no economic appropriateness asserted.",
+        "tax_treatment": "Amounts are supplied after tax for this income line; no automatic tax factor.",
+        "reversibility": "Synthetic nonrecurring event; professional review pending.",
+        "source_ids": ["evidence"],
+        "locator": "evidence.txt, synthetic schedule",
+    }
+    case["normalizations"] = [
+        {
+            "id": "income-2026",
+            "year": 2026,
+            "line": "Reddito netto sostenibile",
+            "reported_input": "reported-income",
+            "adjusted_input": "income",
+            "adjustments": [
+                entry,
+                {
+                    **entry,
+                    "id": "recurring-cost",
+                    "amount_input": "signed-deduction",
+                    "reason": "Synthetic negative adjustment; do not choose only increases.",
+                },
+            ],
+        }
+    ]
+    return case
+
+
+def reviewed_normalized_case() -> dict:
+    """Prepare explicit synthetic journal attestations, then method attestations."""
+    case = normalized_case()
+    initial = build_valuation(case, FIXTURE)
+    for entry, row in zip(
+        case["normalizations"][0]["adjustments"],
+        initial["normalizations"][0]["adjustments"],
+    ):
+        entry["review"] = review(row["dependency_sha256"])
+    prepared = build_valuation(case, FIXTURE)
+    for method, row in zip(case["methods"], prepared["methods"]):
+        method["review"] = review(row["dependency_sha256"])
+    return case
+
+
+def test_signed_normalization_reconciles_without_approving_adjustments() -> None:
+    result = build_valuation(normalized_case(), FIXTURE)
+    values = {row["id"]: row["value"] for row in result["calculations"]}
+    assert values["normalization/income-2026/adjustments"] == "10"
+    assert values["normalization/income-2026/adjusted"] == "100"
+    assert values["normalization/income-2026/difference"] == "0"
+    assert values["income-method/value"] == "1000"
+    assert result["normalizations"][0]["status"] == "partial"
+    assert result["methods"][2]["status"] == "partial"
+    assert result["methods"][3]["status"] == "ready_for_professional_review"
+
+
+def test_reviewed_adjustments_allow_separately_reviewed_method() -> None:
+    result = build_valuation(reviewed_normalized_case(), FIXTURE)
+    assert result["normalizations"][0]["status"] == "accepted_workpaper"
+    assert result["methods"][2]["status"] == "accepted_workpaper"
+    assert result["methods"][2]["normalization_ids"] == ["income-2026"]
+    assert set(result["methods"][2]["input_ids"]) >= {
+        "reported-income",
+        "signed-addition",
+        "signed-deduction",
+    }
+    assert result["piv_conformity"] == "not_assessed"
+
+
+@pytest.mark.parametrize(
+    "field",
+    [
+        "reason",
+        "tax_treatment",
+        "reversibility",
+        "accounting_check",
+        "economic_rationale",
+    ],
+)
+def test_changed_adjustment_invalidates_only_dependent_reviews(field: str) -> None:
+    case = reviewed_normalized_case()
+    case["normalizations"][0]["adjustments"][0][field] = "Revised synthetic explanation"
+    result = build_valuation(case, FIXTURE)
+    assert result["normalizations"][0]["adjustments"][0]["stale_review"] is True
+    assert result["methods"][2]["stale_review"] is True
+    assert result["methods"][2]["status"] == "partial"
+    assert result["methods"][3]["status"] == "accepted_workpaper"
+
+
+@pytest.mark.parametrize(
+    ("ref", "value"),
+    [("income", "999"), ("signed-addition", None), ("reported-income", None)],
+)
+def test_unreconciled_normalization_blocks_dependent_methods_only(
+    ref: str, value: str | None
+) -> None:
+    case = normalized_case()
+    next(row for row in case["inputs"] if row["id"] == ref)["value"] = value
+    result = build_valuation(case, FIXTURE)
+    assert result["normalizations"][0]["status"] == "blocked"
+    assert result["methods"][2]["status"] == "blocked"
+    assert result["methods"][4]["status"] == "blocked"
+    assert result["methods"][3]["status"] == "ready_for_professional_review"
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("reason", ""),
+        ("tax_treatment", ""),
+        ("reversibility", ""),
+        ("source_ids", ["unknown"]),
+        ("amount_input", "income"),
+        ("amount_input", "unknown"),
+    ],
+)
+def test_incomplete_adjustment_contract_is_rejected(field: str, value) -> None:
+    case = normalized_case()
+    case["normalizations"][0]["adjustments"][0][field] = value
+    with pytest.raises(ValuationError):
+        build_valuation(case, FIXTURE)
+
+
+def test_duplicate_adjustment_amount_is_not_summed_twice() -> None:
+    case = normalized_case()
+    case["normalizations"][0]["adjustments"][1]["amount_input"] = "signed-addition"
+    with pytest.raises(ValuationError, match="counted twice"):
+        build_valuation(case, FIXTURE)
+
+
+def test_normalization_does_not_reuse_adjusted_output_as_reported_input() -> None:
+    case = normalized_case()
+    case["normalizations"][0]["reported_input"] = "income"
+    with pytest.raises(ValuationError, match="independent"):
+        build_valuation(case, FIXTURE)
+
+
+def test_normalization_calculation_and_workbook_preserve_full_formula_lineage(
+    tmp_path: Path,
+) -> None:
+    from openpyxl import load_workbook
+
+    result = build_valuation(normalized_case(), FIXTURE)
+    output = tmp_path / "normalized"
+    write_package(result, FIXTURE, output)
+    rows = {row["id"]: index for index, row in enumerate(result["calculations"], 2)}
+    workbook = load_workbook(output / "valuation_workbook.xlsx")
+    normalized = f"B{rows['normalization/income-2026/adjusted']}"
+    dependent = f"B{rows['income-method/input/income']}"
+    assert workbook["Calcoli"][dependent].value == f"=SUM({normalized})"
+    assert workbook["Rettifiche"]["E2"].value == f"='Calcoli'!{normalized}"
+    assert "Reversibilità:" in workbook["Rettifiche"]["F3"].value
+    assert (
+        "Rettificato calcolato: 100,00 EUR"
+        in (output / "valuation_report.md").read_text()
+    )
+    assert "Trattamento fiscale:" in (output / "valuation_report.md").read_text()
+
+
+def test_missing_normalization_amount_exports_a_visible_block_without_zero(
+    tmp_path: Path,
+) -> None:
+    from openpyxl import load_workbook
+
+    case = normalized_case()
+    next(row for row in case["inputs"] if row["id"] == "signed-addition")[
+        "value"
+    ] = None
+    result = build_valuation(case, FIXTURE)
+    output = tmp_path / "missing-adjustment"
+    write_package(result, FIXTURE, output)
+    workbook = load_workbook(output / "valuation_workbook.xlsx")
+    assert workbook["Rettifiche"]["E3"].value is None
+    assert (
+        "Rettifica one-off: non disponibile"
+        in (output / "valuation_report.md").read_text()
+    )
+    assert result["methods"][2]["status"] == "blocked"
+    assert result["methods"][3]["status"] == "ready_for_professional_review"
+
+
+def test_untrusted_adjustment_prose_remains_literal_in_exports(tmp_path: Path) -> None:
+    from openpyxl import load_workbook
+
+    case = normalized_case()
+    case["normalizations"][0]["adjustments"][0][
+        "reason"
+    ] = '=HYPERLINK("https://example.org")<script>x</script>'
+    result = build_valuation(case, FIXTURE)
+    path = tmp_path / "literal-journal.xlsx"
+    write_workbook(path, result)
+    assert load_workbook(path)["Rettifiche"]["F3"].data_type == "s"
+    assert "&lt;script&gt;x&lt;/script&gt;" in compile_html(result)
 
 
 def dated_case(**timing_changes) -> dict:

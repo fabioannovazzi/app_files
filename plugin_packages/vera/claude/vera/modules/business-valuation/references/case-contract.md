@@ -20,7 +20,8 @@ receipted input; an upstream plan must be a finalized same-engagement artifact.
 Required top-level fields: `schema_version=vera.business_valuation.case.v1`,
 `case_id`, `entity_name`, `currency` (one ISO-style three-letter code), `audience`,
 `synthetic` (boolean), `mandate`, `sources`, `inputs`, `methods`, `limitations`.
-Optional fields: `conclusion`, `plan_binding`, `sensitivity`, `purpose_profile`.
+Optional fields: `conclusion`, `plan_binding`, `sensitivity`, `purpose_profile`,
+`normalizations`.
 Unknown fields reject.
 All monetary/rate/multiple values are canonical decimal strings, with no thousands
 separator, exponent or implicit percent conversion. Rates are fractions. Missing
@@ -98,6 +99,39 @@ selected DCF's flows and bridge, labels each result conditional, and retains
 invalid rate/growth combinations as blocked rows without inventing values.
 
 ## Review and revisions
+
+Optional `normalizations` is an explicit adjustment journal. Each group has a
+stable `id`, integer `year`, professionally named `line`, `reported_input`,
+`adjusted_input` and nonempty `adjustments`. The input IDs refer to distinct
+declared amounts in the case currency. A year/line and adjusted output may appear
+only once. Chained adjusted outputs and overwriting replayed plan outputs are
+unsupported: revise the original workpaper or plan instead.
+
+Each adjustment has `id`, `amount_input` (signed change to that line), `reason`,
+`accounting_check`, `economic_rationale`, `tax_treatment`, `reversibility`,
+`source_ids`, `locator`, and optional `review`. All explanations are explicit
+nonempty text; the model and professional judge their substance. A positive or
+negative amount is not selected because of its effect on the valuation. Tax
+treatment is descriptive, never an inferred rate or tax formula. Any separate
+cash/deferred tax effect or impact on another line needs its own evidenced
+amount and reconciliation; do not add it twice or hide it in the signed amount.
+
+The helper replays `reported + sum(signed adjustments) = adjusted` at Decimal
+precision and retains the original amount, total, computed amount, independently
+declared adjusted amount and difference. An absent or mismatched amount blocks
+only dependent methods, while the journal and other methods remain visible.
+One amount input cannot be added twice to the same line. This arithmetic is not
+a complete statement balance, roll-forward, accounting treatment or semantic
+double-counting test across different lines.
+
+Each adjustment exposes its own dependency digest for the standard local review
+attestation below. It binds the year, line, input/source bytes and metadata,
+mandate, audience, tax/reversibility explanations and other declared choices.
+Arithmetic reconciliation alone does not approve an adjustment. Unreviewed or
+stale adjustments prevent dependent method acceptance; unrelated method reviews
+survive. The method formula register and workbook link back to the computed
+adjusted amount and transitive evidence. The `Rettifiche` worksheet and every
+report format retain the journal and its actual review state.
 
 The result supplies a `dependency_sha256` for each method. Review records contain
 `dependency_sha256`, `decision=accepted`, `reviewer`, `reviewed_at` with timezone.

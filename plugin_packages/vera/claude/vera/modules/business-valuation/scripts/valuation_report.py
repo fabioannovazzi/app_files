@@ -104,6 +104,55 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
             ],
         )
     )
+    inputs = {item["id"]: item for item in case["inputs"]}
+    for group in report["normalizations"]:
+        rows = [
+            f"Anno {group['year']} · {group['line']} · Stato: {STATUS[group['status']]}"
+        ]
+        for label, ref in (
+            ("Riportato", group["reported_input"]),
+            ("Rettificato dichiarato", group["adjusted_input"]),
+        ):
+            value = inputs[ref]["value"]
+            shown = (
+                "non disponibile"
+                if value is None
+                else f"{display(value)} {case['currency']}"
+            )
+            rows.append(f"{label}: {shown} [{ref}]")
+        if "value_id" in group:
+            rows.append(
+                f"Rettificato calcolato: {display(amounts[group['value_id']]['value'])} {case['currency']} [{group['value_id']}]. Differenza: {display(amounts[group['difference_id']]['value'])}."
+            )
+        if "reason" in group:
+            rows.append(group["reason"])
+        for adjustment in group["adjustments"]:
+            ref = adjustment["amount_input"]
+            value = inputs[ref]["value"]
+            shown = (
+                "non disponibile"
+                if value is None
+                else f"{display(value)} {case['currency']}"
+            )
+            rows.extend(
+                [
+                    f"Rettifica {adjustment['id']}: {shown} [{ref}] · {STATUS[adjustment['status']]} · {adjustment['reason']}",
+                    f"Quadratura contabile: {adjustment['accounting_check']}",
+                    f"Sostanza economica: {adjustment['economic_rationale']}",
+                    f"Trattamento fiscale: {adjustment['tax_treatment']}",
+                    f"Reversibilità: {adjustment['reversibility']}",
+                    f"Fonti: {', '.join(adjustment['source_ids'])} · {adjustment['locator']}",
+                    f"Revisore dichiarato: {(adjustment.get('review') or {}).get('reviewer', 'non ancora registrato')}",
+                ]
+            )
+            if adjustment["stale_review"]:
+                rows.append(
+                    "La precedente revisione della rettifica non vale per queste dipendenze."
+                )
+        rows.append(
+            "Il trattamento fiscale e la reversibilità sono scelte documentate da rivedere; il calcolo non li deduce. Eventuali effetti fiscali su altre voci richiedono rettifiche separate."
+        )
+        sections.append((f"Rettifiche · {group['line']}", rows))
     for method in report["methods"]:
         rows = [
             f"Stato: {STATUS[method['status']]}",
@@ -363,6 +412,65 @@ def write_workbook(path: Path, report: dict) -> None:
             ("id", "description", "path", "sha256", "status"), 1
         ):
             _literal(sources.cell(index, column), source[key])
+    if report["normalizations"]:
+        journal = workbook.create_sheet("Rettifiche")
+        journal.append(
+            [
+                "ID",
+                "Voce",
+                "Anno",
+                "Tipo",
+                "Importo",
+                "Motivo e trattamento",
+                "Stato",
+                "Fonti e posizione",
+                "Revisore",
+            ]
+        )
+        for group in report["normalizations"]:
+            journal.append(
+                [
+                    group["id"],
+                    group["line"],
+                    group["year"],
+                    "Rettificato calcolato",
+                    (
+                        f"='Calcoli'!B{row_ids[group['value_id']]}"
+                        if "value_id" in group
+                        else None
+                    ),
+                    f"Riportato: {group['reported_input']}; rettificato dichiarato: {group['adjusted_input']}. {group.get('reason', '')}",
+                    STATUS[group["status"]],
+                    ", ".join(group["source_ids"]),
+                    "",
+                ]
+            )
+            for entry in group["adjustments"]:
+                journal.append(
+                    [
+                        entry["id"],
+                        group["line"],
+                        group["year"],
+                        "Rettifica con segno",
+                        (
+                            f"='Dati'!C{input_rows[entry['amount_input']]}"
+                            if next(
+                                item
+                                for item in report["case"]["inputs"]
+                                if item["id"] == entry["amount_input"]
+                            )["value"]
+                            is not None
+                            else None
+                        ),
+                        f"{entry['reason']}\nQuadratura: {entry['accounting_check']}\nSostanza: {entry['economic_rationale']}\nImposte: {entry['tax_treatment']}\nReversibilità: {entry['reversibility']}",
+                        STATUS[entry["status"]],
+                        f"{', '.join(entry['source_ids'])} · {entry['locator']}",
+                        (entry.get("review") or {}).get("reviewer", "Non registrato"),
+                    ]
+                )
+        for row in journal.iter_rows(min_row=2):
+            for column in (0, 1, 3, 5, 6, 7, 8):
+                _literal(row[column], str(row[column].value or ""))
     _literal(summary["B1"], report["case"]["entity_name"])
     summary.merge_cells("B3:E3")
     summary.row_dimensions[3].height = 42
@@ -394,6 +502,10 @@ def write_workbook(path: Path, report: dict) -> None:
         sheet.page_setup.paperSize = sheet.PAPERSIZE_A4
         sheet.page_setup.fitToWidth = 1
         sheet.page_setup.fitToHeight = 0
+    if report["normalizations"]:
+        journal.column_dimensions["F"].width = 70
+        for cell in journal["C"][1:]:
+            cell.number_format = "0"
     workbook.save(path)
 
 

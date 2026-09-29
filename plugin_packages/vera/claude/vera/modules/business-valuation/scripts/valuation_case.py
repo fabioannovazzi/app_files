@@ -327,6 +327,26 @@ def _checked_timing(method: dict, mandate: dict, plan_bridge: dict | None) -> No
         )
 
 
+def _bind_normalizations(result: dict, groups: dict) -> list[dict]:
+    """Keep method formulas and transitive evidence linked to reconciled amounts."""
+    from valuation_normalization import normalization_dependencies
+
+    used = sorted({ref for row in result["calculations"] for ref in row["input_ids"]})
+    dependent = normalization_dependencies(used, groups)
+    for row in result["calculations"]:
+        affected = [
+            group for group in dependent if group["adjusted_input"] in row["input_ids"]
+        ]
+        if row["op"] == "input" and affected:
+            row["op"] = "sum"
+            row["arguments"] = [affected[0]["value_id"]]
+        row["input_ids"] = sorted(
+            set(row["input_ids"])
+            | {ref for group in affected for ref in group["input_ids"]}
+        )
+    return dependent
+
+
 def build_valuation(
     case: dict, source_root: Path, *, replay_parent: Path | None = None
 ) -> dict:
@@ -346,7 +366,13 @@ def build_valuation(
             "methods",
             "limitations",
         },
-        {"conclusion", "plan_binding", "sensitivity", "purpose_profile"},
+        {
+            "conclusion",
+            "plan_binding",
+            "sensitivity",
+            "purpose_profile",
+            "normalizations",
+        },
     )
     require(case["schema_version"] == CASE_SCHEMA, "Unsupported valuation case schema")
     for key in ("case_id", "entity_name", "audience"):
@@ -383,6 +409,9 @@ def build_valuation(
     sources = _sources(case, source_root)
     inputs = _inputs(case, sources)
     purpose = _purpose(case, sources)
+    from valuation_normalization import build_normalizations
+
+    normalizations, calculations = build_normalizations(case, inputs, sources)
     plan_bridge = None
     if "plan_binding" in case:
         require(
@@ -394,7 +423,12 @@ def build_valuation(
         plan_bridge = bridge_plan(case, source_root, replay_parent)
     methods = indexed(case["methods"])
     require(bool(methods), "Select or explicitly exclude valuation methods")
-    outputs, calculations, issues = [], [], []
+    outputs, issues = [], []
+    for group in normalizations.values():
+        if group["status"] != "accepted_workpaper":
+            issues.append(
+                f"Normalization {group['id']}: {group.get('reason', 'adjustment review pending')}"
+            )
     for method in methods.values():
         fields(
             method,
@@ -422,6 +456,7 @@ def build_valuation(
         try:
             _checked_timing(method, mandate, plan_bridge)
             result = calculate_method(method, inputs, case["currency"])
+            dependent_normalizations = _bind_normalizations(result, normalizations)
         except ValuationError as exc:
             outputs.append(
                 {
@@ -450,6 +485,7 @@ def build_valuation(
         source_ids = sorted(
             {ref for key in used for ref in inputs[key]["source_ids"]}
             | set((purpose["selection"] or {}).get("source_ids", []))
+            | {ref for group in dependent_normalizations for ref in group["source_ids"]}
         )
         if dependent_bridge:
             source_ids = sorted(
@@ -468,10 +504,16 @@ def build_valuation(
                 "inputs": [inputs[key] for key in used],
                 "sources": [sources[key] for key in source_ids],
                 "plan_bridge": dependent_bridge,
+                "normalizations": dependent_normalizations,
             }
         )
-        complete = all(inputs[key]["status"] == "confirmed" for key in used) and all(
-            sources[key]["status"] == "reviewed" for key in source_ids
+        complete = (
+            all(inputs[key]["status"] == "confirmed" for key in used)
+            and all(sources[key]["status"] == "reviewed" for key in source_ids)
+            and all(
+                group["status"] == "accepted_workpaper"
+                for group in dependent_normalizations
+            )
         )
         accepted = complete and reviewed(method.get("review"), dependency)
         result.update(
@@ -484,6 +526,9 @@ def build_valuation(
                 "dependency_sha256": dependency,
                 "input_ids": used,
                 "source_ids": source_ids,
+                "normalization_ids": [
+                    group["id"] for group in dependent_normalizations
+                ],
                 "rationale": method["rationale"],
                 "limitations": method["limitations"],
                 "review": method.get("review"),
@@ -499,6 +544,11 @@ def build_valuation(
                     source
                     for ref in row["input_ids"]
                     for source in inputs[ref]["source_ids"]
+                }
+                | {
+                    ref
+                    for group in dependent_normalizations
+                    for ref in group["source_ids"]
                 }
             )
             row["formula_version"] = "1"
@@ -576,6 +626,7 @@ def build_valuation(
                 method["inputs"]["discount_rate"] = scenario["discount_rate"]
             _checked_timing(method, mandate, plan_bridge)
             result = calculate_method(method, inputs, case["currency"])
+            dependent_normalizations = _bind_normalizations(result, normalizations)
         except ValuationError as exc:
             sensitivity.append(
                 {"id": scenario["id"], "status": "blocked", "reason": str(exc)}
@@ -587,6 +638,11 @@ def build_valuation(
                     source
                     for ref in row["input_ids"]
                     for source in inputs[ref]["source_ids"]
+                }
+                | {
+                    ref
+                    for group in dependent_normalizations
+                    for ref in group["source_ids"]
                 }
             )
             row["formula_version"] = "1"
@@ -606,6 +662,7 @@ def build_valuation(
         "conclusion": conclusion,
         "issues": issues,
         "purpose_coverage": purpose,
+        "normalizations": list(normalizations.values()),
         "piv_conformity": "not_assessed",
         "legal_purpose_qualification": "requires_separate_professional_review",
         "review_identity": "local_attestation_not_authenticated",

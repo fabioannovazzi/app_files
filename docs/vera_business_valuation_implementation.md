@@ -54,7 +54,7 @@ formula comparisons; report rendering; privacy coverage and package parity.
 
 Local evidence on 29 September 2026:
 
-- 103 valuation regressions pass; component coverage is 92.66%. These exercise
+- 124 valuation regressions pass; component coverage is 93.47%. These exercise
   all seven methods, failure preservation, review/conclusion freshness, exact
   receipts, full-year plan replay, all 21 explicit purpose intake routes and real
   native lesson input runs. Purpose routing tests do not enable professional use.
@@ -62,7 +62,12 @@ Local evidence on 29 September 2026:
   leap years, flat/spot/interval-forward curves, effective annual and continuous
   rates, horizon terminal discounting, invalid timing, review invalidation and
   rejection of monthly relabelling of annual plan flows.
-- Mypy passes for all six scripts; Bandit reports no findings. Formatting and
+- The structured adjustment journal preserves reported values, signed changes,
+  accounting/economic reasoning, tax/reversibility explanations and individual
+  review dependencies. Missing or inconsistent values block dependent methods;
+  unrelated method reviews survive. It does not classify accounting treatments
+  or establish a full statement balance or roll-forward.
+- Mypy passes for all seven scripts; Bandit reports no findings. Formatting and
   import-order checks pass.
 - LibreOffice independently recalculated all 75 cells of the seven-method
   calculation register and matched the engine within floating-point tolerance.
@@ -74,6 +79,10 @@ Local evidence on 29 September 2026:
   in the formula register. Both fresh annual teaching examples retain their
   expected results and pending professional review. The corresponding teaching
   record preserves earlier evidence hashes and binds the newly inspected files.
+- LibreOffice also recalculated all 82 cells in the normalization workbook,
+  preserving the independent 90 +20 -10 =100 reconciliation and linked method
+  formulas. All six pages of its DOCX were inspected. The complete 124-test run
+  includes absent adjustment values and untrusted-prose export checks.
 - All five current rendered DOCX pages were inspected after adding purpose
   availability. The HTML function page was
   inspected in the browser in Italian and English. Public copy exists in five

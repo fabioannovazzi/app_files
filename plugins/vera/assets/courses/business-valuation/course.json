@@ -30,7 +30,7 @@
     {
       "path": "modules/business-valuation/references/case-contract.md",
       "repository_path": "plugins/business-valuation/references/case-contract.md",
-      "sha256": "055dfbce8ae50137cd09a588ae768be8a6d4dd35a7d4c28b127117b7a919c984"
+      "sha256": "ac4c240339fa46e07fbdc1f820590a7d26973b53acc175efd282133a5d324cb4"
     },
     {
       "path": "modules/business-valuation/references/purpose-profiles.json",
@@ -55,12 +55,17 @@
     {
       "path": "modules/business-valuation/scripts/valuation_case.py",
       "repository_path": "plugins/business-valuation/scripts/valuation_case.py",
-      "sha256": "1d81383107891516f4d08cd629beefaa45f8073976854394a42f36c66696f2aa"
+      "sha256": "63d369a03d78e85adca5728582ae8cd22711e43d81cd6ff27b348dc5d8f0dfb0"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_engine.py",
       "repository_path": "plugins/business-valuation/scripts/valuation_engine.py",
       "sha256": "7103005495b2297d3c792b3b58ed9850862242d75ba6951b9dab6a16a205aa3f"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_normalization.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_normalization.py",
+      "sha256": "45a6259f7d88c9e92dc8d1891ca7d45047d9f96279a48eabccc10246b8e77984"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_plan.py",
@@ -70,12 +75,12 @@
     {
       "path": "modules/business-valuation/scripts/valuation_report.py",
       "repository_path": "plugins/business-valuation/scripts/valuation_report.py",
-      "sha256": "805694e820407147b8c30257302bd1e66121eed8fbe26502ab951371b3f23ad6"
+      "sha256": "b8963751665213d27020076e6448104c58642dbdb5bc3d72217fd50c46fb26e2"
     },
     {
       "path": "modules/business-valuation/skills/business-valuation/SKILL.md",
       "repository_path": "plugins/business-valuation/skills/business-valuation/SKILL.md",
-      "sha256": "08f2e5d4f4d200e282cf578ba7323a65af2978e59b05293447d3cb94c2cb4041"
+      "sha256": "cb8c7522c273105154038d9c06dd39326a36348ec746b4858651f142910fa60f"
     },
     {
       "path": "modules/business-valuation/vendor/modules/__init__.py",

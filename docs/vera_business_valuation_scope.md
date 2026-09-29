@@ -26,7 +26,7 @@ professionally enabled. Specialist extensions remain part of the proposed scope.
 | P0-06 Public sources | Host-led official research instructions; imported bytes/hash and explicit observation/publication/retrieval/vintage metadata; cutoff and age checks | Versioned parsers and tested observed-link acquisition, availability failures, redirects/host validation and historical revised-release cases |
 | P0-07 Guided experience | Native skill builds technical inputs, opens report and asks focused professional questions; user does not author JSON | Witnessed accountant completion of an end-to-end case; synthetic teacher execution does not establish this |
 | P0-08 Outputs | One replayed register produces HTML/MD/DOCX/PDF/XLSX/JSON/CSV; independent LibreOffice formula comparison and visual QA | Structured narrative-claim bindings and broad layout cases; recheck layout whenever report content changes |
-| P0-09 Review | Input/source/method/mandate/audience/plan dependency hashes; independent conclusion review; affected reviews expire and unrelated branches survive | Additional purpose/normalization and benchmark-revision acceptance cases; local attestations do not authenticate humans |
+| P0-09 Review | Input/source/method/mandate/audience/plan dependency hashes; per-adjustment review and transitive method bindings; independent conclusion review; affected reviews expire and unrelated branches survive | Additional purpose, full statement and benchmark-revision acceptance cases; local attestations do not authenticate humans |
 | P0-10 Privacy/release | Vera privacy record, routes, Italian teaching material, component and three host package projections; dedicated CI job | Dependency-checker and page-breadcrumb corrections await owner approval; all CI gates, professional release prerequisites and authoritative existing-listing publication remain pending |
 | P1-01 Specialist methods | Intake scope and unsupported-method diagnostics are explicit | Holding/SOTP, crisis, PPA, rights/waterfalls and damages models with fixtures and specialist review |
 | P1-02 Historical regressions | Publication/observation ordering, cutoff and explicit age policy | Historical revised datasets and preserved release vintages demonstrated end to end |
@@ -39,11 +39,14 @@ commissioning party, expert activity, market-participant perspective, conflicts,
 competencies, share-class instruments and restrictions. Supporting documents and
 the skill preserve these issues for review; that is not structured completion.
 
-Normalizations currently live in supporting source workpapers and separate
-reported/adjusted inputs. The full structured adjustment journal (year, line,
-signed amount, reason, tax, reversibility and reviewer), statement reconciliation
-and balance roll-forward remain to implement. No automatic annualization or
-semantic accounting classifier is provided.
+The structured normalization journal now records year, line, signed amount,
+reason, source, accounting/economic explanations, tax treatment, reversibility
+and local reviewer attestations. Each line reconciles reported and adjusted
+inputs and feeds transitive formulas/review dependencies into affected methods.
+Missing or inconsistent amounts block those methods. Full statement balance and
+roll-forward reconciliation, linked multi-line tax effects and semantic duplicate
+treatment across flows/equity remain to implement and review. No automatic
+annualization or semantic accounting classifier is provided.
 
 Rate/growth sensitivities are implemented for annual and flat dated DCF. A
 single-rate sensitivity cannot flatten a curve; use a separate revision. Margin, reinvestment and scenario
@@ -72,6 +75,13 @@ cells agree with the Decimal ledger within 1e-12 relative/1e-9 absolute toleranc
 The current dated report's five pages were inspected. This establishes arithmetic
 and explicit convention handling; it does not establish forecast seasonality,
 economic suitability, curve estimation or an official PIV methodology.
+
+Normalization acceptance includes positive and negative adjustments, missing
+amounts, mismatched totals, changed tax/accounting/economic/reversibility review
+explanations, unrelated review preservation, duplicate amount prevention and
+literal/escaped exports. All 82 cells in the separate normalization workbook were
+recalculated by LibreOffice with the same tolerance; all six DOCX pages were
+visually inspected. These are synthetic mechanical cases, not field acceptance.
 
 ## Purpose coverage and release evidence
 
