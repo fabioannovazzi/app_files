@@ -81,9 +81,7 @@
     "website-articles",
     "presenza-digitale-studio",
     "website-refresh",
-    "first-website",
-    "fusione",
-    "merger-case"
+    "first-website"
   ],
   "skills": "./skills/",
   "apps": "./.app.json",

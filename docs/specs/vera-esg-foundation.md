@@ -137,3 +137,15 @@ fixture through `--confcutdir`; these are not evidence of an ESG runtime failure
 The version guard compares uncommitted work with HEAD, so the pending merge
 reports the already reserved unpublished Vera candidate as unchanged. Its final
 result and the required package suite are checked again on the committed source.
+
+### Subsequent main integration
+
+Main then advanced to `cf648f7c3` with the synthetic transformation prototype.
+The ESG branch preserves that release as well as the merger foundation, combines
+all three registrations and retains their separate scope boundaries. The full
+Geneva catalogue now has 42 entries; all three additions remain unresolved for
+professional Geneva use. The existing merger source citation is preserved.
+The combined ESG, merger, transformation, filesystem, website and routing suite
+passes all 505 tests. Candidate versions remain reserved and unpublished by this
+task. Packages are rebuilt from this combined source; CI qualifies each commit
+separately. No ESG runtime behavior changed during either merge.

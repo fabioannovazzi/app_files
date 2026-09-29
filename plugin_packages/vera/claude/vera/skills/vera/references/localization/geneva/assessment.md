@@ -91,3 +91,6 @@ Vera 0.1.282 adds the ESG evidence foundation to the catalogue. The earlier
 35-function assessment is preserved; the new function is recorded as unresolved.
 Its synthetic evidence/version tests do not establish Swiss reporting support.
 The combined catalogue now contains 37 function entries and four internal helpers, including the separate unresolved merger foundation from main.
+
+The subsequent combined catalogue also includes the synthetic-only transformation
+prototype, separately unresolved for Geneva. There are 42 skill entries in total.

@@ -418,6 +418,8 @@ def test_client_workflow_registry_covers_every_vera_component() -> None:
     assert set(VERA_CLIENT_WORKFLOW_IDS) == set(components["plugins"]) - {
         # The merger foundation explicitly has no live multi-company Archive adapter.
         "fusione-guidata",
+        # The transformation route is synthetic-only and has no Archive adapter.
+        "trasformazione",
         "browser-automation",
         "comunicazione-professionale",
         "presenza-digitale-studio",
