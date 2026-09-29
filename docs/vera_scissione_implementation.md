@@ -102,14 +102,18 @@ registry is regenerated from canonical source, and the shared boundary was
 reviewed before refreshing the fingerprint and rebuilding affected packages.
 The complete website/lifecycle suites passed **344 tests**, and the runtime/Lucia
 suites passed **184 tests**. These overlapping suite counts are not added together.
+The Geneva catalogue is rebound to the current source and includes scissione as
+`Unresolved`, explicitly outside the initial IT/OIC/EUR runtime. Existing Geneva
+assessments are preserved. All **28 catalogue/Geneva tests passed**; this records
+product scope and does not establish Swiss legal or professional acceptance.
 
 Vera package SHA-256:
 
 | Distribution | SHA-256 |
 |---|---|
-| Codex | `3228d4f88ed1330d5b4713bb65ab02a4efe0467af28f83a378560a765e749966` |
-| ChatGPT upload | `a3f5792f2f3fd0b3c6df3a5d9c59fa7ba9564bdd243684c257a7341ba2ea6087` |
-| Cowork | `2a115d895fa6f035e78392e8cba1d1e5d616ef55b26b9d9d902d4d913a246d05` |
+| Codex | `823b679fe533ff29576fe41c1bcd81924627ccbc7bb138076196fc721ed44850` |
+| ChatGPT upload | `bc450d05335b2028b28e6b64c840ed9260f3011ccc097e52af49298caab55034` |
+| Cowork | `b0749b153736a176afa2f31d74d5e5ec7f84effdb3a1b4df9a00f65eaf855c48` |
 
 These are build candidates. No installed-session acceptance, Marketplace
 publication, public deployment, signature, filing or Discord reply was performed.

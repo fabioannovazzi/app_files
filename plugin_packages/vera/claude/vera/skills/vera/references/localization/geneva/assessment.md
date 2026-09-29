@@ -10,9 +10,9 @@ Later host-specific instructions in this reference cannot override this rule.
 
 # Vera — Geneva localization assessment and implementation
 
-Updated 2026-09-28. Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
+Updated 2026-09-29. Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
 
-This applies the common-core localization method to the complete existing catalogue: 35 professional functions and four internal helpers. The disposition records the assessment; implementation status is separate. No services absent from Vera have been added.
+This applies the common-core localization method to the complete existing catalogue: 36 professional functions and four internal helpers. The disposition records the assessment; implementation status is separate. No services absent from Vera have been added.
 
 The release adds bounded adapters and instructions, not a blanket claim that every fiduciary mandate is supported. Original evidence and professional decisions remain necessary. No real Geneva client workflow has been accepted.
 
@@ -52,6 +52,7 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 | quesito-legale-fiscale | Use | Existing function retained with the recorded qualification limits. |
 | registro-imprese-sari | Adapt | Explicit CH-GE intake/plan, official Swiss source hosts, local authority/position handling and French labels; no portal filing. |
 | sales-plan | Use | Existing function retained with the recorded qualification limits. |
+| scissione-guidata | Unresolved | Initial runtime supports only IT/OIC/EUR partial proportional scission into a new beneficiary. Swiss professional applicability and adaptation have not been established; CH-GE does not execute the Italian route. |
 | studio-archive | Adapt | Swiss IDE normalization and explicit OCR language through CLI/MCP; language changes trigger reindexing. |
 | treasury-forecast | Adapt | CHF forecast/update arithmetic with currency-safe records and currency-correct HTML, Markdown, XLSX and live review. Fixed interface prose remains Italian. |
 | variance-analysis | Use | Existing function retained with the recorded qualification limits. |
@@ -61,6 +62,8 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 ## Scope that remains unresolved
 
 Centrale Rischi source equivalence, the restructuring mandate/procedure, the actual DATEV application and a Swiss structured-invoice output requirement remain unresolved. The Italian FatturaPA-only checker stays outside the domestic example, while remaining available for actual Italian files. No replacement services were invented.
+
+The 2026-09-29 catalogue refresh adds `scissione-guidata` at Vera 0.1.281 and preserves the earlier assessments. Its versioned evidence and arithmetic implementation does not establish a Swiss mandate, accounting treatment or procedure. A future adaptation needs source-backed Swiss requirements and its own reviewed acceptance case. The French explanation page is not Swiss qualification.
 
 ## Acceptance record
 

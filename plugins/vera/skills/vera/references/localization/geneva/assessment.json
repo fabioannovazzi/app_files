@@ -1,6 +1,6 @@
 {
   "schema": "vera.localization.assessment.v1",
-  "catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
+  "catalogue_fingerprint": "5d48aaa1376eb17fc5bf66dcff63a9072f822f651aa45aad2fa6e4b71bbc4c8c",
   "assessment_date": "2026-09-28",
   "target": {
     "id": "CH-GE",
@@ -695,6 +695,27 @@
       "implementation_status": "existing_or_unresolved_as_assessed"
     },
     {
+      "function_id": "scissione-guidata",
+      "name": "Scissione guidata",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Maintain versioned operation evidence, allocations, values, decisions and reviewable ownership schedules for a corporate demerger.",
+      "geneva_application": "Not established. The current executable route is Italian OIC partial proportional scission into a new beneficiary, in EUR; CH-GE requests are outside that route.",
+      "required_change": "First establish a source-backed Swiss mandate, procedure and required deliverables. Assess jurisdiction, accounting, currency and document differences within this function before claiming an adaptation. French interface text does not establish Swiss support.",
+      "adaptation_layers": [
+        "unresolved Swiss professional and procedural mapping",
+        "accounting and currency qualification",
+        "output and review requirements"
+      ],
+      "acceptance_example": "A CH-GE scope must not execute the Italian OIC route. Any future adaptation requires its own reviewed Swiss case contract and acceptance evidence.",
+      "sources": [
+        "scissione_implementation"
+      ],
+      "verification": "Source scope and synthetic unsupported-route tests inspected; no current Swiss legal-source assessment or Geneva professional acceptance performed.",
+      "implementation": "Italian OIC route retained. CH-GE is explicitly unsupported by the initial runtime.",
+      "implementation_status": "unsupported_for_target_pending_assessment"
+    },
+    {
       "function_id": "studio-archive",
       "name": "Studio Archive",
       "role": "function",
@@ -860,6 +881,16 @@
       "url": "https://www.ge.ch/document/directive-sursis-concordataire-ajournement-faillite",
       "basis": "Historical directive: supports existence of local restructuring work only. Not relied on as a complete current procedural rulebook.",
       "consulted": "2026-09-27"
+    },
+    "scissione_implementation": {
+      "title": "Scissione guidata initial source implementation",
+      "paths": [
+        "plugins/scissione-guidata/skills/scissione-guidata/SKILL.md",
+        "plugins/scissione-guidata/scripts/scissione_core.py",
+        "tests/plugins/test_scissione_guidata.py"
+      ],
+      "basis": "Inspected scope and unsupported-route tests establish IT/OIC/EUR boundaries; no Swiss professional applicability or equivalence is inferred.",
+      "consulted": "2026-09-29"
     }
   },
   "course_qa_release_binding": {
@@ -885,5 +916,18 @@
   "course_entry_release_binding": {
     "version": "0.1.277",
     "change": "Remove redundant catalogue jump link and refresh release identity; skill entrypoints and Geneva dispositions unchanged."
+  },
+  "scissione_release_binding": {
+    "reviewed_at": "2026-09-29",
+    "previous_version": "0.1.277",
+    "source_version": "0.1.281",
+    "previous_catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
+    "added_skills": [
+      "scissione-guidata"
+    ],
+    "changed_skills": [
+      "vera"
+    ],
+    "review": "Adds the Italian OIC partial proportional/new-beneficiary workflow and its router entry. Its runtime supports IT/OIC/EUR only; CH-GE applicability and adaptation have not been established. Existing Geneva dispositions and their dated evidence are preserved. This refresh records catalogue identity and the new unresolved entry, not a new Swiss professional acceptance."
   }
 }

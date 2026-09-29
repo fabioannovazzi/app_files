@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "plugins/vera",
-  "version": "0.1.277",
-  "captured_at": "2026-09-29T07:37:00.039849+00:00",
-  "catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
-  "manifest_sha256": "7bc0cca29c5fb77386d0d37c89cc940b0bcab8ee9946a60ec08659a84ac9282c",
+  "version": "0.1.281",
+  "captured_at": "2026-09-29T18:39:55.095815+00:00",
+  "catalogue_fingerprint": "5d48aaa1376eb17fc5bf66dcff63a9072f822f651aa45aad2fa6e4b71bbc4c8c",
+  "manifest_sha256": "1d5678e8dc33733a64825461354df469fdcf995de8249243edadde07c5250cb7",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -177,6 +177,11 @@
       "sha256": "4ccc0c104086d1f90aae18a6ebb5ce1e3b9ca1b22e753b09b24b2dbe5d4a53d5"
     },
     {
+      "function_id": "scissione-guidata",
+      "skill_path": "skills/scissione-guidata/SKILL.md",
+      "sha256": "fd61a00253e1596ce7c570a217d66e122a4195c7adddda17f8888e3b79aaf8c8"
+    },
+    {
       "function_id": "studio-archive",
       "skill_path": "skills/studio-archive/SKILL.md",
       "sha256": "b2f8ad59567a7e390f0fb4afbfdb339f0f8d11b3576ff37497de55cc4172d7f3"
@@ -194,7 +199,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "62b95932ee7e4e0fd149f2ba0c1e2c2b67f9cf39116343801049fe7b5d7e4e9b"
+      "sha256": "589856491683f55df166f07dbc37bce0c6bc55e3a35ddfbddbf2056d43df7795"
     },
     {
       "function_id": "vouching",
