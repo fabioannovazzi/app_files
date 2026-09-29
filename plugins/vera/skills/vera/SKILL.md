@@ -278,6 +278,15 @@ conclusion is supportable, keep the internal assessment as `none_supported` or
 report builder validates counts, shapes, hashes, and status consistency; model
 and professional judgment decide semantic necessity.
 
+## Synthetic transformation prototype
+
+`trasformazione` is a synthetic development prototype, not a client workflow.
+For an explicitly requested prototype/demo, follow its skill and local synthetic
+folder contract. Do not prepare a Studio Archive client run for it. Its simulated
+reviews are not professional approvals and its exports do not perform actions.
+Use Studio Archive's generic local report helper without preparing an archive
+run; it sets server attestation to false. No external stamping for this prototype.
+
 ## Client-first workflow in Codex
 
 Every local client-bound Vera workflow run begins in Studio Archive, and the selected

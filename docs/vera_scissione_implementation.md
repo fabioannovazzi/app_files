@@ -94,50 +94,38 @@ with **2 skips because curated Marketplace installations are absent**. All Codex
 source parity and version alignment;
 Vera's 18 and Lucia's 4 packaged MCP servers initialize and list tools.
 
-The dedicated scissione CI job passed on the first candidate. Broader CI found
-two stale test inventories, the missing generated workflow-registry entry, and
-Lucia's stale privacy fingerprint for the shared archive workflow enumeration.
-The inventories now include this workflow and its two CLI entrypoints; the
-registry is regenerated from canonical source, and the shared boundary was
-reviewed before refreshing the fingerprint and rebuilding affected packages.
-The complete website/lifecycle suites passed **344 tests**, and the runtime/Lucia
-suites passed **184 tests**. These overlapping suite counts are not added together.
-The Geneva catalogue is rebound to the current source and includes scissione as
-`Unresolved`, explicitly outside the initial IT/OIC/EUR runtime. Existing Geneva
-assessments are preserved. All **28 catalogue/Geneva tests passed**; this records
-product scope and does not establish Swiss legal or professional acceptance.
+The branch incorporates main `d728392e7`, preserving the independently merged
+fusione P0 foundation and the synthetic-only trasformazione prototype. Both
+upstream implementations and their tests are unchanged; the scissione engine is
+also unchanged by the integration. The combined Geneva inventory contains all
+42 skill identities and preserves their authored roles and dispositions. No Swiss
+professional applicability is inferred from translation or structural tests.
 
-The shared workflow-ID addition also changed source pins in 34 previously reviewed
-teaching kits (32 Vera, one Clara, one Lucia). Every non-source course field and
-input definition is identical to the previously accepted base. The sole pinned
-source delta adds `scissione-guidata` to the archive workflow tuple. A bounded
-root-authored freshness review records that comparison and the successful CI
-native teaching step (1,165 passed, three skipped). Original reviewers, dates,
-editorial judgments and inspected artifact hashes remain intact. This is not a
-new independent teaching or professional acceptance. The 36 release-review gate
-regressions and 58 remaining compiler/quality commands passed locally; the full
-fresh-JUnit identity gate remains subject to CI. The five later teaching steps
-(source-PDF check, Concordato, Registry, website integrity and matter-opening)
-also passed locally; their four test groups passed 136, 61, 71 and 13 tests, with
-coverage from 80.65% to 89.75%.
+The combined scissione, fusione, trasformazione, website, router, Geneva and icon
+suite passed **372 tests**. The Cowork instruction check and 36 teaching-review
+regressions passed **37 tests**. All three products' host packages pass source
+parity; Vera's 18 and Lucia's 4 packaged MCP servers initialize and list tools.
 
-All **33 CI checks passed** on commit `194ea571f`. The branch then integrated
-main `bbc94c37a`, which adds the independently developed fusione P0 foundation.
-Both functions, their distinct catalogue sections and their unresolved Geneva
-assessments are preserved; the combined catalogue has 41 skill entries. The
-scissione engine is unchanged. The combined integration suite passed 325 tests;
-its one Node-dependent skip was subsequently executed successfully with the
-bundled Node runtime. All 36 teaching-review gate regressions also passed.
-The merged revision requires a fresh CI run; the earlier green rollup does not
-certify the merged source. Vera packages were rebuilt from that combined source.
+The shared scissione workflow-ID addition changed source pins in 34 previously
+reviewed teaching kits (32 Vera, one Clara, one Lucia). Every non-source course
+field and input definition matches the accepted base. The pinned source delta
+adds `scissione-guidata` to the archive workflow tuple. The bounded freshness
+review records that comparison; original reviewers, dates, judgments and artifact
+hashes remain intact. It does not claim a new independent professional or
+teaching review. The complete fresh-JUnit gate passed in the earlier CI runs.
+
+All 33 CI checks passed on `194ea571f`, and all 36 passed on `1dcf0da45` after
+integrating fusione. Main then advanced with trasformazione. The latest combined
+revision requires fresh CI; an earlier green rollup does not certify new source.
+The local completion audit and PR record the final candidate's checks separately.
 
 Vera package SHA-256:
 
 | Distribution | SHA-256 |
 |---|---|
-| Codex | `39b66789c0e9c28de22e3aa1cc928409dc07c5234075c75d17cc6ae116e20169` |
-| ChatGPT upload | `aa8016b6674861c44dc6677e192302c49d82a6f7bf673784470e8bba7f05c4cd` |
-| Cowork | `a68cdf69f992e2fea354bf14d042f2229ad81295c3014b7e0181be8ec786bcf8` |
+| Codex | `fa0481b8a276eaf42857ae6634dc04eef3c832435c1c8d3437d486a1d22254ed` |
+| ChatGPT upload | `aa0f9a666ee7cc59e83c032a13e819a9fb7818e5838bd3e534a87db996d2f436` |
+| Cowork | `e8d79c972f913dc1f7a12277ceaa21b49b5af1ec2e3f0b118f70679fbb33795e` |
 
 These are build candidates. No installed-session acceptance, Marketplace
 publication, public deployment, signature, filing or Discord reply was performed.

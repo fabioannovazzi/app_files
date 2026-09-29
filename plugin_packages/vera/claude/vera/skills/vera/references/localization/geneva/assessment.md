@@ -12,7 +12,7 @@ Later host-specific instructions in this reference cannot override this rule.
 
 Updated 2026-09-29 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
 
-This applies the common-core localization method to the complete existing catalogue: 36 professional functions, four internal helpers and one P0 case foundation. The disposition records the assessment; implementation status is separate. No services absent from Vera have been added.
+This applies the common-core localization method to the complete existing catalogue: 36 professional functions, four internal helpers, one P0 case foundation and one synthetic prototype. The disposition records the assessment; implementation status is separate. No services absent from Vera have been added.
 
 The release adds bounded adapters and instructions, not a blanket claim that every fiduciary mandate is supported. Original evidence and professional decisions remain necessary. No real Geneva client workflow has been accepted.
 
@@ -67,6 +67,8 @@ Centrale Rischi source equivalence, the restructuring mandate/procedure, the act
 The 2026-09-29 catalogue refresh adds `scissione-guidata` at Vera 0.1.281 and preserves the earlier assessments. Its versioned evidence and arithmetic implementation does not establish a Swiss mandate, accounting treatment or procedure. A future adaptation needs source-backed Swiss requirements and its own reviewed acceptance case. The French explanation page is not Swiss qualification.
 
 The 0.1.279 catalogue refresh adds `fusione-guidata` and updates its router entry. It preserves the existing professional assessments. The new foundation is unresolved for Geneva; its synthetic structural checks do not establish Swiss merger capability.
+
+The separately merged `trasformazione` route is retained as a synthetic-only prototype, unresolved for Geneva. It does not accept real mandates or establish a Swiss transformation workflow. The combined Vera 0.1.281 inventory contains 42 skill identities.
 
 ## Acceptance record
 

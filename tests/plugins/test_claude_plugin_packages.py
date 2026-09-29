@@ -835,6 +835,14 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
                 "## Cowork execution contract"
                 in cowork_instruction_docs["skills/learn-with-vera/SKILL.md"]
             )
+            # This authored cross-host introduction carries its own Cowork boundary.
+            normalized = " ".join(content.split())
+            assert (
+                "In Cowork follow the written single-conversation contract"
+                in normalized
+            )
+            assert "Never run desktop profile/session commands there" in normalized
+            assert "uses only its connected lesson folder" in normalized
             continue
         assert "Cowork execution note" in content, name
         assert "Their absence never" in content, name
