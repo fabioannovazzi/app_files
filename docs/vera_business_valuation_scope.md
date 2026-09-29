@@ -23,7 +23,7 @@ professionally enabled. Specialist extensions remain part of the proposed scope.
 | P0-03 Studio Archive | Exact case and nested-source receipts, same-engagement upstream plan, immutable revisions and idempotent replay; native fixture coverage | Installed host/user acceptance; retain explicit cross-client coverage in shared archive tests |
 | P0-04 Business plan v3 | Actual compiler replays the original plan; selected contiguous whole months or complete calendar years reconcile taxes, working capital and capex; monthly amounts bind exact dated FCFF flows | Separately qualified intramonth evidence and additional professionally reviewed real-case evidence |
 | P0-05 Engine | Seven Decimal methods; annual and explicitly dated DCF with stub/monthly/mid-period timing, ACT/365F and ACT/ACT_ISDA, flat/spot/interval-forward rates, effective annual/continuous compounding; formula ledger and EV/equity separation | Mixed-income dated/capital-varying variants, further income/sector models, alternative terminal conventions and curve-specific scenario comparison |
-| P0-06 Public sources | Versioned NYU country-risk HTML acquisition from observed links, immutable original bytes and parser replay; explicit failures/missing dates; tested HTTPS/host/DNS/redirect, MIME/size and revised-release boundaries | ECB, regional/historical workbooks and other source-specific adapters; semantic source qualification and independent historical-availability evidence |
+| P0-06 Public sources | Versioned NYU country-risk HTML and explicitly selected ECB AAA spot CSV acquisition from observed links; immutable originals, exact percent conversion and missing-date diagnostics; parser replay for eligible imported records | ECB publication/vintage evidence and eligible binding, regional/historical workbooks and other adapters; semantic source qualification and independent historical availability |
 | P0-07 Guided experience | Native skill builds technical inputs, opens report and asks focused professional questions; user does not author JSON | Witnessed accountant completion of an end-to-end case; synthetic teacher execution does not establish this |
 | P0-08 Outputs | One replayed register produces HTML/MD/DOCX/PDF/XLSX/JSON/CSV and the named JSON workpapers; explicit claim bindings, numeric equality and review invalidation; independent LibreOffice formula comparison and visual QA | Semantic support review across actual cases and broad layout cases; recheck layout whenever report content changes |
 | P0-09 Review | Input/source/method/mandate/audience/plan dependency hashes; per-adjustment review and transitive method bindings; independent conclusion review; affected reviews expire and unrelated branches survive | Additional purpose, full statement and benchmark-revision acceptance cases; local attestations do not authenticate humans |
@@ -79,7 +79,8 @@ values, consolidated minorities, unsuitable peers, missing public sources and
 download threats. Existing tests establish bounded local input/hash/audience,
 formula-injection and HTML-escaping behavior; they do not establish every one of
 those wider scenarios. The new acquisition helper has explicit download-threat
-tests and accepts only bounded HTML from its supported NYU hosts. It rejects
+tests and accepts bounded HTML from its supported NYU hosts, and HTML/CSV from
+the separately scoped ECB hosts. It rejects
 archive/office content without extracting archives or executing macros.
 
 The dated-DCF extension has independent numerical cases for stub/monthly flows,
@@ -149,8 +150,28 @@ selected row, but remained `metadata_or_value_missing`: the table's displayed
 release date does not establish its exact observation date. No date or current
 parameter adoption was invented. That live evidence proves acquisition and
 parsing, not full historical availability, professional suitability or coverage
-of other providers. The full acceptance run now has 292 passing valuation and
-shared-transport tests at 94.12% component coverage.
+of other providers.
+
+The `ecb-aaa-spot-csv/v1` adapter now preserves the exact selected AAA spot
+series/date, original row and continuous-compounding definition from the official
+40-column CSV. It converts percent to a ratio without changing compounding or
+selecting a maturity. Publication and vintage remain null; HTTP Last-Modified,
+retrieval time and the release schedule cannot fill those fields. The live
+29 September run captured the official landing page, linked terms and 1,287,450-byte
+CSV and parsed the selected 28 September observation. It correctly remains
+`metadata_or_value_missing` and is ineligible for automatic case binding.
+A first request used a web-rendered URL spelling that differed from the literal
+href; that explicit failure is retained. The second used the exact link inspected
+in captured HTML. No endpoint or historical date was guessed.
+
+Forty-four additional ECB regressions cover missing/invented publication evidence,
+continuous versus other rate definitions, signed/missing values, exact selection,
+changed units/status/CSV shape, duplicate observations, revisions, URL/MIME
+boundaries and the refusal to replay an invented vintage. The combined valuation
+and shared-transport suite has 336 passing tests at 94.31% component coverage.
+All 14 component scripts pass Mypy, Black, isort and Bandit. These checks establish
+bounded parsing and evidence handling, not economic suitability or historical
+availability.
 
 Mandate acceptance covers missing fields, invalid dates, source/ownership
 references, rights without a percentage, missing/out-of-range proportions,

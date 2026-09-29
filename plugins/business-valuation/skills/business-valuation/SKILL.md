@@ -110,13 +110,18 @@ private financials or names in queries. Save permitted evidence with observation
 publication/retrieval dates, vintage, definition, geography, selection reason and
 the professionally chosen maximum age. The calculation helper checks dates and
 metadata without network requests; it does not authenticate publishers, assess
-relevance or choose a rate. For the NYU country-risk HTML table, read
+relevance or choose a rate. For the NYU country-risk HTML table or ECB AAA spot CSV, read
 `references/benchmark-acquisition.md` and use the separate acquisition helper
 from links observed on the current official page. Review reuse terms before
 retaining bytes. Import its record and original table as exact evidence receipts,
 bind the selected observation and review its value. Preserve unavailable or
 incomplete observations explicitly; do not invent an observation date from a
-release date. Other publishers and formats require their own reviewed import.
+release date. ECB CSV rates remain continuously compounded after percent-to-ratio
+conversion. Select an exact series/date; do not substitute forward/par rates or
+interpret a continuous rate as effective annual. This adapter preserves the
+observation but lacks publication/vintage evidence, so automatic binding stays
+ineligible. HTTP timestamps and release schedules do not fill that gap.
+Other publishers and formats require their own reviewed import.
 New vintages create new inputs and revisions; frozen reports remain unchanged.
 
 ## Business plan reuse
@@ -184,7 +189,7 @@ Workbook formulas recalculate when opened; exact Decimal values remain alongside
 them as audit evidence. External sharing, signing, filing and sending are separate
 actions requiring explicit authority. Calculation and report compilation call no
 remote service. The separately selected benchmark-acquisition helper makes public
-HTTPS reads to its supported NYU hosts, without sending the private case.
+HTTPS reads to its supported NYU or ECB hosts, without sending the private case.
 
 Follow Vera's run-level model-data report contract and show the report in the final
 response. Include source-reading, assumption/modeling and report-review phases,

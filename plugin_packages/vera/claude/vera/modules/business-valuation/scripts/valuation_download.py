@@ -28,19 +28,28 @@ for candidate in (
 
 from public_http import open_public_url  # noqa: E402
 
-__all__ = ["download_html", "resolve_public_target", "validate_url", "MAX_BYTES"]
+__all__ = [
+    "download_html",
+    "download_csv",
+    "resolve_public_target",
+    "validate_url",
+    "MAX_BYTES",
+    "HOSTS",
+    "ECB_HOSTS",
+]
 MAX_BYTES = 2 * 1024 * 1024
 HOSTS = frozenset({"pages.stern.nyu.edu", "people.stern.nyu.edu", "www.stern.nyu.edu"})
+ECB_HOSTS = frozenset({"www.ecb.europa.eu", "data-api.ecb.europa.eu"})
 
 
-def validate_url(url: str) -> str:
-    """Require an explicit HTTPS NYU URL; never infer an alternate download URL."""
+def validate_url(url: str, *, hosts: frozenset[str] = HOSTS) -> str:
+    """Require an explicit supported HTTPS URL; never infer a download URL."""
     if not isinstance(url, str) or len(url) > 4096 or any(ord(c) <= 32 for c in url):
         raise ValuationError("Invalid public acquisition URL")
     parsed = urlsplit(url)
     if (
         parsed.scheme != "https"
-        or parsed.hostname not in HOSTS
+        or parsed.hostname not in hosts
         or parsed.port not in {None, 443}
         or parsed.username is not None
         or parsed.password is not None
@@ -53,9 +62,11 @@ def validate_url(url: str) -> str:
     return parsed.hostname
 
 
-def resolve_public_target(url: str) -> tuple[str, int, tuple[str, ...]]:
+def resolve_public_target(
+    url: str, *, hosts: frozenset[str] = HOSTS
+) -> tuple[str, int, tuple[str, ...]]:
     """Vet every DNS answer; the shared transport connects to these exact IPs."""
-    host = validate_url(url)
+    host = validate_url(url, hosts=hosts)
     addresses = tuple(
         dict.fromkeys(
             row[4][0] for row in socket.getaddrinfo(host, 443, type=socket.SOCK_STREAM)
@@ -66,13 +77,24 @@ def resolve_public_target(url: str) -> tuple[str, int, tuple[str, ...]]:
     return host, 443, addresses
 
 
-def download_html(url: str) -> tuple[bytes, dict]:
+def download_html(url: str, *, hosts: frozenset[str] = HOSTS) -> tuple[bytes, dict]:
     """Read one bounded HTML document; no cookies, authentication or old cache."""
-    validate_url(url)
+    return _download(url, "text/html", hosts)
+
+
+def download_csv(url: str) -> tuple[bytes, dict]:
+    """Read one bounded ECB CSV without interpreting formulas or office files."""
+    return _download(url, "text/csv", ECB_HOSTS)
+
+
+def _download(
+    url: str, expected_mime: str, hosts: frozenset[str]
+) -> tuple[bytes, dict]:
+    validate_url(url, hosts=hosts)
     redirects = []
 
     def resolve(target: str) -> tuple[str, int, tuple[str, ...]]:
-        result = resolve_public_target(target)
+        result = resolve_public_target(target, hosts=hosts)
         redirects.append(target)
         return result
 
@@ -80,7 +102,7 @@ def download_html(url: str) -> tuple[bytes, dict]:
         url,
         headers={
             "User-Agent": "MparanzaValuationEvidence/0.1",
-            "Accept": "text/html",
+            "Accept": expected_mime,
             "Accept-Encoding": "identity",
         },
     )
@@ -89,21 +111,26 @@ def download_html(url: str) -> tuple[bytes, dict]:
             raise ValuationError("Benchmark response must be complete HTTP 200")
         mime = response.headers.get_content_type()
         if (
-            mime != "text/html"
+            mime != expected_mime
             or response.headers.get("Content-Encoding", "identity") != "identity"
         ):
-            raise ValuationError("Only uncompressed HTML is supported by this parser")
+            raise ValuationError(
+                f"Only uncompressed {expected_mime} is supported by this parser"
+            )
         length = response.headers.get("Content-Length")
         if length is not None and (not length.isdecimal() or int(length) > MAX_BYTES):
             raise ValuationError("Invalid or oversized benchmark response")
         raw = response.read(MAX_BYTES + 1)
         if len(raw) > MAX_BYTES or (length is not None and len(raw) != int(length)):
             raise ValuationError("Oversized or incomplete benchmark response")
-        if b"\x00" in raw or not raw.lstrip().lower().startswith(
+        prefixes = (
             (b"<html", b"<!doctype html")
-        ):
+            if expected_mime == "text/html"
+            else (b"key,freq,",)
+        )
+        if b"\x00" in raw or not raw.lstrip().lower().startswith(prefixes):
             raise ValuationError(
-                "Expected HTML bytes; archives and office files are not parsed"
+                "Expected source text bytes; archives and office files are not parsed"
             )
         charset = response.headers.get_content_charset() or "utf-8"
         if charset.lower() not in {"utf-8", "utf8", "iso-8859-1", "windows-1252"}:

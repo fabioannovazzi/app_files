@@ -168,7 +168,9 @@ def parse_country_risk(raw: bytes, charset: str, selection: dict) -> dict:
 
 
 def _request(request: dict) -> None:
-    from valuation_download import validate_url
+    from valuation_download import ECB_HOSTS, HOSTS, validate_url
+    from valuation_ecb import PARSER as ECB_PARSER
+    from valuation_ecb import validate_selection
 
     fields(
         request,
@@ -185,17 +187,40 @@ def _request(request: dict) -> None:
             "public_query",
         },
     )
-    require(request["parser"] == PARSER, "Unsupported benchmark parser")
+    require(request["parser"] in {PARSER, ECB_PARSER}, "Unsupported benchmark parser")
     for key in ("landing_url", "dataset_url", "terms_url"):
-        validate_url(request[key])
+        validate_url(
+            request[key], hosts=HOSTS if request["parser"] == PARSER else ECB_HOSTS
+        )
     for key in ("terms_note", "observed_basis", "public_query"):
         text(request[key], key)
     require(type(request["copy_permitted"]) is bool, "Record the source reuse decision")
     if request["observed_on"] is not None:
         _iso(request["observed_on"])
-    fields(request["selection"], {"country", "metric"})
-    text(request["selection"]["country"], "country")
-    require(request["selection"]["metric"] in METRICS, "Unsupported selected metric")
+    if request["parser"] == PARSER:
+        fields(request["selection"], {"country", "metric"})
+        text(request["selection"]["country"], "country")
+        require(
+            request["selection"]["metric"] in METRICS, "Unsupported selected metric"
+        )
+    else:
+        validate_selection(request["selection"])
+        require(
+            request["observed_on"] in {None, request["selection"]["observed_on"]},
+            "ECB observation date cannot override the selected CSV date",
+        )
+
+
+def _parse_observation(raw: bytes, charset: str, request: dict) -> dict:
+    from valuation_ecb import parse_ecb_spot
+
+    if request["parser"] == PARSER:
+        observation = parse_country_risk(raw, charset, request["selection"])
+        observation.update(
+            observed_on=request["observed_on"], observed_basis=request["observed_basis"]
+        )
+        return observation
+    return parse_ecb_spot(raw, charset, request["selection"])
 
 
 def _persist(root: Path, record: dict, captures: dict[str, bytes]) -> dict:
@@ -241,7 +266,7 @@ def acquire_benchmark(
     now: datetime | None = None,
 ) -> dict:
     """Capture one selected public observation or preserve its explicit failure."""
-    from valuation_download import download_html
+    from valuation_download import ECB_HOSTS, download_csv, download_html
 
     _request(request)
     current = now or datetime.now(timezone.utc)
@@ -260,7 +285,6 @@ def acquire_benchmark(
     captures: dict[str, bytes] = {}
     if not request["copy_permitted"]:
         return _persist(output_root, record, captures)
-    fetch = fetch or download_html
     try:
         for name, url in (
             ("landing", request["landing_url"]),
@@ -278,23 +302,28 @@ def acquire_benchmark(
                     url in links,
                     "Selected URL was not observed on the captured landing page",
                 )
-            raw, metadata = fetch(url)
+            if fetch is not None:
+                raw, metadata = fetch(url)
+            elif request["parser"] == PARSER:
+                raw, metadata = download_html(url)
+            elif name == "dataset":
+                raw, metadata = download_csv(url)
+            else:
+                raw, metadata = download_html(url, hosts=ECB_HOSTS)
             captures[name] = raw
             record["captures"][name] = metadata
         dataset = record["captures"]["dataset"]
-        observation = parse_country_risk(
-            captures["dataset"], dataset["charset"], request["selection"]
+        observation = _parse_observation(
+            captures["dataset"], dataset["charset"], request
         )
-        observed = request["observed_on"]
+        observed, published = observation["observed_on"], observation["published_on"]
         require(
-            observation["published_on"] <= retrieved_on
-            and (observed is None or observed <= observation["published_on"]),
+            (published is None or published <= retrieved_on)
+            and (observed is None or observed <= (published or retrieved_on)),
             "Acquisition dates are inconsistent",
         )
         observation.update(
             source_url=dataset["final_url"],
-            observed_on=observed,
-            observed_basis=request["observed_basis"],
             retrieved_on=retrieved_on,
             document_sha256=dataset["sha256"],
             status="proposed",
@@ -303,7 +332,10 @@ def acquire_benchmark(
         record["observation"] = observation
         record["status"] = (
             "acquired"
-            if observed is not None and observation["value"] is not None
+            if all(
+                observation[key] is not None
+                for key in ("observed_on", "published_on", "vintage", "value")
+            )
             else "metadata_or_value_missing"
         )
     except (ValueError, OSError, HTTPException) as exc:
@@ -359,6 +391,7 @@ def validate_benchmark_bindings(case: dict, sources: dict, root: Path) -> None:
             and record["status"] == "acquired",
             "Acquisition is not a complete observation",
         )
+        _request(record["request"])
         observation = record["observation"]
         require(
             observation["observation_id"] == binding["observation_id"]
@@ -375,10 +408,10 @@ def validate_benchmark_bindings(case: dict, sources: dict, root: Path) -> None:
             document.stat().st_size <= 2 * 1024 * 1024,
             "Acquisition replay exceeds 2 MiB",
         )
-        parsed = parse_country_risk(
+        parsed = _parse_observation(
             document.read_bytes(),
             record["captures"]["dataset"]["charset"],
-            observation["selection"],
+            record["request"],
         )
         require(
             all(observation[key] == value for key, value in parsed.items()),

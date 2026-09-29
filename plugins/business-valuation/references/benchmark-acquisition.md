@@ -1,10 +1,10 @@
 # Public benchmark acquisition v1
 
-Research and select the relevant source semantically. This first versioned
-adapter supports the **NYU Damodaran country-risk HTML table only**. It does not
-select a country, metric, rate or vintage for the professional. ECB, regional
-Excel datasets, historical workbook formats and other publishers remain separate
-host research/import routes pending their own tested adapters.
+Research and select the relevant source semantically. Versioned adapters support
+the **NYU Damodaran country-risk HTML table** and an **explicitly selected ECB AAA
+spot-rate CSV observation**. They do not select a country, metric, maturity, rate
+or vintage for the professional. Regional Excel datasets, historical workbook
+formats and other publishers remain separate reviewed import routes.
 
 The host prepares a public-only request. Never put client names, private
 documents, forecasts, account identifiers, tokens or secrets in a URL or query.
@@ -63,15 +63,64 @@ country/equity risk premiums, corporate tax rate and CDS columns; selecting a
 tax-rate column does not determine the applicable tax rate for a business.
 
 Networking uses the existing public HTTP transport, with a 20-second elapsed
-budget per document, at most five redirects, a 2 MiB limit and HTML-only MIME/byte
-checks. Only HTTPS standard-port requests to the explicitly supported NYU hosts
-are allowed. Every redirect revalidates its host and DNS answers; private/mixed
+budget per document, at most five redirects, a 2 MiB limit and format-specific
+MIME/byte checks. The NYU parser permits only its supported NYU hosts. The ECB
+parser permits only `www.ecb.europa.eu` and `data-api.ecb.europa.eu`; its landing
+and terms documents must be HTML and its dataset must be `text/csv`. Only HTTPS
+standard-port requests are allowed. Every redirect revalidates its parser's
+host boundary and DNS answers; private/mixed
 addresses are rejected and the connection uses the vetted numeric address with
 the original hostname for TLS verification. No cookies, account credentials,
 body, referer or environment proxy are used. DNS resolution itself is synchronous
 and cannot be interrupted; it consumes the deadline and cannot lead to a request
 after expiry. Archives and office files are rejected; no ZIP extraction or macro
 execution occurs. None of these controls decides economic relevance or truth.
+
+## ECB AAA spot CSV
+
+Read the official [yield-curve page](https://www.ecb.europa.eu/stats/financial_markets_and_interest_rates/euro_area_yield_curves/html/index.en.html)
+and its linked usage terms. Follow an actual CSV link visible there; do not
+construct an endpoint or filename from this example. The source describes the
+curves as informational and identifies its market-data/rating sources. Preserve
+that limitation and source attribution; relevance to a mandate remains a
+professional decision. With the same common request fields, select:
+
+```json
+{
+  "parser": "ecb-aaa-spot-csv/v1",
+  "observed_on": null,
+  "observed_basis": "Use the selected CSV TIME_PERIOD, not its HTTP timestamp.",
+  "selection": {
+    "series_key": "YC.B.U2.EUR.4F.G_N_A.SV_C_YM.SR_10Y",
+    "observed_on": "2026-09-28"
+  }
+}
+```
+
+This is a partial request illustration, not a rate/maturity recommendation or a
+current availability claim. The full request still needs observed landing,
+dataset and terms URLs, reuse decision/note and public-only query. The helper
+requires the exact series/date; it does not select the latest available row or
+substitute another maturity. The 40-column CSV shape, series dimensions, unit
+`PCPA`, multiplier zero, continuous-compounding definition and observation status
+are checked. Forward, par and all-rating curves are separate series and are not
+accepted by this adapter. Missing values stay null; qualified/changed rows stop
+parsing for review. Signed rates are allowed.
+
+The only numeric conversion is percent divided by 100. **Continuous compounding
+remains continuous**: the result is not an effective annual rate or WACC. No
+curve interpolation, economic selection or compounding conversion occurs.
+The original complete row, document bytes and definition are retained.
+
+The observed CSV provides `TIME_PERIOD` but no observation-level publication date
+or independently established historical vintage. Both `published_on` and
+`vintage` therefore remain null, even when HTTP Last-Modified or a daily release
+schedule is known. The snapshot has its own byte hash and retrieval timestamp;
+those do not prove earlier availability. This adapter deliberately returns
+`metadata_or_value_missing`, so its record cannot automatically bind a value into
+a valuation. Independently evidenced publication/vintage and a reviewed import
+route are still required. Do not edit an acquisition record to manufacture them.
+Revised bytes create a new snapshot and never rewrite an earlier case.
 
 ## Binding the observation into a case
 

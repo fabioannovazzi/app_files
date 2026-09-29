@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-valuation",
-  "course_sha256": "3f23554c3b6532271d154d958d6d209f0b99df67e1290c0e10853a4c5b67778f",
+  "course_sha256": "0294130b28e3c38e780ceac86638f97c728d3f66a900991737fb670b65d67310",
   "reviewer": "Codex /root: source, calculation and document review",
-  "reviewed_at": "2026-09-29T21:30:30.700945+00:00",
+  "reviewed_at": "2026-09-29T21:56:11.634342+00:00",
   "review_scope": "Read both fictional notes and the entire Italian lesson. Ran the real bound workflow for demo and practice, inspected their Markdown reports and calculation registers. Seven-method DOCX was rendered and all four pages inspected; LibreOffice independently recalculated all 75 workbook calculation cells. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior is an instruction and separate archive contract, not claimed as a live learner test.",
   "languages": {
     "it": {
@@ -23,11 +23,11 @@
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "758cc7eddca1d62108aaf686bf5a34427e32888a3b0488ad752f552a98aa3111"
+            "sha256": "3a7f7cd9b3e015c2a4a54135f8fd79024fd0700ce63caaf4be16f68c11b5a6e9"
           },
           {
             "name": "valuation.json",
-            "sha256": "2d6302a04600ad61a372a4ba4ee2d58bdab38a9d02d0d404ad8ee4958c77e296"
+            "sha256": "b6837cc1f087195b05a3ca186e7a8162f00654022e9b07d225823e29a063a8dd"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -144,6 +144,19 @@
                 "sha256": "5d8b6a9ccfcafe6d5af3d76119bda90af10fbdbf1eee71bca249891c71bf2d4f"
               }
             ]
+          },
+          {
+            "reviewed_at": "2026-09-29T21:30:30.700945+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "758cc7eddca1d62108aaf686bf5a34427e32888a3b0488ad752f552a98aa3111"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "2d6302a04600ad61a372a4ba4ee2d58bdab38a9d02d0d404ad8ee4958c77e296"
+              }
+            ]
           }
         ]
       },
@@ -153,11 +166,11 @@
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "8e7f42e0f84741a1817e4a09eef5cc9d29d01ee283d60ec1c5895abebd6502f8"
+            "sha256": "4a162bc45f53704dffec8c338bb259039849c2a24cb02ecf59e539a92bd53a74"
           },
           {
             "name": "valuation.json",
-            "sha256": "174f2ef25cc03d22225b046d67889083928a22e747d14ebc0b04fce5a4ae19bb"
+            "sha256": "823a432e57e43224e2fbdfeb3c79b4351f9076f7b29a601b82a19cc18eb85c29"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -274,6 +287,19 @@
                 "sha256": "1ffd8e525dd2c51f3e92c316d34d2b1e078a8d5f047aa2f16e503d5b5596d794"
               }
             ]
+          },
+          {
+            "reviewed_at": "2026-09-29T21:30:30.700945+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "8e7f42e0f84741a1817e4a09eef5cc9d29d01ee283d60ec1c5895abebd6502f8"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "174f2ef25cc03d22225b046d67889083928a22e747d14ebc0b04fce5a4ae19bb"
+              }
+            ]
           }
         ]
       }
@@ -334,5 +360,12 @@
   "statement_review": {
     "reviewed_at": "2026-09-29T21:30:30.700945+00:00",
     "scope": "Reviewed the new source-bound statement arithmetic and dependency integration. The teaching inputs and instructions are unchanged; only governed-source fingerprints changed. Both native runs preserve expected 750000 / 583333.33 EUR equity indications, 18 artifacts, no accepted conclusion and partial mandate status. All output pages inspected. Separate statement fixture has 112 independently recalculated calculation cells and 24 linked reconciliation cells; seven DOCX and six native PDF pages inspected. Synthetic local attestations are not real professional approval."
+  },
+  "ecb_acquisition_review": {
+    "reviewed_at": "2026-09-29T21:56:11.634342+00:00",
+    "scope": "Reviewed exact-series ECB AAA spot CSV parsing and the separate public acquisition boundary. Percent-to-ratio conversion retains continuous compounding; missing publication and vintage evidence prevent automatic binding. The live helper captured the actual official landing, linked usage terms and CSV. A failed request using a differently spelled URL remains preserved; the successful request uses the literal captured href. No live benchmark was adopted into a case.",
+    "tests": "336 valuation and shared-transport tests pass at 94.31% component coverage; Black, isort, Mypy and Bandit pass across all 14 component scripts. Forty-four additional cases cover ECB source shape, selected date/series, signed/missing values, rate/status/unit changes, revisions, download boundaries and fabricated vintage rejection.",
+    "artifact_review": "Read both freshly executed teaching reports in full and inspected all four DOCX and three native PDF pages per case. Both keep their expected 750000 / 583333.33 EUR indications, 18 artifacts, partial mandate and no accepted conclusion. The final model-data paragraph now includes the separate ECB acquisition route. Formula generation and valuation arithmetic are unchanged; prior independent workbook checks remain the relevant arithmetic evidence. The lesson does not claim to teach benchmark acquisition.",
+    "privacy_review": "Reviewed the new bounded public GETs to www.ecb.europa.eu and data-api.ecb.europa.eu, with selected public URLs and connection metadata but no client-case body, credentials or cookies. Updated five public-page translations and the output paragraph. Clara hosted-voice fingerprint changed only because the same shared JavaScript file governs its review; that service content and source are unchanged."
   }
 }

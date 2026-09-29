@@ -30,7 +30,7 @@
     {
       "path": "modules/business-valuation/references/benchmark-acquisition.md",
       "repository_path": "plugins/business-valuation/references/benchmark-acquisition.md",
-      "sha256": "3005e36e2b852280c0a3900b048c5fc7e58ed9a3633b93f83b7779e0ccd98c2f"
+      "sha256": "98ed73e28be42aa6e2bcf7ea808903e4e6167066b4c1af1eaccf922090814abd"
     },
     {
       "path": "modules/business-valuation/references/case-contract.md",
@@ -65,7 +65,7 @@
     {
       "path": "modules/business-valuation/scripts/valuation_benchmarks.py",
       "repository_path": "plugins/business-valuation/scripts/valuation_benchmarks.py",
-      "sha256": "354c6d77e5c4311d8eadad2d0a0fd2be52db75a1e9bf6b449b8ac2bb93ac3d5b"
+      "sha256": "63216710329e5246c7637ca54729c36d36b365d3ed83d81dfe6777cd7385bc8a"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_case.py",
@@ -80,7 +80,12 @@
     {
       "path": "modules/business-valuation/scripts/valuation_download.py",
       "repository_path": "plugins/business-valuation/scripts/valuation_download.py",
-      "sha256": "19ed9aac9f83ed86abe5746447412048099d8a534a1b6c1d3c0f0d1638fe53ea"
+      "sha256": "1af2141a13ee29d51708265e0eea2d8b053a37a44d368757c85d7d2c7234ec86"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_ecb.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_ecb.py",
+      "sha256": "663d5c0d296e440ab36616cfb4a70cce4a183b8dafc8b00f087a64383667a7b5"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_engine.py",
@@ -105,7 +110,7 @@
     {
       "path": "modules/business-valuation/scripts/valuation_report.py",
       "repository_path": "plugins/business-valuation/scripts/valuation_report.py",
-      "sha256": "89abb2393c5a453ab545204ecbf47896af8f35e46ab4dd77e5629bf94f6ae8c5"
+      "sha256": "a5dcde697ebf2d30049ae69631d9b65ee69fc3cfa9511f728d9c64e37600d8bf"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_schema.py",
@@ -120,7 +125,7 @@
     {
       "path": "modules/business-valuation/skills/business-valuation/SKILL.md",
       "repository_path": "plugins/business-valuation/skills/business-valuation/SKILL.md",
-      "sha256": "1c308fcd7d21add9fd7350b1f8d9e7d8be6b287d934d66757adab36fae6543de"
+      "sha256": "a1e69ff6197977dfadb3a3c4712c31f4d1082ff4964e7444ec03a99c29fe1697"
     },
     {
       "path": "modules/business-valuation/vendor/modules/__init__.py",
