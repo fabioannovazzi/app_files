@@ -1149,7 +1149,7 @@ def test_vera_hub_keeps_calls_to_action_in_the_installation_block() -> None:
     install_section = page[install_start:install_end]
 
     assert "data-vera-install-link" in install_section
-    assert "data-vera-cowork-download-link" in install_section
+    assert "data-cowork-guide-link" in install_section
     assert 'href="#installa"' not in page
     assert 'class="text-link' not in page
     assert "data-variance-report-link" not in page
