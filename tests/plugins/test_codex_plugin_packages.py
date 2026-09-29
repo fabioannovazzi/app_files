@@ -5579,6 +5579,9 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         "business-planning": (
             "https://mparanza.com/static/shared/business-planning/index.html?lang=it"
         ),
+        "business-valuation": (
+            "https://mparanza.com/static/shared/business-valuation/index.html"
+        ),
         "prompt-optimizer": (
             "https://mparanza.com/static/shared/prompt-optimizer/index.html"
         ),
