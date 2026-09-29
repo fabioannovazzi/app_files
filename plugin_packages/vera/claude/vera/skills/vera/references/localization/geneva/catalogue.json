@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/.codex/worktrees/assetti-professional-review/app_files/plugins/vera",
-  "version": "0.1.283",
-  "captured_at": "2026-09-29T21:16:57.795636+00:00",
-  "catalogue_fingerprint": "a52176db774bbf6400c591108fa353427c9f937c715d0707f2a3ea4d277b81d3",
-  "manifest_sha256": "d72d431e5344cec0ad8065a2ca5a424b94ce45d9cffbea21e08b0d6631b0ec1f",
+  "root": "plugins/vera",
+  "version": "0.1.285",
+  "captured_at": "2026-09-29T20:51:10.223554+00:00",
+  "catalogue_fingerprint": "6b6600d71b764ee71b86cd54adcf5aa46257bf72ef43606a36dc59562d2fd5cd",
+  "manifest_sha256": "8e9f746798fbf303ec9621210180e242bf77ad45236ba448b93db52e911291aa",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -55,6 +55,11 @@
       "function_id": "centrale-rischi-review",
       "skill_path": "skills/centrale-rischi-review/SKILL.md",
       "sha256": "4548a6c4b41fb845bd260596b680ce1831f6117218e45f0d70b8786d21766da1"
+    },
+    {
+      "function_id": "composizione-negoziata",
+      "skill_path": "skills/composizione-negoziata/SKILL.md",
+      "sha256": "f9f1b8d1e3a4ce9b643f5f2c68065820200cc89d6d4bf2d780a321b61f75a6b2"
     },
     {
       "function_id": "comunicazione-professionale",

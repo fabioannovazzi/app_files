@@ -157,6 +157,7 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "browser-automation": "modules/browser-automation/skills/browser-automation/SKILL.md",
     "vouching": "modules/check-entries/skills/vouching/SKILL.md",
     "concordato-plan-review": "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
+    "composizione-negoziata": "modules/composizione-negoziata/skills/composizione-negoziata/SKILL.md",
     "comunicazione-professionale": "modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
     "dati-fiscali-strutturati": "modules/client-file-preparation/skills/dati-fiscali-strutturati/SKILL.md",
     "legal-tax-answer-review": "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md",

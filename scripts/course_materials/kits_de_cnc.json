@@ -1,0 +1,27 @@
+{
+  "vera/composizione-negoziata": {
+    "title": "Belege und Änderungen einer Composizione negoziata verfolgen",
+    "goal": "Einen Beratungsfall beginnen, einen Entwurf prüfen und nach einem verschobenen Zahlungseingang fortsetzen.",
+    "scenario": "Vollständig fiktives Unternehmen: 50.000 EUR Liquidität, 100.000 EUR erwarteter Eingang am 15. November 2026 und 80.000 EUR Zahlung am 30. November. Der Schuldner hat das Datum nicht bestätigt; Altersstruktur der Forderungen und Aufträge fehlen.",
+    "scope": "Erster Arbeitsablauf: Rolle, Lücken, tatsächlich ausgeführte Liquiditätsanalyse, Vermerk und erneute Prüfung. Keine Zulässigkeitsbeurteilung und kein vollständiger Berufsfall.",
+    "inputs": "Öffnen Sie fall-de.md für Ausgangsfakten und Annahmen. aktualisierung-de.md enthält nur die neue Information für die Übungsphase.",
+    "request": "Vera, ich berate das Unternehmen. Prüfe die fiktiven Daten, kennzeichne Lücken, führe die Liquiditätsplanung aus und erstelle einen beleggestützten Vermerk. Unterstelle keine genehmigte Entscheidung.",
+    "steps": [
+      "Registrieren Sie im Arbeitsfenster den fiktiven Mandanten und das Übungsmandat. Vera trennt Rolle, Quellen, Annahmen und fehlende Belege vor dem Vorschlag der nächsten Tätigkeit.",
+      "Vera führt die Prognose mit ausdrücklich begrenztem Umfang und Annahmen aus, verknüpft das gespeicherte Ergebnis mit dem Vermerk und erfasst eine Prüfung erst nach Ihrer Bestätigung dieser Version. Öffnen Sie den Bericht zur Modell-Datennutzung.",
+      "Setzen Sie denselben Fall mit der Aktualisierung fort. Erhalten Sie den ersten Vermerk, prüfen Sie betroffene Abhängigkeiten und fordern Sie eine neue Analyse an. Frühere Bestätigungen bleiben historisch."
+    ],
+    "deliverables": [
+      "Fallvermerk mit Belegen, Lücken, Annahmen und nächster Tätigkeit.",
+      "Ausgeführte Prognose, gespeicherte Versionen und Bericht zur Datennutzung."
+    ],
+    "review": "Verfolgen Sie den Eingang von der Angabe zur Prognose und zum Vermerk. Eine Datei beweist keine Einbringlichkeit; eine erfasste Bestätigung ist keine Unterschrift.",
+    "checkpoints": [
+      "Unterscheiden Sie Unternehmensberater und unabhängigen Experten.",
+      "Erkennen Sie unbestätigte Annahmen und nach dem Aufschub erneut zu prüfende Versionen."
+    ],
+    "practice": "Fügen Sie aktualisierung-de.md hinzu: Der Schuldner schlägt nun den 15. Januar 2027 vor. Fordern Sie Analyse und Vermerk erneut an, ohne alte Bestätigungen auf die neue Version zu übertragen.",
+    "success": "Sie können einen Fall beginnen, prüfen und fortsetzen und dabei Grenzen, Abhängigkeiten und erforderliche Entscheidungen ausdrücken.",
+    "repeat": "Nennen Sie Rolle, Mandat, Stichtag und freigegebene Fallunterlagen. Prüfen Sie entscheidende Rechtsquellen bei Verwendung; Unabhängigkeit und Schlussfolgerungen beurteilt der Berufsträger."
+  }
+}

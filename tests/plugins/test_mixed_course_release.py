@@ -147,7 +147,8 @@ def test_public_catalogue_links_every_language_and_contains_no_local_requests():
     directory = ROOT / "static/shared/courses"
     guides = set(directory.glob("*/*/*/course.html"))
     introductions = set(directory.glob("vera/get-started/*/course.html"))
-    assert len(guides - introductions) == 205
+    expected_public_guides = 210  # Includes the five new CNC language pages.
+    assert len(guides - introductions) == expected_public_guides
     assert {path.parent.name for path in introductions} == {
         "it",
         "en",

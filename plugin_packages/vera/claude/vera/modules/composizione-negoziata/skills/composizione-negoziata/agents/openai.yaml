@@ -1,0 +1,4 @@
+interface:
+  display_name: "Composizione negoziata"
+  short_description: "Guida advisor ed esperto con evidenze, bozze e revisioni della pratica."
+  default_prompt: "Guidami in questa composizione negoziata, distinguendo ruolo, evidenze mancanti e prossima attività."

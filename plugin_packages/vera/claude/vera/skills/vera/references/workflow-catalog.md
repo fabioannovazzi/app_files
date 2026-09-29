@@ -83,6 +83,10 @@ adapter are unimplemented. Use its specialist skill directly for P0 work.
 - `concordato-plan-review`: review an Italian concordato preventivo across the
   procedure, proposal, plan, attestation, creditors, treatment, liquidity,
   evidence consistency, and open issues.
+- `composizione-negoziata`: guide an Italian CNC case as company advisor or
+  independent expert, with separate role guidance, evidence gaps, existing Vera
+  analyses, drafts, case revisions and dependency impact. Local review records
+  do not authenticate professional identity or authorize filing.
 - `comunicazione-professionale`: decide whether a current tax, legal,
   regulatory, accounting, or professional development is worth communicating;
   learn only from exact prior studio communications selected by the

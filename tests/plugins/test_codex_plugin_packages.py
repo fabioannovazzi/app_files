@@ -29,6 +29,7 @@ COMMERCIALISTA_MODULE_NAMES = {
     "business-planning",
     "check-entries",
     "concordato-plan-review",
+    "composizione-negoziata",
     "comunicazione-professionale",
     "presenza-digitale-studio",
     "deep-research-validator",
@@ -81,6 +82,7 @@ VERA_PUBLIC_PAGE_PATHS = (
     Path("static/shared/archive-organization/index.html"),
     Path("static/shared/check-entries/index.html"),
     Path("static/shared/concordato-plan-review/index.html"),
+    Path("static/shared/composizione-negoziata/index.html"),
     Path("static/shared/deep-research-validator/index.html"),
     Path("static/shared/financial-analysis/index.html"),
     Path("static/shared/management-control-pack/index.html"),
@@ -1558,6 +1560,7 @@ def test_vera_routes_every_commercialista_module() -> None:
     assert components["schema_version"] == 1
     assert set(components["plugins"]) == COMMERCIALISTA_MODULE_NAMES
     assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {
+        "composizione-negoziata",
         "trasformazione",
         "fusione-guidata",
         "invoice-xml",
@@ -2283,6 +2286,17 @@ def test_all_plugin_skills_define_material_choice_intake() -> None:
         )
         lowered_skill_text = combined_skill_text.lower()
 
+        if plugin_name == "composizione-negoziata":
+            # The compact specialist intake carries the same obligations without
+            # repeating the older generic intake boilerplate in every module.
+            assert "role, client/engagement, accessible documents" in lowered_skill_text
+            assert "read supplied evidence before asking for more" in lowered_skill_text
+            assert (
+                "current problem, observed evidence, contrary evidence and gaps"
+                in lowered_skill_text
+            )
+            continue
+
         if plugin_name == "trasformazione":
             assert (
                 "inspect provided synthetic inputs before asking" in lowered_skill_text
@@ -2788,6 +2802,13 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
         for skill_file in skill_files:
             skill_text = skill_file.read_text(encoding="utf-8")
             normalized_skill_text = " ".join(skill_text.split())
+            if plugin_root.name == "composizione-negoziata":
+                assert "Produce and persist useful work" in skill_text
+                assert "Declare every physical output" in normalized_skill_text
+                assert "actual model-data report" in normalized_skill_text
+                assert "read its skill and follow" in normalized_skill_text.lower()
+                assert "Never simulate saved history" in skill_text
+                continue
             if skill_file.parent.name == "trasformazione":
                 if plugin_root.name == "vera":
                     assert "../../modules/trasformazione" in normalized_skill_text
@@ -2883,7 +2904,10 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 skill_file.parent.name != plugin_root.name
             ):
                 assert "Read that module's" in normalized_skill_text
-                assert "plugin working directory" in normalized_skill_text
+                if skill_file.parent.name == "composizione-negoziata":
+                    assert "Use the module root for commands" in normalized_skill_text
+                else:
+                    assert "plugin working directory" in normalized_skill_text
                 continue
             if (
                 plugin_root.name == "clara"
@@ -3916,6 +3940,7 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         "../fatture-xml-check/index.html",
         "../report-enti-locali/index.html",
         "../concordato-plan-review/index.html",
+        "../composizione-negoziata/index.html",
         "../fusione-guidata/index.html",
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
@@ -3926,9 +3951,9 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 36
-    assert core.count('class="module-row"') == 36
-    assert core.count('data-jurisdiction-item="it"') == 11
+    assert core.count(" data-module-link") == 37
+    assert core.count('class="module-row"') == 37
+    assert core.count('data-jurisdiction-item="it"') == 12
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for area_id in (
@@ -5641,6 +5666,7 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         "browser-automation": (
             "https://mparanza.com/static/shared/browser-automation/index.html?lang=it"
         ),
+        "composizione-negoziata": "https://mparanza.com/static/shared/composizione-negoziata/index.html",
         "fusione-guidata": "https://mparanza.com/static/shared/fusione-guidata/index.html?lang=it",
         "studio-archive": ("https://mparanza.com/static/shared/vera/index.html"),
         "vera": ("https://mparanza.com/static/shared/vera/index.html?lang=it"),

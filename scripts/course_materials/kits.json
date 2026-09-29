@@ -8065,5 +8065,95 @@
         ]
       }
     ]
+  },
+  "vera/composizione-negoziata": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "record_role_and_evidence_then_review_changed_receipt"
+    },
+    "files": [
+      {
+        "source": "composizione-negoziata/caso-it.md",
+        "path": "files/input/caso-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/aggiornamento-it.md",
+        "path": "files/practice/aggiornamento-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/case-en.md",
+        "path": "files/input/case-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/update-en.md",
+        "path": "files/practice/update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/cas-fr.md",
+        "path": "files/input/cas-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/mise-a-jour-fr.md",
+        "path": "files/practice/mise-a-jour-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/fall-de.md",
+        "path": "files/input/fall-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/aktualisierung-de.md",
+        "path": "files/practice/aktualisierung-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/caso-es.md",
+        "path": "files/input/caso-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/actualizacion-es.md",
+        "path": "files/practice/actualizacion-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
   }
 }
