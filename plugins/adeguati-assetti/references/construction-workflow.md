@@ -1,5 +1,8 @@
 # Construction in the native Codex engagement
 
+Read `construction-sources.md` for the original catalog's source IDs and research
+limits. It preserves contributor provenance; it is not a fresh legal-source review.
+
 ## Start and resume
 
 Use the current authenticated host conversation and Studio Archive. No model API

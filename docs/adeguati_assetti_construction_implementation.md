@@ -111,7 +111,7 @@ regressions remain in `test_adeguati_assetti.py`.
 
 ## Validation evidence
 
-Focused source suite: 134 passed, 90.89% coverage across the component scripts.
+Focused source suite on current main: 134 passed, 90.62% coverage across the component scripts.
 Mypy passed for the six new modules; Bandit found no issues in the module scripts.
 Browser verification used an existing Chromium binary, with desktop 1280px and
 mobile 390px views. No network requests, page errors or horizontal mobile overflow
@@ -123,6 +123,21 @@ the module uses those existing supported ranges without changing runtime policy.
 The shared workflow catalog changed only to describe this construction mode.
 DATEV starter and local onboarding data paths are unchanged; their reviewed
 fingerprints were refreshed for that shared-file dependency.
+The update-check and receipt services changed only through the canonical Vera
+version; their recorded external data paths remain unchanged.
+
+Codex, ChatGPT-upload and Cowork builds and parity checks passed; all 18 packaged
+MCP servers initialized and listed tools. Package integrity, update notification
+and privacy regression suites passed. Generated distribution files were built
+locally, not published. Vera 0.1.283 and component 0.1.4 are development versions;
+open PR version reservations were checked before selecting them.
+
+The full repository test gate could not collect 26 modules because the existing
+local SciPy native library failed to load (`_spropack`, malformed Mach-O section).
+Repository-wide Black/Isort also reported existing issues outside this change.
+The changed module passes Black/Isort; `mypy src/` passed and `bandit -r src/`
+reported no medium/high findings. These limitations mean the full quality gate
+is not green; no merge or production acceptance is claimed.
 
 No release publication, installed-version acceptance, authenticated professional
 identity, full UNI mapping or completed real-company pilot is implied.

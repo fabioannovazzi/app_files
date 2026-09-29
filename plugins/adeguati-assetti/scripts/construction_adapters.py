@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from decimal import Decimal, InvalidOperation
+from typing import cast
 
 from construction_core import _attestation, _put, digest, fields, refs, require, text
 
@@ -103,7 +104,9 @@ def budget_rows(plan: dict, binding: dict, mapping: dict) -> list[dict]:
     fields(mapping, "reviewer", "decision", "mapping_version")
     rows = mapping.get("rows")
     require(isinstance(rows, list) and bool(rows), "No reviewed mapping rows")
-    output, seen, totals = [], set(), {}
+    rows = cast(list[dict], rows)
+    output, seen = [], set()
+    totals: dict[str, Decimal] = {}
     for row in rows:
         cid = row.get("calculation_id")
         require(
@@ -143,6 +146,7 @@ def budget_rows(plan: dict, binding: dict, mapping: dict) -> list[dict]:
         isinstance(expected, dict) and set(expected) == set(totals),
         "Missing mapping control totals",
     )
+    expected = cast(dict, expected)
     require(
         all(decimal_value(expected[k]) == v for k, v in totals.items()),
         "Budget mapping does not reconcile",

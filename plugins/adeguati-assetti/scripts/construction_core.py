@@ -8,7 +8,7 @@ import json
 import math
 from datetime import datetime
 from fractions import Fraction
-from typing import Any
+from typing import Any, cast
 
 __all__ = [
     "apply_event",
@@ -437,6 +437,7 @@ def apply_event(state: dict, event: dict, *, actor: str, at: str) -> dict:
     kind = text(event.get("kind"), "event kind")
     p = copy.deepcopy(event.get("payload"))
     require(isinstance(p, dict), "Event payload must be an object")
+    p = cast(dict, p)
     result = copy.deepcopy(state)
     if kind == "scope":
         fields(p, "description", "proportionality", "limitations")
@@ -527,7 +528,7 @@ def apply_event(state: dict, event: dict, *, actor: str, at: str) -> dict:
             )
         _put(result, collection, p, actor, at)
     elif kind == "assessment":
-        _criterion(state, p.get("id"))
+        _criterion(state, text(p.get("id"), "criterion ID"))
         fields(p, "rationale", "adequacy_judgment")
         require(
             p.get("applicability") in {"pending", "applicable", "not_applicable"},
@@ -552,7 +553,7 @@ def apply_event(state: dict, event: dict, *, actor: str, at: str) -> dict:
         p.pop("qualification_review", None)
         _put(result, "assessments", p, actor, at)
     elif kind == "qualification_review":
-        cid = p.get("criterion_id")
+        cid = text(p.get("criterion_id"), "criterion ID")
         require(cid in state["assessments"], "Missing assessment")
         require(
             p.get("basis_sha256") == assessment_basis(state, cid),
@@ -565,7 +566,7 @@ def apply_event(state: dict, event: dict, *, actor: str, at: str) -> dict:
             "at": at,
         }
     elif kind == "score_decision":
-        cid = p.get("criterion_id")
+        cid = text(p.get("criterion_id"), "criterion ID")
         _criterion(state, cid)
         require(
             p.get("status") in {"proposed", "recorded", "revoked"},
@@ -755,14 +756,14 @@ def apply_event(state: dict, event: dict, *, actor: str, at: str) -> dict:
         _put(result, collection, p, actor, at)
     elif kind == "manual_compile":
         fields(p, "id", "introduction", "limitations")
-        basis = manual_basis(state, p.get("control_ids"))
+        basis = manual_basis(state, cast(list[str], p.get("control_ids")))
         p["snapshot"] = basis
         p["basis_sha256"] = digest(basis)
         p["professional_review"] = None
         p["manual_sha256"] = digest(p)
         _put(result, "manuals", p, actor, at, immutable=True)
     elif kind == "manual_review":
-        mid = p.get("manual_id")
+        mid = text(p.get("manual_id"), "manual ID")
         require(mid in state["manuals"], "Unknown manual")
         require(
             manual_status(state, mid) != "needs_review", "Manual dependencies changed"
@@ -782,7 +783,7 @@ def apply_event(state: dict, event: dict, *, actor: str, at: str) -> dict:
             text(value, "finding disposition")
         result["manuals"][mid]["professional_review"] = {**p, "actor": actor, "at": at}
     elif kind == "adoption":
-        mid = p.get("manual_id")
+        mid = text(p.get("manual_id"), "manual ID")
         require(
             mid in state["manuals"]
             and manual_status(state, mid) in {"professionally_reviewed", "adopted"},
@@ -796,7 +797,8 @@ def apply_event(state: dict, event: dict, *, actor: str, at: str) -> dict:
         _attestation(state, p)
         _put(result, "adoptions", p, actor, at, immutable=True)
     elif kind == "execution":
-        cid, mid = p.get("control_id"), p.get("manual_id")
+        cid = text(p.get("control_id"), "control ID")
+        mid = text(p.get("manual_id"), "manual ID")
         require(
             mid in state["manuals"] and manual_status(state, mid) == "adopted",
             "Execution requires the current adopted manual",
