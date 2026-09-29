@@ -176,6 +176,7 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "financial-report-builder": "modules/report-builder/skills/financial-report-builder/SKILL.md",
     "sales-plan": "modules/sales-plan/skills/sales-plan/SKILL.md",
     "business-planning": "modules/business-planning/skills/business-planning/SKILL.md",
+    "business-valuation": "modules/business-valuation/skills/business-valuation/SKILL.md",
     "variance-analysis": "modules/variance-analysis/skills/variance-analysis/SKILL.md",
     "studio-archive": "modules/studio-archive/skills/studio-archive/SKILL.md",
 }

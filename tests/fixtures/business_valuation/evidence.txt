@@ -1,0 +1,2 @@
+Synthetic development fixture only. All values and rates below are invented.
+Flow and terminal cash 100 EUR; rate 0.1; growth 0; asset 1000; liability 300; tax adjustment 50; adjusted equity 650; income 100; multiple 5; unlevered PV 1100; tax shield PV 100; financing cost PV 20; financial debt 300; excess cash 50; other adjustments 0.

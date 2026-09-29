@@ -1,0 +1,360 @@
+{
+  "schema_version": "vera.business_valuation.case.v1",
+  "case_id": "synthetic-pmi",
+  "entity_name": "Impresa sintetica",
+  "currency": "EUR",
+  "audience": "internal",
+  "synthetic": true,
+  "mandate": {
+    "purpose": "Confronto interno dei metodi su dati sintetici",
+    "subject": "Impresa nel suo complesso",
+    "valuation_date": "2026-12-31",
+    "information_cutoff": "2026-12-31",
+    "basis_of_value": "Base ipotetica per test",
+    "premise": "Continuità ipotetica",
+    "rights": "Nessuna quota o diritto speciale modellato",
+    "professional_limitations": "Nessuna revisione PIV o finalità legale svolta."
+  },
+  "sources": [
+    {
+      "id": "evidence",
+      "path": "evidence.txt",
+      "sha256": "ccd06a63185e92c704bda45ef64bafb33be1524e9b0e56510e65b43fa844ecc0",
+      "description": "Synthetic numerical fixture",
+      "allowed_audiences": [
+        "internal"
+      ],
+      "status": "reviewed"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "flow",
+      "value": "100",
+      "unit": "EUR",
+      "description": "Synthetic flow",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt, synthetic values",
+      "kind": "assumption",
+      "status": "confirmed"
+    },
+    {
+      "id": "terminal",
+      "value": "100",
+      "unit": "EUR",
+      "description": "Synthetic terminal",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt, synthetic values",
+      "kind": "assumption",
+      "status": "confirmed"
+    },
+    {
+      "id": "rate",
+      "value": "0.1",
+      "unit": "ratio",
+      "description": "Synthetic rate",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt, synthetic values",
+      "kind": "assumption",
+      "status": "confirmed"
+    },
+    {
+      "id": "growth",
+      "value": "0",
+      "unit": "ratio",
+      "description": "Synthetic growth",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt, synthetic values",
+      "kind": "assumption",
+      "status": "confirmed"
+    },
+    {
+      "id": "assets",
+      "value": "1000",
+      "unit": "EUR",
+      "description": "Synthetic assets",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt, synthetic values",
+      "kind": "assumption",
+      "status": "confirmed"
+    },
+    {
+      "id": "liabilities",
+      "value": "300",
+      "unit": "EUR",
+      "description": "Synthetic liabilities",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt, synthetic values",
+      "kind": "assumption",
+      "status": "confirmed"
+    },
+    {
+      "id": "tax",
+      "value": "50",
+      "unit": "EUR",
+      "description": "Synthetic tax",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt, synthetic values",
+      "kind": "assumption",
+      "status": "confirmed"
+    },
+    {
+      "id": "capital",
+      "value": "650",
+      "unit": "EUR",
+      "description": "Synthetic capital",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt, synthetic values",
+      "kind": "assumption",
+      "status": "confirmed"
+    },
+    {
+      "id": "income",
+      "value": "100",
+      "unit": "EUR",
+      "description": "Synthetic income",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt, synthetic values",
+      "kind": "assumption",
+      "status": "confirmed"
+    },
+    {
+      "id": "multiple",
+      "value": "5",
+      "unit": "multiple",
+      "description": "Synthetic multiple",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt, synthetic values",
+      "kind": "assumption",
+      "status": "confirmed"
+    },
+    {
+      "id": "unlevered",
+      "value": "1100",
+      "unit": "EUR",
+      "description": "Synthetic unlevered",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt, synthetic values",
+      "kind": "assumption",
+      "status": "confirmed"
+    },
+    {
+      "id": "shield",
+      "value": "100",
+      "unit": "EUR",
+      "description": "Synthetic shield",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt, synthetic values",
+      "kind": "assumption",
+      "status": "confirmed"
+    },
+    {
+      "id": "cost",
+      "value": "20",
+      "unit": "EUR",
+      "description": "Synthetic cost",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt, synthetic values",
+      "kind": "assumption",
+      "status": "confirmed"
+    },
+    {
+      "id": "debt",
+      "value": "300",
+      "unit": "EUR",
+      "description": "Synthetic debt",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt, synthetic values",
+      "kind": "assumption",
+      "status": "confirmed"
+    },
+    {
+      "id": "cash",
+      "value": "50",
+      "unit": "EUR",
+      "description": "Synthetic cash",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt, synthetic values",
+      "kind": "assumption",
+      "status": "confirmed"
+    },
+    {
+      "id": "zero",
+      "value": "0",
+      "unit": "EUR",
+      "description": "Synthetic zero",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt, synthetic values",
+      "kind": "assumption",
+      "status": "confirmed"
+    }
+  ],
+  "methods": [
+    {
+      "id": "fcff",
+      "kind": "DCF_FCFF",
+      "selected": true,
+      "rationale": "Synthetic numerical acceptance case for DCF_FCFF",
+      "inputs": {
+        "flows": [
+          "flow"
+        ],
+        "discount_rate": "rate",
+        "terminal_next_flow": "terminal",
+        "terminal_growth": "growth"
+      },
+      "limitations": [
+        "Invented inputs; not a real valuation."
+      ],
+      "bridge": {
+        "financial_debt": "debt",
+        "debt_like": "zero",
+        "excess_cash": "cash",
+        "non_operating_assets": "zero",
+        "signed_adjustments": "zero"
+      }
+    },
+    {
+      "id": "fcfe",
+      "kind": "DCF_FCFE",
+      "selected": true,
+      "rationale": "Synthetic numerical acceptance case for DCF_FCFE",
+      "inputs": {
+        "flows": [
+          "flow"
+        ],
+        "discount_rate": "rate",
+        "terminal_next_flow": "terminal",
+        "terminal_growth": "growth"
+      },
+      "limitations": [
+        "Invented inputs; not a real valuation."
+      ]
+    },
+    {
+      "id": "income-method",
+      "kind": "INCOME_EQUITY",
+      "selected": true,
+      "rationale": "Synthetic numerical acceptance case for INCOME_EQUITY",
+      "inputs": {
+        "normalized_equity_income": "income",
+        "cost_equity": "rate"
+      },
+      "limitations": [
+        "Invented inputs; not a real valuation."
+      ]
+    },
+    {
+      "id": "nav",
+      "kind": "NAV",
+      "selected": true,
+      "rationale": "Synthetic numerical acceptance case for NAV",
+      "inputs": {
+        "assets": [
+          "assets"
+        ],
+        "liabilities": [
+          "liabilities"
+        ],
+        "tax_adjustment": "tax"
+      },
+      "limitations": [
+        "Invented inputs; not a real valuation."
+      ]
+    },
+    {
+      "id": "mixed",
+      "kind": "MIXED_EQUITY",
+      "selected": true,
+      "rationale": "Synthetic numerical acceptance case for MIXED_EQUITY",
+      "inputs": {
+        "adjusted_equity": "capital",
+        "incomes": [
+          "income"
+        ],
+        "normal_return": "rate",
+        "excess_discount": "rate"
+      },
+      "limitations": [
+        "Invented inputs; not a real valuation."
+      ]
+    },
+    {
+      "id": "multiple-method",
+      "kind": "MULTIPLE",
+      "selected": true,
+      "rationale": "Synthetic numerical acceptance case for MULTIPLE",
+      "inputs": {
+        "metric": "income",
+        "selected_multiple": "multiple",
+        "kind": "EV_EBITDA"
+      },
+      "limitations": [
+        "Invented inputs; not a real valuation."
+      ],
+      "bridge": {
+        "financial_debt": "debt",
+        "debt_like": "zero",
+        "excess_cash": "cash",
+        "non_operating_assets": "zero",
+        "signed_adjustments": "zero"
+      }
+    },
+    {
+      "id": "apv",
+      "kind": "APV",
+      "selected": true,
+      "rationale": "Synthetic numerical acceptance case for APV",
+      "inputs": {
+        "unlevered_value": "unlevered",
+        "pv_tax_shields": "shield",
+        "pv_financing_costs": "cost"
+      },
+      "limitations": [
+        "Invented inputs; not a real valuation."
+      ],
+      "bridge": {
+        "financial_debt": "debt",
+        "debt_like": "zero",
+        "excess_cash": "cash",
+        "non_operating_assets": "zero",
+        "signed_adjustments": "zero"
+      }
+    }
+  ],
+  "limitations": [
+    "Esempio sintetico di sviluppo, non benchmark corrente."
+  ]
+}

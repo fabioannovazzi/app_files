@@ -275,6 +275,7 @@ SPECS = (
         "#00B0F0",
         "management_pack",
     ),
+    IconSpec("business-valuation", "Vera · Business Valuation", "#002060", "#57A6C7", "business_valuation"),
     IconSpec(
         "business-planning",
         "Mparanza · Business Planning",
@@ -558,6 +559,7 @@ def _body(spec: IconSpec) -> str:
   <path d="M18 42V34M24 42V29M38 42V37M44 42V31" stroke="{color}" stroke-width="4" stroke-linecap="round"/>
   <path d="m17 20 5-4 5 3" fill="none" stroke="{accent}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
   <circle cx="45" cy="19" r="3" fill="{accent}"/>""",
+        "business_valuation": '<path d="M18 26h28M32 18v29M24 24l-7 15h14L24 24zm16 0-7 15h14L40 24z" fill="none" stroke="#F7F0DF" stroke-width="2.5" stroke-linejoin="round"/><path d="M23 49h18" stroke="#F7F0DF" stroke-width="3"/>',
         "business_plan": f"""
   <rect x="11" y="15" width="12" height="34" rx="3" fill="{paper}"/>
   <rect x="26" y="15" width="12" height="34" rx="3" fill="{paper}"/>
