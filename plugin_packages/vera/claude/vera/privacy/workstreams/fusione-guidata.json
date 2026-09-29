@@ -1,0 +1,64 @@
+{
+  "schema_version": 3,
+  "workstream": "fusione-guidata",
+  "display_name": "Fusione guidata — P0",
+  "role": "workflow",
+  "governed_paths": [
+    ".codex-plugin/plugin.json",
+    "scripts",
+    "skills"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "merger-case-review",
+        "purpose": "Interpret supplied evidence and review facts, branch proposals, dependencies and exact professional confirmations.",
+        "content": "Company identities, legal forms, residences, ownership and rights; explicitly selected documents and source paths; evidence locators, complete selected source bytes when the host reads them, facts and unresolved alternatives; rule citations, applicability intervals, assumptions and source errors; drafts, exact approval content, actor declarations and change impacts. The helper processes complete selected files locally and exports only scopes allowed for the declared actor. No fixed semantic subset or automatic anonymization is promised.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "merger-run-disclosure",
+        "purpose": "Describe measured local case processing and its model-exposure limitations.",
+        "content": "Scoped current records and accessible immutable history, local item counts, source fingerprints and a readable model-data report. Real-case exports default to not_measurable for model exposure because the local helper cannot inspect the host context. Synthetic demos explicitly contain no client data. The canonical report is built locally with no server receipt request.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [
+    {
+      "id": "case-and-company-scope",
+      "control": "Each dependency checks its exact operation ID, object, version and hash. Reads, imports, writes and reports require the declared actor grant and all inherited company scopes. New cross-case evidence requires an explicit file import. These are logical helper checks, not identity authentication, encryption or OS isolation."
+    },
+    {
+      "id": "explicit-snapshot-import",
+      "control": "Only explicitly selected ordinary files within the selected company source roots can be imported; symlink paths and oversized files fail. Preserved document bytes are hash-checked on review and retrieval. Generic put cannot fabricate acquired Evidence or Artifact records."
+    },
+    {
+      "id": "immutable-approval-history",
+      "control": "SQLite transactions, expected-version checks and immutable-record triggers preserve revisions. Approval requires a reviewer/administrator grant and an exact unchanged target with no unresolved or stale dependencies. Generic put cannot fabricate Decision records. Confirmations are recorded assertions, not verified signatures."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-09-29",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "7b1eac6b6ec62775613ac431c73dc7906601f081da343670b7e1e0619fc535b8"
+  },
+  "governed_shared_paths": [
+    "modules/fusione-guidata/vendor/modules/model_data_report.py",
+    "modules/studio-archive/vendor/modules/model_data_report.py",
+    "scripts/model_data_report.py"
+  ]
+}
