@@ -31,3 +31,7 @@ Never invent missing evidence, sign or file on a client's behalf, send
 communications, alter source records, or make a decision reserved to the
 commercialista. Every conclusion and deliverable remains a draft for qualified
 professional review.
+
+Merger case preparation can use `vera:fusione-guidata` for its P0 evidence and
+revision foundation. Do not imply that legal execution branches, concambio
+calculations or the multi-company Studio Archive adapter are implemented.
