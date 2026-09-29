@@ -66,13 +66,14 @@ def render_introduction(root: Path, destination: Path) -> str:
         links.append(f'<a href="{target}" lang="{language}">{name}</a>')
     return (
         '<section id="inizia-con-vera" aria-labelledby="inizia-con-vera-title">'
-        '<h2 id="inizia-con-vera-title">Inizia a usare Vera</h2>'
-        '<p class="lead">È la tua prima volta? Prova un lavoro con file fittizi già preparati: '
+        '<h2 id="inizia-con-vera-title"><a href="vera/get-started/it/course.html">'
+        "Inizia a usare Vera</a></h2>"
+        '<p class="lead">Prova un lavoro con file fittizi già preparati: '
         "impara cosa chiedere, quali file fornire, come leggere il risultato e come modificarlo.</p>"
         "<p>Ti proponiamo 3–4 funzioni utili per il tuo lavoro e ne proviamo una sola. "
         "5–8 minuti di spiegazione e breve pratica, oltre ai tempi di elaborazione e alle domande. "
         "Introduzione facoltativa, in Codex o per iscritto in Cowork.</p>"
         '<nav aria-label="Lingua del corso introduttivo">'
         + " · ".join(links)
-        + '</nav><p><a href="#vera">Conosci già Vera? Scegli direttamente un corso.</a></p></section>'
+        + '</nav><p><a href="#vera">Corsi Vera</a></p></section>'
     )

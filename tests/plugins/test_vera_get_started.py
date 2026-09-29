@@ -48,7 +48,7 @@ def test_introduction_links_resolve_and_preserve_exact_host_requests(
     copy = json.loads(
         (ROOT / "plugins/vera" / REFERENCE / "get-started.json").read_text()
     )
-    pages = [link for link in Page(section).links if not link.startswith("#")]
+    pages = {link for link in Page(section).links if not link.startswith("#")}
     assert len(pages) == 5
     for link in pages:
         target = tmp_path / link
