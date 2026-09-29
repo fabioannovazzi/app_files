@@ -107,12 +107,26 @@ The Geneva catalogue is rebound to the current source and includes scissione as
 assessments are preserved. All **28 catalogue/Geneva tests passed**; this records
 product scope and does not establish Swiss legal or professional acceptance.
 
+The shared workflow-ID addition also changed source pins in 34 previously reviewed
+teaching kits (32 Vera, one Clara, one Lucia). Every non-source course field and
+input definition is identical to the previously accepted base. The sole pinned
+source delta adds `scissione-guidata` to the archive workflow tuple. A bounded
+root-authored freshness review records that comparison and the successful CI
+native teaching step (1,165 passed, three skipped). Original reviewers, dates,
+editorial judgments and inspected artifact hashes remain intact. This is not a
+new independent teaching or professional acceptance. The 36 release-review gate
+regressions and 58 remaining compiler/quality commands passed locally; the full
+fresh-JUnit identity gate remains subject to CI. The five later teaching steps
+(source-PDF check, Concordato, Registry, website integrity and matter-opening)
+also passed locally; their four test groups passed 136, 61, 71 and 13 tests, with
+coverage from 80.65% to 89.75%.
+
 Vera package SHA-256:
 
 | Distribution | SHA-256 |
 |---|---|
-| Codex | `823b679fe533ff29576fe41c1bcd81924627ccbc7bb138076196fc721ed44850` |
-| ChatGPT upload | `bc450d05335b2028b28e6b64c840ed9260f3011ccc097e52af49298caab55034` |
+| Codex | `48ce154e3da9dfde6f0378ae553aa529e4dca66a62e65ee417d7bcedbe3b5c4a` |
+| ChatGPT upload | `a320d58d2bed041a413c03fb2e908aa00041eee0cd66b3faa6e76c0da90b54c4` |
 | Cowork | `b0749b153736a176afa2f31d74d5e5ec7f84effdb3a1b4df9a00f65eaf855c48` |
 
 These are build candidates. No installed-session acceptance, Marketplace

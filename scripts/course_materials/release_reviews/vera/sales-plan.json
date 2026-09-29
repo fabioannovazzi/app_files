@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "sales-plan",
-  "course_sha256": "0e3b2aa59fd296a3a04dfee538b4d0943c4d2b69d82746354d9850bbabb9d6a2",
+  "course_sha256": "038f549c3a6bc42521b0bd2a1cee7ee377036d856bed2229bf937079afead310",
   "reviewer": "Codex: five-language sales-plan lesson and actual scenario delivery review",
   "reviewed_at": "2026-09-14T21:58:58.519111+00:00",
   "review_scope": "Prepared material and native local workflow review. Read all five complete outlines, all ten assumption source notes, the four-row Actual CSV, all ten delivered cards, assumption read-backs and run-review notes. The final Italian/English cards match the reviewed text outside their separately read final trace tables. All thirty native scenario/summary/ledger CSV files match the inspected phase-specific values across languages. Thirty-nine relevant native checks pass, including ten phase/language lesson identities, exact-row retrieval, same-engagement alternative runs and first-output preservation. Host-authored regression interpretations and delivery formatting live outside the shipped kits. Native voice, window rendering, elapsed lesson time, learner comprehension, learner confirmation and professional approval remain separate unverified steps.",
@@ -649,5 +649,26 @@
     "content_review": "The complete authored course object is unchanged from the verified course QA commit when source bindings are excluded. Retains both the prior Italian Codex QA record and the Geneva source-bound review from main. No new lesson, language-journey acceptance or professional approval is asserted.",
     "source_review": "Integrated additive Geneva jurisdiction/currency adapters and French presentation from PR #692; course QA source/result readers, saved-review controls, parser hardening and teacher/working roles are preserved. Generated assets and packages are rebuilt from this combined source.",
     "native_execution_requirement": "The combined candidate must pass the unchanged required native demo/practice checks and dedicated Geneva regressions before deployment."
+  },
+  "scissione_registry_freshness_review": {
+    "reviewer": "Codex root: bounded source-difference revalidation",
+    "reviewed_at": "2026-09-29T19:12:44.408707+00:00",
+    "base_commit": "6f26f0e8241a0fe3027c162e2c2cae4d97395465",
+    "previous_course_sha256": "0e3b2aa59fd296a3a04dfee538b4d0943c4d2b69d82746354d9850bbabb9d6a2",
+    "current_course_sha256": "038f549c3a6bc42521b0bd2a1cee7ee377036d856bed2229bf937079afead310",
+    "changed_repository_source": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+    "previous_source_sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
+    "current_source_sha256": "e4080cc44f7acb11350d7c69695fce21319fe17847bb1f7d03b892dd91084cf8",
+    "changed_package_paths": [
+      "modules/sales-plan/vendor/modules/vera_assurance/contracts.py",
+      "vendor/modules/vera_assurance/contracts.py"
+    ],
+    "scope": "All non-source course fields, including localized outlines and fictional input definitions, are identical as parsed JSON to the previously accepted baseline. The only pinned source difference is adding scissione-guidata to VERA_CLIENT_WORKFLOW_IDS; existing identities and execution logic are unchanged. Original reviewers, dates, editorial judgments, demo/practice identities and inspected output hashes are preserved. This is a root review of dependency freshness, not a new independent editorial review, professional acceptance or learner-completion claim.",
+    "native_execution_evidence": {
+      "job_url": "https://github.com/fabioannovazzi/app_files/actions/runs/36614213054/job/109562969446",
+      "head_commit": "42b8bd435a3c4c94d0a40e2f1c79c3460e2e6ecb",
+      "step": "Verify teaching-kit languages, real executions and native packages",
+      "observed_result": "1165 passed, 3 skipped; step succeeded. Aggregate execution evidence only; the full release gate must still verify every required exact demo/practice identity in fresh JUnit."
+    }
   }
 }

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "management-control-pack",
-  "course_sha256": "681b1b40ea1dfae0a4341dd710c22df5d46d8e2c9f9ea77c28cfd2a7c6a8eb42",
+  "course_sha256": "a4a1129b9b3d2a9fbb44912e92d0e310941fc2439c8a94b122a69f469bf0fb29",
   "reviewer": "Codex lesson and actual generated report review",
   "reviewed_at": "2026-09-23T11:51:00.787581+00:00",
   "review_scope": "Reviewed localized lessons, prepared workbook meanings and generated demo/practice narratives and tables. Current native execution checks recalculate the workbook and retain the previous report. Authored commentary is replayed as a fixture, not represented as fresh model inference. The shared Italian dashboard was also inspected in Chrome and its February selector verified. No learner participation, professional approval, live voice or all-locale visual inspection is claimed.",
@@ -118,5 +118,26 @@
     "content_review": "The complete authored course object is unchanged from the verified course QA commit when source bindings are excluded. Retains both the prior Italian Codex QA record and the Geneva source-bound review from main. No new lesson, language-journey acceptance or professional approval is asserted.",
     "source_review": "Integrated additive Geneva jurisdiction/currency adapters and French presentation from PR #692; course QA source/result readers, saved-review controls, parser hardening and teacher/working roles are preserved. Generated assets and packages are rebuilt from this combined source.",
     "native_execution_requirement": "The combined candidate must pass the unchanged required native demo/practice checks and dedicated Geneva regressions before deployment."
+  },
+  "scissione_registry_freshness_review": {
+    "reviewer": "Codex root: bounded source-difference revalidation",
+    "reviewed_at": "2026-09-29T19:12:44.318148+00:00",
+    "base_commit": "6f26f0e8241a0fe3027c162e2c2cae4d97395465",
+    "previous_course_sha256": "681b1b40ea1dfae0a4341dd710c22df5d46d8e2c9f9ea77c28cfd2a7c6a8eb42",
+    "current_course_sha256": "a4a1129b9b3d2a9fbb44912e92d0e310941fc2439c8a94b122a69f469bf0fb29",
+    "changed_repository_source": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+    "previous_source_sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
+    "current_source_sha256": "e4080cc44f7acb11350d7c69695fce21319fe17847bb1f7d03b892dd91084cf8",
+    "changed_package_paths": [
+      "modules/management-control-pack/vendor/modules/vera_assurance/contracts.py",
+      "vendor/modules/vera_assurance/contracts.py"
+    ],
+    "scope": "All non-source course fields, including localized outlines and fictional input definitions, are identical as parsed JSON to the previously accepted baseline. The only pinned source difference is adding scissione-guidata to VERA_CLIENT_WORKFLOW_IDS; existing identities and execution logic are unchanged. Original reviewers, dates, editorial judgments, demo/practice identities and inspected output hashes are preserved. This is a root review of dependency freshness, not a new independent editorial review, professional acceptance or learner-completion claim.",
+    "native_execution_evidence": {
+      "job_url": "https://github.com/fabioannovazzi/app_files/actions/runs/36614213054/job/109562969446",
+      "head_commit": "42b8bd435a3c4c94d0a40e2f1c79c3460e2e6ecb",
+      "step": "Verify teaching-kit languages, real executions and native packages",
+      "observed_result": "1165 passed, 3 skipped; step succeeded. Aggregate execution evidence only; the full release gate must still verify every required exact demo/practice identity in fresh JUnit."
+    }
   }
 }

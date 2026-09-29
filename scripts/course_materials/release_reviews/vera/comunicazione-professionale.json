@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "comunicazione-professionale",
-  "course_sha256": "69c0bec0790302da920a9c9cff1ca42e99cb051c96ac4d0c2faa4fd400c5ad8c",
+  "course_sha256": "aa444362f72ce9701bb6f6445f56f725cdddc374c6813f8611b20f955421331c",
   "reviewer": "Codex: first-use/source/output inspection; independent claim session 01a0a0b8-d623-7cd0-870c-ec3921855b09 and independent editorial session /root/communication_editorial_isolated_07",
   "reviewed_at": "2026-09-14T17:03:02.450310+00:00",
   "review_scope": "Actual current local native packaging with explicitly synthetic professional-review transitions. Exact revised contributions and all 220 claims across both products were independently assessed, followed by a fresh editorial session separate from generation, source assurance and benchmark qualification. The final FAQs preserve the exact reviewed bodies once; root inspected the native packaging and all ten practice emails. Host identities are operator attestations, not API receipts. The outputs are Markdown FAQs and text emails; no HTML, rendered palette, professional approval, sending, real learner, or voice/two-window acceptance is claimed.",
@@ -413,5 +413,25 @@
     "content_review": "The complete authored course object is unchanged from the verified course QA commit when source bindings are excluded. Retains both the prior Italian Codex QA record and the Geneva source-bound review from main. No new lesson, language-journey acceptance or professional approval is asserted.",
     "source_review": "Integrated additive Geneva jurisdiction/currency adapters and French presentation from PR #692; course QA source/result readers, saved-review controls, parser hardening and teacher/working roles are preserved. Generated assets and packages are rebuilt from this combined source.",
     "native_execution_requirement": "The combined candidate must pass the unchanged required native demo/practice checks and dedicated Geneva regressions before deployment."
+  },
+  "scissione_registry_freshness_review": {
+    "reviewer": "Codex root: bounded source-difference revalidation",
+    "reviewed_at": "2026-09-29T19:12:44.195536+00:00",
+    "base_commit": "6f26f0e8241a0fe3027c162e2c2cae4d97395465",
+    "previous_course_sha256": "69c0bec0790302da920a9c9cff1ca42e99cb051c96ac4d0c2faa4fd400c5ad8c",
+    "current_course_sha256": "aa444362f72ce9701bb6f6445f56f725cdddc374c6813f8611b20f955421331c",
+    "changed_repository_source": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+    "previous_source_sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
+    "current_source_sha256": "e4080cc44f7acb11350d7c69695fce21319fe17847bb1f7d03b892dd91084cf8",
+    "changed_package_paths": [
+      "vendor/modules/vera_assurance/contracts.py"
+    ],
+    "scope": "All non-source course fields, including localized outlines and fictional input definitions, are identical as parsed JSON to the previously accepted baseline. The only pinned source difference is adding scissione-guidata to VERA_CLIENT_WORKFLOW_IDS; existing identities and execution logic are unchanged. Original reviewers, dates, editorial judgments, demo/practice identities and inspected output hashes are preserved. This is a root review of dependency freshness, not a new independent editorial review, professional acceptance or learner-completion claim.",
+    "native_execution_evidence": {
+      "job_url": "https://github.com/fabioannovazzi/app_files/actions/runs/36614213054/job/109562969446",
+      "head_commit": "42b8bd435a3c4c94d0a40e2f1c79c3460e2e6ecb",
+      "step": "Verify teaching-kit languages, real executions and native packages",
+      "observed_result": "1165 passed, 3 skipped; step succeeded. Aggregate execution evidence only; the full release gate must still verify every required exact demo/practice identity in fresh JUnit."
+    }
   }
 }
