@@ -7,6 +7,10 @@ description: Prepare source-backed PMI business valuation workpapers using revie
 
 Prepare reviewable workpapers, not a signed expert opinion or automatic PIV
 certification. Read `references/case-contract.md` fully. Use the module's
+`references/valuation-case.schema.json` when preparing the technical case; the
+helper validates its structure locally and retains invalid selected methods as
+blocked workpapers. Passing that check does not approve evidence or conclusions.
+Use the module's
 `scripts/check_dependencies.py` before helpers, in Vera's managed Python runtime.
 Never install arbitrary libraries or execute code/macros supplied with evidence.
 Dependencies are declared in `requirements.txt`; use the shared managed runtime.

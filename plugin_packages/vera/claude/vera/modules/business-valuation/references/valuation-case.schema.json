@@ -1,0 +1,1243 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:mparanza:vera:business-valuation:case:v1",
+  "title": "Vera business valuation case envelope",
+  "description": "Local development workpaper contract. Validate this envelope before source reads, then $defs.selectedMethod independently for each selected method. Invalid method payloads remain blocked workpapers. Review eligibility, cross-record references, date ordering, source receipts and financial judgments are separate runtime or professional checks. No external schema retrieval.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "case_id",
+    "entity_name",
+    "audience",
+    "currency",
+    "synthetic",
+    "mandate",
+    "sources",
+    "inputs",
+    "methods",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "vera.business_valuation.case.v1"
+    },
+    "case_id": {
+      "$ref": "#/$defs/text"
+    },
+    "entity_name": {
+      "$ref": "#/$defs/text"
+    },
+    "audience": {
+      "$ref": "#/$defs/text"
+    },
+    "currency": {
+      "$ref": "#/$defs/currency"
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "mandate": {
+      "$ref": "#/$defs/mandate"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      },
+      "minItems": 1,
+      "maxItems": 2000
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/input"
+      },
+      "minItems": 0,
+      "maxItems": 2000
+    },
+    "methods": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/methodEnvelope"
+      },
+      "minItems": 1,
+      "maxItems": 2000
+    },
+    "limitations": {
+      "$ref": "#/$defs/limitations"
+    },
+    "conclusion": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/conclusion"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "plan_binding": {
+      "$ref": "#/$defs/planBinding"
+    },
+    "sensitivity": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sensitivity"
+      },
+      "minItems": 0,
+      "maxItems": 2000
+    },
+    "purpose_profile": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/purpose"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "normalizations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/normalization"
+      },
+      "minItems": 0,
+      "maxItems": 2000
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/claim"
+      },
+      "minItems": 0,
+      "maxItems": 2000
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 20000,
+      "pattern": "\\S"
+    },
+    "id": {
+      "type": "string",
+      "maxLength": 80,
+      "pattern": "^[a-z][a-z0-9_-]{0,79}$(?![\\s\\S])"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$(?![\\s\\S])"
+    },
+    "decimal": {
+      "type": "string",
+      "maxLength": 80,
+      "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$(?![\\s\\S])"
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$(?![\\s\\S])"
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$(?![\\s\\S])"
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "minItems": 0,
+      "maxItems": 2000
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "minItems": 0,
+      "maxItems": 2000,
+      "uniqueItems": true
+    },
+    "review": {
+      "description": "Raw local attestation retained for diagnostics. Runtime checks the exact dependency digest, accepted decision, named reviewer and timezone-aware timestamp; a structurally valid case never grants acceptance."
+    },
+    "mandate": {
+      "type": "object",
+      "required": [
+        "purpose",
+        "subject",
+        "basis_of_value",
+        "premise",
+        "rights",
+        "professional_limitations",
+        "valuation_date",
+        "information_cutoff"
+      ],
+      "properties": {
+        "purpose": {
+          "$ref": "#/$defs/text"
+        },
+        "subject": {
+          "$ref": "#/$defs/text"
+        },
+        "basis_of_value": {
+          "$ref": "#/$defs/text"
+        },
+        "premise": {
+          "$ref": "#/$defs/text"
+        },
+        "rights": {
+          "$ref": "#/$defs/text"
+        },
+        "professional_limitations": {
+          "$ref": "#/$defs/text"
+        },
+        "valuation_date": {
+          "$ref": "#/$defs/date"
+        },
+        "information_cutoff": {
+          "$ref": "#/$defs/date"
+        }
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "id",
+        "path",
+        "sha256",
+        "description",
+        "allowed_audiences",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "path": {
+          "$ref": "#/$defs/text"
+        },
+        "sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "allowed_audiences": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 1,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "status": {
+          "enum": [
+            "reviewed",
+            "unverified"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "benchmark": {
+      "type": "object",
+      "required": [
+        "source_url",
+        "observed_on",
+        "published_on",
+        "retrieved_on",
+        "vintage",
+        "definition",
+        "geography",
+        "selection_reason",
+        "max_age_days"
+      ],
+      "properties": {
+        "source_url": {
+          "type": "string",
+          "maxLength": 20000,
+          "pattern": "^https://"
+        },
+        "observed_on": {
+          "$ref": "#/$defs/date"
+        },
+        "published_on": {
+          "$ref": "#/$defs/date"
+        },
+        "retrieved_on": {
+          "$ref": "#/$defs/date"
+        },
+        "vintage": {
+          "$ref": "#/$defs/text"
+        },
+        "definition": {
+          "$ref": "#/$defs/text"
+        },
+        "geography": {
+          "$ref": "#/$defs/text"
+        },
+        "selection_reason": {
+          "$ref": "#/$defs/text"
+        },
+        "max_age_days": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "input": {
+      "type": "object",
+      "required": [
+        "id",
+        "value",
+        "unit",
+        "description",
+        "locator",
+        "source_ids",
+        "kind",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/decimal"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/currency"
+            },
+            {
+              "enum": [
+                "ratio",
+                "multiple"
+              ]
+            }
+          ]
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "locator": {
+          "$ref": "#/$defs/text"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "kind": {
+          "enum": [
+            "fact",
+            "assumption",
+            "hypothesis"
+          ]
+        },
+        "status": {
+          "enum": [
+            "confirmed",
+            "proposed"
+          ]
+        },
+        "benchmark": {
+          "$ref": "#/$defs/benchmark"
+        },
+        "plan_calculation_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 1,
+          "maxItems": 2000,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "purpose": {
+      "type": "object",
+      "required": [
+        "id",
+        "selection_reason",
+        "source_ids",
+        "locator"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "selection_reason": {
+          "$ref": "#/$defs/text"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "locator": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "additionalProperties": false
+    },
+    "planBinding": {
+      "type": "object",
+      "required": [
+        "source_id",
+        "source_map",
+        "scenario_id",
+        "cash_operating_taxes",
+        "opening_operating_nwc",
+        "annual_input_ids",
+        "operating_classification",
+        "tax_refund_basis"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "#/$defs/id"
+        },
+        "source_map": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 2000,
+          "propertyNames": {
+            "$ref": "#/$defs/text"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "scenario_id": {
+          "$ref": "#/$defs/text"
+        },
+        "cash_operating_taxes": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 1200,
+          "propertyNames": {
+            "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])$(?![\\s\\S])"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "opening_operating_nwc": {
+          "$ref": "#/$defs/id"
+        },
+        "annual_input_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "operating_classification": {
+          "$ref": "#/$defs/text"
+        },
+        "tax_refund_basis": {
+          "type": "string",
+          "maxLength": 20000
+        }
+      },
+      "additionalProperties": false
+    },
+    "adjustment": {
+      "type": "object",
+      "required": [
+        "id",
+        "amount_input",
+        "reason",
+        "accounting_check",
+        "economic_rationale",
+        "tax_treatment",
+        "reversibility",
+        "locator",
+        "source_ids"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "amount_input": {
+          "$ref": "#/$defs/id"
+        },
+        "reason": {
+          "$ref": "#/$defs/text"
+        },
+        "accounting_check": {
+          "$ref": "#/$defs/text"
+        },
+        "economic_rationale": {
+          "$ref": "#/$defs/text"
+        },
+        "tax_treatment": {
+          "$ref": "#/$defs/text"
+        },
+        "reversibility": {
+          "$ref": "#/$defs/text"
+        },
+        "locator": {
+          "$ref": "#/$defs/text"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        }
+      },
+      "additionalProperties": false
+    },
+    "normalization": {
+      "type": "object",
+      "required": [
+        "id",
+        "year",
+        "line",
+        "reported_input",
+        "adjusted_input",
+        "adjustments"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "year": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9998
+        },
+        "line": {
+          "$ref": "#/$defs/text"
+        },
+        "reported_input": {
+          "$ref": "#/$defs/id"
+        },
+        "adjusted_input": {
+          "$ref": "#/$defs/id"
+        },
+        "adjustments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/adjustment"
+          },
+          "minItems": 1,
+          "maxItems": 2000
+        }
+      },
+      "additionalProperties": false
+    },
+    "claimValue": {
+      "type": "object",
+      "required": [
+        "calculation_id",
+        "value",
+        "unit"
+      ],
+      "properties": {
+        "calculation_id": {
+          "$ref": "#/$defs/text"
+        },
+        "value": {
+          "$ref": "#/$defs/decimal"
+        },
+        "unit": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "additionalProperties": false
+    },
+    "claim": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "text",
+        "location",
+        "basis",
+        "source_ids",
+        "input_ids",
+        "calculation_ids",
+        "method_ids",
+        "limitations"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "enum": [
+            "fact",
+            "assumption",
+            "hypothesis",
+            "opinion"
+          ]
+        },
+        "text": {
+          "$ref": "#/$defs/text"
+        },
+        "location": {
+          "$ref": "#/$defs/text"
+        },
+        "basis": {
+          "$ref": "#/$defs/text"
+        },
+        "source_ids": {
+          "$ref": "#/$defs/references"
+        },
+        "input_ids": {
+          "$ref": "#/$defs/references"
+        },
+        "calculation_ids": {
+          "$ref": "#/$defs/references"
+        },
+        "method_ids": {
+          "$ref": "#/$defs/references"
+        },
+        "limitations": {
+          "$ref": "#/$defs/limitations"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/claimValue"
+          },
+          "minItems": 0,
+          "maxItems": 2000
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        }
+      },
+      "additionalProperties": false
+    },
+    "conclusion": {
+      "type": "object",
+      "required": [
+        "text",
+        "method_ids",
+        "review"
+      ],
+      "properties": {
+        "text": {
+          "$ref": "#/$defs/text"
+        },
+        "method_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "claim_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        }
+      },
+      "additionalProperties": false
+    },
+    "sensitivity": {
+      "type": "object",
+      "required": [
+        "id",
+        "method_id",
+        "discount_rate",
+        "terminal_rate",
+        "terminal_growth"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "method_id": {
+          "$ref": "#/$defs/id"
+        },
+        "discount_rate": {
+          "$ref": "#/$defs/id"
+        },
+        "terminal_rate": {
+          "$ref": "#/$defs/id"
+        },
+        "terminal_growth": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false
+    },
+    "bridge": {
+      "type": "object",
+      "required": [
+        "financial_debt",
+        "debt_like",
+        "excess_cash",
+        "non_operating_assets",
+        "signed_adjustments"
+      ],
+      "properties": {
+        "financial_debt": {
+          "$ref": "#/$defs/id"
+        },
+        "debt_like": {
+          "$ref": "#/$defs/id"
+        },
+        "excess_cash": {
+          "$ref": "#/$defs/id"
+        },
+        "non_operating_assets": {
+          "$ref": "#/$defs/id"
+        },
+        "signed_adjustments": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false
+    },
+    "methodEnvelope": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "selected",
+        "rationale",
+        "inputs",
+        "limitations"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "$ref": "#/$defs/text"
+        },
+        "selected": {
+          "type": "boolean"
+        },
+        "rationale": {
+          "$ref": "#/$defs/text"
+        },
+        "inputs": {
+          "description": "Validated against the selected-method definition inside the per-method diagnostic boundary."
+        },
+        "limitations": {
+          "$ref": "#/$defs/limitations"
+        },
+        "bridge": {},
+        "timing": {},
+        "review": {
+          "$ref": "#/$defs/review"
+        }
+      },
+      "additionalProperties": false
+    },
+    "annualDcfInputs": {
+      "type": "object",
+      "required": [
+        "flows",
+        "discount_rate",
+        "terminal_next_flow",
+        "terminal_growth"
+      ],
+      "properties": {
+        "flows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "discount_rate": {
+          "$ref": "#/$defs/id"
+        },
+        "terminal_next_flow": {
+          "$ref": "#/$defs/id"
+        },
+        "terminal_growth": {
+          "$ref": "#/$defs/id"
+        },
+        "terminal_rate": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false
+    },
+    "datedDcfInputs": {
+      "type": "object",
+      "required": [
+        "flows",
+        "terminal_next_flow",
+        "terminal_growth",
+        "terminal_rate"
+      ],
+      "properties": {
+        "flows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 1200
+        },
+        "terminal_next_flow": {
+          "$ref": "#/$defs/id"
+        },
+        "terminal_growth": {
+          "$ref": "#/$defs/id"
+        },
+        "terminal_rate": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false
+    },
+    "incomeInputs": {
+      "type": "object",
+      "required": [
+        "normalized_equity_income",
+        "cost_equity"
+      ],
+      "properties": {
+        "normalized_equity_income": {
+          "$ref": "#/$defs/id"
+        },
+        "cost_equity": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false
+    },
+    "navInputs": {
+      "type": "object",
+      "required": [
+        "assets",
+        "liabilities",
+        "tax_adjustment"
+      ],
+      "properties": {
+        "assets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "liabilities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "tax_adjustment": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false
+    },
+    "mixedInputs": {
+      "type": "object",
+      "required": [
+        "adjusted_equity",
+        "incomes",
+        "normal_return",
+        "excess_discount"
+      ],
+      "properties": {
+        "adjusted_equity": {
+          "$ref": "#/$defs/id"
+        },
+        "incomes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "normal_return": {
+          "$ref": "#/$defs/id"
+        },
+        "excess_discount": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false
+    },
+    "multipleInputs": {
+      "type": "object",
+      "required": [
+        "metric",
+        "selected_multiple",
+        "kind"
+      ],
+      "properties": {
+        "metric": {
+          "$ref": "#/$defs/id"
+        },
+        "selected_multiple": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "enum": [
+            "EV_EBITDA",
+            "EV_EBIT",
+            "EV_REVENUE",
+            "P_E"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "apvInputs": {
+      "type": "object",
+      "required": [
+        "unlevered_value",
+        "pv_tax_shields",
+        "pv_financing_costs"
+      ],
+      "properties": {
+        "unlevered_value": {
+          "$ref": "#/$defs/id"
+        },
+        "pv_tax_shields": {
+          "$ref": "#/$defs/id"
+        },
+        "pv_financing_costs": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false
+    },
+    "timing": {
+      "type": "object",
+      "required": [
+        "valuation_date",
+        "period_end_dates",
+        "cash_flow_timing",
+        "day_count",
+        "rate_compounding",
+        "rate_model",
+        "rate_ids",
+        "rationale"
+      ],
+      "properties": {
+        "valuation_date": {
+          "$ref": "#/$defs/date"
+        },
+        "period_end_dates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/date"
+          },
+          "minItems": 1,
+          "maxItems": 1200
+        },
+        "cash_flow_timing": {
+          "enum": [
+            "end_period",
+            "mid_period"
+          ]
+        },
+        "day_count": {
+          "enum": [
+            "ACT/365F",
+            "ACT/ACT_ISDA"
+          ]
+        },
+        "rate_compounding": {
+          "enum": [
+            "effective_annual",
+            "continuous"
+          ]
+        },
+        "rate_model": {
+          "enum": [
+            "flat",
+            "spot_curve",
+            "forward_curve"
+          ]
+        },
+        "rate_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 1200
+        },
+        "terminal_discount_rate": {
+          "$ref": "#/$defs/id"
+        },
+        "rationale": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "rate_model": {
+                "const": "spot_curve"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "terminal_discount_rate"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "terminal_discount_rate"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "selectedMethod": {
+      "description": "Validate each selected method independently after the case envelope. Structural validity does not establish reference existence, arithmetic validity or economic appropriateness.",
+      "allOf": [
+        {
+          "$ref": "#/$defs/methodEnvelope"
+        },
+        {
+          "properties": {
+            "selected": {
+              "const": true
+            },
+            "kind": {
+              "enum": [
+                "DCF_FCFF",
+                "DCF_FCFE",
+                "INCOME_EQUITY",
+                "NAV",
+                "MIXED_EQUITY",
+                "MULTIPLE",
+                "APV"
+              ]
+            },
+            "bridge": {
+              "$ref": "#/$defs/bridge"
+            },
+            "timing": {
+              "$ref": "#/$defs/timing"
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "DCF_FCFF"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "required": [
+                "timing"
+              ]
+            },
+            "then": {
+              "properties": {
+                "inputs": {
+                  "$ref": "#/$defs/datedDcfInputs"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "inputs": {
+                  "$ref": "#/$defs/annualDcfInputs"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "DCF_FCFE"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "required": [
+                "timing"
+              ]
+            },
+            "then": {
+              "properties": {
+                "inputs": {
+                  "$ref": "#/$defs/datedDcfInputs"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "inputs": {
+                  "$ref": "#/$defs/annualDcfInputs"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "INCOME_EQUITY"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inputs": {
+                "$ref": "#/$defs/incomeInputs"
+              }
+            },
+            "not": {
+              "required": [
+                "timing"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "NAV"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inputs": {
+                "$ref": "#/$defs/navInputs"
+              }
+            },
+            "not": {
+              "required": [
+                "timing"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "MIXED_EQUITY"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inputs": {
+                "$ref": "#/$defs/mixedInputs"
+              }
+            },
+            "not": {
+              "required": [
+                "timing"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "MULTIPLE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inputs": {
+                "$ref": "#/$defs/multipleInputs"
+              }
+            },
+            "not": {
+              "required": [
+                "timing"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "APV"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inputs": {
+                "$ref": "#/$defs/apvInputs"
+              }
+            },
+            "not": {
+              "required": [
+                "timing"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

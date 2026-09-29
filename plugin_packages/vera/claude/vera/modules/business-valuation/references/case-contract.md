@@ -15,6 +15,23 @@ The user does not write JSON. `scripts/run_valuation.py` requires a current
 portable Studio Archive context. Every source and the case must be an exact
 receipted input; an upstream plan must be a finalized same-engagement artifact.
 
+The published structural contract is `valuation-case.schema.json` (JSON Schema
+Draft 2020-12). The helper uses the declared `jsonschema` runtime dependency to
+validate the case envelope before source-path discovery or nested file reads.
+It then validates `$defs.selectedMethod` independently for each selected method:
+malformed or unsupported method payloads become blocked workpapers while other
+methods remain calculable. Excluded methods retain their rationale without
+requiring a complete numeric payload. All schema references are bundled local
+definitions; case files cannot select a schema or trigger remote retrieval.
+
+Schema checks enforce field shape, bounded lists, canonical dates/decimal text
+and the documented method payloads. Reference existence, date ordering, receipts,
+hashes, unit relationships, arithmetic and economic judgment need the separate
+runtime or professional checks below. Raw local review records are deliberately
+retained, including incomplete ones; only the exact runtime attestation checks
+can grant review status. Schema validity never proves professional acceptance.
+Diagnostics identify the field path and failed rule without echoing field values.
+
 ## Case and source records
 
 Required top-level fields: `schema_version=vera.business_valuation.case.v1`,

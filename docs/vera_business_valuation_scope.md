@@ -97,11 +97,15 @@ conclusion and professional review. The additional claim register brings the
 helper output to 18 artifacts. Actual model-data JSON/Markdown remain a separate
 host responsibility; a numerical helper cannot invent what the model read.
 
-The contributor's architecture also explicitly requests production JSON Schema
-validation using the existing runtime. Current code validates consumed fields,
-types and dependencies directly; a published case schema and its runtime
-integration remain to implement. Do not describe the Python checks as complete
-JSON Schema implementation.
+The contributor's requested production JSON Schema validation now uses the
+declared `jsonschema>=4.23,<5` dependency and bundled Draft 2020-12 case schema.
+The runtime validates the envelope before nested-source discovery, then selected
+method payloads inside their individual diagnostic boundaries. Unsupported or
+incomplete methods remain blocked alongside usable methods; excluded specialist
+methods retain their explanation. Only bundled internal schema references are
+used. Schema checks cover structure and explicit representations; semantic
+suitability, cross-record integrity, receipts and review freshness remain separate
+checks. Invalid review records are retained without granting acceptance.
 
 ## Purpose coverage and release evidence
 

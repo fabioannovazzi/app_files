@@ -12,6 +12,7 @@ from typing import Any
 from urllib.parse import urlsplit
 
 from valuation_engine import ValuationError, calculate_method, decimal
+from valuation_schema import validate_case, validate_selected_method
 
 __all__ = [
     "build_valuation",
@@ -122,6 +123,7 @@ def reviewed(record: Any, expected_digest: str) -> bool:
 
 def source_paths(case: dict, root: Path) -> list[Path]:
     """Close nested sources to a declared root before receipt validation or reads."""
+    validate_case(case)
     root = root.resolve(strict=True)
     result = []
     for source in case["sources"]:
@@ -405,6 +407,7 @@ def build_valuation(
     case: dict, source_root: Path, *, replay_parent: Path | None = None
 ) -> dict:
     """Compile independent methods; stale attestations cannot authorize new values."""
+    validate_case(case)
     fields(
         case,
         {
@@ -509,6 +512,7 @@ def build_valuation(
             )
             continue
         try:
+            validate_selected_method(method)
             _checked_timing(method, mandate, plan_bridge)
             result = calculate_method(method, inputs, case["currency"])
             dependent_normalizations = _bind_normalizations(result, normalizations)
@@ -628,10 +632,11 @@ def build_valuation(
         )
         method = deepcopy(methods[scenario["method_id"]])
         method["id"] = scenario["id"]
-        method["inputs"].update(
-            {key: scenario[key] for key in ("terminal_rate", "terminal_growth")}
-        )
         try:
+            validate_selected_method(method)
+            method["inputs"].update(
+                {key: scenario[key] for key in ("terminal_rate", "terminal_growth")}
+            )
             if "timing" in method:
                 require(
                     isinstance(method["timing"], dict)

@@ -9,7 +9,7 @@ __all__ = ["main"]
 
 
 def main() -> int:
-    for package in ("openpyxl", "python-docx", "reportlab"):
+    for package in ("jsonschema", "openpyxl", "python-docx", "reportlab"):
         logging.info("%s %s", package, importlib.metadata.version(package))
     return 0
 

@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-valuation",
-  "course_sha256": "5681fa98b2bfd9e84d854c5b446ec142157db1abf76cbd2d1bd37550590b4b21",
+  "course_sha256": "eb5af5fdbbbe796c2a442769e8607b0d9f50191e8d4fda5f1acf0344bd98a018",
   "reviewer": "Codex /root: source, calculation and document review",
-  "reviewed_at": "2026-09-29T19:15:08.903348+00:00",
+  "reviewed_at": "2026-09-29T19:29:57.892588+00:00",
   "review_scope": "Read both fictional notes and the entire Italian lesson. Ran the real bound workflow for demo and practice, inspected their Markdown reports and calculation registers. Seven-method DOCX was rendered and all four pages inspected; LibreOffice independently recalculated all 75 workbook calculation cells. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior is an instruction and separate archive contract, not claimed as a live learner test.",
   "languages": {
     "it": {
@@ -23,11 +23,11 @@
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "4c3bce5282b3b526497d2842e3748f7b55c8e541eaf9d1f46e31de69824e33c9"
+            "sha256": "ac0631b40caa651d9bb336ddd74ae7e6f818ea2ed71e305f95a2fb6878e33478"
           },
           {
             "name": "valuation.json",
-            "sha256": "17bf642e139b54463c4e04902837ce8dbc19adc8663d41afcb7a89f2863251ac"
+            "sha256": "9da2c8fdee8f47acbd9bb167efc001685709b19ab00dacb5da7ee0f3475b71a8"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -79,6 +79,19 @@
                 "sha256": "0c4954be6a5d49a73bc9677fa34f31bd4b05ccbffbe60a7f04a1ae89dbb8fe5d"
               }
             ]
+          },
+          {
+            "reviewed_at": "2026-09-29T19:15:08.903348+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "4c3bce5282b3b526497d2842e3748f7b55c8e541eaf9d1f46e31de69824e33c9"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "17bf642e139b54463c4e04902837ce8dbc19adc8663d41afcb7a89f2863251ac"
+              }
+            ]
           }
         ]
       },
@@ -88,11 +101,11 @@
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "5d9b0491a59e3251fc2005dcaf6a4daa7595aca1dc67ca83816f595e4b895fcc"
+            "sha256": "e2c2eff888423b1621125f39abf120c370a845d3b1778b1eb16d40412f3e2753"
           },
           {
             "name": "valuation.json",
-            "sha256": "1f7e0bb19eac79a738d3d834ca1c69ddc13ec51285a7f25cbea2f445a0018dce"
+            "sha256": "7a8546ead0468247ac1f1a64f1041871e80490887a3a2f0e78a359210a38a895"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -144,6 +157,19 @@
                 "sha256": "7001f1e9b1e0ce8f9d8e231a4b87630ee1a7a98dd28d47b101c02dd35b46dc21"
               }
             ]
+          },
+          {
+            "reviewed_at": "2026-09-29T19:15:08.903348+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "5d9b0491a59e3251fc2005dcaf6a4daa7595aca1dc67ca83816f595e4b895fcc"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "1f7e0bb19eac79a738d3d834ca1c69ddc13ec51285a7f25cbea2f445a0018dce"
+              }
+            ]
           }
         ]
       }
@@ -174,5 +200,10 @@
     "tests": "140 valuation tests pass at 94.66% coverage, including stale claim/conclusion review, unavailable evidence, numeric mismatches, normalization tax-dependency and conditional scenario references.",
     "artifact_review": "All five DOCX and four native PDF pages of the synthetic claim example are readable. LibreOffice independently matches its 75 calculation cells plus the linked 750 EUR claim value at 1e-12 relative / 1e-9 absolute tolerance.",
     "previous_reviewed_at": "2026-09-29T18:56:11.711307+00:00"
+  },
+  "schema_validation_review": {
+    "scope": "Reviewed the bundled Draft 2020-12 schema and local runtime integration. Case shape is checked before nested-source discovery; selected method payloads are checked within partial-workpaper boundaries. No external schema retrieval or professional acceptance is introduced. Read both freshly executed annual lesson reports: unchanged 750000 and 583333.33 EUR equity indications, pending review, development-only purpose coverage and 18 artifacts each. Report renderer and document layout are unchanged from the previous visual review.",
+    "tests": "160 valuation tests pass at 93.72% coverage, including invalid canonical dates and numbers, bounded records, missing receipt path fields, private-value redaction, partial method/sensitivity diagnostics and excluded specialist methods.",
+    "previous_reviewed_at": "2026-09-29T19:15:08.903348+00:00"
   }
 }

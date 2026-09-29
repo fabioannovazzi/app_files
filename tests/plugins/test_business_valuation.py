@@ -24,6 +24,7 @@ import valuation_claims
 import valuation_engine
 import valuation_normalization
 import valuation_report
+import valuation_schema
 from valuation_case import build_valuation, digest, read_json
 from valuation_engine import ValuationError, decimal, evaluate
 from valuation_report import compile_html, write_package, write_workbook
@@ -43,12 +44,111 @@ def restore_imports(monkeypatch: pytest.MonkeyPatch) -> None:
         valuation_engine,
         valuation_normalization,
         valuation_report,
+        valuation_schema,
     ):
         monkeypatch.setitem(sys.modules, module.__name__, module)
 
 
 def case_data() -> dict:
     return read_json(FIXTURE / "case.json")
+
+
+@pytest.mark.parametrize(
+    ("path", "value"),
+    [
+        (("currency",), "eur"),
+        (("synthetic",), "true"),
+        (("mandate", "valuation_date"), "2026-02-30"),
+        (("mandate", "information_cutoff"), "20261231"),
+        (("sources", 0, "allowed_audiences"), "internal"),
+        (("sources", 0, "sha256"), "a" * 63),
+        (("inputs", 0, "value"), "private-value-not-a-number"),
+        (("inputs", 0, "value"), "100\n"),
+        (("inputs", 0, "value"), 100),
+        (("inputs", 0, "source_ids"), [["evidence"]]),
+        (("limitations",), [" "]),
+        (("undeclared-field",), "private-value-not-a-number"),
+    ],
+)
+def test_schema_rejects_bad_case_before_nested_source_access(
+    path: tuple, value: object, tmp_path: Path
+) -> None:
+    case = case_data()
+    parent = case
+    for key in path[:-1]:
+        parent = parent[key]
+    parent[path[-1]] = value
+
+    with pytest.raises(ValuationError, match="schema") as error:
+        build_valuation(case, tmp_path / "source-root-does-not-exist")
+
+    assert "private-value-not-a-number" not in str(error.value)
+
+
+def test_source_path_discovery_applies_schema_before_receipt_expansion(
+    tmp_path: Path,
+) -> None:
+    case = case_data()
+    del case["sources"][0]["path"]
+    with pytest.raises(ValuationError, match="at /sources/0: schema required"):
+        valuation_case.source_paths(case, tmp_path / "missing")
+
+
+def test_schema_bounds_case_record_arrays() -> None:
+    case = case_data()
+    case["sources"] = case["sources"] * 2001
+    with pytest.raises(ValuationError, match="schema maxItems"):
+        valuation_schema.validate_case(case)
+
+
+@pytest.mark.parametrize("payload", [None, [], {"flows": ["flow"]}])
+def test_schema_preserves_malformed_method_and_sensitivity_as_blocked(
+    payload: object,
+) -> None:
+    case = case_data()
+    case["methods"][0]["inputs"] = payload
+    case["sensitivity"] = [
+        dict(
+            id="scenario",
+            method_id="fcff",
+            discount_rate="rate",
+            terminal_rate="rate",
+            terminal_growth="growth",
+        )
+    ]
+
+    result = build_valuation(case, FIXTURE)
+
+    assert result["methods"][0]["status"] == "blocked"
+    assert "schema" in result["methods"][0]["reason"]
+    assert result["sensitivity"][0]["status"] == "blocked"
+    assert result["methods"][1]["status"] == "ready_for_professional_review"
+
+
+def test_schema_keeps_excluded_specialist_method_without_a_numeric_payload() -> None:
+    case = case_data()
+    case["methods"][0].update(kind="SPECIALIST_METHOD", selected=False, inputs=None)
+    result = build_valuation(case, FIXTURE)
+    assert result["methods"][0]["status"] == "excluded"
+    assert result["methods"][1]["status"] == "ready_for_professional_review"
+
+
+def test_schema_does_not_grant_acceptance_to_an_incomplete_attestation() -> None:
+    case = case_data()
+    case["methods"][0]["review"] = {"decision": "accepted"}
+    result = build_valuation(case, FIXTURE)
+    assert result["methods"][0]["status"] == "ready_for_professional_review"
+    assert result["methods"][0]["stale_review"] is True
+
+
+def test_published_schema_uses_only_internal_references() -> None:
+    from jsonschema import Draft202012Validator
+
+    schema = read_json(SCRIPTS.parent / "references/valuation-case.schema.json")
+    Draft202012Validator.check_schema(schema)
+    references = re.findall(r'"\$ref": "([^"]+)"', json.dumps(schema))
+    assert references
+    assert set(ref.split("/")[0] for ref in references) == {"#"}
 
 
 def review(dependency: str) -> dict:
