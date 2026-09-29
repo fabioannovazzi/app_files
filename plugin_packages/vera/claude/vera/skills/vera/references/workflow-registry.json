@@ -462,6 +462,17 @@
         "modules/studio-archive/scripts/check_dependencies.py",
         "modules/studio-archive/scripts/studio_archive.py"
       ]
+    },
+    {
+      "component_id": "trasformazione",
+      "skills": [
+        "modules/trasformazione/skills/trasformazione/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/trasformazione/scripts/check_dependencies.py",
+        "modules/trasformazione/scripts/demo.py",
+        "modules/trasformazione/scripts/transform_case.py"
+      ]
     }
   ],
   "vera_wrapper_skills": [
@@ -499,6 +510,7 @@
     "skills/registro-imprese-sari/SKILL.md",
     "skills/sales-plan/SKILL.md",
     "skills/studio-archive/SKILL.md",
+    "skills/trasformazione/SKILL.md",
     "skills/treasury-forecast/SKILL.md",
     "skills/variance-analysis/SKILL.md",
     "skills/vera/SKILL.md",
