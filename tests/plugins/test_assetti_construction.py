@@ -704,6 +704,64 @@ def test_html_embeds_case_as_data_and_has_no_remote_resources() -> None:
     assert "localStorage" not in rendered
 
 
+def test_followup_form_keeps_original_answers_and_adds_unknown_questions() -> None:
+    state = imported(case(), intake())
+
+    rendered = render_form(
+        state,
+        questions=[
+            {
+                "id": "FOLLOWUP",
+                "question": "Who reviewed the last budget?",
+                "criterion_ids": ["C0"],
+            }
+        ],
+    )
+
+    config = json.loads(
+        rendered.split('id="configuration">', 1)[1].split("</script>", 1)[0]
+    )
+    assert config["saved_intake"] == intake()
+    assert config["initial_intake"]["answers"][0] == intake()["answers"][0]
+    assert config["initial_intake"]["answers"][1]["status"] == "unknown"
+    assert (
+        config["initial_intake"]["answers"][1]["question"]
+        == "Who reviewed the last budget?"
+    )
+
+
+def test_followup_cannot_change_the_question_under_an_existing_answer() -> None:
+    state = imported(case(), intake())
+
+    with pytest.raises(ValueError, match="new ID"):
+        render_form(
+            state,
+            questions=[
+                {
+                    "id": "C0",
+                    "question": "A different question",
+                    "criterion_ids": ["C0"],
+                }
+            ],
+        )
+
+
+@pytest.mark.parametrize(
+    "questions",
+    [
+        [],
+        [
+            {"id": "Q", "question": "Question", "criterion_ids": []},
+            {"id": "Q", "question": "Duplicate", "criterion_ids": []},
+        ],
+        [{"id": "Q", "question": "Question", "criterion_ids": ["UNKNOWN"]}],
+    ],
+)
+def test_form_rejects_empty_duplicate_or_unbound_questions(questions) -> None:
+    with pytest.raises(ValueError):
+        render_form(case(), questions=questions)
+
+
 def test_export_formats_bind_same_manual_and_keep_editable_register_fields(
     tmp_path: Path,
 ) -> None:

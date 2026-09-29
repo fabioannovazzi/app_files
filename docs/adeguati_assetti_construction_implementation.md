@@ -111,14 +111,27 @@ regressions remain in `test_adeguati_assetti.py`.
 
 ## Validation evidence
 
-Final CI-equivalent source and packaged assetti suite on current main: 137 passed,
-90.67% coverage across the component scripts. Strict plugin Mypy passed for all
+Final CI-equivalent source, packaged assetti and privacy suite on current main:
+170 passed (142 assetti and 28 privacy), 90.79% coverage across the component
+scripts. Strict plugin Mypy passed for all
 eight scripts; Bandit found no issues in the module scripts. The two CLI lifecycle
 checks and all 28 privacy surface tests passed.
 Browser verification used an existing Chromium binary, with desktop 1280px and
 mobile 390px views. No network requests, page errors or horizontal mobile overflow
 were observed. DOCX was rendered through the bundled LibreOffice renderer and PDF
 through pdftoppm; these are synthetic examples, not professional acceptance.
+
+Adaptive interview regression: adding contextual questions to a resumed interview
+preserves every prior question and original answer, adds unknown follow-ups and
+exports a new revision whose parent is the previous imported payload. Reusing an
+ID for a changed question is rejected. A real Chromium round trip verified the
+follow-up export, rejected a newer draft with a conflicting parent, then passed
+the exported file through the Python importer with no score promotion.
+
+Remote CI on the source-only draft confirmed release alignment stops at the stale
+generated `adeguati-assetti/course.json`; the inspected Clara package job fails on
+the same course source drift. Committing those generated artifacts remains a
+separate pending repository-policy exception.
 
 Both document libraries already exist in all three shared runtime recipes;
 the module uses those existing supported ranges without changing runtime policy.

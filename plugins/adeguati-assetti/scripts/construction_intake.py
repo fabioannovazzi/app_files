@@ -208,8 +208,52 @@ def render_form(state: dict, *, questions: list[dict] | None = None) -> str:
             {"id": c["id"], "question": c["question"], "criterion_ids": [c["id"]]}
             for c in state["catalog"]["criteria"]
         )
+    require(
+        isinstance(questions, list) and bool(questions), "Provide at least one question"
+    )
+    known = {c["id"] for c in state["catalog"]["criteria"]}
+    seen = set()
     for question in questions:
         fields(question, "id", "question")
+        require(question["id"] not in seen, "Duplicate question ID")
+        seen.add(question["id"])
+        require(
+            isinstance(question.get("criterion_ids"), list)
+            and all(cid in known for cid in question["criterion_ids"]),
+            "Unknown question criterion",
+        )
+    initial = None
+    if saved:
+        initial = json.loads(json.dumps(saved))
+        previous = {row["question_id"]: row for row in initial["answers"]}
+        for question in questions:
+            if question["id"] in previous:
+                original = previous[question["id"]]
+                require(
+                    original["question"] == question["question"]
+                    and original["criterion_ids"] == question["criterion_ids"],
+                    "A changed question needs a new ID; preserve its original answer",
+                )
+            else:
+                initial["answers"].append(
+                    {
+                        "question_id": question["id"],
+                        "question": question["question"],
+                        "criterion_ids": question["criterion_ids"],
+                        "original": "",
+                        "status": "unknown",
+                        "notes": "",
+                        "attachment_refs": [],
+                    }
+                )
+        questions = [
+            {
+                "id": row["question_id"],
+                "question": row["question"],
+                "criterion_ids": row["criterion_ids"],
+            }
+            for row in initial["answers"]
+        ]
     config = {
         "schema_version": INTAKE_SCHEMA,
         "practice_id": state["case_id"],
@@ -219,6 +263,7 @@ def render_form(state: dict, *, questions: list[dict] | None = None) -> str:
         "entity_name": state["entity_name"],
         "questions": questions,
         "saved_intake": saved,
+        "initial_intake": initial,
         "resume_summary": state["cursor"].get("summary", ""),
         "next_step": state["cursor"].get("next_step", ""),
     }
