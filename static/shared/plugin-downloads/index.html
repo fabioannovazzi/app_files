@@ -183,6 +183,9 @@ codex plugin list --json</code></pre>
       document.querySelectorAll('[data-product]').forEach(function (button) { button.setAttribute('aria-pressed', String(button.dataset.product === key)); });
       const example = language === 'en' ? '/path/to/' : '/percorso/';
       document.getElementById('commands').textContent = 'codex plugin marketplace add "' + example + key + '-codex-plugin"\ncodex plugin add ' + identifier + '\ncodex plugin list --json';
+      document.querySelectorAll('[data-language]').forEach(function (link) {
+        link.href = '?lang=' + link.dataset.language + '&product=' + key;
+      });
       status.textContent = '';
     }
     document.querySelectorAll('[data-product]').forEach(function (button) { button.addEventListener('click', function () { selectProduct(button.dataset.product); }); });
@@ -195,7 +198,8 @@ codex plugin list --json</code></pre>
         status.textContent = language === 'en' ? 'Text selected. Copy it manually.' : 'Testo selezionato. Copialo manualmente.';
       }
     });
-    selectProduct('vera');
+    const requestedProduct = new URLSearchParams(window.location.search).get('product');
+    selectProduct(Object.prototype.hasOwnProperty.call(products, requestedProduct) ? requestedProduct : 'vera');
   </script>
 </body>
 </html>
