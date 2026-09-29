@@ -28,6 +28,9 @@ class IconSpec:
 
 SPECS = (
     IconSpec(
+        "patent-box-review", "Vera · Patent Box", "#002060", "#00B0F0", "patent_box"
+    ),
+    IconSpec(
         "invoice-xml",
         "Vera · Preparazione fatture XML",
         "#002060",
@@ -360,6 +363,7 @@ def _body(spec: IconSpec) -> str:
     color = "#1F211D"
     accent = spec.accent
     bodies = {
+        "patent_box": f"""<path d="M16 12h24l8 8v32H16zM39 12v10h9M23 29h17M23 36h8" fill="none" stroke="{paper}" stroke-width="3"/><circle cx="39" cy="43" r="7" fill="none" stroke="{accent}" stroke-width="3"/><path d="m35 43 3 3 5-6" fill="none" stroke="{accent}" stroke-width="2"/>""",
         "treasury": f"""<rect x="13" y="17" width="38" height="35" rx="4" fill="none" stroke="{paper}" stroke-width="3"/><path d="M22 12v10M42 12v10M13 28h38" stroke="{paper}" stroke-width="3"/><path d="m19 39 8-5 8 12 10-10" fill="none" stroke="{accent}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>""",
         "assetti": f"""<path d="M25 12h14v12H25zM10 40h14v12H10zM40 40h14v12H40zM32 24v8M17 40v-8h30v8" fill="none" stroke="{paper}" stroke-width="3"/><circle cx="32" cy="32" r="3" fill="{accent}"/>""",
         "aml": f"""<path d="M15 17h20v15H15zM29 38h18v13H29z" fill="none" stroke="{paper}" stroke-width="3"/><path d="M25 32v12h4" fill="none" stroke="{paper}" stroke-width="3"/><circle cx="43" cy="22" r="7" fill="none" stroke="{accent}" stroke-width="3"/><path d="m48 27 6 6" stroke="{accent}" stroke-width="3"/>""",

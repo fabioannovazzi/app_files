@@ -28,6 +28,16 @@ teaching or browser setup. This installation adaptation is separate from the
 professional course catalog below; it does not provide an unattended executor.
 <!-- VERA_OPENAI_DATEV_END -->
 
+## Development preview
+
+`patent-box-review` prepares an ordinary software Patent Box case from selected
+  documents, reviewed cost mappings and detailed control proposals; execute the
+  synthetic acceptance calculation and produce traceable draft workpapers and an
+  A/B dossier. Real calculations remain blocked pending reviewed legal sources
+  and an authenticated professional review adapter. No filing, signature or live
+  monitoring. Read `../../patent-box-review/SKILL.md`. This preview has no
+  released teaching kit; use its explicitly synthetic acceptance procedure.
+
 ## Professional workflows
 
 - `invoice-xml`: prepare ordinary FPR12 invoice XML from supplied PDFs, photos

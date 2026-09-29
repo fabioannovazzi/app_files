@@ -1,0 +1,89 @@
+{
+  "schema_version": 3,
+  "workstream": "patent-box-review",
+  "display_name": "Patent Box",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "patent_box",
+    "schemas",
+    "config"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-patent-box-evidence",
+        "purpose": "Extract case facts and propose detailed controls and draft A/B text",
+        "content": "The host model may read the selected client identity and period, software and rights evidence, technical descriptions, contracts, accounting lines, costs, people and activity allocations, prior options and incentives, public source text, proposed control rationales and citations. The source can be complete when relevant. Local snapshots and CSV parsing do not anonymize it or prevent host-model processing. Runtime profiles describe account boundaries; this first integration does not establish Cowork acceptance.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "proposal-review-and-draft-results",
+        "purpose": "Review exact proposals, identify missing documents and explain draft calculations",
+        "content": "The readable review contains the full normalized case, detailed control statuses, rationale, evidence/source IDs, proposed rules and A/B narratives. Result review exposes included, excluded and suspended bases, separate income/IRAP additional deductions, line-level traceability, missing evidence, asserted reviewer and decision reference. These may contain real case data during preparation; the first integration calculates only labelled synthetic cases.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "official-source-research",
+      "kind": "public_research",
+      "destination": "Official tax and legal sources selected by the host model",
+      "purpose": "Acquire current and period-specific source material for professional review",
+      "content": "Generic act identifiers, Patent Box topics and period terms; the workflow instructs the host not to send client facts or identifiers in queries",
+      "optional": true,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Read-only source research uses host tools. Bundled workflow scripts make no network request, start no monitor and send no notifications. Real rules remain DRAFT."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "exact-running-context",
+      "control": "All workflow actions load the actual Studio Archive v2 context for patent-box-review, require a running run, constrain writes to its output directory and snapshot only its exact selected receipts."
+    },
+    {
+      "id": "evidence-and-review-freshness",
+      "control": "Selected source and snapshot hashes are rechecked before every action; proposals, explicit decisions and results are created exclusively at distinct digest-bound paths. Missing or stale decisions cannot calculate. Hashes do not authenticate a professional reviewer."
+    },
+    {
+      "id": "closed-controls-and-arithmetic",
+      "control": "Closed schemas, exact evidence/source references, detailed child-control aggregation, duplicate ledger-row detection, allocation limits and Decimal arithmetic reject malformed or unsupported data rather than inferring an outcome."
+    },
+    {
+      "id": "real-calculation-gate",
+      "control": "The integration rejects every real-case calculation pending legal-source validation and an authenticated professional-review adapter. Synthetic acceptance records cannot be used on real cases."
+    },
+    {
+      "id": "spreadsheet-cell-escaping",
+      "control": "Generated CSV cells that begin with spreadsheet formula prefixes are escaped before export."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-09-29",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "5827f52ed7e7436bd71340e879dad6eee8f1f7a581ff2f9ed77439894b18f70f"
+  }
+}

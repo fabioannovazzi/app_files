@@ -811,6 +811,13 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
         if "/references/" in name
     }
     assert references
+    # The authored introduction has its own host contract; it is not a
+    # professional reference receiving the generic projection note.
+    introduction = references.pop("skills/learn-with-vera/references/get-started.md")
+    normalized = " ".join(introduction.split())
+    assert "In Cowork follow the written single-conversation contract" in normalized
+    assert "Never run desktop profile/session commands there" in normalized
+    assert "or ask for a second chat or voice" in normalized
     for name, content in references.items():
         assert "Cowork execution note" in content, name
         assert "Their absence never" in content, name

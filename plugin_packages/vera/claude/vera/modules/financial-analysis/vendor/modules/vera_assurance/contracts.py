@@ -148,6 +148,7 @@ VERA_CLIENT_WORKFLOW_IDS = (
     "previdenza-inps",
     "registro-imprese-sari",
     "bandi-agevolazioni",
+    "patent-box-review",
     "bilancio-xbrl-it",
 )
 

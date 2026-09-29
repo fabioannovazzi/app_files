@@ -462,6 +462,16 @@
         "modules/studio-archive/scripts/check_dependencies.py",
         "modules/studio-archive/scripts/studio_archive.py"
       ]
+    },
+    {
+      "component_id": "patent-box-review",
+      "skills": [
+        "modules/patent-box-review/skills/patent-box-review/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/patent-box-review/scripts/check_dependencies.py",
+        "modules/patent-box-review/scripts/patent_box_workflow.py"
+      ]
     }
   ],
   "vera_wrapper_skills": [
@@ -492,6 +502,7 @@
     "skills/management-control-pack/SKILL.md",
     "skills/new-client/SKILL.md",
     "skills/open-item-reconciliation/SKILL.md",
+    "skills/patent-box-review/SKILL.md",
     "skills/presenza-digitale-studio/SKILL.md",
     "skills/previdenza-inps/SKILL.md",
     "skills/privacy-surface-review/SKILL.md",

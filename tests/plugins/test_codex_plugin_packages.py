@@ -16,6 +16,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 COMMERCIALISTA_MODULE_NAMES = {
+    "patent-box-review",
     "treasury-forecast",
     "aml-review",
     "adeguati-assetti",
@@ -1556,6 +1557,7 @@ def test_vera_routes_every_commercialista_module() -> None:
     assert components["schema_version"] == 1
     assert set(components["plugins"]) == COMMERCIALISTA_MODULE_NAMES
     assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {
+        "patent-box-review",
         "invoice-xml",
         "treasury-forecast",
         "aml-review",
@@ -5547,6 +5549,9 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
             "https://mparanza.com/static/shared/centrale-rischi-review/index.html?lang=it"
         ),
         "sales-plan": ("https://mparanza.com/static/shared/sales-plan/index.html"),
+        "patent-box-review": (
+            "https://mparanza.com/static/shared/patent-box-review/index.html?lang=it"
+        ),
         "business-planning": (
             "https://mparanza.com/static/shared/business-planning/index.html?lang=it"
         ),

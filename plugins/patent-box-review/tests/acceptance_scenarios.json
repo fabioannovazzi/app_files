@@ -1,0 +1,294 @@
+{
+  "schema_version": "1.0",
+  "status": "PROFESSIONAL_UAT_NOT_EXECUTED",
+  "scenarios": [
+    {
+      "scenario_id": "PB.UAT.001",
+      "title": "Software interno",
+      "expected_behavior": "Individua componente originale, diritti, uso e attività; calcolo solo dopo evidenze",
+      "coverage": "PARTIAL_AUTOMATION",
+      "unit_test": "test_ordinary_software_no_registration",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.002",
+      "title": "Software non registrato",
+      "expected_behavior": "Non escludere l’ordinario per la sola mancanza di registrazione",
+      "coverage": "PARTIAL_AUTOMATION",
+      "unit_test": "test_ordinary_software_no_registration",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.003",
+      "title": "Software registrato e premiale",
+      "expected_behavior": "Verificare evento distinto e finestra storica",
+      "coverage": "PARTIAL_AUTOMATION",
+      "unit_test": "test_premial_exact_eighth_period_included",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.004",
+      "title": "Personalizzazione software terzi",
+      "expected_behavior": "Separare configurazione e componente originale; non attribuire diritti non provati",
+      "coverage": "MANUAL_PENDING",
+      "unit_test": null,
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.005",
+      "title": "Moduli propri e acquistati",
+      "expected_behavior": "Allocazioni documentate e limitate alla parte qualificata",
+      "coverage": "MANUAL_PENDING",
+      "unit_test": null,
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.006",
+      "title": "Brevetto",
+      "expected_behavior": "Confrontare titolo/rivendicazioni, diritti, attività e uso",
+      "coverage": "MANUAL_PENDING",
+      "unit_test": null,
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.007",
+      "title": "Design con costi meccanici",
+      "expected_behavior": "Non includere automaticamente costi funzionali solo perché appartenenti allo stesso prodotto",
+      "coverage": "MANUAL_PENDING",
+      "unit_test": null,
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.008",
+      "title": "Più IP e complementarità",
+      "expected_behavior": "Evitare doppio utilizzo di quote; motivare unità di analisi",
+      "coverage": "PARTIAL_AUTOMATION",
+      "unit_test": "test_overallocation_across_multiple_ips_rejected",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.009",
+      "title": "Costi promiscui",
+      "expected_behavior": "Richiedere driver oggettivo riproducibile; nessuna percentuale inventata",
+      "coverage": "PARTIAL_AUTOMATION",
+      "unit_test": "test_warning_is_not_silent_pass",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.010",
+      "title": "Personale su più progetti",
+      "expected_behavior": "Controllare ore, firme e riconciliazione del costo aziendale",
+      "coverage": "MANUAL_PENDING",
+      "unit_test": null,
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.011",
+      "title": "Esterno indipendente",
+      "expected_behavior": "Richiedere attività effettiva, rischi e direzione",
+      "coverage": "PARTIAL_AUTOMATION",
+      "unit_test": "test_outsourcing_requires_specific_review",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.012",
+      "title": "Infragruppo",
+      "expected_behavior": "Applicare regola pertinente a rapporti effettivi senza automatismi da fattura",
+      "coverage": "MANUAL_PENDING",
+      "unit_test": null,
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.013",
+      "title": "Subappalto",
+      "expected_behavior": "Ricostruire catena commissionari e localizzazione",
+      "coverage": "MANUAL_PENDING",
+      "unit_test": null,
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.014",
+      "title": "Fornitore estero",
+      "expected_behavior": "Distinguere residenza del fornitore e luogo delle attività",
+      "coverage": "MANUAL_PENDING",
+      "unit_test": null,
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.015",
+      "title": "Diritti mancanti",
+      "expected_behavior": "Sospendere il bene interessato senza inventare una cessione",
+      "coverage": "AUTOMATED_MECHANICS",
+      "unit_test": "test_missing_rights_suspend",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.016",
+      "title": "Contabilità non quadrata",
+      "expected_behavior": "Bloccare il calcolo e mostrare differenza",
+      "coverage": "AUTOMATED_MECHANICS",
+      "unit_test": "test_accounting_tieout_required",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.017",
+      "title": "Credito R&S sovrapposto",
+      "expected_behavior": "Aprire matrice anno/costo/regime e decisione di coordinamento",
+      "coverage": "PARTIAL_AUTOMATION",
+      "unit_test": "test_missing_cost_incentive_review_suspends",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.018",
+      "title": "Costi di otto esercizi",
+      "expected_behavior": "Usare periodi fiscali consecutivi, confine ottavo/nono",
+      "coverage": "AUTOMATED_MECHANICS",
+      "unit_test": "test_ninth_period_excluded",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.019",
+      "title": "Operazione straordinaria",
+      "expected_behavior": "Riesaminare continuità dei diritti, costi, opzione e storia",
+      "coverage": "MANUAL_PENDING",
+      "unit_test": null,
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.020",
+      "title": "Documenti completi e IP escluso",
+      "expected_behavior": "Fascicolo completo non attribuisce diritto al beneficio",
+      "coverage": "AUTOMATED_MECHANICS",
+      "unit_test": "test_documentation_does_not_cure_missing_ip",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.021",
+      "title": "Beneficio e fascicolo incompleto",
+      "expected_behavior": "Mantenere separati esito sostanziale e documentale",
+      "coverage": "AUTOMATED_MECHANICS",
+      "unit_test": "test_penalty_incomplete_independent",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.022",
+      "title": "Nuova fonte su pratica aperta",
+      "expected_behavior": "Proporre riesame con fonte e periodi interessati",
+      "coverage": "PARTIAL_AUTOMATION",
+      "unit_test": "test_unknown_mapping_broadens_review",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.023",
+      "title": "Nuova fonte su pratica chiusa",
+      "expected_behavior": "Conservare versione approvata e generare proposta riapertura",
+      "coverage": "AUTOMATED_MECHANICS",
+      "unit_test": "test_changed_source_reopens_only_by_proposal",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.024",
+      "title": "Sentenza vecchio regime",
+      "expected_behavior": "Non applicarla al nuovo regime per corrispondenza lessicale",
+      "coverage": "PARTIAL_AUTOMATION",
+      "unit_test": "test_old_regime_not_automatically_reused",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.025",
+      "title": "Fonte non accessibile",
+      "expected_behavior": "Segnalare copertura parziale senza attestare assenza novità",
+      "coverage": "AUTOMATED_MECHANICS",
+      "unit_test": "test_network_failure_is_not_no_change",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.026",
+      "title": "Costi già agevolati",
+      "expected_behavior": "Verificare pregresse quote e sospendere sovrapposizioni",
+      "coverage": "AUTOMATED_MECHANICS",
+      "unit_test": "test_prior_claim_duplicate_suspends",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.027",
+      "title": "Anno non solare",
+      "expected_behavior": "Calcolare sugli esercizi e non per sottrazione di anni solari",
+      "coverage": "AUTOMATED_MECHANICS",
+      "unit_test": "test_non_calendar_periods",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.028",
+      "title": "Utilizzo successivo alla privativa",
+      "expected_behavior": "Ancorare finestra dei costi all’evento; documentare quando l’uso consente fruizione",
+      "coverage": "PARTIAL_AUTOMATION",
+      "unit_test": "test_deferred_use_does_not_shift_historical_window",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.029",
+      "title": "Termini firma e dichiarazione",
+      "expected_behavior": "Distinguere invio, termine ordinario, deroghe iniziali, integrative e remissione",
+      "coverage": "MANUAL_PENDING",
+      "unit_test": null,
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.030",
+      "title": "IRES in perdita/IRAP incapiente",
+      "expected_behavior": "Coordinamento incentivi con trattamento distinto e fonte applicabile; niente risparmio standard",
+      "coverage": "MANUAL_PENDING",
+      "unit_test": null,
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.031",
+      "title": "Fonte interpello",
+      "expected_behavior": "Confrontare fatti, quesito, posizione istante e parere Agenzia",
+      "coverage": "MANUAL_PENDING",
+      "unit_test": null,
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    },
+    {
+      "scenario_id": "PB.UAT.032",
+      "title": "Pratica mutata dopo approvazione",
+      "expected_behavior": "Rifiutare risultato riferito a input o regole diversi",
+      "coverage": "AUTOMATED_MECHANICS",
+      "unit_test": "test_approval_stale_input_rejected",
+      "professional_uat": "NOT_RUN",
+      "required_for_production": true
+    }
+  ]
+}

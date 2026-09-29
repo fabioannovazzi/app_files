@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Prima integrazione Patent Box: preparazione della pratica software e collaudo sintetico. Calcoli reali non abilitati.">
+  <title>Patent Box — anteprima di sviluppo | Vera</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../product-function-page.css">
+  <style>
+    .pf-languages { gap: 16px; border: 0; padding: 0; }
+    .pf-languages a { display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; text-decoration: none; }
+    .pf-languages a[aria-current="page"] { color: var(--pf-blue); font-weight: 700; text-decoration: underline; text-underline-offset: 6px; }
+    .pf-product { text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content" id="skip">Vai al contenuto</a>
+  <header class="pf-nav"><div class="pf-nav__inner">
+    <a class="pf-product" href="../vera/index.html">Vera</a>
+    <nav class="pf-languages" aria-label="Language"><a href="?lang=it">IT</a><a href="?lang=en">EN</a><a href="?lang=fr">FR</a><a href="?lang=de">DE</a><a href="?lang=es">ES</a></nav>
+  </div></header>
+  <main class="pf-main" id="main-content">
+    <section class="pf-hero"><div><p class="pf-label" id="status">Anteprima di sviluppo · non pubblicata</p><h1>Patent Box</h1><p class="pf-summary" id="summary">Prepara documenti, costi e controlli per una pratica ordinaria software. Il calcolo è limitato al collaudo sintetico.</p></div><div class="pf-hero__aside"><p id="limit">Le regole reali restano in bozza. La revisione registrata non autentica l'identità professionale.</p></div></section>
+    <section class="pf-facts" aria-label="Patent Box">
+      <article class="pf-fact"><h2 id="inputTitle">Dati in ingresso</h2><p id="input">Documenti selezionati su impresa, software, diritti, attività, opzioni e incentivi; un CSV contabile con colonne mappate e importi EUR.</p></article>
+      <article class="pf-fact"><h2 id="methodTitle">Procedura</h2><p id="method">Vera propone fatti, domande e controlli motivati. La persona rivede la proposta esatta. Il codice verifica provenienza, duplicati, allocazioni e aggiornamento delle prove prima del calcolo sintetico.</p></article>
+      <article class="pf-fact"><h2 id="outputTitle">Elaborati</h2><p id="output">Sintesi, documenti mancanti, matrice dei controlli, riconciliazione dei costi, risultato JSON, workpaper e fascicolo A/B in bozza. Basi redditi e IRAP restano separate; la deduzione aggiuntiva non è un credito o un risparmio d'imposta.</p></article>
+    </section>
+    <section class="pf-section"><div class="pf-section__head"><h2 id="responsibilityTitle">Revisione e limiti</h2><p class="pf-section__copy" id="responsibility">Qualificazione fiscale, sufficienza delle prove e fonti applicabili richiedono revisione professionale. Premiale, brevetti, design, recupero quantitativo degli incentivi, dichiarazioni, firme, marche e monitoraggio live non sono integrati in questo primo percorso. Nessun documento viene firmato o inviato.</p></div></section>
+    <section class="function-model-data" data-model-data-workflow="patent-box-review" data-model-data-status="relevant" aria-labelledby="dataTitle"><div class="function-model-data__head"><div class="function-model-data__heading"><h2 id="dataTitle">Quali dati arrivano al modello</h2></div><div class="function-model-data__body"><p class="function-model-data__copy" id="data">Il modello della sessione può leggere i documenti selezionati, dati identificativi pertinenti, contratti, attività e persone, righe contabili, fonti, motivazioni, domande e testi del fascicolo. Il codice locale conserva copie e hash e calcola gli importi; non rende quei dati anonimi né garantisce un trattamento soltanto locale. La ricerca pubblica usa quesiti generici senza dati del cliente. Le regole dell'account scelto si applicano al modello. Il report del run dichiara ciò che è misurabile e ciò che non lo è; non è telemetria firmata dal provider. Il collaudo tecnico non dimostra accettazione in una nuova sessione installata o in Cowork.</p></div></div></section>
+  </main>
+  <script>
+  const translations = {
+    en: {
+      skip: "Skip to content", status: "Development preview · unpublished", summary: "Prepare documents, costs and controls for an ordinary software case. Calculation is limited to synthetic acceptance tests.", limit: "Real rules remain in draft. Recorded review does not authenticate professional identity.",
+      inputTitle: "Inputs", input: "Selected company, software, rights, activity, option and incentive documents; an accounting CSV with mapped columns and EUR amounts.",
+      methodTitle: "Procedure", method: "Vera proposes facts, questions and reasoned controls. The operator reviews the exact proposal. Local code checks provenance, duplicates, allocations and evidence freshness before the synthetic calculation.",
+      outputTitle: "Outputs", output: "Case summary, missing documents, control matrix, cost reconciliation, JSON result, workpaper and draft A/B dossier. Income and IRAP bases remain separate; an additional deduction is neither a tax credit nor tax savings.",
+      responsibilityTitle: "Review and limits", responsibility: "Tax qualification, evidence sufficiency and applicable sources require professional review. Premiale, patents, design, quantitative incentive recapture, returns, signatures, timestamps and live monitoring are outside this first integrated path. No document is signed or sent.",
+      dataTitle: "What data reaches the model", data: "The session model may read selected documents, relevant identity, contracts, activities and people, accounting rows, sources, rationales, questions and dossier text. Local code preserves copies and hashes and calculates amounts; it neither anonymizes those data nor guarantees local-only processing. Public research uses generic questions without client data. The selected model account arrangement applies. The run report distinguishes measurable evidence from what is not measurable; it is not provider-signed telemetry. Technical tests do not prove acceptance in a fresh installed session or in Cowork."
+    },
+    fr: {
+      skip: "Aller au contenu", status: "Aperçu de développement · non publié", summary: "Prépare les documents, coûts et contrôles d'un dossier ordinaire relatif à un logiciel. Le calcul est limité aux essais synthétiques.", limit: "Les règles réelles restent à l'état de brouillon. La revue enregistrée n'authentifie pas l'identité professionnelle.",
+      inputTitle: "Données d'entrée", input: "Documents sélectionnés concernant l'entreprise, le logiciel, les droits, les activités, options et aides ; fichier comptable CSV avec colonnes définies et montants en EUR.",
+      methodTitle: "Procédure", method: "Vera propose des faits, questions et contrôles motivés. La personne revoit la proposition exacte. Le code local vérifie la provenance, les doublons, allocations et modifications des preuves avant le calcul synthétique.",
+      outputTitle: "Livrables", output: "Synthèse, documents manquants, matrice des contrôles, rapprochement des coûts, résultat JSON, feuille de travail et dossier A/B en brouillon. Les bases du revenu et de l'IRAP restent distinctes ; la déduction supplémentaire n'est ni un crédit ni une économie d'impôt.",
+      responsibilityTitle: "Revue et limites", responsibility: "La qualification fiscale, la suffisance des preuves et les sources applicables exigent une revue professionnelle. Le mécanisme premiale, brevets, dessins, récupération chiffrée des aides, déclarations, signatures, horodatages et veille en direct ne sont pas intégrés. Aucun document n'est signé ou envoyé.",
+      dataTitle: "Quelles données parviennent au modèle", data: "Le modèle de la session peut lire les documents sélectionnés, identités pertinentes, contrats, activités et personnes, lignes comptables, sources, motifs, questions et textes du dossier. Le code local conserve copies et empreintes et calcule les montants ; il n'anonymise pas ces données et ne garantit pas un traitement uniquement local. La recherche publique utilise des questions génériques sans données client. Les conditions du compte choisi s'appliquent au modèle. Le rapport distingue les preuves mesurables des éléments non mesurables ; ce n'est pas une télémétrie signée par le fournisseur. Les essais techniques ne prouvent pas l'acceptation dans une nouvelle session installée ou dans Cowork."
+    },
+    de: {
+      skip: "Zum Inhalt", status: "Entwicklungsvorschau · unveröffentlicht", summary: "Bereitet Unterlagen, Kosten und Prüfungen für einen ordentlichen Softwarefall vor. Berechnungen sind auf synthetische Abnahmetests begrenzt.", limit: "Reale Regeln bleiben Entwürfe. Die gespeicherte Prüfung authentifiziert keine berufliche Identität.",
+      inputTitle: "Eingaben", input: "Ausgewählte Unterlagen zu Unternehmen, Software, Rechten, Tätigkeiten, Optionen und Förderungen; eine Buchhaltungs-CSV mit zugeordneten Spalten und EUR-Beträgen.",
+      methodTitle: "Ablauf", method: "Vera schlägt Fakten, Fragen und begründete Prüfungen vor. Die Person prüft den genauen Vorschlag. Lokaler Code prüft Herkunft, Dubletten, Zuordnungen und unveränderte Belege vor der synthetischen Berechnung.",
+      outputTitle: "Ergebnisse", output: "Fallübersicht, fehlende Unterlagen, Prüfmatrix, Kostenabstimmung, JSON-Ergebnis, Arbeitspapier und A/B-Dossier als Entwurf. Einkommens- und IRAP-Basen bleiben getrennt; der zusätzliche Abzug ist weder Steuergutschrift noch Steuerersparnis.",
+      responsibilityTitle: "Prüfung und Grenzen", responsibility: "Steuerliche Einordnung, Belegqualität und anwendbare Quellen erfordern fachliche Prüfung. Premiale, Patente, Design, rechnerische Fördermittelkorrekturen, Erklärungen, Signaturen, Zeitstempel und laufende Überwachung sind nicht integriert. Es wird nichts unterschrieben oder versandt.",
+      dataTitle: "Welche Daten das Modell erhält", data: "Das Sitzungsmodell kann ausgewählte Dokumente, relevante Identitäten, Verträge, Tätigkeiten und Personen, Buchungszeilen, Quellen, Begründungen, Fragen und Dossiertexte lesen. Lokaler Code bewahrt Kopien und Hashwerte auf und berechnet Beträge; er anonymisiert diese Daten nicht und garantiert keine ausschließlich lokale Verarbeitung. Öffentliche Recherche verwendet allgemeine Fragen ohne Mandantendaten. Die Bedingungen des ausgewählten Modellkontos gelten. Der Bericht trennt messbare Nachweise von nicht messbaren Angaben; er ist keine vom Anbieter signierte Telemetrie. Technische Tests belegen keine Abnahme in einer neu installierten Sitzung oder in Cowork."
+    },
+    es: {
+      skip: "Ir al contenido", status: "Vista de desarrollo · sin publicar", summary: "Prepara documentos, costes y controles de un expediente ordinario de software. El cálculo se limita a pruebas sintéticas.", limit: "Las reglas reales siguen en borrador. La revisión guardada no autentica la identidad profesional.",
+      inputTitle: "Datos de entrada", input: "Documentos seleccionados sobre empresa, software, derechos, actividades, opciones e incentivos; un CSV contable con columnas definidas e importes EUR.",
+      methodTitle: "Procedimiento", method: "Vera propone hechos, preguntas y controles motivados. La persona revisa la propuesta exacta. El código local verifica procedencia, duplicados, asignaciones y cambios en las pruebas antes del cálculo sintético.",
+      outputTitle: "Resultados", output: "Resumen, documentos pendientes, matriz de controles, conciliación de costes, resultado JSON, papel de trabajo y expediente A/B en borrador. Las bases de renta e IRAP permanecen separadas; la deducción adicional no es un crédito ni un ahorro fiscal.",
+      responsibilityTitle: "Revisión y límites", responsibility: "La calificación fiscal, suficiencia de pruebas y fuentes aplicables requieren revisión profesional. Premiale, patentes, diseños, recuperación cuantitativa de incentivos, declaraciones, firmas, sellos temporales y seguimiento en directo no están integrados. No se firma ni envía ningún documento.",
+      dataTitle: "Qué datos recibe el modelo", data: "El modelo de la sesión puede leer documentos seleccionados, identidades pertinentes, contratos, actividades y personas, filas contables, fuentes, motivos, preguntas y textos del expediente. El código local conserva copias y huellas y calcula importes; no anonimiza esos datos ni garantiza un tratamiento exclusivamente local. La investigación pública usa preguntas genéricas sin datos del cliente. Se aplican las condiciones de la cuenta elegida. El informe distingue pruebas medibles de lo no medible; no es telemetría firmada por el proveedor. Las pruebas técnicas no acreditan aceptación en una nueva sesión instalada ni en Cowork."
+    }
+  };
+  const requested = new URLSearchParams(location.search).get("lang") || "it";
+  const language = ["it", "en", "fr", "de", "es"].includes(requested) ? requested : "it";
+  if (translations[language]) for (const [id, value] of Object.entries(translations[language])) document.getElementById(id).textContent = value;
+  document.documentElement.lang = language;
+  document.querySelector(`nav a[href="?lang=${language}"]`).setAttribute("aria-current", "page");
+  document.title = `Patent Box | Vera · ${document.getElementById("status").textContent}`;
+  document.querySelector('meta[name="description"]').content = document.getElementById("summary").textContent;
+  </script>
+</body>
+</html>
