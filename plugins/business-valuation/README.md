@@ -1,7 +1,8 @@
 # Valutazione d’impresa
 
-Vera component for source-backed PMI valuation workpapers. Seven calculation
-methods, explicit professional assumptions, receipt-bound sources, exact
+Vera component for source-backed PMI valuation workpapers. DCF, constant or
+finite-duration equity income, NAV, mixed income, multiples and APV, with explicit
+professional assumptions, receipt-bound sources, exact
 calculation lineage, independent method review and existing v3 business-plan
 reuse. Outputs: HTML, Markdown, DOCX/PDF, formula XLSX, JSON and CSV.
 

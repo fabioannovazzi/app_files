@@ -89,7 +89,7 @@ the model/professional still checks completeness, classifications and substance.
 ## Methods and parameters
 
 Propose and explain methods according to the mandate. The implemented calculations
-are FCFF/FCFE DCF with annual or explicitly dated flows, constant equity income, adjusted NAV,
+are FCFF/FCFE DCF with annual or explicitly dated flows, constant or finite-duration equity income, adjusted NAV,
 constant-capital mixed income, selected EV or equity multiples, and APV composition.
 Explain each selection/exclusion. The professional selects sustainable terminal
 flows, capital costs, asset values, comparable samples and multiples. Keep
@@ -103,6 +103,17 @@ forward and par rates. Keep the annual terminal flow/rate separate from monthly
 flows and horizon discounting. Read back these assumptions for professional review.
 The mixed method remains annual. Crisis distributions, special rights/waterfalls,
 PPA and specialist sector models are unsupported.
+
+For finite-duration equity income, use the separate `INCOME_EQUITY_FINITE`
+contract. Supply actual period income amounts, an explicit dated discount schedule
+and an independently sourced equity residual at the final date, including an
+explicit zero when justified. Record the source-bound `income_basis`: capacity
+and capital maintenance, reinvestment, distributions and residual/double-counting
+explanations. Read these assumptions back before confirming the basis and method.
+Income is not automatically cash or distributable profit. Never relabel plan FCFF
+as income, derive the residual from the last income, infer a perpetuity or deduct
+debt again. Review the separate `Base reddituale` worksheet and the horizon factor,
+which remains at period end even when incomes are placed at mid-period.
 
 For benchmarks, research official public sources with public parameter/sector/date
 queries only. The mandate authorizes necessary public research; do not include

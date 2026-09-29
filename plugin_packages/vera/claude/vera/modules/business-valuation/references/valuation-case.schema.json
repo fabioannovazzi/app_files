@@ -856,7 +856,8 @@
         "timing": {},
         "review": {
           "$ref": "#/$defs/review"
-        }
+        },
+        "income_basis": {}
       },
       "additionalProperties": false
     },
@@ -1149,7 +1150,8 @@
                 "NAV",
                 "MIXED_EQUITY",
                 "MULTIPLE",
-                "APV"
+                "APV",
+                "INCOME_EQUITY_FINITE"
               ]
             },
             "bridge": {
@@ -1321,6 +1323,41 @@
             "not": {
               "required": [
                 "timing"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "INCOME_EQUITY_FINITE"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "timing",
+              "income_basis"
+            ],
+            "properties": {
+              "inputs": {
+                "$ref": "#/$defs/finiteIncomeInputs"
+              },
+              "income_basis": {
+                "$ref": "#/$defs/incomeBasis"
+              }
+            },
+            "not": {
+              "required": [
+                "bridge"
+              ]
+            }
+          },
+          "else": {
+            "not": {
+              "required": [
+                "income_basis"
               ]
             }
           }
@@ -1794,6 +1831,72 @@
         },
         "review": {
           "$ref": "#/$defs/review"
+        }
+      },
+      "additionalProperties": false
+    },
+    "finiteIncomeInputs": {
+      "type": "object",
+      "required": [
+        "incomes",
+        "residual_value"
+      ],
+      "properties": {
+        "incomes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 1200
+        },
+        "residual_value": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false
+    },
+    "incomeBasis": {
+      "type": "object",
+      "required": [
+        "capital_maintenance",
+        "reinvestment",
+        "distributions",
+        "residual_basis",
+        "locator",
+        "source_ids",
+        "status"
+      ],
+      "properties": {
+        "capital_maintenance": {
+          "$ref": "#/$defs/text"
+        },
+        "reinvestment": {
+          "$ref": "#/$defs/text"
+        },
+        "distributions": {
+          "$ref": "#/$defs/text"
+        },
+        "residual_basis": {
+          "$ref": "#/$defs/text"
+        },
+        "locator": {
+          "$ref": "#/$defs/text"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "status": {
+          "enum": [
+            "proposed",
+            "confirmed"
+          ]
         }
       },
       "additionalProperties": false

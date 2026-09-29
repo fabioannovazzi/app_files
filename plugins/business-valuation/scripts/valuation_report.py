@@ -27,6 +27,7 @@ METHOD_LABELS = {
     "DCF_FCFF": "DCF sui flussi dell’impresa",
     "DCF_FCFE": "DCF sui flussi dei soci",
     "INCOME_EQUITY": "Metodo reddituale",
+    "INCOME_EQUITY_FINITE": "Metodo reddituale a durata finita",
     "NAV": "Patrimoniale rettificato",
     "MIXED_EQUITY": "Metodo misto",
     "MULTIPLE": "Multipli",
@@ -36,6 +37,10 @@ DETAIL_LABELS = {
     "terminal_value": "Valore terminale",
     "pv_terminal": "Valore attuale del valore terminale",
     "terminal_share": "Incidenza del valore terminale sul risultato del metodo",
+    "income_pv": "Valore attuale dei redditi espliciti",
+    "residual_value": "Valore residuo del capitale proprio alla scadenza",
+    "pv_residual": "Valore attuale del residuo",
+    "residual_share": "Rapporto fra valore attuale del residuo e risultato",
 }
 TIMING_LABELS = {
     "end_period": "flussi a fine periodo",
@@ -419,13 +424,31 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
                 )
                 rows.append(f"{DETAIL_LABELS[label]}: {shown} [{ref}]")
             rows.extend(method["limitations"])
+            income_basis = method.get("income_basis")
+            if income_basis:
+                rows.extend(
+                    [
+                        "Il calcolo attualizza redditi dichiarati e un residuo fornito separatamente. Non converte il reddito in cassa, non stima una perpetuità e non deduce nuovamente il debito.",
+                        f"Base reddituale: {'Confermata' if income_basis['status'] == 'confirmed' else 'Da confermare'}",
+                        f"Mantenimento del capitale: {income_basis['capital_maintenance']}",
+                        f"Reinvestimenti: {income_basis['reinvestment']}",
+                        f"Distribuzioni e disponibilità: {income_basis['distributions']}",
+                        f"Base del residuo e assenza di duplicazioni: {income_basis['residual_basis']}",
+                        f"Fonti della base reddituale: {', '.join(income_basis['source_ids'])} · {income_basis['locator']}",
+                        "La coerenza tra redditi, mantenimento della capacità, reinvestimenti, distribuzioni e residuo richiede revisione professionale; la compilazione dei campi non la dimostra.",
+                    ]
+                )
             timing = method.get("timing")
             if timing:
                 rows.extend(
                     [
-                        f"Tempi espliciti dalla data {timing['valuation_date']}: {timing['day_count']}; {TIMING_LABELS[timing['cash_flow_timing']]}; {TIMING_LABELS[timing['rate_model']]}; {TIMING_LABELS[timing['rate_compounding']]}.",
+                        f"Tempi espliciti dalla data {timing['valuation_date']}: {timing['day_count']}; {TIMING_LABELS[timing['cash_flow_timing']].replace('flussi', 'redditi') if income_basis else TIMING_LABELS[timing['cash_flow_timing']]}; {TIMING_LABELS[timing['rate_model']]}; {TIMING_LABELS[timing['rate_compounding']]}.",
                         timing["rationale"],
-                        "Il valore terminale è una perpetuità annuale a fine periodo, stimata all'ultima data del piano. Il flusso terminale è annuale e distinto dagli eventuali flussi mensili; il tasso terminale e la crescita sono annui effettivi.",
+                        (
+                            "Il residuo equity è un importo autonomo alla fine dell'ultimo periodo e resta a quella scadenza anche se i redditi sono collocati a metà periodo. Non è derivato dall'ultimo reddito né da una formula di crescita perpetua."
+                            if income_basis
+                            else "Il valore terminale è una perpetuità annuale a fine periodo, stimata all'ultima data del piano. Il flusso terminale è annuale e distinto dagli eventuali flussi mensili; il tasso terminale e la crescita sono annui effettivi."
+                        ),
                     ]
                 )
                 rows.extend(
@@ -642,6 +665,39 @@ def write_workbook(path: Path, report: dict) -> None:
     for row in mandate_sheet:
         for cell in row:
             if cell.value is not None:
+                _literal(cell, str(cell.value))
+    finite_methods = [
+        method for method in report["methods"] if "income_basis" in method
+    ]
+    if finite_methods:
+        income_sheet = workbook.create_sheet("Base reddituale")
+        income_sheet.append(
+            ["Metodo", "Campo", "Descrizione", "Stato", "Fonti", "Posizione"]
+        )
+        for method in finite_methods:
+            basis = method["income_basis"]
+            for key, label in (
+                ("capital_maintenance", "Mantenimento del capitale"),
+                ("reinvestment", "Reinvestimenti"),
+                ("distributions", "Distribuzioni e disponibilità"),
+                ("residual_basis", "Residuo e duplicazioni"),
+            ):
+                income_sheet.append(
+                    [
+                        method["method_id"],
+                        label,
+                        basis[key],
+                        (
+                            "Confermata"
+                            if basis["status"] == "confirmed"
+                            else "Da confermare"
+                        ),
+                        ", ".join(basis["source_ids"]),
+                        basis["locator"],
+                    ]
+                )
+        for row in income_sheet:
+            for cell in row:
                 _literal(cell, str(cell.value))
     summary.append(["Valutazione d'impresa", report["case"]["entity_name"]])
     summary.append(["Stato", STATUS[report["status"]]])

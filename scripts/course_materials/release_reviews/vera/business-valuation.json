@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-valuation",
-  "course_sha256": "0294130b28e3c38e780ceac86638f97c728d3f66a900991737fb670b65d67310",
+  "course_sha256": "07b2cbb60c42387fe488daf238ecd1b6a5daa8a735ee737c9b602191aae82397",
   "reviewer": "Codex /root: source, calculation and document review",
-  "reviewed_at": "2026-09-29T21:56:11.634342+00:00",
+  "reviewed_at": "2026-09-29T22:15:33.243210+00:00",
   "review_scope": "Read both fictional notes and the entire Italian lesson. Ran the real bound workflow for demo and practice, inspected their Markdown reports and calculation registers. Seven-method DOCX was rendered and all four pages inspected; LibreOffice independently recalculated all 75 workbook calculation cells. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior is an instruction and separate archive contract, not claimed as a live learner test.",
   "languages": {
     "it": {
@@ -23,11 +23,11 @@
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "3a7f7cd9b3e015c2a4a54135f8fd79024fd0700ce63caaf4be16f68c11b5a6e9"
+            "sha256": "bd81933d45aefc8762103d3a3310359f6bc3bcf7983a4a28fb6ecdadc93ab4db"
           },
           {
             "name": "valuation.json",
-            "sha256": "b6837cc1f087195b05a3ca186e7a8162f00654022e9b07d225823e29a063a8dd"
+            "sha256": "99f1c734c9ce1adf4e42764bf06a19c365e39f3667621a59169acbbc643121d0"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -157,6 +157,19 @@
                 "sha256": "2d6302a04600ad61a372a4ba4ee2d58bdab38a9d02d0d404ad8ee4958c77e296"
               }
             ]
+          },
+          {
+            "reviewed_at": "2026-09-29T21:56:11.634342+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "3a7f7cd9b3e015c2a4a54135f8fd79024fd0700ce63caaf4be16f68c11b5a6e9"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "b6837cc1f087195b05a3ca186e7a8162f00654022e9b07d225823e29a063a8dd"
+              }
+            ]
           }
         ]
       },
@@ -166,11 +179,11 @@
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "4a162bc45f53704dffec8c338bb259039849c2a24cb02ecf59e539a92bd53a74"
+            "sha256": "9d8272c31eb92bd0541b1aa4802e7565c9aaf6f935a93bed709784e509132473"
           },
           {
             "name": "valuation.json",
-            "sha256": "823a432e57e43224e2fbdfeb3c79b4351f9076f7b29a601b82a19cc18eb85c29"
+            "sha256": "50697ea1b359ecf0f6d04f39d1edb1bb1a6deb9ed2da5a2ee80c139db3c87407"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -300,6 +313,19 @@
                 "sha256": "174f2ef25cc03d22225b046d67889083928a22e747d14ebc0b04fce5a4ae19bb"
               }
             ]
+          },
+          {
+            "reviewed_at": "2026-09-29T21:56:11.634342+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "4a162bc45f53704dffec8c338bb259039849c2a24cb02ecf59e539a92bd53a74"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "823a432e57e43224e2fbdfeb3c79b4351f9076f7b29a601b82a19cc18eb85c29"
+              }
+            ]
           }
         ]
       }
@@ -367,5 +393,12 @@
     "tests": "336 valuation and shared-transport tests pass at 94.31% component coverage; Black, isort, Mypy and Bandit pass across all 14 component scripts. Forty-four additional cases cover ECB source shape, selected date/series, signed/missing values, rate/status/unit changes, revisions, download boundaries and fabricated vintage rejection.",
     "artifact_review": "Read both freshly executed teaching reports in full and inspected all four DOCX and three native PDF pages per case. Both keep their expected 750000 / 583333.33 EUR indications, 18 artifacts, partial mandate and no accepted conclusion. The final model-data paragraph now includes the separate ECB acquisition route. Formula generation and valuation arithmetic are unchanged; prior independent workbook checks remain the relevant arithmetic evidence. The lesson does not claim to teach benchmark acquisition.",
     "privacy_review": "Reviewed the new bounded public GETs to www.ecb.europa.eu and data-api.ecb.europa.eu, with selected public URLs and connection metadata but no client-case body, credentials or cookies. Updated five public-page translations and the output paragraph. Clara hosted-voice fingerprint changed only because the same shared JavaScript file governs its review; that service content and source are unchanged."
+  },
+  "finite_income_review": {
+    "reviewed_at": "2026-09-29T22:15:33.243210+00:00",
+    "scope": "Reviewed the separate finite-duration equity-income contract, independent horizon residual, explicit timing and source-bound capital maintenance/reinvestment/distribution/residual basis. The compiler does not equate income with cash, select economic life or residual, infer perpetual growth or deduct debt again. Method review binds the explanations and their sources. All 21 purpose profiles remain professionally disabled.",
+    "tests": "373 valuation/acquisition/shared-transport tests pass at 94.43% component coverage; 37 new tests cover numerical conventions, signed and missing amounts, source/basis status, review invalidation, formula lineage, FCFF misuse, literal exports and archive receipts. Static, formatting and Bandit checks pass for 14 scripts.",
+    "artifact_review": "LibreOffice independently matched 103 annual, 109 mid-period and 103 continuous-rate calculation cells at 1e-12 relative / 1e-9 absolute tolerance. Each workbook retains four literal source-bound basis rows. All seven DOCX and five native PDF pages of both annual and archive-bound finite-income examples were visually inspected. The standalone mid-period and continuous report layouts were not separately rendered; their workbooks and numerical tests were checked. Both native teaching reports preserve the fully read prior Markdown text except receipt IDs, expected 750000 / 583333.33 EUR indications, 18 artifacts, partial mandate and no accepted conclusion; all four DOCX and three PDF pages per case were visually inspected. The lesson does not claim to teach the optional finite-income variant.",
+    "privacy_review": "The new income, residual and professional basis records remain within existing selected engagement/model-context boundaries. No external request, recipient or automatic professional acceptance is added. The five public function descriptions now name the finite-duration variant. The shared Research Video page content remains unchanged."
   }
 }

@@ -22,7 +22,7 @@ professionally enabled. Specialist extensions remain part of the proposed scope.
 | P0-02 Purpose profiles | All 21 profiles have explicit semantic intake, source binding and development-only coverage in `purpose-profiles.json` | Primary research, specialist implementation, purpose-specific synthetic and professionally reviewed case for each activated profile; none is activated |
 | P0-03 Studio Archive | Exact case and nested-source receipts, same-engagement upstream plan, immutable revisions and idempotent replay; native fixture coverage | Installed host/user acceptance; retain explicit cross-client coverage in shared archive tests |
 | P0-04 Business plan v3 | Actual compiler replays the original plan; selected contiguous whole months or complete calendar years reconcile taxes, working capital and capex; monthly amounts bind exact dated FCFF flows | Separately qualified intramonth evidence and additional professionally reviewed real-case evidence |
-| P0-05 Engine | Seven Decimal methods; annual and explicitly dated DCF with stub/monthly/mid-period timing, ACT/365F and ACT/ACT_ISDA, flat/spot/interval-forward rates, effective annual/continuous compounding; formula ledger and EV/equity separation | Mixed-income dated/capital-varying variants, further income/sector models, alternative terminal conventions and curve-specific scenario comparison |
+| P0-05 Engine | Eight explicit Decimal variants including finite-duration equity income with an independent residual; annual and explicitly dated DCF with stub/monthly/mid-period timing, ACT/365F and ACT/ACT_ISDA, flat/spot/interval-forward rates, effective annual/continuous compounding; formula ledger and EV/equity separation | Mixed-income dated/capital-varying variants, further sector models, alternative terminal conventions and curve-specific scenario comparison |
 | P0-06 Public sources | Versioned NYU country-risk HTML and explicitly selected ECB AAA spot CSV acquisition from observed links; immutable originals, exact percent conversion and missing-date diagnostics; parser replay for eligible imported records | ECB publication/vintage evidence and eligible binding, regional/historical workbooks and other adapters; semantic source qualification and independent historical availability |
 | P0-07 Guided experience | Native skill builds technical inputs, opens report and asks focused professional questions; user does not author JSON | Witnessed accountant completion of an end-to-end case; synthetic teacher execution does not establish this |
 | P0-08 Outputs | One replayed register produces HTML/MD/DOCX/PDF/XLSX/JSON/CSV and the named JSON workpapers; explicit claim bindings, numeric equality and review invalidation; independent LibreOffice formula comparison and visual QA | Semantic support review across actual cases and broad layout cases; recheck layout whenever report content changes |
@@ -188,6 +188,23 @@ outside the repository, including their different mandate statuses. Fifteen
 governed source files per archive match byte-for-byte; 108 focused privacy,
 teaching and package/release checks pass. Full CI and installed acceptance remain
 separate requirements.
+
+The finite-duration equity-income extension is a separate `INCOME_EQUITY_FINITE`
+variant. It requires exact dated periods, supplied income amounts, a separate
+horizon equity residual and a source-bound basis explaining capital maintenance,
+reinvestment, distributions and residual double-counting. It never equates income
+with cash, infers a residual/perpetuity, relabels plan FCFF or deducts debt again.
+The residual remains at period end with mid-period income timing. Missing basis
+or source structure blocks that method; unconfirmed assumptions remain partial.
+Changed explanations and evidence invalidate its review while independent methods
+survive. This is an explicit calculation contract, not professional validation of
+income availability, residual sustainability or method suitability. Thirty-seven
+new cases bring the combined suite to 373 passes at 94.43% component coverage.
+All 14 component scripts pass static, formatting and Bandit checks.
+LibreOffice independently matches all 315 calculation cells across annual,
+mid-period and continuous examples; each workbook retains four basis rows.
+All seven DOCX and five native PDF pages of the annual and archive-bound examples
+and four DOCX/three PDF pages per teaching case were visually inspected.
 
 ## Purpose coverage and release evidence
 

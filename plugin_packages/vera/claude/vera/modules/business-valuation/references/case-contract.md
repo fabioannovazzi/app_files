@@ -143,6 +143,7 @@ is an input ID, not an inline amount. Unselected methods retain their rationale.
 | --- | --- | --- |
 | DCF_FCFF / DCF_FCFE | flows (ordered list), discount_rate, terminal_next_flow, terminal_growth; optional terminal_rate | Annual end-year discounting; terminal flow is supplied independently; terminal rate must exceed growth; FCFE is already equity |
 | INCOME_EQUITY | normalized_equity_income, cost_equity | Positive constant equity income divided by positive Ke |
+| INCOME_EQUITY_FINITE | incomes (ordered list), residual_value | Dated equity income plus a separately evidenced equity residual at the horizon; requires timing and income_basis |
 | NAV | assets (nonempty list), liabilities (possibly empty list), tax_adjustment | Adjusted assets less liabilities less signed tax adjustment |
 | MIXED_EQUITY | adjusted_equity, incomes (ordered list), normal_return, excess_discount | Constant adjusted equity plus discounted annual excess incomes |
 | MULTIPLE | metric, selected_multiple, kind | Positive metric times selected multiple; kind is EV_EBITDA, EV_EBIT, EV_REVENUE or P_E |
@@ -416,3 +417,49 @@ definitions; [ECB technical notes](https://www.ecb.europa.eu/stats/financial_mar
 for the distinction between spot, forward and par curves and continuous
 discounting. These references do not prescribe a company's cost of capital or
 establish PIV conformity. No market datasets or protected standard text are bundled.
+
+## Finite-duration equity income
+
+`INCOME_EQUITY_FINITE` implements the contributor's finite-duration income
+extension as a distinct method. It does not silently change `INCOME_EQUITY`'s
+positive constant perpetuity. Its exact inputs are `incomes` and `residual_value`,
+all references to evidenced monetary amounts. It requires the same explicit
+`timing` schedule described above, including one exact period end per income,
+day count, timing and rate convention. Complete annual periods, stubs and monthly
+periods use their supplied amounts without proration or automatic annualization.
+
+The calculation is `sum(income_t / divisor_t) + residual / horizon_divisor`.
+Each divisor follows the declared flat, spot or interval-forward convention.
+The residual is a separate **equity value at the final period end**, discounted
+from that date even with mid-period incomes. For spot curves,
+`terminal_discount_rate` means the separately selected horizon spot rate here.
+There is no terminal-growth input or inferred perpetuity; zero residual requires
+an explicit, independently evidenced zero input. An income reference cannot also
+be the residual reference. Signed period incomes and residual values are retained;
+this numerical permission is not evidence that a negative amount is appropriate.
+Do not deduct financial debt again from an equity result or attach an EV bridge.
+
+Supply an `income_basis` object with nonempty `capital_maintenance`,
+`reinvestment`, `distributions` and `residual_basis` explanations, `source_ids`,
+`locator` and `status` (`proposed` or `confirmed`). Explain the remaining economic
+life and why income, capacity maintenance, reinvestment, available distributions
+and the residual are coherent without counting the same value twice. Preserve
+the evidence and assumptions separately from the calculated indication. Missing
+structure or source references block this method; a proposed basis or unreviewed
+source keeps it partial. A changed explanation, source or residual invalidates
+its method attestation. Filled fields do not prove semantic suitability.
+
+The compiler does not convert accounting income into cash, estimate future
+capital requirements, decide distributability or estimate a residual. A plan's
+generated FCFF inputs cannot be relabelled as equity income/residual. Use the
+existing business-plan workflow to prepare forecasts and independently map the
+correct income evidence. The report and `Base reddituale` worksheet expose the
+four explanations. Formula, claim, statement and normalization dependencies keep
+their existing review boundaries. Rates/growth sensitivity remains the DCF
+contract; compare a changed finite-income assumption through a separate revision.
+
+The source proposal specifies this income extension; it is not a DCF equivalence
+claim. The distinction between income, reinvestment and equity cash flows is
+explained in [Damodaran's cash-flow discussion](https://pages.stern.nyu.edu/~adamodar/New_Home_Page/littlebook/cashflows.htm),
+inspected on 30 September 2026. Professional method suitability and purpose/PIV
+review remain separate requirements.

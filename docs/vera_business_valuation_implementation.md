@@ -16,7 +16,7 @@ complete contributor requirements, observed coverage and unfinished acceptance
 work. The goal is not complete and no purpose is professionally activated.
 
 Implement a client-bound `business-valuation` workflow for preparing reviewable
-PMI valuation workpapers. The supported methods are FCFF and FCFE DCF, constant
+PMI valuation workpapers. The supported methods are FCFF and FCFE DCF, constant or finite-duration
 equity income, adjusted NAV, constant-capital mixed income, selected multiples,
 and APV composition. Method selection, source relevance, normalizations,
 terminal sustainability, benchmark comparability and conclusion are model and

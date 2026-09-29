@@ -18,6 +18,7 @@ METHODS = {
     "DCF_FCFF",
     "DCF_FCFE",
     "INCOME_EQUITY",
+    "INCOME_EQUITY_FINITE",
     "NAV",
     "MIXED_EQUITY",
     "MULTIPLE",
@@ -177,7 +178,11 @@ def _year_fraction(
 
 
 def _dated_factors(
-    ledger: Ledger, timing: dict, count: int
+    ledger: Ledger,
+    timing: dict,
+    count: int,
+    *,
+    terminal_convention: str = "annual_end_period_perpetuity_at_horizon",
 ) -> tuple[list[str], str, dict]:
     """Discount explicit dated flows; never infer a curve or prorate amounts."""
     _keys(
@@ -319,7 +324,7 @@ def _dated_factors(
             "schedule": schedule,
             "terminal_time_id": previous_time,
             "terminal_discount_factor_id": horizon_factor,
-            "terminal_value_convention": "annual_end_period_perpetuity_at_horizon",
+            "terminal_value_convention": terminal_convention,
         },
     )
 
@@ -336,8 +341,14 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
     value_type = "equity"
     extras: dict[str, str] = {}
     timing_result = None
-    if "timing" in method and kind not in {"DCF_FCFF", "DCF_FCFE"}:
-        raise ValuationError("Explicit dated timing currently requires a DCF method")
+    if "timing" in method and kind not in {
+        "DCF_FCFF",
+        "DCF_FCFE",
+        "INCOME_EQUITY_FINITE",
+    }:
+        raise ValuationError(
+            "Explicit dated timing requires DCF or finite equity income"
+        )
 
     def sequence(refs: Any, name: str, limit: int = 100) -> list[str]:
         if not isinstance(refs, list) or not 1 <= len(refs) <= limit:
@@ -410,6 +421,38 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
                 "terminal_share", "divide", [terminal_pv, result], "ratio"
             )
         value_type = "operating_enterprise" if kind == "DCF_FCFF" else "equity"
+    elif kind == "INCOME_EQUITY_FINITE":
+        _keys(args, {"incomes", "residual_value"})
+        incomes = sequence(args["incomes"], "Finite equity incomes", 1200)
+        if "timing" not in method:
+            raise ValuationError("Finite equity income requires explicit dated timing")
+        if args["residual_value"] in args["incomes"]:
+            raise ValuationError(
+                "Residual value requires an independent input, not a period income"
+            )
+        residual = money(args["residual_value"])
+        factors, horizon, timing_result = _dated_factors(
+            ledger,
+            method["timing"],
+            len(incomes),
+            terminal_convention="explicit_equity_residual_at_horizon",
+        )
+        present = [
+            ledger.add(f"pv/{t}", "divide", [income, factor])
+            for t, (income, factor) in enumerate(zip(incomes, factors), 1)
+        ]
+        income_pv = ledger.add("income_pv", "sum", present)
+        residual_pv = ledger.add("pv_residual", "divide", [residual, horizon])
+        result = ledger.add("value", "sum", [income_pv, residual_pv])
+        extras = {
+            "income_pv": income_pv,
+            "residual_value": residual,
+            "pv_residual": residual_pv,
+        }
+        if ledger.value(result) != 0:
+            extras["residual_share"] = ledger.add(
+                "residual_share", "divide", [residual_pv, result], "ratio"
+            )
     elif kind == "INCOME_EQUITY":
         _keys(args, {"normalized_equity_income", "cost_equity"})
         result = ledger.add(
