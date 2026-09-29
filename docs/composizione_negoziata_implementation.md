@@ -159,3 +159,17 @@ on 2026-09-29, including the overlapping ESG and assetti candidates.
 The subsequent integration includes `d728392e7`, preserving the newly released
 synthetic transformation prototype and its explicit limits. CNC behavior is
 unchanged; packages and governed catalogue identities are regenerated.
+
+## Native course qualification
+
+Ten fresh source-tree demo/practice executions cover the CNC lesson in all five
+languages. They run the treasury CLI, bind its immutable output, retain gaps,
+seal and resume the case, preserve the baseline, and recalculate after the
+receipt delay. The observed minimum changes from EUR 50,000 to EUR -30,000.
+The course release record binds the compiled lesson to inspected output hashes.
+Scripted judgment prose is a synthetic fixture; live learner, voice,
+installed-host and professional acceptance remain unverified. These ten checks
+are additional to the 23 CNC kernel tests. Existing course review records retain
+their prior artifact reviews with a bounded freshness review: authored content
+is identical to main; source changes are the added CNC registry ID and additive
+archive methods, with every pre-existing ledger definition unchanged.

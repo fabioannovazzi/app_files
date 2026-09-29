@@ -236,6 +236,7 @@ jobs:
           tests/plugins/test_teaching_communication_execution.py
           tests/plugins/test_teaching_management_execution.py
           tests/plugins/test_teaching_clara_budget_execution.py
+          tests/plugins/test_teaching_cnc_execution.py
           tests/plugins/test_cowork_teaching.py
           tests/plugins/test_vera_get_started.py
           tests/plugins/test_teaching_browser_execution.py
@@ -284,6 +285,8 @@ jobs:
         run: |
           python scripts/course_materials/build_catalog.py --check
           python scripts/course_materials/build_public_catalog.py --check
+          python -m black --check tests/plugins/test_teaching_cnc_execution.py
+          python -m isort --check-only tests/plugins/test_teaching_cnc_execution.py
           python scripts/build_matter_review_assets.py --check
           python scripts/course_materials/verify_release.py --junit "$RUNNER_TEMP/teaching-native.xml"
           python scripts/course_materials/build_presentation_baselines.py --check
