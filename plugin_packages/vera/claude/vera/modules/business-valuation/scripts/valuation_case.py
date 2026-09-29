@@ -304,7 +304,32 @@ def _purpose(case: dict, sources: dict) -> dict:
 
 
 def _checked_timing(method: dict, mandate: dict, plan_bridge: dict | None) -> None:
-    """Bind a method's clock and any annual plan flows to their actual periods."""
+    """Match exact plan flow IDs and periods; never infer a cash-flow conversion."""
+    args = method["inputs"]
+    bound_flows = (
+        plan_bridge is not None
+        and isinstance(args, dict)
+        and isinstance(args.get("flows"), list)
+        and bool(set(args["flows"]) & set(plan_bridge["flow_input_ids"]))
+    )
+    if plan_bridge is not None and plan_bridge["flow_frequency"] == "monthly":
+        other_refs = {
+            ref
+            for key, value in args.items()
+            if key != "flows"
+            for ref in (value if isinstance(value, list) else [value])
+            if isinstance(ref, str)
+        }
+        if bound_flows or other_refs & set(plan_bridge["flow_input_ids"]):
+            require(
+                method["kind"] == "DCF_FCFF"
+                and "timing" in method
+                and args.get("flows") == plan_bridge["flow_input_ids"]
+                and method["timing"].get("period_end_dates")
+                == plan_bridge["period_end_dates"]
+                and not other_refs & set(plan_bridge["flow_input_ids"]),
+                "Monthly plan FCFF requires dated DCF_FCFF with every selected month in order and a separate annual terminal flow",
+            )
     if "timing" not in method:
         return
     timing = method["timing"]
@@ -313,19 +338,12 @@ def _checked_timing(method: dict, mandate: dict, plan_bridge: dict | None) -> No
         and timing.get("valuation_date") == mandate["valuation_date"],
         "Method timing must use the mandate valuation date",
     )
-    args = method["inputs"]
-    if (
-        not plan_bridge
-        or not isinstance(args, dict)
-        or not isinstance(args.get("flows"), list)
-    ):
+    if not bound_flows or plan_bridge is None:
         return
-    annual_ids = plan_bridge["binding"]["annual_input_ids"]
-    if any(ref in annual_ids for ref in args["flows"]):
+    if plan_bridge["flow_frequency"] == "annual":
         require(
-            args["flows"] == annual_ids
-            and timing.get("period_end_dates")
-            == [f"{row['year']}-12-31" for row in plan_bridge["annual"]],
+            args["flows"] == plan_bridge["flow_input_ids"]
+            and timing.get("period_end_dates") == plan_bridge["period_end_dates"],
             "Annual plan flows must keep their complete annual periods; no monthly relabelling",
         )
 
@@ -537,7 +555,7 @@ def build_valuation(
         )
         dependent_bridge = (
             plan_bridge
-            if plan_bridge and set(used) & set(case["plan_binding"]["annual_input_ids"])
+            if plan_bridge and set(used) & set(plan_bridge["flow_input_ids"])
             else None
         )
         if dependent_bridge:

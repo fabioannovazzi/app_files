@@ -32,7 +32,7 @@
     },
     {
       "path": "modules/business-valuation/references/case-contract.md",
-      "sha256": "1cb292c015504c4b2ad76a8cf23646398bba0720f47f0000f02f8eb689643f58"
+      "sha256": "cb504d8ca5d6479bf83dfbed342b6c460f030e11198e234ace746d9ab744807a"
     },
     {
       "path": "modules/business-valuation/references/purpose-profiles.json",
@@ -40,7 +40,7 @@
     },
     {
       "path": "modules/business-valuation/references/valuation-case.schema.json",
-      "sha256": "e921891b453c53576d148b78419855c012318886df3509f47967d1eb64a50df6"
+      "sha256": "7d5e00c51a680a379d54b3ed832e20a356aa1a2cf2fdfd52aefe6af7720b2e3e"
     },
     {
       "path": "modules/business-valuation/requirements.txt",
@@ -60,7 +60,7 @@
     },
     {
       "path": "modules/business-valuation/scripts/valuation_case.py",
-      "sha256": "2f46b5c60e19696def94602d0eac50a04ef253f0b93a4206414b809395a3585b"
+      "sha256": "a0ebb625dbf09f4c87f0eea8bb7a139b462d995634fb856045322106ca14ef0d"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_claims.py",
@@ -80,11 +80,11 @@
     },
     {
       "path": "modules/business-valuation/scripts/valuation_plan.py",
-      "sha256": "aae9b1d60f242da2b2bfae590e5dab1fd4f7f0ecf63228e46a55584f13b396eb"
+      "sha256": "afb23f84018f15fa16196ced2b8e39c1e2029d858493c0a167c10c434311760a"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_report.py",
-      "sha256": "08210893364457ed4fd6a01e50a2b67b92fbcc753aa49b16c526aa8a9c588f9a"
+      "sha256": "c54eccbe7025f2c1f77c693ecaf2364d29716f37528a019bc581b79a165e0973"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_schema.py",
@@ -92,7 +92,7 @@
     },
     {
       "path": "modules/business-valuation/skills/business-valuation/SKILL.md",
-      "sha256": "4049cfd481d994ef200fbbc52a538b2656d87b434e296ab1723052ff7ac11dfb"
+      "sha256": "04c6483cfc2b085996f84472f059186626a518c0ee1c05f3fe47f8c84bb24707"
     },
     {
       "path": "modules/business-valuation/vendor/modules/__init__.py",
@@ -261,5 +261,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d4d33fd273f98abeef70d2f31d6879e16808cce38dc511a4fc0fbae8623d1158"
+  "canonical_course_sha256": "870360fab80631e111e2fdc4808bf573e5f9505735b7e79738967d3ac2365329"
 }

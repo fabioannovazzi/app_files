@@ -433,7 +433,6 @@
         "scenario_id",
         "cash_operating_taxes",
         "opening_operating_nwc",
-        "annual_input_ids",
         "operating_classification",
         "tax_refund_basis"
       ],
@@ -478,6 +477,26 @@
           "maxItems": 100,
           "uniqueItems": true
         },
+        "monthly_input_ids": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/id"},
+          "minItems": 1,
+          "maxItems": 60,
+          "uniqueItems": true
+        },
+        "flow_frequency": {
+          "enum": ["annual", "monthly"]
+        },
+        "selected_periods": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])$(?![\\s\\S])"
+          },
+          "minItems": 1,
+          "maxItems": 60,
+          "uniqueItems": true
+        },
         "operating_classification": {
           "$ref": "#/$defs/text"
         },
@@ -486,7 +505,19 @@
           "maxLength": 20000
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": ["annual_input_ids"],
+          "properties": {"flow_frequency": {"const": "annual"}},
+          "not": {"required": ["monthly_input_ids"]}
+        },
+        {
+          "required": ["flow_frequency", "monthly_input_ids", "selected_periods"],
+          "properties": {"flow_frequency": {"const": "monthly"}},
+          "not": {"required": ["annual_input_ids"]}
+        }
+      ]
     },
     "adjustment": {
       "type": "object",

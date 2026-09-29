@@ -54,14 +54,33 @@ formula comparisons; report rendering; privacy coverage and package parity.
 
 Local evidence on 29 September 2026:
 
-- 214 valuation/acquisition/shared-transport regressions pass; component coverage is 93.67%. These exercise
+- 235 valuation/acquisition/shared-transport regressions pass; component coverage is 93.35%. These exercise
   all seven methods, failure preservation, review/conclusion freshness, exact
-  receipts, full-year plan replay, all 21 explicit purpose intake routes and real
+  receipts, annual and selected-month plan replay, all 21 explicit purpose intake routes and real
   native lesson input runs. Purpose routing tests do not enable professional use.
 - Dated DCF tests cover stub/monthly/mid-period flows, two day-count conventions,
   leap years, flat/spot/interval-forward curves, effective annual and continuous
   rates, horizon terminal discounting, invalid timing, review invalidation and
   rejection of monthly relabelling of annual plan flows.
+- The monthly plan bridge selects only existing contiguous whole months, including
+  partial years and leap-year month ends. It requires a separately evidenced
+  opening working-capital amount at the preceding month end, exact monthly taxes,
+  original plan replay and a dated FCFF method with the same ordered flows.
+  The annual terminal flow stays separate; intramonth proration is unsupported.
+  Report text and the formula workbook expose every monthly reconciliation.
+  LibreOffice independently recalculated 255 calculation, bridge and linked-input
+  cells across final monthly and annual examples, all within 1e-12 relative /
+  1e-9 absolute tolerance. Each example's six DOCX and five native PDF pages were
+  inspected. Evidence is retained in `monthly-plan-acceptance/final-workbook-verification.json`
+  under the recovered-source output directory. Both fresh annual teaching reports
+  retain 750,000 / 583,333.33 EUR equity indications and pending review.
+- After rebuilding the monthly extension, all three extracted Vera package
+  layouts replay both examples outside the repository. Their case hashes,
+  monthly/annual bridges, method records and complete calculation registers
+  match the source results exactly. Fourteen Python/schema/transport files per
+  archive also match source bytes. Full three-product release alignment passes;
+  77 privacy/teaching-review and 31 course-package/release checks pass. This is
+  extracted-package evidence, not enabled-host or professional acceptance.
 - The structured adjustment journal preserves reported values, signed changes,
   accounting/economic reasoning, tax/reversibility explanations and individual
   review dependencies. Missing or inconsistent values block dependent methods;

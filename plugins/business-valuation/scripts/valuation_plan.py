@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import shutil
 import sys
+from calendar import monthrange
+from datetime import date, timedelta
 from decimal import Decimal, localcontext
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -29,10 +31,10 @@ def bridge_plan(case: dict, source_root: Path, replay_parent: Path) -> dict:
             "scenario_id",
             "cash_operating_taxes",
             "opening_operating_nwc",
-            "annual_input_ids",
             "operating_classification",
             "tax_refund_basis",
         },
+        {"annual_input_ids", "monthly_input_ids", "flow_frequency", "selected_periods"},
     )
     require(
         bool(binding["operating_classification"]),
@@ -88,14 +90,37 @@ def bridge_plan(case: dict, source_root: Path, replay_parent: Path) -> dict:
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(paths[mapped], target)
         validate_plan(plan, source_root=root)
-    periods = upstream["periods"]
+    available = upstream["periods"]
+    periods = binding.get("selected_periods", available)
     require(
-        bool(periods) and periods[0].endswith("-01") and len(periods) % 12 == 0,
-        "Annual valuation bridge requires complete January-December years; no invented stub conversion",
+        bool(periods) and set(periods) <= set(available),
+        "Select existing plan periods; never extend the forecast",
     )
+    first = available.index(periods[0])
     require(
-        case["mandate"]["valuation_date"] == f"{int(periods[0][:4])-1}-12-31",
-        "End-year bridge requires valuation on the preceding year end",
+        periods == available[first : first + len(periods)],
+        "Selected plan periods must be contiguous and ordered",
+    )
+    frequency = binding.get("flow_frequency", "annual")
+    if frequency == "annual":
+        require(
+            periods[0].endswith("-01") and len(periods) % 12 == 0,
+            "Annual valuation bridge requires complete January-December years; no invented stub conversion",
+        )
+    start = date.fromisoformat(periods[0] + "-01")
+    require(start > date.min, "Plan start must have a preceding valuation date")
+    require(
+        case["mandate"]["valuation_date"] == (start - timedelta(days=1)).isoformat(),
+        "Plan bridge requires valuation at the month end before the first selected period",
+    )
+    flow_ids = binding[f"{frequency}_input_ids"]
+    require(
+        not set(flow_ids)
+        & (
+            set(binding["cash_operating_taxes"].values())
+            | {binding["opening_operating_nwc"]}
+        ),
+        "Derived plan flow inputs must differ from tax and opening working-capital inputs",
     )
     scenarios = [
         row
@@ -123,8 +148,11 @@ def bridge_plan(case: dict, source_root: Path, replay_parent: Path) -> dict:
         ctx.prec = 40
         running = Decimal(0)
         annual_ids = []
+        annual_periods: list[str] = []
         for row in scenarios[0]["schedule"]:
             period = row["period"]
+            if period not in periods:
+                continue
             values = {
                 key: decimal(row[key])
                 for key in (
@@ -179,6 +207,11 @@ def bridge_plan(case: dict, source_root: Path, replay_parent: Path) -> dict:
                     "period": period,
                     "ebit": str(ebit),
                     "cash_operating_taxes": str(tax),
+                    "depreciation_amortization": str(
+                        values["depreciation_amortization"]
+                    ),
+                    "capital_expenditure": str(values["capital_expenditure"]),
+                    "opening_nwc": str(previous),
                     "delta_nwc": str(delta),
                     "ending_nwc": str(nwc),
                     "fcff": str(fcff),
@@ -189,37 +222,52 @@ def bridge_plan(case: dict, source_root: Path, replay_parent: Path) -> dict:
             previous = nwc
             running += fcff
             annual_ids.extend(ids)
+            annual_periods.append(period)
             if period.endswith("-12"):
-                annual.append(
-                    {
-                        "year": period[:4],
-                        "fcff": str(running),
-                        "ending_nwc": str(nwc),
-                        "plan_calculation_ids": annual_ids,
-                    }
-                )
-                running, annual_ids = Decimal(0), []
+                # A partial calendar year stays monthly; never relabel it annual.
+                if len(annual_periods) == 12 and annual_periods[0].endswith("-01"):
+                    annual.append(
+                        {
+                            "year": period[:4],
+                            "fcff": str(running),
+                            "ending_nwc": str(nwc),
+                            "plan_calculation_ids": annual_ids,
+                        }
+                    )
+                running, annual_ids, annual_periods = Decimal(0), [], []
+        bound_rows = monthly if frequency == "monthly" else annual
         require(
-            len(binding["annual_input_ids"]) == len(annual),
-            "Bind one FCFF input per complete year",
+            len(flow_ids) == len(bound_rows),
+            "Bind one FCFF input per selected month or complete year",
         )
-        for ref, row in zip(binding["annual_input_ids"], annual):
+        for ref, row in zip(flow_ids, bound_rows):
             require(
                 amount(ref) == decimal(row["fcff"]),
                 "Valuation flow differs from replayed plan bridge",
             )
             require(
                 binding["source_id"] in inputs[ref]["source_ids"],
-                "Annual flow must reference its plan artifact",
+                "Plan flow must reference its plan artifact",
             )
             require(
                 inputs[ref].get("plan_calculation_ids") == row["plan_calculation_ids"],
-                "Annual flow must retain exact upstream calculation IDs",
+                "Plan flow must retain exact upstream calculation IDs",
             )
     return {
         "plan_sha256": sources[binding["source_id"]]["sha256"],
         "plan_case_sha256": plan["case_sha256"],
         "scenario_id": binding["scenario_id"],
+        "flow_frequency": frequency,
+        "selected_periods": periods,
+        "flow_input_ids": flow_ids,
+        "period_end_dates": (
+            [
+                f"{period}-{monthrange(int(period[:4]), int(period[5:]))[1]:02}"
+                for period in periods
+            ]
+            if frequency == "monthly"
+            else [f"{row['year']}-12-31" for row in annual]
+        ),
         "monthly": monthly,
         "annual": annual,
         "binding": binding,

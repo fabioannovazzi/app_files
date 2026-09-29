@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-valuation",
-  "course_sha256": "d4d33fd273f98abeef70d2f31d6879e16808cce38dc511a4fc0fbae8623d1158",
+  "course_sha256": "870360fab80631e111e2fdc4808bf573e5f9505735b7e79738967d3ac2365329",
   "reviewer": "Codex /root: source, calculation and document review",
-  "reviewed_at": "2026-09-29T19:59:46.447104+00:00",
+  "reviewed_at": "2026-09-29T20:40:10.735452+00:00",
   "review_scope": "Read both fictional notes and the entire Italian lesson. Ran the real bound workflow for demo and practice, inspected their Markdown reports and calculation registers. Seven-method DOCX was rendered and all four pages inspected; LibreOffice independently recalculated all 75 workbook calculation cells. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior is an instruction and separate archive contract, not claimed as a live learner test.",
   "languages": {
     "it": {
@@ -23,11 +23,11 @@
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "205782ab51e2caef992b684b450ca1b38f970788e195c21fde98ef60be0ab258"
+            "sha256": "4bdefd31a7f71d9cc6a680d149537cb9faae518e30936189b25e17856da645e2"
           },
           {
             "name": "valuation.json",
-            "sha256": "0316cc5c243d6b23c74a1b36d7a308b711598d1e9549a6703b45f517d73bd02a"
+            "sha256": "a43a47f2309472a0ae1831396a627dae73c69e2bb86e26ff6d82cc793fae5d64"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -105,6 +105,19 @@
                 "sha256": "9da2c8fdee8f47acbd9bb167efc001685709b19ab00dacb5da7ee0f3475b71a8"
               }
             ]
+          },
+          {
+            "reviewed_at": "2026-09-29T19:59:46.447104+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "205782ab51e2caef992b684b450ca1b38f970788e195c21fde98ef60be0ab258"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "0316cc5c243d6b23c74a1b36d7a308b711598d1e9549a6703b45f517d73bd02a"
+              }
+            ]
           }
         ]
       },
@@ -114,11 +127,11 @@
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "d5a6dc59eccc7f858d19642e43bbc5baf27620fbc5211724fecfb7251c3c217c"
+            "sha256": "443b6f4c674cd5147b807fe1dcd4105c358b8177f47c82eb4cda4ddb70d8099b"
           },
           {
             "name": "valuation.json",
-            "sha256": "715dca4e34a54054920e026dc5d0f83f3734abe9d2841a570e95e3a1755706ed"
+            "sha256": "84bad7a3243bfadff979c3670b448df36594ea179583a7f4922ff69ba2bf0791"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -196,6 +209,19 @@
                 "sha256": "7a8546ead0468247ac1f1a64f1041871e80490887a3a2f0e78a359210a38a895"
               }
             ]
+          },
+          {
+            "reviewed_at": "2026-09-29T19:59:46.447104+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "d5a6dc59eccc7f858d19642e43bbc5baf27620fbc5211724fecfb7251c3c217c"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "715dca4e34a54054920e026dc5d0f83f3734abe9d2841a570e95e3a1755706ed"
+              }
+            ]
           }
         ]
       }
@@ -238,5 +264,12 @@
     "artifact_review": "All five DOCX and four native PDF pages of the synthetic acquisition-bound example were visually inspected and are readable, including the separate network boundary in the final model-data section. Its original 2.50 percent observation is replayed as ratio 0.025. Existing workbook arithmetic is unchanged from the independently recalculated examples.",
     "live_source_limit": "The live NYU HTML retrieval preserved the landing page, usage terms and data bytes. It returned metadata_or_value_missing because no observation date was established; no live source was silently adopted into a professional case. Published/last-updated and retrieved dates do not prove historical availability.",
     "previous_reviewed_at": "2026-09-29T19:29:57.892588+00:00"
+  },
+  "monthly_plan_review": {
+    "scope": "Reviewed selected whole-month and complete-calendar-year bindings against original business-plan v3 replay. Monthly FCFF requires explicit opening working capital and taxes, exact dated flow order and month ends, and a separate annual terminal assumption. Read both fresh annual teaching reports: unchanged 750000 / 583333.33 EUR indications, 18 artifacts, pending review and development-only purpose coverage. The lesson does not claim to teach this optional monthly-plan extension. No intramonth proration, professional approval, live learner or installed-host acceptance is inferred.",
+    "tests": "235 valuation/acquisition/shared-transport tests pass at 93.35% component coverage. Selected horizons, leap-year month ends, tax and lineage gaps, date/order/terminal misuse, input cycles and dependent review invalidation are covered. All eleven component scripts pass Mypy, Black, isort and Bandit.",
+    "artifact_review": "LibreOffice independently recalculated 255 calculation, monthly bridge and linked-input cells across the final monthly and annual examples, all matching at 1e-12 relative / 1e-9 absolute tolerance. All six DOCX and five native PDF pages per example were visually inspected. The final Word contents match the rendered documents exactly; PDF headings remain with following text. Formula workbooks expose opening/closing stocks, tax links and monthly or annual flow links.",
+    "privacy_review": "The extension changes local plan selection, formula lineage and report content. Existing plan evidence, assumptions and rendered outputs may be read in the selected host model context. It adds no external recipient or network call.",
+    "previous_reviewed_at": "2026-09-29T19:59:46.447104+00:00"
   }
 }

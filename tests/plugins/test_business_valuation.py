@@ -7,7 +7,9 @@ import json
 import re
 import shutil
 import sys
+from calendar import monthrange
 from copy import deepcopy
+from datetime import date, timedelta
 from decimal import Decimal
 from pathlib import Path
 
@@ -1304,15 +1306,15 @@ def test_other_workflow_context_is_rejected(tmp_path: Path) -> None:
         run_valuation.run_case(case_path, context)
 
 
-def planning_case(tmp_path: Path) -> dict:
-    """Reuse the real v3 synthetic case and compiler with a full calendar year."""
+def planning_case(tmp_path: Path, months: int = 12) -> dict:
+    """Reuse the real v3 synthetic case and compiler for an explicit horizon."""
     scripts = ROOT / "plugins/business-planning/scripts"
     sys.path.insert(0, str(scripts))
     from planning_workflow import build_plan
 
     planning_fixture = ROOT / "tests/fixtures/business_planning"
     upstream = read_json(planning_fixture / "case.json")
-    periods = [f"2027-{month:02}" for month in range(1, 13)]
+    periods = [f"{2027 + index // 12}-{index % 12 + 1:02}" for index in range(months)]
     upstream["periods"] = periods
     upstream["assumptions"][0]["effective_periods"] = periods
     for scenario in upstream["financial"]["scenarios"]:
@@ -1352,7 +1354,7 @@ def planning_case(tmp_path: Path) -> dict:
             )
         )
     case["inputs"][0].update(
-        value="-1200",
+        value=str(-100 * months),
         source_ids=["plan"],
         plan_calculation_ids=[
             f"base/{period}/{metric}"
@@ -1371,6 +1373,303 @@ def planning_case(tmp_path: Path) -> dict:
         tax_refund_basis="",
     )
     return case
+
+
+def monthly_planning_case(
+    tmp_path: Path, periods: list[str] | None = None, *, months: int = 3
+) -> dict:
+    """Bind explicit synthetic monthly FCFF, keeping annual terminal evidence separate."""
+    case = planning_case(tmp_path, months)
+    selected = periods or ["2027-01", "2027-02", "2027-03"]
+    case["inputs"][0] = deepcopy(case_data()["inputs"][0])
+    template = case["inputs"][0]
+    refs = [f"monthly-{period}" for period in selected]
+    for period, ref in zip(selected, refs):
+        case["inputs"].append(
+            {
+                **template,
+                "id": ref,
+                "value": "-100",
+                "source_ids": ["plan"],
+                "plan_calculation_ids": [
+                    f"base/{period}/ebit",
+                    f"base/{period}/working_capital",
+                ],
+            }
+        )
+    case["inputs"].append({**template, "id": "operating-tax", "value": "0"})
+    binding = case["plan_binding"]
+    binding.pop("annual_input_ids")
+    binding.update(
+        flow_frequency="monthly",
+        selected_periods=selected,
+        monthly_input_ids=refs,
+        cash_operating_taxes={period: "operating-tax" for period in selected},
+        operating_classification="Synthetic operating current balances; the declared opening stock refers to the selected valuation date.",
+    )
+    valuation_date = (
+        date.fromisoformat(selected[0] + "-01") - timedelta(days=1)
+    ).isoformat()
+    case["mandate"]["valuation_date"] = valuation_date
+    case["mandate"]["information_cutoff"] = valuation_date
+    method = case["methods"][0]
+    method["inputs"].pop("discount_rate")
+    method["inputs"].update(flows=refs, terminal_rate="rate")
+    method["timing"] = {
+        **dated_case()["methods"][0]["timing"],
+        "valuation_date": valuation_date,
+        "period_end_dates": [
+            f"{period}-{monthrange(int(period[:4]), int(period[5:]))[1]:02}"
+            for period in selected
+        ],
+    }
+    return case
+
+
+def test_monthly_partial_year_plan_preserves_actual_flows_and_dated_value(
+    tmp_path: Path,
+) -> None:
+    case = monthly_planning_case(tmp_path)
+
+    result = build_valuation(case, tmp_path, replay_parent=tmp_path / "replay")
+
+    assert [row["fcff"] for row in result["plan_bridge"]["monthly"]] == [
+        "-100",
+        "-100",
+        "-100",
+    ]
+    assert result["plan_bridge"]["annual"] == []
+    assert result["plan_bridge"]["period_end_dates"] == [
+        "2027-01-31",
+        "2027-02-28",
+        "2027-03-31",
+    ]
+    values = {row["id"]: float(row["value"]) for row in result["calculations"]}
+    assert values["fcff/value"] == pytest.approx(681.4306143628385)
+    assert values["fcff/equity"] == pytest.approx(431.43061436283847)
+    assert result["methods"][0]["status"] == "ready_for_professional_review"
+
+
+def test_selected_plan_months_use_declared_opening_stock_and_cash_taxes(
+    tmp_path: Path,
+) -> None:
+    case = monthly_planning_case(tmp_path, ["2027-04", "2027-05", "2027-06"], months=12)
+    template = case["inputs"][0]
+    case["inputs"].append({**template, "id": "opening-nwc", "value": "50"})
+    case["plan_binding"]["opening_operating_nwc"] = "opening-nwc"
+    next(row for row in case["inputs"] if row["id"] == "operating-tax")["value"] = "5"
+    next(row for row in case["inputs"] if row["id"] == "monthly-2027-04")[
+        "value"
+    ] = "-55"
+    next(row for row in case["inputs"] if row["id"] == "monthly-2027-05")[
+        "value"
+    ] = "-105"
+    next(row for row in case["inputs"] if row["id"] == "monthly-2027-06")[
+        "value"
+    ] = "-105"
+
+    result = build_valuation(case, tmp_path, replay_parent=tmp_path / "replay")
+
+    assert [row["fcff"] for row in result["plan_bridge"]["monthly"]] == [
+        "-55",
+        "-105",
+        "-105",
+    ]
+    assert [row["opening_nwc"] for row in result["plan_bridge"]["monthly"]] == [
+        "50",
+        "0",
+        "0",
+    ]
+    assert result["plan_bridge"]["annual"] == []
+    assert result["plan_bridge"]["monthly"][0]["plan_calculation_ids"] == [
+        "base/2027-04/ebit",
+        "base/2027-04/working_capital",
+    ]
+
+
+def test_monthly_plan_across_year_end_retains_leap_day_without_annualizing(
+    tmp_path: Path,
+) -> None:
+    case = monthly_planning_case(
+        tmp_path, ["2027-11", "2027-12", "2028-01", "2028-02"], months=24
+    )
+
+    result = build_valuation(case, tmp_path, replay_parent=tmp_path / "replay")
+
+    assert result["plan_bridge"]["period_end_dates"] == [
+        "2027-11-30",
+        "2027-12-31",
+        "2028-01-31",
+        "2028-02-29",
+    ]
+    assert result["plan_bridge"]["annual"] == []
+
+
+@pytest.mark.parametrize(
+    "periods",
+    [
+        ["2027-01", "2027-03"],
+        ["2027-03", "2027-02", "2027-01"],
+        ["2027-04"],
+    ],
+)
+def test_monthly_plan_rejects_gaps_reordering_and_unavailable_periods(
+    tmp_path: Path, periods: list[str]
+) -> None:
+    case = monthly_planning_case(tmp_path)
+    case["plan_binding"]["selected_periods"] = periods
+
+    with pytest.raises(
+        ValuationError, match="existing plan periods|contiguous and ordered"
+    ):
+        build_valuation(case, tmp_path, replay_parent=tmp_path / "replay")
+
+
+def test_monthly_plan_rejects_midmonth_valuation_without_invented_proration(
+    tmp_path: Path,
+) -> None:
+    case = monthly_planning_case(tmp_path)
+    case["mandate"]["valuation_date"] = "2027-01-15"
+
+    with pytest.raises(ValuationError, match="month end before"):
+        build_valuation(case, tmp_path, replay_parent=tmp_path / "replay")
+
+
+def test_monthly_plan_requires_every_selected_month_tax(tmp_path: Path) -> None:
+    case = monthly_planning_case(tmp_path)
+    del case["plan_binding"]["cash_operating_taxes"]["2027-02"]
+
+    with pytest.raises(ValuationError, match="every month"):
+        build_valuation(case, tmp_path, replay_parent=tmp_path / "replay")
+
+
+def test_monthly_plan_rejects_substituted_lineage(tmp_path: Path) -> None:
+    case = monthly_planning_case(tmp_path)
+    next(row for row in case["inputs"] if row["id"] == "monthly-2027-02")[
+        "plan_calculation_ids"
+    ] = ["base/2027-01/ebit"]
+
+    with pytest.raises(ValuationError, match="exact upstream calculation IDs"):
+        build_valuation(case, tmp_path, replay_parent=tmp_path / "replay")
+
+
+@pytest.mark.parametrize(
+    "change", ["undated", "reordered", "wrong-date", "terminal", "fcfe"]
+)
+def test_monthly_plan_cannot_change_flow_clock_or_reuse_fcff_as_annual_income(
+    tmp_path: Path, change: str
+) -> None:
+    case = monthly_planning_case(tmp_path)
+    method = case["methods"][0]
+    if change == "undated":
+        method.pop("timing")
+        method["inputs"]["discount_rate"] = method["inputs"].pop("terminal_rate")
+    elif change == "reordered":
+        method["inputs"]["flows"] = list(reversed(method["inputs"]["flows"]))
+    elif change == "wrong-date":
+        method["timing"]["period_end_dates"][0] = "2027-01-30"
+    elif change == "terminal":
+        method["inputs"]["terminal_next_flow"] = "monthly-2027-03"
+    else:
+        method["kind"] = "DCF_FCFE"
+        method.pop("bridge")
+
+    result = build_valuation(case, tmp_path, replay_parent=tmp_path / "replay")
+
+    assert result["methods"][0]["status"] == "blocked"
+    assert "Monthly plan FCFF requires dated DCF_FCFF" in result["methods"][0]["reason"]
+    assert result["methods"][3]["status"] == "ready_for_professional_review"
+
+
+def test_monthly_plan_tax_evidence_change_invalidates_only_dependent_review(
+    tmp_path: Path,
+) -> None:
+    case = monthly_planning_case(tmp_path)
+    prepared = build_valuation(case, tmp_path, replay_parent=tmp_path / "replay")
+    for method, result in zip(case["methods"], prepared["methods"]):
+        method["review"] = review(result["dependency_sha256"])
+    next(row for row in case["inputs"] if row["id"] == "operating-tax")[
+        "description"
+    ] = "Revised synthetic cash tax basis"
+
+    result = build_valuation(case, tmp_path, replay_parent=tmp_path / "replay")
+
+    assert result["methods"][0]["status"] == "ready_for_professional_review"
+    assert result["methods"][3]["status"] == "accepted_workpaper"
+
+
+def test_monthly_plan_workbook_links_reconciliation_to_valuation_inputs(
+    tmp_path: Path,
+) -> None:
+    from openpyxl import load_workbook
+
+    case = monthly_planning_case(tmp_path)
+    report = build_valuation(case, tmp_path, replay_parent=tmp_path / "replay")
+    output = tmp_path / "monthly.xlsx"
+
+    write_workbook(output, report)
+
+    workbook = load_workbook(output)
+    rows = {row[0].value: row[0].row for row in workbook["Dati"].iter_rows(min_row=2)}
+    assert workbook["Dati"].cell(rows["monthly-2027-01"], 3).value == "='Piano FCFF'!I2"
+    assert workbook["Piano FCFF"]["I2"].value == "=B2-C2+D2-E2-H2"
+    assert workbook["Piano FCFF"]["F3"].value == "=G2"
+    assert workbook["Piano FCFF"]["J2"].value == "-100"
+
+
+@pytest.mark.parametrize(
+    ("change", "reason"),
+    [
+        ("amount", "differs from replayed"),
+        ("unit", "incompatible bridge input"),
+        ("count", "Bind one FCFF"),
+        ("cycle", "must differ from tax"),
+    ],
+)
+def test_monthly_plan_requires_exact_amounts_units_and_independent_inputs(
+    tmp_path: Path, change: str, reason: str
+) -> None:
+    case = monthly_planning_case(tmp_path)
+    first = next(row for row in case["inputs"] if row["id"] == "monthly-2027-01")
+    if change == "amount":
+        first["value"] = "-90"
+    elif change == "unit":
+        first["unit"] = "ratio"
+    elif change == "count":
+        case["plan_binding"]["monthly_input_ids"] = case["plan_binding"][
+            "monthly_input_ids"
+        ][:-1]
+    else:
+        case["plan_binding"]["cash_operating_taxes"]["2027-01"] = first["id"]
+
+    with pytest.raises(ValuationError, match=reason):
+        build_valuation(case, tmp_path, replay_parent=tmp_path / "replay")
+
+
+def test_annual_bridge_can_select_a_later_complete_year_from_same_plan(
+    tmp_path: Path,
+) -> None:
+    case = planning_case(tmp_path, 24)
+    periods = [f"2028-{month:02}" for month in range(1, 13)]
+    case["mandate"]["valuation_date"] = "2027-12-31"
+    case["plan_binding"]["selected_periods"] = periods
+    case["plan_binding"]["cash_operating_taxes"] = {
+        period: "zero" for period in periods
+    }
+    case["inputs"][0].update(
+        value="-1200",
+        plan_calculation_ids=[
+            f"base/{period}/{metric}"
+            for period in periods
+            for metric in ("ebit", "working_capital")
+        ],
+    )
+
+    result = build_valuation(case, tmp_path, replay_parent=tmp_path / "replay")
+
+    assert result["plan_bridge"]["annual"][0]["year"] == "2028"
+    assert result["plan_bridge"]["annual"][0]["fcff"] == "-1200"
+    assert result["plan_bridge"]["period_end_dates"] == ["2028-12-31"]
 
 
 def test_existing_plan_bridge_replays_and_reconciles_annual_fcff(

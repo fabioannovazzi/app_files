@@ -21,7 +21,7 @@ professionally enabled. Specialist extensions remain part of the proposed scope.
 | P0-01 PIV and rights | No conformity claim; original 18 proposed topics have no verified principle/page references or real reviewer | Read definitive Principles and Rationale under their applicable access/reuse terms; record exact references, interpretation, edition rationale, reviewer and resolved conflicts |
 | P0-02 Purpose profiles | All 21 profiles have explicit semantic intake, source binding and development-only coverage in `purpose-profiles.json` | Primary research, specialist implementation, purpose-specific synthetic and professionally reviewed case for each activated profile; none is activated |
 | P0-03 Studio Archive | Exact case and nested-source receipts, same-engagement upstream plan, immutable revisions and idempotent replay; native fixture coverage | Installed host/user acceptance; retain explicit cross-client coverage in shared archive tests |
-| P0-04 Business plan v3 | Actual compiler replays a complete calendar-year plan; FCFF bridge reconciles monthly taxes, working capital and capex; missing tax blocks | Partial periods and additional reviewed real-case evidence |
+| P0-04 Business plan v3 | Actual compiler replays the original plan; selected contiguous whole months or complete calendar years reconcile taxes, working capital and capex; monthly amounts bind exact dated FCFF flows | Separately qualified intramonth evidence and additional professionally reviewed real-case evidence |
 | P0-05 Engine | Seven Decimal methods; annual and explicitly dated DCF with stub/monthly/mid-period timing, ACT/365F and ACT/ACT_ISDA, flat/spot/interval-forward rates, effective annual/continuous compounding; formula ledger and EV/equity separation | Mixed-income dated/capital-varying variants, further income/sector models, alternative terminal conventions and curve-specific scenario comparison |
 | P0-06 Public sources | Versioned NYU country-risk HTML acquisition from observed links, immutable original bytes and parser replay; explicit failures/missing dates; tested HTTPS/host/DNS/redirect, MIME/size and revised-release boundaries | ECB, regional/historical workbooks and other source-specific adapters; semantic source qualification and independent historical-availability evidence |
 | P0-07 Guided experience | Native skill builds technical inputs, opens report and asks focused professional questions; user does not author JSON | Witnessed accountant completion of an end-to-end case; synthetic teacher execution does not establish this |
@@ -77,6 +77,20 @@ The current dated report's five pages were inspected. This establishes arithmeti
 and explicit convention handling; it does not establish forecast seasonality,
 economic suitability, curve estimation or an official PIV methodology.
 
+The plan bridge now selects existing contiguous whole months, including a partial
+year or a horizon crossing calendar years. The opening working-capital amount is
+explicitly evidenced at the preceding month end; earlier plan forecasts never
+silently become actual balances. The complete upstream plan is replayed, and every
+selected month's taxes and calculation lineage must be present. Monthly bound
+amounts feed only a dated FCFF DCF in the same order and at the actual month ends;
+the annual terminal flow remains separate. No intramonth proration, forecast
+extension or automatic annualization is introduced. Final monthly and annual
+workbooks independently match the engine across 255 calculation, bridge and
+linked-input cells; all six DOCX and five PDF pages per example were inspected.
+Tests cover missing taxes, gapped/reordered horizons, leap-year month ends,
+incorrect dates, terminal reuse, input cycles and dependent review invalidation.
+These establish mechanical consistency, not professional forecast acceptance.
+
 Normalization acceptance includes positive and negative adjustments, missing
 amounts, mismatched totals, changed tax/accounting/economic/reversibility review
 explanations, unrelated review preservation, duplicate amount prevention and
@@ -121,8 +135,8 @@ selected row, but remained `metadata_or_value_missing`: the table's displayed
 release date does not establish its exact observation date. No date or current
 parameter adoption was invented. That live evidence proves acquisition and
 parsing, not full historical availability, professional suitability or coverage
-of other providers. The full acceptance run now has 214 passing valuation and
-shared-transport tests at 93.67% component coverage.
+of other providers. The full acceptance run now has 235 passing valuation and
+shared-transport tests at 93.35% component coverage.
 
 ## Purpose coverage and release evidence
 

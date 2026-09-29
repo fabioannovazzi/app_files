@@ -210,12 +210,40 @@ compiler. Supporting sources are temporarily reconstructed at original relative
 paths in a scratch directory under the exact run output; the final bridge persists
 hashes and lineage. The source plan and original evidence are never modified.
 
-Only complete calendar-year periods and a preceding December 31 valuation date
-are accepted. The bridge uses reviewed operating current assets/liabilities,
-explicit operating cash taxes and capex, preserving annual closing stocks and
-summing monthly flows. Annual inputs must equal the computed FCFF and contain
-the exact bridge `plan_calculation_ids`. No stale plan, source-hash mismatch,
-arbitrary imported plan or cross-engagement plan can pass the CLI gate.
+The default annual route uses `annual_input_ids` and complete calendar years
+after a December 31 valuation date. An optional `selected_periods` array selects
+an existing ordered contiguous portion of the plan; omission uses the full plan.
+It never extends the upstream horizon. For the explicit monthly route, set
+`flow_frequency=monthly`, provide `selected_periods` and `monthly_input_ids`
+instead of `annual_input_ids`. Supply one distinct FCFF input per chosen month,
+in that same order. These inputs must differ from the tax/opening-stock inputs.
+
+Monthly selection may cover a partial year or cross calendar years. The valuation
+date must be the month end immediately before the first selected month. Opening
+operating working capital is the separately evidenced amount at that date;
+earlier plan forecasts are not silently treated as actual closing balances.
+An intramonth valuation needs separately qualified partial-month evidence and is
+not automatically prorated by this adapter. Only the selected months require
+cash operating tax inputs; the complete original plan is still replayed first.
+
+The bridge uses reviewed operating current assets/liabilities, explicit operating
+cash taxes and capex. It preserves monthly opening/closing stocks and sums flows;
+only complete January–December groups appear in its annual subtotal list. Every
+bound flow equals the computed FCFF and retains the exact upstream calculation
+IDs and plan source. Monthly FCFF can feed only a dated `DCF_FCFF` with all selected
+flows in order and exact month-end period boundaries. Explicit mid-period timing
+is allowed by the DCF convention; the period boundaries remain unchanged. The
+annual terminal cash flow must be a separate assumption, never the last monthly
+amount reused as annual income or an automatic twelvefold extrapolation.
+
+`forecast_binding.json` retains frequency, selected periods, input bindings,
+dates, monthly reconciliations and complete-year subtotals. The readable report
+shows the monthly bridge. In `Piano FCFF`, spreadsheet formulas reconcile cash
+taxes and working-capital movements and feed monthly or summed annual amounts
+into the valuation input cells. Changing a dependent tax/opening-stock input,
+plan revision, period selection or convention invalidates its method review.
+No stale plan, source-hash mismatch, arbitrary imported plan or cross-engagement
+plan can pass the CLI gate.
 
 ## Outputs and limits
 

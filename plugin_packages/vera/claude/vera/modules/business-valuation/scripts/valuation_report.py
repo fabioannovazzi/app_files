@@ -7,6 +7,7 @@ import hashlib
 import html
 import json
 from pathlib import Path
+from typing import Any
 
 from valuation_case import build_valuation, require
 from valuation_engine import decimal
@@ -111,6 +112,23 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
         )
     )
     inputs = {item["id"]: item for item in case["inputs"]}
+    plan = report["plan_bridge"]
+    if plan:
+        periods = plan["selected_periods"]
+        frequency = "mensili" if plan["flow_frequency"] == "monthly" else "annuali"
+        rows = [
+            f"Scenario {plan['scenario_id']} · Periodi selezionati: {periods[0]} — {periods[-1]} · Flussi valutativi {frequency}.",
+            "Il piano originale è stato ricalcolato. Le imposte operative per cassa e il capitale circolante iniziale sono ipotesi separate da verificare; il piano non approva la finalità valutativa.",
+            plan["binding"]["operating_classification"],
+        ]
+        for row in plan["monthly"]:
+            rows.append(
+                f"{row['period']}: EBIT {display(row['ebit'])}; imposte operative {display(row['cash_operating_taxes'])}; ammortamenti {display(row['depreciation_amortization'])}; investimenti {display(row['capital_expenditure'])}; variazione CCN {display(row['delta_nwc'])}; FCFF {display(row['fcff'])} {case['currency']}. CCN: {display(row['opening_nwc'])} → {display(row['ending_nwc'])}."
+            )
+        rows.append(
+            "I mesi mantengono i propri importi e le proprie scadenze. Il flusso terminale annuo è un'ipotesi distinta: non deriva dalla moltiplicazione automatica di un mese o di un periodo parziale."
+        )
+        sections.append(("Raccordo dal piano", rows))
     for group in report["normalizations"]:
         rows = [
             f"Anno {group['year']} · {group['line']} · Stato: {STATUS[group['status']]}"
@@ -342,6 +360,58 @@ def _literal(cell: object, value: str) -> None:
     cell.data_type = "s"
 
 
+def _write_plan_bridge(workbook: Any, report: dict, input_rows: dict[str, int]) -> None:
+    """Expose the exact reconciled bridge and link its flows into the formula graph."""
+    plan = report["plan_bridge"]
+    if not plan:
+        return
+    sheet = workbook.create_sheet("Piano FCFF")
+    sheet.append(
+        [
+            "Periodo",
+            "EBIT",
+            "Imposte operative per cassa",
+            "Ammortamenti",
+            "Investimenti",
+            "CCN apertura",
+            "CCN chiusura",
+            "Variazione CCN",
+            "FCFF",
+            "FCFF esatto",
+            "Calcoli del piano",
+        ]
+    )
+    for index, row in enumerate(plan["monthly"], 2):
+        opening = (
+            f"='Dati'!C{input_rows[plan['binding']['opening_operating_nwc']]}"
+            if index == 2
+            else f"=G{index-1}"
+        )
+        sheet.append(
+            [
+                row["period"],
+                float(decimal(row["ebit"])),
+                f"='Dati'!C{input_rows[row['tax_input_id']]}",
+                float(decimal(row["depreciation_amortization"])),
+                float(decimal(row["capital_expenditure"])),
+                opening,
+                float(decimal(row["ending_nwc"])),
+                f"=G{index}-F{index}",
+                f"=B{index}-C{index}+D{index}-E{index}-H{index}",
+                row["fcff"],
+                ", ".join(row["plan_calculation_ids"]),
+            ]
+        )
+        for column in (1, 10, 11):
+            _literal(sheet.cell(index, column), str(sheet.cell(index, column).value))
+    for index, ref in enumerate(plan["flow_input_ids"]):
+        if plan["flow_frequency"] == "monthly":
+            formula = f"='Piano FCFF'!I{index+2}"
+        else:
+            formula = f"=SUM('Piano FCFF'!I{index*12+2}:I{index*12+13})"
+        workbook["Dati"].cell(input_rows[ref], 3, formula)
+
+
 def write_workbook(path: Path, report: dict) -> None:
     """Link input cells and formula nodes; prevent formula injection from labels."""
     from openpyxl import Workbook
@@ -390,6 +460,7 @@ def write_workbook(path: Path, report: dict) -> None:
             _literal(
                 inputs.cell(index, column), str(inputs.cell(index, column).value or "")
             )
+    _write_plan_bridge(workbook, report, input_rows)
     calculations.append(
         [
             "Calculation ID",
@@ -605,6 +676,11 @@ def write_workbook(path: Path, report: dict) -> None:
         journal.column_dimensions["F"].width = 70
         for cell in journal["C"][1:]:
             cell.number_format = "0"
+    if report["plan_bridge"]:
+        workbook["Piano FCFF"].column_dimensions["A"].width = 14
+        workbook["Piano FCFF"].column_dimensions["B"].width = 24
+        workbook["Piano FCFF"].column_dimensions["J"].width = 28
+        workbook["Piano FCFF"].column_dimensions["K"].width = 54
     workbook.save(path)
 
 
@@ -694,6 +770,7 @@ def _write_documents(directory: Path, report: dict) -> None:
     styles["Normal"].fontSize = 10
     styles["Normal"].leading = 14
     styles["Normal"].alignment = TA_LEFT
+    styles["Heading2"].keepWithNext = True
     content = [Paragraph("Valutazione d’impresa", styles["Title"]), Spacer(1, 12)]
     for heading, paragraphs in report_sections(report):
         document.add_heading(heading, level=1)

@@ -189,10 +189,15 @@ Import the plan's original supporting sources as exact receipts and map their ID
 The existing compiler replays the whole plan before the valuation bridge runs.
 Provide evidenced cash operating taxes per month and opening operating working
 capital, and explain the operating/debt-like classification. No automatic tax
-refund or use of levered tax expense. The current bridge accepts complete calendar
-years beginning after a December 31 valuation date. It sums flows and changes,
-retains the last working-capital stock and preserves upstream calculation IDs.
-Partial-year plans remain unsupported; never pad periods or invent forecasts.
+refund or use of levered tax expense. Select an existing contiguous plan horizon.
+The annual bridge accepts complete calendar years after a December 31 valuation
+date. The monthly bridge accepts selected whole months, including a partial year,
+and requires valuation at the preceding month end, explicit opening working
+capital for that date and a dated FCFF DCF with those exact monthly cash flows.
+Keep a separate annual terminal-flow assumption. Never relabel a monthly amount
+as annual income, prorate a month at an intramonth valuation date, pad periods or
+invent forecasts. The bridge preserves upstream calculation IDs; the report and
+`Piano FCFF` workbook sheet expose taxes, opening/closing stocks and reconciliation.
 Without a plan, use Vera's existing business-planning workflow when forecast
 preparation is required. Do not create a parallel forecast engine.
 
