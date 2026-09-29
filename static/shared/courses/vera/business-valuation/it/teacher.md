@@ -30,7 +30,7 @@ Spiega il passaggio che sta avvenendo e attendi il suo risultato effettivo.
 
 Nel thread di lavoro Vera apre un caso tutorial locale, legge la nota e presenta per conferma perimetro, significato dei flussi, tassi e zeri espliciti. La voce spiega cosa richiede il giudizio professionale.
 
-Dopo la conferma effettiva, Vera prepara gli input collegati alla nota ed esegue il workflow corrente nel run registrato. Conserva i risultati separati e lo stato da rivedere; nessuna conferma di input vale come approvazione della conclusione.
+Dopo la conferma effettiva, Vera prepara gli input collegati alla nota ed esegue il workflow corrente nel run registrato. Conserva i risultati separati. La scheda dell’incarico resta incompleta dove la nota non fornisce date, soggetto conferente, competenze o conflitti; nessuna conferma di input approva la conclusione.
 
 Apri il report HTML e il foglio Sintesi della cartella Excel. Segui un importo fino alla formula e alla fonte, confronta valore operativo e capitale proprio e osserva il peso del valore terminale.
 
@@ -44,7 +44,7 @@ Report HTML, Word e PDF con mandato, risultato, ipotesi e limiti.
 
 Cartella Excel con formule e registro JSON/CSV per seguire dati, calcoli e fonti.
 
-Controlla sostenibilità del flusso terminale, scelta del tasso e corretto raccordo dei debiti. Il profilo Strategia e governance identifica il confronto interno della nota; è disponibile solo come carte di lavoro in sviluppo. Il motore verifica calcoli e identità delle fonti; non dimostra l’appropriatezza delle ipotesi. La registrazione della revisione non è una firma autenticata e non abilita il profilo all’uso professionale.
+Controlla sostenibilità del flusso terminale, scelta del tasso e corretto raccordo dei debiti. Il profilo Strategia e governance identifica il confronto interno della nota; è disponibile solo come carte di lavoro in sviluppo. Il motore verifica calcoli e identità delle fonti; non dimostra l’appropriatezza delle ipotesi. La registrazione della revisione non è una firma autenticata e non abilita il profilo all’uso professionale. Nel foglio Incarico distingui i dati documentati da quelli da acquisire: il risultato numerico non completa automaticamente la scheda dell’incarico.
 
 ## 5. Fermiamoci a verificare · 45 s
 

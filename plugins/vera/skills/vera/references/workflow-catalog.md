@@ -48,7 +48,11 @@ adapter are unimplemented. Use its specialist skill directly for P0 work.
 - `adeguati-assetti`: assess an Italian company's organizational, administrative
   and accounting arrangements using proportionate review of responsibilities,
   processes and actual reporting/operating evidence; prepare findings, improvement
-  actions and subsequent reviews. A management report alone is not an assetti
+  actions and subsequent reviews. When construction is requested, use the same
+  engagement for attributed interviews, qualified evidence, reasoned professional
+  overrides, control design, versioned manuals/registers, separate adoption and
+  sampled operating review. The numerical method is experimental; a manual does
+  not prove operation. A management report alone is not an assetti
   assessment; general legal questions remain in quesito-legale-fiscale.
 
 - `aml-review`: review Italian client AML evidence at onboarding or later review,
@@ -177,6 +181,16 @@ adapter are unimplemented. Use its specialist skill directly for P0 work.
 - `studio-archive`: create or resume a durable client engagement; use its
   authorized local-document, Google Drive or Shared Drive, Gmail, or
   capability-gated WhatsApp evidence routes without mixing clients.
+
+## Synthetic development prototypes
+
+Read `../../trasformazione/SKILL.md` to prepare a synthetic Italian company-transformation case,
+  import evidence, propose findings, check exact arithmetic, record explicit
+  simulated/user review and export a versioned dossier. Changed evidence reopens
+  dependent approvals. This increment does not accept real client mandates,
+  qualify legal/tax effects, compute statutory deadlines or perform external
+  actions. It has no Studio Archive adapter. Select only for an explicitly
+  requested synthetic prototype or demonstration.
 
 ## Subordinate intake workflows
 

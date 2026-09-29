@@ -10,9 +10,9 @@ Later host-specific instructions in this reference cannot override this rule.
 
 # Vera — Geneva localization assessment and implementation
 
-Updated 2026-09-29 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
+Updated 2026-09-30 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
 
-This applies the common-core localization method to the complete existing catalogue: 35 professional functions, four internal helpers and one P0 case foundation. The disposition records the assessment; implementation status is separate. No services absent from Vera have been added.
+The current inventory covers all 42 skill entrypoints, including internal helpers and development prototypes. The disposition records the assessment; implementation status is separate. No services absent from Vera have been added.
 
 The release adds bounded adapters and instructions, not a blanket claim that every fiduciary mandate is supported. Original evidence and professional decisions remain necessary. No real Geneva client workflow has been accepted.
 
@@ -27,6 +27,7 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 | bilancio-oic | Adapt | Swiss CO/CHF annual-account draft adapter using reviewed account mappings, two-period reconciliation, source-bound disclosure review and professional decisions. No automatic statutory-completeness or filing claim. |
 | browser-automation | Use | Existing function retained with the recorded qualification limits. |
 | business-planning | Adapt | French report presentation and number formatting; existing CHF calculations retained. |
+| business-valuation | Unresolved | Source-linked valuation workpapers; no Swiss mandate qualification or Geneva client acceptance. Report prose remains Italian. |
 | centrale-rischi-review | Unresolved | Existing function retained with the recorded qualification limits. |
 | comunicazione-professionale | Use | Existing function retained with the recorded qualification limits. |
 | concordato-plan-review | Unresolved | Existing function retained with the recorded qualification limits. |
@@ -54,6 +55,7 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 | registro-imprese-sari | Adapt | Explicit CH-GE intake/plan, official Swiss source hosts, local authority/position handling and French labels; no portal filing. |
 | sales-plan | Use | Existing function retained with the recorded qualification limits. |
 | studio-archive | Adapt | Swiss IDE normalization and explicit OCR language through CLI/MCP; language changes trigger reindexing. |
+| trasformazione | Unresolved | Synthetic-only Italian transformation prototype; no real client mandate or Swiss legal qualification. |
 | treasury-forecast | Adapt | CHF forecast/update arithmetic with currency-safe records and currency-correct HTML, Markdown, XLSX and live review. Fixed interface prose remains Italian. |
 | variance-analysis | Use | Existing function retained with the recorded qualification limits. |
 | vera | Use | Existing function retained with the recorded qualification limits. |
@@ -83,3 +85,9 @@ These sources support the target investigation, not an automatic rules engine. R
 - [PFPDT outsourcing and processing roles](https://www.edoeb.admin.ch/fr/externalisation-sous-traitance)
 
 See [the complete machine-readable assessment](assessment.json) for each function’s purpose, common method, original adaptation requirement, acceptance example and source references.
+
+## Assetti construction release binding
+
+The 0.1.283 refresh changes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Existing target judgments remain in place. The new assetti construction mode has not been validated for CH-GE; the earlier assessment-mode scope does not qualify that new mode.
+
+The unpublished 0.1.286 valuation candidate integrates that release and the transformation prototype. Its 42-entry catalogue retains all prior assessment rows and adds the unresolved valuation row. This integration does not extend the earlier Geneva professional assessment.

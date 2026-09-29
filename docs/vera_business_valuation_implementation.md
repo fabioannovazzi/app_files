@@ -53,6 +53,49 @@ units, double debt deduction, terminal growth, source changes and stale review;
 real v3 plan replay; Studio Archive cross-client and receipt checks; workbook
 formula comparisons; report rendering; privacy coverage and package parity.
 
+### Current integration checkpoint — 30 September 2026
+
+The active valuation branch incorporates upstream main
+`f09267a16fc906f813de80675b2b8328f33c979d`, including the synthetic transformation
+prototype and assetti construction workflow. Both routing entries and CI jobs are
+retained. Vera candidate `0.1.286` is above main's `0.1.283` and every inspected
+open candidate (highest `0.1.285`); it is not a published version. Recheck main,
+open release candidates and the authoritative listing before publication.
+
+All 413 valuation/transport regressions still pass at 94.66% component coverage;
+68 construction, 46 transformation and ten native assetti lesson cases pass.
+The assetti lesson differs from both merge parents only in source fingerprints;
+its prior editorial reviews and development limits are retained. The regenerated
+42-entry Geneva inventory preserves existing dispositions and explicitly leaves
+valuation and transformation unresolved. It does not qualify construction for
+Swiss mandates.
+
+All three product source/version/package checks pass (Vera 0.1.286, Clara
+0.1.221, Lucia 0.1.61). Each Vera archive has 18 exact valuation source files and
+reproduces six complete saved reports outside the repository, for 18 exact
+replays. The valuation implementation and lesson source bytes are unchanged by
+this integration. Rebuilding the public lesson also incorporates its previously
+reviewed mandate-completeness wording.
+
+The current 508 package/privacy/teaching checks have 505 passes, two installed
+Marketplace-cache skips and the known dependency-checker argument failure.
+The earlier development version-guard failure no longer occurs in this run;
+remote current-head CI and publication checks remain outstanding. Both workflow
+registry checks and all 44 Cowork package checks pass. Initial expanded commands
+omitted the shared fixture or bundled Node path; the corrected commands used the
+repository setup without production changes. Three additional workflow-test
+assumptions were corrected only in tests: prototype exclusions, public benchmark
+acquisition classification, and the construction CLI's indirect archive loader.
+All 167 final workflow-boundary and public-catalogue checks pass after those
+test-only corrections.
+
+The integration evidence is retained alongside the recovered source in
+`integration-package-verification.json` and the `valuation-integration-*.xml`
+and `.log` records. Dependency-checker and breadcrumb corrections still await
+owner approval. Public GitHub push was previously denied by automatic approval
+review and has not been retried; the remote draft remains at its older head.
+No merge to main, deployment, publication or enabled-host acceptance is claimed.
+
 Local evidence on 29 September 2026:
 
 - 292 valuation/acquisition/shared-transport regressions pass; component coverage is 94.12%. These exercise

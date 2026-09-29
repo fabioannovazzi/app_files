@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "adeguati-assetti",
-  "course_sha256": "8dba4758fa3b32f101cb28eda7130a975ec9b3b452ee614903b26216ad28ac55",
+  "course_sha256": "6c35a2ec6fcdef713bb4b4a9b951742aa4358732f0b9eeea64581659e7159c45",
   "reviewer": "Codex: localized teaching materials and actual native draft/follow-up evidence review",
   "reviewed_at": "2026-09-14T20:09:40.718058+00:00",
   "review_scope": "All five lesson outlines and original fictional documents were read. Reviewed all unique semantic content of the twenty native memos across these two workflows and both phases, actual output structure, local source links, saved record identity/status/predecessor and delivery/source-challenge companions. Final output comparison confirms only the intended empty-evidence-label removal after the semantic review; exact current artifact hashes are recorded. The 113 focused tests have no failures or skips. These are Markdown/JSON outputs; no browser, native GUI rendering, live voice, learner comprehension or independent professional acceptance is claimed. CNDCEC source indices were checked as research starting points, without claiming article-level legal analysis. Fixture narratives exercise the normal Codex-authored stage and are not shipped as predetermined lesson answers.",
@@ -433,5 +433,22 @@
         "after": "291b0c14d84c2498581ba6e8da92ecbb948df5abfa329bcab9d24ef0924da9a1"
       }
     ]
+  },
+  "construction_source_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-29T21:47:09.787596+00:00",
+    "previous_course_sha256": "6c06178888fce4c7fbc572aae6ea6ec93962ea916ffc5375084d2e712e8b2711",
+    "content_review": "Compared the complete course JSON with origin/main at d728392e712b82049b9fc8f196aa44df51cbbaed. Only sources differ; all five localized lesson outlines, checkpoints, inputs, demo/practice instructions and outputs are unchanged. Existing editorial judgments are retained for the assessment-mode lesson. This does not certify a new construction-mode lesson.",
+    "source_review": "Source bindings now include the additive construction workflow, its intake/export/adapters/storage helpers and references, declared dependencies, dependency checker and combined skill. The existing assetti_review.py assessment implementation is unchanged. The assessment lesson continues to exercise the assessment mode.",
+    "native_execution_review": "All ten native assessment demo/practice cases passed locally on 2026-09-29 using the current course hash (test_assetti_kit_runs_assessment_and_same_case_follow_up; 10 passed in 1.27 seconds). The full native execution stage also passed in CI run 36632351720 before the stale editorial binding was detected. Fresh CI must validate all current course identities and hashes.",
+    "limits": "This is a bounded source-binding refresh, not a new independent editorial, visual, learner or professional acceptance. Earlier output-artifact hashes remain historical evidence. No construction-mode teaching acceptance or Geneva construction qualification is claimed."
+  },
+  "combined_valuation_construction_integration": {
+    "reviewed_at": "2026-09-29T22:58:01.745580+00:00",
+    "upstream_main": "f09267a16fc906f813de80675b2b8328f33c979d",
+    "content_review": "Compared every course field with both merge parents: only source fingerprints differ. All five localized outlines, inputs and demo/practice instructions are identical. Retain both earlier editorial records without claiming new construction-mode teaching acceptance.",
+    "source_review": "The merged source retains the complete upstream construction workflow and the additive business-valuation assurance registration. Existing assessment implementation and lesson semantics are unchanged. No additional external recipient or model-data route is introduced by this merge.",
+    "native_verification": "All ten native assessment demo/practice cases pass against this exact course hash. The same invocation passes 114 construction/transformation cases (124 total). The first invocation excluded the repository fixture and produced three setup errors; the corrected invocation includes it, without source or test edits.",
+    "limits": "Mechanical regression and source-binding integration only; no new visual, learner, professional or Geneva construction acceptance."
   }
 }

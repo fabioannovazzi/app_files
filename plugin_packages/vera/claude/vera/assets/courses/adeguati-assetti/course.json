@@ -28,8 +28,28 @@
   },
   "sources": [
     {
+      "path": "modules/adeguati-assetti/assets/construction-intake.html",
+      "sha256": "ce286701adbffc94aae09b5fe86d9cb10d692c830f5a49490fa5ce4ad7ffbbb1"
+    },
+    {
       "path": "modules/adeguati-assetti/assets/icon.svg",
       "sha256": "d215fd17d4913d8f3fe5a4bf4d492f78ee46fa65408d0ec878b3fec32db8a004"
+    },
+    {
+      "path": "modules/adeguati-assetti/references/construction-catalog.json",
+      "sha256": "4fe2422498a3e0c2453841f7bff4bae4abaaf658cd237011f4792da35e39e382"
+    },
+    {
+      "path": "modules/adeguati-assetti/references/construction-contract.md",
+      "sha256": "fb9a90b4e89e206122bff6a7bc6c3a0c08bc160b13b0a6fa8a6435c24d4003b0"
+    },
+    {
+      "path": "modules/adeguati-assetti/references/construction-sources.md",
+      "sha256": "a97109bbb799b1ec5345fe80c96e7c00717533760fdcc4f3b4fd9e0d39ebfd21"
+    },
+    {
+      "path": "modules/adeguati-assetti/references/construction-workflow.md",
+      "sha256": "8c609f9c78ef2ea0f98331d2926bc2b1099e65afa2b5b79b226e516753691e8f"
     },
     {
       "path": "modules/adeguati-assetti/references/intelligent-assessment.md",
@@ -45,7 +65,11 @@
     },
     {
       "path": "modules/adeguati-assetti/requirements.txt",
-      "sha256": "a289f525166e15bc5b9d66d072d85822ef3152ad0f0456a801a99ed82593ca58"
+      "sha256": "0022f9106a06265d85675ef2d6218caebb2cfd1a69bc69876953a4a0624d5257"
+    },
+    {
+      "path": "modules/adeguati-assetti/scripts/assetti_construction.py",
+      "sha256": "d87ba3cc406b3455e6689388fa6c02e445d6b121c2cf222ca715487792067d2e"
     },
     {
       "path": "modules/adeguati-assetti/scripts/assetti_review.py",
@@ -53,11 +77,31 @@
     },
     {
       "path": "modules/adeguati-assetti/scripts/check_dependencies.py",
-      "sha256": "0d196d5928e53e302ccb750a58def7ee90797b67ed1f0fa5c421d52e3ab75f00"
+      "sha256": "e6088e7916508a295ad924ec63c4f666336533387726a7cd8a99b29b4e1a26d5"
+    },
+    {
+      "path": "modules/adeguati-assetti/scripts/construction_adapters.py",
+      "sha256": "4e81f4714c19755c1cddd3e46324499552e37563a21fb4f5d63b23d58b2b17e2"
+    },
+    {
+      "path": "modules/adeguati-assetti/scripts/construction_core.py",
+      "sha256": "1edfc60da9830528331b5cdc66766f4d5daddea402ba1202acba3f6a78d4d9a0"
+    },
+    {
+      "path": "modules/adeguati-assetti/scripts/construction_exports.py",
+      "sha256": "d7d819435c28b7d9d2e4c8e9a19a963915d7b8a265a517e9d063d83629524fb4"
+    },
+    {
+      "path": "modules/adeguati-assetti/scripts/construction_intake.py",
+      "sha256": "cbee5c6d57da936bec28c1776772f324de89e989edb21fcec4d4df4d156a3a5c"
+    },
+    {
+      "path": "modules/adeguati-assetti/scripts/construction_store.py",
+      "sha256": "6a9d86c20841afe42d8a4c1cad64757744b1d7f8ca93d44d46636ed14dbee569"
     },
     {
       "path": "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
-      "sha256": "cb05c9012f25c394937028a370ca9e3199db7523f3e3ddd359382bc76eb8c2cf"
+      "sha256": "1178c3b98022a8c049c8d9696a232ce6ebe74ef03c68189be206fe249b0687eb"
     },
     {
       "path": "modules/adeguati-assetti/skills/adeguati-assetti/references/geneva.md",
@@ -582,5 +626,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "8dba4758fa3b32f101cb28eda7130a975ec9b3b452ee614903b26216ad28ac55"
+  "canonical_course_sha256": "6c35a2ec6fcdef713bb4b4a9b951742aa4358732f0b9eeea64581659e7159c45"
 }

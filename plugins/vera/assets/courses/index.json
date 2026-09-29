@@ -4,7 +4,7 @@
   "courses": {
     "adeguati-assetti": {
       "path": "adeguati-assetti/course.json",
-      "sha256": "8dba4758fa3b32f101cb28eda7130a975ec9b3b452ee614903b26216ad28ac55",
+      "sha256": "6c35a2ec6fcdef713bb4b4a9b951742aa4358732f0b9eeea64581659e7159c45",
       "languages": [
         "it",
         "en",

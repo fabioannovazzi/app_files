@@ -36,6 +36,7 @@ CLIENT_WORKFLOW_ENTRYPOINTS = (
     ("treasury-forecast", "run_treasury.py"),
     ("aml-review", "aml_review.py"),
     ("adeguati-assetti", "assetti_review.py"),
+    ("adeguati-assetti", "assetti_construction.py"),
     ("archive-organization", "archive_organization.py"),
     ("open-item-reconciliation", "audit_assurance.py"),
     ("open-item-reconciliation", "build_missing_evidence_requests.py"),
@@ -165,6 +166,8 @@ CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     ("passive-invoice-audit", "check_dependencies.py"),
     ("business-planning", "check_dependencies.py"),
     ("business-valuation", "check_dependencies.py"),
+    # Public-source snapshots are acquired before import into a client run.
+    ("business-valuation", "valuation_benchmarks.py"),
     ("business-planning", "run_strategic_plan.py"),
     ("business-planning", "prepare_report_site.py"),
     ("sales-plan", "check_dependencies.py"),
@@ -416,8 +419,11 @@ def test_client_workflow_registry_covers_every_vera_component() -> None:
     assert set(VERA_CLIENT_WORKFLOW_IDS) == set(components["plugins"]) - {
         "browser-automation",
         "comunicazione-professionale",
+        # These development prototypes have no client-workflow adapter.
+        "fusione-guidata",
         "presenza-digitale-studio",
         "studio-archive",
+        "trasformazione",
     }
 
 
@@ -963,6 +969,18 @@ def test_client_workflow_entrypoint_requires_managed_context(
                 "--output-dir",
                 "missing-output",
             ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert result.returncode == 2
+        assert "required: --client-engagement" in result.stderr
+        return
+    if (workflow_id, script_name) == ("adeguati-assetti", "assetti_construction.py"):
+        # Its loader is returned by _archive_loader and invoked through an alias.
+        # Exercise the public CLI; construction tests verify real receipt checks.
+        result = subprocess.run(
+            [*workflow_cli(script_path), "status"],
             capture_output=True,
             text=True,
             check=False,
