@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "plugins/vera",
-  "version": "0.1.274",
-  "captured_at": "2026-09-28T13:34:51.825646+00:00",
-  "catalogue_fingerprint": "d2bbc3b715b98c3309dc76014391d8e8df789dbac607246de2e3e7303707c6b5",
-  "manifest_sha256": "561f1e2067db32be8c17a4fff0573c65aa918256c159d87cd6a059c735dd5599",
+  "version": "0.1.275",
+  "captured_at": "2026-09-29T06:52:59.657707+00:00",
+  "catalogue_fingerprint": "7cadaf453790b5f14e4e19a920956c74eb4d25bf5cfa40707b3bf8e317732d28",
+  "manifest_sha256": "bfcd99570b1745052fd494d0187d9c3635c382faa59946cf94b85f1b8d5e7221",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -114,7 +114,7 @@
     {
       "function_id": "learn-with-vera",
       "skill_path": "skills/learn-with-vera/SKILL.md",
-      "sha256": "7234efa621e18944a9154e59daa0db39c525bd460d515b5bed1e32ae92c3870f"
+      "sha256": "8921927e4361244093541ac4b94b2ee1aa1ff5bd0966fbdef7dc1f6b3f2cc4e5"
     },
     {
       "function_id": "legal-tax-answer-planner",

@@ -1,6 +1,6 @@
 {
   "schema": "vera.localization.assessment.v1",
-  "catalogue_fingerprint": "d2bbc3b715b98c3309dc76014391d8e8df789dbac607246de2e3e7303707c6b5",
+  "catalogue_fingerprint": "7cadaf453790b5f14e4e19a920956c74eb4d25bf5cfa40707b3bf8e317732d28",
   "assessment_date": "2026-09-28",
   "target": {
     "id": "CH-GE",
@@ -876,5 +876,10 @@
   "release_revalidation": {
     "version": "0.1.274",
     "scope": "All skill entrypoint hashes are unchanged from the preceding snapshot. Release manifest identity refreshed for the Cowork archive startup and session fix; existing jurisdiction assessments are unchanged."
+  },
+  "get_started_release_binding": {
+    "version": "0.1.275",
+    "reviewed_at": "2026-09-29",
+    "change": "Optional introductory single-course teaching route; professional workflow scope and Geneva dispositions unchanged. Language alone never selects jurisdiction."
   }
 }

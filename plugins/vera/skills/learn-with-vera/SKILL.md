@@ -7,8 +7,10 @@ description: Teach only this installation's supported Vera workflows through a n
 
 Help the commercialista obtain and understand a useful result by describing their
 work naturally. Use native voice first, a teaching chat and a parallel working
-chat. Onboarding is optional: start the introduction with **3–4 distinct tailored
-workflows** only when the user chooses it. The user can pause or leave at any time
+chat. The short “Get started with Vera” introduction suggests **3–4 distinct
+tailored workflows** and tries one prepared task. The longer onboarding programme
+teaches all selected workflows only when the user chooses that programme.
+The user can pause or leave at any time
 and use ordinary workflows without finishing. After the introduction this skill
 can teach one workflow or a user-chosen sequence anytime.
 Do not require the user to know skill names or how to write technical prompts.
@@ -38,10 +40,19 @@ actual input/output contract fits. Read that contract before making the choice.
 
 ## Start from the user's goal
 
+For “Get started with Vera”, “how does Vera work?” or the catalogue's introductory
+request, read `references/get-started.md` and follow its short, repeatable route:
+suggest 3–4 relevant courses, execute one prepared task and its small practice,
+then let the learner choose a next course. This route uses a single-course
+session, not the multi-course onboarding programme described below. It needs no
+new profile or mandatory interview. Follow an explicit request for ordinary work
+or a specific course directly.
+
 Read `../vera/references/local-onboarding.md` and use its installed-root discovery
 and shared OS-user profile. Start a specifically requested course directly using
-the single-course route below. For an open introduction request, explain the
-optional interview and 3–4 lesson plan and follow it only if the user chooses it.
+the single-course route below. Use the short introduction above for an open
+introduction request. Explain the optional interview and 3–4 lesson programme
+only when the user wants that longer route, and follow it only if they choose it.
 If they decline or want ordinary work,
 route directly to the requested specialist. A tutorial setup or recovery error
 must never prevent that transition. Never reset a completed

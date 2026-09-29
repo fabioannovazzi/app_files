@@ -22,6 +22,12 @@ an explanation of Vera's scope and selection of a supported Vera lesson.
 
 ## Entry and local profile
 
+For the catalogue's “Get started with Vera” course or a request to understand
+Vera in general, route to `../../learn-with-vera/references/get-started.md`.
+That repeatable introduction suggests 3–4 next courses but runs only one prepared
+task and its practice through a single-course session. It does not require a new
+profile, invoke this multi-course programme or reset its existing progress.
+
 Do not run `local_onboarding.py status` before ordinary work or direct specialist
 invocation. Do not require a profile, repeat an invitation or redirect a concrete
 professional request into a tutorial. If the user skips, declines, pauses or

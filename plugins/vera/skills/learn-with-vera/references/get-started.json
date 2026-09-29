@@ -1,0 +1,97 @@
+{
+  "it": {
+    "title": "Inizia a usare Vera",
+    "lead": "Impara a chiedere un lavoro, fornire i file, leggere il risultato e chiedere una modifica. Proviamo insieme un solo caso con documenti fittizi già preparati.",
+    "duration": "5–8 minuti di spiegazione e breve prova. Elaborazione e domande possono richiedere più tempo.",
+    "optional": "Puoi saltare questa introduzione, interromperla o rifarla quando vuoi. Non occorre completarla per usare Vera.",
+    "back": "Tutti i corsi",
+    "route": "Una prima esperienza, passo per passo",
+    "steps": [
+      {"title": "Di che cosa ti occupi?", "text": "Racconta brevemente il tuo lavoro e cosa vorresti provare. Vera ti propone 3–4 funzioni pertinenti con il risultato che puoi ottenere. Ne scegliamo una sola per cominciare. Se non hai una preferenza, possiamo confrontare un estratto conto e un mastro banca fittizi."},
+      {"title": "Chiedi il lavoro e guarda i file", "text": "Apriamo i documenti preparati per il caso scelto. Non devi conoscere comandi: descrivi il risultato che vuoi, quali file usare e il periodo o la domanda. Ad esempio: «Confronta questo estratto conto con il mastro banca e mostrami i movimenti da verificare»."},
+      {"title": "Segui il lavoro e apri il risultato", "text": "Vera esegue la funzione corrente. Ti spiega eventuali domande e apre il risultato effettivo. Vediamo dove è salvato, come riaprirlo, quale dato controllare sulla fonte e che cosa richiede ancora la tua revisione."},
+      {"title": "Chiedi una piccola modifica", "text": "Usa la variazione già preparata per l’esercizio: un periodo aggiornato o un documento aggiuntivo. Chiedi a Vera di ripetere il lavoro. Confrontiamo il nuovo risultato con il primo, che rimane disponibile."},
+      {"title": "Scegli che cosa imparare dopo", "text": "Prova a dire come chiederesti un lavoro simile e quali file forniresti. Alla fine ricevi i collegamenti ai risultati e scegli il prossimo corso fra quelli proposti. Gli altri corsi non sono obbligatori e non partono automaticamente."}
+    ],
+    "codex_prompt": "Vera, guidami nel corso «Inizia a usare Vera» in italiano. Chiedimi brevemente di cosa mi occupo e cosa vorrei provare; proponi 3–4 funzioni pertinenti e aiutami a sceglierne una. Usa il suo caso fittizio preparato per insegnarmi a chiedere il lavoro, fornire i file, aprire e verificare il risultato, poi fare una piccola modifica. Usa questa chat per spiegare e rispondere; crea o riprendi una seconda chat di lavoro e guidami ad aprirla in un’altra finestra. Aiutami ad attivare la voce. Esegui la funzione reale e attendi le mie risposte durante la prova. Alla fine scegliamo il prossimo corso, senza avviarlo automaticamente.",
+    "cowork_prompt": "Vera, guidami nel corso «Inizia a usare Vera» in italiano, per iscritto in questa sola conversazione Cowork. Chiedimi brevemente di cosa mi occupo e cosa vorrei provare; proponi 3–4 funzioni pertinenti e aiutami a sceglierne una. Usa il suo caso fittizio preparato per insegnarmi a chiedere il lavoro, fornire i file, aprire e verificare il risultato, poi fare una piccola modifica. Esegui la funzione reale, attendi le mie risposte e conserva entrambi i risultati nella cartella della lezione. Non usare voce né una seconda chat. Alla fine scegliamo il prossimo corso, senza avviarlo automaticamente.",
+    "data_heading": "Quali dati arrivano al modello",
+    "data": "Il modello di Codex o Claude legge ciò che racconti del tuo lavoro, i file fittizi e i risultati che apriamo nella conversazione. I progressi sono salvati sul computer in Codex o nella cartella collegata in Cowork; non vengono inviati a Mparanza. Questo non significa elaborazione del modello offline. Non servono documenti di clienti reali per questa introduzione."
+  },
+  "en": {
+    "title": "Get started with Vera",
+    "lead": "Learn to ask for work, provide files, read the result and request a change. We will try one task together using prepared fictional documents.",
+    "duration": "5–8 minutes of explanation and a short exercise. Processing and questions can take longer.",
+    "optional": "You can skip, pause or revisit this introduction at any time. Completing it is not required to use Vera.",
+    "back": "All courses",
+    "route": "Your first task, step by step",
+    "steps": [
+      {"title": "What do you work on?", "text": "Briefly describe your work and what you would like to try. Vera suggests 3–4 relevant functions and the result each produces. Choose just one to start. If you have no preference, we can compare a fictional bank statement and bank ledger."},
+      {"title": "Ask for the work and look at the files", "text": "Open the documents prepared for the chosen case. You do not need commands: describe the result you want, which files to use and the period or question. For example: “Compare this bank statement with the ledger and show me the transactions to review.”"},
+      {"title": "Follow the work and open the result", "text": "Vera runs the current function, explains any questions and opens the actual result. See where it is saved, how to reopen it, which figure to check against its source and what still needs your review."},
+      {"title": "Request a small change", "text": "Use the prepared practice variation: an updated period or an additional document. Ask Vera to run the work again. Compare the new result with the first, which remains available."},
+      {"title": "Choose what to learn next", "text": "Try describing how you would request similar work and which files you would provide. Finish with links to the results and choose your next course from the suggestions. The other courses are optional and do not start automatically."}
+    ],
+    "codex_prompt": "Vera, guide me through “Get started with Vera” in English. Briefly ask about my work and what I would like to try; suggest 3–4 relevant functions and help me choose one. Use its prepared fictional case to teach me to ask for work, provide files, open and check the result, then make a small change. Explain and answer questions in this chat; create or resume a second working chat and help me open it in another window. Help me turn on voice. Execute the real function and wait for my answers during practice. Finish by choosing the next course without starting it automatically.",
+    "cowork_prompt": "Vera, guide me through “Get started with Vera” in English, in writing in this single Cowork conversation. Briefly ask about my work and what I would like to try; suggest 3–4 relevant functions and help me choose one. Use its prepared fictional case to teach me to ask for work, provide files, open and check the result, then make a small change. Execute the real function, wait for my answers and keep both results in the lesson folder. Do not use voice or a second chat. Finish by choosing the next course without starting it automatically.",
+    "data_heading": "What data reaches the model",
+    "data": "The Codex or Claude model reads what you share about your work, the fictional files and the results we open in the conversation. Progress is saved on your computer in Codex or in the connected folder in Cowork; it is not sent to Mparanza. This does not mean offline model processing. You do not need real client documents for this introduction."
+  },
+  "fr": {
+    "title": "Commencer avec Vera",
+    "lead": "Apprenez à demander un travail, fournir les fichiers, lire le résultat et demander une modification. Nous essayons ensemble un seul cas avec des documents fictifs déjà préparés.",
+    "duration": "5–8 minutes d’explication et un court exercice. Le traitement et les questions peuvent prendre plus de temps.",
+    "optional": "Vous pouvez passer cette introduction, l’interrompre ou la reprendre à tout moment. Elle n’est pas obligatoire pour utiliser Vera.",
+    "back": "Tous les cours",
+    "route": "Un premier travail, étape par étape",
+    "steps": [
+      {"title": "Quel est votre travail ?", "text": "Décrivez brièvement votre activité et ce que vous souhaitez essayer. Vera propose 3–4 fonctions pertinentes et le résultat attendu pour chacune. Choisissez-en une seule pour commencer. Sans préférence, nous pouvons comparer un relevé bancaire et un grand livre banque fictifs."},
+      {"title": "Demandez le travail et regardez les fichiers", "text": "Ouvrons les documents préparés pour le cas choisi. Pas besoin de commandes : décrivez le résultat souhaité, les fichiers à utiliser et la période ou la question. Par exemple : « Compare ce relevé bancaire au grand livre et montre-moi les opérations à vérifier. »"},
+      {"title": "Suivez le travail et ouvrez le résultat", "text": "Vera exécute la fonction actuelle, explique ses questions et ouvre le résultat réel. Voyons où il est enregistré, comment le rouvrir, quelle donnée vérifier dans la source et ce qui nécessite encore votre révision."},
+      {"title": "Demandez une petite modification", "text": "Utilisez la variation préparée pour l’exercice : une période actualisée ou un document supplémentaire. Demandez à Vera de refaire le travail. Comparons le nouveau résultat au premier, qui reste disponible."},
+      {"title": "Choisissez la suite", "text": "Essayez de formuler une demande similaire et de préciser les fichiers à fournir. Vous repartez avec les liens vers les résultats et choisissez le prochain cours parmi les propositions. Les autres cours restent facultatifs et ne démarrent pas automatiquement."}
+    ],
+    "codex_prompt": "Vera, guide-moi dans le cours « Commencer avec Vera » en français. Demande-moi brièvement quel est mon travail et ce que je souhaite essayer ; propose 3–4 fonctions pertinentes et aide-moi à en choisir une. Utilise son cas fictif préparé pour m’apprendre à demander le travail, fournir les fichiers, ouvrir et vérifier le résultat, puis demander une petite modification. Explique et réponds ici ; crée ou reprends une seconde conversation de travail et aide-moi à l’ouvrir dans une autre fenêtre. Aide-moi à activer la voix. Exécute la vraie fonction et attends mes réponses pendant l’exercice. À la fin, choisissons le prochain cours sans le démarrer automatiquement.",
+    "cowork_prompt": "Vera, guide-moi dans le cours « Commencer avec Vera » en français, par écrit dans cette seule conversation Cowork. Demande-moi brièvement quel est mon travail et ce que je souhaite essayer ; propose 3–4 fonctions pertinentes et aide-moi à en choisir une. Utilise son cas fictif préparé pour m’apprendre à demander le travail, fournir les fichiers, ouvrir et vérifier le résultat, puis demander une petite modification. Exécute la vraie fonction, attends mes réponses et conserve les deux résultats dans le dossier de la leçon. N’utilise ni voix ni seconde conversation. À la fin, choisissons le prochain cours sans le démarrer automatiquement.",
+    "data_heading": "Quelles données parviennent au modèle",
+    "data": "Le modèle de Codex ou Claude lit ce que vous racontez de votre travail, les fichiers fictifs et les résultats ouverts dans la conversation. La progression est enregistrée sur votre ordinateur dans Codex ou dans le dossier connecté dans Cowork ; elle n’est pas envoyée à Mparanza. Cela ne signifie pas que le modèle fonctionne hors ligne. Aucun document de client réel n’est nécessaire pour cette introduction."
+  },
+  "de": {
+    "title": "Erste Schritte mit Vera",
+    "lead": "Lernen Sie, eine Aufgabe zu beschreiben, Dateien bereitzustellen, das Ergebnis zu lesen und eine Änderung anzufordern. Gemeinsam bearbeiten wir einen Fall mit vorbereiteten fiktiven Dokumenten.",
+    "duration": "5–8 Minuten Erklärung und eine kurze Übung. Verarbeitung und Fragen können länger dauern.",
+    "optional": "Sie können diese Einführung jederzeit überspringen, unterbrechen oder wiederholen. Sie ist keine Voraussetzung für die Nutzung von Vera.",
+    "back": "Alle Kurse",
+    "route": "Eine erste Aufgabe, Schritt für Schritt",
+    "steps": [
+      {"title": "Woran arbeiten Sie?", "text": "Beschreiben Sie kurz Ihre Arbeit und was Sie ausprobieren möchten. Vera schlägt 3–4 passende Funktionen mit ihren Ergebnissen vor. Wählen Sie zunächst nur eine. Ohne besondere Präferenz können wir einen fiktiven Kontoauszug mit dem Bankkonto im Hauptbuch vergleichen."},
+      {"title": "Beschreiben Sie die Aufgabe und sehen Sie die Dateien an", "text": "Wir öffnen die vorbereiteten Dokumente des gewählten Falls. Sie brauchen keine Befehle: Beschreiben Sie das gewünschte Ergebnis, die Dateien und den Zeitraum oder die Frage. Zum Beispiel: „Vergleiche diesen Kontoauszug mit dem Bankkonto im Hauptbuch und zeige mir die zu prüfenden Buchungen.“"},
+      {"title": "Verfolgen Sie die Arbeit und öffnen Sie das Ergebnis", "text": "Vera führt die aktuelle Funktion aus, erklärt Rückfragen und öffnet das tatsächliche Ergebnis. Sie sehen, wo es gespeichert ist, wie Sie es wieder öffnen, welche Zahl Sie an der Quelle prüfen und was noch Ihre fachliche Prüfung erfordert."},
+      {"title": "Fordern Sie eine kleine Änderung an", "text": "Verwenden Sie die vorbereitete Übungsvariante: einen aktualisierten Zeitraum oder ein zusätzliches Dokument. Bitten Sie Vera, die Aufgabe erneut auszuführen. Wir vergleichen das neue Ergebnis mit dem ersten, das erhalten bleibt."},
+      {"title": "Wählen Sie den nächsten Kurs", "text": "Beschreiben Sie, wie Sie eine ähnliche Aufgabe anfordern würden und welche Dateien Sie bereitstellen würden. Zum Abschluss erhalten Sie Links zu den Ergebnissen und wählen einen nächsten Kurs. Die weiteren Kurse sind freiwillig und starten nicht automatisch."}
+    ],
+    "codex_prompt": "Vera, führe mich auf Deutsch durch „Erste Schritte mit Vera“. Frage kurz nach meiner Arbeit und was ich ausprobieren möchte; schlage 3–4 passende Funktionen vor und hilf mir, eine auszuwählen. Zeige mir anhand ihres vorbereiteten fiktiven Falls, wie ich eine Aufgabe beschreibe, Dateien bereitstelle, das Ergebnis öffne und prüfe und anschließend eine kleine Änderung anfordere. Erkläre und beantworte Fragen hier; erstelle oder öffne einen zweiten Arbeitschat und hilf mir, ihn in einem weiteren Fenster zu öffnen. Hilf mir, die Sprachfunktion zu aktivieren. Führe die echte Funktion aus und warte während der Übung auf meine Antworten. Wählen wir zum Schluss den nächsten Kurs, ohne ihn automatisch zu starten.",
+    "cowork_prompt": "Vera, führe mich auf Deutsch durch „Erste Schritte mit Vera“, schriftlich in dieser einzigen Cowork-Unterhaltung. Frage kurz nach meiner Arbeit und was ich ausprobieren möchte; schlage 3–4 passende Funktionen vor und hilf mir, eine auszuwählen. Zeige mir anhand ihres vorbereiteten fiktiven Falls, wie ich eine Aufgabe beschreibe, Dateien bereitstelle, das Ergebnis öffne und prüfe und anschließend eine kleine Änderung anfordere. Führe die echte Funktion aus, warte auf meine Antworten und bewahre beide Ergebnisse im Unterrichtsordner auf. Verwende keine Sprachfunktion und keinen zweiten Chat. Wählen wir zum Schluss den nächsten Kurs, ohne ihn automatisch zu starten.",
+    "data_heading": "Welche Daten das Modell erhält",
+    "data": "Das Modell von Codex oder Claude liest Ihre Angaben zur Arbeit, die fiktiven Dateien und die in der Unterhaltung geöffneten Ergebnisse. Der Fortschritt wird in Codex auf Ihrem Computer oder in Cowork im verbundenen Ordner gespeichert und nicht an Mparanza gesendet. Das bedeutet keine Offline-Verarbeitung durch das Modell. Für diese Einführung brauchen Sie keine echten Mandantendokumente."
+  },
+  "es": {
+    "title": "Empieza a usar Vera",
+    "lead": "Aprende a pedir un trabajo, aportar archivos, leer el resultado y solicitar un cambio. Probaremos juntos un solo caso con documentos ficticios ya preparados.",
+    "duration": "5–8 minutos de explicación y una breve práctica. El procesamiento y las preguntas pueden requerir más tiempo.",
+    "optional": "Puedes saltarte esta introducción, pausarla o repetirla cuando quieras. No es obligatorio completarla para usar Vera.",
+    "back": "Todos los cursos",
+    "route": "Una primera tarea, paso a paso",
+    "steps": [
+      {"title": "¿A qué te dedicas?", "text": "Describe brevemente tu trabajo y qué te gustaría probar. Vera propone 3–4 funciones pertinentes con el resultado que puedes obtener. Elige solo una para empezar. Si no tienes preferencia, podemos comparar un extracto bancario y un mayor de bancos ficticios."},
+      {"title": "Pide el trabajo y mira los archivos", "text": "Abrimos los documentos preparados para el caso elegido. No necesitas comandos: describe el resultado que buscas, los archivos que debe usar y el período o la pregunta. Por ejemplo: «Compara este extracto con el mayor de bancos y muéstrame los movimientos que debo revisar»."},
+      {"title": "Sigue el trabajo y abre el resultado", "text": "Vera ejecuta la función actual, explica sus preguntas y abre el resultado real. Vemos dónde está guardado, cómo volver a abrirlo, qué dato comprobar en la fuente y qué necesita todavía tu revisión."},
+      {"title": "Pide un pequeño cambio", "text": "Usa la variación preparada para la práctica: un período actualizado o un documento adicional. Pide a Vera que repita el trabajo. Comparamos el nuevo resultado con el primero, que se conserva."},
+      {"title": "Elige qué aprender después", "text": "Intenta explicar cómo pedirías un trabajo similar y qué archivos aportarías. Al terminar recibes enlaces a los resultados y eliges el siguiente curso entre las propuestas. Los demás cursos son opcionales y no se inician automáticamente."}
+    ],
+    "codex_prompt": "Vera, guíame por el curso «Empieza a usar Vera» en español. Pregúntame brevemente a qué me dedico y qué quiero probar; propón 3–4 funciones pertinentes y ayúdame a elegir una. Usa su caso ficticio preparado para enseñarme a pedir el trabajo, aportar archivos, abrir y comprobar el resultado y hacer un pequeño cambio. Explica y responde aquí; crea o retoma un segundo chat de trabajo y ayúdame a abrirlo en otra ventana. Ayúdame a activar la voz. Ejecuta la función real y espera mis respuestas durante la práctica. Al terminar, elijamos el siguiente curso sin iniciarlo automáticamente.",
+    "cowork_prompt": "Vera, guíame por el curso «Empieza a usar Vera» en español, por escrito en esta única conversación Cowork. Pregúntame brevemente a qué me dedico y qué quiero probar; propón 3–4 funciones pertinentes y ayúdame a elegir una. Usa su caso ficticio preparado para enseñarme a pedir el trabajo, aportar archivos, abrir y comprobar el resultado y hacer un pequeño cambio. Ejecuta la función real, espera mis respuestas y conserva ambos resultados en la carpeta de la lección. No uses voz ni un segundo chat. Al terminar, elijamos el siguiente curso sin iniciarlo automáticamente.",
+    "data_heading": "Qué datos llegan al modelo",
+    "data": "El modelo de Codex o Claude lee lo que cuentas de tu trabajo, los archivos ficticios y los resultados que abrimos en la conversación. El progreso se guarda en tu ordenador en Codex o en la carpeta conectada en Cowork; no se envía a Mparanza. Esto no significa que el modelo procese los datos sin conexión. No necesitas documentos de clientes reales para esta introducción."
+  }
+}

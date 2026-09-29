@@ -169,3 +169,7 @@ research required by a supported method retains its normal source boundaries.
 The helper itself has no network calls. Claude processes the conversation and
 files it reads under the user's Anthropic account; saving a file in a connected
 folder does not promise offline processing or exclude host-managed storage.
+
+## Get started with Vera
+
+For a general introduction or the catalogue's Get started with Vera request, read `references/get-started.md` and its localized outline. Suggest 3–4 relevant courses, try one prepared task and its practice, then choose a next course. Follow this package's written single-conversation contract; desktop session and profile commands in the shared reference do not apply to Cowork.

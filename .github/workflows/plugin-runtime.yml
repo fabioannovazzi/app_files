@@ -186,6 +186,7 @@ jobs:
           tests/plugins/test_teaching_management_execution.py
           tests/plugins/test_teaching_clara_budget_execution.py
           tests/plugins/test_cowork_teaching.py
+          tests/plugins/test_vera_get_started.py
           tests/plugins/test_teaching_browser_execution.py
           tests/plugins/test_teaching_purchase_execution.py
           tests/plugins/test_matter_review_presentation.py

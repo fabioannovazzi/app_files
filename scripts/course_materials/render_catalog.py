@@ -11,6 +11,7 @@ from pathlib import Path
 
 from build_catalog import ROOT, _eligible, build
 from course_start import add_course_start
+from get_started import render_introduction
 
 sys.path.insert(0, str(ROOT / "plugins/_shared/vendor/modules"))
 from courseware.library import CourseLibrary  # noqa: E402
@@ -45,9 +46,9 @@ def render(destination: Path, *, preview: bool = False, public: bool = False) ->
         "OFL.txt",
     ):
         shutil.copyfile(assets / name, destination / name)
-    if public:
-        for name in ("course-start.css", "course-start.js"):
-            shutil.copyfile(Path(__file__).parent / name, destination / name)
+    for name in ("course-start.css", "course-start.js"):
+        shutil.copyfile(Path(__file__).parent / name, destination / name)
+    introduction = render_introduction(ROOT, destination)
     sections = []
     for product in ("vera", "clara", "lucia"):
         product_root = ROOT / "plugins" / product
@@ -164,8 +165,11 @@ def render(destination: Path, *, preview: bool = False, public: bool = False) ->
         '<header class="masthead"><b>Vera · Clara · Lucia</b><span>Materiali delle lezioni</span></header><main>'
         '<div class="hero"><h1>Lezioni per usare i flussi di lavoro</h1>'
         '<p class="lead">Per ogni funzione: i file da fornire, una richiesta di esempio, i passaggi, '
-        "il risultato da aprire e una breve prova da fare.</p>" + notice + "</div>"
-        '<section id="come-iniziare"><h2>Come avviare una lezione</h2>'
+        "il risultato da aprire e una breve prova da fare.</p>"
+        + notice
+        + "</div>"
+        + introduction
+        + '<section id="come-iniziare"><h2>Come avviare una lezione</h2>'
         "<p>Scegli qui sotto una funzione e apri la lezione nella tua lingua. "
         "All’inizio della pagina trovi <strong>Avvia questa lezione</strong>: copia la richiesta, "
         "scegli Codex oppure Claude Cowork con il plugin indicato installato. In Codex seleziona @Vera, @Clara o @Lucia "
