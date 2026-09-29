@@ -99,8 +99,8 @@ The generic package assertions were updated for the new component, public
 page and compact specialist contract. Existing Cowork introduction wording and
 cache-busting stylesheet URLs are checked for their actual contract rather than
 outdated literal boilerplate. The shared archive change requires aligned
-candidate bundles: Vera 0.1.282, Clara 0.1.223 and Lucia 0.1.63, with Studio
-Archive 0.1.39. These candidates were moved above the manifest versions inspected
+candidate bundles: Vera 0.1.284, Clara 0.1.224 and Lucia 0.1.64, with Studio
+Archive 0.1.40. These candidates were moved above the manifest versions inspected
 in open PRs #705–#708 to avoid publishing different source under the same version.
 The candidate refresh passed source/package parity for all three products.
 Its broad package and privacy regression run had 564 passes, two skips and
@@ -146,3 +146,12 @@ questions require current primary sources and professional review.
 
 Synthetic verification is not field validation. Professional acceptance on an
 authorized real case and fresh installed-host qualification remain distinct.
+
+## Combined release integration
+
+Integrated main through `bbc94c37a` to preserve the released merger foundation.
+The CNC helper and ledger behavior are unchanged by this integration. Source
+catalogues include both functions, generated archives are rebuilt from combined
+source, and the Geneva catalogue records CNC as an Italian workflow whose
+Swiss scope remains unassessed. Candidate versions are above open PRs inspected
+on 2026-09-29, including the overlapping ESG and assetti candidates.

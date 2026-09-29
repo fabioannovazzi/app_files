@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "plugins/vera",
-  "version": "0.1.277",
-  "captured_at": "2026-09-29T07:37:00.039849+00:00",
-  "catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
-  "manifest_sha256": "7bc0cca29c5fb77386d0d37c89cc940b0bcab8ee9946a60ec08659a84ac9282c",
+  "root": "/Users/fabio/.codex/worktrees/vera-composizione-negoziata/app_files/plugins/vera",
+  "version": "0.1.284",
+  "captured_at": "2026-09-29T20:16:41.126152+00:00",
+  "catalogue_fingerprint": "161c763996ef9efc3647c1b75da8b607c09839028cebac185b0504fc9d8d8321",
+  "manifest_sha256": "3ec67ec62e4c6cf37135e7ffdf0335db85f6050f9ab47ba7944e03b0f9b0b040",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -57,6 +57,11 @@
       "sha256": "4548a6c4b41fb845bd260596b680ce1831f6117218e45f0d70b8786d21766da1"
     },
     {
+      "function_id": "composizione-negoziata",
+      "skill_path": "skills/composizione-negoziata/SKILL.md",
+      "sha256": "f9f1b8d1e3a4ce9b643f5f2c68065820200cc89d6d4bf2d780a321b61f75a6b2"
+    },
+    {
       "function_id": "comunicazione-professionale",
       "skill_path": "skills/comunicazione-professionale/SKILL.md",
       "sha256": "50af60a05507b119f9b51cf9bb3b1800d9cabe65a41e51bea578b2ab5ecb3cfe"
@@ -95,6 +100,11 @@
       "function_id": "financial-report-builder",
       "skill_path": "skills/financial-report-builder/SKILL.md",
       "sha256": "f6208a7e9b9b235949ff1276a1cc3614fbbf479869b0dc370e332125f7b0cf62"
+    },
+    {
+      "function_id": "fusione-guidata",
+      "skill_path": "skills/fusione-guidata/SKILL.md",
+      "sha256": "2c3a8adaf8386593adf8649f7b6dc45c998d5e6db05d998bb03f5d4162915129"
     },
     {
       "function_id": "invoice-xml",
@@ -194,7 +204,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "62b95932ee7e4e0fd149f2ba0c1e2c2b67f9cf39116343801049fe7b5d7e4e9b"
+      "sha256": "29b23b4da7258fe2272da43b4ae026ff231d8ea21947fd0a7cae60d732f447a9"
     },
     {
       "function_id": "vouching",

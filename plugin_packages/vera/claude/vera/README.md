@@ -99,6 +99,10 @@ environment does not isolate modules or client matters from one another.
 
 The shared specialist workflows cover:
 
+- `fusione-guidata` P0 merger case preparation with versioned evidence, explicit
+  facts, professional confirmation records and change impacts; legal branches and
+  merger calculations remain unsupported;
+
 - new-client file preparation, evidence gaps, identity, engagement, privacy,
   AML, document planning, and monitoring;
 - accounting evidence reconciliation, journal sampling, entry checks, and

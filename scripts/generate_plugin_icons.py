@@ -35,6 +35,9 @@ SPECS = (
         "negotiation",
     ),
     IconSpec(
+        "fusione-guidata", "Vera · Fusione guidata", "#002060", "#00B0F0", "merger"
+    ),
+    IconSpec(
         "invoice-xml",
         "Vera · Preparazione fatture XML",
         "#002060",
@@ -367,6 +370,7 @@ def _body(spec: IconSpec) -> str:
     color = "#1F211D"
     accent = spec.accent
     bodies = {
+        "merger": f"""<path d="M12 14h14v14H12zM38 14h14v14H38zM19 28v9h26v-9M32 37v7M24 44h16v10H24z" fill="none" stroke="{paper}" stroke-width="3"/><circle cx="32" cy="37" r="3" fill="{accent}"/>""",
         "treasury": f"""<rect x="13" y="17" width="38" height="35" rx="4" fill="none" stroke="{paper}" stroke-width="3"/><path d="M22 12v10M42 12v10M13 28h38" stroke="{paper}" stroke-width="3"/><path d="m19 39 8-5 8 12 10-10" fill="none" stroke="{accent}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>""",
         "assetti": f"""<path d="M25 12h14v12H25zM10 40h14v12H10zM40 40h14v12H40zM32 24v8M17 40v-8h30v8" fill="none" stroke="{paper}" stroke-width="3"/><circle cx="32" cy="32" r="3" fill="{accent}"/>""",
         "negotiation": f"""<path d="M12 17h18v16H18l-6 6zm22 8h18v22l-6-6H34z" fill="none" stroke="{paper}" stroke-width="3" stroke-linejoin="round"/><path d="M23 47h8l7 7" fill="none" stroke="{accent}" stroke-width="3" stroke-linecap="round"/>""",
