@@ -22,7 +22,7 @@ professionally enabled. Specialist extensions remain part of the proposed scope.
 | P0-02 Purpose profiles | All 21 profiles have explicit semantic intake, source binding and development-only coverage in `purpose-profiles.json` | Primary research, specialist implementation, purpose-specific synthetic and professionally reviewed case for each activated profile; none is activated |
 | P0-03 Studio Archive | Exact case and nested-source receipts, same-engagement upstream plan, immutable revisions and idempotent replay; native fixture coverage | Installed host/user acceptance; retain explicit cross-client coverage in shared archive tests |
 | P0-04 Business plan v3 | Actual compiler replays a complete calendar-year plan; FCFF bridge reconciles monthly taxes, working capital and capex; missing tax blocks | Partial periods and additional reviewed real-case evidence |
-| P0-05 Engine | Seven independently tested Decimal methods, annual end-year DCF/mixed calculations, formula ledger and EV/equity separation | Stub, mid-year, monthly discounting, day-count, variable curves and further income/sector variants |
+| P0-05 Engine | Seven Decimal methods; annual and explicitly dated DCF with stub/monthly/mid-period timing, ACT/365F and ACT/ACT_ISDA, flat/spot/interval-forward rates, effective annual/continuous compounding; formula ledger and EV/equity separation | Mixed-income dated/capital-varying variants, further income/sector models, alternative terminal conventions and curve-specific scenario comparison |
 | P0-06 Public sources | Host-led official research instructions; imported bytes/hash and explicit observation/publication/retrieval/vintage metadata; cutoff and age checks | Versioned parsers and tested observed-link acquisition, availability failures, redirects/host validation and historical revised-release cases |
 | P0-07 Guided experience | Native skill builds technical inputs, opens report and asks focused professional questions; user does not author JSON | Witnessed accountant completion of an end-to-end case; synthetic teacher execution does not establish this |
 | P0-08 Outputs | One replayed register produces HTML/MD/DOCX/PDF/XLSX/JSON/CSV; independent LibreOffice formula comparison and visual QA | Structured narrative-claim bindings and broad layout cases; recheck layout whenever report content changes |
@@ -45,7 +45,8 @@ signed amount, reason, tax, reversibility and reviewer), statement reconciliatio
 and balance roll-forward remain to implement. No automatic annualization or
 semantic accounting classifier is provided.
 
-Rate/growth sensitivities are implemented. Margin, reinvestment and scenario
+Rate/growth sensitivities are implemented for annual and flat dated DCF. A
+single-rate sensitivity cannot flatten a curve; use a separate revision. Margin, reinvestment and scenario
 changes require revised inputs/plans; an integrated scenario comparison remains
 to implement. Benchmark metadata is not a comparability decision. Peer-level
 inclusion/exclusion, LTM/forward alignment and IFRS 16 reconciliation are not
@@ -62,6 +63,15 @@ download threats. Existing tests establish bounded local input/hash/audience,
 formula-injection and HTML-escaping behavior; they do not establish every one of
 those wider scenarios. Download-threat tests become required with acquisition;
 there is currently no helper URL fetcher, archive extractor or macro executor.
+
+The dated-DCF extension has independent numerical cases for stub/monthly flows,
+mid-period timing, leap-year day counts, continuous compounding and separate spot
+versus interval-forward curves. A plan's annual flow cannot be relabelled monthly.
+Three exported workbooks were recalculated with LibreOffice: all 300 calculation
+cells agree with the Decimal ledger within 1e-12 relative/1e-9 absolute tolerance.
+The current dated report's five pages were inspected. This establishes arithmetic
+and explicit convention handling; it does not establish forecast seasonality,
+economic suitability, curve estimation or an official PIV methodology.
 
 ## Purpose coverage and release evidence
 

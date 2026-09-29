@@ -28,7 +28,7 @@
     },
     {
       "path": "modules/business-valuation/references/case-contract.md",
-      "sha256": "2382f0ee4601374f8987c9b0d984d833b73e91e7df1213c8e0ba3fc4ab6bca4a"
+      "sha256": "b16f45ffca11b6dacb34969629bd4f8806fa93c5c6eea3456411b13330d9242b"
     },
     {
       "path": "modules/business-valuation/references/purpose-profiles.json",
@@ -48,11 +48,11 @@
     },
     {
       "path": "modules/business-valuation/scripts/valuation_case.py",
-      "sha256": "f6413347dadcf12fc5571946686a0605e7400c55db3ea5ae2f7418b994e031f1"
+      "sha256": "1d81383107891516f4d08cd629beefaa45f8073976854394a42f36c66696f2aa"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_engine.py",
-      "sha256": "d9831f4e397c3f7983397f5702c2db745aa17e5e1a7b8b52c8fcf76e7e4e0edb"
+      "sha256": "7103005495b2297d3c792b3b58ed9850862242d75ba6951b9dab6a16a205aa3f"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_plan.py",
@@ -60,11 +60,11 @@
     },
     {
       "path": "modules/business-valuation/scripts/valuation_report.py",
-      "sha256": "ca3fd2fb1a287be82265d347ff98e81c7705a961df45a6086eb9f0abed2fd789"
+      "sha256": "805694e820407147b8c30257302bd1e66121eed8fbe26502ab951371b3f23ad6"
     },
     {
       "path": "modules/business-valuation/skills/business-valuation/SKILL.md",
-      "sha256": "7903b1a8410bc830064b1f760b921b9c4d494ab7871a125944276aa16f104af6"
+      "sha256": "c93b064445fbbe7643839eb6a67a57387ef950e8cd11e37dafad84f388b2cd56"
     },
     {
       "path": "modules/business-valuation/vendor/modules/__init__.py",
@@ -229,5 +229,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "20f2a2078f4ed2864607f283eb36bdb404ed8adf8dc45892aa09b1e0e2494980"
+  "canonical_course_sha256": "477eb0fb01e7e51630ce7448a2f52ba926160f5ea1c156bcd375808119bdb27b"
 }

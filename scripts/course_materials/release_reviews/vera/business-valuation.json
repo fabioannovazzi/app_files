@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-valuation",
-  "course_sha256": "20f2a2078f4ed2864607f283eb36bdb404ed8adf8dc45892aa09b1e0e2494980",
+  "course_sha256": "477eb0fb01e7e51630ce7448a2f52ba926160f5ea1c156bcd375808119bdb27b",
   "reviewer": "Codex /root: source, calculation and document review",
-  "reviewed_at": "2026-09-29T18:16:00.914541+00:00",
+  "reviewed_at": "2026-09-29T18:42:03.899149+00:00",
   "review_scope": "Read both fictional notes and the entire Italian lesson. Ran the real bound workflow for demo and practice, inspected their Markdown reports and calculation registers. Seven-method DOCX was rendered and all four pages inspected; LibreOffice independently recalculated all 75 workbook calculation cells. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior is an instruction and separate archive contract, not claimed as a live learner test.",
   "languages": {
     "it": {
@@ -23,11 +23,11 @@
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "de6a71f284f3d273dd13ee55653576faef7b3f8f755ae8bd07eb36bdef2f321a"
+            "sha256": "b62f2574c2080e4f1c4c25702a0efd93562d402a4acad3667c4de209cc36296d"
           },
           {
             "name": "valuation.json",
-            "sha256": "60492aeafad6e50bca50b6059190522372e4deb021e5ec836dfe0690e159d939"
+            "sha256": "6e4f8b8d6d1971e1aa2308ad8a5bf7a69fdacc0df74f10188a2c2dc941b2dbf0"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -39,6 +39,21 @@
             "name": "valuation.json",
             "sha256": "593f02acc8472370d42878c5f2600f91891ab6dc10862cbb2729fbf11a98cd10"
           }
+        ],
+        "review_history": [
+          {
+            "reviewed_at": "2026-09-29T18:16:00.914541+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "de6a71f284f3d273dd13ee55653576faef7b3f8f755ae8bd07eb36bdef2f321a"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "60492aeafad6e50bca50b6059190522372e4deb021e5ec836dfe0690e159d939"
+              }
+            ]
+          }
         ]
       },
       "practice": {
@@ -47,11 +62,11 @@
         "reviewed_artifacts": [
           {
             "name": "valuation_report.md",
-            "sha256": "5689d7888a47fb7c89c7a4e7bc460d67fabf7efe6c04e050a341f1f4e9a1069e"
+            "sha256": "74a501c8e6ddb426ea900fdee8282f732372bb051ad466e91ed58dc840571ee9"
           },
           {
             "name": "valuation.json",
-            "sha256": "2a7590f22a1bc21dd2898c375b3aebab3edf0e543c25356fd9c56eea23c1fbb6"
+            "sha256": "7337a0ad02762ad2880db23180ee468756ce15515ba161a21bf21cece611e82d"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -62,6 +77,21 @@
           {
             "name": "valuation.json",
             "sha256": "e1f0e376af1fc1a7f5213e42cb0b44a139807ab2e7a1d24999b64f7bdf37ae5b"
+          }
+        ],
+        "review_history": [
+          {
+            "reviewed_at": "2026-09-29T18:16:00.914541+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "5689d7888a47fb7c89c7a4e7bc460d67fabf7efe6c04e050a341f1f4e9a1069e"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "2a7590f22a1bc21dd2898c375b3aebab3edf0e543c25356fd9c56eea23c1fbb6"
+              }
+            ]
           }
         ]
       }
@@ -74,5 +104,11 @@
     "scope": "Reviewed all 21 explicit intake profiles, dependency binding and development-only availability. Read both fresh demo/practice Markdown reports, including the Strategy and governance profile and unchanged 750000 / 583333.33 EUR results. Rendered the fresh seven-method DOCX and inspected all five pages: readable with complete method blocks, source text and the new availability section. No professional profile approval, PIV review or live learner acceptance is implied.",
     "tests": "72 valuation tests pass at 91.27% coverage, including both fresh native teaching phases and 21 intake profiles.",
     "previous_reviewed_at": "2026-09-29T17:43:56.264741+00:00"
+  },
+  "dated_calculation_review": {
+    "scope": "Reviewed the optional dated DCF source and formula contract. The Italian first-use lesson still uses annual flows; both freshly executed native demo/practice reports preserve the expected 750000 / 583333.33 EUR equity indications, development-only purpose coverage and pending review. Inspected all five pages of the final forward/mid-period DOCX, including the Italian timing labels and displayed factors. No PIV approval, human case acceptance, installed-host or live learner acceptance is implied.",
+    "tests": "103 valuation tests pass at 92.66% coverage, including both fresh native teaching phases, dated numerical cases, invalid timing, annual plan relabelling rejection and curve sensitivity boundaries.",
+    "independent_workbook_review": "Three dated workbooks (monthly continuous, spot mid-period and interval-forward mid-period) were independently recalculated by LibreOffice. All 300 calculation cells match the Decimal ledger within 1e-12 relative / 1e-9 absolute tolerance.",
+    "previous_reviewed_at": "2026-09-29T18:16:00.914541+00:00"
   }
 }

@@ -6,7 +6,9 @@ The register is a small expression tree, never executable source or Python eval.
 
 from __future__ import annotations
 
+import calendar
 import re
+from datetime import date
 from decimal import Decimal, localcontext
 from typing import Any
 
@@ -44,6 +46,12 @@ def evaluate(op: str, values: list[Decimal]) -> Decimal:
         ctx.prec = 40
         if op == "sum":
             return sum(values, Decimal(0))
+        if op == "exp":
+            if len(values) != 1 or abs(values[0]) > 100:
+                raise ValuationError(
+                    "Exponential exceeds the supported numeric range [-100, 100]"
+                )
+            return values[0].exp()
         if len(values) != 2:
             raise ValuationError("Binary operation needs two operands")
         left, right = values
@@ -129,6 +137,193 @@ def _keys(args: dict, required: set[str], optional: set[str] | None = None) -> N
         raise ValuationError(f"Expected method inputs: {sorted(required)}")
 
 
+def _date(value: Any) -> date:
+    if not isinstance(value, str):
+        raise ValuationError("Timing dates require YYYY-MM-DD text")
+    try:
+        result = date.fromisoformat(value)
+    except ValueError as exc:
+        raise ValuationError("Invalid timing date") from exc
+    if result.isoformat() != value or result.year == 9999:
+        raise ValuationError("Timing dates require canonical dates before year 9999")
+    return result
+
+
+def _year_fraction(
+    ledger: Ledger, name: str, start: date, end: date, basis: str
+) -> str:
+    """Expose actual days and denominators as replayable integer arithmetic."""
+    parts = []
+    cursor = start
+    while cursor < end:
+        stop = end if basis == "ACT/365F" else min(end, date(cursor.year + 1, 1, 1))
+        denominator = (
+            365 if basis == "ACT/365F" else 366 if calendar.isleap(cursor.year) else 365
+        )
+        part = len(parts)
+        parts.append(
+            ledger.add(
+                f"{name}/part-{part}",
+                "divide",
+                [
+                    ledger.constant(f"{name}/days-{part}", (stop - cursor).days),
+                    ledger.constant(f"{name}/year-{part}", denominator),
+                ],
+                "years",
+            )
+        )
+        cursor = stop
+    return ledger.add(name, "sum", parts, "years")
+
+
+def _dated_factors(
+    ledger: Ledger, timing: dict, count: int
+) -> tuple[list[str], str, dict]:
+    """Discount explicit dated flows; never infer a curve or prorate amounts."""
+    _keys(
+        timing,
+        {
+            "valuation_date",
+            "period_end_dates",
+            "cash_flow_timing",
+            "day_count",
+            "rate_compounding",
+            "rate_model",
+            "rate_ids",
+            "rationale",
+        },
+        {"terminal_discount_rate"},
+    )
+    valuation_date = _date(timing["valuation_date"])
+    ends = timing["period_end_dates"]
+    if not isinstance(ends, list) or len(ends) != count:
+        raise ValuationError("Provide one end date per explicit cash flow")
+    dates = [_date(value) for value in ends]
+    if any(right <= left for left, right in zip([valuation_date, *dates], dates)):
+        raise ValuationError("Cash-flow periods must increase after the valuation date")
+    if (dates[-1] - valuation_date).days > 36600:
+        raise ValuationError(
+            "Dated calculation horizon exceeds the supported 36600-day bound"
+        )
+    basis, convention = timing["day_count"], timing["cash_flow_timing"]
+    if not all(
+        isinstance(timing[key], str)
+        for key in ("day_count", "cash_flow_timing", "rate_compounding", "rate_model")
+    ):
+        raise ValuationError("Timing conventions require explicit text identifiers")
+    if basis not in {"ACT/365F", "ACT/ACT_ISDA"}:
+        raise ValuationError("Choose ACT/365F or ACT/ACT_ISDA explicitly")
+    if convention not in {"end_period", "mid_period"}:
+        raise ValuationError("Choose end_period or mid_period explicitly")
+    if timing["rate_compounding"] not in {"effective_annual", "continuous"}:
+        raise ValuationError("Unsupported discount-rate compounding")
+    model, rates = timing["rate_model"], timing["rate_ids"]
+    if model not in {"flat", "spot_curve", "forward_curve"}:
+        raise ValuationError("Choose flat, spot_curve or forward_curve explicitly")
+    if not isinstance(rates, list) or len(rates) != (1 if model == "flat" else count):
+        raise ValuationError("Rate IDs must match the selected flat or curve model")
+    if (model == "spot_curve") != ("terminal_discount_rate" in timing):
+        raise ValuationError(
+            "Only a spot curve requires a separate horizon discount rate"
+        )
+    if (
+        not isinstance(timing["rationale"], str)
+        or not timing["rationale"].strip()
+        or len(timing["rationale"]) > 20000
+    ):
+        raise ValuationError("Explain the cash timing, day count and rate model")
+
+    one = ledger.constant("timing/one", 1)
+    two = ledger.constant("timing/two", 2)
+
+    def factor(name: str, rate_id: Any, years: str) -> str:
+        rate = ledger.input(rate_id, "ratio")
+        if timing["rate_compounding"] == "continuous":
+            exponent = ledger.add(
+                f"{name}/exponent", "multiply", [rate, years], "ratio"
+            )
+            return ledger.add(name, "exp", [exponent], "ratio")
+        if ledger.value(rate) <= -1:
+            raise ValuationError("Effective annual discount rates must exceed -1")
+        base = ledger.add(f"{name}/base", "sum", [one, rate], "ratio")
+        return ledger.add(name, "power", [base, years], "ratio")
+
+    factors, schedule = [], []
+    previous = valuation_date
+    previous_time = ledger.constant("timing/zero", 0)
+    accumulated = one
+    for index, end in enumerate(dates, 1):
+        end_time = _year_fraction(
+            ledger, f"time/{index}/end", valuation_date, end, basis
+        )
+        duration = ledger.add(
+            f"time/{index}/duration", "subtract", [end_time, previous_time], "years"
+        )
+        cash_time = end_time
+        cash_duration = duration
+        if convention == "mid_period":
+            total = ledger.add(
+                f"time/{index}/sum", "sum", [previous_time, end_time], "years"
+            )
+            cash_time = ledger.add(
+                f"time/{index}/cash", "divide", [total, two], "years"
+            )
+            cash_duration = ledger.add(
+                f"time/{index}/half", "divide", [duration, two], "years"
+            )
+        rate_id = rates[0] if model == "flat" else rates[index - 1]
+        if model == "forward_curve":
+            current = factor(f"discount/{index}/cash-period", rate_id, cash_duration)
+            cash_factor = ledger.add(
+                f"discount/{index}", "multiply", [accumulated, current], "ratio"
+            )
+            full = factor(f"discount/{index}/full-period", rate_id, duration)
+            accumulated = ledger.add(
+                f"discount/{index}/accumulated",
+                "multiply",
+                [accumulated, full],
+                "ratio",
+            )
+        else:
+            cash_factor = factor(f"discount/{index}", rate_id, cash_time)
+        factors.append(cash_factor)
+        schedule.append(
+            {
+                "start_date": previous.isoformat(),
+                "end_date": end.isoformat(),
+                "cash_time_id": cash_time,
+                "discount_factor_id": cash_factor,
+                "rate_id": rate_id,
+            }
+        )
+        previous, previous_time = end, end_time
+    horizon_factor = (
+        accumulated
+        if model == "forward_curve"
+        else factor(
+            "discount/terminal-horizon",
+            timing["terminal_discount_rate"] if model == "spot_curve" else rates[0],
+            previous_time,
+        )
+    )
+    return (
+        factors,
+        horizon_factor,
+        {
+            "valuation_date": timing["valuation_date"],
+            "day_count": basis,
+            "cash_flow_timing": convention,
+            "rate_compounding": timing["rate_compounding"],
+            "rate_model": model,
+            "rationale": timing["rationale"],
+            "schedule": schedule,
+            "terminal_time_id": previous_time,
+            "terminal_discount_factor_id": horizon_factor,
+            "terminal_value_convention": "annual_end_period_perpetuity_at_horizon",
+        },
+    )
+
+
 def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> dict:
     """Calculate one selected method, retaining equity versus enterprise basis."""
     kind = method["kind"]
@@ -140,10 +335,13 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
     ratio = lambda ref: ledger.input(ref, "ratio")
     value_type = "equity"
     extras: dict[str, str] = {}
+    timing_result = None
+    if "timing" in method and kind not in {"DCF_FCFF", "DCF_FCFE"}:
+        raise ValuationError("Explicit dated timing currently requires a DCF method")
 
-    def sequence(refs: Any, name: str) -> list[str]:
-        if not isinstance(refs, list) or not 1 <= len(refs) <= 100:
-            raise ValuationError(f"{name} requires 1..100 explicit amounts")
+    def sequence(refs: Any, name: str, limit: int = 100) -> list[str]:
+        if not isinstance(refs, list) or not 1 <= len(refs) <= limit:
+            raise ValuationError(f"{name} requires 1..{limit} explicit amounts")
         return [money(ref) for ref in refs]
 
     def positive(ref: str) -> str:
@@ -157,37 +355,49 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
         return ref
 
     if kind in {"DCF_FCFF", "DCF_FCFE"}:
+        dated = "timing" in method
         _keys(
             args,
-            {"flows", "discount_rate", "terminal_next_flow", "terminal_growth"},
-            {"terminal_rate"},
+            {"flows", "terminal_next_flow", "terminal_growth"}
+            | ({"terminal_rate"} if dated else {"discount_rate"}),
+            set() if dated else {"terminal_rate"},
         )
-        flows = sequence(args["flows"], "DCF")
-        rate = ratio(args["discount_rate"])
+        flows = sequence(args["flows"], "DCF", 1200 if dated else 100)
         growth = ratio(args["terminal_growth"])
-        terminal_rate = ratio(args.get("terminal_rate", args["discount_rate"]))
-        if (
-            ledger.value(rate) <= -1
-            or ledger.value(growth) <= -1
-            or ledger.value(terminal_rate) <= ledger.value(growth)
+        terminal_rate = ratio(
+            args["terminal_rate"] if "terminal_rate" in args else args["discount_rate"]
+        )
+        if ledger.value(growth) <= -1 or ledger.value(terminal_rate) <= ledger.value(
+            growth
         ):
             raise ValuationError(
                 "Require discount rate > -1 and terminal rate > growth > -1"
             )
         nxt = nonnegative(money(args["terminal_next_flow"]))
-        base = ledger.add(
-            "discount_base", "sum", [ledger.constant("one", 1), rate], "ratio"
-        )
-        present = []
-        factor = ""
-        for t, flow in enumerate(flows, 1):
-            factor = ledger.add(
-                f"discount/{t}",
-                "power",
-                [base, ledger.constant(f"year-{t}", t)],
-                "ratio",
+        if dated:
+            factors, factor, timing_result = _dated_factors(
+                ledger, method["timing"], len(flows)
             )
-            present.append(ledger.add(f"pv/{t}", "divide", [flow, factor]))
+        else:
+            rate = ratio(args["discount_rate"])
+            if ledger.value(rate) <= -1:
+                raise ValuationError("Discount rate must exceed -1")
+            base = ledger.add(
+                "discount_base", "sum", [ledger.constant("one", 1), rate], "ratio"
+            )
+            factors = [
+                ledger.add(
+                    f"discount/{t}",
+                    "power",
+                    [base, ledger.constant(f"year-{t}", t)],
+                    "ratio",
+                )
+                for t in range(1, len(flows) + 1)
+            ]
+            factor = factors[-1]
+        present = []
+        for t, (flow, cash_factor) in enumerate(zip(flows, factors), 1):
+            present.append(ledger.add(f"pv/{t}", "divide", [flow, cash_factor]))
         spread = ledger.add(
             "terminal_spread", "subtract", [terminal_rate, growth], "ratio"
         )
@@ -312,6 +522,11 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
         "value_id": result,
         "equity_id": equity,
         "detail_ids": extras,
-        "convention": "annual_end_year_constant_explicit_discount",
+        "convention": (
+            "explicit_dated_discount"
+            if timing_result
+            else "annual_end_year_constant_explicit_discount"
+        ),
+        "timing": timing_result,
         "calculations": list(ledger.rows.values()),
     }

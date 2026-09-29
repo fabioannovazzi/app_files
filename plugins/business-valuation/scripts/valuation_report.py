@@ -36,11 +36,20 @@ DETAIL_LABELS = {
     "pv_terminal": "Valore attuale del valore terminale",
     "terminal_share": "Incidenza del valore terminale sul risultato del metodo",
 }
+TIMING_LABELS = {
+    "end_period": "flussi a fine periodo",
+    "mid_period": "flussi a metà periodo",
+    "flat": "tasso costante",
+    "spot_curve": "tassi spot per scadenza",
+    "forward_curve": "tassi forward per intervallo",
+    "effective_annual": "capitalizzazione annua effettiva",
+    "continuous": "capitalizzazione continua",
+}
 
 
-def display(value: str) -> str:
+def display(value: str, places: int = 2) -> str:
     """Round only the reader-facing display; retain original decimal strings."""
-    return f"{decimal(value):,.2f}".translate(str.maketrans(",.", ".,"))
+    return f"{decimal(value):,.{places}f}".translate(str.maketrans(",.", ".,"))
 
 
 def _method_label(kind: str) -> str:
@@ -128,6 +137,19 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
                 )
                 rows.append(f"{DETAIL_LABELS[label]}: {shown} [{ref}]")
             rows.extend(method["limitations"])
+            timing = method.get("timing")
+            if timing:
+                rows.extend(
+                    [
+                        f"Tempi espliciti dalla data {timing['valuation_date']}: {timing['day_count']}; {TIMING_LABELS[timing['cash_flow_timing']]}; {TIMING_LABELS[timing['rate_model']]}; {TIMING_LABELS[timing['rate_compounding']]}.",
+                        timing["rationale"],
+                        "Il valore terminale è una perpetuità annuale a fine periodo, stimata all'ultima data del piano. Il flusso terminale è annuale e distinto dagli eventuali flussi mensili; il tasso terminale e la crescita sono annui effettivi.",
+                    ]
+                )
+                rows.extend(
+                    f"Periodo {period['start_date']} → {period['end_date']}: tempo {display(amounts[period['cash_time_id']]['value'], 6)} anni [{period['cash_time_id']}]; divisore {display(amounts[period['discount_factor_id']]['value'], 6)} [{period['discount_factor_id']}]."
+                    for period in timing["schedule"]
+                )
             if method["stale_review"]:
                 rows.append(
                     "La revisione precedente non è valida per queste dipendenze."
@@ -172,7 +194,7 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
                 mandate["professional_limitations"],
                 *case["limitations"],
                 *report["issues"],
-                "DCF e metodo misto: periodi annuali interi a fine anno. Nessuna conversione automatica di periodi frazionari o mensili.",
+                "Il DCF usa anni interi a fine anno salvo calendario esplicito del metodo. Gli importi dei periodi parziali o mensili devono essere forniti: non sono riproporzionati automaticamente. Il metodo misto resta annuale.",
                 "La registrazione del revisore è una dichiarazione locale, non autenticazione dell'identità o firma professionale.",
             ],
         )
@@ -289,6 +311,8 @@ def write_workbook(path: Path, report: dict) -> None:
             formula = float(decimal(row["value"]))
         elif row["op"] == "sum":
             formula = f"=SUM({','.join(args)})" if args else "=0"
+        elif row["op"] == "exp":
+            formula = f"=EXP({args[0]})"
         else:
             symbol = {"subtract": "-", "multiply": "*", "divide": "/", "power": "^"}[
                 row["op"]

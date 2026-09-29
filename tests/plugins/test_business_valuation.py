@@ -51,6 +51,170 @@ def review(dependency: str) -> dict:
     }
 
 
+def dated_case(**timing_changes) -> dict:
+    """Use a synthetic 100-unit flow and independently supplied annual terminal flow."""
+    case = case_data()
+    timing = {
+        "valuation_date": "2027-01-01",
+        "period_end_dates": ["2028-01-01"],
+        "cash_flow_timing": "end_period",
+        "day_count": "ACT/365F",
+        "rate_compounding": "effective_annual",
+        "rate_model": "flat",
+        "rate_ids": ["rate"],
+        "rationale": "Synthetic timing choice; no claim of economic suitability.",
+        **timing_changes,
+    }
+    case["mandate"]["valuation_date"] = timing["valuation_date"]
+    method = case["methods"][0]
+    method["timing"] = timing
+    method["inputs"].pop("discount_rate")
+    method["inputs"]["terminal_rate"] = "rate"
+    method["inputs"]["flows"] = ["flow"] * len(timing["period_end_dates"])
+    rate_input = next(row for row in case["inputs"] if row["id"] == "rate")
+    case["inputs"].extend(
+        [
+            {**rate_input, "id": "rate20", "value": "0.2"},
+            {**rate_input, "id": "rate25", "value": "0.25"},
+        ]
+    )
+    return case
+
+
+@pytest.mark.parametrize(
+    ("timing", "expected"),
+    [
+        ({}, 1000.0),
+        ({"cash_flow_timing": "mid_period"}, 1004.4371680154683),
+        (
+            {"valuation_date": "2026-06-30", "period_end_dates": ["2026-12-31"]},
+            1048.3981252157032,
+        ),
+        (
+            {
+                "valuation_date": "2026-12-31",
+                "period_end_dates": ["2027-01-31", "2027-02-28"],
+            },
+            1182.3767274027036,
+        ),
+        ({"rate_compounding": "continuous"}, 995.3211598395554),
+        (
+            {
+                "period_end_dates": ["2028-01-01", "2029-01-01"],
+                "day_count": "ACT/ACT_ISDA",
+                "rate_model": "spot_curve",
+                "rate_ids": ["rate", "rate20"],
+                "terminal_discount_rate": "rate25",
+            },
+            800.3535353535353,
+        ),
+        (
+            {
+                "period_end_dates": ["2028-01-01", "2029-01-01"],
+                "day_count": "ACT/ACT_ISDA",
+                "rate_model": "forward_curve",
+                "rate_ids": ["rate", "rate20"],
+            },
+            924.2424242424242,
+        ),
+        (
+            {
+                "period_end_dates": ["2028-01-01", "2029-01-01"],
+                "day_count": "ACT/ACT_ISDA",
+                "cash_flow_timing": "mid_period",
+                "rate_model": "forward_curve",
+                "rate_ids": ["rate", "rate20"],
+            },
+            935.9102827889783,
+        ),
+    ],
+)
+def test_dated_dcf_matches_independent_present_values(
+    timing: dict, expected: float
+) -> None:
+    result = build_valuation(dated_case(**timing), FIXTURE)
+    values = {row["id"]: row["value"] for row in result["calculations"]}
+    assert float(values["fcff/value"]) == pytest.approx(expected, rel=0, abs=1e-9)
+    assert result["methods"][0]["convention"] == "explicit_dated_discount"
+
+
+@pytest.mark.parametrize(
+    ("basis", "expected"),
+    [("ACT/ACT_ISDA", "1"), ("ACT/365F", "1.002739726027397260273972602739726027397")],
+)
+def test_dated_leap_year_preserves_declared_day_count(
+    basis: str, expected: str
+) -> None:
+    case = dated_case(
+        valuation_date="2024-01-01", period_end_dates=["2025-01-01"], day_count=basis
+    )
+    result = build_valuation(case, FIXTURE)
+    values = {row["id"]: row["value"] for row in result["calculations"]}
+    assert Decimal(values["fcff/time/1/end"]) == Decimal(expected)
+
+
+@pytest.mark.parametrize(
+    ("field", "invalid"),
+    [
+        ("valuation_date", "2026-12-31"),
+        ("period_end_dates", ["2027-01-01"]),
+        ("period_end_dates", ["20280101"]),
+        ("period_end_dates", ["2028-02-30"]),
+        ("period_end_dates", ["2028-01-01", "2029-01-01"]),
+        ("period_end_dates", ["2200-01-01"]),
+        ("day_count", "ACT/ACT_ICMA"),
+        ("day_count", []),
+        ("cash_flow_timing", "automatic"),
+        ("rate_compounding", "monthly_nominal"),
+        ("rate_model", "automatic"),
+        ("rate_model", "spot_curve"),
+        ("rate_ids", ["missing_rate"]),
+        ("rate_ids", []),
+        ("rationale", ""),
+    ],
+)
+def test_invalid_timing_blocks_only_its_method(field: str, invalid: object) -> None:
+    case = dated_case()
+    case["methods"][0]["timing"][field] = invalid
+    result = build_valuation(case, FIXTURE)
+    assert result["methods"][0]["status"] == "blocked"
+    assert result["methods"][1]["status"] == "ready_for_professional_review"
+
+
+def test_midperiod_cash_does_not_shift_terminal_value_to_midperiod() -> None:
+    result = build_valuation(dated_case(cash_flow_timing="mid_period"), FIXTURE)
+    values = {row["id"]: row["value"] for row in result["calculations"]}
+    assert Decimal(values["fcff/time/1/cash"]) == Decimal("0.5")
+    assert Decimal(values["fcff/time/1/end"]) == Decimal("1")
+    assert Decimal(values["fcff/discount/terminal-horizon"]) == Decimal("1.1")
+
+
+def test_changed_timing_invalidates_only_its_method_review() -> None:
+    case = dated_case()
+    prior = build_valuation(case, FIXTURE)
+    case["methods"][0]["review"] = review(prior["methods"][0]["dependency_sha256"])
+    case["methods"][1]["review"] = review(prior["methods"][1]["dependency_sha256"])
+    case["methods"][0]["timing"]["cash_flow_timing"] = "mid_period"
+    result = build_valuation(case, FIXTURE)
+    assert result["methods"][0]["stale_review"] is True
+    assert result["methods"][1]["status"] == "accepted_workpaper"
+
+
+def test_dated_continuous_report_exports_formula_and_timing(tmp_path: Path) -> None:
+    from openpyxl import load_workbook
+
+    result = build_valuation(dated_case(rate_compounding="continuous"), FIXTURE)
+    output = tmp_path / "dated-report"
+    write_package(result, FIXTURE, output)
+    workbook = load_workbook(output / "valuation_workbook.xlsx", data_only=False)
+    formulas = [
+        cell.value for cell in workbook["Calcoli"]["B"] if cell.data_type == "f"
+    ]
+    assert any(formula.startswith("=EXP(") for formula in formulas)
+    assert "ACT/365F" in (output / "valuation_report.md").read_text()
+    assert "annuale e distinto" in (output / "valuation_report.md").read_text()
+
+
 @pytest.mark.parametrize(
     ("calculation_id", "expected"),
     [
@@ -665,3 +829,38 @@ def test_plan_bridge_pending_cash_tax_prevents_acceptance(tmp_path: Path) -> Non
     next(item for item in case["inputs"] if item["id"] == "zero")["status"] = "proposed"
     result = build_valuation(case, tmp_path, replay_parent=tmp_path / "replay")
     assert result["methods"][0]["status"] == "partial"
+
+
+def test_dated_plan_cannot_relabel_annual_amount_as_monthly(tmp_path: Path) -> None:
+    case = planning_case(tmp_path)
+    method = case["methods"][0]
+    method["inputs"].pop("discount_rate")
+    method["inputs"]["terminal_rate"] = "rate"
+    method["timing"] = dated_case()["methods"][0]["timing"]
+    method["timing"]["valuation_date"] = case["mandate"]["valuation_date"]
+    method["timing"]["period_end_dates"] = ["2027-01-31"]
+
+    result = build_valuation(case, tmp_path, replay_parent=tmp_path / "replay")
+
+    assert result["methods"][0]["status"] == "blocked"
+    assert "no monthly relabelling" in result["methods"][0]["reason"]
+
+
+@pytest.mark.parametrize("model", ["flat", "forward_curve"])
+def test_single_rate_sensitivity_keeps_dated_curve_semantics(model: str) -> None:
+    case = dated_case(rate_model=model)
+    case["sensitivity"] = [
+        {
+            "id": "higher-rate",
+            "method_id": "fcff",
+            "discount_rate": "rate20",
+            "terminal_rate": "rate20",
+            "terminal_growth": "growth",
+        }
+    ]
+    expected = {"flat": "illustrative_sensitivity", "forward_curve": "blocked"}
+
+    result = build_valuation(case, FIXTURE)
+
+    assert result["sensitivity"][0]["status"] == expected[model]
+    assert result["methods"][0]["status"] == "ready_for_professional_review"

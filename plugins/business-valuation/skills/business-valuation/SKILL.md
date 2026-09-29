@@ -51,14 +51,20 @@ statements is reviewed preparation, not a universal automatic parser.
 ## Methods and parameters
 
 Propose and explain methods according to the mandate. The implemented calculations
-are FCFF/FCFE DCF with annual end-year flows, constant equity income, adjusted NAV,
+are FCFF/FCFE DCF with annual or explicitly dated flows, constant equity income, adjusted NAV,
 constant-capital mixed income, selected EV or equity multiples, and APV composition.
 Explain each selection/exclusion. The professional selects sustainable terminal
 flows, capital costs, asset values, comparable samples and multiples. Keep
 enterprise value and equity separate. Never deduct debt from FCFE or P/E again,
 average methods, add minority discounts, or select terminal growth automatically.
-Fractional periods, monthly discounting, term structures, crisis distributions,
-special rights/waterfalls, PPA and specialist sector models are unsupported.
+For stub/monthly or mid-period DCF, use the explicit timing contract: exact dates,
+ACT/365F or ACT/ACT_ISDA, effective annual or continuous rates, and an expressly
+selected flat, spot or interval-forward curve. Explain the convention and preserve
+the supplied period amounts; never prorate them automatically or confuse spot,
+forward and par rates. Keep the annual terminal flow/rate separate from monthly
+flows and horizon discounting. Read back these assumptions for professional review.
+The mixed method remains annual. Crisis distributions, special rights/waterfalls,
+PPA and specialist sector models are unsupported.
 
 For benchmarks, research official public sources with public parameter/sector/date
 queries only. The mandate authorizes necessary public research; do not include

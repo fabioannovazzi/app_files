@@ -210,7 +210,7 @@
     },
     "business-valuation": {
       "path": "business-valuation/course.json",
-      "sha256": "20f2a2078f4ed2864607f283eb36bdb404ed8adf8dc45892aa09b1e0e2494980",
+      "sha256": "477eb0fb01e7e51630ce7448a2f52ba926160f5ea1c156bcd375808119bdb27b",
       "languages": [
         "it"
       ],

@@ -73,7 +73,7 @@ checks. URLs are citations only; no URL fetcher runs inside the helper.
 ## Methods
 
 A method has `id`, `kind`, `selected` (boolean), `rationale`, `inputs`,
-`limitations` (list); optional `bridge`, `review`. Every monetary parameter below
+`limitations` (list); optional `bridge`, `review`, `timing`. Every monetary parameter below
 is an input ID, not an inline amount. Unselected methods retain their rationale.
 
 | Kind | Required inputs | Meaning |
@@ -151,4 +151,58 @@ does not amend the approved JSON case or its recorded professional reviews.
 The function prepares workpapers. PIV conformity and purpose-specific legal
 qualification remain explicitly not assessed. No automatic signing, filing,
 communication, market-data feed, special-rights model, PPA, crisis distribution,
-fractional-period DCF or variable discount curve is claimed.
+curve estimation/interpolation or automatic period proration is provided.
+
+## Explicit dated DCF
+
+DCF may instead include `timing`. In that form its `inputs` are exactly `flows`,
+`terminal_next_flow`, `terminal_growth`, `terminal_rate`; there is no hidden
+fallback `discount_rate`. The latter two terminal assumptions are **effective
+annual** rates and the terminal flow is an independently supplied **annual**
+amount, including when explicit forecast cash flows are monthly.
+
+Required timing fields:
+
+- `valuation_date`: exact mandate date; canonical YYYY-MM-DD.
+- `period_end_dates`: one strictly increasing date per supplied flow, after the
+  valuation date. Periods begin at that date and then the previous end. Supply
+  the actual remaining stub/monthly amounts; code never prorates an annual flow.
+- `cash_flow_timing`: `end_period` or `mid_period`. Mid-period uses the arithmetic
+  midpoint of the start/end year fractions, not an inferred payment date.
+- `day_count`: `ACT/365F` (actual days divided by 365) or `ACT/ACT_ISDA` (calendar
+  year segments divided by their own 365/366 days, start included/end excluded).
+- `rate_compounding`: `effective_annual` or `continuous`. All rate IDs in this
+  schedule share that declared convention. Percentages must already be fractions.
+- `rate_model`: `flat`, `spot_curve` or `forward_curve`.
+- `rate_ids`: one ID for flat, one ID per flow/period for either curve.
+- `rationale`: professional explanation of periods, timing and rate assumptions.
+
+Only `spot_curve` also requires `terminal_discount_rate`, an input ID for the
+spot rate at the final period end. Its cash-flow rates are spot rates at the
+actual cash times. Forward rates instead apply to each complete interval; earlier
+interval factors accumulate before the current full/half interval. They are not
+instantaneous point observations or par yields. The engine does not construct,
+interpolate or choose a market curve.
+
+The divisor for effective annual rates is `(1+r)^t`; continuous rates use
+`exp(r*t)`. Forward models multiply interval divisors. The terminal value is an
+annual end-period perpetuity valued at the final period end and discounted from
+that horizon, even with mid-period operating cash flows. This is an explicit
+terminal convention; it does not assert that continuing cash is distributed
+uniformly through future years. A different continuation model requires its own
+validated contract. Days, denominators, times, rates, factors and PVs appear in
+the formula ledger and workbook; the report exposes the schedule.
+
+Limits: at most 1,200 explicit periods and 36,600 days; dates before year 9999.
+The EXP primitive accepts exponents in [-100, 100] as an explicit numerical
+capacity limit, not a suitability rule. The existing annual plan bridge still
+requires full calendar years: dated use must retain all annual flow IDs and their
+actual December 31 ends. A single-rate sensitivity supports flat dated schedules;
+curve revisions require a separate case and are never silently flattened.
+
+Methodological implementation references checked on 29 September 2026:
+[Strata day counts](https://strata.opengamma.io/day_counts/) for the two day-count
+definitions; [ECB technical notes](https://www.ecb.europa.eu/stats/financial_markets_and_interest_rates/euro_area_yield_curves/shared/pdf/technical_notes.pdf)
+for the distinction between spot, forward and par curves and continuous
+discounting. These references do not prescribe a company's cost of capital or
+establish PIV conformity. No market datasets or protected standard text are bundled.

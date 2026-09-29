@@ -300,6 +300,33 @@ def _purpose(case: dict, sources: dict) -> dict:
     }
 
 
+def _checked_timing(method: dict, mandate: dict, plan_bridge: dict | None) -> None:
+    """Bind a method's clock and any annual plan flows to their actual periods."""
+    if "timing" not in method:
+        return
+    timing = method["timing"]
+    require(
+        isinstance(timing, dict)
+        and timing.get("valuation_date") == mandate["valuation_date"],
+        "Method timing must use the mandate valuation date",
+    )
+    args = method["inputs"]
+    if (
+        not plan_bridge
+        or not isinstance(args, dict)
+        or not isinstance(args.get("flows"), list)
+    ):
+        return
+    annual_ids = plan_bridge["binding"]["annual_input_ids"]
+    if any(ref in annual_ids for ref in args["flows"]):
+        require(
+            args["flows"] == annual_ids
+            and timing.get("period_end_dates")
+            == [f"{row['year']}-12-31" for row in plan_bridge["annual"]],
+            "Annual plan flows must keep their complete annual periods; no monthly relabelling",
+        )
+
+
 def build_valuation(
     case: dict, source_root: Path, *, replay_parent: Path | None = None
 ) -> dict:
@@ -372,7 +399,7 @@ def build_valuation(
         fields(
             method,
             {"id", "kind", "selected", "rationale", "inputs", "limitations"},
-            {"bridge", "review"},
+            {"bridge", "review", "timing"},
         )
         text(method["rationale"], "method selection rationale")
         text(method["kind"], "method kind")
@@ -393,6 +420,7 @@ def build_valuation(
             )
             continue
         try:
+            _checked_timing(method, mandate, plan_bridge)
             result = calculate_method(method, inputs, case["currency"])
         except ValuationError as exc:
             outputs.append(
@@ -534,12 +562,19 @@ def build_valuation(
         method = deepcopy(methods[scenario["method_id"]])
         method["id"] = scenario["id"]
         method["inputs"].update(
-            {
-                key: scenario[key]
-                for key in ("discount_rate", "terminal_rate", "terminal_growth")
-            }
+            {key: scenario[key] for key in ("terminal_rate", "terminal_growth")}
         )
         try:
+            if "timing" in method:
+                require(
+                    isinstance(method["timing"], dict)
+                    and method["timing"].get("rate_model") == "flat",
+                    "A single-rate sensitivity requires a flat curve; supply a separate case revision for a curve change",
+                )
+                method["timing"]["rate_ids"] = [scenario["discount_rate"]]
+            else:
+                method["inputs"]["discount_rate"] = scenario["discount_rate"]
+            _checked_timing(method, mandate, plan_bridge)
             result = calculate_method(method, inputs, case["currency"])
         except ValuationError as exc:
             sensitivity.append(

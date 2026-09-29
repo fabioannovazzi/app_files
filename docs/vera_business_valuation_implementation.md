@@ -54,21 +54,37 @@ formula comparisons; report rendering; privacy coverage and package parity.
 
 Local evidence on 29 September 2026:
 
-- 72 valuation regressions pass; component coverage is 91.27%. These exercise
+- 103 valuation regressions pass; component coverage is 92.66%. These exercise
   all seven methods, failure preservation, review/conclusion freshness, exact
   receipts, full-year plan replay, all 21 explicit purpose intake routes and real
   native lesson input runs. Purpose routing tests do not enable professional use.
+- Dated DCF tests cover stub/monthly/mid-period flows, two day-count conventions,
+  leap years, flat/spot/interval-forward curves, effective annual and continuous
+  rates, horizon terminal discounting, invalid timing, review invalidation and
+  rejection of monthly relabelling of annual plan flows.
 - Mypy passes for all six scripts; Bandit reports no findings. Formatting and
   import-order checks pass.
 - LibreOffice independently recalculated all 75 cells of the seven-method
   calculation register and matched the engine within floating-point tolerance.
+- It also recalculated three dated-model workbooks (300 calculation cells) and
+  matched the Decimal ledger at 1e-12 relative/1e-9 absolute tolerance. Evidence is
+  retained in `outputs/vera-valuations-discord/dated-acceptance/workbook-verification.json`.
+- All five final dated-report DOCX pages were inspected. The timing schedule uses
+  Italian convention labels and six-place displayed factors; exact values remain
+  in the formula register. Both fresh annual teaching examples retain their
+  expected results and pending professional review. The corresponding teaching
+  record preserves earlier evidence hashes and binds the newly inspected files.
 - All five current rendered DOCX pages were inspected after adding purpose
   availability. The HTML function page was
   inspected in the browser in Italian and English. Public copy exists in five
   languages and states that generated reports currently use Italian.
 - Vera 0.1.278 builds for Codex, ChatGPT upload and Cowork; packaged MCP startup
   initializes all 18 configured servers. Exact source/package parity passed
-  again after the final partial-report robustness correction.
+  again after the dated-DCF extension, including all three products' projections.
+- The dated source delta adds local formulas and timing metadata, without a new
+  network call or external recipient. Vera and Clara privacy registers validate
+  after reviewing the affected valuation, teaching and shared page sources; all
+  41 focused Vera/Clara privacy tests pass.
 - The shared workflow ID addition changes source fingerprints in existing
   lessons. Their content and input records were compared with origin/main and
   are identical; the recorded refresh covers that registry change only.
