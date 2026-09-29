@@ -173,3 +173,10 @@ snapshot; no unrelated production page was changed. In the current focused
 privacy/Lucia/page run, 94 tests pass and these two page assertions fail. Both
 complete privacy-register validators pass. A package build is not a green full
 release gate.
+
+The earlier schema commit's teaching CI finished with 1325 passes, three skips
+and three failures caused by stale expected course counts (32/143 instead of
+33/144 after adding the Italian valuation lesson). Only test expectations were
+updated. All ten affected archive/course checks pass locally, including the
+actual preparation of every Vera Cowork lesson and language. Current-head CI
+must still run after the next authorized public PR update.
