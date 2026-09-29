@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "treasury-forecast",
-  "course_sha256": "8832c4e07ce6fa4c5ce45e2ac1fa1a9ebe804cfacd8a94f9c671e3e7b8f692d4",
+  "course_sha256": "d791f4416b3c484e73bd0ff58b868b623ba115954a27c5321c601a7217c67b98",
   "reviewer": "Codex: Italian first-use treasury lesson, native forecast and delivery review",
   "reviewed_at": "2026-09-14T19:47:49.498130+00:00",
   "review_scope": "Read the Italian first-use outline, both fictional contexts and six source-table roles. Two current bound native teaching cases run preparation and versioned date review; practice also runs the native hypothetical-date scenario, preserving the baseline. All 62 component/native checks pass without failures or skips. Reviewed actual events, daily/weekly balances, version inventory, delivery note and exact artifact links. Visually inspected all six workbook sheets through eight views; the practice baseline workbook has identical cells, styles, widths and row heights. Read both native HTML reports as parsed source text and the Markdown report. Browser URL security policy blocked opening the local HTML report; visual browser presentation and interactive learner behavior remain unverified. Material acceptance does not claim live voice, learner understanding or professional approval.",
@@ -215,5 +215,23 @@
     "content_review": "The complete authored course object is unchanged from the verified course QA commit when source bindings are excluded. Retains both the prior Italian Codex QA record and the Geneva source-bound review from main. No new lesson, language-journey acceptance or professional approval is asserted.",
     "source_review": "Integrated additive Geneva jurisdiction/currency adapters and French presentation from PR #692; course QA source/result readers, saved-review controls, parser hardening and teacher/working roles are preserved. Generated assets and packages are rebuilt from this combined source.",
     "native_execution_requirement": "The combined candidate must pass the unchanged required native demo/practice checks and dedicated Geneva regressions before deployment."
+  },
+  "valuation_integration_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-29T17:43:56.264741+00:00",
+    "previous_course_sha256": "8832c4e07ce6fa4c5ce45e2ac1fa1a9ebe804cfacd8a94f9c671e3e7b8f692d4",
+    "scope": "Compared every lesson field and input record with origin/main: identical outside source fingerprints. Inspected the sole shared dependency change: adding business-valuation to VERA_CLIENT_WORKFLOW_IDS. No existing workflow semantics, lesson text or input bytes changed. Preserve prior editorial and artifact reviews; fresh native executions remain required in CI.",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+        "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
+        "after": "291b0c14d84c2498581ba6e8da92ecbb948df5abfa329bcab9d24ef0924da9a1"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+        "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
+        "after": "291b0c14d84c2498581ba6e8da92ecbb948df5abfa329bcab9d24ef0924da9a1"
+      }
+    ]
   }
 }

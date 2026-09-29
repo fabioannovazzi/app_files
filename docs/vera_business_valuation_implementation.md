@@ -47,4 +47,37 @@ units, double debt deduction, terminal growth, source changes and stale review;
 real v3 plan replay; Studio Archive cross-client and receipt checks; workbook
 formula comparisons; report rendering; privacy coverage and package parity.
 
-Implementation and release evidence will be recorded here as work progresses.
+Local evidence on 29 September 2026:
+
+- 49 valuation regressions pass; component coverage is 91.05%. These exercise
+  all seven methods, failure preservation, review/conclusion freshness, exact
+  receipts, full-year plan replay and real native lesson input runs.
+- Mypy passes for all six scripts; Bandit reports no findings. Formatting and
+  import-order checks pass.
+- LibreOffice independently recalculated all 75 cells of the seven-method
+  calculation register and matched the engine within floating-point tolerance.
+- All four rendered DOCX pages were inspected. The HTML function page was
+  inspected in the browser in Italian and English. Public copy exists in five
+  languages and states that generated reports currently use Italian.
+- Vera 0.1.278 builds for Codex, ChatGPT upload and Cowork; packaged MCP startup
+  initializes all 18 configured servers. Exact source/package parity passed
+  again after the final partial-report robustness correction.
+- The shared workflow ID addition changes source fingerprints in existing
+  lessons. Their content and input records were compared with origin/main and
+  are identical; the recorded refresh covers that registry change only.
+- The new Italian lesson ships fictional mandate notes and a separate 12% rate
+  revision, not a preapproved case or precomputed result. Native demo/practice
+  runs produce respectively 750,000 and 583,333.33 EUR equity indications and
+  retain review-pending status. No live learner, voice or installed-plugin
+  acceptance is claimed.
+
+The publisher page under the Mparanza organization displayed only “Untitled
+Plugin / No versions yet” during this run. Vera's existing Marketplace listing
+and Published version were unavailable; no upload or publication occurred.
+Merge, deployment and installed-session acceptance remain separate steps.
+
+One release check exposed a dependency-checker integration gap: the new helper
+does not yet accept the standard `--requirements` option or enforce declared
+version ranges. A concrete correction was prepared and user approval requested
+under the repository's instruction to stop before production changes prompted
+by a failed test. Do not treat this pending check as release acceptance.

@@ -25,6 +25,7 @@ COMMERCIALISTA_MODULE_NAMES = {
     "bilancio-xbrl-it",
     "browser-automation",
     "business-planning",
+    "business-valuation",
     "check-entries",
     "concordato-plan-review",
     "comunicazione-professionale",
@@ -1563,6 +1564,7 @@ def test_vera_routes_every_commercialista_module() -> None:
         "bandi-agevolazioni",
         "browser-automation",
         "business-planning",
+        "business-valuation",
         "comunicazione-professionale",
         "management-control-pack",
         "centrale-rischi-review",
@@ -2263,6 +2265,14 @@ def test_all_plugin_skills_define_material_choice_intake() -> None:
         )
         lowered_skill_text = combined_skill_text.lower()
 
+        if plugin_name == "business-valuation":
+            # The mandate workflow has its own concrete intake contract.
+            assert "resolve entity or branch" in lowered_skill_text
+            assert "ask only material missing choices" in lowered_skill_text
+            assert "from supplied evidence" in lowered_skill_text
+            assert "never ask the professional to write json" in lowered_skill_text
+            continue
+
         assert (
             "material choices" in lowered_skill_text
             or "material research-angle" in lowered_skill_text
@@ -2748,6 +2758,25 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
         for skill_file in skill_files:
             skill_text = skill_file.read_text(encoding="utf-8")
             normalized_skill_text = " ".join(skill_text.split())
+            if plugin_root.name == "business-valuation":
+                # Test the actual fixed output contract rather than a legacy filename.
+                assert "## Calculation and review" in skill_text
+                assert "## Delivery and privacy" in skill_text
+                assert "Open `valuation_report.html`" in normalized_skill_text
+                assert (
+                    "HTML, DOCX/PDF, formula XLSX, JSON and calculation CSV"
+                    in normalized_skill_text
+                )
+                assert "same immutable revision" in normalized_skill_text
+                continue
+            if (
+                plugin_root.name == "vera"
+                and skill_file.parent.name == "business-valuation"
+            ):
+                assert "Read that module's" in normalized_skill_text
+                assert "follow it" in normalized_skill_text
+                assert "from that module root" in normalized_skill_text
+                continue
             if (
                 plugin_root.name in {"vera", "clara", "lucia"}
                 and skill_file.parent.name == f"learn-with-{plugin_root.name}"
@@ -3851,8 +3880,8 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 35
-    assert core.count('class="module-row"') == 35
+    assert core.count(" data-module-link") == 36
+    assert core.count('class="module-row"') == 36
     assert core.count('data-jurisdiction-item="it"') == 10
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core

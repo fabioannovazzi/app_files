@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "avviso-intake",
-  "course_sha256": "138909825bfdf086f4094bd0d8501343cb1653024c5daab23e48c3e79c1e68df",
+  "course_sha256": "92d654aa98ac9f0d2b32e09e66cf89085da9edc12cbed1e743fa14440c10cadc",
   "reviewer": "Codex: original fictional notice/update, five first-use outlines, native extraction tables and all ten source-bound Codex review notes",
   "reviewed_at": "2026-09-14T16:57:28.170830+00:00",
   "review_scope": "The current native pipeline imports and extracts the notice. Fixed model-authored test interpretations exercise the existing skill instruction to create codex_run_review.md in the actual run output; they are not native-code legal determinations or fresh model execution in CI, and are never shipped as learner results. The native ledger declares and seals those real output files. The wider client-file package and lexical fiscal classifications remain unapproved. No legal deadline, professional approval, sending, voice or learner understanding is attested.",
@@ -329,5 +329,23 @@
     "content_review": "The complete authored course object is unchanged from the verified course QA commit when source bindings are excluded. Retains both the prior Italian Codex QA record and the Geneva source-bound review from main. No new lesson, language-journey acceptance or professional approval is asserted.",
     "source_review": "Integrated additive Geneva jurisdiction/currency adapters and French presentation from PR #692; course QA source/result readers, saved-review controls, parser hardening and teacher/working roles are preserved. Generated assets and packages are rebuilt from this combined source.",
     "native_execution_requirement": "The combined candidate must pass the unchanged required native demo/practice checks and dedicated Geneva regressions before deployment."
+  },
+  "valuation_integration_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-29T17:43:56.264741+00:00",
+    "previous_course_sha256": "138909825bfdf086f4094bd0d8501343cb1653024c5daab23e48c3e79c1e68df",
+    "scope": "Compared every lesson field and input record with origin/main: identical outside source fingerprints. Inspected the sole shared dependency change: adding business-valuation to VERA_CLIENT_WORKFLOW_IDS. No existing workflow semantics, lesson text or input bytes changed. Preserve prior editorial and artifact reviews; fresh native executions remain required in CI.",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+        "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
+        "after": "291b0c14d84c2498581ba6e8da92ecbb948df5abfa329bcab9d24ef0924da9a1"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+        "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
+        "after": "291b0c14d84c2498581ba6e8da92ecbb948df5abfa329bcab9d24ef0924da9a1"
+      }
+    ]
   }
 }

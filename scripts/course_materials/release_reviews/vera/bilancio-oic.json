@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "bilancio-oic",
-  "course_sha256": "b32000c4fcf5523fc8816a28acdcb84e8438c12337c578df8babfeca32a7171b",
+  "course_sha256": "ec573ed290b4190a71e0823d9f43f34b1ac378310632013891f665de17914d64",
   "reviewer": "Codex lesson, generated accounts and integration evidence review",
   "reviewed_at": "2026-09-23T11:54:05.184666+00:00",
   "review_scope": "Reviewed both localized lessons and four actual generated draft accounts. Native execution uses the checksum-verified official PCI taxonomy and Arelle. Parser, mapping and disclosure decisions in automated checks are explicitly synthetic fixtures supported by the fictional declaration, not learner or professional approvals. No filing, signature, human timing or live voice is claimed.",
@@ -133,5 +133,18 @@
     "content_review": "The complete authored course object is unchanged from the verified course QA commit when source bindings are excluded. Retains both the prior Italian Codex QA record and the Geneva source-bound review from main. No new lesson, language-journey acceptance or professional approval is asserted.",
     "source_review": "Integrated additive Geneva jurisdiction/currency adapters and French presentation from PR #692; course QA source/result readers, saved-review controls, parser hardening and teacher/working roles are preserved. Generated assets and packages are rebuilt from this combined source.",
     "native_execution_requirement": "The combined candidate must pass the unchanged required native demo/practice checks and dedicated Geneva regressions before deployment."
+  },
+  "valuation_integration_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-29T17:43:56.264741+00:00",
+    "previous_course_sha256": "b32000c4fcf5523fc8816a28acdcb84e8438c12337c578df8babfeca32a7171b",
+    "scope": "Compared every lesson field and input record with origin/main: identical outside source fingerprints. Inspected the sole shared dependency change: adding business-valuation to VERA_CLIENT_WORKFLOW_IDS. No existing workflow semantics, lesson text or input bytes changed. Preserve prior editorial and artifact reviews; fresh native executions remain required in CI.",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+        "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
+        "after": "291b0c14d84c2498581ba6e8da92ecbb948df5abfa329bcab9d24ef0924da9a1"
+      }
+    ]
   }
 }

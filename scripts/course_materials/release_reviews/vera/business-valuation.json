@@ -1,0 +1,53 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "business-valuation",
+  "course_sha256": "05d82775a2abc34568024e0942249dbcdbeb29a712339ac23007b540ec323c8d",
+  "reviewer": "Codex /root: source, calculation and document review",
+  "reviewed_at": "2026-09-29T17:43:56.264741+00:00",
+  "review_scope": "Read both fictional notes and the entire Italian lesson. Ran the real bound workflow for demo and practice, inspected their Markdown reports and calculation registers. Seven-method DOCX was rendered and all four pages inspected; LibreOffice independently recalculated all 75 workbook calculation cells. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior is an instruction and separate archive contract, not claimed as a live learner test.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson explains mandate, sources, hypotheses, a DCF FCFF and the equity bridge before changing a rate. It labels all inputs as fictional and workpapers as requiring review.",
+        "inputs_and_request": "One readable note supplies 100000 EUR annual and terminal FCFF, a 10% rate, zero growth, 300000 debt and 50000 excess cash. The prompt asks for a confirmation table before execution; it does not require the learner to author JSON or approve a precomputed result.",
+        "execution_and_checkpoints": "The native runner used exact imported source receipts and a business-valuation context for both cases. Checkpoints ask the learner to identify assumptions and follow a bridge amount to its source. Test confirmations are synthetic fixtures, not evidence of user approval.",
+        "deliverable_and_next_action": "Both inspected reports distinguish operating value and equity, state the terminal share and preserve limitations, source hashes and no conclusion acceptance. The lesson opens HTML and the formula workbook and explains their use.",
+        "practice_and_repeat": "The separate practice note changes both rates to 12% while retaining all other assumptions. The result changes as expected; the lesson directs a separate revision and explains review invalidation. Ordinary tests also verify dependency-bound review and immutable/idempotent exports.",
+        "language_and_pacing": "The complete guide and source notes are Italian, matching the fixed Italian output renderer. Six stages total 390 seconds; processing and questions may extend this. No claim about actual live teaching duration or comprehension."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_business_valuation::test_valuation_teaching_sources_run_the_bound_workflow[demo]",
+        "result_review": "Operating value 1000000 EUR and equity 750000 EUR at 10%; terminal share 90.91%. Report states review pending and no accepted conclusion; the rate source is preserved.",
+        "reviewed_artifacts": [
+          {
+            "name": "valuation_report.md",
+            "sha256": "9c4519ecb4b1d1b84d9b09003ed60c3c8bf729cecfe1cede90274b7280c361c4"
+          },
+          {
+            "name": "valuation.json",
+            "sha256": "593f02acc8472370d42878c5f2600f91891ab6dc10862cbb2729fbf11a98cd10"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_business_valuation::test_valuation_teaching_sources_run_the_bound_workflow[practice]",
+        "result_review": "Operating value 833333.33 EUR and equity 583333.33 EUR at 12%; terminal share 89.29%. Report states review pending and no accepted conclusion; the rate source is preserved.",
+        "reviewed_artifacts": [
+          {
+            "name": "valuation_report.md",
+            "sha256": "3b642d8edfac1b3e1934dcc62ca2475d02ef9fc105cb4dcf0d0d7867ba4bb9e7"
+          },
+          {
+            "name": "valuation.json",
+            "sha256": "e1f0e376af1fc1a7f5213e42cb0b44a139807ab2e7a1d24999b64f7bdf37ae5b"
+          }
+        ]
+      }
+    }
+  },
+  "source_revision_review": {
+    "scope": "Inspected the final source delta after the recorded teaching runs: method kind is validated as text and unsupported methods retain a readable blocked label in partial exports. The DCF used by both lessons is unchanged. The full 49-case suite, including both teaching phases, passed after that source correction; CI will bind fresh teaching JUnit to the compiled course."
+  }
+}

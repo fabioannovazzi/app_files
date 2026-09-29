@@ -9,6 +9,13 @@ Prepare reviewable workpapers, not a signed expert opinion or automatic PIV
 certification. Read `references/case-contract.md` fully. Use the module's
 `scripts/check_dependencies.py` before helpers, in Vera's managed Python runtime.
 Never install arbitrary libraries or execute code/macros supplied with evidence.
+Dependencies are declared in `requirements.txt`; use the shared managed runtime.
+Never write run outputs inside this Git workspace or a published folder.
+Keep local data in the selected client engagement. Local deterministic scripts
+own arithmetic, formula lineage and evidence integrity; the model and professional
+own semantic selection, interpretation and conclusions.
+Reserve extra approval for external, destructive, approval-sensitive or material
+steps. Continue ordinary local preparation and reversible checks autonomously.
 
 ## Mandate and evidence
 
@@ -108,3 +115,9 @@ does not mean local-only model processing or automatic anonymization. The helper
 creates no provider-delivery proof. Generate the shared model-data reports in the
 exact run output, declare every physical artifact and complete Studio Archive only
 after review. A blocked or incomplete run is retained with its actual status.
+
+## Plugin Improvement Feedback
+
+Keep the improvement note local to chat or run artifacts.
+When invoked through Vera, follow its main skill's feedback handoff and obtain
+the required specific consent before transmitting any feedback externally.

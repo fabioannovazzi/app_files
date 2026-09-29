@@ -188,6 +188,16 @@
       ]
     },
     {
+      "component_id": "business-valuation",
+      "skills": [
+        "modules/business-valuation/skills/business-valuation/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/business-valuation/scripts/check_dependencies.py",
+        "modules/business-valuation/scripts/run_valuation.py"
+      ]
+    },
+    {
       "component_id": "variance-analysis",
       "skills": [
         "modules/variance-analysis/skills/variance-analysis/SKILL.md"
@@ -474,6 +484,7 @@
     "skills/bilancio-oic/SKILL.md",
     "skills/browser-automation/SKILL.md",
     "skills/business-planning/SKILL.md",
+    "skills/business-valuation/SKILL.md",
     "skills/centrale-rischi-review/SKILL.md",
     "skills/comunicazione-professionale/SKILL.md",
     "skills/concordato-plan-review/SKILL.md",

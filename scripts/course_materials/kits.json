@@ -8065,5 +8065,38 @@
         ]
       }
     ]
+  },
+  "vera/business-valuation": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": [
+      {
+        "source": "business-valuation/caso-it.md",
+        "path": "files/input/caso-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-valuation/caso-it.md",
+        "path": "files/practice/caso-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-valuation/pratica-it.md",
+        "path": "files/practice/pratica-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      }
+    ]
   }
 }

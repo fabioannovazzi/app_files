@@ -1,0 +1,88 @@
+{
+  "schema_version": 3,
+  "workstream": "business-valuation",
+  "display_name": "Valutazione d’impresa",
+  "role": "workflow",
+  "governed_paths": [
+    ".codex-plugin/plugin.json",
+    "skills",
+    "references",
+    "scripts",
+    "assets",
+    "requirements.txt"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "valuation-evidence-and-mandate",
+        "purpose": "Interpret the mandate, financial evidence, source relevance, normalizations and method selection.",
+        "content": "Selected statements, schedules, plan sources, entity and personal information, rights, mandate, dates, normalized amounts, adjustments and private forecasts may be read by the selected model. The workflow keeps document/page/cell references, facts, assumptions and hypotheses. There is no automatic anonymization or enforced minimum-context projection. The model and professional decide relevance and method suitability.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "valuation-calculation-and-review",
+        "purpose": "Explain independent method results and sensitivities, author the conclusion and record professional decisions.",
+        "content": "The local Decimal engine consumes the complete structured case and validates source bytes. It emits inputs, formulas, results, source IDs, benchmark metadata, exact dependency digests and local review attestations. The model may read these records and complete exported HTML, Markdown, DOCX, PDF, XLSX and JSON/CSV, including reviewer names and timestamps. The helper performs no model or network calls. Business-plan replay temporarily reconstructs exact mapped sources below the bound run output, removes scratch copies afterwards and preserves bridge hashes, periods, monthly/annual values and upstream calculation IDs in the durable result. All permanent case artifacts remain in the selected engagement. Local arithmetic does not mean local-only processing by the selected model runtime.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "valuation-public-research",
+      "kind": "public_research",
+      "destination": "Host-provided search and official public sources selected for the valuation, including OIV, IVSC, ECB, NYU, Banca d’Italia and statistical authorities",
+      "purpose": "Verify relevant methodologies, legal-purpose requirements and dated public benchmark evidence.",
+      "content": "Public parameter, date, sector and geography queries and retrieved public evidence. The skill excludes private client names, source documents and unpublished forecasts from queries. The numerical helper does not fetch URLs or download datasets.",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "A valuation mandate or explicit research-route choice authorizes necessary public research, subject to host tool permission.",
+        "Source choice and query minimization are model-led; the module does not implement a semantic privacy classifier.",
+        "No implicit communication, publishing, signing or filing route."
+      ],
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "archive-and-source-binding",
+      "control": "The entry point requires a running portable v2 business-valuation context, validates the case and every nested source against exact receipts, rejects traversal and symlinks, verifies source hashes and confines outputs to that run. A reused plan must be a finalized business-planning upstream artifact in the same engagement."
+    },
+    {
+      "id": "audience-and-replay",
+      "control": "Each selected source must explicitly allow the report audience. Export replays the complete case and plan before writing. Existing revision files are hash-checked and never overwritten."
+    },
+    {
+      "id": "review-dependencies",
+      "control": "Method acceptance requires matching dependency digests and confirmed inputs/reviewed sources; changed dependencies make earlier review attestations ineffective. Conclusion acceptance also binds the selected method versions and prose. This does not authenticate the reviewer."
+    },
+    {
+      "id": "safe-report-rendering",
+      "control": "HTML and PDF text is escaped; spreadsheet labels are forced to literal text. Formulas use a closed arithmetic vocabulary, never evaluated supplied code or formulas. JSON rejects duplicate keys and nonfinite constants."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-09-29",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "7f359a21b643b0075882b777db29d0a289dd9aa1de71a4c2d0a3d8e39b4c8459"
+  }
+}

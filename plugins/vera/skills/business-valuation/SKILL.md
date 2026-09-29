@@ -13,5 +13,8 @@ exact client, engagement, immutable inputs and outputs. Onboarding is optional
 and never blocks professional work. Calculations do not certify PIV conformity
 or qualify the mandate's legal purpose.
 
-After substantive use, follow Vera's run-level model-data report and Plugin
-Improvement Feedback sections in `../vera/SKILL.md`.
+After substantive use, follow Vera's run-level model-data report in `../vera/SKILL.md`.
+
+## Plugin Improvement Feedback
+
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.

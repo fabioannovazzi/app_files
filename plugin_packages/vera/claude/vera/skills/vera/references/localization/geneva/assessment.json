@@ -1,6 +1,6 @@
 {
   "schema": "vera.localization.assessment.v1",
-  "catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
+  "catalogue_fingerprint": "8380f8ff5aa121dfe461ba251201e21a7df06831b15281ad70cbb01adac0ac38",
   "assessment_date": "2026-09-28",
   "target": {
     "id": "CH-GE",
@@ -792,6 +792,24 @@
       "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance.",
       "implementation": "Supporting-PDF intake for Geneva without FatturaPA-first assumptions; source currency and lineage preserved.",
       "implementation_status": "adapted_with_documented_scope"
+    },
+    {
+      "function_id": "business-valuation",
+      "name": "Business valuation workpapers",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Prepare source-linked valuation workpapers with selected methods and explicit assumptions.",
+      "geneva_application": "Not assessed in this implementation; no Swiss professional-use claim.",
+      "required_change": "First establish the mandate, local professional requirements and source fit. The current report renderer is Italian; French website copy does not change report language.",
+      "adaptation_layers": [
+        "professional mandate assessment",
+        "report language"
+      ],
+      "acceptance_example": "A future assessment must inspect a representative Geneva mandate, supported methods, local source requirements and expected report before claiming readiness.",
+      "sources": [],
+      "verification": "Current valuation source and synthetic tests inspected; no Swiss legal-purpose review or Geneva client test.",
+      "implementation": "Common arithmetic and evidence workflow only.",
+      "implementation_status": "unassessed"
     }
   ],
   "sources": {
@@ -885,5 +903,10 @@
   "course_entry_release_binding": {
     "version": "0.1.277",
     "change": "Remove redundant catalogue jump link and refresh release identity; skill entrypoints and Geneva dispositions unchanged."
+  },
+  "catalogue_update": {
+    "date": "2026-09-29",
+    "source_version": "0.1.278",
+    "scope": "Added business-valuation as Unresolved; existing Geneva dispositions and their original assessment baseline are retained. Catalogue hashes also reflect the new Vera version and router entry."
   }
 }

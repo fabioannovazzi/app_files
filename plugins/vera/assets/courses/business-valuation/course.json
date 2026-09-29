@@ -1,0 +1,354 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "business-valuation",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it"
+  ],
+  "language_basis": "workflow_output_contract",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
+  "sources": [
+    {
+      "path": "modules/business-valuation/assets/icon.svg",
+      "repository_path": "plugins/business-valuation/assets/icon.svg",
+      "sha256": "18529aca60718f8522901906b39c749aed4f2334cf92237739f2ad5d949023d8"
+    },
+    {
+      "path": "modules/business-valuation/references/case-contract.md",
+      "repository_path": "plugins/business-valuation/references/case-contract.md",
+      "sha256": "b095a318a383f460ca771247e8e9300f00caa8e035095f6ee1563302cdcbb7dd"
+    },
+    {
+      "path": "modules/business-valuation/requirements.txt",
+      "repository_path": "plugins/business-valuation/requirements.txt",
+      "sha256": "f305d71565c7f55c182752011d6b97ee16f7fea9a2a56e823a1fd8c10cd4fed5"
+    },
+    {
+      "path": "modules/business-valuation/scripts/check_dependencies.py",
+      "repository_path": "plugins/business-valuation/scripts/check_dependencies.py",
+      "sha256": "712c4657500149d1fc4a51da6754cb03b8f6465a02ef7ed8a9ce1378c8de85a7"
+    },
+    {
+      "path": "modules/business-valuation/scripts/run_valuation.py",
+      "repository_path": "plugins/business-valuation/scripts/run_valuation.py",
+      "sha256": "06b86561255566e61a5bdea5da38f165da9521557643c86644d6b7445a19b369"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_case.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_case.py",
+      "sha256": "155e99cae5feb8ff6a4d9c682cd0f6dab2ca9ff51c3bc108fdad64c699397aee"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_engine.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_engine.py",
+      "sha256": "d9831f4e397c3f7983397f5702c2db745aa17e5e1a7b8b52c8fcf76e7e4e0edb"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_plan.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_plan.py",
+      "sha256": "aae9b1d60f242da2b2bfae590e5dab1fd4f7f0ecf63228e46a55584f13b396eb"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_report.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_report.py",
+      "sha256": "bc6944e45042c71ce471eef5d9032bbadbd50dd2ccabb15e057e89dc9921eb34"
+    },
+    {
+      "path": "modules/business-valuation/skills/business-valuation/SKILL.md",
+      "repository_path": "plugins/business-valuation/skills/business-valuation/SKILL.md",
+      "sha256": "e30be3f7ac06e9d8e5e854d22b1934a74f91fe8db0a925e84aa9b0851bb76310"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "291b0c14d84c2498581ba6e8da92ecbb948df5abfa329bcab9d24ef0924da9a1"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/vera_assurance/jurisdiction.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "skills/business-valuation/SKILL.md",
+      "repository_path": "plugins/vera/skills/business-valuation/SKILL.md",
+      "sha256": "d9cb9d9acf505333d298e140e685d215e505f5c87899f6b74ba4b97ddb111314"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "5b28ac597f0a3deaf4cfc907b8a33bb40aae21719206ad0c976b605950f89dc7"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "507967ae7dcf07ae4e138fff4333adb5fd709484731dcef45d531152c54ede45"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
+      "path": "vendor/modules/courseware/deck_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/deck_view.py",
+      "sha256": "96f75ea3078c9e0c6e509cdefb0beeb876677e2e7884777d213d9b03c6c27b80"
+    },
+    {
+      "path": "vendor/modules/courseware/document_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/document_view.py",
+      "sha256": "9982c9d6ce83e7feb26165308fa9a136a744891a7e623ce23ff9bb778e6b7403"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/html_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/html_view.py",
+      "sha256": "57280e82460bd8c7982294c4be6e0cff7da969800d4282e6da15059571cce0b1"
+    },
+    {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+    },
+    {
+      "path": "vendor/modules/courseware/preview.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/preview.py",
+      "sha256": "1a6e56141cdd554a6510100f47745f7b31472c9d22f45407f4f86ac7981aee10"
+    },
+    {
+      "path": "vendor/modules/courseware/sales_plan_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/sales_plan_view.py",
+      "sha256": "115977d03c034ed5f363d6fd5c8c82648ed1349067ac61e48d0701b10caa7e7b"
+    },
+    {
+      "path": "vendor/modules/courseware/website_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/website_view.py",
+      "sha256": "f230f86272201bae7bc34f1868d8cb6013b47ce9ccc8b876acdfb0bc257637d5"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "291b0c14d84c2498581ba6e8da92ecbb948df5abfa329bcab9d24ef0924da9a1"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/caso-it.md",
+      "sha256": "b5b40509d08e4671dcde1590b0f583605bba182530928ba8bd833a47c1aea17c",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/caso-it.md",
+      "sha256": "b5b40509d08e4671dcde1590b0f583605bba182530928ba8bd833a47c1aea17c",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/pratica-it.md",
+      "sha256": "084ee0891eb5b3c4cebd922a5aecbce9de1ebd0b9fbcbd14ccd929b181da125c",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Preparare carte di lavoro per una valutazione d’impresa",
+      "goal": "Imparare a fornire incarico, fonti e ipotesi, distinguere valore operativo e capitale proprio e rivedere un risultato quando cambia il tasso.",
+      "scenario": "Officina Arco vuole un confronto interno su dati completamente inventati. Sono disponibili flussi FCFF prospettici, ipotesi di tasso e un raccordo esplicito al capitale proprio.",
+      "scope": "Un DCF FCFF annuale e il relativo raccordo. La lezione non dimostra la sostenibilità dei flussi, non qualifica una finalità legale e non certifica conformità PIV. I documenti generati sono in italiano.",
+      "inputs": "Apri caso-it.md. Individua finalità, data, valuta, destinatari, flussi, tassi e debiti. Gli zeri sono espliciti e i tassi sono ipotesi didattiche, non dati di mercato. Nessun risultato è precalcolato.",
+      "request": "Vera, prepara le carte di lavoro per valutare Officina Arco con il DCF FCFF usando questa nota sintetica. Prima mostrami dati, ipotesi e limiti da confermare; poi mostrami valore operativo, raccordo al capitale proprio e formule.",
+      "steps": [
+        "Nel thread di lavoro Vera apre un caso tutorial locale, legge la nota e presenta per conferma perimetro, significato dei flussi, tassi e zeri espliciti. La voce spiega cosa richiede il giudizio professionale.",
+        "Dopo la conferma effettiva, Vera prepara gli input collegati alla nota ed esegue il workflow corrente nel run registrato. Conserva i risultati separati e lo stato da rivedere; nessuna conferma di input vale come approvazione della conclusione.",
+        "Apri il report HTML e il foglio Sintesi della cartella Excel. Segui un importo fino alla formula e alla fonte, confronta valore operativo e capitale proprio e osserva il peso del valore terminale."
+      ],
+      "deliverables": [
+        "Report HTML, Word e PDF con mandato, risultato, ipotesi e limiti.",
+        "Cartella Excel con formule e registro JSON/CSV per seguire dati, calcoli e fonti."
+      ],
+      "review": "Controlla sostenibilità del flusso terminale, scelta del tasso e corretto raccordo dei debiti. Il motore verifica calcoli e identità delle fonti; non dimostra l’appropriatezza delle ipotesi. La registrazione della revisione non è una firma autenticata.",
+      "checkpoints": [
+        "Prima del calcolo, identifica un fatto della nota e un’ipotesi da confermare.",
+        "Nel report, spiega perché valore operativo e capitale proprio differiscono e trova la fonte di una rettifica."
+      ],
+      "practice": "Usa la cartella di pratica e leggi pratica-it.md. Nello stesso caso chiedi una nuova revisione con entrambi i tassi al 12%, conservando il primo output. Conferma la modifica e confronta i risultati; individua le revisioni che devono essere ripetute.",
+      "success": "Sai fornire un mandato e input documentati, leggere i due valori, seguire le formule e conservare una revisione distinta quando cambia un’ipotesi.",
+      "repeat": "Per un caso reale indica finalità, data e destinatari, allega bilanci, piano disponibile e fonti delle rettifiche. Conferma le ipotesi e fai rivedere scelta dei metodi, limiti e conclusione dal professionista."
+    }
+  }
+}

@@ -275,7 +275,13 @@ SPECS = (
         "#00B0F0",
         "management_pack",
     ),
-    IconSpec("business-valuation", "Vera · Business Valuation", "#002060", "#57A6C7", "business_valuation"),
+    IconSpec(
+        "business-valuation",
+        "Vera · Business Valuation",
+        "#002060",
+        "#57A6C7",
+        "business_valuation",
+    ),
     IconSpec(
         "business-planning",
         "Mparanza · Business Planning",
