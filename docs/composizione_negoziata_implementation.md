@@ -173,3 +173,15 @@ are additional to the 23 CNC kernel tests. Existing course review records retain
 their prior artifact reviews with a bounded freshness review: authored content
 is identical to main; source changes are the added CNC registry ID and additive
 archive methods, with every pre-existing ledger definition unchanged.
+
+The final pre-integration candidate passed all 39 GitHub checks at `724fa543b`,
+including 1,182 native teaching tests (three existing skips) and 46 reviewed
+kits / 210 locales. Main then advanced to `f09267a16` with the assetti construction
+workflow. The combined release preserves that module unchanged, keeps CNC and
+archive behavior unchanged, combines the filesystem entrypoint checks, and
+rebuilds shared packages. The existing assetti assessment lesson has identical
+authored content; its current source binding retains both bounded reviews.
+The combined local regression passes all 426 tests, including both native lessons,
+archive boundaries and privacy records. All three products pass package parity.
+Two stale filesystem-test expectations were aligned with the inspected existing
+prototype scopes and the construction CLI loader; production behavior is unchanged.

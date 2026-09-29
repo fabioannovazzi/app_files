@@ -37,6 +37,7 @@ CLIENT_WORKFLOW_ENTRYPOINTS = (
     ("aml-review", "aml_review.py"),
     ("adeguati-assetti", "assetti_review.py"),
     ("composizione-negoziata", "cnc_case.py"),
+    ("adeguati-assetti", "assetti_construction.py"),
     ("archive-organization", "archive_organization.py"),
     ("open-item-reconciliation", "audit_assurance.py"),
     ("open-item-reconciliation", "build_missing_evidence_requests.py"),
@@ -418,6 +419,9 @@ def test_client_workflow_registry_covers_every_vera_component() -> None:
         "comunicazione-professionale",
         "presenza-digitale-studio",
         "studio-archive",
+        # These foundations explicitly do not yet have Studio Archive adapters.
+        "fusione-guidata",
+        "trasformazione",
     }
 
 
@@ -1019,6 +1023,9 @@ def test_client_workflow_entrypoint_requires_managed_context(
     if workflow_id == "composizione-negoziata":
         # CNC resolves the same checked loader for source and bundled execution.
         loader_names.add("load_context")
+    if script_name == "assetti_construction.py":
+        # Construction resolves the checked loader for source and bundled execution.
+        loader_names.add("_archive_loader")
     loader_calls = [
         node
         for node in ast.walk(tree)

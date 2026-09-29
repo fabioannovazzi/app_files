@@ -92,7 +92,7 @@ Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
-# Valutazione degli assetti organizzativi, amministrativi e contabili
+# Valutazione e costruzione degli assetti organizzativi, amministrativi e contabili
 
 ## Jurisdiction and Geneva
 
@@ -106,6 +106,18 @@ of arrangements, not a compliance certificate, statutory audit, attestation or
 automatic crisis declaration. Directors retain their responsibilities; the
 commercialista reviews the proposed analysis. Neither a score nor a successful
 script establishes adequacy.
+
+## Construction requested by the professional
+
+When asked to build arrangements, carry the same engagement through discovery,
+evidence review, control design, manual/registers, distinct company adoption,
+operating evidence and subsequent review. Read `references/construction-workflow.md`
+and `references/construction-contract.md` completely. The existing assessment v1
+helper remains available; never reinterpret historical completion as adoption.
+Construction uses `scripts/assetti_construction.py` in the same archive workflow.
+It is an experimental studio method requiring company-specific professional
+review and a supervised operating pilot, not a turnkey or certified installation.
+The optional numerical view explains qualified evidence; it never decides adequacy.
 
 Read `references/intelligent-assessment.md`, `references/professional-method.md`
 and `references/record-contract.md`
@@ -209,7 +221,7 @@ review JSON in the output folder and run from the module root:
 python scripts/assetti_review.py --client-engagement <context-path> --review <run-output>/review_input.json
 ```
 
-For every new run, author the `intelligent_review` extension described in the
+For every new assessment-mode run, author the `intelligent_review` extension described in the
 record contract. Use its coverage, process evidence, targeted questions, chronology
 and decision brief to make the reasoning reviewable. Reassess hypotheses after
 answers; do not merely fill fields or run the helper and call that analysis.
@@ -236,8 +248,11 @@ company or employee identifiers. No external business-data connector is included
 
 ## Execution boundaries
 
-The local deterministic helpers use only the Python standard library declared in
-`requirements.txt`; they verify bindings and record integrity, not adequacy.
+Local deterministic scripts own exact arithmetic, file bindings, revisions and
+record integrity; the model and professional own semantic judgment. The domain
+helpers use the Python standard library; construction manual exports use
+python-docx and ReportLab declared in `requirements.txt` in the shared managed
+runtime. They never determine adequacy.
 Run `scripts/check_dependencies.py` before helper execution. Do not install
 undeclared dependencies. Explicit approval is reserved for external, destructive,
 approval-sensitive or materially unresolved steps. Ordinary authorized local
