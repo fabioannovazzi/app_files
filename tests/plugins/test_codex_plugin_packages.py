@@ -3954,7 +3954,7 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
     assert core.count(" data-module-link") == 38
-    assert core.count('class="module-row"') == 37
+    assert core.count('class="module-row"') == 38
     assert core.count('data-jurisdiction-item="it"') == 12
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
