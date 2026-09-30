@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "new-client",
-  "course_sha256": "2c6b0eb93e16e3928f29529ebadd49f3bb94056a30aaf37dce72d9a25315f27b",
+  "course_sha256": "191704004a19a6ca08379340b92eea926b7ab1257c7cc0236d218bfd90c0f2af",
   "reviewer": "Codex: five-language first-use material and actual New Client draft-dossier review",
   "reviewed_at": "2026-09-15T00:09:04.432157+00:00",
   "review_scope": "Reviewed all five lesson outlines, fictional profile/contact sources, actual localized document requests, final cards, studio notes and memo facts/services. Inspected the current review widget in five loopback browser views, including the client facts and English engagement details. This accepts the prepared first use: produce and inspect an internal draft dossier, save a proposed request and revise from new contact evidence. It does not attest completed professional review, client acceptance, signing or sending. Native MCP validate/render/save, mandatory model-data disclosure, sealed delivery and Studio Archive completion are exercised. Apply is not part of the completed lesson evidence: the registry review date has expired, and a real attempted Apply correctly stopped. Source refresh is still required before decisions can be applied. Native voice, actual paired-window learner interaction and human timing/comprehension remain unverified.",
@@ -453,5 +453,17 @@
     "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
     "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
     "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json"
+  },
+  "patent_box_source_refresh_20260930": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-09-30T11:04:31.688736+00:00",
+    "baseline_commit": "bcda5096b53af83584f73b645a0d9e78b29de104",
+    "previous_course_sha256": "2c6b0eb93e16e3928f29529ebadd49f3bb94056a30aaf37dce72d9a25315f27b",
+    "current_course_sha256": "191704004a19a6ca08379340b92eea926b7ab1257c7cc0236d218bfd90c0f2af",
+    "content_review": "The complete compiled course object is identical to the previously reviewed main baseline except for source bindings. All authored locales, fictional inputs, requests, checkpoints, outputs, practice and pacing are unchanged. Original editorial judgments and artifact reviews are preserved.",
+    "source_review": "The only changed source adds patent-box-review to VERA_CLIENT_WORKFLOW_IDS. An AST comparison confirms all other shared contract statements are identical. Existing workflow IDs and their behavior are unchanged.",
+    "native_execution_evidence": "GitHub Actions run 36703497570, job 109848196461, source 437abcd61eca512a4da8c591386ffdbd0895bec7: the native teaching batch passed 1183 tests, with three explicit skips and 92.10% courseware coverage. The later stale editorial-digest gate failed; this is not a green whole-run claim. Fresh CI must validate every required demo/practice identity against the current digest.",
+    "limits": "Source compatibility review only; no new independent editorial, visual, learner, installed-host or professional acceptance. Earlier reviewed artifacts remain historical evidence.",
+    "detail": "docs/releases/2026-09-30-patent-box-course-source-review.json"
   }
 }

@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0",
+  "ruleset_id": "PB.BASELINE.PROPOSED",
+  "version": "0.1.0",
+  "demo": false,
+  "status": "DRAFT",
+  "reviewer": null,
+  "reviewed_on": null,
+  "valid_from": "2026-09-23",
+  "valid_until": "2026-09-30",
+  "sources_checked_on": null,
+  "max_source_age_days": 7,
+  "tax_period_start_min": "2021-01-01",
+  "tax_period_start_max": "2026-12-31",
+  "enhancement_rate": "1.10",
+  "premial_periods": 8,
+  "premial_entry_anchor_date": "2021-12-31",
+  "ip_types": [
+    "SOFTWARE",
+    "PATENT",
+    "DESIGN"
+  ],
+  "premial_event_kinds": {
+    "SOFTWARE": [
+      "SIAE_REGISTRATION",
+      "EQUIVALENT_PUBLIC_REGISTRATION"
+    ],
+    "PATENT": [
+      "PATENT_GRANT"
+    ],
+    "DESIGN": [
+      "DESIGN_REGISTRATION"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "DL146.ART6",
+      "status": "PENDING",
+      "authority_type": "LAW",
+      "snapshot_sha256": null,
+      "snapshot_evidence_id": "TO_ACQUIRE.DL146.ART6"
+    },
+    {
+      "source_id": "AE.PROV48243.2022",
+      "status": "PENDING",
+      "authority_type": "IMPLEMENTING_ACT",
+      "snapshot_sha256": null,
+      "snapshot_evidence_id": "TO_ACQUIRE.AE.PROV48243.2022"
+    },
+    {
+      "source_id": "AE.PROV52642.2023",
+      "status": "PENDING",
+      "authority_type": "IMPLEMENTING_ACT",
+      "snapshot_sha256": null,
+      "snapshot_evidence_id": "TO_ACQUIRE.AE.PROV52642.2023"
+    },
+    {
+      "source_id": "AE.CIRC5E.2023",
+      "status": "PENDING",
+      "authority_type": "GUIDANCE",
+      "snapshot_sha256": null,
+      "snapshot_evidence_id": "TO_ACQUIRE.AE.CIRC5E.2023"
+    }
+  ],
+  "rule_ids": [
+    "PB.SUBJECT",
+    "PB.OPTION",
+    "PB.IP.SOFTWARE",
+    "PB.IP.PATENT",
+    "PB.IP.DESIGN",
+    "PB.RIGHTS",
+    "PB.ACTIVITY",
+    "PB.USE",
+    "PB.OUTSOURCING",
+    "PB.COST",
+    "PB.LINKAGE",
+    "PB.ALLOCATION",
+    "PB.PREMIAL",
+    "PB.INCENTIVES",
+    "PB.DOC",
+    "PB.DECLARATION"
+  ]
+}

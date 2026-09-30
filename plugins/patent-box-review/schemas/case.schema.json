@@ -1,0 +1,548 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:vera:patent-box:case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "case_id",
+    "demo",
+    "regime",
+    "claim_period_id",
+    "periods",
+    "ledger_control_total",
+    "controls",
+    "ips",
+    "costs",
+    "allocations",
+    "evidence",
+    "prior_claims",
+    "penalty_protection"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+    },
+    "demo": {
+      "type": "boolean"
+    },
+    "regime": {
+      "const": "NEW"
+    },
+    "claim_period_id": {
+      "type": "string",
+      "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+    },
+    "periods": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/period"
+      },
+      "minItems": 1,
+      "uniqueItems": false
+    },
+    "ledger_control_total": {
+      "type": "string",
+      "pattern": "(0|[1-9][0-9]{0,13})\\.[0-9]{2}"
+    },
+    "controls": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/control"
+      },
+      "minItems": 0,
+      "uniqueItems": false
+    },
+    "ips": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ip"
+      },
+      "minItems": 1,
+      "uniqueItems": false
+    },
+    "costs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/cost"
+      },
+      "minItems": 1,
+      "uniqueItems": false
+    },
+    "allocations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/allocation"
+      },
+      "minItems": 1,
+      "uniqueItems": false
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence"
+      },
+      "minItems": 1,
+      "uniqueItems": false
+    },
+    "prior_claims": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/prior"
+      },
+      "minItems": 0,
+      "uniqueItems": false
+    },
+    "penalty_protection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requested",
+        "controls"
+      ],
+      "properties": {
+        "requested": {
+          "type": "boolean"
+        },
+        "controls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/control"
+          },
+          "minItems": 0,
+          "uniqueItems": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "control": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate",
+        "status",
+        "conclusion",
+        "source_ids",
+        "evidence_ids",
+        "reviewer",
+        "reviewed_on"
+      ],
+      "properties": {
+        "gate": {
+          "type": "string",
+          "enum": [
+            "SUBJECT",
+            "OPTION",
+            "HISTORY",
+            "IP",
+            "RIGHTS",
+            "ACTIVITY",
+            "USE",
+            "OUTSOURCING",
+            "PREMIAL",
+            "COST",
+            "LINKAGE",
+            "ALLOCATION",
+            "INCENTIVES",
+            "DOC_A",
+            "DOC_B",
+            "SIGNATURE",
+            "TIMESTAMP",
+            "COMMUNICATION",
+            "RETENTION"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "WARNING",
+            "FAIL",
+            "BLOCKED",
+            "NOT_TESTED"
+          ]
+        },
+        "conclusion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10000
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "reviewer": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 10000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reviewed_on": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "period": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "period_id",
+        "sequence",
+        "start",
+        "end"
+      ],
+      "properties": {
+        "period_id": {
+          "type": "string",
+          "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "start": {
+          "type": "string",
+          "format": "date"
+        },
+        "end": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "ip": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ip_id",
+        "name",
+        "type",
+        "description",
+        "outsourced",
+        "premial_event",
+        "controls"
+      ],
+      "properties": {
+        "ip_id": {
+          "type": "string",
+          "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10000
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "SOFTWARE",
+            "PATENT",
+            "DESIGN",
+            "OTHER"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10000
+        },
+        "outsourced": {
+          "type": "boolean"
+        },
+        "premial_event": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "period_id",
+                "date",
+                "evidence_ids"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "SIAE_REGISTRATION",
+                    "EQUIVALENT_PUBLIC_REGISTRATION",
+                    "PATENT_GRANT",
+                    "DESIGN_REGISTRATION"
+                  ]
+                },
+                "period_id": {
+                  "type": "string",
+                  "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "evidence_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+                  },
+                  "minItems": 0,
+                  "uniqueItems": true
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "controls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/control"
+          },
+          "minItems": 0,
+          "uniqueItems": false
+        }
+      }
+    },
+    "cost": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cost_id",
+        "ledger_row_key",
+        "period_id",
+        "account",
+        "category",
+        "evidence_id",
+        "currency",
+        "book_amount",
+        "income_max",
+        "irap_max"
+      ],
+      "properties": {
+        "cost_id": {
+          "type": "string",
+          "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+        },
+        "ledger_row_key": {
+          "type": "string",
+          "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+        },
+        "period_id": {
+          "type": "string",
+          "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+        },
+        "account": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10000
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "PERSONNEL",
+            "DEPRECIATION",
+            "SERVICES",
+            "MATERIALS",
+            "IP_PROTECTION",
+            "OTHER"
+          ]
+        },
+        "evidence_id": {
+          "type": "string",
+          "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+        },
+        "currency": {
+          "const": "EUR"
+        },
+        "book_amount": {
+          "type": "string",
+          "pattern": "(0|[1-9][0-9]{0,13})\\.[0-9]{2}"
+        },
+        "income_max": {
+          "type": "string",
+          "pattern": "(0|[1-9][0-9]{0,13})\\.[0-9]{2}"
+        },
+        "irap_max": {
+          "type": "string",
+          "pattern": "(0|[1-9][0-9]{0,13})\\.[0-9]{2}"
+        }
+      }
+    },
+    "allocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allocation_id",
+        "cost_id",
+        "ip_id",
+        "activity_id",
+        "project_id",
+        "mode",
+        "income_amount",
+        "irap_amount",
+        "allocation_method",
+        "controls"
+      ],
+      "properties": {
+        "allocation_id": {
+          "type": "string",
+          "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+        },
+        "cost_id": {
+          "type": "string",
+          "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+        },
+        "ip_id": {
+          "type": "string",
+          "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+        },
+        "activity_id": {
+          "type": "string",
+          "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+        },
+        "project_id": {
+          "type": "string",
+          "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "ORDINARY",
+            "PREMIAL"
+          ]
+        },
+        "income_amount": {
+          "type": "string",
+          "pattern": "(0|[1-9][0-9]{0,13})\\.[0-9]{2}"
+        },
+        "irap_amount": {
+          "type": "string",
+          "pattern": "(0|[1-9][0-9]{0,13})\\.[0-9]{2}"
+        },
+        "allocation_method": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10000
+        },
+        "controls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/control"
+          },
+          "minItems": 0,
+          "uniqueItems": false
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "path",
+        "sha256",
+        "description"
+      ],
+      "properties": {
+        "evidence_id": {
+          "type": "string",
+          "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10000
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "[a-f0-9]{64}"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10000
+        }
+      }
+    },
+    "prior": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim_id",
+        "cost_id",
+        "claim_period_id",
+        "income_amount",
+        "irap_amount",
+        "regime",
+        "evidence_id"
+      ],
+      "properties": {
+        "claim_id": {
+          "type": "string",
+          "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+        },
+        "cost_id": {
+          "type": "string",
+          "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+        },
+        "claim_period_id": {
+          "type": "string",
+          "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+        },
+        "income_amount": {
+          "type": "string",
+          "pattern": "(0|[1-9][0-9]{0,13})\\.[0-9]{2}"
+        },
+        "irap_amount": {
+          "type": "string",
+          "pattern": "(0|[1-9][0-9]{0,13})\\.[0-9]{2}"
+        },
+        "regime": {
+          "type": "string",
+          "enum": [
+            "OLD",
+            "NEW"
+          ]
+        },
+        "evidence_id": {
+          "type": "string",
+          "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+        }
+      }
+    }
+  }
+}

@@ -34,7 +34,8 @@
     "studio-archive",
     "esg-reporting-assurance",
     "trasformazione",
-    "fusione-guidata"
+    "fusione-guidata",
+    "patent-box-review"
   ],
   "shared_services": [
     "managed-python-runtime",

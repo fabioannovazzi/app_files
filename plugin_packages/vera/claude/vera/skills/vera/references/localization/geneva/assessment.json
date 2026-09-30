@@ -614,6 +614,24 @@
       "implementation_status": "adapted_with_documented_scope"
     },
     {
+      "function_id": "patent-box-review",
+      "name": "Patent Box controlled preview",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Organize evidence and reviewed ledger costs, prepare draft dossiers, and retain authenticated professional review decisions.",
+      "geneva_application": "Not assessed. The current workflow targets Italian Patent Box work; no Swiss or Geneva applicability or professional acceptance is established.",
+      "required_change": "Qualify the mandate, governing sources, rules, evidence, professional authorization and outputs before considering a Geneva adaptation.",
+      "adaptation_layers": [
+        "mandate and legal-source qualification",
+        "rules and professional acceptance"
+      ],
+      "acceptance_example": "A Geneva request is not treated as qualified merely because the explanation page supports French; any proposed use retains an explicit unresolved target assessment.",
+      "sources": [],
+      "verification": "Patent Box implementation and controlled-preview boundaries inspected. No Swiss source research or Geneva professional acceptance performed.",
+      "implementation": "Italian controlled preview with real calculations gated by reviewed sources, rules and firm authorization; professional acceptance remains pending.",
+      "implementation_status": "unresolved_not_qualified_for_target"
+    },
+    {
       "function_id": "presenza-digitale-studio",
       "name": "Firm website",
       "role": "function",
@@ -1018,7 +1036,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "06895e9748b15b956cd7d74fbf3c2cb46753c225a72b8757e11600ed7e735069",
+  "catalogue_fingerprint": "e1e6b8491a9bc293dec6f93d3150c75911449c142ced92e385fc0eb04a872203",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1032,5 +1050,19 @@
   "esg_deployment_binding_20260930": {
     "version": "0.1.291",
     "scope": "Integrates Fusione P1 and CNC completion; retains all recorded target dispositions. ESG remains unresolved for Swiss professional use."
+  },
+  "patent_box_release_binding": {
+    "reviewed_at": "2026-09-30",
+    "version": "0.1.294",
+    "previous_catalogue_fingerprint": "06895e9748b15b956cd7d74fbf3c2cb46753c225a72b8757e11600ed7e735069",
+    "added_skills": [
+      "patent-box-review"
+    ],
+    "review": "Refreshes the release identity and adds the Italian Patent Box controlled preview as unresolved for CH-GE. All existing professional assessments and limitations are preserved."
+  },
+  "patent_box_privacy_release_binding": {
+    "version": "0.1.295",
+    "reviewed_at": "2026-09-30",
+    "review": "Refreshes only the canonical version binding after the teaching-review privacy refresh. Existing assessments, including the unresolved Patent Box target assessment, are preserved."
   }
 }

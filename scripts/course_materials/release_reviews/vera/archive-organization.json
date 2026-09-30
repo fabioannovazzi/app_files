@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "archive-organization",
-  "course_sha256": "6f5160106554683f019f9363fba5a22b7645d7bd6889fc303eef3c4a200ab89e",
+  "course_sha256": "e23604fe079c633592c7555d704b36e08083b8d4486f016e9158c6eb7d6e8bb8",
   "reviewer": "Codex: five-language archive organisation material, execution and browser presentation review",
   "reviewed_at": "2026-09-14T22:54:42.105288+00:00",
   "review_scope": "Reviewed all five full lesson outlines, fifteen unique fictional source documents and ten final artifact cards with actual approved destinations and operation-journal states. The current widget was rendered in a loopback-only browser harness using actual MCP render responses; all five language views were inspected, and the Italian destination edit and reviewer fields were exercised. The final compact list layout was checked in all five languages. Read-only browser geometry confirmed separate filename/control bounds in Italian and no horizontal overflow or overlapping rows in English at the desktop viewport. The complete shipped widget script generates the requests used by ten current MCP/pipeline regressions, with real local persistence and separately authorized fictional filesystem execution. These regression reviewers and semantic fixtures are not real learner approvals. Native in-chat widget hosting, native voice, two-window interaction, human elapsed time and comprehension remain unverified.",
@@ -381,5 +381,17 @@
     "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
     "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
     "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json"
+  },
+  "patent_box_source_refresh_20260930": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-09-30T11:04:31.688736+00:00",
+    "baseline_commit": "bcda5096b53af83584f73b645a0d9e78b29de104",
+    "previous_course_sha256": "6f5160106554683f019f9363fba5a22b7645d7bd6889fc303eef3c4a200ab89e",
+    "current_course_sha256": "e23604fe079c633592c7555d704b36e08083b8d4486f016e9158c6eb7d6e8bb8",
+    "content_review": "The complete compiled course object is identical to the previously reviewed main baseline except for source bindings. All authored locales, fictional inputs, requests, checkpoints, outputs, practice and pacing are unchanged. Original editorial judgments and artifact reviews are preserved.",
+    "source_review": "The only changed source adds patent-box-review to VERA_CLIENT_WORKFLOW_IDS. An AST comparison confirms all other shared contract statements are identical. Existing workflow IDs and their behavior are unchanged.",
+    "native_execution_evidence": "GitHub Actions run 36703497570, job 109848196461, source 437abcd61eca512a4da8c591386ffdbd0895bec7: the native teaching batch passed 1183 tests, with three explicit skips and 92.10% courseware coverage. The later stale editorial-digest gate failed; this is not a green whole-run claim. Fresh CI must validate every required demo/practice identity against the current digest.",
+    "limits": "Source compatibility review only; no new independent editorial, visual, learner, installed-host or professional acceptance. Earlier reviewed artifacts remain historical evidence.",
+    "detail": "docs/releases/2026-09-30-patent-box-course-source-review.json"
   }
 }

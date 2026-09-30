@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "plugins/vera",
-  "version": "0.1.293",
-  "captured_at": "2026-09-30T09:39:13.543159+00:00",
-  "catalogue_fingerprint": "06895e9748b15b956cd7d74fbf3c2cb46753c225a72b8757e11600ed7e735069",
-  "manifest_sha256": "b81715dab71e35affb2563bbf9b7fd09598d2c8852a86aa6ba9d03532a1aa75b",
+  "version": "0.1.295",
+  "captured_at": "2026-09-30T11:12:18.627766+00:00",
+  "catalogue_fingerprint": "e1e6b8491a9bc293dec6f93d3150c75911449c142ced92e385fc0eb04a872203",
+  "manifest_sha256": "07b01aec871bc218895aa4fd0df1565421d1688267eae2e81366820dc1bc796f",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -155,6 +155,11 @@
       "function_id": "open-item-reconciliation",
       "skill_path": "skills/open-item-reconciliation/SKILL.md",
       "sha256": "88b9e2b6afc2479588dca8d02c7864ad89535ffb411597a739c5ca47bf83f388"
+    },
+    {
+      "function_id": "patent-box-review",
+      "skill_path": "skills/patent-box-review/SKILL.md",
+      "sha256": "2223683d89b7b73b3ab813cb9c690612a88038075459ec2cd423fa108b6299b8"
     },
     {
       "function_id": "presenza-digitale-studio",

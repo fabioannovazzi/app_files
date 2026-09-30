@@ -1,0 +1,540 @@
+{
+  "schema_version": "1.0",
+  "proposed": true,
+  "controls": [
+    {
+      "control_id": "PB.SUBJECT",
+      "gate": "SUBJECT",
+      "title": "Contribuente e investitore",
+      "question": "Qual è il soggetto che sostiene costi e rischi, utilizza i risultati e determina il reddito d’impresa?",
+      "suggested_evidence": [
+        "Visura",
+        "Regime fiscale",
+        "Contratti e descrizione dei rischi"
+      ],
+      "branch": "ALL",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.EXCLUSIONS",
+      "gate": "SUBJECT",
+      "title": "Esclusioni e continuità",
+      "question": "Vi sono regimi forfetari/catastali, liquidazione o procedure che richiedono una verifica delle esclusioni?",
+      "suggested_evidence": [
+        "Situazione fiscale e societaria"
+      ],
+      "branch": "ALL",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.OPTION",
+      "gate": "OPTION",
+      "title": "Opzione e durata",
+      "question": "Qual è il primo periodo di opzione? Ricostruisci il quinquennio, rinnovi, dichiarazioni, eventuali omissioni e rimedi applicabili.",
+      "suggested_evidence": [
+        "Dichiarazioni e ricevute",
+        "Prospetto opzioni"
+      ],
+      "branch": "ALL",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.TRANSITION",
+      "gate": "HISTORY",
+      "title": "Vecchio e nuovo regime",
+      "question": "Quali opzioni, accordi e costi erano già coinvolti nel vecchio Patent Box o in precedenti dichiarazioni?",
+      "suggested_evidence": [
+        "Accordi",
+        "Dichiarazioni storiche",
+        "Registro impieghi costi"
+      ],
+      "branch": "ALL",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.IP.SOFTWARE",
+      "gate": "IP",
+      "title": "Software",
+      "question": "Quale componente originale è protetta? Distingui codice proprio, componenti di terzi, configurazione e personalizzazione.",
+      "suggested_evidence": [
+        "Relazione tecnica",
+        "Versioni e repository selezionati",
+        "Licenze componenti"
+      ],
+      "branch": "SOFTWARE",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.IP.PATENT",
+      "gate": "IP",
+      "title": "Brevetto",
+      "question": "Qual è l’invenzione e il perimetro della tutela? Quali sono domanda, concessione, territorio, validità e uso?",
+      "suggested_evidence": [
+        "Titolo o domanda",
+        "Rivendicazioni",
+        "Documenti tecnici"
+      ],
+      "branch": "PATENT",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.IP.DESIGN",
+      "gate": "IP",
+      "title": "Disegno o modello",
+      "question": "La tutela riguarda forma/aspetto o altri elementi? Quali costi sono effettivamente collegati all’oggetto tutelato?",
+      "suggested_evidence": [
+        "Registrazione o prova tutela pertinente",
+        "Disegni",
+        "Distinta attività estetiche e funzionali"
+      ],
+      "branch": "DESIGN",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.IP.COMPLEMENTARY",
+      "gate": "IP",
+      "title": "Beni complementari",
+      "question": "Esistono più beni utilizzati congiuntamente? Motiva l’unità di analisi e mantieni i singoli IP identificabili.",
+      "suggested_evidence": [
+        "Mappa prodotto-IP",
+        "Relazione di complementarità"
+      ],
+      "branch": "MULTI_IP",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.RIGHTS",
+      "gate": "RIGHTS",
+      "title": "Diritti economici",
+      "question": "Chi può sfruttare economicamente il bene e in forza di quale catena di atti?",
+      "suggested_evidence": [
+        "Licenze",
+        "Cessioni",
+        "Contratti di lavoro e di sviluppo"
+      ],
+      "branch": "ALL",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.USE",
+      "gate": "USE",
+      "title": "Utilizzo",
+      "question": "Da quando il bene è effettivamente utilizzato direttamente o indirettamente? La mera detenzione non descrive l’uso.",
+      "suggested_evidence": [
+        "Messa in esercizio",
+        "Contratti di licenza",
+        "Evidenze operative datate"
+      ],
+      "branch": "ALL",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.ACTIVITY",
+      "gate": "ACTIVITY",
+      "title": "Attività rilevanti",
+      "question": "Quali attività concrete, risultati, persone e periodi sono riferibili all’IP secondo le categorie applicabili?",
+      "suggested_evidence": [
+        "Relazioni tecniche",
+        "Piani progetto",
+        "Deliverable"
+      ],
+      "branch": "ALL",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.OUTSOURCING",
+      "gate": "OUTSOURCING",
+      "title": "Commissionari",
+      "question": "Chi dirige l’attività, chi sostiene il rischio, dove si svolge e chi acquista i risultati?",
+      "suggested_evidence": [
+        "Contratto",
+        "Consegne",
+        "Report direzione tecnica",
+        "Paesi di effettivo svolgimento"
+      ],
+      "branch": "OUTSOURCED",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.GROUP",
+      "gate": "OUTSOURCING",
+      "title": "Gruppo e subfornitura",
+      "question": "Il fornitore o subfornitore è associato? Ricostruisci la catena senza dedurre la soluzione dalla sola residenza.",
+      "suggested_evidence": [
+        "Organigramma gruppo",
+        "Contratti subfornitura"
+      ],
+      "branch": "OUTSOURCED",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.COST",
+      "gate": "COST",
+      "title": "Costo e competenza",
+      "question": "Quali importi rilevano nel periodo e nelle due basi fiscali? Distingui costo contabile, fiscalmente rilevante e candidato.",
+      "suggested_evidence": [
+        "Mastro",
+        "Documenti di costo",
+        "Riconciliazione fiscale"
+      ],
+      "branch": "ALL",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.PERSONNEL",
+      "gate": "COST",
+      "title": "Personale",
+      "question": "Quali ore e mansioni sono riferibili alle attività? Chi ha firmato le evidenze e quali semplificazioni sono applicabili?",
+      "suggested_evidence": [
+        "Cedolini riepilogativi",
+        "Timesheet",
+        "Relazione responsabile"
+      ],
+      "branch": "PERSONNEL",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.ASSETS",
+      "gate": "COST",
+      "title": "Beni e quote",
+      "question": "Quali quote/periodi di utilizzo dei beni strumentali sono riferibili al progetto?",
+      "suggested_evidence": [
+        "Registro cespiti",
+        "Contratti",
+        "Prospetto quote"
+      ],
+      "branch": "DEPRECIATION",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.LINKAGE",
+      "gate": "LINKAGE",
+      "title": "Catena probatoria",
+      "question": "Per ciascun importo mostra costo → attività → progetto → bene e confini dell’oggetto tutelato.",
+      "suggested_evidence": [
+        "Matrice analitica con ID",
+        "Evidenze tecniche e contabili"
+      ],
+      "branch": "ALL",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.ALLOCATION",
+      "gate": "ALLOCATION",
+      "title": "Costi promiscui",
+      "question": "Qual è il driver oggettivo e come può essere riprodotto? La percentuale deriva da dati o è solo proposta?",
+      "suggested_evidence": [
+        "Driver",
+        "Calcolo allocazione",
+        "Decisione motivata"
+      ],
+      "branch": "ALL",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.DUPLICATES",
+      "gate": "HISTORY",
+      "title": "Pregressa fruizione",
+      "question": "Le medesime quote sono già agevolate in altri beni, anni, soggetti o regimi?",
+      "suggested_evidence": [
+        "Registro storico impieghi",
+        "Quadratura costi-IP-periodo"
+      ],
+      "branch": "ALL",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.PREMIAL",
+      "gate": "PREMIAL",
+      "title": "Meccanismo premiale",
+      "question": "Qual è l’evento rilevante per questo tipo di bene e quali sono gli otto periodi fiscali precedenti?",
+      "suggested_evidence": [
+        "Evento e prima registrazione",
+        "Calendario esercizi",
+        "Costi storici"
+      ],
+      "branch": "PREMIAL",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.PREMIAL.SOFTWARE",
+      "gate": "PREMIAL",
+      "title": "Registrazione software",
+      "question": "Per il premiale quale registrazione SIAE o equivalente e quale data risultano provate?",
+      "suggested_evidence": [
+        "Attestazione registrazione",
+        "Identità e versione del software"
+      ],
+      "branch": "PREMIAL_SOFTWARE",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.EXTRAORDINARY",
+      "gate": "HISTORY",
+      "title": "Operazioni straordinarie",
+      "question": "Sono intervenuti fusioni, scissioni, conferimenti o trasferimenti? Quali diritti, costi e opzioni seguono il bene?",
+      "suggested_evidence": [
+        "Atti",
+        "Situazioni di raccordo",
+        "Parere sulla continuità"
+      ],
+      "branch": "EXTRAORDINARY",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.INCENTIVES",
+      "gate": "INCENTIVES",
+      "title": "Altri incentivi",
+      "question": "Per ogni costo e anno quali crediti/contributi sono maturati, fruiti, non fruiti o riversati?",
+      "suggested_evidence": [
+        "Prospetto incentivi",
+        "Dichiarazioni",
+        "F24",
+        "Concessioni"
+      ],
+      "branch": "ALL",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.RD.CREDIT",
+      "gate": "INCENTIVES",
+      "title": "R&S e capienza",
+      "question": "Quale regime del credito si applica e quali effetti ha il Patent Box su base, ricalcolo e restituzione, distinti fra redditi e IRAP?",
+      "suggested_evidence": [
+        "Matrice costi-incentivi",
+        "Calcolo fiscale",
+        "Confronto fattispecie interpello"
+      ],
+      "branch": "RD_OVERLAP",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.DOC.A",
+      "gate": "DOC_A",
+      "title": "Fascicolo A",
+      "question": "La descrizione è coerente con funzioni, rischi, diritti, contratti, attività e relazione tecnica verificati?",
+      "suggested_evidence": [
+        "Indice vigente",
+        "Narrativa con evidenze"
+      ],
+      "branch": "PENALTY_REQUESTED",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.DOC.B",
+      "gate": "DOC_B",
+      "title": "Fascicolo B",
+      "question": "Ogni prospetto è riconciliato ai costi e ai documenti con driver e variazioni verificabili?",
+      "suggested_evidence": [
+        "Prospetti per IP",
+        "Quadratura contabile-fiscale"
+      ],
+      "branch": "PENALTY_REQUESTED",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.DOC.SIGN",
+      "gate": "SIGNATURE",
+      "title": "Firma",
+      "question": "Chi firma, con quale potere e quale evidenza della validità della firma?",
+      "suggested_evidence": [
+        "File firmato",
+        "Delega",
+        "Esito verificatore firma"
+      ],
+      "branch": "PENALTY_REQUESTED",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.DOC.TIME",
+      "gate": "TIMESTAMP",
+      "title": "Marca e termini",
+      "question": "Quale scadenza si applica a questa dichiarazione e a eventuali deroghe/rimedi? Confrontala con la marca verificata.",
+      "suggested_evidence": [
+        "Marca temporale",
+        "Ricevute",
+        "Fonte regola termine"
+      ],
+      "branch": "PENALTY_REQUESTED",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.DECLARATION",
+      "gate": "COMMUNICATION",
+      "title": "Dichiarazione",
+      "question": "Confronta opzione, comunicazione documentazione e variazioni con il modello e le istruzioni dell’anno.",
+      "suggested_evidence": [
+        "Modello/istruzioni",
+        "Bozza e ricevuta"
+      ],
+      "branch": "ALL",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.DOC.RETENTION",
+      "gate": "RETENTION",
+      "title": "Conservazione e richiesta",
+      "question": "Dove si conserva la versione esatta? Quali termini di conservazione/consegna si applicano e da quale evento decorrono?",
+      "suggested_evidence": [
+        "Registro versioni",
+        "Richiesta ufficio",
+        "Scadenziario motivato"
+      ],
+      "branch": "PENALTY_REQUESTED",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.ADVERSARIAL",
+      "gate": "FINAL_REVIEW",
+      "title": "Riesame critico",
+      "question": "Quali contestazioni sostanziali o documentali restano sostenibili con questi fatti e fonti?",
+      "suggested_evidence": [
+        "Mappa tesi-evidenze",
+        "Questioni irrisolte"
+      ],
+      "branch": "ALL",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    },
+    {
+      "control_id": "PB.SOURCES",
+      "gate": "SOURCE_PREFLIGHT",
+      "title": "Aggiornamento fonti",
+      "question": "Quali fonti sono state cercate, lette, non accessibili, sostituite e applicabili a ciascun periodo?",
+      "suggested_evidence": [
+        "Registro fonti",
+        "Log scansione",
+        "Confronto versioni"
+      ],
+      "branch": "ALL",
+      "semantic_decision": "MODEL_PROPOSAL_AND_PROFESSIONAL_REVIEW",
+      "failure_scope": "AFFECTED_COMPONENT",
+      "no_evidence_status": "BLOCKED",
+      "source_resolution": "Resolve current and period-specific sources before deciding",
+      "follow_up": "Chiedere solo documenti o chiarimenti mancanti che cambiano l’esito; spiegare perché servono."
+    }
+  ]
+}

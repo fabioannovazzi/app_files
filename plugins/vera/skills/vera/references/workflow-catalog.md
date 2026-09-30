@@ -28,6 +28,16 @@ teaching or browser setup. This installation adaptation is separate from the
 professional course catalog below; it does not provide an unattended executor.
 <!-- VERA_OPENAI_DATEV_END -->
 
+## Development preview
+
+`patent-box-review` prepares selected evidence, reviewed ledger mappings and
+component controls for software, patents and designs, then exports draft A/B
+Word/PDF documents. Real calculation requires reviewed current sources and
+certificate-authenticated authorization under a firm-issued mandate. It verifies
+existing signatures and timestamps; it does not sign or file documents. All
+professional UAT and production acceptance boundaries remain explicit. Read
+`../../patent-box-review/SKILL.md`. This preview has no released teaching kit.
+
 ## Merger workpapers
 
 `fusione-guidata` prepares reviewed P1 domestic OIC incorporation workpapers for
