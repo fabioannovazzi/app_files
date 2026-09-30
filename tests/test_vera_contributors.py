@@ -70,3 +70,32 @@ def test_anna_vivoli_card_uses_her_linkedin_photo_and_approved_details() -> None
     assert anna_card.select_one(".contributor-mark img").get("src") == (
         "/static/shared/vera/images/contributors/anna-vivoli.jpg"
     )
+
+
+def test_francesco_perini_card_uses_provided_photo_and_approved_details() -> None:
+    html = CONTRIBUTORS_PAGE.read_text(encoding="utf-8")
+    soup = BeautifulSoup(html, "html.parser")
+    cards = soup.select("#contributors .contributor-list > li")
+    perini_cards = [
+        card
+        for card in cards
+        if card.select_one(".contributor-name")
+        and card.select_one(".contributor-name").get_text(" ", strip=True)
+        == "Francesco Perini"
+    ]
+
+    assert len(perini_cards) == 1, "Francesco Perini must appear exactly once."
+    perini_card = perini_cards[0]
+    assert perini_card.select_one("a.contributor-row").get("href") == (
+        "https://www.linkedin.com/in/francesco-perini-33a5a520/"
+    )
+    assert perini_card.select_one(".contributor-profile").get_text(
+        " ", strip=True
+    ) == "Dottore Commercialista e Revisore Legale · Verona"
+    assert perini_card.select_one(".contributor-role").get_text(" ", strip=True) == (
+        "Porta in Vera l’esperienza maturata nell’affiancare le imprese nelle decisioni "
+        "che riguardano attività e patrimonio."
+    )
+    assert perini_card.select_one(".contributor-mark img").get("src") == (
+        "/static/shared/vera/images/contributors/francesco-perini.jpeg"
+    )
