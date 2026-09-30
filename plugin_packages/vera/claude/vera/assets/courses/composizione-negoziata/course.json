@@ -32,16 +32,20 @@
       "sha256": "57d5f2434dd064061c42c6a6b8fa009c4c53170ecbba191274f775bde83b32f5"
     },
     {
+      "path": "modules/composizione-negoziata/references/access-and-measures.md",
+      "sha256": "d73f6c8cb0a36081cc0a9a27ad807bb5128d741bdb200ed1a165427e8758b32b"
+    },
+    {
       "path": "modules/composizione-negoziata/references/advisor.md",
-      "sha256": "7db81dce17eb76e9881e63c97bcf4d87d1b5cffe303ba90bf611acbff68e8e21"
+      "sha256": "4a3bd9870430510c6beb21ce2b0e5bd113a04bf3266b10f3c84e146606a917e2"
     },
     {
       "path": "modules/composizione-negoziata/references/case-record.md",
-      "sha256": "2c10c86f2084aa7f12aebb1d597adfa34a17da69af6eed60debfb19fc57edafe"
+      "sha256": "8b612b146fe4448c83e84a9027a3773246966272c4f0b0fed0cd38eef28c8c67"
     },
     {
       "path": "modules/composizione-negoziata/references/esperto.md",
-      "sha256": "1a4f59ca272846931182b1658b85b343a3df29a122eb44bc22c674986aadcc31"
+      "sha256": "a7946e589eadc7dc0b613abf9f1101217a253595de1b86bce290ec2c343cfce6"
     },
     {
       "path": "modules/composizione-negoziata/references/events-and-closure.md",
@@ -50,6 +54,14 @@
     {
       "path": "modules/composizione-negoziata/references/financial-and-research.md",
       "sha256": "ad03fc2cc23a0077da53c7b387ca922d96cb327762a572de21f5a7b946b3a80c"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/negotiations-and-special-events.md",
+      "sha256": "48ca3f780b917e824d3fb37213c2684084d009076e692f52416d199f7a4c7f95"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/report-and-handoff.md",
+      "sha256": "4b93be792b16b76c42e10cdabf5a86c1e44cbf1f64d98351e778d9c2fcca96fc"
     },
     {
       "path": "modules/composizione-negoziata/requirements.txt",
@@ -61,11 +73,15 @@
     },
     {
       "path": "modules/composizione-negoziata/scripts/cnc_case.py",
-      "sha256": "15fdb2d15ffdff414e1e113925161600e032079544cf00f5ad01b70eca386933"
+      "sha256": "973ca3e00a0827fb4ae3fef7a31aa79dc606184a40c60b0aa5b90a5946bcec07"
+    },
+    {
+      "path": "modules/composizione-negoziata/scripts/cnc_review_client.py",
+      "sha256": "6d84ccf1844b6fce6395655e04c9b3b70df67ebff6e253ad94f2e09d144e0581"
     },
     {
       "path": "modules/composizione-negoziata/skills/composizione-negoziata/SKILL.md",
-      "sha256": "0d47a0f17ff96d5853ac468c24891968aedc8abe83df8c782ace8943299bd122"
+      "sha256": "6618a1fa1734e70cd32d51d91116190d426b2b75e8e3febd005da849b76bd445"
     },
     {
       "path": "modules/composizione-negoziata/skills/composizione-negoziata/agents/openai.yaml",
@@ -350,5 +366,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "2114c6bd1c6f75378162bd62b89233a8f535ad1ce856dda856cc334c9be98961"
+  "canonical_course_sha256": "aaecd0a601724148807c3bdb199938adc44d8ba4135e991c9d21403cbd744651"
 }

@@ -172,7 +172,11 @@ COWORK_OMITTED_PATHS = frozenset(
         "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
     }
 )
-COWORK_SHARED_SERVICES = ("run-receipt-stamping", "managed-python-runtime")
+COWORK_SHARED_SERVICES = (
+    "run-receipt-stamping",
+    "managed-python-runtime",
+    "cnc-authenticated-review",
+)
 PROJECTION_ONLY_PATHS = frozenset(
     {
         "marketplace_skill_instructions.json",

@@ -33,19 +33,24 @@
       "sha256": "57d5f2434dd064061c42c6a6b8fa009c4c53170ecbba191274f775bde83b32f5"
     },
     {
+      "path": "modules/composizione-negoziata/references/access-and-measures.md",
+      "repository_path": "plugins/composizione-negoziata/references/access-and-measures.md",
+      "sha256": "c0a03b02d27d3c343abb452a0b219f592a26e751270f198b29e6d9e4bfabf9f3"
+    },
+    {
       "path": "modules/composizione-negoziata/references/advisor.md",
       "repository_path": "plugins/composizione-negoziata/references/advisor.md",
-      "sha256": "3d2bd71cda393a52daea4356ada611d4643cadd21c884522111c724aeaecb81c"
+      "sha256": "6f7cb795f7813e2b3ad8d02c5d3ec9d677277a39fe38c04d8b19b1f1249c7160"
     },
     {
       "path": "modules/composizione-negoziata/references/case-record.md",
       "repository_path": "plugins/composizione-negoziata/references/case-record.md",
-      "sha256": "1a81357351c5ab25c96675cc20931144100070feda917c86afce1cb9e542b8f5"
+      "sha256": "4c72b1d84e4ce6d38a6a52c5f438afb638fba81df0dde4f8b10d207871f4d8b9"
     },
     {
       "path": "modules/composizione-negoziata/references/esperto.md",
       "repository_path": "plugins/composizione-negoziata/references/esperto.md",
-      "sha256": "3da7dc3a3439fc9fcf4fe1bd628055e98f8a6aea38a5fe05d5a399319830e6cf"
+      "sha256": "08d5b03a81240948080e203cf972c46ed373fbfc298a2b700be18a98c657b865"
     },
     {
       "path": "modules/composizione-negoziata/references/events-and-closure.md",
@@ -56,6 +61,16 @@
       "path": "modules/composizione-negoziata/references/financial-and-research.md",
       "repository_path": "plugins/composizione-negoziata/references/financial-and-research.md",
       "sha256": "91ea6e33da3e87e81567def0e2fd6d2175ababe9be2e2956f655789d92570120"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/negotiations-and-special-events.md",
+      "repository_path": "plugins/composizione-negoziata/references/negotiations-and-special-events.md",
+      "sha256": "f8fd90dc7d29198389e0171b032a7178678dacb44d80b389141f73d1f153dbb3"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/report-and-handoff.md",
+      "repository_path": "plugins/composizione-negoziata/references/report-and-handoff.md",
+      "sha256": "6129598a732d70c12a78f82bef82b70c449f72d83afdcbd94190301e85cd81f1"
     },
     {
       "path": "modules/composizione-negoziata/requirements.txt",
@@ -70,12 +85,17 @@
     {
       "path": "modules/composizione-negoziata/scripts/cnc_case.py",
       "repository_path": "plugins/composizione-negoziata/scripts/cnc_case.py",
-      "sha256": "15fdb2d15ffdff414e1e113925161600e032079544cf00f5ad01b70eca386933"
+      "sha256": "973ca3e00a0827fb4ae3fef7a31aa79dc606184a40c60b0aa5b90a5946bcec07"
+    },
+    {
+      "path": "modules/composizione-negoziata/scripts/cnc_review_client.py",
+      "repository_path": "plugins/composizione-negoziata/scripts/cnc_review_client.py",
+      "sha256": "6d84ccf1844b6fce6395655e04c9b3b70df67ebff6e253ad94f2e09d144e0581"
     },
     {
       "path": "modules/composizione-negoziata/skills/composizione-negoziata/SKILL.md",
       "repository_path": "plugins/composizione-negoziata/skills/composizione-negoziata/SKILL.md",
-      "sha256": "b59c1c6f0388914d455aac5e93450b4b5fd3064015f9f5d6d0f9fd358ad77ebe"
+      "sha256": "400c16568029652bf88133afc8997a0fc7a35e25b49e0e67426f504a7372ec6b"
     },
     {
       "path": "modules/composizione-negoziata/skills/composizione-negoziata/agents/openai.yaml",
