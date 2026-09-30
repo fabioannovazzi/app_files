@@ -1,7 +1,7 @@
 {
   "name": "fusione-guidata",
-  "version": "0.1.0",
-  "description": "Vera P0 merger case foundation: evidence, explicit facts, version-bound decisions and change impacts. Legal execution branches are unsupported.",
+  "version": "0.1.1",
+  "description": "Reviewed domestic OIC incorporation workpapers: exact exchange, accounting bridges, event calendars, archive evidence and versioned dossiers.",
   "author": {
     "name": "Fabio Annovazzi · Mparanza",
     "email": "fabio@mparanza.com",
@@ -18,9 +18,9 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Fusione guidata · P0",
-    "shortDescription": "Versioned merger case foundation",
-    "longDescription": "Organize a multi-company merger case with explicit imports, known/unknown/disputed facts, source versions, recorded professional confirmations and selective review after input changes. P0 does not calculate exchange ratios, apply legal branches, sign or file.",
+    "displayName": "Fusione guidata · P1",
+    "shortDescription": "Reviewed OIC incorporation workpapers",
+    "longDescription": "Prepare two domestic OIC incorporation branches with source-bound valuation and exchange workpapers, accounting bridges, event calendars, verified Studio Archive imports and review dossiers. Professional review is required; the helper neither signs nor files.",
     "developerName": "Fabio Annovazzi · Mparanza",
     "category": "Productivity",
     "capabilities": [
@@ -29,7 +29,7 @@
       "Analysis"
     ],
     "defaultPrompt": [
-      "Prepare a synthetic merger case demonstration and show the impact of an input change."
+      "Prepare a reviewed domestic OIC incorporation case with explicit evidence, exact workpapers and a review dossier."
     ],
     "websiteURL": "https://mparanza.com/static/shared/fusione-guidata/index.html?lang=it",
     "privacyPolicyURL": "https://mparanza.com/privacy",

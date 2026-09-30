@@ -820,7 +820,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
         VERA_PLUGIN_ROOT / "skills" / "vera" / "references" / "workflow-catalog.md"
     ).read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    foundation = catalog.split("## P0 case foundation", 1)[1].split(
+    foundation = catalog.split("## Merger workpapers", 1)[1].split(
         "## Professional workflows", 1
     )[0]
     foundation_skills = set(
@@ -996,7 +996,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Pratiche Registro Imprese",
         "Bilancio OIC e XBRL",
         "Composizione negoziata",
-        "Fascicolo di fusione · P0",
+        "Fusione per incorporazione",
         "Revisione concordato preventivo",
         "Automazione web",
         "Campionamento scritture contabili",
@@ -1063,7 +1063,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "vouching": "Verifica documentale",
         "composizione-negoziata": "Composizione negoziata",
         "concordato-plan-review": "Revisione concordato preventivo",
-        "fusione-guidata": "Fascicolo di fusione · P0",
+        "fusione-guidata": "Fusione per incorporazione",
         "comunicazione-professionale": "Comunicazione professionale",
         "dati-fiscali-strutturati": "Estrazione dati fiscali",
         "legal-tax-answer-review": "Validazione ricerca",

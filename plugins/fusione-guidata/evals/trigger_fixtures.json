@@ -19,6 +19,15 @@
         "synthetic",
         "history"
       ]
+    },
+    {
+      "id": "ordinary-incorporation-p1",
+      "prompt": "Prepara il concambio, il ponte contabile e il calendario per una incorporazione nazionale OIC tra indipendenti, con revisione professionale.",
+      "required_signals": [
+        "incorporazione",
+        "OIC",
+        "revisione"
+      ]
     }
   ],
   "should_not_trigger": [

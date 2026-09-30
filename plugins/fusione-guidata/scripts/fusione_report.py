@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from fusione_case import CaseStore, now, plain_path
+from fusione_dossier import write_workpapers
 from fusione_model import CaseError
 
 __all__ = ["export_report"]
@@ -51,7 +52,7 @@ def export_report(
         json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
     lines = [
-        "# Fusione guidata — P0",
+        "# Fusione guidata — fascicolo di revisione",
         "",
         (
             "Synthetic demonstration."
@@ -80,11 +81,11 @@ def export_report(
             "",
             "The JSON report preserves every accessible revision, exact evidence references, approval content and recorded change impacts. Approvals cover their named scope and version only.",
             "",
-            "Local actor and company checks do not authenticate identities, encrypt files or restrict direct filesystem access. No legal branch, filing, signature, statutory calendar or numerical merger model is executed.",
+            "Local actor and company checks do not authenticate identities, encrypt files or restrict direct filesystem access. P1 workpapers execute only their declared calculations and calendar conventions. They do not authorize legal execution, signatures or filings.",
             "",
             "## What data reaches the model",
             "",
-            "Case identities, ownership, selected evidence, facts, source/rule content, drafts and approvals may be read by the selected Codex or Cowork runtime. Nothing is automatically anonymized. The helper uses local files and makes no model API or network calls; this does not imply local-only model processing. See model_data_report.md for what can actually be established for this export.",
+            "Case identities, archive identities and receipt paths, ownership, selected evidence, valuations, balances, shareholder allocations, calendar dates, fiscal registers, source/rule content, drafts and approvals may be read by the selected Codex or Cowork runtime. Nothing is automatically anonymized. The helper uses local files and makes no model API or network calls; this does not imply local-only model processing. See model_data_report.md for what can actually be established for this export.",
         ]
     )
     markdown_path = destination / "case-report.md"
@@ -103,7 +104,7 @@ def export_report(
         "runtime_profile": runtime_profile,
         "language": "en",
         "created_at": now(),
-        "professional_purpose": "Review versioned merger-case evidence, unresolved facts, scoped decisions and change dependencies.",
+        "professional_purpose": "Review versioned merger-case evidence, P1 exchange and accounting workpapers, event calendars, scoped decisions and change dependencies.",
         "phases": [
             {
                 "phase_id": "case-review",
@@ -129,7 +130,9 @@ def export_report(
         json.dumps(model_report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
     (destination / "model_data_report.md").write_text(model_markdown, encoding="utf-8")
+    workpapers = write_workpapers(report, destination)
     return {
+        **workpapers,
         "case_report": str(markdown_path),
         "case_json": str(case_path),
         "model_data_report": str(destination / "model_data_report.md"),

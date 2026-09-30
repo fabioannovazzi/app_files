@@ -82,10 +82,10 @@ or state. The same request now fails without changing the 11,871-byte saved case
 and resume succeeds. ASCII and Unicode regressions verify unchanged state and
 output files. No history is truncated or pruned.
 
-Current local evidence after integration of main `8f662195f`:
+Deployment candidate evidence after integration of main `c3f09ad78`:
 
 - 50 ESG regressions pass; 88.72% coverage across the three new scripts.
-- 601 combined ESG, merger, transformation, CNC, assetti, filesystem, website,
+- 672 combined ESG, merger P0/P1, transformation, CNC, assetti, filesystem, website,
   registry and routing tests pass.
 - Canonical Codex, ChatGPT-upload and Cowork archives match source for all three
   products. Each Vera archive passes all six synthetic demo checks.
@@ -95,8 +95,9 @@ Current local evidence after integration of main `8f662195f`:
   the additive ESG registry and prepared-lesson exclusion review. Historical
   editorial evidence is not new visual or learner acceptance.
 
-The required package/update/privacy suite and exact-commit CI must pass before
-review readiness is reported. Evidence logs remain in the recovery folder.
+The required package/update/privacy suite passes: 442 tests, with two conditional
+skips. Exact-commit CI must pass before merge. Evidence logs remain in the
+recovery folder.
 The configured ESG Black, Isort, Mypy and Bandit commands pass. A supplementary
 Mypy invocation using the stricter shared-runtime config reports five pre-existing
 errors in the synthetic demo; that configuration is not the ESG CI gate and no
@@ -104,12 +105,14 @@ production change was made to satisfy it. An earlier broad Cowork invocation als
 exposed an unchanged projection-note assertion on a source-preserved teaching
 reference, separate from the required CI gates.
 
-Candidate versions: Vera 0.1.286, Clara 0.1.225, Lucia 0.1.65, Studio Archive
+Candidate versions: Vera 0.1.291, Clara 0.1.227, Lucia 0.1.67, Studio Archive
 0.1.41, ESG component 0.1.0. Clara and Lucia rebuild because they embed the shared
 contracts and course policy; ESG is exposed only by Vera. Versions exceed main
 and the inspected open candidates. Recheck the sequence before publication.
 
-These checks cover source and packaged synthetic execution. No merge to main,
-deployment, Marketplace publication, enabled-host acceptance, real-client work
-or Discord reply is included. Complete reporting, assurance and renderers remain
+These checks cover source and packaged synthetic execution. On 30 September
+2026 the user authorized merge and deployment of this foundation release.
+Deployment and Marketplace publication require separate live verification;
+enabled-host acceptance, real-client work and Discord replies are not established
+by these checks. Complete reporting, assurance and renderers remain
 the ordered backlog above, as required by the recovered first-tranche brief.

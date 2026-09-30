@@ -37,7 +37,7 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 | fatture-xml-check | Ignore for this target | Existing function retained with the recorded qualification limits. |
 | financial-analysis | Use | Existing function retained with the recorded qualification limits. |
 | financial-report-builder | Use | Existing function retained with the recorded qualification limits. |
-| fusione-guidata | Unresolved | P0 preserves multi-company evidence and review history. All legal merger branches are unsupported; Swiss/Geneva professional fit and adaptations have not been assessed. |
+| fusione-guidata | Unresolved | P1 retains the evidence and review foundation and adds two Italian OIC incorporation branches. Swiss/Geneva professional fit and adaptations remain unassessed; foreign scope is unsupported. |
 | invoice-xml | Unresolved | Existing function retained with the recorded qualification limits. |
 | journal-bank-reconciliation | Adapt | Reviewed French textual dates use additive adapter v8; currencies remain explicitly source-mapped. |
 | journal-sampling | Adapt | Source-evidenced currency and Swiss export qualification instructions; no new sampling algorithm. |
@@ -100,3 +100,7 @@ prototype, separately unresolved for Geneva. There are 42 skill entries in total
 The 0.1.283 refresh changes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Existing target judgments remain in place. The new assetti construction mode has not been validated for CH-GE; the earlier assessment-mode scope does not qualify that new mode.
 
 The 30 September combined candidate 0.1.286 has 43 skill entries. All prior scope judgments are retained; ESG, CNC, merger and transformation remain unresolved for Geneva.
+
+The 0.1.287 candidate updates the merger entrypoint to P1. The two supported branches are domestic Italian OIC incorporations; the Geneva assessment remains Unresolved.
+
+The ESG deployment candidate 0.1.291 retains all 43 entries and the merged Fusione P1 scope; target dispositions remain unchanged.
