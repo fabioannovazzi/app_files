@@ -172,6 +172,10 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
   reviewable Markdown, DOCX, or JSON reports.
 - `sales-plan`: create a forward-looking sales Plan from reviewed Actuals and
   confirmed commercial or FX assumptions.
+- `business-valuation`: prepare source-backed PMI valuation workpapers using selected
+  DCF, income, NAV, mixed, multiples and APV methods; reuse the same-engagement
+  business plan, retain calculations and review decisions, and export reports
+  and a formula workbook. Does not sign or certify PIV/legal-purpose conformity.
 - `business-planning`: prepare one business plan for a startup, new venture or
   established company. Assess customers, market, operations, economics, cash,
   options, recommendation and next actions using one case, financial model and

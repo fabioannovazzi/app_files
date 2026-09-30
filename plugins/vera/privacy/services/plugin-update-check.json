@@ -37,9 +37,9 @@
   ],
   "security_controls": [],
   "review": {
-    "reviewed_at": "2026-09-26",
+    "reviewed_at": "2026-09-30",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "ac41b4513b93bd6b90653da49b1587910bb119321e4bd2fff04dc77812d8a510"
+    "source_fingerprint": "8276289e78b270df66edfd72bd2ab4413d78a431a6f837affff42cb36fddf040"
   }
 }

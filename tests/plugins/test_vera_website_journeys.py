@@ -877,7 +877,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    expected_module_count = 39
+    expected_module_count = 40
     module_hrefs = re.findall(
         r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
     )
@@ -1007,6 +1007,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Riconciliazione banca-contabilità",
         "Riconciliazione partite aperte",
         "Preparazione piano vendite",
+        "Valutazione d’impresa",
         "Preparare un business plan",
         "Analisi scostamenti",
         "Adeguati assetti",
@@ -1038,6 +1039,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "module.reconciliation.title": "Riconciliazione partite aperte",
         "module.plan.title": "Preparazione piano vendite",
         "module.businessPlanning.title": "Preparare un business plan",
+        "module.valuation.title": "Valutazione d’impresa",
         "module.variance.title": "Analisi scostamenti",
         "module.assetti.title": "Adeguati assetti",
         "module.treasury.title": "Budget di tesoreria",
@@ -1074,6 +1076,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "management-control-pack": "Pacchetto controllo di gestione",
         "centrale-rischi-review": "Analisi Centrale Rischi",
         "business-planning": "Prepare a business plan",
+        "business-valuation": "Valutazione d’impresa",
         "journal-bank-reconciliation": "Riconciliazione banca-contabilità",
         "journal-sampling": "Campionamento scritture contabili",
         "new-client": "Apertura del fascicolo cliente",
@@ -1096,7 +1099,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 39
+    assert len(labels) == 40
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
@@ -1635,7 +1638,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 39
+    expected_module_link_count = 40
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',

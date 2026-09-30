@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "provenance": "Valutazioni PMI Developer Pack v0.1.0, registry/purposes.json and docs/04-piv-e-finalita.md; independently integrated on 2026-09-29",
+  "coverage": {
+    "designed": true,
+    "implementation": "common_workpaper_core_only",
+    "testing": "shared_arithmetic_and_intake_only",
+    "professional_review": "pending",
+    "professional_use_enabled": false
+  },
+  "profiles": [
+    {"id": "sale", "label": "Compravendita e investimento", "intake_focus": "Parti, perimetro, sinergie, condizioni della transazione, debito, cassa e circolante."},
+    {"id": "contribution", "label": "Conferimento", "intake_focus": "Forma societaria, beni o azienda conferiti, incarico dell'esperto e disciplina da verificare."},
+    {"id": "transformation", "label": "Trasformazione", "intake_focus": "Forma iniziale e finale, patrimonio, data, oggetto e requisiti dell'incarico da verificare."},
+    {"id": "merger", "label": "Fusione", "intake_focus": "Perimetri e dati omogenei, valori relativi, classi di diritti e rapporto di cambio; il nucleo non calcola il cambio."},
+    {"id": "demerger", "label": "Scissione", "intake_focus": "Perimetri trasferiti e residui, allocazioni e diritti; il nucleo non calcola rapporti di cambio o riparti."},
+    {"id": "capital_increase", "label": "Aumento di capitale e diritti dei soci", "intake_focus": "Diritti delle classi, condizioni dell'operazione, diluizione e disciplina da verificare."},
+    {"id": "withdrawal", "label": "Recesso", "intake_focus": "Forma societaria, causa, statuto, data e diritti; nessuno sconto di minoranza automatico."},
+    {"id": "exclusion", "label": "Esclusione e liquidazione quota", "intake_focus": "Causa, statuto, diritti e disciplina della liquidazione della quota da verificare."},
+    {"id": "inheritance", "label": "Successione e donazione", "intake_focus": "Obiettivo economico, beneficiari, diritti e distinta base fiscale da verificare."},
+    {"id": "family", "label": "Patto di famiglia e divisione", "intake_focus": "Beni e beneficiari, equilibrio economico, diritti e distinta disciplina fiscale e civile."},
+    {"id": "tax", "label": "Finalità fiscale e rideterminazione", "intake_focus": "Base richiesta, data e norma applicabile; il valore economico non sostituisce la base fiscale."},
+    {"id": "accounting", "label": "Bilancio e impairment", "intake_focus": "Principi contabili applicabili, unità di conto e raccordo contabile; nessun test impairment specialistico attivo."},
+    {"id": "ppa", "label": "PPA e allocazioni", "intake_focus": "Operazione, unità di conto, attività e passività identificabili; modello PPA non attivo."},
+    {"id": "litigation", "label": "Contenzioso CTU CTP e danni", "intake_focus": "Quesito, controfattuale, nesso causale e data; modello danni non attivo."},
+    {"id": "distress", "label": "Crisi e ristrutturazione", "intake_focus": "Continuità supportata, fabbisogni, tempi, costi e scenari; riparti e modelli di crisi non attivi."},
+    {"id": "liquidation", "label": "Liquidazione ordinaria o forzata", "intake_focus": "Premessa, realizzi, tempi, costi e classi di diritti; modello di liquidazione non attivo."},
+    {"id": "collateral", "label": "Garanzie e finanziamento", "intake_focus": "Oggetto, diritti aggredibili e limiti d'uso; nessuna decisione creditizia automatica."},
+    {"id": "strategy", "label": "Strategia e governance", "intake_focus": "Decisione, prospettiva, indicatori di valore e comparabilità delle revisioni."},
+    {"id": "fairness", "label": "Congruità e fairness opinion", "intake_focus": "Oggetto e profondità del giudizio richiesto; le carte di calcolo non costituiscono fairness opinion."},
+    {"id": "review", "label": "Revisione valutazione altrui", "intake_focus": "Relazione originaria, perimetro e profondità della revisione; nessuna approvazione implicita dell'altrui stima."},
+    {"id": "custom", "label": "Altra finalità specificata", "intake_focus": "Descrivere la finalità concreta e predisporre ricerca e revisione specifiche; nessun metodo predefinito."}
+  ]
+}

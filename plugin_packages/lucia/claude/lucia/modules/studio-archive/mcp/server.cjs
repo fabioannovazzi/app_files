@@ -67,6 +67,7 @@ const VERA_CLIENT_WORKFLOW_IDS = Object.freeze([
   "invoice-xml",
   "sales-plan",
   "business-planning",
+  "business-valuation",
   "variance-analysis",
   "management-control-pack",
   "centrale-rischi-review",

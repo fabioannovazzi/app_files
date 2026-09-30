@@ -614,24 +614,6 @@
       "implementation_status": "adapted_with_documented_scope"
     },
     {
-      "function_id": "patent-box-review",
-      "name": "Patent Box controlled preview",
-      "role": "function",
-      "disposition": "Unresolved",
-      "common_work": "Organize evidence and reviewed ledger costs, prepare draft dossiers, and retain authenticated professional review decisions.",
-      "geneva_application": "Not assessed. The current workflow targets Italian Patent Box work; no Swiss or Geneva applicability or professional acceptance is established.",
-      "required_change": "Qualify the mandate, governing sources, rules, evidence, professional authorization and outputs before considering a Geneva adaptation.",
-      "adaptation_layers": [
-        "mandate and legal-source qualification",
-        "rules and professional acceptance"
-      ],
-      "acceptance_example": "A Geneva request is not treated as qualified merely because the explanation page supports French; any proposed use retains an explicit unresolved target assessment.",
-      "sources": [],
-      "verification": "Patent Box implementation and controlled-preview boundaries inspected. No Swiss source research or Geneva professional acceptance performed.",
-      "implementation": "Italian controlled preview with real calculations gated by reviewed sources, rules and firm authorization; professional acceptance remains pending.",
-      "implementation_status": "unresolved_not_qualified_for_target"
-    },
-    {
       "function_id": "presenza-digitale-studio",
       "name": "Firm website",
       "role": "function",
@@ -882,6 +864,42 @@
       "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance.",
       "implementation": "Supporting-PDF intake for Geneva without FatturaPA-first assumptions; source currency and lineage preserved.",
       "implementation_status": "adapted_with_documented_scope"
+    },
+    {
+      "function_id": "business-valuation",
+      "name": "Business valuation workpapers",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Prepare source-linked valuation workpapers with selected methods and explicit assumptions.",
+      "geneva_application": "Not assessed in this implementation; no Swiss professional-use claim.",
+      "required_change": "First establish the mandate, local professional requirements and source fit. The current report renderer is Italian; French website copy does not change report language.",
+      "adaptation_layers": [
+        "professional mandate assessment",
+        "report language"
+      ],
+      "acceptance_example": "A future assessment must inspect a representative Geneva mandate, supported methods, local source requirements and expected report before claiming readiness.",
+      "sources": [],
+      "verification": "Current valuation source and synthetic tests inspected; no Swiss legal-purpose review or Geneva client test.",
+      "implementation": "Common arithmetic and evidence workflow only.",
+      "implementation_status": "unassessed"
+    },
+    {
+      "function_id": "patent-box-review",
+      "name": "Patent Box controlled preview",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Organize evidence and reviewed ledger costs, prepare draft dossiers, and retain authenticated professional review decisions.",
+      "geneva_application": "Not assessed. The current workflow targets Italian Patent Box work; no Swiss or Geneva applicability or professional acceptance is established.",
+      "required_change": "Qualify the mandate, governing sources, rules, evidence, professional authorization and outputs before considering a Geneva adaptation.",
+      "adaptation_layers": [
+        "mandate and legal-source qualification",
+        "rules and professional acceptance"
+      ],
+      "acceptance_example": "A Geneva request is not treated as qualified merely because the explanation page supports French; any proposed use retains an explicit unresolved target assessment.",
+      "sources": [],
+      "verification": "Patent Box implementation and controlled-preview boundaries inspected. No Swiss source research or Geneva professional acceptance performed.",
+      "implementation": "Italian controlled preview with real calculations gated by reviewed sources, rules and firm authorization; professional acceptance remains pending.",
+      "implementation_status": "unresolved_not_qualified_for_target"
     }
   ],
   "sources": {
@@ -1036,7 +1054,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "e1e6b8491a9bc293dec6f93d3150c75911449c142ced92e385fc0eb04a872203",
+  "catalogue_fingerprint": "039bb0173cb73c3d0b2dc620d5be1bc0fc45e40fabf7c70c94909c56b1bb1e0f",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1050,6 +1068,27 @@
   "esg_deployment_binding_20260930": {
     "version": "0.1.291",
     "scope": "Integrates Fusione P1 and CNC completion; retains all recorded target dispositions. ESG remains unresolved for Swiss professional use."
+  },
+  "catalogue_update": {
+    "date": "2026-09-30",
+    "source_version": "0.1.286",
+    "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification."
+  },
+  "holding_release_binding": {
+    "reviewed_at": "2026-09-29T23:34:08.160128+00:00",
+    "version": "0.1.287",
+    "previous_catalogue_fingerprint": "a9ceba58dffbd53dcaa7f1c47cc9ebee8f005d6e71ac0f2394ce7cccc209766a",
+    "scope": "Manifest identity refresh for the holding/SOTP development workpaper; all 42 skill-entrypoint hashes match the previous catalogue. Existing dispositions including business-valuation Unresolved are preserved. No Swiss professional qualification inferred."
+  },
+  "valuation_cnc_integration": {
+    "reviewed_at": "2026-09-29T23:44:22.110465+00:00",
+    "version": "0.1.288",
+    "scope": "Merged all existing target dispositions from both parents. Added CNC remains unresolved; valuation remains unresolved. The 43-entry inventory reflects the combined candidate only, not Swiss qualification."
+  },
+  "valuation_fusione_integration": {
+    "version": "0.1.291",
+    "source_main": "c3f09ad78f69a96445762e3772b7c05ec88d5862",
+    "scope": "Preserves all existing Geneva dispositions and adopts the upstream Fusione P1 row verbatim. Both valuation and merger remain Unresolved. This is combined-source inventory maintenance, not new Swiss qualification."
   },
   "patent_box_release_binding": {
     "reviewed_at": "2026-09-30",

@@ -1,5 +1,11 @@
 # Prepared teaching kits
 
+The September 29 valuation addition supplies an Italian first-use kit for
+`vera/business-valuation`, matching its Italian document-output contract.
+`inputs/business-valuation` contains a fictional FCFF mandate and a separate
+rate revision, with no precomputed result or professional acceptance. Native
+demo/practice checks live in `tests/plugins/test_business_valuation.py`.
+
 ## Interim release: 34 new kits and 11 retained lessons
 
 `release_plan.json` freezes the owner's selected mixed release. Its 34 prepared

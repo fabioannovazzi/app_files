@@ -10,6 +10,24 @@ permissions:
   contents: read
 
 jobs:
+  business-valuation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest pytest-cov pypdf black==25.1.0 isort==6.0.1 mypy bandit -r plugins/business-valuation/requirements.txt -r plugins/business-planning/requirements.txt
+      - name: Verify valuation calculations, evidence and plan replay
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_business_valuation.py tests/plugins/test_business_valuation_benchmarks.py tests/plugins/test_business_valuation_ecb.py tests/plugins/test_business_valuation_income.py tests/plugins/test_business_valuation_residual.py tests/plugins/test_business_valuation_holding.py tests/plugins/test_business_valuation_comparables.py tests/plugins/test_business_valuation_economic.py tests/plugins/test_business_valuation_mandate.py tests/plugins/test_business_valuation_dependencies.py tests/plugins/test_clara_public_http.py --cov=plugins/business-valuation/scripts --cov-report=term-missing --cov-fail-under=80
+      - name: Check valuation code quality
+        run: |
+          python -m black --check plugins/business-valuation/scripts tests/plugins/test_business_valuation.py tests/plugins/test_business_valuation_benchmarks.py tests/plugins/test_business_valuation_ecb.py tests/plugins/test_business_valuation_income.py tests/plugins/test_business_valuation_residual.py tests/plugins/test_business_valuation_holding.py tests/plugins/test_business_valuation_comparables.py tests/plugins/test_business_valuation_economic.py tests/plugins/test_business_valuation_mandate.py tests/plugins/test_business_valuation_dependencies.py
+          python -m isort --check-only plugins/business-valuation/scripts tests/plugins/test_business_valuation.py tests/plugins/test_business_valuation_benchmarks.py tests/plugins/test_business_valuation_ecb.py tests/plugins/test_business_valuation_income.py tests/plugins/test_business_valuation_residual.py tests/plugins/test_business_valuation_holding.py tests/plugins/test_business_valuation_comparables.py tests/plugins/test_business_valuation_economic.py tests/plugins/test_business_valuation_mandate.py tests/plugins/test_business_valuation_dependencies.py
+          python -m mypy --follow-imports=skip plugins/business-valuation/scripts
+          python -m bandit -q -r plugins/business-valuation/scripts
+
   composizione-negoziata:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -179,6 +197,7 @@ jobs:
           -r plugins/bandi-agevolazioni/requirements.txt
           -r plugins/bilancio-xbrl-it/requirements.txt
           -r plugins/business-planning/requirements.txt
+          -r plugins/business-valuation/requirements.txt
           -r plugins/centrale-rischi-review/requirements.txt
           -r plugins/check-entries/requirements.txt
           -r plugins/clara/requirements.txt
@@ -235,6 +254,7 @@ jobs:
           tests/plugins/test_teaching_invoice_xml_execution.py
           tests/plugins/test_teaching_communication_execution.py
           tests/plugins/test_teaching_management_execution.py
+          tests/plugins/test_business_valuation.py
           tests/plugins/test_teaching_clara_budget_execution.py
           tests/plugins/test_teaching_cnc_execution.py
           tests/plugins/test_cnc_integrations.py

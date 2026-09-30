@@ -1,0 +1,42 @@
+{
+  "name": "business-valuation",
+  "version": "0.1.3",
+  "description": "Prepara carte di lavoro per valutare PMI con fonti, metodi, calcoli e revisione professionale.",
+  "author": {
+    "name": "Mparanza",
+    "email": "fabio@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/business-valuation/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "business-valuation",
+    "valutazione",
+    "PMI",
+    "commercialisti"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Valutazione d’impresa",
+    "shortDescription": "Confronta metodi valutativi con fonti e ipotesi verificabili.",
+    "longDescription": "Prepara DCF, reddituale, patrimoniale, misto, holding/SOTP, multipli e APV da dati e ipotesi documentati. Riusa il business plan e produce relazioni e workbook per revisione professionale. Nessuna certificazione PIV automatica.",
+    "developerName": "Mparanza",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "defaultPrompt": [
+      "Prepara le carte di lavoro per la valutazione di questa impresa, con fonti, ipotesi e metodi da rivedere."
+    ],
+    "brandColor": "#002060",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg",
+    "screenshots": []
+  }
+}

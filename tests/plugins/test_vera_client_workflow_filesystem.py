@@ -64,6 +64,7 @@ CLIENT_WORKFLOW_ENTRYPOINTS = (
     ("journal-bank-reconciliation", "semantic_review.py"),
     ("passive-invoice-audit", "run_audit.py"),
     ("business-planning", "run_business_plan.py"),
+    ("business-valuation", "run_valuation.py"),
     ("sales-plan", "prepare_sales_plan_case.py"),
     ("sales-plan", "run_plan.py"),
     ("variance-analysis", "inspect_inputs.py"),
@@ -174,6 +175,9 @@ CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     ("journal-bank-reconciliation", "implementation_bootstrap.py"),
     ("passive-invoice-audit", "check_dependencies.py"),
     ("business-planning", "check_dependencies.py"),
+    ("business-valuation", "check_dependencies.py"),
+    # Public-source snapshots are acquired before import into a client run.
+    ("business-valuation", "valuation_benchmarks.py"),
     ("business-planning", "run_strategic_plan.py"),
     ("business-planning", "prepare_report_site.py"),
     ("sales-plan", "check_dependencies.py"),
@@ -429,10 +433,10 @@ def test_client_workflow_registry_covers_every_vera_component() -> None:
         "trasformazione",
         "browser-automation",
         "comunicazione-professionale",
+        # These development prototypes have no client-workflow adapter.
+        "fusione-guidata",
         "presenza-digitale-studio",
         "studio-archive",
-        # These foundations explicitly do not yet have Studio Archive adapters.
-        "fusione-guidata",
         "trasformazione",
     }
 
@@ -997,6 +1001,18 @@ def test_client_workflow_entrypoint_requires_managed_context(
                 "--output-dir",
                 "missing-output",
             ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert result.returncode == 2
+        assert "required: --client-engagement" in result.stderr
+        return
+    if (workflow_id, script_name) == ("adeguati-assetti", "assetti_construction.py"):
+        # Its loader is returned by _archive_loader and invoked through an alias.
+        # Exercise the public CLI; construction tests verify real receipt checks.
+        result = subprocess.run(
+            [*workflow_cli(script_path), "status"],
             capture_output=True,
             text=True,
             check=False,

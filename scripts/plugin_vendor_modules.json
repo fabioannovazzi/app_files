@@ -213,6 +213,19 @@
         "vera_assurance"
       ]
     },
+    "business-valuation": {
+      "module_roots": [
+        "vera_assurance"
+      ],
+      "overlays": [
+        {
+          "source_root": "plugins/clara/scripts",
+          "module_roots": [
+            "public_http.py"
+          ]
+        }
+      ]
+    },
     "fusione-guidata": {
       "module_roots": [],
       "overlays": [

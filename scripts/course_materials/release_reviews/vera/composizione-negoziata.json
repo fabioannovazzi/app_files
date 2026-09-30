@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "composizione-negoziata",
-  "course_sha256": "f2e336699b029e78c4cdd323e8914919d0049e61ae318b7e901a98ca47df3d41",
+  "course_sha256": "7760d82f707fbc5530b9344e4b05d0d49b59bfc6775d0ddbebea8025f6883019",
   "reviewer": "Codex /root - source, native execution and artifact review",
   "reviewed_at": "2026-09-30T06:38:38.506975+00:00",
-  "review_scope": "Read all five authored outlines and their fictional initial/update inputs. Executed and inspected ten fresh native demo/practice cases, actual treasury outputs, sealed case snapshots and source-linked notes. These are scripted source-tree executions; judgment prose is an explicitly authored synthetic fixture. No learner, voice, window, installed-host or professional acceptance is claimed. Completion follow-up: reran all ten localized native cases on 30 September, inspected the changed decision-authority footer and retained notes, forecasts and snapshots. Lesson content is unchanged; the new full-case and authenticated-review tests are separate from this introductory lesson.",
+  "review_scope": "Read all five authored outlines and their fictional initial/update inputs. Executed and inspected ten fresh native demo/practice cases, actual treasury outputs, sealed case snapshots and source-linked notes. These are scripted source-tree executions; judgment prose is an explicitly authored synthetic fixture. No learner, voice, window, installed-host or professional acceptance is claimed. Completion follow-up: reran all ten localized native cases on 30 September, inspected the changed decision-authority footer and retained notes, forecasts and snapshots. Lesson content is unchanged; the new full-case and authenticated-review tests are separate from this introductory lesson. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -253,6 +253,11 @@
     "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
     "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
     "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json"
+  },
+  "valuation_cnc_integration": {
+    "reviewed_at": "2026-09-29T23:43:34.663881+00:00",
+    "scope": "Lesson content unchanged from MERGE_HEAD outside the source inventory. Reviewed additive workflow-ID registration and Studio Archive immutable snapshot functions. Prior editorial/artifact acceptance and professional limits retained; native CNC and valuation execution is verified separately.",
+    "integrated_main": "8f662195f00bac3b605ac73077e1a0bd31d30253"
   },
   "patent_box_source_refresh_20260930": {
     "reviewer": "Codex /root - bounded source compatibility review",

@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "plugins/vera",
-  "version": "0.1.295",
-  "captured_at": "2026-09-30T11:12:18.627766+00:00",
-  "catalogue_fingerprint": "e1e6b8491a9bc293dec6f93d3150c75911449c142ced92e385fc0eb04a872203",
-  "manifest_sha256": "07b01aec871bc218895aa4fd0df1565421d1688267eae2e81366820dc1bc796f",
+  "root": "/Users/fabio/.codex/worktrees/vera-pmi-valuations/app_files/plugins/vera",
+  "version": "0.1.296",
+  "captured_at": "2026-09-30T11:21:11.035353+00:00",
+  "catalogue_fingerprint": "039bb0173cb73c3d0b2dc620d5be1bc0fc45e40fabf7c70c94909c56b1bb1e0f",
+  "manifest_sha256": "8fdf8708c443bb75a01271943b7effd05127ff4accc4dc6dcaa34261bf57c680",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -50,6 +50,11 @@
       "function_id": "business-planning",
       "skill_path": "skills/business-planning/SKILL.md",
       "sha256": "5bdfff880bde6f66cd11c93619d3db68d0e9d94ffa99503df41d40becb2a6361"
+    },
+    {
+      "function_id": "business-valuation",
+      "skill_path": "skills/business-valuation/SKILL.md",
+      "sha256": "d9cb9d9acf505333d298e140e685d215e505f5c87899f6b74ba4b97ddb111314"
     },
     {
       "function_id": "centrale-rischi-review",
@@ -219,7 +224,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "515ee701a96fd6c383c0036e37a1b0c00866eb1cd485702c960a0a2e878e6794"
+      "sha256": "fb8b9d55aae6853851368a1f1eca8e9d5f7be2b3e080016f3a833b6d70973809"
     },
     {
       "function_id": "vouching",

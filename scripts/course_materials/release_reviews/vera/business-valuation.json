@@ -1,0 +1,503 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "business-valuation",
+  "course_sha256": "5e2bcb518ef0e9a08ca8bb9ae2ceef883e541c8dcfea9e581c744f51df6ff0bb",
+  "reviewer": "Codex /root: source, calculation and document engineering review",
+  "reviewed_at": "2026-09-30T07:10:05.839673+00:00",
+  "review_scope": "Read the entire Italian lesson and both fictional source notes. Ran separate receipt-bound native demo and practice using this exact course source inventory; inspected the Markdown reports and canonical JSON calculations. Rendered each DOCX and native PDF and visually inspected all sixteen pages (four pages per format per case): no clipping, overlap or orphaned mandate/source pairs observed. LibreOffice independently recalculated all forty calculation cells within relative 1e-12 and absolute 1e-9 tolerance. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior remains a lesson instruction plus separate archive regressions, not a witnessed learner test. No PIV conformity or purpose activation is attested. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson explains mandate, sources, hypotheses, a DCF FCFF and the equity bridge before changing a rate. It labels all inputs as fictional and workpapers as requiring review.",
+        "inputs_and_request": "One readable note supplies 100000 EUR annual and terminal FCFF, a 10% rate, zero growth, 300000 debt and 50000 excess cash. The prompt asks for a confirmation table before execution; it does not require the learner to author JSON or approve a precomputed result.",
+        "execution_and_checkpoints": "The native runner used exact imported source receipts and a business-valuation context for both cases. Checkpoints ask the learner to identify assumptions and follow a bridge amount to its source. Test confirmations are synthetic fixtures, not evidence of user approval.",
+        "deliverable_and_next_action": "Both inspected reports distinguish operating value and equity, preserve terminal share and source hashes, and identify unavailable mandate fields. The updated lesson points to the Incarico worksheet and explains that arithmetic does not complete an engagement letter. No mandate or conclusion approval is invented.",
+        "practice_and_repeat": "The separate practice note changes both rates to 12% while retaining all other assumptions. The result changes as expected; the lesson directs a separate revision and explains review invalidation. Ordinary tests also verify dependency-bound review and immutable/idempotent exports.",
+        "language_and_pacing": "The complete guide and source notes are Italian, matching the fixed Italian output renderer. Six stages total 390 seconds; processing and questions may extend this. No claim about actual live teaching duration or comprehension."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_business_valuation::test_valuation_teaching_sources_run_the_bound_workflow[demo]",
+        "result_review": "Operating value 1000000.000000000000000000000000000000000 EUR and equity 750000.000000000000000000000000000000000 EUR. The report remains incomplete because the fictional note does not provide the complete engagement or an explicit standards selection. The numerical method is review-pending; no conclusion or PIV/purpose acceptance is recorded. Sources and changed-rate lineage are retained. All four DOCX and four native PDF pages were inspected, and all twenty workbook calculation cells independently agree with LibreOffice. Statement balance, movement and continuity records remain explicitly unavailable.",
+        "reviewed_artifacts": [
+          {
+            "name": "valuation.json",
+            "sha256": "edac743067c083f7bc4b41e80894a7471b1105f022258e28df7874d86d872ca3"
+          },
+          {
+            "name": "valuation_report.docx",
+            "sha256": "cee1877421b66b506d884bab4c4f8c825d513f87b32bbce0d5db683f993c5626"
+          },
+          {
+            "name": "valuation_report.md",
+            "sha256": "8a7da48ea8cbca8b6e65fce1c62d48c369b8c50a457455001ea51391a12951ee"
+          },
+          {
+            "name": "valuation_report.pdf",
+            "sha256": "8f9bf08cf593c75824acfc93d55fb64edf93a8c396b9fe452a8f54c2a485499f"
+          },
+          {
+            "name": "valuation_workbook.xlsx",
+            "sha256": "893a97ce74afe5f8b09e3dad926ad9f816e59cedf7a4c54bea63d0d6eaac866c"
+          }
+        ],
+        "prior_reviewed_artifacts": [
+          {
+            "name": "valuation_report.md",
+            "sha256": "ac0631b40caa651d9bb336ddd74ae7e6f818ea2ed71e305f95a2fb6878e33478"
+          },
+          {
+            "name": "valuation.json",
+            "sha256": "9da2c8fdee8f47acbd9bb167efc001685709b19ab00dacb5da7ee0f3475b71a8"
+          },
+          {
+            "reviewed_at": "2026-09-29T22:15:33.243210+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "bd81933d45aefc8762103d3a3310359f6bc3bcf7983a4a28fb6ecdadc93ab4db"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "99f1c734c9ce1adf4e42764bf06a19c365e39f3667621a59169acbbc643121d0"
+              }
+            ]
+          }
+        ],
+        "review_history": [
+          {
+            "reviewed_at": "2026-09-29T18:16:00.914541+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "de6a71f284f3d273dd13ee55653576faef7b3f8f755ae8bd07eb36bdef2f321a"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "60492aeafad6e50bca50b6059190522372e4deb021e5ec836dfe0690e159d939"
+              }
+            ]
+          },
+          {
+            "reviewed_at": "2026-09-29T18:42:03.899149+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "b62f2574c2080e4f1c4c25702a0efd93562d402a4acad3667c4de209cc36296d"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "6e4f8b8d6d1971e1aa2308ad8a5bf7a69fdacc0df74f10188a2c2dc941b2dbf0"
+              }
+            ]
+          },
+          {
+            "reviewed_at": "2026-09-29T18:56:11.711307+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "5831545b2ee50fab11ba5da9d367a1c6eb0e00abd4d960d46504256ab9f397c6"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "0c4954be6a5d49a73bc9677fa34f31bd4b05ccbffbe60a7f04a1ae89dbb8fe5d"
+              }
+            ]
+          },
+          {
+            "reviewed_at": "2026-09-29T19:15:08.903348+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "4c3bce5282b3b526497d2842e3748f7b55c8e541eaf9d1f46e31de69824e33c9"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "17bf642e139b54463c4e04902837ce8dbc19adc8663d41afcb7a89f2863251ac"
+              }
+            ]
+          },
+          {
+            "reviewed_at": "2026-09-29T19:29:57.892588+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "ac0631b40caa651d9bb336ddd74ae7e6f818ea2ed71e305f95a2fb6878e33478"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "9da2c8fdee8f47acbd9bb167efc001685709b19ab00dacb5da7ee0f3475b71a8"
+              }
+            ]
+          },
+          {
+            "reviewed_at": "2026-09-29T19:59:46.447104+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "205782ab51e2caef992b684b450ca1b38f970788e195c21fde98ef60be0ab258"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "0316cc5c243d6b23c74a1b36d7a308b711598d1e9549a6703b45f517d73bd02a"
+              }
+            ]
+          },
+          {
+            "reviewed_at": "2026-09-29T20:40:10.735452+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "4bdefd31a7f71d9cc6a680d149537cb9faae518e30936189b25e17856da645e2"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "a43a47f2309472a0ae1831396a627dae73c69e2bb86e26ff6d82cc793fae5d64"
+              }
+            ]
+          },
+          {
+            "reviewed_at": "2026-09-29T21:03:18.112278+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "8972a1267a81a666c077109a210fafa362fe284301a5d5d69eb0b67d2376bd8b"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "5d8b6a9ccfcafe6d5af3d76119bda90af10fbdbf1eee71bca249891c71bf2d4f"
+              }
+            ]
+          },
+          {
+            "reviewed_at": "2026-09-29T21:30:30.700945+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "758cc7eddca1d62108aaf686bf5a34427e32888a3b0488ad752f552a98aa3111"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "2d6302a04600ad61a372a4ba4ee2d58bdab38a9d02d0d404ad8ee4958c77e296"
+              }
+            ]
+          },
+          {
+            "reviewed_at": "2026-09-29T21:56:11.634342+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "3a7f7cd9b3e015c2a4a54135f8fd79024fd0700ce63caaf4be16f68c11b5a6e9"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "b6837cc1f087195b05a3ca186e7a8162f00654022e9b07d225823e29a063a8dd"
+              }
+            ]
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_business_valuation::test_valuation_teaching_sources_run_the_bound_workflow[practice]",
+        "result_review": "Operating value 833333.3333333333333333333333333333333333 EUR and equity 583333.3333333333333333333333333333333333 EUR. The report remains incomplete because the fictional note does not provide the complete engagement or an explicit standards selection. The numerical method is review-pending; no conclusion or PIV/purpose acceptance is recorded. Sources and changed-rate lineage are retained. All four DOCX and four native PDF pages were inspected, and all twenty workbook calculation cells independently agree with LibreOffice. Statement balance, movement and continuity records remain explicitly unavailable.",
+        "reviewed_artifacts": [
+          {
+            "name": "valuation.json",
+            "sha256": "3ac44e1a7a1e83f054b47566992735840aae088d715fa4e3942a03229616e368"
+          },
+          {
+            "name": "valuation_report.docx",
+            "sha256": "dba20d6dd163ac4a1144851b30643f0aea9988d44401853888ec87dfe05c9981"
+          },
+          {
+            "name": "valuation_report.md",
+            "sha256": "6fa6a6dea6f4d758b6e53c19fa95ebc07042a601361db628158915ce70426d70"
+          },
+          {
+            "name": "valuation_report.pdf",
+            "sha256": "2a3f0f07ca15fab2f091d275b954bb9a230a5baa30a94bab068e4132d95227e6"
+          },
+          {
+            "name": "valuation_workbook.xlsx",
+            "sha256": "cf0fe41d9fa60f423b32b1be1ded8c4a9a75692b63561f4da8e1c42cd19c3b5b"
+          }
+        ],
+        "prior_reviewed_artifacts": [
+          {
+            "name": "valuation_report.md",
+            "sha256": "e2c2eff888423b1621125f39abf120c370a845d3b1778b1eb16d40412f3e2753"
+          },
+          {
+            "name": "valuation.json",
+            "sha256": "7a8546ead0468247ac1f1a64f1041871e80490887a3a2f0e78a359210a38a895"
+          },
+          {
+            "reviewed_at": "2026-09-29T22:15:33.243210+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "9d8272c31eb92bd0541b1aa4802e7565c9aaf6f935a93bed709784e509132473"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "50697ea1b359ecf0f6d04f39d1edb1bb1a6deb9ed2da5a2ee80c139db3c87407"
+              }
+            ]
+          }
+        ],
+        "review_history": [
+          {
+            "reviewed_at": "2026-09-29T18:16:00.914541+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "5689d7888a47fb7c89c7a4e7bc460d67fabf7efe6c04e050a341f1f4e9a1069e"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "2a7590f22a1bc21dd2898c375b3aebab3edf0e543c25356fd9c56eea23c1fbb6"
+              }
+            ]
+          },
+          {
+            "reviewed_at": "2026-09-29T18:42:03.899149+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "74a501c8e6ddb426ea900fdee8282f732372bb051ad466e91ed58dc840571ee9"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "7337a0ad02762ad2880db23180ee468756ce15515ba161a21bf21cece611e82d"
+              }
+            ]
+          },
+          {
+            "reviewed_at": "2026-09-29T18:56:11.711307+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "9a3c783dae646cc88d189fe4a063ad06c5cdf16f59440a9fa2036788e4338290"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "7001f1e9b1e0ce8f9d8e231a4b87630ee1a7a98dd28d47b101c02dd35b46dc21"
+              }
+            ]
+          },
+          {
+            "reviewed_at": "2026-09-29T19:15:08.903348+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "5d9b0491a59e3251fc2005dcaf6a4daa7595aca1dc67ca83816f595e4b895fcc"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "1f7e0bb19eac79a738d3d834ca1c69ddc13ec51285a7f25cbea2f445a0018dce"
+              }
+            ]
+          },
+          {
+            "reviewed_at": "2026-09-29T19:29:57.892588+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "e2c2eff888423b1621125f39abf120c370a845d3b1778b1eb16d40412f3e2753"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "7a8546ead0468247ac1f1a64f1041871e80490887a3a2f0e78a359210a38a895"
+              }
+            ]
+          },
+          {
+            "reviewed_at": "2026-09-29T19:59:46.447104+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "d5a6dc59eccc7f858d19642e43bbc5baf27620fbc5211724fecfb7251c3c217c"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "715dca4e34a54054920e026dc5d0f83f3734abe9d2841a570e95e3a1755706ed"
+              }
+            ]
+          },
+          {
+            "reviewed_at": "2026-09-29T20:40:10.735452+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "443b6f4c674cd5147b807fe1dcd4105c358b8177f47c82eb4cda4ddb70d8099b"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "84bad7a3243bfadff979c3670b448df36594ea179583a7f4922ff69ba2bf0791"
+              }
+            ]
+          },
+          {
+            "reviewed_at": "2026-09-29T21:03:18.112278+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "7d2d70534bddea93c31e85afe0edfd093a49f48a329dbe73fa649eb10d18ba2a"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "1ffd8e525dd2c51f3e92c316d34d2b1e078a8d5f047aa2f16e503d5b5596d794"
+              }
+            ]
+          },
+          {
+            "reviewed_at": "2026-09-29T21:30:30.700945+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "8e7f42e0f84741a1817e4a09eef5cc9d29d01ee283d60ec1c5895abebd6502f8"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "174f2ef25cc03d22225b046d67889083928a22e747d14ebc0b04fce5a4ae19bb"
+              }
+            ]
+          },
+          {
+            "reviewed_at": "2026-09-29T21:56:11.634342+00:00",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "4a162bc45f53704dffec8c338bb259039849c2a24cb02ecf59e539a92bd53a74"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "823a432e57e43224e2fbdfeb3c79b4351f9076f7b29a601b82a19cc18eb85c29"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "source_revision_review": {
+    "scope": "Inspected the final source delta after the recorded teaching runs: method kind is validated as text and unsupported methods retain a readable blocked label in partial exports. The DCF used by both lessons is unchanged. The full 49-case suite, including both teaching phases, passed after that source correction; CI will bind fresh teaching JUnit to the compiled course."
+  },
+  "purpose_coverage_review": {
+    "scope": "Reviewed all 21 explicit intake profiles, dependency binding and development-only availability. Read both fresh demo/practice Markdown reports, including the Strategy and governance profile and unchanged 750000 / 583333.33 EUR results. Rendered the fresh seven-method DOCX and inspected all five pages: readable with complete method blocks, source text and the new availability section. No professional profile approval, PIV review or live learner acceptance is implied.",
+    "tests": "72 valuation tests pass at 91.27% coverage, including both fresh native teaching phases and 21 intake profiles.",
+    "previous_reviewed_at": "2026-09-29T17:43:56.264741+00:00"
+  },
+  "dated_calculation_review": {
+    "scope": "Reviewed the optional dated DCF source and formula contract. The Italian first-use lesson still uses annual flows; both freshly executed native demo/practice reports preserve the expected 750000 / 583333.33 EUR equity indications, development-only purpose coverage and pending review. Inspected all five pages of the final forward/mid-period DOCX, including the Italian timing labels and displayed factors. No PIV approval, human case acceptance, installed-host or live learner acceptance is implied.",
+    "tests": "103 valuation tests pass at 92.66% coverage, including both fresh native teaching phases, dated numerical cases, invalid timing, annual plan relabelling rejection and curve sensitivity boundaries.",
+    "independent_workbook_review": "Three dated workbooks (monthly continuous, spot mid-period and interval-forward mid-period) were independently recalculated by LibreOffice. All 300 calculation cells match the Decimal ledger within 1e-12 relative / 1e-9 absolute tolerance.",
+    "previous_reviewed_at": "2026-09-29T18:16:00.914541+00:00"
+  },
+  "normalization_review": {
+    "scope": "Reviewed the structured signed-adjustment journal and its reported-to-adjusted reconciliation, explicit accounting/economic/tax/reversibility explanations, exact local review dependencies and transitive method formulas. Read both fresh native teaching reports: the unchanged annual lesson retains the expected values and review-pending state. Inspected all six pages of the separate normalization DOCX; no clipped text or hidden adjustment status was observed. The journal is not used as an invented professional review or an automatic accounting classifier.",
+    "tests": "124 valuation tests pass at 93.47% coverage. Missing amounts, inconsistent reconciliation, changed review explanations, duplicate amounts and untrusted export text are covered.",
+    "independent_workbook_review": "LibreOffice recalculated all 82 normalization-workbook calculation cells; all match the Decimal register at 1e-12 relative / 1e-9 absolute tolerance. The separate journal links preserve 90 reported +20 -10 =100 adjusted.",
+    "previous_reviewed_at": "2026-09-29T18:42:03.899149+00:00"
+  },
+  "claim_registry_review": {
+    "scope": "Reviewed the explicit claim contract, numeric bindings and separate local attestations, plus the named JSON workpaper projections. Read both fresh annual lesson reports; results remain 750000 and 583333.33 EUR with pending review and development-only purpose coverage. Both native runs now retain all 18 numerical workpapers. The lesson has no authored claim registry and does not claim to teach that optional extension. Separate synthetic claim DOCX/PDF and workbook were inspected; no human or PIV approval is inferred.",
+    "tests": "140 valuation tests pass at 94.66% coverage, including stale claim/conclusion review, unavailable evidence, numeric mismatches, normalization tax-dependency and conditional scenario references.",
+    "artifact_review": "All five DOCX and four native PDF pages of the synthetic claim example are readable. LibreOffice independently matches its 75 calculation cells plus the linked 750 EUR claim value at 1e-12 relative / 1e-9 absolute tolerance.",
+    "previous_reviewed_at": "2026-09-29T18:56:11.711307+00:00"
+  },
+  "schema_validation_review": {
+    "scope": "Reviewed the bundled Draft 2020-12 schema and local runtime integration. Case shape is checked before nested-source discovery; selected method payloads are checked within partial-workpaper boundaries. No external schema retrieval or professional acceptance is introduced. Read both freshly executed annual lesson reports: unchanged 750000 and 583333.33 EUR equity indications, pending review, development-only purpose coverage and 18 artifacts each. Report renderer and document layout are unchanged from the previous visual review.",
+    "tests": "160 valuation tests pass at 93.72% coverage, including invalid canonical dates and numbers, bounded records, missing receipt path fields, private-value redaction, partial method/sensitivity diagnostics and excluded specialist methods.",
+    "previous_reviewed_at": "2026-09-29T19:15:08.903348+00:00"
+  },
+  "benchmark_acquisition_review": {
+    "scope": "Reviewed the versioned NYU country-risk HTML adapter, separate public evidence preparation and local replay of exact imported acquisition records and documents. Both freshly executed annual teaching reports preserve 750000 / 583333.33 EUR indications, pending review, development-only purpose coverage and all 18 artifacts. The lesson does not use an acquired benchmark or claim to teach source acquisition.",
+    "tests": "214 valuation and shared public-transport tests pass at 93.67% component coverage. Exact percent-to-ratio conversion, source revisions, missing observation dates, failure persistence, historical cutoffs, review invalidation, immutable snapshots and network destination/body boundaries are covered.",
+    "artifact_review": "All five DOCX and four native PDF pages of the synthetic acquisition-bound example were visually inspected and are readable, including the separate network boundary in the final model-data section. Its original 2.50 percent observation is replayed as ratio 0.025. Existing workbook arithmetic is unchanged from the independently recalculated examples.",
+    "live_source_limit": "The live NYU HTML retrieval preserved the landing page, usage terms and data bytes. It returned metadata_or_value_missing because no observation date was established; no live source was silently adopted into a professional case. Published/last-updated and retrieved dates do not prove historical availability.",
+    "previous_reviewed_at": "2026-09-29T19:29:57.892588+00:00"
+  },
+  "monthly_plan_review": {
+    "scope": "Reviewed selected whole-month and complete-calendar-year bindings against original business-plan v3 replay. Monthly FCFF requires explicit opening working capital and taxes, exact dated flow order and month ends, and a separate annual terminal assumption. Read both fresh annual teaching reports: unchanged 750000 / 583333.33 EUR indications, 18 artifacts, pending review and development-only purpose coverage. The lesson does not claim to teach this optional monthly-plan extension. No intramonth proration, professional approval, live learner or installed-host acceptance is inferred.",
+    "tests": "235 valuation/acquisition/shared-transport tests pass at 93.35% component coverage. Selected horizons, leap-year month ends, tax and lineage gaps, date/order/terminal misuse, input cycles and dependent review invalidation are covered. All eleven component scripts pass Mypy, Black, isort and Bandit.",
+    "artifact_review": "LibreOffice independently recalculated 255 calculation, monthly bridge and linked-input cells across the final monthly and annual examples, all matching at 1e-12 relative / 1e-9 absolute tolerance. All six DOCX and five native PDF pages per example were visually inspected. The final Word contents match the rendered documents exactly; PDF headings remain with following text. Formula workbooks expose opening/closing stocks, tax links and monthly or annual flow links.",
+    "privacy_review": "The extension changes local plan selection, formula lineage and report content. Existing plan evidence, assumptions and rendered outputs may be read in the selected host model context. It adds no external recipient or network call.",
+    "previous_reviewed_at": "2026-09-29T19:59:46.447104+00:00"
+  },
+  "mandate_review": {
+    "scope": "Reviewed the structured mandate and rights contract, explicit source/ratio bindings and separate local mandate attestation. A missing field stays null; missing or unreviewed information marks the whole case partial while preserving independent arithmetic. Complete-case/conclusion acceptance requires a current mandate review. Changed mandate dependencies invalidate methods, adjustments, claims and conclusion; changing only the mandate reviewer preserves arithmetic reviews and expires conclusion review. No legal suitability, competence, independence or authenticated identity is inferred.",
+    "tests": "264 valuation/acquisition/shared-transport tests pass at 93.69% component coverage. Twelve scripts pass Mypy, Black, isort and Bandit; mandate references, unknowns, date shape, ownership bounds, invalidation and literal/escaped exports are covered.",
+    "artifact_review": "The separate synthetic 40% interest retains 750 EUR equity reference output without automatic multiplication. LibreOffice matches all 75 calculation cells; 19 mandate data rows remain visible. All six DOCX and five native PDF pages were inspected. Both final annual teaching reports were read fully and their final localization delta reviewed; all four DOCX and three native PDF pages per case were visually inspected. Each native run retains 18 artifacts and the expected 750000 / 583333.33 EUR indication. Both cases now remain partial because the note lacks eight structured mandate answers.",
+    "privacy_review": "Structured commissioning, competence, conflict and rights evidence may be read by the selected host model, with source identities and local review records. The feature adds local records and output fields only; no new recipient, API, external request or authorization to publish.",
+    "previous_reviewed_at": "2026-09-29T20:40:10.735452+00:00"
+  },
+  "statement_review": {
+    "reviewed_at": "2026-09-29T21:30:30.700945+00:00",
+    "scope": "Reviewed the new source-bound statement arithmetic and dependency integration. The teaching inputs and instructions are unchanged; only governed-source fingerprints changed. Both native runs preserve expected 750000 / 583333.33 EUR equity indications, 18 artifacts, no accepted conclusion and partial mandate status. All output pages inspected. Separate statement fixture has 112 independently recalculated calculation cells and 24 linked reconciliation cells; seven DOCX and six native PDF pages inspected. Synthetic local attestations are not real professional approval."
+  },
+  "ecb_acquisition_review": {
+    "reviewed_at": "2026-09-29T21:56:11.634342+00:00",
+    "scope": "Reviewed exact-series ECB AAA spot CSV parsing and the separate public acquisition boundary. Percent-to-ratio conversion retains continuous compounding; missing publication and vintage evidence prevent automatic binding. The live helper captured the actual official landing, linked usage terms and CSV. A failed request using a differently spelled URL remains preserved; the successful request uses the literal captured href. No live benchmark was adopted into a case.",
+    "tests": "336 valuation and shared-transport tests pass at 94.31% component coverage; Black, isort, Mypy and Bandit pass across all 14 component scripts. Forty-four additional cases cover ECB source shape, selected date/series, signed/missing values, rate/status/unit changes, revisions, download boundaries and fabricated vintage rejection.",
+    "artifact_review": "Read both freshly executed teaching reports in full and inspected all four DOCX and three native PDF pages per case. Both keep their expected 750000 / 583333.33 EUR indications, 18 artifacts, partial mandate and no accepted conclusion. The final model-data paragraph now includes the separate ECB acquisition route. Formula generation and valuation arithmetic are unchanged; prior independent workbook checks remain the relevant arithmetic evidence. The lesson does not claim to teach benchmark acquisition.",
+    "privacy_review": "Reviewed the new bounded public GETs to www.ecb.europa.eu and data-api.ecb.europa.eu, with selected public URLs and connection metadata but no client-case body, credentials or cookies. Updated five public-page translations and the output paragraph. Clara hosted-voice fingerprint changed only because the same shared JavaScript file governs its review; that service content and source are unchanged."
+  },
+  "finite_income_review": {
+    "reviewed_at": "2026-09-29T22:15:33.243210+00:00",
+    "scope": "Reviewed the separate finite-duration equity-income contract, independent horizon residual, explicit timing and source-bound capital maintenance/reinvestment/distribution/residual basis. The compiler does not equate income with cash, select economic life or residual, infer perpetual growth or deduct debt again. Method review binds the explanations and their sources. All 21 purpose profiles remain professionally disabled.",
+    "tests": "373 valuation/acquisition/shared-transport tests pass at 94.43% component coverage; 37 new tests cover numerical conventions, signed and missing amounts, source/basis status, review invalidation, formula lineage, FCFF misuse, literal exports and archive receipts. Static, formatting and Bandit checks pass for 14 scripts.",
+    "artifact_review": "LibreOffice independently matched 103 annual, 109 mid-period and 103 continuous-rate calculation cells at 1e-12 relative / 1e-9 absolute tolerance. Each workbook retains four literal source-bound basis rows. All seven DOCX and five native PDF pages of both annual and archive-bound finite-income examples were visually inspected. The standalone mid-period and continuous report layouts were not separately rendered; their workbooks and numerical tests were checked. Both native teaching reports preserve the fully read prior Markdown text except receipt IDs, expected 750000 / 583333.33 EUR indications, 18 artifacts, partial mandate and no accepted conclusion; all four DOCX and three PDF pages per case were visually inspected. The lesson does not claim to teach the optional finite-income variant.",
+    "privacy_review": "The new income, residual and professional basis records remain within existing selected engagement/model-context boundaries. No external request, recipient or automatic professional acceptance is added. The five public function descriptions now name the finite-duration variant. The shared Research Video page content remains unchanged."
+  },
+  "residual_income_review": {
+    "reviewed_at": "2026-09-29T22:41:00.415155+00:00",
+    "scope": "Separate clean-surplus residual-income equity variant with explicit changing book capital, independently supplied incomes/distributions/contributions, end-period conventions, same-factor interval charges, terminal equity less final book equity, and an owner-cash-flow algebraic cross-check. Accounting adjustments, terminal valuation, distributability and professional purpose qualification remain professional judgments. No PIV compliance is claimed.",
+    "tests": "413 valuation/acquisition/shared-transport regressions pass at 94.66% component coverage, including 40 new cases. Black, Isort, Mypy and Bandit pass on 15 scripts. A Mypy internal cache error cleared using an isolated cache without code or dependency changes. The first test run had a plan fixture date mismatch; only that test fixture was corrected.",
+    "artifact_review": "LibreOffice independently matches 400 calculation and 66 linked reconciliation cells across annual, spot-curve and short-period examples, with five literal basis rows per workbook. Read the annual Markdown report fully and inspected every eight DOCX and six native PDF pages of all three examples and the native archive-bound residual case. Both fresh native lesson reports match the previously read Markdown except receipt IDs, preserve 750000 / 583333.33 EUR indications, partial mandate, 18 artifacts and no accepted conclusion; all four DOCX and three PDF pages per lesson output were inspected. The Italian lesson still teaches DCF and does not claim to cover the optional residual-income variant.",
+    "privacy_review": "New capital, income, owner-transaction, terminal equity and accounting-basis records stay within existing selected engagement/model-context boundaries. No new external recipient or request. Five public descriptions now name residual income; the shared Research Video page content is unchanged."
+  },
+  "holding_sotp_review": {
+    "reviewed_at": "2026-09-29T23:34:08.173644+00:00",
+    "scope": "Ten explicit calculation variants now include holding/SOTP. Three part bases preserve subsidiary equity bridges, explicit ownership/rights, already-valued interests and parent-only adjustments. Model/professional selection and economic overlap review remain outside mechanical checks; no purpose profile is activated.",
+    "source_review": "Inspected engine, schema, source/review dependency closure, report projection, fixture and all five localized function-page changes. The Italian course differs from HEAD only in its sources array; no holding lesson is claimed.",
+    "verification": "474 valuation/transport tests pass at 95.13% coverage, including 61 holding cases. Static checks pass across 16 scripts. Three fresh native holding/demo/practice runs pass. LibreOffice independently matches 428 calculation cells and 108 linked holding cells across four cases, with 36 literal basis rows each.",
+    "artifact_review": "Inspected all 48 DOCX and 34 native PDF pages across the standard, negative-equity, tax-credit, receipt-bound holding and two teaching outputs. All 18 artifact hashes per output verify. Two scenario notes were clarified and exported as new immutable revisions; production source was unchanged. No clipped text or overlapping content observed. Existing lesson Markdown matches prior reviewed output after receipt identity normalization; indications remain 750000 / 583333.33 EUR with incomplete mandate and no accepted conclusion.",
+    "privacy_review": "Holding identities, values, ownership denominators, rights, parent exposures, tax/cost bases and eliminations may enter selected model context. No new external destination/request. Only the business-valuation block changed in the shared public function-page file; unrelated research-video content is unchanged."
+  },
+  "valuation_cnc_integration": {
+    "reviewed_at": "2026-09-29T23:43:34.820726+00:00",
+    "scope": "Lesson content unchanged from HEAD outside the source inventory. Reviewed additive workflow-ID registration and Studio Archive immutable snapshot functions. Prior editorial/artifact acceptance and professional limits retained; native CNC and valuation execution is verified separately.",
+    "integrated_main": "8f662195f00bac3b605ac73077e1a0bd31d30253"
+  },
+  "release_review_history": [
+    {
+      "reviewed_at": "2026-09-29T22:41:00.415155+00:00",
+      "course_sha256": "766265dc013343c79c627798647ee4a31702d97bf419a0b0ef8251b99510f758",
+      "review_scope": "Read both fictional notes and the entire Italian lesson. Ran the real bound workflow for demo and practice, inspected their Markdown reports and calculation registers. Seven-method DOCX was rendered and all four pages inspected; LibreOffice independently recalculated all 75 workbook calculation cells. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior is an instruction and separate archive contract, not claimed as a live learner test.",
+      "artifacts": {
+        "demo": [
+          {
+            "name": "valuation_report.md",
+            "sha256": "4633a0949336690bc55e64dc8ecc5ad6acd95222d8341f3a86b43d8ab0639676"
+          },
+          {
+            "name": "valuation.json",
+            "sha256": "5aae4fb8a660635d2490b68756dd05551ea812bab753b3eda9703bdfd8445e21"
+          }
+        ],
+        "practice": [
+          {
+            "name": "valuation_report.md",
+            "sha256": "074a3c66fb437125b3f883c33f653e53ddacfa31e3ab2951e3dc71751b608fc3"
+          },
+          {
+            "name": "valuation.json",
+            "sha256": "c53f523ab398ade48b23c6689b958e7f83b5664bad107bce8d23eacf66a53019"
+          }
+        ]
+      }
+    }
+  ]
+}

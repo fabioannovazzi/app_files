@@ -29,6 +29,7 @@ COMMERCIALISTA_MODULE_NAMES = {
     "bilancio-xbrl-it",
     "browser-automation",
     "business-planning",
+    "business-valuation",
     "check-entries",
     "concordato-plan-review",
     "composizione-negoziata",
@@ -1603,6 +1604,7 @@ def test_vera_routes_every_commercialista_module() -> None:
         "bandi-agevolazioni",
         "browser-automation",
         "business-planning",
+        "business-valuation",
         "comunicazione-professionale",
         "management-control-pack",
         "centrale-rischi-review",
@@ -2319,6 +2321,13 @@ def test_all_plugin_skills_define_material_choice_intake() -> None:
         )
         lowered_skill_text = combined_skill_text.lower()
 
+        if plugin_name == "business-valuation":
+            # The mandate workflow has its own concrete intake contract.
+            assert "resolve entity or branch" in lowered_skill_text
+            assert "ask only material missing choices" in lowered_skill_text
+            assert "from supplied evidence" in lowered_skill_text
+            assert "never ask the professional to write json" in lowered_skill_text
+            continue
         if plugin_name == "composizione-negoziata":
             # The compact specialist intake carries the same obligations without
             # repeating the older generic intake boilerplate in every module.
@@ -2835,6 +2844,25 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
         for skill_file in skill_files:
             skill_text = skill_file.read_text(encoding="utf-8")
             normalized_skill_text = " ".join(skill_text.split())
+            if plugin_root.name == "business-valuation":
+                # Test the actual fixed output contract rather than a legacy filename.
+                assert "## Calculation and review" in skill_text
+                assert "## Delivery and privacy" in skill_text
+                assert "Open `valuation_report.html`" in normalized_skill_text
+                assert (
+                    "HTML, DOCX/PDF, formula XLSX, JSON and calculation CSV"
+                    in normalized_skill_text
+                )
+                assert "same immutable revision" in normalized_skill_text
+                continue
+            if (
+                plugin_root.name == "vera"
+                and skill_file.parent.name == "business-valuation"
+            ):
+                assert "Read that module's" in normalized_skill_text
+                assert "follow it" in normalized_skill_text
+                assert "from that module root" in normalized_skill_text
+                continue
             if plugin_root.name == "composizione-negoziata":
                 assert "Produce and persist useful work" in skill_text
                 assert "Declare every physical output" in normalized_skill_text
@@ -3989,8 +4017,8 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 39
-    assert core.count('class="module-row"') == 39
+    assert core.count(" data-module-link") == 40
+    assert core.count('class="module-row"') == 40
     assert core.count('data-jurisdiction-item="it"') == 13
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
@@ -5692,6 +5720,9 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         ),
         "business-planning": (
             "https://mparanza.com/static/shared/business-planning/index.html?lang=it"
+        ),
+        "business-valuation": (
+            "https://mparanza.com/static/shared/business-valuation/index.html"
         ),
         "prompt-optimizer": (
             "https://mparanza.com/static/shared/prompt-optimizer/index.html"

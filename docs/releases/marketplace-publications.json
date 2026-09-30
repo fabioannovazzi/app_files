@@ -3,20 +3,20 @@
   "basis": "Version directly confirmed as Published in OpenAI Platform; not inferred from a local candidate or installed cache.",
   "plugins": {
     "clara": {
-      "version": "0.1.230",
+      "version": "0.1.232",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a?q=clara",
-      "observed_at": "2026-09-30T11:12:18.567025+00:00",
-      "verification_record": "https://platform.openai.com/plugins/manage/plugins_6a57b17fb5848191be710192d93fe03a?version=appsub_6abce1515f2481918e10e8bcaf50bc7a&tab=details",
-      "basis": "OpenAI Platform authoritative version selector directly showed this exact version as Published. This records observed Marketplace state; server deployment and release CI are verified separately.",
-      "package_sha256": "135015fbc4044ddec8623feb57c33eea90e99373cbef4c2ac2cb4c8ec51b4064"
+      "observed_at": "2026-09-30T12:37:12.713517+00:00",
+      "verification_record": "https://platform.openai.com/plugins/manage/plugins_6a57b17fb5848191be710192d93fe03a?version=appsub_6abcf61cec608191a75964b72bc09059&tab=details",
+      "basis": "OpenAI Platform authoritative version selector directly showed this exact version as Published. Release CI, server deployment and installed-host acceptance are verified separately.",
+      "package_sha256": "8b80d3c527ec55987ea755afc6a5c76fec7fb8d096cf593d2de15f0a03f94196"
     },
     "vera": {
-      "version": "0.1.294",
+      "version": "0.1.296",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d",
-      "observed_at": "2026-09-30T11:12:18.558678+00:00",
-      "verification_record": "https://platform.openai.com/plugins/manage/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d?version=pluginrel_e40b0ad34dcc8191b96537aa3ad3650f",
-      "basis": "OpenAI Platform authoritative version selector directly showed this exact version as Published. This records observed Marketplace state; server deployment and release CI are verified separately.",
-      "package_sha256": "f002391c9760877c42f75a9d7821771db89a81e8d533736d59951558253785ec"
+      "observed_at": "2026-09-30T12:37:12.694426+00:00",
+      "verification_record": "https://platform.openai.com/plugins/manage/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d?version=appsub_6abcd282d2808191b12ae19dbdb4218b&tab=details",
+      "basis": "OpenAI Platform authoritative version selector directly showed this exact version as Published. Release CI, server deployment and installed-host acceptance are verified separately.",
+      "package_sha256": "f5c7ea3a8315b585a576b08a26e61eea57115787906aa9297bdee879a8ee7631"
     },
     "lucia": {
       "version": "0.1.50",

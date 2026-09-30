@@ -138,6 +138,7 @@ VERA_CLIENT_WORKFLOW_IDS = (
     "invoice-xml",
     "sales-plan",
     "business-planning",
+    "business-valuation",
     "variance-analysis",
     "management-control-pack",
     "centrale-rischi-review",
