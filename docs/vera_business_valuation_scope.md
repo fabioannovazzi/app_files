@@ -1,6 +1,6 @@
 # Contributor scope and implementation coverage
 
-Reviewed 29 September 2026 against the recovered Valutazioni PMI Developer Pack
+Reviewed 30 September 2026 against the recovered Valutazioni PMI Developer Pack
 v0.1.0 (archive hash and discussion provenance are in
 `vera_business_valuation_implementation.md`). Source requirements are
 `HANDOFF_SVILUPPATORE.md`, `docs/01-specifica-funzionale.md`,
@@ -87,9 +87,15 @@ annualization or semantic accounting classifier is provided.
 Rate/growth sensitivities are implemented for annual and flat dated DCF. A
 single-rate sensitivity cannot flatten a curve; use a separate revision. Margin, reinvestment and scenario
 changes require revised inputs/plans; an integrated scenario comparison remains
-to implement. Benchmark metadata is not a comparability decision. Peer-level
-inclusion/exclusion, LTM/forward alignment and IFRS 16 reconciliation are not
-specialist models in the common engine. Tax shields and terminal flow are
+to implement. Benchmark metadata is not a comparability decision. The optional
+comparable-company workpaper now retains the initial universe, explicit inclusion
+and exclusion decisions, period/accounting/lease bases, and exact supplied
+numerator/metric reconciliations. Its 45 cases bring the suite to 519 passes
+with 95.47% coverage. It does not discover or rank peers, select or average the
+applied multiple, establish LTM coverage, convert currencies, or determine IFRS 16
+adjustments. Semantic comparability, complete accounting treatment, authentic
+market observations and specialist professional cases remain unfinished.
+Tax shields and terminal flow are
 explicit supplied assumptions, not independently estimated tax/sustainability
 opinions. Negative equity is allowed; share percentages, special rights, premiums
 and discounts are not automatic multipliers.

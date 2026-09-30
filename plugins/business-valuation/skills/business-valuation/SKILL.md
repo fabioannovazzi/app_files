@@ -144,6 +144,21 @@ plan FCFF as a stake value. Review `Partecipazioni`, `Base holding` and
 `Eliminazioni`, and read back all bases before confirming them. This composition
 does not value waterfalls, authenticate ownership or qualify a legal purpose.
 
+For a multiple, retain the initial comparable-company list in `comparables`,
+including candidates excluded for missing data, negative metrics or poor fit.
+Explain each decision using business, markets, growth, margins, scale, risk and
+leverage. Keep LTM and forward observations distinct. Reconcile reported amounts
+and signed adjustments to the supplied comparable numerator and metric; record
+accounting standards, publication/price dates and the chosen lease convention.
+Explain IFRS 16 effects on metric, operating value and the target debt bridge;
+never derive them from a label. For EV/revenue, examine margin differences.
+The helper calculates included ratios and checks explicit reconciliations; it
+does not select a sample or average the applied multiple. Supply that multiple
+and its rationale separately. If no peer is suitable, exclude the method with
+a reason and preserve the workpaper. Review `Comparabili`, `Base multipli` and
+`Raccordi multipli`, including exclusions, before recording method acceptance.
+Original sources and all decisions may enter the selected model context.
+
 For benchmarks, research official public sources with public parameter/sector/date
 queries only. The mandate authorizes necessary public research; do not include
 private financials or names in queries. Save permitted evidence with observation,

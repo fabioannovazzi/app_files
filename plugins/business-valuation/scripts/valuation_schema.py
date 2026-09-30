@@ -14,7 +14,7 @@ from typing import Any
 from jsonschema import Draft202012Validator, FormatChecker
 from valuation_engine import ValuationError
 
-__all__ = ["validate_case", "validate_selected_method"]
+__all__ = ["validate_case", "validate_selected_method", "validate_comparables"]
 
 
 @lru_cache(maxsize=1)
@@ -55,3 +55,15 @@ def validate_case(case: Any) -> None:
 def validate_selected_method(method: dict) -> None:
     """Reject one method payload inside the caller's partial-workpaper boundary."""
     _validate(method, _validators()[1], "selected method")
+
+
+def validate_comparables(value: dict) -> None:
+    """Validate retained peer decisions even when their valuation method is excluded."""
+    _validate(
+        value,
+        Draft202012Validator(
+            {"$ref": "#/$defs/comparables", "$defs": _validators()[0].schema["$defs"]},
+            format_checker=FormatChecker(formats=["date"]),
+        ),
+        "comparable workpaper",
+    )

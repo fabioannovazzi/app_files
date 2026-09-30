@@ -6,6 +6,9 @@ NAV, mixed income, holding/SOTP composition, multiples and APV, with explicit
 professional assumptions, receipt-bound sources, exact
 calculation lineage, independent method review and existing v3 business-plan
 reuse. Outputs: HTML, Markdown, DOCX/PDF, formula XLSX, JSON and CSV.
+Optional multiple workpapers retain every peer decision, reported-to-comparable
+reconciliations and explicit period/accounting/lease bases without selecting or
+averaging the applied multiple.
 
 Read the [skill](skills/business-valuation/SKILL.md) and
 [case contract](references/case-contract.md), including its bundled

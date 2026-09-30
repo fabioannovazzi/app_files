@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from valuation_case import build_valuation, require
+from valuation_comparables import BASIS_LABELS as COMPARABLE_BASIS_LABELS
 from valuation_engine import decimal
 from valuation_holding import HOLDING_BASIS_LABELS, PART_BASIS_LABELS
 
@@ -441,6 +442,10 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
             f"Stato: {STATUS[method['status']]}",
             method.get("rationale", method.get("reason", "")),
         ]
+        if "comparables" in method:
+            rows.extend(_comparable_rows(method, amounts))
+        if "comparables_issue" in method:
+            rows.append(method["comparables_issue"])
         if "value_id" in method:
             value = amounts[method["value_id"]]
             basis = (
@@ -710,6 +715,149 @@ def _write_plan_bridge(workbook: Any, report: dict, input_rows: dict[str, int]) 
         else:
             formula = f"=SUM('Piano FCFF'!I{index*12+2}:I{index*12+13})"
         workbook["Dati"].cell(input_rows[ref], 3, formula)
+
+
+def _comparable_basis_rows(method: dict) -> list[list[str]]:
+    """Retain the complete initial universe, exclusions and declared accounting bases."""
+    review = method["comparables"]
+    rows = []
+
+    def append(subject: str, key: str, value: str, evidence: dict) -> None:
+        rows.append(
+            [
+                subject,
+                key,
+                value,
+                HOLDING_STATUS[evidence["status"]],
+                ", ".join(evidence["source_ids"]),
+                evidence["locator"],
+            ]
+        )
+
+    for key, label in COMPARABLE_BASIS_LABELS.items():
+        append("Campione", label, review[key], review)
+    records = [("Impresa valutata", review["target"], review["target"])]
+    for peer in review["peers"]:
+        append(peer["id"], "Soggetto", peer["name"] + " · " + peer["entity_id"], peer)
+        append(
+            peer["id"],
+            "Decisione",
+            "Incluso" if peer["decision"] == "include" else "Escluso",
+            peer,
+        )
+        append(peer["id"], "Motivo", peer["reason"], peer)
+        if peer["decision"] == "include":
+            records.append((peer["id"], peer["data"], peer))
+    labels = {
+        "period_start": "Inizio periodo",
+        "period_end": "Fine periodo",
+        "period_kind": "Base temporale",
+        "published_on": "Pubblicazione evidenza",
+        "metric_basis": "Metrica reported/adjusted",
+        "lease_basis": "Trattamento leasing",
+        "accounting_basis": "Base contabile",
+        "kind": "Tipo multiplo",
+        "price_date": "Data del prezzo",
+        "comparability": "Confronto dei fondamentali",
+    }
+    for subject, data, evidence in records:
+        for key, label in labels.items():
+            if key in data:
+                append(subject, label, data[key], evidence)
+        for key, label in [("metric", "Metrica"), ("numerator", "Numeratore")]:
+            if key in data:
+                amount = data[key]
+                append(
+                    subject,
+                    label,
+                    f"{amount['reported_input']} + rettifiche [{', '.join(amount['adjustment_inputs'])}] = {amount['comparable_input']}. {amount['explanation']}",
+                    evidence,
+                )
+    return rows
+
+
+def _comparable_rows(method: dict, amounts: dict) -> list[str]:
+    rows = [
+        f"{subject} · {label}: {value} · {status} · Fonti: {sources} · {locator}"
+        for subject, label, value, status, sources, locator in _comparable_basis_rows(
+            method
+        )
+    ]
+    for peer in method.get("comparable_schedule", {}).get("peers", []):
+        ref = peer["multiple_id"]
+        rows.append(
+            f"Multiplo del comparabile {peer['id']}: {display(amounts[ref]['value'])}x [{ref}]."
+        )
+    rows.append(
+        "Il multiplo applicato è un'ipotesi fornita separatamente: non è selezionato, mediato o corretto automaticamente. La quadratura non prova comparabilità economica, completezza del campione o adeguatezza delle rettifiche contabili e leasing."
+    )
+    return rows
+
+
+def _write_comparable_sheets(workbook: Any, report: dict, row_ids: dict) -> None:
+    """Link peer calculations while preserving unavailable and excluded decisions."""
+    methods = [row for row in report["methods"] if "comparables" in row]
+    if not methods:
+        return
+    peers = workbook.create_sheet("Comparabili")
+    peers.append(["Metodo", "Candidato", "Decisione", "Motivo", "Multiplo", "Calcolo"])
+    bases = workbook.create_sheet("Base multipli")
+    bases.append(
+        ["Metodo", "Soggetto", "Campo", "Descrizione", "Stato", "Fonti", "Posizione"]
+    )
+    amounts = workbook.create_sheet("Raccordi multipli")
+    amounts.append(["Metodo", "Soggetto", "Voce", "Valore", "Calcolo"])
+    for method in methods:
+        mid = method["method_id"]
+        for row in _comparable_basis_rows(method):
+            bases.append([mid, *row])
+        schedule = method.get("comparable_schedule", {})
+        results = {row["id"]: row for row in schedule.get("peers", [])}
+        for peer in method["comparables"]["peers"]:
+            ref = results.get(peer["id"], {}).get("multiple_id")
+            peers.append(
+                [
+                    mid,
+                    peer["name"] + " · " + peer["id"],
+                    "Incluso" if peer["decision"] == "include" else "Escluso",
+                    peer["reason"],
+                    f"='Calcoli'!B{row_ids[ref]}" if ref else "Non calcolato",
+                    ref or "",
+                ]
+            )
+        reconciliations = (
+            [("Impresa valutata", "Metrica", schedule["target"])] if schedule else []
+        )
+        for peer in results.values():
+            reconciliations.extend(
+                [
+                    (peer["id"], "Numeratore", peer["numerator"]),
+                    (peer["id"], "Metrica", peer["metric"]),
+                ]
+            )
+        for subject, label, record in reconciliations:
+            refs = [
+                ("Reported", record["reported_id"]),
+                *[("Rettifica con segno", ref) for ref in record["adjustment_ids"]],
+                ("Comparabile fornito", record["comparable_id"]),
+                ("Riconciliato", record["computed_id"]),
+                ("Differenza", record["difference_id"]),
+            ]
+            for description, ref in refs:
+                amounts.append(
+                    [
+                        mid,
+                        subject,
+                        label + " · " + description,
+                        f"='Calcoli'!B{row_ids[ref]}",
+                        ref,
+                    ]
+                )
+    for sheet, formula_column in [(peers, 5), (bases, None), (amounts, 4)]:
+        for row in sheet:
+            for cell in row:
+                if cell.row == 1 or cell.column != formula_column:
+                    _literal(cell, str(cell.value or ""))
 
 
 def _holding_rows(method: dict, amounts: dict, currency: str) -> list[str]:
@@ -1004,6 +1152,7 @@ def write_workbook(path: Path, report: dict) -> None:
                 str(calculations.cell(index, column).value or ""),
             )
     _write_holding_sheets(workbook, report, row_ids)
+    _write_comparable_sheets(workbook, report, row_ids)
     residual_methods = [
         method for method in report["methods"] if "residual_basis" in method
     ]
@@ -1299,6 +1448,9 @@ def write_workbook(path: Path, report: dict) -> None:
         workbook["Piano FCFF"].column_dimensions["K"].width = 54
     mandate_sheet.column_dimensions["B"].width = 80
     mandate_sheet.column_dimensions["E"].width = 60
+    if "Comparabili" in workbook:
+        workbook["Base multipli"].column_dimensions["D"].width = 80
+        workbook["Comparabili"].column_dimensions["D"].width = 80
     if "Partecipazioni" in workbook:
         workbook["Base holding"].column_dimensions["D"].width = 80
         workbook["Eliminazioni"].column_dimensions["E"].width = 80

@@ -141,6 +141,73 @@ is an input ID, not an inline amount. Unselected methods retain their rationale.
 | MULTIPLE | metric, selected_multiple, kind | Positive metric times selected multiple; kind is EV_EBITDA, EV_EBIT, EV_REVENUE or P_E |
 | APV | unlevered_value, pv_tax_shields, pv_financing_costs | Supplied unlevered PV plus shield PV less financing-cost PV |
 
+### Comparable-company workpaper
+
+The `MULTIPLE` method may carry a `comparables` workpaper. Without it the helper
+only applies the independently supplied multiple: it does not claim to have
+qualified a sample. With it, keep the entire initial candidate list and explicit
+`include`/`exclude` decisions. A selected method with no included peer is blocked;
+exclude that unsupported method with a reason. Its structurally valid workpaper
+remains visible even when the entire method is excluded or its arithmetic fails.
+
+The group records `initial_universe`, `selection_reason`, `date_alignment`,
+`accounting_alignment`, `lease_alignment`, `margin_analysis`, source IDs, locator,
+proposed/confirmed status, one `target` and 1–100 `peers`. These explanations cover
+the actual business, markets, growth, profitability, size, risks, leverage,
+accounting differences and selection biases. EV/revenue needs an explicit margin
+comparison. Text presence is not a semantic comparability decision.
+
+The target has `period_start`, `period_end`, `period_kind` (`LTM` or `forward`),
+`published_on`, `metric_basis` (`reported` or `adjusted`), `lease_basis`
+(`capitalized`, `expensed` or `not_applicable`), `accounting_basis`, a `metric`
+reconciliation and its own evidence/status. LTM/forward labels describe the
+supplied source periods; the helper does not establish twelve-month coverage,
+annualize, prorate or infer forecast facts. A reconciliation has `reported_input`,
+`adjustment_inputs` (explicit signed list, possibly empty), `comparable_input`
+and `explanation`. The independent supplied total must exactly equal the reported
+amount plus adjustments. Adjustment IDs cannot repeat or reuse their totals;
+an unchanged amount may use the same input on both sides when the list is empty.
+The target comparable input must be the metric actually multiplied by the selected
+multiple. Linked normalization and statement workpapers retain their own review gates.
+
+Each peer has a unique `id`, unique declared `entity_id`, `name`, `decision`,
+`reason`, source IDs, locator and proposed/confirmed status. An included peer also
+has `data`: the target's period/accounting fields, method `kind`, `price_date`,
+`comparability` explanation, and separate `numerator` and `metric` reconciliations.
+The price must not postdate the valuation or information cutoff; publication must
+not postdate the cutoff. LTM periods must end by publication. Included peers must
+declare the same multiple kind, LTM/forward, reported/adjusted and lease conventions
+as the target. Different accounting standards and period/price dates still require
+the recorded professional reconciliation; matching labels do not prove comparability.
+An excluded peer has no numerical `data` payload: preserve its original evidence
+and explain missing, negative or unsuitable observations in the decision, without
+creating a meaningless ratio. It stays in the initial list and in review dependencies.
+
+All monetary inputs use the case currency and full amounts, not per-share values.
+Document any FX conversion independently before import; none is automatic. For
+EV multiples, reconcile the operating-value numerator, including the supplied
+lease/debt treatment; P/E uses total equity and total equity earnings. Report
+lease adjustments in the relevant numerator, metric and target equity bridge,
+with their own amounts and explanations. No IFRS 16 measurement, lease liability,
+rent adjustment or debt classification is inferred. Included reconciled numerators
+and metrics must be positive and distinct. The helper calculates each ratio but
+never selects a multiple, averages peers, trims outliers, imposes a range or changes
+the independent `selected_multiple`. Missing amounts or inconsistent totals block
+that method while unrelated methods remain usable. Plan FCFF cannot be relabelled
+as peer values or target metrics, including through linked normalizations.
+
+All decisions, explanations, included numeric dependencies and source bytes bind
+the method review. Proposed records or unreviewed sources keep it partial.
+Changes invalidate dependent reviews and claims; unrelated methods survive.
+HTML/MD/DOCX/PDF, `method_decisions.json`, the full JSON and `Comparabili`,
+`Base multipli`, `Raccordi multipli` worksheets preserve the same workpaper.
+
+Methodological cross-check: [Damodaran, The Anatomy of a Multiple](https://pages.stern.nyu.edu/adamodar/New_Home_Page/lectures/multintr.htm)
+requires consistent claimholder and accounting definitions and examination of
+underlying fundamentals. The contributor pack supplies the peer decision,
+LTM/forward and lease reconciliation requirements. Neither source establishes
+professional acceptance of this implementation or a particular peer sample.
+
 ### Holding company and sum of the parts
 
 `HOLDING_SOTP` produces the holding's equity reference value. It requires

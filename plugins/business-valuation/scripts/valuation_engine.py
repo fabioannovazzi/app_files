@@ -345,6 +345,7 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
     timing_result = None
     residual_schedule = None
     holding_schedule = None
+    comparable_schedule = None
     if "timing" in method and kind not in {
         "DCF_FCFF",
         "DCF_FCFE",
@@ -552,6 +553,10 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
         _keys(args, {"metric", "selected_multiple", "kind"})
         if args["kind"] not in {"EV_EBITDA", "EV_EBIT", "EV_REVENUE", "P_E"}:
             raise ValuationError("Unsupported multiple basis")
+        if "comparables" in method:
+            from valuation_comparables import calculate_comparables
+
+            comparable_schedule = calculate_comparables(ledger, method)
         result = ledger.add(
             "value",
             "multiply",
@@ -634,4 +639,6 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
         output["clean_surplus_schedule"] = residual_schedule
     if holding_schedule is not None:
         output["holding_schedule"] = holding_schedule
+    if comparable_schedule is not None:
+        output["comparable_schedule"] = comparable_schedule
     return output

@@ -53,6 +53,46 @@ units, double debt deduction, terminal growth, source changes and stale review;
 real v3 plan replay; Studio Archive cross-client and receipt checks; workbook
 formula comparisons; report rendering; privacy coverage and package parity.
 
+### Comparable-company workpaper checkpoint — 30 September 2026
+
+The optional `MULTIPLE.comparables` workpaper preserves the initial candidate
+list, every inclusion/exclusion reason, source evidence, publication/price dates,
+period labels, accounting/lease bases and exact reported-to-comparable amount
+reconciliations. It calculates included peer ratios but leaves the applied
+multiple independently supplied. A method with no included peer cannot calculate;
+its decisions remain visible when blocked or explicitly excluded. Matching
+labels and arithmetic do not establish economic comparability or IFRS 16 adequacy.
+The model/professional still selects peers, classifies and reviews adjustments,
+assesses margins and chooses the multiple. No automatic discovery, ranking,
+averaging, FX conversion or annualization was added.
+
+Forty-five new regressions bring the valuation/acquisition/shared-transport suite
+to **519 passes with 95.47% coverage**. Black, Isort, Mypy and Bandit pass on all
+17 component scripts. The first test run used the unsupported source status
+`unreviewed`; only that fixture was corrected to the existing `unverified` value.
+No production code changed to repair that test. Native peer and DCF demo/practice
+runs pass. The DCF lesson and report prose are unchanged outside source inventories
+and generated receipt identifiers; no new peer-selection lesson is claimed.
+
+Three examples retain the native successful peer case, no supported peer and an
+explicitly excluded multiple method. LibreOffice independently matches 120
+calculation cells and 25 linked peer cells. All 22 DOCX and 18 PDF pages were
+visually inspected with no clipping or overlap observed. Each output set has 18
+hash-verified artifacts; copied native inputs/outputs remain in the ignored
+primary evidence directory to survive temporary test-directory cleanup.
+
+Source reserves Vera **0.1.289** and business-valuation **0.1.2**. The ZIPs remain
+the prior **0.1.288** build and are not represented as current.
+The read-only package check confirms the missing new module and source drift.
+Automatic approval review rejected the proposed teaching-review and three
+service-fingerprint refreshes as persistent governance changes needing specific
+authorization. The exact local proposal is retained as
+`outputs/vera-valuations-discord/peer-release-metadata-proposal.md`; it is not
+applied. No service controls or destinations changed. Packaging, affected release
+checks and current-head remote CI remain outstanding, along with prior owner
+approvals and the wider contributor scope. No push, merge, deployment,
+Marketplace publication or professional activation occurred.
+
 ### Combined CNC integration checkpoint — 30 September 2026
 
 Integrated upstream main `8f662195f00bac3b605ac73077e1a0bd31d30253` on the
