@@ -136,7 +136,7 @@
     },
     {
       "path": "modules/business-valuation/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "21df79682979e8c5486b0f1728321c12c7af3d41c7637c22b1094415941d49d7"
+      "sha256": "8181e60115a694cf46c4935f8261458c4d964bce34bff7fe188dfbcec7d64e2a"
     },
     {
       "path": "modules/business-valuation/vendor/modules/vera_assurance/decisions.py",
@@ -184,7 +184,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "21df79682979e8c5486b0f1728321c12c7af3d41c7637c22b1094415941d49d7"
+      "sha256": "8181e60115a694cf46c4935f8261458c4d964bce34bff7fe188dfbcec7d64e2a"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -289,5 +289,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "a181c76a26e9bd4f59f14e7ea0bd3aa9e4bc93de2b5399900aa634783a2a8552"
+  "canonical_course_sha256": "6ede1ee90a43878388ccfa2161ba8665d58f2992d82834ab5345d7e320dee20b"
 }

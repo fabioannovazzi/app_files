@@ -131,7 +131,7 @@ SEVERE_CONTRACT_COVERAGE_AUDIT_SEVERITIES = {"blocker", "high", "medium"}
 CHATGPT_UPLOAD_MAX_DEFAULT_PROMPTS = 3
 CHATGPT_UPLOAD_MAX_DEFAULT_PROMPT_LENGTH = 128
 CHATGPT_UPLOAD_MAX_SUBTITLE_LENGTH = 30
-CHATGPT_UPLOAD_UNSUPPORTED_MANIFEST_FIELDS = {"apps", "mcpServers"}
+CHATGPT_UPLOAD_UNSUPPORTED_MANIFEST_FIELDS = {"apps", "mcpServers", "hooks"}
 CHATGPT_UPLOAD_UNSUPPORTED_INTERFACE_FIELDS = {"screenshots"}
 CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES = {".app.json", ".mcp.json"}
 CHATGPT_UPLOAD_REVIEW_MCP_SERVER = "scripts/review_mcp_server.cjs"
@@ -141,6 +141,7 @@ CHATGPT_HIDDEN_COMPONENTS: dict[str, frozenset[str]] = {}
 CHATGPT_SKILL_CARDS_FILE = "marketplace_skill_instructions.json"
 VERA_CHATGPT_DEVELOPER_SKILLS = frozenset({"privacy-surface-review"})
 VERA_CHATGPT_ROUTER_TARGETS = {
+    "esg-reporting-assurance": "modules/esg-reporting-assurance/skills/esg-reporting-assurance/SKILL.md",
     "trasformazione": "modules/trasformazione/skills/trasformazione/SKILL.md",
     "fusione-guidata": "modules/fusione-guidata/skills/fusione-guidata/SKILL.md",
     "datev-invoice-start": "skills/datev-invoice-start/SKILL.md",
@@ -1576,6 +1577,10 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
         ):
             continue
         if name == CHATGPT_SKILL_CARDS_FILE:
+            continue
+        # Lifecycle hooks are unsupported in Marketplace submissions. Keep
+        # them in native host packages, but omit root and component hooks here.
+        if "hooks" in path_parts[:-1]:
             continue
         if path_parts[-1] in CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES:
             continue

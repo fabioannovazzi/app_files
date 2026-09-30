@@ -16,6 +16,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 COMMERCIALISTA_MODULE_NAMES = {
+    "esg-reporting-assurance",
     "trasformazione",
     "fusione-guidata",
     "treasury-forecast",
@@ -944,6 +945,35 @@ def test_cross_surface_plugins_define_chatgpt_runtime_in_main_skill(
     assert builder.has_chatgpt_runtime_contract(content)
 
 
+@pytest.mark.parametrize("plugin_name", ["clara", "lucia", "vera"])
+def test_chatgpt_upload_omits_lifecycle_hooks_and_preserves_native_hooks(
+    plugin_name: str,
+) -> None:
+    builder = load_builder()
+    targets = {package.plugin: package for package in builder.load_packages()}
+    targets.update({bundle.name: bundle for bundle in builder.load_bundles()})
+    target = targets[plugin_name]
+    prefix = f"{target.package_root}/plugins/{plugin_name}/"
+    source_hooks = ROOT / "plugins" / plugin_name / "hooks" / "hooks.json"
+    native_entries = builder.expected_zip_entries(target)
+
+    entries = builder.chatgpt_upload_entries(target)
+
+    assert not any("hooks" in name.split("/")[:-1] for name in entries)
+    manifests = [
+        json.loads(content)
+        for name, content in entries.items()
+        if name.endswith(".codex-plugin/plugin.json")
+    ]
+    assert manifests
+    assert all("hooks" not in manifest for manifest in manifests)
+    assert native_entries[prefix + "hooks/hooks.json"] == source_hooks.read_bytes()
+    assert (
+        json.loads(native_entries[prefix + ".codex-plugin/plugin.json"])["hooks"]
+        == "./hooks/hooks.json"
+    )
+
+
 def test_chatgpt_card_projection_uses_approved_instructions() -> None:
     builder = load_builder()
     source = (
@@ -1561,6 +1591,7 @@ def test_vera_routes_every_commercialista_module() -> None:
     assert components["schema_version"] == 1
     assert set(components["plugins"]) == COMMERCIALISTA_MODULE_NAMES
     assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {
+        "esg-reporting-assurance",
         "composizione-negoziata",
         "trasformazione",
         "fusione-guidata",
@@ -3979,8 +4010,8 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 38
-    assert core.count('class="module-row"') == 38
+    assert core.count(" data-module-link") == 39
+    assert core.count('class="module-row"') == 39
     assert core.count('data-jurisdiction-item="it"') == 12
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
@@ -5621,6 +5652,7 @@ def test_reporting_component_manifests_use_clara_homepage() -> None:
 
 def test_standard_family_plugin_manifests_use_family_homepages() -> None:
     expected_homepages = {
+        "esg-reporting-assurance": "https://mparanza.com/static/shared/esg-reporting-assurance/index.html",
         "trasformazione": "https://mparanza.com/static/shared/trasformazione/index.html",
         "invoice-xml": "https://mparanza.com/static/shared/invoice-xml/index.html",
         "aml-review": "https://mparanza.com/static/shared/aml-review/index.html",

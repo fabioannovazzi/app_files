@@ -1,6 +1,6 @@
 {
   "schema": "vera.localization.assessment.v1",
-  "catalogue_fingerprint": "4e9a6a73bfe64f8471dd6cbe1ce98c18ef71623705fbddcea3a75fddddb14909",
+  "catalogue_fingerprint": "252e0453e672e9c10121e8e7037d795b1d55d66717e8c5cadbf5e714714b15e3",
   "assessment_date": "2026-09-28",
   "target": {
     "id": "CH-GE",
@@ -200,24 +200,6 @@
       "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance.",
       "implementation": "French report presentation and number formatting; existing CHF calculations retained.",
       "implementation_status": "adapted_with_documented_scope"
-    },
-    {
-      "function_id": "business-valuation",
-      "name": "Business valuation workpapers",
-      "role": "function",
-      "disposition": "Unresolved",
-      "common_work": "Prepare source-linked valuation workpapers with selected methods and explicit assumptions.",
-      "geneva_application": "Not assessed in this implementation; no Swiss professional-use claim.",
-      "required_change": "First establish the mandate, local professional requirements and source fit. The current report renderer is Italian; French website copy does not change report language.",
-      "adaptation_layers": [
-        "professional mandate assessment",
-        "report language"
-      ],
-      "acceptance_example": "A future assessment must inspect a representative Geneva mandate, supported methods, local source requirements and expected report before claiming readiness.",
-      "sources": [],
-      "verification": "Current valuation source and synthetic tests inspected; no Swiss legal-purpose review or Geneva client test.",
-      "implementation": "Common arithmetic and evidence workflow only.",
-      "implementation_status": "unassessed"
     },
     {
       "function_id": "centrale-rischi-review",
@@ -865,6 +847,42 @@
       "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance.",
       "implementation": "Supporting-PDF intake for Geneva without FatturaPA-first assumptions; source currency and lineage preserved.",
       "implementation_status": "adapted_with_documented_scope"
+    },
+    {
+      "function_id": "business-valuation",
+      "name": "Business valuation workpapers",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Prepare source-linked valuation workpapers with selected methods and explicit assumptions.",
+      "geneva_application": "Not assessed in this implementation; no Swiss professional-use claim.",
+      "required_change": "First establish the mandate, local professional requirements and source fit. The current report renderer is Italian; French website copy does not change report language.",
+      "adaptation_layers": [
+        "professional mandate assessment",
+        "report language"
+      ],
+      "acceptance_example": "A future assessment must inspect a representative Geneva mandate, supported methods, local source requirements and expected report before claiming readiness.",
+      "sources": [],
+      "verification": "Current valuation source and synthetic tests inspected; no Swiss legal-purpose review or Geneva client test.",
+      "implementation": "Common arithmetic and evidence workflow only.",
+      "implementation_status": "unassessed"
+    },
+    {
+      "function_id": "esg-reporting-assurance",
+      "name": "ESG evidence foundation",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Preserve exact CSV/text evidence, versioned source metadata and professional decisions, and export partial drafts within one Studio Archive engagement.",
+      "geneva_application": "Not assessed. The evidence/version foundation does not establish suitability for a Swiss or Geneva reporting mandate.",
+      "required_change": "Review the actual mandate, applicable sources, reporting framework, formats, language and professional responsibilities before deciding whether and how the existing foundation applies.",
+      "adaptation_layers": [
+        "mandate and legal-source qualification",
+        "input and output qualification"
+      ],
+      "acceptance_example": "A future reviewed Geneva case must preserve its explicit jurisdiction and source basis independently of French output language; no such professional case has been tested.",
+      "sources": [],
+      "verification": "ESG component skill, schema and synthetic tests inspected. No current Swiss ESG legal-source research or Geneva professional acceptance is claimed.",
+      "implementation": "New first-tranche foundation; no Geneva-specific adaptation implemented.",
+      "implementation_status": "unresolved_not_qualified_for_target"
     }
   ],
   "sources": {
@@ -1000,10 +1018,25 @@
     "reviewed_at": "2026-09-29",
     "review": "Combines the existing fusione-guidata P0 and synthetic-only trasformazione entries. All prior target judgments and both unresolved entries are preserved. No new professional or jurisdiction qualification is inferred."
   },
+  "cnc_release_binding": {
+    "version": "0.1.285",
+    "reviewed_at": "2026-09-29",
+    "previous_catalogue_fingerprint": "500598f2e1c2bbaf1ffd4cb41f8b2eb21ae6a68fd64cc126084daa34d97dcd43",
+    "added_skills": [
+      "composizione-negoziata"
+    ],
+    "review": "Add the Italian CNC workflow as unresolved for CH-GE. Preserve all prior Geneva assessments and the merger foundation; the combined release does not establish Swiss applicability. Preserve the newly merged synthetic-only transformation prototype."
+  },
   "assetti_construction_release_binding": {
     "version": "0.1.283",
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
+  },
+  "fusione_p1_release_binding": {
+    "reviewed_at": "2026-09-30",
+    "previous_catalogue_fingerprint": "6b6600d71b764ee71b86cd54adcf5aa46257bf72ef43606a36dc59562d2fd5cd",
+    "candidate_version": "0.1.287",
+    "review": "Updates the fusione-guidata and Vera router entrypoints for two domestic Italian OIC branches. Geneva dispositions and professional-fit limits remain unchanged; this is catalogue maintenance, not Swiss qualification."
   },
   "catalogue_update": {
     "date": "2026-09-30",
@@ -1016,29 +1049,27 @@
     "previous_catalogue_fingerprint": "a9ceba58dffbd53dcaa7f1c47cc9ebee8f005d6e71ac0f2394ce7cccc209766a",
     "scope": "Manifest identity refresh for the holding/SOTP development workpaper; all 42 skill-entrypoint hashes match the previous catalogue. Existing dispositions including business-valuation Unresolved are preserved. No Swiss professional qualification inferred."
   },
-  "cnc_release_binding": {
-    "version": "0.1.285",
-    "reviewed_at": "2026-09-29",
-    "previous_catalogue_fingerprint": "500598f2e1c2bbaf1ffd4cb41f8b2eb21ae6a68fd64cc126084daa34d97dcd43",
-    "added_skills": [
-      "composizione-negoziata"
-    ],
-    "review": "Add the Italian CNC workflow as unresolved for CH-GE. Preserve all prior Geneva assessments and the merger foundation; the combined release does not establish Swiss applicability. Preserve the newly merged synthetic-only transformation prototype."
-  },
   "valuation_cnc_integration": {
     "reviewed_at": "2026-09-29T23:44:22.110465+00:00",
     "version": "0.1.288",
     "scope": "Merged all existing target dispositions from both parents. Added CNC remains unresolved; valuation remains unresolved. The 43-entry inventory reflects the combined candidate only, not Swiss qualification."
   },
-  "fusione_p1_release_binding": {
-    "reviewed_at": "2026-09-30",
-    "previous_catalogue_fingerprint": "6b6600d71b764ee71b86cd54adcf5aa46257bf72ef43606a36dc59562d2fd5cd",
-    "candidate_version": "0.1.287",
-    "review": "Updates the fusione-guidata and Vera router entrypoints for two domestic Italian OIC branches. Geneva dispositions and professional-fit limits remain unchanged; this is catalogue maintenance, not Swiss qualification."
-  },
   "valuation_fusione_integration": {
     "version": "0.1.291",
     "source_main": "c3f09ad78f69a96445762e3772b7c05ec88d5862",
     "scope": "Preserves all existing Geneva dispositions and adopts the upstream Fusione P1 row verbatim. Both valuation and merger remain Unresolved. This is combined-source inventory maintenance, not new Swiss qualification."
+  },
+  "esg_release_binding": {
+    "source_version": "0.1.282",
+    "previous_catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
+    "change": "Add esg-reporting-assurance as Unresolved. Preserve earlier assessments; no new Swiss legal conclusions or professional acceptance. Merge current main retaining the separate fusione-guidata unresolved assessment. Preserve the subsequent synthetic transformation route and its unresolved assessment."
+  },
+  "esg_combined_binding_20260930": {
+    "version": "0.1.286",
+    "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
+  },
+  "esg_deployment_binding_20260930": {
+    "version": "0.1.291",
+    "scope": "Integrates Fusione P1 and CNC completion; retains all recorded target dispositions. ESG remains unresolved for Swiss professional use."
   }
 }

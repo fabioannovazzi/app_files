@@ -33,6 +33,7 @@
     "bilancio-xbrl-it",
     "browser-automation",
     "studio-archive",
+    "esg-reporting-assurance",
     "trasformazione",
     "fusione-guidata"
   ],
@@ -42,7 +43,8 @@
     "plugin-feedback",
     "run-receipt-stamping",
     "local-onboarding",
-    "datev-starter"
+    "datev-starter",
+    "cnc-authenticated-review"
   ],
   "workflow_roles": {
     "new-client": {

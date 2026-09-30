@@ -9,10 +9,18 @@ import json
 import logging
 import re
 import sys
+import uuid
 from pathlib import Path
 from typing import Any
 
-__all__ = ["apply_request", "digest", "main", "render_record", "stale_nodes"]
+__all__ = [
+    "apply_request",
+    "digest",
+    "main",
+    "render_record",
+    "stale_nodes",
+    "closure_status",
+]
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = "composizione-negoziata"
@@ -192,6 +200,89 @@ def _node(value: dict[str, Any], context: dict[str, Any], role: str) -> dict[str
     return {**copy.deepcopy(value), "citations": citations}
 
 
+def _closure(value: Any, nodes: dict[str, dict[str, Any]], role: str) -> dict[str, Any]:
+    """Bind a model-selected handoff to exact evidence; never decide its legal outcome."""
+    _exact(
+        value,
+        {"outcome", "report_id", "basis_ids", "receipt_ids", "residual_tasks"},
+        "closure",
+    )
+    if value["outcome"] not in {
+        "agreement",
+        "no_agreement",
+        "interrupted",
+        "alternative",
+    }:
+        raise ValueError("Unsupported closure outcome")
+    report = nodes.get(value["report_id"])
+    if report is None or report["kind"] != "draft" or report["responsibility"] != role:
+        raise ValueError("Closure requires a role-specific draft report")
+    referenced = [value["report_id"]]
+    for field in ("basis_ids", "receipt_ids"):
+        ids = value[field]
+        if (
+            not isinstance(ids, list)
+            or not all(isinstance(item, str) for item in ids)
+            or len(set(ids)) != len(ids)
+        ):
+            raise ValueError(f"closure.{field} must contain unique node IDs")
+        if field == "basis_ids" and not ids:
+            raise ValueError("Closure requires an explicit outcome basis")
+        referenced.extend(ids)
+    if not isinstance(value["residual_tasks"], list):
+        raise ValueError("Closure residual_tasks must be a list")
+    task_ids: set[str] = set()
+    for task in value["residual_tasks"]:
+        _exact(task, {"node_id", "owner", "due_basis"}, "residual task")
+        if task["node_id"] in task_ids:
+            raise ValueError("Duplicate residual task")
+        task_ids.add(task["node_id"])
+        for field in ("owner", "due_basis"):
+            _text(task[field], field, 5000)
+        referenced.append(task["node_id"])
+    if any(key not in nodes for key in referenced):
+        raise ValueError("Closure references an unknown node")
+    if any(key in stale_nodes(nodes) for key in referenced):
+        raise ValueError("Closure cannot bind stale evidence or reports")
+    for key in value["receipt_ids"]:
+        if (
+            nodes[key]["kind"] != "document"
+            or nodes[key]["classification"] != "documented"
+        ):
+            raise ValueError("A completed-act receipt requires a bound document")
+    if not set(value["basis_ids"]).issubset(report["depends_on"]):
+        raise ValueError("Closure report must depend on its outcome basis")
+    return {
+        **copy.deepcopy(value),
+        "versions": {key: nodes[key]["version"] for key in sorted(set(referenced))},
+    }
+
+
+def closure_status(state: dict[str, Any]) -> str:
+    """Expose changed handoffs without mistaking run completion for legal closure."""
+    closure = state.get("closure")
+    if not closure:
+        return "open"
+    if any(
+        key in state["stale_nodes"] or state["nodes"][key]["version"] != version
+        for key, version in closure["versions"].items()
+    ):
+        return "reopened_for_review"
+    for review in reversed(state["reviews"]):
+        if (
+            review["node_id"] == closure["report_id"]
+            and review["node_version"] == closure["versions"][closure["report_id"]]
+            and review["authority"] == "mparanza_authenticated_account"
+        ):
+            return (
+                "reviewed_handoff"
+                if review["decision"] == "accepted"
+                else "draft_handoff"
+            )
+
+    return "draft_handoff"
+
+
 def _build_payload(
     request: dict[str, Any], context: dict[str, Any], previous: dict[str, Any] | None
 ) -> dict[str, Any]:
@@ -231,7 +322,7 @@ def _build_payload(
     reviews = copy.deepcopy(previous["reviews"]) if previous else []
     for review in request["reviews"]:
         _exact(
-            review,
+            {key: value for key, value in review.items() if key != "server_receipt"},
             {
                 "node_id",
                 "node_version",
@@ -254,9 +345,38 @@ def _build_payload(
         for field in ("reviewer_ref", "confirmation_ref", "reason"):
             _text(review[field], field, 10000)
         recorded = {**review, "authority": "record_only_identity_not_verified"}
+        if "server_receipt" in review:
+            sys.path.insert(0, str(ROOT / "scripts"))
+            from cnc_review_client import verify_receipt
+
+            verified = verify_receipt(
+                review["server_receipt"],
+                context,
+                node_id=review["node_id"],
+                node_version=target["version"],
+                role=role,
+                decision=review["decision"],
+            )
+            recorded["reviewer_ref"] = verified["actor"]
+            recorded["confirmation_ref"] = verified["request_id"]
+            recorded["authority"] = verified["authority"]
         if recorded not in reviews:
             reviews.append(recorded)
+    closure = copy.deepcopy(previous.get("closure")) if previous else None
+    if "closure" in request:
+        candidate = _closure(request["closure"], nodes, role)
+        if candidate != closure and previous:
+            old_report = previous["nodes"].get(candidate["report_id"])
+            if (
+                old_report
+                and old_report["version"] == nodes[candidate["report_id"]]["version"]
+            ):
+                raise ValueError(
+                    "A new or revised handoff requires a newly reviewed report version"
+                )
+        closure = candidate
     return {
+        "closure": closure,
         "schema_version": "vera.cnc_case.v1",
         "role": role,
         "stage": request["stage"],
@@ -272,7 +392,7 @@ def _build_payload(
 def apply_request(context_path: Path, request: dict[str, Any]) -> dict[str, Any]:
     """Apply one explicit model-authored update with revision conflict protection."""
     _exact(
-        request,
+        {key: value for key, value in request.items() if key != "closure"},
         {
             "expected_revision",
             "idempotency_key",
@@ -387,6 +507,32 @@ def render_record(record: dict[str, Any]) -> str:
         if node["depends_on"]:
             lines.append("Dipende da: " + ", ".join(node["depends_on"]))
         lines.append("")
+    closure = state.get("closure")
+    if closure:
+        lines.extend(
+            [
+                "## Esito e consegna",
+                "",
+                f"Stato: {closure_status(state)}",
+                "",
+                f"Esito proposto: {closure['outcome']}; relazione: {closure['report_id']}",
+                "",
+                "La consegna non prova firma, deposito, accordo efficace o chiusura giuridica.",
+                "",
+            ]
+        )
+        lines.append(
+            "Ricevute documentate: "
+            + (
+                ", ".join(closure["receipt_ids"])
+                or "nessuna; adempimenti non attestati"
+            )
+        )
+        for task in closure["residual_tasks"]:
+            lines.append(
+                f"- Attività residua {task['node_id']}; responsabile: {task['owner']}; termine/base: {task['due_basis']}"
+            )
+        lines.append("")
     lines.extend(["## Decisioni registrate", ""])
     for review in state["reviews"]:
         current = state["nodes"][review["node_id"]]
@@ -401,13 +547,13 @@ def render_record(record: dict[str, Any]) -> str:
         )
         lines.extend(
             [
-                f"- {review['reviewer_ref']}: {review['decision']} — {review['node_id']} ({status}). {review['reason']} Riferimento conferma: {review['confirmation_ref']}."
+                f"- {review['reviewer_ref']} [{review['authority']}]: {review['decision']} — {review['node_id']} ({status}). {review['reason']} Riferimento conferma: {review['confirmation_ref']}."
             ]
         )
     lines.extend(
         [
             "",
-            "Le decisioni sono registrazioni di conferme fornite dal professionista. Il sistema locale non autentica l'identità del revisore, non firma e non autorizza depositi o invii. Una versione corrente non costituisce una conclusione professionale approvata.",
+            "Le decisioni sono registrazioni di conferme fornite dal professionista. Il sistema locale non autentica l'identità del revisore, non firma e non autorizza depositi o invii. Una versione corrente non costituisce una conclusione professionale approvata. Solo le ricevute verificate dal servizio Mparanza attestano l’account che ha registrato la decisione; non provano qualifica professionale o firma.",
             "",
             f"Snapshot SHA-256: {record['content_sha256']}",
             "",
@@ -422,9 +568,13 @@ def main() -> int:
     parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--request", type=Path)
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument(
+        "--review-node",
+        help="Prepare a local browser review file; never approve automatically",
+    )
     args = parser.parse_args()
-    if bool(args.request) == args.resume:
-        parser.error("Choose --request or --resume")
+    if sum((bool(args.request), args.resume, bool(args.review_node))) != 1:
+        parser.error("Choose --request, --resume or --review-node")
     ledger, load_context = _dependencies()
     context = load_context(
         args.client_engagement,
@@ -436,7 +586,7 @@ def main() -> int:
             else ("running",)
         ),
     )
-    if args.resume:
+    if args.resume or args.review_node:
         history = ledger.load_workflow_history(
             Path(context["studio_client_folder"]["client_root"]),
             context["engagement_id"],
@@ -444,6 +594,37 @@ def main() -> int:
         )
         if not history:
             raise ValueError("No CNC snapshot exists for this engagement")
+        if args.review_node:
+            sys.path.insert(0, str(ROOT / "scripts"))
+            from cnc_review_client import case_reference
+
+            state = history[-1]["payload"]
+            node = state["nodes"].get(args.review_node)
+            if node is None or args.review_node in state["stale_nodes"]:
+                raise ValueError("Review preparation requires a current node")
+            request_id = str(uuid.uuid4())
+            review_file = Path(context["output_dir"]) / f"cnc-review-{request_id}.json"
+            with review_file.open("x", encoding="utf-8") as handle:
+                json.dump(
+                    {
+                        "node": node,
+                        "request": {
+                            "request_id": request_id,
+                            "case_ref": case_reference(context),
+                            "role": state["role"],
+                            "node_ref": digest(node["id"]),
+                            "node_version": node["version"],
+                        },
+                    },
+                    handle,
+                    ensure_ascii=False,
+                    indent=2,
+                )
+            logging.info(
+                "Review file: %s; open https://mparanza.com/vera/cnc-review and select it. Only the professional may confirm.",
+                review_file,
+            )
+            return 0
         logging.info("%s", render_record(history[-1]))
         return 0
     request = json.loads(args.request.read_text(encoding="utf-8"))

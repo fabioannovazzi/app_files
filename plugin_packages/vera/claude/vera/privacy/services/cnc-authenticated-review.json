@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "service_id": "cnc-authenticated-review",
+  "display_name": "Authenticated CNC review decisions",
+  "governed_paths": [
+    "skills/composizione-negoziata/SKILL.md"
+  ],
+  "runtime_profiles": [
+    "anthropic-cowork"
+  ],
+  "external_boundaries": [
+    {
+      "id": "authenticated-professional-review",
+      "kind": "hosted_service",
+      "destination": "https://mparanza.com/vera/cnc-review and fixed HTTPS /api/vera/cnc-reviews routes",
+      "purpose": "Attribute a decision on an exact local version to a signed-in account and enforce case/role ownership",
+      "content": "Opaque case and node digests, request UUID, exact node version digest, role, decision, authenticated account email, server timestamp and normal connection metadata. The browser displays a locally selected draft; its text, citations and files are not uploaded. Receipt verification sends only its opaque UUID and complete-receipt digest.",
+      "retention": "Server review metadata and case ownership remain until administrative deletion is requested from Mparanza. Local review files and receipts remain in the studio archive under its retention controls. Deletion prevents later server verification.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "The user must choose this hosted route before transmission. The professional personally signs in and confirms; the assistant prepares but never approves.",
+        "Server session authentication fails closed when disabled; same-origin requests, fixed metadata schema, payload-size and rate limits are enforced. The first authenticated reviewer owns the review scope; other accounts and role changes are rejected.",
+        "The client uses a fixed HTTPS verification endpoint, rejects redirects, bounds responses and compares the entire retained record and exact local scope/version before authenticating a decision.",
+        "The local filesystem remains the document-access boundary. Account authentication is not proof of qualification, professional independence, a signature or authority to file.",
+        "Only the most recently recorded decision for the exact case, node and version can be verified for import; earlier receipts remain historical."
+      ],
+      "activation": "explicit_user_choice"
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "explicit-professional-review",
+      "control": "The routed CNC skill requires the user to choose the hosted route, then the professional personally reviews the exact draft. Ordinary drafting continues without the service.",
+      "implemented_by": [
+        "skills/composizione-negoziata/SKILL.md"
+      ],
+      "on_violation": "Do not transmit review metadata or claim authenticated approval."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-09-30",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "source_fingerprint": "8cc1ac868ae4c9fca778d19a727f92f1411849ab2108cc23a038188808ec1115"
+  }
+}

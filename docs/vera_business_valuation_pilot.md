@@ -86,3 +86,10 @@ regressions pass. The browser verification covers five languages and desktop/mob
 layouts. No plugin source or package changed. The owner instructed **do not
 publish**: the local correction is not pushed, merged, deployed or submitted to
 Marketplace. CI on the earlier pushed revision does not verify this local delta.
+
+
+## Beta publication decision — 30 September 2026
+
+The user superseded the earlier publication hold and requested publication if the workflow is useful, with fixes otherwise. The release scope is a beta for valuation workpapers tested against already valued cases: linked source evidence, explicit assumptions, arithmetic, editable workbooks, reports and retained revisions. All purpose-specific professional qualification gates remain unchanged. No real accountant acceptance or PIV conformity is claimed. The Discord message was deleted by the user; this release does not repost it.
+
+The merged valuation suite passed 635 tests at 96.08% coverage. Fresh packaged CLI acceptance and final publication evidence are retained under `outputs/vera-valuations-discord/beta-release/` in the primary checkout. These records distinguish generated workpapers, package parity, live deployment and Marketplace publication.

@@ -106,6 +106,8 @@ environment does not isolate modules or client matters from one another.
 
 The shared specialist workflows cover:
 
+- ESG case evidence, version-specific decisions and partial Markdown/JSON drafts
+  through `esg-reporting-assurance`; complete reporting and assurance remain unimplemented;
 - `fusione-guidata` P0 merger case preparation with versioned evidence, explicit
   facts, professional confirmation records and change impacts; legal branches and
   merger calculations remain unsupported;
