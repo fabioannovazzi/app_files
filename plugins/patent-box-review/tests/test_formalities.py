@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import logging
 import re
 import shutil
 import subprocess
@@ -35,6 +36,23 @@ from pypdf.generic import (
 AT = datetime(2030, 1, 1, tzinfo=timezone.utc)
 BEFORE = datetime(2025, 1, 1, tzinfo=timezone.utc)
 AFTER = datetime(2035, 1, 1, tzinfo=timezone.utc)
+
+
+@pytest.fixture(autouse=True)
+def openssl_failure_diagnostics(monkeypatch):
+    """Retain synthetic provider errors so platform failures are actionable."""
+    original = subprocess.run
+
+    def run(*args, **kwargs):
+        result = original(*args, **kwargs)
+        command = args[0] if args else kwargs.get("args", [])
+        if result.returncode and command and "openssl" in str(command[0]):
+            logging.getLogger(__name__).warning(
+                "Synthetic OpenSSL diagnostic: %s %s", result.stdout, result.stderr
+            )
+        return result
+
+    monkeypatch.setattr(subprocess, "run", run)
 
 
 def key():
