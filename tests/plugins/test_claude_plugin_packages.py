@@ -508,8 +508,8 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
         assert "## Cowork execution contract" in content, name
         assert "connected folder and supplied files first" in content, name
         if name == "modules/fusione-guidata/skills/fusione-guidata/SKILL.md":
-            # The P0 helper has no installable dependencies; retain its narrower rule.
-            assert "standard-library-only dependencies" in " ".join(content.split())
+            # The P1 helper still has no installable dependencies; retain that contract.
+            assert "uses only the standard library" in " ".join(content.split())
             requirements = vera_entries[
                 "modules/fusione-guidata/requirements.txt"
             ].decode()

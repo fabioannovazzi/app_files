@@ -24,6 +24,12 @@ KINDS = {
     "Decision",
     "ChangeImpact",
     "Artifact",
+    "Valuation",
+    "ExchangeModel",
+    "BookBridge",
+    "Deadline",
+    "LegalDocument",
+    "ArchiveBinding",
 }
 WORK_STATES = {
     "draft",
@@ -110,6 +116,41 @@ def validate_data(kind: str, data: dict[str, Any]) -> None:
     if kind not in KINDS or not isinstance(data, dict):
         raise CaseError("Unknown record kind or non-object data.")
     no_floats(data)
+    if kind in {
+        "Valuation",
+        "ExchangeModel",
+        "BookBridge",
+        "Deadline",
+        "LegalDocument",
+    } or (kind == "BranchDecision" and "engine_version" in data):
+        if (
+            set(data) != {"engine_version", "request", "result", "issues"}
+            or data["engine_version"] != "fusione.p1.v1"
+        ):
+            raise CaseError("Invalid P1 workpaper envelope.")
+        if not isinstance(data["request"], dict) or not isinstance(
+            data["issues"], list
+        ):
+            raise CaseError("P1 request and issues must remain explicit.")
+        if data["result"] is not None and not isinstance(data["result"], dict):
+            raise CaseError("Invalid P1 result.")
+        for issue in data["issues"]:
+            text(issue, "workpaper issue")
+        return
+    if kind == "ArchiveBinding":
+        required_binding = {
+            "entity_id",
+            "client_root",
+            "client_id",
+            "engagement_id",
+            "client_sha256",
+            "engagement_sha256",
+        }
+        if set(data) != required_binding:
+            raise CaseError("Invalid Studio Archive binding.")
+        for key in required_binding:
+            text(data[key], key)
+        return
     required = {
         "Operation": {
             "operation_type",

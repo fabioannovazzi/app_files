@@ -125,4 +125,4 @@ complete the individual-principle mapping, original interpretation, implementati
 and test link; resolve applicability and terminology questions with an identified
 qualified reviewer. P0-02 still requires review for each purpose to be activated.
 All 21 purpose profiles retain their existing development-only state.
-The denied release-metadata changes and public-push request remain unapplied.
+The later owner approval authorized the bounded engineering release-metadata corrections and public PR update; those are now applied. This does not resolve the substantive PIV or professional-review work described here.

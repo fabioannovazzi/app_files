@@ -81,3 +81,5 @@ See [the complete machine-readable assessment](assessment.json) for each functio
 The 0.1.283 refresh changes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Existing target judgments remain in place. The new assetti construction mode has not been validated for CH-GE; the earlier assessment-mode scope does not qualify that new mode.
 
 The unpublished 0.1.286 valuation candidate integrates that release and the transformation prototype. Its 42-entry catalogue retains all prior assessment rows and adds the unresolved valuation row. This integration does not extend the earlier Geneva professional assessment.
+
+The 0.1.291 candidate also integrates the upstream Fusione P1 entrypoint and its existing Unresolved Geneva assessment. Both domestic Italian incorporation branches remain unqualified for Switzerland; the combined inventory does not extend professional availability.

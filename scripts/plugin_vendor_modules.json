@@ -234,6 +234,12 @@
           "module_roots": [
             "model_data_report.py"
           ]
+        },
+        {
+          "source_root": "plugins/studio-archive/scripts",
+          "module_roots": [
+            "client_ledger.py"
+          ]
         }
       ]
     }

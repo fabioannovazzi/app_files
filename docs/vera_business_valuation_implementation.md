@@ -563,3 +563,37 @@ and three failures caused by stale expected course counts (32/143 instead of
 updated. All ten affected archive/course checks pass locally, including the
 actual preparation of every Vera Cowork lesson and language. Current-head CI
 must still run after the next authorized public PR update.
+
+
+## Focused pilot preparation: 30 September 2026
+
+The owner authorized a pilot using an ordinary anonymized SME case and an
+existing independent professional valuation. The execution and acceptance
+protocol is in `vera_business_valuation_pilot.md`. The source folder, reference
+valuation and responsible reviewer have been requested but not supplied; the
+recovered developer attachments contain synthetic examples only. No real-case
+execution or benefit measurement is claimed.
+
+The earlier dependency-checker, valuation breadcrumb and release-record changes
+were subsequently approved and implemented. The previous PR head's only failing
+GitHub check was the stale expected Vera Cowork course count (33 instead of 34).
+That test expectation is corrected; the installed teaching suite passes 23 tests
+with two expected non-Vera receipt-helper skips.
+
+Upstream Fusione P1 from `c3f09ad78f69a96445762e3772b7c05ec88d5862`
+is integrated without discarding its implementation. Vera 0.1.291 is rebuilt for
+all three hosts; Clara 0.1.226 and Lucia 0.1.66 retain their verified packages.
+All nine source/package comparisons pass. The Vera privacy register validates
+after reviewing the exact changed router, catalogue and manifest sources.
+The 43-entry Geneva catalogue retains unresolved dispositions for valuation,
+Fusione and CNC; this integration does not qualify any of them for Switzerland.
+
+The merged-source integration run passes 876 tests with four conditional skips.
+One additional package test initially lacked a fixture because the local command
+excluded the parent conftest; rerunning it with that fixture passes. The public
+page suite passes 214 tests and fails four assertions on the upstream Fusione
+page: shared navigation, model-data component, run-report note and typography
+scale. All four failures also reproduce on untouched upstream main. They remain
+unresolved and are not waived. No production page is changed solely to satisfy
+these tests. Current-head CI, deployment, Marketplace publication, fresh-session
+installation acceptance and the real professional pilot remain separate gates.

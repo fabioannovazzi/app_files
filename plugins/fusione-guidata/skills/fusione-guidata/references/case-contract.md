@@ -1,4 +1,6 @@
-# P0 case contract
+# Case foundation contract
+
+For P1 archive actions and computed workpapers also read `p1-contract.md`.
 
 `scripts/run_fusione.py` provides `init`, `apply`, `show`, `export` and `demo`.
 All non-demo commands require `--case /absolute/case-directory --actor actor_id`.
@@ -88,7 +90,7 @@ dependencies. These prerequisites do not prove legal validity or test execution.
 `approved_for_defined_scope` is derived from a separately recorded Decision for the
 unchanged version. A new rule revision never inherits that approval.
 
-All P0 BranchDecision records have `support_status: "unsupported"`. The model
+Legacy P0 BranchDecision proposal records have `support_status: "unsupported"`. The model
 records the proposed branch and why further work is needed; code never selects it.
 
 ## Revision and approval semantics
@@ -111,10 +113,6 @@ Combined-company objects remain hidden if any company is inaccessible. Reading t
 database directly is outside this logical access boundary. SQLite transactions
 serialize writes; callers must use current `expected_version` values.
 
-## P1 handoff
+## P1 implementation
 
-Before enabling either ordinary domestic OIC incorporation or direct wholly owned
-incorporation, validate dated primary sources and professional assumptions; add
-exact calculation and calendar contracts, Studio Archive multi-company integration,
-source-supported examples, and branch-specific positive/negative acceptance cases.
-The 36 contributor scenarios remain requirements, not executed workflow tests.
+P1 workpaper and Studio Archive contracts are in `p1-contract.md`. Legacy P0 proposals are not implicitly promoted.

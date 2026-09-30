@@ -2316,15 +2316,15 @@ def test_all_plugin_skills_define_material_choice_intake() -> None:
             assert "do not route a real client mandate" in lowered_skill_text
             continue
         if plugin_name == "fusione-guidata":
-            # Check the P0 intake contract without requiring legacy template wording.
+            # Check the P1 intake contract without requiring legacy template wording.
             normalized = " ".join(combined_skill_text.split())
             assert (
-                "Start from the supplied operation, company identities and selected evidence"
+                "Identify whom the professional assists, mandates/conflicts, the two companies"
                 in normalized
             )
-            assert "Ask only for missing choices that change the scope" in normalized
-            assert "Keep absent facts `unknown`" in normalized
-            assert "continue independent case preparation" in normalized
+            assert "Ask only questions that alter a material choice" in normalized
+            assert "A missing fact remains `unknown`" in normalized
+            assert "Independent work can continue" in normalized
             continue
         assert (
             "material choices" in lowered_skill_text
@@ -2952,19 +2952,19 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 assert "working directory" in normalized_skill_text
                 continue
             if plugin_root.name == "fusione-guidata":
-                # P0 exports a durable case review, not a legacy workbench run report.
+                # P1 exports case history and workpapers through its own review contract.
                 assert (
                     "Never write run outputs inside this Git workspace or plugin source"
                     in normalized_skill_text
                 )
                 assert "references/case-contract.md" in normalized_skill_text
-                assert "one reviewed request at a time" in normalized_skill_text
                 assert (
-                    "Show the readable report and its link with the result"
+                    "selecting one kind at a time and its exact input references"
                     in normalized_skill_text
                 )
+                assert "show the readable privacy report" in normalized_skill_text
                 assert (
-                    "professional confirmation still requires the actual named reviewer's decision"
+                    "actual professional confirmation still belongs to the named reviewer"
                     in normalized_skill_text
                 )
                 continue

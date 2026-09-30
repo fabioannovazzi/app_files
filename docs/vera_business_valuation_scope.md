@@ -14,6 +14,14 @@ before professional activation. It does not permit treating calculation tests
 as PIV review or purpose-specific professional approval. No profile is currently
 professionally enabled. Specialist extensions remain part of the proposed scope.
 
+## Focused first-release pilot
+
+The owner authorized one ordinary SME case against an existing professional
+valuation. [The pilot protocol](vera_business_valuation_pilot.md) records the
+normal-workflow, comparison and reviewer evidence required. Source files and a
+reviewer are still needed; no real-case result is claimed. This stages the broader
+scope without removing it.
+
 ## Original backlog
 
 | ID | Observed implementation | Remaining acceptance work |
@@ -27,7 +35,7 @@ professionally enabled. Specialist extensions remain part of the proposed scope.
 | P0-07 Guided experience | Native skill builds technical inputs, opens report and asks focused professional questions; user does not author JSON | Witnessed accountant completion of an end-to-end case; synthetic teacher execution does not establish this |
 | P0-08 Outputs | One replayed register produces HTML/MD/DOCX/PDF/XLSX/JSON/CSV and the named JSON workpapers; explicit claim bindings, numeric equality and review invalidation; independent LibreOffice formula comparison and visual QA | Semantic support review across actual cases and broad layout cases; recheck layout whenever report content changes |
 | P0-09 Review | Input/source/method/mandate/audience/plan dependency hashes; per-adjustment review and transitive method bindings; independent conclusion review; affected reviews expire and unrelated branches survive | Additional purpose, full statement and benchmark-revision acceptance cases; local attestations do not authenticate humans |
-| P0-10 Privacy/release | Approved dependency-checker and breadcrumb fixes, reviewed teaching evidence and current Vera/Clara privacy registers; component 0.1.3 and Vera 0.1.290/Clara 0.1.226/Lucia 0.1.66 packages aligned; dedicated CI job | Current-head CI gates, merge/deployment, professional release prerequisites and authoritative existing-listing publication remain pending |
+| P0-10 Privacy/release | Approved dependency-checker and breadcrumb fixes, reviewed teaching evidence and current Vera/Clara privacy registers; component 0.1.3 and Vera 0.1.291/Clara 0.1.226/Lucia 0.1.66 candidate packages; stale teaching count corrected; dedicated CI job | Current-head CI gates, merge/deployment, professional release prerequisites and authoritative existing-listing publication remain pending |
 | P1-01 Specialist methods | Holding/SOTP composes explicitly valued interests, parent exposures and signed eliminations with evidence-bound review; unsupported-method diagnostics remain explicit | Holding professional cases and semantic duplication/rights review; circular holdings, crisis, PPA, rights/waterfalls and damages models with fixtures and specialist review |
 | P1-02 Historical regressions | Synthetic old/new acquisition snapshots preserve original bytes; later releases reject earlier cutoffs; dependent reviews expire | Authentic archived datasets, independently established availability dates and reviewed historical cases |
 
