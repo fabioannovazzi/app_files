@@ -73,3 +73,11 @@ The update-check privacy review governs the request, response-validation code an
 This is a guided professional workflow. Case meaning, current law, evidence sufficiency, appointment, independence and final professional conclusions remain reviewed work. The matrix does not label 35 live professional acceptance scenarios as passed. External sending, signing, filing, payments and autonomous monitoring remain outside the recovered requested implementation scope.
 
 Source tests, generated package execution, server deployment, Marketplace publication, the enabled installation and a fresh conversation are separate release facts. Record each exact version and result in the release receipt. As inspected during this work, the enabled local Vera was still 0.1.275; it did not establish acceptance of this candidate. No real-client field acceptance is claimed.
+
+## Marketplace packaging follow-up
+
+The September 30 upload exposed OpenAI's current rejection of lifecycle hooks in submission ZIPs. The shared ChatGPT projection now omits the root and component `hooks` declarations and hook directories; native Codex and Cowork packages retain their hooks. The projection change applies to Vera, Clara and Lucia, so all three products are rebuilt with one version per product across hosts. Three regression cases verify hook exclusion and retention in native packages; the complete package/update suite passed 404 tests with two environment-conditional skips. No CNC workflow or professional decision logic changes in this follow-up.
+
+The original listing's published-version action, “Upload plugin to make changes”, exposes the existing Business — Mparanza identity. Draft reupload lacks that selector. Publication remains unproven until the exact release is shown as Published; an unrelated unpublished draft created during discovery is awaiting permanent-deletion confirmation.
+
+Reference: https://developers.openai.com/plugins/deploy/submission#automatically-provide-submission-and-review-information

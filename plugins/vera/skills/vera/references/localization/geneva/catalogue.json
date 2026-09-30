@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/.codex/worktrees/cnc-completion/app_files/plugins/vera",
-  "version": "0.1.288",
-  "captured_at": "2026-09-30T08:20:22.758890+00:00",
-  "catalogue_fingerprint": "912a721b800cfeb2fbd867902ecbf1aaad721f8d2695659e987933048ceb5268",
-  "manifest_sha256": "2d888fb2c20c27357f3e35ac75a5632aace8343323dbce6bf56d8324abdb4c0c",
+  "version": "0.1.293",
+  "captured_at": "2026-09-30T09:17:01.951329+00:00",
+  "catalogue_fingerprint": "0004ef61e446d81f2f5d8a41cc1d8f8f0e55a98a3007f424bf526be1d51c3307",
+  "manifest_sha256": "b81715dab71e35affb2563bbf9b7fd09598d2c8852a86aa6ba9d03532a1aa75b",
   "entries": [
     {
       "function_id": "adeguati-assetti",
