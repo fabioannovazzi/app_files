@@ -345,7 +345,7 @@
     {
       "path": "vendor/modules/courseware/policy.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
-      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+      "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
     },
     {
       "path": "vendor/modules/courseware/preview.py",
@@ -375,7 +375,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "e5408638e77848e651eed7aa99bc76c6f5a21b9997d3347bce02d7e78da90edd"
+      "sha256": "84c9b1a1dfe04a933c993f76151dc4f7e7969c5cad45e091592f326b2df90891"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

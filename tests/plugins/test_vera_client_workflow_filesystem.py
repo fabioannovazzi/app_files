@@ -29,6 +29,7 @@ from vera_assurance import (  # noqa: E402
 )
 
 CLIENT_WORKFLOW_ENTRYPOINTS = (
+    ("esg-reporting-assurance", "esg_case.py"),
     ("bilancio-xbrl-it", "jurisdiction_accounts.py"),
     ("new-client", "jurisdiction_setup.py"),
     ("invoice-xml", "invoice_workflow.py"),
@@ -129,6 +130,9 @@ CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
 
 # Maintenance, inspection and validated-report delivery do not start a workflow.
 CLIENT_WORKFLOW_CLI_ALLOWLIST = (
+    ("esg-reporting-assurance", "check_dependencies.py"),
+    # Generates only a new synthetic developer case; not a professional entrypoint.
+    ("esg-reporting-assurance", "demo_esg.py"),
     ("composizione-negoziata", "check_dependencies.py"),
     # Existing Italian accounts tools use the separate tenant/revision service
     # lifecycle; only the Geneva adapter starts a Studio Archive workflow.
@@ -415,6 +419,10 @@ def test_client_workflow_registry_covers_every_vera_component() -> None:
     )
 
     assert set(VERA_CLIENT_WORKFLOW_IDS) == set(components["plugins"]) - {
+        # The merger foundation explicitly has no live multi-company Archive adapter.
+        "fusione-guidata",
+        # The transformation route is synthetic-only and has no Archive adapter.
+        "trasformazione",
         "browser-automation",
         "comunicazione-professionale",
         "presenza-digitale-studio",
@@ -956,6 +964,24 @@ def test_client_workflow_entrypoint_requires_managed_context(
 ) -> None:
     plugin_root = ROOT / "plugins" / workflow_id
     script_path = plugin_root / "scripts" / script_name
+    if workflow_id == "esg-reporting-assurance":
+        # ESG names the required portable context --context. Verify the public
+        # CLI contract rather than demanding another workflow's option spelling.
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(script_path),
+                "start_case",
+                "--request",
+                "missing.json",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert result.returncode == 2
+        assert "required: --context" in result.stderr
+        return
     if workflow_id == "business-planning":
         # This owner delegates parsing to the shared CLI. Test the public boundary
         # instead of requiring its argparse declaration to be physically inline.

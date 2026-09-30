@@ -56,11 +56,11 @@ were visually inspected; exact artifacts and hashes are recorded in task output
 `document-acceptance-20260930/final/visual-qa.json`.
 
 The dependency recipe and revision are synchronized across Vera, Clara and
-Lucia. Candidate versions are Vera 0.1.292, Clara 0.1.228, Lucia 0.1.68 and the
+Lucia. Candidate versions are Vera 0.1.294, Clara 0.1.230, Lucia 0.1.70 and the
 Patent Box component 0.1.1. They exceed the current main/open-PR versions inspected
-on 2026-09-30. Current-main source 5f4c3324b is integrated, including
+on 2026-09-30. Current-main source a003f9789 is integrated, including
 Composizione negoziata, Trasformazione, Fusione and the updated Adeguati assetti
-workflow. Server deployment and Marketplace publication require separate
+workflow and ESG evidence foundation. Server deployment and Marketplace publication require separate
 verification for these exact versions. Build and acceptance receipts are retained
 in the task release evidence; regenerate and verify archives after source edits.
 

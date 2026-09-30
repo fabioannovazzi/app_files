@@ -100,7 +100,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "e5408638e77848e651eed7aa99bc76c6f5a21b9997d3347bce02d7e78da90edd"
+      "sha256": "84c9b1a1dfe04a933c993f76151dc4f7e7969c5cad45e091592f326b2df90891"
     },
     {
       "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/decisions.py",
@@ -148,7 +148,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "e5408638e77848e651eed7aa99bc76c6f5a21b9997d3347bce02d7e78da90edd"
+      "sha256": "84c9b1a1dfe04a933c993f76151dc4f7e7969c5cad45e091592f326b2df90891"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -457,5 +457,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "19e73e8a2183131934b756f4ff83ded730efb9fe24b6254af8e1edc2281cffde"
+  "canonical_course_sha256": "fbfa5392c74514ff6c3082aaf9b537502bc5f2c5439f4f0f4051e2a6735c086c"
 }

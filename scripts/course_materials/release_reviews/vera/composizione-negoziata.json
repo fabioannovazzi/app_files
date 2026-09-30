@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "composizione-negoziata",
-  "course_sha256": "aaecd0a601724148807c3bdb199938adc44d8ba4135e991c9d21403cbd744651",
+  "course_sha256": "2723629bc982b4eb38311138d6ebcd068bd6dad8ea0f4813ef4d61a8f96c5034",
   "reviewer": "Codex /root - source, native execution and artifact review",
   "reviewed_at": "2026-09-30T06:38:38.506975+00:00",
   "review_scope": "Read all five authored outlines and their fictional initial/update inputs. Executed and inspected ten fresh native demo/practice cases, actual treasury outputs, sealed case snapshots and source-linked notes. These are scripted source-tree executions; judgment prose is an explicitly authored synthetic fixture. No learner, voice, window, installed-host or professional acceptance is claimed. Completion follow-up: reran all ten localized native cases on 30 September, inspected the changed decision-authority footer and retained notes, forecasts and snapshots. Lesson content is unchanged; the new full-case and authenticated-review tests are separate from this introductory lesson.",
@@ -242,5 +242,16 @@
         ]
       }
     }
+  },
+  "esg_source_refresh_20260930": {
+    "reviewer": "Codex /root - bounded source review",
+    "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
+    "baseline_commit": "5f4c3324b9efe209e9e6f99a3a38d7ac002df81a",
+    "previous_course_sha256": "aaecd0a601724148807c3bdb199938adc44d8ba4135e991c9d21403cbd744651",
+    "current_course_sha256": "2723629bc982b4eb38311138d6ebcd068bd6dad8ea0f4813ef4d61a8f96c5034",
+    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
+    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
+    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
+    "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json"
   }
 }
