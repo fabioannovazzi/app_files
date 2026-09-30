@@ -1763,6 +1763,28 @@
         },
         "review": {
           "$ref": "#/$defs/review"
+        },
+        "expert_identity": {
+          "$ref": "#/$defs/mandateField"
+        },
+        "written_mandate": {
+          "$ref": "#/$defs/mandateField"
+        },
+        "remuneration": {
+          "$ref": "#/$defs/mandateField"
+        },
+        "delivery_terms": {
+          "$ref": "#/$defs/mandateField"
+        },
+        "amendments": {
+          "$ref": "#/$defs/mandateField"
+        },
+        "standards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/mandateStandard"
+          },
+          "maxItems": 30
         }
       },
       "additionalProperties": false
@@ -2893,6 +2915,84 @@
           "enum": [
             "proposed",
             "confirmed"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "mandateStandard": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "edition",
+        "adoption_reason",
+        "departures",
+        "status",
+        "source_ids",
+        "locator"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "edition": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "adoption_reason": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "departures": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "confirmed",
+            "proposed"
+          ]
+        },
+        "source_ids": {
+          "$ref": "#/$defs/references"
+        },
+        "locator": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
           ]
         }
       },

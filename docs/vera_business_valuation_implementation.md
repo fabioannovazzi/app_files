@@ -54,6 +54,79 @@ units, double debt deduction, terminal growth, source changes and stale review;
 real v3 plan replay; Studio Archive cross-client and receipt checks; workbook
 formula comparisons; report rendering; privacy coverage and package parity.
 
+### Engagement and standards checkpoint — 30 September 2026
+
+The common workpaper now retains explicit standard identity, edition, adoption
+reason and declared departures, plus expert/signatory identity, written mandate,
+remuneration, delivery terms and amendments. Each choice binds source IDs and a
+locator. Missing records, nulls, proposed choices or missing evidence keep the
+mandate incomplete without discarding independently valid amounts. Duplicate IDs
+and unresolved references reject. Changing a choice or its source invalidates
+mandate, method, normalization, narrative and conclusion reviews. The software
+checks traceability and completeness; it neither selects a standard from a date
+nor verifies applicability, qualifications or conformity. All 21 purpose profiles
+remain development-only, and `piv_conformity` remains `not_assessed`.
+
+The schema, workflow instructions and case contract describe these fields. The
+fixture declares an invented exercise protocol, not a real professional standard;
+no review or human identity is fabricated. The same values and explicit unknowns
+appear in HTML/Markdown/DOCX/PDF, the `Incarico` workbook sheet and JSON workpapers.
+The report renderer also keeps generated source references with their fields
+across DOCX/PDF page breaks, following an observed pagination issue.
+
+Fifty-six new regressions bring the valuation/acquisition/shared-transport suite
+to **623 passes with 95.68% coverage**. Black, Isort, Mypy and Bandit pass for the
+component; `valuation_mandate.py` has 100% statement coverage. Tests cover missing
+terms and standards, malformed records, unresolved/duplicate IDs, unreviewed and
+changed sources, stale dependent reviews, preserved calculations and escaped
+exports. No production change was made to repair a failing test. The pagination
+change followed visual inspection; the suite passed before and after it.
+
+Two fresh synthetic Studio Archive runs exercise complete and incomplete mandate
+records, retain 18 hash-verified artifacts each and replay idempotently. All ten
+DOCX and eight PDF pages were visually inspected after pagination changes; no
+clipping, overlap or separated mandate/source pairs was observed. LibreOffice
+independently reproduced all 40 calculation cells. These are engineering runs,
+not installed-product or professional-case acceptance. Evidence lives under the
+primary checkout's ignored `outputs/vera-valuations-discord/mandate-acceptance/`
+directory; the final visual examples are in its `paginated` subdirectory.
+
+The Privacy Surface Review source inspection identified additional model-context
+details: expert/signatory identity, written engagement, fees, delivery, amendments,
+selected standards/editions and their explanations/locators. Those data can be
+read by the selected Codex/Cowork model through case/source inspection and the
+exported workpapers. This change introduces no network destination, automatic
+anonymization or identity verification. A local review-delta note records the
+needed manifest wording; no privacy attestation or fingerprint was refreshed.
+
+Read-only release checks still fail on the stale business-valuation teaching
+course and four privacy fingerprints (the valuation workstream and the existing
+local-onboarding, plugin-update-check and run-receipt-stamping services). The
+earlier automatic approval denial of release-review mutations remains unresolved.
+Source stays at the unreleased Vera 0.1.289 candidate; ZIPs stay at 0.1.288. Nothing
+was pushed, merged, deployed or published. P0-01/P0-02, the broader scope and the
+qualified professional review remain open. The goal service still reports
+`usageLimited`; this checkpoint was completed through the user's explicit
+continuation request in chat.
+
+### Partial primary-source checkpoint — 30 September 2026
+
+The official PIV consultation viewers were inspected for 25 printed Principles
+pages (2–4, 29–42, 65–72) and six Rationale pages (75–80). The original engineering
+note `vera_business_valuation_piv_research.md` records candidate exact references
+for 12 of the contributor's 18 topics and the remaining reading boundary.
+No full-topic review, approved interpretation or qualified reviewer is claimed.
+The source text and page images are not copied into the repository or packages.
+
+Schema inspection identifies missing structured standards/edition selection,
+expert identity and written engagement terms, more specific assumption and
+limitation records, availability reasoning, report context and retention review.
+These are recorded implementation gaps. This checkpoint changes documentation
+only: no runtime/schema edits, professional activation, review attestations,
+privacy fingerprints, package rebuild or public push. The existing 567-test
+result belongs to the unchanged code checkpoint below; tests were not rerun for
+these research notes. P0-01 and the wider goal remain open.
+
 ### Economic-profit checkpoint — 30 September 2026
 
 The distinct `ECONOMIC_PROFIT` method retains independently evidenced opening/

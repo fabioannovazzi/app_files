@@ -1513,9 +1513,10 @@ def test_valuation_teaching_sources_run_the_bound_workflow(
     case["mandate_details"] = {
         key: {"value": None, "status": "proposed", "source_ids": [], "locator": None}
         for key in case["mandate_details"]
-        if key != "interests"
+        if key not in {"interests", "standards", "review"}
     }
     case["mandate_details"]["interests"] = []
+    case["mandate_details"]["standards"] = []
     for key, value in (
         ("subject_type", "enterprise"),
         ("recipients", "Soli destinatari interni della lezione"),

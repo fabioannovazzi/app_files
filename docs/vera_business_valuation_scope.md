@@ -18,7 +18,7 @@ professionally enabled. Specialist extensions remain part of the proposed scope.
 
 | ID | Observed implementation | Remaining acceptance work |
 | --- | --- | --- |
-| P0-01 PIV and rights | No conformity claim; original 18 proposed topics have no verified principle/page references or real reviewer | Read definitive Principles and Rationale under their applicable access/reuse terms; record exact references, interpretation, edition rationale, reviewer and resolved conflicts |
+| P0-01 PIV and rights | Partial primary inspection now records candidate references for 12 of the 18 proposed topics; no complete mapping, conformity claim or real reviewer | Complete unread relevant Principles and Rationale sections, individual prescriptive classification, interpretation, edition rationale, implementation/test bindings, professional review and rights assessment; see `vera_business_valuation_piv_research.md` |
 | P0-02 Purpose profiles | All 21 profiles have explicit semantic intake, source binding and development-only coverage in `purpose-profiles.json` | Primary research, specialist implementation, purpose-specific synthetic and professionally reviewed case for each activated profile; none is activated |
 | P0-03 Studio Archive | Exact case and nested-source receipts, same-engagement upstream plan, immutable revisions and idempotent replay; native fixture coverage | Installed host/user acceptance; retain explicit cross-client coverage in shared archive tests |
 | P0-04 Business plan v3 | Actual compiler replays the original plan; selected contiguous whole months or complete calendar years reconcile taxes, working capital and capex; monthly amounts bind exact dated FCFF flows | Separately qualified intramonth evidence and additional professionally reviewed real-case evidence |
@@ -69,8 +69,11 @@ Each set retains 18 hashed artifacts. This verifies local arithmetic and output
 generation, not professional activation, installed delivery or publication.
 
 The case contract now has structured, evidence-linked engagement/report dates,
-commissioning party, expert activity, participant perspective, recipients, use
-restrictions, competencies and conflicts. Rights records retain class/description,
+commissioning party, expert/signatory identity and activity, written mandate,
+remuneration, delivery terms, amendments, participant perspective, recipients,
+use restrictions, competencies and conflicts. Selected standards retain identity,
+edition, adoption reason and declared departures, with evidence and locators;
+software does not choose an edition or assess conformity. Rights records retain class/description,
 ownership basis, economic/administrative rights, statute, agreements, restrictions
 and thresholds. Nulls and unconfirmed evidence make the case partial while valid
 calculations remain visible. Explicit ratio inputs never automatically scale equity
@@ -306,7 +309,10 @@ requirements: mandate/independence, basis, dates, rights, information quality,
 fundamental analysis/plan, methods, capital cost, terminal value, comparables,
 assets/intangibles, premiums/discounts, crisis/liquidation, legal purposes,
 synthesis, reporting, SME proportionality and review/limitations. Exact principle
-and page references and professional reviewer remain unknown. Do not invent them.
+and page references are now partially inspected for 12 topics in
+`vera_business_valuation_piv_research.md`; no topic mapping is complete.
+The qualified professional reviewer and approved interpretations remain
+unknown. Candidate references do not enable a purpose or close P0-01.
 
 ## Migration and preservation
 

@@ -19,7 +19,7 @@
     {
       "id": "evidence",
       "path": "evidence.txt",
-      "sha256": "a4532c838c3cf91a8a9671d4029cf0fb41430199adc57f8197e72112a79a6d2b",
+      "sha256": "526d0963c9d6456fc7855ca0e37d62050e6df1ebfa508bd31baaeb47ba3704f9",
       "description": "Synthetic numerical fixture",
       "allowed_audiences": [
         "internal"
@@ -438,6 +438,60 @@
       ],
       "locator": "evidence.txt: synthetic mandate"
     },
-    "interests": []
+    "interests": [],
+    "expert_identity": {
+      "value": "Valutatore Alfa inventato; nessuna identità o qualifica reale verificata",
+      "status": "confirmed",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt: synthetic engagement extension"
+    },
+    "written_mandate": {
+      "value": "Sola nota di esercizio sintetica; nessun contratto reale",
+      "status": "confirmed",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt: synthetic engagement extension"
+    },
+    "remuneration": {
+      "value": "Nessun compenso nel solo esercizio inventato",
+      "status": "confirmed",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt: synthetic engagement extension"
+    },
+    "delivery_terms": {
+      "value": "Consegna interna fittizia il 15 gennaio 2027; nessun obbligo reale",
+      "status": "confirmed",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt: synthetic engagement extension"
+    },
+    "amendments": {
+      "value": "Nessuna modifica dichiarata nel solo esercizio inventato",
+      "status": "confirmed",
+      "source_ids": [
+        "evidence"
+      ],
+      "locator": "evidence.txt: synthetic engagement extension"
+    },
+    "standards": [
+      {
+        "id": "synthetic-protocol",
+        "name": "Protocollo interno di esercizio inventato; non è uno standard professionale",
+        "edition": "fixture-v1",
+        "adoption_reason": "Sola prova software del collegamento alle fonti; nessuna adozione PIV o IVS",
+        "departures": "Nessuno nel solo protocollo inventato; conformità reale non valutata",
+        "status": "confirmed",
+        "source_ids": [
+          "evidence"
+        ],
+        "locator": "evidence.txt: synthetic engagement extension"
+      }
+    ]
   }
 }

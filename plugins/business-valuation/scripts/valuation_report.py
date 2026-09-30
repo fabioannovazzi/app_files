@@ -13,6 +13,7 @@ from valuation_case import build_valuation, require
 from valuation_comparables import BASIS_LABELS as COMPARABLE_BASIS_LABELS
 from valuation_engine import decimal
 from valuation_holding import HOLDING_BASIS_LABELS, PART_BASIS_LABELS
+from valuation_mandate import MANDATE_FIELDS, STANDARD_FIELDS
 
 __all__ = ["write_package", "report_sections", "write_workbook", "compile_html"]
 
@@ -125,6 +126,15 @@ MANDATE_LABELS = {
     "engagement_date": "Data dell'incarico",
     "report_date": "Data della relazione",
     "commissioning_party": "Soggetto conferente",
+    "expert_identity": "Identità dell'esperto e del firmatario",
+    "written_mandate": "Incarico scritto e relativo riferimento",
+    "remuneration": "Compenso e condizioni",
+    "delivery_terms": "Termini di consegna",
+    "amendments": "Modifiche dell'incarico",
+    "name": "Standard dichiarato",
+    "edition": "Edizione dichiarata",
+    "adoption_reason": "Motivo della scelta",
+    "departures": "Scostamenti dichiarati e motivazione",
     "expert_activity": "Attività richiesta all'esperto",
     "participant_perspective": "Prospettiva del partecipante",
     "recipients": "Destinatari dichiarati",
@@ -164,8 +174,10 @@ def _mandate_rows(report: dict) -> list[tuple[str, str, str, str, str]]:
     if details is None:
         return [("Scheda dell'incarico", "Da acquisire", "Incompleta", "", "")]
     rows = []
-    for key, item in details.items():
-        if key in {"review", "interests"}:
+    for key in MANDATE_FIELDS:
+        item = details.get(key)
+        if item is None:
+            rows.append((MANDATE_LABELS[key], "Da acquisire", "Incompleto", "", ""))
             continue
         value = item["value"]
         if key == "subject_type" and value is not None:
@@ -179,6 +191,20 @@ def _mandate_rows(report: dict) -> list[tuple[str, str, str, str, str]]:
                 item["locator"] or "Posizione da acquisire",
             )
         )
+    standards = details.get("standards", [])
+    if not standards:
+        rows.append(("Standard ed edizione", "Da acquisire", "Incompleto", "", ""))
+    for item in standards:
+        for key in STANDARD_FIELDS:
+            rows.append(
+                (
+                    f"{item['id']} · {MANDATE_LABELS[key]}",
+                    item[key] if item[key] is not None else "Da acquisire",
+                    "Confermato" if item["status"] == "confirmed" else "Da confermare",
+                    ", ".join(item["source_ids"]),
+                    item["locator"] or "Posizione da acquisire",
+                )
+            )
     inputs = {row["id"]: row for row in report["case"]["inputs"]}
     for item in details["interests"]:
         status = "Confermato" if item["status"] == "confirmed" else "Da confermare"
@@ -260,6 +286,7 @@ def _readable_issues(report: dict) -> list[str]:
         "Structured mandate details have not been collected": "Scheda dell'incarico non ancora acquisita.",
         "Selected subject requires an explicit rights record": "L'oggetto selezionato richiede una scheda dei diritti.",
         "Mandate source review pending": "Le fonti dell'incarico richiedono ancora revisione.",
+        "Mandate standards: explicit selection and evidence pending": "Standard ed edizione: scelta esplicita ed evidenza da acquisire.",
     }
     for key, label in MANDATE_LABELS.items():
         translated[f"Mandate {key}: evidence or confirmation pending"] = (
@@ -272,6 +299,10 @@ def _readable_issues(report: dict) -> list[str]:
         "ownership ratio outside zero to one": "percentuale fuori dall'intervallo tra 0% e 100%",
     }
     details = report["mandate_assessment"]["details"]
+    for item in (details or {}).get("standards", []):
+        translated[f"Standard {item['id']}: selection or evidence pending"] = (
+            f"Standard {item['id']}: scelta o evidenza da acquisire."
+        )
     for item in (details or {}).get("interests", []):
         for reason, shown in reasons.items():
             translated[f"Rights {item['id']}: {reason}"] = (
@@ -1672,13 +1703,29 @@ def _write_documents(directory: Path, report: dict) -> None:
         document.add_heading(heading, level=1)
         group = [Paragraph(html.escape(heading), styles["Heading2"])]
         method_section = heading in METHOD_LABELS.values()
+        paragraph_groups: list[list] = []
         for index, paragraph in enumerate(paragraphs):
             item = document.add_paragraph(paragraph)
-            if method_section and index < len(paragraphs) - 1:
+            # "Fonti:" is emitted by the report outline, not inferred from evidence.
+            paired_source = index + 1 < len(paragraphs) and paragraphs[
+                index + 1
+            ].startswith("Fonti:")
+            if paired_source or (method_section and index < len(paragraphs) - 1):
                 item.paragraph_format.keep_with_next = True
-            group.extend(
-                [Paragraph(html.escape(paragraph), styles["Normal"]), Spacer(1, 7)]
-            )
+            item.paragraph_format.keep_together = True
+            rendered = [
+                Paragraph(html.escape(paragraph), styles["Normal"]),
+                Spacer(1, 7),
+            ]
+            if paragraph.startswith("Fonti:") and paragraph_groups:
+                paragraph_groups[-1].extend(rendered)
+            else:
+                paragraph_groups.append(rendered)
+        for paragraphs_group in paragraph_groups:
+            if len(paragraphs_group) > 2 and not method_section:
+                group.append(KeepTogether(paragraphs_group))
+            else:
+                group.extend(paragraphs_group)
         content.extend([KeepTogether(group)] if method_section else group)
     document.save(directory / "valuation_report.docx")
 

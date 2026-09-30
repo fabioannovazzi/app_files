@@ -33,8 +33,13 @@ needed; the calculation engine does not qualify those matters.
 
 Prepare the structured `mandate_details`: distinguish engagement and report dates
 from valuation date and information cutoff; identify commissioning party, expert
-activity, participant perspective, recipients, use restrictions, competencies and
-conflicts. Bind each supplied answer to evidence and a locator; leave unavailable
+activity and signatory identity, written engagement, remuneration, delivery terms,
+amendments, participant perspective, recipients, use restrictions, competencies
+and conflicts. Record each selected standard's identity, edition, adoption reason
+and explained departures in `standards`; leave an absent selection incomplete.
+Use explicit evidence for a decision not to adopt a standard or a declaration of
+no departures, fees or amendments. Do not select an edition from a date or infer
+compliance from filled fields. Bind each supplied answer to evidence and a locator; leave unavailable
 answers null and proposed. For interests or specific rights, describe each class,
 economic/administrative rights, statute, agreements, restrictions and thresholds.
 Bind any ownership ratio and explain its denominator; a percentage alone does not

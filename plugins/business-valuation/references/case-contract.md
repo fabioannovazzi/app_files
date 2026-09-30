@@ -54,6 +54,34 @@ distinct from the existing valuation date and information cutoff. The subject is
 explicitly `enterprise`, `business_unit`, `equity_interest` or `specific_right`.
 Dates do not automatically select a standard, governing law or permitted scope.
 
+Also collect `expert_identity` (including the intended signatory), `written_mandate`,
+`remuneration`, `delivery_terms` and `amendments` using the same field record.
+Bind the written engagement and any amendments to their actual source locations.
+An evidenced declaration of no amendments or no fee is an explicit professional
+statement, never an inferred default. These five fields may be absent in an
+incomplete case; each absence, null, proposed answer or missing evidence makes
+the mandate partial while preserving independently valid calculations.
+
+`standards` is an array of at most 30 explicit selections. Each record has `id`,
+`name`, `edition`, `adoption_reason`, `departures`, `status`, `source_ids` and
+`locator`. IDs must be unique. Text fields and locator may be null while unknown;
+status is `confirmed` or `proposed`. A missing or empty array is incomplete, not
+an assertion that no standard applies. An explicit decision not to adopt a
+standard must identify that decision, explain its basis and record edition
+nonapplicability and any departures in the supplied evidence. Do not invent a
+standard or fill unknowns with a default edition. A declared absence of departures
+also needs evidence. The model/professional selects and interprets standards;
+software checks only shape, completeness, references and source-review status.
+It does not confirm that an identified standard exists, is applicable or has been
+complied with. No date, name or filled field grants PIV conformity. The result
+continues to return `piv_conformity = not_assessed`.
+
+All engagement terms and standards, including their source metadata and hashes,
+are included in the mandate dependency digest. Changing them invalidates the
+mandate and dependent method, adjustment, claim and conclusion attestations.
+Their deterministic checks serve traceability and stale-review prevention, not
+semantic or professional judgment.
+
 Each `interests` record has an `id`, `description`, `ownership_input_id`,
 `ownership_basis`, `economic_rights`, `administrative_rights`, `statutes`,
 `agreements`, `restrictions`, `thresholds`, `source_ids`, `locator` and `status`.
