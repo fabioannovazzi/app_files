@@ -15,6 +15,16 @@ task; Vera selects the workflow. Use semantic judgment, then read the selected
 skill completely. Do not select from keywords or use a cross-cutting assurance
 skill to imitate a missing operational workflow.
 
+## Development preview
+
+`patent-box-review` prepares selected evidence, reviewed ledger mappings and
+component controls for software, patents and designs, then exports draft A/B
+Word/PDF documents. Real calculation requires reviewed current sources and
+certificate-authenticated authorization under a firm-issued mandate. It verifies
+existing signatures and timestamps; it does not sign or file documents. All
+professional UAT and production acceptance boundaries remain explicit. Read
+`../../patent-box-review/SKILL.md`. This preview has no released teaching kit.
+
 ## Merger workpapers
 
 `fusione-guidata` prepares reviewed P1 domestic OIC incorporation workpapers for

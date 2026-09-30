@@ -242,6 +242,11 @@
           ]
         }
       ]
+    },
+    "patent-box-review": {
+      "module_roots": [
+        "vera_assurance"
+      ]
     }
   }
 }

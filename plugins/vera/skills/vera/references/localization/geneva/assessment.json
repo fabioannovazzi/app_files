@@ -1,6 +1,5 @@
 {
   "schema": "vera.localization.assessment.v1",
-  "catalogue_fingerprint": "252e0453e672e9c10121e8e7037d795b1d55d66717e8c5cadbf5e714714b15e3",
   "assessment_date": "2026-09-28",
   "target": {
     "id": "CH-GE",
@@ -333,6 +332,24 @@
       "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance.",
       "implementation": "Existing function retained with the recorded qualification limits.",
       "implementation_status": "existing_or_unresolved_as_assessed"
+    },
+    {
+      "function_id": "esg-reporting-assurance",
+      "name": "ESG evidence foundation",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Preserve exact CSV/text evidence, versioned source metadata and professional decisions, and export partial drafts within one Studio Archive engagement.",
+      "geneva_application": "Not assessed. The evidence/version foundation does not establish suitability for a Swiss or Geneva reporting mandate.",
+      "required_change": "Review the actual mandate, applicable sources, reporting framework, formats, language and professional responsibilities before deciding whether and how the existing foundation applies.",
+      "adaptation_layers": [
+        "mandate and legal-source qualification",
+        "input and output qualification"
+      ],
+      "acceptance_example": "A future reviewed Geneva case must preserve its explicit jurisdiction and source basis independently of French output language; no such professional case has been tested.",
+      "sources": [],
+      "verification": "ESG component skill, schema and synthetic tests inspected. No current Swiss ESG legal-source research or Geneva professional acceptance is claimed.",
+      "implementation": "New first-tranche foundation; no Geneva-specific adaptation implemented.",
+      "implementation_status": "unresolved_not_qualified_for_target"
     },
     {
       "function_id": "fatture-xml-check",
@@ -867,21 +884,21 @@
       "implementation_status": "unassessed"
     },
     {
-      "function_id": "esg-reporting-assurance",
-      "name": "ESG evidence foundation",
+      "function_id": "patent-box-review",
+      "name": "Patent Box controlled preview",
       "role": "function",
       "disposition": "Unresolved",
-      "common_work": "Preserve exact CSV/text evidence, versioned source metadata and professional decisions, and export partial drafts within one Studio Archive engagement.",
-      "geneva_application": "Not assessed. The evidence/version foundation does not establish suitability for a Swiss or Geneva reporting mandate.",
-      "required_change": "Review the actual mandate, applicable sources, reporting framework, formats, language and professional responsibilities before deciding whether and how the existing foundation applies.",
+      "common_work": "Organize evidence and reviewed ledger costs, prepare draft dossiers, and retain authenticated professional review decisions.",
+      "geneva_application": "Not assessed. The current workflow targets Italian Patent Box work; no Swiss or Geneva applicability or professional acceptance is established.",
+      "required_change": "Qualify the mandate, governing sources, rules, evidence, professional authorization and outputs before considering a Geneva adaptation.",
       "adaptation_layers": [
         "mandate and legal-source qualification",
-        "input and output qualification"
+        "rules and professional acceptance"
       ],
-      "acceptance_example": "A future reviewed Geneva case must preserve its explicit jurisdiction and source basis independently of French output language; no such professional case has been tested.",
+      "acceptance_example": "A Geneva request is not treated as qualified merely because the explanation page supports French; any proposed use retains an explicit unresolved target assessment.",
       "sources": [],
-      "verification": "ESG component skill, schema and synthetic tests inspected. No current Swiss ESG legal-source research or Geneva professional acceptance is claimed.",
-      "implementation": "New first-tranche foundation; no Geneva-specific adaptation implemented.",
+      "verification": "Patent Box implementation and controlled-preview boundaries inspected. No Swiss source research or Geneva professional acceptance performed.",
+      "implementation": "Italian controlled preview with real calculations gated by reviewed sources, rules and firm authorization; professional acceptance remains pending.",
       "implementation_status": "unresolved_not_qualified_for_target"
     }
   ],
@@ -988,17 +1005,10 @@
     "version": "0.1.277",
     "change": "Remove redundant catalogue jump link and refresh release identity; skill entrypoints and Geneva dispositions unchanged."
   },
-  "transformation_prototype_catalogue_binding": {
-    "version": "0.1.280",
-    "reviewed_at": "2026-09-29",
+  "esg_release_binding": {
+    "source_version": "0.1.282",
     "previous_catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
-    "added_skills": [
-      "trasformazione"
-    ],
-    "changed_skills": [
-      "vera"
-    ],
-    "review": "Adds the explicit synthetic-only transformation route and candidate manifest identity. The new row remains Unresolved for CH-GE. Existing assessment rows and their professional-evidence limits are preserved; this update is catalogue integration, not a Swiss capability release."
+    "change": "Add esg-reporting-assurance as Unresolved. Preserve earlier assessments; no new Swiss legal conclusions or professional acceptance. Merge current main retaining the separate fusione-guidata unresolved assessment. Preserve the subsequent synthetic transformation route and its unresolved assessment."
   },
   "fusione_p0_release_binding": {
     "version": "0.1.279",
@@ -1012,6 +1022,18 @@
       "vera"
     ],
     "review": "Register the new structural P0 foundation as unresolved for CH-GE. The Vera router adds only that foundation. Existing function dispositions and source assessments are preserved; no Swiss merger capability or current legal review is established."
+  },
+  "transformation_prototype_catalogue_binding": {
+    "version": "0.1.280",
+    "reviewed_at": "2026-09-29",
+    "previous_catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
+    "added_skills": [
+      "trasformazione"
+    ],
+    "changed_skills": [
+      "vera"
+    ],
+    "review": "Adds the explicit synthetic-only transformation route and candidate manifest identity. The new row remains Unresolved for CH-GE. Existing assessment rows and their professional-evidence limits are preserved; this update is catalogue integration, not a Swiss capability release."
   },
   "combined_release_binding": {
     "version": "0.1.280",
@@ -1032,11 +1054,20 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
+  "catalogue_fingerprint": "039bb0173cb73c3d0b2dc620d5be1bc0fc45e40fabf7c70c94909c56b1bb1e0f",
+  "esg_combined_binding_20260930": {
+    "version": "0.1.286",
+    "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
+  },
   "fusione_p1_release_binding": {
     "reviewed_at": "2026-09-30",
     "previous_catalogue_fingerprint": "6b6600d71b764ee71b86cd54adcf5aa46257bf72ef43606a36dc59562d2fd5cd",
     "candidate_version": "0.1.287",
     "review": "Updates the fusione-guidata and Vera router entrypoints for two domestic Italian OIC branches. Geneva dispositions and professional-fit limits remain unchanged; this is catalogue maintenance, not Swiss qualification."
+  },
+  "esg_deployment_binding_20260930": {
+    "version": "0.1.291",
+    "scope": "Integrates Fusione P1 and CNC completion; retains all recorded target dispositions. ESG remains unresolved for Swiss professional use."
   },
   "catalogue_update": {
     "date": "2026-09-30",
@@ -1059,17 +1090,18 @@
     "source_main": "c3f09ad78f69a96445762e3772b7c05ec88d5862",
     "scope": "Preserves all existing Geneva dispositions and adopts the upstream Fusione P1 row verbatim. Both valuation and merger remain Unresolved. This is combined-source inventory maintenance, not new Swiss qualification."
   },
-  "esg_release_binding": {
-    "source_version": "0.1.282",
-    "previous_catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
-    "change": "Add esg-reporting-assurance as Unresolved. Preserve earlier assessments; no new Swiss legal conclusions or professional acceptance. Merge current main retaining the separate fusione-guidata unresolved assessment. Preserve the subsequent synthetic transformation route and its unresolved assessment."
+  "patent_box_release_binding": {
+    "reviewed_at": "2026-09-30",
+    "version": "0.1.294",
+    "previous_catalogue_fingerprint": "06895e9748b15b956cd7d74fbf3c2cb46753c225a72b8757e11600ed7e735069",
+    "added_skills": [
+      "patent-box-review"
+    ],
+    "review": "Refreshes the release identity and adds the Italian Patent Box controlled preview as unresolved for CH-GE. All existing professional assessments and limitations are preserved."
   },
-  "esg_combined_binding_20260930": {
-    "version": "0.1.286",
-    "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
-  },
-  "esg_deployment_binding_20260930": {
-    "version": "0.1.291",
-    "scope": "Integrates Fusione P1 and CNC completion; retains all recorded target dispositions. ESG remains unresolved for Swiss professional use."
+  "patent_box_privacy_release_binding": {
+    "version": "0.1.295",
+    "reviewed_at": "2026-09-30",
+    "review": "Refreshes only the canonical version binding after the teaching-review privacy refresh. Existing assessments, including the unresolved Patent Box target assessment, are preserved."
   }
 }

@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "professional-mandate.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "mandate_id",
+    "policy_id",
+    "demo",
+    "scope",
+    "reviewer_name",
+    "professional_reference",
+    "reviewer_certificate_sha256",
+    "actions",
+    "valid_from",
+    "valid_until",
+    "powers_evidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "mandate_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": ".*\\S.*"
+    },
+    "policy_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": ".*\\S.*"
+    },
+    "demo": {
+      "type": "boolean"
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "client_id",
+        "engagement_id",
+        "period"
+      ],
+      "properties": {
+        "client_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500,
+          "pattern": ".*\\S.*"
+        },
+        "engagement_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500,
+          "pattern": ".*\\S.*"
+        },
+        "period": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "period_id",
+            "start",
+            "end"
+          ],
+          "properties": {
+            "period_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500,
+              "pattern": ".*\\S.*"
+            },
+            "start": {
+              "type": "string",
+              "format": "date"
+            },
+            "end": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        }
+      }
+    },
+    "reviewer_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": ".*\\S.*"
+    },
+    "professional_reference": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": ".*\\S.*"
+    },
+    "reviewer_certificate_sha256": {
+      "type": "string",
+      "pattern": "[0-9a-f]{64}"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "REVIEW_CONTROLS",
+          "REVIEW_RULES",
+          "APPROVE_DOSSIER",
+          "REOPEN_CASE"
+        ]
+      },
+      "uniqueItems": true,
+      "maxItems": 1000
+    },
+    "valid_from": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "valid_until": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "powers_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "reference",
+          "sha256"
+        ],
+        "properties": {
+          "reference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "pattern": ".*\\S.*"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "[0-9a-f]{64}"
+          }
+        }
+      },
+      "uniqueItems": true,
+      "maxItems": 1000
+    }
+  }
+}

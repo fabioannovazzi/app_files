@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "run_date": "2026-09-23",
+  "python_version": "3.12.14",
+  "platform": "Linux",
+  "command": "python3 -m unittest discover -s tests -q",
+  "tests_run": 71,
+  "passed": 71,
+  "failures": 0,
+  "errors": 0,
+  "observed_output": "Ran 71 tests in 0.080s\nOK",
+  "cli_smoke_checks": [
+    {"case": "ordinary", "exit_code": 0},
+    {"case": "premial", "exit_code": 0},
+    {"case": "mixed", "exit_code": 0},
+    {"case": "source-diff", "exit_code": 0},
+    {"case": "node-bridge-validate", "exit_code": 0}
+  ],
+  "professional_acceptance_scenarios": 32,
+  "professional_acceptance_executed": 0,
+  "plugin_integration_tested": false,
+  "production_qualified": false
+}

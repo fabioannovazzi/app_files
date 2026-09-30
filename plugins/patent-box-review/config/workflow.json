@@ -1,0 +1,217 @@
+{
+  "schema_version": "1.0",
+  "workflow_id": "patent-box-review",
+  "public_identity_proposed": "vera:patent-box-review",
+  "implementation_status": "DEVELOPER_REFERENCE_NOT_REGISTERED",
+  "orchestrator_implemented": false,
+  "control_statuses": [
+    "PASS",
+    "WARNING",
+    "FAIL",
+    "BLOCKED",
+    "NOT_TESTED"
+  ],
+  "case_states": [
+    "OPEN",
+    "IN_REVIEW",
+    "DRAFT_READY",
+    "APPROVED",
+    "REVIEW_PROPOSED",
+    "SUPERSEDED"
+  ],
+  "stages": [
+    {
+      "id": "INTAKE",
+      "depends_on": [],
+      "outputs": [
+        "case_map",
+        "missing_documents"
+      ],
+      "scope": "case",
+      "required_if": "always"
+    },
+    {
+      "id": "SOURCE_PREFLIGHT",
+      "depends_on": [
+        "INTAKE"
+      ],
+      "outputs": [
+        "source_register",
+        "source_coverage"
+      ],
+      "scope": "case",
+      "required_if": "always"
+    },
+    {
+      "id": "SUBJECT_GATE",
+      "depends_on": [
+        "SOURCE_PREFLIGHT"
+      ],
+      "outputs": [
+        "subject_assessment",
+        "option_history"
+      ],
+      "scope": "component",
+      "required_if": "always"
+    },
+    {
+      "id": "IP_GATE",
+      "depends_on": [
+        "SUBJECT_GATE"
+      ],
+      "outputs": [
+        "ip_register"
+      ],
+      "scope": "component",
+      "required_if": "always"
+    },
+    {
+      "id": "RIGHTS_GATE",
+      "depends_on": [
+        "IP_GATE"
+      ],
+      "outputs": [
+        "rights_chain"
+      ],
+      "scope": "component",
+      "required_if": "always"
+    },
+    {
+      "id": "ACTIVITY_GATE",
+      "depends_on": [
+        "RIGHTS_GATE"
+      ],
+      "outputs": [
+        "activity_ip_map"
+      ],
+      "scope": "component",
+      "required_if": "always"
+    },
+    {
+      "id": "OUTSOURCING_GATE",
+      "depends_on": [
+        "ACTIVITY_GATE"
+      ],
+      "outputs": [
+        "supplier_review"
+      ],
+      "scope": "component",
+      "required_if": "outsourced"
+    },
+    {
+      "id": "COST_LINKAGE_GATE",
+      "depends_on": [
+        "ACTIVITY_GATE",
+        "OUTSOURCING_GATE"
+      ],
+      "outputs": [
+        "cost_population",
+        "allocation_decisions"
+      ],
+      "scope": "component",
+      "required_if": "always"
+    },
+    {
+      "id": "PREMIAL_GATE",
+      "depends_on": [
+        "COST_LINKAGE_GATE"
+      ],
+      "outputs": [
+        "historical_cost_ledger"
+      ],
+      "scope": "component",
+      "required_if": "premial_requested"
+    },
+    {
+      "id": "INCENTIVE_COORDINATION",
+      "depends_on": [
+        "PREMIAL_GATE"
+      ],
+      "outputs": [
+        "incentive_matrix",
+        "coordination_decision"
+      ],
+      "scope": "component",
+      "required_if": "always"
+    },
+    {
+      "id": "CALCULATION",
+      "depends_on": [
+        "INCENTIVE_COORDINATION"
+      ],
+      "outputs": [
+        "result.json",
+        "cost_reconciliation.csv",
+        "workpaper.md"
+      ],
+      "scope": "component",
+      "required_if": "always"
+    },
+    {
+      "id": "DOCUMENTATION_A",
+      "depends_on": [
+        "CALCULATION"
+      ],
+      "outputs": [
+        "section_a_draft"
+      ],
+      "scope": "component",
+      "required_if": "penalty_requested"
+    },
+    {
+      "id": "DOCUMENTATION_B",
+      "depends_on": [
+        "CALCULATION"
+      ],
+      "outputs": [
+        "section_b_draft"
+      ],
+      "scope": "component",
+      "required_if": "penalty_requested"
+    },
+    {
+      "id": "DECLARATION_RECONCILIATION",
+      "depends_on": [
+        "CALCULATION",
+        "DOCUMENTATION_A",
+        "DOCUMENTATION_B"
+      ],
+      "outputs": [
+        "declaration_bridge"
+      ],
+      "scope": "component",
+      "required_if": "always"
+    },
+    {
+      "id": "FINAL_REVIEW",
+      "depends_on": [
+        "DECLARATION_RECONCILIATION"
+      ],
+      "outputs": [
+        "adversarial_review",
+        "open_issues"
+      ],
+      "scope": "case",
+      "required_if": "always"
+    },
+    {
+      "id": "PROFESSIONAL_APPROVAL",
+      "depends_on": [
+        "FINAL_REVIEW"
+      ],
+      "outputs": [
+        "review_record",
+        "frozen_manifest"
+      ],
+      "scope": "case",
+      "required_if": "always"
+    }
+  ],
+  "transition_rules": {
+    "warning": "suspend affected amounts until resolved",
+    "failed": "exclude affected component; retain reason",
+    "missing": "suspend affected component",
+    "new_source": "propose review; never overwrite approved case",
+    "approval": "authenticated host decision bound to input/rules/result/evidence hashes"
+  }
+}

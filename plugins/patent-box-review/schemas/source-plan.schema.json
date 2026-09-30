@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:vera:patent-box:source-plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plan_id",
+    "public_data_only",
+    "reviewed_by",
+    "reviewed_at",
+    "review_basis",
+    "limits",
+    "scopes"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "plan_id": {
+      "type": "string",
+      "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+    },
+    "public_data_only": {
+      "const": true
+    },
+    "reviewed_by": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 10000
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "review_basis": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 10000
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_requests",
+        "max_bytes",
+        "timeout_seconds",
+        "min_interval_seconds"
+      ],
+      "properties": {
+        "max_requests": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "max_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16777216
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        },
+        "min_interval_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        }
+      }
+    },
+    "scopes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "scope_id",
+          "authority",
+          "topic",
+          "window_start",
+          "window_end",
+          "allowed_hosts",
+          "entry_urls"
+        ],
+        "properties": {
+          "scope_id": {
+            "type": "string",
+            "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+          },
+          "authority": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "topic": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "window_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "window_end": {
+            "type": "string",
+            "format": "date"
+          },
+          "allowed_hosts": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "[a-z0-9][a-z0-9.-]{1,251}[a-z0-9]"
+            },
+            "minItems": 1,
+            "maxItems": 30
+          },
+          "entry_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 10000
+            },
+            "minItems": 1,
+            "maxItems": 100
+          }
+        }
+      },
+      "minItems": 1,
+      "maxItems": 30
+    }
+  }
+}

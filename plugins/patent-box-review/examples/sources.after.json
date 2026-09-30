@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "coverage": "COMPLETE_DECLARED_SCOPE",
+  "sources": [
+    {
+      "source_id": "DEMO.SOURCE",
+      "url": "https://example.invalid/synthetic",
+      "content_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "retrieved_at": "2026-09-23T09:00:00+00:00",
+      "fetch_status": "OK",
+      "rule_ids": [
+        "PB.IP.SOFTWARE"
+      ],
+      "impact_reviewed": true,
+      "affected_from": "2021-01-01",
+      "affected_to": null,
+      "regime": "NEW"
+    }
+  ]
+}

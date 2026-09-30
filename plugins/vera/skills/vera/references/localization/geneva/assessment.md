@@ -2,7 +2,7 @@
 
 Updated 2026-09-30 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
 
-The current inventory covers all 44 skill entrypoints, including internal helpers and development prototypes. All prior professional judgments are retained; catalogue coverage does not establish target-country acceptance.
+The current inventory covers all 45 skill entrypoints, including internal helpers and development prototypes. All prior professional judgments are retained; catalogue coverage does not establish target-country acceptance.
 
 The release adds bounded adapters and instructions, not a blanket claim that every fiduciary mandate is supported. Original evidence and professional decisions remain necessary. No real Geneva client workflow has been accepted.
 
@@ -102,4 +102,4 @@ The ESG deployment candidate 0.1.291 retains all 43 entries and the merged Fusio
 
 The 0.1.288 release refresh updates the package identity only. All 42 skill entrypoints are byte-identical to the recorded 0.1.287 catalogue; the professional assessments and unresolved Swiss scope remain unchanged.
 
-The 0.1.295 valuation beta integrates the current 44-entry catalogue. Its additional inventory and source bindings do not qualify any previously unresolved Geneva function.
+The 0.1.296 valuation beta integrates the current 45-entry catalogue. Its additional inventory and source bindings do not qualify any previously unresolved Geneva function.

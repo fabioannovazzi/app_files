@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/.codex/worktrees/vera-pmi-valuations/app_files/plugins/vera",
-  "version": "0.1.295",
-  "captured_at": "2026-09-30T10:51:42.258102+00:00",
-  "catalogue_fingerprint": "252e0453e672e9c10121e8e7037d795b1d55d66717e8c5cadbf5e714714b15e3",
-  "manifest_sha256": "3daf419728936fe25ef0e2ebc33ce5ba543fca4908f7aba4efac25bc66d3d993",
+  "version": "0.1.296",
+  "captured_at": "2026-09-30T11:21:11.035353+00:00",
+  "catalogue_fingerprint": "039bb0173cb73c3d0b2dc620d5be1bc0fc45e40fabf7c70c94909c56b1bb1e0f",
+  "manifest_sha256": "8fdf8708c443bb75a01271943b7effd05127ff4accc4dc6dcaa34261bf57c680",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -160,6 +160,11 @@
       "function_id": "open-item-reconciliation",
       "skill_path": "skills/open-item-reconciliation/SKILL.md",
       "sha256": "88b9e2b6afc2479588dca8d02c7864ad89535ffb411597a739c5ca47bf83f388"
+    },
+    {
+      "function_id": "patent-box-review",
+      "skill_path": "skills/patent-box-review/SKILL.md",
+      "sha256": "2223683d89b7b73b3ab813cb9c690612a88038075459ec2cd423fa108b6299b8"
     },
     {
       "function_id": "presenza-digitale-studio",

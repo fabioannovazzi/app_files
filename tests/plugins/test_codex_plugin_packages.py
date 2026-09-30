@@ -16,6 +16,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 COMMERCIALISTA_MODULE_NAMES = {
+    "patent-box-review",
     "esg-reporting-assurance",
     "trasformazione",
     "fusione-guidata",
@@ -1591,6 +1592,7 @@ def test_vera_routes_every_commercialista_module() -> None:
     assert components["schema_version"] == 1
     assert set(components["plugins"]) == COMMERCIALISTA_MODULE_NAMES
     assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {
+        "patent-box-review",
         "esg-reporting-assurance",
         "composizione-negoziata",
         "trasformazione",
@@ -3345,12 +3347,15 @@ def test_static_plugin_pages_are_public_and_plugin_downloads_are_removed() -> No
         assert response.status_code == 404, path
 
 
-def test_manual_vera_download_is_removed() -> None:
+def test_manual_vera_download_is_removed(monkeypatch: pytest.MonkeyPatch) -> None:
     _restore_application_import_path()
 
     from fastapi.testclient import TestClient
 
+    from modules.hosted_services import api as pdp_api
     from src.fastapi_app_entry import app
+
+    monkeypatch.setattr(pdp_api, "start_voice_retention_cleanup", lambda: None)
 
     with TestClient(app) as client:
         response = client.get(
@@ -3376,6 +3381,7 @@ def test_clara_downloads_and_removed_explainers_return_404(
     from modules.hosted_services import api as pdp_api
     from src.fastapi_app_entry import app
 
+    monkeypatch.setattr(pdp_api, "start_voice_retention_cleanup", lambda: None)
     pro_email = "pro@example.com"
     free_email = "free@example.com"
     permissions_file = tmp_path / "site_page_permissions.json"
@@ -4001,6 +4007,7 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         "../concordato-plan-review/index.html",
         "../composizione-negoziata/index.html",
         "../fusione-guidata/index.html",
+        "../patent-box-review/index.html",
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
     ):
@@ -4010,9 +4017,9 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 39
-    assert core.count('class="module-row"') == 39
-    assert core.count('data-jurisdiction-item="it"') == 12
+    assert core.count(" data-module-link") == 40
+    assert core.count('class="module-row"') == 40
+    assert core.count('data-jurisdiction-item="it"') == 13
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for area_id in (
@@ -5708,6 +5715,9 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
             "https://mparanza.com/static/shared/centrale-rischi-review/index.html?lang=it"
         ),
         "sales-plan": ("https://mparanza.com/static/shared/sales-plan/index.html"),
+        "patent-box-review": (
+            "https://mparanza.com/static/shared/patent-box-review/index.html?lang=it"
+        ),
         "business-planning": (
             "https://mparanza.com/static/shared/business-planning/index.html?lang=it"
         ),

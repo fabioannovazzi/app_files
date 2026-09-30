@@ -172,6 +172,7 @@
     "clara-transcribe": [["clara", "area-recordings"]],
     "comunicazione-professionale": [["lucia", "area-studio"], ["vera", "area-studio"]],
     "concordato-plan-review": [["vera", "area-matters"]],
+    "patent-box-review": [["vera", "area-matters"]],
     "composizione-negoziata": [["vera", "area-matters"]],
     "dati-fiscali-strutturati": [["vera", "area-clients"]],
     "deep-research-validator": [["lucia", "area-research"], ["vera", "area-research"]],
