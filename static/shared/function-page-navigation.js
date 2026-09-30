@@ -155,6 +155,7 @@
     "bilancio-xbrl-it": [["vera", "area-matters"]],
     "business-planning": [["vera", "area-analysis"]],
     "business-valuation": [["vera", "area-analysis"]],
+    "fusione-guidata": [["vera", "area-matters"]],
     "browser-automation": [["vera", "area-matters"]],
     "centrale-rischi-review": [["vera", "area-analysis"]],
     "check-entries": [["vera", "area-accounting"]],

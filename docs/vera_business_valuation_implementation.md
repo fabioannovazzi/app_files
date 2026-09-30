@@ -597,3 +597,30 @@ scale. All four failures also reproduce on untouched upstream main. They remain
 unresolved and are not waived. No production page is changed solely to satisfy
 these tests. Current-head CI, deployment, Marketplace publication, fresh-session
 installation acceptance and the real professional pilot remain separate gates.
+
+
+## Approved local page correction and publication hold
+
+The owner subsequently approved the prepared two-file Fusione surface correction
+and instructed **do not publish**. The correction is applied locally only: the
+shared breadcrumb maps to Vera's matters area, the page consumes the common type
+scale, and its existing localized data section uses the shared report component.
+No workflow data description or plugin runtime changed. The complete Vera privacy
+register remains current; neither changed page file is a fingerprint input, so
+no privacy record or package was changed to manufacture a new review.
+
+All 259 page/typography/journey/privacy regressions now pass. The browser shows
+one final data section, the translated breadcrumb and report link in all five
+languages; none overflows at 390px. Desktop/mobile rendering was inspected and
+browser error logs are empty. The four inherited page failures above are resolved
+in the local worktree, not in the previously pushed PR head.
+
+The last push, `cc50a44d072ee27f620d47f6620322bd7d42188e`, preceded the
+publication hold. No further push, merge, deployment or Marketplace publication
+is authorized. The unchanged Vera 0.1.291 ZIP was also verified from its immutable
+download URL and executed from a fresh extraction: eighteen hash-verified
+artifacts, identical replay, no professional conclusion or activation. This is
+synthetic package execution, not an installed-host or accountant pilot.
+The real source folder, independent valuation and responsible reviewer remain
+unsupplied. Evidence is retained in the primary checkout's ignored
+`outputs/vera-valuations-discord/pilot-preparation/` directory.

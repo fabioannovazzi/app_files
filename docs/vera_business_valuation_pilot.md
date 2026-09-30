@@ -81,7 +81,8 @@ installed-host acceptance is claimed by this document.
 
 Merged-source verification: 877 integration checks pass across the main run and
 the corrected fixture rerun, with four conditional skips. All nine host packages
-match source and the Vera privacy register validates. Public-page checks have
-214 passes and four inherited Fusione failures reproduced on untouched main;
-these remain open release issues. Current-head GitHub CI must be assessed after
-the candidate is pushed.
+match source and the Vera privacy register validates. After the owner-approved local Fusione page correction, all 259 page and privacy
+regressions pass. The browser verification covers five languages and desktop/mobile
+layouts. No plugin source or package changed. The owner instructed **do not
+publish**: the local correction is not pushed, merged, deployed or submitted to
+Marketplace. CI on the earlier pushed revision does not verify this local delta.
