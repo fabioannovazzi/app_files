@@ -188,7 +188,8 @@ def authority(tmp_path_factory):
     revoked_crl = write(root / "revoked.crl", crl(root_cert, root_key, signer))
     revoked_tsa = write(root / "revoked-tsa.crl", crl(root_cert, root_key, tsa))
     config = root / "tsa.cnf"
-    config.write_text(f"""[tsa]
+    config.write_text(
+        f"""[tsa]
 default_tsa = tsa_config
 [tsa_config]
 serial = {root / 'serial'}
@@ -204,7 +205,8 @@ ordering = yes
 tsa_name = yes
 ess_cert_id_chain = no
 ess_cert_id_alg = sha256
-""")
+"""
+    )
     (root / "serial").write_text("01")
     request, response, token = (
         root / "request.tsq",
