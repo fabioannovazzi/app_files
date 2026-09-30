@@ -624,3 +624,22 @@ synthetic package execution, not an installed-host or accountant pilot.
 The real source folder, independent valuation and responsible reviewer remain
 unsupplied. Evidence is retained in the primary checkout's ignored
 `outputs/vera-valuations-discord/pilot-preparation/` directory.
+
+## Local standards continuation and completed earlier CI
+
+The read-only GitHub check on 30 September 2026 found all 40 returned checks
+successful on the earlier pushed head
+`cc50a44d072ee27f620d47f6620322bd7d42188e`. This completes the two previously
+running checks; it does not cover the later local page correction or this
+documentation increment. The pull request remains a draft and its merge state
+was `DIRTY`; no merge or conflict-resolution claim is made.
+
+The local PIV reading now includes printed Principles pp. 73–90 and selected
+Rationale pp. 1, 15–19 and 100–109 in addition to the earlier ranges. The
+[method review](vera_business_valuation_piv_method_review.md) records eight
+review items with individual reference anchors, code/test evidence and four
+candidate acceptance scenarios. It identifies gaps in explicit assumption,
+limitation, forecast, terminal-basis and comparable-price context without
+changing the numerical engine or claiming professional standards compliance.
+No source volume was downloaded or reproduced. The actual pilot inputs and
+responsible reviewer remain unsupplied. The publication hold remains in force.
