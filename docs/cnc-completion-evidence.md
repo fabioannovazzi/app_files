@@ -66,6 +66,8 @@ All guide paths below are relative to `plugins/composizione-negoziata/references
 
 Clara 0.1.226 is a maintenance rebuild: its privacy records include the shared hosted router and the course-review directory. The reviewed changes add CNC routes and update synthetic CNC teaching evidence; they do not change Clara payload, access or retention behavior.
 
+The update-check privacy review governs the request, response-validation code and hosted route. The mutable public version announcement is release state, not plugin code: including its bytes in a shipped review creates a circular release (publishing changes the announcement and immediately invalidates the package just published). Its version values therefore no longer enter the Clara service fingerprint; the fixed endpoint, accepted response schema, destination validation and no-case-data construction remain governed. The public manifest is still updated only after authoritative Published verification.
+
 ## Evidence boundaries
 
 This is a guided professional workflow. Case meaning, current law, evidence sufficiency, appointment, independence and final professional conclusions remain reviewed work. The matrix does not label 35 live professional acceptance scenarios as passed. External sending, signing, filing, payments and autonomous monitoring remain outside the recovered requested implementation scope.

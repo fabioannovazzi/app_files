@@ -1,6 +1,6 @@
 {
   "schema": "vera.localization.assessment.v1",
-  "catalogue_fingerprint": "6b6600d71b764ee71b86cd54adcf5aa46257bf72ef43606a36dc59562d2fd5cd",
+  "catalogue_fingerprint": "b67dc19169de761e122ebf927d7bd792382901f419a73af3fa1952aa615df725",
   "assessment_date": "2026-09-28",
   "target": {
     "id": "CH-GE",
@@ -393,22 +393,22 @@
     },
     {
       "function_id": "fusione-guidata",
-      "name": "Merger case foundation (P0)",
+      "name": "Domestic OIC incorporation workpapers (P1)",
       "role": "foundation",
       "disposition": "Unresolved",
-      "common_work": "Preserve multi-company evidence, unknown or disputed facts, exact-version review decisions and dependencies in one case.",
-      "geneva_application": "Professional fit and any required Swiss/Geneva merger adaptations have not been assessed. The P0 helper supports no legal merger branch in any jurisdiction.",
+      "common_work": "Preserve multi-company evidence and exact reviews, calculate two selected domestic OIC incorporation branches and prepare accounting and calendar workpapers.",
+      "geneva_application": "Swiss/Geneva professional fit and merger adaptations remain unassessed. P1 supports only two explicitly selected Italian OIC incorporation branches.",
       "required_change": "Establish the professional mandate and governing source requirements before defining a Swiss merger branch; do not treat the structural case demonstration as jurisdiction qualification.",
       "adaptation_layers": [
         "professional mandate qualification",
         "Swiss/Geneva sources and rules not assessed"
       ],
-      "acceptance_example": "A later reviewed Swiss/Geneva mandate must identify applicable source versions and professional decisions; the current P0 continues to report every legal branch as unsupported.",
+      "acceptance_example": "A later reviewed Swiss/Geneva mandate must identify applicable sources and decisions; current P1 rejects foreign company scope.",
       "sources": [
         "fusione_p0"
       ],
-      "verification": "Inspected source and synthetic structural regressions only; no Swiss merger assessment, legal validation or client acceptance.",
-      "implementation": "Existing P0 case foundation records exact evidence, review and change history; jurisdiction-specific legal branches remain unsupported.",
+      "verification": "Inspected source and synthetic numerical, archive and review regressions only; no Swiss merger assessment, legal validation or client acceptance.",
+      "implementation": "Versioned foundation plus ordinary independent and direct wholly owned Italian OIC incorporation workpapers. Swiss branches remain unsupported.",
       "implementation_status": "foundation_only_jurisdiction_unassessed"
     },
     {
@@ -995,5 +995,11 @@
     "version": "0.1.283",
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
+  },
+  "fusione_p1_release_binding": {
+    "reviewed_at": "2026-09-30",
+    "previous_catalogue_fingerprint": "6b6600d71b764ee71b86cd54adcf5aa46257bf72ef43606a36dc59562d2fd5cd",
+    "candidate_version": "0.1.287",
+    "review": "Updates the fusione-guidata and Vera router entrypoints for two domestic Italian OIC branches. Geneva dispositions and professional-fit limits remain unchanged; this is catalogue maintenance, not Swiss qualification."
   }
 }

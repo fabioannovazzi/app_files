@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "workstream": "fusione-guidata",
-  "display_name": "Fusione guidata — P0",
+  "display_name": "Fusione guidata — P1",
   "role": "workflow",
   "governed_paths": [
     ".codex-plugin/plugin.json",
@@ -17,8 +17,8 @@
     "classes": [
       {
         "id": "merger-case-review",
-        "purpose": "Interpret supplied evidence and review facts, branch proposals, dependencies and exact professional confirmations.",
-        "content": "Company identities, legal forms, residences, ownership and rights; explicitly selected documents and source paths; evidence locators, complete selected source bytes when the host reads them, facts and unresolved alternatives; rule citations, applicability intervals, assumptions and source errors; drafts, exact approval content, actor declarations and change impacts. The helper processes complete selected files locally and exports only scopes allowed for the declared actor. No fixed semantic subset or automatic anonymization is promised.",
+        "purpose": "Review evidenced domestic OIC incorporation workpapers, exact calculations, model-authored dossier sections and scoped professional confirmations.",
+        "content": "Company and shareholder identities, legal forms, residence, ownership and rights; selected Studio Archive client and engagement identities, receipt metadata and paths; selected document bytes, locators and hashes; reviewed valuations, balances, exact allocations, accounting policies, fiscal registers, calendar events and assumptions; rule citations, applicability intervals and source errors; draft dossier sections, exact approval content and change impacts. The helper processes complete selected files locally and exports only scopes permitted for the declared actor. No fixed semantic subset or automatic anonymization is promised.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -35,7 +35,25 @@
       }
     ]
   },
-  "external_boundaries": [],
+  "external_boundaries": [
+    {
+      "id": "current-source-research",
+      "kind": "public_research",
+      "destination": "Case-selected official legal and professional public sources",
+      "purpose": "Verify current and temporally applicable sources for decisive professional questions",
+      "content": "Generic legal and professional research topics and public URLs; no direct client identifiers or confidential plan excerpts in public queries",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Record source rank, dates, inspected scope, applicability and limits.",
+        "Keep names, tax identifiers, credentials, private amounts and case text out of public research queries."
+      ]
+    }
+  ],
   "security_controls": [
     {
       "id": "case-and-company-scope",
@@ -48,17 +66,23 @@
     {
       "id": "immutable-approval-history",
       "control": "SQLite transactions, expected-version checks and immutable-record triggers preserve revisions. Approval requires a reviewer/administrator grant and an exact unchanged target with no unresolved or stale dependencies. Generic put cannot fabricate Decision records. Confirmations are recorded assertions, not verified signatures."
+    },
+    {
+      "id": "explicit-archive-receipt",
+      "control": "Only a company-scoped administrator can bind an existing client and open engagement. Imports verify exact manifest identities and fingerprints, receipt digest and file bytes, and preserve a case-local snapshot. The helper never discovers folders or writes to the source archive. These checks do not authenticate the declared operator."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-29",
+    "reviewed_at": "2026-09-30",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a92a57800fc533e4fe8c5e7f42df9e50eb22c3d5288acfde89d75871cfe32aa0"
+    "source_fingerprint": "fc3744fe286d19889749418975ec75db3e9bf4a2cd54d6bc32e0a079f50d30ce"
   },
   "governed_shared_paths": [
     "modules/fusione-guidata/vendor/modules/model_data_report.py",
     "modules/studio-archive/vendor/modules/model_data_report.py",
-    "scripts/model_data_report.py"
+    "scripts/model_data_report.py",
+    "modules/fusione-guidata/vendor/modules/client_ledger.py",
+    "modules/studio-archive/scripts/client_ledger.py"
   ]
 }

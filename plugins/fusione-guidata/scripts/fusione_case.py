@@ -1,4 +1,4 @@
-"""Durable P0 merger case records with exact revisions and explicit local scopes.
+"""Durable merger case records with exact revisions and explicit local scopes.
 
 Fixed checks protect reference integrity, access scoping and approval history.
 They do not classify transactions, decide source relevance or authenticate users.
@@ -27,7 +27,14 @@ from fusione_model import (
 
 __all__ = ["CaseStore", "CaseError", "reference"]
 MAX_DOCUMENT_BYTES = 20 * 1024 * 1024
-INTERNAL_KINDS = {"Evidence", "Decision", "ChangeImpact", "Artifact"}
+P1_KINDS = {"Valuation", "ExchangeModel", "BookBridge", "Deadline", "LegalDocument"}
+INTERNAL_KINDS = {
+    "Evidence",
+    "Decision",
+    "ChangeImpact",
+    "Artifact",
+    "ArchiveBinding",
+} | P1_KINDS
 
 
 def now() -> str:
@@ -296,7 +303,7 @@ class CaseStore:
             )
         if work_status == "not_applicable":
             raise CaseError(
-                "P0 does not infer non-applicability; record a scoped professional decision instead."
+                "The helper does not infer non-applicability; record a scoped professional decision instead."
             )
         if not isinstance(scope, list) or len(scope) != len(set(scope)):
             raise CaseError("Company scope must be an explicit list of unique IDs.")
@@ -442,7 +449,9 @@ class CaseStore:
         work_status: str = "draft",
     ) -> dict[str, Any]:
         """Append a validated revision, with optimistic concurrency and impact history."""
-        if kind in INTERNAL_KINDS:
+        if kind in INTERNAL_KINDS or (
+            kind == "BranchDecision" and "engine_version" in data
+        ):
             raise CaseError(
                 "Use the import, artifact or approval operation for this record kind."
             )
@@ -456,6 +465,53 @@ class CaseStore:
                 dependencies=dependencies,
                 expected_version=expected_version,
                 work_status=work_status,
+            )
+
+    def workpaper(
+        self,
+        object_id: str,
+        kind: str,
+        request: dict[str, Any],
+        *,
+        expected_version: int,
+    ) -> dict[str, Any]:
+        """Derive an immutable P1 workpaper from exact inputs in one transaction."""
+        from fusione_p1 import derive, selected_references
+
+        if kind not in P1_KINDS | {"BranchDecision"}:
+            raise CaseError("Unknown P1 workpaper kind.")
+        with self._connect(write=True) as db:
+            refs = selected_references(request)
+            operation = self._load(db, "operation")
+            refs[operation["id"]] = reference(operation)
+            records = {key: self._resolve(db, ref) for key, ref in refs.items()}
+            scope = sorted(set().union(*(set(r["scope"]) for r in records.values())))
+            self._allow(db, scope, write=True)
+            issues = sorted(
+                set(
+                    issue
+                    for r in records.values()
+                    for issue in self._base_issues(db, r)
+                )
+            )
+            result = None
+            if not issues:
+                result, issues = derive(kind, request, records)
+            data = {
+                "engine_version": "fusione.p1.v1",
+                "request": request,
+                "result": result,
+                "issues": issues,
+            }
+            return self._append(
+                db,
+                object_id,
+                kind,
+                data,
+                scope=scope,
+                dependencies=list(refs.values()),
+                expected_version=expected_version,
+                work_status="missing_evidence" if issues else "review_pending",
             )
 
     def _document(self, path: Path) -> bytes:
@@ -520,6 +576,114 @@ class CaseStore:
                 data,
                 scope=[entity_id],
                 dependencies=[reference(entity)],
+                expected_version=expected_version,
+                work_status="review_pending",
+            )
+
+    def bind_archive(
+        self,
+        object_id: str,
+        entity_id: str,
+        client_root: Path,
+        client_id: str,
+        engagement_id: str,
+        *,
+        expected_version: int = 0,
+    ) -> dict[str, Any]:
+        """Bind one declared company to an exact existing Studio Archive engagement."""
+        from fusione_archive import binding_data
+
+        with self._connect(write=True) as db:
+            self._allow(db, [entity_id], write=True, admin=True)
+            entity = self._load(db, entity_id)
+            if entity["kind"] != "Entity":
+                raise CaseError("Archive binding requires a registered company.")
+            root = plain_path(client_root, directory=True)
+            if not any(
+                root.is_relative_to(plain_path(Path(p), directory=True))
+                for p in entity["data"]["source_roots"]
+            ):
+                raise CaseError(
+                    "Archive root is outside this company's selected source roots."
+                )
+            data = binding_data(entity_id, root, client_id, engagement_id)
+            for record in self._heads(db):
+                if record["kind"] == "ArchiveBinding" and record["id"] != object_id:
+                    other = record["data"]
+                    if (
+                        other["client_id"] == client_id
+                        and other["entity_id"] != entity_id
+                    ):
+                        raise CaseError(
+                            "One stable archive client cannot represent two companies in this case."
+                        )
+            return self._append(
+                db,
+                object_id,
+                "ArchiveBinding",
+                data,
+                scope=[entity_id],
+                dependencies=[reference(entity)],
+                expected_version=expected_version,
+                work_status="review_pending",
+            )
+
+    def import_archive(
+        self,
+        object_id: str,
+        binding: dict[str, Any],
+        input_id: str,
+        *,
+        locator: str,
+        description: str,
+        expected_version: int = 0,
+    ) -> dict[str, Any]:
+        """Snapshot one verified receipt, preserving its client/engagement provenance."""
+        from fusione_archive import selected_receipt
+
+        text(locator, "evidence locator")
+        text(description, "evidence description")
+        with self._connect(write=True) as db:
+            bound = self._resolve(db, binding)
+            if bound["kind"] != "ArchiveBinding" or self._base_issues(db, bound):
+                raise CaseError("Use a current verified archive binding.")
+            self._allow(db, bound["scope"], write=True)
+            receipt = selected_receipt(bound["data"], input_id)
+            source = plain_path(Path(receipt["path"]))
+            content = self._document(source)
+            sha256 = hashlib.sha256(content).hexdigest()
+            if sha256 != receipt["sha256"] or len(content) != receipt["byte_count"]:
+                raise CaseError("Archive bytes changed during import.")
+            db.execute("INSERT OR IGNORE INTO blobs VALUES (?, ?)", (sha256, content))
+            data = {
+                "description": description,
+                "locator": locator,
+                "source_path": str(source),
+                "filename": source.name,
+                "sha256": sha256,
+                "byte_count": len(content),
+                "imported_by": self.actor,
+                "archive_receipt": {
+                    key: receipt[key]
+                    for key in (
+                        "client_id",
+                        "engagement_id",
+                        "input_id",
+                        "content_sha256",
+                        "sha256",
+                        "byte_count",
+                        "relative_path",
+                        "receipt_relative_path",
+                    )
+                },
+            }
+            return self._append(
+                db,
+                object_id,
+                "Evidence",
+                data,
+                scope=bound["scope"],
+                dependencies=[binding],
                 expected_version=expected_version,
                 work_status="review_pending",
             )
@@ -591,8 +755,25 @@ class CaseStore:
             "withdrawn",
         }:
             issues.append(f"rule_{data['review_status']}:{record['id']}")
-        if kind == "BranchDecision":
+        if kind == "BranchDecision" and "engine_version" not in data:
             issues.append(f"unsupported_branch:{record['id']}")
+        if kind in P1_KINDS or (kind == "BranchDecision" and "engine_version" in data):
+            issues.extend(f"p1:{record['id']}:{issue}" for issue in data["issues"])
+            operation = self._load(db, "operation")
+            planned = operation["data"]["planned_date"]
+            if planned is None:
+                issues.append(f"planned_date_missing:{record['id']}")
+            for dep in record["dependencies"]:
+                source = self._resolve(db, dep)
+                if source["kind"] == "RuleVersion" and planned is not None:
+                    start = source["data"]["applicable_from"]
+                    end = source["data"]["applicable_to"]
+                    if (
+                        start is None
+                        or planned < start
+                        or (end is not None and planned > end)
+                    ):
+                        issues.append(f"rule_outside_declared_period:{source['id']}")
         if kind in {"Evidence", "Artifact"}:
             blob = db.execute(
                 "SELECT content FROM blobs WHERE sha256=?", (data["sha256"],)
@@ -617,8 +798,23 @@ class CaseStore:
             if key in seen:
                 continue
             seen.add(key)
-            if child["kind"] == "RuleVersion" and not self._approval_ids(db, child):
-                issues.append(f"rule_unapproved:{child['id']}")
+            requires_review = (
+                child["kind"] == "RuleVersion"
+                or (
+                    child["kind"] == "BranchDecision"
+                    and "engine_version" in child["data"]
+                )
+                or (
+                    record["kind"] in {"LegalDocument", "Artifact"}
+                    and child["kind"] in P1_KINDS
+                )
+            )
+            if requires_review and not self._approval_ids(db, child):
+                issues.append(
+                    f"rule_unapproved:{child['id']}"
+                    if child["kind"] == "RuleVersion"
+                    else f"input_unapproved:{child['id']}"
+                )
             issues.extend(self._rule_issues(db, child, seen))
         return sorted(set(issues))
 
@@ -654,8 +850,11 @@ class CaseStore:
             grant = self._allow(db, record["scope"], write=True)
             if grant["role"] not in {"reviewer", "administrator"}:
                 raise CaseError("An editor cannot record a professional approval.")
-            if record["kind"] in {"Decision", "ChangeImpact", "BranchDecision"}:
-                raise CaseError("This record is not an approvable P0 deliverable.")
+            if record["kind"] in {"Decision", "ChangeImpact"} or (
+                record["kind"] == "BranchDecision"
+                and "engine_version" not in record["data"]
+            ):
+                raise CaseError("This record is not an approvable deliverable.")
             issues = self._base_issues(db, record) + self._rule_issues(db, record)
             if issues:
                 raise CaseError("Approval blocked: " + ", ".join(sorted(set(issues))))
@@ -738,7 +937,7 @@ class CaseStore:
                 "synthetic": self.metadata["synthetic"],
                 "actor": self.actor,
                 "generated_at": now(),
-                "scope": "P0 case foundation; legal branches and numerical merger models are not implemented",
+                "scope": "Versioned merger case; P1 workpapers support two declared domestic OIC incorporation branches under recorded professional review. No signature, filing or legal certification.",
                 "records": records,
                 "history": history,
                 "execution_evidence": {

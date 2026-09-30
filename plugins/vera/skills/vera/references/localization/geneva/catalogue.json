@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "plugins/vera",
-  "version": "0.1.285",
-  "captured_at": "2026-09-29T20:51:10.223554+00:00",
-  "catalogue_fingerprint": "6b6600d71b764ee71b86cd54adcf5aa46257bf72ef43606a36dc59562d2fd5cd",
-  "manifest_sha256": "8e9f746798fbf303ec9621210180e242bf77ad45236ba448b93db52e911291aa",
+  "root": "/Users/fabio/.codex/worktrees/vera-fusione-p1/app_files/plugins/vera",
+  "version": "0.1.287",
+  "captured_at": "2026-09-30T06:37:34.565914+00:00",
+  "catalogue_fingerprint": "b67dc19169de761e122ebf927d7bd792382901f419a73af3fa1952aa615df725",
+  "manifest_sha256": "53387ebb9a82967a9a0461e489295932acc764bdbd0e3d274873236e4d88d3a7",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -104,7 +104,7 @@
     {
       "function_id": "fusione-guidata",
       "skill_path": "skills/fusione-guidata/SKILL.md",
-      "sha256": "2c3a8adaf8386593adf8649f7b6dc45c998d5e6db05d998bb03f5d4162915129"
+      "sha256": "ba18a24db267eb7a2cc2f4d70a768622b208e05f3ac43b50b488859d7209a45c"
     },
     {
       "function_id": "invoice-xml",
