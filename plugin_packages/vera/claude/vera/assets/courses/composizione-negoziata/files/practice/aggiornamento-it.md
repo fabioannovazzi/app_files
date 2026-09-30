@@ -1,0 +1,1 @@
+AGGIORNAMENTO SINTETICO. Il debitore propone ora il 15 gennaio 2027 per lo stesso incasso di EUR 100.000. Nessuna prova di pagamento o accettazione professionale è allegata. Le altre informazioni del caso restano quelle iniziali.

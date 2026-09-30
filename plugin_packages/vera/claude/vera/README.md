@@ -207,6 +207,11 @@ including for the base portable ledger in Cowork.
 
 ## Adeguati assetti
 
+`vera:composizione-negoziata` guides an Italian CNC case with separate advisor
+and expert instructions, existing Vera analyses, evidence-linked drafts and
+case revisions. Changed dependencies trigger review; recorded confirmations
+are not authenticated signatures. No filing or automatic monitoring is included.
+
 `vera:adeguati-assetti` evaluates organizational, administrative and accounting
 arrangements from company evidence. It distinguishes documented procedures,
 reported practices, operating evidence and unknowns; delivers a memo, findings,

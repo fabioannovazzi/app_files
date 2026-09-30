@@ -87,13 +87,25 @@ def _read(path: Path) -> dict[str, Any]:
     return value
 
 
-def _write(path: Path, value: Any) -> None:
+def _state_bytes(state: dict[str, Any]) -> bytes:
+    """Reject unreadable state before any artifact or state file is written."""
+    content = (
+        json.dumps(state, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
+    ).encode("utf-8")
+    if len(content) > MAX_BYTES:
+        raise ESGError(
+            "ESG state exceeds the 8 MiB foundation limit; "
+            "no new state or drafts were saved"
+        )
+    return content
+
+
+def _write(path: Path, content: bytes) -> None:
     temporary = path.with_name(f".{path.name}.{uuid.uuid4().hex}")
     try:
-        with temporary.open("x", encoding="utf-8") as stream:
+        with temporary.open("xb") as stream:
             temporary.chmod(0o600)
-            json.dump(value, stream, ensure_ascii=False, indent=2, allow_nan=False)
-            stream.write("\n")
+            stream.write(content)
         temporary.replace(path)
     finally:
         temporary.unlink(missing_ok=True)
@@ -534,8 +546,9 @@ def execute(
         }
         state.pop("sha256", None)
         state["sha256"] = _digest(state)
+        content = _state_bytes(state)
         _persist_artifacts(output, state)
-        _write(state_path, state)
+        _write(state_path, content)
         return {"status": "saved", "reference": result, "state_sha256": state["sha256"]}
 
 

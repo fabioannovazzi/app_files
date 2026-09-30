@@ -39,6 +39,7 @@ __all__ = [
     "RUN_LIFECYCLE_STATES",
     "RUN_MANIFEST_SCHEMA",
     "cancel_run",
+    "append_workflow_snapshot",
     "close_engagement",
     "complete_run",
     "create_client_manifest",
@@ -54,6 +55,7 @@ __all__ = [
     "load_engagement_manifest",
     "load_input_receipt",
     "load_run",
+    "load_workflow_history",
     "prepare_run",
     "retention_report",
     "snapshot_client_folder",
@@ -1678,6 +1680,124 @@ def list_runs(
             key=lambda item: (item["run"]["created_at"], item["run"]["run_id"]),
         )
     )
+
+
+def _workflow_history_locked(
+    client_root: Path, engagement_id: str, workflow_id: str
+) -> list[dict[str, Any]]:
+    """Replay immutable snapshots across managed runs of one workflow."""
+    history: list[dict[str, Any]] = []
+    for loaded in list_runs(client_root, engagement_id):
+        run = loaded["run"]
+        if run["workflow_id"] != workflow_id:
+            continue
+        for path in sorted(Path(loaded["output_dir"]).glob("workflow-revision-*.json")):
+            row = _validate_seal(
+                _read_json(path, label="workflow snapshot"), label="workflow snapshot"
+            )
+            if (
+                row.get("schema_version") != "vera.workflow_snapshot.v1"
+                or row.get("client_id") != run["client_id"]
+                or row.get("engagement_id") != engagement_id
+                or row.get("workflow_id") != workflow_id
+                or row.get("run_id") != run["run_id"]
+                or type(row.get("revision")) is not int
+                or row["revision"] < 1
+                or path.name != f"workflow-revision-{row['revision']:06d}.json"
+                or not isinstance(row.get("payload"), dict)
+            ):
+                raise LedgerError("Workflow snapshot identity is invalid.")
+            history.append(row)
+    history.sort(key=lambda row: row["revision"])
+    predecessor = None
+    keys: set[str] = set()
+    for revision, row in enumerate(history, start=1):
+        key = _text(row.get("idempotency_key"), label="snapshot idempotency key")
+        if (
+            row["revision"] != revision
+            or row.get("previous_sha256") != predecessor
+            or key in keys
+        ):
+            raise LedgerError("Workflow snapshot history is incomplete or forked.")
+        keys.add(key)
+        predecessor = row["content_sha256"]
+    return history
+
+
+def load_workflow_history(
+    client_root: Path, engagement_id: str, workflow_id: str
+) -> tuple[dict[str, Any], ...]:
+    """Read a coherent history without relying on chat memory or latest mtime."""
+    with _engagement_lock(client_root, engagement_id):
+        return tuple(_workflow_history_locked(client_root, engagement_id, workflow_id))
+
+
+def append_workflow_snapshot(
+    client_root: Path,
+    engagement_id: str,
+    run_id: str,
+    payload: Mapping[str, Any],
+    *,
+    expected_revision: int,
+    idempotency_key: str,
+    request_sha256: str,
+) -> dict[str, Any]:
+    """Append with CAS and retry identity under the existing engagement lock.
+
+    Fixed revision/hash checks prevent lost updates and duplicate writes; they
+    never decide professional meaning or authenticate a reviewer. Snapshots
+    remain ordinary declared run artifacts, not a second case archive.
+    """
+    if type(expected_revision) is not int or expected_revision < 0:
+        raise LedgerError("expected_revision must be a nonnegative integer.")
+    key = _text(idempotency_key, label="snapshot idempotency key")
+    if not isinstance(request_sha256, str) or not _SHA256_RE.fullmatch(request_sha256):
+        raise LedgerError("Snapshot request digest is invalid.")
+    with _engagement_lock(client_root, engagement_id):
+        loaded = load_run(client_root, engagement_id, run_id)
+        run = loaded["run"]
+        if run["status"] != "running":
+            raise LedgerError("Snapshot writes require a running workflow.")
+        history = _workflow_history_locked(
+            client_root, engagement_id, run["workflow_id"]
+        )
+        for row in history:
+            if row["idempotency_key"] == key:
+                if (
+                    row["request_sha256"] != request_sha256
+                    or row["revision"] != expected_revision + 1
+                    or row["run_id"] != run_id
+                ):
+                    raise LedgerError(
+                        "Snapshot retry key was reused for another request."
+                    )
+                return row
+        if len(history) != expected_revision:
+            raise LedgerError("Stale workflow revision; reload and reconcile changes.")
+        row = _sealed(
+            {
+                "schema_version": "vera.workflow_snapshot.v1",
+                "client_id": run["client_id"],
+                "engagement_id": engagement_id,
+                "workflow_id": run["workflow_id"],
+                "run_id": run_id,
+                "revision": expected_revision + 1,
+                "previous_sha256": history[-1]["content_sha256"] if history else None,
+                "idempotency_key": key,
+                "request_sha256": request_sha256,
+                "created_at": _now_iso(),
+                "payload": dict(payload),
+            }
+        )
+        if len(json.dumps(row).encode("utf-8")) > _MAX_JSON_BYTES:
+            raise LedgerError("Workflow snapshot exceeds its size limit.")
+        target = Path(loaded["output_dir"]) / (
+            f"workflow-revision-{row['revision']:06d}.json"
+        )
+        if target.exists() or target.is_symlink():
+            raise LedgerError("Workflow snapshot already exists.")
+        _write_json(target, row)
+        return row
 
 
 def prepare_run(

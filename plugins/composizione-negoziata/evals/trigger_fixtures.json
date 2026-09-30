@@ -1,0 +1,14 @@
+{
+  "plugin": "composizione-negoziata",
+  "version": 1,
+  "should_trigger": [
+    {"id": "advisor-intake", "prompt": "Sono l'advisor: guidami nella composizione negoziata partendo dai documenti disponibili.", "required_signals": ["advisor", "evidenze", "prossima attività"]},
+    {"id": "expert-independence", "prompt": "Sono stato nominato esperto indipendente. Ho assistito l'impresa in passato: guidami nella verifica iniziale.", "required_signals": ["esperto", "indipendenza", "verifica"]},
+    {"id": "resume-delay", "prompt": "Riprendi la CNC: l'incasso previsto a novembre arriverà a gennaio. Quali elaborati dobbiamo rivedere?", "required_signals": ["versioni", "dipendenze", "riesame"]}
+  ],
+  "should_not_trigger": [
+    {"id": "legal-only", "prompt": "Spiega in generale l'articolo 17 del CCII, senza aprire una pratica."},
+    {"id": "concordato-review", "prompt": "Rivedi questo piano di concordato preventivo e il trattamento dei creditori."},
+    {"id": "forecast-only", "prompt": "Calcola solo il forecast da queste sei tabelle di tesoreria, senza una CNC."}
+  ]
+}

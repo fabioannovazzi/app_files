@@ -95,6 +95,7 @@
         "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md"
       ],
       "python_entrypoints": [
+        "modules/adeguati-assetti/scripts/assetti_construction.py",
         "modules/adeguati-assetti/scripts/assetti_review.py",
         "modules/adeguati-assetti/scripts/check_dependencies.py"
       ]
@@ -287,6 +288,16 @@
         "modules/concordato-plan-review/scripts/review_case_model.py",
         "modules/concordato-plan-review/scripts/review_source_roles.py",
         "modules/concordato-plan-review/scripts/run_concordato_review.py"
+      ]
+    },
+    {
+      "component_id": "composizione-negoziata",
+      "skills": [
+        "modules/composizione-negoziata/skills/composizione-negoziata/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/composizione-negoziata/scripts/check_dependencies.py",
+        "modules/composizione-negoziata/scripts/cnc_case.py"
       ]
     },
     {
@@ -507,6 +518,7 @@
     "skills/browser-automation/SKILL.md",
     "skills/business-planning/SKILL.md",
     "skills/centrale-rischi-review/SKILL.md",
+    "skills/composizione-negoziata/SKILL.md",
     "skills/comunicazione-professionale/SKILL.md",
     "skills/concordato-plan-review/SKILL.md",
     "skills/dati-fiscali-strutturati/SKILL.md",

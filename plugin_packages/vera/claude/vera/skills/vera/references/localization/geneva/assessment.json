@@ -1,6 +1,5 @@
 {
   "schema": "vera.localization.assessment.v1",
-  "catalogue_fingerprint": "7b2c91e9077baf1c310f82d362fe9e5ef0c2e71252beb36f66169ef9218df67a",
   "assessment_date": "2026-09-28",
   "target": {
     "id": "CH-GE",
@@ -219,6 +218,26 @@
       "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance.",
       "implementation": "Existing function retained with the recorded qualification limits.",
       "implementation_status": "existing_or_unresolved_as_assessed"
+    },
+    {
+      "function_id": "composizione-negoziata",
+      "name": "Italian negotiated crisis case workflow",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Preserve role-specific evidence, drafts, professional review references and explicit change dependencies across case sessions.",
+      "geneva_application": "The current workflow addresses an Italian composizione negoziata. A Swiss/Geneva counterpart, mandate and source framework have not been assessed.",
+      "required_change": "Assess the actual Swiss mandate and applicable primary sources before adapting this professional workflow. Language alone does not select jurisdiction.",
+      "adaptation_layers": [
+        "professional mandate",
+        "Swiss legal and procedural sources not assessed"
+      ],
+      "acceptance_example": "A Geneva request is not represented as a supported Italian procedure; the jurisdiction gap remains explicit pending assessment.",
+      "sources": [
+        "cnc_source"
+      ],
+      "verification": "Inspected the CNC skill, role guides and synthetic executable cases; no Swiss adaptation or real-client acceptance.",
+      "implementation": "Italian advisor/expert guidance, managed case revisions and existing Vera capability routing.",
+      "implementation_status": "italian_workflow_swiss_scope_unassessed"
     },
     {
       "function_id": "comunicazione-professionale",
@@ -919,6 +938,11 @@
       "path": "docs/vera-fusione-p0.md",
       "basis": "Internal implementation evidence for a structural case foundation; supplies no Swiss merger law or professional acceptance.",
       "consulted": "2026-09-29"
+    },
+    "cnc_source": {
+      "title": "CNC implementation and scope",
+      "url": "repository:plugins/composizione-negoziata/skills/composizione-negoziata/SKILL.md",
+      "scope": "Italian workflow and explicit different-jurisdiction assessment requirement; no Swiss legal-source verification."
     }
   },
   "course_qa_release_binding": {
@@ -979,5 +1003,24 @@
     "version": "0.1.280",
     "reviewed_at": "2026-09-29",
     "review": "Combines the existing fusione-guidata P0 and synthetic-only trasformazione entries. All prior target judgments and both unresolved entries are preserved. No new professional or jurisdiction qualification is inferred."
+  },
+  "cnc_release_binding": {
+    "version": "0.1.285",
+    "reviewed_at": "2026-09-29",
+    "previous_catalogue_fingerprint": "500598f2e1c2bbaf1ffd4cb41f8b2eb21ae6a68fd64cc126084daa34d97dcd43",
+    "added_skills": [
+      "composizione-negoziata"
+    ],
+    "review": "Add the Italian CNC workflow as unresolved for CH-GE. Preserve all prior Geneva assessments and the merger foundation; the combined release does not establish Swiss applicability. Preserve the newly merged synthetic-only transformation prototype."
+  },
+  "assetti_construction_release_binding": {
+    "version": "0.1.283",
+    "reviewed_at": "2026-09-29",
+    "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
+  },
+  "catalogue_fingerprint": "857eb74ee774e7a0fbc6fdef0bd5b4dad6896fe65c34d46f0530b96cf4c3b3ec",
+  "esg_combined_binding_20260930": {
+    "version": "0.1.286",
+    "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
   }
 }

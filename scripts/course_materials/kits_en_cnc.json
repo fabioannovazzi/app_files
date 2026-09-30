@@ -1,0 +1,27 @@
+{
+  "vera/composizione-negoziata": {
+    "title": "Track evidence and changes in a composizione negoziata",
+    "goal": "Start an advisor case, review a draft and resume it when a receipt moves.",
+    "scenario": "Entirely synthetic company: EUR 50,000 cash, EUR 100,000 expected on 15 November 2026 and EUR 80,000 payable on 30 November. The debtor has not confirmed the date; aging and orders are absent.",
+    "scope": "First operational path: role, gaps, an actual treasury analysis, a note and review after a change. This is neither an eligibility opinion nor a complete professional case.",
+    "inputs": "Open case-en.md for initial facts and assumptions. update-en.md contains only the new information for the practice phase.",
+    "request": "Vera, I advise the company. Examine the synthetic inputs, flag gaps, run treasury forecasting and prepare an evidence-linked initial note. Do not assume any decision has been approved.",
+    "steps": [
+      "In the working window, register the synthetic client and tutorial engagement. Vera distinguishes role, sources, assumptions and missing evidence before proposing the next activity.",
+      "Vera runs treasury forecasting with explicit coverage and assumptions, binds the saved result to the note and records a review only after your confirmation of that version. Open the model-data report.",
+      "Resume the same case with the update. Preserve the first note, inspect affected dependencies and request a new analysis. Previous confirmations remain historical."
+    ],
+    "deliverables": [
+      "Case note with evidence, gaps, assumptions and next activity.",
+      "Executed forecast, saved revisions and a report of actual data use."
+    ],
+    "review": "Trace the receipt from the reported fact to the forecast and note. A file does not establish collectability; a recorded confirmation is not a signature.",
+    "checkpoints": [
+      "Distinguish the company advisor from the independent expert.",
+      "Identify unsupported assumptions and versions to revisit after the delay."
+    ],
+    "practice": "Introduce update-en.md: the debtor now proposes 15 January 2027. Request a fresh analysis and note without carrying old confirmations into the new version.",
+    "success": "You can start, review and resume a case while keeping limitations, dependencies and required decisions explicit.",
+    "repeat": "Specify role, engagement, reference date and authorized real-case documents. Verify decisive legal sources at use; independence and conclusions remain professional responsibilities."
+  }
+}

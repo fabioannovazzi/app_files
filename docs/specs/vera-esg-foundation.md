@@ -74,78 +74,42 @@ reported for inspection rather than silently removed.
 
 ## Verification evidence
 
-See the task's test log and synthetic demo. The contributor's 34 reference tests
-and 37 proposed product scenarios are not claimed as integration passes.
-The user approved the correction of blank missing-data excerpts and the Archive
-MCP workflow registration on 29 September 2026, together with the package integration.
-The corrected ESG and Studio Archive regressions pass. The synthetic demonstration
-passes all six recorded checks; its run folders preserve the exact evidence and drafts.
+The user approved the blank missing-data excerpt and Archive registration fixes
+on 29 September, and the state-size correction on 30 September 2026. A public CLI
+probe had accepted an 8,381,003-byte request but saved an unreadable 8,393,954-byte
+state. The corrected helper measures exact UTF-8 state bytes before writing drafts
+or state. The same request now fails without changing the 11,871-byte saved case,
+and resume succeeds. ASCII and Unicode regressions verify unchanged state and
+output files. No history is truncated or pruned.
 
+Current local evidence after integration of main `8f662195f`:
 
-Local verification after the approved correction and integration:
+- 50 ESG regressions pass; 88.72% coverage across the three new scripts.
+- 601 combined ESG, merger, transformation, CNC, assetti, filesystem, website,
+  registry and routing tests pass.
+- Canonical Codex, ChatGPT-upload and Cowork archives match source for all three
+  products. Each Vera archive passes all six synthetic demo checks.
+- The 43-entry Geneva catalogue preserves the recorded scope judgments.
+- All 46 courses retain identical authored JSON except source bindings relative
+  to main. `docs/releases/2026-09-30-vera-esg-course-source-review.json` records
+  the additive ESG registry and prepared-lesson exclusion review. Historical
+  editorial evidence is not new visual or learner acceptance.
 
-- 48 ESG regressions pass; 88.58% coverage across the three new scripts.
-- 439 package, update-notification and privacy checks pass; two conditional skips.
-- Codex, ChatGPT-upload and Cowork archives all match the canonical source.
-- The six synthetic acceptance checks also pass from each extracted Vera archive.
-- Black, Isort, Mypy and Bandit pass on the new scripts; whitespace checks pass.
-- Existing course content remains identical after excluding source bindings;
-  `docs/releases/2026-09-29-vera-esg-course-source-review.json` records the two
-  additive shared changes. Historical editorial reviews are not represented as
-  new visual or learner acceptance.
+The required package/update/privacy suite and exact-commit CI must pass before
+review readiness is reported. Evidence logs remain in the recovery folder.
+The configured ESG Black, Isort, Mypy and Bandit commands pass. A supplementary
+Mypy invocation using the stricter shared-runtime config reports five pre-existing
+errors in the synthetic demo; that configuration is not the ESG CI gate and no
+production change was made to satisfy it. An earlier broad Cowork invocation also
+exposed an unchanged projection-note assertion on a source-preserved teaching
+reference, separate from the required CI gates.
 
-Candidate versions: Vera 0.1.282, Clara 0.1.223, Lucia 0.1.63, Studio Archive
-0.1.39, ESG component 0.1.0. Clara and Lucia rebuild because they embed the
-shared contracts and course policy; ESG is only exposed by Vera. Versions were
-selected above main and the inspected open PR candidates. Recheck the release
-sequence and integrate intervening main changes before any publication.
+Candidate versions: Vera 0.1.286, Clara 0.1.225, Lucia 0.1.65, Studio Archive
+0.1.41, ESG component 0.1.0. Clara and Lucia rebuild because they embed the shared
+contracts and course policy; ESG is exposed only by Vera. Versions exceed main
+and the inspected open candidates. Recheck the sequence before publication.
 
-These checks cover local code and packaged execution, not Marketplace Published
-status, deployed public pages, enabled host installation or professional use.
-The new CI matrix schedules the ESG tests on Linux and Windows; those results
-remain separate from the observed local macOS run. No Discord reply is sent.
-
-### CI integration follow-up
-
-Both ESG CI matrix jobs passed on Linux and Windows. The initial broader CI
-run identified omitted CLI classifications, older website inventory expectations,
-a shared-archive privacy fingerprint in Lucia, and the Geneva catalogue snapshot.
-These records are now reconciled: ESG requires its portable `--context`, the
-developer demo is classified separately, and Geneva suitability remains explicitly
-unresolved. The focused 370-test integration suite and 40-entry catalogue check
-pass. Source fingerprints and all affected packages were rebuilt; no ESG behavior
-or existing professional capability was changed to satisfy these checks.
-
-
-### Integration with the merger foundation
-
-Main advanced to `bbc94c37a` after the first complete 34-check CI pass on
-`bb4e4773`. The task branch incorporates that main revision, preserves both
-functions, regenerates the combined packages and keeps the unpublished candidate
-versions above main. The combined catalogue has 37 function entries and four
-helpers; both new foundations remain unresolved for Geneva professional use.
-
-The merged source passes 48 ESG tests at 88.58% coverage and 411 merger,
-Archive/filesystem, website, registry and routing tests. All three product
-packages match canonical source. All six synthetic ESG checks pass from each
-Vera archive format. CI must qualify the exact integration commit independently.
-
-A broader local Cowork test invocation exposed a pre-existing assertion requiring
-a projection note on every reference, including the unchanged source-preserved
-`learn-with-vera/references/get-started.md`. It also omitted the parent test
-fixture through `--confcutdir`; these are not evidence of an ESG runtime failure.
-The version guard compares uncommitted work with HEAD, so the pending merge
-reports the already reserved unpublished Vera candidate as unchanged. Its final
-result and the required package suite are checked again on the committed source.
-
-### Subsequent main integration
-
-Main then advanced to `cf648f7c3` with the synthetic transformation prototype.
-The ESG branch preserves that release as well as the merger foundation, combines
-all three registrations and retains their separate scope boundaries. The full
-Geneva catalogue now has 42 entries; all three additions remain unresolved for
-professional Geneva use. The existing merger source citation is preserved.
-The combined ESG, merger, transformation, filesystem, website and routing suite
-passes all 505 tests. Candidate versions remain reserved and unpublished by this
-task. Packages are rebuilt from this combined source; CI qualifies each commit
-separately. No ESG runtime behavior changed during either merge.
+These checks cover source and packaged synthetic execution. No merge to main,
+deployment, Marketplace publication, enabled-host acceptance, real-client work
+or Discord reply is included. Complete reporting, assurance and renderers remain
+the ordered backlog above, as required by the recovered first-tranche brief.

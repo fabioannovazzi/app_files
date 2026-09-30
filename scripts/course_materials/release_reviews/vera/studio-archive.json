@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "studio-archive",
-  "course_sha256": "1ea8a89846ee681bb1803f8e2dba4a325eac3bb2c37173ad098eaeed0f1812e7",
+  "course_sha256": "d1768a6c57346ecf08556dce891efbfebc710c9f7fa748b81250fa3bccd00892",
   "reviewer": "Codex: five-language local archive lesson and delivered answer review",
   "reviewed_at": "2026-09-14T21:43:59.684693+00:00",
   "review_scope": "Prepared material and native local document-search review. Read all five complete outlines, all fifteen fictional input documents and all ten final answer captures. Nineteen checks pass, including ten distinct phase/language exercises through the real staging, archive configuration, refresh, exact-scope search and source opening functions. Semantic answers are authored regression fixtures outside the shipped kits and do not replace live host reasoning. Native voice, GUI presentation, actual elapsed lesson time and learner comprehension remain unverified. Gmail, WhatsApp, Drive and the separate engagement lifecycle are not exercised by this local-search lesson.",
@@ -346,15 +346,42 @@
     "source_review": "Integrated additive Geneva jurisdiction/currency adapters and French presentation from PR #692; course QA source/result readers, saved-review controls, parser hardening and teacher/working roles are preserved. Generated assets and packages are rebuilt from this combined source.",
     "native_execution_requirement": "The combined candidate must pass the unchanged required native demo/practice checks and dedicated Geneva regressions before deployment."
   },
-  "esg_source_refresh_20260929": {
-    "reviewer": "Codex /root - bounded source review",
-    "reviewed_at": "2026-09-29T18:26:42.517707+00:00",
-    "baseline_commit": "6f26f0e8241a0fe3027c162e2c2cae4d97395465",
+  "cnc_integration_freshness": {
+    "reviewer": "Codex /root - bounded source freshness review",
+    "reviewed_at": "2026-09-29T22:10:29.059436+00:00",
+    "comparison_commit": "d728392e712b82049b9fc8f196aa44df51cbbaed",
     "previous_course_sha256": "bdca4646ff1d61d972baa545be56aa0af24e8e39f50565f7636152c19e6aeed7",
-    "current_course_sha256": "1ea8a89846ee681bb1803f8e2dba4a325eac3bb2c37173ad098eaeed0f1812e7",
+    "source_changes": [
+      {
+        "path": "modules/studio-archive/scripts/client_ledger.py",
+        "before": "96a8bc37a6632edb3d345cd78d86b6d3a78c615f741ead702d489ae5a4e040f4",
+        "after": "cebe03cf64d188cbab8be95ce083227663cfc3b6f41a802fa7f88c63f449bf9e"
+      },
+      {
+        "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+        "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
+        "after": "c4c791eab77b3077554dbbc40d90247a347b62b832bb7fdbdc21f73dbe679294"
+      },
+      {
+        "path": "vendor/modules/vera_assurance/contracts.py",
+        "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
+        "after": "c4c791eab77b3077554dbbc40d90247a347b62b832bb7fdbdc21f73dbe679294"
+      }
+    ],
+    "content_review": "Compared the complete compiled course with the reviewed main baseline. Every field except sources is identical, including authored locales, fictional inputs, checkpoints, practice and pacing. Original editorial explanations and inspected artifact hashes are preserved.",
+    "source_review": "Reviewed the sole shared-contract change: adding composizione-negoziata to the recognized managed workflow IDs. The Studio Archive lesson also binds the additive sealed snapshot history/read/append methods under the existing engagement lock. An AST comparison confirms that every pre-existing ledger function and class is unchanged. No existing lesson behavior or external recipient is added by these changes.",
+    "execution_evidence": "GitHub run 36633858670, job 109629617115 at 7ef49b804: 1171 native teaching tests passed, three skipped; one stale public-catalogue count assertion failed and has been corrected separately. This is not a green whole-run claim. Ten additional CNC native demo/practice cases pass locally.",
+    "limits": "Historical artifact reviews remain historical. No new independent editorial, live learner, voice, installed-host or professional acceptance is claimed. The release gate must validate current native demo/practice identities against these exact course hashes."
+  },
+  "esg_source_refresh_20260930": {
+    "reviewer": "Codex /root - bounded source review",
+    "reviewed_at": "2026-09-30T06:05:58.004774+00:00",
+    "baseline_commit": "8f662195f00bac3b605ac73077e1a0bd31d30253",
+    "previous_course_sha256": "7cc8bb3d4155302ad3a1935305bb38ebcdea0968324a48cc90f5bf059a8312dd",
+    "current_course_sha256": "d1768a6c57346ecf08556dce891efbfebc710c9f7fa748b81250fa3bccd00892",
     "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
     "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
     "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
-    "detail": "docs/releases/2026-09-29-vera-esg-course-source-review.json"
+    "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json"
   }
 }

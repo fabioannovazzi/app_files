@@ -259,7 +259,7 @@ def test_vera_keeps_market_specific_functions_inside_user_job_areas() -> None:
     assert 'href="#jurisdiction"' not in vera
     assert "data-jurisdiction-section" not in vera
     assert "data-jurisdiction-nav" not in vera
-    assert vera.count('data-jurisdiction-item="it"') == 10
+    assert vera.count('data-jurisdiction-item="it"') == 11
     assert 'id="area-matters"' in vera
     assert 'id="area-analysis"' in vera
     assert 'id="area-research"' in vera
@@ -964,11 +964,7 @@ def test_all_function_page_systems_use_the_shared_quiet_typography_scale() -> No
         for href in _directory_links(page):
             destination = _resolved_page(page_path, href)
             explanation = destination.read_text(encoding="utf-8")
-            assert any(
-                stylesheet in explanation
-                for stylesheet in (
-                    "product-function-page.css?v=20260813-function-pages",
-                    "plugin-page-shell.css?v=20260813-function-pages",
-                    "function-page-scale.css?v=20260813-function-pages",
-                )
+            assert re.search(
+                r'href="\.\./(?:product-function-page|plugin-page-shell|function-page-scale)\.css(?:\?[^\"]*)?"',
+                explanation,
             ), f"{destination}: does not consume the shared function-page scale"

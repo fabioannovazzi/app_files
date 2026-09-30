@@ -10,6 +10,31 @@ permissions:
   contents: read
 
 jobs:
+  composizione-negoziata:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit -r plugins/treasury-forecast/requirements.txt
+      - name: Verify roles, versioned evidence, treasury handoff and resume
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_composizione_negoziata.py
+          --cov=plugins/composizione-negoziata/scripts --cov-report=term-missing --cov-fail-under=80
+      - name: Check CNC code quality
+        run: |
+          python -m black --check plugins/composizione-negoziata/scripts tests/plugins/test_composizione_negoziata.py
+          python -m isort --check-only plugins/composizione-negoziata/scripts tests/plugins/test_composizione_negoziata.py
+          python -m mypy --config-file=tests/plugin_runtime.mypy.ini plugins/composizione-negoziata/scripts
+          python -m bandit -qr plugins/composizione-negoziata/scripts -ll
+
   transformation-prototype:
     name: Synthetic transformation prototype
     runs-on: ${{ matrix.os }}
@@ -211,6 +236,7 @@ jobs:
           tests/plugins/test_teaching_communication_execution.py
           tests/plugins/test_teaching_management_execution.py
           tests/plugins/test_teaching_clara_budget_execution.py
+          tests/plugins/test_teaching_cnc_execution.py
           tests/plugins/test_cowork_teaching.py
           tests/plugins/test_vera_get_started.py
           tests/plugins/test_teaching_browser_execution.py
@@ -259,6 +285,8 @@ jobs:
         run: |
           python scripts/course_materials/build_catalog.py --check
           python scripts/course_materials/build_public_catalog.py --check
+          python -m black --check tests/plugins/test_teaching_cnc_execution.py
+          python -m isort --check-only tests/plugins/test_teaching_cnc_execution.py
           python scripts/build_matter_review_assets.py --check
           python scripts/course_materials/verify_release.py --junit "$RUNNER_TEMP/teaching-native.xml"
           python scripts/course_materials/build_presentation_baselines.py --check
@@ -409,17 +437,17 @@ jobs:
         with:
           python-version: "3.12"
       # Shared test modules import the repository's HTML and PDF readers.
-      - run: python -m pip install pytest pytest-cov beautifulsoup4 pypdf black==25.1.0 isort==6.0.1 mypy bandit
+      - run: python -m pip install pytest pytest-cov beautifulsoup4 pypdf black==25.1.0 isort==6.0.1 mypy bandit -r plugins/adeguati-assetti/requirements.txt -r plugins/business-planning/requirements.txt
       - name: Verify review records, evidence, decisions and real archive bindings
-        run: python -m pytest -q tests/plugins/test_adeguati_assetti.py tests/plugins/test_adeguati_assetti_packages.py --cov=plugins/adeguati-assetti/scripts --cov-fail-under=80
+        run: python -m pytest -q tests/plugins/test_adeguati_assetti.py tests/plugins/test_assetti_construction.py tests/plugins/test_adeguati_assetti_packages.py --cov=plugins/adeguati-assetti/scripts --cov-fail-under=80
       - name: Require lifecycle classification for every registered CLI
         run: python -m pytest -q tests/plugins/test_vera_client_workflow_filesystem.py -k 'client_workflow_entrypoints_cover_registered_vera_workflows or every_workflow_python_cli_has_exactly_one_lifecycle_classification'
       - name: Verify public workflow names, jurisdiction and links
         run: python -m pytest -q tests/plugins/test_vera_website_journeys.py -k 'hub_keeps_market_specific_work_locale_scoped or italian_directory_matches_marketplace_capability_names or hub_module_fragments_resolve_to_real_page_sections'
       - name: Check formatting, typing and security
         run: |
-          python -m black --check plugins/adeguati-assetti/scripts tests/plugins/test_adeguati_assetti.py
-          python -m isort --check-only plugins/adeguati-assetti/scripts tests/plugins/test_adeguati_assetti.py
+          python -m black --check plugins/adeguati-assetti/scripts tests/plugins/test_adeguati_assetti.py tests/plugins/test_assetti_construction.py
+          python -m isort --check-only plugins/adeguati-assetti/scripts tests/plugins/test_adeguati_assetti.py tests/plugins/test_assetti_construction.py
           python -m mypy --config-file=tests/plugin_runtime.mypy.ini plugins/adeguati-assetti/scripts
           python -m bandit -r plugins/adeguati-assetti/scripts -ll
 

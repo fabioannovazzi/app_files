@@ -84,3 +84,9 @@ The combined catalogue now contains 37 function entries and four internal helper
 
 The subsequent combined catalogue also includes the synthetic-only transformation
 prototype, separately unresolved for Geneva. There are 42 skill entries in total.
+
+## Assetti construction release binding
+
+The 0.1.283 refresh changes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Existing target judgments remain in place. The new assetti construction mode has not been validated for CH-GE; the earlier assessment-mode scope does not qualify that new mode.
+
+The 30 September combined candidate 0.1.286 has 43 skill entries. All prior scope judgments are retained; ESG, CNC, merger and transformation remain unresolved for Geneva.
