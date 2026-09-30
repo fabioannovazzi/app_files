@@ -3,20 +3,20 @@
   "basis": "Version directly confirmed as Published in OpenAI Platform; not inferred from a local candidate or installed cache.",
   "plugins": {
     "clara": {
-      "version": "0.1.208",
+      "version": "0.1.230",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a?q=clara",
-      "observed_at": "2026-09-15",
-      "verification_record": "https://platform.openai.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a/submissions/appsub_6aa92a1ac4c88191a3f494531b74aeb6",
-      "basis": "OpenAI Platform authoritative version list directly showed 0.1.208 Published on 2026-09-15. All 16 skill scans passed. This hash identifies the uploaded archive before the post-publication registry privacy-fingerprint refresh. PR #640 passed all 29 required release checks before publication.",
-      "package_sha256": "1ab78718d84f483c44fe5227156ab941766744a461e14ca9908d971a2860af5b"
+      "observed_at": "2026-09-30T11:12:18.567025+00:00",
+      "verification_record": "https://platform.openai.com/plugins/manage/plugins_6a57b17fb5848191be710192d93fe03a?version=appsub_6abce1515f2481918e10e8bcaf50bc7a&tab=details",
+      "basis": "OpenAI Platform authoritative version selector directly showed this exact version as Published. This records observed Marketplace state; server deployment and release CI are verified separately.",
+      "package_sha256": "135015fbc4044ddec8623feb57c33eea90e99373cbef4c2ac2cb4c8ec51b4064"
     },
     "vera": {
-      "version": "0.1.258",
+      "version": "0.1.294",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d",
-      "observed_at": "2026-09-15",
-      "verification_record": "https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6aa93d9a0bc48191966c4982ce716772",
-      "basis": "OpenAI Platform authoritative version list directly showed 0.1.258 Published on 2026-09-15. All 39 skill scans passed. Fabio explicitly approved the four publisher declarations. This is the exact tested teaching-release archive; PR #640 passed all 29 required release checks.",
-      "package_sha256": "79eb655c7b9ef7e3ccc4b4ee74cf826d76ef209eb2c13ebe190e54b1f239b36f"
+      "observed_at": "2026-09-30T11:12:18.558678+00:00",
+      "verification_record": "https://platform.openai.com/plugins/manage/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d?version=pluginrel_e40b0ad34dcc8191b96537aa3ad3650f",
+      "basis": "OpenAI Platform authoritative version selector directly showed this exact version as Published. This records observed Marketplace state; server deployment and release CI are verified separately.",
+      "package_sha256": "f002391c9760877c42f75a9d7821771db89a81e8d533736d59951558253785ec"
     },
     "lucia": {
       "version": "0.1.50",
