@@ -1,4 +1,4 @@
-name: Fusione P0 foundation
+name: Fusione P0 and P1 workpapers
 
 on:
   pull_request:
@@ -28,14 +28,14 @@ jobs:
       - name: Verify case revisions, access scopes, approvals and change review
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
-          tests/plugins/test_fusione_guidata.py
+          tests/plugins/test_fusione_guidata.py tests/plugins/test_fusione_p1.py
           --cov=plugins/fusione-guidata/scripts --cov-report=term-missing
           --cov-fail-under=80
       - name: Check foundation code quality
         shell: bash
         run: |
           python plugins/fusione-guidata/scripts/check_dependencies.py
-          python -m black --check plugins/fusione-guidata/scripts tests/plugins/test_fusione_guidata.py
-          python -m isort --check-only plugins/fusione-guidata/scripts tests/plugins/test_fusione_guidata.py
+          python -m black --check plugins/fusione-guidata/scripts tests/plugins/test_fusione_guidata.py tests/plugins/test_fusione_p1.py
+          python -m isort --check-only plugins/fusione-guidata/scripts tests/plugins/test_fusione_guidata.py tests/plugins/test_fusione_p1.py
           python -m mypy plugins/fusione-guidata/scripts
           python -m bandit -q -r plugins/fusione-guidata/scripts

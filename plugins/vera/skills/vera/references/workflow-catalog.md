@@ -28,13 +28,14 @@ teaching or browser setup. This installation adaptation is separate from the
 professional course catalog below; it does not provide an unattended executor.
 <!-- VERA_OPENAI_DATEV_END -->
 
-## P0 case foundation
+## Merger workpapers
 
-`fusione-guidata` prepares a multi-company merger case with explicit evidence
-imports, versioned facts/sources/rules, scoped confirmation records and change
-impacts. Its own synthetic CLI demo is available. It is not a prepared onboarding
-lesson: legal branches, calculations and the live multi-company Studio Archive
-adapter are unimplemented. Use its specialist skill directly for P0 work.
+`fusione-guidata` prepares reviewed P1 domestic OIC incorporation workpapers for
+independent or directly wholly owned companies: verified Studio Archive imports,
+valuation bridges, exact shareholder allocations, accounting bridges, event
+calendars and versioned review dossiers. Its two complete synthetic cases are
+available through `demo-p1`. It is not a prepared onboarding lesson. Later
+branches, signatures and filings remain unsupported. Use the specialist skill.
 
 ## Professional workflows
 

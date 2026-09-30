@@ -1,4 +1,4 @@
 interface:
-  display_name: "Fusione guidata · P0"
-  short_description: "Versioned merger evidence and scoped review."
-  default_prompt: "Prepare a P0 merger case with explicit evidence, unresolved facts, scoped approvals and change impacts."
+  display_name: "Fusione guidata · P1"
+  short_description: "Reviewed domestic OIC incorporation workpapers."
+  default_prompt: "Prepare reviewed OIC incorporation workpapers with verified evidence, exact allocations, accounting bridges and event calendars."
