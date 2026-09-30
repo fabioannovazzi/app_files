@@ -1,0 +1,30 @@
+{
+  "plugin": "esg-reporting-assurance",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "esg-1",
+      "prompt": "Organizza le evidenze di questa pratica ESG e conserva le decisioni sulle versioni.",
+      "required_signals": [
+        "ESG"
+      ]
+    },
+    {
+      "id": "esg-2",
+      "prompt": "Riprendi il fascicolo ESG e mostrami le decisioni obsolete dopo la nuova bolletta.",
+      "required_signals": [
+        "ESG"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "esg-3",
+      "prompt": "Prepara una dichiarazione IVA."
+    },
+    {
+      "id": "esg-4",
+      "prompt": "Riconcilia estratto conto e giornale contabile."
+    }
+  ]
+}

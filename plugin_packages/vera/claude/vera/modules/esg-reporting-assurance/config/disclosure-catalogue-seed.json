@@ -1,0 +1,554 @@
+{
+  "status": "unverified_contributor_seed",
+  "catalogue_complete": false,
+  "legal_review_approved": false,
+  "source_package_sha256": "36e501beee344e8e0e7c882f138c5f459b893d24b82b34cf7640b82d68783226",
+  "payload": {
+    "schema_version": "1.0.0",
+    "catalogue_complete": false,
+    "conformity_claims_enabled": false,
+    "purpose": "Coverage map for implementation, not exhaustive datapoint catalogue.",
+    "required_datapoint_fields": [
+      "id",
+      "framework_version",
+      "source_id",
+      "paragraph",
+      "requirement_kind",
+      "condition",
+      "materiality_dependency",
+      "phase_in",
+      "unit",
+      "period_basis",
+      "comparatives",
+      "omission_treatment"
+    ],
+    "families": [
+      {
+        "id": "VSME2025-B1",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "B1",
+        "label": "Perimetro e criteri",
+        "scope": "disclosure_family",
+        "module": "basic",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, B1",
+        "inputs": "bilanci, struttura gruppo, siti",
+        "work": "identità, esercizio, modulo e siti",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-B2",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "B2",
+        "label": "Pratiche e politiche",
+        "scope": "disclosure_family",
+        "module": "basic",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, B2",
+        "inputs": "policy e verbali",
+        "work": "politiche esistenti e iniziative",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-B3",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "B3",
+        "label": "Energia ed emissioni",
+        "scope": "disclosure_family",
+        "module": "basic",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, B3",
+        "inputs": "bollette, combustibili, inventario",
+        "work": "energia, Scope 1 e Scope 2 pertinenti",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-B4",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "B4",
+        "label": "Inquinamento",
+        "scope": "disclosure_family",
+        "module": "basic",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, B4",
+        "inputs": "autorizzazioni e misure",
+        "work": "informazioni condizionate alla fattispecie",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-B5",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "B5",
+        "label": "Biodiversità",
+        "scope": "disclosure_family",
+        "module": "basic",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, B5",
+        "inputs": "coordinate e fonti geografiche",
+        "work": "siti e aree pertinenti",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-B6",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "B6",
+        "label": "Acqua",
+        "scope": "disclosure_family",
+        "module": "basic",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, B6",
+        "inputs": "contatori e fatture",
+        "work": "prelievi e consumi pertinenti",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-B7",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "B7",
+        "label": "Risorse e rifiuti",
+        "scope": "disclosure_family",
+        "module": "basic",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, B7",
+        "inputs": "registri e formulari",
+        "work": "materiali e gestione rifiuti",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-B8",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "B8",
+        "label": "Personale",
+        "scope": "disclosure_family",
+        "module": "basic",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, B8",
+        "inputs": "report personale",
+        "work": "composizione e dinamica della popolazione",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-B9",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "B9",
+        "label": "Salute e sicurezza",
+        "scope": "disclosure_family",
+        "module": "basic",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, B9",
+        "inputs": "registri e ore lavorate",
+        "work": "eventi e indicatori previsti",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-B10",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "B10",
+        "label": "Retribuzioni e formazione",
+        "scope": "disclosure_family",
+        "module": "basic",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, B10",
+        "inputs": "paghe e formazione",
+        "work": "misure secondo condizioni del criterio",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-B11",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "B11",
+        "label": "Corruzione",
+        "scope": "disclosure_family",
+        "module": "basic",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, B11",
+        "inputs": "evidenze legali e sanzioni",
+        "work": "eventi rilevanti previsti dal criterio",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-C1",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "C1",
+        "label": "Modello e strategia",
+        "scope": "disclosure_family",
+        "module": "comprehensive",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, C1",
+        "inputs": "piano aziendale",
+        "work": "attività e iniziative rilevanti",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-C2",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "C2",
+        "label": "Politiche e iniziative",
+        "scope": "disclosure_family",
+        "module": "comprehensive",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, C2",
+        "inputs": "policy e verbali",
+        "work": "dettagli di pratiche e responsabilità",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-C3",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "C3",
+        "label": "Obiettivi climatici",
+        "scope": "disclosure_family",
+        "module": "comprehensive",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, C3",
+        "inputs": "delibere, baseline, piano",
+        "work": "target e piano se presenti",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-C4",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "C4",
+        "label": "Rischi climatici",
+        "scope": "disclosure_family",
+        "module": "comprehensive",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, C4",
+        "inputs": "analisi siti e scenari",
+        "work": "rischi e misure pertinenti",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-C5",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "C5",
+        "label": "Personale aggiuntivo",
+        "scope": "disclosure_family",
+        "module": "comprehensive",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, C5",
+        "inputs": "report personale",
+        "work": "informazioni condizionate aggiuntive",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-C6",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "C6",
+        "label": "Diritti umani",
+        "scope": "disclosure_family",
+        "module": "comprehensive",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, C6",
+        "inputs": "policy e segnalazioni",
+        "work": "politiche e processi",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-C7",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "C7",
+        "label": "Eventi diritti umani",
+        "scope": "disclosure_family",
+        "module": "comprehensive",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, C7",
+        "inputs": "fascicoli e verifiche",
+        "work": "incidenti secondo definizione/versione",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-C8",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "C8",
+        "label": "Ricavi per attività",
+        "scope": "disclosure_family",
+        "module": "comprehensive",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, C8",
+        "inputs": "contabilità e segmenti",
+        "work": "attività previste dal criterio",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "VSME2025-C9",
+        "framework_version": "VSME_RECOMMENDATION_2025_1710",
+        "code": "C9",
+        "label": "Organi di governo",
+        "scope": "disclosure_family",
+        "module": "comprehensive",
+        "source_ids": [
+          "S10",
+          "S35"
+        ],
+        "locator": "Allegato I, C9",
+        "inputs": "verbali e nomine",
+        "work": "composizione e indicatore previsto",
+        "applicability": "Resolve exact paragraph conditions, thresholds and permissions from approved datapoint catalogue; do not infer from label.",
+        "automatic_required": false
+      },
+      {
+        "id": "ESRS2023-ESRS1",
+        "framework_version": "ESRS_2023_WITH_2025_QUICKFIX",
+        "code": "ESRS1",
+        "label": "Criteri generali",
+        "scope": "standard_family",
+        "source_ids": [
+          "S06",
+          "S07"
+        ],
+        "locator": "Allegato I, ESRS1",
+        "automatic_required": false,
+        "applicability": "Resolve materiality, mandatory cross-cutting items, entity-specific disclosures and phase-ins in the versioned catalogue."
+      },
+      {
+        "id": "ESRS2023-ESRS2",
+        "framework_version": "ESRS_2023_WITH_2025_QUICKFIX",
+        "code": "ESRS2",
+        "label": "Informazioni trasversali",
+        "scope": "standard_family",
+        "source_ids": [
+          "S06",
+          "S07"
+        ],
+        "locator": "Allegato I, ESRS2",
+        "automatic_required": false,
+        "applicability": "Resolve materiality, mandatory cross-cutting items, entity-specific disclosures and phase-ins in the versioned catalogue."
+      },
+      {
+        "id": "ESRS2023-E1",
+        "framework_version": "ESRS_2023_WITH_2025_QUICKFIX",
+        "code": "E1",
+        "label": "Clima",
+        "scope": "standard_family",
+        "source_ids": [
+          "S06",
+          "S07"
+        ],
+        "locator": "Allegato I, E1",
+        "automatic_required": false,
+        "applicability": "Resolve materiality, mandatory cross-cutting items, entity-specific disclosures and phase-ins in the versioned catalogue."
+      },
+      {
+        "id": "ESRS2023-E2",
+        "framework_version": "ESRS_2023_WITH_2025_QUICKFIX",
+        "code": "E2",
+        "label": "Inquinamento",
+        "scope": "standard_family",
+        "source_ids": [
+          "S06",
+          "S07"
+        ],
+        "locator": "Allegato I, E2",
+        "automatic_required": false,
+        "applicability": "Resolve materiality, mandatory cross-cutting items, entity-specific disclosures and phase-ins in the versioned catalogue."
+      },
+      {
+        "id": "ESRS2023-E3",
+        "framework_version": "ESRS_2023_WITH_2025_QUICKFIX",
+        "code": "E3",
+        "label": "Acqua e risorse marine",
+        "scope": "standard_family",
+        "source_ids": [
+          "S06",
+          "S07"
+        ],
+        "locator": "Allegato I, E3",
+        "automatic_required": false,
+        "applicability": "Resolve materiality, mandatory cross-cutting items, entity-specific disclosures and phase-ins in the versioned catalogue."
+      },
+      {
+        "id": "ESRS2023-E4",
+        "framework_version": "ESRS_2023_WITH_2025_QUICKFIX",
+        "code": "E4",
+        "label": "Biodiversità",
+        "scope": "standard_family",
+        "source_ids": [
+          "S06",
+          "S07"
+        ],
+        "locator": "Allegato I, E4",
+        "automatic_required": false,
+        "applicability": "Resolve materiality, mandatory cross-cutting items, entity-specific disclosures and phase-ins in the versioned catalogue."
+      },
+      {
+        "id": "ESRS2023-E5",
+        "framework_version": "ESRS_2023_WITH_2025_QUICKFIX",
+        "code": "E5",
+        "label": "Risorse e circolarità",
+        "scope": "standard_family",
+        "source_ids": [
+          "S06",
+          "S07"
+        ],
+        "locator": "Allegato I, E5",
+        "automatic_required": false,
+        "applicability": "Resolve materiality, mandatory cross-cutting items, entity-specific disclosures and phase-ins in the versioned catalogue."
+      },
+      {
+        "id": "ESRS2023-S1",
+        "framework_version": "ESRS_2023_WITH_2025_QUICKFIX",
+        "code": "S1",
+        "label": "Personale proprio",
+        "scope": "standard_family",
+        "source_ids": [
+          "S06",
+          "S07"
+        ],
+        "locator": "Allegato I, S1",
+        "automatic_required": false,
+        "applicability": "Resolve materiality, mandatory cross-cutting items, entity-specific disclosures and phase-ins in the versioned catalogue."
+      },
+      {
+        "id": "ESRS2023-S2",
+        "framework_version": "ESRS_2023_WITH_2025_QUICKFIX",
+        "code": "S2",
+        "label": "Lavoratori di filiera",
+        "scope": "standard_family",
+        "source_ids": [
+          "S06",
+          "S07"
+        ],
+        "locator": "Allegato I, S2",
+        "automatic_required": false,
+        "applicability": "Resolve materiality, mandatory cross-cutting items, entity-specific disclosures and phase-ins in the versioned catalogue."
+      },
+      {
+        "id": "ESRS2023-S3",
+        "framework_version": "ESRS_2023_WITH_2025_QUICKFIX",
+        "code": "S3",
+        "label": "Comunità",
+        "scope": "standard_family",
+        "source_ids": [
+          "S06",
+          "S07"
+        ],
+        "locator": "Allegato I, S3",
+        "automatic_required": false,
+        "applicability": "Resolve materiality, mandatory cross-cutting items, entity-specific disclosures and phase-ins in the versioned catalogue."
+      },
+      {
+        "id": "ESRS2023-S4",
+        "framework_version": "ESRS_2023_WITH_2025_QUICKFIX",
+        "code": "S4",
+        "label": "Consumatori e utilizzatori",
+        "scope": "standard_family",
+        "source_ids": [
+          "S06",
+          "S07"
+        ],
+        "locator": "Allegato I, S4",
+        "automatic_required": false,
+        "applicability": "Resolve materiality, mandatory cross-cutting items, entity-specific disclosures and phase-ins in the versioned catalogue."
+      },
+      {
+        "id": "ESRS2023-G1",
+        "framework_version": "ESRS_2023_WITH_2025_QUICKFIX",
+        "code": "G1",
+        "label": "Condotta aziendale",
+        "scope": "standard_family",
+        "source_ids": [
+          "S06",
+          "S07"
+        ],
+        "locator": "Allegato I, G1",
+        "automatic_required": false,
+        "applicability": "Resolve materiality, mandatory cross-cutting items, entity-specific disclosures and phase-ins in the versioned catalogue."
+      }
+    ],
+    "candidate_versions": [
+      {
+        "id": "ESRS_COMMISSION_2026_5010",
+        "source_ids": [
+          "S08",
+          "S09"
+        ],
+        "active": false
+      },
+      {
+        "id": "VOLUNTARY_COMMISSION_2026_5011",
+        "source_ids": [
+          "S11",
+          "S12"
+        ],
+        "active": false
+      }
+    ]
+  }
+}

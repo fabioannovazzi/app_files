@@ -475,6 +475,17 @@
       ]
     },
     {
+      "component_id": "esg-reporting-assurance",
+      "skills": [
+        "modules/esg-reporting-assurance/skills/esg-reporting-assurance/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/esg-reporting-assurance/scripts/check_dependencies.py",
+        "modules/esg-reporting-assurance/scripts/demo_esg.py",
+        "modules/esg-reporting-assurance/scripts/esg_case.py"
+      ]
+    },
+    {
       "component_id": "trasformazione",
       "skills": [
         "modules/trasformazione/skills/trasformazione/SKILL.md"
@@ -512,6 +523,7 @@
     "skills/concordato-plan-review/SKILL.md",
     "skills/dati-fiscali-strutturati/SKILL.md",
     "skills/email-cliente/SKILL.md",
+    "skills/esg-reporting-assurance/SKILL.md",
     "skills/fatture-xml-check/SKILL.md",
     "skills/financial-analysis/SKILL.md",
     "skills/financial-report-builder/SKILL.md",

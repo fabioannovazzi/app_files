@@ -930,3 +930,10 @@ review or confirmation afterward.
 ## Supported Python runtime
 
 Use CPython 3.12 for all Python workflows. Run the bundle managed dependency setup before invoking component scripts. It reuses the shared environment or selects an installed Python 3.12. If Python 3.12 and uv are absent, setup automatically downloads the published, SHA-256-verified uv bootstrap and provisions private CPython 3.12 inside shared runtime storage. Users do not install uv, change system Python, or edit PATH. Any supported host Python, including 3.14, may launch setup; workflow helpers run in the managed interpreter. If automatic setup is unavailable, report the concrete setup error; do not switch the workflow to Python 3.10, 3.11 or 3.13. Vera, Clara and Lucia use one shared environment per operating-system host, outside plugin and client folders. Published shared recipes govern its dependencies. Optional OCR, once approved, is installed in that same environment and retained across updates. Setup waits for running workflows; after failed setup, repair the environment before using it again.
+
+## ESG evidence foundation
+
+For an ESG case requiring source locators, version history and recorded
+professional decisions, read `../esg-reporting-assurance/SKILL.md`. This first
+delivery supports partial foundation drafts only; full ESG reporting and
+assurance remain outside its implemented scope.

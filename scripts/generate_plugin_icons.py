@@ -28,6 +28,9 @@ class IconSpec:
 
 SPECS = (
     IconSpec(
+        "esg-reporting-assurance", "Vera · Fascicolo ESG", "#002060", "#00B0F0", "esg"
+    ),
+    IconSpec(
         "composizione-negoziata",
         "Vera · Composizione negoziata",
         "#002060",
@@ -377,6 +380,7 @@ def _body(spec: IconSpec) -> str:
     color = "#1F211D"
     accent = spec.accent
     bodies = {
+        "esg": f"""<path d="M14 14h30v38H14zM21 23h16M21 30h10" fill="none" stroke="{paper}" stroke-width="3"/><path d="M30 44c-5-12 7-17 20-16 0 13-8 22-20 16zm0 0 13-10" fill="none" stroke="{accent}" stroke-width="3"/>""",
         "merger": f"""<path d="M12 14h14v14H12zM38 14h14v14H38zM19 28v9h26v-9M32 37v7M24 44h16v10H24z" fill="none" stroke="{paper}" stroke-width="3"/><circle cx="32" cy="37" r="3" fill="{accent}"/>""",
         "treasury": f"""<rect x="13" y="17" width="38" height="35" rx="4" fill="none" stroke="{paper}" stroke-width="3"/><path d="M22 12v10M42 12v10M13 28h38" stroke="{paper}" stroke-width="3"/><path d="m19 39 8-5 8 12 10-10" fill="none" stroke="{accent}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>""",
         "transformation": f"""<path d="M11 19h16v26H11zM39 15h14v34H39zM29 30h8m-4-4 4 4-4 4" fill="none" stroke="{paper}" stroke-width="3" stroke-linejoin="round"/><path d="M14 51h36" stroke="{accent}" stroke-width="3"/>""",

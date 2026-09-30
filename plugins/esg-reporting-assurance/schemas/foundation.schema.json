@@ -1,0 +1,661 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:vera:esg:foundation:v1",
+  "$defs": {
+    "period": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date"
+        },
+        "end": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "additionalProperties": false
+    },
+    "reference": {
+      "type": "object",
+      "properties": {
+        "client_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "engagement_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "case_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "kind": {
+          "enum": [
+            "case",
+            "source",
+            "evidence",
+            "decision",
+            "artifact"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "client_id",
+        "engagement_id",
+        "case_id",
+        "kind",
+        "id",
+        "version",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "case": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "enum": [
+            "preparation",
+            "review",
+            "assurance"
+          ]
+        },
+        "reporting_basis": {
+          "enum": [
+            "voluntary",
+            "mandatory",
+            "unresolved"
+          ]
+        },
+        "period": {
+          "$ref": "#/$defs/period"
+        },
+        "jurisdiction": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "framework_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "assurance_level": {
+          "enum": [
+            "not_applicable",
+            "limited",
+            "reasonable"
+          ]
+        },
+        "synthetic": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "service",
+        "reporting_basis",
+        "period",
+        "jurisdiction",
+        "framework_version",
+        "assurance_level",
+        "synthetic"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "service": {
+                "const": "assurance"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "assurance_level": {
+                "enum": [
+                  "limited",
+                  "reasonable"
+                ]
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "assurance_level": {
+                "const": "not_applicable"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "observation": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "observed",
+            "not_available",
+            "not_applicable"
+          ]
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+            }
+          ]
+        },
+        "unit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "disclosure_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "metric_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "status",
+        "value",
+        "unit",
+        "rationale",
+        "disclosure_id",
+        "metric_id"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "observed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "string"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "locator": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "row": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "column": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "row",
+            "column"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "line": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "line"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "evidence": {
+      "type": "object",
+      "properties": {
+        "client_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "engagement_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "input_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "source_relative_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "locator": {
+          "$ref": "#/$defs/locator"
+        },
+        "excerpt": {
+          "type": "string"
+        },
+        "observation": {
+          "$ref": "#/$defs/observation"
+        }
+      },
+      "required": [
+        "client_id",
+        "engagement_id",
+        "input_id",
+        "sha256",
+        "source_relative_path",
+        "locator",
+        "excerpt",
+        "observation"
+      ],
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "publisher": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "applicability_period": {
+          "$ref": "#/$defs/period"
+        },
+        "review_status": {
+          "enum": [
+            "unverified_seed",
+            "needs_review"
+          ]
+        },
+        "catalogue_complete": {
+          "type": "boolean"
+        },
+        "legal_review_approved": {
+          "type": "boolean"
+        },
+        "locator": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "title",
+        "publisher",
+        "url",
+        "version",
+        "applicability_period",
+        "review_status",
+        "catalogue_complete",
+        "legal_review_approved",
+        "locator",
+        "rationale"
+      ],
+      "additionalProperties": false
+    },
+    "decision": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "scope",
+            "applicability",
+            "materiality",
+            "independence",
+            "estimate",
+            "conclusion",
+            "delivery"
+          ]
+        },
+        "decided_by": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "decided_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "outcome": {
+          "enum": [
+            "approved",
+            "rejected",
+            "noted"
+          ]
+        },
+        "decision": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "type",
+        "decided_by",
+        "decided_on",
+        "outcome",
+        "decision",
+        "rationale"
+      ],
+      "additionalProperties": false
+    },
+    "artifact": {
+      "type": "object",
+      "properties": {
+        "claim": {
+          "const": "partial_draft"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "audience": {
+          "const": "professional"
+        },
+        "content": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "claim",
+        "title",
+        "audience",
+        "content",
+        "limitations"
+      ],
+      "additionalProperties": false
+    },
+    "start_case": {
+      "type": "object",
+      "properties": {
+        "idempotency_key": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "case_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "record": {
+          "$ref": "#/$defs/case"
+        },
+        "previous_context": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "idempotency_key",
+        "case_id",
+        "record",
+        "previous_context"
+      ],
+      "additionalProperties": false
+    },
+    "bind_evidence": {
+      "type": "object",
+      "properties": {
+        "idempotency_key": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "expected_state_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "input_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "locator": {
+          "$ref": "#/$defs/locator"
+        },
+        "observation": {
+          "$ref": "#/$defs/observation"
+        }
+      },
+      "required": [
+        "idempotency_key",
+        "expected_state_sha256",
+        "id",
+        "input_id",
+        "locator",
+        "observation"
+      ],
+      "additionalProperties": false
+    },
+    "register_source": {
+      "type": "object",
+      "properties": {
+        "idempotency_key": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "expected_state_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "record": {
+          "$ref": "#/$defs/source"
+        }
+      },
+      "required": [
+        "idempotency_key",
+        "expected_state_sha256",
+        "id",
+        "record"
+      ],
+      "additionalProperties": false
+    },
+    "record_decision": {
+      "type": "object",
+      "properties": {
+        "idempotency_key": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "expected_state_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "record": {
+          "$ref": "#/$defs/decision"
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/reference"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "idempotency_key",
+        "expected_state_sha256",
+        "id",
+        "record",
+        "dependencies"
+      ],
+      "additionalProperties": false
+    },
+    "build_deliverables": {
+      "type": "object",
+      "properties": {
+        "idempotency_key": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "expected_state_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "content": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/reference"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "idempotency_key",
+        "expected_state_sha256",
+        "id",
+        "title",
+        "content",
+        "claim",
+        "dependencies"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

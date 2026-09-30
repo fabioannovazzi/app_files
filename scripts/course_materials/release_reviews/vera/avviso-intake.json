@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "avviso-intake",
-  "course_sha256": "f2e2b6389909d2fc1ccd68153e3bbea587cd7d60a74a7ca0807d9ae3ec19e6a3",
+  "course_sha256": "88def90fba0cb5bbbce61958a45761bc816c560b0bdbff537539336aa9ea1487",
   "reviewer": "Codex: original fictional notice/update, five first-use outlines, native extraction tables and all ten source-bound Codex review notes",
   "reviewed_at": "2026-09-14T16:57:28.170830+00:00",
   "review_scope": "The current native pipeline imports and extracts the notice. Fixed model-authored test interpretations exercise the existing skill instruction to create codex_run_review.md in the actual run output; they are not native-code legal determinations or fresh model execution in CI, and are never shipped as learner results. The native ledger declares and seals those real output files. The wider client-file package and lexical fiscal classifications remain unapproved. No legal deadline, professional approval, sending, voice or learner understanding is attested.",
@@ -351,5 +351,16 @@
     "source_review": "Reviewed the sole shared-contract change: adding composizione-negoziata to the recognized managed workflow IDs. The Studio Archive lesson also binds the additive sealed snapshot history/read/append methods under the existing engagement lock. An AST comparison confirms that every pre-existing ledger function and class is unchanged. No existing lesson behavior or external recipient is added by these changes.",
     "execution_evidence": "GitHub run 36633858670, job 109629617115 at 7ef49b804: 1171 native teaching tests passed, three skipped; one stale public-catalogue count assertion failed and has been corrected separately. This is not a green whole-run claim. Ten additional CNC native demo/practice cases pass locally.",
     "limits": "Historical artifact reviews remain historical. No new independent editorial, live learner, voice, installed-host or professional acceptance is claimed. The release gate must validate current native demo/practice identities against these exact course hashes."
+  },
+  "esg_source_refresh_20260930": {
+    "reviewer": "Codex /root - bounded source review",
+    "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
+    "baseline_commit": "5f4c3324b9efe209e9e6f99a3a38d7ac002df81a",
+    "previous_course_sha256": "f2e2b6389909d2fc1ccd68153e3bbea587cd7d60a74a7ca0807d9ae3ec19e6a3",
+    "current_course_sha256": "88def90fba0cb5bbbce61958a45761bc816c560b0bdbff537539336aa9ea1487",
+    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
+    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
+    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
+    "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json"
   }
 }
