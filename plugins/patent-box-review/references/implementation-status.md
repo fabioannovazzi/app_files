@@ -5,10 +5,10 @@ written brief 1554538351997227140; original contribution 1552213594513612880.
 Recovered on 2026-09-29. The original archive has 56 entries, with 55 verified
 manifest hashes. Original contributor: francesco062691.
 
-The goal remains the full recovered specification. The previous first-slice
-completion claim was withdrawn. The user authorized the production correction
-and continued implementation; the aggregation correction is applied. This
-snapshot is not released, installed-runtime accepted or professionally accepted.
+This release makes the implemented workflow available as a controlled preview.
+The full recovered specification remains the acceptance target. Technical tests
+do not establish installed-runtime or professional acceptance; the remaining
+conditions below stay explicit when the preview is distributed.
 
 ## Observed implementation
 
@@ -30,7 +30,7 @@ snapshot is not released, installed-runtime accepted or professionally accepted.
 
 ## Current verification
 
-On 2026-09-30 the combined component and archive suite passes **297 tests**,
+On 2026-09-30 the component and extracted-package suite passes **300 tests**,
 with **84.36%** coverage over the package and scripts. These include actual
 synthetic cryptographic signatures, revoked certificates/mandates, changed
 inputs/output files, cross-client scope, source freshness and an authenticated
@@ -48,9 +48,11 @@ were visually inspected; exact artifacts and hashes are recorded in task output
 The dependency recipe and revision are synchronized across Vera, Clara and
 Lucia. Candidate versions are Vera 0.1.292, Clara 0.1.228, Lucia 0.1.68 and the
 Patent Box component 0.1.1. They exceed the current main/open-PR versions inspected
-on 2026-09-30, but are not reserved or published versions. Current-main source 5f4c3324b is now integrated in this isolated task checkout, including Composizione negoziata, Trasformazione, Fusione and the updated Adeguati assetti workflow. No task changes have been merged into main. Build/parity/test
-receipts are retained in task output `continuation-review`; generated archives
-and their source hashes must be rechecked after every source edit.
+on 2026-09-30. Current-main source 5f4c3324b is integrated, including
+Composizione negoziata, Trasformazione, Fusione and the updated Adeguati assetti
+workflow. Server deployment and Marketplace publication require separate
+verification for these exact versions. Build and acceptance receipts are retained
+in the task release evidence; regenerate and verify archives after source edits.
 
 ## Broader repository gates
 
@@ -59,7 +61,8 @@ an installed SciPy native-library loader failure and dependent imports. It did
 not establish full-suite success or repository coverage. Repository-wide Black
 and Isort checks also report formatting issues outside this component; no broad
 reformat was performed. Targeted component formatting and unsuppressed type
-checks pass. The unrelated repository gates remain open before a release.
+checks pass. Baseline failures are reported separately from regressions. Required release CI
+must pass before merging this preview.
 
 ## Remaining acceptance
 
@@ -70,5 +73,6 @@ monitor false-positive/false-negative review, configured scheduled monitoring an
 notification delivery, professional reopening acceptance, green release CI and
 installed-runtime checks remain required.
 
-No task merge into main, deployment, Marketplace publication or external message occurred for
-this continuation. Development archives are not released delivery artifacts. Do not mark the goal complete on technical tests.
+Preview deployment does not complete professional acceptance or prove an enabled
+installation has updated. Do not mark the full implementation goal complete from
+technical tests or publication alone.

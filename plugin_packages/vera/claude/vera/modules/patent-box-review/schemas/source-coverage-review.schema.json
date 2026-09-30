@@ -1,0 +1,291 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:vera:patent-box:source-coverage-review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "reviewed_by",
+    "reviewed_at",
+    "scope_reviews",
+    "source_selections",
+    "source_exclusions"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "reviewed_by": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 10000
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scope_reviews": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "scope_id",
+          "pagination_complete",
+          "coverage_reason",
+          "link_decisions"
+        ],
+        "properties": {
+          "scope_id": {
+            "type": "string",
+            "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+          },
+          "pagination_complete": {
+            "type": "boolean"
+          },
+          "coverage_reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "link_decisions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "receipt_id",
+                "link_id",
+                "classification",
+                "reason"
+              ],
+              "properties": {
+                "receipt_id": {
+                  "type": "string",
+                  "pattern": "[a-f0-9]{64}"
+                },
+                "link_id": {
+                  "type": "string",
+                  "pattern": "[a-f0-9]{64}"
+                },
+                "classification": {
+                  "type": "string",
+                  "enum": [
+                    "NAVIGATION",
+                    "OUTSIDE_WINDOW",
+                    "NOT_RELEVANT",
+                    "DISCOVERED_DOCUMENT",
+                    "LISTING_PAGE"
+                  ]
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 10000
+                }
+              }
+            },
+            "minItems": 0,
+            "maxItems": 10000
+          }
+        }
+      },
+      "minItems": 1,
+      "maxItems": 30
+    },
+    "source_selections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "receipt_id",
+          "metadata"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+          },
+          "receipt_id": {
+            "type": "string",
+            "pattern": "[a-f0-9]{64}"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "authority",
+              "document_type",
+              "number",
+              "published_on",
+              "effective_from",
+              "effective_to",
+              "affected_from",
+              "affected_to",
+              "regime",
+              "rule_ids",
+              "relationship",
+              "previous_source_ids",
+              "applicability_rationale"
+            ],
+            "properties": {
+              "authority": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 10000
+              },
+              "document_type": {
+                "type": "string",
+                "enum": [
+                  "LEGISLATION",
+                  "IMPLEMENTATION",
+                  "GENERAL_GUIDANCE",
+                  "INDIVIDUAL_RULING",
+                  "JUDGMENT",
+                  "TECHNICAL",
+                  "UNKNOWN"
+                ]
+              },
+              "number": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10000
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "published_on": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "effective_from": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "effective_to": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "affected_from": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "affected_to": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "regime": {
+                "type": "string",
+                "enum": [
+                  "OLD",
+                  "NEW",
+                  "TRANSITION",
+                  "UNKNOWN"
+                ]
+              },
+              "rule_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+                },
+                "minItems": 0,
+                "maxItems": 10000
+              },
+              "relationship": {
+                "type": "string",
+                "enum": [
+                  "NEW",
+                  "PARTIAL_UPDATE",
+                  "REPLACEMENT",
+                  "UNRELATED",
+                  "UNKNOWN"
+                ]
+              },
+              "previous_source_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+                },
+                "minItems": 0,
+                "maxItems": 10000
+              },
+              "applicability_rationale": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 10000
+              }
+            }
+          }
+        }
+      },
+      "minItems": 0,
+      "maxItems": 10000
+    },
+    "source_exclusions": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "receipt_id",
+          "reason"
+        ],
+        "properties": {
+          "receipt_id": {
+            "type": "string",
+            "pattern": "[a-f0-9]{64}"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          }
+        }
+      }
+    }
+  }
+}
