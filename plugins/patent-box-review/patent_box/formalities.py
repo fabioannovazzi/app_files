@@ -534,8 +534,9 @@ def verify_timestamp(
         stamp = _write(root, "timestamp.der", inputs["timestamp"])
         data = _write(root, "document.bin", inputs["document"])
         roots = _write(root, "roots.pem", inputs["trusted_roots"])
-        # ts uses no-CApath/store via environment; explicit empty paths avoid
-        # platform trust defaults on versions whose ts CLI lacks those flags.
+        # ts lacks no-CApath/store on some OpenSSL 3 releases. Keep the
+        # directory empty and bind both file/store loaders to selected roots;
+        # OpenSSL 3.0 rejects an empty directory as a store URI.
         empty_ca = root / "empty-ca"
         empty_ca.mkdir()
         provider.env.update(SSL_CERT_DIR=str(empty_ca), SSL_CERT_FILE=roots)
@@ -551,7 +552,7 @@ def verify_timestamp(
             "-CApath",
             str(empty_ca),
             "-CAstore",
-            str(empty_ca),
+            roots,
             "-attime",
             str(int(_time(at).timestamp())),
             "-auth_level",

@@ -820,7 +820,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
         VERA_PLUGIN_ROOT / "skills" / "vera" / "references" / "workflow-catalog.md"
     ).read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    foundation = catalog.split("## Merger workpapers", 1)[1].split(
+    foundation = catalog.split("## Development preview", 1)[1].split(
         "## Professional workflows", 1
     )[0]
     foundation_skills = set(
@@ -877,7 +877,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    expected_module_count = 38
+    expected_module_count = 39
     module_hrefs = re.findall(
         r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
     )
@@ -886,7 +886,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     assert len(module_hrefs) == expected_module_count
     assert len(module_hrefs) == len(set(module_hrefs))
     assert core.count('data-primary-workflow-link="') == 2
-    assert core.count('data-jurisdiction-item="it"') == 12
+    assert core.count('data-jurisdiction-item="it"') == 13
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for expected_href in (
@@ -997,6 +997,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Bilancio OIC e XBRL",
         "Composizione negoziata",
         "Fusione per incorporazione",
+        "Patent Box · anteprima",
         "Revisione concordato preventivo",
         "Automazione web",
         "Campionamento scritture contabili",
@@ -1095,7 +1096,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 38
+    assert len(labels) == 39
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
@@ -1634,7 +1635,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 38
+    expected_module_link_count = 39
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',
