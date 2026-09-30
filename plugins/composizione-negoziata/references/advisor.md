@@ -21,3 +21,7 @@ Piano e proposte restano dell'impresa. Non attribuire all'advisor il parere
 indipendente dell'esperto. Non confondere ricavi con incassi, patrimonio
 contabile con realizzo, proposta con accordo o fatturato commerciale con
 requisito legale di accesso. Non aggiustare ipotesi per l'esito desiderato.
+
+## Riferimenti progressivi
+
+Per accesso, indipendenza, atti o termini leggi `access-and-measures.md`; per trattative, posizioni speciali o variazioni leggi `negotiations-and-special-events.md`; per esito positivo/negativo e attività residue leggi `report-and-handoff.md`. Non caricare tutti i riferimenti se il problema corrente non li richiede.

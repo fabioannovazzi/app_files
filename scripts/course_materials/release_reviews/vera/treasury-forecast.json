@@ -240,8 +240,8 @@
   },
   "esg_source_refresh_20260930": {
     "reviewer": "Codex /root - bounded source review",
-    "reviewed_at": "2026-09-30T06:05:58.004774+00:00",
-    "baseline_commit": "8f662195f00bac3b605ac73077e1a0bd31d30253",
+    "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
+    "baseline_commit": "5f4c3324b9efe209e9e6f99a3a38d7ac002df81a",
     "previous_course_sha256": "eae3c12ca9b6aa7b3b808a27dff3defd459d41c916df91a513a303344c2f3d09",
     "current_course_sha256": "99cf7c466065a70cf0bc3b42bb1ab7c737feb3e91edab509d50cc925634acc20",
     "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",

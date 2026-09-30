@@ -2,7 +2,7 @@
   "schema": "vera.localization.catalogue.v1",
   "root": "plugins/vera",
   "version": "0.1.291",
-  "captured_at": "2026-09-30T08:52:48.284590+00:00",
+  "captured_at": "2026-09-30T09:04:18.183950+00:00",
   "catalogue_fingerprint": "b515ac4fbeb529cdc7daa468183abc4b753cfaa5fbcf290def9463ff1426ae7a",
   "manifest_sha256": "7b50b4f35971bda637d62f69cb7043739510aa1cf61ebb5c2856583e9acf1f6a",
   "entries": [

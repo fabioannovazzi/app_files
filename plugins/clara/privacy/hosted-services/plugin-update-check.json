@@ -15,7 +15,6 @@
     "scripts/check_for_update.py",
     "repository/modules/hosted_services/api.py",
     "repository/modules/pdp/legal_content.py",
-    "repository/static/shared/codex-plugin-versions.json",
     "scripts/onboarding_session_start.py",
     "skills/clara/SKILL.md"
   ],
@@ -62,9 +61,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-15",
+    "reviewed_at": "2026-09-30",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "5516f9aff1b4159be4ba9582e98f0c2d55ebe34c7411a57d4bdcc57ed1a192bb"
+    "source_fingerprint": "5f74d796c97e8678008dd304ae3a728858ccb7db977948f873fd595caa654ef2"
   }
 }

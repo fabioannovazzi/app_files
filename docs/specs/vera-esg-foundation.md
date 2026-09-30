@@ -82,11 +82,12 @@ or state. The same request now fails without changing the 11,871-byte saved case
 and resume succeeds. ASCII and Unicode regressions verify unchanged state and
 output files. No history is truncated or pruned.
 
-Deployment candidate evidence after integration of main `c3f09ad78`:
+Deployment candidate evidence after integration of main `5f4c3324b`:
 
 - 50 ESG regressions pass; 88.72% coverage across the three new scripts.
-- 672 combined ESG, merger P0/P1, transformation, CNC, assetti, filesystem, website,
-  registry and routing tests pass.
+- The combined integration run passes 681 tests with 23 conditional skips. Its
+  locale check passes after adding the bundled Node runtime to PATH; the 55 CNC
+  and hosted-review checks also pass separately with CI fixture isolation.
 - Canonical Codex, ChatGPT-upload and Cowork archives match source for all three
   products. Each Vera archive passes all six synthetic demo checks.
 - The 43-entry Geneva catalogue preserves the recorded scope judgments.

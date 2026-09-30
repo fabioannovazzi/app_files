@@ -94,3 +94,5 @@ The 30 September combined candidate 0.1.286 has 43 skill entries. All prior scop
 The 0.1.287 candidate updates the merger entrypoint to P1. The two supported branches are domestic Italian OIC incorporations; the Geneva assessment remains Unresolved.
 
 The ESG deployment candidate 0.1.291 retains all 43 entries and the merged Fusione P1 scope; target dispositions remain unchanged.
+
+The 0.1.288 release refresh updates the package identity only. All 42 skill entrypoints are byte-identical to the recorded 0.1.287 catalogue; the professional assessments and unresolved Swiss scope remain unchanged.

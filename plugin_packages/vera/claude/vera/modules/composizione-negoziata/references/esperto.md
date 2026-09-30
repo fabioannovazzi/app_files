@@ -32,3 +32,7 @@ https://www.fondazionenazionalecommercialisti.it/node/1904 . La pagina distingue
 analisi preliminare, supporto alle trattative/pareri e rendicontazione finale.
 Leggi le sezioni pertinenti e verifica aggiornamenti prima dell'uso decisivo.
 Raccomandazioni professionali e legge hanno rango diverso.
+
+## Riferimenti progressivi
+
+Per accesso, indipendenza, atti o termini leggi `access-and-measures.md`; per trattative, posizioni speciali o variazioni leggi `negotiations-and-special-events.md`; per esito positivo/negativo e attività residue leggi `report-and-handoff.md`. Non caricare tutti i riferimenti se il problema corrente non li richiede.

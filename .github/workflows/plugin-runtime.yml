@@ -22,18 +22,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit -r plugins/treasury-forecast/requirements.txt
+      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit -r plugins/treasury-forecast/requirements.txt -r tests/cnc_hosted_requirements.txt
       - name: Verify roles, versioned evidence, treasury handoff and resume
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
-          tests/plugins/test_composizione_negoziata.py
-          --cov=plugins/composizione-negoziata/scripts --cov-report=term-missing --cov-fail-under=80
+          tests/plugins/test_composizione_negoziata.py tests/plugins/test_cnc_completion.py tests/plugins/test_cnc_journeys.py tests/modules/cnc_review/test_api.py
+          --cov=modules/cnc_review --cov=plugins/composizione-negoziata/scripts --cov-report=term-missing --cov-fail-under=80
       - name: Check CNC code quality
         run: |
-          python -m black --check plugins/composizione-negoziata/scripts tests/plugins/test_composizione_negoziata.py
-          python -m isort --check-only plugins/composizione-negoziata/scripts tests/plugins/test_composizione_negoziata.py
-          python -m mypy --config-file=tests/plugin_runtime.mypy.ini plugins/composizione-negoziata/scripts
-          python -m bandit -qr plugins/composizione-negoziata/scripts -ll
+          python -m black --check plugins/composizione-negoziata/scripts tests/plugins/test_composizione_negoziata.py tests/plugins/test_cnc_completion.py tests/plugins/test_cnc_journeys.py modules/cnc_review tests/modules/cnc_review
+          python -m isort --check-only plugins/composizione-negoziata/scripts tests/plugins/test_composizione_negoziata.py tests/plugins/test_cnc_completion.py tests/plugins/test_cnc_journeys.py modules/cnc_review tests/modules/cnc_review
+          python -m mypy --config-file=tests/plugin_runtime.mypy.ini plugins/composizione-negoziata/scripts modules/cnc_review
+          python -m bandit -qr modules/cnc_review plugins/composizione-negoziata/scripts -ll
 
   transformation-prototype:
     name: Synthetic transformation prototype
@@ -237,6 +237,7 @@ jobs:
           tests/plugins/test_teaching_management_execution.py
           tests/plugins/test_teaching_clara_budget_execution.py
           tests/plugins/test_teaching_cnc_execution.py
+          tests/plugins/test_cnc_integrations.py
           tests/plugins/test_cowork_teaching.py
           tests/plugins/test_vera_get_started.py
           tests/plugins/test_teaching_browser_execution.py
