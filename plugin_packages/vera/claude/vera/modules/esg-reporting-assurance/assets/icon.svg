@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vera · Fascicolo ESG" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="7" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+<path d="M14 14h30v38H14zM21 23h16M21 30h10" fill="none" stroke="#F7F0DF" stroke-width="3"/><path d="M30 44c-5-12 7-17 20-16 0 13-8 22-20 16zm0 0 13-10" fill="none" stroke="#00B0F0" stroke-width="3"/>
+</svg>

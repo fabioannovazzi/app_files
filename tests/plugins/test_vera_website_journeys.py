@@ -877,7 +877,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    expected_module_count = 37
+    expected_module_count = 38
     module_hrefs = re.findall(
         r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
     )
@@ -1009,6 +1009,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Preparare un business plan",
         "Analisi scostamenti",
         "Adeguati assetti",
+        "Fascicolo ESG · in sviluppo",
         "Budget di tesoreria",
         "Pacchetto controllo di gestione",
         "Analisi Centrale Rischi",
@@ -1022,6 +1023,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Sito dello studio",
     ]
     expected_runtime_labels = {
+        "module.esg.title": "Fascicolo ESG · in sviluppo",
         "module.invoiceXml.title": "Preparazione fatture XML",
         "module.learn.title": "Impara con Vera",
         "module.newClient.title": "Apertura del fascicolo cliente",
@@ -1049,6 +1051,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
 
     # The public directory and marketplace use one canonical naming contract.
     canonical_skill_labels = {
+        "esg-reporting-assurance": "Fascicolo ESG",
         "invoice-xml": "Preparazione fatture XML",
         "learn-with-vera": "Impara con Vera",
         "adeguati-assetti": "Adeguati assetti",
@@ -1092,7 +1095,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 37
+    assert len(labels) == 38
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
@@ -1631,7 +1634,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 37
+    expected_module_link_count = 38
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',

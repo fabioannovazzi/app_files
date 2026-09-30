@@ -1,9 +1,9 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/.codex/worktrees/cnc-completion/app_files/plugins/vera",
+  "root": "plugins/vera",
   "version": "0.1.293",
-  "captured_at": "2026-09-30T09:17:01.951329+00:00",
-  "catalogue_fingerprint": "0004ef61e446d81f2f5d8a41cc1d8f8f0e55a98a3007f424bf526be1d51c3307",
+  "captured_at": "2026-09-30T09:39:13.543159+00:00",
+  "catalogue_fingerprint": "06895e9748b15b956cd7d74fbf3c2cb46753c225a72b8757e11600ed7e735069",
   "manifest_sha256": "b81715dab71e35affb2563bbf9b7fd09598d2c8852a86aa6ba9d03532a1aa75b",
   "entries": [
     {
@@ -85,6 +85,11 @@
       "function_id": "email-cliente",
       "skill_path": "skills/email-cliente/SKILL.md",
       "sha256": "5a1abf9e8c28aed45ea7ccf31742798546a8175f3c5ecffce0405eab2069978a"
+    },
+    {
+      "function_id": "esg-reporting-assurance",
+      "skill_path": "skills/esg-reporting-assurance/SKILL.md",
+      "sha256": "d86f9901319e9dc16c2e4365e60960f311f9b3c26f0cb9d66702ffa3b77e6808"
     },
     {
       "function_id": "fatture-xml-check",
@@ -209,7 +214,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "f3942cb4da944899f91192b070135162c1664077e36a014f447968c9f1bc1eb6"
+      "sha256": "515ee701a96fd6c383c0036e37a1b0c00866eb1cd485702c960a0a2e878e6794"
     },
     {
       "function_id": "vouching",

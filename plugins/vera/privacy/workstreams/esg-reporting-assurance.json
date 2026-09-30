@@ -1,0 +1,66 @@
+{
+  "schema_version": 3,
+  "workstream": "esg-reporting-assurance",
+  "display_name": "Fascicolo ESG",
+  "role": "workflow",
+  "governed_paths": [
+    ".codex-plugin/plugin.json",
+    "skills",
+    "scripts",
+    "schemas",
+    "config",
+    "assets",
+    "requirements.txt"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "esg-evidence",
+        "purpose": "Interpret the selected evidence and proposed observations.",
+        "content": "Client and engagement IDs, reporting period, jurisdiction, service, source paths and hashes, CSV cells or text lines, units, supplied numeric observations, missing-data reasons and optional disclosure/metric labels. Local Python reads the entire selected CSV/TXT/Markdown input up to 8 MB. Host-read original documents and helper output may enter model context; no automatic anonymization.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "esg-decisions",
+        "purpose": "Explain changes and prepare partial drafts for professional review.",
+        "content": "Source titles, URLs, versions and unapproved catalogue status; declared reviewer names, dates, decisions and rationales; exact references, full retained history, stale status and draft text. The script does not call a model. Actual host reads must be recorded by Vera separately; the helper cannot attest to them.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [
+    {
+      "id": "archive-isolation",
+      "control": "Every operation revalidates a portable v2 Studio Archive context and exact selected input bytes. Mutations require running status; source binding accepts only selected IDs. Cross-client and cross-engagement references fail."
+    },
+    {
+      "id": "version-integrity",
+      "control": "State and immutable entity hashes are checked on resume, exact reference versions are resolved and historical inputs remain selected. Changed evidence makes dependent decisions and drafts stale. Expected-state digests reject stale writers; a single-writer lock prevents overlapping mutations."
+    },
+    {
+      "id": "closed-output-paths",
+      "control": "Outputs use fixed state filenames and hash-derived draft filenames in the verified run output directory. Traversal and symlinks are rejected and draft bytes are verified before reuse."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-09-29",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "54b55899424722582dd095cf5ca83ea9aacd62a1ba07a92ce6aa03491b405baa"
+  }
+}

@@ -12,7 +12,7 @@ Later host-specific instructions in this reference cannot override this rule.
 
 Updated 2026-09-29 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
 
-This applies the common-core localization method to the complete existing catalogue: 35 professional functions, four internal helpers and one P0 case foundation. The disposition records the assessment; implementation status is separate. No services absent from Vera have been added.
+This applies the common-core localization method to the complete existing catalogue: 35 professional functions, four internal helpers and two new case foundations. The disposition records the assessment; implementation status is separate. No services absent from Vera have been added.
 
 The release adds bounded adapters and instructions, not a blanket claim that every fiduciary mandate is supported. Original evidence and professional decisions remain necessary. No real Geneva client workflow has been accepted.
 
@@ -33,6 +33,7 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 | datev-invoice-start | Unresolved | Existing function retained with the recorded qualification limits. |
 | dati-fiscali-strutturati | Use | Existing function retained with the recorded qualification limits. |
 | email-cliente | Use | Existing function retained with the recorded qualification limits. |
+| esg-reporting-assurance | Unresolved | New evidence foundation; Swiss/Geneva applicability and professional use have not been assessed. |
 | fatture-xml-check | Ignore for this target | Existing function retained with the recorded qualification limits. |
 | financial-analysis | Use | Existing function retained with the recorded qualification limits. |
 | financial-report-builder | Use | Existing function retained with the recorded qualification limits. |
@@ -84,10 +85,24 @@ These sources support the target investigation, not an automatic rules engine. R
 
 See [the complete machine-readable assessment](assessment.json) for each function’s purpose, common method, original adaptation requirement, acceptance example and source references.
 
+## ESG catalogue update — 29 September 2026
+
+Vera 0.1.282 adds the ESG evidence foundation to the catalogue. The earlier
+35-function assessment is preserved; the new function is recorded as unresolved.
+Its synthetic evidence/version tests do not establish Swiss reporting support.
+The combined catalogue now contains 37 function entries and four internal helpers, including the separate unresolved merger foundation from main.
+
+The subsequent combined catalogue also includes the synthetic-only transformation
+prototype, separately unresolved for Geneva. There are 42 skill entries in total.
+
 ## Assetti construction release binding
 
 The 0.1.283 refresh changes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Existing target judgments remain in place. The new assetti construction mode has not been validated for CH-GE; the earlier assessment-mode scope does not qualify that new mode.
 
+The 30 September combined candidate 0.1.286 has 43 skill entries. All prior scope judgments are retained; ESG, CNC, merger and transformation remain unresolved for Geneva.
+
 The 0.1.287 candidate updates the merger entrypoint to P1. The two supported branches are domestic Italian OIC incorporations; the Geneva assessment remains Unresolved.
+
+The ESG deployment candidate 0.1.291 retains all 43 entries and the merged Fusione P1 scope; target dispositions remain unchanged.
 
 The 0.1.288 release refresh updates the package identity only. All 42 skill entrypoints are byte-identical to the recorded 0.1.287 catalogue; the professional assessments and unresolved Swiss scope remain unchanged.
