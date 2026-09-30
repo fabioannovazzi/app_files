@@ -860,7 +860,8 @@
         "income_basis": {},
         "residual_basis": {},
         "holding_basis": {},
-        "comparables": {}
+        "comparables": {},
+        "economic_basis": {}
       },
       "additionalProperties": false
     },
@@ -1156,7 +1157,8 @@
                 "APV",
                 "INCOME_EQUITY_FINITE",
                 "RESIDUAL_INCOME_EQUITY",
-                "HOLDING_SOTP"
+                "HOLDING_SOTP",
+                "ECONOMIC_PROFIT"
               ]
             },
             "bridge": {
@@ -1471,6 +1473,43 @@
             "not": {
               "required": [
                 "comparables"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "ECONOMIC_PROFIT"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "timing",
+              "economic_basis"
+            ],
+            "properties": {
+              "inputs": {
+                "$ref": "#/$defs/economicProfitInputs"
+              },
+              "timing": {
+                "properties": {
+                  "cash_flow_timing": {
+                    "const": "end_period"
+                  }
+                }
+              },
+              "economic_basis": {
+                "$ref": "#/$defs/economicBasis"
+              }
+            }
+          },
+          "else": {
+            "not": {
+              "required": [
+                "economic_basis"
               ]
             }
           }
@@ -2763,6 +2802,98 @@
           },
           "minItems": 1,
           "maxItems": 100
+        }
+      },
+      "additionalProperties": false
+    },
+    "economicProfitInputs": {
+      "type": "object",
+      "required": [
+        "operating_capital",
+        "nopat",
+        "net_reinvestment",
+        "terminal_enterprise_value"
+      ],
+      "properties": {
+        "operating_capital": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 2,
+          "maxItems": 1201
+        },
+        "nopat": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 1200
+        },
+        "net_reinvestment": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 1200
+        },
+        "terminal_enterprise_value": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false
+    },
+    "economicBasis": {
+      "type": "object",
+      "required": [
+        "operating_perimeter",
+        "accounting_adjustments",
+        "nopat_tax_basis",
+        "reinvestment_basis",
+        "terminal_enterprise_basis",
+        "capital_cost_basis",
+        "locator",
+        "source_ids",
+        "status"
+      ],
+      "properties": {
+        "operating_perimeter": {
+          "$ref": "#/$defs/text"
+        },
+        "accounting_adjustments": {
+          "$ref": "#/$defs/text"
+        },
+        "nopat_tax_basis": {
+          "$ref": "#/$defs/text"
+        },
+        "reinvestment_basis": {
+          "$ref": "#/$defs/text"
+        },
+        "terminal_enterprise_basis": {
+          "$ref": "#/$defs/text"
+        },
+        "capital_cost_basis": {
+          "$ref": "#/$defs/text"
+        },
+        "locator": {
+          "$ref": "#/$defs/text"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "status": {
+          "enum": [
+            "proposed",
+            "confirmed"
+          ]
         }
       },
       "additionalProperties": false

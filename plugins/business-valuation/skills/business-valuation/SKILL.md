@@ -90,7 +90,7 @@ the model/professional still checks completeness, classifications and substance.
 
 Propose and explain methods according to the mandate. The implemented calculations
 are FCFF/FCFE DCF with annual or explicitly dated flows, constant or finite-duration equity income, adjusted NAV,
-constant-capital mixed income, clean-surplus residual equity income, holding/SOTP composition, selected EV or equity multiples, and APV composition.
+constant-capital mixed income, clean-surplus residual equity income, operating economic profit, holding/SOTP composition, selected EV or equity multiples, and APV composition.
 Explain each selection/exclusion. The professional selects sustainable terminal
 flows, capital costs, asset values, comparable samples and multiples. Keep
 enterprise value and equity separate. Never deduct debt from FCFE or P/E again,
@@ -128,6 +128,20 @@ Inspect `Base residuale` and `Clean surplus` before recording method review.
 Do not infer a terminal value, treat plan FCFF as income, deduct debt again or
 claim that a balanced schedule establishes accounting adequacy or distributability.
 Mid-period owner transactions require a separately qualified model.
+
+For operating economic profit, use the distinct `ECONOMIC_PROFIT` contract.
+Supply independently evidenced opening/closing operating capital, NOPAT and signed
+net reinvestment for each exact end-period date, plus a separate terminal operating
+enterprise value. Review the operating perimeter, consistent accounting adjustments,
+unlevered operating taxes, complete capital movements, terminal basis and WACC in
+`economic_basis`. Never invent reinvestment to balance capital or relabel plan FCFF
+as NOPAT. The helper checks capital roll-forward and displays a separate FCFF
+reconciliation using the same discount factors. These equalities do not establish
+economic or tax adequacy. Inspect `Base profitto economico` and `Capitale operativo`
+before review. The output is operating enterprise value; apply only an explicitly
+supplied complete equity bridge. No terminal growth, WACC estimation or automatic
+lease/tax adjustment is provided. Mid-period capital transactions need a different
+qualified model and are rejected by this contract.
 
 For a holding, use `HOLDING_SOTP` with independently valued parts and a parent-only
 perimeter. Ask whether each amount is operating enterprise value, full equity or

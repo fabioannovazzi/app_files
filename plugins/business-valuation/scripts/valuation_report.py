@@ -31,6 +31,7 @@ METHOD_LABELS = {
     "INCOME_EQUITY": "Metodo reddituale",
     "INCOME_EQUITY_FINITE": "Metodo reddituale a durata finita",
     "RESIDUAL_INCOME_EQUITY": "Reddito residuale del capitale proprio",
+    "ECONOMIC_PROFIT": "Profitto economico operativo",
     "HOLDING_SOTP": "Holding: somma delle partecipazioni",
     "NAV": "Patrimoniale rettificato",
     "MIXED_EQUITY": "Metodo misto",
@@ -53,6 +54,14 @@ DETAIL_LABELS = {
     "pv_continuing_residual": "Valore attuale dell'eccedenza terminale",
     "owner_cashflow_value": "Riscontro con distribuzioni nette e valore terminale",
     "owner_cashflow_difference": "Differenza aritmetica del riscontro",
+    "opening_operating_capital": "Capitale operativo iniziale",
+    "economic_profit_pv": "Valore attuale dei profitti economici",
+    "terminal_enterprise_value": "Valore operativo terminale fornito",
+    "closing_operating_capital": "Capitale operativo finale",
+    "continuing_economic_profit": "Eccedenza terminale rispetto al capitale operativo finale",
+    "pv_continuing_economic_profit": "Valore attuale dell'eccedenza operativa terminale",
+    "operating_cashflow_value": "Riscontro con FCFF e valore operativo terminale",
+    "operating_cashflow_difference": "Differenza aritmetica del riscontro FCFF",
     "holdings_value": "Valore delle partecipazioni detenute",
     "parent_assets": "Attività autonome della holding",
     "parent_liabilities": "Passività autonome della holding",
@@ -87,6 +96,14 @@ RESIDUAL_BASIS_LABELS = {
     "owner_transactions": "Distribuzioni e apporti dei soci",
     "terminal_equity_basis": "Base del valore equity terminale",
     "capital_cost_basis": "Costo del capitale proprio e tempi",
+}
+ECONOMIC_BASIS_LABELS = {
+    "operating_perimeter": "Perimetro del capitale operativo",
+    "accounting_adjustments": "Rettifiche contabili coerenti",
+    "nopat_tax_basis": "NOPAT e trattamento delle imposte",
+    "reinvestment_basis": "Reinvestimento netto e variazioni del capitale",
+    "terminal_enterprise_basis": "Base del valore operativo terminale",
+    "capital_cost_basis": "Costo del capitale operativo e tempi",
 }
 TIMING_LABELS = {
     "end_period": "flussi a fine periodo",
@@ -478,6 +495,23 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
                 rows.extend(_holding_rows(method, amounts, case["currency"]))
             income_basis = method.get("income_basis")
             residual_basis = method.get("residual_basis")
+            economic_basis = method.get("economic_basis")
+            if economic_basis:
+                rows.extend(
+                    [
+                        f"Base del profitto economico: {'Confermata' if economic_basis['status'] == 'confirmed' else 'Da confermare'}",
+                        *[
+                            f"{label}: {economic_basis[key]}"
+                            for key, label in ECONOMIC_BASIS_LABELS.items()
+                        ],
+                        f"Fonti: {', '.join(economic_basis['source_ids'])} · {economic_basis['locator']}",
+                        "Ogni periodo riconcilia capitale operativo iniziale + reinvestimento netto = capitale finale. Il profitto economico sottrae al NOPAT l'onere sul capitale iniziale. Il riscontro FCFF usa NOPAT − reinvestimento netto; la quadratura non dimostra la correttezza economica o fiscale degli importi.",
+                    ]
+                )
+                for index, item in enumerate(method["operating_capital_schedule"], 1):
+                    rows.append(
+                        f"Periodo {index}: capitale finale {display(amounts[item['closing_id']]['value'])}; differenza di quadratura {display(amounts[item['difference_id']]['value'])}; onere operativo {display(amounts[item['capital_charge_id']]['value'])}; profitto economico {display(amounts[item['economic_profit_id']]['value'])}; FCFF {display(amounts[item['fcff_id']]['value'])} [{item['economic_profit_id']}]."
+                    )
             if residual_basis:
                 rows.extend(
                     [
@@ -514,12 +548,16 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
                         f"Tempi espliciti dalla data {timing['valuation_date']}: {timing['day_count']}; {TIMING_LABELS[timing['cash_flow_timing']].replace('flussi', 'redditi') if income_basis or residual_basis else TIMING_LABELS[timing['cash_flow_timing']]}; {TIMING_LABELS[timing['rate_model']]}; {TIMING_LABELS[timing['rate_compounding']]}.",
                         timing["rationale"],
                         (
-                            "L'onere di ciascun periodo usa il patrimonio iniziale e il rendimento implicito negli stessi fattori di sconto. Il termine finale è valore equity fornito meno patrimonio finale, scontato alla medesima scadenza. Non si aggiunge nuovamente il patrimonio finale e non si deduce il debito. Distribuzioni e apporti sono collocati a fine periodo."
-                            if residual_basis
+                            "La continuazione è il valore operativo terminale fornito meno il capitale operativo finale. NOPAT e reinvestimenti sono collocati a fine periodo; il costo di ciascun intervallo deriva dagli stessi divisori di attualizzazione. Il modello non stima automaticamente il WACC, rettifiche contabili o imposte."
+                            if economic_basis
                             else (
-                                "Il residuo equity è un importo autonomo alla fine dell'ultimo periodo e resta a quella scadenza anche se i redditi sono collocati a metà periodo. Non è derivato dall'ultimo reddito né da una formula di crescita perpetua."
-                                if income_basis
-                                else "Il valore terminale è una perpetuità annuale a fine periodo, stimata all'ultima data del piano. Il flusso terminale è annuale e distinto dagli eventuali flussi mensili; il tasso terminale e la crescita sono annui effettivi."
+                                "L'onere di ciascun periodo usa il patrimonio iniziale e il rendimento implicito negli stessi fattori di sconto. Il termine finale è valore equity fornito meno patrimonio finale, scontato alla medesima scadenza. Non si aggiunge nuovamente il patrimonio finale e non si deduce il debito. Distribuzioni e apporti sono collocati a fine periodo."
+                                if residual_basis
+                                else (
+                                    "Il residuo equity è un importo autonomo alla fine dell'ultimo periodo e resta a quella scadenza anche se i redditi sono collocati a metà periodo. Non è derivato dall'ultimo reddito né da una formula di crescita perpetua."
+                                    if income_basis
+                                    else "Il valore terminale è una perpetuità annuale a fine periodo, stimata all'ultima data del piano. Il flusso terminale è annuale e distinto dagli eventuali flussi mensili; il tasso terminale e la crescita sono annui effettivi."
+                                )
                             )
                         ),
                     ]
@@ -792,6 +830,80 @@ def _comparable_rows(method: dict, amounts: dict) -> list[str]:
         "Il multiplo applicato è un'ipotesi fornita separatamente: non è selezionato, mediato o corretto automaticamente. La quadratura non prova comparabilità economica, completezza del campione o adeguatezza delle rettifiche contabili e leasing."
     )
     return rows
+
+
+def _write_economic_sheets(
+    workbook: Any, report: dict, row_ids: dict[str, int]
+) -> None:
+    """Expose operating capital and FCFF checks as links to the canonical ledger."""
+    methods = [row for row in report["methods"] if "economic_basis" in row]
+    if not methods:
+        return
+    basis_sheet = workbook.create_sheet("Base profitto economico")
+    basis_sheet.append(
+        ["Metodo", "Campo", "Descrizione", "Stato", "Fonti", "Posizione"]
+    )
+    capital_sheet = workbook.create_sheet("Capitale operativo")
+    capital_sheet.append(
+        [
+            "Metodo",
+            "Periodo",
+            "Capitale iniziale",
+            "NOPAT",
+            "Reinvestimento netto",
+            "Capitale finale",
+            "Finale calcolato",
+            "Differenza",
+            "Costo del periodo",
+            "Onere operativo",
+            "Profitto economico",
+            "Valore attuale profitto",
+            "FCFF",
+            "Valore attuale FCFF",
+        ]
+    )
+    for method in methods:
+        basis = method["economic_basis"]
+        for key, label in ECONOMIC_BASIS_LABELS.items():
+            basis_sheet.append(
+                [
+                    method["method_id"],
+                    label,
+                    basis[key],
+                    "Confermata" if basis["status"] == "confirmed" else "Da confermare",
+                    ", ".join(basis["source_ids"]),
+                    basis["locator"],
+                ]
+            )
+        for index, item in enumerate(method["operating_capital_schedule"]):
+            period = method["timing"]["schedule"][index]
+            capital_sheet.append(
+                [
+                    method["method_id"],
+                    f"{period['start_date']} – {period['end_date']}",
+                    *[
+                        f"='Calcoli'!B{row_ids[item[key]]}"
+                        for key in (
+                            "opening_id",
+                            "nopat_id",
+                            "reinvestment_id",
+                            "closing_id",
+                            "expected_closing_id",
+                            "difference_id",
+                            "period_cost_id",
+                            "capital_charge_id",
+                            "economic_profit_id",
+                            "pv_economic_profit_id",
+                            "fcff_id",
+                            "pv_fcff_id",
+                        )
+                    ],
+                ]
+            )
+            _literal(capital_sheet.cell(capital_sheet.max_row, 1), method["method_id"])
+    for row in basis_sheet:
+        for cell in row:
+            _literal(cell, str(cell.value))
 
 
 def _write_comparable_sheets(workbook: Any, report: dict, row_ids: dict) -> None:
@@ -1153,6 +1265,7 @@ def write_workbook(path: Path, report: dict) -> None:
             )
     _write_holding_sheets(workbook, report, row_ids)
     _write_comparable_sheets(workbook, report, row_ids)
+    _write_economic_sheets(workbook, report, row_ids)
     residual_methods = [
         method for method in report["methods"] if "residual_basis" in method
     ]

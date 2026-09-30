@@ -18,6 +18,7 @@ work. The goal is not complete and no purpose is professionally activated.
 Implement a client-bound `business-valuation` workflow for preparing reviewable
 PMI valuation workpapers. The supported methods are FCFF and FCFE DCF, constant or finite-duration
 equity income, clean-surplus residual income with changing equity capital,
+economic profit with operating-capital and FCFF reconciliation,
 adjusted NAV, constant-capital mixed income, holding/SOTP composition, selected
 multiples, and APV composition. Method selection, source relevance, normalizations,
 terminal sustainability, benchmark comparability and conclusion are model and
@@ -52,6 +53,51 @@ Independent numerical fixtures; failure cases for missing data, incompatible
 units, double debt deduction, terminal growth, source changes and stale review;
 real v3 plan replay; Studio Archive cross-client and receipt checks; workbook
 formula comparisons; report rendering; privacy coverage and package parity.
+
+### Economic-profit checkpoint — 30 September 2026
+
+The distinct `ECONOMIC_PROFIT` method retains independently evidenced opening/
+closing operating capital, NOPAT, signed net reinvestment, dated capital costs
+and a supplied terminal operating enterprise value. Each capital roll-forward
+must reconcile exactly. Interval charges use the same cumulative discount
+factors as the profit and cash-flow expressions. The terminal continuation
+subtracts final capital once, and a separate FCFF expression supplies an
+algebraic cross-check. This is an operating value; an optional explicit complete
+bridge gives equity. No WACC, tax, lease adjustment, balancing plug, automatic
+terminal assumption or mid-period capital transaction model is introduced.
+
+Source-bound explanations cover operating perimeter, accounting adjustments,
+unlevered-tax treatment, reinvestment completeness, capital cost and terminal
+basis. Their changes expire dependent method and narrative reviews. Proposed
+bases remain partial. Plan FCFF cannot be relabelled as NOPAT or operating
+capital, including via normalization. These checks establish mechanical
+consistency, not accounting substance, economic adequacy or professional approval.
+
+Forty-eight economic-profit regressions bring the valuation/acquisition/shared-
+transport suite to **567 passes with 95.61% coverage**. All 18 component scripts
+pass Black, Isort, Mypy and Bandit. Mypy's first run hit an internal error;
+fresh-cache runs pass in both silent-import and CI skip-import modes. One new
+test incorrectly expected a per-method diagnostic for a plan normalization;
+the existing earlier plan guard rejects the complete case. Only that test
+expectation was corrected. No production change repaired a failing test.
+
+Native economic-profit and existing DCF teaching runs pass. The output examples
+include annual flat rates, monthly interval-forward rates with an equity bridge,
+and missing final capital. LibreOffice independently reproduces **196 calculation
+cells and 48 linked economic-profit cells**. All **18 DOCX and 15 PDF pages** were
+visually inspected: no clipping or overlap; the blocked example has one final
+continuation line on its last PDF page. Each of five retained output sets has
+18 hash-verified artifacts. This is local synthetic execution and document QA.
+
+Vera source remains the unreleased **0.1.289** candidate, component **0.1.2**;
+ZIPs remain **0.1.288** and do not include this extension or the new peer workpaper.
+Read-only release checks fail at the stale course source inventory. Privacy
+checks report the valuation workstream and the same three service fingerprints
+as stale. No fingerprint or teaching-review attestation was refreshed. The
+previous `peer-release-metadata-proposal.md` is still an unapplied proposal;
+its exact source/artifact bindings must be regenerated against current evidence
+after authorization. Prior test-repair and public-push approvals remain pending.
+No merge, deployment, Marketplace publication or professional activation occurred.
 
 ### Comparable-company workpaper checkpoint — 30 September 2026
 

@@ -556,6 +556,7 @@ def build_valuation(
                 "timing",
                 "income_basis",
                 "residual_basis",
+                "economic_basis",
                 "holding_basis",
                 "comparables",
             },
@@ -606,6 +607,7 @@ def build_valuation(
                 comparable_dependencies = comparable_evidence(method, mandate, sources)
             income_basis = method.get("income_basis")
             residual_basis = method.get("residual_basis")
+            economic_basis = method.get("economic_basis")
             holding_basis = method.get("holding_basis")
             holding_dependencies: dict[str, Any] = {"source_ids": [], "complete": True}
             if holding_basis is not None:
@@ -619,6 +621,11 @@ def build_valuation(
                     set(residual_basis["source_ids"]) <= sources.keys(),
                     "Residual-income basis requires declared evidence sources",
                 )
+            if economic_basis is not None:
+                require(
+                    set(economic_basis["source_ids"]) <= sources.keys(),
+                    "Economic-profit basis requires declared evidence sources",
+                )
             if income_basis is not None:
                 require(
                     set(income_basis["source_ids"]) <= sources.keys(),
@@ -627,6 +634,16 @@ def build_valuation(
             _checked_timing(method, mandate, plan_bridge)
             result = calculate_method(method, inputs, case["currency"])
             dependent_normalizations = _bind_normalizations(result, normalizations)
+            if method["kind"] == "ECONOMIC_PROFIT" and plan_bridge is not None:
+                require(
+                    not {
+                        ref
+                        for row in result["calculations"]
+                        for ref in row["input_ids"]
+                    }
+                    & set(plan_bridge["flow_input_ids"]),
+                    "Plan FCFF cannot be relabelled as operating capital, NOPAT or reinvestment",
+                )
             if valid_comparables is not None and plan_bridge is not None:
                 require(
                     not {
@@ -690,6 +707,7 @@ def build_valuation(
             | {ref for group in dependent_statements for ref in group["source_ids"]}
             | set((income_basis or {}).get("source_ids", []))
             | set((residual_basis or {}).get("source_ids", []))
+            | set((economic_basis or {}).get("source_ids", []))
             | set(holding_dependencies["source_ids"])
             | set(comparable_dependencies["source_ids"])
         )
@@ -728,6 +746,7 @@ def build_valuation(
             )
             and (income_basis is None or income_basis["status"] == "confirmed")
             and (residual_basis is None or residual_basis["status"] == "confirmed")
+            and (economic_basis is None or economic_basis["status"] == "confirmed")
             and holding_dependencies["complete"]
             and comparable_dependencies["complete"]
         )
@@ -757,6 +776,8 @@ def build_valuation(
             result["income_basis"] = income_basis
         if residual_basis is not None:
             result["residual_basis"] = residual_basis
+        if economic_basis is not None:
+            result["economic_basis"] = economic_basis
         if holding_basis is not None:
             result["holding_basis"] = holding_basis
         if valid_comparables is not None:

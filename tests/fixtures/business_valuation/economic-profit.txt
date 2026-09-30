@@ -1,0 +1,11 @@
+Fictional operating-capital workpaper, EUR; no company or professional case.
+Valuation date 2024-12-31. Two forecast years ending 2025-12-31 and 2026-12-31.
+Operating capital: 1000 at valuation, 1100 at first end, 1050 at second end.
+Period NOPAT: 180 and 160. Net reinvestment: 100 and -50 (explicit release).
+Independent operating enterprise value at the last date: 1400.
+Flat annual effective operating capital cost: 10 percent. Alternative second rate: 20 percent.
+NOPAT and net reinvestment occur at period end; all capital changes are captured.
+No nonoperating balances, unrecorded revaluations or foreign exchange changes assumed.
+NOPAT is after unlevered operating taxes; tax estimation is not performed here.
+Opening/closing capital and reinvestment use one explicitly assumed accounting basis.
+Amounts and terminal value are illustrative, not sustainable-flow or WACC opinions.

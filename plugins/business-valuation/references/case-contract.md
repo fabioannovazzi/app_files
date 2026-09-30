@@ -135,6 +135,7 @@ is an input ID, not an inline amount. Unselected methods retain their rationale.
 | INCOME_EQUITY | normalized_equity_income, cost_equity | Positive constant equity income divided by positive Ke |
 | INCOME_EQUITY_FINITE | incomes (ordered list), residual_value | Dated equity income plus a separately evidenced equity residual at the horizon; requires timing and income_basis |
 | RESIDUAL_INCOME_EQUITY | book_equity (n+1), incomes, distributions, contributions (n each), terminal_equity_value | Dated clean-surplus common-equity model with changing book capital; requires timing and residual_basis |
+| ECONOMIC_PROFIT | operating_capital (n+1), nopat, net_reinvestment (n each), terminal_enterprise_value | Dated operating economic profit with reconciled capital and FCFF; requires timing and economic_basis; optional enterprise-to-equity bridge |
 | HOLDING_SOTP | holdings, parent_assets, parent_liabilities, holding_costs_pv, tax_adjustment, eliminations | Explicit stake values plus parent-only assets, less parent-only liabilities, holding-cost PV and signed tax adjustment, plus signed eliminations; requires holding_basis |
 | NAV | assets (nonempty list), liabilities (possibly empty list), tax_adjustment | Adjusted assets less liabilities less signed tax adjustment |
 | MIXED_EQUITY | adjusted_equity, incomes (ordered list), normal_return, excess_discount | Constant adjusted equity plus discounted annual excess incomes |
@@ -319,6 +320,53 @@ for beginning-equity charges and the terminal equity/book difference;
 for the clean-surplus derivation. The dated factor extension above is an explicit
 algebraic contract, verified against owner cash flows; these references do not
 establish this implementation's PIV conformity or professional suitability.
+
+### Economic profit with changing operating capital
+
+`ECONOMIC_PROFIT` values the operating enterprise, separately from the equity
+residual-income method. Supply `operating_capital` at valuation and each period
+end, period `nopat` after unlevered operating taxes, signed `net_reinvestment`,
+and an independently evidenced `terminal_enterprise_value` at the final date.
+All are explicit monetary input IDs in the case currency. Exactly reconcile
+`C[t] = C[t-1] + net_reinvestment[t]`; no balancing plug, missing zero or automatic
+revaluation/tax/lease/foreign-exchange adjustment is created. Negative capital,
+NOPAT, reinvestment and terminal values remain signed. A terminal value may
+explicitly equal final operating capital; it cannot reuse a period NOPAT or
+reinvestment input. Whether any supplied amount is appropriate requires review.
+
+Use explicit end-period timing with the same dated factors, day counts, flat/spot/
+interval-forward and effective/continuous conventions described above. A spot
+curve uses its last rate for the horizon. Mid-period capital transactions are
+unsupported. With `D[0]=1`, interval cost is `q[t]=D[t]/D[t-1]-1` and economic
+profit is `EP[t]=NOPAT[t]-q[t]*C[t-1]`. Operating enterprise value is
+`C[0]+sum(EP[t]/D[t])+(terminal_enterprise_value-C[n])/D[n]`.
+The ledger separately computes
+`sum((NOPAT[t]-net_reinvestment[t])/D[t])+terminal_enterprise_value/D[n]` and
+shows its difference from the economic-profit expression. Final Decimal rounding
+can produce a tiny difference; the capital roll-forward itself must be exact.
+This algebraic cross-check shares the assumptions and does not independently
+validate accounting, taxes, forecast availability, terminal value or WACC.
+
+`economic_basis` requires explanations for `operating_perimeter`,
+`accounting_adjustments`, `nopat_tax_basis`, `reinvestment_basis`,
+`terminal_enterprise_basis`, `capital_cost_basis`, plus `locator`, `source_ids`
+and `status` (`proposed` or `confirmed`). Explain how all capital movements are
+captured and how tax/accounting treatments remain consistent across the model.
+Missing descriptions/sources block the method; proposed bases or unreviewed
+sources keep it partial. Changes expire dependent reviews. Existing normalization
+and statement dependencies apply, including their transitive source closure.
+Bound plan FCFF cannot be relabelled as capital, NOPAT, reinvestment or terminal
+value, including through normalized inputs. An operating-capital bridge from
+the plan requires separately qualified evidence. The output preserves two
+formula-linked workbook sheets, `Base profitto economico` and `Capitale operativo`.
+
+Primary methodology inspected 30 September 2026:
+[Damodaran, Economic Value Added](https://pages.stern.nyu.edu/adamodar/New_Home_Page/invfables/eva.htm)
+relates after-tax operating profit and capital charges to operating value and
+discusses consistent accounting adjustments. The interval-factor and terminal
+capital reconciliation above are explicit algebraic implementation contracts.
+The source does not establish this implementation's PIV conformity, current
+accounting treatment, or suitability for a particular professional purpose.
 
 An enterprise-side method can supply `bridge` with input IDs `financial_debt`,
 `debt_like`, `excess_cash`, `non_operating_assets`, `signed_adjustments`.
