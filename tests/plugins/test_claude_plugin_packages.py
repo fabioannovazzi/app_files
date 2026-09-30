@@ -1227,6 +1227,7 @@ def test_claude_build_is_deterministic_and_self_verifying(
         package,
         output_directory=tmp_path / "vera",
         output_zip=tmp_path / "vera-claude-plugin.zip",
+        public_zip=tmp_path / "public-vera-cowork-plugin.zip",
     )
 
     builder.build_package(isolated)
@@ -1249,6 +1250,7 @@ def test_claude_verifier_reports_directory_and_zip_drift(
         package,
         output_directory=tmp_path / "vera",
         output_zip=tmp_path / "vera-claude-plugin.zip",
+        public_zip=tmp_path / "public-vera-cowork-plugin.zip",
     )
     builder.build_package(isolated)
     skill_path = isolated.output_directory / "skills" / "vera" / "SKILL.md"

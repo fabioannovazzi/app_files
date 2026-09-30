@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import copy
 import csv
+import hashlib
 import io
 import json
 import logging
@@ -21,6 +22,11 @@ from typing import Any
 __all__ = [
     "initialize",
     "import_ledger",
+    "inspect_ledger",
+    "normalize_ledger",
+    "verify_formalities",
+    "prepare_professional_review",
+    "accept_professional_review",
     "propose",
     "review",
     "calculate_draft",
@@ -38,6 +44,12 @@ for _vendor in (
         sys.path.insert(0, str(_vendor))
         break
 
+from patent_box import professional_review
+from patent_box.casebook import (
+    casebook_markdown,
+    check_casebook,
+    missing_documents_markdown,
+)
 from patent_box.contracts import (
     ContractError,
     canonical_hash,
@@ -46,7 +58,15 @@ from patent_box.contracts import (
     read_json,
     validate,
 )
+from patent_box.coordination import reconcile_declarations
+from patent_box.documents import compose_dossier, render_docx, render_pdf
 from patent_box.engine import CASE_GATES, IP_GATES, LINE_GATES, calculate
+from patent_box.formalities import verify_cms, verify_pdf, verify_timestamp
+from patent_box.ledger_import import (
+    inspect_table,
+    normalization_markdown,
+    normalize_population,
+)
 from patent_box.render import markdown
 from vera_assurance import load_client_engagement_context_file
 
@@ -165,7 +185,7 @@ def initialize(context_path: Path, *, as_of: str, demo: bool = False) -> dict[st
         output / "intake.md",
         "# Patent Box — apertura della pratica\n\nBOZZA. "
         + ("Pratica sintetica.\n" if demo else "Pratica da istruire.\n")
-        + "\nChiarire soggetto e periodo, software e diritti, attività, costi, opzioni pregresse e incentivi. Leggere solo i documenti selezionati e chiedere ciò che manca.\n\n"
+        + "\nChiarire soggetto e periodo, beni e diritti, attività, costi, opzioni pregresse e incentivi. Leggere solo i documenti selezionati e chiedere ciò che manca.\n\n"
         + "\n".join(f"- {r['evidence_id']}: {r['description']}" for r in records)
         + "\n",
     )
@@ -217,61 +237,306 @@ def import_ledger(context_path: Path, *, evidence_id: str) -> dict[str, Any]:
     return result
 
 
-def _requirements(case: dict[str, Any]) -> list[dict[str, Any]]:
-    """Expand declared structural scope; legal applicability remains in review."""
-    catalog = read_json(ROOT / "config/control_catalog.json")["controls"]
+def _ledger_table(
+    output: Path, session: dict[str, Any], table_id: str
+) -> dict[str, Any]:
+    """Replay exact selected bytes so a rehashed cell edit is still rejected."""
+    if not re.fullmatch(r"T\.[0-9a-f]{64}", table_id):
+        raise ContractError("Invalid table identity")
+    table = _read(output / f"ledger_table_{table_id}.json")
+    record = indexed(session["inputs"], "evidence_id").get(table["source_evidence_id"])
+    if record is None:
+        raise ContractError("Table evidence is outside the selected run")
+    replayed = inspect_table(output / record["path"], record, table["options"])
+    if table["table_id"] != table_id or table != replayed:
+        raise ContractError("Table does not replay from the selected original")
+    return table
+
+
+def inspect_ledger(
+    context_path: Path, *, evidence_id: str, options: dict[str, Any]
+) -> dict[str, Any]:
+    """Persist a selected CSV/XLSX/PDF table without deciding its accounting meaning."""
+    _, output, session = _bound(context_path)
+    record = indexed(session["inputs"], "evidence_id").get(evidence_id)
+    if record is None:
+        raise ContractError("Ledger is not selected evidence")
+    table = inspect_table(output / record["path"], record, options)
+    target = output / f"ledger_table_{table['table_id']}.json"
+    if target.exists():
+        if _ledger_table(output, session, table["table_id"]) != table:
+            raise ContractError("Existing table differs from the selected original")
+    else:
+        _new(target, _dump(table))
+    return table
+
+
+def normalize_ledger(context_path: Path, plan: dict[str, Any]) -> dict[str, Any]:
+    """Persist the model's source-bound normalization proposal and readable trace."""
+    _, output, session = _bound(context_path)
+    validate(plan, "ledger-normalization.schema.json")
+    tables = [
+        _ledger_table(output, session, row["table_id"]) for row in plan["mappings"]
+    ]
+    result = normalize_population(
+        tables, plan, {r["evidence_id"] for r in session["inputs"]}
+    )
+    record = {
+        "schema_version": "1.0",
+        "run_id": session["run_id"],
+        "evidence_hash": canonical_hash(session["inputs"]),
+        "plan": plan,
+        "tables": tables,
+        "result": result,
+    }
+    digest = result["normalization_digest"]
+    _new(output / f"normalization_{digest}.json", _dump(record))
+    _new(output / f"normalization_{digest}.md", normalization_markdown(result))
+    return result
+
+
+def _normalization(
+    output: Path, session: dict[str, Any], digest: str
+) -> dict[str, Any]:
+    if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
+        raise ContractError("Invalid normalization digest")
+    record = _read(output / f"normalization_{digest}.json")
+    if record["run_id"] != session["run_id"] or record[
+        "evidence_hash"
+    ] != canonical_hash(session["inputs"]):
+        raise ContractError("Normalization belongs to another run or input version")
+    plan = record["plan"]
+    validate(plan, "ledger-normalization.schema.json")
+    tables = [
+        _ledger_table(output, session, row["table_id"]) for row in plan["mappings"]
+    ]
+    result = normalize_population(
+        tables, plan, {r["evidence_id"] for r in session["inputs"]}
+    )
+    if (
+        result["normalization_digest"] != digest
+        or result != record["result"]
+        or record["tables"] != tables
+    ):
+        raise ContractError("Normalization changed or does not replay")
+    return record
+
+
+def _bind_normalized_costs(proposal: dict[str, Any], record: dict[str, Any]) -> None:
+    result = record["result"]
+    if (
+        indexed(proposal["case"]["costs"], "cost_id")
+        != indexed(result["costs"], "cost_id")
+        or proposal["case"]["ledger_control_total"] != result["ledger_control_total"]
+    ):
+        raise ContractError(
+            "Cost population or total differs from reviewed normalization"
+        )
+    controls = indexed(proposal["controls"], "key")
+    for allocation in proposal["case"]["allocations"]:
+        if allocation["cost_id"] in result["blocked_cost_ids"]:
+            key = f"allocation:{allocation['allocation_id']}/PB.COST"
+            if controls[key]["status"] not in ("BLOCKED", "NOT_TESTED"):
+                raise ContractError(
+                    "Unresolved duplicate requires BLOCKED/NOT_TESTED on its affected cost"
+                )
+
+
+def verify_formalities(
+    context_path: Path,
+    plan: dict[str, Any],
+    *,
+    openssl: Path,
+    trusted_roots: Path | None = None,
+    crls: Path | None = None,
+    intermediates: Path | None = None,
+    trust_basis: str | None = None,
+    at: datetime | None = None,
+) -> dict[str, Any]:
+    """Persist actual local verification for exact selected run evidence."""
+    _, output, session = _bound(context_path)
+    validate(plan, "formalities-plan.schema.json")
+    inputs = indexed(session["inputs"], "evidence_id")
+    ids = [plan["document_evidence_id"]]
+    if plan["signature_evidence_id"] is not None:
+        ids.append(plan["signature_evidence_id"])
+    if set(ids) - set(inputs):
+        raise ContractError("Formalities may read only this run's selected evidence")
+    if (plan["format"] == "PDF") != (plan["signature_evidence_id"] is None):
+        raise ContractError(
+            "PDF uses its embedded signature; other formats need exact signature evidence"
+        )
+    if trusted_roots is not None:
+        _text(trust_basis, "independently configured trust basis")
+    elif crls is not None or intermediates is not None:
+        raise ContractError(
+            "Revocation/intermediate configuration requires explicit trust roots"
+        )
+    document = output / inputs[plan["document_evidence_id"]]["path"]
+    options: dict[str, Any] = {
+        "openssl": openssl,
+        "at": at or datetime.now(timezone.utc),
+        "trusted_roots": trusted_roots,
+        "crls": crls,
+    }
+    if plan["format"] == "PDF":
+        verification = verify_pdf(document, **options)
+    else:
+        signature = output / inputs[plan["signature_evidence_id"]]["path"]
+        if plan["format"].startswith("CMS_"):
+            verification = verify_cms(
+                signature,
+                document,
+                detached=plan["format"] == "CMS_DETACHED",
+                **options,
+            )
+        else:
+            if trusted_roots is None:
+                raise ContractError(
+                    "Timestamp verification requires independently configured TSA roots"
+                )
+            verification = verify_timestamp(
+                signature,
+                document,
+                intermediates=intermediates,
+                token=plan["format"] == "RFC3161_TOKEN",
+                **options,
+            )
+    snapshots = {}
+    for name, path in (
+        ("trusted_roots", trusted_roots),
+        ("crls", crls),
+        ("intermediates", intermediates),
+    ):
+        if path is not None:
+            if (
+                path.is_symlink()
+                or not path.is_file()
+                or path.stat().st_size > MAX_BYTES
+            ):
+                raise ContractError(
+                    "Trust configuration must use bounded regular files"
+                )
+            raw = path.read_bytes()
+            if not raw or len(raw) > MAX_BYTES:
+                raise ContractError("Trust configuration is empty or too large")
+            # Compare retained bytes, not a second pathname read, with the provider.
+            for item in verification.get("signatures", [verification]):
+                checked_hashes = item.get("input_sha256", {})
+                if (
+                    name in checked_hashes
+                    and hashlib.sha256(raw).hexdigest() != checked_hashes[name]
+                ):
+                    raise ContractError(
+                        "Trust configuration changed during verification"
+                    )
+            snapshots[name] = raw
+    record = {
+        "schema_version": "1.0",
+        "run_id": session["run_id"],
+        "evidence_hash": canonical_hash(session["inputs"]),
+        "plan": plan,
+        "trust_basis": trust_basis,
+        "verification": verification,
+        "trust_snapshot_sha256": {
+            name: hashlib.sha256(raw).hexdigest() for name, raw in snapshots.items()
+        },
+    }
+    digest = canonical_hash(record)
+    destination = output / f"formalities_{digest}"
+    destination.mkdir(mode=0o700)
+    _new(destination / "verification.json", _dump(record))
+    for name, raw in snapshots.items():
+        _new(destination / f"{name}.pem", raw)
+    _new(
+        destination / "review.md",
+        "# Verifica tecnica di firma e marca\n\n"
+        + "Esiti tecnici sui documenti selezionati. Poteri, qualifica, scadenze applicabili e conservazione richiedono riesame separato.\n\n"
+        + "```json\n"
+        + _dump(verification)
+        + "```\n",
+    )
+    return {"formalities_digest": digest, "output_dir": str(destination), **record}
+
+
+def _scopes(
+    case: dict[str, Any],
+) -> list[tuple[str, dict[str, Any], list[str], set[str]]]:
+    """Expand explicit case structure, not semantic eligibility, into review work."""
     scopes = [
         (
             "case",
             case,
             list(CASE_GATES) + ["COMMUNICATION", "FINAL_REVIEW", "SOURCE_PREFLIGHT"],
-            {"ALL"},
+            {"ALL", "EXTRAORDINARY"},
         )
     ]
+    premial_ips = {a["ip_id"] for a in case["allocations"] if a["mode"] == "PREMIAL"}
     for ip in case["ips"]:
-        branches = {"ALL", "SOFTWARE"}
+        branches = {"ALL", ip["type"]}
+        gates = list(IP_GATES)
         if len(case["ips"]) > 1:
             branches.add("MULTI_IP")
         if ip["outsourced"]:
             branches.add("OUTSOURCED")
-        scopes.append(
-            (
-                "ip:" + ip["ip_id"],
-                ip,
-                list(IP_GATES) + (["OUTSOURCING"] if ip["outsourced"] else []),
-                branches,
-            )
-        )
+            gates.append("OUTSOURCING")
+        if ip["ip_id"] in premial_ips:
+            branches.add("PREMIAL")
+            if ip["type"] == "SOFTWARE":
+                branches.add("PREMIAL_SOFTWARE")
+            gates.append("PREMIAL")
+        scopes.append(("ip:" + ip["ip_id"], ip, gates, branches))
     costs = indexed(case["costs"], "cost_id")
     for allocation in case["allocations"]:
-        branches = {"ALL", "RD_OVERLAP", costs[allocation["cost_id"]]["category"]}
         scopes.append(
             (
                 "allocation:" + allocation["allocation_id"],
                 allocation,
                 list(LINE_GATES),
-                branches,
+                {"ALL", "RD_OVERLAP", costs[allocation["cost_id"]]["category"]},
             )
         )
-    requirements = []
-    for scope, _, gates, branches in scopes:
-        for control in catalog:
-            if control["gate"] in gates and control["branch"] in branches:
-                requirements.append(
-                    {
-                        "key": scope + "/" + control["control_id"],
-                        "scope": scope,
-                        **control,
-                    }
-                )
-    return requirements
+    if case["penalty_protection"]["requested"]:
+        scopes.append(
+            (
+                "penalty",
+                case["penalty_protection"],
+                [
+                    "DOC_A",
+                    "DOC_B",
+                    "SIGNATURE",
+                    "TIMESTAMP",
+                    "COMMUNICATION",
+                    "RETENTION",
+                ],
+                {"ALL", "PENALTY_REQUESTED"},
+            )
+        )
+    return scopes
+
+
+def _requirements(case: dict[str, Any]) -> list[dict[str, Any]]:
+    """Require every catalog child within the declared structural branch."""
+    catalog = read_json(ROOT / "config/control_catalog.json")["controls"]
+    return [
+        {"key": scope + "/" + control["control_id"], "scope": scope, **control}
+        for scope, _, gates, branches in _scopes(case)
+        for control in catalog
+        if control["gate"] in gates and control["branch"] in branches
+    ]
 
 
 def _check_proposal(
     proposal: dict[str, Any], session: dict[str, Any]
 ) -> dict[str, Any]:
-    if set(proposal) != {"case", "rules", "controls", "narratives"}:
-        raise ContractError("Proposal needs exactly case, rules, controls, narratives")
+    required_fields = {"case", "rules", "controls", "narratives"}
+    if not required_fields <= set(proposal) or set(proposal) - required_fields - {
+        "casebook",
+        "normalization_digest",
+    }:
+        raise ContractError(
+            "Proposal needs case, rules, controls, narratives and optional casebook/normalization_digest"
+        )
     result = copy.deepcopy(proposal)
     case, rules = result["case"], result["rules"]
     validate(case, "case.schema.json")
@@ -288,17 +553,6 @@ def _check_proposal(
     ]
     if case["evidence"] != expected:
         raise ContractError("Proposal must retain the exact selected evidence register")
-    if (
-        any(
-            ip["type"] != "SOFTWARE" or ip["premial_event"] is not None
-            for ip in case["ips"]
-        )
-        or any(row["mode"] != "ORDINARY" for row in case["allocations"])
-        or case["prior_claims"]
-    ):
-        raise ContractError(
-            "First integration supports ordinary software only; specialist history/premial requires a dedicated workflow"
-        )
     indexed(case["ips"], "ip_id")
     indexed(case["costs"], "cost_id")
     indexed(case["costs"], "ledger_row_key")
@@ -314,7 +568,7 @@ def _check_proposal(
         raise ContractError("Controls must be an array")
     controls = indexed(result["controls"], "key")
     if set(controls) - required:
-        raise ContractError("Control outside declared ordinary-software scope")
+        raise ContractError("Control outside declared case scope")
     evidence_ids = {r["evidence_id"] for r in expected}
     source_ids = {r["source_id"] for r in rules["sources"]}
     for row in controls.values():
@@ -368,6 +622,16 @@ def _check_proposal(
         )
         for row in requirements
     ]
+    if "casebook" in result:
+        checked = check_casebook(result["casebook"], case, rules, required)
+        for gap in checked["gaps"]:
+            if (
+                gap["control_key"] in controls
+                and controls[gap["control_key"]]["status"] == "PASS"
+            ):
+                raise ContractError(
+                    "PASS contradicts missing casebook records: " + gap["control_key"]
+                )
     # Prefilled global PASS rows must never bypass detailed review.
     case["controls"] = []
     for row in case["ips"] + case["allocations"]:
@@ -389,21 +653,25 @@ def propose(context_path: Path, payload: dict[str, Any]) -> dict[str, str]:
     """Persist the model's proposal and readable review; never approve it."""
     _, output, session = _bound(context_path)
     proposal = _check_proposal(payload, session)
-    # Exact equality proves the normalized cost population still comes from
-    # the selected, explicitly mapped CSV; a matching ID alone is insufficient.
-    records = indexed(session["inputs"], "evidence_id")
-    cost_evidence = {row["evidence_id"] for row in proposal["case"]["costs"]}
-    if not cost_evidence <= set(records):
-        raise ContractError("Cost evidence is outside the selected run")
-    expected_costs = [
-        row
-        for evidence_id in sorted(cost_evidence)
-        for row in _ledger_rows(output, records[evidence_id])
-    ]
-    if indexed(expected_costs, "cost_id") != indexed(
-        proposal["case"]["costs"], "cost_id"
-    ):
-        raise ContractError("Cost population differs from selected mapped ledger")
+    if "normalization_digest" in proposal:
+        record = _normalization(output, session, proposal["normalization_digest"])
+        _bind_normalized_costs(proposal, record)
+        proposal["normalization_record"] = record
+    else:
+        # Legacy canonical CSV path still requires exact selected-row equality.
+        records = indexed(session["inputs"], "evidence_id")
+        cost_evidence = {row["evidence_id"] for row in proposal["case"]["costs"]}
+        if not cost_evidence <= set(records):
+            raise ContractError("Cost evidence is outside the selected run")
+        expected_costs = [
+            row
+            for evidence_id in sorted(cost_evidence)
+            for row in _ledger_rows(output, records[evidence_id])
+        ]
+        if indexed(expected_costs, "cost_id") != indexed(
+            proposal["case"]["costs"], "cost_id"
+        ):
+            raise ContractError("Cost population differs from selected mapped ledger")
     digest = canonical_hash(proposal)
     _new(output / f"proposal_{digest}.json", _dump(proposal))
     rows = [
@@ -413,14 +681,33 @@ def propose(context_path: Path, payload: dict[str, Any]) -> dict[str, str]:
         "",
         f"Riferimento: {digest}",
         "",
-        "## Dati, importi e narrazione",
+        "## Perimetro e importi proposti",
         "",
-        "```json",
-        _dump(proposal["case"]),
-        "```",
+        f"Periodo richiesto: {proposal['case']['claim_period_id']}",
+        f"Totale contabile selezionato: EUR {proposal['case']['ledger_control_total']}",
         "",
-        "## Controlli",
     ]
+    for ip in proposal["case"]["ips"]:
+        rows.append(
+            f"- Bene {ip['ip_id']}: {ip['name']} ({ip['type']}); {ip['description']}"
+        )
+    for allocation in proposal["case"]["allocations"]:
+        rows.append(
+            f"- Quota {allocation['allocation_id']} / {allocation['mode']}: "
+            f"costo {allocation['cost_id']}, bene {allocation['ip_id']}, "
+            f"progetto {allocation['project_id']}, attività {allocation['activity_id']}; "
+            f"redditi EUR {allocation['income_amount']}, IRAP EUR {allocation['irap_amount']}. "
+            f"Criterio: {allocation['allocation_method']}"
+        )
+    if "normalization_record" in proposal:
+        rows += ["", normalization_markdown(proposal["normalization_record"]["result"])]
+    if "casebook" in proposal:
+        rows += [
+            "",
+            casebook_markdown(proposal["casebook"]),
+            missing_documents_markdown(proposal["casebook"]),
+        ]
+    rows += ["", "## Controlli"]
     for item in proposal["controls"]:
         rows += [
             "",
@@ -429,15 +716,31 @@ def propose(context_path: Path, payload: dict[str, Any]) -> dict[str, str]:
             "Prove: " + ", ".join(item["evidence_ids"]),
             "Fonti: " + ", ".join(item["source_ids"]),
         ]
+    rows += ["", "## Testi proposti", ""]
+    for paragraph in proposal["narratives"]:
+        rows += [
+            f"Sezione {paragraph['section']}: {paragraph['text']}",
+            "Prove: "
+            + ", ".join(paragraph["evidence_ids"])
+            + "; "
+            + paragraph["locator"],
+            "",
+        ]
+    rules = proposal["rules"]
+    rows += [
+        "## Regole proposte",
+        "",
+        f"Versione {rules['ruleset_id']} / {rules['version']}; stato {rules['status']}",
+        f"Maggiorazione proposta: {rules['enhancement_rate']}; finestra premiale: {rules['premial_periods']} periodi fiscali.",
+        f"Fonti controllate il {rules['sources_checked_on']}; revisione regole del {rules['reviewed_on']}.",
+    ]
+    for source in rules["sources"]:
+        rows.append(
+            f"- {source['source_id']}: prova {source['snapshot_evidence_id']}; SHA-256 {source['snapshot_sha256']}"
+        )
     rows += [
         "",
-        "## Testi proposti",
-        _dump(proposal["narratives"]),
-        "",
-        "## Regole proposte",
-        "```json",
-        _dump(proposal["rules"]),
-        "```",
+        f"Record completo: proposal_{digest}.json",
         "",
         "Confermare esplicitamente la proposta identificata sopra oppure chiedere modifiche. L'identità dichiarata non è autenticata professionalmente. La conferma conserva anche controlli aperti: non li trasforma in PASS.",
     ]
@@ -485,26 +788,63 @@ def review(
     return record
 
 
+def prepare_professional_review(
+    context_path: Path,
+    *,
+    digest: str,
+    source_scan: Path,
+    action: str = "REVIEW_CONTROLS",
+    at: datetime | None = None,
+    previous_digest: str | None = None,
+    reason: str | None = None,
+) -> dict[str, Any]:
+    """Prepare a bounded readable request; signing occurs in the chosen provider."""
+    context, output, session = _bound(context_path)
+    return professional_review.prepare_review(
+        context,
+        session,
+        output,
+        _proposal(output, digest),
+        source_scan=source_scan,
+        action=action,
+        previous_digest=previous_digest,
+        reason=reason,
+        at=at or datetime.now(timezone.utc),
+    )
+
+
+def accept_professional_review(
+    context_path: Path,
+    *,
+    digest: str,
+    request_digest: str,
+    signature: Path,
+    mandate: Path,
+    mandate_signature: Path,
+    at: datetime | None = None,
+) -> dict[str, Any]:
+    """Retain a certificate-authenticated decision for this exact run version."""
+    context, output, session = _bound(context_path)
+    return professional_review.accept_review(
+        context,
+        session,
+        output,
+        _proposal(output, digest),
+        request_digest=request_digest,
+        signature=signature,
+        mandate=mandate,
+        mandate_signature=mandate_signature,
+        at=at or datetime.now(timezone.utc),
+    )
+
+
 def _aggregate(proposal: dict[str, Any], decision: dict[str, Any]) -> dict[str, Any]:
     case = copy.deepcopy(proposal["case"])
     detailed = indexed(proposal["controls"], "key")
     requirements = _requirements(case)
-    scopes = (
-        [("case", case, CASE_GATES)]
-        + [
-            (
-                "ip:" + row["ip_id"],
-                row,
-                (*IP_GATES, *(("OUTSOURCING",) if row["outsourced"] else ())),
-            )
-            for row in case["ips"]
-        ]
-        + [
-            ("allocation:" + row["allocation_id"], row, LINE_GATES)
-            for row in case["allocations"]
-        ]
-    )
-    for scope, target, gates in scopes:
+    for scope, target, gates, _ in _scopes(case):
+        if scope == "case":
+            gates = list(CASE_GATES)
         for gate in gates:
             children = [
                 detailed[row["key"]]
@@ -559,11 +899,38 @@ def _csv(rows: list[dict[str, Any]], fields: list[str]) -> str:
     return stream.getvalue()
 
 
-def calculate_draft(context_path: Path, *, digest: str) -> dict[str, Any]:
+def calculate_draft(
+    context_path: Path, *, digest: str, at: datetime | None = None
+) -> dict[str, Any]:
     """Calculate one fresh reviewed snapshot and compose traceable draft artifacts."""
-    _, output, session = _bound(context_path)
+    context, output, session = _bound(context_path)
     proposal = _proposal(output, digest)
-    decision = _read(output / f"decision_{digest}.json")
+    if "normalization_digest" in proposal:
+        record = _normalization(output, session, proposal["normalization_digest"])
+        if record != proposal["normalization_record"]:
+            raise ContractError("Normalization differs from the reviewed proposal")
+        _bind_normalized_costs(proposal, record)
+    professional_review.verify_reopening(
+        context, session, output, proposal, at=at or datetime.now(timezone.utc)
+    )
+    authenticated = output / f"authenticated_decision_{digest}.json"
+    decision_path = (
+        authenticated if authenticated.exists() else output / f"decision_{digest}.json"
+    )
+    if authenticated.exists():
+        validation_time = at or datetime.now(timezone.utc)
+        if (
+            not session["demo"]
+            and session["as_of"] != validation_time.date().isoformat()
+        ):
+            raise ContractError(
+                "Real calculation needs a current dated archive run and source review"
+            )
+        decision = professional_review.verify_control_review(
+            context, session, output, proposal, at=validation_time
+        )
+    else:
+        decision = _read(decision_path)
     if (
         decision["run_id"] != session["run_id"]
         or decision["proposal_digest"] != digest
@@ -572,22 +939,39 @@ def calculate_draft(context_path: Path, *, digest: str) -> dict[str, Any]:
     ):
         raise ContractError("Review is not bound to this run and these inputs")
     _text(decision["reviewer"], "reviewer")
-    if not session["demo"]:
+    if not session["demo"] and not authenticated.exists():
         raise ContractError(
-            "Real calculation is blocked pending reviewed legal sources and an authenticated professional review adapter; preparation remains available"
+            "Real calculation is blocked without reviewed legal sources and an authenticated professional decision; preparation remains available"
         )
-    if decision["identity_assurance"] != "SYNTHETIC_ACCEPTANCE":
+    if (
+        session["demo"]
+        and not authenticated.exists()
+        and decision["identity_assurance"] != "SYNTHETIC_ACCEPTANCE"
+    ):
         raise ContractError("Demo requires a labelled synthetic decision")
     case = _aggregate(proposal, decision)
     result = calculate(
         case, proposal["rules"], evidence_root=output, as_of=session["as_of"]
     )
+    document = compose_dossier(proposal, result, decision)
+    pdf_bytes = render_pdf(document)
+    docx_bytes = render_docx(document)
     destination = output / f"calculation_{digest}"
     destination.mkdir(mode=0o700)
     _new(destination / "case.json", _dump(case))
     _new(destination / "rules.json", _dump(proposal["rules"]))
     _new(destination / "result.json", _dump(result))
+    _new(destination / "dossier_document.json", _dump(document))
+    _new(destination / "fascicolo_A_B.docx", docx_bytes)
+    _new(destination / "fascicolo_A_B.pdf", pdf_bytes)
     _new(destination / "workpaper.md", markdown(result))
+    if "normalization_record" in proposal:
+        record = proposal["normalization_record"]
+        _new(destination / "ledger_normalization.json", _dump(record))
+        _new(
+            destination / "ledger_normalization.md",
+            normalization_markdown(record["result"]),
+        )
     controls = [
         {
             **row,
@@ -699,20 +1083,49 @@ def calculate_draft(context_path: Path, *, digest: str) -> dict[str, Any]:
         missing,
         "## Adempimenti e limiti",
         "",
-        "Firma, marca, modello dichiarativo, coordinamento quantitativo incentivi e autenticazione professionale: NON VERIFICATI. Regole reali DRAFT. Nessun invio o monitoraggio attivato.",
+        "Fascicolo in bozza. Firma del fascicolo, marca, poteri, modello dichiarativo e conservazione richiedono esiti separati. Nessun invio o monitoraggio attivato.",
     ]
+    if "casebook" in proposal:
+        book = proposal["casebook"]
+        assessment = check_casebook(
+            book, case, proposal["rules"], {r["key"] for r in proposal["controls"]}
+        )
+        declaration = reconcile_declarations(
+            book["declarations"], result, assessment["incentives"]
+        )
+        _new(destination / "casebook.json", _dump(book))
+        _new(destination / "casebook.md", casebook_markdown(book))
+        _new(destination / "document_requests.md", missing_documents_markdown(book))
+        _new(
+            destination / "incentive_matrix.json",
+            _dump({"rows": assessment["incentives"]}),
+        )
+        _new(destination / "declaration_bridge.json", _dump(declaration))
+        _new(
+            destination / "open_casebook_items.json",
+            _dump({"gaps": assessment["gaps"]}),
+        )
+        _new(
+            destination / "office_requests.json",
+            _dump({"rows": book["office_requests"]}),
+        )
+        dossier += ["", casebook_markdown(book), missing_documents_markdown(book)]
     _new(destination / "fascicolo_A_B.md", "\n".join(dossier) + "\n")
     _new(
         destination / "case_summary.md",
         markdown(result)
         + "\n"
         + missing
-        + "\nRevisione sintetica; UAT professionale non eseguita.\n",
+        + (
+            "\nPratica sintetica; UAT professionale non eseguita.\n"
+            if session["demo"]
+            else "\nCalcolo in bozza su proposta riesaminata. Approvazione finale del fascicolo separata.\n"
+        ),
     )
     manifest = {
         "run_id": session["run_id"],
         "proposal_digest": digest,
-        "decision_sha256": file_hash(output / f"decision_{digest}.json"),
+        "decision_sha256": file_hash(decision_path),
         "previous_results": sorted(
             path.name for path in output.glob("calculation_*") if path != destination
         ),
@@ -734,6 +1147,34 @@ def main(argv: list[str] | None = None) -> int:
     init.add_argument("--demo", action="store_true")
     ledger = commands.add_parser("import-ledger")
     ledger.add_argument("--evidence-id", required=True)
+    inspect = commands.add_parser("inspect-ledger")
+    inspect.add_argument("--evidence-id", required=True)
+    inspect.add_argument("--options", type=Path, required=True)
+    normalize = commands.add_parser("normalize-ledger")
+    normalize.add_argument("--plan", type=Path, required=True)
+    prepare_review = commands.add_parser("prepare-professional-review")
+    prepare_review.add_argument("--digest", required=True)
+    prepare_review.add_argument("--source-scan", type=Path, required=True)
+    prepare_review.add_argument(
+        "--action",
+        choices=["REVIEW_CONTROLS", "APPROVE_DOSSIER", "REOPEN_CASE"],
+        default="REVIEW_CONTROLS",
+    )
+    prepare_review.add_argument("--previous-digest")
+    prepare_review.add_argument("--reason")
+    accept_review = commands.add_parser("accept-professional-review")
+    accept_review.add_argument("--digest", required=True)
+    accept_review.add_argument("--request-digest", required=True)
+    accept_review.add_argument("--signature", type=Path, required=True)
+    accept_review.add_argument("--mandate", type=Path, required=True)
+    accept_review.add_argument("--mandate-signature", type=Path, required=True)
+    formal = commands.add_parser("verify-formalities")
+    formal.add_argument("--plan", type=Path, required=True)
+    formal.add_argument("--openssl", type=Path, required=True)
+    formal.add_argument("--trusted-roots", type=Path)
+    formal.add_argument("--crls", type=Path)
+    formal.add_argument("--intermediates", type=Path)
+    formal.add_argument("--trust-basis")
     proposal = commands.add_parser("propose")
     proposal.add_argument("--proposal", type=Path, required=True)
     decision = commands.add_parser("review")
@@ -749,6 +1190,54 @@ def main(argv: list[str] | None = None) -> int:
         result = initialize(args.client_engagement, as_of=args.as_of, demo=args.demo)
     elif args.command == "import-ledger":
         result = import_ledger(args.client_engagement, evidence_id=args.evidence_id)
+    elif args.command in ("inspect-ledger", "normalize-ledger"):
+        _, output = _context(args.client_engagement)
+        input_path = args.options if args.command == "inspect-ledger" else args.plan
+        if not input_path.resolve(strict=True).is_relative_to(output.resolve()):
+            raise ContractError(
+                "Write the model mapping inside the bound output directory"
+            )
+        if args.command == "inspect-ledger":
+            result = inspect_ledger(
+                args.client_engagement,
+                evidence_id=args.evidence_id,
+                options=_read(input_path),
+            )
+        else:
+            result = normalize_ledger(args.client_engagement, _read(input_path))
+    elif args.command == "prepare-professional-review":
+        result = prepare_professional_review(
+            args.client_engagement,
+            digest=args.digest,
+            source_scan=args.source_scan,
+            action=args.action,
+            previous_digest=args.previous_digest,
+            reason=args.reason,
+        )
+    elif args.command == "accept-professional-review":
+        result = accept_professional_review(
+            args.client_engagement,
+            digest=args.digest,
+            request_digest=args.request_digest,
+            signature=args.signature,
+            mandate=args.mandate,
+            mandate_signature=args.mandate_signature,
+        )
+    elif args.command == "verify-formalities":
+        _, output = _context(args.client_engagement)
+        if not args.plan.resolve(strict=True).is_relative_to(output.resolve()):
+            raise ContractError(
+                "Write the verification plan inside the bound output directory"
+            )
+        result = verify_formalities(
+            args.client_engagement,
+            _read(args.plan),
+            openssl=args.openssl,
+            trusted_roots=args.trusted_roots,
+            crls=args.crls,
+            intermediates=args.intermediates,
+            trust_basis=args.trust_basis,
+        )
     elif args.command == "propose":
         context, output = _context(args.client_engagement)
         proposal_path = args.proposal.resolve(strict=True)

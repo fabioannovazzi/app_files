@@ -1,4 +1,4 @@
-"""Check the standard-library runtime required by Patent Box."""
+"""Check the declared shared runtime dependencies required by Patent Box."""
 
 from __future__ import annotations
 
@@ -48,7 +48,8 @@ def main(argv: list[str] | None = None) -> int:
     for requirements_file in requirement_files:
         for line in requirements_file.read_text(encoding="utf-8").splitlines():
             package = _requirement_name(line)
-            if package and importlib.util.find_spec(package.replace("-", "_")) is None:
+            module = {"python-docx": "docx"}.get(package, package.replace("-", "_"))
+            if package and importlib.util.find_spec(module) is None:
                 missing_packages.append(package)
     if missing_packages:
         LOGGER.error("Missing dependencies: %s", ", ".join(sorted(missing_packages)))

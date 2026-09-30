@@ -3190,12 +3190,15 @@ def test_static_plugin_pages_are_public_and_plugin_downloads_are_removed() -> No
         assert response.status_code == 404, path
 
 
-def test_manual_vera_download_is_removed() -> None:
+def test_manual_vera_download_is_removed(monkeypatch: pytest.MonkeyPatch) -> None:
     _restore_application_import_path()
 
     from fastapi.testclient import TestClient
 
+    from modules.hosted_services import api as pdp_api
     from src.fastapi_app_entry import app
+
+    monkeypatch.setattr(pdp_api, "start_voice_retention_cleanup", lambda: None)
 
     with TestClient(app) as client:
         response = client.get(
@@ -3221,6 +3224,7 @@ def test_clara_downloads_and_removed_explainers_return_404(
     from modules.hosted_services import api as pdp_api
     from src.fastapi_app_entry import app
 
+    monkeypatch.setattr(pdp_api, "start_voice_retention_cleanup", lambda: None)
     pro_email = "pro@example.com"
     free_email = "free@example.com"
     permissions_file = tmp_path / "site_page_permissions.json"

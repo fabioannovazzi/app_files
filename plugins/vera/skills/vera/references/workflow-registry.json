@@ -470,6 +470,7 @@
       ],
       "python_entrypoints": [
         "modules/patent-box-review/scripts/check_dependencies.py",
+        "modules/patent-box-review/scripts/patent_box_sources.py",
         "modules/patent-box-review/scripts/patent_box_workflow.py"
       ]
     }

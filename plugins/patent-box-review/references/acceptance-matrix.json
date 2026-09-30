@@ -1,0 +1,280 @@
+{
+  "schema_version": "1.0",
+  "specification": "references/SPECIFICA_FUNZIONALE.md",
+  "status": "IN_PROGRESS_NOT_ACCEPTED",
+  "previous_completion_withdrawn": true,
+  "requirements": [
+    {
+      "id": "scope",
+      "requirement": "Software, patent, design, premiale, history, outsourcing and penalty branches",
+      "status": "TECHNICAL_BRANCH_AND_AGGREGATION_CHECKS_PASS_PROFESSIONAL_UAT_PENDING",
+      "evidence": "scripts/patent_box_workflow.py; tests/plugins/test_patent_box_workflow.py"
+    },
+    {
+      "id": "casebook",
+      "requirement": "Rights, activities, supplier chains and targeted missing-document requests",
+      "status": "CONTRACT_AND_INTEGRATION_CHECKS_PASS_PROFESSIONAL_UAT_PENDING",
+      "evidence": "patent_box/casebook.py; tests/plugins/test_patent_box_casebook.py"
+    },
+    {
+      "id": "import",
+      "requirement": "Reviewed source mappings, adjustments, FX, payroll and economic duplicate review",
+      "status": "31_TECHNICAL_CHECKS_PASS_PROFESSIONAL_UAT_PENDING",
+      "evidence": "references/ledger-import.md; tests/test_ledger_import.py; tests/plugins/test_patent_box_ledger_workflow.py"
+    },
+    {
+      "id": "incentives",
+      "requirement": "Source-specific quantitative incentive coordination",
+      "status": "REVIEWED_FORMULA_CONTRACT_TESTED_REAL_RULES_UNAPPROVED",
+      "evidence": "patent_box/coordination.py; tests/plugins/test_patent_box_casebook.py"
+    },
+    {
+      "id": "declaration",
+      "requirement": "Versioned annual return mapping and reconciliation",
+      "status": "ANNUAL_MAPPING_CONTRACT_TESTED_REAL_MODELS_UNAPPROVED",
+      "evidence": "patent_box/coordination.py; tests/plugins/test_patent_box_casebook.py"
+    },
+    {
+      "id": "documents",
+      "requirement": "Source-backed A/B paragraphs and editable/exported documents",
+      "status": "DOCX_PDF_EXPORT_AND_FOUR_PAGE_VISUAL_QA_PASS_PROFESSIONAL_UAT_PENDING",
+      "evidence": "patent_box/documents.py; tests/plugins/test_patent_box_documents.py; task output document-acceptance-20260930/final/visual-qa.json"
+    },
+    {
+      "id": "formalities",
+      "requirement": "Cryptographic signature, timestamp, powers, deadlines and office request",
+      "status": "CMS_PDF_RFC3161_TECHNICAL_CHECKS_PASS_QUALIFIED_PROVIDER_AND_POWERS_ACCEPTANCE_PENDING",
+      "evidence": "references/formalities.md; tests/test_formalities.py"
+    },
+    {
+      "id": "discovery",
+      "requirement": "Bounded public source acquisition with discovery and coverage",
+      "status": "TECHNICAL_ADAPTER_VERIFIED_LIVE_SCOPE_UAT_PENDING",
+      "evidence": "references/source-discovery.md; tests/test_source_acquisition.py; task outputs/live-source-acceptance-20260929"
+    },
+    {
+      "id": "monitor",
+      "requirement": "Text/version comparison, durable default-off host coordinator, impact queue and controlled reopening",
+      "status": "COORDINATOR_BYTE_TEXT_EXTRACTION_QUEUE_AND_SIGNED_ARCHIVE_REOPENING_TESTED_NATIVE_HOST_AND_PROFESSIONAL_UAT_PENDING",
+      "evidence": "patent_box/monitor_service.py; references/monitor-service.md; tests/test_monitor_service.py; tests/test_source_acquisition.py; tests/plugins/test_patent_box_professional_review.py"
+    },
+    {
+      "id": "identity",
+      "requirement": "Authenticated authorized reviewer bound to inputs, rules and results",
+      "status": "CERTIFICATE_AND_FIRM_SIGNED_MANDATE_INTEGRATION_PASS_SYNTHETIC_ONLY",
+      "evidence": "references/professional-review.md; tests/test_authorization.py; tests/plugins/test_patent_box_professional_review.py"
+    },
+    {
+      "id": "dialogue",
+      "requirement": "Live guided end-to-end acceptance from actual selected evidence",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "professional",
+      "requirement": "Professional acceptance of the 32 recovered scenarios",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "release",
+      "requirement": "Package, runtime and release acceptance for final implementation",
+      "status": "DEVELOPMENT_REBUILD_IN_PROGRESS_RELEASE_AND_INSTALLED_ACCEPTANCE_PENDING",
+      "evidence": "shared-runtime source synchronized; task output continuation-review contains separately dated source, package and repository-gate receipts"
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "PB.UAT.001",
+      "title": "Software interno",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_ordinary_software_no_registration",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.002",
+      "title": "Software non registrato",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_ordinary_software_no_registration",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.003",
+      "title": "Software registrato e premiale",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_premial_exact_eighth_period_included",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.004",
+      "title": "Personalizzazione software terzi",
+      "mechanical_verification": "PENDING",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.005",
+      "title": "Moduli propri e acquistati",
+      "mechanical_verification": "PENDING",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.006",
+      "title": "Brevetto",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_specialist_ip_branch_reaches_bound_calculation; semantic patent qualification NOT_RUN",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.007",
+      "title": "Design con costi meccanici",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_specialist_ip_branch_reaches_bound_calculation; separation of aesthetic and functional costs NOT_RUN",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.008",
+      "title": "Più IP e complementarità",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_overallocation_across_multiple_ips_rejected",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.009",
+      "title": "Costi promiscui",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_warning_is_not_silent_pass",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.010",
+      "title": "Personale su più progetti",
+      "mechanical_verification": "PENDING",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.011",
+      "title": "Esterno indipendente",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_outsourcing_requires_specific_review",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.012",
+      "title": "Infragruppo",
+      "mechanical_verification": "PENDING",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.013",
+      "title": "Subappalto",
+      "mechanical_verification": "PENDING",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.014",
+      "title": "Fornitore estero",
+      "mechanical_verification": "PENDING",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.015",
+      "title": "Diritti mancanti",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_missing_rights_suspend",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.016",
+      "title": "Contabilità non quadrata",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_accounting_tieout_required",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.017",
+      "title": "Credito R&S sovrapposto",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_missing_cost_incentive_review_suspends",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.018",
+      "title": "Costi di otto esercizi",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_ninth_period_excluded",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.019",
+      "title": "Operazione straordinaria",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_missing_extraordinary_review_suspends_case; legal continuity decision NOT_RUN",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.020",
+      "title": "Documenti completi e IP escluso",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_documentation_does_not_cure_missing_ip",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.021",
+      "title": "Beneficio e fascicolo incompleto",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_penalty_incomplete_independent",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.022",
+      "title": "Nuova fonte su pratica aperta",
+      "mechanical_verification": "LIVE_DOCUMENT_DISCOVERY_VERIFIED; full professional scenario NOT_RUN",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.023",
+      "title": "Nuova fonte su pratica chiusa",
+      "mechanical_verification": "PRIVATE_REOPEN_QUEUE_AND_SIGNED_COMPLETED_ARCHIVE_HANDOFF_TESTED_SYNTHETIC; professional source effect NOT_RUN",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.024",
+      "title": "Sentenza vecchio regime",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_old_regime_not_automatically_reused",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.025",
+      "title": "Fonte non accessibile",
+      "mechanical_verification": "HTTP_FAILURE_TESTED; LIVE_PARTIAL_COVERAGE_RETAINED",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.026",
+      "title": "Costi già agevolati",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_prior_claim_duplicate_suspends",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.027",
+      "title": "Anno non solare",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_non_calendar_periods",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.028",
+      "title": "Utilizzo successivo alla privativa",
+      "mechanical_verification": "PARTIAL_MECHANICS_TESTED: test_deferred_use_does_not_shift_historical_window",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.029",
+      "title": "Termini firma e dichiarazione",
+      "mechanical_verification": "SYNTHETIC_RFC3161_AND_REVIEWED_CUTOFF_COMPARISON_TESTED; LEGAL_DEADLINE_APPLICABILITY_NOT_ACCEPTED",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.030",
+      "title": "IRES in perdita/IRAP incapiente",
+      "mechanical_verification": "PENDING",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.031",
+      "title": "Fonte interpello",
+      "mechanical_verification": "PENDING",
+      "professional_uat": "NOT_RUN"
+    },
+    {
+      "scenario_id": "PB.UAT.032",
+      "title": "Pratica mutata dopo approvazione",
+      "mechanical_verification": "SIGNED_TAMPER_REJECTION_AND_NEW_RUN_REOPENING_TESTED; PROFESSIONAL_ACCEPTANCE_PENDING",
+      "professional_uat": "NOT_RUN"
+    }
+  ]
+}

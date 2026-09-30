@@ -30,13 +30,13 @@ professional course catalog below; it does not provide an unattended executor.
 
 ## Development preview
 
-`patent-box-review` prepares an ordinary software Patent Box case from selected
-  documents, reviewed cost mappings and detailed control proposals; execute the
-  synthetic acceptance calculation and produce traceable draft workpapers and an
-  A/B dossier. Real calculations remain blocked pending reviewed legal sources
-  and an authenticated professional review adapter. No filing, signature or live
-  monitoring. Read `../../patent-box-review/SKILL.md`. This preview has no
-  released teaching kit; use its explicitly synthetic acceptance procedure.
+`patent-box-review` prepares selected evidence, reviewed ledger mappings and
+component controls for software, patents and designs, then exports draft A/B
+Word/PDF documents. Real calculation requires reviewed current sources and
+certificate-authenticated authorization under a firm-issued mandate. It verifies
+existing signatures and timestamps; it does not sign or file documents. All
+professional UAT and production acceptance boundaries remain explicit. Read
+`../../patent-box-review/SKILL.md`. This preview has no released teaching kit.
 
 ## Professional workflows
 

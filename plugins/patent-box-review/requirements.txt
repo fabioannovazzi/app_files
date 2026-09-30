@@ -1,1 +1,6 @@
-# Standard library only; Vera shared runtime supplies archive integration.
+# Existing shared Mparanza runtime packages; no installation during a case.
+defusedxml>=0.7,<1
+pypdf>=5,<7
+python-docx>=1.1
+reportlab>=4.0,<5
+cryptography>=43.0.1

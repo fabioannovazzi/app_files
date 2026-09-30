@@ -33,7 +33,12 @@ def workflow() -> ModuleType:
 
 
 def running_case(
-    tmp_path: Path, workflow: ModuleType, *, demo: bool = True, mixed: bool = False
+    tmp_path: Path,
+    workflow: ModuleType,
+    *,
+    demo: bool = True,
+    mixed: bool = False,
+    ledger_text: str | None = None,
 ) -> dict[str, Any]:
     archive = load_module(
         "patent_box_archive_test",
@@ -62,6 +67,8 @@ def running_case(
             ledger.read_text()
             + "C2,GL.2,P2025,Synthetic cost,PERSONNEL,100000.00,100000.00,80000.00\n"
         )
+    if ledger_text is not None:
+        ledger.write_text(ledger_text)
     input_ids = [
         archive.import_studio_client_document(
             client["client_id"],
@@ -129,6 +136,7 @@ def model_proposal(case_run: dict[str, Any], workflow: ModuleType) -> dict[str, 
         "case/PB.OPTION",
         "case/PB.TRANSITION",
         "case/PB.DUPLICATES",
+        "case/PB.EXTRAORDINARY",
         "case/PB.DECLARATION",
         "case/PB.ADVERSARIAL",
         "case/PB.SOURCES",
@@ -388,7 +396,7 @@ def test_real_calculation_cannot_use_synthetic_acceptance(
     run = running_case(tmp_path, workflow, demo=False)
     digest = reviewed(run, workflow, model_proposal(run, workflow))
 
-    with pytest.raises(ValueError, match="authenticated professional review"):
+    with pytest.raises(ValueError, match="authenticated professional"):
         workflow.calculate_draft(run["context"], digest=digest)
 
 
@@ -551,3 +559,94 @@ def test_reference_core_does_not_admit_or_exclude_without_review(
     )
 
     assert result["lines"][0]["status"] == "SUSPENDED"
+
+
+@pytest.mark.parametrize("ip_type", ["PATENT", "DESIGN"])
+def test_specialist_ip_branch_reaches_bound_calculation(
+    tmp_path: Path, workflow: ModuleType, ip_type: str
+) -> None:
+    run = running_case(tmp_path, workflow)
+    proposal = model_proposal(run, workflow)
+    proposal["case"]["ips"][0]["type"] = ip_type
+    next(c for c in proposal["controls"] if c["key"] == "ip:IP.SOFT/PB.IP.SOFTWARE")[
+        "key"
+    ] = ("ip:IP.SOFT/PB.IP." + ip_type)
+    digest = reviewed(run, workflow, proposal)
+
+    result = workflow.calculate_draft(run["context"], digest=digest)["result"]
+
+    assert result["lines"][0]["status"] == "INCLUDED"
+    assert result["additional_deduction"]["income"] == "110000.00"
+
+
+@pytest.mark.parametrize(
+    "period,status", [("P2017", "INCLUDED"), ("P2016", "EXCLUDED")]
+)
+def test_premial_branch_uses_exact_fiscal_window_in_archive_run(
+    tmp_path: Path, workflow: ModuleType, period: str, status: str
+) -> None:
+    ledger = (
+        "cost_id,ledger_row_key,period_id,account,category,book_amount,income_max,irap_max\n"
+        + f"C1,GL.1,{period},Synthetic cost,PERSONNEL,100000.00,100000.00,80000.00\n"
+    )
+    run = running_case(tmp_path, workflow, ledger_text=ledger)
+    proposal = model_proposal(run, workflow)
+    historical = json.loads((PLUGIN / "examples/case.premial.json").read_text())
+    proposal["case"]["periods"] = historical["periods"]
+    proposal["case"]["ips"][0]["premial_event"] = historical["ips"][0]["premial_event"]
+    proposal["case"]["ips"][0]["premial_event"]["evidence_ids"] = ["E0001"]
+    proposal["case"]["allocations"][0]["mode"] = "PREMIAL"
+    proposal["controls"] += [
+        dict(proposal["controls"][0], key="ip:IP.SOFT/" + key)
+        for key in ("PB.PREMIAL", "PB.PREMIAL.SOFTWARE")
+    ]
+    digest = reviewed(run, workflow, proposal)
+
+    result = workflow.calculate_draft(run["context"], digest=digest)["result"]
+
+    assert result["lines"][0]["status"] == status
+
+
+def test_missing_extraordinary_review_suspends_case(
+    tmp_path: Path, workflow: ModuleType
+) -> None:
+    run = running_case(tmp_path, workflow)
+    proposal = model_proposal(run, workflow)
+    proposal["controls"] = [
+        r for r in proposal["controls"] if r["key"] != "case/PB.EXTRAORDINARY"
+    ]
+    digest = reviewed(run, workflow, proposal)
+
+    result = workflow.calculate_draft(run["context"], digest=digest)["result"]
+
+    assert result["lines"][0]["status"] == "SUSPENDED"
+    assert "HISTORY:NOT_TESTED" in result["lines"][0]["reasons"]
+
+
+def test_penalty_details_do_not_suspend_substantive_calculation(
+    tmp_path: Path, workflow: ModuleType
+) -> None:
+    run = running_case(tmp_path, workflow)
+    proposal = model_proposal(run, workflow)
+    proposal["case"]["penalty_protection"]["requested"] = True
+    proposal["controls"] += [
+        dict(proposal["controls"][0], key="penalty/" + key)
+        for key in (
+            "PB.DOC.A",
+            "PB.DOC.B",
+            "PB.DOC.SIGN",
+            "PB.DOC.TIME",
+            "PB.DECLARATION",
+            "PB.DOC.RETENTION",
+        )
+    ]
+    next(r for r in proposal["controls"] if r["key"] == "penalty/PB.DOC.TIME")[
+        "status"
+    ] = "BLOCKED"
+    digest = reviewed(run, workflow, proposal)
+
+    result = workflow.calculate_draft(run["context"], digest=digest)["result"]
+
+    assert result["lines"][0]["status"] == "INCLUDED"
+    assert result["penalty_protection"]["status"] == "NOT_READY"
+    assert "TIMESTAMP:BLOCKED" in result["penalty_protection"]["reasons"]

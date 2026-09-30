@@ -1,6 +1,6 @@
 ---
 name: patent-box-review
-description: Prepare ordinary software Patent Box evidence, cost mappings and control proposals, then run a synthetic calculation and draft A/B dossier. Real calculations are blocked pending legal-source and authenticated professional-review integration.
+description: Prepare software, patent and design evidence, reviewed ledger costs and control proposals; export draft Word/PDF dossiers and verify signed professional reviews. Real calculations require current reviewed sources and configured firm authorization; professional acceptance remains pending.
 ---
 
 # Patent Box
@@ -13,4 +13,4 @@ otherwise resolve `../../../patent-box-review` in repository source. Read that m
 Studio Archive, explicit review, output and draft-only boundaries.
 Treat the resolved module root as the plugin working directory for commands.
 
-Do not imply this first integration is approved for real tax calculations.
+Read the current implementation status and preserve its professional, provider and installed-runtime acceptance boundaries.

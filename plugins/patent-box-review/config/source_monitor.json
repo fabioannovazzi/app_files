@@ -39,20 +39,29 @@
     "\"Patent Box\" software SIAE",
     "\"Patent Box\" credito ricerca sviluppo nettizzazione"
   ],
-  "discovery_adapter": "TO_IMPLEMENT_IN_AUTHORIZED_HOST",
+  "discovery_adapter": "scripts/patent_box_sources.py",
   "snapshot_input_schema": "source-snapshot.schema.json",
   "implemented": [
-    "offline snapshot comparison",
-    "case impact review queue"
+    "immutable public HTTPS acquisition",
+    "observed-link discovery guided by host model",
+    "explicit scope/window/pagination coverage review",
+    "original and versioned extracted-text preservation",
+    "byte/text comparison with unresolved legal effect",
+    "private conservative case-impact queue",
+    "fresh signed case reopening with preserved prior artifacts, including selected completed-run handoffs",
+    "default-off host-scheduler coordination and explicit host receipt records",
+    "durable due/pending/failed jobs and preserved complete baselines",
+    "private notice records; unchanged complete scans stay quiet",
+    "review events for corrected extraction of unchanged originals"
   ],
   "not_implemented": [
-    "live source discovery",
     "authenticated database access",
-    "scheduler",
-    "notification delivery",
-    "source activation"
+    "independent host-scheduler and notification-delivery verification",
+    "independent statutory retention"
   ],
   "network_error_policy": "PARTIAL_SCAN; retain last valid snapshot, expose failed scope; never report no updates",
   "activation_policy": "human source and applicability review, new immutable ruleset version, regression tests, explicit case re-review",
-  "no_silent_mutations": true
+  "no_silent_mutations": true,
+  "service_adapter": "patent_box/monitor_service.py",
+  "service_instructions": "references/monitor-service.md"
 }

@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "professional-request.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "request_id",
+    "action",
+    "demo",
+    "scope",
+    "run_id",
+    "created_at",
+    "expires_at",
+    "statement",
+    "bindings"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "request_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": ".*\\S.*"
+    },
+    "action": {
+      "enum": [
+        "REVIEW_CONTROLS",
+        "APPROVE_DOSSIER",
+        "REOPEN_CASE"
+      ]
+    },
+    "demo": {
+      "type": "boolean"
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "client_id",
+        "engagement_id",
+        "period"
+      ],
+      "properties": {
+        "client_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500,
+          "pattern": ".*\\S.*"
+        },
+        "engagement_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500,
+          "pattern": ".*\\S.*"
+        },
+        "period": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "period_id",
+            "start",
+            "end"
+          ],
+          "properties": {
+            "period_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500,
+              "pattern": ".*\\S.*"
+            },
+            "start": {
+              "type": "string",
+              "format": "date"
+            },
+            "end": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        }
+      }
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": ".*\\S.*"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "statement": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": ".*\\S.*"
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "proposal_sha256",
+        "evidence_sha256",
+        "rules_sha256",
+        "source_preflight_sha256",
+        "result_sha256",
+        "artifacts_sha256",
+        "prior_approval_sha256"
+      ],
+      "properties": {
+        "proposal_sha256": {
+          "type": "string",
+          "pattern": "[0-9a-f]{64}"
+        },
+        "evidence_sha256": {
+          "type": "string",
+          "pattern": "[0-9a-f]{64}"
+        },
+        "rules_sha256": {
+          "type": "string",
+          "pattern": "[0-9a-f]{64}"
+        },
+        "source_preflight_sha256": {
+          "type": "string",
+          "pattern": "[0-9a-f]{64}"
+        },
+        "result_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "[0-9a-f]{64}"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "artifacts_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "[0-9a-f]{64}"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "prior_approval_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "[0-9a-f]{64}"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "reopening": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "previous_proposal_sha256",
+        "reason"
+      ],
+      "properties": {
+        "previous_proposal_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": ".*\\S.*"
+        }
+      }
+    }
+  }
+}
