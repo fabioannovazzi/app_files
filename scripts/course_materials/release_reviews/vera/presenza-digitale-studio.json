@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "presenza-digitale-studio",
-  "course_sha256": "b17b5e3a21d0493a88cb86d4f702f50434653cb7d8dd35bca5fdbbf572b261ba",
+  "course_sha256": "d767a309c5e89bf68fa4e2be05e4806407e5e17ed4aba91b7f6779f86163e06f",
   "reviewer": "Codex: five-language first-use website material, native execution and rendered output review",
   "reviewed_at": "2026-09-15T01:19:06.368130+00:00",
   "review_scope": "Read the complete five-language outlines, fictional studio profiles and hours updates. Reviewed all 20 exact demonstration/practice pages for Vera and Lucia through actual full-page desktop and phone browser captures, with observed navigation, widths and console state. The browser returned JPEG bytes: their original bytes were preserved and filenames corrected, and the current workflow now accepts PNG or JPEG evidence with matching headers, dimensions and hashes. Each reviewed run has a real recorded quality assessment and valid quality_ready state. Fresh native preparation/implementation/mechanical checks in website-teaching-release-04 reproduce every reviewed site digest after that repair. Those tests use explicitly authored fictional briefs and HTML, not simulated browser acceptance. This accepts prepared local teaching material; it does not attest a professional publication decision, human lesson timing/comprehension or live native voice and paired-window learner interaction. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -685,5 +685,13 @@
     "native_execution_evidence": "GitHub Actions run 36703497570, job 109848196461, source 437abcd61eca512a4da8c591386ffdbd0895bec7: the native teaching batch passed 1183 tests, with three explicit skips and 92.10% courseware coverage. The later stale editorial-digest gate failed; this is not a green whole-run claim. Fresh CI must validate every required demo/practice identity against the current digest.",
     "limits": "Source compatibility review only; no new independent editorial, visual, learner, installed-host or professional acceptance. Earlier reviewed artifacts remain historical evidence.",
     "detail": "docs/releases/2026-09-30-patent-box-course-source-review.json"
+  },
+  "scissione_integration_refresh_20260930": {
+    "previous_course_sha256": "b17b5e3a21d0493a88cb86d4f702f50434653cb7d8dd35bca5fdbbf572b261ba",
+    "new_course_sha256": "d767a309c5e89bf68fa4e2be05e4806407e5e17ed4aba91b7f6779f86163e06f",
+    "changed_sources": [
+      "plugins/_shared/vendor/modules/vera_assurance/contracts.py"
+    ],
+    "review": "Every authored lesson field and input record matches current main. The sole shared source change adds scissione-guidata to the supported workflow IDs; existing workflow behavior is unchanged. Original reviewers, dates, judgments and output hashes are preserved. Fresh native teaching executions are required in CI; no new professional or learner acceptance is claimed."
   }
 }

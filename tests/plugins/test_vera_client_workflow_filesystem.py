@@ -29,6 +29,7 @@ from vera_assurance import (  # noqa: E402
 )
 
 CLIENT_WORKFLOW_ENTRYPOINTS = (
+    ("scissione-guidata", "run_scissione.py"),
     ("patent-box-review", "patent_box_workflow.py"),
     ("esg-reporting-assurance", "esg_case.py"),
     ("bilancio-xbrl-it", "jurisdiction_accounts.py"),
@@ -132,6 +133,7 @@ CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
 
 # Maintenance, inspection and validated-report delivery do not start a workflow.
 CLIENT_WORKFLOW_CLI_ALLOWLIST = (
+    ("scissione-guidata", "check_dependencies.py"),
     ("patent-box-review", "check_dependencies.py"),
     # Public-source acquisition and monitoring have no client case lifecycle.
     ("patent-box-review", "patent_box_sources.py"),

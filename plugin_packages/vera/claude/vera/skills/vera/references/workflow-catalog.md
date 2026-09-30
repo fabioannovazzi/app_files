@@ -276,4 +276,12 @@ recreating a central function register.
 
 - `treasury-forecast`: prepare and maintain a dated cash forecast from the documented bank, outstanding-item, planned-flow, allocation and adjustment tables. Review expected dates, preserve applicable decisions, compare successive accepted forecasts and produce Excel/HTML workpapers. Required missing data stops this workflow; optional supplied XML is invoice evidence, not payment proof. No business-planning dependency or automatic Agenzia download.
 
+## Scissione: initial operational path
+
+For a versioned scissione dossier, read `../../scissione-guidata/SKILL.md`.
+prepare a versioned dossier and ownership/allocation schedules for an Italian OIC partial proportional scission into a new beneficiary. Require authorized entity evidence and exact-version professional decisions; preserve unknowns, separate book/tax/economic/shareholder tax values and reopen dependent approvals after changes. No automatic legal rules, accounting entries, statutory deadlines, signatures or filings. Other routes are explicitly unsupported.
+This operational path has synthetic acceptance tests but no prepared voice lesson
+yet. Do not present another lesson as a scissione execution.
+
+
 - `learn-with-vera`: learn an installed function in writing using prepared files, actual execution and practice in one conversation.

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vera · Scissione guidata" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="7" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+<path d="M22 12h20v13H22zM12 41h15v12H12zM38 41h15v12H38zM32 25v8M19 41v-8h27v8" fill="none" stroke="#F7F0DF" stroke-width="3"/><path d="m14 37 5 5 5-5m17 0 5 5 5-5" fill="none" stroke="#00B0F0" stroke-width="3"/>
+</svg>

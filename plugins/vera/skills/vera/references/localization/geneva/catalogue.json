@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/.codex/worktrees/vera-pmi-valuations/app_files/plugins/vera",
-  "version": "0.1.296",
-  "captured_at": "2026-09-30T11:21:11.035353+00:00",
-  "catalogue_fingerprint": "039bb0173cb73c3d0b2dc620d5be1bc0fc45e40fabf7c70c94909c56b1bb1e0f",
-  "manifest_sha256": "8fdf8708c443bb75a01271943b7effd05127ff4accc4dc6dcaa34261bf57c680",
+  "root": "/Users/fabio/.codex/worktrees/vera-scissione/app_files/plugins/vera",
+  "version": "0.1.297",
+  "captured_at": "2026-09-30T13:39:28.075049+00:00",
+  "catalogue_fingerprint": "8e3d54f9359fbca867287ad57183488948f1880e1ac89fa62be0b0a7efa9aecf",
+  "manifest_sha256": "fb86e960009b6f893c6205744e682be68b1876dd8daeaf328b2a23afe50f6983",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -202,6 +202,11 @@
       "sha256": "4ccc0c104086d1f90aae18a6ebb5ce1e3b9ca1b22e753b09b24b2dbe5d4a53d5"
     },
     {
+      "function_id": "scissione-guidata",
+      "skill_path": "skills/scissione-guidata/SKILL.md",
+      "sha256": "fd61a00253e1596ce7c570a217d66e122a4195c7adddda17f8888e3b79aaf8c8"
+    },
+    {
       "function_id": "studio-archive",
       "skill_path": "skills/studio-archive/SKILL.md",
       "sha256": "b2f8ad59567a7e390f0fb4afbfdb339f0f8d11b3576ff37497de55cc4172d7f3"
@@ -224,7 +229,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "fb8b9d55aae6853851368a1f1eca8e9d5f7be2b3e080016f3a833b6d70973809"
+      "sha256": "2ac3d58dd7fa99f9167b5f6549e468b029c807d2a8e26a2665ea6cf28e6570ef"
     },
     {
       "function_id": "vouching",

@@ -174,6 +174,12 @@ skill rather than inventing a generic studio workflow. The user describes the
 professional work; the user is never required to know, name, or choose Vera's
 internal skills.
 
+For a versioned scissione dossier, select `scissione-guidata` and read its
+specialist contract. Its first path supports Italian OIC partial proportional
+scission into a new beneficiary; other configurations remain explicitly unsupported.
+Require authorized Studio Archive inputs and actual exact-version professional
+confirmation. Technical preparation is not legal validation, signature or filing.
+
 For a repeatable cash forecast, select `treasury-forecast` and require its
 published input contract. It uses supplied balances, open items, additional
 cash flows and settlement evidence, preserving reviewed dates between runs.

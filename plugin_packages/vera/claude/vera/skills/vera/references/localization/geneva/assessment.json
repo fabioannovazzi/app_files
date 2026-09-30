@@ -900,6 +900,27 @@
       "verification": "Patent Box implementation and controlled-preview boundaries inspected. No Swiss source research or Geneva professional acceptance performed.",
       "implementation": "Italian controlled preview with real calculations gated by reviewed sources, rules and firm authorization; professional acceptance remains pending.",
       "implementation_status": "unresolved_not_qualified_for_target"
+    },
+    {
+      "function_id": "scissione-guidata",
+      "name": "Scissione guidata",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Maintain versioned operation evidence, allocations, values, decisions and reviewable ownership schedules for a corporate demerger.",
+      "geneva_application": "Not established. The current executable route is Italian OIC partial proportional scission into a new beneficiary, in EUR; CH-GE requests are outside that route.",
+      "required_change": "First establish a source-backed Swiss mandate, procedure and required deliverables. Assess jurisdiction, accounting, currency and document differences within this function before claiming an adaptation. French interface text does not establish Swiss support.",
+      "adaptation_layers": [
+        "unresolved Swiss professional and procedural mapping",
+        "accounting and currency qualification",
+        "output and review requirements"
+      ],
+      "acceptance_example": "A CH-GE scope must not execute the Italian OIC route. Any future adaptation requires its own reviewed Swiss case contract and acceptance evidence.",
+      "sources": [
+        "scissione_implementation"
+      ],
+      "verification": "Source scope and synthetic unsupported-route tests inspected; no current Swiss legal-source assessment or Geneva professional acceptance performed.",
+      "implementation": "Italian OIC route retained. CH-GE is explicitly unsupported by the initial runtime.",
+      "implementation_status": "unsupported_for_target_pending_assessment"
     }
   ],
   "sources": {
@@ -979,6 +1000,16 @@
       "title": "CNC implementation and scope",
       "url": "repository:plugins/composizione-negoziata/skills/composizione-negoziata/SKILL.md",
       "scope": "Italian workflow and explicit different-jurisdiction assessment requirement; no Swiss legal-source verification."
+    },
+    "scissione_implementation": {
+      "title": "Scissione guidata initial source implementation",
+      "paths": [
+        "plugins/scissione-guidata/skills/scissione-guidata/SKILL.md",
+        "plugins/scissione-guidata/scripts/scissione_core.py",
+        "tests/plugins/test_scissione_guidata.py"
+      ],
+      "basis": "Inspected scope and unsupported-route tests establish IT/OIC/EUR boundaries; no Swiss professional applicability or equivalence is inferred.",
+      "consulted": "2026-09-29"
     }
   },
   "course_qa_release_binding": {
@@ -1054,7 +1085,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "039bb0173cb73c3d0b2dc620d5be1bc0fc45e40fabf7c70c94909c56b1bb1e0f",
+  "catalogue_fingerprint": "8e3d54f9359fbca867287ad57183488948f1880e1ac89fa62be0b0a7efa9aecf",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1103,5 +1134,11 @@
     "version": "0.1.295",
     "reviewed_at": "2026-09-30",
     "review": "Refreshes only the canonical version binding after the teaching-review privacy refresh. Existing assessments, including the unresolved Patent Box target assessment, are preserved."
+  },
+  "scissione_release_binding": {
+    "reviewed_at": "2026-09-30",
+    "source_version": "0.1.297",
+    "integrated_main_commit": "84f230804d295f1fe6cfdbc682cb0c1f5990447c",
+    "review": "Adds the retained Italian OIC partial proportional/new-beneficiary Scissione path. Preserves every current-main target disposition and source. Swiss applicability remains unresolved; no professional acceptance is inferred."
   }
 }

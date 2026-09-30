@@ -121,7 +121,7 @@
     },
     {
       "path": "modules/previdenza-inps/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "92ee4c3e2775385a83221e24695dc65b10e9821de13c3d1f3d6f79f48ec44981"
+      "sha256": "089670445e91974b68e9eca35017948a8bac2d07e7e05dba29be05b32fb76e93"
     },
     {
       "path": "modules/previdenza-inps/vendor/modules/vera_assurance/decisions.py",
@@ -169,7 +169,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "92ee4c3e2775385a83221e24695dc65b10e9821de13c3d1f3d6f79f48ec44981"
+      "sha256": "089670445e91974b68e9eca35017948a8bac2d07e7e05dba29be05b32fb76e93"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -670,5 +670,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "cef2ca632ac21a0c53c7407a0e9847620f55edfa59dc3121713baff8e4eb8270"
+  "canonical_course_sha256": "5038970bd939b1498c85a67b53a82c7288be08a9209f90146b8197c9286a9ddc"
 }

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "open-item-reconciliation",
-  "course_sha256": "14ab6efb755a696e51ba95afbb89e817e3d883831e876b137ed5516a7804fd05",
+  "course_sha256": "a154a71fff14ea97bcbba67cca2b3c61ad442bcd5a5e2de3ca1b1287461a34e9",
   "reviewer": "Codex: source, first-use outline and actual native document/workbook review",
   "reviewed_at": "2026-09-14T17:59:18.652300+00:00",
   "review_scope": "Prepared full-payment matching example and cumulative April practice. All 51 Word pages from native run 07 and 34 summary/request worksheet views were visually inspected. All three operational sheets were also checked through a native LibreOffice conversion, which disproved the excessive row heights in the secondary preview renderer. Run 08 re-executes the final corrected outlines with unchanged inputs and production method: full Word body XML and both operational/request workbook cell values and styles match run 07 after exact managed-source and run-metadata substitutions. The local HTML review page could not be opened because of browser URL security policy; visual browser interaction, learner understanding, native voice and two-window behavior are not attested. Row review remains pending; this is not professional case approval. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -437,5 +437,13 @@
     "native_execution_evidence": "GitHub Actions run 36703497570, job 109848196461, source 437abcd61eca512a4da8c591386ffdbd0895bec7: the native teaching batch passed 1183 tests, with three explicit skips and 92.10% courseware coverage. The later stale editorial-digest gate failed; this is not a green whole-run claim. Fresh CI must validate every required demo/practice identity against the current digest.",
     "limits": "Source compatibility review only; no new independent editorial, visual, learner, installed-host or professional acceptance. Earlier reviewed artifacts remain historical evidence.",
     "detail": "docs/releases/2026-09-30-patent-box-course-source-review.json"
+  },
+  "scissione_integration_refresh_20260930": {
+    "previous_course_sha256": "14ab6efb755a696e51ba95afbb89e817e3d883831e876b137ed5516a7804fd05",
+    "new_course_sha256": "a154a71fff14ea97bcbba67cca2b3c61ad442bcd5a5e2de3ca1b1287461a34e9",
+    "changed_sources": [
+      "plugins/_shared/vendor/modules/vera_assurance/contracts.py"
+    ],
+    "review": "Every authored lesson field and input record matches current main. The sole shared source change adds scissione-guidata to the supported workflow IDs; existing workflow behavior is unchanged. Original reviewers, dates, judgments and output hashes are preserved. Fresh native teaching executions are required in CI; no new professional or learner acceptance is claimed."
   }
 }

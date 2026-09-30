@@ -100,7 +100,7 @@
     {
       "path": "modules/archive-organization/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "92ee4c3e2775385a83221e24695dc65b10e9821de13c3d1f3d6f79f48ec44981"
+      "sha256": "089670445e91974b68e9eca35017948a8bac2d07e7e05dba29be05b32fb76e93"
     },
     {
       "path": "modules/archive-organization/vendor/modules/vera_assurance/decisions.py",
@@ -250,7 +250,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "92ee4c3e2775385a83221e24695dc65b10e9821de13c3d1f3d6f79f48ec44981"
+      "sha256": "089670445e91974b68e9eca35017948a8bac2d07e7e05dba29be05b32fb76e93"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

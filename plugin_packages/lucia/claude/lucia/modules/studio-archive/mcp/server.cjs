@@ -52,6 +52,7 @@ const TOOL_NAMES = {
   matchEmail: "match_studio_archive_email",
 };
 const VERA_CLIENT_WORKFLOW_IDS = Object.freeze([
+  "scissione-guidata",
   "esg-reporting-assurance",
   "treasury-forecast",
   "aml-review",
@@ -74,11 +75,13 @@ const VERA_CLIENT_WORKFLOW_IDS = Object.freeze([
   "financial-analysis",
   "report-builder",
   "concordato-plan-review",
+  "composizione-negoziata",
   "prompt-optimizer",
   "deep-research-validator",
   "previdenza-inps",
   "registro-imprese-sari",
   "bandi-agevolazioni",
+  "patent-box-review",
   "bilancio-xbrl-it",
 ]);
 const CLIENT_WORKFLOW_IDS = Object.freeze([

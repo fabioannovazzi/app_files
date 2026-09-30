@@ -2,7 +2,7 @@
 
 Updated 2026-09-30 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
 
-The current inventory covers all 45 skill entrypoints, including internal helpers and development prototypes. All prior professional judgments are retained; catalogue coverage does not establish target-country acceptance.
+The current inventory covers all 46 skill entrypoints, including internal helpers and development prototypes. All prior professional judgments are retained; catalogue coverage does not establish target-country acceptance.
 
 The release adds bounded adapters and instructions, not a blanket claim that every fiduciary mandate is supported. Original evidence and professional decisions remain necessary. No real Geneva client workflow has been accepted.
 

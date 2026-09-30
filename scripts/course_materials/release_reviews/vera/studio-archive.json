@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "studio-archive",
-  "course_sha256": "5ac44b76362207f5b3e39752d99959eb2b67480e722be4b4c845cf6606387a78",
+  "course_sha256": "cba83c4da30dd21b68343e14e12881eb598c501c92d6fbbb5f55fcd115a0315e",
   "reviewer": "Codex: five-language local archive lesson and delivered answer review",
   "reviewed_at": "2026-09-14T21:43:59.684693+00:00",
   "review_scope": "Prepared material and native local document-search review. Read all five complete outlines, all fifteen fictional input documents and all ten final answer captures. Nineteen checks pass, including ten distinct phase/language exercises through the real staging, archive configuration, refresh, exact-scope search and source opening functions. Semantic answers are authored regression fixtures outside the shipped kits and do not replace live host reasoning. Native voice, GUI presentation, actual elapsed lesson time and learner comprehension remain unverified. Gmail, WhatsApp, Drive and the separate engagement lifecycle are not exercised by this local-search lesson. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -418,5 +418,13 @@
     "native_execution_evidence": "GitHub Actions run 36703497570, job 109848196461, source 437abcd61eca512a4da8c591386ffdbd0895bec7: the native teaching batch passed 1183 tests, with three explicit skips and 92.10% courseware coverage. The later stale editorial-digest gate failed; this is not a green whole-run claim. Fresh CI must validate every required demo/practice identity against the current digest.",
     "limits": "Source compatibility review only; no new independent editorial, visual, learner, installed-host or professional acceptance. Earlier reviewed artifacts remain historical evidence.",
     "detail": "docs/releases/2026-09-30-patent-box-course-source-review.json"
+  },
+  "scissione_integration_refresh_20260930": {
+    "previous_course_sha256": "5ac44b76362207f5b3e39752d99959eb2b67480e722be4b4c845cf6606387a78",
+    "new_course_sha256": "cba83c4da30dd21b68343e14e12881eb598c501c92d6fbbb5f55fcd115a0315e",
+    "changed_sources": [
+      "plugins/_shared/vendor/modules/vera_assurance/contracts.py"
+    ],
+    "review": "Every authored lesson field and input record matches current main. The sole shared source change adds scissione-guidata to the supported workflow IDs; existing workflow behavior is unchanged. Original reviewers, dates, judgments and output hashes are preserved. Fresh native teaching executions are required in CI; no new professional or learner acceptance is claimed."
   }
 }

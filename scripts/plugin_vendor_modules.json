@@ -13,6 +13,9 @@
     "variance"
   ],
   "plugins": {
+    "scissione-guidata": {
+      "module_roots": ["vera_assurance"]
+    },
     "distribution-analysis": {},
     "mix-contribution-analysis": {},
     "period-comparison": {

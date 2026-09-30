@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "registro-imprese-sari",
-  "course_sha256": "49c957415f48d165ce99bbb88657f54d50f586378c95df5d2749b98eef6c5a9b",
+  "course_sha256": "db889cece8668bdda055ac85e6491e92536f3f83a703f075dede0957068e919d",
   "reviewer": "Codex: direct lesson, source-file, native artifact and browser review",
   "reviewed_at": "2026-09-15T01:54:14.804674+00:00",
   "languages": {
@@ -600,5 +600,13 @@
     "native_execution_evidence": "GitHub Actions run 36703497570, job 109848196461, source 437abcd61eca512a4da8c591386ffdbd0895bec7: the native teaching batch passed 1183 tests, with three explicit skips and 92.10% courseware coverage. The later stale editorial-digest gate failed; this is not a green whole-run claim. Fresh CI must validate every required demo/practice identity against the current digest.",
     "limits": "Source compatibility review only; no new independent editorial, visual, learner, installed-host or professional acceptance. Earlier reviewed artifacts remain historical evidence.",
     "detail": "docs/releases/2026-09-30-patent-box-course-source-review.json"
+  },
+  "scissione_integration_refresh_20260930": {
+    "previous_course_sha256": "49c957415f48d165ce99bbb88657f54d50f586378c95df5d2749b98eef6c5a9b",
+    "new_course_sha256": "db889cece8668bdda055ac85e6491e92536f3f83a703f075dede0957068e919d",
+    "changed_sources": [
+      "plugins/_shared/vendor/modules/vera_assurance/contracts.py"
+    ],
+    "review": "Every authored lesson field and input record matches current main. The sole shared source change adds scissione-guidata to the supported workflow IDs; existing workflow behavior is unchanged. Original reviewers, dates, judgments and output hashes are preserved. Fresh native teaching executions are required in CI; no new professional or learner acceptance is claimed."
   }
 }

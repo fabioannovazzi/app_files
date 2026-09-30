@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "quesito-legale-fiscale",
-  "course_sha256": "8a4f46d0a83a1250182c9d116f6c81d2de0d49e73c3f787b09e1af77da329726",
+  "course_sha256": "454e0efd5aec69fd32f8326e73431d8f386e9dfae1f7dd200b4293e3b5e5d9e6",
   "reviewer": "Codex: authored lesson, official-source and rendered native-output review",
   "reviewed_at": "2026-09-23T11:43:24.017498+00:00",
   "review_scope": "First-use kit, fictional request, native planning, actual authored multilingual answer, source inspection, claim review, Word packaging and preserved practice revision. Rendered all ten distinct answer texts; both products produce the same reviewed document bodies. Regression fixtures replay dated official-source evidence and model-authored judgments; they do not attest fresh model inference, learner participation, professional approval or live voice. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -426,5 +426,13 @@
     "native_execution_evidence": "GitHub Actions run 36703497570, job 109848196461, source 437abcd61eca512a4da8c591386ffdbd0895bec7: the native teaching batch passed 1183 tests, with three explicit skips and 92.10% courseware coverage. The later stale editorial-digest gate failed; this is not a green whole-run claim. Fresh CI must validate every required demo/practice identity against the current digest.",
     "limits": "Source compatibility review only; no new independent editorial, visual, learner, installed-host or professional acceptance. Earlier reviewed artifacts remain historical evidence.",
     "detail": "docs/releases/2026-09-30-patent-box-course-source-review.json"
+  },
+  "scissione_integration_refresh_20260930": {
+    "previous_course_sha256": "8a4f46d0a83a1250182c9d116f6c81d2de0d49e73c3f787b09e1af77da329726",
+    "new_course_sha256": "454e0efd5aec69fd32f8326e73431d8f386e9dfae1f7dd200b4293e3b5e5d9e6",
+    "changed_sources": [
+      "plugins/_shared/vendor/modules/vera_assurance/contracts.py"
+    ],
+    "review": "Every authored lesson field and input record matches current main. The sole shared source change adds scissione-guidata to the supported workflow IDs; existing workflow behavior is unchanged. Original reviewers, dates, judgments and output hashes are preserved. Fresh native teaching executions are required in CI; no new professional or learner acceptance is claimed."
   }
 }
