@@ -30,6 +30,7 @@ CHECK_DEPENDENCIES_PATH = COMPONENT_ROOT / "scripts" / "check_dependencies.py"
 MCP_SERVER_PATH = COMPONENT_ROOT / "mcp" / "server.cjs"
 EXPECTED_CLIENT_WORKFLOW_IDS = (
     "scissione-guidata",
+    "esg-reporting-assurance",
     "treasury-forecast",
     "aml-review",
     "adeguati-assetti",
@@ -44,17 +45,20 @@ EXPECTED_CLIENT_WORKFLOW_IDS = (
     "invoice-xml",
     "sales-plan",
     "business-planning",
+    "business-valuation",
     "variance-analysis",
     "management-control-pack",
     "centrale-rischi-review",
     "financial-analysis",
     "report-builder",
     "concordato-plan-review",
+    "composizione-negoziata",
     "prompt-optimizer",
     "deep-research-validator",
     "previdenza-inps",
     "registro-imprese-sari",
     "bandi-agevolazioni",
+    "patent-box-review",
     "bilancio-xbrl-it",
 )
 

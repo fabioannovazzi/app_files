@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/.codex/worktrees/vera-scissione/app_files/plugins/vera",
-  "version": "0.1.281",
-  "captured_at": "2026-09-29T20:55:10.330303+00:00",
-  "catalogue_fingerprint": "08c93654dbfa97e6495ca67f47509176cb50b92c09a4528dbdb9c48b2c76b6c9",
-  "manifest_sha256": "1d5678e8dc33733a64825461354df469fdcf995de8249243edadde07c5250cb7",
+  "version": "0.1.297",
+  "captured_at": "2026-09-30T13:39:28.075049+00:00",
+  "catalogue_fingerprint": "8e3d54f9359fbca867287ad57183488948f1880e1ac89fa62be0b0a7efa9aecf",
+  "manifest_sha256": "fb86e960009b6f893c6205744e682be68b1876dd8daeaf328b2a23afe50f6983",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -52,9 +52,19 @@
       "sha256": "5bdfff880bde6f66cd11c93619d3db68d0e9d94ffa99503df41d40becb2a6361"
     },
     {
+      "function_id": "business-valuation",
+      "skill_path": "skills/business-valuation/SKILL.md",
+      "sha256": "d9cb9d9acf505333d298e140e685d215e505f5c87899f6b74ba4b97ddb111314"
+    },
+    {
       "function_id": "centrale-rischi-review",
       "skill_path": "skills/centrale-rischi-review/SKILL.md",
       "sha256": "4548a6c4b41fb845bd260596b680ce1831f6117218e45f0d70b8786d21766da1"
+    },
+    {
+      "function_id": "composizione-negoziata",
+      "skill_path": "skills/composizione-negoziata/SKILL.md",
+      "sha256": "f9f1b8d1e3a4ce9b643f5f2c68065820200cc89d6d4bf2d780a321b61f75a6b2"
     },
     {
       "function_id": "comunicazione-professionale",
@@ -82,6 +92,11 @@
       "sha256": "5a1abf9e8c28aed45ea7ccf31742798546a8175f3c5ecffce0405eab2069978a"
     },
     {
+      "function_id": "esg-reporting-assurance",
+      "skill_path": "skills/esg-reporting-assurance/SKILL.md",
+      "sha256": "d86f9901319e9dc16c2e4365e60960f311f9b3c26f0cb9d66702ffa3b77e6808"
+    },
+    {
       "function_id": "fatture-xml-check",
       "skill_path": "skills/fatture-xml-check/SKILL.md",
       "sha256": "09259e844b55b8cf287cb0553c8199432c28e6b511a6c05a67aabd10219c4351"
@@ -99,7 +114,7 @@
     {
       "function_id": "fusione-guidata",
       "skill_path": "skills/fusione-guidata/SKILL.md",
-      "sha256": "2c3a8adaf8386593adf8649f7b6dc45c998d5e6db05d998bb03f5d4162915129"
+      "sha256": "ba18a24db267eb7a2cc2f4d70a768622b208e05f3ac43b50b488859d7209a45c"
     },
     {
       "function_id": "invoice-xml",
@@ -145,6 +160,11 @@
       "function_id": "open-item-reconciliation",
       "skill_path": "skills/open-item-reconciliation/SKILL.md",
       "sha256": "88b9e2b6afc2479588dca8d02c7864ad89535ffb411597a739c5ca47bf83f388"
+    },
+    {
+      "function_id": "patent-box-review",
+      "skill_path": "skills/patent-box-review/SKILL.md",
+      "sha256": "2223683d89b7b73b3ab813cb9c690612a88038075459ec2cd423fa108b6299b8"
     },
     {
       "function_id": "presenza-digitale-studio",
@@ -209,7 +229,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "63c3399ac4b5488aa07b14bd8b9aa28dde6a87a96e885a398e9c0d5799d078b4"
+      "sha256": "2ac3d58dd7fa99f9167b5f6549e468b029c807d2a8e26a2665ea6cf28e6570ef"
     },
     {
       "function_id": "vouching",

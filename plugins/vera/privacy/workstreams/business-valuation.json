@@ -1,0 +1,96 @@
+{
+  "schema_version": 3,
+  "workstream": "business-valuation",
+  "display_name": "Valutazione d’impresa",
+  "role": "workflow",
+  "governed_paths": [
+    ".codex-plugin/plugin.json",
+    "skills",
+    "references",
+    "scripts",
+    "assets",
+    "requirements.txt"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "valuation-evidence-and-mandate",
+        "purpose": "Interpret the mandate, financial evidence, source relevance, normalizations and method selection.",
+        "content": "Selected statements, schedules, plan sources, entity and personal information, rights, mandate, dates, normalized amounts, adjustments and private forecasts may be read by the selected model. The workflow keeps document/page/cell references, facts, assumptions and hypotheses. There is no automatic anonymization or enforced minimum-context projection. The model and professional decide relevance and method suitability. The structured mandate may include commissioning parties, recipients, engagement/report dates, expert activity, declared competencies, conflicts of interest, class-specific rights, percentage bases, agreements and restrictions, including unavailable or unconfirmed fields. These are selected client/professional evidence, not automatically verified competence or independence. Explicit statement records also retain mapped asset, liability and equity lines, independent opening balances, signed movements, periods, declared perimeters/accounting bases, comparisons and reviewer decisions. Those records and reconciliation exceptions may enter model context; arithmetic checks do not establish completeness or classification. Finite-duration income workpapers also retain the selected economic-life horizon, signed period incomes, an independent equity residual and source-linked explanations of capital maintenance, reinvestment, distributions and residual double-counting. The model/professional reviews those meanings; local code checks arithmetic and evidence/review identity. Residual-income workpapers include opening/closing book equity, clean-surplus income, owner distributions and contributions, terminal equity, accounting/OCI adjustment explanations and equity-cost assumptions. The model may read these records and reconciliation exceptions. Their numerical equality does not verify accounting substance or distributability. Holding/SOTP workpapers also retain subsidiary enterprise/equity or specific-interest values, entity/interest identities, valuation dates/currencies, ownership denominators and ratios, rights explanations and explicit adjustments, parent assets/liabilities, cost present values, tax assumptions and signed intragroup eliminations. These records, source locators, proposed/confirmed bases and exact method reviews may enter model context. Mechanical identity and amount checks do not qualify the rights or prove absence of economic double counting. Comparable-company workpapers retain the initial universe, each inclusion/exclusion reason, source locators, publication and price dates, LTM/forward and reported/adjusted bases, accounting and lease conventions, reconciled numerator/metric amounts, signed adjustments and the separately chosen multiple. Those observations and professional judgments may enter model context. Local code neither fetches peer data nor selects or ranks the sample. Economic-profit workpapers retain operating-capital opening and closing balances, NOPAT, signed net reinvestment, operating terminal values and dated capital costs. The model may read their source-bound operating perimeter, accounting adjustments, unlevered-tax treatment, reinvestment completeness, WACC and terminal explanations, plus capital and FCFF reconciliation differences. Local arithmetic does not qualify these assumptions or automatically reuse plan FCFF as NOPAT. The structured engagement also retains expert/signatory identity, written mandate, remuneration, delivery terms and amendments, plus each expressly selected standard, edition, adoption reason and departure explanation. These fields, their sources/locators and proposed or confirmed review decisions may enter model context and remain in the exported workpapers. Local validation checks field shape, source identity and review dependencies; it neither authenticates the named people nor selects an edition or establishes standards conformity.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "valuation-calculation-and-review",
+        "purpose": "Explain independent method results and sensitivities, author the conclusion and record professional decisions.",
+        "content": "The local Decimal engine consumes the complete structured case and validates source bytes. It emits inputs, formulas, results, source IDs, benchmark metadata, exact dependency digests and local review attestations. The model may read these records and complete exported HTML, Markdown, DOCX, PDF, XLSX and JSON/CSV, including reviewer names and timestamps. The helper performs no model or network calls. Business-plan replay temporarily reconstructs exact mapped sources below the bound run output, removes scratch copies afterwards and preserves bridge hashes, periods, monthly/annual values and upstream calculation IDs in the durable result. All permanent case artifacts remain in the selected engagement. Local arithmetic does not mean local-only processing by the selected model runtime. The optional acquisition request, observed URLs, raw public pages, usage terms, parsed original rows, transformations, retrieval metadata and failure records may also be read by the model. Imported acquisition records and original documents are replayed locally before their values enter the case. ECB public CSV rows, selected series/date, continuous-compounding definition and missing publication/vintage limitations may enter model context. They are preserved proposals, not approved risk-free rates.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "valuation-public-research",
+      "kind": "public_research",
+      "destination": "Host-provided search and official public sources selected for the valuation, including OIV, IVSC, ECB, NYU, Banca d’Italia and statistical authorities",
+      "purpose": "Verify relevant methodologies, legal-purpose requirements and dated public benchmark evidence.",
+      "content": "Public parameter, date, sector and geography queries and retrieved public evidence. The skill excludes private client names, source documents and unpublished forecasts from queries. The numerical compiler does not fetch URLs. The separately selected NYU or ECB acquisition helper sends only a bodyless GET for each selected public landing, terms and dataset URL, plus ordinary network metadata and a fixed user agent; it uses no account, cookies or client-case payload.",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "A valuation mandate or explicit research-route choice authorizes necessary public research, subject to host tool permission.",
+        "Source choice and query minimization are model-led; the module does not implement a semantic privacy classifier.",
+        "No implicit communication, publishing, signing or filing route.",
+        "The versioned NYU HTML and ECB AAA spot CSV adapters require observed landing-page links and an explicit reuse decision. They preserve bytes, original values, rate conventions and available date evidence. ECB publication and vintage remain null because the inspected CSV does not establish them; HTTP timestamps and release schedules are not substitutes. Incomplete observations cannot bind automatically. Selection and semantic privacy remain host/model responsibilities."
+      ],
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "archive-and-source-binding",
+      "control": "The entry point requires a running portable v2 business-valuation context, validates the case and every nested source against exact receipts, rejects traversal and symlinks, verifies source hashes and confines outputs to that run. A reused plan must be a finalized business-planning upstream artifact in the same engagement."
+    },
+    {
+      "id": "audience-and-replay",
+      "control": "Each selected source must explicitly allow the report audience. Export replays the complete case and plan before writing. Existing revision files are hash-checked and never overwritten."
+    },
+    {
+      "id": "review-dependencies",
+      "control": "Method acceptance requires matching dependency digests and confirmed inputs/reviewed sources; changed dependencies make earlier review attestations ineffective. Conclusion acceptance also binds the selected method versions and prose. This does not authenticate the reviewer."
+    },
+    {
+      "id": "safe-report-rendering",
+      "control": "HTML and PDF text is escaped; spreadsheet labels are forced to literal text. Formulas use a closed arithmetic vocabulary, never evaluated supplied code or formulas. JSON rejects duplicate keys and nonfinite constants."
+    },
+    {
+      "id": "bounded-public-acquisition",
+      "control": "Only standard-port HTTPS on the parser-specific NYU or ECB hosts; revalidate every redirect and all DNS answers, reject non-public addresses, connect to vetted numeric addresses while retaining original TLS hostname validation. Existing transport disables environment proxies and applies a 20-second per-document elapsed deadline including body reads, except synchronous DNS cannot be interrupted. Enforce 2 MiB, HTML MIME/byte checks for landing and terms pages and NYU tables, and text/csv MIME/byte checks for ECB data; reject archives and office files without executing scripts, macros or extracting archives. Store immutable snapshots and never fall back silently to a cached success."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-09-30",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "e1e85d6ffe9b30f7363143f3e39c8529356ad398a7a1660de4a76a9d8086484d"
+  },
+  "governed_repository_paths": [
+    "plugins/clara/scripts/public_http.py"
+  ]
+}

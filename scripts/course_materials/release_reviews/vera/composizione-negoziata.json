@@ -1,0 +1,282 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "composizione-negoziata",
+  "course_sha256": "6151492031e9c72cc24c00a5b131e1a2bbda352f7b056c7e0ed7525a1460ed3b",
+  "reviewer": "Codex /root - source, native execution and artifact review",
+  "reviewed_at": "2026-09-30T06:38:38.506975+00:00",
+  "review_scope": "Read all five authored outlines and their fictional initial/update inputs. Executed and inspected ten fresh native demo/practice cases, actual treasury outputs, sealed case snapshots and source-linked notes. These are scripted source-tree executions; judgment prose is an explicitly authored synthetic fixture. No learner, voice, window, installed-host or professional acceptance is claimed. Completion follow-up: reran all ten localized native cases on 30 September, inspected the changed decision-authority footer and retained notes, forecasts and snapshots. Lesson content is unchanged; the new full-case and authenticated-review tests are separate from this introductory lesson. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The Italian outline teaches the limited advisor path: select the role, import evidence, expose gaps, invoke treasury, review a source-linked note and resume after a change. It expressly excludes an eligibility opinion and a complete professional case.",
+        "inputs_and_request": "The Italian initial input identifies EUR 50,000 cash, an unconfirmed EUR 100,000 receipt on 15 November 2026 and EUR 80,000 payment on 30 November. Aging, orders and the business plan remain missing; the separate practice file changes only the receipt to 15 January 2027.",
+        "execution_and_checkpoints": "The actual native CLI imports the localized inputs, executes treasury, binds the forecast artifact, saves case revisions and resumes from a fresh process. The scripted request prose is a fixture rather than model-generated judgment. Role and missing-evidence checkpoints remain explicit; no learner confirmation or professional decision is invented.",
+        "deliverable_and_next_action": "Inspected the emitted note, forecast JSON and sealed snapshot for both phases. The note traces the calculation to its recorded input and retains missing aging. Forecast minimum is EUR 50,000 in demo and EUR -30,000 after the delay; these cover only the two supplied flows. The guide asks for source and professional review before proposals.",
+        "practice_and_repeat": "Practice imports the separate update in the same engagement, marks forecast, funding and memo stale, executes a new forecast and writes a new note. Earlier forecast bytes remain unchanged. A fresh process recovers the revised case; review records remain empty. Version-bound professional-decision behavior is tested separately in the CNC kernel suite.",
+        "language_and_pacing": "Read the complete Italian outline and both input files. The localized instructions preserve roles, uncertainty and date change. Six stages total 390 seconds, with processing and questions allowed to extend this. Native output values and localized fixture notes were inspected; canonical JSON and helper structural headings are not a fully localized professional report. No live voice or learner-comprehension claim is made."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_cnc_execution::test_cnc_kit_executes_forecast_and_preserves_case_versions[demo-it]",
+        "result_review": "Demo preserves the actual EUR 50,000 minimum forecast and a source-linked revision-2 note. The unconfirmed receipt and missing aging remain explicit; the role is advisor and no professional review or external action is authorized.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000002.md",
+            "sha256": "1fa129a71b9e847e7c99a5d05e32ff64288f8b031408fb9bc3e0854bd067b349"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "b195a67f826e0bd392aa301ff6835412ef27e1a81a02de031b1e6f792230508b"
+          },
+          {
+            "name": "workflow-revision-000002.json",
+            "sha256": "241ff319e719f14be9d8fa279e42ddbc6e2b8fbbc4738beea8bebc9a6a01c16b"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_cnc_execution::test_cnc_kit_executes_forecast_and_preserves_case_versions[practice-it]",
+        "result_review": "Practice preserves the baseline, imports the January update, invalidates the three dependent nodes, recalculates the actual EUR -30,000 minimum and saves revision 4. Fresh-process resume recovers it with no stale nodes or invented professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000004.md",
+            "sha256": "5e9489b350eed0ad9c0e50c674f8437b3e7e30a2609232698e90ee0c2aad9d8e"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "559ca87a3fb50292c10ceaf9c77cdf4da61074bfff10a619dff3043d231922b3"
+          },
+          {
+            "name": "workflow-revision-000004.json",
+            "sha256": "e85e0ba0325fcb7fb56bf293f2464586334bc89c398b4fa59ca11dba3677dcd4"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The English outline teaches the limited advisor path: select the role, import evidence, expose gaps, invoke treasury, review a source-linked note and resume after a change. It expressly excludes an eligibility opinion and a complete professional case.",
+        "inputs_and_request": "The English initial input identifies EUR 50,000 cash, an unconfirmed EUR 100,000 receipt on 15 November 2026 and EUR 80,000 payment on 30 November. Aging, orders and the business plan remain missing; the separate practice file changes only the receipt to 15 January 2027.",
+        "execution_and_checkpoints": "The actual native CLI imports the localized inputs, executes treasury, binds the forecast artifact, saves case revisions and resumes from a fresh process. The scripted request prose is a fixture rather than model-generated judgment. Role and missing-evidence checkpoints remain explicit; no learner confirmation or professional decision is invented.",
+        "deliverable_and_next_action": "Inspected the emitted note, forecast JSON and sealed snapshot for both phases. The note traces the calculation to its recorded input and retains missing aging. Forecast minimum is EUR 50,000 in demo and EUR -30,000 after the delay; these cover only the two supplied flows. The guide asks for source and professional review before proposals.",
+        "practice_and_repeat": "Practice imports the separate update in the same engagement, marks forecast, funding and memo stale, executes a new forecast and writes a new note. Earlier forecast bytes remain unchanged. A fresh process recovers the revised case; review records remain empty. Version-bound professional-decision behavior is tested separately in the CNC kernel suite.",
+        "language_and_pacing": "Read the complete English outline and both input files. The localized instructions preserve roles, uncertainty and date change. Six stages total 390 seconds, with processing and questions allowed to extend this. Native output values and localized fixture notes were inspected; canonical JSON and helper structural headings are not a fully localized professional report. No live voice or learner-comprehension claim is made."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_cnc_execution::test_cnc_kit_executes_forecast_and_preserves_case_versions[demo-en]",
+        "result_review": "Demo preserves the actual EUR 50,000 minimum forecast and a source-linked revision-2 note. The unconfirmed receipt and missing aging remain explicit; the role is advisor and no professional review or external action is authorized.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000002.md",
+            "sha256": "f1491cf3a919ba98d1ad0aaa8485db481001af56735dc967621d16ffb7a7eb6d"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "e05eddc57dae06843203b67dbae21ddd0bfb08bab68a3f37b9751ceaf256db0d"
+          },
+          {
+            "name": "workflow-revision-000002.json",
+            "sha256": "f4a6040bc5ff67f96569e2ca56198762c15660db86f963b1bce245fc301640ed"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_cnc_execution::test_cnc_kit_executes_forecast_and_preserves_case_versions[practice-en]",
+        "result_review": "Practice preserves the baseline, imports the January update, invalidates the three dependent nodes, recalculates the actual EUR -30,000 minimum and saves revision 4. Fresh-process resume recovers it with no stale nodes or invented professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000004.md",
+            "sha256": "83e94f872f4d391a1d802d41b8bd10d006aaa298cc6e9daed8cafef087eae960"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "7663eff2afed451cbbdd863e7c211b167a488f566439e5cf96f6bd84ba3d032e"
+          },
+          {
+            "name": "workflow-revision-000004.json",
+            "sha256": "9b1760632f1c761a578fe81a3656cbefc737ddd41997fefd16d9b31c17a5f7c0"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The French outline teaches the limited advisor path: select the role, import evidence, expose gaps, invoke treasury, review a source-linked note and resume after a change. It expressly excludes an eligibility opinion and a complete professional case.",
+        "inputs_and_request": "The French initial input identifies EUR 50,000 cash, an unconfirmed EUR 100,000 receipt on 15 November 2026 and EUR 80,000 payment on 30 November. Aging, orders and the business plan remain missing; the separate practice file changes only the receipt to 15 January 2027.",
+        "execution_and_checkpoints": "The actual native CLI imports the localized inputs, executes treasury, binds the forecast artifact, saves case revisions and resumes from a fresh process. The scripted request prose is a fixture rather than model-generated judgment. Role and missing-evidence checkpoints remain explicit; no learner confirmation or professional decision is invented.",
+        "deliverable_and_next_action": "Inspected the emitted note, forecast JSON and sealed snapshot for both phases. The note traces the calculation to its recorded input and retains missing aging. Forecast minimum is EUR 50,000 in demo and EUR -30,000 after the delay; these cover only the two supplied flows. The guide asks for source and professional review before proposals.",
+        "practice_and_repeat": "Practice imports the separate update in the same engagement, marks forecast, funding and memo stale, executes a new forecast and writes a new note. Earlier forecast bytes remain unchanged. A fresh process recovers the revised case; review records remain empty. Version-bound professional-decision behavior is tested separately in the CNC kernel suite.",
+        "language_and_pacing": "Read the complete French outline and both input files. The localized instructions preserve roles, uncertainty and date change. Six stages total 390 seconds, with processing and questions allowed to extend this. Native output values and localized fixture notes were inspected; canonical JSON and helper structural headings are not a fully localized professional report. No live voice or learner-comprehension claim is made."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_cnc_execution::test_cnc_kit_executes_forecast_and_preserves_case_versions[demo-fr]",
+        "result_review": "Demo preserves the actual EUR 50,000 minimum forecast and a source-linked revision-2 note. The unconfirmed receipt and missing aging remain explicit; the role is advisor and no professional review or external action is authorized.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000002.md",
+            "sha256": "01bcdaad58835e0928ccae89a0fae3c2e65095b8b853d46d7b9c85202bda91e3"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "b0ecb5d5a4d96a272648d50f6727e5df387d477a97d37d5adcc80ccf0a394a39"
+          },
+          {
+            "name": "workflow-revision-000002.json",
+            "sha256": "13cc04f3a12b04fd74f2497bf78d744ab5e52dce6f06c07a9c29179d909bfccc"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_cnc_execution::test_cnc_kit_executes_forecast_and_preserves_case_versions[practice-fr]",
+        "result_review": "Practice preserves the baseline, imports the January update, invalidates the three dependent nodes, recalculates the actual EUR -30,000 minimum and saves revision 4. Fresh-process resume recovers it with no stale nodes or invented professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000004.md",
+            "sha256": "e36fe5224fcec099c1e4ca725779ff959f235c2ca4d3260fec514c85125349f1"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "71c5270e5109bc964b65ed256405139d0be8d59cc3b091265ae6d2c7ffaa60f8"
+          },
+          {
+            "name": "workflow-revision-000004.json",
+            "sha256": "ef6b43682fe95e67d91c46a0f9943bee969634a419d43545b07b6539cc825fa3"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The German outline teaches the limited advisor path: select the role, import evidence, expose gaps, invoke treasury, review a source-linked note and resume after a change. It expressly excludes an eligibility opinion and a complete professional case.",
+        "inputs_and_request": "The German initial input identifies EUR 50,000 cash, an unconfirmed EUR 100,000 receipt on 15 November 2026 and EUR 80,000 payment on 30 November. Aging, orders and the business plan remain missing; the separate practice file changes only the receipt to 15 January 2027.",
+        "execution_and_checkpoints": "The actual native CLI imports the localized inputs, executes treasury, binds the forecast artifact, saves case revisions and resumes from a fresh process. The scripted request prose is a fixture rather than model-generated judgment. Role and missing-evidence checkpoints remain explicit; no learner confirmation or professional decision is invented.",
+        "deliverable_and_next_action": "Inspected the emitted note, forecast JSON and sealed snapshot for both phases. The note traces the calculation to its recorded input and retains missing aging. Forecast minimum is EUR 50,000 in demo and EUR -30,000 after the delay; these cover only the two supplied flows. The guide asks for source and professional review before proposals.",
+        "practice_and_repeat": "Practice imports the separate update in the same engagement, marks forecast, funding and memo stale, executes a new forecast and writes a new note. Earlier forecast bytes remain unchanged. A fresh process recovers the revised case; review records remain empty. Version-bound professional-decision behavior is tested separately in the CNC kernel suite.",
+        "language_and_pacing": "Read the complete German outline and both input files. The localized instructions preserve roles, uncertainty and date change. Six stages total 390 seconds, with processing and questions allowed to extend this. Native output values and localized fixture notes were inspected; canonical JSON and helper structural headings are not a fully localized professional report. No live voice or learner-comprehension claim is made."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_cnc_execution::test_cnc_kit_executes_forecast_and_preserves_case_versions[demo-de]",
+        "result_review": "Demo preserves the actual EUR 50,000 minimum forecast and a source-linked revision-2 note. The unconfirmed receipt and missing aging remain explicit; the role is advisor and no professional review or external action is authorized.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000002.md",
+            "sha256": "532f99a99284f5c9408f3d98f6d9e9b9e4b07a2a9609eba1554b2312278d4c82"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "39ff3c90e6d3361f759ff6087333411433b4d8aa7e6181ef7044b275eb6e06ef"
+          },
+          {
+            "name": "workflow-revision-000002.json",
+            "sha256": "7ee60d5c46647d32e0e56dd6e371e609b2444a97dc6d374da1b7f51afd465787"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_cnc_execution::test_cnc_kit_executes_forecast_and_preserves_case_versions[practice-de]",
+        "result_review": "Practice preserves the baseline, imports the January update, invalidates the three dependent nodes, recalculates the actual EUR -30,000 minimum and saves revision 4. Fresh-process resume recovers it with no stale nodes or invented professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000004.md",
+            "sha256": "a02085fb5f20399b47c41b28a3e050daaeec1f822429b5bb4430042c942bcebb"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "aa55c56a45dcc8ee6f4df340e9bb963bac13c553d81d9f65280009c3e5efffbc"
+          },
+          {
+            "name": "workflow-revision-000004.json",
+            "sha256": "8d54c18ac3b63dfaf08f4198664ac894991dc1ee97bcb31a7b9deba70102c3f6"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The Spanish outline teaches the limited advisor path: select the role, import evidence, expose gaps, invoke treasury, review a source-linked note and resume after a change. It expressly excludes an eligibility opinion and a complete professional case.",
+        "inputs_and_request": "The Spanish initial input identifies EUR 50,000 cash, an unconfirmed EUR 100,000 receipt on 15 November 2026 and EUR 80,000 payment on 30 November. Aging, orders and the business plan remain missing; the separate practice file changes only the receipt to 15 January 2027.",
+        "execution_and_checkpoints": "The actual native CLI imports the localized inputs, executes treasury, binds the forecast artifact, saves case revisions and resumes from a fresh process. The scripted request prose is a fixture rather than model-generated judgment. Role and missing-evidence checkpoints remain explicit; no learner confirmation or professional decision is invented.",
+        "deliverable_and_next_action": "Inspected the emitted note, forecast JSON and sealed snapshot for both phases. The note traces the calculation to its recorded input and retains missing aging. Forecast minimum is EUR 50,000 in demo and EUR -30,000 after the delay; these cover only the two supplied flows. The guide asks for source and professional review before proposals.",
+        "practice_and_repeat": "Practice imports the separate update in the same engagement, marks forecast, funding and memo stale, executes a new forecast and writes a new note. Earlier forecast bytes remain unchanged. A fresh process recovers the revised case; review records remain empty. Version-bound professional-decision behavior is tested separately in the CNC kernel suite.",
+        "language_and_pacing": "Read the complete Spanish outline and both input files. The localized instructions preserve roles, uncertainty and date change. Six stages total 390 seconds, with processing and questions allowed to extend this. Native output values and localized fixture notes were inspected; canonical JSON and helper structural headings are not a fully localized professional report. No live voice or learner-comprehension claim is made."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_cnc_execution::test_cnc_kit_executes_forecast_and_preserves_case_versions[demo-es]",
+        "result_review": "Demo preserves the actual EUR 50,000 minimum forecast and a source-linked revision-2 note. The unconfirmed receipt and missing aging remain explicit; the role is advisor and no professional review or external action is authorized.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000002.md",
+            "sha256": "1096ea01d546c0cf7b156f6d3574a0e6562ae9b0e1ece20aae47396ac0820612"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "1af421dc483966abb5843b7f632530068a968accaa221d8203a5d4a60f903ba0"
+          },
+          {
+            "name": "workflow-revision-000002.json",
+            "sha256": "8efd0e8be56f4a47b6df3ad6083edf26eab83202a6039ef5b9750f9510d4764a"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_cnc_execution::test_cnc_kit_executes_forecast_and_preserves_case_versions[practice-es]",
+        "result_review": "Practice preserves the baseline, imports the January update, invalidates the three dependent nodes, recalculates the actual EUR -30,000 minimum and saves revision 4. Fresh-process resume recovers it with no stale nodes or invented professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000004.md",
+            "sha256": "ee17e2633dd86474ea665a4802d5b8923bba455693673304d1714f8a138ba11e"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "d891281e4ef15b483e1b5ab08b129760d2c36ba78714ccfbb7924d2eda701461"
+          },
+          {
+            "name": "workflow-revision-000004.json",
+            "sha256": "46b42adf3f139b0ac73029feda1ce901eccd201f77c1e6f97996074912f28155"
+          }
+        ]
+      }
+    }
+  },
+  "esg_source_refresh_20260930": {
+    "reviewer": "Codex /root - bounded source review",
+    "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
+    "baseline_commit": "5f4c3324b9efe209e9e6f99a3a38d7ac002df81a",
+    "previous_course_sha256": "aaecd0a601724148807c3bdb199938adc44d8ba4135e991c9d21403cbd744651",
+    "current_course_sha256": "2723629bc982b4eb38311138d6ebcd068bd6dad8ea0f4813ef4d61a8f96c5034",
+    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
+    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
+    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
+    "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json"
+  },
+  "valuation_cnc_integration": {
+    "reviewed_at": "2026-09-29T23:43:34.663881+00:00",
+    "scope": "Lesson content unchanged from MERGE_HEAD outside the source inventory. Reviewed additive workflow-ID registration and Studio Archive immutable snapshot functions. Prior editorial/artifact acceptance and professional limits retained; native CNC and valuation execution is verified separately.",
+    "integrated_main": "8f662195f00bac3b605ac73077e1a0bd31d30253"
+  },
+  "patent_box_source_refresh_20260930": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-09-30T11:04:31.688736+00:00",
+    "baseline_commit": "bcda5096b53af83584f73b645a0d9e78b29de104",
+    "previous_course_sha256": "2723629bc982b4eb38311138d6ebcd068bd6dad8ea0f4813ef4d61a8f96c5034",
+    "current_course_sha256": "f2e336699b029e78c4cdd323e8914919d0049e61ae318b7e901a98ca47df3d41",
+    "content_review": "The complete compiled course object is identical to the previously reviewed main baseline except for source bindings. All authored locales, fictional inputs, requests, checkpoints, outputs, practice and pacing are unchanged. Original editorial judgments and artifact reviews are preserved.",
+    "source_review": "The only changed source adds patent-box-review to VERA_CLIENT_WORKFLOW_IDS. An AST comparison confirms all other shared contract statements are identical. Existing workflow IDs and their behavior are unchanged.",
+    "native_execution_evidence": "GitHub Actions run 36703497570, job 109848196461, source 437abcd61eca512a4da8c591386ffdbd0895bec7: the native teaching batch passed 1183 tests, with three explicit skips and 92.10% courseware coverage. The later stale editorial-digest gate failed; this is not a green whole-run claim. Fresh CI must validate every required demo/practice identity against the current digest.",
+    "limits": "Source compatibility review only; no new independent editorial, visual, learner, installed-host or professional acceptance. Earlier reviewed artifacts remain historical evidence.",
+    "detail": "docs/releases/2026-09-30-patent-box-course-source-review.json"
+  },
+  "scissione_integration_refresh_20260930": {
+    "previous_course_sha256": "7760d82f707fbc5530b9344e4b05d0d49b59bfc6775d0ddbebea8025f6883019",
+    "new_course_sha256": "6151492031e9c72cc24c00a5b131e1a2bbda352f7b056c7e0ed7525a1460ed3b",
+    "changed_sources": [
+      "plugins/_shared/vendor/modules/vera_assurance/contracts.py"
+    ],
+    "review": "Every authored lesson field and input record matches current main. The sole shared source change adds scissione-guidata to the supported workflow IDs; existing workflow behavior is unchanged. Original reviewers, dates, judgments and output hashes are preserved. Fresh native teaching executions are required in CI; no new professional or learner acceptance is claimed."
+  }
+}

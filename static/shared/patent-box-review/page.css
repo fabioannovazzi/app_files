@@ -1,0 +1,36 @@
+.pf-languages { gap: 16px; border: 0; padding: 0; }
+.pf-languages a { display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; text-decoration: none; }
+.pf-languages a[aria-current="page"] { color: var(--pf-blue); font-weight: 700; text-decoration: underline; text-underline-offset: 6px; }
+.pf-product { text-decoration: none; font-weight: 600; padding-left: 0; border: 0; }
+.pf-hero { padding-block: 64px; }
+.pf-hero__aside h2, .pf-fact h2 { font-size: var(--function-subsection-title-size) !important; }
+.pf-hero__aside h2 { margin: 0 0 16px; }
+.pf-section { padding-block: 72px; }
+.pf-section__copy > p:first-child { margin-top: 0; }
+.pb-text-link { display: inline-block; margin-top: 24px; color: var(--pf-blue); font-weight: 600; text-underline-offset: 5px; text-decoration-thickness: 1px; }
+.pb-example { margin-top: 32px; border-left: 2px solid var(--pf-cyan); padding-left: 24px; }
+.pb-example h3 { margin: 0 0 12px; }
+.pb-example p { margin: 0; }
+.pb-steps { list-style: none; margin: 36px 0 0; padding: 0; }
+.pb-steps li { display: grid; grid-template-columns: 44px minmax(160px, .6fr) minmax(0, 1fr); gap: 24px; padding-block: 28px; border-top: 1px solid var(--pf-line); }
+.pb-steps h3, .pb-steps p { margin: 0; }
+.pb-step-number { color: var(--pf-blue); font-weight: 600; font-variant-numeric: tabular-nums; }
+.pb-deliverables { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 36px; }
+.pb-deliverables article { border-top: 2px solid var(--pf-blue); padding-top: 24px; }
+.pb-deliverables h3 { margin: 12px 0 20px; }
+.pb-deliverables ul { padding-left: 20px; margin: 0; }
+.pb-deliverables li + li { margin-top: 12px; }
+.pb-gate { max-width: 80ch; margin: 36px 0 0; color: var(--pf-muted); }
+.pb-review { display: grid; gap: 28px; }
+.pb-review h3 { margin: 0 0 12px; }
+.pb-review p { margin: 0; }
+.pf-prompt { font-family: inherit; font-size: 1.05rem; line-height: 1.65; white-space: normal; overflow-wrap: anywhere; border: 0; border-left: 2px solid var(--pf-cyan); border-radius: 0; background: none; margin: 28px 0 0; padding: 4px 0 4px 24px; }
+.function-model-data__copy + .function-model-data__copy { margin-top: 20px; }
+#deliverables { scroll-margin-top: 90px; }
+@media (max-width: 760px) {
+  .pf-hero, .pf-section { padding-block: 40px; }
+  .pf-languages { gap: 12px; }
+  .pb-steps li { grid-template-columns: 28px minmax(0, 1fr); gap: 12px 16px; }
+  .pb-steps p { grid-column: 2; }
+  .pb-deliverables { grid-template-columns: 1fr; gap: 32px; }
+}

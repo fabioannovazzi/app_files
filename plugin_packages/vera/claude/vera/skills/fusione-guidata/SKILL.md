@@ -1,6 +1,6 @@
 ---
 name: fusione-guidata
-description: Prepare or demonstrate Vera's P0 multi-company merger case with explicit evidence imports, versioned facts and rules, scoped professional decisions and selective change review. Legal merger branches and calculations are unsupported.
+description: Prepare P1 domestic OIC incorporation workpapers for independent or directly wholly owned companies, with verified archive evidence, exact exchange allocations, accounting bridges, event calendars and reviewed dossiers. Later branches remain unsupported.
 ---
 
 ## Cowork execution contract
@@ -92,7 +92,7 @@ Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
-# Fusione guidata — P0
+# Fusione guidata — P1
 
 
 

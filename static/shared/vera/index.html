@@ -1224,8 +1224,6 @@
             <div class="install-option">
               <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-vera-install-link data-i18n="install.button">Installa per ChatGPT Work e Codex</a>
               <p class="install-option__note" data-i18n="install.chatgptHelp">Apre la pagina di installazione di Vera per ChatGPT Work e Codex.</p>
-              <a class="button install-option__download" href="../plugin-downloads/index.html?product=vera&amp;lang=it" data-codex-download-link data-i18n="install.zipButton">Scarica ZIP per ChatGPT e Codex</a>
-              <p class="install-option__note" data-i18n="install.zipHelp">Pacchetto per Codex e istruzioni di installazione.</p>
             </div>
           </div>
           <a class="hero-install__video" id="vera-install-video-link" href="https://youtu.be/yAnkIabnQ1M" target="_blank" rel="noopener noreferrer" aria-label="Collega ChatGPT al computer con Codex" data-i18n-aria-label="install.video.title">
@@ -1482,10 +1480,12 @@
               <h4>Bilancio OIC e XBRL</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
+            <a class="module-row" href="../composizione-negoziata/index.html" data-module-link data-jurisdiction-item="it" data-vera-workflow="composizione-negoziata"><h4>Composizione negoziata</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" href="../fusione-guidata/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="fusione-guidata" hidden>
-              <h4>Fascicolo di fusione · P0</h4>
+              <h4>Fusione per incorporazione</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
+            <a class="module-row" href="../patent-box-review/index.html" data-module-link data-jurisdiction-item="it" data-vera-workflow="patent-box-review" hidden><h4>Patent Box · anteprima</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" href="../concordato-plan-review/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="concordato-plan-review" hidden>
               <h4>Revisione concordato preventivo</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
@@ -1542,6 +1542,7 @@
               <h4 data-i18n="module.plan.title">Preparazione piano vendite</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
+            <a class="module-row" id="business-valuation" href="../business-valuation/index.html" data-module-link data-vera-workflow="business-valuation"><h4 data-i18n="module.valuation.title">Valutazione d’impresa</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" id="business-planning" href="../business-planning/index.html" data-module-link data-vera-workflow="business-planning">
               <h4 data-i18n="module.businessPlanning.title">Preparare un business plan</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
@@ -1552,6 +1553,7 @@
             </a>
             <a class="module-row" href="../adeguati-assetti/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="adeguati-assetti"><h4 data-i18n="module.assetti.title">Adeguati assetti</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" id="scissione-guidata" href="../scissione-guidata/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="scissione-guidata"><h4 data-i18n="module.scissione.title">Scissione guidata</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" id="esg-reporting-assurance" href="../esg-reporting-assurance/index.html" data-module-link data-vera-workflow="esg-reporting-assurance"><h4 data-i18n="module.esg.title">Fascicolo ESG · in sviluppo</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" id="treasury-forecast" href="../treasury-forecast/index.html" data-module-link data-vera-workflow="treasury-forecast"><h4 data-i18n="module.treasury.title">Budget di tesoreria</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" id="management-control-pack" href="../management-control-pack/index.html" data-module-link data-vera-workflow="management-control-pack">
               <h4 data-i18n="module.managementPack.title">Pacchetto controllo di gestione</h4>
@@ -1737,11 +1739,13 @@
         "module.reconciliation": "Verifica se le partite indicate come aperte lo sono ancora al cut-off e separa saldi supportati, possibili regolamenti non allocati, residui ed evidenze mancanti.",
         "module.plan.title": "Preparazione piano vendite",
         "module.plan": "Trasforma vendite Actual revisionate in un Plan applicando soltanto assunzioni commerciali e valutarie confermate, con scope, periodi, priorità e riconciliazione visibili.",
+        "module.valuation.title": "Valutazione d’impresa",
         "module.businessPlanning.title": "Preparare un business plan",
         "module.businessPlanning": "Preparare un business plan",
         "module.variance.title": "Analisi scostamenti",
         "module.variance": "Confronta consuntivo (Actual), Budget, Forecast o periodi precedenti; riconcilia i totali alle fonti, calcola gli scostamenti a valore e, con unità affidabili, per prezzo, volume e mix, poi prepara tabelle e grafici rivedibili.",
         "module.scissione.title": "Scissione guidata",
+        "module.esg.title": "Fascicolo ESG · in sviluppo",
         "module.treasury.title": "Budget di tesoreria",
         "module.managementPack.title": "Pacchetto controllo di gestione",
         "module.centraleRischi.title": "Analisi Centrale Rischi",
@@ -1831,7 +1835,7 @@
         "install.actions.label": "Opzioni di installazione di Vera",
         "install.button": "Installa per ChatGPT Work e Codex",
         "install.chatgptHelp": "Apre la pagina di installazione di Vera per ChatGPT Work e Codex.",
-        "install.zipButton": "Scarica ZIP per ChatGPT e Codex", "install.zipHelp": "Pacchetto per Codex e istruzioni di installazione.", "install.coworkButton": "Vai al marketplace Cowork",
+        "install.coworkButton": "Vai al marketplace Cowork",
         "install.coworkHelp": "Abbiamo inviato il plugin al marketplace Cowork. In attesa di approvazione.",
         "install.coworkGuide": "Scarica ZIP per Cowork",
         "install.coworkZipHelp": "Pacchetto per Cowork e istruzioni per installare o aggiornare.",
@@ -1955,11 +1959,13 @@
         "module.reconciliation": "Checks whether items reported as open are still open at cut-off and separates supported balances, possible unallocated settlements, residuals and missing evidence.",
         "module.plan.title": "Prepare the sales plan",
         "module.plan": "Turns reviewed Actual sales into a Plan using only confirmed commercial and FX assumptions, with scopes, periods, priorities and reconciliation kept visible.",
+        "module.valuation.title": "Business valuation",
         "module.businessPlanning.title": "Prepare a business plan",
         "module.businessPlanning": "Prepare a business plan",
         "module.variance.title": "Variance analysis",
         "module.variance": "Compares Actual with Budget, Forecast or prior periods; ties totals to sources, calculates value variances and, with reliable units, price, volume and mix effects, then prepares reviewable tables and plots.",
         "module.scissione.title": "Guided demerger",
+        "module.esg.title": "ESG case file · in development",
         "module.treasury.title": "Cash forecast",
         "module.managementPack.title": "Management control pack",
         "module.centraleRischi.title": "Centrale Rischi analysis",
@@ -2049,7 +2055,7 @@
         "install.actions.label": "Vera installation options",
         "install.button": "Install for ChatGPT Work and Codex",
         "install.chatgptHelp": "Opens Vera’s installation page for ChatGPT Work and Codex.",
-        "install.zipButton": "Download ZIP for ChatGPT and Codex", "install.zipHelp": "Codex package and installation instructions.", "install.coworkButton": "Go to Cowork marketplace",
+        "install.coworkButton": "Go to Cowork marketplace",
         "install.coworkHelp": "We have submitted the plugin to the Cowork marketplace. Awaiting approval.",
         "install.coworkGuide": "Download ZIP for Cowork",
         "install.coworkZipHelp": "Cowork package and instructions to install or update.",
@@ -2173,11 +2179,13 @@
         "module.reconciliation": "Vérifie si les postes déclarés ouverts le sont encore au cut-off et sépare soldes étayés, règlements potentiellement non affectés, résiduels et preuves manquantes.",
         "module.plan.title": "Préparer le plan des ventes",
         "module.plan": "Transforme les ventes réelles révisées en Plan en appliquant uniquement des hypothèses commerciales et de change confirmées, avec périmètres, périodes, priorités et rapprochement visibles.",
+        "module.valuation.title": "Évaluation d’entreprise",
         "module.businessPlanning.title": "Préparer un business plan",
         "module.businessPlanning": "Préparer un business plan",
         "module.variance.title": "Analyse des écarts",
         "module.variance": "Compare le Réel au Budget, à la Prévision ou aux périodes antérieures ; rapproche les totaux des sources, calcule les écarts en valeur et, avec des unités fiables, les effets prix, volume et mix, puis prépare des tableaux et graphiques révisables.",
         "module.scissione.title": "Scission guidée",
+        "module.esg.title": "Dossier ESG · en développement",
         "module.treasury.title": "Budget de trésorerie",
         "module.managementPack.title": "Dossier de contrôle de gestion",
         "module.centraleRischi.title": "Analyse Centrale Rischi",
@@ -2267,7 +2275,7 @@
         "install.actions.label": "Options d’installation de Vera",
         "install.button": "Installer pour ChatGPT Work et Codex",
         "install.chatgptHelp": "Ouvre la page d’installation de Vera pour ChatGPT Work et Codex.",
-        "install.zipButton": "Télécharger le ZIP pour ChatGPT et Codex", "install.zipHelp": "Paquet pour Codex et instructions d’installation.", "install.coworkButton": "Aller au marketplace Cowork",
+        "install.coworkButton": "Aller au marketplace Cowork",
         "install.coworkHelp": "Nous avons soumis le plugin au marketplace Cowork. En attente d’approbation.",
         "install.coworkGuide": "Télécharger le ZIP pour Cowork",
         "install.coworkZipHelp": "Paquet pour Cowork et instructions d’installation ou de mise à jour.",
@@ -2391,11 +2399,13 @@
         "module.reconciliation": "Prüft, ob die als offen gemeldeten Posten zum Cut-off noch offen sind, und trennt belegte Salden, mögliche nicht zugeordnete Zahlungen, Restbeträge und fehlende Nachweise.",
         "module.plan.title": "Vertriebsplan erstellen",
         "module.plan": "Überführt geprüfte Ist-Umsätze in einen Plan und verwendet dabei nur bestätigte Vertriebs- und Währungsannahmen; Umfang, Zeiträume, Prioritäten und Abstimmung bleiben sichtbar.",
+        "module.valuation.title": "Unternehmensbewertung",
         "module.businessPlanning.title": "Businessplan erstellen",
         "module.businessPlanning": "Businessplan erstellen",
         "module.variance.title": "Abweichungsanalyse",
         "module.variance": "Vergleicht Ist mit Budget, Forecast oder Vorperioden; stimmt Summen mit Quellen ab, berechnet Wertabweichungen und bei verlässlichen Einheiten Preis-, Mengen- und Mixeffekte und erstellt prüfbare Tabellen und Grafiken.",
         "module.scissione.title": "Begleitete Spaltung",
+        "module.esg.title": "ESG-Akte · in Entwicklung",
         "module.treasury.title": "Liquiditätsplanung",
         "module.managementPack.title": "Controlling-Paket",
         "module.centraleRischi.title": "Centrale-Rischi-Analyse",
@@ -2485,7 +2495,7 @@
         "install.actions.label": "Installationsoptionen für Vera",
         "install.button": "Für ChatGPT Work und Codex installieren",
         "install.chatgptHelp": "Öffnet Veras Installationsseite für ChatGPT Work und Codex.",
-        "install.zipButton": "ZIP für ChatGPT und Codex herunterladen", "install.zipHelp": "Paket für Codex und Installationsanleitung.", "install.coworkButton": "Zum Cowork-Marketplace",
+        "install.coworkButton": "Zum Cowork-Marketplace",
         "install.coworkHelp": "Wir haben das Plugin beim Cowork-Marketplace eingereicht. Die Freigabe steht aus.",
         "install.coworkGuide": "ZIP für Cowork herunterladen",
         "install.coworkZipHelp": "Cowork-Paket und Anleitung zum Installieren oder Aktualisieren.",
@@ -2609,11 +2619,13 @@
         "module.reconciliation": "Comprueba si las partidas declaradas abiertas siguen abiertas al corte y separa saldos respaldados, posibles liquidaciones no asignadas, residuos y evidencias pendientes.",
         "module.plan.title": "Preparar el plan de ventas",
         "module.plan": "Convierte ventas reales revisadas en un Plan aplicando únicamente supuestos comerciales y de cambio confirmados, con ámbitos, periodos, prioridades y conciliación visibles.",
+        "module.valuation.title": "Valoración de empresas",
         "module.businessPlanning.title": "Preparar un plan de negocio",
         "module.businessPlanning": "Preparar un plan de negocio",
         "module.variance.title": "Análisis de desviaciones",
         "module.variance": "Compara Real con Presupuesto, Previsión o periodos anteriores; concilia los totales con las fuentes, calcula desviaciones de valor y, con unidades fiables, efectos de precio, volumen y mix, y prepara tablas y gráficos revisables.",
         "module.scissione.title": "Escisión guiada",
+        "module.esg.title": "Expediente ESG · en desarrollo",
         "module.treasury.title": "Presupuesto de tesorería",
         "module.managementPack.title": "Paquete de control de gestión",
         "module.centraleRischi.title": "Análisis Centrale Rischi",
@@ -2703,7 +2715,7 @@
         "install.actions.label": "Opciones de instalación de Vera",
         "install.button": "Instalar para ChatGPT Work y Codex",
         "install.chatgptHelp": "Abre la página de instalación de Vera para ChatGPT Work y Codex.",
-        "install.zipButton": "Descargar ZIP para ChatGPT y Codex", "install.zipHelp": "Paquete para Codex e instrucciones de instalación.", "install.coworkButton": "Ir al marketplace de Cowork",
+        "install.coworkButton": "Ir al marketplace de Cowork",
         "install.coworkHelp": "Hemos enviado el plugin al marketplace de Cowork. Pendiente de aprobación.",
         "install.coworkGuide": "Descargar ZIP para Cowork",
         "install.coworkZipHelp": "Paquete para Cowork e instrucciones para instalar o actualizar.",
@@ -2807,8 +2819,7 @@
         const key = node.dataset.i18nAriaLabel;
         if (Object.prototype.hasOwnProperty.call(strings, key)) node.setAttribute("aria-label", strings[key]);
       });
-      document.querySelector("[data-codex-download-link]").href =
-        "../plugin-downloads/index.html?product=vera&lang=" + (lang === "it" ? "it" : "en");
+
       document.querySelector("[data-cowork-guide-link]").href =
         "../cowork-downloads/index.html?lang=" + (lang === "it" ? "it" : "en");
       document.querySelectorAll("[data-current-language]").forEach((node) => {

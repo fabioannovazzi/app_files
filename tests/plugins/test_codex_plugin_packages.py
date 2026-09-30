@@ -17,6 +17,8 @@ ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 COMMERCIALISTA_MODULE_NAMES = {
     "scissione-guidata",
+    "patent-box-review",
+    "esg-reporting-assurance",
     "trasformazione",
     "fusione-guidata",
     "treasury-forecast",
@@ -28,8 +30,10 @@ COMMERCIALISTA_MODULE_NAMES = {
     "bilancio-xbrl-it",
     "browser-automation",
     "business-planning",
+    "business-valuation",
     "check-entries",
     "concordato-plan-review",
+    "composizione-negoziata",
     "comunicazione-professionale",
     "presenza-digitale-studio",
     "deep-research-validator",
@@ -83,6 +87,7 @@ VERA_PUBLIC_PAGE_PATHS = (
     Path("static/shared/archive-organization/index.html"),
     Path("static/shared/check-entries/index.html"),
     Path("static/shared/concordato-plan-review/index.html"),
+    Path("static/shared/composizione-negoziata/index.html"),
     Path("static/shared/deep-research-validator/index.html"),
     Path("static/shared/financial-analysis/index.html"),
     Path("static/shared/management-control-pack/index.html"),
@@ -943,6 +948,35 @@ def test_cross_surface_plugins_define_chatgpt_runtime_in_main_skill(
     assert builder.has_chatgpt_runtime_contract(content)
 
 
+@pytest.mark.parametrize("plugin_name", ["clara", "lucia", "vera"])
+def test_chatgpt_upload_omits_lifecycle_hooks_and_preserves_native_hooks(
+    plugin_name: str,
+) -> None:
+    builder = load_builder()
+    targets = {package.plugin: package for package in builder.load_packages()}
+    targets.update({bundle.name: bundle for bundle in builder.load_bundles()})
+    target = targets[plugin_name]
+    prefix = f"{target.package_root}/plugins/{plugin_name}/"
+    source_hooks = ROOT / "plugins" / plugin_name / "hooks" / "hooks.json"
+    native_entries = builder.expected_zip_entries(target)
+
+    entries = builder.chatgpt_upload_entries(target)
+
+    assert not any("hooks" in name.split("/")[:-1] for name in entries)
+    manifests = [
+        json.loads(content)
+        for name, content in entries.items()
+        if name.endswith(".codex-plugin/plugin.json")
+    ]
+    assert manifests
+    assert all("hooks" not in manifest for manifest in manifests)
+    assert native_entries[prefix + "hooks/hooks.json"] == source_hooks.read_bytes()
+    assert (
+        json.loads(native_entries[prefix + ".codex-plugin/plugin.json"])["hooks"]
+        == "./hooks/hooks.json"
+    )
+
+
 def test_chatgpt_card_projection_uses_approved_instructions() -> None:
     builder = load_builder()
     source = (
@@ -1561,6 +1595,9 @@ def test_vera_routes_every_commercialista_module() -> None:
     assert set(components["plugins"]) == COMMERCIALISTA_MODULE_NAMES
     assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {
         "scissione-guidata",
+        "patent-box-review",
+        "esg-reporting-assurance",
+        "composizione-negoziata",
         "trasformazione",
         "fusione-guidata",
         "invoice-xml",
@@ -1570,6 +1607,7 @@ def test_vera_routes_every_commercialista_module() -> None:
         "bandi-agevolazioni",
         "browser-automation",
         "business-planning",
+        "business-valuation",
         "comunicazione-professionale",
         "management-control-pack",
         "centrale-rischi-review",
@@ -2286,6 +2324,24 @@ def test_all_plugin_skills_define_material_choice_intake() -> None:
         )
         lowered_skill_text = combined_skill_text.lower()
 
+        if plugin_name == "business-valuation":
+            # The mandate workflow has its own concrete intake contract.
+            assert "resolve entity or branch" in lowered_skill_text
+            assert "ask only material missing choices" in lowered_skill_text
+            assert "from supplied evidence" in lowered_skill_text
+            assert "never ask the professional to write json" in lowered_skill_text
+            continue
+        if plugin_name == "composizione-negoziata":
+            # The compact specialist intake carries the same obligations without
+            # repeating the older generic intake boilerplate in every module.
+            assert "role, client/engagement, accessible documents" in lowered_skill_text
+            assert "read supplied evidence before asking for more" in lowered_skill_text
+            assert (
+                "current problem, observed evidence, contrary evidence and gaps"
+                in lowered_skill_text
+            )
+            continue
+
         if plugin_name == "trasformazione":
             assert (
                 "inspect provided synthetic inputs before asking" in lowered_skill_text
@@ -2296,15 +2352,15 @@ def test_all_plugin_skills_define_material_choice_intake() -> None:
             assert "do not route a real client mandate" in lowered_skill_text
             continue
         if plugin_name == "fusione-guidata":
-            # Check the P0 intake contract without requiring legacy template wording.
+            # Check the P1 intake contract without requiring legacy template wording.
             normalized = " ".join(combined_skill_text.split())
             assert (
-                "Start from the supplied operation, company identities and selected evidence"
+                "Identify whom the professional assists, mandates/conflicts, the two companies"
                 in normalized
             )
-            assert "Ask only for missing choices that change the scope" in normalized
-            assert "Keep absent facts `unknown`" in normalized
-            assert "continue independent case preparation" in normalized
+            assert "Ask only questions that alter a material choice" in normalized
+            assert "A missing fact remains `unknown`" in normalized
+            assert "Independent work can continue" in normalized
             continue
         assert (
             "material choices" in lowered_skill_text
@@ -2799,6 +2855,32 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
         for skill_file in skill_files:
             skill_text = skill_file.read_text(encoding="utf-8")
             normalized_skill_text = " ".join(skill_text.split())
+            if plugin_root.name == "business-valuation":
+                # Test the actual fixed output contract rather than a legacy filename.
+                assert "## Calculation and review" in skill_text
+                assert "## Delivery and privacy" in skill_text
+                assert "Open `valuation_report.html`" in normalized_skill_text
+                assert (
+                    "HTML, DOCX/PDF, formula XLSX, JSON and calculation CSV"
+                    in normalized_skill_text
+                )
+                assert "same immutable revision" in normalized_skill_text
+                continue
+            if (
+                plugin_root.name == "vera"
+                and skill_file.parent.name == "business-valuation"
+            ):
+                assert "Read that module's" in normalized_skill_text
+                assert "follow it" in normalized_skill_text
+                assert "from that module root" in normalized_skill_text
+                continue
+            if plugin_root.name == "composizione-negoziata":
+                assert "Produce and persist useful work" in skill_text
+                assert "Declare every physical output" in normalized_skill_text
+                assert "actual model-data report" in normalized_skill_text
+                assert "read its skill and follow" in normalized_skill_text.lower()
+                assert "Never simulate saved history" in skill_text
+                continue
             if skill_file.parent.name == "trasformazione":
                 if plugin_root.name == "vera":
                     assert "../../modules/trasformazione" in normalized_skill_text
@@ -2894,7 +2976,10 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 skill_file.parent.name != plugin_root.name
             ):
                 assert "Read that module's" in normalized_skill_text
-                assert "plugin working directory" in normalized_skill_text
+                if skill_file.parent.name == "composizione-negoziata":
+                    assert "Use the module root for commands" in normalized_skill_text
+                else:
+                    assert "plugin working directory" in normalized_skill_text
                 continue
             if (
                 plugin_root.name == "clara"
@@ -2911,19 +2996,19 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 assert "working directory" in normalized_skill_text
                 continue
             if plugin_root.name == "fusione-guidata":
-                # P0 exports a durable case review, not a legacy workbench run report.
+                # P1 exports case history and workpapers through its own review contract.
                 assert (
                     "Never write run outputs inside this Git workspace or plugin source"
                     in normalized_skill_text
                 )
                 assert "references/case-contract.md" in normalized_skill_text
-                assert "one reviewed request at a time" in normalized_skill_text
                 assert (
-                    "Show the readable report and its link with the result"
+                    "selecting one kind at a time and its exact input references"
                     in normalized_skill_text
                 )
+                assert "show the readable privacy report" in normalized_skill_text
                 assert (
-                    "professional confirmation still requires the actual named reviewer's decision"
+                    "actual professional confirmation still belongs to the named reviewer"
                     in normalized_skill_text
                 )
                 continue
@@ -3273,12 +3358,15 @@ def test_static_plugin_pages_are_public_and_plugin_downloads_are_removed() -> No
         assert response.status_code == 404, path
 
 
-def test_manual_vera_download_is_removed() -> None:
+def test_manual_vera_download_is_removed(monkeypatch: pytest.MonkeyPatch) -> None:
     _restore_application_import_path()
 
     from fastapi.testclient import TestClient
 
+    from modules.hosted_services import api as pdp_api
     from src.fastapi_app_entry import app
+
+    monkeypatch.setattr(pdp_api, "start_voice_retention_cleanup", lambda: None)
 
     with TestClient(app) as client:
         response = client.get(
@@ -3304,6 +3392,7 @@ def test_clara_downloads_and_removed_explainers_return_404(
     from modules.hosted_services import api as pdp_api
     from src.fastapi_app_entry import app
 
+    monkeypatch.setattr(pdp_api, "start_voice_retention_cleanup", lambda: None)
     pro_email = "pro@example.com"
     free_email = "free@example.com"
     permissions_file = tmp_path / "site_page_permissions.json"
@@ -3927,8 +4016,10 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         "../fatture-xml-check/index.html",
         "../report-enti-locali/index.html",
         "../concordato-plan-review/index.html",
+        "../composizione-negoziata/index.html",
         "../fusione-guidata/index.html",
         "../scissione-guidata/index.html",
+        "../patent-box-review/index.html",
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
     ):
@@ -3938,9 +4029,9 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 37
-    assert core.count('class="module-row"') == 37
-    assert core.count('data-jurisdiction-item="it"') == 12
+    assert core.count(" data-module-link") == 41
+    assert core.count('class="module-row"') == 41
+    assert core.count('data-jurisdiction-item="it"') == 14
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for area_id in (
@@ -5581,6 +5672,7 @@ def test_reporting_component_manifests_use_clara_homepage() -> None:
 def test_standard_family_plugin_manifests_use_family_homepages() -> None:
     expected_homepages = {
         "scissione-guidata": "https://mparanza.com/static/shared/scissione-guidata/index.html",
+        "esg-reporting-assurance": "https://mparanza.com/static/shared/esg-reporting-assurance/index.html",
         "trasformazione": "https://mparanza.com/static/shared/trasformazione/index.html",
         "invoice-xml": "https://mparanza.com/static/shared/invoice-xml/index.html",
         "aml-review": "https://mparanza.com/static/shared/aml-review/index.html",
@@ -5636,8 +5728,14 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
             "https://mparanza.com/static/shared/centrale-rischi-review/index.html?lang=it"
         ),
         "sales-plan": ("https://mparanza.com/static/shared/sales-plan/index.html"),
+        "patent-box-review": (
+            "https://mparanza.com/static/shared/patent-box-review/index.html?lang=it"
+        ),
         "business-planning": (
             "https://mparanza.com/static/shared/business-planning/index.html?lang=it"
+        ),
+        "business-valuation": (
+            "https://mparanza.com/static/shared/business-valuation/index.html"
         ),
         "prompt-optimizer": (
             "https://mparanza.com/static/shared/prompt-optimizer/index.html"
@@ -5654,6 +5752,7 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         "browser-automation": (
             "https://mparanza.com/static/shared/browser-automation/index.html?lang=it"
         ),
+        "composizione-negoziata": "https://mparanza.com/static/shared/composizione-negoziata/index.html",
         "fusione-guidata": "https://mparanza.com/static/shared/fusione-guidata/index.html?lang=it",
         "studio-archive": ("https://mparanza.com/static/shared/vera/index.html"),
         "vera": ("https://mparanza.com/static/shared/vera/index.html?lang=it"),

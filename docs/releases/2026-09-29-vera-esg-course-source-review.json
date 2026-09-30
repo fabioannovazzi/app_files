@@ -1,0 +1,1773 @@
+{
+  "schema": "vera.esg_course_source_review.v1",
+  "reviewer": "Codex /root",
+  "reviewed_at": "2026-09-29T18:26:42.517707+00:00",
+  "baseline_commit": "6f26f0e8241a0fe3027c162e2c2cae4d97395465",
+  "scope": "Exact equality of authored course content; two additive shared source changes only. No new editorial, visual or professional acceptance.",
+  "kits": [
+    {
+      "kit": "clara/advisory-brief-planner",
+      "previous_course_sha256": "3ed6f1caabb93c62067b60c4a4ee4d5a49af4551863d457a6490ae9d9254f2ca",
+      "current_course_sha256": "98582f9b70a2b4cd1da8710a19e5125fa7f72d56e1d701472a0a033b4f0a3d9c",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "clara/advisory-case-director",
+      "previous_course_sha256": "745cbe08c6a78aa7deb497168ec10f88fa188878b61225b17f98701878729389",
+      "current_course_sha256": "2a7e084f9a7c37982971afe5b4db64f1e52d9df235f60be00fe3a17c13aa3908",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "clara/advisory-deliverable-validator",
+      "previous_course_sha256": "c3e73d3279eb627835ae3ef641c7efd508cf47c7ceb18a610e0b90c099a96e66",
+      "current_course_sha256": "a8c5517a737a30bd370170335e485a1eaacfcb5402176c4829b00882d3752964",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "clara/attribute-reporting",
+      "previous_course_sha256": "3820e69f1b2234f6a2e0fc5b918db50bac32b6c5a8df3f44cf10b0d86fe1b9ff",
+      "current_course_sha256": "3cd301f9ca321a2cc3093496bcf0d1c04b351a921cfcb0e271d32f184eef15c1",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "clara/business-planning",
+      "previous_course_sha256": "c7caa4ffef84c83e74479289e7569932e66a5a745fc6c6405dc88fc4387badf6",
+      "current_course_sha256": "bc41b7d6aa74ba50357a37e96865e2cc6c1b3ba3b041360d43e0f4c16d97d833",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "clara/deck-correction",
+      "previous_course_sha256": "58f64fb5a8c0aceaf1754fcbd45199b983eeebcad3ba3f193796cffc88a75dba",
+      "current_course_sha256": "0197a2691717d5e0c2b6692bcdf9d69dac05900d282ce33beaa2fa250d13850d",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "clara/html-deck",
+      "previous_course_sha256": "23dd34f863d47720ab7d378dfba8a9b9714c1fdaa82f224352f8bf588e7a6ed4",
+      "current_course_sha256": "a54b222cffa806e6b1adc5d1b272c639749fe495d4de53f1b011705abd1f7289",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "clara/reporting-engine",
+      "previous_course_sha256": "6ad903edcf59b869b6626f88f9592baa850976096922e8745090405db537350c",
+      "current_course_sha256": "2d5709426546461a6b97cf4beb62ed7dc0a825df4bac3debb716b24b57937fd3",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "clara/transcribe",
+      "previous_course_sha256": "73d85a7063d2bf5ccc1c2da3958e96c3bed65e53c26be53dde2ea0ca02c44eff",
+      "current_course_sha256": "db0b75ed53dc6fb69c8e17ad718bcc8ce0651275c1e7e18ed5156ac35c547d8b",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "lucia/apertura-pratica",
+      "previous_course_sha256": "0d623f5e876c8e99d177516b187ad90cf9c84e503558f579cf6a3c9fca426aac",
+      "current_course_sha256": "4768a95ab838d4f7d47341f062bdf8e2db7b84384e498e802f6367f9403fde1f",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "lucia/comunicazione-professionale",
+      "previous_course_sha256": "cb3b30702ca1ccb5fcba93763821e8c594afa25acaf757dd21cfec5e338cc74f",
+      "current_course_sha256": "47d18238615c5d067d9c44a9cc0dffb0dd0c866b90a1e24152cbe3c402f5f185",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "lucia/presenza-digitale-studio",
+      "previous_course_sha256": "bd7e0dddbe204c760eb182d3f9d95800aefb5aae18988b2385ae5a8d42aef5ff",
+      "current_course_sha256": "2f4c9dd12d05e00737f70534d0c5e223376dea34dfddee4fcd08d897f9162975",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "lucia/quesito-legale-fiscale",
+      "previous_course_sha256": "76bc53c03f3bb6e227fb8a6708320e1631fbb3cbcb2f6f59129594186a0def1f",
+      "current_course_sha256": "91d0e7ef8ff50b100165a4729403db16ef31f4b7473ae79402a27e83624ffbcb",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/adeguati-assetti",
+      "previous_course_sha256": "6c06178888fce4c7fbc572aae6ea6ec93962ea916ffc5375084d2e712e8b2711",
+      "current_course_sha256": "54575b43afd24428985af00abb53438f2e5f7d4d8deeea4800357c3593ff8fc6",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/aml-review",
+      "previous_course_sha256": "c8c3b38afbf7e058bb35f3a83c8a9240a10eccdf3c1f0ec88baeb40d75410d65",
+      "current_course_sha256": "c3ce622bd3749f6943d1a9965afde1ba4202114a7809a96b4287e7dbb8ed15ff",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/aml-review/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/aml-review/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/aml-review/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/archive-organization",
+      "previous_course_sha256": "3a58e1b1965af47b199a067c06c02e784330f71466c23f24d91e00b59905357b",
+      "current_course_sha256": "20abb6a2b592e070e8f0b76af5df3b24e0c81110d0701942b4bd29a254695921",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/archive-organization/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/archive-organization/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/archive-organization/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/avviso-intake",
+      "previous_course_sha256": "138909825bfdf086f4094bd0d8501343cb1653024c5daab23e48c3e79c1e68df",
+      "current_course_sha256": "907292bd66a46aaef5bf3a0bdf4b4b3f16aa535d7f288fb9664bfc96679df1c2",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/bandi-agevolazioni",
+      "previous_course_sha256": "d4d3a5519c8299757bf8941fc2756595f0de059f11e3f241a98fbc69927d39b6",
+      "current_course_sha256": "5528bcfa40bd612949b3becaf8bb9f05e6f751e52afb0ebc0eaa731fe5afa1c9",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/bilancio-oic",
+      "previous_course_sha256": "b32000c4fcf5523fc8816a28acdcb84e8438c12337c578df8babfeca32a7171b",
+      "current_course_sha256": "f381b03d118127c3e9f6259c226395b25bfcc0df18c1f5014d790473b791beac",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/browser-automation",
+      "previous_course_sha256": "0fe770de0889c2ca0b5de103d3c4184c5a29aa198564b34ba349cd078d2aa965",
+      "current_course_sha256": "45ce1d3f9be5a0c5cecbb9e2f4a3f32e4d829d22320c5d2e1d47f58e2ed10834",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/business-planning",
+      "previous_course_sha256": "aa5e2e5ed3179114c4c9aba345a04f1ac39c2c7ee44ed33343315c04982089be",
+      "current_course_sha256": "cb629855b45e26f3ba5a6eff0662f0ad1a12349a3886d050b2159400b2090f2a",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/centrale-rischi-review",
+      "previous_course_sha256": "ea642a3fa6f36164c9af30571d32ce9d4f2e0b645140fef98642463dd1c17893",
+      "current_course_sha256": "5ce94b0b5eb35e04ca754e13553178240e849c151ad5baa7164ebfeb4be406f4",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/comunicazione-professionale",
+      "previous_course_sha256": "69c0bec0790302da920a9c9cff1ca42e99cb051c96ac4d0c2faa4fd400c5ad8c",
+      "current_course_sha256": "7a35d079fbeafe89efc34448f3fb5b3899205331e5edef10a9523ef508144225",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/concordato-plan-review",
+      "previous_course_sha256": "4a1dd4f930a42496a5b7691fc169f97bba42a05124ec911b4b25fa4482e8e1f1",
+      "current_course_sha256": "c83aef56d70b70ad53b24bf82cfc16ba410b2691e710bd6b50afc2da02a4e891",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/dati-fiscali-strutturati",
+      "previous_course_sha256": "02c4e90927891ec9ac51181ea8e705c1e4059132c92ae7a5f0047ab3d0d760d5",
+      "current_course_sha256": "4c62e9cb99997f0483799af7457e9a37d748d1b40744f40f8696b2ab72aaae20",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/email-cliente",
+      "previous_course_sha256": "b95dfdd9629a679082f88884d990662148abc859015f0684fab3921545807faf",
+      "current_course_sha256": "2dbc549adc2b5c499088e564a1e857fbd338000052abbe2501cd7c9698eca59a",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/fatture-xml-check",
+      "previous_course_sha256": "4a2f39a1d14d0f73e306cd942458df02347c18fb34e0c5772e757249798323bb",
+      "current_course_sha256": "5f233a1ebbf58ee545dbdb82179b5a793c016a755117e43ac1684f1379b5cd9b",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/financial-analysis",
+      "previous_course_sha256": "ed49e5ac9712783b0586e9c427c77d25b40d399f9754fa2450f4556e101d9c26",
+      "current_course_sha256": "0676c0a013d7bd4ee2398e584b9b552216dee135389e4cb9069c054f584b1cdb",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/financial-analysis/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/financial-analysis/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/financial-analysis/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/financial-report-builder",
+      "previous_course_sha256": "803d2389ba1e263d6a29412a5b40216cada80adcaee540191a2d6655d9df51b5",
+      "current_course_sha256": "d62207ff612566d0e3392272a0e8ba6c2dc52d955a53124424532ee6cd5d9e77",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/invoice-xml",
+      "previous_course_sha256": "707031db7ec04782779454d33406c6583586b549e52b9b8f1805f9b565e778b2",
+      "current_course_sha256": "d78d0c4d077bcba530325fab57fbb930642b2061b9d05cf491a095017eacbd43",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/invoice-xml/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/invoice-xml/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/invoice-xml/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/journal-bank-reconciliation",
+      "previous_course_sha256": "34a9f687bdfbc0df3401e99a01365e6f66bb53888e4d189a1955d0b6130ba9ba",
+      "current_course_sha256": "1b147463750877e1eabf71c7b395a5df41c20247f06778a8a03ba6b909494656",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/journal-sampling",
+      "previous_course_sha256": "3d06d57e3a9cda8464065f876c74a17413e67e62657878b818caa818caadbe8b",
+      "current_course_sha256": "e3b80235ab96d2758d5d0a372f724708077015d6f14048e1588efdd298786b19",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/journal-sampling/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/journal-sampling/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/journal-sampling/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/management-control-pack",
+      "previous_course_sha256": "681b1b40ea1dfae0a4341dd710c22df5d46d8e2c9f9ea77c28cfd2a7c6a8eb42",
+      "current_course_sha256": "89943801daa13c5b122897d956ef66937f1d23b894e0293630401ec8e33d9496",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/management-control-pack/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/management-control-pack/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/management-control-pack/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/new-client",
+      "previous_course_sha256": "14b80672bdc4be7c0132b3ccec33f6c1f3c93e25f18f3d199d2b74b21e3c7776",
+      "current_course_sha256": "5b8396573e47a1a99d557edf9888f9ba7f3fadcc951d41738baa53a8e40c9a06",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "modules/new-client/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/new-client/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/new-client/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/open-item-reconciliation",
+      "previous_course_sha256": "3af1708e9686a4829c35510bd6367c52374f34f8f07f3446aca615af195af96a",
+      "current_course_sha256": "f15b081023c40dbe19219ff837a835db7012a4e76ab6ddda96692c30b5734ad1",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/presenza-digitale-studio",
+      "previous_course_sha256": "99564bb5fa6c8108035149cfc28c563896733c416af136ffc3aa6fb532eca0a8",
+      "current_course_sha256": "a58dae51018894c504ca321c712243cf5b659b17d57411125be31bb28f635246",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/previdenza-inps",
+      "previous_course_sha256": "b4a1e48872867226f6f21118ed4c515e292be7bb283691da4568a403404b1731",
+      "current_course_sha256": "015074c1b8b7fca71e1e164397473827ff02d6971c58a982502d498196339ad8",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/previdenza-inps/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/previdenza-inps/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/previdenza-inps/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/purchase-invoice-review",
+      "previous_course_sha256": "7a9611e52c2581491ae3ecc6da72e1338990d66ada5cbafa8fae3bb723953303",
+      "current_course_sha256": "75d00cc8e2cfffa97694cd6cc488994c46f32fe0fe42998466b2923e6e2c9424",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/passive-invoice-audit/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/passive-invoice-audit/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/passive-invoice-audit/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/quesito-legale-fiscale",
+      "previous_course_sha256": "9667a1eaceec3bc30686eb268cfcf3ef28b9b335c5157ecc130c688b32e1bd71",
+      "current_course_sha256": "c61d019f4b37a101e04311151c93a23458729d96e6980daf01fedc8f0a826bd0",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/registro-imprese-sari",
+      "previous_course_sha256": "b1dabcc03fa825ce4f3770fd6a38a922a7eebda74bb92cba24bead7ded3ddf37",
+      "current_course_sha256": "29d8e10b0d64266a8f02eeefc1ccc42272ad03f4d9d67d321af84991d8ec3194",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/sales-plan",
+      "previous_course_sha256": "0e3b2aa59fd296a3a04dfee538b4d0943c4d2b69d82746354d9850bbabb9d6a2",
+      "current_course_sha256": "75f13e32302234cbfe48b3a006116869847f9c6c51aea37cb599d9e937f72b3a",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/sales-plan/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/sales-plan/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/sales-plan/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/studio-archive",
+      "previous_course_sha256": "bdca4646ff1d61d972baa545be56aa0af24e8e39f50565f7636152c19e6aeed7",
+      "current_course_sha256": "1ea8a89846ee681bb1803f8e2dba4a325eac3bb2c37173ad098eaeed0f1812e7",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/treasury-forecast",
+      "previous_course_sha256": "8832c4e07ce6fa4c5ce45e2ac1fa1a9ebe804cfacd8a94f9c671e3e7b8f692d4",
+      "current_course_sha256": "bba6c5ddff6b819b01691fdc21502e31b41673bfef2dbf4a36d7f8b4632fe067",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/treasury-forecast/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/treasury-forecast/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/treasury-forecast/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/variance-analysis",
+      "previous_course_sha256": "2d89c5aea31a12867f36596ceb12982fbd564e48720bca8a65cc03fae944ee38",
+      "current_course_sha256": "73f5c3cce5b0a60dcaebbb3a98cbfba2879b796175b5e15fc731e68e8ab3672f",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/variance-analysis/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/variance-analysis/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/variance-analysis/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/vouching",
+      "previous_course_sha256": "0a14428fbd797b10affbbfa6d023fd4fdfbb61b442e36f6777d8fb6c4a4ce1ba",
+      "current_course_sha256": "8c67e56f0b9c5a3138c0d2be129906b45e12de1195e64ad6aa4524a0127a129e",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/check-entries/vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "modules/check-entries/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "modules/check-entries/vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/policy.py",
+          "before": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/policy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+            "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+          }
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "before": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624"
+          },
+          "after": {
+            "path": "vendor/modules/vera_assurance/contracts.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+            "sha256": "0ce2a5fbcd03ca6d3f551d090ccefd69adf7a5fae4c67087108f1990735df9aa"
+          }
+        }
+      ]
+    }
+  ]
+}

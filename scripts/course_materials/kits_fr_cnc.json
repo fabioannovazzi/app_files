@@ -1,0 +1,27 @@
+{
+  "vera/composizione-negoziata": {
+    "title": "Suivre les preuves et les changements d’une composizione negoziata",
+    "goal": "Ouvrir un dossier de conseil, revoir un projet et le reprendre après le report d’un encaissement.",
+    "scenario": "Entreprise entièrement fictive : trésorerie de 50 000 EUR, encaissement prévu de 100 000 EUR le 15 novembre 2026, paiement de 80 000 EUR le 30 novembre. Le débiteur n’a pas confirmé la date ; balance âgée et commandes absentes.",
+    "scope": "Premier parcours : rôle, lacunes, analyse de trésorerie exécutée, note et révision après changement. Ce n’est ni un avis d’admissibilité ni un dossier professionnel complet.",
+    "inputs": "Ouvrez cas-fr.md pour les faits et hypothèses initiaux. mise-a-jour-fr.md contient uniquement la nouvelle information de l’exercice pratique.",
+    "request": "Vera, je conseille l’entreprise. Examine les données fictives, signale les lacunes, exécute la prévision de trésorerie et prépare une note liée aux preuves. Ne présume aucune décision approuvée.",
+    "steps": [
+      "Dans la fenêtre de travail, enregistrez le client fictif et la mission pédagogique. Vera distingue rôle, sources, hypothèses et preuves manquantes avant de proposer la prochaine activité.",
+      "Vera exécute la prévision avec périmètre et hypothèses explicites, relie le résultat conservé à la note et n’enregistre une révision qu’après votre confirmation de cette version. Ouvrez le rapport des données transmises au modèle.",
+      "Reprenez le même dossier avec la mise à jour. Conservez la première note, examinez les dépendances affectées et demandez une nouvelle analyse. Les confirmations antérieures restent historiques."
+    ],
+    "deliverables": [
+      "Note avec preuves, lacunes, hypothèses et prochaine activité.",
+      "Prévision exécutée, versions conservées et rapport des données utilisées."
+    ],
+    "review": "Reliez la déclaration d’encaissement à la prévision et à la note. Un fichier ne prouve pas le recouvrement ; une confirmation enregistrée n’est pas une signature.",
+    "checkpoints": [
+      "Distinguez le conseil de l’entreprise de l’expert indépendant.",
+      "Repérez les hypothèses non confirmées et les versions à revoir après le report."
+    ],
+    "practice": "Introduisez mise-a-jour-fr.md : le débiteur propose désormais le 15 janvier 2027. Demandez une nouvelle analyse et une nouvelle note sans transférer les anciennes confirmations.",
+    "success": "Vous savez ouvrir, revoir et reprendre le dossier en explicitant limites, dépendances et décisions requises.",
+    "repeat": "Précisez rôle, mission, date de référence et documents autorisés. Vérifiez les sources juridiques décisives lors de l’utilisation ; indépendance et conclusions relèvent du professionnel."
+  }
+}

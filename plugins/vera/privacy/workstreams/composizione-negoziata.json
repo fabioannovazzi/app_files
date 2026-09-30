@@ -1,0 +1,102 @@
+{
+  "schema_version": 3,
+  "workstream": "composizione-negoziata",
+  "display_name": "Composizione negoziata",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "references"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "governed_repository_paths": [
+    "plugins/studio-archive/scripts/client_ledger.py"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "case-evidence-and-role",
+        "purpose": "Identify the professional role, current problem, evidence gaps and next activity",
+        "content": "Selected company and creditor identities, mandates, prior relationships, financial statements, ledgers, bank evidence, plans, negotiations, court acts, confidential professional notes and exact source locators. The selected runtime may read complete relevant files. No automatic anonymization, fixed excerpt limit or local-only processing is provided.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "persistent-case-and-drafts",
+        "purpose": "Resume the case, assess changes and prepare role-specific professional drafts",
+        "content": "Case snapshots, facts, assumptions, gaps, questions, source metadata, prior analysis outputs, dependency relationships, generated draft content, historical reviews and confirmation references. Python verifies explicit references and revisions locally; the model determines semantic meaning and impact. Codex and Cowork use the same archive contract where local execution is available; chat fallback does not claim durable revision enforcement. Optional authenticated-review receipts include account email, timestamp, opaque identifiers, version and decision; the generated local browser review file contains the exact draft and evidence references.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "current-source-research",
+      "kind": "public_research",
+      "destination": "Case-selected official legal and professional public sources",
+      "purpose": "Verify current and temporally applicable sources for decisive professional questions",
+      "content": "Generic legal and professional research topics and public URLs; no direct client identifiers or confidential plan excerpts in public queries",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Record source rank, dates, inspected scope, applicability and limits.",
+        "Keep names, tax identifiers, credentials, private amounts and case text out of public research queries."
+      ]
+    },
+    {
+      "id": "authenticated-professional-review",
+      "kind": "hosted_service",
+      "destination": "https://mparanza.com/vera/cnc-review and fixed HTTPS /api/vera/cnc-reviews routes",
+      "purpose": "Attribute a decision on an exact local version to a signed-in account and enforce case/role ownership",
+      "content": "Opaque case and node digests, request UUID, exact node version digest, role, decision, authenticated account email, server timestamp and normal connection metadata. The browser displays a locally selected draft; its text, citations and files are not uploaded. Receipt verification sends only its opaque UUID and complete-receipt digest. Server review metadata and case ownership remain until administrative deletion is requested from Mparanza. Local review files and receipts remain in the studio archive under its retention controls. Deletion prevents later server verification.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "The user must choose this hosted route before transmission. The professional personally signs in and confirms; the assistant prepares but never approves.",
+        "Server session authentication fails closed when disabled; same-origin requests, fixed metadata schema, payload-size and rate limits are enforced. The first authenticated reviewer owns the review scope; other accounts and role changes are rejected.",
+        "The client uses a fixed HTTPS verification endpoint, rejects redirects, bounds responses and compares the entire retained record and exact local scope/version before authenticating a decision.",
+        "The local filesystem remains the document-access boundary. Account authentication is not proof of qualification, professional independence, a signature or authority to file."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "managed-run-boundary",
+      "control": "The writer requires a running portable v2 CNC context. Archive loading verifies bound inputs and rejects foreign references, changed bytes and unsupported workflow identities."
+    },
+    {
+      "id": "revision-conflict-and-history",
+      "control": "The archive's engagement lock serializes snapshot writes. Expected revisions reject lost updates; request hashes and retry keys prevent conflicting retries; linked snapshots preserve earlier records across runs."
+    },
+    {
+      "id": "role-and-review-version-binding",
+      "control": "Role changes and stale/wrong-version reviews are rejected. Attribution-only JSON never approves a handoff. Optional Mparanza receipts are independently verified and bound to the authenticated account and exact case, role, node and version; later authenticated rejection supersedes acceptance. Local document access remains governed by host permissions."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-09-30",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "6ae58bdc89e8ce0d2a5f7af532799aa7040deed5662c7382925121aee15b2219"
+  }
+}

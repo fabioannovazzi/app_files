@@ -28,9 +28,34 @@
   },
   "sources": [
     {
+      "path": "modules/adeguati-assetti/assets/construction-intake.html",
+      "repository_path": "plugins/adeguati-assetti/assets/construction-intake.html",
+      "sha256": "7e3d01ee902db3c812bcc291a4bb4626fc170b5001e8b523ab60d542d35b491b"
+    },
+    {
       "path": "modules/adeguati-assetti/assets/icon.svg",
       "repository_path": "plugins/adeguati-assetti/assets/icon.svg",
       "sha256": "d215fd17d4913d8f3fe5a4bf4d492f78ee46fa65408d0ec878b3fec32db8a004"
+    },
+    {
+      "path": "modules/adeguati-assetti/references/construction-catalog.json",
+      "repository_path": "plugins/adeguati-assetti/references/construction-catalog.json",
+      "sha256": "4fe2422498a3e0c2453841f7bff4bae4abaaf658cd237011f4792da35e39e382"
+    },
+    {
+      "path": "modules/adeguati-assetti/references/construction-contract.md",
+      "repository_path": "plugins/adeguati-assetti/references/construction-contract.md",
+      "sha256": "d7c0d50183371e3db181d1844abdc1ceac535bf6ce66d1ad191300dd6df73fb7"
+    },
+    {
+      "path": "modules/adeguati-assetti/references/construction-sources.md",
+      "repository_path": "plugins/adeguati-assetti/references/construction-sources.md",
+      "sha256": "33d6867d5bb70f584d9ac6ef4726feab145e7edcf5253f0bba7286bf07f105d0"
+    },
+    {
+      "path": "modules/adeguati-assetti/references/construction-workflow.md",
+      "repository_path": "plugins/adeguati-assetti/references/construction-workflow.md",
+      "sha256": "756b9d3688265e71a660ab2fb7f075218ec0847e53bf5092f1e70d105d7a48f6"
     },
     {
       "path": "modules/adeguati-assetti/references/intelligent-assessment.md",
@@ -50,7 +75,12 @@
     {
       "path": "modules/adeguati-assetti/requirements.txt",
       "repository_path": "plugins/adeguati-assetti/requirements.txt",
-      "sha256": "a289f525166e15bc5b9d66d072d85822ef3152ad0f0456a801a99ed82593ca58"
+      "sha256": "0022f9106a06265d85675ef2d6218caebb2cfd1a69bc69876953a4a0624d5257"
+    },
+    {
+      "path": "modules/adeguati-assetti/scripts/assetti_construction.py",
+      "repository_path": "plugins/adeguati-assetti/scripts/assetti_construction.py",
+      "sha256": "d87ba3cc406b3455e6689388fa6c02e445d6b121c2cf222ca715487792067d2e"
     },
     {
       "path": "modules/adeguati-assetti/scripts/assetti_review.py",
@@ -60,12 +90,37 @@
     {
       "path": "modules/adeguati-assetti/scripts/check_dependencies.py",
       "repository_path": "plugins/adeguati-assetti/scripts/check_dependencies.py",
-      "sha256": "0d196d5928e53e302ccb750a58def7ee90797b67ed1f0fa5c421d52e3ab75f00"
+      "sha256": "e6088e7916508a295ad924ec63c4f666336533387726a7cd8a99b29b4e1a26d5"
+    },
+    {
+      "path": "modules/adeguati-assetti/scripts/construction_adapters.py",
+      "repository_path": "plugins/adeguati-assetti/scripts/construction_adapters.py",
+      "sha256": "4e81f4714c19755c1cddd3e46324499552e37563a21fb4f5d63b23d58b2b17e2"
+    },
+    {
+      "path": "modules/adeguati-assetti/scripts/construction_core.py",
+      "repository_path": "plugins/adeguati-assetti/scripts/construction_core.py",
+      "sha256": "1edfc60da9830528331b5cdc66766f4d5daddea402ba1202acba3f6a78d4d9a0"
+    },
+    {
+      "path": "modules/adeguati-assetti/scripts/construction_exports.py",
+      "repository_path": "plugins/adeguati-assetti/scripts/construction_exports.py",
+      "sha256": "d7d819435c28b7d9d2e4c8e9a19a963915d7b8a265a517e9d063d83629524fb4"
+    },
+    {
+      "path": "modules/adeguati-assetti/scripts/construction_intake.py",
+      "repository_path": "plugins/adeguati-assetti/scripts/construction_intake.py",
+      "sha256": "cbee5c6d57da936bec28c1776772f324de89e989edb21fcec4d4df4d156a3a5c"
+    },
+    {
+      "path": "modules/adeguati-assetti/scripts/construction_store.py",
+      "repository_path": "plugins/adeguati-assetti/scripts/construction_store.py",
+      "sha256": "6a9d86c20841afe42d8a4c1cad64757744b1d7f8ca93d44d46636ed14dbee569"
     },
     {
       "path": "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
       "repository_path": "plugins/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
-      "sha256": "de40193b9a50083a698dc1cdf14b7d40795cd979ecc68cf8b3ac0fcd17e6d736"
+      "sha256": "238303755cb266f9dee4d5ec0bd83e3cd814e38f43f80d822de7bdc95a9479ea"
     },
     {
       "path": "modules/adeguati-assetti/skills/adeguati-assetti/references/geneva.md",
@@ -85,7 +140,7 @@
     {
       "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "e4080cc44f7acb11350d7c69695fce21319fe17847bb1f7d03b892dd91084cf8"
+      "sha256": "089670445e91974b68e9eca35017948a8bac2d07e7e05dba29be05b32fb76e93"
     },
     {
       "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/decisions.py",
@@ -205,7 +260,7 @@
     {
       "path": "vendor/modules/courseware/policy.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
-      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+      "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
     },
     {
       "path": "vendor/modules/courseware/preview.py",
@@ -235,7 +290,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "e4080cc44f7acb11350d7c69695fce21319fe17847bb1f7d03b892dd91084cf8"
+      "sha256": "089670445e91974b68e9eca35017948a8bac2d07e7e05dba29be05b32fb76e93"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

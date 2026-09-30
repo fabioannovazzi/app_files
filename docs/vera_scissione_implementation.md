@@ -1,6 +1,7 @@
 # Scissione guidata implementation
 
-Status: implemented first candidate for review; not deployed or published.
+Status: release candidate integrated with main for the authorized Scissione deployment.
+Server deployment and Marketplace publication must be verified separately.
 Source: Discord message 1554534739514359879 in channel
 1554383368270118973, recovered 2026-09-29. Contribution attributed to Francesco
 Giraldo; ZIP SHA-256 `49d683ea9cfcce56f7f386356522e43a2d8304138571ac1ff4a2008ec3328676`.
@@ -64,7 +65,7 @@ Record the exact tests, remaining limitations and package state before review.
   explanation are integrated. The function is Italy-scoped on the product page.
   It has no prepared voice lesson in this initial candidate.
 
-## Evidence and limits
+## Historical candidate evidence and limits
 
 Recovered six channel messages and three attachments. All fourteen hashes in the
 contributor's original file manifest match the recovered ZIP. The supplied report
@@ -129,3 +130,29 @@ Vera package SHA-256:
 
 These are build candidates. No installed-session acceptance, Marketplace
 publication, public deployment, signature, filing or Discord reply was performed.
+
+## September 30 release integration
+
+Integrated main `84f230804d295f1fe6cfdbc682cb0c1f5990447c`, retaining the
+PMI valuation, Patent Box, ESG, Fusione P1 and CNC releases. The Scissione
+implementation and its 49 acceptance tests are unchanged; the integrated run
+passes all 49 with 84.84% coverage. No new legal route is enabled.
+
+Release versions: Vera **0.1.297**, Clara **0.1.233**, Lucia **0.1.73**,
+Studio Archive **0.1.42**. Shared archive registration requires rebuilding
+all three products. Earlier candidate versions and hashes above are historical.
+
+The 46-entry Geneva inventory preserves every current-main assessment and adds
+the retained unresolved Scissione entry. This does not qualify Swiss use.
+The public explanation states the minimum containing version and explicitly
+retains the outstanding professional validation on a real case.
+
+For 36 teaching kits, every non-source field and input record matches main.
+The source delta adds Scissione to the archive's supported workflow IDs.
+Existing reviewer attribution and output hashes are preserved; fresh native
+execution and editorial binding remain enforced by CI.
+
+The release also repairs the current-main archive registry mismatch: the MCP
+workflow enum now includes the already-supported CNC and Patent Box IDs in
+the same order as Python. The inventory test adds its missing Patent Box ID.
+This correction was explicitly approved on September 30.

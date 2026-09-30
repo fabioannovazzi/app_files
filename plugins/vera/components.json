@@ -15,6 +15,7 @@
     "invoice-xml",
     "sales-plan",
     "business-planning",
+    "business-valuation",
     "variance-analysis",
     "management-control-pack",
     "treasury-forecast",
@@ -22,6 +23,7 @@
     "financial-analysis",
     "report-builder",
     "concordato-plan-review",
+    "composizione-negoziata",
     "comunicazione-professionale",
     "presenza-digitale-studio",
     "prompt-optimizer",
@@ -32,8 +34,10 @@
     "bilancio-xbrl-it",
     "browser-automation",
     "studio-archive",
+    "esg-reporting-assurance",
     "trasformazione",
-    "fusione-guidata"
+    "fusione-guidata",
+    "patent-box-review"
   ],
   "shared_services": [
     "managed-python-runtime",
@@ -41,7 +45,8 @@
     "plugin-feedback",
     "run-receipt-stamping",
     "local-onboarding",
-    "datev-starter"
+    "datev-starter",
+    "cnc-authenticated-review"
   ],
   "workflow_roles": {
     "new-client": {

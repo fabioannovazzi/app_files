@@ -28,11 +28,24 @@ class IconSpec:
 
 SPECS = (
     IconSpec(
+        "patent-box-review", "Vera · Patent Box", "#002060", "#00B0F0", "patent_box"
+    ),
+    IconSpec(
+        "esg-reporting-assurance", "Vera · Fascicolo ESG", "#002060", "#00B0F0", "esg"
+    ),
+    IconSpec(
         "scissione-guidata",
         "Vera · Scissione guidata",
         "#002060",
         "#00B0F0",
         "scissione",
+    ),
+    IconSpec(
+        "composizione-negoziata",
+        "Vera · Composizione negoziata",
+        "#002060",
+        "#00B0F0",
+        "negotiation",
     ),
     IconSpec(
         "trasformazione",
@@ -293,6 +306,13 @@ SPECS = (
         "management_pack",
     ),
     IconSpec(
+        "business-valuation",
+        "Vera · Business Valuation",
+        "#002060",
+        "#57A6C7",
+        "business_valuation",
+    ),
+    IconSpec(
         "business-planning",
         "Mparanza · Business Planning",
         "#002060",
@@ -377,11 +397,14 @@ def _body(spec: IconSpec) -> str:
     color = "#1F211D"
     accent = spec.accent
     bodies = {
+        "patent_box": f"""<path d="M16 12h24l8 8v32H16zM39 12v10h9M23 29h17M23 36h8" fill="none" stroke="{paper}" stroke-width="3"/><circle cx="39" cy="43" r="7" fill="none" stroke="{accent}" stroke-width="3"/><path d="m35 43 3 3 5-6" fill="none" stroke="{accent}" stroke-width="2"/>""",
         "scissione": f"""<path d="M22 12h20v13H22zM12 41h15v12H12zM38 41h15v12H38zM32 25v8M19 41v-8h27v8" fill="none" stroke="{paper}" stroke-width="3"/><path d="m14 37 5 5 5-5m17 0 5 5 5-5" fill="none" stroke="{accent}" stroke-width="3"/>""",
+        "esg": f"""<path d="M14 14h30v38H14zM21 23h16M21 30h10" fill="none" stroke="{paper}" stroke-width="3"/><path d="M30 44c-5-12 7-17 20-16 0 13-8 22-20 16zm0 0 13-10" fill="none" stroke="{accent}" stroke-width="3"/>""",
         "merger": f"""<path d="M12 14h14v14H12zM38 14h14v14H38zM19 28v9h26v-9M32 37v7M24 44h16v10H24z" fill="none" stroke="{paper}" stroke-width="3"/><circle cx="32" cy="37" r="3" fill="{accent}"/>""",
         "treasury": f"""<rect x="13" y="17" width="38" height="35" rx="4" fill="none" stroke="{paper}" stroke-width="3"/><path d="M22 12v10M42 12v10M13 28h38" stroke="{paper}" stroke-width="3"/><path d="m19 39 8-5 8 12 10-10" fill="none" stroke="{accent}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>""",
         "transformation": f"""<path d="M11 19h16v26H11zM39 15h14v34H39zM29 30h8m-4-4 4 4-4 4" fill="none" stroke="{paper}" stroke-width="3" stroke-linejoin="round"/><path d="M14 51h36" stroke="{accent}" stroke-width="3"/>""",
         "assetti": f"""<path d="M25 12h14v12H25zM10 40h14v12H10zM40 40h14v12H40zM32 24v8M17 40v-8h30v8" fill="none" stroke="{paper}" stroke-width="3"/><circle cx="32" cy="32" r="3" fill="{accent}"/>""",
+        "negotiation": f"""<path d="M12 17h18v16H18l-6 6zm22 8h18v22l-6-6H34z" fill="none" stroke="{paper}" stroke-width="3" stroke-linejoin="round"/><path d="M23 47h8l7 7" fill="none" stroke="{accent}" stroke-width="3" stroke-linecap="round"/>""",
         "aml": f"""<path d="M15 17h20v15H15zM29 38h18v13H29z" fill="none" stroke="{paper}" stroke-width="3"/><path d="M25 32v12h4" fill="none" stroke="{paper}" stroke-width="3"/><circle cx="43" cy="22" r="7" fill="none" stroke="{accent}" stroke-width="3"/><path d="m48 27 6 6" stroke="{accent}" stroke-width="3"/>""",
         "invoice_xml": f"""<path d="M16 12h24l8 8v32H16zM39 12v10h9M23 28h17" fill="none" stroke="{paper}" stroke-width="3"/><path d="m26 36-5 5 5 5m12-10 5 5-5 5m-4-12-4 16" fill="none" stroke="{accent}" stroke-width="3"/>""",
         "organize": f"""
@@ -578,6 +601,7 @@ def _body(spec: IconSpec) -> str:
   <path d="M18 42V34M24 42V29M38 42V37M44 42V31" stroke="{color}" stroke-width="4" stroke-linecap="round"/>
   <path d="m17 20 5-4 5 3" fill="none" stroke="{accent}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
   <circle cx="45" cy="19" r="3" fill="{accent}"/>""",
+        "business_valuation": '<path d="M18 26h28M32 18v29M24 24l-7 15h14L24 24zm16 0-7 15h14L40 24z" fill="none" stroke="#F7F0DF" stroke-width="2.5" stroke-linejoin="round"/><path d="M23 49h18" stroke="#F7F0DF" stroke-width="3"/>',
         "business_plan": f"""
   <rect x="11" y="15" width="12" height="34" rx="3" fill="{paper}"/>
   <rect x="26" y="15" width="12" height="34" rx="3" fill="{paper}"/>

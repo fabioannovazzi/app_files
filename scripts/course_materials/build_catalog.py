@@ -43,6 +43,7 @@ LIMITED_LANGUAGES = {
     "vera/management-control-pack": ["it", "en"],
     "vera/centrale-rischi-review": ["it"],
     "vera/treasury-forecast": ["it"],
+    "vera/business-valuation": ["it"],
 }
 
 

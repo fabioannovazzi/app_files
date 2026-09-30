@@ -105,6 +105,7 @@
         "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md"
       ],
       "python_entrypoints": [
+        "modules/adeguati-assetti/scripts/assetti_construction.py",
         "modules/adeguati-assetti/scripts/assetti_review.py",
         "modules/adeguati-assetti/scripts/check_dependencies.py"
       ]
@@ -195,6 +196,17 @@
         "modules/business-planning/scripts/prepare_report_site.py",
         "modules/business-planning/scripts/run_business_plan.py",
         "modules/business-planning/scripts/run_strategic_plan.py"
+      ]
+    },
+    {
+      "component_id": "business-valuation",
+      "skills": [
+        "modules/business-valuation/skills/business-valuation/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/business-valuation/scripts/check_dependencies.py",
+        "modules/business-valuation/scripts/run_valuation.py",
+        "modules/business-valuation/scripts/valuation_benchmarks.py"
       ]
     },
     {
@@ -297,6 +309,16 @@
         "modules/concordato-plan-review/scripts/review_case_model.py",
         "modules/concordato-plan-review/scripts/review_source_roles.py",
         "modules/concordato-plan-review/scripts/run_concordato_review.py"
+      ]
+    },
+    {
+      "component_id": "composizione-negoziata",
+      "skills": [
+        "modules/composizione-negoziata/skills/composizione-negoziata/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/composizione-negoziata/scripts/check_dependencies.py",
+        "modules/composizione-negoziata/scripts/cnc_case.py"
       ]
     },
     {
@@ -474,6 +496,17 @@
       ]
     },
     {
+      "component_id": "esg-reporting-assurance",
+      "skills": [
+        "modules/esg-reporting-assurance/skills/esg-reporting-assurance/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/esg-reporting-assurance/scripts/check_dependencies.py",
+        "modules/esg-reporting-assurance/scripts/demo_esg.py",
+        "modules/esg-reporting-assurance/scripts/esg_case.py"
+      ]
+    },
+    {
       "component_id": "trasformazione",
       "skills": [
         "modules/trasformazione/skills/trasformazione/SKILL.md"
@@ -493,6 +526,17 @@
         "modules/fusione-guidata/scripts/check_dependencies.py",
         "modules/fusione-guidata/scripts/run_fusione.py"
       ]
+    },
+    {
+      "component_id": "patent-box-review",
+      "skills": [
+        "modules/patent-box-review/skills/patent-box-review/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/patent-box-review/scripts/check_dependencies.py",
+        "modules/patent-box-review/scripts/patent_box_sources.py",
+        "modules/patent-box-review/scripts/patent_box_workflow.py"
+      ]
     }
   ],
   "vera_wrapper_skills": [
@@ -505,12 +549,15 @@
     "skills/bilancio-oic/SKILL.md",
     "skills/browser-automation/SKILL.md",
     "skills/business-planning/SKILL.md",
+    "skills/business-valuation/SKILL.md",
     "skills/centrale-rischi-review/SKILL.md",
+    "skills/composizione-negoziata/SKILL.md",
     "skills/comunicazione-professionale/SKILL.md",
     "skills/concordato-plan-review/SKILL.md",
     "skills/datev-invoice-start/SKILL.md",
     "skills/dati-fiscali-strutturati/SKILL.md",
     "skills/email-cliente/SKILL.md",
+    "skills/esg-reporting-assurance/SKILL.md",
     "skills/fatture-xml-check/SKILL.md",
     "skills/financial-analysis/SKILL.md",
     "skills/financial-report-builder/SKILL.md",
@@ -524,6 +571,7 @@
     "skills/management-control-pack/SKILL.md",
     "skills/new-client/SKILL.md",
     "skills/open-item-reconciliation/SKILL.md",
+    "skills/patent-box-review/SKILL.md",
     "skills/presenza-digitale-studio/SKILL.md",
     "skills/previdenza-inps/SKILL.md",
     "skills/privacy-surface-review/SKILL.md",

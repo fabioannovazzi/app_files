@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vera · Business Valuation" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#57A6C7"/>
+  <circle cx="51" cy="50" r="7" fill="#57A6C7"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+<path d="M18 26h28M32 18v29M24 24l-7 15h14L24 24zm16 0-7 15h14L40 24z" fill="none" stroke="#F7F0DF" stroke-width="2.5" stroke-linejoin="round"/><path d="M23 49h18" stroke="#F7F0DF" stroke-width="3"/>
+</svg>

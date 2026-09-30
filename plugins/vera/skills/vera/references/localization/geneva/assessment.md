@@ -1,8 +1,8 @@
 # Vera — Geneva localization assessment and implementation
 
-Updated 2026-09-29 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
+Updated 2026-09-30 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
 
-This applies the common-core localization method to the complete existing catalogue: 36 professional functions, four internal helpers, one P0 case foundation and one synthetic prototype. The disposition records the assessment; implementation status is separate. No services absent from Vera have been added.
+The current inventory covers all 46 skill entrypoints, including internal helpers and development prototypes. All prior professional judgments are retained; catalogue coverage does not establish target-country acceptance.
 
 The release adds bounded adapters and instructions, not a blanket claim that every fiduciary mandate is supported. Original evidence and professional decisions remain necessary. No real Geneva client workflow has been accepted.
 
@@ -17,12 +17,14 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 | bilancio-oic | Adapt | Swiss CO/CHF annual-account draft adapter using reviewed account mappings, two-period reconciliation, source-bound disclosure review and professional decisions. No automatic statutory-completeness or filing claim. |
 | browser-automation | Use | Existing function retained with the recorded qualification limits. |
 | business-planning | Adapt | French report presentation and number formatting; existing CHF calculations retained. |
+| business-valuation | Unresolved | Source-linked valuation workpapers; no Swiss mandate qualification or Geneva client acceptance. Report prose remains Italian. |
 | centrale-rischi-review | Unresolved | Existing function retained with the recorded qualification limits. |
 | comunicazione-professionale | Use | Existing function retained with the recorded qualification limits. |
 | concordato-plan-review | Unresolved | Existing function retained with the recorded qualification limits. |
 | datev-invoice-start | Unresolved | Existing function retained with the recorded qualification limits. |
 | dati-fiscali-strutturati | Use | Existing function retained with the recorded qualification limits. |
 | email-cliente | Use | Existing function retained with the recorded qualification limits. |
+| esg-reporting-assurance | Unresolved | New evidence foundation; Swiss/Geneva applicability and professional use have not been assessed. |
 | fatture-xml-check | Ignore for this target | Existing function retained with the recorded qualification limits. |
 | financial-analysis | Use | Existing function retained with the recorded qualification limits. |
 | financial-report-builder | Use | Existing function retained with the recorded qualification limits. |
@@ -43,8 +45,8 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 | quesito-legale-fiscale | Use | Existing function retained with the recorded qualification limits. |
 | registro-imprese-sari | Adapt | Explicit CH-GE intake/plan, official Swiss source hosts, local authority/position handling and French labels; no portal filing. |
 | sales-plan | Use | Existing function retained with the recorded qualification limits. |
-| scissione-guidata | Unresolved | Initial runtime supports only IT/OIC/EUR partial proportional scission into a new beneficiary. Swiss professional applicability and adaptation have not been established; CH-GE does not execute the Italian route. |
 | studio-archive | Adapt | Swiss IDE normalization and explicit OCR language through CLI/MCP; language changes trigger reindexing. |
+| trasformazione | Unresolved | Synthetic-only Italian transformation prototype; no real client mandate or Swiss legal qualification. |
 | treasury-forecast | Adapt | CHF forecast/update arithmetic with currency-safe records and currency-correct HTML, Markdown, XLSX and live review. Fixed interface prose remains Italian. |
 | variance-analysis | Use | Existing function retained with the recorded qualification limits. |
 | vera | Use | Existing function retained with the recorded qualification limits. |
@@ -54,11 +56,7 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 
 Centrale Rischi source equivalence, the restructuring mandate/procedure, the actual DATEV application and a Swiss structured-invoice output requirement remain unresolved. The Italian FatturaPA-only checker stays outside the domestic example, while remaining available for actual Italian files. No replacement services were invented.
 
-The 2026-09-29 catalogue refresh adds `scissione-guidata` at Vera 0.1.281 and preserves the earlier assessments. Its versioned evidence and arithmetic implementation does not establish a Swiss mandate, accounting treatment or procedure. A future adaptation needs source-backed Swiss requirements and its own reviewed acceptance case. The French explanation page is not Swiss qualification.
-
 The 0.1.279 catalogue refresh adds `fusione-guidata` and updates its router entry. It preserves the existing professional assessments. The new foundation is unresolved for Geneva; its synthetic structural checks do not establish Swiss merger capability.
-
-The separately merged `trasformazione` route is retained as a synthetic-only prototype, unresolved for Geneva. It does not accept real mandates or establish a Swiss transformation workflow. The combined Vera 0.1.281 inventory contains 42 skill identities.
 
 ## Acceptance record
 
@@ -78,3 +76,30 @@ These sources support the target investigation, not an automatic rules engine. R
 - [PFPDT outsourcing and processing roles](https://www.edoeb.admin.ch/fr/externalisation-sous-traitance)
 
 See [the complete machine-readable assessment](assessment.json) for each function’s purpose, common method, original adaptation requirement, acceptance example and source references.
+
+## ESG catalogue update — 29 September 2026
+
+Vera 0.1.282 adds the ESG evidence foundation to the catalogue. The earlier
+35-function assessment is preserved; the new function is recorded as unresolved.
+Its synthetic evidence/version tests do not establish Swiss reporting support.
+The combined catalogue now contains 37 function entries and four internal helpers, including the separate unresolved merger foundation from main.
+
+The subsequent combined catalogue also includes the synthetic-only transformation
+prototype, separately unresolved for Geneva. There are 42 skill entries in total.
+
+## Assetti construction release binding
+
+The 0.1.283 refresh changes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Existing target judgments remain in place. The new assetti construction mode has not been validated for CH-GE; the earlier assessment-mode scope does not qualify that new mode.
+
+The unpublished 0.1.286 valuation candidate integrates that release and the transformation prototype. Its 42-entry catalogue retains all prior assessment rows and adds the unresolved valuation row. This integration does not extend the earlier Geneva professional assessment.
+
+The 0.1.291 candidate also integrates the upstream Fusione P1 entrypoint and its existing Unresolved Geneva assessment. Both domestic Italian incorporation branches remain unqualified for Switzerland; the combined inventory does not extend professional availability.
+The 30 September combined candidate 0.1.286 has 43 skill entries. All prior scope judgments are retained; ESG, CNC, merger and transformation remain unresolved for Geneva.
+
+The 0.1.287 candidate updates the merger entrypoint to P1. The two supported branches are domestic Italian OIC incorporations; the Geneva assessment remains Unresolved.
+
+The ESG deployment candidate 0.1.291 retains all 43 entries and the merged Fusione P1 scope; target dispositions remain unchanged.
+
+The 0.1.288 release refresh updates the package identity only. All 42 skill entrypoints are byte-identical to the recorded 0.1.287 catalogue; the professional assessments and unresolved Swiss scope remain unchanged.
+
+The 0.1.296 valuation beta integrates the current 45-entry catalogue. Its additional inventory and source bindings do not qualify any previously unresolved Geneva function.

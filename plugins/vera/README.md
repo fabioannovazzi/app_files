@@ -8,6 +8,13 @@ limitations, and professional-review steps visible. Vera does not replace the
 commercialista: decisions, approval, and responsibility remain with the
 qualified professional.
 
+## Business valuation
+
+`business-valuation` prepares client-bound PMI valuation workpapers with selected
+methods, traceable calculations, business-plan reuse, professional review and
+HTML, DOCX, PDF, XLSX, JSON and CSV outputs. It does not provide a signed opinion
+or certify PIV conformity. See the module skill for supported conventions.
+
 ## One source, two packages
 
 Vera is maintained once in this repository. The same skills and component
@@ -99,6 +106,8 @@ environment does not isolate modules or client matters from one another.
 
 The shared specialist workflows cover:
 
+- ESG case evidence, version-specific decisions and partial Markdown/JSON drafts
+  through `esg-reporting-assurance`; complete reporting and assurance remain unimplemented;
 - `fusione-guidata` P0 merger case preparation with versioned evidence, explicit
   facts, professional confirmation records and change impacts; legal branches and
   merger calculations remain unsupported;
@@ -204,6 +213,11 @@ run it through the managed launcher to enforce this supported-runtime contract,
 including for the base portable ledger in Cowork.
 
 ## Adeguati assetti
+
+`vera:composizione-negoziata` guides an Italian CNC case with separate advisor
+and expert instructions, existing Vera analyses, evidence-linked drafts and
+case revisions. Changed dependencies trigger review; recorded confirmations
+are not authenticated signatures. No filing or automatic monitoring is included.
 
 `vera:adeguati-assetti` evaluates organizational, administrative and accounting
 arrangements from company evidence. It distinguishes documented procedures,

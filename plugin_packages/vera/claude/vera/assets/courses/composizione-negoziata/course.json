@@ -1,0 +1,370 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "composizione-negoziata",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "record_role_and_evidence_then_review_changed_receipt"
+  },
+  "sources": [
+    {
+      "path": "modules/composizione-negoziata/assets/icon.svg",
+      "sha256": "57d5f2434dd064061c42c6a6b8fa009c4c53170ecbba191274f775bde83b32f5"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/access-and-measures.md",
+      "sha256": "d73f6c8cb0a36081cc0a9a27ad807bb5128d741bdb200ed1a165427e8758b32b"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/advisor.md",
+      "sha256": "4a3bd9870430510c6beb21ce2b0e5bd113a04bf3266b10f3c84e146606a917e2"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/case-record.md",
+      "sha256": "8b612b146fe4448c83e84a9027a3773246966272c4f0b0fed0cd38eef28c8c67"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/esperto.md",
+      "sha256": "a7946e589eadc7dc0b613abf9f1101217a253595de1b86bce290ec2c343cfce6"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/events-and-closure.md",
+      "sha256": "8e493c00b69c983f5b8d8e3241c63029af722c48e8a39a9e040c4af793420e1b"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/financial-and-research.md",
+      "sha256": "ad03fc2cc23a0077da53c7b387ca922d96cb327762a572de21f5a7b946b3a80c"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/negotiations-and-special-events.md",
+      "sha256": "48ca3f780b917e824d3fb37213c2684084d009076e692f52416d199f7a4c7f95"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/report-and-handoff.md",
+      "sha256": "4b93be792b16b76c42e10cdabf5a86c1e44cbf1f64d98351e778d9c2fcca96fc"
+    },
+    {
+      "path": "modules/composizione-negoziata/requirements.txt",
+      "sha256": "b11002e732f89a31a126e1c4387bb0d1e574a1cd12a72ff1109705c510b476be"
+    },
+    {
+      "path": "modules/composizione-negoziata/scripts/check_dependencies.py",
+      "sha256": "b6f39a186c1d0f18b8ee66914cc06996cc667a029c64e34d8536e5b6d611d1c3"
+    },
+    {
+      "path": "modules/composizione-negoziata/scripts/cnc_case.py",
+      "sha256": "973ca3e00a0827fb4ae3fef7a31aa79dc606184a40c60b0aa5b90a5946bcec07"
+    },
+    {
+      "path": "modules/composizione-negoziata/scripts/cnc_review_client.py",
+      "sha256": "6d84ccf1844b6fce6395655e04c9b3b70df67ebff6e253ad94f2e09d144e0581"
+    },
+    {
+      "path": "modules/composizione-negoziata/skills/composizione-negoziata/SKILL.md",
+      "sha256": "6618a1fa1734e70cd32d51d91116190d426b2b75e8e3febd005da849b76bd445"
+    },
+    {
+      "path": "modules/composizione-negoziata/skills/composizione-negoziata/agents/openai.yaml",
+      "sha256": "15a2bc5644f4dfe718150e02a0bfad2c5c9d3819211167bca097985f74c30834"
+    },
+    {
+      "path": "skills/composizione-negoziata/SKILL.md",
+      "sha256": "fa87ac2a9ff089eda1c6e4d96721e98599785eef23c387027a84d821fbece0ec"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "089670445e91974b68e9eca35017948a8bac2d07e7e05dba29be05b32fb76e93"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/caso-it.md",
+      "sha256": "11e8920f74b82156a64b2c92a689ebe31313f97deccc625c4ba3f5b2f950bd4b",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/aggiornamento-it.md",
+      "sha256": "512f806988042eb7f9f5a7e51089ba3a248b6201212407a64d8aa07daf09428f",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/case-en.md",
+      "sha256": "65682ac0424e19aafff2e6293196f405100b7165af2abf6e0dd985ee756c571e",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/update-en.md",
+      "sha256": "52c4782605d45905fc5157ee372a6ecdfb31da31951374f7a49bb16bdd97136d",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/cas-fr.md",
+      "sha256": "d84e9b06f119df1119ccc24edb0e3e7db41f342419c3ec9c3a6fa855b584296c",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/mise-a-jour-fr.md",
+      "sha256": "9de3ef47f6991714ef8e69b57c168ce85ac91a346bf621902db21eb238c85fe8",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/fall-de.md",
+      "sha256": "6796da6c88a2518bf1658eb8df08ff015110e78601b09ffc1aea3fcf9375b2e0",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/aktualisierung-de.md",
+      "sha256": "0c6dd206045fb32d3d46d562f49d978a00bc2373fe65fd98da23909e9e344ea4",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/caso-es.md",
+      "sha256": "6333f5cdef5e863195f4cf461c8ca8c471d0218847e1af23cbf4e701dabb26c5",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/actualizacion-es.md",
+      "sha256": "515de4dd5baeab248f59d91dab8548ce310180bca03dc4f21fbdb856d8f95c03",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Seguire evidenze e variazioni di una composizione negoziata",
+      "goal": "Avviare una pratica come advisor, rivedere una bozza e riprenderla quando cambia un incasso.",
+      "scenario": "Impresa interamente sintetica: cassa EUR 50.000, incasso previsto EUR 100.000 il 15 novembre 2026, pagamento EUR 80.000 il 30 novembre. Il debitore non ha confermato la data; non sono forniti aging né ordini.",
+      "scope": "Primo percorso operativo: ruolo, lacune, analisi di tesoreria richiamata, nota e revisione dopo una variazione. Non è una valutazione di accesso alla procedura né una pratica completa.",
+      "inputs": "Apri caso-it.md per fatti e ipotesi iniziali. aggiornamento-it.md contiene soltanto la nuova informazione da introdurre nella prova pratica.",
+      "request": "Vera, assisto l’impresa come advisor. Esamina i dati sintetici, segnala le lacune, richiama la tesoreria e prepara una prima nota collegata alle evidenze. Non assumere decisioni già approvate.",
+      "steps": [
+        "In questa conversazione, registra il cliente sintetico e l’incarico di esercitazione. Vera distingue il ruolo, le fonti, le ipotesi e le informazioni mancanti prima di proporre la prossima attività.",
+        "Vera esegue la funzione di tesoreria con copertura e ipotesi esplicite, collega il risultato salvato alla nota e registra una revisione solo dopo una tua conferma riferita a quella versione. Apri il report sui dati arrivati al modello.",
+        "Riprendi la stessa pratica con l’aggiornamento: conserva la prima nota, controlla i collegamenti da riesaminare e chiedi la nuova analisi. Una vecchia conferma resta storica."
+      ],
+      "deliverables": [
+        "Nota della pratica con evidenze, lacune, ipotesi e attività successiva.",
+        "Forecast effettivamente eseguito, revisioni salvate e report dei dati usati."
+      ],
+      "review": "Segui l’incasso dalla dichiarazione alla previsione e alla nota. La disponibilità del file non prova l’incassabilità; una registrazione di conferma non è una firma.",
+      "checkpoints": [
+        "Distingui il lavoro dell’advisor dalle verifiche dell’esperto indipendente.",
+        "Individua ipotesi non confermate e versioni da riesaminare dopo il rinvio."
+      ],
+      "practice": "Introduci aggiornamento-it.md: il debitore propone il 15 gennaio 2027. Chiedi una nuova analisi e una nuova nota, senza trasferire le vecchie conferme alla nuova versione.",
+      "success": "Sai avviare, rivedere e riprendere il caso, mantenendo espliciti limiti, dipendenze e decisioni richieste.",
+      "repeat": "Indica ruolo, incarico, data di riferimento e documenti autorizzati della pratica reale. Le fonti giuridiche decisive vanno verificate al momento; indipendenza e conclusioni restano al professionista."
+    },
+    "en": {
+      "title": "Track evidence and changes in a composizione negoziata",
+      "goal": "Start an advisor case, review a draft and resume it when a receipt moves.",
+      "scenario": "Entirely synthetic company: EUR 50,000 cash, EUR 100,000 expected on 15 November 2026 and EUR 80,000 payable on 30 November. The debtor has not confirmed the date; aging and orders are absent.",
+      "scope": "First operational path: role, gaps, an actual treasury analysis, a note and review after a change. This is neither an eligibility opinion nor a complete professional case.",
+      "inputs": "Open case-en.md for initial facts and assumptions. update-en.md contains only the new information for the practice phase.",
+      "request": "Vera, I advise the company. Examine the synthetic inputs, flag gaps, run treasury forecasting and prepare an evidence-linked initial note. Do not assume any decision has been approved.",
+      "steps": [
+        "In this conversation, register the synthetic client and tutorial engagement. Vera distinguishes role, sources, assumptions and missing evidence before proposing the next activity.",
+        "Vera runs treasury forecasting with explicit coverage and assumptions, binds the saved result to the note and records a review only after your confirmation of that version. Open the model-data report.",
+        "Resume the same case with the update. Preserve the first note, inspect affected dependencies and request a new analysis. Previous confirmations remain historical."
+      ],
+      "deliverables": [
+        "Case note with evidence, gaps, assumptions and next activity.",
+        "Executed forecast, saved revisions and a report of actual data use."
+      ],
+      "review": "Trace the receipt from the reported fact to the forecast and note. A file does not establish collectability; a recorded confirmation is not a signature.",
+      "checkpoints": [
+        "Distinguish the company advisor from the independent expert.",
+        "Identify unsupported assumptions and versions to revisit after the delay."
+      ],
+      "practice": "Introduce update-en.md: the debtor now proposes 15 January 2027. Request a fresh analysis and note without carrying old confirmations into the new version.",
+      "success": "You can start, review and resume a case while keeping limitations, dependencies and required decisions explicit.",
+      "repeat": "Specify role, engagement, reference date and authorized real-case documents. Verify decisive legal sources at use; independence and conclusions remain professional responsibilities."
+    },
+    "fr": {
+      "title": "Suivre les preuves et les changements d’une composizione negoziata",
+      "goal": "Ouvrir un dossier de conseil, revoir un projet et le reprendre après le report d’un encaissement.",
+      "scenario": "Entreprise entièrement fictive : trésorerie de 50 000 EUR, encaissement prévu de 100 000 EUR le 15 novembre 2026, paiement de 80 000 EUR le 30 novembre. Le débiteur n’a pas confirmé la date ; balance âgée et commandes absentes.",
+      "scope": "Premier parcours : rôle, lacunes, analyse de trésorerie exécutée, note et révision après changement. Ce n’est ni un avis d’admissibilité ni un dossier professionnel complet.",
+      "inputs": "Ouvrez cas-fr.md pour les faits et hypothèses initiaux. mise-a-jour-fr.md contient uniquement la nouvelle information de l’exercice pratique.",
+      "request": "Vera, je conseille l’entreprise. Examine les données fictives, signale les lacunes, exécute la prévision de trésorerie et prépare une note liée aux preuves. Ne présume aucune décision approuvée.",
+      "steps": [
+        "Dans cette conversation, enregistrez le client fictif et la mission pédagogique. Vera distingue rôle, sources, hypothèses et preuves manquantes avant de proposer la prochaine activité.",
+        "Vera exécute la prévision avec périmètre et hypothèses explicites, relie le résultat conservé à la note et n’enregistre une révision qu’après votre confirmation de cette version. Ouvrez le rapport des données transmises au modèle.",
+        "Reprenez le même dossier avec la mise à jour. Conservez la première note, examinez les dépendances affectées et demandez une nouvelle analyse. Les confirmations antérieures restent historiques."
+      ],
+      "deliverables": [
+        "Note avec preuves, lacunes, hypothèses et prochaine activité.",
+        "Prévision exécutée, versions conservées et rapport des données utilisées."
+      ],
+      "review": "Reliez la déclaration d’encaissement à la prévision et à la note. Un fichier ne prouve pas le recouvrement ; une confirmation enregistrée n’est pas une signature.",
+      "checkpoints": [
+        "Distinguez le conseil de l’entreprise de l’expert indépendant.",
+        "Repérez les hypothèses non confirmées et les versions à revoir après le report."
+      ],
+      "practice": "Introduisez mise-a-jour-fr.md : le débiteur propose désormais le 15 janvier 2027. Demandez une nouvelle analyse et une nouvelle note sans transférer les anciennes confirmations.",
+      "success": "Vous savez ouvrir, revoir et reprendre le dossier en explicitant limites, dépendances et décisions requises.",
+      "repeat": "Précisez rôle, mission, date de référence et documents autorisés. Vérifiez les sources juridiques décisives lors de l’utilisation ; indépendance et conclusions relèvent du professionnel."
+    },
+    "de": {
+      "title": "Belege und Änderungen einer Composizione negoziata verfolgen",
+      "goal": "Einen Beratungsfall beginnen, einen Entwurf prüfen und nach einem verschobenen Zahlungseingang fortsetzen.",
+      "scenario": "Vollständig fiktives Unternehmen: 50.000 EUR Liquidität, 100.000 EUR erwarteter Eingang am 15. November 2026 und 80.000 EUR Zahlung am 30. November. Der Schuldner hat das Datum nicht bestätigt; Altersstruktur der Forderungen und Aufträge fehlen.",
+      "scope": "Erster Arbeitsablauf: Rolle, Lücken, tatsächlich ausgeführte Liquiditätsanalyse, Vermerk und erneute Prüfung. Keine Zulässigkeitsbeurteilung und kein vollständiger Berufsfall.",
+      "inputs": "Öffnen Sie fall-de.md für Ausgangsfakten und Annahmen. aktualisierung-de.md enthält nur die neue Information für die Übungsphase.",
+      "request": "Vera, ich berate das Unternehmen. Prüfe die fiktiven Daten, kennzeichne Lücken, führe die Liquiditätsplanung aus und erstelle einen beleggestützten Vermerk. Unterstelle keine genehmigte Entscheidung.",
+      "steps": [
+        "Registrieren Sie in diesem Chat den fiktiven Mandanten und das Übungsmandat. Vera trennt Rolle, Quellen, Annahmen und fehlende Belege vor dem Vorschlag der nächsten Tätigkeit.",
+        "Vera führt die Prognose mit ausdrücklich begrenztem Umfang und Annahmen aus, verknüpft das gespeicherte Ergebnis mit dem Vermerk und erfasst eine Prüfung erst nach Ihrer Bestätigung dieser Version. Öffnen Sie den Bericht zur Modell-Datennutzung.",
+        "Setzen Sie denselben Fall mit der Aktualisierung fort. Erhalten Sie den ersten Vermerk, prüfen Sie betroffene Abhängigkeiten und fordern Sie eine neue Analyse an. Frühere Bestätigungen bleiben historisch."
+      ],
+      "deliverables": [
+        "Fallvermerk mit Belegen, Lücken, Annahmen und nächster Tätigkeit.",
+        "Ausgeführte Prognose, gespeicherte Versionen und Bericht zur Datennutzung."
+      ],
+      "review": "Verfolgen Sie den Eingang von der Angabe zur Prognose und zum Vermerk. Eine Datei beweist keine Einbringlichkeit; eine erfasste Bestätigung ist keine Unterschrift.",
+      "checkpoints": [
+        "Unterscheiden Sie Unternehmensberater und unabhängigen Experten.",
+        "Erkennen Sie unbestätigte Annahmen und nach dem Aufschub erneut zu prüfende Versionen."
+      ],
+      "practice": "Fügen Sie aktualisierung-de.md hinzu: Der Schuldner schlägt nun den 15. Januar 2027 vor. Fordern Sie Analyse und Vermerk erneut an, ohne alte Bestätigungen auf die neue Version zu übertragen.",
+      "success": "Sie können einen Fall beginnen, prüfen und fortsetzen und dabei Grenzen, Abhängigkeiten und erforderliche Entscheidungen ausdrücken.",
+      "repeat": "Nennen Sie Rolle, Mandat, Stichtag und freigegebene Fallunterlagen. Prüfen Sie entscheidende Rechtsquellen bei Verwendung; Unabhängigkeit und Schlussfolgerungen beurteilt der Berufsträger."
+    },
+    "es": {
+      "title": "Seguir evidencias y cambios de una composizione negoziata",
+      "goal": "Abrir un expediente como asesor, revisar un borrador y retomarlo cuando se retrasa un cobro.",
+      "scenario": "Empresa totalmente ficticia: caja de 50.000 EUR, cobro previsto de 100.000 EUR el 15 de noviembre de 2026 y pago de 80.000 EUR el 30 de noviembre. El deudor no ha confirmado la fecha; faltan antigüedad de saldos y pedidos.",
+      "scope": "Primer recorrido: rol, carencias, análisis de tesorería ejecutado, nota y revisión tras un cambio. No es un dictamen de admisibilidad ni un expediente profesional completo.",
+      "inputs": "Abre caso-es.md para los hechos e hipótesis iniciales. actualizacion-es.md contiene solo la nueva información de la práctica.",
+      "request": "Vera, asesoro a la empresa. Examina los datos ficticios, señala carencias, ejecuta la previsión de tesorería y prepara una nota vinculada a evidencias. No presupongas decisiones aprobadas.",
+      "steps": [
+        "En esta conversación, registra el cliente ficticio y el encargo didáctico. Vera distingue rol, fuentes, hipótesis y evidencias ausentes antes de proponer la próxima actividad.",
+        "Vera ejecuta la previsión con alcance e hipótesis explícitos, vincula el resultado guardado a la nota y registra una revisión solo tras tu confirmación de esa versión. Abre el informe de datos que llegan al modelo.",
+        "Retoma el mismo expediente con la actualización. Conserva la primera nota, examina dependencias afectadas y pide un nuevo análisis. Las confirmaciones anteriores quedan como históricas."
+      ],
+      "deliverables": [
+        "Nota con evidencias, carencias, hipótesis y próxima actividad.",
+        "Previsión ejecutada, revisiones guardadas e informe de datos utilizados."
+      ],
+      "review": "Sigue el cobro desde la declaración hasta la previsión y la nota. Un archivo no prueba la cobrabilidad; una confirmación registrada no es una firma.",
+      "checkpoints": [
+        "Distingue al asesor de la empresa del experto independiente.",
+        "Identifica hipótesis no confirmadas y versiones que revisar tras el retraso."
+      ],
+      "practice": "Introduce actualizacion-es.md: el deudor propone ahora el 15 de enero de 2027. Pide un nuevo análisis y una nueva nota sin trasladar confirmaciones antiguas a la nueva versión.",
+      "success": "Sabes abrir, revisar y retomar el expediente manteniendo explícitos límites, dependencias y decisiones pendientes.",
+      "repeat": "Indica rol, encargo, fecha de referencia y documentos autorizados. Verifica las fuentes jurídicas decisivas al utilizarlas; independencia y conclusiones corresponden al profesional."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "6151492031e9c72cc24c00a5b131e1a2bbda352f7b056c7e0ed7525a1460ed3b"
+}

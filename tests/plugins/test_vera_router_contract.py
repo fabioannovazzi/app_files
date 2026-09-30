@@ -69,8 +69,8 @@ def test_vera_workflow_catalog_covers_every_specialist_skill() -> None:
     # Installation adaptations have an explicit skill link outside the lesson list.
     catalogued_skills.update(re.findall(r"\.\./\.\./([a-z0-9-]+)/SKILL\.md", catalog))
 
-    # P0 foundations are registered separately from prepared professional lessons.
-    foundation = catalog.split("## P0 case foundation", 1)[1].split(
+    # Merger workpapers are registered separately from prepared professional lessons.
+    foundation = catalog.split("## Merger workpapers", 1)[1].split(
         "## Professional workflows", 1
     )[0]
     catalogued_skills.update(

@@ -131,7 +131,7 @@ SEVERE_CONTRACT_COVERAGE_AUDIT_SEVERITIES = {"blocker", "high", "medium"}
 CHATGPT_UPLOAD_MAX_DEFAULT_PROMPTS = 3
 CHATGPT_UPLOAD_MAX_DEFAULT_PROMPT_LENGTH = 128
 CHATGPT_UPLOAD_MAX_SUBTITLE_LENGTH = 30
-CHATGPT_UPLOAD_UNSUPPORTED_MANIFEST_FIELDS = {"apps", "mcpServers"}
+CHATGPT_UPLOAD_UNSUPPORTED_MANIFEST_FIELDS = {"apps", "mcpServers", "hooks"}
 CHATGPT_UPLOAD_UNSUPPORTED_INTERFACE_FIELDS = {"screenshots"}
 CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES = {".app.json", ".mcp.json"}
 CHATGPT_UPLOAD_REVIEW_MCP_SERVER = "scripts/review_mcp_server.cjs"
@@ -142,6 +142,8 @@ CHATGPT_SKILL_CARDS_FILE = "marketplace_skill_instructions.json"
 VERA_CHATGPT_DEVELOPER_SKILLS = frozenset({"privacy-surface-review"})
 VERA_CHATGPT_ROUTER_TARGETS = {
     "scissione-guidata": "modules/scissione-guidata/skills/scissione-guidata/SKILL.md",
+    "patent-box-review": "modules/patent-box-review/skills/patent-box-review/SKILL.md",
+    "esg-reporting-assurance": "modules/esg-reporting-assurance/skills/esg-reporting-assurance/SKILL.md",
     "trasformazione": "modules/trasformazione/skills/trasformazione/SKILL.md",
     "fusione-guidata": "modules/fusione-guidata/skills/fusione-guidata/SKILL.md",
     "datev-invoice-start": "skills/datev-invoice-start/SKILL.md",
@@ -158,6 +160,7 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "browser-automation": "modules/browser-automation/skills/browser-automation/SKILL.md",
     "vouching": "modules/check-entries/skills/vouching/SKILL.md",
     "concordato-plan-review": "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
+    "composizione-negoziata": "modules/composizione-negoziata/skills/composizione-negoziata/SKILL.md",
     "comunicazione-professionale": "modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
     "dati-fiscali-strutturati": "modules/client-file-preparation/skills/dati-fiscali-strutturati/SKILL.md",
     "legal-tax-answer-review": "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md",
@@ -179,6 +182,7 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "financial-report-builder": "modules/report-builder/skills/financial-report-builder/SKILL.md",
     "sales-plan": "modules/sales-plan/skills/sales-plan/SKILL.md",
     "business-planning": "modules/business-planning/skills/business-planning/SKILL.md",
+    "business-valuation": "modules/business-valuation/skills/business-valuation/SKILL.md",
     "variance-analysis": "modules/variance-analysis/skills/variance-analysis/SKILL.md",
     "studio-archive": "modules/studio-archive/skills/studio-archive/SKILL.md",
 }
@@ -1575,6 +1579,10 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
         ):
             continue
         if name == CHATGPT_SKILL_CARDS_FILE:
+            continue
+        # Lifecycle hooks are unsupported in Marketplace submissions. Keep
+        # them in native host packages, but omit root and component hooks here.
+        if "hooks" in path_parts[:-1]:
             continue
         if path_parts[-1] in CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES:
             continue

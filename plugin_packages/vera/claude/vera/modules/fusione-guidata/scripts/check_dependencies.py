@@ -15,7 +15,7 @@ def main() -> int:
         return 1
     with sqlite3.connect(":memory:") as db:
         db.execute("SELECT 1").fetchone()
-    logging.info("Fusione P0: Python and SQLite are available; no additional packages.")
+    logging.info("Fusione: Python and SQLite are available; no additional packages.")
     return 0
 
 

@@ -4,7 +4,7 @@
   "courses": {
     "adeguati-assetti": {
       "path": "adeguati-assetti/course.json",
-      "sha256": "66ea449fc36bfb25e7f6f1cb04a2c4f204072aa00c7f091efb288b07fd9c5098",
+      "sha256": "cd97351045ab9cc6146f71395f330b8e011c17bc48951523e45817b0eb1368c9",
       "languages": [
         "it",
         "en",
@@ -32,7 +32,7 @@
     },
     "aml-review": {
       "path": "aml-review/course.json",
-      "sha256": "a2634a2e163cc8c588fabf139b1ea1e10eecd811b7362f75982833f678a87c75",
+      "sha256": "c8efe29bda08058f40931ad53064943d3fe13b6d52ab750953a5f51f70874c25",
       "languages": [
         "it",
         "en",
@@ -60,7 +60,7 @@
     },
     "archive-organization": {
       "path": "archive-organization/course.json",
-      "sha256": "304319e34fd4e1c376e84e564c7e428773ebda40d8999581fde865cfa31e7773",
+      "sha256": "7f884cf1a973bbdaec3ad946a2ffaa778e5c71276841568a87f05439314820cf",
       "languages": [
         "it",
         "en",
@@ -88,7 +88,7 @@
     },
     "avviso-intake": {
       "path": "avviso-intake/course.json",
-      "sha256": "3a9f6a8bab55cea2c69069d6c69d83cc6a4290090b94c846eed9ae07e6f57fb3",
+      "sha256": "343102d0f9989fb8dec18cf12c73c89cc954036f61766b00ed178cddcfe7fc7a",
       "languages": [
         "it",
         "en",
@@ -116,7 +116,7 @@
     },
     "bandi-agevolazioni": {
       "path": "bandi-agevolazioni/course.json",
-      "sha256": "0d77057d54f713e8d1ec60856565518fb22dacd53bc32fbf704d8a25f451775b",
+      "sha256": "697068a9865f58f0928ab6c28aa0324901a790e5376e49f19af30b167825377f",
       "languages": [
         "it",
         "en",
@@ -144,7 +144,7 @@
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "c161db01384554be76ebfb2890170e4aa0cb6a405cf2fb15436780496e064895",
+      "sha256": "cef2e13acf8d27ff6650f329b3ac29a57d9077847099bf85c8f1fe5bff7b3a3b",
       "languages": [
         "it",
         "en"
@@ -163,7 +163,7 @@
     },
     "browser-automation": {
       "path": "browser-automation/course.json",
-      "sha256": "139656a2a087d34d047448c4328eedcabf95d0cfdd32bbb0f99a4069d89954eb",
+      "sha256": "9371150ce3d2f4e616f616d192ca8a9173f071037eca44df9e35196cf9bbc6a5",
       "languages": [
         "it",
         "en",
@@ -191,7 +191,7 @@
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "cda961fbd2c8a59dc06ef50600435c136148f383a1c7663bfd352fec5f867ccc",
+      "sha256": "70c54452a7906868ac34f88827387a7bfacdcbf8a5da8e48705eafa37f81c409",
       "languages": [
         "it",
         "en"
@@ -208,9 +208,25 @@
         "en": "Learn to start from a proposal, supply available information and obtain a report that helps decide what to test, change or investigate."
       }
     },
+    "business-valuation": {
+      "path": "business-valuation/course.json",
+      "sha256": "4258807c3c2a6c7710eafc6d109680980ba82fadd7d54048b380b7b03964a8d5",
+      "languages": [
+        "it"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Preparare carte di lavoro per una valutazione d’impresa"
+      },
+      "goals": {
+        "it": "Imparare a fornire incarico, fonti e ipotesi, distinguere valore operativo e capitale proprio e rivedere un risultato quando cambia il tasso."
+      }
+    },
     "centrale-rischi-review": {
       "path": "centrale-rischi-review/course.json",
-      "sha256": "ddd768137bfbfa4a3a63ed20bc39e302f6f5a6fe883617168026c3ea71712718",
+      "sha256": "4664e4caf5564a82c794df6bc3e5a86246e9df52e3b76edeedd27e605644c7db",
       "languages": [
         "it"
       ],
@@ -224,9 +240,37 @@
         "it": "Impara a partire da una Centrale Rischi, ottenere un’analisi verificabile e usarla per preparare il confronto con il cliente."
       }
     },
+    "composizione-negoziata": {
+      "path": "composizione-negoziata/course.json",
+      "sha256": "bb30e53e0529c4e257ce7d72878413f6e03142c1e3b624d8d321ee7487f8f733",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Seguire evidenze e variazioni di una composizione negoziata",
+        "en": "Track evidence and changes in a composizione negoziata",
+        "fr": "Suivre les preuves et les changements d’une composizione negoziata",
+        "de": "Belege und Änderungen einer Composizione negoziata verfolgen",
+        "es": "Seguir evidencias y cambios de una composizione negoziata"
+      },
+      "goals": {
+        "it": "Avviare una pratica come advisor, rivedere una bozza e riprenderla quando cambia un incasso.",
+        "en": "Start an advisor case, review a draft and resume it when a receipt moves.",
+        "fr": "Ouvrir un dossier de conseil, revoir un projet et le reprendre après le report d’un encaissement.",
+        "de": "Einen Beratungsfall beginnen, einen Entwurf prüfen und nach einem verschobenen Zahlungseingang fortsetzen.",
+        "es": "Abrir un expediente como asesor, revisar un borrador y retomarlo cuando se retrasa un cobro."
+      }
+    },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
-      "sha256": "3a85c3163d76c719a02d13a1de385a27e3db9455d681891dd7661255ab2886a2",
+      "sha256": "7a9303fa5fc78115f78d35ae3b05fb414a99ada3a80b2c56cd09afcef7dddc2c",
       "languages": [
         "it",
         "en",
@@ -254,7 +298,7 @@
     },
     "concordato-plan-review": {
       "path": "concordato-plan-review/course.json",
-      "sha256": "a9f5ed5b2775c00cc419bb4940d31d502405b643e93b24aa2f02871f66376ae1",
+      "sha256": "294bae78bd11929fea944e8a85303088d14b209c99dae05fde6e066c3ce1c38f",
       "languages": [
         "it",
         "en",
@@ -282,7 +326,7 @@
     },
     "dati-fiscali-strutturati": {
       "path": "dati-fiscali-strutturati/course.json",
-      "sha256": "1561d2f17ac64b93333da07cec95b849c78afa9054bc59d7e1f30cf868accc58",
+      "sha256": "8cb1513230fe4918485d5eb6f2d0087425a73cf218984ff2dc8e9795c4968158",
       "languages": [
         "it",
         "en",
@@ -310,7 +354,7 @@
     },
     "email-cliente": {
       "path": "email-cliente/course.json",
-      "sha256": "f2d625be71fcd2e94fb48f057342679b8df29faeb8e1adbcfe131dfe119155ad",
+      "sha256": "cda4c750b1b73d7112360ad41041440cf70ad631911b5b6afd6296d7a828f265",
       "languages": [
         "it",
         "en",
@@ -338,7 +382,7 @@
     },
     "fatture-xml-check": {
       "path": "fatture-xml-check/course.json",
-      "sha256": "39b47a978474052594aeda4a7a9e1091e2a899dd358498e8b7a1f79731b3acce",
+      "sha256": "b195bf099bb28f0d7e231dd010d42d6d24d6c4537f6926f4aa5474ffe6dad803",
       "languages": [
         "it",
         "en",
@@ -366,7 +410,7 @@
     },
     "financial-analysis": {
       "path": "financial-analysis/course.json",
-      "sha256": "34211a06e96b0f545e1af3a2ea4629fa811870d97711a57522ceb78ad2ab526e",
+      "sha256": "719179c384543d626e77fd733c4078cc5489e125fc19a47d1f36ca3de4a34614",
       "languages": [
         "it",
         "en",
@@ -394,7 +438,7 @@
     },
     "financial-report-builder": {
       "path": "financial-report-builder/course.json",
-      "sha256": "81b7af319d91716dae21669056d7fbfbc473b26c7a8540cb5b11b0a4bb7bcb40",
+      "sha256": "aa8c58157fba9b89edf1dde5a1e612562eff70e36ef57b34aa09435a4514a193",
       "languages": [
         "it",
         "en",
@@ -422,7 +466,7 @@
     },
     "invoice-xml": {
       "path": "invoice-xml/course.json",
-      "sha256": "25575a4f32692f1cb56fbe170cbed099bf52af5bef45624ae0b13108109a504c",
+      "sha256": "74b48009a89e7038c26416d51cf435e56fc20021e1e3670d60635a46bc58bfae",
       "languages": [
         "it",
         "en",
@@ -450,7 +494,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "1b6b3b5b6c41501ec55c5c26658ab7bd550eec3ed198e32861a4563d6089d2ec",
+      "sha256": "0fa92b1c942fd011e0159ad6d6734529bc19fbf92c11346cdbd31ef9076c23f9",
       "languages": [
         "it",
         "en",
@@ -478,7 +522,7 @@
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
-      "sha256": "47978102ae83757f75ed8310b209b3a0c999508190406ad9879c9fcfec7a079c",
+      "sha256": "b545ed0fc95aa8a5d78bd993911889cf0bc81f91ec025818c974518bde322b99",
       "languages": [
         "it",
         "en",
@@ -506,7 +550,7 @@
     },
     "management-control-pack": {
       "path": "management-control-pack/course.json",
-      "sha256": "5b812c6d59fcc011c645184d95a939732e41507d6ff8a848332e8b3cc2ae1366",
+      "sha256": "d1cde9e32542d31b2b32b2b545dedd5da35592c48271015a47a8df122155481c",
       "languages": [
         "it",
         "en"
@@ -525,7 +569,7 @@
     },
     "new-client": {
       "path": "new-client/course.json",
-      "sha256": "d5e3b850279cbe5a80339b63ea325ca910c840399ce81b5a9f27aaa57e28443a",
+      "sha256": "688dc0efa9749df1eca2d95ab78322ccf0a5ea37b01e2a807e64be96b498af7c",
       "languages": [
         "it",
         "en",
@@ -553,7 +597,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "9120f9915a463b6e8ff8bae18767a1caf10f443ebfa53a83f2ece54326b43335",
+      "sha256": "39686225a32bcbee383f35018ef87df2a677afbf7f5e32e271d953e8fdc6174b",
       "languages": [
         "it",
         "en",
@@ -581,7 +625,7 @@
     },
     "presenza-digitale-studio": {
       "path": "presenza-digitale-studio/course.json",
-      "sha256": "747e80d274967e6ddb3812cefc91a81820e355ca80461110ac1185dfd3e95f46",
+      "sha256": "0c98e6bad0e110c3a340c4834fbf27fa9c78bd4bff2c2bb60b723ba3a199fe60",
       "languages": [
         "it",
         "en",
@@ -609,7 +653,7 @@
     },
     "previdenza-inps": {
       "path": "previdenza-inps/course.json",
-      "sha256": "52a7ed37247311a1c576d30060804c00146ef84b3a2d1b1c309a37e427012631",
+      "sha256": "4b4c19e24f0499c804e607ca9df455bef0e0fcc5580ad16fd8c18d449a100c07",
       "languages": [
         "it",
         "en",
@@ -637,7 +681,7 @@
     },
     "purchase-invoice-review": {
       "path": "purchase-invoice-review/course.json",
-      "sha256": "6d20a5a786309223101ad9ed866cf246258e76e86f6f0443836eea116eb87c9e",
+      "sha256": "e648add8edac976e023dada13dc5fd1e05ebb3d2fcea14b0cddbb052d5e75789",
       "languages": [
         "it",
         "en",
@@ -665,7 +709,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "64dcb4c59059588642e89b7c484af0d5a6453242fb1df5e13b60499dfebee52e",
+      "sha256": "70d220b80ad8edf7666037538ef7635b1a5529d3af4a1898e0628f1d0b64f939",
       "languages": [
         "it",
         "en",
@@ -693,7 +737,7 @@
     },
     "registro-imprese-sari": {
       "path": "registro-imprese-sari/course.json",
-      "sha256": "30fdd68d3cddad31d3233b8435929ef55500d02795c25226befc7c53480de9ef",
+      "sha256": "6689cdc25a1e37d5ceda9b9eff0291e3b12de09966e4e6f8cc78545f1c9575e5",
       "languages": [
         "it",
         "en",
@@ -721,7 +765,7 @@
     },
     "sales-plan": {
       "path": "sales-plan/course.json",
-      "sha256": "661798b72014db70925c2ce9df6d1f9a7be462a929e5f4878036fef751cde396",
+      "sha256": "f044d051cf551a8e11705aacdca2040293aed0cf82481f0f95fdc26dbe5b3402",
       "languages": [
         "it",
         "en",
@@ -749,7 +793,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "0f81ea9e9806d9f59a7ff63555960467fc8ec1093853526172be344fc7f9138d",
+      "sha256": "daeff8bd3285d4751f2aad9d0c2612a34ca60394998731896a6d24a33a40409f",
       "languages": [
         "it",
         "en",
@@ -777,7 +821,7 @@
     },
     "treasury-forecast": {
       "path": "treasury-forecast/course.json",
-      "sha256": "dd713524942301ee55c6b79ab6f7b81ab50548b272ed4bacf5a84d5c14bb1235",
+      "sha256": "190b0abb1876792df8b9d1aaf213293b0bb7b59023a8e45db0e72f4397a74996",
       "languages": [
         "it"
       ],
@@ -793,7 +837,7 @@
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "d41f75db923ff8be48f77eebbd7bfa2c67891efc548204bad6d3156d7904d391",
+      "sha256": "258a37ea39124906481c62ec2add8bc496266852afc7e7fc91879b952c195374",
       "languages": [
         "it",
         "en",
@@ -821,7 +865,7 @@
     },
     "vouching": {
       "path": "vouching/course.json",
-      "sha256": "21d6c9e178dc702aa2a796c4aa10e2e9cd83b05355932bebb35b819ac21c43f7",
+      "sha256": "72c0c71092864ccdc46341f27705595cd3c712c5604c9830f35d34378c078406",
       "languages": [
         "it",
         "en",

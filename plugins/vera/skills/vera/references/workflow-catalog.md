@@ -28,22 +28,32 @@ teaching or browser setup. This installation adaptation is separate from the
 professional course catalog below; it does not provide an unattended executor.
 <!-- VERA_OPENAI_DATEV_END -->
 
-## Scissione: initial operational path
+## Development preview
 
-For a versioned scissione dossier, read `../../scissione-guidata/SKILL.md`.
-prepare a versioned dossier and ownership/allocation schedules for an Italian OIC partial proportional scission into a new beneficiary. Require authorized entity evidence and exact-version professional decisions; preserve unknowns, separate book/tax/economic/shareholder tax values and reopen dependent approvals after changes. No automatic legal rules, accounting entries, statutory deadlines, signatures or filings. Other routes are explicitly unsupported.
-This operational path has synthetic acceptance tests but no prepared voice lesson
-yet. Do not present another lesson as a scissione execution.
+`patent-box-review` prepares selected evidence, reviewed ledger mappings and
+component controls for software, patents and designs, then exports draft A/B
+Word/PDF documents. Real calculation requires reviewed current sources and
+certificate-authenticated authorization under a firm-issued mandate. It verifies
+existing signatures and timestamps; it does not sign or file documents. All
+professional UAT and production acceptance boundaries remain explicit. Read
+`../../patent-box-review/SKILL.md`. This preview has no released teaching kit.
 
-## P0 case foundation
+## Merger workpapers
 
-`fusione-guidata` prepares a multi-company merger case with explicit evidence
-imports, versioned facts/sources/rules, scoped confirmation records and change
-impacts. Its own synthetic CLI demo is available. It is not a prepared onboarding
-lesson: legal branches, calculations and the live multi-company Studio Archive
-adapter are unimplemented. Use its specialist skill directly for P0 work.
+`fusione-guidata` prepares reviewed P1 domestic OIC incorporation workpapers for
+independent or directly wholly owned companies: verified Studio Archive imports,
+valuation bridges, exact shareholder allocations, accounting bridges, event
+calendars and versioned review dossiers. Its two complete synthetic cases are
+available through `demo-p1`. It is not a prepared onboarding lesson. Later
+branches, signatures and filings remain unsupported. Use the specialist skill.
 
 ## Professional workflows
+
+- `esg-reporting-assurance`: organize the first ESG evidence and decision
+  foundation inside an existing client engagement; bind CSV cells or text lines,
+  retain versions and decisions, flag stale dependencies and export partial drafts.
+  It does not yet produce complete ESG reports, ESRS/taxonomy assessments or
+  assurance opinions. Use the dedicated skill and state those limits.
 
 
 - `invoice-xml`: prepare ordinary FPR12 invoice XML from supplied PDFs, photos
@@ -55,7 +65,11 @@ adapter are unimplemented. Use its specialist skill directly for P0 work.
 - `adeguati-assetti`: assess an Italian company's organizational, administrative
   and accounting arrangements using proportionate review of responsibilities,
   processes and actual reporting/operating evidence; prepare findings, improvement
-  actions and subsequent reviews. A management report alone is not an assetti
+  actions and subsequent reviews. When construction is requested, use the same
+  engagement for attributed interviews, qualified evidence, reasoned professional
+  overrides, control design, versioned manuals/registers, separate adoption and
+  sampled operating review. The numerical method is experimental; a manual does
+  not prove operation. A management report alone is not an assetti
   assessment; general legal questions remain in quesito-legale-fiscale.
 
 - `aml-review`: review Italian client AML evidence at onboarding or later review,
@@ -99,6 +113,10 @@ adapter are unimplemented. Use its specialist skill directly for P0 work.
 - `concordato-plan-review`: review an Italian concordato preventivo across the
   procedure, proposal, plan, attestation, creditors, treatment, liquidity,
   evidence consistency, and open issues.
+- `composizione-negoziata`: guide an Italian CNC case as company advisor or
+  independent expert, with separate role guidance, evidence gaps, existing Vera
+  analyses, drafts, case revisions and dependency impact. Local review records
+  do not authenticate professional identity or authorize filing.
 - `comunicazione-professionale`: decide whether a current tax, legal,
   regulatory, accounting, or professional development is worth communicating;
   learn only from exact prior studio communications selected by the
@@ -167,6 +185,10 @@ adapter are unimplemented. Use its specialist skill directly for P0 work.
   reviewable Markdown, DOCX, or JSON reports.
 - `sales-plan`: create a forward-looking sales Plan from reviewed Actuals and
   confirmed commercial or FX assumptions.
+- `business-valuation`: prepare source-backed PMI valuation workpapers using selected
+  DCF, income, NAV, mixed, multiples and APV methods; reuse the same-engagement
+  business plan, retain calculations and review decisions, and export reports
+  and a formula workbook. Does not sign or certify PIV/legal-purpose conformity.
 - `business-planning`: prepare one business plan for a startup, new venture or
   established company. Assess customers, market, operations, economics, cash,
   options, recommendation and next actions using one case, financial model and
@@ -266,3 +288,11 @@ or validates the professional reason. Keep `/data-handling` global rather than
 recreating a central function register.
 
 - `treasury-forecast`: prepare and maintain a dated cash forecast from the documented bank, outstanding-item, planned-flow, allocation and adjustment tables. Review expected dates, preserve applicable decisions, compare successive accepted forecasts and produce Excel/HTML workpapers. Required missing data stops this workflow; optional supplied XML is invoice evidence, not payment proof. No business-planning dependency or automatic Agenzia download.
+
+## Scissione: initial operational path
+
+For a versioned scissione dossier, read `../../scissione-guidata/SKILL.md`.
+prepare a versioned dossier and ownership/allocation schedules for an Italian OIC partial proportional scission into a new beneficiary. Require authorized entity evidence and exact-version professional decisions; preserve unknowns, separate book/tax/economic/shareholder tax values and reopen dependent approvals after changes. No automatic legal rules, accounting entries, statutory deadlines, signatures or filings. Other routes are explicitly unsupported.
+This operational path has synthetic acceptance tests but no prepared voice lesson
+yet. Do not present another lesson as a scissione execution.
+

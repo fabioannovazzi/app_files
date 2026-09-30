@@ -1,0 +1,11 @@
+Fictional finite-duration income fixture, not a professional valuation.
+Valuation date 2024-12-31. Periods end 2025-12-31 and 2026-12-31.
+Each supplied equity income is 100 EUR; the separate equity residual at the
+second period end is 500 EUR. Effective annual cost of equity is 10%.
+Alternative illustrative curve rates are 20% and 30%; they are not benchmarks.
+The two-year horizon is a synthetic declared economic-life assumption.
+Capital maintenance is assumed covered by the expenses in the income figures.
+No incremental reinvestment is assumed; this needs professional assessment.
+Distribution availability is a synthetic assumption, not a legal conclusion.
+The residual is independently supplied, excludes the period income amounts,
+and is already an equity value; no additional debt deduction is intended.

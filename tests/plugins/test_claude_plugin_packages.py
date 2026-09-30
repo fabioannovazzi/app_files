@@ -419,10 +419,12 @@ def test_cowork_privacy_register_keeps_supported_receipts_and_omits_openai_servi
     assert projected_components["shared_services"] == [
         "run-receipt-stamping",
         "managed-python-runtime",
+        "cnc-authenticated-review",
     ]
     assert {name for name in vera_entries if name.startswith("privacy/services/")} == {
         "privacy/services/run-receipt-stamping.json",
         "privacy/services/managed-python-runtime.json",
+        "privacy/services/cnc-authenticated-review.json",
     }
     assert "privacy/workstreams/studio-archive.json" in vera_entries
     runtime_service = json.loads(
@@ -508,8 +510,8 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
         assert "## Cowork execution contract" in content, name
         assert "connected folder and supplied files first" in content, name
         if name == "modules/fusione-guidata/skills/fusione-guidata/SKILL.md":
-            # The P0 helper has no installable dependencies; retain its narrower rule.
-            assert "standard-library-only dependencies" in " ".join(content.split())
+            # The P1 helper still has no installable dependencies; retain that contract.
+            assert "uses only the standard library" in " ".join(content.split())
             requirements = vera_entries[
                 "modules/fusione-guidata/requirements.txt"
             ].decode()
@@ -820,7 +822,13 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
         name: content
         for name, content in cowork_instruction_docs.items()
         if "/references/" in name
+        and not name.startswith("skills/learn-with-vera/references/")
     }
+    introduction = cowork_instruction_docs[
+        "skills/learn-with-vera/references/get-started.md"
+    ]
+    assert "In Cowork follow the written single-conversation contract" in introduction
+    assert "Never run desktop profile/session commands there" in introduction
     assert references
     for name, content in references.items():
         if name == "skills/learn-with-vera/references/get-started.md":
@@ -1252,6 +1260,7 @@ def test_claude_build_is_deterministic_and_self_verifying(
         package,
         output_directory=tmp_path / "vera",
         output_zip=tmp_path / "vera-claude-plugin.zip",
+        public_zip=tmp_path / "public-vera-cowork-plugin.zip",
     )
 
     builder.build_package(isolated)
@@ -1274,6 +1283,7 @@ def test_claude_verifier_reports_directory_and_zip_drift(
         package,
         output_directory=tmp_path / "vera",
         output_zip=tmp_path / "vera-claude-plugin.zip",
+        public_zip=tmp_path / "public-vera-cowork-plugin.zip",
     )
     builder.build_package(isolated)
     skill_path = isolated.output_directory / "skills" / "vera" / "SKILL.md"

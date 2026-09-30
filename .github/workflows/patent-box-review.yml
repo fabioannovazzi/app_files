@@ -1,0 +1,53 @@
+name: Patent Box evidence and draft dossiers
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-acceptance:
+    name: Synthetic cases and packaged execution
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install declared dependencies and quality tools
+        run: >-
+          python -m pip install pytest pytest-cov openpyxl black==25.1.0 isort==6.0.1 mypy bandit
+          -r plugins/patent-box-review/requirements.txt
+      - name: Require OpenSSL 3 for the cryptographic integration cases
+        run: |
+          openssl version
+          python -c "import subprocess; assert subprocess.check_output(['openssl', 'version'], text=True).startswith('OpenSSL 3.')"
+      - name: Verify evidence, costs, authorization, monitoring and reopening
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          plugins/patent-box-review/tests
+          tests/plugins/test_patent_box_workflow.py
+          tests/plugins/test_patent_box_casebook.py
+          tests/plugins/test_patent_box_documents.py
+          tests/plugins/test_patent_box_ledger_workflow.py
+          tests/plugins/test_patent_box_professional_review.py
+          --cov=plugins/patent-box-review/patent_box
+          --cov=plugins/patent-box-review/scripts
+          --cov-report=term-missing --cov-fail-under=80
+      - name: Run the synthetic archive-to-Word-and-PDF path from all three Vera ZIPs
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_patent_box_package_runtime.py
+      - name: Check component quality
+        run: |
+          python -m black --check plugins/patent-box-review tests/plugins/test_patent_box*.py
+          python -m isort --check-only plugins/patent-box-review tests/plugins/test_patent_box*.py
+          python -m mypy --config-file=plugins/patent-box-review/mypy.ini plugins/patent-box-review/patent_box plugins/patent-box-review/scripts
+          python -m bandit -qr plugins/patent-box-review/patent_box plugins/patent-box-review/scripts -ll

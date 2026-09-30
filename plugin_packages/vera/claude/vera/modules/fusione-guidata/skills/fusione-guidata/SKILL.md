@@ -1,6 +1,6 @@
 ---
 name: fusione-guidata
-description: Prepare and demonstrate Vera's P0 multi-company merger case foundation with explicit evidence imports, known/unknown/disputed facts, version-bound professional decisions and selective change review. Merger calculations and legal execution branches are not implemented.
+description: "Prepare reviewed P1 domestic OIC incorporation workpapers for independent or directly wholly owned companies: evidence-bound valuation bridges, exact exchange allocations, accounting bridges, event calendars and review dossiers, with verified multi-company Studio Archive imports and revision history. Preserve P0 case preparation; later branches remain unsupported."
 ---
 
 ## Cowork execution contract
@@ -92,107 +92,171 @@ Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
-# Fusione guidata — P0
+# Fusione guidata — P1
 
-Use the existing authenticated Claude or Cowork session. This component needs no
-model API key and makes no network requests. It manages a durable case foundation;
-it does not execute a merger or determine the legal path. Use the user's language.
+Use the existing authenticated Claude or Cowork session. No model API key is
+required. Resolve this module root and run `python scripts/check_dependencies.py`
+using Vera's shared managed Python runtime. Read `references/case-contract.md`
+and `references/p1-contract.md` before writing requests. The component uses only
+the standard library, as declared in `requirements.txt`; do not install packages at runtime.
 
-Resolve this component's root before commands. Use Vera's shared managed Python
-runtime and run `python scripts/check_dependencies.py` first. Its `requirements.txt`
-declares standard-library-only dependencies; never install packages at runtime. Read
-`references/case-contract.md` for the exact request and record contracts.
+Use the user's language. Explain the work in professional terms, without requiring
+the user to choose a technical skill or edit JSON. You prepare requests from the
+inspected evidence and review choices. Keep outputs in an explicitly selected case
+or engagement output folder outside the plugin and repository source.
 
 Never write run outputs inside this Git workspace or plugin source. Use the
 selected engagement output directory, or a separate user-authorized demo directory.
-
 Explicit approval is reserved for external, destructive, approval-sensitive or
-material steps. The user's prior authorization covers reversible case preparation;
-professional confirmation still requires the actual named reviewer's decision.
-Deterministic local scripts own parsing, hashes and structural validation; the model
-owns semantic interpretation and proposed dependency selection.
+material steps. Prior authorization covers reversible case preparation; actual
+professional confirmation still belongs to the named reviewer.
+Deterministic local scripts own exact arithmetic, calendar offsets, hashes and
+structural validation. The model owns semantic interpretation, source relevance
+and proposed dependency selection.
 
-Start from the supplied operation, company identities and selected evidence. Ask
-only for missing choices that change the scope. Keep absent facts `unknown` and
-conflicting evidence `disputed`, with null values; never replace either with zero,
-false, non-applicability or approval. Explain why an unresolved fact matters.
+## Start from the actual case
 
-## Supported work
+Identify whom the professional assists, mandates/conflicts, the two companies,
+ownership and rights, objectives, intended dates, accounting framework, acquisition
+funding and exceptional conditions. Reuse available evidence. Ask only questions
+that alter a material choice; explain why they matter. A missing fact remains
+`unknown`, a contradiction `disputed`, both with null values. Never turn either
+into zero, false, consent or an exemption. Independent work can continue.
 
-The helper stores Operation, Entity, OwnershipEdge, Evidence, Fact, SourceVersion,
-RuleVersion, BranchDecision, Decision, ChangeImpact and Artifact records. It uses
-immutable revisions and exact case/object/version/hash dependencies. SQLite
-transactions and expected-version checks prevent partially applied or stale writes.
+The model proposes the branch and explains its evidence. P1 implements workpapers
+for `ordinary_domestic_oic` and `wholly_owned_domestic_oic`: two Italian OIC
+companies, incorporation, ordinary homogeneous rights and no cash adjustment,
+reciprocal/own holdings, MLBO, crisis or regulated special case. The direct wholly
+owned branch also requires its exact ownership edge. Record the declared scope
+facts with evidence; code checks those declarations and arithmetic, not legal
+classification. Foreign, IFRS, partial/90%, inverse, sister-company, MLBO,
+new-company and other special combinations require later work and must remain
+explicitly unsupported. Do not relabel a case to pass the P1 checks.
 
-The model interprets documents, selects relevant sources, proposes branch decisions
-and maps material dependencies. Code checks exact shapes, references, declared
-company scopes, hashes and types. A valid record does not prove semantic completeness,
-source authority, legal applicability or a correct professional conclusion.
+## Evidence and Studio Archive
 
-For an illustrative walkthrough, run:
+Read the two selected Studio Archive client and engagement identities using its
+actual ledger. Register each company with its authorized source roots, then
+`bind_archive` with the exact client root, client ID and engagement ID. Import
+only explicitly selected input IDs using `import_archive`; the adapter verifies
+the receipt and stored bytes, retaining identity, path, hash and locator in the
+new case Evidence. It does not scan other clients or copy a combined dossier back
+into an individual client's archive. Ordinary selected-file `import_evidence`
+remains available. Model-extracted facts refer to their actual page/row evidence.
 
-```sh
-python scripts/run_fusione.py demo --output /absolute/new-demo-directory
-```
+Read the current company grants. Never change actor or invent an administrator to
+bypass a denial. Actor IDs are declared local workflow identities, not authenticated
+accounts; filesystem permissions and encryption remain outside this helper.
+Archive bindings require a case administrator. The adapter reads existing archives
+and writes the selected case only. It neither closes engagements nor changes runs.
 
-Open the before/after reports and `demo-results.json`. Explain what actually passed
-and what was not run. Every demo entity, source, rule and approval is synthetic.
+## Sources and review
 
-For a scoped local case, create an operation using `init`, then use `apply` with
-one reviewed request at a time. Record each company's permitted source directories
-explicitly. An import is one selected file, not permission to scan its parent or
-another company. Preserve original documents; the helper snapshots their bytes.
+Read `references/p1-source-review.md`. Its public sources and candidate calendar
+recipes are starting evidence, not an approved rulepack. Use the host's authorized
+research workflow to check the current primary text for the actual dates and case.
+Use generic public queries without client identifiers. Store the selected snapshot
+as Evidence, then SourceVersion and RuleVersion with exact references, applicability,
+exceptions and test references. A failed access is `failed`, never "no change".
+The helper has no network client or automatic source monitor.
 
-Read the registered companies and grants before operations. Use the operator's
-declared actor; do not switch to an administrator or invent a reviewer to bypass a
-denial. Actor IDs are local workflow declarations, not authenticated identities.
-Filesystem permissions, account authentication and encryption remain outside this
-component. A person with direct database access can bypass its workflow controls.
+The model selects pertinent sources, interprets exceptions and proposes rules.
+Code checks shapes, hashes, exact periods and calculations. Obtain the named
+professional's actual confirmation of each rule and branch scope before treating
+it as reviewed. Never record an approval on their behalf. Confirmations retain
+exact content/version, role, author, time, scope and confirmation evidence; they
+are not electronic signatures or proof of identity.
 
-Bind each conclusion/draft to all its material evidence, facts and rules. The
-helper cannot discover omitted dependencies. Record professional confirmation only
-after the named reviewer actually approves the exact version, and retain their
-role, time, scope and confirmation evidence. Never approve on their behalf.
-Rule approval is a separate Decision; JSON validation never promotes a candidate.
+## Prepare and review the workpapers
 
-After a source or fact changes, inspect the new ChangeImpact and affected statuses.
-Historical drafts and approvals remain unchanged. Re-read the evidence, revise
-dependent records to the reviewed input versions, and obtain any new approval
-needed. Independent records can continue. A failed source retrieval is an explicit
-SourceVersion with its error and attempt date, never “no change”; prior successful
-snapshots remain available. Public research itself belongs to the host's separately
-authorized research workflow, not this local helper.
+Use `apply` action `workpaper`, selecting one kind at a time and its exact input
+references. Read the persisted result and issues before moving to dependent work.
 
-## Boundaries and handoff
+1. **BranchDecision:** record the proposed branch, both companies, explicit scope
+   facts, rationale, source-backed rules and ownership evidence. Missing or
+   conflicting inputs persist as a blocked workpaper, without an invented result.
+2. **Valuation:** for the independent branch, record each reviewed equity value or
+   enterprise-to-equity bridge, methodology and matching valuation date. The model
+   and professional perform valuation; the code only executes the stated bridge.
+3. **ExchangeModel:** supply totals, nominal value, share versus capital-unit
+   convention, and every shareholder's evidenced holdings. The output retains the
+   exact ratio, new units, capital increase, allocation and resulting fraction per
+   shareholder. Fractional shares are exposed and require a dedicated allocation
+   beyond P1; never round silently. The wholly owned branch issues zero new units
+   and retains acquirer shareholder proportions.
+4. **BookBridge:** map each reviewed balance-sheet account and signed debit amount
+   for the same reference date. Close/adjust the source balances professionally
+   first; code does not infer period-end entries. Explicitly select reciprocal
+   balance pairs and their eligible treatment. Unequal amounts remain exceptions.
+   Select the participation account for the wholly owned branch. The output
+   cancels that account or records new capital, calculates annullamento/concambio
+   separately, and reconciles opening balances. Supply source-backed difference
+   allocations and accounting policy; no automatic goodwill or reserve treatment.
+   Preserve accounting values, asset tax bases, shareholder tax costs, reserves
+   and loss positions separately. Tax treatment, deferred-tax assumptions and
+   advanced loss/group calculations are professional work, not inferred by P1.
+5. **Deadline:** prepare the case's event schedule from exact rule versions and
+   evidenced anchors, including all relevant companies. Distinguish project
+   publication, document availability, decision registration, creditor interval,
+   document age, act/deposit and legal/accounting/tax dates. Select each applicable
+   period and exception from sources; never infer a waiver from ownership or a
+   shareholder consent from a creditor consent. Month arithmetic uses actual
+   calendar months. Record any professionally reviewed holiday adjustment with
+   its rationale; the raw boundary remains visible. Missing execution evidence
+   remains `not_evidenced`; a date calculation never authorizes execution.
+6. **LegalDocument:** assemble the reviewed workpapers and evidence-bound prose
+   into the review dossier. Complete mandate, objectives, due diligence findings,
+   feasibility, articles/statutory changes, profit participation, accounting
+   date, special rights, management advantages, tax review, execution checklist,
+   cut-over responsibilities and post-merger checks. The project should account
+   for each pertinent art. 2501-ter field. Any selected 2505 exemption needs its
+   reviewed source and scope; it does not remove every document. Reuse existing
+   legal research, financial analysis, treasury, reconciliation or SARI skills
+   only for their inspected contracts and genuinely required subwork.
 
-Every legal merger branch returns `unsupported` in P0, including ordinary domestic
-OIC incorporation, wholly owned, partial, inverse, sister-company, MLBO, IFRS and
-cross-border operations. Do not use the contributor's illustrative formulas as a
-supported calculation engine. Statutory calendars, signatures, filing, tax treatment
-and real-case professional acceptance are not implemented. Record a requested
-branch and the unresolved work; continue independent case preparation.
+Review due diligence across corporate/shareholder rights, financial balances,
+intercompany differences, debt/covenants, tax positions, contracts, workforce,
+property, litigation, grants and operational continuity. Capture material findings,
+source locators, open questions, responsible professional and affected outputs.
+A narrative that simply says "reviewed" is not evidence that the work happened.
 
-No live Studio Archive adapter is claimed. Its client and engagement identifiers
-cannot be pasted into a reference to bypass case boundaries. Client-bound work still
-uses Vera's selected Studio Archive engagement/output folder and explicitly selected
-receipted source directories; importing the selected files into this case creates
-new local evidence records. Do not auto-discover other client folders. Keep P0
-professional use provisional until the actual multi-company adapter and acceptance
-case have been reviewed. Do not alter or close the underlying engagements here.
+The professional reviews valuation/congruity, accounting policy and any fiscal
+conclusions. A draft can exist before approval; its issues and pending confirmations
+stay visible. LegalDocument approval requires reviewed upstream workpapers. Final
+execution still belongs to the responsible organs, notary and professionals.
+P1 neither signs nor files nor treats an act PDF as proof of registration/effect.
 
-Export using `export --output /absolute/new-review-directory`; this writes a scoped
-Markdown overview, complete accessible revision history in JSON, and the canonical
-local model-data report. Show the readable report and its link with the result.
-The automatic export cannot observe host model exposure: real cases remain
-`not_measurable` unless the orchestrator adds actual observed phases through Vera's
-report workflow. Do not describe an exported file as transmitted to a model.
+## Changes, handoff and demonstration
+
+On an input or source revision, read ChangeImpact and current status. Re-read the
+actual evidence, revise only affected workpapers with current exact references,
+and obtain renewed confirmations when required. Never overwrite approved history.
+Moving the planned date also reopens dependent work and checks declared rule periods.
+Scope completeness and material dependencies remain model/professional judgments.
+
+`export` writes the scoped case history, readable Markdown and HTML P1 workpapers,
+and the canonical local model-data report. Open `p1-workpapers.html` for review and
+show the readable privacy report. Explain the current stage, open issues and next
+professional action. For a retained document snapshot, place the approved draft
+under this case's `drafts/` and register it with `artifact`, citing its exact inputs.
+Do not describe a generated dossier as an executed merger or an accepted client case.
+
+Run `python scripts/run_fusione.py demo-p1 --output /absolute/new-directory` for
+two entirely synthetic cases using the real archive and case APIs. It preserves
+requests, before/after dossiers, receipt provenance and assertion results. The old
+`demo` command still exercises P0. Demo reviewers and approvals are synthetic.
+Never turn these fixtures into actual professional confirmations. Report passed,
+failed and not-run work separately; the contributor's full 36-scenario proposal
+is not certified by these tests.
 
 ## What data reaches the model
 
-The selected runtime may read company names, ownership, file paths, evidence text,
-facts, proposed rules, drafts, approvals and questions needed for the assignment.
-The helper validates and snapshots complete selected files locally; report output
-contains only the declared actor's company scopes. This is not anonymization or a
-local-only processing guarantee. Claude and Cowork use their selected provider account.
-No hosted upload, network fetch, model API call, signature or filing occurs in the
-helper. The local report is evidence about this workflow, not provider telemetry.
+The selected host may read company/client and engagement identities, ownership,
+paths, selected source documents, ledger balances, tax bases, valuations, shareholder
+allocations, event dates, source passages, model-authored drafts and professional
+confirmations needed for the assignment. Imports verify complete selected bytes
+locally. Reports retain all declared company scopes; nothing is automatically
+anonymized. Claude/Cowork use the selected provider account, so local helper execution
+does not mean local-only model processing. No helper network calls, uploads or
+model API calls occur. Real-case model exposure is `not_measurable` until the
+orchestrator records observable phases through Vera's normal report workflow.
