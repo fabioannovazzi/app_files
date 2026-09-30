@@ -213,6 +213,23 @@
         "vera_assurance"
       ]
     },
+    "fusione-guidata": {
+      "module_roots": [],
+      "overlays": [
+        {
+          "source_root": "plugins/vera/scripts",
+          "module_roots": [
+            "model_data_report.py"
+          ]
+        },
+        {
+          "source_root": "plugins/studio-archive/scripts",
+          "module_roots": [
+            "client_ledger.py"
+          ]
+        }
+      ]
+    },
     "patent-box-review": {
       "module_roots": [
         "vera_assurance"

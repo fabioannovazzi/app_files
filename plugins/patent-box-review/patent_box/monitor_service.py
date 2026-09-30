@@ -84,6 +84,10 @@ def _locked(root: Path) -> Iterator[dict[str, Any]]:
         raise ContractError(
             "Private monitor storage now overlaps public source storage"
         )
+    for name in ("jobs", "schedules"):
+        directory = root / name
+        if directory.is_symlink() or not directory.is_dir():
+            raise ContractError("Private monitor directories cannot be redirected")
     lock = root / ".monitor.lock"
     try:
         descriptor = lock.open("xb")

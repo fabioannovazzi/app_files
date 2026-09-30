@@ -31,3 +31,9 @@ Never invent missing evidence, sign or file on a client's behalf, send
 communications, alter source records, or make a decision reserved to the
 commercialista. Every conclusion and deliverable remains a draft for qualified
 professional review.
+
+Merger preparation can use `vera:fusione-guidata` for P1 domestic OIC
+incorporation workpapers between independent or directly wholly owned companies.
+It provides exact allocations, accounting bridges, reviewed calendars, verified
+archive imports and versioned dossiers. Professional review remains required;
+later branches, signatures and filings are unsupported.

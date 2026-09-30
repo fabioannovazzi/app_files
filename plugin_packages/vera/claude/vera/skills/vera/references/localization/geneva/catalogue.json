@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "plugins/vera",
-  "version": "0.1.277",
-  "captured_at": "2026-09-29T07:37:00.039849+00:00",
-  "catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
-  "manifest_sha256": "7bc0cca29c5fb77386d0d37c89cc940b0bcab8ee9946a60ec08659a84ac9282c",
+  "root": "/Users/fabio/.codex/worktrees/vera-fusione-p1/app_files/plugins/vera",
+  "version": "0.1.287",
+  "captured_at": "2026-09-30T06:37:34.565914+00:00",
+  "catalogue_fingerprint": "b67dc19169de761e122ebf927d7bd792382901f419a73af3fa1952aa615df725",
+  "manifest_sha256": "53387ebb9a82967a9a0461e489295932acc764bdbd0e3d274873236e4d88d3a7",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -57,6 +57,11 @@
       "sha256": "4548a6c4b41fb845bd260596b680ce1831f6117218e45f0d70b8786d21766da1"
     },
     {
+      "function_id": "composizione-negoziata",
+      "skill_path": "skills/composizione-negoziata/SKILL.md",
+      "sha256": "f9f1b8d1e3a4ce9b643f5f2c68065820200cc89d6d4bf2d780a321b61f75a6b2"
+    },
+    {
       "function_id": "comunicazione-professionale",
       "skill_path": "skills/comunicazione-professionale/SKILL.md",
       "sha256": "50af60a05507b119f9b51cf9bb3b1800d9cabe65a41e51bea578b2ab5ecb3cfe"
@@ -95,6 +100,11 @@
       "function_id": "financial-report-builder",
       "skill_path": "skills/financial-report-builder/SKILL.md",
       "sha256": "f6208a7e9b9b235949ff1276a1cc3614fbbf479869b0dc370e332125f7b0cf62"
+    },
+    {
+      "function_id": "fusione-guidata",
+      "skill_path": "skills/fusione-guidata/SKILL.md",
+      "sha256": "ba18a24db267eb7a2cc2f4d70a768622b208e05f3ac43b50b488859d7209a45c"
     },
     {
       "function_id": "invoice-xml",
@@ -182,6 +192,11 @@
       "sha256": "b2f8ad59567a7e390f0fb4afbfdb339f0f8d11b3576ff37497de55cc4172d7f3"
     },
     {
+      "function_id": "trasformazione",
+      "skill_path": "skills/trasformazione/SKILL.md",
+      "sha256": "b36f003f163ca249f5145b6983f17695fb2391318696bd9c258ecf67a19461ca"
+    },
+    {
       "function_id": "treasury-forecast",
       "skill_path": "skills/treasury-forecast/SKILL.md",
       "sha256": "d485e58b1bd3013e5b2721af9bac77e69d7254c830a7c8be335507681a63cc64"
@@ -194,7 +209,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "62b95932ee7e4e0fd149f2ba0c1e2c2b67f9cf39116343801049fe7b5d7e4e9b"
+      "sha256": "f3942cb4da944899f91192b070135162c1664077e36a014f447968c9f1bc1eb6"
     },
     {
       "function_id": "vouching",

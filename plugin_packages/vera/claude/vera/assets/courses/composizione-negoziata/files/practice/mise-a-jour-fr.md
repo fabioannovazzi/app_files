@@ -1,0 +1,1 @@
+MISE À JOUR FICTIVE. Le débiteur propose désormais le 15 janvier 2027 pour le même encaissement de 100 000 EUR. Aucune preuve de paiement ni acceptation professionnelle jointe. Les autres informations restent celles du dossier initial.

@@ -79,8 +79,8 @@
     {
       "id": "release",
       "requirement": "Package, runtime and release acceptance for final implementation",
-      "status": "DEVELOPMENT_REBUILD_IN_PROGRESS_RELEASE_AND_INSTALLED_ACCEPTANCE_PENDING",
-      "evidence": "shared-runtime source synchronized; task output continuation-review contains separately dated source, package and repository-gate receipts"
+      "status": "DEVELOPMENT_PACKAGE_TEST_RECEIPTS_REQUIRED_RELEASE_AND_INSTALLED_ACCEPTANCE_PENDING",
+      "evidence": "tests/plugins/test_patent_box_package_runtime.py; task output continuation-review contains exact package/source hashes and separate source, packaged-execution and broader repository-gate results"
     }
   ],
   "scenarios": [

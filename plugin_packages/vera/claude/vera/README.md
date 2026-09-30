@@ -99,6 +99,10 @@ environment does not isolate modules or client matters from one another.
 
 The shared specialist workflows cover:
 
+- `fusione-guidata` P0 merger case preparation with versioned evidence, explicit
+  facts, professional confirmation records and change impacts; legal branches and
+  merger calculations remain unsupported;
+
 - new-client file preparation, evidence gaps, identity, engagement, privacy,
   AML, document planning, and monitoring;
 - accounting evidence reconciliation, journal sampling, entry checks, and
@@ -200,6 +204,11 @@ run it through the managed launcher to enforce this supported-runtime contract,
 including for the base portable ledger in Cowork.
 
 ## Adeguati assetti
+
+`vera:composizione-negoziata` guides an Italian CNC case with separate advisor
+and expert instructions, existing Vera analyses, evidence-linked drafts and
+case revisions. Changed dependencies trigger review; recorded confirmations
+are not authenticated signatures. No filing or automatic monitoring is included.
 
 `vera:adeguati-assetti` evaluates organizational, administrative and accounting
 arrangements from company evidence. It distinguishes documented procedures,

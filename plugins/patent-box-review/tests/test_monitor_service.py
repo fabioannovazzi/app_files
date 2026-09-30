@@ -325,3 +325,27 @@ def test_monitor_rejects_backdated_host_schedule_receipt(configured):
     activate(configured)
     with pytest.raises(ContractError, match="cannot precede"):
         activate(configured, active=False, at=NOW - timedelta(minutes=1))
+
+
+def test_finish_rejects_job_storage_redirected_into_public_sources(configured):
+    request = service.begin(
+        configured["root"], configured["plan"], trigger="OPEN_CASE", at=NOW
+    )
+    scan = Path(request["scan"])
+    receipt = acquisition.acquire(
+        scan,
+        scope_id="PUBLIC",
+        url=ENTRY,
+        kind="DOCUMENT",
+        fetcher=fetch_html(b"<p>Public original</p>"),
+    )
+    acquisition.finish_scan(scan, review(receipt))
+    jobs = configured["root"] / "jobs"
+    redirected = configured["public"] / "redirected-jobs"
+    jobs.rename(redirected)
+    jobs.symlink_to(redirected, target_is_directory=True)
+
+    with pytest.raises(ContractError, match="cannot be redirected"):
+        service.finish(configured["root"], request["job_id"], at=NOW)
+
+    assert not (redirected / request["job_id"] / "case_index.json").exists()

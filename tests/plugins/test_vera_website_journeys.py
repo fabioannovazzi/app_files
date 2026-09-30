@@ -11,6 +11,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 import pytest
+from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -304,6 +305,52 @@ def _js_named_object_literals(source: str) -> list[tuple[str, str]]:
     return literals
 
 
+def _js_initialized_locale_properties(
+    page: str, object_name: str, literal: str
+) -> dict[str, str]:
+    """Evaluate explicit locale assignments against the page's actual text nodes."""
+
+    assignments = re.findall(
+        rf"\b{re.escape(object_name)}\.[a-z]{{2}}\s*=\s*[^;]+;", page
+    )
+    if not assignments:
+        return _js_object_properties(literal)
+    node = shutil.which("node")
+    assert node is not None, "Node.js is required to verify initialized locale objects"
+    nodes = [
+        {"dataset": {"i18n": item["data-i18n"]}, "textContent": item.get_text()}
+        for item in BeautifulSoup(page, "html.parser").select("[data-i18n]")
+    ]
+    script = """
+const vm = require('node:vm');
+const input = JSON.parse(require('node:fs').readFileSync(0, 'utf8'));
+const document = { querySelectorAll(selector) {
+  if (selector !== '[data-i18n]') throw new Error('Unexpected locale selector');
+  return input.nodes;
+}};
+const source = `(() => { const ${input.name} = ${input.literal};
+  ${input.assignments.join('\\n')} return ${input.name}; })()`;
+const result = vm.runInNewContext(source, { document }, { timeout: 1000 });
+process.stdout.write(JSON.stringify(result));
+"""
+    result = subprocess.run(
+        [node, "-e", script],
+        input=json.dumps(
+            {
+                "name": object_name,
+                "literal": literal,
+                "assignments": assignments,
+                "nodes": nodes,
+            }
+        ),
+        text=True,
+        capture_output=True,
+        check=True,
+        timeout=5,
+    )
+    return {key: json.dumps(value) for key, value in json.loads(result.stdout).items()}
+
+
 def _vtt_seconds(timestamp: str) -> float:
     """Convert one WebVTT timestamp to seconds."""
 
@@ -431,6 +478,7 @@ def test_static_pages_with_spanish_selector_have_complete_locale_objects() -> No
             if len(present_languages) < 3:
                 continue
 
+            properties = _js_initialized_locale_properties(page, object_name, literal)
             locale_object_count += 1
             assert language_buttons <= properties.keys(), (
                 f"{page_label}: {object_name} is missing "
@@ -772,6 +820,12 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
         VERA_PLUGIN_ROOT / "skills" / "vera" / "references" / "workflow-catalog.md"
     ).read_text(encoding="utf-8")
     core = _section_markup(page, "core")
+    foundation = catalog.split("## Merger workpapers", 1)[1].split(
+        "## Professional workflows", 1
+    )[0]
+    foundation_skills = set(
+        re.findall(r"^`([a-z0-9-]+)` prepares", foundation, re.MULTILINE)
+    )
     roles = json.loads((VERA_PLUGIN_ROOT / "components.json").read_text())[
         "workflow_roles"
     ]
@@ -782,20 +836,28 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 
     # Exact identity closure is mechanically verifiable and prevents public
     # inventory drift. Page component IDs resolve to the current skill names.
-    assert directory_skills == (
-        set(re.findall(r"^- `([^`]+)`:", catalog, re.MULTILINE))
-        - _catalog_workflow_names(
-            catalog, "Learning and discovery", "Professional workflows"
+    assert (
+        directory_skills
+        == (
+            set(re.findall(r"^- `([^`]+)`:", catalog, re.MULTILINE))
+            - _catalog_workflow_names(
+                catalog, "Learning and discovery", "Professional workflows"
+            )
+            - _catalog_workflow_names(
+                catalog,
+                "Subordinate intake workflows",
+                "Cross-cutting answer assurance",
+            )
+            - _catalog_workflow_names(
+                catalog,
+                "Cross-cutting answer assurance",
+                "Run-wide model-data evidence",
+            )
+            - _catalog_workflow_names(
+                catalog, "Developer governance", "Public process explanations"
+            )
         )
-        - _catalog_workflow_names(
-            catalog, "Subordinate intake workflows", "Cross-cutting answer assurance"
-        )
-        - _catalog_workflow_names(
-            catalog, "Cross-cutting answer assurance", "Run-wide model-data evidence"
-        )
-        - _catalog_workflow_names(
-            catalog, "Developer governance", "Public process explanations"
-        )
+        | foundation_skills
     )
     assert set(
         re.findall(r'data-vera-subordinate-workflow="([^"]+)"', core)
@@ -815,7 +877,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    expected_module_count = 35
+    expected_module_count = 37
     module_hrefs = re.findall(
         r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
     )
@@ -824,7 +886,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     assert len(module_hrefs) == expected_module_count
     assert len(module_hrefs) == len(set(module_hrefs))
     assert core.count('data-primary-workflow-link="') == 2
-    assert core.count('data-jurisdiction-item="it"') == 10
+    assert core.count('data-jurisdiction-item="it"') == 12
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for expected_href in (
@@ -838,6 +900,8 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
         "../bilancio-xbrl-it/index.html",
+        "../composizione-negoziata/index.html",
+        "../fusione-guidata/index.html",
         "../concordato-plan-review/index.html",
         "../browser-automation/index.html",
         "../journal-sampling/index.html",
@@ -931,6 +995,8 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Revisione pratica INPS",
         "Pratiche Registro Imprese",
         "Bilancio OIC e XBRL",
+        "Composizione negoziata",
+        "Fusione per incorporazione",
         "Revisione concordato preventivo",
         "Automazione web",
         "Campionamento scritture contabili",
@@ -992,7 +1058,9 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "avviso-intake": "Esame avvisi e cartelle",
         "bilancio-oic": "Bilancio OIC e XBRL",
         "vouching": "Verifica documentale",
+        "composizione-negoziata": "Composizione negoziata",
         "concordato-plan-review": "Revisione concordato preventivo",
+        "fusione-guidata": "Fusione per incorporazione",
         "comunicazione-professionale": "Comunicazione professionale",
         "dati-fiscali-strutturati": "Estrazione dati fiscali",
         "legal-tax-answer-review": "Validazione ricerca",
@@ -1024,7 +1092,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 35
+    assert len(labels) == 37
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
@@ -1563,7 +1631,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 35
+    expected_module_link_count = 37
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',

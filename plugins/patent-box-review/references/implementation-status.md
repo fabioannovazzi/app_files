@@ -30,8 +30,8 @@ snapshot is not released, installed-runtime accepted or professionally accepted.
 
 ## Current verification
 
-On 2026-09-30 the combined component and archive suite passes **296 tests**,
-with **84.34%** coverage over the package and scripts. These include actual
+On 2026-09-30 the combined component and archive suite passes **297 tests**,
+with **84.36%** coverage over the package and scripts. These include actual
 synthetic cryptographic signatures, revoked certificates/mandates, changed
 inputs/output files, cross-client scope, source freshness and an authenticated
 archive-to-draft-to-final-review path, followed by signed reopening in the same run or a new run after archive completion. All certificates and identities in those
@@ -39,7 +39,7 @@ tests are synthetic. Mypy passes for 19 source files with the component configur
 errors instead of inheriting the repository-wide suppression.
 Monitor tests also exercise unchanged results, partial/failed research, pending-job reuse, extraction-only changes and the preservation of approved-case hashes. These tests do not activate a native schedule or prove notification delivery.
 Black/Isort and whitespace checks pass; Bandit finds no medium/high issues.
-The privacy register is complete and current.
+The privacy register is complete and current. An additional integration test extracts each of the three Vera archives and runs its own packaged Studio Archive and Patent Box modules in a separate process, producing synthetic Word/PDF output; task receipts record the result for the exact package generation.
 
 All four pages of the synthetic Word-rendered dossier and all four PDF pages
 were visually inspected; exact artifacts and hashes are recorded in task output
@@ -48,8 +48,7 @@ were visually inspected; exact artifacts and hashes are recorded in task output
 The dependency recipe and revision are synchronized across Vera, Clara and
 Lucia. Candidate versions are Vera 0.1.290, Clara 0.1.226, Lucia 0.1.66 and the
 Patent Box component 0.1.1. They exceed the current main/open-PR versions inspected
-on 2026-09-30, but are not reserved or published versions. This checkout still
-needs source reconciliation with current main before release. Build/parity/test
+on 2026-09-30, but are not reserved or published versions. Current-main source c3f09ad78 is now integrated in this isolated task checkout, including Composizione negoziata, Trasformazione, Fusione and the updated Adeguati assetti workflow. No task changes have been merged into main. Build/parity/test
 receipts are retained in task output `continuation-review`; generated archives
 and their source hashes must be rechecked after every source edit.
 
@@ -68,8 +67,8 @@ All 32 professional UAT scenarios remain NOT_RUN. Genuine guided client-case
 acceptance, approved current/period-specific rules and annual mappings,
 qualified-provider formalities, production authority administration/retention,
 monitor false-positive/false-negative review, configured scheduled monitoring and
-notification delivery, professional reopening acceptance, final release
-reconciliation and installed-runtime checks remain required.
+notification delivery, professional reopening acceptance, green release CI and
+installed-runtime checks remain required.
 
-No merge, deployment, Marketplace publication or external message occurred for
+No task merge into main, deployment, Marketplace publication or external message occurred for
 this continuation. Development archives are not released delivery artifacts. Do not mark the goal complete on technical tests.

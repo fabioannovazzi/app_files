@@ -38,7 +38,17 @@ existing signatures and timestamps; it does not sign or file documents. All
 professional UAT and production acceptance boundaries remain explicit. Read
 `../../patent-box-review/SKILL.md`. This preview has no released teaching kit.
 
+## Merger workpapers
+
+`fusione-guidata` prepares reviewed P1 domestic OIC incorporation workpapers for
+independent or directly wholly owned companies: verified Studio Archive imports,
+valuation bridges, exact shareholder allocations, accounting bridges, event
+calendars and versioned review dossiers. Its two complete synthetic cases are
+available through `demo-p1`. It is not a prepared onboarding lesson. Later
+branches, signatures and filings remain unsupported. Use the specialist skill.
+
 ## Professional workflows
+
 
 - `invoice-xml`: prepare ordinary FPR12 invoice XML from supplied PDFs, photos
   or confirmed structured data; combine source views, retain field evidence,
@@ -49,7 +59,11 @@ professional UAT and production acceptance boundaries remain explicit. Read
 - `adeguati-assetti`: assess an Italian company's organizational, administrative
   and accounting arrangements using proportionate review of responsibilities,
   processes and actual reporting/operating evidence; prepare findings, improvement
-  actions and subsequent reviews. A management report alone is not an assetti
+  actions and subsequent reviews. When construction is requested, use the same
+  engagement for attributed interviews, qualified evidence, reasoned professional
+  overrides, control design, versioned manuals/registers, separate adoption and
+  sampled operating review. The numerical method is experimental; a manual does
+  not prove operation. A management report alone is not an assetti
   assessment; general legal questions remain in quesito-legale-fiscale.
 
 - `aml-review`: review Italian client AML evidence at onboarding or later review,
@@ -93,6 +107,10 @@ professional UAT and production acceptance boundaries remain explicit. Read
 - `concordato-plan-review`: review an Italian concordato preventivo across the
   procedure, proposal, plan, attestation, creditors, treatment, liquidity,
   evidence consistency, and open issues.
+- `composizione-negoziata`: guide an Italian CNC case as company advisor or
+  independent expert, with separate role guidance, evidence gaps, existing Vera
+  analyses, drafts, case revisions and dependency impact. Local review records
+  do not authenticate professional identity or authorize filing.
 - `comunicazione-professionale`: decide whether a current tax, legal,
   regulatory, accounting, or professional development is worth communicating;
   learn only from exact prior studio communications selected by the
@@ -174,6 +192,16 @@ professional UAT and production acceptance boundaries remain explicit. Read
 - `studio-archive`: create or resume a durable client engagement; use its
   authorized local-document, Google Drive or Shared Drive, Gmail, or
   capability-gated WhatsApp evidence routes without mixing clients.
+
+## Synthetic development prototypes
+
+Read `../../trasformazione/SKILL.md` to prepare a synthetic Italian company-transformation case,
+  import evidence, propose findings, check exact arithmetic, record explicit
+  simulated/user review and export a versioned dossier. Changed evidence reopens
+  dependent approvals. This increment does not accept real client mandates,
+  qualify legal/tax effects, compute statutory deadlines or perform external
+  actions. It has no Studio Archive adapter. Select only for an explicitly
+  requested synthetic prototype or demonstration.
 
 ## Subordinate intake workflows
 

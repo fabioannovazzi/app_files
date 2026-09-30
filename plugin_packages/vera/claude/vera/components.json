@@ -21,6 +21,7 @@
     "financial-analysis",
     "report-builder",
     "concordato-plan-review",
+    "composizione-negoziata",
     "comunicazione-professionale",
     "presenza-digitale-studio",
     "prompt-optimizer",
@@ -31,7 +32,8 @@
     "bilancio-xbrl-it",
     "browser-automation",
     "studio-archive",
-    "patent-box-review"
+    "trasformazione",
+    "fusione-guidata"
   ],
   "shared_services": [
     "run-receipt-stamping",

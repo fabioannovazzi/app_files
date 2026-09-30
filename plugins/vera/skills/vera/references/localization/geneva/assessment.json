@@ -1,6 +1,6 @@
 {
   "schema": "vera.localization.assessment.v1",
-  "catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
+  "catalogue_fingerprint": "b67dc19169de761e122ebf927d7bd792382901f419a73af3fa1952aa615df725",
   "assessment_date": "2026-09-28",
   "target": {
     "id": "CH-GE",
@@ -221,6 +221,26 @@
       "implementation_status": "existing_or_unresolved_as_assessed"
     },
     {
+      "function_id": "composizione-negoziata",
+      "name": "Italian negotiated crisis case workflow",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Preserve role-specific evidence, drafts, professional review references and explicit change dependencies across case sessions.",
+      "geneva_application": "The current workflow addresses an Italian composizione negoziata. A Swiss/Geneva counterpart, mandate and source framework have not been assessed.",
+      "required_change": "Assess the actual Swiss mandate and applicable primary sources before adapting this professional workflow. Language alone does not select jurisdiction.",
+      "adaptation_layers": [
+        "professional mandate",
+        "Swiss legal and procedural sources not assessed"
+      ],
+      "acceptance_example": "A Geneva request is not represented as a supported Italian procedure; the jurisdiction gap remains explicit pending assessment.",
+      "sources": [
+        "cnc_source"
+      ],
+      "verification": "Inspected the CNC skill, role guides and synthetic executable cases; no Swiss adaptation or real-client acceptance.",
+      "implementation": "Italian advisor/expert guidance, managed case revisions and existing Vera capability routing.",
+      "implementation_status": "italian_workflow_swiss_scope_unassessed"
+    },
+    {
       "function_id": "comunicazione-professionale",
       "name": "Professional communication",
       "role": "function",
@@ -370,6 +390,26 @@
       "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance.",
       "implementation": "Existing function retained with the recorded qualification limits.",
       "implementation_status": "existing_or_unresolved_as_assessed"
+    },
+    {
+      "function_id": "fusione-guidata",
+      "name": "Domestic OIC incorporation workpapers (P1)",
+      "role": "foundation",
+      "disposition": "Unresolved",
+      "common_work": "Preserve multi-company evidence and exact reviews, calculate two selected domestic OIC incorporation branches and prepare accounting and calendar workpapers.",
+      "geneva_application": "Swiss/Geneva professional fit and merger adaptations remain unassessed. P1 supports only two explicitly selected Italian OIC incorporation branches.",
+      "required_change": "Establish the professional mandate and governing source requirements before defining a Swiss merger branch; do not treat the structural case demonstration as jurisdiction qualification.",
+      "adaptation_layers": [
+        "professional mandate qualification",
+        "Swiss/Geneva sources and rules not assessed"
+      ],
+      "acceptance_example": "A later reviewed Swiss/Geneva mandate must identify applicable sources and decisions; current P1 rejects foreign company scope.",
+      "sources": [
+        "fusione_p0"
+      ],
+      "verification": "Inspected source and synthetic numerical, archive and review regressions only; no Swiss merger assessment, legal validation or client acceptance.",
+      "implementation": "Versioned foundation plus ordinary independent and direct wholly owned Italian OIC incorporation workpapers. Swiss branches remain unsupported.",
+      "implementation_status": "foundation_only_jurisdiction_unassessed"
     },
     {
       "function_id": "invoice-xml",
@@ -716,6 +756,21 @@
       "implementation_status": "adapted_with_documented_scope"
     },
     {
+      "function_id": "trasformazione",
+      "name": "Synthetic company-transformation prototype",
+      "role": "prototype",
+      "disposition": "Unresolved",
+      "common_work": "Prepare a synthetic transformation case from evidence, proposed findings, exact calculations, version-bound review and a local dossier.",
+      "geneva_application": "Not assessed. The current increment is a synthetic Italian prototype and does not accept real mandates. No Geneva professional-use or legal-applicability claim is made.",
+      "required_change": "Before proposing Geneva use, establish the relevant professional purpose, governing sources, required inputs and professional validation. French page text and common arithmetic do not establish a Swiss adaptation.",
+      "adaptation_layers": [],
+      "acceptance_example": "A Geneva real-client transformation request is not routed into this synthetic-only prototype. An explicitly requested synthetic demonstration remains labelled as such and makes no Swiss legal-effect claim.",
+      "sources": [],
+      "verification": "Prototype source, wrapper and synthetic tests inspected; no Geneva source research or professional acceptance performed for this addition.",
+      "implementation": "Local synthetic evidence-to-dossier prototype with no filing, statutory deadline or Studio Archive adapter.",
+      "implementation_status": "synthetic_prototype_only_geneva_unassessed"
+    },
+    {
       "function_id": "treasury-forecast",
       "name": "Treasury Forecast",
       "role": "function",
@@ -860,6 +915,17 @@
       "url": "https://www.ge.ch/document/directive-sursis-concordataire-ajournement-faillite",
       "basis": "Historical directive: supports existence of local restructuring work only. Not relied on as a complete current procedural rulebook.",
       "consulted": "2026-09-27"
+    },
+    "fusione_p0": {
+      "title": "Fusione guidata P0 source and requirement map",
+      "path": "docs/vera-fusione-p0.md",
+      "basis": "Internal implementation evidence for a structural case foundation; supplies no Swiss merger law or professional acceptance.",
+      "consulted": "2026-09-29"
+    },
+    "cnc_source": {
+      "title": "CNC implementation and scope",
+      "url": "repository:plugins/composizione-negoziata/skills/composizione-negoziata/SKILL.md",
+      "scope": "Italian workflow and explicit different-jurisdiction assessment requirement; no Swiss legal-source verification."
     }
   },
   "course_qa_release_binding": {
@@ -885,5 +951,55 @@
   "course_entry_release_binding": {
     "version": "0.1.277",
     "change": "Remove redundant catalogue jump link and refresh release identity; skill entrypoints and Geneva dispositions unchanged."
+  },
+  "transformation_prototype_catalogue_binding": {
+    "version": "0.1.280",
+    "reviewed_at": "2026-09-29",
+    "previous_catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
+    "added_skills": [
+      "trasformazione"
+    ],
+    "changed_skills": [
+      "vera"
+    ],
+    "review": "Adds the explicit synthetic-only transformation route and candidate manifest identity. The new row remains Unresolved for CH-GE. Existing assessment rows and their professional-evidence limits are preserved; this update is catalogue integration, not a Swiss capability release."
+  },
+  "fusione_p0_release_binding": {
+    "version": "0.1.279",
+    "reviewed_at": "2026-09-29",
+    "previous_version": "0.1.277",
+    "previous_catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
+    "added_skills": [
+      "fusione-guidata"
+    ],
+    "changed_skills": [
+      "vera"
+    ],
+    "review": "Register the new structural P0 foundation as unresolved for CH-GE. The Vera router adds only that foundation. Existing function dispositions and source assessments are preserved; no Swiss merger capability or current legal review is established."
+  },
+  "combined_release_binding": {
+    "version": "0.1.280",
+    "reviewed_at": "2026-09-29",
+    "review": "Combines the existing fusione-guidata P0 and synthetic-only trasformazione entries. All prior target judgments and both unresolved entries are preserved. No new professional or jurisdiction qualification is inferred."
+  },
+  "cnc_release_binding": {
+    "version": "0.1.285",
+    "reviewed_at": "2026-09-29",
+    "previous_catalogue_fingerprint": "500598f2e1c2bbaf1ffd4cb41f8b2eb21ae6a68fd64cc126084daa34d97dcd43",
+    "added_skills": [
+      "composizione-negoziata"
+    ],
+    "review": "Add the Italian CNC workflow as unresolved for CH-GE. Preserve all prior Geneva assessments and the merger foundation; the combined release does not establish Swiss applicability. Preserve the newly merged synthetic-only transformation prototype."
+  },
+  "assetti_construction_release_binding": {
+    "version": "0.1.283",
+    "reviewed_at": "2026-09-29",
+    "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
+  },
+  "fusione_p1_release_binding": {
+    "reviewed_at": "2026-09-30",
+    "previous_catalogue_fingerprint": "6b6600d71b764ee71b86cd54adcf5aa46257bf72ef43606a36dc59562d2fd5cd",
+    "candidate_version": "0.1.287",
+    "review": "Updates the fusione-guidata and Vera router entrypoints for two domestic Italian OIC branches. Geneva dispositions and professional-fit limits remain unchanged; this is catalogue maintenance, not Swiss qualification."
   }
 }

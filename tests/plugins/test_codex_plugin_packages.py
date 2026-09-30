@@ -17,6 +17,8 @@ ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 COMMERCIALISTA_MODULE_NAMES = {
     "patent-box-review",
+    "trasformazione",
+    "fusione-guidata",
     "treasury-forecast",
     "aml-review",
     "adeguati-assetti",
@@ -28,6 +30,7 @@ COMMERCIALISTA_MODULE_NAMES = {
     "business-planning",
     "check-entries",
     "concordato-plan-review",
+    "composizione-negoziata",
     "comunicazione-professionale",
     "presenza-digitale-studio",
     "deep-research-validator",
@@ -80,6 +83,7 @@ VERA_PUBLIC_PAGE_PATHS = (
     Path("static/shared/archive-organization/index.html"),
     Path("static/shared/check-entries/index.html"),
     Path("static/shared/concordato-plan-review/index.html"),
+    Path("static/shared/composizione-negoziata/index.html"),
     Path("static/shared/deep-research-validator/index.html"),
     Path("static/shared/financial-analysis/index.html"),
     Path("static/shared/management-control-pack/index.html"),
@@ -1558,6 +1562,9 @@ def test_vera_routes_every_commercialista_module() -> None:
     assert set(components["plugins"]) == COMMERCIALISTA_MODULE_NAMES
     assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {
         "patent-box-review",
+        "composizione-negoziata",
+        "trasformazione",
+        "fusione-guidata",
         "invoice-xml",
         "treasury-forecast",
         "aml-review",
@@ -2250,6 +2257,22 @@ def test_all_dependency_checkers_accept_explicit_requirements_files(
             capture_output=True,
         )
 
+        if plugin_name == "fusione-guidata":
+            # This foundation declares no pip dependencies or alternate requirement set.
+            declared = (clean_plugin / "requirements.txt").read_text()
+            assert not any(
+                line.strip() and not line.lstrip().startswith("#")
+                for line in declared.splitlines()
+            )
+            runtime = subprocess.run(
+                [sys.executable, str(checker)],
+                check=False,
+                text=True,
+                capture_output=True,
+            )
+            assert runtime.returncode == 0, runtime.stderr
+            assert "Python and SQLite are available" in runtime.stderr
+            continue
         assert "--requirements" in result.stdout, plugin_name
 
 
@@ -2265,6 +2288,37 @@ def test_all_plugin_skills_define_material_choice_intake() -> None:
         )
         lowered_skill_text = combined_skill_text.lower()
 
+        if plugin_name == "composizione-negoziata":
+            # The compact specialist intake carries the same obligations without
+            # repeating the older generic intake boilerplate in every module.
+            assert "role, client/engagement, accessible documents" in lowered_skill_text
+            assert "read supplied evidence before asking for more" in lowered_skill_text
+            assert (
+                "current problem, observed evidence, contrary evidence and gaps"
+                in lowered_skill_text
+            )
+            continue
+
+        if plugin_name == "trasformazione":
+            assert (
+                "inspect provided synthetic inputs before asking" in lowered_skill_text
+            )
+            assert (
+                "missing fact that changes the next useful step" in lowered_skill_text
+            )
+            assert "do not route a real client mandate" in lowered_skill_text
+            continue
+        if plugin_name == "fusione-guidata":
+            # Check the P1 intake contract without requiring legacy template wording.
+            normalized = " ".join(combined_skill_text.split())
+            assert (
+                "Identify whom the professional assists, mandates/conflicts, the two companies"
+                in normalized
+            )
+            assert "Ask only questions that alter a material choice" in normalized
+            assert "A missing fact remains `unknown`" in normalized
+            assert "Independent work can continue" in normalized
+            continue
         assert (
             "material choices" in lowered_skill_text
             or "material research-angle" in lowered_skill_text
@@ -2750,6 +2804,30 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
         for skill_file in skill_files:
             skill_text = skill_file.read_text(encoding="utf-8")
             normalized_skill_text = " ".join(skill_text.split())
+            if plugin_root.name == "composizione-negoziata":
+                assert "Produce and persist useful work" in skill_text
+                assert "Declare every physical output" in normalized_skill_text
+                assert "actual model-data report" in normalized_skill_text
+                assert "read its skill and follow" in normalized_skill_text.lower()
+                assert "Never simulate saved history" in skill_text
+                continue
+            if skill_file.parent.name == "trasformazione":
+                if plugin_root.name == "vera":
+                    assert "../../modules/trasformazione" in normalized_skill_text
+                    assert "../../../trasformazione" in normalized_skill_text
+                    assert "Read the complete" in normalized_skill_text
+                    assert "working directory" in normalized_skill_text
+                else:
+                    assert (
+                        "version-bound Markdown memorandum and JSON dossier"
+                        in normalized_skill_text
+                    )
+                    assert (
+                        "Do not report a successful export as legal readiness"
+                        in normalized_skill_text
+                    )
+                    assert "Keep earlier exports" in normalized_skill_text
+                continue
             if (
                 plugin_root.name in {"vera", "clara", "lucia"}
                 and skill_file.parent.name == f"learn-with-{plugin_root.name}"
@@ -2828,7 +2906,10 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 skill_file.parent.name != plugin_root.name
             ):
                 assert "Read that module's" in normalized_skill_text
-                assert "plugin working directory" in normalized_skill_text
+                if skill_file.parent.name == "composizione-negoziata":
+                    assert "Use the module root for commands" in normalized_skill_text
+                else:
+                    assert "plugin working directory" in normalized_skill_text
                 continue
             if (
                 plugin_root.name == "clara"
@@ -2843,6 +2924,23 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
             }:
                 assert "Read that component's" in normalized_skill_text
                 assert "working directory" in normalized_skill_text
+                continue
+            if plugin_root.name == "fusione-guidata":
+                # P1 exports case history and workpapers through its own review contract.
+                assert (
+                    "Never write run outputs inside this Git workspace or plugin source"
+                    in normalized_skill_text
+                )
+                assert "references/case-contract.md" in normalized_skill_text
+                assert (
+                    "selecting one kind at a time and its exact input references"
+                    in normalized_skill_text
+                )
+                assert "show the readable privacy report" in normalized_skill_text
+                assert (
+                    "actual professional confirmation still belongs to the named reviewer"
+                    in normalized_skill_text
+                )
                 continue
             for snippet in required_snippets:
                 if (
@@ -3848,6 +3946,8 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         "../fatture-xml-check/index.html",
         "../report-enti-locali/index.html",
         "../concordato-plan-review/index.html",
+        "../composizione-negoziata/index.html",
+        "../fusione-guidata/index.html",
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
     ):
@@ -3857,9 +3957,9 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 35
-    assert core.count('class="module-row"') == 35
-    assert core.count('data-jurisdiction-item="it"') == 10
+    assert core.count(" data-module-link") == 37
+    assert core.count('class="module-row"') == 37
+    assert core.count('data-jurisdiction-item="it"') == 12
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for area_id in (
@@ -5499,6 +5599,7 @@ def test_reporting_component_manifests_use_clara_homepage() -> None:
 
 def test_standard_family_plugin_manifests_use_family_homepages() -> None:
     expected_homepages = {
+        "trasformazione": "https://mparanza.com/static/shared/trasformazione/index.html",
         "invoice-xml": "https://mparanza.com/static/shared/invoice-xml/index.html",
         "aml-review": "https://mparanza.com/static/shared/aml-review/index.html",
         "adeguati-assetti": "https://mparanza.com/static/shared/adeguati-assetti/index.html",
@@ -5574,6 +5675,8 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         "browser-automation": (
             "https://mparanza.com/static/shared/browser-automation/index.html?lang=it"
         ),
+        "composizione-negoziata": "https://mparanza.com/static/shared/composizione-negoziata/index.html",
+        "fusione-guidata": "https://mparanza.com/static/shared/fusione-guidata/index.html?lang=it",
         "studio-archive": ("https://mparanza.com/static/shared/vera/index.html"),
         "vera": ("https://mparanza.com/static/shared/vera/index.html?lang=it"),
         "clara": ("https://mparanza.com/static/shared/clara/index.html?lang=en"),

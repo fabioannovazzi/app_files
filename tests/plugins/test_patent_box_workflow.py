@@ -39,10 +39,11 @@ def running_case(
     demo: bool = True,
     mixed: bool = False,
     ledger_text: str | None = None,
+    archive_script: Path | None = None,
 ) -> dict[str, Any]:
     archive = load_module(
         "patent_box_archive_test",
-        ROOT / "plugins/studio-archive/scripts/archive_core.py",
+        archive_script or ROOT / "plugins/studio-archive/scripts/archive_core.py",
     )
     archive_root = tmp_path / "studio"
     (archive_root / "Synthetic software company").mkdir(parents=True)

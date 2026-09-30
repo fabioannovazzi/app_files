@@ -95,6 +95,7 @@
         "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md"
       ],
       "python_entrypoints": [
+        "modules/adeguati-assetti/scripts/assetti_construction.py",
         "modules/adeguati-assetti/scripts/assetti_review.py",
         "modules/adeguati-assetti/scripts/check_dependencies.py"
       ]
@@ -290,6 +291,16 @@
       ]
     },
     {
+      "component_id": "composizione-negoziata",
+      "skills": [
+        "modules/composizione-negoziata/skills/composizione-negoziata/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/composizione-negoziata/scripts/check_dependencies.py",
+        "modules/composizione-negoziata/scripts/cnc_case.py"
+      ]
+    },
+    {
       "component_id": "comunicazione-professionale",
       "skills": [
         "modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md"
@@ -464,13 +475,24 @@
       ]
     },
     {
-      "component_id": "patent-box-review",
+      "component_id": "trasformazione",
       "skills": [
-        "modules/patent-box-review/skills/patent-box-review/SKILL.md"
+        "modules/trasformazione/skills/trasformazione/SKILL.md"
       ],
       "python_entrypoints": [
-        "modules/patent-box-review/scripts/check_dependencies.py",
-        "modules/patent-box-review/scripts/patent_box_workflow.py"
+        "modules/trasformazione/scripts/check_dependencies.py",
+        "modules/trasformazione/scripts/demo.py",
+        "modules/trasformazione/scripts/transform_case.py"
+      ]
+    },
+    {
+      "component_id": "fusione-guidata",
+      "skills": [
+        "modules/fusione-guidata/skills/fusione-guidata/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/fusione-guidata/scripts/check_dependencies.py",
+        "modules/fusione-guidata/scripts/run_fusione.py"
       ]
     }
   ],
@@ -485,6 +507,7 @@
     "skills/browser-automation/SKILL.md",
     "skills/business-planning/SKILL.md",
     "skills/centrale-rischi-review/SKILL.md",
+    "skills/composizione-negoziata/SKILL.md",
     "skills/comunicazione-professionale/SKILL.md",
     "skills/concordato-plan-review/SKILL.md",
     "skills/dati-fiscali-strutturati/SKILL.md",
@@ -492,6 +515,7 @@
     "skills/fatture-xml-check/SKILL.md",
     "skills/financial-analysis/SKILL.md",
     "skills/financial-report-builder/SKILL.md",
+    "skills/fusione-guidata/SKILL.md",
     "skills/invoice-xml/SKILL.md",
     "skills/journal-bank-reconciliation/SKILL.md",
     "skills/journal-sampling/SKILL.md",
@@ -501,7 +525,6 @@
     "skills/management-control-pack/SKILL.md",
     "skills/new-client/SKILL.md",
     "skills/open-item-reconciliation/SKILL.md",
-    "skills/patent-box-review/SKILL.md",
     "skills/presenza-digitale-studio/SKILL.md",
     "skills/previdenza-inps/SKILL.md",
     "skills/privacy-surface-review/SKILL.md",
@@ -510,6 +533,7 @@
     "skills/registro-imprese-sari/SKILL.md",
     "skills/sales-plan/SKILL.md",
     "skills/studio-archive/SKILL.md",
+    "skills/trasformazione/SKILL.md",
     "skills/treasury-forecast/SKILL.md",
     "skills/variance-analysis/SKILL.md",
     "skills/vera/SKILL.md",

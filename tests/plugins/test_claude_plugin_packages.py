@@ -507,7 +507,18 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
     for name, content in skills.items():
         assert "## Cowork execution contract" in content, name
         assert "connected folder and supplied files first" in content, name
-        assert "never install packages at runtime" not in content, name
+        if name == "modules/fusione-guidata/skills/fusione-guidata/SKILL.md":
+            # The P1 helper still has no installable dependencies; retain that contract.
+            assert "uses only the standard library" in " ".join(content.split())
+            requirements = vera_entries[
+                "modules/fusione-guidata/requirements.txt"
+            ].decode()
+            assert not any(
+                line.strip() and not line.lstrip().startswith("#")
+                for line in requirements.splitlines()
+            )
+        else:
+            assert "never install packages at runtime" not in content, name
         assert "scripts/check_dependencies.py --module <module>" in content, name
         assert (
             "scripts/managed_python_runtime.py --module <module> run" in content
@@ -809,16 +820,25 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
         name: content
         for name, content in cowork_instruction_docs.items()
         if "/references/" in name
+        and not name.startswith("skills/learn-with-vera/references/")
     }
+    introduction = cowork_instruction_docs[
+        "skills/learn-with-vera/references/get-started.md"
+    ]
+    assert "In Cowork follow the written single-conversation contract" in introduction
+    assert "Never run desktop profile/session commands there" in introduction
     assert references
-    # The authored introduction has its own host contract; it is not a
-    # professional reference receiving the generic projection note.
-    introduction = references.pop("skills/learn-with-vera/references/get-started.md")
-    normalized = " ".join(introduction.split())
-    assert "In Cowork follow the written single-conversation contract" in normalized
-    assert "Never run desktop profile/session commands there" in normalized
-    assert "or ask for a second chat or voice" in normalized
     for name, content in references.items():
+        if name == "skills/learn-with-vera/references/get-started.md":
+            # This authored cross-host introduction carries its own Cowork boundary.
+            normalized = " ".join(content.split())
+            assert (
+                "In Cowork follow the written single-conversation contract"
+                in normalized
+            )
+            assert "Never run desktop profile/session commands there" in normalized
+            assert "uses only its connected lesson folder" in normalized
+            continue
         assert "Cowork execution note" in content, name
         assert "Their absence never" in content, name
         assert "blocks delivery" in content, name

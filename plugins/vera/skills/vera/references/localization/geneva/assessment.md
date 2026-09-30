@@ -1,8 +1,8 @@
 # Vera — Geneva localization assessment and implementation
 
-Updated 2026-09-28. Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
+Updated 2026-09-29 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
 
-This applies the common-core localization method to the complete existing catalogue: 35 professional functions and four internal helpers. The disposition records the assessment; implementation status is separate. No services absent from Vera have been added.
+This applies the common-core localization method to the complete existing catalogue: 35 professional functions, four internal helpers and one P0 case foundation. The disposition records the assessment; implementation status is separate. No services absent from Vera have been added.
 
 The release adds bounded adapters and instructions, not a blanket claim that every fiduciary mandate is supported. Original evidence and professional decisions remain necessary. No real Geneva client workflow has been accepted.
 
@@ -26,6 +26,7 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 | fatture-xml-check | Ignore for this target | Existing function retained with the recorded qualification limits. |
 | financial-analysis | Use | Existing function retained with the recorded qualification limits. |
 | financial-report-builder | Use | Existing function retained with the recorded qualification limits. |
+| fusione-guidata | Unresolved | P1 retains the evidence and review foundation and adds two Italian OIC incorporation branches. Swiss/Geneva professional fit and adaptations remain unassessed; foreign scope is unsupported. |
 | invoice-xml | Unresolved | Existing function retained with the recorded qualification limits. |
 | journal-bank-reconciliation | Adapt | Reviewed French textual dates use additive adapter v8; currencies remain explicitly source-mapped. |
 | journal-sampling | Adapt | Source-evidenced currency and Swiss export qualification instructions; no new sampling algorithm. |
@@ -52,6 +53,8 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 
 Centrale Rischi source equivalence, the restructuring mandate/procedure, the actual DATEV application and a Swiss structured-invoice output requirement remain unresolved. The Italian FatturaPA-only checker stays outside the domestic example, while remaining available for actual Italian files. No replacement services were invented.
 
+The 0.1.279 catalogue refresh adds `fusione-guidata` and updates its router entry. It preserves the existing professional assessments. The new foundation is unresolved for Geneva; its synthetic structural checks do not establish Swiss merger capability.
+
 ## Acceptance record
 
 The repository tests exercise CHF Treasury figures and generated currency labels, French Business Planning reports, reviewed French date parsing, Swiss IDE/OCR handling, source-bound annual accounts and onboarding, and rejection of altered sources or inappropriate jurisdiction/currency combinations. The release validation records exact commands and results. Synthetic examples are not legal validation or field acceptance.
@@ -70,3 +73,9 @@ These sources support the target investigation, not an automatic rules engine. R
 - [PFPDT outsourcing and processing roles](https://www.edoeb.admin.ch/fr/externalisation-sous-traitance)
 
 See [the complete machine-readable assessment](assessment.json) for each function’s purpose, common method, original adaptation requirement, acceptance example and source references.
+
+## Assetti construction release binding
+
+The 0.1.283 refresh changes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Existing target judgments remain in place. The new assetti construction mode has not been validated for CH-GE; the earlier assessment-mode scope does not qualify that new mode.
+
+The 0.1.287 candidate updates the merger entrypoint to P1. The two supported branches are domestic Italian OIC incorporations; the Geneva assessment remains Unresolved.

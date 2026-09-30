@@ -6,7 +6,9 @@
   "governed_paths": [
     "skills",
     "scripts",
-    "references"
+    "references",
+    "assets",
+    "requirements.txt"
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance"
@@ -21,7 +23,7 @@
       {
         "id": "arrangements-evidence",
         "purpose": "Assess company arrangements, operating evidence, proportionate findings, actions and prior reviews",
-        "content": "Selected company descriptions, organization charts, staff roles and delegations, procedures, interview notes, minutes, management/accounting reports, forecasts, operating examples, prior reviews, action evidence and professional decisions. Initial assessment, source review, action planning and subsequent review may read complete relevant files and prior records. There is no fixed excerpt limit or automatic anonymization. Local Python verifies source bindings and hashes and renders records; it does not perform semantic assessment. Targeted questions and attributed answers, conflicting accounts, process/risk/control relationships and event-versus-information chronology may enter the same model context. The model revises hypotheses and writes a management discussion brief; the helper only validates linked records and renders them.",
+        "content": "Selected company descriptions, organization charts, staff roles and delegations, procedures, interview notes, minutes, management/accounting reports, forecasts, operating examples, prior reviews, action evidence and professional decisions. Initial assessment, source review, action planning and subsequent review may read complete relevant files and prior records. There is no fixed excerpt limit or automatic anonymization. Local Python verifies source bindings and hashes and renders records; it does not perform semantic assessment. Targeted questions and attributed answers, conflicting accounts, process/risk/control relationships and event-versus-information chronology may enter the same model context. The model revises hypotheses and writes a management discussion brief; the helper only validates linked records and renders them. Construction can also read original interview Markdown, corrected transcripts supplied by the user, methodology catalog, qualified evidence, numerical explanations, attributed professional overrides, control designs, manuals and registers, company adoption evidence, execution samples, strategy objectives, KPI definitions and observations, and exact linked Business Planning or externally reviewed artifacts. The standalone HTML form makes no network requests, captures no audio and exports drafts only on explicit user action. Returning that draft to Codex or Cowork brings its contents into the selected model context. Local actor labels are attribution and are not authenticated professional identities. No hosted audio adapter or automatic upload is included.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -56,12 +58,16 @@
     {
       "id": "record-integrity",
       "control": "Records bind source hashes, prior client and engagement identity, and exact proposal digests for decisions; content-addressed output never overwrites an earlier record."
+    },
+    {
+      "id": "construction-revisions",
+      "control": "The construction CLI validates exact archive receipts and source bytes, rejects cross-client snapshots, uses transactional compare-and-append revisions and idempotency keys, validates intake identity/version, and binds decisions and manual versions to exact dependencies. Offline HTML escapes case data, uses a no-network CSP and has no automatic upload or microphone access."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-12",
+    "reviewed_at": "2026-09-29",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "964094c7678b1815e63a2437af56f23cb0a5ff978469e34fa0ff0f05337496a8"
+    "source_fingerprint": "4f551fa0ac8c6b064294bdc5f1a9c543d3676c63df2d37e8961b4769e60291a2"
   }
 }

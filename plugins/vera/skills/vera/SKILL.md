@@ -272,6 +272,15 @@ conclusion is supportable, keep the internal assessment as `none_supported` or
 report builder validates counts, shapes, hashes, and status consistency; model
 and professional judgment decide semantic necessity.
 
+## Synthetic transformation prototype
+
+`trasformazione` is a synthetic development prototype, not a client workflow.
+For an explicitly requested prototype/demo, follow its skill and local synthetic
+folder contract. Do not prepare a Studio Archive client run for it. Its simulated
+reviews are not professional approvals and its exports do not perform actions.
+Use Studio Archive's generic local report helper without preparing an archive
+run; it sets server attestation to false. No external stamping for this prototype.
+
 ## Client-first workflow in Codex
 
 Every local client-bound Vera workflow run begins in Studio Archive, and the selected
@@ -407,6 +416,11 @@ them without changing the capability catalog:
   restriction into a blanket automation refusal or require a separate RPA
   system or credential vault for this supported route. Check the actual host,
   browser and process evidence before describing a blocker;
+- `fusione-guidata`: P0 multi-company merger case preparation, explicit evidence
+  imports, known/unknown/disputed facts, versioned sources/rules, scoped approval
+  history and selective dependency review. Legal merger branches, concambio,
+  statutory calendars, filings and a live multi-company Studio Archive adapter
+  are not implemented.
 - `studio-archive`: durable local client IDs and engagements plus four
   independent evidence routes for one client's Gmail, one verified local
   WhatsApp Desktop chat, an optional local document archive, or one bound

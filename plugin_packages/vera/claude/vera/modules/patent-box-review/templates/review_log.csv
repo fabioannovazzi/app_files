@@ -1,1 +1,0 @@
-decision_id,case_id,component_id,control_id,previous_status,new_status,reason,source_ids,evidence_ids,input_hash,rules_hash,result_hash,reviewer_id,reviewed_at,supersedes_decision_id
