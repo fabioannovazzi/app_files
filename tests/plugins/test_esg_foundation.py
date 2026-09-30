@@ -491,3 +491,33 @@ def test_source_registration_rejects_unqualified_catalogue_claims(case, flag):
             "register_source",
             {"id": "criteria", "idempotency_key": "criteria-1", "record": record},
         )
+
+
+@pytest.mark.parametrize("character", ["x", "é"])
+def test_state_limit_rejects_draft_without_changing_saved_case(case, character):
+    state_path = case.output / "esg_state.json"
+    previous_state = state_path.read_bytes()
+    previous_files = set(case.output.iterdir())
+    state_limit_bytes = 8 * 1024 * 1024
+    request_overhead_margin = 1024
+    near_limit_bytes = state_limit_bytes - request_overhead_margin
+    content = character * (near_limit_bytes // len(character.encode("utf-8")))
+    request = {
+        "expected_state_sha256": case.result["state_sha256"],
+        "id": "large-memo",
+        "idempotency_key": "large-memo",
+        "dependencies": [case.result["reference"]],
+        "claim": "partial_draft",
+        "title": "Synthetic state size limit",
+        "content": content,
+    }
+    assert (
+        len(json.dumps(request, ensure_ascii=False).encode("utf-8")) < state_limit_bytes
+    )
+
+    with pytest.raises(case.esg.ESGError, match="ESG state exceeds"):
+        case.esg.execute(case.context, "build_deliverables", request)
+
+    assert state_path.read_bytes() == previous_state
+    assert set(case.output.iterdir()) == previous_files
+    assert case.esg.resume_case(case.context)["revision"] == 1

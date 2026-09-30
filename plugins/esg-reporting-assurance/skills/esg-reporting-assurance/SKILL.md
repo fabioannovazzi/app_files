@@ -97,6 +97,11 @@ run folder. Use `resume_case --context <context>` without a request to recover.
 For every mutation after start, use the latest returned `state_sha256` as
 `expected_state_sha256`. Retrying uses the identical request and key. A changed
 request with the same key fails; an intentional new version uses a new key.
+The complete persisted state is limited to 8 MiB of UTF-8 JSON, including its
+history. A mutation that would exceed that limit fails before saving any new
+state or drafts; the prior case remains recoverable. Reduce the proposed content
+or evidence scope without discarding recorded history. No automatic pruning occurs.
+
 If state changed, recover and review before resubmitting. A pending write lock
 requires checking that no process is writing; never silently delete an unknown lock.
 
