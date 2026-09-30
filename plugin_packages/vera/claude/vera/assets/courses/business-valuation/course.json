@@ -32,7 +32,7 @@
     },
     {
       "path": "modules/business-valuation/references/case-contract.md",
-      "sha256": "0165c4dd0d97ed44d444a48d6c62ee29bcc7df2b812d1debe4c14ec1c7e62188"
+      "sha256": "0071d1b633dc50d541145ac8539ebbe4a49aa8aa0ffcc2bc80f4033c6ea3641f"
     },
     {
       "path": "modules/business-valuation/references/purpose-profiles.json",
@@ -40,7 +40,7 @@
     },
     {
       "path": "modules/business-valuation/references/valuation-case.schema.json",
-      "sha256": "a363cc12c1044c45c7362343b7e1549bdb114ac98cb3d7abcca4d8a93c328c4a"
+      "sha256": "a26aaf9c9e644d407595401eec6a064870858e251dfdb0b634763ebcdc0c0e5e"
     },
     {
       "path": "modules/business-valuation/requirements.txt",
@@ -48,7 +48,7 @@
     },
     {
       "path": "modules/business-valuation/scripts/check_dependencies.py",
-      "sha256": "69185772ceeed1fb568634be199523f65981eec64236effb404a06bfb3fbeee3"
+      "sha256": "46e32163cced87a53fc28b5fab5dc9c2b0cd5ba0b4bbe8a2f3870d1936b2f63c"
     },
     {
       "path": "modules/business-valuation/scripts/run_valuation.py",
@@ -60,11 +60,15 @@
     },
     {
       "path": "modules/business-valuation/scripts/valuation_case.py",
-      "sha256": "8a0f2b793cdc4a45875178faeb83489e4703bf5a349a0604c789126b654abb63"
+      "sha256": "275748032261e9fc9057d9e172fa472faa11d4f4cd4df6a05725968644d1f373"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_claims.py",
       "sha256": "81d95eefb26e1f25b643bfa54942010086866587d81d7c3e6d55bb2481a01894"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_comparables.py",
+      "sha256": "f18b66fb2d1b823399d40bed4e63e24f654cee4675d47abdb0f250bd1f703e8b"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_download.py",
@@ -75,8 +79,12 @@
       "sha256": "663d5c0d296e440ab36616cfb4a70cce4a183b8dafc8b00f087a64383667a7b5"
     },
     {
+      "path": "modules/business-valuation/scripts/valuation_economic.py",
+      "sha256": "bd651cb1b6e0e07c22224884947e690b5e7e9a1b51f785898f377d4dd471b310"
+    },
+    {
       "path": "modules/business-valuation/scripts/valuation_engine.py",
-      "sha256": "e6cd0ea742daf55fcbd0658e01e36a1714b953f611466eea2a211734eb4c3600"
+      "sha256": "afcec8ce563e01d83fcbd1a2911ddac61b1450b2393202d26af37a6c5e9e9854"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_holding.py",
@@ -84,7 +92,7 @@
     },
     {
       "path": "modules/business-valuation/scripts/valuation_mandate.py",
-      "sha256": "4ce6c5b55d42cc60dd84c0cf8bcf5dd535c997d3ee54a0d07079c4bf72a9d691"
+      "sha256": "69bc18f555bbb77781fb1cddd073de4e48c398c7fc191e5ae90605e749adbee0"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_normalization.py",
@@ -96,7 +104,7 @@
     },
     {
       "path": "modules/business-valuation/scripts/valuation_report.py",
-      "sha256": "dfc4b4411e56b89feb69a7c9f53b001c4b05316522820c1a8286ad13cf4d5d16"
+      "sha256": "e8b7d325672f36bc97e4c694ca8005189143f77cfe2361342ef8790ddcac89ed"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_residual.py",
@@ -104,7 +112,7 @@
     },
     {
       "path": "modules/business-valuation/scripts/valuation_schema.py",
-      "sha256": "0cb4917d893ee1fe4c13c503f7564b52d23272f3f8f02d8370997590d2feff35"
+      "sha256": "11d08f73b221e35a44b22e65ea81b3f9f2144bf61892075d2466bee56c948b5c"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_statements.py",
@@ -112,7 +120,7 @@
     },
     {
       "path": "modules/business-valuation/skills/business-valuation/SKILL.md",
-      "sha256": "097c2dfe81516d8f8408b031b68a0e622e0380df5b5be218ccb56350bf6d6b3f"
+      "sha256": "57717d6b531cbf2bbd237fd77d47ca0c61567e3223300e12c2f0db1e0db1bd44"
     },
     {
       "path": "modules/business-valuation/vendor/modules/__init__.py",
@@ -281,5 +289,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "766265dc013343c79c627798647ee4a31702d97bf419a0b0ef8251b99510f758"
+  "canonical_course_sha256": "a181c76a26e9bd4f59f14e7ea0bd3aa9e4bc93de2b5399900aa634783a2a8552"
 }

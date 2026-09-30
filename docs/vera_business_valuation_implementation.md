@@ -54,6 +54,50 @@ units, double debt deduction, terminal growth, source changes and stale review;
 real v3 plan replay; Studio Archive cross-client and receipt checks; workbook
 formula comparisons; report rendering; privacy coverage and package parity.
 
+### Approved engineering release checkpoint — 30 September 2026
+
+The owner's explicit approval supersedes the pending-approval statements in the
+historical checkpoints below. The dependency checker now accepts the documented
+`--requirements requirements.txt` argument and rejects missing or unsupported
+dependencies. Twelve regressions cover that command contract. The function's
+shared breadcrumb mapping is present and was verified in the rendered Italian
+page under the real `/static/shared/` URL structure. The secret-scan exception
+names only the exact historical finding for the public ECB series identifier;
+no credential or general scanner rule is excluded.
+
+The valuation/transport suite passes **635 tests with 96.08% component coverage**.
+Black, Isort, Mypy and Bandit pass for the component and its tests. The focused
+release/package/privacy suite passes **564 tests with 2 conditional skips**.
+The first release run found a missing component version bump and three sandbox
+write denials; the versions were bumped and the suite rerun with worktree access.
+The page suites pass 206 tests and retain four unrelated Fusione failures already
+reproduced on unchanged main; these failures are not waived or repaired here.
+
+Two fresh native synthetic teaching runs retain exact course and artifact hashes.
+All sixteen rendered DOCX/PDF pages were inspected; no clipping, overlap or
+orphaned source fields were observed. LibreOffice independently reproduced all
+forty workbook calculation cells within relative 1e-12 and absolute 1e-9 tolerance.
+The course inventory and its engineering release review now bind these inspected
+outputs. Native voice, learner comprehension, same-case live learner revision and
+installed-host acceptance were not witnessed. The evidence is retained under
+`outputs/vera-valuations-discord/approved-release-review` in the primary checkout.
+
+The valuation privacy record now describes the added engagement and standards
+fields. The affected shared-service and Clara records were re-reviewed against
+their exact source deltas; the manifest and shared copy/course changes introduce
+no new destination, consent, retention or transport behavior. Both complete
+privacy registers validate. Business valuation is version 0.1.3; the rebuilt
+product candidates are Vera 0.1.290, Clara 0.1.226 and Lucia 0.1.66. All nine host
+packages match source, and the packaged MCP servers initialize and list tools.
+The public download links must bind the resulting immutable package commit.
+
+Current-head GitHub checks, merge/deployment and authoritative Marketplace
+publication are separate pending steps. No qualified professional reviewer has
+been designated: all 21 purpose profiles remain disabled for professional use,
+PIV conformity is not assessed, and the remaining scope table stays open. This
+checkpoint completes the approved engineering corrections, not those professional
+or specialist acceptance requirements.
+
 ### Engagement and standards checkpoint — 30 September 2026
 
 The common workpaper now retains explicit standard identity, edition, adoption

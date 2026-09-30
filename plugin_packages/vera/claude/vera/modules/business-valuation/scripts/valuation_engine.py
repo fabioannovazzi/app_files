@@ -20,6 +20,7 @@ METHODS = {
     "INCOME_EQUITY",
     "INCOME_EQUITY_FINITE",
     "RESIDUAL_INCOME_EQUITY",
+    "ECONOMIC_PROFIT",
     "HOLDING_SOTP",
     "NAV",
     "MIXED_EQUITY",
@@ -344,15 +345,18 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
     extras: dict[str, str] = {}
     timing_result = None
     residual_schedule = None
+    economic_schedule = None
     holding_schedule = None
+    comparable_schedule = None
     if "timing" in method and kind not in {
         "DCF_FCFF",
         "DCF_FCFE",
         "INCOME_EQUITY_FINITE",
         "RESIDUAL_INCOME_EQUITY",
+        "ECONOMIC_PROFIT",
     }:
         raise ValuationError(
-            "Explicit dated timing requires DCF, finite equity income or residual income"
+            "Explicit dated timing requires DCF, finite equity income, residual income or economic profit"
         )
 
     def sequence(refs: Any, name: str, limit: int = 100) -> list[str]:
@@ -491,6 +495,39 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
         result, extras, residual_schedule = residual_income(
             ledger, args, factors, horizon
         )
+    elif kind == "ECONOMIC_PROFIT":
+        from valuation_economic import economic_profit
+
+        _keys(
+            args,
+            {
+                "operating_capital",
+                "nopat",
+                "net_reinvestment",
+                "terminal_enterprise_value",
+            },
+        )
+        nopat = sequence(args["nopat"], "NOPAT amounts", 1200)
+        timing = method.get("timing")
+        if not timing or timing["cash_flow_timing"] != "end_period":
+            raise ValuationError("Economic profit requires explicit end-period timing")
+        if (
+            timing["rate_model"] == "spot_curve"
+            and timing.get("terminal_discount_rate") != timing["rate_ids"][-1]
+        ):
+            raise ValuationError(
+                "Economic profit requires the final spot rate at the horizon"
+            )
+        factors, horizon, timing_result = _dated_factors(
+            ledger,
+            timing,
+            len(nopat),
+            terminal_convention="terminal_enterprise_less_closing_operating_capital",
+        )
+        result, extras, economic_schedule = economic_profit(
+            ledger, args, factors, horizon
+        )
+        value_type = "operating_enterprise"
     elif kind == "HOLDING_SOTP":
         from valuation_holding import holding_sotp
 
@@ -552,6 +589,10 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
         _keys(args, {"metric", "selected_multiple", "kind"})
         if args["kind"] not in {"EV_EBITDA", "EV_EBIT", "EV_REVENUE", "P_E"}:
             raise ValuationError("Unsupported multiple basis")
+        if "comparables" in method:
+            from valuation_comparables import calculate_comparables
+
+            comparable_schedule = calculate_comparables(ledger, method)
         result = ledger.add(
             "value",
             "multiply",
@@ -632,6 +673,10 @@ def calculate_method(method: dict, inputs: dict[str, dict], currency: str) -> di
     }
     if residual_schedule is not None:
         output["clean_surplus_schedule"] = residual_schedule
+    if economic_schedule is not None:
+        output["operating_capital_schedule"] = economic_schedule
     if holding_schedule is not None:
         output["holding_schedule"] = holding_schedule
+    if comparable_schedule is not None:
+        output["comparable_schedule"] = comparable_schedule
     return output

@@ -35,7 +35,7 @@
     {
       "path": "modules/business-valuation/references/case-contract.md",
       "repository_path": "plugins/business-valuation/references/case-contract.md",
-      "sha256": "cb8b2623f91ffbb7f48ca1a625b5e4ee2dcf8e2e3853e1be7778e0082d8ece9d"
+      "sha256": "a1679302ea245a6cbe8169f92dfa50859e485c35e9a4b4fe49800e6a8780dd80"
     },
     {
       "path": "modules/business-valuation/references/purpose-profiles.json",
@@ -45,7 +45,7 @@
     {
       "path": "modules/business-valuation/references/valuation-case.schema.json",
       "repository_path": "plugins/business-valuation/references/valuation-case.schema.json",
-      "sha256": "d454428ef289918e4676deed21467ac139f7ee44eca8b13d44bc30c5639596a3"
+      "sha256": "a26aaf9c9e644d407595401eec6a064870858e251dfdb0b634763ebcdc0c0e5e"
     },
     {
       "path": "modules/business-valuation/requirements.txt",
@@ -55,7 +55,7 @@
     {
       "path": "modules/business-valuation/scripts/check_dependencies.py",
       "repository_path": "plugins/business-valuation/scripts/check_dependencies.py",
-      "sha256": "69185772ceeed1fb568634be199523f65981eec64236effb404a06bfb3fbeee3"
+      "sha256": "46e32163cced87a53fc28b5fab5dc9c2b0cd5ba0b4bbe8a2f3870d1936b2f63c"
     },
     {
       "path": "modules/business-valuation/scripts/run_valuation.py",
@@ -70,7 +70,7 @@
     {
       "path": "modules/business-valuation/scripts/valuation_case.py",
       "repository_path": "plugins/business-valuation/scripts/valuation_case.py",
-      "sha256": "479893dfc1df78e390569e1b0d7e6db22c16e960b8a8a31248afde684d7781cd"
+      "sha256": "275748032261e9fc9057d9e172fa472faa11d4f4cd4df6a05725968644d1f373"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_claims.py",
@@ -93,9 +93,14 @@
       "sha256": "663d5c0d296e440ab36616cfb4a70cce4a183b8dafc8b00f087a64383667a7b5"
     },
     {
+      "path": "modules/business-valuation/scripts/valuation_economic.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_economic.py",
+      "sha256": "bd651cb1b6e0e07c22224884947e690b5e7e9a1b51f785898f377d4dd471b310"
+    },
+    {
       "path": "modules/business-valuation/scripts/valuation_engine.py",
       "repository_path": "plugins/business-valuation/scripts/valuation_engine.py",
-      "sha256": "f7b0443d9c12657e620e7383e061391160d693595cdfd7800c9f3f81bfea75ba"
+      "sha256": "afcec8ce563e01d83fcbd1a2911ddac61b1450b2393202d26af37a6c5e9e9854"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_holding.py",
@@ -105,7 +110,7 @@
     {
       "path": "modules/business-valuation/scripts/valuation_mandate.py",
       "repository_path": "plugins/business-valuation/scripts/valuation_mandate.py",
-      "sha256": "4ce6c5b55d42cc60dd84c0cf8bcf5dd535c997d3ee54a0d07079c4bf72a9d691"
+      "sha256": "69bc18f555bbb77781fb1cddd073de4e48c398c7fc191e5ae90605e749adbee0"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_normalization.py",
@@ -120,7 +125,7 @@
     {
       "path": "modules/business-valuation/scripts/valuation_report.py",
       "repository_path": "plugins/business-valuation/scripts/valuation_report.py",
-      "sha256": "93a99a1eff5b48cc6e62df207ea46c0dc9254c82bfa1a6d994d61a61f0b279b2"
+      "sha256": "e8b7d325672f36bc97e4c694ca8005189143f77cfe2361342ef8790ddcac89ed"
     },
     {
       "path": "modules/business-valuation/scripts/valuation_residual.py",
@@ -140,7 +145,7 @@
     {
       "path": "modules/business-valuation/skills/business-valuation/SKILL.md",
       "repository_path": "plugins/business-valuation/skills/business-valuation/SKILL.md",
-      "sha256": "f80b98f0d41a2199ce3bd6e3765f013fc45474ddf53495c341a92b377d8f5e56"
+      "sha256": "84fbb693d9d5917cca621718f122ac7192dd8192cba2868f78321c1a6f5a4b99"
     },
     {
       "path": "modules/business-valuation/vendor/modules/__init__.py",

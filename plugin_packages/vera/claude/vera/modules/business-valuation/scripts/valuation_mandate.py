@@ -7,7 +7,26 @@ from copy import deepcopy
 from valuation_case import digest, require, reviewed
 from valuation_engine import decimal
 
-__all__ = ["build_mandate"]
+__all__ = ["build_mandate", "MANDATE_FIELDS", "STANDARD_FIELDS"]
+
+MANDATE_FIELDS = (
+    "subject_type",
+    "engagement_date",
+    "report_date",
+    "commissioning_party",
+    "expert_identity",
+    "expert_activity",
+    "written_mandate",
+    "remuneration",
+    "delivery_terms",
+    "amendments",
+    "participant_perspective",
+    "recipients",
+    "use_restrictions",
+    "competencies",
+    "conflicts",
+)
+STANDARD_FIELDS = ("name", "edition", "adoption_reason", "departures")
 
 
 def build_mandate(case: dict, inputs: dict, sources: dict) -> dict:
@@ -19,8 +38,10 @@ def build_mandate(case: dict, inputs: dict, sources: dict) -> dict:
     if details is None:
         issues.append("Structured mandate details have not been collected")
     else:
-        for name, item in details.items():
-            if name in {"interests", "review"}:
+        for name in MANDATE_FIELDS:
+            item = details.get(name)
+            if item is None:
+                issues.append(f"Mandate {name}: evidence or confirmation pending")
                 continue
             require(
                 set(item["source_ids"]) <= sources.keys(),
@@ -34,6 +55,26 @@ def build_mandate(case: dict, inputs: dict, sources: dict) -> dict:
                 or item["locator"] is None
             ):
                 issues.append(f"Mandate {name}: evidence or confirmation pending")
+        standards = details.get("standards", [])
+        if not standards:
+            issues.append("Mandate standards: explicit selection and evidence pending")
+        standard_ids = [row["id"] for row in standards]
+        require(
+            len(set(standard_ids)) == len(standard_ids), "Duplicate mandate standard"
+        )
+        for item in standards:
+            require(
+                set(item["source_ids"]) <= sources.keys(),
+                "Unresolved mandate standard evidence",
+            )
+            source_ids.update(item["source_ids"])
+            if (
+                any(item[key] is None for key in STANDARD_FIELDS)
+                or item["status"] != "confirmed"
+                or not item["source_ids"]
+                or item["locator"] is None
+            ):
+                issues.append(f"Standard {item['id']}: selection or evidence pending")
         interest_ids = [row["id"] for row in details["interests"]]
         require(
             len(set(interest_ids)) == len(interest_ids), "Duplicate mandate interest"

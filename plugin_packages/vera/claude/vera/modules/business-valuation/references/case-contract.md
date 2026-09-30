@@ -64,6 +64,34 @@ distinct from the existing valuation date and information cutoff. The subject is
 explicitly `enterprise`, `business_unit`, `equity_interest` or `specific_right`.
 Dates do not automatically select a standard, governing law or permitted scope.
 
+Also collect `expert_identity` (including the intended signatory), `written_mandate`,
+`remuneration`, `delivery_terms` and `amendments` using the same field record.
+Bind the written engagement and any amendments to their actual source locations.
+An evidenced declaration of no amendments or no fee is an explicit professional
+statement, never an inferred default. These five fields may be absent in an
+incomplete case; each absence, null, proposed answer or missing evidence makes
+the mandate partial while preserving independently valid calculations.
+
+`standards` is an array of at most 30 explicit selections. Each record has `id`,
+`name`, `edition`, `adoption_reason`, `departures`, `status`, `source_ids` and
+`locator`. IDs must be unique. Text fields and locator may be null while unknown;
+status is `confirmed` or `proposed`. A missing or empty array is incomplete, not
+an assertion that no standard applies. An explicit decision not to adopt a
+standard must identify that decision, explain its basis and record edition
+nonapplicability and any departures in the supplied evidence. Do not invent a
+standard or fill unknowns with a default edition. A declared absence of departures
+also needs evidence. The model/professional selects and interprets standards;
+software checks only shape, completeness, references and source-review status.
+It does not confirm that an identified standard exists, is applicable or has been
+complied with. No date, name or filled field grants PIV conformity. The result
+continues to return `piv_conformity = not_assessed`.
+
+All engagement terms and standards, including their source metadata and hashes,
+are included in the mandate dependency digest. Changing them invalidates the
+mandate and dependent method, adjustment, claim and conclusion attestations.
+Their deterministic checks serve traceability and stale-review prevention, not
+semantic or professional judgment.
+
 Each `interests` record has an `id`, `description`, `ownership_input_id`,
 `ownership_basis`, `economic_rights`, `administrative_rights`, `statutes`,
 `agreements`, `restrictions`, `thresholds`, `source_ids`, `locator` and `status`.
@@ -145,11 +173,79 @@ is an input ID, not an inline amount. Unselected methods retain their rationale.
 | INCOME_EQUITY | normalized_equity_income, cost_equity | Positive constant equity income divided by positive Ke |
 | INCOME_EQUITY_FINITE | incomes (ordered list), residual_value | Dated equity income plus a separately evidenced equity residual at the horizon; requires timing and income_basis |
 | RESIDUAL_INCOME_EQUITY | book_equity (n+1), incomes, distributions, contributions (n each), terminal_equity_value | Dated clean-surplus common-equity model with changing book capital; requires timing and residual_basis |
+| ECONOMIC_PROFIT | operating_capital (n+1), nopat, net_reinvestment (n each), terminal_enterprise_value | Dated operating economic profit with reconciled capital and FCFF; requires timing and economic_basis; optional enterprise-to-equity bridge |
 | HOLDING_SOTP | holdings, parent_assets, parent_liabilities, holding_costs_pv, tax_adjustment, eliminations | Explicit stake values plus parent-only assets, less parent-only liabilities, holding-cost PV and signed tax adjustment, plus signed eliminations; requires holding_basis |
 | NAV | assets (nonempty list), liabilities (possibly empty list), tax_adjustment | Adjusted assets less liabilities less signed tax adjustment |
 | MIXED_EQUITY | adjusted_equity, incomes (ordered list), normal_return, excess_discount | Constant adjusted equity plus discounted annual excess incomes |
 | MULTIPLE | metric, selected_multiple, kind | Positive metric times selected multiple; kind is EV_EBITDA, EV_EBIT, EV_REVENUE or P_E |
 | APV | unlevered_value, pv_tax_shields, pv_financing_costs | Supplied unlevered PV plus shield PV less financing-cost PV |
+
+### Comparable-company workpaper
+
+The `MULTIPLE` method may carry a `comparables` workpaper. Without it the helper
+only applies the independently supplied multiple: it does not claim to have
+qualified a sample. With it, keep the entire initial candidate list and explicit
+`include`/`exclude` decisions. A selected method with no included peer is blocked;
+exclude that unsupported method with a reason. Its structurally valid workpaper
+remains visible even when the entire method is excluded or its arithmetic fails.
+
+The group records `initial_universe`, `selection_reason`, `date_alignment`,
+`accounting_alignment`, `lease_alignment`, `margin_analysis`, source IDs, locator,
+proposed/confirmed status, one `target` and 1–100 `peers`. These explanations cover
+the actual business, markets, growth, profitability, size, risks, leverage,
+accounting differences and selection biases. EV/revenue needs an explicit margin
+comparison. Text presence is not a semantic comparability decision.
+
+The target has `period_start`, `period_end`, `period_kind` (`LTM` or `forward`),
+`published_on`, `metric_basis` (`reported` or `adjusted`), `lease_basis`
+(`capitalized`, `expensed` or `not_applicable`), `accounting_basis`, a `metric`
+reconciliation and its own evidence/status. LTM/forward labels describe the
+supplied source periods; the helper does not establish twelve-month coverage,
+annualize, prorate or infer forecast facts. A reconciliation has `reported_input`,
+`adjustment_inputs` (explicit signed list, possibly empty), `comparable_input`
+and `explanation`. The independent supplied total must exactly equal the reported
+amount plus adjustments. Adjustment IDs cannot repeat or reuse their totals;
+an unchanged amount may use the same input on both sides when the list is empty.
+The target comparable input must be the metric actually multiplied by the selected
+multiple. Linked normalization and statement workpapers retain their own review gates.
+
+Each peer has a unique `id`, unique declared `entity_id`, `name`, `decision`,
+`reason`, source IDs, locator and proposed/confirmed status. An included peer also
+has `data`: the target's period/accounting fields, method `kind`, `price_date`,
+`comparability` explanation, and separate `numerator` and `metric` reconciliations.
+The price must not postdate the valuation or information cutoff; publication must
+not postdate the cutoff. LTM periods must end by publication. Included peers must
+declare the same multiple kind, LTM/forward, reported/adjusted and lease conventions
+as the target. Different accounting standards and period/price dates still require
+the recorded professional reconciliation; matching labels do not prove comparability.
+An excluded peer has no numerical `data` payload: preserve its original evidence
+and explain missing, negative or unsuitable observations in the decision, without
+creating a meaningless ratio. It stays in the initial list and in review dependencies.
+
+All monetary inputs use the case currency and full amounts, not per-share values.
+Document any FX conversion independently before import; none is automatic. For
+EV multiples, reconcile the operating-value numerator, including the supplied
+lease/debt treatment; P/E uses total equity and total equity earnings. Report
+lease adjustments in the relevant numerator, metric and target equity bridge,
+with their own amounts and explanations. No IFRS 16 measurement, lease liability,
+rent adjustment or debt classification is inferred. Included reconciled numerators
+and metrics must be positive and distinct. The helper calculates each ratio but
+never selects a multiple, averages peers, trims outliers, imposes a range or changes
+the independent `selected_multiple`. Missing amounts or inconsistent totals block
+that method while unrelated methods remain usable. Plan FCFF cannot be relabelled
+as peer values or target metrics, including through linked normalizations.
+
+All decisions, explanations, included numeric dependencies and source bytes bind
+the method review. Proposed records or unreviewed sources keep it partial.
+Changes invalidate dependent reviews and claims; unrelated methods survive.
+HTML/MD/DOCX/PDF, `method_decisions.json`, the full JSON and `Comparabili`,
+`Base multipli`, `Raccordi multipli` worksheets preserve the same workpaper.
+
+Methodological cross-check: [Damodaran, The Anatomy of a Multiple](https://pages.stern.nyu.edu/adamodar/New_Home_Page/lectures/multintr.htm)
+requires consistent claimholder and accounting definitions and examination of
+underlying fundamentals. The contributor pack supplies the peer decision,
+LTM/forward and lease reconciliation requirements. Neither source establishes
+professional acceptance of this implementation or a particular peer sample.
 
 ### Holding company and sum of the parts
 
@@ -262,6 +358,53 @@ for beginning-equity charges and the terminal equity/book difference;
 for the clean-surplus derivation. The dated factor extension above is an explicit
 algebraic contract, verified against owner cash flows; these references do not
 establish this implementation's PIV conformity or professional suitability.
+
+### Economic profit with changing operating capital
+
+`ECONOMIC_PROFIT` values the operating enterprise, separately from the equity
+residual-income method. Supply `operating_capital` at valuation and each period
+end, period `nopat` after unlevered operating taxes, signed `net_reinvestment`,
+and an independently evidenced `terminal_enterprise_value` at the final date.
+All are explicit monetary input IDs in the case currency. Exactly reconcile
+`C[t] = C[t-1] + net_reinvestment[t]`; no balancing plug, missing zero or automatic
+revaluation/tax/lease/foreign-exchange adjustment is created. Negative capital,
+NOPAT, reinvestment and terminal values remain signed. A terminal value may
+explicitly equal final operating capital; it cannot reuse a period NOPAT or
+reinvestment input. Whether any supplied amount is appropriate requires review.
+
+Use explicit end-period timing with the same dated factors, day counts, flat/spot/
+interval-forward and effective/continuous conventions described above. A spot
+curve uses its last rate for the horizon. Mid-period capital transactions are
+unsupported. With `D[0]=1`, interval cost is `q[t]=D[t]/D[t-1]-1` and economic
+profit is `EP[t]=NOPAT[t]-q[t]*C[t-1]`. Operating enterprise value is
+`C[0]+sum(EP[t]/D[t])+(terminal_enterprise_value-C[n])/D[n]`.
+The ledger separately computes
+`sum((NOPAT[t]-net_reinvestment[t])/D[t])+terminal_enterprise_value/D[n]` and
+shows its difference from the economic-profit expression. Final Decimal rounding
+can produce a tiny difference; the capital roll-forward itself must be exact.
+This algebraic cross-check shares the assumptions and does not independently
+validate accounting, taxes, forecast availability, terminal value or WACC.
+
+`economic_basis` requires explanations for `operating_perimeter`,
+`accounting_adjustments`, `nopat_tax_basis`, `reinvestment_basis`,
+`terminal_enterprise_basis`, `capital_cost_basis`, plus `locator`, `source_ids`
+and `status` (`proposed` or `confirmed`). Explain how all capital movements are
+captured and how tax/accounting treatments remain consistent across the model.
+Missing descriptions/sources block the method; proposed bases or unreviewed
+sources keep it partial. Changes expire dependent reviews. Existing normalization
+and statement dependencies apply, including their transitive source closure.
+Bound plan FCFF cannot be relabelled as capital, NOPAT, reinvestment or terminal
+value, including through normalized inputs. An operating-capital bridge from
+the plan requires separately qualified evidence. The output preserves two
+formula-linked workbook sheets, `Base profitto economico` and `Capitale operativo`.
+
+Primary methodology inspected 30 September 2026:
+[Damodaran, Economic Value Added](https://pages.stern.nyu.edu/adamodar/New_Home_Page/invfables/eva.htm)
+relates after-tax operating profit and capital charges to operating value and
+discusses consistent accounting adjustments. The interval-factor and terminal
+capital reconciliation above are explicit algebraic implementation contracts.
+The source does not establish this implementation's PIV conformity, current
+accounting treatment, or suitability for a particular professional purpose.
 
 An enterprise-side method can supply `bridge` with input IDs `financial_debt`,
 `debt_like`, `excess_cash`, `non_operating_assets`, `signed_adjustments`.

@@ -122,8 +122,13 @@ needed; the calculation engine does not qualify those matters.
 
 Prepare the structured `mandate_details`: distinguish engagement and report dates
 from valuation date and information cutoff; identify commissioning party, expert
-activity, participant perspective, recipients, use restrictions, competencies and
-conflicts. Bind each supplied answer to evidence and a locator; leave unavailable
+activity and signatory identity, written engagement, remuneration, delivery terms,
+amendments, participant perspective, recipients, use restrictions, competencies
+and conflicts. Record each selected standard's identity, edition, adoption reason
+and explained departures in `standards`; leave an absent selection incomplete.
+Use explicit evidence for a decision not to adopt a standard or a declaration of
+no departures, fees or amendments. Do not select an edition from a date or infer
+compliance from filled fields. Bind each supplied answer to evidence and a locator; leave unavailable
 answers null and proposed. For interests or specific rights, describe each class,
 economic/administrative rights, statute, agreements, restrictions and thresholds.
 Bind any ownership ratio and explain its denominator; a percentage alone does not
@@ -179,7 +184,7 @@ the model/professional still checks completeness, classifications and substance.
 
 Propose and explain methods according to the mandate. The implemented calculations
 are FCFF/FCFE DCF with annual or explicitly dated flows, constant or finite-duration equity income, adjusted NAV,
-constant-capital mixed income, clean-surplus residual equity income, holding/SOTP composition, selected EV or equity multiples, and APV composition.
+constant-capital mixed income, clean-surplus residual equity income, operating economic profit, holding/SOTP composition, selected EV or equity multiples, and APV composition.
 Explain each selection/exclusion. The professional selects sustainable terminal
 flows, capital costs, asset values, comparable samples and multiples. Keep
 enterprise value and equity separate. Never deduct debt from FCFE or P/E again,
@@ -218,6 +223,20 @@ Do not infer a terminal value, treat plan FCFF as income, deduct debt again or
 claim that a balanced schedule establishes accounting adequacy or distributability.
 Mid-period owner transactions require a separately qualified model.
 
+For operating economic profit, use the distinct `ECONOMIC_PROFIT` contract.
+Supply independently evidenced opening/closing operating capital, NOPAT and signed
+net reinvestment for each exact end-period date, plus a separate terminal operating
+enterprise value. Review the operating perimeter, consistent accounting adjustments,
+unlevered operating taxes, complete capital movements, terminal basis and WACC in
+`economic_basis`. Never invent reinvestment to balance capital or relabel plan FCFF
+as NOPAT. The helper checks capital roll-forward and displays a separate FCFF
+reconciliation using the same discount factors. These equalities do not establish
+economic or tax adequacy. Inspect `Base profitto economico` and `Capitale operativo`
+before review. The output is operating enterprise value; apply only an explicitly
+supplied complete equity bridge. No terminal growth, WACC estimation or automatic
+lease/tax adjustment is provided. Mid-period capital transactions need a different
+qualified model and are rejected by this contract.
+
 For a holding, use `HOLDING_SOTP` with independently valued parts and a parent-only
 perimeter. Ask whether each amount is operating enterprise value, full equity or
 the value of a specific right already held. Convert only enterprise values through
@@ -232,6 +251,21 @@ debt or cash, silently floor negative equity, invent a holding discount, or use
 plan FCFF as a stake value. Review `Partecipazioni`, `Base holding` and
 `Eliminazioni`, and read back all bases before confirming them. This composition
 does not value waterfalls, authenticate ownership or qualify a legal purpose.
+
+For a multiple, retain the initial comparable-company list in `comparables`,
+including candidates excluded for missing data, negative metrics or poor fit.
+Explain each decision using business, markets, growth, margins, scale, risk and
+leverage. Keep LTM and forward observations distinct. Reconcile reported amounts
+and signed adjustments to the supplied comparable numerator and metric; record
+accounting standards, publication/price dates and the chosen lease convention.
+Explain IFRS 16 effects on metric, operating value and the target debt bridge;
+never derive them from a label. For EV/revenue, examine margin differences.
+The helper calculates included ratios and checks explicit reconciliations; it
+does not select a sample or average the applied multiple. Supply that multiple
+and its rationale separately. If no peer is suitable, exclude the method with
+a reason and preserve the workpaper. Review `Comparabili`, `Base multipli` and
+`Raccordi multipli`, including exclusions, before recording method acceptance.
+Original sources and all decisions may enter the selected model context.
 
 For benchmarks, research official public sources with public parameter/sector/date
 queries only. The mandate authorizes necessary public research; do not include

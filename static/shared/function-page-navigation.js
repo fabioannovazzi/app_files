@@ -154,6 +154,7 @@
     "bandi-agevolazioni": [["vera", "area-research"]],
     "bilancio-xbrl-it": [["vera", "area-matters"]],
     "business-planning": [["vera", "area-analysis"]],
+    "business-valuation": [["vera", "area-analysis"]],
     "browser-automation": [["vera", "area-matters"]],
     "centrale-rischi-review": [["vera", "area-analysis"]],
     "check-entries": [["vera", "area-accounting"]],

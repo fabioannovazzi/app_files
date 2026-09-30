@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-valuation",
-  "course_sha256": "766265dc013343c79c627798647ee4a31702d97bf419a0b0ef8251b99510f758",
-  "reviewer": "Codex /root: source, calculation and document review",
-  "reviewed_at": "2026-09-29T22:41:00.415155+00:00",
-  "review_scope": "Read both fictional notes and the entire Italian lesson. Ran the real bound workflow for demo and practice, inspected their Markdown reports and calculation registers. Seven-method DOCX was rendered and all four pages inspected; LibreOffice independently recalculated all 75 workbook calculation cells. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior is an instruction and separate archive contract, not claimed as a live learner test.",
+  "course_sha256": "a181c76a26e9bd4f59f14e7ea0bd3aa9e4bc93de2b5399900aa634783a2a8552",
+  "reviewer": "Codex /root: source, calculation and document engineering review",
+  "reviewed_at": "2026-09-30T07:10:05.839673+00:00",
+  "review_scope": "Read the entire Italian lesson and both fictional source notes. Ran separate receipt-bound native demo and practice using this exact course source inventory; inspected the Markdown reports and canonical JSON calculations. Rendered each DOCX and native PDF and visually inspected all sixteen pages (four pages per format per case): no clipping, overlap or orphaned mandate/source pairs observed. LibreOffice independently recalculated all forty calculation cells within relative 1e-12 and absolute 1e-9 tolerance. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior remains a lesson instruction plus separate archive regressions, not a witnessed learner test. No PIV conformity or purpose activation is attested.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -19,15 +19,27 @@
       },
       "demo": {
         "test_case": "tests.plugins.test_business_valuation::test_valuation_teaching_sources_run_the_bound_workflow[demo]",
-        "result_review": "Operating value 1000000 EUR and equity 750000 EUR at 10%; terminal share 90.91%. Report now states incomplete because eight mandate fields are unavailable; the numerical method remains review-pending and no conclusion is accepted; the rate source is preserved. The current output explicitly records the Strategy and governance profile as development workpapers only, with professional use disabled. The statement section explicitly says balance, movement and continuity records were not supplied. All four DOCX and three native PDF pages were inspected after this change; no statement completion was inferred.",
+        "result_review": "Operating value 1000000.000000000000000000000000000000000 EUR and equity 750000.000000000000000000000000000000000 EUR. The report remains incomplete because the fictional note does not provide the complete engagement or an explicit standards selection. The numerical method is review-pending; no conclusion or PIV/purpose acceptance is recorded. Sources and changed-rate lineage are retained. All four DOCX and four native PDF pages were inspected, and all twenty workbook calculation cells independently agree with LibreOffice. Statement balance, movement and continuity records remain explicitly unavailable.",
         "reviewed_artifacts": [
           {
-            "name": "valuation_report.md",
-            "sha256": "4633a0949336690bc55e64dc8ecc5ad6acd95222d8341f3a86b43d8ab0639676"
+            "name": "valuation.json",
+            "sha256": "edac743067c083f7bc4b41e80894a7471b1105f022258e28df7874d86d872ca3"
           },
           {
-            "name": "valuation.json",
-            "sha256": "5aae4fb8a660635d2490b68756dd05551ea812bab753b3eda9703bdfd8445e21"
+            "name": "valuation_report.docx",
+            "sha256": "cee1877421b66b506d884bab4c4f8c825d513f87b32bbce0d5db683f993c5626"
+          },
+          {
+            "name": "valuation_report.md",
+            "sha256": "8a7da48ea8cbca8b6e65fce1c62d48c369b8c50a457455001ea51391a12951ee"
+          },
+          {
+            "name": "valuation_report.pdf",
+            "sha256": "8f9bf08cf593c75824acfc93d55fb64edf93a8c396b9fe452a8f54c2a485499f"
+          },
+          {
+            "name": "valuation_workbook.xlsx",
+            "sha256": "893a97ce74afe5f8b09e3dad926ad9f816e59cedf7a4c54bea63d0d6eaac866c"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -188,15 +200,27 @@
       },
       "practice": {
         "test_case": "tests.plugins.test_business_valuation::test_valuation_teaching_sources_run_the_bound_workflow[practice]",
-        "result_review": "Operating value 833333.33 EUR and equity 583333.33 EUR at 12%; terminal share 89.29%. Report now states incomplete because eight mandate fields are unavailable; the numerical method remains review-pending and no conclusion is accepted; the rate source is preserved. The current output explicitly records the Strategy and governance profile as development workpapers only, with professional use disabled. The statement section explicitly says balance, movement and continuity records were not supplied. All four DOCX and three native PDF pages were inspected after this change; no statement completion was inferred.",
+        "result_review": "Operating value 833333.3333333333333333333333333333333333 EUR and equity 583333.3333333333333333333333333333333333 EUR. The report remains incomplete because the fictional note does not provide the complete engagement or an explicit standards selection. The numerical method is review-pending; no conclusion or PIV/purpose acceptance is recorded. Sources and changed-rate lineage are retained. All four DOCX and four native PDF pages were inspected, and all twenty workbook calculation cells independently agree with LibreOffice. Statement balance, movement and continuity records remain explicitly unavailable.",
         "reviewed_artifacts": [
           {
-            "name": "valuation_report.md",
-            "sha256": "074a3c66fb437125b3f883c33f653e53ddacfa31e3ab2951e3dc71751b608fc3"
+            "name": "valuation.json",
+            "sha256": "3ac44e1a7a1e83f054b47566992735840aae088d715fa4e3942a03229616e368"
           },
           {
-            "name": "valuation.json",
-            "sha256": "c53f523ab398ade48b23c6689b958e7f83b5664bad107bce8d23eacf66a53019"
+            "name": "valuation_report.docx",
+            "sha256": "dba20d6dd163ac4a1144851b30643f0aea9988d44401853888ec87dfe05c9981"
+          },
+          {
+            "name": "valuation_report.md",
+            "sha256": "6fa6a6dea6f4d758b6e53c19fa95ebc07042a601361db628158915ce70426d70"
+          },
+          {
+            "name": "valuation_report.pdf",
+            "sha256": "2a3f0f07ca15fab2f091d275b954bb9a230a5baa30a94bab068e4132d95227e6"
+          },
+          {
+            "name": "valuation_workbook.xlsx",
+            "sha256": "cf0fe41d9fa60f423b32b1be1ded8c4a9a75692b63561f4da8e1c42cd19c3b5b"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -446,5 +470,34 @@
     "reviewed_at": "2026-09-29T23:43:34.820726+00:00",
     "scope": "Lesson content unchanged from HEAD outside the source inventory. Reviewed additive workflow-ID registration and Studio Archive immutable snapshot functions. Prior editorial/artifact acceptance and professional limits retained; native CNC and valuation execution is verified separately.",
     "integrated_main": "8f662195f00bac3b605ac73077e1a0bd31d30253"
-  }
+  },
+  "release_review_history": [
+    {
+      "reviewed_at": "2026-09-29T22:41:00.415155+00:00",
+      "course_sha256": "766265dc013343c79c627798647ee4a31702d97bf419a0b0ef8251b99510f758",
+      "review_scope": "Read both fictional notes and the entire Italian lesson. Ran the real bound workflow for demo and practice, inspected their Markdown reports and calculation registers. Seven-method DOCX was rendered and all four pages inspected; LibreOffice independently recalculated all 75 workbook calculation cells. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior is an instruction and separate archive contract, not claimed as a live learner test.",
+      "artifacts": {
+        "demo": [
+          {
+            "name": "valuation_report.md",
+            "sha256": "4633a0949336690bc55e64dc8ecc5ad6acd95222d8341f3a86b43d8ab0639676"
+          },
+          {
+            "name": "valuation.json",
+            "sha256": "5aae4fb8a660635d2490b68756dd05551ea812bab753b3eda9703bdfd8445e21"
+          }
+        ],
+        "practice": [
+          {
+            "name": "valuation_report.md",
+            "sha256": "074a3c66fb437125b3f883c33f653e53ddacfa31e3ab2951e3dc71751b608fc3"
+          },
+          {
+            "name": "valuation.json",
+            "sha256": "c53f523ab398ade48b23c6689b958e7f83b5664bad107bce8d23eacf66a53019"
+          }
+        ]
+      }
+    }
+  ]
 }

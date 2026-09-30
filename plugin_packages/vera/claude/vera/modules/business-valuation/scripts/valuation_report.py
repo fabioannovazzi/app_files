@@ -10,8 +10,10 @@ from pathlib import Path
 from typing import Any
 
 from valuation_case import build_valuation, require
+from valuation_comparables import BASIS_LABELS as COMPARABLE_BASIS_LABELS
 from valuation_engine import decimal
 from valuation_holding import HOLDING_BASIS_LABELS, PART_BASIS_LABELS
+from valuation_mandate import MANDATE_FIELDS, STANDARD_FIELDS
 
 __all__ = ["write_package", "report_sections", "write_workbook", "compile_html"]
 
@@ -30,6 +32,7 @@ METHOD_LABELS = {
     "INCOME_EQUITY": "Metodo reddituale",
     "INCOME_EQUITY_FINITE": "Metodo reddituale a durata finita",
     "RESIDUAL_INCOME_EQUITY": "Reddito residuale del capitale proprio",
+    "ECONOMIC_PROFIT": "Profitto economico operativo",
     "HOLDING_SOTP": "Holding: somma delle partecipazioni",
     "NAV": "Patrimoniale rettificato",
     "MIXED_EQUITY": "Metodo misto",
@@ -52,6 +55,14 @@ DETAIL_LABELS = {
     "pv_continuing_residual": "Valore attuale dell'eccedenza terminale",
     "owner_cashflow_value": "Riscontro con distribuzioni nette e valore terminale",
     "owner_cashflow_difference": "Differenza aritmetica del riscontro",
+    "opening_operating_capital": "Capitale operativo iniziale",
+    "economic_profit_pv": "Valore attuale dei profitti economici",
+    "terminal_enterprise_value": "Valore operativo terminale fornito",
+    "closing_operating_capital": "Capitale operativo finale",
+    "continuing_economic_profit": "Eccedenza terminale rispetto al capitale operativo finale",
+    "pv_continuing_economic_profit": "Valore attuale dell'eccedenza operativa terminale",
+    "operating_cashflow_value": "Riscontro con FCFF e valore operativo terminale",
+    "operating_cashflow_difference": "Differenza aritmetica del riscontro FCFF",
     "holdings_value": "Valore delle partecipazioni detenute",
     "parent_assets": "Attività autonome della holding",
     "parent_liabilities": "Passività autonome della holding",
@@ -87,6 +98,14 @@ RESIDUAL_BASIS_LABELS = {
     "terminal_equity_basis": "Base del valore equity terminale",
     "capital_cost_basis": "Costo del capitale proprio e tempi",
 }
+ECONOMIC_BASIS_LABELS = {
+    "operating_perimeter": "Perimetro del capitale operativo",
+    "accounting_adjustments": "Rettifiche contabili coerenti",
+    "nopat_tax_basis": "NOPAT e trattamento delle imposte",
+    "reinvestment_basis": "Reinvestimento netto e variazioni del capitale",
+    "terminal_enterprise_basis": "Base del valore operativo terminale",
+    "capital_cost_basis": "Costo del capitale operativo e tempi",
+}
 TIMING_LABELS = {
     "end_period": "flussi a fine periodo",
     "mid_period": "flussi a metà periodo",
@@ -107,6 +126,15 @@ MANDATE_LABELS = {
     "engagement_date": "Data dell'incarico",
     "report_date": "Data della relazione",
     "commissioning_party": "Soggetto conferente",
+    "expert_identity": "Identità dell'esperto e del firmatario",
+    "written_mandate": "Incarico scritto e relativo riferimento",
+    "remuneration": "Compenso e condizioni",
+    "delivery_terms": "Termini di consegna",
+    "amendments": "Modifiche dell'incarico",
+    "name": "Standard dichiarato",
+    "edition": "Edizione dichiarata",
+    "adoption_reason": "Motivo della scelta",
+    "departures": "Scostamenti dichiarati e motivazione",
     "expert_activity": "Attività richiesta all'esperto",
     "participant_perspective": "Prospettiva del partecipante",
     "recipients": "Destinatari dichiarati",
@@ -146,8 +174,10 @@ def _mandate_rows(report: dict) -> list[tuple[str, str, str, str, str]]:
     if details is None:
         return [("Scheda dell'incarico", "Da acquisire", "Incompleta", "", "")]
     rows = []
-    for key, item in details.items():
-        if key in {"review", "interests"}:
+    for key in MANDATE_FIELDS:
+        item = details.get(key)
+        if item is None:
+            rows.append((MANDATE_LABELS[key], "Da acquisire", "Incompleto", "", ""))
             continue
         value = item["value"]
         if key == "subject_type" and value is not None:
@@ -161,6 +191,20 @@ def _mandate_rows(report: dict) -> list[tuple[str, str, str, str, str]]:
                 item["locator"] or "Posizione da acquisire",
             )
         )
+    standards = details.get("standards", [])
+    if not standards:
+        rows.append(("Standard ed edizione", "Da acquisire", "Incompleto", "", ""))
+    for item in standards:
+        for key in STANDARD_FIELDS:
+            rows.append(
+                (
+                    f"{item['id']} · {MANDATE_LABELS[key]}",
+                    item[key] if item[key] is not None else "Da acquisire",
+                    "Confermato" if item["status"] == "confirmed" else "Da confermare",
+                    ", ".join(item["source_ids"]),
+                    item["locator"] or "Posizione da acquisire",
+                )
+            )
     inputs = {row["id"]: row for row in report["case"]["inputs"]}
     for item in details["interests"]:
         status = "Confermato" if item["status"] == "confirmed" else "Da confermare"
@@ -242,6 +286,7 @@ def _readable_issues(report: dict) -> list[str]:
         "Structured mandate details have not been collected": "Scheda dell'incarico non ancora acquisita.",
         "Selected subject requires an explicit rights record": "L'oggetto selezionato richiede una scheda dei diritti.",
         "Mandate source review pending": "Le fonti dell'incarico richiedono ancora revisione.",
+        "Mandate standards: explicit selection and evidence pending": "Standard ed edizione: scelta esplicita ed evidenza da acquisire.",
     }
     for key, label in MANDATE_LABELS.items():
         translated[f"Mandate {key}: evidence or confirmation pending"] = (
@@ -254,6 +299,10 @@ def _readable_issues(report: dict) -> list[str]:
         "ownership ratio outside zero to one": "percentuale fuori dall'intervallo tra 0% e 100%",
     }
     details = report["mandate_assessment"]["details"]
+    for item in (details or {}).get("standards", []):
+        translated[f"Standard {item['id']}: selection or evidence pending"] = (
+            f"Standard {item['id']}: scelta o evidenza da acquisire."
+        )
     for item in (details or {}).get("interests", []):
         for reason, shown in reasons.items():
             translated[f"Rights {item['id']}: {reason}"] = (
@@ -441,6 +490,10 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
             f"Stato: {STATUS[method['status']]}",
             method.get("rationale", method.get("reason", "")),
         ]
+        if "comparables" in method:
+            rows.extend(_comparable_rows(method, amounts))
+        if "comparables_issue" in method:
+            rows.append(method["comparables_issue"])
         if "value_id" in method:
             value = amounts[method["value_id"]]
             basis = (
@@ -473,6 +526,23 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
                 rows.extend(_holding_rows(method, amounts, case["currency"]))
             income_basis = method.get("income_basis")
             residual_basis = method.get("residual_basis")
+            economic_basis = method.get("economic_basis")
+            if economic_basis:
+                rows.extend(
+                    [
+                        f"Base del profitto economico: {'Confermata' if economic_basis['status'] == 'confirmed' else 'Da confermare'}",
+                        *[
+                            f"{label}: {economic_basis[key]}"
+                            for key, label in ECONOMIC_BASIS_LABELS.items()
+                        ],
+                        f"Fonti: {', '.join(economic_basis['source_ids'])} · {economic_basis['locator']}",
+                        "Ogni periodo riconcilia capitale operativo iniziale + reinvestimento netto = capitale finale. Il profitto economico sottrae al NOPAT l'onere sul capitale iniziale. Il riscontro FCFF usa NOPAT − reinvestimento netto; la quadratura non dimostra la correttezza economica o fiscale degli importi.",
+                    ]
+                )
+                for index, item in enumerate(method["operating_capital_schedule"], 1):
+                    rows.append(
+                        f"Periodo {index}: capitale finale {display(amounts[item['closing_id']]['value'])}; differenza di quadratura {display(amounts[item['difference_id']]['value'])}; onere operativo {display(amounts[item['capital_charge_id']]['value'])}; profitto economico {display(amounts[item['economic_profit_id']]['value'])}; FCFF {display(amounts[item['fcff_id']]['value'])} [{item['economic_profit_id']}]."
+                    )
             if residual_basis:
                 rows.extend(
                     [
@@ -509,12 +579,16 @@ def report_sections(report: dict) -> list[tuple[str, list[str]]]:
                         f"Tempi espliciti dalla data {timing['valuation_date']}: {timing['day_count']}; {TIMING_LABELS[timing['cash_flow_timing']].replace('flussi', 'redditi') if income_basis or residual_basis else TIMING_LABELS[timing['cash_flow_timing']]}; {TIMING_LABELS[timing['rate_model']]}; {TIMING_LABELS[timing['rate_compounding']]}.",
                         timing["rationale"],
                         (
-                            "L'onere di ciascun periodo usa il patrimonio iniziale e il rendimento implicito negli stessi fattori di sconto. Il termine finale è valore equity fornito meno patrimonio finale, scontato alla medesima scadenza. Non si aggiunge nuovamente il patrimonio finale e non si deduce il debito. Distribuzioni e apporti sono collocati a fine periodo."
-                            if residual_basis
+                            "La continuazione è il valore operativo terminale fornito meno il capitale operativo finale. NOPAT e reinvestimenti sono collocati a fine periodo; il costo di ciascun intervallo deriva dagli stessi divisori di attualizzazione. Il modello non stima automaticamente il WACC, rettifiche contabili o imposte."
+                            if economic_basis
                             else (
-                                "Il residuo equity è un importo autonomo alla fine dell'ultimo periodo e resta a quella scadenza anche se i redditi sono collocati a metà periodo. Non è derivato dall'ultimo reddito né da una formula di crescita perpetua."
-                                if income_basis
-                                else "Il valore terminale è una perpetuità annuale a fine periodo, stimata all'ultima data del piano. Il flusso terminale è annuale e distinto dagli eventuali flussi mensili; il tasso terminale e la crescita sono annui effettivi."
+                                "L'onere di ciascun periodo usa il patrimonio iniziale e il rendimento implicito negli stessi fattori di sconto. Il termine finale è valore equity fornito meno patrimonio finale, scontato alla medesima scadenza. Non si aggiunge nuovamente il patrimonio finale e non si deduce il debito. Distribuzioni e apporti sono collocati a fine periodo."
+                                if residual_basis
+                                else (
+                                    "Il residuo equity è un importo autonomo alla fine dell'ultimo periodo e resta a quella scadenza anche se i redditi sono collocati a metà periodo. Non è derivato dall'ultimo reddito né da una formula di crescita perpetua."
+                                    if income_basis
+                                    else "Il valore terminale è una perpetuità annuale a fine periodo, stimata all'ultima data del piano. Il flusso terminale è annuale e distinto dagli eventuali flussi mensili; il tasso terminale e la crescita sono annui effettivi."
+                                )
                             )
                         ),
                     ]
@@ -710,6 +784,223 @@ def _write_plan_bridge(workbook: Any, report: dict, input_rows: dict[str, int]) 
         else:
             formula = f"=SUM('Piano FCFF'!I{index*12+2}:I{index*12+13})"
         workbook["Dati"].cell(input_rows[ref], 3, formula)
+
+
+def _comparable_basis_rows(method: dict) -> list[list[str]]:
+    """Retain the complete initial universe, exclusions and declared accounting bases."""
+    review = method["comparables"]
+    rows = []
+
+    def append(subject: str, key: str, value: str, evidence: dict) -> None:
+        rows.append(
+            [
+                subject,
+                key,
+                value,
+                HOLDING_STATUS[evidence["status"]],
+                ", ".join(evidence["source_ids"]),
+                evidence["locator"],
+            ]
+        )
+
+    for key, label in COMPARABLE_BASIS_LABELS.items():
+        append("Campione", label, review[key], review)
+    records = [("Impresa valutata", review["target"], review["target"])]
+    for peer in review["peers"]:
+        append(peer["id"], "Soggetto", peer["name"] + " · " + peer["entity_id"], peer)
+        append(
+            peer["id"],
+            "Decisione",
+            "Incluso" if peer["decision"] == "include" else "Escluso",
+            peer,
+        )
+        append(peer["id"], "Motivo", peer["reason"], peer)
+        if peer["decision"] == "include":
+            records.append((peer["id"], peer["data"], peer))
+    labels = {
+        "period_start": "Inizio periodo",
+        "period_end": "Fine periodo",
+        "period_kind": "Base temporale",
+        "published_on": "Pubblicazione evidenza",
+        "metric_basis": "Metrica reported/adjusted",
+        "lease_basis": "Trattamento leasing",
+        "accounting_basis": "Base contabile",
+        "kind": "Tipo multiplo",
+        "price_date": "Data del prezzo",
+        "comparability": "Confronto dei fondamentali",
+    }
+    for subject, data, evidence in records:
+        for key, label in labels.items():
+            if key in data:
+                append(subject, label, data[key], evidence)
+        for key, label in [("metric", "Metrica"), ("numerator", "Numeratore")]:
+            if key in data:
+                amount = data[key]
+                append(
+                    subject,
+                    label,
+                    f"{amount['reported_input']} + rettifiche [{', '.join(amount['adjustment_inputs'])}] = {amount['comparable_input']}. {amount['explanation']}",
+                    evidence,
+                )
+    return rows
+
+
+def _comparable_rows(method: dict, amounts: dict) -> list[str]:
+    rows = [
+        f"{subject} · {label}: {value} · {status} · Fonti: {sources} · {locator}"
+        for subject, label, value, status, sources, locator in _comparable_basis_rows(
+            method
+        )
+    ]
+    for peer in method.get("comparable_schedule", {}).get("peers", []):
+        ref = peer["multiple_id"]
+        rows.append(
+            f"Multiplo del comparabile {peer['id']}: {display(amounts[ref]['value'])}x [{ref}]."
+        )
+    rows.append(
+        "Il multiplo applicato è un'ipotesi fornita separatamente: non è selezionato, mediato o corretto automaticamente. La quadratura non prova comparabilità economica, completezza del campione o adeguatezza delle rettifiche contabili e leasing."
+    )
+    return rows
+
+
+def _write_economic_sheets(
+    workbook: Any, report: dict, row_ids: dict[str, int]
+) -> None:
+    """Expose operating capital and FCFF checks as links to the canonical ledger."""
+    methods = [row for row in report["methods"] if "economic_basis" in row]
+    if not methods:
+        return
+    basis_sheet = workbook.create_sheet("Base profitto economico")
+    basis_sheet.append(
+        ["Metodo", "Campo", "Descrizione", "Stato", "Fonti", "Posizione"]
+    )
+    capital_sheet = workbook.create_sheet("Capitale operativo")
+    capital_sheet.append(
+        [
+            "Metodo",
+            "Periodo",
+            "Capitale iniziale",
+            "NOPAT",
+            "Reinvestimento netto",
+            "Capitale finale",
+            "Finale calcolato",
+            "Differenza",
+            "Costo del periodo",
+            "Onere operativo",
+            "Profitto economico",
+            "Valore attuale profitto",
+            "FCFF",
+            "Valore attuale FCFF",
+        ]
+    )
+    for method in methods:
+        basis = method["economic_basis"]
+        for key, label in ECONOMIC_BASIS_LABELS.items():
+            basis_sheet.append(
+                [
+                    method["method_id"],
+                    label,
+                    basis[key],
+                    "Confermata" if basis["status"] == "confirmed" else "Da confermare",
+                    ", ".join(basis["source_ids"]),
+                    basis["locator"],
+                ]
+            )
+        for index, item in enumerate(method["operating_capital_schedule"]):
+            period = method["timing"]["schedule"][index]
+            capital_sheet.append(
+                [
+                    method["method_id"],
+                    f"{period['start_date']} – {period['end_date']}",
+                    *[
+                        f"='Calcoli'!B{row_ids[item[key]]}"
+                        for key in (
+                            "opening_id",
+                            "nopat_id",
+                            "reinvestment_id",
+                            "closing_id",
+                            "expected_closing_id",
+                            "difference_id",
+                            "period_cost_id",
+                            "capital_charge_id",
+                            "economic_profit_id",
+                            "pv_economic_profit_id",
+                            "fcff_id",
+                            "pv_fcff_id",
+                        )
+                    ],
+                ]
+            )
+            _literal(capital_sheet.cell(capital_sheet.max_row, 1), method["method_id"])
+    for row in basis_sheet:
+        for cell in row:
+            _literal(cell, str(cell.value))
+
+
+def _write_comparable_sheets(workbook: Any, report: dict, row_ids: dict) -> None:
+    """Link peer calculations while preserving unavailable and excluded decisions."""
+    methods = [row for row in report["methods"] if "comparables" in row]
+    if not methods:
+        return
+    peers = workbook.create_sheet("Comparabili")
+    peers.append(["Metodo", "Candidato", "Decisione", "Motivo", "Multiplo", "Calcolo"])
+    bases = workbook.create_sheet("Base multipli")
+    bases.append(
+        ["Metodo", "Soggetto", "Campo", "Descrizione", "Stato", "Fonti", "Posizione"]
+    )
+    amounts = workbook.create_sheet("Raccordi multipli")
+    amounts.append(["Metodo", "Soggetto", "Voce", "Valore", "Calcolo"])
+    for method in methods:
+        mid = method["method_id"]
+        for row in _comparable_basis_rows(method):
+            bases.append([mid, *row])
+        schedule = method.get("comparable_schedule", {})
+        results = {row["id"]: row for row in schedule.get("peers", [])}
+        for peer in method["comparables"]["peers"]:
+            ref = results.get(peer["id"], {}).get("multiple_id")
+            peers.append(
+                [
+                    mid,
+                    peer["name"] + " · " + peer["id"],
+                    "Incluso" if peer["decision"] == "include" else "Escluso",
+                    peer["reason"],
+                    f"='Calcoli'!B{row_ids[ref]}" if ref else "Non calcolato",
+                    ref or "",
+                ]
+            )
+        reconciliations = (
+            [("Impresa valutata", "Metrica", schedule["target"])] if schedule else []
+        )
+        for peer in results.values():
+            reconciliations.extend(
+                [
+                    (peer["id"], "Numeratore", peer["numerator"]),
+                    (peer["id"], "Metrica", peer["metric"]),
+                ]
+            )
+        for subject, label, record in reconciliations:
+            refs = [
+                ("Reported", record["reported_id"]),
+                *[("Rettifica con segno", ref) for ref in record["adjustment_ids"]],
+                ("Comparabile fornito", record["comparable_id"]),
+                ("Riconciliato", record["computed_id"]),
+                ("Differenza", record["difference_id"]),
+            ]
+            for description, ref in refs:
+                amounts.append(
+                    [
+                        mid,
+                        subject,
+                        label + " · " + description,
+                        f"='Calcoli'!B{row_ids[ref]}",
+                        ref,
+                    ]
+                )
+    for sheet, formula_column in [(peers, 5), (bases, None), (amounts, 4)]:
+        for row in sheet:
+            for cell in row:
+                if cell.row == 1 or cell.column != formula_column:
+                    _literal(cell, str(cell.value or ""))
 
 
 def _holding_rows(method: dict, amounts: dict, currency: str) -> list[str]:
@@ -1004,6 +1295,8 @@ def write_workbook(path: Path, report: dict) -> None:
                 str(calculations.cell(index, column).value or ""),
             )
     _write_holding_sheets(workbook, report, row_ids)
+    _write_comparable_sheets(workbook, report, row_ids)
+    _write_economic_sheets(workbook, report, row_ids)
     residual_methods = [
         method for method in report["methods"] if "residual_basis" in method
     ]
@@ -1299,6 +1592,9 @@ def write_workbook(path: Path, report: dict) -> None:
         workbook["Piano FCFF"].column_dimensions["K"].width = 54
     mandate_sheet.column_dimensions["B"].width = 80
     mandate_sheet.column_dimensions["E"].width = 60
+    if "Comparabili" in workbook:
+        workbook["Base multipli"].column_dimensions["D"].width = 80
+        workbook["Comparabili"].column_dimensions["D"].width = 80
     if "Partecipazioni" in workbook:
         workbook["Base holding"].column_dimensions["D"].width = 80
         workbook["Eliminazioni"].column_dimensions["E"].width = 80
@@ -1407,13 +1703,29 @@ def _write_documents(directory: Path, report: dict) -> None:
         document.add_heading(heading, level=1)
         group = [Paragraph(html.escape(heading), styles["Heading2"])]
         method_section = heading in METHOD_LABELS.values()
+        paragraph_groups: list[list] = []
         for index, paragraph in enumerate(paragraphs):
             item = document.add_paragraph(paragraph)
-            if method_section and index < len(paragraphs) - 1:
+            # "Fonti:" is emitted by the report outline, not inferred from evidence.
+            paired_source = index + 1 < len(paragraphs) and paragraphs[
+                index + 1
+            ].startswith("Fonti:")
+            if paired_source or (method_section and index < len(paragraphs) - 1):
                 item.paragraph_format.keep_with_next = True
-            group.extend(
-                [Paragraph(html.escape(paragraph), styles["Normal"]), Spacer(1, 7)]
-            )
+            item.paragraph_format.keep_together = True
+            rendered = [
+                Paragraph(html.escape(paragraph), styles["Normal"]),
+                Spacer(1, 7),
+            ]
+            if paragraph.startswith("Fonti:") and paragraph_groups:
+                paragraph_groups[-1].extend(rendered)
+            else:
+                paragraph_groups.append(rendered)
+        for paragraphs_group in paragraph_groups:
+            if len(paragraphs_group) > 2 and not method_section:
+                group.append(KeepTogether(paragraphs_group))
+            else:
+                group.extend(paragraphs_group)
         content.extend([KeepTogether(group)] if method_section else group)
     document.save(directory / "valuation_report.docx")
 

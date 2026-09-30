@@ -859,7 +859,9 @@
         },
         "income_basis": {},
         "residual_basis": {},
-        "holding_basis": {}
+        "holding_basis": {},
+        "comparables": {},
+        "economic_basis": {}
       },
       "additionalProperties": false
     },
@@ -1155,7 +1157,8 @@
                 "APV",
                 "INCOME_EQUITY_FINITE",
                 "RESIDUAL_INCOME_EQUITY",
-                "HOLDING_SOTP"
+                "HOLDING_SOTP",
+                "ECONOMIC_PROFIT"
               ]
             },
             "bridge": {
@@ -1450,6 +1453,66 @@
               ]
             }
           }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "MULTIPLE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "comparables": {
+                "$ref": "#/$defs/comparables"
+              }
+            }
+          },
+          "else": {
+            "not": {
+              "required": [
+                "comparables"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "ECONOMIC_PROFIT"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "timing",
+              "economic_basis"
+            ],
+            "properties": {
+              "inputs": {
+                "$ref": "#/$defs/economicProfitInputs"
+              },
+              "timing": {
+                "properties": {
+                  "cash_flow_timing": {
+                    "const": "end_period"
+                  }
+                }
+              },
+              "economic_basis": {
+                "$ref": "#/$defs/economicBasis"
+              }
+            }
+          },
+          "else": {
+            "not": {
+              "required": [
+                "economic_basis"
+              ]
+            }
+          }
         }
       ]
     },
@@ -1700,6 +1763,28 @@
         },
         "review": {
           "$ref": "#/$defs/review"
+        },
+        "expert_identity": {
+          "$ref": "#/$defs/mandateField"
+        },
+        "written_mandate": {
+          "$ref": "#/$defs/mandateField"
+        },
+        "remuneration": {
+          "$ref": "#/$defs/mandateField"
+        },
+        "delivery_terms": {
+          "$ref": "#/$defs/mandateField"
+        },
+        "amendments": {
+          "$ref": "#/$defs/mandateField"
+        },
+        "standards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/mandateStandard"
+          },
+          "maxItems": 30
         }
       },
       "additionalProperties": false
@@ -2424,6 +2509,491 @@
           "minItems": 0,
           "maxItems": 100,
           "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "comparableAmount": {
+      "type": "object",
+      "required": [
+        "reported_input",
+        "adjustment_inputs",
+        "comparable_input",
+        "explanation"
+      ],
+      "properties": {
+        "reported_input": {
+          "$ref": "#/$defs/id"
+        },
+        "adjustment_inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "comparable_input": {
+          "$ref": "#/$defs/id"
+        },
+        "explanation": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "additionalProperties": false
+    },
+    "comparableTarget": {
+      "type": "object",
+      "required": [
+        "period_start",
+        "period_end",
+        "period_kind",
+        "published_on",
+        "metric_basis",
+        "lease_basis",
+        "accounting_basis",
+        "metric",
+        "source_ids",
+        "locator",
+        "status"
+      ],
+      "properties": {
+        "period_start": {
+          "$ref": "#/$defs/date"
+        },
+        "period_end": {
+          "$ref": "#/$defs/date"
+        },
+        "period_kind": {
+          "enum": [
+            "LTM",
+            "forward"
+          ]
+        },
+        "published_on": {
+          "$ref": "#/$defs/date"
+        },
+        "metric_basis": {
+          "enum": [
+            "reported",
+            "adjusted"
+          ]
+        },
+        "lease_basis": {
+          "enum": [
+            "capitalized",
+            "expensed",
+            "not_applicable"
+          ]
+        },
+        "accounting_basis": {
+          "$ref": "#/$defs/text"
+        },
+        "metric": {
+          "$ref": "#/$defs/comparableAmount"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "locator": {
+          "$ref": "#/$defs/text"
+        },
+        "status": {
+          "enum": [
+            "proposed",
+            "confirmed"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "comparablePeerData": {
+      "type": "object",
+      "required": [
+        "period_start",
+        "period_end",
+        "period_kind",
+        "published_on",
+        "metric_basis",
+        "lease_basis",
+        "accounting_basis",
+        "metric",
+        "kind",
+        "price_date",
+        "numerator",
+        "comparability"
+      ],
+      "properties": {
+        "period_start": {
+          "$ref": "#/$defs/date"
+        },
+        "period_end": {
+          "$ref": "#/$defs/date"
+        },
+        "period_kind": {
+          "enum": [
+            "LTM",
+            "forward"
+          ]
+        },
+        "published_on": {
+          "$ref": "#/$defs/date"
+        },
+        "metric_basis": {
+          "enum": [
+            "reported",
+            "adjusted"
+          ]
+        },
+        "lease_basis": {
+          "enum": [
+            "capitalized",
+            "expensed",
+            "not_applicable"
+          ]
+        },
+        "accounting_basis": {
+          "$ref": "#/$defs/text"
+        },
+        "metric": {
+          "$ref": "#/$defs/comparableAmount"
+        },
+        "kind": {
+          "enum": [
+            "EV_EBITDA",
+            "EV_EBIT",
+            "EV_REVENUE",
+            "P_E"
+          ]
+        },
+        "price_date": {
+          "$ref": "#/$defs/date"
+        },
+        "numerator": {
+          "$ref": "#/$defs/comparableAmount"
+        },
+        "comparability": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "additionalProperties": false
+    },
+    "comparablePeer": {
+      "type": "object",
+      "required": [
+        "id",
+        "entity_id",
+        "name",
+        "decision",
+        "reason",
+        "source_ids",
+        "locator",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "entity_id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "$ref": "#/$defs/text"
+        },
+        "decision": {
+          "enum": [
+            "include",
+            "exclude"
+          ]
+        },
+        "reason": {
+          "$ref": "#/$defs/text"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "locator": {
+          "$ref": "#/$defs/text"
+        },
+        "status": {
+          "enum": [
+            "proposed",
+            "confirmed"
+          ]
+        },
+        "data": {
+          "$ref": "#/$defs/comparablePeerData"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "decision": {
+                "const": "include"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "data"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "data"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "comparables": {
+      "type": "object",
+      "required": [
+        "initial_universe",
+        "selection_reason",
+        "date_alignment",
+        "accounting_alignment",
+        "lease_alignment",
+        "margin_analysis",
+        "source_ids",
+        "locator",
+        "status",
+        "target",
+        "peers"
+      ],
+      "properties": {
+        "initial_universe": {
+          "$ref": "#/$defs/text"
+        },
+        "selection_reason": {
+          "$ref": "#/$defs/text"
+        },
+        "date_alignment": {
+          "$ref": "#/$defs/text"
+        },
+        "accounting_alignment": {
+          "$ref": "#/$defs/text"
+        },
+        "lease_alignment": {
+          "$ref": "#/$defs/text"
+        },
+        "margin_analysis": {
+          "$ref": "#/$defs/text"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "locator": {
+          "$ref": "#/$defs/text"
+        },
+        "status": {
+          "enum": [
+            "proposed",
+            "confirmed"
+          ]
+        },
+        "target": {
+          "$ref": "#/$defs/comparableTarget"
+        },
+        "peers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/comparablePeer"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "additionalProperties": false
+    },
+    "economicProfitInputs": {
+      "type": "object",
+      "required": [
+        "operating_capital",
+        "nopat",
+        "net_reinvestment",
+        "terminal_enterprise_value"
+      ],
+      "properties": {
+        "operating_capital": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 2,
+          "maxItems": 1201
+        },
+        "nopat": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 1200
+        },
+        "net_reinvestment": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 1200
+        },
+        "terminal_enterprise_value": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false
+    },
+    "economicBasis": {
+      "type": "object",
+      "required": [
+        "operating_perimeter",
+        "accounting_adjustments",
+        "nopat_tax_basis",
+        "reinvestment_basis",
+        "terminal_enterprise_basis",
+        "capital_cost_basis",
+        "locator",
+        "source_ids",
+        "status"
+      ],
+      "properties": {
+        "operating_perimeter": {
+          "$ref": "#/$defs/text"
+        },
+        "accounting_adjustments": {
+          "$ref": "#/$defs/text"
+        },
+        "nopat_tax_basis": {
+          "$ref": "#/$defs/text"
+        },
+        "reinvestment_basis": {
+          "$ref": "#/$defs/text"
+        },
+        "terminal_enterprise_basis": {
+          "$ref": "#/$defs/text"
+        },
+        "capital_cost_basis": {
+          "$ref": "#/$defs/text"
+        },
+        "locator": {
+          "$ref": "#/$defs/text"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 2000,
+          "uniqueItems": true
+        },
+        "status": {
+          "enum": [
+            "proposed",
+            "confirmed"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "mandateStandard": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "edition",
+        "adoption_reason",
+        "departures",
+        "status",
+        "source_ids",
+        "locator"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "edition": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "adoption_reason": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "departures": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "confirmed",
+            "proposed"
+          ]
+        },
+        "source_ids": {
+          "$ref": "#/$defs/references"
+        },
+        "locator": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "additionalProperties": false
