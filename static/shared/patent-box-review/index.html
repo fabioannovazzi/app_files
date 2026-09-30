@@ -4,107 +4,301 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="description" content="Prepara prove, costi e controlli per software, brevetti e design, con fascicolo A/B in Word e PDF. Il percorso completo resta in collaudo.">
-  <title>Patent Box — anteprima di sviluppo | Vera</title>
+  <meta name="description" content="Prepara la pratica Patent Box: prove, costi e controlli per la revisione professionale. Anteprima per una prova guidata.">
+  <title>Patent Box — anteprima | Vera</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../product-function-page.css">
-  <style>
-    .pf-languages { gap: 16px; border: 0; padding: 0; }
-    .pf-languages a { display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; text-decoration: none; }
-    .pf-languages a[aria-current="page"] { color: var(--pf-blue); font-weight: 700; text-decoration: underline; text-underline-offset: 6px; }
-    .pf-product { text-decoration: none; font-weight: 600; }
-  </style>
+  <link rel="stylesheet" href="page.css">
 </head>
 <body>
   <a class="skip-link" href="#main-content" id="skip">Vai al contenuto</a>
   <header class="pf-nav"><div class="pf-nav__inner">
-    <a class="pf-product" href="../vera/index.html">Vera</a>
-    <nav class="pf-languages" aria-label="Language"><a href="?lang=it">IT</a><a href="?lang=en">EN</a><a href="?lang=fr">FR</a><a href="?lang=de">DE</a><a href="?lang=es">ES</a></nav>
+    <a class="pf-product" href="../vera/index.html" data-vera-link>Vera</a>
+    <nav class="pf-languages" aria-label="Language"><a href="?lang=it" lang="it" aria-current="page">IT</a><a href="?lang=en" lang="en">EN</a><a href="?lang=fr" lang="fr">FR</a><a href="?lang=de" lang="de">DE</a><a href="?lang=es" lang="es">ES</a></nav>
   </div></header>
   <main class="pf-main" id="main-content">
-    <section class="pf-hero"><div><p class="pf-label" id="status">Anteprima di sviluppo · non pubblicata</p><h1>Patent Box</h1><p class="pf-summary" id="summary">Prepara prove, costi e controlli per software, brevetti e design, con fascicolo A/B in Word e PDF. Il percorso completo resta in collaudo.</p></div><div class="pf-hero__aside"><p id="limit">Le regole reali sono in bozza. Il calcolo reale richiede fonti riesaminate e un professionista autorizzato tramite certificato e mandato dello studio.</p></div></section>
-    <section class="pf-facts" aria-label="Patent Box">
-      <article class="pf-fact"><h2 id="inputTitle">Dati in ingresso</h2><p id="input">Documenti selezionati su impresa, beni, diritti, attività, opzioni e incentivi; contabilità CSV, XLSX o PDF leggibile con mappature, importi e rettifiche riesaminati. Firme e marche si verificano sui file selezionati.</p></article>
-      <article class="pf-fact"><h2 id="methodTitle">Procedura</h2><p id="method">Vera propone fatti, richieste mirate e controlli motivati. Il professionista rivede le conclusioni. Il codice verifica riferimenti, popolazioni contabili, allocazioni e calcoli; una revisione firmata lega la decisione alla proposta e alle fonti esatte.</p></article>
-      <article class="pf-fact"><h2 id="outputTitle">Elaborati</h2><p id="output">Sintesi, documenti mancanti, matrice dei controlli, riconciliazione dei costi, workpaper e fascicolo A/B modificabile e PDF. Restano visibili paragrafi aperti, basi redditi e IRAP separate ed esiti di firma e marca. La deduzione aggiuntiva non è un credito o un risparmio di imposta.</p></article>
-    </section>
-    <section class="pf-section"><div class="pf-section__head"><h2 id="responsibilityTitle">Revisione e limiti</h2><p class="pf-section__copy" id="responsibility">Qualificazione fiscale, sufficienza delle prove, fonti e modelli annuali richiedono revisione professionale. I test tecnici non completano i 32 scenari professionali previsti. Restano da accettare provider qualificato, conservazione, monitor pianificato, riapertura controllata e runtime installato. La funzione verifica firme esistenti; non firma né trasmette documenti.</p></div></section>
-    <section class="function-model-data" data-model-data-workflow="patent-box-review" data-model-data-status="relevant" aria-labelledby="dataTitle"><div class="function-model-data__head"><div class="function-model-data__heading"><h2 id="dataTitle">Quali dati arrivano al modello</h2></div><div class="function-model-data__body"><p class="function-model-data__copy" id="data">Il modello della sessione può leggere documenti selezionati, identità pertinenti, contratti, attività, persone, righe contabili, fonti, motivazioni e testi del fascicolo. Può leggere anche certificati, nomi e riferimenti professionali, mandati e risultati di verifica. Parsing, copie, hash ed esportazioni locali non anonimizzano i dati né garantiscono un trattamento soltanto locale. Si applicano le condizioni dell’account scelto. La ricerca pubblica usa quesiti generici senza dati del cliente. La verifica crittografica non effettua richieste di rete. Se il professionista sceglie un servizio di firma esterno, vi trasferisce personalmente la richiesta con identificativi opachi, periodo, dichiarazione e hash, oppure il mandato; il plugin non la carica. Il report distingue le evidenze misurabili da quelle non misurabili.</p></div></div></section>
+
+<section class="pf-hero"><div><p class="pf-label" id="status">Italia · Anteprima per una prova guidata</p><h1>Patent Box</h1><p class="pf-summary" id="summary">Prepara la pratica Patent Box: collega beni, attività e costi alle prove e porta al professionista una proposta di revisione.</p><a class="pb-text-link" href="#deliverables" id="jump">Vedi gli elaborati <span aria-hidden="true">↓</span></a></div><aside class="pf-hero__aside"><h2 id="limitTitle">Stato della funzione</h2><p id="limit">La preparazione e gli elaborati sono stati verificati su casi sintetici. L’accettazione professionale su una pratica reale e la prova nel plugin installato restano da completare.</p></aside></section>
+<section class="pf-facts" aria-label="Patent Box"><article class="pf-fact"><h2 id="inputsTitle">Documenti selezionati</h2><p id="inputs">Diritti su software, brevetti o design; attività e progetti; contratti, personale, contabilità e precedenti opzioni o incentivi.</p></article><article class="pf-fact"><h2 id="methodTitle">Revisione per bene e costo</h2><p id="method">Ogni conclusione conserva i riferimenti alle prove. Lacune, esclusioni e componenti sospese restano distinguibili.</p></article><article class="pf-fact"><h2 id="outputTitle">Proposta, poi calcolo</h2><p id="output">La proposta leggibile si prepara prima dell’autorizzazione. Il calcolo reale e il fascicolo Word/PDF richiedono regole e revisione approvate.</p></article></section>
+<section class="pf-section"><div class="pf-section__head"><h2 id="useTitle">Quando provarla</h2><div class="pf-section__copy"><p id="use">Per uno studio che deve ricostruire una pratica da documenti tecnici e contabili e individuare le questioni da sottoporre al professionista. Il primo risultato è una proposta verificabile, con costi riconciliati e richieste mirate sui documenti mancanti.</p><div class="pb-example"><h3 id="exampleLabel">Esempio di lavoro</h3><p id="example">La pratica contiene due software, contratti di sviluppo e costi del personale. Per un bene manca la prova del diritto: Vera lo segnala nel controllo pertinente e formula la richiesta documentale. Nel calcolo, dopo la revisione richiesta, una componente sospesa resta distinta dalle componenti ammesse o escluse.</p></div></div></div></section>
+<section class="pf-section"><h2 id="stepsTitle">Come si prepara la pratica</h2><ol class="pb-steps"><li><span class="pb-step-number" aria-hidden="true">01</span><h3 id="step1Title">Seleziona il perimetro</h3><p id="step1">Indica cliente, periodo e beni. Scegli i documenti della pratica nell’Archivio di studio: Vera lavora sugli input selezionati e conserva i riferimenti alle versioni usate.</p></li><li><span class="pb-step-number" aria-hidden="true">02</span><h3 id="step2Title">Riconcilia i costi</h3><p id="step2">Vera legge CSV, XLSX o tabelle PDF con testo leggibile. Propone mappature, rettifiche e allocazioni da riesaminare, mantenendo totali di controllo, righe originali e decisioni sui possibili duplicati.</p></li><li><span class="pb-step-number" aria-hidden="true">03</span><h3 id="step3Title">Rivedi prove e conclusioni</h3><p id="step3">Il professionista esamina fatti, controlli, fonti e testi proposti per il fascicolo. I percorsi ordinario e premiale, i fornitori e la storia delle opzioni sono trattati quando pertinenti al caso; i dubbi non diventano esiti positivi automatici.</p></li></ol></section>
+<section class="pf-section" id="deliverables"><h2 id="deliverablesTitle">Cosa ricevi</h2><div class="pb-deliverables"><article><p class="pf-label" id="prepareLabel">Durante la preparazione</p><h3 id="prepareTitle">Una proposta leggibile</h3><ul><li id="prepare1">Fatti e riferimenti ai documenti, con lacune e richieste mirate.</li><li id="prepare2">Riconciliazione dei costi, controlli motivati e testi A/B da riesaminare.</li></ul></article><article><p class="pf-label" id="approvedLabel">Dopo la revisione richiesta</p><h3 id="approvedTitle">Calcolo e fascicolo in bozza</h3><ul><li id="approved1">Riepilogo, documenti mancanti, matrice dei controlli, riconciliazione e carte di lavoro.</li><li id="approved2">Fascicolo A/B modificabile in Word e copia PDF, con citazioni e paragrafi ancora aperti.</li></ul></article></div><p class="pb-gate" id="gate">Per una pratica reale servono fonti aggiornate e riesaminate, regole approvate e una revisione firmata da un professionista autorizzato dallo studio. Questa configurazione non è fornita già approvata. Gli importi distinguono le basi redditi e IRAP: la deduzione aggiuntiva non è un credito né un risparmio d’imposta.</p></section>
+<section class="pf-section"><div class="pf-section__head"><h2 id="limitsTitle">Responsabilità e funzioni opzionali</h2><div class="pb-review"><article><h3 id="reviewTitle">Decisioni del professionista</h3><p id="review">Restano al professionista la qualificazione fiscale, la sufficienza delle prove e la validità delle fonti e dei modelli annuali. Vera non presenta dichiarazioni e non attribuisce protezione dalle sanzioni. I test tecnici non dimostrano l’utilità su una pratica reale.</p></article><article><h3 id="formalTitle">Firme e versioni</h3><p id="formal">La funzione verifica firme e marche già presenti sui file selezionati, senza firmare per il professionista. L’approvazione finale riguarda gli elaborati esatti. La riapertura richiede una nuova autorizzazione e conserva la versione precedente. Qualificazione del provider e conservazione a norma restano da validare.</p></article><article><h3 id="monitorTitle">Monitoraggio su richiesta</h3><p id="monitor">Il monitor è disattivato. Se richiesto e configurato nell’host, confronta le fonti pubbliche e prepara una coda privata delle pratiche potenzialmente interessate. Non modifica regole o pratiche automaticamente; una richiesta di notifica salvata non prova l’invio.</p></article></div></div></section>
+<section class="pf-section"><div class="pf-section__head"><h2 id="startTitle">Avvia una prova guidata</h2><div class="pf-section__copy"><p id="start">Nel plugin Vera che include Patent Box, seleziona i documenti della pratica e usa una richiesta come questa. L’anteprima non abilita da sola il calcolo reale.</p><blockquote class="pf-prompt" id="prompt">@Vera prepara una proposta di revisione Patent Box per il cliente e il periodo selezionati. Usa i documenti scelti, riconcilia i costi e mostrami prove, lacune e controlli da riesaminare.</blockquote><a class="pb-text-link" href="../vera/index.html#area-matters" data-vera-link id="back">Torna alle funzioni di Vera</a></div></div></section>
+<section class="function-model-data" data-model-data-workflow="patent-box-review" data-model-data-status="relevant" aria-labelledby="dataTitle"><div class="function-model-data__head"><div class="function-model-data__heading"><h2 id="dataTitle">Quali dati arrivano al modello</h2></div><div class="function-model-data__body"><p class="function-model-data__copy" id="data">Il modello della sessione può leggere anche per intero i documenti selezionati: identità pertinenti, diritti, contratti, attività, persone, righe contabili, fonti, motivazioni e testi del fascicolo. Può leggere certificati, nomi e riferimenti professionali, mandati e risultati di verifica. Codex usa il modello della sessione OpenAI; Cowork quello della sessione Anthropic, alle condizioni del rispettivo account. Parsing, copie, impronte ed esportazioni locali non anonimizzano i dati e non garantiscono un trattamento soltanto locale.</p><p class="function-model-data__copy" id="dataResearch">La ricerca pubblica usa quesiti generici senza dati del cliente. La verifica crittografica locale non effettua richieste di rete. Se il professionista sceglie un servizio di firma esterno, vi trasferisce personalmente la richiesta con identificativi opachi, periodo, dichiarazione e impronte, oppure il mandato; il plugin non la carica e non richiede chiavi private.</p><p class="function-model-data__copy" id="dataMonitor">Un monitor configurato nell’host può esporre al modello e alla memoria dell’attività i percorsi selezionati, il responsabile, il perimetro pubblico e i riferimenti privati alle pratiche e alle approvazioni. Non invia questi riferimenti nelle ricerche pubbliche. Il report della pratica distingue quanto è misurabile da quanto non è misurabile: non promette un conteggio completo dei dati ricevuti dal provider.</p></div></div></section>
   </main>
   <script>
   const translations = {
+  "it": {
+    "skip": "Vai al contenuto",
+    "status": "Italia · Anteprima per una prova guidata",
+    "summary": "Prepara la pratica Patent Box: collega beni, attività e costi alle prove e porta al professionista una proposta di revisione.",
+    "limitTitle": "Stato della funzione",
+    "limit": "La preparazione e gli elaborati sono stati verificati su casi sintetici. L’accettazione professionale su una pratica reale e la prova nel plugin installato restano da completare.",
+    "jump": "Vedi gli elaborati",
+    "inputsTitle": "Documenti selezionati",
+    "inputs": "Diritti su software, brevetti o design; attività e progetti; contratti, personale, contabilità e precedenti opzioni o incentivi.",
+    "methodTitle": "Revisione per bene e costo",
+    "method": "Ogni conclusione conserva i riferimenti alle prove. Lacune, esclusioni e componenti sospese restano distinguibili.",
+    "outputTitle": "Proposta, poi calcolo",
+    "output": "La proposta leggibile si prepara prima dell’autorizzazione. Il calcolo reale e il fascicolo Word/PDF richiedono regole e revisione approvate.",
+    "useTitle": "Quando provarla",
+    "use": "Per uno studio che deve ricostruire una pratica da documenti tecnici e contabili e individuare le questioni da sottoporre al professionista. Il primo risultato è una proposta verificabile, con costi riconciliati e richieste mirate sui documenti mancanti.",
+    "exampleLabel": "Esempio di lavoro",
+    "example": "La pratica contiene due software, contratti di sviluppo e costi del personale. Per un bene manca la prova del diritto: Vera lo segnala nel controllo pertinente e formula la richiesta documentale. Nel calcolo, dopo la revisione richiesta, una componente sospesa resta distinta dalle componenti ammesse o escluse.",
+    "stepsTitle": "Come si prepara la pratica",
+    "step1Title": "Seleziona il perimetro",
+    "step1": "Indica cliente, periodo e beni. Scegli i documenti della pratica nell’Archivio di studio: Vera lavora sugli input selezionati e conserva i riferimenti alle versioni usate.",
+    "step2Title": "Riconcilia i costi",
+    "step2": "Vera legge CSV, XLSX o tabelle PDF con testo leggibile. Propone mappature, rettifiche e allocazioni da riesaminare, mantenendo totali di controllo, righe originali e decisioni sui possibili duplicati.",
+    "step3Title": "Rivedi prove e conclusioni",
+    "step3": "Il professionista esamina fatti, controlli, fonti e testi proposti per il fascicolo. I percorsi ordinario e premiale, i fornitori e la storia delle opzioni sono trattati quando pertinenti al caso; i dubbi non diventano esiti positivi automatici.",
+    "deliverablesTitle": "Cosa ricevi",
+    "prepareLabel": "Durante la preparazione",
+    "prepareTitle": "Una proposta leggibile",
+    "prepare1": "Fatti e riferimenti ai documenti, con lacune e richieste mirate.",
+    "prepare2": "Riconciliazione dei costi, controlli motivati e testi A/B da riesaminare.",
+    "approvedLabel": "Dopo la revisione richiesta",
+    "approvedTitle": "Calcolo e fascicolo in bozza",
+    "approved1": "Riepilogo, documenti mancanti, matrice dei controlli, riconciliazione e carte di lavoro.",
+    "approved2": "Fascicolo A/B modificabile in Word e copia PDF, con citazioni e paragrafi ancora aperti.",
+    "gate": "Per una pratica reale servono fonti aggiornate e riesaminate, regole approvate e una revisione firmata da un professionista autorizzato dallo studio. Questa configurazione non è fornita già approvata. Gli importi distinguono le basi redditi e IRAP: la deduzione aggiuntiva non è un credito né un risparmio d’imposta.",
+    "limitsTitle": "Responsabilità e funzioni opzionali",
+    "reviewTitle": "Decisioni del professionista",
+    "review": "Restano al professionista la qualificazione fiscale, la sufficienza delle prove e la validità delle fonti e dei modelli annuali. Vera non presenta dichiarazioni e non attribuisce protezione dalle sanzioni. I test tecnici non dimostrano l’utilità su una pratica reale.",
+    "formalTitle": "Firme e versioni",
+    "formal": "La funzione verifica firme e marche già presenti sui file selezionati, senza firmare per il professionista. L’approvazione finale riguarda gli elaborati esatti. La riapertura richiede una nuova autorizzazione e conserva la versione precedente. Qualificazione del provider e conservazione a norma restano da validare.",
+    "monitorTitle": "Monitoraggio su richiesta",
+    "monitor": "Il monitor è disattivato. Se richiesto e configurato nell’host, confronta le fonti pubbliche e prepara una coda privata delle pratiche potenzialmente interessate. Non modifica regole o pratiche automaticamente; una richiesta di notifica salvata non prova l’invio.",
+    "startTitle": "Avvia una prova guidata",
+    "start": "Nel plugin Vera che include Patent Box, seleziona i documenti della pratica e usa una richiesta come questa. L’anteprima non abilita da sola il calcolo reale.",
+    "prompt": "@Vera prepara una proposta di revisione Patent Box per il cliente e il periodo selezionati. Usa i documenti scelti, riconcilia i costi e mostrami prove, lacune e controlli da riesaminare.",
+    "back": "Torna alle funzioni di Vera",
+    "dataTitle": "Quali dati arrivano al modello",
+    "data": "Il modello della sessione può leggere anche per intero i documenti selezionati: identità pertinenti, diritti, contratti, attività, persone, righe contabili, fonti, motivazioni e testi del fascicolo. Può leggere certificati, nomi e riferimenti professionali, mandati e risultati di verifica. Codex usa il modello della sessione OpenAI; Cowork quello della sessione Anthropic, alle condizioni del rispettivo account. Parsing, copie, impronte ed esportazioni locali non anonimizzano i dati e non garantiscono un trattamento soltanto locale.",
+    "dataResearch": "La ricerca pubblica usa quesiti generici senza dati del cliente. La verifica crittografica locale non effettua richieste di rete. Se il professionista sceglie un servizio di firma esterno, vi trasferisce personalmente la richiesta con identificativi opachi, periodo, dichiarazione e impronte, oppure il mandato; il plugin non la carica e non richiede chiavi private.",
+    "dataMonitor": "Un monitor configurato nell’host può esporre al modello e alla memoria dell’attività i percorsi selezionati, il responsabile, il perimetro pubblico e i riferimenti privati alle pratiche e alle approvazioni. Non invia questi riferimenti nelle ricerche pubbliche. Il report della pratica distingue quanto è misurabile da quanto non è misurabile: non promette un conteggio completo dei dati ricevuti dal provider."
+  },
   "en": {
     "skip": "Skip to content",
-    "status": "Development preview · unpublished",
-    "summary": "Prepare evidence, costs and controls for software, patents and designs, with an A/B dossier in Word and PDF. The complete workflow remains under acceptance testing.",
-    "limit": "Real rules remain in draft. Real calculation requires reviewed sources and a professional authorized through a certificate and firm-issued mandate.",
-    "inputTitle": "Inputs",
-    "input": "Selected company, asset, rights, activity, option and incentive documents; CSV, XLSX or readable PDF accounting with reviewed mappings, amounts and adjustments. Signature and timestamp checks use selected files.",
-    "methodTitle": "Procedure",
-    "method": "Vera proposes facts, targeted requests and reasoned controls. The professional reviews the conclusions. Code checks references, accounting populations, allocations and arithmetic; signed review binds the decision to the exact proposal and sources.",
-    "outputTitle": "Outputs",
-    "output": "Summary, missing documents, control matrix, cost reconciliation, workpaper and editable/PDF A/B dossier. Open paragraphs, separate income and IRAP bases, and signature/timestamp results remain visible. An additional deduction is neither a tax credit nor tax savings.",
-    "responsibilityTitle": "Review and limits",
-    "responsibility": "Tax qualification, evidence sufficiency, sources and annual models require professional review. Technical tests do not complete the 32 specified professional scenarios. Qualified-provider, retention, scheduled-monitor, controlled-reopening and installed-runtime acceptance remain outstanding. The function verifies existing signatures; it does not sign or submit documents.",
+    "status": "Italy · Preview for a guided trial",
+    "summary": "Prepare a Patent Box case: connect assets, activities and costs to evidence, then present a review proposal to the professional.",
+    "limitTitle": "Current status",
+    "limit": "Preparation and deliverables have been checked on synthetic cases. Professional acceptance on a real case and testing in the installed plugin remain outstanding.",
+    "jump": "See the deliverables",
+    "inputsTitle": "Selected documents",
+    "inputs": "Rights to software, patents or designs; activities and projects; contracts, personnel, accounting and previous elections or incentives.",
+    "methodTitle": "Review each asset and cost",
+    "method": "Each conclusion keeps its evidence references. Gaps, exclusions and suspended components remain distinct.",
+    "outputTitle": "Proposal, then calculation",
+    "output": "The readable proposal precedes authorization. Real calculation and the Word/PDF dossier require approved rules and review.",
+    "useTitle": "When to try it",
+    "use": "For a firm reconstructing a case from technical and accounting documents and identifying issues for professional review. The first result is a reviewable proposal with reconciled costs and targeted requests for missing documents. This workflow concerns the Italian regime.",
+    "exampleLabel": "Working example",
+    "example": "A case contains two software assets, development contracts and personnel costs. Evidence of the right to one asset is missing: Vera identifies the gap in the relevant control and prepares a document request. In the calculation, after the required review, a suspended component remains distinct from included or excluded components.",
+    "stepsTitle": "How the case is prepared",
+    "step1Title": "Select the scope",
+    "step1": "Identify the client, period and assets. Select case documents in the Studio Archive: Vera works with the selected inputs and preserves references to the versions used.",
+    "step2Title": "Reconcile the costs",
+    "step2": "Vera reads CSV, XLSX or PDF tables with readable text. It proposes mappings, adjustments and allocations for review, retaining control totals, original rows and decisions about possible duplicates.",
+    "step3Title": "Review evidence and conclusions",
+    "step3": "The professional examines proposed facts, controls, sources and dossier text. Ordinary and historical qualifying-cost branches, suppliers and election history are considered when relevant; uncertainty does not automatically become a positive finding.",
+    "deliverablesTitle": "What you receive",
+    "prepareLabel": "During preparation",
+    "prepareTitle": "A readable proposal",
+    "prepare1": "Facts and document references, with gaps and targeted requests.",
+    "prepare2": "Cost reconciliation, reasoned controls and draft A/B text for review.",
+    "approvedLabel": "After the required review",
+    "approvedTitle": "Draft calculation and dossier",
+    "approved1": "Summary, missing documents, control matrix, reconciliation and workpapers.",
+    "approved2": "An editable Word A/B dossier and PDF copy, with citations and open paragraphs.",
+    "gate": "A real case requires current reviewed sources, approved rules and a signed review by a professional authorized by the firm. This configuration is not supplied preapproved. Amounts distinguish income-tax and IRAP bases: the additional deduction is neither a credit nor tax savings.",
+    "limitsTitle": "Responsibilities and optional functions",
+    "reviewTitle": "Professional decisions",
+    "review": "Tax qualification, evidence sufficiency, sources and annual return models remain the professional’s responsibility. Vera does not file returns or grant penalty protection. Technical tests do not demonstrate usefulness on a real case.",
+    "formalTitle": "Signatures and versions",
+    "formal": "The function checks existing signatures and timestamps on selected files; it does not sign for the professional. Final approval binds the exact deliverables. Reopening requires new authorization and preserves the previous version. Provider qualification and statutory retention remain to be validated.",
+    "monitorTitle": "Monitoring on request",
+    "monitor": "Monitoring is off. If requested and configured in the host, it compares public sources and prepares a private queue of potentially affected cases. It does not automatically change rules or cases; a saved notification request does not prove delivery.",
+    "startTitle": "Start a guided trial",
+    "start": "In a Vera plugin that includes Patent Box, select the case documents and use a request like this. The preview does not itself enable real calculation.",
+    "prompt": "@Vera prepare a Patent Box review proposal for the selected client and period. Use the selected documents, reconcile the costs and show me the evidence, gaps and controls to review.",
+    "back": "Back to Vera functions",
     "dataTitle": "What data reaches the model",
-    "data": "The session model may read selected documents, relevant identities, contracts, activities, people, accounting rows, sources, rationales and dossier text. It may also read certificates, professional names/references, mandates and verification results. Local parsing, copies, hashes and exports neither anonymize data nor guarantee local-only processing. The selected account terms apply. Public research uses generic queries without client data. Cryptographic verification makes no network requests. If the professional chooses an external signing service, they transfer the request containing opaque identifiers, period, statement and hashes, or the mandate; the plugin does not upload it. The run report distinguishes measurable from unmeasurable evidence."
+    "data": "The session model may read selected documents in full: relevant identities, rights, contracts, activities, people, accounting rows, sources, rationales and dossier text. It may read certificates, professional names and references, mandates and verification results. Codex uses the OpenAI session model; Cowork uses the Anthropic session model, under the respective account terms. Local parsing, copies, hashes and exports neither anonymize data nor guarantee local-only processing.",
+    "dataResearch": "Public research uses generic queries without client data. Local cryptographic verification makes no network requests. If the professional chooses an external signing service, they personally transfer the request containing opaque identifiers, period, statement and hashes, or the mandate; the plugin does not upload it or request private keys.",
+    "dataMonitor": "A host-configured monitor may expose selected paths, its owner, public scope and private case and approval references to the model and task storage. These references are not sent in public searches. The case report distinguishes measurable from unmeasurable evidence; it does not promise a complete count of the data received by the provider."
   },
   "fr": {
     "skip": "Aller au contenu",
-    "status": "Aperçu de développement · non publié",
-    "summary": "Prépare les preuves, coûts et contrôles pour logiciels, brevets et dessins, avec un dossier A/B Word et PDF. Le parcours complet reste en cours de validation.",
-    "limit": "Les règles réelles restent en brouillon. Le calcul réel exige des sources revues et un professionnel autorisé par certificat et mandat du cabinet.",
-    "inputTitle": "Données d'entrée",
-    "input": "Documents sélectionnés sur entreprise, actifs, droits, activités, options et aides ; comptabilité CSV, XLSX ou PDF lisible avec correspondances, montants et ajustements revus. Les signatures et horodatages sont vérifiés sur les fichiers sélectionnés.",
-    "methodTitle": "Procédure",
-    "method": "Vera propose des faits, demandes ciblées et contrôles motivés. Le professionnel revoit les conclusions. Le code vérifie références, populations comptables, allocations et calculs ; la revue signée lie la décision à la proposition et aux sources exactes.",
-    "outputTitle": "Livrables",
-    "output": "Synthèse, documents manquants, matrice de contrôle, rapprochement des coûts, feuille de travail et dossier A/B modifiable et PDF. Paragraphes ouverts, bases revenu et IRAP distinctes et résultats de signature/horodatage restent visibles. La déduction supplémentaire n’est ni un crédit ni une économie d’impôt.",
-    "responsibilityTitle": "Revue et limites",
-    "responsibility": "Qualification fiscale, suffisance des preuves, sources et modèles annuels exigent une revue professionnelle. Les tests techniques ne complètent pas les 32 scénarios professionnels prévus. Prestataire qualifié, conservation, veille planifiée, réouverture contrôlée et runtime installé restent à valider. La fonction vérifie les signatures existantes ; elle ne signe ni ne transmet les documents.",
+    "status": "Italie · Aperçu pour un essai guidé",
+    "summary": "Préparez un dossier Patent Box : reliez actifs, activités et coûts aux preuves, puis présentez une proposition de revue au professionnel.",
+    "limitTitle": "État de la fonction",
+    "limit": "La préparation et les livrables ont été vérifiés sur des cas synthétiques. La validation professionnelle sur un cas réel et l’essai dans le plugin installé restent à réaliser.",
+    "jump": "Voir les livrables",
+    "inputsTitle": "Documents sélectionnés",
+    "inputs": "Droits sur logiciels, brevets ou dessins ; activités et projets ; contrats, personnel, comptabilité et options ou aides antérieures.",
+    "methodTitle": "Revue par actif et coût",
+    "method": "Chaque conclusion conserve ses références aux preuves. Les lacunes, exclusions et éléments suspendus restent distincts.",
+    "outputTitle": "Proposition, puis calcul",
+    "output": "La proposition lisible précède l’autorisation. Le calcul réel et le dossier Word/PDF exigent des règles et une revue approuvées.",
+    "useTitle": "Quand l’essayer",
+    "use": "Pour un cabinet qui reconstitue un dossier à partir de documents techniques et comptables et identifie les questions à soumettre au professionnel. Le premier résultat est une proposition vérifiable, avec rapprochement des coûts et demandes ciblées de pièces manquantes. Ce parcours concerne le régime italien.",
+    "exampleLabel": "Exemple de travail",
+    "example": "Le dossier contient deux logiciels, des contrats de développement et des frais de personnel. La preuve du droit sur un actif manque : Vera signale la lacune dans le contrôle concerné et prépare une demande de pièce. Dans le calcul, après la revue requise, un élément suspendu reste distinct des éléments retenus ou exclus.",
+    "stepsTitle": "Comment préparer le dossier",
+    "step1Title": "Sélectionner le périmètre",
+    "step1": "Indiquez le client, la période et les actifs. Sélectionnez les documents dans les Archives du cabinet : Vera travaille sur ces entrées et conserve les références aux versions utilisées.",
+    "step2Title": "Rapprocher les coûts",
+    "step2": "Vera lit les CSV, XLSX ou tableaux PDF à texte lisible. Elle propose les correspondances, ajustements et allocations à revoir, en conservant totaux de contrôle, lignes originales et décisions sur les doublons possibles.",
+    "step3Title": "Revoir preuves et conclusions",
+    "step3": "Le professionnel examine faits, contrôles, sources et textes proposés. Les volets ordinaire et de reprise des coûts historiques, les fournisseurs et l’historique des options sont traités selon leur pertinence ; une incertitude ne devient pas automatiquement un résultat positif.",
+    "deliverablesTitle": "Ce que vous recevez",
+    "prepareLabel": "Pendant la préparation",
+    "prepareTitle": "Une proposition lisible",
+    "prepare1": "Faits et références documentaires, lacunes et demandes ciblées.",
+    "prepare2": "Rapprochement des coûts, contrôles motivés et textes A/B à revoir.",
+    "approvedLabel": "Après la revue requise",
+    "approvedTitle": "Calcul et dossier en projet",
+    "approved1": "Synthèse, pièces manquantes, matrice de contrôle, rapprochement et feuilles de travail.",
+    "approved2": "Dossier A/B modifiable sous Word et copie PDF, avec citations et paragraphes ouverts.",
+    "gate": "Un cas réel exige des sources actuelles revues, des règles approuvées et une revue signée par un professionnel autorisé par le cabinet. Cette configuration n’est pas fournie déjà approuvée. Les montants distinguent les bases d’impôt sur le revenu et d’IRAP : la déduction supplémentaire n’est ni un crédit ni une économie d’impôt.",
+    "limitsTitle": "Responsabilités et fonctions optionnelles",
+    "reviewTitle": "Décisions du professionnel",
+    "review": "La qualification fiscale, la suffisance des preuves, les sources et les modèles déclaratifs annuels relèvent du professionnel. Vera ne dépose pas de déclarations et n’accorde pas de protection contre les sanctions. Les tests techniques ne démontrent pas l’utilité sur un cas réel.",
+    "formalTitle": "Signatures et versions",
+    "formal": "La fonction vérifie les signatures et horodatages existants sur les fichiers sélectionnés ; elle ne signe pas à la place du professionnel. L’approbation finale porte sur les livrables exacts. La réouverture exige une nouvelle autorisation et conserve la version précédente. La qualification du prestataire et la conservation légale restent à valider.",
+    "monitorTitle": "Veille sur demande",
+    "monitor": "La veille est désactivée. Sur demande et après configuration dans l’hôte, elle compare les sources publiques et prépare une liste privée de dossiers potentiellement concernés. Elle ne modifie automatiquement ni règles ni dossiers ; une demande de notification enregistrée ne prouve pas son envoi.",
+    "startTitle": "Commencer un essai guidé",
+    "start": "Dans un plugin Vera incluant Patent Box, sélectionnez les documents et utilisez une demande comme celle-ci. L’aperçu n’active pas à lui seul le calcul réel.",
+    "prompt": "@Vera prépare une proposition de revue Patent Box pour le client et la période sélectionnés. Utilise les documents choisis, rapproche les coûts et montre-moi les preuves, lacunes et contrôles à revoir.",
+    "back": "Retour aux fonctions de Vera",
     "dataTitle": "Quelles données parviennent au modèle",
-    "data": "Le modèle de session peut lire documents sélectionnés, identités pertinentes, contrats, activités, personnes, lignes comptables, sources, motifs et textes du dossier, ainsi que certificats, noms et références professionnels, mandats et résultats de vérification. Le traitement, les copies, empreintes et exports locaux n’anonymisent pas les données et ne garantissent pas un traitement uniquement local. Les conditions du compte choisi s’appliquent. La recherche publique utilise des requêtes génériques sans données client. La vérification cryptographique ne fait aucune requête réseau. Si le professionnel choisit un service de signature externe, il y transfère la demande avec identifiants opaques, période, déclaration et empreintes, ou le mandat ; le plugin ne la téléverse pas. Le rapport distingue preuves mesurables et non mesurables."
+    "data": "Le modèle de session peut lire les documents sélectionnés en entier : identités pertinentes, droits, contrats, activités, personnes, lignes comptables, sources, motifs et textes du dossier. Il peut lire certificats, noms et références professionnels, mandats et résultats de vérification. Codex utilise le modèle de session OpenAI ; Cowork, celui d’Anthropic, selon les conditions du compte concerné. Traitement, copies, empreintes et exports locaux n’anonymisent pas les données et ne garantissent pas un traitement uniquement local.",
+    "dataResearch": "La recherche publique utilise des requêtes génériques sans données client. La vérification cryptographique locale ne fait aucune requête réseau. Si le professionnel choisit un service de signature externe, il y transfère lui-même la demande contenant identifiants opaques, période, déclaration et empreintes, ou le mandat ; le plugin ne la téléverse pas et ne demande pas de clés privées.",
+    "dataMonitor": "Une veille configurée dans l’hôte peut exposer au modèle et au stockage de la tâche les chemins sélectionnés, le responsable, le périmètre public et les références privées aux dossiers et approbations. Ces références ne sont pas envoyées dans les recherches publiques. Le rapport distingue les preuves mesurables des non mesurables ; il ne promet pas un décompte complet des données reçues par le fournisseur."
   },
   "de": {
     "skip": "Zum Inhalt",
-    "status": "Entwicklungsvorschau · unveröffentlicht",
-    "summary": "Bereitet Belege, Kosten und Prüfungen für Software, Patente und Designs mit einem A/B-Dossier in Word und PDF vor. Die vollständige Abnahme steht noch aus.",
-    "limit": "Reale Regeln bleiben Entwürfe. Reale Berechnungen erfordern geprüfte Quellen sowie eine über Zertifikat und Kanzleimandat autorisierte Fachperson.",
-    "inputTitle": "Eingaben",
-    "input": "Ausgewählte Unterlagen zu Unternehmen, Schutzrechten, Tätigkeiten, Optionen und Förderungen; CSV-, XLSX- oder lesbare PDF-Buchhaltung mit geprüften Zuordnungen, Beträgen und Korrekturen. Signaturen und Zeitstempel werden an ausgewählten Dateien geprüft.",
-    "methodTitle": "Ablauf",
-    "method": "Vera schlägt Fakten, gezielte Rückfragen und begründete Prüfungen vor. Die Fachperson prüft die Schlussfolgerungen. Code prüft Referenzen, Buchungspopulationen, Zuordnungen und Berechnungen; die signierte Prüfung bindet die Entscheidung an den genauen Vorschlag und seine Quellen.",
-    "outputTitle": "Ergebnisse",
-    "output": "Übersicht, fehlende Unterlagen, Prüfmatrix, Kostenabstimmung, Arbeitspapier und bearbeitbares A/B-Dossier mit PDF. Offene Abschnitte, getrennte Einkommens- und IRAP-Basen sowie Signatur- und Zeitstempelergebnisse bleiben sichtbar. Der zusätzliche Abzug ist weder Steuergutschrift noch Steuerersparnis.",
-    "responsibilityTitle": "Prüfung und Grenzen",
-    "responsibility": "Steuerliche Einordnung, Belegqualität, Quellen und Jahresmodelle erfordern fachliche Prüfung. Technische Tests ersetzen die 32 vorgesehenen fachlichen Szenarien nicht. Qualifizierter Anbieter, Aufbewahrung, geplante Überwachung, kontrollierte Wiederaufnahme und installierte Laufzeit sind noch abzunehmen. Die Funktion prüft vorhandene Signaturen; sie unterschreibt und übermittelt keine Dokumente.",
+    "status": "Italien · Vorschau für einen begleiteten Test",
+    "summary": "Bereiten Sie einen Patent-Box-Fall vor: Verknüpfen Sie Schutzrechte, Tätigkeiten und Kosten mit Belegen und legen Sie der Fachperson einen Prüfungsvorschlag vor.",
+    "limitTitle": "Stand der Funktion",
+    "limit": "Vorbereitung und Ergebnisse wurden an synthetischen Fällen geprüft. Die fachliche Abnahme an einem realen Fall und der Test im installierten Plugin stehen noch aus.",
+    "jump": "Ergebnisse ansehen",
+    "inputsTitle": "Ausgewählte Unterlagen",
+    "inputs": "Rechte an Software, Patenten oder Designs; Tätigkeiten und Projekte; Verträge, Personal, Buchhaltung und frühere Wahlrechte oder Förderungen.",
+    "methodTitle": "Prüfung je Schutzrecht und Kostenposition",
+    "method": "Jede Schlussfolgerung behält ihre Belegverweise. Lücken, Ausschlüsse und zurückgestellte Positionen bleiben getrennt.",
+    "outputTitle": "Vorschlag, dann Berechnung",
+    "output": "Der lesbare Vorschlag entsteht vor der Autorisierung. Die reale Berechnung und das Word/PDF-Dossier erfordern genehmigte Regeln und eine freigegebene Prüfung.",
+    "useTitle": "Wann ein Test sinnvoll ist",
+    "use": "Für eine Kanzlei, die einen Fall aus technischen und buchhalterischen Unterlagen aufbereitet und offene Fragen für die Fachperson ermittelt. Das erste Ergebnis ist ein prüfbarer Vorschlag mit abgestimmten Kosten und gezielten Anfragen zu fehlenden Unterlagen. Der Ablauf betrifft das italienische Steuerregime.",
+    "exampleLabel": "Arbeitsbeispiel",
+    "example": "Der Fall enthält zwei Softwareprodukte, Entwicklungsverträge und Personalkosten. Für ein Schutzrecht fehlt der Rechtsnachweis: Vera kennzeichnet die Lücke in der zugehörigen Prüfung und formuliert eine Unterlagenanfrage. In der Berechnung bleibt eine zurückgestellte Position nach der erforderlichen Prüfung von berücksichtigten oder ausgeschlossenen Positionen getrennt.",
+    "stepsTitle": "So wird der Fall vorbereitet",
+    "step1Title": "Umfang auswählen",
+    "step1": "Legen Sie Mandant, Zeitraum und Schutzrechte fest. Wählen Sie die Unterlagen im Kanzleiarchiv: Vera arbeitet mit diesen Eingaben und bewahrt Verweise auf die verwendeten Versionen.",
+    "step2Title": "Kosten abstimmen",
+    "step2": "Vera liest CSV, XLSX oder PDF-Tabellen mit lesbarem Text. Sie schlägt Zuordnungen, Korrekturen und Aufteilungen zur Prüfung vor und erhält Kontrollsummen, Originalzeilen und Entscheidungen zu möglichen Dubletten.",
+    "step3Title": "Belege und Schlussfolgerungen prüfen",
+    "step3": "Die Fachperson prüft vorgeschlagene Fakten, Kontrollen, Quellen und Dossiertexte. Reguläre Kosten und berücksichtigungsfähige historische Kosten, Lieferanten und frühere Wahlrechte werden nach Fallrelevanz behandelt; Unklarheiten führen nicht automatisch zu positiven Ergebnissen.",
+    "deliverablesTitle": "Was Sie erhalten",
+    "prepareLabel": "Während der Vorbereitung",
+    "prepareTitle": "Einen lesbaren Vorschlag",
+    "prepare1": "Fakten und Dokumentverweise mit Lücken und gezielten Rückfragen.",
+    "prepare2": "Kostenabstimmung, begründete Kontrollen und A/B-Textentwürfe zur Prüfung.",
+    "approvedLabel": "Nach der erforderlichen Prüfung",
+    "approvedTitle": "Berechnung und Dossierentwurf",
+    "approved1": "Übersicht, fehlende Unterlagen, Prüfmatrix, Abstimmung und Arbeitspapiere.",
+    "approved2": "Bearbeitbares A/B-Dossier in Word und PDF-Kopie mit Zitaten und offenen Abschnitten.",
+    "gate": "Ein realer Fall erfordert aktuelle geprüfte Quellen, genehmigte Regeln und eine signierte Prüfung durch eine von der Kanzlei autorisierte Fachperson. Diese Konfiguration wird nicht bereits genehmigt mitgeliefert. Die Beträge trennen Ertragsteuer- und IRAP-Basen: Der zusätzliche Abzug ist weder eine Steuergutschrift noch die Steuerersparnis.",
+    "limitsTitle": "Verantwortung und optionale Funktionen",
+    "reviewTitle": "Entscheidungen der Fachperson",
+    "review": "Steuerliche Einordnung, ausreichende Belege, Quellen und jährliche Erklärungsvordrucke bleiben Sache der Fachperson. Vera reicht keine Steuererklärungen ein und gewährt keinen Schutz vor Sanktionen. Technische Tests belegen keinen Nutzen an einem realen Fall.",
+    "formalTitle": "Signaturen und Versionen",
+    "formal": "Die Funktion prüft vorhandene Signaturen und Zeitstempel ausgewählter Dateien; sie unterschreibt nicht für die Fachperson. Die abschließende Freigabe bindet die genauen Ergebnisse. Eine Wiederaufnahme erfordert eine neue Autorisierung und erhält die vorherige Version. Anbieterqualifikation und gesetzeskonforme Aufbewahrung sind noch zu validieren.",
+    "monitorTitle": "Überwachung auf Anfrage",
+    "monitor": "Die Überwachung ist ausgeschaltet. Nach Beauftragung und Einrichtung im Host vergleicht sie öffentliche Quellen und bereitet eine private Liste möglicherweise betroffener Fälle vor. Sie ändert Regeln oder Fälle nicht automatisch; eine gespeicherte Benachrichtigungsanfrage belegt keine Zustellung.",
+    "startTitle": "Einen begleiteten Test beginnen",
+    "start": "Wählen Sie in einem Vera-Plugin mit Patent Box die Fallunterlagen aus und verwenden Sie eine Anfrage wie diese. Die Vorschau allein aktiviert keine reale Berechnung.",
+    "prompt": "@Vera bereite einen Patent-Box-Prüfungsvorschlag für den ausgewählten Mandanten und Zeitraum vor. Nutze die gewählten Unterlagen, stimme die Kosten ab und zeige mir Belege, Lücken und zu prüfende Kontrollen.",
+    "back": "Zurück zu den Vera-Funktionen",
     "dataTitle": "Welche Daten das Modell erhält",
-    "data": "Das Sitzungsmodell kann ausgewählte Dokumente, relevante Identitäten, Verträge, Tätigkeiten, Personen, Buchungszeilen, Quellen, Begründungen und Dossiertexte sowie Zertifikate, berufliche Namen/Referenzen, Mandate und Prüfergebnisse lesen. Lokale Verarbeitung, Kopien, Hashwerte und Exporte anonymisieren Daten nicht und garantieren keine ausschließlich lokale Verarbeitung. Die Bedingungen des gewählten Kontos gelten. Öffentliche Recherche nutzt allgemeine Abfragen ohne Mandantendaten. Die Kryptoprüfung sendet keine Netzwerkanfragen. Wählt die Fachperson einen externen Signaturdienst, überträgt sie selbst den Antrag mit opaken IDs, Zeitraum, Erklärung und Hashwerten oder das Mandat; das Plugin lädt ihn nicht hoch. Der Bericht trennt messbare von nicht messbaren Nachweisen."
+    "data": "Das Sitzungsmodell kann ausgewählte Dokumente vollständig lesen: relevante Identitäten, Rechte, Verträge, Tätigkeiten, Personen, Buchungszeilen, Quellen, Begründungen und Dossiertexte. Es kann Zertifikate, berufliche Namen und Referenzen, Mandate und Prüfergebnisse lesen. Codex verwendet das OpenAI-Sitzungsmodell, Cowork das Anthropic-Sitzungsmodell zu den jeweiligen Kontobedingungen. Lokale Verarbeitung, Kopien, Hashwerte und Exporte anonymisieren Daten nicht und garantieren keine ausschließlich lokale Verarbeitung.",
+    "dataResearch": "Öffentliche Recherche verwendet allgemeine Abfragen ohne Mandantendaten. Die lokale Kryptoprüfung sendet keine Netzwerkanfragen. Wählt die Fachperson einen externen Signaturdienst, überträgt sie selbst den Antrag mit opaken Kennungen, Zeitraum, Erklärung und Hashwerten oder das Mandat; das Plugin lädt nichts hoch und fordert keine privaten Schlüssel an.",
+    "dataMonitor": "Eine im Host konfigurierte Überwachung kann ausgewählte Pfade, Verantwortliche, den öffentlichen Rechercheumfang sowie private Fall- und Freigabeverweise dem Modell und dem Aufgabenspeicher zugänglich machen. Diese Verweise werden nicht in öffentlichen Suchen gesendet. Der Fallbericht trennt messbare von nicht messbaren Nachweisen; er verspricht keine vollständige Zählung der beim Anbieter eingegangenen Daten."
   },
   "es": {
     "skip": "Ir al contenido",
-    "status": "Vista de desarrollo · sin publicar",
-    "summary": "Prepara pruebas, costes y controles para software, patentes y diseños, con expediente A/B en Word y PDF. La aceptación del recorrido completo sigue pendiente.",
-    "limit": "Las reglas reales siguen en borrador. El cálculo real exige fuentes revisadas y un profesional autorizado mediante certificado y mandato del despacho.",
-    "inputTitle": "Datos de entrada",
-    "input": "Documentos seleccionados sobre empresa, activos, derechos, actividades, opciones e incentivos; contabilidad CSV, XLSX o PDF legible con correspondencias, importes y ajustes revisados. Las firmas y sellos temporales se verifican sobre archivos seleccionados.",
-    "methodTitle": "Procedimiento",
-    "method": "Vera propone hechos, solicitudes concretas y controles motivados. El profesional revisa las conclusiones. El código verifica referencias, poblaciones contables, asignaciones y cálculos; la revisión firmada vincula la decisión a la propuesta y las fuentes exactas.",
-    "outputTitle": "Resultados",
-    "output": "Resumen, documentos pendientes, matriz de controles, conciliación de costes, papel de trabajo y expediente A/B editable y PDF. Quedan visibles párrafos abiertos, bases de renta e IRAP separadas y resultados de firma y sello temporal. La deducción adicional no es un crédito ni un ahorro fiscal.",
-    "responsibilityTitle": "Revisión y límites",
-    "responsibility": "Calificación fiscal, suficiencia de pruebas, fuentes y modelos anuales requieren revisión profesional. Las pruebas técnicas no completan los 32 escenarios profesionales previstos. Quedan pendientes proveedor cualificado, conservación, monitor programado, reapertura controlada y entorno instalado. La función verifica firmas existentes; no firma ni presenta documentos.",
+    "status": "Italia · Vista previa para una prueba guiada",
+    "summary": "Prepara un expediente Patent Box: vincula activos, actividades y costes con las pruebas y presenta una propuesta de revisión al profesional.",
+    "limitTitle": "Estado de la función",
+    "limit": "La preparación y los entregables se han comprobado con casos sintéticos. Quedan pendientes la aceptación profesional con un caso real y la prueba en el plugin instalado.",
+    "jump": "Ver los entregables",
+    "inputsTitle": "Documentos seleccionados",
+    "inputs": "Derechos sobre software, patentes o diseños; actividades y proyectos; contratos, personal, contabilidad y opciones o incentivos anteriores.",
+    "methodTitle": "Revisión por activo y coste",
+    "method": "Cada conclusión conserva sus referencias a las pruebas. Las carencias, exclusiones y partidas suspendidas quedan diferenciadas.",
+    "outputTitle": "Propuesta, después cálculo",
+    "output": "La propuesta legible precede a la autorización. El cálculo real y el expediente Word/PDF exigen reglas y revisión aprobadas.",
+    "useTitle": "Cuándo probarla",
+    "use": "Para un despacho que reconstruye un expediente a partir de documentos técnicos y contables e identifica cuestiones que debe revisar el profesional. El primer resultado es una propuesta verificable, con costes conciliados y solicitudes concretas de documentos pendientes. Este recorrido se refiere al régimen italiano.",
+    "exampleLabel": "Ejemplo de trabajo",
+    "example": "El expediente contiene dos programas, contratos de desarrollo y costes de personal. Falta la prueba del derecho sobre un activo: Vera señala la carencia en el control pertinente y prepara una solicitud documental. En el cálculo, tras la revisión exigida, una partida suspendida se mantiene separada de las incluidas o excluidas.",
+    "stepsTitle": "Cómo se prepara el expediente",
+    "step1Title": "Seleccionar el alcance",
+    "step1": "Indica cliente, periodo y activos. Elige los documentos en el Archivo del despacho: Vera trabaja con estas entradas y conserva referencias a las versiones utilizadas.",
+    "step2Title": "Conciliar los costes",
+    "step2": "Vera lee CSV, XLSX o tablas PDF con texto legible. Propone correspondencias, ajustes y asignaciones para revisar, conservando totales de control, filas originales y decisiones sobre posibles duplicados.",
+    "step3Title": "Revisar pruebas y conclusiones",
+    "step3": "El profesional examina hechos, controles, fuentes y textos propuestos. Se consideran las vías ordinaria y de costes históricos elegibles, los proveedores y las opciones anteriores cuando corresponda; las dudas no se convierten automáticamente en resultados positivos.",
+    "deliverablesTitle": "Qué recibes",
+    "prepareLabel": "Durante la preparación",
+    "prepareTitle": "Una propuesta legible",
+    "prepare1": "Hechos y referencias documentales, carencias y solicitudes concretas.",
+    "prepare2": "Conciliación de costes, controles motivados y textos A/B para revisar.",
+    "approvedLabel": "Después de la revisión exigida",
+    "approvedTitle": "Cálculo y expediente en borrador",
+    "approved1": "Resumen, documentos pendientes, matriz de controles, conciliación y papeles de trabajo.",
+    "approved2": "Expediente A/B editable en Word y copia PDF, con citas y párrafos abiertos.",
+    "gate": "Un caso real exige fuentes actuales revisadas, reglas aprobadas y una revisión firmada por un profesional autorizado por el despacho. Esta configuración no se entrega ya aprobada. Los importes distinguen las bases de renta e IRAP: la deducción adicional no es un crédito ni un ahorro fiscal.",
+    "limitsTitle": "Responsabilidades y funciones opcionales",
+    "reviewTitle": "Decisiones del profesional",
+    "review": "La calificación fiscal, la suficiencia de pruebas, las fuentes y los modelos anuales son responsabilidad del profesional. Vera no presenta declaraciones ni concede protección frente a sanciones. Las pruebas técnicas no demuestran utilidad en un caso real.",
+    "formalTitle": "Firmas y versiones",
+    "formal": "La función comprueba firmas y sellos temporales existentes en los archivos seleccionados; no firma por el profesional. La aprobación final vincula los entregables exactos. La reapertura exige una nueva autorización y conserva la versión anterior. La cualificación del proveedor y la conservación legal quedan por validar.",
+    "monitorTitle": "Seguimiento a petición",
+    "monitor": "El seguimiento está desactivado. Si se solicita y configura en el entorno anfitrión, compara fuentes públicas y prepara una lista privada de casos potencialmente afectados. No modifica reglas ni expedientes automáticamente; una solicitud de notificación guardada no prueba su envío.",
+    "startTitle": "Iniciar una prueba guiada",
+    "start": "En un plugin Vera que incluya Patent Box, selecciona los documentos y utiliza una petición como esta. La vista previa no habilita por sí sola el cálculo real.",
+    "prompt": "@Vera prepara una propuesta de revisión Patent Box para el cliente y el periodo seleccionados. Usa los documentos elegidos, concilia los costes y muéstrame las pruebas, carencias y controles que debo revisar.",
+    "back": "Volver a las funciones de Vera",
     "dataTitle": "Qué datos recibe el modelo",
-    "data": "El modelo de la sesión puede leer documentos seleccionados, identidades pertinentes, contratos, actividades, personas, filas contables, fuentes, motivos y textos del expediente, así como certificados, nombres y referencias profesionales, mandatos y resultados de verificación. El tratamiento, copias, huellas y exportaciones locales no anonimizan los datos ni garantizan un tratamiento exclusivamente local. Se aplican las condiciones de la cuenta elegida. La investigación pública usa consultas genéricas sin datos del cliente. La verificación criptográfica no hace solicitudes de red. Si el profesional elige un servicio de firma externo, transfiere personalmente la solicitud con identificadores opacos, periodo, declaración y huellas, o el mandato; el plugin no lo carga. El informe distingue pruebas medibles de las no medibles."
+    "data": "El modelo de la sesión puede leer los documentos seleccionados completos: identidades pertinentes, derechos, contratos, actividades, personas, filas contables, fuentes, motivos y textos del expediente. Puede leer certificados, nombres y referencias profesionales, mandatos y resultados de verificación. Codex usa el modelo de sesión de OpenAI; Cowork, el de Anthropic, según las condiciones de la cuenta respectiva. El tratamiento, las copias, huellas y exportaciones locales no anonimizan los datos ni garantizan un tratamiento exclusivamente local.",
+    "dataResearch": "La investigación pública utiliza consultas genéricas sin datos del cliente. La verificación criptográfica local no hace solicitudes de red. Si el profesional elige un servicio de firma externo, transfiere personalmente la solicitud con identificadores opacos, periodo, declaración y huellas, o el mandato; el plugin no la carga ni solicita claves privadas.",
+    "dataMonitor": "Un seguimiento configurado en el entorno anfitrión puede exponer al modelo y al almacenamiento de la tarea las rutas elegidas, el responsable, el alcance público y las referencias privadas a expedientes y aprobaciones. Estas referencias no se envían en búsquedas públicas. El informe distingue pruebas medibles de las no medibles; no promete un recuento completo de los datos recibidos por el proveedor."
   }
 };
   const requested = new URLSearchParams(location.search).get("lang") || "it";
-  const language = ["it", "en", "fr", "de", "es"].includes(requested) ? requested : "it";
-  if (translations[language]) for (const [id, value] of Object.entries(translations[language])) document.getElementById(id).textContent = value;
+  const language = Object.hasOwn(translations, requested) ? requested : "it";
+  for (const [id, value] of Object.entries(translations[language])) document.getElementById(id).textContent = value;
   document.documentElement.lang = language;
-  document.querySelector(`nav a[href="?lang=${language}"]`).setAttribute("aria-current", "page");
-  document.title = `Patent Box | Vera · ${document.getElementById("status").textContent}`;
-  document.querySelector('meta[name="description"]').content = document.getElementById("summary").textContent;
+  document.querySelectorAll('.pf-languages a').forEach(link => {
+    const active = new URL(link.href).searchParams.get("lang") === language;
+    if (active) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
+  document.querySelectorAll('[data-vera-link]').forEach(link => {
+    const url = new URL(link.href);
+    url.searchParams.set("lang", language);
+    link.href = url.href;
+  });
+  document.title = `Patent Box | Vera · ${translations[language].status}`;
+  document.querySelector('meta[name="description"]').content = translations[language].summary;
   </script>
+  <script src="../function-model-data.js" defer></script>
 </body>
 </html>
