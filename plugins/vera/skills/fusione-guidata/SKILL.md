@@ -1,6 +1,6 @@
 ---
 name: fusione-guidata
-description: Prepare or demonstrate Vera's P0 multi-company merger case with explicit evidence imports, versioned facts and rules, scoped professional decisions and selective change review. Legal merger branches and calculations are unsupported.
+description: Prepare P1 domestic OIC incorporation workpapers for independent or directly wholly owned companies, with verified archive evidence, exact exchange allocations, accounting bridges, event calendars and reviewed dossiers. Later branches remain unsupported.
 ---
 
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
@@ -17,7 +17,7 @@ change request, stamp a tutorial receipt or call hosted interviews for a tutoria
 Current user requests take precedence over saved preferences.
 <!-- VERA_OPENAI_ONBOARDING_END -->
 
-# Fusione guidata — P0
+# Fusione guidata — P1
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 

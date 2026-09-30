@@ -10,6 +10,7 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
+    "modules/fusione-guidata/vendor/modules/client_ledger.py",
     "modules/studio-archive/scripts/client_ledger.py"
   ],
   "runtime_profiles": [
@@ -76,6 +77,6 @@
     "reviewed_at": "2026-09-29",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c1c0236adda9c1fa49f8ae6053677ab15a9ae3f64acc317fa8e4df7b9292243c"
+    "source_fingerprint": "5843049d6bce538e469f27f1eb3097d792c121f62be5aa1003f01727d58d0bf1"
   }
 }
