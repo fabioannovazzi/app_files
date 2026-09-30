@@ -79,3 +79,5 @@ See [the complete machine-readable assessment](assessment.json) for each functio
 The 0.1.283 refresh changes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Existing target judgments remain in place. The new assetti construction mode has not been validated for CH-GE; the earlier assessment-mode scope does not qualify that new mode.
 
 The 0.1.287 candidate updates the merger entrypoint to P1. The two supported branches are domestic Italian OIC incorporations; the Geneva assessment remains Unresolved.
+
+The 0.1.288 release refresh updates the package identity only. All 42 skill entrypoints are byte-identical to the recorded 0.1.287 catalogue; the professional assessments and unresolved Swiss scope remain unchanged.

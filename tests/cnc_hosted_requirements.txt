@@ -1,0 +1,10 @@
+# Test-only hosted review adapter dependencies; local CNC helpers remain stdlib.
+fastapi>=0.115,<0.116
+httpx>=0.27,<1
+jinja2>=3.1,<4
+cryptography>=43.0.1
+psycopg[binary]>=3.2,<4
+# Existing run-receipt imports initialize the shared PDP module.
+beautifulsoup4>=4.12,<5
+requests>=2.32,<3
+json-repair>=0.54,<1

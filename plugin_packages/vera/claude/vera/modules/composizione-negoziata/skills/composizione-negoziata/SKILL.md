@@ -113,7 +113,7 @@ Use model reasoning to identify the next professional problem, select evidence,
 explain priority, choose an existing capability and draft the result. Do not
 invent scores, mandatory phase sequences or admissibility classifiers. Read
 `../../references/financial-and-research.md` for cash, plans, assumptions or law,
-and `../../references/events-and-closure.md` for negotiations, changes or closure.
+and `../../references/events-and-closure.md` for change impact. For access or urgent measures read `../../references/access-and-measures.md`; for negotiations and special events read `../../references/negotiations-and-special-events.md`; for the final report, unsuccessful outcomes and residual work read `../../references/report-and-handoff.md`. Load only the guide needed now.
 
 Unreadable evidence remains unreadable. Missing aging, proof of collection,
 court receipts or current law stays a gap, never zero or an inferred fact.
@@ -185,14 +185,41 @@ professional review.
 
 ## Professional decisions and authority
 
-Record a review only after the user confirms the exact presented version.
-Preserve reviewer reference, confirmation reference, decision and reason. Never
-manufacture confirmation from model output or an attachment. Reviews bind to a
-node version and become historical when that node or its dependencies change.
-A local record is not authenticated identity, a signature, an appointment or
-authorization to file. Studio Archive has no multi-user authentication service.
-External filing, signing, communications and payments are outside this module.
-Prepare a handoff and distinguish missing receipts from completed acts.
+Record a review only after the professional confirms the exact displayed version.
+Local attribution records remain `record_only_identity_not_verified` and never
+approve a handoff. For an authenticated review, use the optional Mparanza account
+route only after the user chooses it; reuse an existing explicit choice. Explain
+that the server receives opaque case/node identifiers, version digest, decision,
+account email and timestamp, and retains them until administrative deletion.
+Documents and the report text stay local; the browser reads the selected file.
+
+Prepare the exact current node without sending data:
+
+```sh
+python scripts/cnc_case.py --client-engagement <absolute-context> --review-node <node-id>
+```
+
+Give the generated local JSON and `https://mparanza.com/vera/cnc-review` to the
+professional. Only that person signs in, reads and confirms. Never click the
+confirmation, automate sign-in as the reviewer, or manufacture a receipt. The
+first authenticated reviewer owns the case's review scope; another account or
+role cannot approve it. This permission concerns hosted review records; local
+file access remains controlled by the host/OS and Studio Archive, not a remote
+multi-user document vault.
+
+Import the downloaded receipt into the running run's declared output area.
+Include its exact parsed object as `server_receipt` in the ordinary review row.
+The helper checks the fixed HTTPS server record and binds its actual account to
+the current role, case, node and version. Wrong, changed or unavailable receipts
+cannot create authenticated approval. Keep drafting if the service is unavailable;
+report the approval as pending. A later rejection overrides a previous acceptance.
+See `../../references/case-record.md` for the contract.
+
+Neither authenticated account ownership nor a local record proves professional
+qualification, independence, appointment, legal validity or a signature. External
+filing, signing, communications and payments remain outside this module. Prepare
+a handoff with actual receipts or explicit gaps. Changed dependencies require a
+new review; never transfer acceptance to an updated draft.
 
 ## Close the working session
 
