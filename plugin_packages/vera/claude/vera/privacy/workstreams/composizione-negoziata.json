@@ -32,7 +32,7 @@
       {
         "id": "persistent-case-and-drafts",
         "purpose": "Resume the case, assess changes and prepare role-specific professional drafts",
-        "content": "Case snapshots, facts, assumptions, gaps, questions, source metadata, prior analysis outputs, dependency relationships, generated draft content, historical reviews and confirmation references. Python verifies explicit references and revisions locally; the model determines semantic meaning and impact. Codex and Cowork use the same archive contract where local execution is available; chat fallback does not claim durable revision enforcement.",
+        "content": "Case snapshots, facts, assumptions, gaps, questions, source metadata, prior analysis outputs, dependency relationships, generated draft content, historical reviews and confirmation references. Python verifies explicit references and revisions locally; the model determines semantic meaning and impact. Codex and Cowork use the same archive contract where local execution is available; chat fallback does not claim durable revision enforcement. Optional authenticated-review receipts include account email, timestamp, opaque identifiers, version and decision; the generated local browser review file contains the exact draft and evidence references.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -57,6 +57,25 @@
         "Record source rank, dates, inspected scope, applicability and limits.",
         "Keep names, tax identifiers, credentials, private amounts and case text out of public research queries."
       ]
+    },
+    {
+      "id": "authenticated-professional-review",
+      "kind": "hosted_service",
+      "destination": "https://mparanza.com/vera/cnc-review and fixed HTTPS /api/vera/cnc-reviews routes",
+      "purpose": "Attribute a decision on an exact local version to a signed-in account and enforce case/role ownership",
+      "content": "Opaque case and node digests, request UUID, exact node version digest, role, decision, authenticated account email, server timestamp and normal connection metadata. The browser displays a locally selected draft; its text, citations and files are not uploaded. Receipt verification sends only its opaque UUID and complete-receipt digest. Server review metadata and case ownership remain until administrative deletion is requested from Mparanza. Local review files and receipts remain in the studio archive under its retention controls. Deletion prevents later server verification.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "The user must choose this hosted route before transmission. The professional personally signs in and confirms; the assistant prepares but never approves.",
+        "Server session authentication fails closed when disabled; same-origin requests, fixed metadata schema, payload-size and rate limits are enforced. The first authenticated reviewer owns the review scope; other accounts and role changes are rejected.",
+        "The client uses a fixed HTTPS verification endpoint, rejects redirects, bounds responses and compares the entire retained record and exact local scope/version before authenticating a decision.",
+        "The local filesystem remains the document-access boundary. Account authentication is not proof of qualification, professional independence, a signature or authority to file."
+      ]
     }
   ],
   "security_controls": [
@@ -70,13 +89,13 @@
     },
     {
       "id": "role-and-review-version-binding",
-      "control": "The helper rejects a role change in an existing engagement, role-mismatched nodes and reviews of stale or wrong-version nodes. Every recorded review explicitly states that professional identity is not authenticated. These checks are not an ACL or signature system."
+      "control": "Role changes and stale/wrong-version reviews are rejected. Attribution-only JSON never approves a handoff. Optional Mparanza receipts are independently verified and bound to the authenticated account and exact case, role, node and version; later authenticated rejection supersedes acceptance. Local document access remains governed by host permissions."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-29",
+    "reviewed_at": "2026-09-30",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5843049d6bce538e469f27f1eb3097d792c121f62be5aa1003f01727d58d0bf1"
+    "source_fingerprint": "73e682cdd94e8554e52494367a3f3263b7a3e91ec75816c06f85002b449b3696"
   }
 }

@@ -94,9 +94,14 @@ After a real professional confirmation, a review row has exactly:
 ```
 
 Decisions may be accepted, changes_requested or rejected. A stale target or
-wrong version is rejected. The helper labels every review
-`record_only_identity_not_verified`: it cannot authenticate the reviewer or
-turn the record into a signature/filing authority. Never generate confirmations
+wrong version is rejected. Without a verified server receipt the helper labels the review
+`record_only_identity_not_verified`; this attribution cannot approve a handoff.
+For the user-selected authenticated route, add `server_receipt` containing the
+exact downloaded receipt JSON. The helper verifies it with Mparanza and replaces
+the claimed reviewer/confirmation labels with the retained account and receipt ID.
+The role, case, node version and decision must match. Never construct a receipt
+or add an `authority` flag to a review request. Failure leaves the update unsaved.
+Account verification does not establish qualification, a signature or filing authority. Never generate confirmations
 for the user. Historical decisions remain in every subsequent snapshot.
 
 After saving, read both the snapshot and the memo. Finalization declares the
@@ -106,3 +111,5 @@ replaying the identical request to regenerate the missing memo. Do not alter
 closed artifacts; start a successor run. Snapshots are append-only through
 this API; the filesystem itself is controlled by the local user, not an
 authenticated immutable remote store.
+
+For a final role-specific handoff, the request may additionally contain `closure`, as specified in `report-and-handoff.md`. The saved handoff binds exact versions; changes reopen review. It never attests legal closure or external execution.

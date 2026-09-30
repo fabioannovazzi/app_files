@@ -419,10 +419,12 @@ def test_cowork_privacy_register_keeps_supported_receipts_and_omits_openai_servi
     assert projected_components["shared_services"] == [
         "run-receipt-stamping",
         "managed-python-runtime",
+        "cnc-authenticated-review",
     ]
     assert {name for name in vera_entries if name.startswith("privacy/services/")} == {
         "privacy/services/run-receipt-stamping.json",
         "privacy/services/managed-python-runtime.json",
+        "privacy/services/cnc-authenticated-review.json",
     }
     assert "privacy/workstreams/studio-archive.json" in vera_entries
     runtime_service = json.loads(
