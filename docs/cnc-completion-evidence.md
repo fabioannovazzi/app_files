@@ -16,7 +16,7 @@ The optional Mparanza route records an explicit browser decision under the exist
 - Two synthetic full journeys, one per role, execute real treasury analysis, preserve gaps, revise after delayed cash, deliver a no-agreement report with residual work, seal and resume in a fresh process. Their professional prose is an authored fixture, not independent professional acceptance.
 - Five native specialist executions passed and their saved artifact hashes matched the inputs bound into CNC successor runs: financial analysis, Centrale Rischi, journal/bank reconciliation, open-item reconciliation and business planning. Treasury is exercised separately in both journeys. This proves the managed artifact interface, not that all five unrelated fictional cases form one economic case.
 - Ten localized introductory demo/practice runs passed (IT/EN/FR/DE/ES). Their notes, actual forecasts and sealed snapshots were inspected; current release-review records retain the exact hashes.
-- Both generated host archives passed 25 extracted-package executions each (23 kernel tests and both full journeys). The test harness uses repository test metadata; the CNC, treasury, archive and shared runtime code execute from the extracted package. This is not host installation acceptance.
+- Both generated host archives passed 38 extracted-package executions each (23 kernel tests, both full journeys and 13 completion/review tests). The test harness uses repository test metadata; the CNC, treasury, archive and shared runtime code execute from the extracted package. This is not host installation acceptance.
 - Black, Isort, Mypy for the plugin scripts and hosted service, and Bandit for scripts plus hosted service passed. Privacy source fingerprints were reviewed and validated.
 - Chrome loaded a real generated synthetic draft, verified its version, required an explicit decision, and saved/downloaded a `changes_requested` receipt as `synthetic-reviewer@example.test` against a loopback test server. No real professional's decision was made.
 
@@ -63,6 +63,8 @@ All guide paths below are relative to `plugins/composizione-negoziata/references
 | AC33 | Existing Studio Archive access scope and input integrity contract retained | K for changed-bound-file rejection; existing archive regression scope |
 | AC34 | Role-specific report index, missing sections and residual responsibilities | G, K, J |
 | AC35 | Unverified JSON never approves; authenticated actor derived from signed session, exact record verified | H, K, browser synthetic test |
+
+Clara 0.1.226 is a maintenance rebuild: its privacy records include the shared hosted router and the course-review directory. The reviewed changes add CNC routes and update synthetic CNC teaching evidence; they do not change Clara payload, access or retention behavior.
 
 ## Evidence boundaries
 
