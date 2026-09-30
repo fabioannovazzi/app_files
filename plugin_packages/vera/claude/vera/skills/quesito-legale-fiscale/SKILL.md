@@ -92,19 +92,6 @@ Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
-<!-- VERA_OPENAI_ONBOARDING_BEGIN -->
-Onboarding is optional. Continue ordinary professional work immediately,
-including direct specialist invocation, without checking or completing a local
-onboarding profile. Missing, unfinished, inaccessible or corrupt onboarding state,
-or unavailable voice/window controls, must never block ordinary work. Do not
-automatically start, resume or repeatedly offer onboarding.
-Only for a user-requested tutorial or a native teaching handoff, read
-`../vera/references/local-onboarding.md`. A verified paired lesson worker
-executes only its bound lesson and token; never bypass tutorial validation.
-Tutorial profiles, progress, examples and feedback remain local; never send a
-change request, stamp a tutorial receipt or call hosted interviews for a tutorial.
-Current user requests take precedence over saved preferences.
-<!-- VERA_OPENAI_ONBOARDING_END -->
 # Risposta a quesiti legali e fiscali
 
 This is Vera's user-facing journey from a substantive legal, tax or

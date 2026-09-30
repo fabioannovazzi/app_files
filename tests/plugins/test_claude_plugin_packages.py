@@ -155,10 +155,135 @@ def configured():
     return builder, marketplace, vera_package
 
 
+@pytest.mark.parametrize(
+    ("section", "newline", "after"),
+    [
+        ("ONBOARDING", "\n", "\n# Continued work\n"),
+        ("ONBOARDING", "\n", "\n\n# Continued work\n"),
+        ("ONBOARDING", "\n", ""),
+        ("ONBOARDING", "\r\n", "\r\n# Continued work\r\n"),
+        ("DATEV", "\n", "\n# Continued work\n"),
+        ("VERSION", "\n", "\n# Continued work\n"),
+    ],
+)
+def test_cowork_skill_removes_openai_blocks_independent_of_spacing(
+    section: str, newline: str, after: str
+) -> None:
+    builder = load_builder()
+    content = (
+        "---\nname: fixture\ndescription: Fixture workflow\n---\n\n"
+        "Retained professional task.\n\n"
+        f"<!-- VERA_OPENAI_{section}_BEGIN -->{newline}"
+        f"Read `../vera/references/local-onboarding.md`.{newline}"
+        f"<!-- VERA_OPENAI_{section}_END -->{after}"
+    ).encode()
+
+    projected = builder.project_cowork_skill(
+        content,
+        relative_path="skills/fixture/SKILL.md",
+        cowork_runtime_reference=b"",
+        studio_archive_reference=b"",
+    )
+
+    assert b"local-onboarding.md" not in projected
+    assert b"VERA_OPENAI_" not in projected
+    assert b"Retained professional task." in projected
+    assert after.strip().encode() in projected
+
+
+def test_cowork_registry_removes_only_declared_host_exclusions() -> None:
+    builder = load_builder()
+    registry = {
+        "routing_policy": "Use professional judgment.",
+        "vera_wrapper_skills": [
+            "skills/active/SKILL.md",
+            "skills/datev-invoice-start/SKILL.md",
+            "skills/privacy-surface-review/SKILL.md",
+        ],
+        "components": [
+            {
+                "skills": ["modules/active/skills/active/SKILL.md"],
+                "python_entrypoints": [
+                    "modules/active/scripts/run.py",
+                    "modules/previdenza-inps/scripts/capture_portal_snapshot.py",
+                ],
+            }
+        ],
+    }
+    entries = {
+        "skills/active/SKILL.md": b"",
+        "modules/active/skills/active/SKILL.md": b"",
+        "modules/active/scripts/run.py": b"",
+    }
+
+    projected = builder.project_cowork_workflow_registry(
+        json.dumps(registry).encode(), entries=entries
+    )
+
+    assert json.loads(projected) == {
+        "routing_policy": "Use professional judgment.",
+        "vera_wrapper_skills": ["skills/active/SKILL.md"],
+        "components": [
+            {
+                "skills": ["modules/active/skills/active/SKILL.md"],
+                "python_entrypoints": ["modules/active/scripts/run.py"],
+            }
+        ],
+    }
+
+
+@pytest.mark.parametrize(
+    "field", ["vera_wrapper_skills", "skills", "python_entrypoints"]
+)
+def test_cowork_registry_rejects_unexpected_missing_files(field: str) -> None:
+    builder = load_builder()
+    registry = {
+        "vera_wrapper_skills": [],
+        "components": [{"skills": [], "python_entrypoints": []}],
+    }
+    fields = {
+        "vera_wrapper_skills": registry,
+        "skills": registry["components"][0],
+        "python_entrypoints": registry["components"][0],
+    }
+    fields[field][field] = ["modules/active/missing.md"]
+
+    with pytest.raises(ValueError, match="modules/active/missing.md"):
+        builder.project_cowork_workflow_registry(
+            json.dumps(registry).encode(), entries={}
+        )
+
+
 @pytest.fixture(scope="module")
 def vera_entries(configured):
     builder, _, package = configured
     return builder.claude_package_entries(package)
+
+
+def test_cowork_package_has_no_dangling_onboarding_or_registry_paths(
+    vera_entries,
+) -> None:
+    skill = vera_entries["skills/quesito-legale-fiscale/SKILL.md"]
+    registry = json.loads(vera_entries["skills/vera/references/workflow-registry.json"])
+    paths = registry["vera_wrapper_skills"] + [
+        path
+        for component in registry["components"]
+        for field in ("skills", "python_entrypoints")
+        for path in component[field]
+    ]
+
+    assert b"local-onboarding.md" not in skill
+    assert set(paths) <= vera_entries.keys()
+
+
+def test_cowork_build_rejects_unremoved_openai_instruction_blocks(
+    configured, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    builder, _, package = configured
+    monkeypatch.setattr(builder, "_without_openai_onboarding", lambda content: content)
+
+    with pytest.raises(ValueError, match="retains an OpenAI-only block"):
+        builder.claude_package_entries(package)
 
 
 @pytest.fixture(scope="module")

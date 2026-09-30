@@ -401,7 +401,6 @@
         "modules/previdenza-inps/skills/previdenza-inps/SKILL.md"
       ],
       "python_entrypoints": [
-        "modules/previdenza-inps/scripts/capture_portal_snapshot.py",
         "modules/previdenza-inps/scripts/check_dependencies.py",
         "modules/previdenza-inps/scripts/inventory_case.py",
         "modules/previdenza-inps/scripts/package_case.py",
@@ -573,7 +572,6 @@
     "skills/patent-box-review/SKILL.md",
     "skills/presenza-digitale-studio/SKILL.md",
     "skills/previdenza-inps/SKILL.md",
-    "skills/privacy-surface-review/SKILL.md",
     "skills/purchase-invoice-review/SKILL.md",
     "skills/quesito-legale-fiscale/SKILL.md",
     "skills/registro-imprese-sari/SKILL.md",

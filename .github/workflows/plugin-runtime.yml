@@ -599,6 +599,8 @@ jobs:
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_vera_implementation_bytecode.py -k mcp
       - name: Enforce Cowork manifest description limits
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_claude_plugin_packages.py -k "description or projected_cowork_skills_remove"
+      - name: Reject dangling Cowork workflow references
+        run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_claude_plugin_packages.py -k "cowork_skill_removes_openai_blocks or cowork_registry or cowork_package_has_no_dangling or cowork_build_rejects_unremoved"
       - name: Verify distributed Cowork artifacts and runtime
         run: python scripts/build_claude_plugin_zip.py vera --check
       - name: Verify Lucia's shared archive privacy binding

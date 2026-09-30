@@ -38,6 +38,7 @@ __all__ = [
     "project_claude_manifest",
     "project_claude_mcp",
     "project_cowork_skill",
+    "project_cowork_workflow_registry",
     "verify_catalog",
     "verify_directory",
     "verify_package",
@@ -1802,8 +1803,8 @@ def _without_openai_onboarding(content: bytes) -> bytes:
     """Keep the one-off OpenAI onboarding out of the unchanged Cowork runtime."""
     text = content.decode("utf-8")
     text = re.sub(
-        r"<!-- VERA_OPENAI_(?:ONBOARDING|DATEV|VERSION)_BEGIN -->\n.*?"
-        r"<!-- VERA_OPENAI_(?:ONBOARDING|DATEV|VERSION)_END -->\n\n",
+        r"<!-- (?P<block>VERA_OPENAI_(?:ONBOARDING|DATEV|VERSION))_BEGIN -->\r?\n.*?"
+        r"<!-- (?P=block)_END -->(?:\r?\n|$)(?:\r?\n)?",
         "",
         text,
         flags=re.DOTALL,
@@ -2024,6 +2025,39 @@ when the professional explicitly selects that different route.
     return text.encode("utf-8")
 
 
+def project_cowork_workflow_registry(
+    content: bytes, *, entries: dict[str, bytes]
+) -> bytes:
+    """Keep explicit host exclusions; reject mechanically missing package paths."""
+    registry = json.loads(content)
+    omitted = (
+        ROOT_OMITTED_PATHS
+        | COWORK_OMITTED_PATHS
+        | {
+            "skills/datev-invoice-start/SKILL.md",
+            "skills/privacy-surface-review/SKILL.md",
+        }
+    )
+
+    def packaged_paths(paths: list[str]) -> list[str]:
+        retained = [path for path in paths if path not in omitted]
+        missing = [path for path in retained if path not in entries]
+        if missing:
+            raise ValueError(
+                "Cowork workflow registry references missing package files: "
+                + ", ".join(missing)
+            )
+        return retained
+
+    registry["vera_wrapper_skills"] = packaged_paths(registry["vera_wrapper_skills"])
+    for component in registry["components"]:
+        component["skills"] = packaged_paths(component["skills"])
+        component["python_entrypoints"] = packaged_paths(
+            component["python_entrypoints"]
+        )
+    return _json_bytes(registry)
+
+
 def _validate_cowork_instruction_entries(entries: dict[str, bytes]) -> None:
     for name, content in entries.items():
         is_instruction = (
@@ -2034,6 +2068,13 @@ def _validate_cowork_instruction_entries(entries: dict[str, bytes]) -> None:
         if not is_instruction:
             continue
         text = content.decode("utf-8")
+        # These markers explicitly delimit excluded host instructions, not prose.
+        if re.search(
+            r"<!-- (?:VERA|CLARA|LUCIA)_OPENAI_"
+            r"(?:ONBOARDING|DATEV|VERSION)_(?:BEGIN|END) -->",
+            text,
+        ):
+            raise ValueError(f"{name}: Cowork instruction retains an OpenAI-only block")
         for marker in COWORK_FORBIDDEN_INSTRUCTION_MARKERS:
             if marker in text:
                 raise ValueError(
@@ -3063,17 +3104,6 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             content = _json_bytes({"runtime": "cowork-haiku"})
         elif relative == "components.json":
             content = _project_vera_components(content)
-        elif relative == "skills/vera/references/workflow-registry.json":
-            registry = json.loads(content)
-            registry["vera_wrapper_skills"] = [
-                skill
-                for skill in registry["vera_wrapper_skills"]
-                if skill
-                not in {
-                    "skills/datev-invoice-start/SKILL.md",
-                }
-            ]
-            content = _json_bytes(registry)
         if (
             relative.startswith("modules/")
             and Path(relative).suffix.lower() in RUNTIME_TEXT_SUFFIXES
@@ -3101,6 +3131,10 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             if name.startswith(prefix)
         },
         entries,
+    )
+    registry_path = "skills/vera/references/workflow-registry.json"
+    entries[registry_path] = project_cowork_workflow_registry(
+        entries[registry_path], entries=entries
     )
     _project_cowork_privacy_register(entries)
     _validate_cowork_instruction_entries(entries)
