@@ -608,3 +608,38 @@ Do not invent an offset, renew an approval or count that blocked follow-up as a
 successful computation. The successful base practice and its blocked update are
 separate checkpoints. All exercise calendar conventions are fictional hypotheses;
 real-case sources and actual professional confirmation remain required.
+
+## Patent Box controlled preview
+
+`patent-box-review` supplies fictional ordinary software evidence, a ledger and
+an unchanged synthetic source. Use the normal tutorial adapter, exact selected
+receipts and current Patent Box module. Inspect the ledger, review its mapping
+and source total, normalize, then propose detailed controls and located A/B text.
+The ordinary maintenance row is distinct from development. Practice starts a
+fresh bound case with an additional personnel row whose project link is missing.
+Keep it suspended and request evidence; absence does not establish failure.
+Preserve demonstration bytes and obtain a new actual proposal confirmation.
+
+Only explicitly synthetic initialization (`--demo`) and the shipped demo rules
+at their historical test date 2026-09-23 are permitted in this exercise. Never
+refresh or promote them into real rules. Read the readable proposal before actual
+learner confirmation; `--synthetic` requires an explicitly synthetic reviewer
+and the actual confirmation reference. Automated fixtures use test identities
+only and do not attest learner participation. Without confirmation calculation
+stays pending. No tutorial exception configures a firm policy, signs a mandate,
+or authorizes real-client calculation.
+
+Open the actual summary, missing-document list, controls, reconciliation,
+workpaper, unsigned Word/PDF A/B dossier and model-data report. Explain the
+additional deduction versus a tax saving and the separate income/IRAP bases.
+Engine titles and fields remain Italian; conversation, outline and authored
+narrative follow the selected supported language. Patents, designs, premial
+events and signature/timestamp verification are separate fact-dependent paths,
+not demonstrated executions. The implementation remains a controlled preview:
+32 professional UAT scenarios are NOT_RUN and professional/installed-host
+acceptance is unverified. Synthetic success changes none of those boundaries.
+The lesson has no public research, schedule, notification, signing or filing.
+Fictional inputs, model proposals and results read by the native OpenAI host
+enter its account model context; local storage does not mean offline inference.
+Complete the normal report, declarations and local ledger finalization without
+telemetry or external feedback.

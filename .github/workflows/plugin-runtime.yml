@@ -212,6 +212,7 @@ jobs:
           -r plugins/management-control-pack/requirements.txt
           -r plugins/open-item-reconciliation/requirements.txt
           -r plugins/passive-invoice-audit/requirements.txt
+          -r plugins/patent-box-review/requirements.txt
           -r plugins/presenza-digitale-studio/requirements.txt
           -r plugins/previdenza-inps/requirements.txt
           -r plugins/prompt-optimizer/requirements.txt
@@ -256,6 +257,7 @@ jobs:
           tests/plugins/test_teaching_management_execution.py
           tests/plugins/test_business_valuation.py
           tests/plugins/test_teaching_clara_budget_execution.py
+          tests/plugins/test_teaching_patent_box_execution.py
           tests/plugins/test_teaching_cnc_execution.py
           tests/plugins/test_teaching_fusione_execution.py
           tests/plugins/test_cnc_integrations.py
@@ -305,6 +307,10 @@ jobs:
           python -m bandit -q plugins/bilancio-xbrl-it/scripts/accounts_preview.py plugins/bilancio-xbrl-it/scripts/accounts_preview_text.py plugins/bilancio-xbrl-it/scripts/xbrl_case.py
       - name: Check course runtime and compiler
         run: |
+          python -m black --check tests/plugins/test_teaching_patent_box_execution.py
+          python -m isort --check-only tests/plugins/test_teaching_patent_box_execution.py
+          python -m mypy --follow-imports=skip tests/plugins/test_teaching_patent_box_execution.py
+          python -m bandit -q -ll tests/plugins/test_teaching_patent_box_execution.py
           python scripts/course_materials/build_catalog.py --check
           python scripts/course_materials/build_public_catalog.py --check
           python -m black --check tests/plugins/test_teaching_cnc_execution.py

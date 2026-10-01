@@ -185,6 +185,12 @@ def _source_records(product: str, workflow: str) -> list[dict[str, str]]:
             module_root / name
             for name in ("rulepacks", "taxonomy", "templates", "assets")
         ]
+        if module == "patent-box-review":
+            # This component keeps its engine and synthetic rule contract outside
+            # scripts/vendor; both affect the prepared lesson's execution.
+            candidates += [
+                module_root / name for name in ("patent_box", "config", "examples")
+            ]
         requirements = module_root / "requirements.txt"
         if requirements.is_file():
             paths.add(requirements)

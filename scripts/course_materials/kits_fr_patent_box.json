@@ -1,0 +1,27 @@
+{
+  "vera/patent-box-review": {
+    "title": "Préparer un dossier Patent Box à partir des preuves et des coûts",
+    "goal": "Apprendre à fournir les pièces du logiciel, rapprocher les coûts, distinguer inclusion, exclusion et suspension et lire un dossier A/B à revoir.",
+    "scenario": "Arco Software est fictive. Le projet Faro est un module original utilisé en interne en 2025 ; le registre distingue personnel de développement et maintenance ordinaire.",
+    "scope": "Aperçu contrôlé italien : premier cas de logiciel ordinaire. Conversation en français ; titres et champs des documents du moteur restent italiens. Brevets, dessins et branche premial exigent d’autres preuves et ne sont pas démontrés. Les 32 scénarios UAT professionnels restent NOT_RUN ; acceptation professionnelle et sur le poste installé non vérifiée.",
+    "inputs": "Ouvrez evidence-fr.md, ledger-demo.csv et synthetic-rules.txt. Identifiez droits, activités, période, projet, lignes et bases proposées revenus/IRAP. Faits inventés et bases fiscales pédagogiques. La source synthétique ne sert qu’au test historique du 23 septembre 2026, pas au droit actuel.",
+    "request": "Vera, prépare un dossier Patent Box fictif pour Faro avec ces fichiers. Montre preuves, rapprochement, contrôles proposés et questions ouvertes ; après ma confirmation, exécute uniquement le calcul synthétique et montre le projet A/B.",
+    "steps": [
+      "Vera importe ces seuls fichiers dans un cas pédagogique local séparé, les lit et propose le périmètre. La voix relie logiciel, droits, activités et utilisation aux sections de la note ; explique les preuves nécessaires pour un brevet ou dessin sans les inventer.",
+      "Vera inspecte les lignes CSV et propose correspondances, total comptable et bases distinctes. Revoyez exclusion de la maintenance, liens au projet, absence déclarée d’autres aides et limites des déclarations. Aucune correspondance ni approbation n’est fournie.",
+      "Ouvrez la revue lisible de la proposition. Après confirmation réelle de la version exacte seulement, enregistrez une revue synthétique et exécutez le moteur en demo avec règles synthétiques à la date historique. Aucun mandat ni source réelle n’est configuré. Ouvrez résumé, rapprochement et dossier Word/PDF réellement produits, puis le rapport des données au modèle."
+    ],
+    "deliverables": [
+      "Résumé, documents manquants, matrice de contrôles et rapprochement avec lignes et sources.",
+      "Feuille de travail, dossier A/B Word/PDF non signé, calcul et rapport des données au modèle."
+    ],
+    "review": "Commencez par le résumé et remontez un montant à sa ligne. La déduction supplémentaire n’est pas une économie fiscale : le moteur ne calcule pas celle-ci. Une suspension ne prouve pas l’inéligibilité. Dossier provisoire : aucun envoi, signature, dépôt ou protection contre les sanctions. Un cas réel nécessite sources/règles actuelles revues et autorisation professionnelle authentifiée ; la confirmation pédagogique ne les remplace pas.",
+    "checkpoints": [
+      "Avant calcul, reliez une ligne au projet et à l’activité et expliquez la différence des bases.",
+      "Trouvez un coût exclu, son motif et sa source. Évaluez si la preuve suffirait pour un client réel."
+    ],
+    "practice": "Demandez un nouveau cas avec evidence-practice-fr.md, ledger-practice.csv et la même source synthétique. Un coût de personnel supplémentaire n’a pas de lien documenté au projet. Ne l’inventez pas : revoyez la proposition, préservez la démonstration et trouvez le coût suspendu et la pièce à demander dans le nouveau dossier.",
+    "success": "Vous savez choisir les fichiers, demander la revue, rapprocher un montant, expliquer exclusion et suspension et identifier les vérifications professionnelles restantes.",
+    "repeat": "Pour un client réel, précisez entreprise, période, bien et finalité ; fournissez droits, activités, coûts et historique des aides. Revoyez correspondances et contrôles avec le professionnel et suivez l’autorisation normale. Ne réutilisez ni source, ni approbation, ni date synthétique."
+  }
+}

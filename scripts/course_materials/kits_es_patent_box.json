@@ -1,0 +1,27 @@
+{
+  "vera/patent-box-review": {
+    "title": "Preparar un expediente Patent Box con evidencias y costes",
+    "goal": "Aprender a aportar pruebas del software, conciliar costes, distinguir inclusión, exclusión y suspensión y leer un borrador A/B.",
+    "scenario": "Arco Software es ficticia. Faro es un módulo original usado internamente en 2025; el registro separa personal de desarrollo y mantenimiento ordinario.",
+    "scope": "Vista previa controlada italiana: primer caso de software ordinario. Conversación en español; títulos y campos del motor permanecen en italiano. Patentes, diseños y rama premial requieren otras pruebas y no se demuestran. Los 32 escenarios UAT profesionales siguen NOT_RUN; aceptación profesional y del equipo instalado no verificada.",
+    "inputs": "Abre evidence-es.md, ledger-demo.csv y synthetic-rules.txt. Identifica derechos, actividades, periodo, proyecto, filas y bases propuestas renta/IRAP. Hechos inventados y bases fiscales didácticas. La fuente sintética solo sirve para el test histórico del 23 de septiembre de 2026, no como normativa actual.",
+    "request": "Vera, prepara un expediente Patent Box ficticio para Faro con estos archivos. Muestra evidencias, conciliación, controles propuestos y preguntas abiertas; tras mi confirmación ejecuta solo el cálculo sintético y muestra el borrador A/B.",
+    "steps": [
+      "Vera importa solo estos archivos en un caso didáctico local separado, los lee y propone el alcance. La voz relaciona software, derechos, actividades y uso con secciones de la nota; explica las pruebas de una patente o diseño sin inventarlas.",
+      "Vera inspecciona filas CSV y propone mapeo, total contable y bases distintas. Revisa exclusión del mantenimiento, vínculos al proyecto, ausencia declarada de otras ayudas y límites de las declaraciones. No se suministra mapeo ni aprobación.",
+      "Abre la revisión legible de la propuesta. Solo tras confirmar realmente la versión exacta, registra una revisión sintética y ejecuta el motor con demo y reglas sintéticas a la fecha histórica. No se configuran mandatos ni fuentes reales. Abre resumen, conciliación y expediente Word/PDF realmente producidos, luego el informe de datos al modelo."
+    ],
+    "deliverables": [
+      "Resumen, documentos pendientes, matriz de controles y conciliación con filas y fuentes.",
+      "Papel de trabajo, expediente A/B Word/PDF sin firmar, registro del cálculo e informe de datos al modelo."
+    ],
+    "review": "Empieza por el resumen y sigue un importe hasta su fila. La deducción adicional no es ahorro fiscal: el motor no calcula ahorro. La suspensión no demuestra inadmisibilidad. El expediente es borrador: sin envío, firma, presentación ni protección sancionadora. Un caso real exige fuentes/reglas actuales revisadas y autorización profesional autenticada; la confirmación didáctica no las sustituye.",
+    "checkpoints": [
+      "Antes del cálculo relaciona una fila con proyecto y actividad y explica por qué las bases pueden diferir.",
+      "Busca un coste excluido, motivo y fuente. Considera si las pruebas bastarían para un cliente real."
+    ],
+    "practice": "Pide un caso nuevo con evidence-practice-es.md, ledger-practice.csv y la misma fuente sintética. Añade personal sin vínculo documentado al proyecto. No lo inventes: revisa la propuesta, conserva la demostración y encuentra el coste suspendido y el documento que falta en el nuevo borrador.",
+    "success": "Sabes elegir archivos, pedir la revisión, conciliar un importe, explicar exclusión y suspensión e identificar verificaciones profesionales pendientes.",
+    "repeat": "Para un cliente real indica empresa, periodo, activo y finalidad; aporta derechos, actividades, costes e historial de ayudas. Revisa mapeos y controles con el profesional y sigue la autorización normal. Nunca reutilices fuente, aprobación o fecha sintéticas."
+  }
+}

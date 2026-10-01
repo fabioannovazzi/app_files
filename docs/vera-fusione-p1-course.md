@@ -3,8 +3,8 @@
 The prepared `vera/fusione-guidata` course is registered in Vera's native
 workflow catalogue, compiled lesson index and public course catalogue. Revision
 `2026-10-01.1` provides Italian, English, French, German and Spanish guidance.
-The owning-product inventory is now Vera 35 workflows / 154 locales, and all
-products total 48 workflows / 216 locales. Vera 0.1.305 is a release candidate;
+The owning-product inventory is now Vera 36 workflows / 159 locales, and all
+products total 49 workflows / 221 locales. Vera 0.1.305 is a release candidate;
 this document does not assert deployment, Marketplace publication or installation.
 
 ## Lesson and source material
@@ -93,3 +93,7 @@ snapshot is refreshed for this source identity; it does not establish Geneva
 applicability for this Italian merger course. The corrected website inventory
 test ends its learning exclusion at DATEV installation trial and passes with Node.
 Merge and deployment require green remote checks.
+
+Main integration preserves the complete five-language Patent Box course from
+PR #728 and Clara 0.1.234. Both original teaching contracts and course definitions
+are retained, with generated catalogues and packages rebuilt from combined source.

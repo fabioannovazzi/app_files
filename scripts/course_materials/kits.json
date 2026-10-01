@@ -8189,6 +8189,144 @@
       }
     ]
   },
+  "vera/patent-box-review": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "inspect_normalize_review_then_synthetic_dossier"
+    },
+    "files": [
+      {
+        "source": "patent-box/evidence-it.md",
+        "path": "files/input/evidence-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-practice-it.md",
+        "path": "files/practice/evidence-practice-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-en.md",
+        "path": "files/input/evidence-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-practice-en.md",
+        "path": "files/practice/evidence-practice-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-fr.md",
+        "path": "files/input/evidence-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-practice-fr.md",
+        "path": "files/practice/evidence-practice-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-de.md",
+        "path": "files/input/evidence-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-practice-de.md",
+        "path": "files/practice/evidence-practice-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-es.md",
+        "path": "files/input/evidence-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-practice-es.md",
+        "path": "files/practice/evidence-practice-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "patent-box/ledger-demo.csv",
+        "path": "files/input/ledger-demo.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "patent-box/synthetic-rules.txt",
+        "path": "files/input/synthetic-rules.txt",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "patent-box/ledger-practice.csv",
+        "path": "files/practice/ledger-practice.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "patent-box/synthetic-rules.txt",
+        "path": "files/practice/synthetic-rules.txt",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      }
+    ]
+  },
   "vera/fusione-guidata": {
     "group": "workflow",
     "execution": {
