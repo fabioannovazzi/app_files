@@ -296,6 +296,35 @@ understanding, installed-host behavior and professional real-client validation
 are separate acceptance work. The ten demo/practice identities and inspected
 artifact hashes are in `release_reviews/vera/fusione-guidata.json`.
 
+## Trasformazione synthetic course (2026-10-01)
+
+The prepared `vera/trasformazione` kit adds five complete conversation locales
+(it/en/fr/de/es), with Italian fictional JSON evidence and native Italian dossiers.
+The current compiler inventory is 49 owning-product entries / 221 locales
+(Vera: 36 / 159). These are course entries, not professionally qualified workflows.
+
+Two independent case packs contain mandate, separate participant rights, creditor
+positions, a withheld valuation and a changed-liability valuation. No approved
+proposal, reviewer decision or generated dossier is shipped as an input. The
+worker follows the installed component contract and the documented private
+synthetic-folder exception, with no Studio Archive adapter or real-client handoff.
+Its model authors dependencies and findings; the native component checks shape,
+exact arithmetic, hash-bound review and history.
+
+`tests/plugins/test_teaching_trasformazione_execution.py` executes demonstration
+and practice in every locale and exercises both extracted native archive formats.
+Its independently authored interpretation and reviewer are regression fixtures,
+not the learner's decisions or professional validation. The tests preserve four
+exports per case: missing valuation, simulated preparation approvals, selective
+staleness, and corrected calculations/findings with a fresh simulated decision.
+Tax, release and opposition remain blocked. The generic local model-data builder
+produces a readable report without server stamping. Output inspection and the
+locale-specific review attestations are recorded separately; they do not establish
+native voice, paired-window visibility, learner understanding, enabled-plugin
+acceptance, legal/tax qualification, real-client use or Marketplace publication.
+The historical 46 scenarios include only 11 mechanically tested subsets;
+professional coverage remains pending.
+
 ## CNC practical course · 1 October 2026
 
 The existing `vera/composizione-negoziata` entry now supplies one extended

@@ -208,7 +208,7 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
 
 ## Synthetic development prototypes
 
-Read `../../trasformazione/SKILL.md` to prepare a synthetic Italian company-transformation case,
+- `trasformazione`: prepare a synthetic Italian company-transformation case,
   import evidence, propose findings, check exact arithmetic, record explicit
   simulated/user review and export a versioned dossier. Changed evidence reopens
   dependent approvals. This increment does not accept real client mandates,

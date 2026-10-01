@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/.codex/worktrees/fusione-p1-course/app_files/plugins/vera",
-  "version": "0.1.318",
-  "captured_at": "2026-10-01T12:30:54.995833+00:00",
-  "catalogue_fingerprint": "5d65354078e8f3838365b2825f577c55cfe6f8e306ae093729928f2d9bb0cbea",
-  "manifest_sha256": "0497edcf2c435b80288bd33ade3d636b2a11779fba06a840de13feba45fd79cf",
+  "version": "0.1.321",
+  "captured_at": "2026-10-01T17:18:49.760164+00:00",
+  "catalogue_fingerprint": "20caa9f130d6f3b101c1b96e7f348d87e2d9b79dbf6810fbf88491427bc2cdc6",
+  "manifest_sha256": "dffbd3f8ac21d5bde82d3ce5b24d78a1d1493fae95cd347372e3e3f6114896c0",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -134,7 +134,7 @@
     {
       "function_id": "learn-with-vera",
       "skill_path": "skills/learn-with-vera/SKILL.md",
-      "sha256": "8921927e4361244093541ac4b94b2ee1aa1ff5bd0966fbdef7dc1f6b3f2cc4e5"
+      "sha256": "643580dbeb0c8dbdcc5a0ff53b01e60974179d595e96f0599aff20f424a933e7"
     },
     {
       "function_id": "legal-tax-answer-planner",
@@ -214,7 +214,7 @@
     {
       "function_id": "trasformazione",
       "skill_path": "skills/trasformazione/SKILL.md",
-      "sha256": "b36f003f163ca249f5145b6983f17695fb2391318696bd9c258ecf67a19461ca"
+      "sha256": "cea3d8b860ab9745e93afe84baf2be2c4ebb1e3fdf69dbca20f36715f351abc9"
     },
     {
       "function_id": "treasury-forecast",

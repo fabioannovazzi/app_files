@@ -103,8 +103,9 @@ Treat the module root as the working directory and run
 This synthetic prototype uses its own explicit local folder and simulated/user
 review records. It has no Studio Archive adapter, professional source validation,
 statutory deadline engine, external filing or transmission. Do not use it for a
-real mandate. Do not infer that the prototype is available through the ordinary
-professional lesson course; use its own persisted synthetic demonstration.
+real mandate. For a requested synthetic lesson, use its prepared course from
+`local_courses.py`; the course does not extend professional acceptance. Follow
+the workflow-specific notes in `../learn-with-vera/references/prepared-courses.md`.
 
 For a requested prototype or demo, continue ordinary authorized local work.
 Never write run outputs inside this Git workspace or a published directory.

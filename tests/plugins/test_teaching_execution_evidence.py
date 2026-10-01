@@ -19,6 +19,12 @@ from courseware.library import CourseLibrary
 from desktop_teaching.onboarding import Store
 
 
+@pytest.fixture(autouse=True)
+def course_runtime_imports(monkeypatch):
+    """Restore lazy course imports after the repository's module isolation hook."""
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
+
+
 @pytest.fixture(params=["vera", "clara", "lucia"])
 def active(request, tmp_path):
     if request.param == "vera":

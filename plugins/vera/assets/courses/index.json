@@ -875,6 +875,34 @@
         "es": "Aprender a conectar una carpeta del despacho, buscar en el cliente correcto y obtener una respuesta vinculada a sus documentos."
       }
     },
+    "trasformazione": {
+      "path": "trasformazione/course.json",
+      "sha256": "6b0fb7b9c6248aef773c90fa01267424605212b204d03d7b377df3a90171eb89",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Eseguire un caso sintetico di trasformazione societaria",
+        "en": "Run a synthetic company-transformation case",
+        "fr": "Exécuter un cas synthétique de transformation de société",
+        "de": "Einen synthetischen Umwandlungsfall bearbeiten",
+        "es": "Ejecutar un caso sintético de transformación societaria"
+      },
+      "goals": {
+        "it": "Preparare e rivedere un dossier sintetico, seguire le fonti e riaprire le decisioni quando cambia una passività.",
+        "en": "Prepare and review a synthetic dossier, trace its evidence and reopen decisions when a liability changes.",
+        "fr": "Préparer et revoir un dossier synthétique, suivre ses preuves et rouvrir les décisions après une modification du passif.",
+        "de": "Ein synthetisches Dossier erstellen und prüfen, Belege verfolgen und Entscheidungen nach geänderten Verbindlichkeiten neu prüfen.",
+        "es": "Preparar y revisar un expediente sintético, seguir sus evidencias y reabrir decisiones cuando cambia un pasivo."
+      }
+    },
     "treasury-forecast": {
       "path": "treasury-forecast/course.json",
       "sha256": "5a5edd648abff7a562c826f871d15ddd71540069c129a32a3183c93c8b05a1d0",

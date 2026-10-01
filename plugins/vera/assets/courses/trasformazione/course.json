@@ -1,0 +1,515 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "trasformazione",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "synthetic_evidence_review_stale_dossier"
+  },
+  "sources": [
+    {
+      "path": "modules/trasformazione/assets/icon.svg",
+      "repository_path": "plugins/trasformazione/assets/icon.svg",
+      "sha256": "8a50df95bf250089e0f4278fac1fc28e6b6642cf9635ee11f2b658d029531f0e"
+    },
+    {
+      "path": "modules/trasformazione/references/acceptance-matrix.json",
+      "repository_path": "plugins/trasformazione/references/acceptance-matrix.json",
+      "sha256": "9ff135207bb52ef09555cb4ad21f1c85675cb2306602b8928cd09701784f3840"
+    },
+    {
+      "path": "modules/trasformazione/references/privacy-review.md",
+      "repository_path": "plugins/trasformazione/references/privacy-review.md",
+      "sha256": "2bf0715eb025ff7adf539042fa3ad686465698e40d4294f02029eda0ede441cf"
+    },
+    {
+      "path": "modules/trasformazione/references/provenance.json",
+      "repository_path": "plugins/trasformazione/references/provenance.json",
+      "sha256": "2b53b61fc4a88cdc6e138447f0e7bd9af82e67e811b4b4f323e4af3b63d4d663"
+    },
+    {
+      "path": "modules/trasformazione/references/record-contract.md",
+      "repository_path": "plugins/trasformazione/references/record-contract.md",
+      "sha256": "14bbd506cf6a3c6402b98ac4947846719c118194ad770f24dc3c53080b95eb2a"
+    },
+    {
+      "path": "modules/trasformazione/requirements.txt",
+      "repository_path": "plugins/trasformazione/requirements.txt",
+      "sha256": "f6e5a2e90df544b4907f849ab51488b2a7fa21cccccf4d8fecff211c8f203da9"
+    },
+    {
+      "path": "modules/trasformazione/scripts/check_dependencies.py",
+      "repository_path": "plugins/trasformazione/scripts/check_dependencies.py",
+      "sha256": "d0acdf4b11465fc359a2ee03d7eaef64f02478954a2c38192361b0040c335aef"
+    },
+    {
+      "path": "modules/trasformazione/scripts/demo.py",
+      "repository_path": "plugins/trasformazione/scripts/demo.py",
+      "sha256": "f8c7c5d0a92d1c2b8f152f0295916c216d6d887def8b28d81c8055ad657c9c51"
+    },
+    {
+      "path": "modules/trasformazione/scripts/transform_case.py",
+      "repository_path": "plugins/trasformazione/scripts/transform_case.py",
+      "sha256": "99f5a56d9f8b8280aaf06bcef58c79bfd1450c298181a94f639eba1afabe05b8"
+    },
+    {
+      "path": "modules/trasformazione/skills/trasformazione/SKILL.md",
+      "repository_path": "plugins/trasformazione/skills/trasformazione/SKILL.md",
+      "sha256": "0dee3ad53d74be3d550db5688322d7103a709cdd71a15783593b5fd5a9becd3b"
+    },
+    {
+      "path": "scripts/check_dependencies.py",
+      "repository_path": "plugins/vera/scripts/check_dependencies.py",
+      "sha256": "d8fe58ac68e4cb0e05783256d829fbffc2a29c802c83902ee3102ff432764b69"
+    },
+    {
+      "path": "scripts/managed_python_runtime.py",
+      "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+      "sha256": "ccc8f805bc8807b1c16a2a92dc43533571cb341bc20a68d850d25af04c879e69"
+    },
+    {
+      "path": "skills/trasformazione/SKILL.md",
+      "repository_path": "plugins/vera/skills/trasformazione/SKILL.md",
+      "sha256": "cea3d8b860ab9745e93afe84baf2be2c4ebb1e3fdf69dbca20f36715f351abc9"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "5b28ac597f0a3deaf4cfc907b8a33bb40aae21719206ad0c976b605950f89dc7"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "507967ae7dcf07ae4e138fff4333adb5fd709484731dcef45d531152c54ede45"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
+      "path": "vendor/modules/courseware/deck_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/deck_view.py",
+      "sha256": "96f75ea3078c9e0c6e509cdefb0beeb876677e2e7884777d213d9b03c6c27b80"
+    },
+    {
+      "path": "vendor/modules/courseware/document_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/document_view.py",
+      "sha256": "9982c9d6ce83e7feb26165308fa9a136a744891a7e623ce23ff9bb778e6b7403"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/html_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/html_view.py",
+      "sha256": "57280e82460bd8c7982294c4be6e0cff7da969800d4282e6da15059571cce0b1"
+    },
+    {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+    },
+    {
+      "path": "vendor/modules/courseware/preview.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/preview.py",
+      "sha256": "1a6e56141cdd554a6510100f47745f7b31472c9d22f45407f4f86ac7981aee10"
+    },
+    {
+      "path": "vendor/modules/courseware/sales_plan_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/sales_plan_view.py",
+      "sha256": "115977d03c034ed5f363d6fd5c8c82648ed1349067ac61e48d0701b10caa7e7b"
+    },
+    {
+      "path": "vendor/modules/courseware/website_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/website_view.py",
+      "sha256": "f230f86272201bae7bc34f1868d8cb6013b47ce9ccc8b876acdfb0bc257637d5"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "089670445e91974b68e9eca35017948a8bac2d07e7e05dba29be05b32fb76e93"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/case.json",
+      "sha256": "8f27d4cb5fe433ae62c85821eef5d57ac0bc190330685ca6c8aaf543421d5f91",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/participants.json",
+      "sha256": "38f25d57d8597945b63adfc664295cb4f4b308d241a858d3fe746efbdd54f992",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/creditors.json",
+      "sha256": "a8e3c15e8f86116e6bde3dae669cce5cc2e72b8c80eb39d6925c0caeaa7e4810",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/valuation.json",
+      "sha256": "f4ff9d40680f724ccfb6a97ebfa5ce82d119ad31c14fb63a10f91a637601f8f0",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/valuation-update.json",
+      "sha256": "59f6d2b2cb9b196c4676d7c37cceba3e22bd8aaef4d2d96c4706c3b274df520d",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/case.json",
+      "sha256": "8f27d4cb5fe433ae62c85821eef5d57ac0bc190330685ca6c8aaf543421d5f91",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/participants.json",
+      "sha256": "38f25d57d8597945b63adfc664295cb4f4b308d241a858d3fe746efbdd54f992",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/creditors.json",
+      "sha256": "a8e3c15e8f86116e6bde3dae669cce5cc2e72b8c80eb39d6925c0caeaa7e4810",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/valuation.json",
+      "sha256": "17bc9f4739890da013557d1f429ed9f673fd5b84caea44df85d77d01a5dd177c",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/valuation-update.json",
+      "sha256": "085e3b040017285ca04d69ac9015acc36fd5bc5c4d9b2e101b848b5d92ee21a0",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Eseguire un caso sintetico di trasformazione societaria",
+      "goal": "Preparare e rivedere un dossier sintetico, seguire le fonti e riaprire le decisioni quando cambia una passività.",
+      "scenario": "Officina Selce SNC ipotizza una SRL. Due soci hanno diritti di capitale, voto e utili distinti. La stima arriva dopo l’elenco creditori.",
+      "scope": "Prototipo italiano su dati inventati, in Codex desktop e nel percorso locale Work quando supportato; Cowork non offre questo corso. Il dossier nativo resta in italiano. Nessuna qualificazione legale o fiscale, firma autenticata, integrazione Studio Archive o deposito.",
+      "inputs": "Apri files/input/case.json, participants.json e creditors.json. Conserva valuation.json per il secondo passaggio e valuation-update.json per il cambiamento finale. Null significa ignoto, non zero o consenso; le stringhe numeriche sono esatte. Non caricare clienti reali.",
+      "request": "Vera, guidami nel caso sintetico Officina Selce: importa prima incarico, soci e creditori, mostrami cosa manca per il capitale, poi acquisisci la stima. Proponi analisi collegate alle fonti, mostrami le decisioni da rivedere ed esporta il dossier senza azioni esterne.",
+      "steps": [
+        "Nel thread di lavoro, Vera legge la procedura installata e crea una nuova cartella sintetica locale. Importa i primi tre file come evidenze. Proponi rami separati per capitale, raccolta creditori e fiscalità. Il capitale dipende dalla stima non ancora ricevuta; la raccolta può proseguire, ma liberazione e opposizione restano questioni distinte. Esporta questa prima versione.",
+        "Importa valuation.json. Il modello propone calcoli, diritti e rilievi con dipendenze esatte dai documenti e motivi verificabili. Esamina copertura del capitale e ripartizione, separando capitale/voto/utili e valore contabile/stimato/fiscale. Non inventare fonti normative: le questioni fiscali e le ricevute mancanti restano aperte. Mostra proposta, digest e dossier prima della revisione.",
+        "Registra solo le decisioni effettivamente espresse dal partecipante, con revisore, motivo e digest; una simulazione deve essere etichettata. Conserva l’export. Reimporta valuation-update.json con lo stesso identificativo della stima: il capitale diventa stale, la raccolta indipendente resta corrente. I vecchi calcoli non si aggiornano leggendo il documento: correggi input numerici e rilievi, risottometti e chiedi una nuova decisione. Apri dossier.md, case.json, manifest.json e history/."
+      ],
+      "deliverables": [
+        "Dossier Markdown e JSON versionati con documenti, dipendenze, importi, diritti, blocchi, questioni aperte e decisioni; manifest con hash.",
+        "Export precedenti e storia concatenata, più rapporto locale leggibile sui dati arrivati al modello. I file preparati non sono questi risultati."
+      ],
+      "review": "Segui un rilievo fino a evidence/<hash> e al documento originale. Controlla quantità esatte e separazione dei diritti. Un margine non è una riserva distribuibile. Una ricevuta ignota non libera il socio né risolve l’opposizione. La revisione registrata non autentica il revisore e approva al massimo la preparazione sintetica.",
+      "checkpoints": [
+        "Prima della stima, indica quale ramo è bloccato e quale può raccogliere dati; trova una ricevuta e una base fiscale mancanti.",
+        "Prima della decisione, controlla la fonte e le tre quote di ogni socio. Dopo l’aggiornamento, mostra stale e una decisione indipendente conservata."
+      ],
+      "practice": "Crea un secondo caso con files/practice/, preservando il demo. Usa 640000 di attivi e 270000 di passivi; ripeti importazione, proposta e revisione. Poi importa valuation-update.json con passivi 305000 sotto lo stesso ID. Individua i rami stale, correggi la copertura e il rilievo, richiedi nuova revisione ed esporta senza chiudere le questioni fiscali o inventare ricevute.",
+      "success": "Nel demo verifica netto 450000, margine aritmetico 350000 e quote capitale 60000/40000; con passivi 310000 verifica netto 390000 e margine 290000 dopo il riesame. Nella pratica verifica 370000/270000 e poi 335000/235000. Trova i diritti voto 1/2–1/2 e utili 7/10–3/10, la decisione precedente in history, il blocco fiscale e gli hash dell’export. Sono criteri di controllo, non risultati già eseguiti.",
+      "repeat": "Ripeti solo con dati sintetici, una nuova cartella e la skill Vera realmente installata. Il pilot professionale supervisionato richiede qualificazione e accettazione ancora pendenti. Spiegazione e prova breve: 5–8 minuti; lettura, revisione e pratica completa possono proseguire oltre. Profilo, progressi e file restano locali; il modello nativo può leggere i documenti selezionati e non è elaborazione solo locale."
+    },
+    "en": {
+      "title": "Run a synthetic company-transformation case",
+      "goal": "Prepare and review a synthetic dossier, trace its evidence and reopen decisions when a liability changes.",
+      "scenario": "Fictional Officina Selce SNC considers becoming an SRL. Two participants have separate capital, voting and profit rights. The valuation arrives after the creditor list.",
+      "scope": "Italian prototype with invented data, in desktop Codex and local Work where supported. Cowork has no teaching course. Native dossiers remain Italian. No legal or tax qualification, authenticated signature, Studio Archive integration or filing.",
+      "inputs": "Open files/input/case.json, participants.json and creditors.json. Hold valuation.json for the second stage and valuation-update.json for the final change. Null means unknown, never zero or consent; numeric strings are exact. Do not supply real clients.",
+      "request": "Vera, guide me through the synthetic Officina Selce case. Import the brief, participants and creditors first, show what blocks capital, then acquire the valuation. Propose evidence-linked findings, show the decisions to review and export the dossier without external actions.",
+      "steps": [
+        "In the working chat, Vera reads the installed procedure and creates a fresh local synthetic folder. Import the first three files as evidence. Propose separate capital, creditor-collection and tax branches. Capital depends on the unreceived valuation; collection can continue, but release and opposition remain separate open questions. Export this first version.",
+        "Import valuation.json. The model proposes calculations, rights and findings with exact document dependencies and inspectable reasons. Review capital coverage and allocation, separating capital/vote/profit and book/estimated/tax values. Do not invent legal authorities: tax questions and missing receipts stay open. Show proposal, digest and dossier before review.",
+        "Record only decisions actually expressed by the participant, with reviewer, reason and digest; label any simulation. Keep the export. Reimport valuation-update.json under the same valuation evidence ID: capital becomes stale while independent collection stays current. Document changes do not update old calculations: correct numeric inputs and findings, resubmit and request a fresh decision. Open dossier.md, case.json, manifest.json and history/."
+      ],
+      "deliverables": [
+        "Versioned Markdown and JSON dossier with documents, dependencies, amounts, rights, blockers, open issues and decisions; file-hash manifest.",
+        "Earlier exports and chained history, plus the readable local model-data report. Prepared files are not these execution outputs."
+      ],
+      "review": "Trace a finding to evidence/<hash> and its original document. Check exact amounts and separate rights. An arithmetic margin is not distributable reserves. An unknown receipt establishes neither release nor opposition outcome. Recorded review does not authenticate a reviewer and approves at most synthetic preparation.",
+      "checkpoints": [
+        "Before valuation, identify the blocked branch and the branch able to collect information; find a missing receipt and tax basis.",
+        "Before deciding, inspect the evidence and each participant’s three shares. After the update, show stale and a preserved independent decision."
+      ],
+      "practice": "Create a second case from files/practice/, keeping the demo. Use assets 640000 and liabilities 270000; repeat import, proposal and review. Then import valuation-update.json with liabilities 305000 under the same ID. Identify stale branches, correct coverage and findings, seek fresh review and export without closing tax questions or inventing receipts.",
+      "success": "In the demo check net assets 450000, arithmetic margin 350000 and capital amounts 60000/40000; after liabilities become 310000 check 390000/290000 following reassessment. In practice check 370000/270000 then 335000/235000. Find voting rights 1/2–1/2, profit rights 7/10–3/10, the previous decision in history, the tax blocker and export hashes. These are review criteria, not already executed results.",
+      "repeat": "Repeat only with synthetic data, a fresh folder and the actually installed Vera skill. A supervised professional pilot still needs qualification and acceptance. Explanation and brief attempt target 5–8 minutes; full review and practice may take longer. Profile, progress and files remain local; the native model may read selected documents, so processing is not local-only."
+    },
+    "fr": {
+      "title": "Exécuter un cas synthétique de transformation de société",
+      "goal": "Préparer et revoir un dossier synthétique, suivre ses preuves et rouvrir les décisions après une modification du passif.",
+      "scenario": "Officina Selce SNC, société fictive, envisage une SRL. Deux associés ont des droits distincts sur le capital, les votes et les bénéfices. L’évaluation arrive après la liste des créanciers.",
+      "scope": "Prototype italien sur données inventées dans Codex desktop et Work local lorsque pris en charge. Cowork ne propose pas ce cours. Le dossier natif reste en italien. Aucune qualification juridique ou fiscale, signature authentifiée, intégration Studio Archive ou formalité de dépôt.",
+      "inputs": "Ouvrez files/input/case.json, participants.json et creditors.json. Gardez valuation.json pour la deuxième étape et valuation-update.json pour la modification finale. Null signifie inconnu, jamais zéro ou consentement ; les chaînes numériques sont exactes. Aucun client réel.",
+      "request": "Vera, accompagne-moi dans le cas synthétique Officina Selce : importe d’abord le mandat, les associés et les créanciers, montre ce qui manque pour le capital, puis acquiers l’évaluation. Propose des conclusions liées aux preuves, montre les décisions à revoir et exporte sans action externe.",
+      "steps": [
+        "Dans le chat de travail, Vera lit la procédure installée et crée un nouveau dossier synthétique local. Importez les trois premiers fichiers comme preuves. Proposez des branches séparées pour capital, collecte des créanciers et fiscalité. Le capital dépend de l’évaluation non reçue ; la collecte peut continuer, mais libération et opposition restent distinctes. Exportez cette version.",
+        "Importez valuation.json. Le modèle propose calculs, droits et conclusions avec dépendances documentaires exactes et motifs vérifiables. Examinez couverture et répartition du capital en séparant capital/vote/bénéfices et valeurs comptable/estimée/fiscale. N’inventez pas de sources juridiques : questions fiscales et accusés de réception manquants restent ouverts. Montrez proposition, empreinte et dossier avant révision.",
+        "Enregistrez uniquement les décisions effectivement exprimées par le participant, avec réviseur, motif et empreinte ; étiquetez toute simulation. Conservez l’export. Réimportez valuation-update.json sous le même identifiant : capital devient stale et la collecte indépendante reste courante. Le document ne met pas à jour les anciens calculs : corrigez données numériques et conclusions, soumettez à nouveau et demandez une nouvelle décision. Ouvrez dossier.md, case.json, manifest.json et history/."
+      ],
+      "deliverables": [
+        "Dossier Markdown et JSON versionné avec documents, dépendances, montants, droits, blocages, questions ouvertes et décisions ; manifeste des empreintes.",
+        "Exports précédents et historique chaîné, avec rapport local lisible sur les données transmises au modèle. Les fichiers préparés ne sont pas les résultats exécutés."
+      ],
+      "review": "Suivez une conclusion jusqu’à evidence/<hash> et au document original. Vérifiez montants exacts et droits distincts. Une marge arithmétique n’est pas une réserve distribuable. Une réception inconnue ne prouve ni libération ni issue de l’opposition. La révision enregistrée n’authentifie pas le réviseur et approuve au plus la préparation synthétique.",
+      "checkpoints": [
+        "Avant l’évaluation, identifiez la branche bloquée et celle pouvant collecter des données ; trouvez une réception et une base fiscale manquantes.",
+        "Avant la décision, vérifiez la preuve et les trois quotes-parts de chaque associé. Après modification, montrez stale et une décision indépendante conservée."
+      ],
+      "practice": "Créez un deuxième cas avec files/practice/, en conservant la démonstration. Utilisez actif 640000 et passif 270000 ; répétez importation, proposition et révision. Importez ensuite valuation-update.json avec passif 305000 sous le même ID. Repérez les branches stale, corrigez couverture et conclusions, sollicitez une nouvelle révision et exportez sans clôturer les questions fiscales ni inventer de réception.",
+      "success": "Dans la démonstration, vérifiez actif net 450000, marge 350000 et capital 60000/40000 ; avec passif 310000, vérifiez 390000/290000 après réexamen. Dans l’exercice, vérifiez 370000/270000 puis 335000/235000. Retrouvez votes 1/2–1/2, bénéfices 7/10–3/10, décision précédente dans history, blocage fiscal et empreintes des exports. Ce sont des critères de contrôle, pas des résultats déjà exécutés.",
+      "repeat": "Répétez uniquement avec données synthétiques, nouveau dossier et skill Vera réellement installée. Le pilot professionnel supervisé exige encore qualification et acceptation. Explication et essai court : 5–8 minutes ; révision et exercice complet peuvent durer davantage. Profil, progrès et fichiers restent locaux ; le modèle natif peut lire les documents sélectionnés, le traitement n’est pas exclusivement local."
+    },
+    "de": {
+      "title": "Einen synthetischen Umwandlungsfall bearbeiten",
+      "goal": "Ein synthetisches Dossier erstellen und prüfen, Belege verfolgen und Entscheidungen nach geänderten Verbindlichkeiten neu prüfen.",
+      "scenario": "Die erfundene Officina Selce SNC erwägt eine SRL. Zwei Gesellschafter haben unterschiedliche Kapital-, Stimm- und Gewinnrechte. Die Bewertung kommt nach der Gläubigerliste.",
+      "scope": "Italienischer Prototyp mit erfundenen Daten in Codex Desktop und lokalem Work, soweit unterstützt. Cowork bietet diesen Kurs nicht. Das native Dossier bleibt italienisch. Keine rechtliche oder steuerliche Qualifizierung, authentifizierte Unterschrift, Studio-Archive-Integration oder Einreichung.",
+      "inputs": "Öffnen Sie files/input/case.json, participants.json und creditors.json. valuation.json folgt im zweiten Schritt, valuation-update.json bei der letzten Änderung. Null bedeutet unbekannt, nicht null Euro oder Zustimmung; Zahlenzeichenfolgen sind exakt. Keine echten Mandanten.",
+      "request": "Vera, führe mich durch den synthetischen Fall Officina Selce: importiere zuerst Auftrag, Gesellschafter und Gläubiger, zeige die fehlenden Kapitalbelege und erfasse dann die Bewertung. Schlage beleggebundene Schlussfolgerungen vor, zeige die zu prüfenden Entscheidungen und exportiere ohne externe Aktionen.",
+      "steps": [
+        "Im Arbeitschat liest Vera das installierte Verfahren und erstellt einen neuen lokalen synthetischen Ordner. Importieren Sie die ersten drei Dateien als Belege. Schlagen Sie getrennte Zweige für Kapital, Gläubigererfassung und Steuern vor. Kapital hängt von der noch fehlenden Bewertung ab; die Erfassung kann weitergehen, während Haftungsbefreiung und Widerspruch getrennte offene Fragen bleiben. Exportieren Sie diese Version.",
+        "Importieren Sie valuation.json. Das Modell schlägt Berechnungen, Rechte und Schlussfolgerungen mit genauen Belegabhängigkeiten und prüfbaren Gründen vor. Prüfen Sie Kapitaldeckung und Verteilung; unterscheiden Sie Kapital/Stimmen/Gewinn sowie Buch-/Schätz-/Steuerwert. Erfinden Sie keine Rechtsquellen: Steuerfragen und fehlende Empfangsnachweise bleiben offen. Zeigen Sie Vorschlag, Digest und Dossier vor der Prüfung.",
+        "Erfassen Sie nur tatsächlich geäußerte Entscheidungen des Teilnehmers mit Prüfer, Grund und Digest; kennzeichnen Sie Simulationen. Bewahren Sie den Export auf. Importieren Sie valuation-update.json unter derselben Bewertungs-ID: Kapital wird stale, unabhängige Erfassung bleibt aktuell. Neue Dokumente ändern alte Berechnungen nicht: korrigieren Sie Zahlen und Aussagen, reichen Sie erneut zur Prüfung ein und erfragen Sie eine neue Entscheidung. Öffnen Sie dossier.md, case.json, manifest.json und history/."
+      ],
+      "deliverables": [
+        "Versioniertes Markdown- und JSON-Dossier mit Belegen, Abhängigkeiten, Beträgen, Rechten, Blockaden, offenen Fragen und Entscheidungen; Hash-Manifest.",
+        "Frühere Exporte und verkettete Historie sowie lesbarer lokaler Bericht zu Modelldaten. Vorbereitete Dateien sind keine Ausführungsergebnisse."
+      ],
+      "review": "Verfolgen Sie eine Aussage zu evidence/<hash> und zum Originalbeleg. Prüfen Sie exakte Beträge und getrennte Rechte. Ein Rechenüberschuss ist keine ausschüttbare Rücklage. Ein unbekannter Empfangsnachweis belegt weder Haftungsbefreiung noch Widerspruchsausgang. Der Prüfvermerk authentifiziert keinen Prüfer und erlaubt höchstens synthetische Vorbereitung.",
+      "checkpoints": [
+        "Benennen Sie vor der Bewertung den blockierten und den weiterarbeitenden Zweig; finden Sie fehlenden Empfangsnachweis und Steuerbasis.",
+        "Prüfen Sie vor der Entscheidung Beleg und drei Rechteanteile je Gesellschafter. Zeigen Sie nach der Änderung stale und eine erhaltene unabhängige Entscheidung."
+      ],
+      "practice": "Erstellen Sie mit files/practice/ einen zweiten Fall und bewahren Sie die Demo. Verwenden Sie Aktiva 640000 und Verbindlichkeiten 270000; wiederholen Sie Import, Vorschlag und Prüfung. Importieren Sie dann valuation-update.json mit Verbindlichkeiten 305000 unter derselben ID. Finden Sie stale-Zweige, korrigieren Sie Deckung und Aussagen, fordern Sie neue Prüfung an und exportieren Sie ohne Steuerfragen zu schließen oder Empfangsnachweise zu erfinden.",
+      "success": "Prüfen Sie in der Demo Nettovermögen 450000, Rechenüberschuss 350000 und Kapitalbeträge 60000/40000; bei Verbindlichkeiten 310000 nach Neubewertung 390000/290000. In der Übung: 370000/270000, danach 335000/235000. Finden Sie Stimmen 1/2–1/2, Gewinn 7/10–3/10, frühere Entscheidung in history, Steuerblockade und Export-Hashes. Dies sind Prüfkriterien, keine bereits ausgeführten Ergebnisse.",
+      "repeat": "Nur mit synthetischen Daten, neuem Ordner und tatsächlich installierter Vera-Skill wiederholen. Ein beaufsichtigter professioneller Pilot benötigt noch Qualifizierung und Abnahme. Erklärung und Kurzversuch: 5–8 Minuten; vollständige Prüfung und Übung können länger dauern. Profil, Fortschritt und Dateien bleiben lokal; ausgewählte Dokumente können vom nativen Modell gelesen werden, Verarbeitung ist nicht ausschließlich lokal."
+    },
+    "es": {
+      "title": "Ejecutar un caso sintético de transformación societaria",
+      "goal": "Preparar y revisar un expediente sintético, seguir sus evidencias y reabrir decisiones cuando cambia un pasivo.",
+      "scenario": "Officina Selce SNC, empresa inventada, considera una SRL. Dos socios tienen derechos distintos de capital, voto y beneficios. La valoración llega después de la lista de acreedores.",
+      "scope": "Prototipo italiano con datos inventados en Codex desktop y Work local donde esté admitido. Cowork no ofrece este curso. El expediente nativo sigue en italiano. Sin calificación jurídica o fiscal, firma autenticada, integración Studio Archive ni presentación oficial.",
+      "inputs": "Abre files/input/case.json, participants.json y creditors.json. Reserva valuation.json para el segundo paso y valuation-update.json para el cambio final. Null significa desconocido, nunca cero o consentimiento; las cadenas numéricas son exactas. No uses clientes reales.",
+      "request": "Vera, guíame por el caso sintético Officina Selce: importa primero encargo, socios y acreedores, muestra qué falta para el capital y después incorpora la valoración. Propón conclusiones vinculadas a evidencias, muestra decisiones pendientes de revisión y exporta sin acciones externas.",
+      "steps": [
+        "En el chat de trabajo, Vera lee el procedimiento instalado y crea una carpeta sintética local nueva. Importa los tres primeros archivos como evidencias. Propón ramas separadas para capital, recopilación de acreedores y fiscalidad. El capital depende de la valoración aún no recibida; la recopilación puede continuar, pero liberación y oposición siguen siendo cuestiones distintas. Exporta esta versión.",
+        "Importa valuation.json. El modelo propone cálculos, derechos y conclusiones con dependencias documentales exactas y motivos comprobables. Examina cobertura y reparto de capital, separando capital/voto/beneficios y valores contable/estimado/fiscal. No inventes autoridades jurídicas: las cuestiones fiscales y los acuses ausentes siguen abiertos. Muestra propuesta, resumen criptográfico y expediente antes de revisar.",
+        "Registra únicamente decisiones expresadas realmente por el participante, con revisor, motivo y resumen criptográfico; etiqueta cualquier simulación. Conserva la exportación. Reimporta valuation-update.json con el mismo ID de valoración: capital pasa a stale y la recopilación independiente sigue vigente. El documento no actualiza cálculos antiguos: corrige datos numéricos y conclusiones, vuelve a someterlos y solicita una decisión nueva. Abre dossier.md, case.json, manifest.json y history/."
+      ],
+      "deliverables": [
+        "Expediente Markdown y JSON versionado con documentos, dependencias, importes, derechos, bloqueos, cuestiones abiertas y decisiones; manifiesto de hashes.",
+        "Exportaciones anteriores e historial encadenado, más informe local legible sobre datos que llegan al modelo. Los archivos preparados no son resultados ejecutados."
+      ],
+      "review": "Sigue una conclusión hasta evidence/<hash> y su documento original. Comprueba importes exactos y derechos distintos. Un margen aritmético no es una reserva distribuible. Una recepción desconocida no demuestra liberación ni resultado de oposición. La revisión registrada no autentica al revisor y aprueba como máximo la preparación sintética.",
+      "checkpoints": [
+        "Antes de la valoración, identifica la rama bloqueada y la que puede recopilar datos; encuentra una recepción y una base fiscal ausentes.",
+        "Antes de decidir, comprueba la evidencia y las tres cuotas de cada socio. Tras el cambio, muestra stale y una decisión independiente conservada."
+      ],
+      "practice": "Crea un segundo caso con files/practice/, conservando la demostración. Usa activos 640000 y pasivos 270000; repite importación, propuesta y revisión. Después importa valuation-update.json con pasivos 305000 bajo el mismo ID. Identifica ramas stale, corrige cobertura y conclusiones, solicita nueva revisión y exporta sin cerrar cuestiones fiscales ni inventar recepciones.",
+      "success": "En la demostración comprueba patrimonio neto 450000, margen 350000 y capital 60000/40000; con pasivos 310000 comprueba 390000/290000 tras revisar. En la práctica comprueba 370000/270000 y después 335000/235000. Encuentra votos 1/2–1/2, beneficios 7/10–3/10, decisión anterior en history, bloqueo fiscal y hashes del expediente. Son criterios de revisión, no resultados ya ejecutados.",
+      "repeat": "Repite solo con datos sintéticos, carpeta nueva y skill Vera realmente instalada. Un piloto profesional supervisado todavía requiere calificación y aceptación. Explicación y prueba breve: 5–8 minutos; revisión y práctica completa pueden durar más. Perfil, progreso y archivos siguen locales; el modelo nativo puede leer documentos seleccionados, así que el procesamiento no es exclusivamente local."
+    }
+  }
+}

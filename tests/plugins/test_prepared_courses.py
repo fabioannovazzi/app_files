@@ -2245,3 +2245,20 @@ def test_native_deck_result_keeps_navigation_original_and_download(
             workflow, "it", lesson, "execution.json", tmp_path / "unsafe-deck"
         )
     assert not (tmp_path / "unsafe-deck").exists()
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_public_transformation_course_discloses_cowork_unavailability(
+    language: str,
+) -> None:
+    page = (
+        ROOT / "static/shared/courses/vera/trasformazione" / language / "course.html"
+    ).read_text(encoding="utf-8")
+    startup_copy = json.loads(
+        (ROOT / "scripts/cowork_teaching/public-start.json").read_text(encoding="utf-8")
+    )[language]
+
+    assert 'id="course-start-request"' in page
+    assert startup_copy["unavailable"] in page
+    assert 'id="cowork-start-request"' not in page
+    assert 'data-copy-target="cowork-start-request"' not in page
