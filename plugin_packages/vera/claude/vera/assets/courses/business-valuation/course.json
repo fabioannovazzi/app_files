@@ -259,35 +259,66 @@
         "it"
       ],
       "role": "practice"
+    },
+    {
+      "path": "files/practice/evidenze-mancanti-it.md",
+      "sha256": "4c04a993f5a9db8e902f065c51ee8b885e445e741269ae6aa8a1bacb0cf4fb36",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/integrazione-it.md",
+      "sha256": "a1974b4b49ad226d806ef4aa16d018c809098579828fb398a66424a4ebde6a28",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/riscontri-it.md",
+      "sha256": "c1643a4449610bf5deb0954fa447ed4e945d73a816112a5262e5f8c636612ef9",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
     }
   ],
   "locales": {
     "it": {
-      "title": "Preparare carte di lavoro per una valutazione d’impresa",
-      "goal": "Imparare a fornire incarico, fonti e ipotesi, distinguere valore operativo e capitale proprio e rivedere un risultato quando cambia il tasso.",
-      "scenario": "Officina Arco vuole un confronto interno su dati completamente inventati. Sono disponibili flussi FCFF prospettici, ipotesi di tasso e un raccordo esplicito al capitale proprio.",
-      "scope": "Un DCF FCFF annuale e il relativo raccordo. La lezione non dimostra la sostenibilità dei flussi, non qualifica una finalità legale e non certifica conformità PIV. I documenti generati sono in italiano.",
-      "inputs": "Apri caso-it.md. Individua finalità, data, valuta, destinatari, flussi, tassi e debiti. Gli zeri sono espliciti e i tassi sono ipotesi didattiche, non dati di mercato. Nessun risultato è precalcolato.",
-      "request": "Vera, prepara le carte di lavoro per valutare Officina Arco con il DCF FCFF usando questa nota sintetica. Prima mostrami dati, ipotesi e limiti da confermare; poi mostrami valore operativo, raccordo al capitale proprio e formule.",
+      "title": "Valutazione PMI: dal fascicolo alle carte di lavoro DCF",
+      "goal": "Aprire un incarico in Studio Archive, tracciare le fonti, riprodurre un DCF, rivedere Excel e report, cambiare il tasso e recuperare il lavoro salvato.",
+      "scenario": "Sei il commercialista di Officina Arco, società interamente fittizia. La direzione chiede un confronto interno sul valore al 31 dicembre 2026. La nota distingue FCFF prospettici, ipotesi didattiche e raccordo al capitale proprio: parti da questi documenti e conserva ogni esecuzione nel fascicolo tutorial.",
+      "scope": "Un DCF FCFF annuale sul 100% dell’attività e sul capitale proprio, in euro, senza sconti di quota. La spiegazione iniziale e il primo confronto sono brevi; per eseguire, controllare Excel, fare le due prove e riaprire il fascicolo prevedi 25–35 minuti più l’elaborazione. Il risultato è una bozza di carte di lavoro della beta: non costituisce accettazione professionale, certificazione PIV o perizia firmata. La sostenibilità dei flussi e la finalità legale non sono verificate.",
+      "inputs": "Scarica caso-it.md per la dimostrazione e pratica-it.md per il cambio di tasso. evidenze-mancanti-it.md è una prova autonoma: contiene gli stessi fatti di base ma non il flusso terminale; integrazione-it.md fornisce successivamente quell’ipotesi. riscontri-it.md contiene il calcolo manuale e la lista dei controlli: consultalo dopo il tuo calcolo, senza importarlo come prova economica o sostituirlo a un output. I documenti sono fittizi; non esiste un business plan finalizzato. Vera prepara il caso tecnico dai documenti, tu non devi scrivere JSON.",
+      "request": "Vera, guidami nel corso Valutazione PMI con questi file fittizi. Apri un incarico tutorial Valutazione PMI — Officina Arco in Studio Archive, importa solo caso-it.md come evidenza iniziale e mostrami la ricevuta. Proponi il metodo adatto, mostrami dati e ipotesi da confermare, poi genera il DCF FCFF e apri report ed Excel. Conserva i risultati per le prove e per riaprirli in una nuova chat.",
       "steps": [
-        "In questa conversazione Vera apre un caso tutorial locale, legge la nota e presenta per conferma perimetro, significato dei flussi, tassi e zeri espliciti. L’assistente spiega per iscritto cosa richiede il giudizio professionale.",
-        "Dopo la conferma effettiva, Vera prepara gli input collegati alla nota ed esegue il workflow corrente nel run registrato. Conserva i risultati separati. La scheda dell’incarico resta incompleta dove la nota non fornisce date, soggetto conferente, competenze o conflitti; nessuna conferma di input approva la conclusione.",
-        "Apri il report HTML e il foglio Sintesi della cartella Excel. Segui un importo fino alla formula e alla fonte, confronta valore operativo e capitale proprio e osserva il peso del valore terminale."
+        "Apri Studio Archive e identifica il cliente tutorial Officina Arco; conferma la cartella prima della copia. Crea o seleziona l’incarico Valutazione PMI — Officina Arco e annota client_id ed engagement_id. Importa caso-it.md: apri l’originale conservato e trova input_id, hash SHA-256 e data della ricevuta. Segui le istruzioni iniziali del tuo host per visualizzare i risultati.",
+        "Rivedi finalità interna, data e limite informativo 31/12/2026, euro, continuità ipotetica e 100% del capitale. Il DCF FCFF è proposto perché la nota dà flussi operativi dopo imposte, investimenti e circolante. Escludi motivatamente gli altri metodi: mancano redditi normalizzati, valori patrimoniali e comparabili. Per un caso reale valuta l’appropriatezza rispetto all’incarico; non scegliere un metodo solo perché il software lo esegue.",
+        "Conferma solo i dati che hai letto: FCFF 2027 e terminale annuo 2028 di €100.000, tasso di sconto e terminale 10%, crescita 0%, debito €300.000, cassa eccedente €50.000 e gli altri zeri espliciti. Vera collega ogni input alla sezione della nota e distingue fatti, ipotesi e conferme. Campi di incarico non forniti e standard non selezionati restano incompleti: nessuna firma o attestazione professionale è simulata.",
+        "Vera prepara business-valuation con gli input_id esatti, avvia il run e usa soltanto i file idratati da Studio Archive. Il helper calcola localmente, produce report e cartella Excel con formule, e conserva la revisione. Apri valuation_report.html, valuation_workbook.xlsx e valuation_report.docx/PDF: verifica risultato, fonti, limiti e sensibilità. Un’uscita del comando con stato partial può avere output utili: leggi lo stato, non rilanciare alla cieca.",
+        "Nell’Excel parti da Sintesi, poi segui una formula al registro dei calcoli e al relativo input: €100.000/(1+10%) per il primo flusso, €100.000/(10%−0%) per il terminale a fine 2027. Dal valore operativo sottrai solo debito e assimilati e aggiungi cassa eccedente e rettifiche dichiarate. Apri Incarico per vedere cosa manca. Il workbook è modificabile per verifiche: una modifica manuale non aggiorna JSON, report o revisione archiviata; chiedi a Vera una nuova esecuzione per aggiornare il fascicolo.",
+        "Prima di concludere, Vera prepara e mostra il report dei dati al modello, dichiara tutti gli artefatti e registra il run con lo stato effettivo. Conserva client_id, engagement_id, run_id e percorsi. In una nuova chat chiedi: «Riapri l’incarico Valutazione PMI — Officina Arco e mostrami report ed Excel del run iniziale senza ricalcolare». Seleziona lo stesso cliente e incarico dall’elenco: verifica run_id e hash del report, poi apri i file salvati."
       ],
       "deliverables": [
-        "Report HTML, Word e PDF con mandato, risultato, ipotesi e limiti.",
-        "Cartella Excel con formule e registro JSON/CSV per seguire dati, calcoli e fonti."
+        "Report HTML e Word modificabile, più PDF: mandato, risultati, assunzioni, metodi esclusi, fonti, limiti e sensibilità. Una bozza partial con risultato aritmetico non è una conclusione accettata.",
+        "Excel con formule e valori Decimal di controllo; registri JSON/CSV di input, calcoli e fonti. Confronta una formula ricalcolata da Excel con il valore conservato e il riscontro manuale. La cassa aggiunta è solo quella eccedente dichiarata, non una compensazione inventata.",
+        "Ricevute di importazione, manifest del run e report leggibile dei dati al modello: permettono di risalire dall’importo alla fonte e di recuperare la stessa revisione senza affidarsi alla memoria della chat."
       ],
-      "review": "Controlla sostenibilità del flusso terminale, scelta del tasso e corretto raccordo dei debiti. Il profilo Strategia e governance identifica il confronto interno della nota; è disponibile solo come carte di lavoro in sviluppo. Il motore verifica calcoli e identità delle fonti; non dimostra l’appropriatezza delle ipotesi. La registrazione della revisione non è una firma autenticata e non abilita il profilo all’uso professionale. Nel foglio Incarico distingui i dati documentati da quelli da acquisire: il risultato numerico non completa automaticamente la scheda dell’incarico.",
+      "review": "Il commercialista decide scopo, base di valore, continuità, adeguatezza del metodo, sostenibilità del terminale, costo del capitale, normalizzazioni, debiti assimilati e conclusione. Qui i tassi sono ipotesi didattiche, non benchmark verificati. Confermare un input non approva incarico o conclusione. La scheda Incarico resta partial per le informazioni non fornite; il metodo numerico resta da rivedere. Per uso reale servono incarico, competenze e conflitti, standard scelti e motivati, bilanci e basi delle ipotesi, oltre alle revisioni professionali previste. La beta non qualifica il profilo Strategia e governance per l’uso professionale e non autentica l’identità del firmatario.",
       "checkpoints": [
-        "Prima del calcolo, identifica un fatto della nota e un’ipotesi da confermare.",
-        "Nel report, spiega perché valore operativo e capitale proprio differiscono e trova la fonte di una rettifica."
+        "Archivio: mostra cliente, incarico, run_id e ricevuta di caso-it.md. Trova l’input del debito e la sua sezione nella nota: un valore senza fonte o conferma richiede revisione.",
+        "Caso iniziale: PV del primo FCFF €90.909,09; terminale non attualizzato €1.000.000; PV terminale €909.090,91; valore operativo €1.000.000; capitale proprio €750.000. Tolleranza €0,01 sui valori esposti. Il terminale pesa il 90,91% del valore operativo: indica perché la sua sostenibilità conta.",
+        "Con entrambi i tassi al 12%: PV primo FCFF €89.285,71; terminale €833.333,33; PV terminale €744.047,62; valore operativo €833.333,33; capitale proprio €583.333,33. Il capitale diminuisce di €166.666,67 (22,22%). Il run iniziale deve restare apribile e invariato.",
+        "Evidenza assente: DCF bloccato e nessun capitale proprio numerico del metodo; stato del caso partial o blocked secondo gli altri elementi disponibili, nessuna conclusione accettata. Il solo flusso 2027 non giustifica una perpetuità. Dopo integrazione e conferma deve tornare il riscontro iniziale, con nuova fonte e nuovo run.",
+        "Riapertura: stessa revisione e stessi hash di report ed Excel, nessun nuovo calcolo. Sai distinguere un output salvato, un input confermato e una conclusione approvata."
       ],
-      "practice": "Usa la cartella di pratica e leggi pratica-it.md. Nello stesso caso chiedi una nuova revisione con entrambi i tassi al 12%, conservando il primo output. Conferma la modifica e confronta i risultati; individua le revisioni che devono essere ripetute.",
-      "success": "Sai fornire un mandato e input documentati, leggere i due valori, seguire le formule e conservare una revisione distinta quando cambia un’ipotesi.",
-      "repeat": "Per un caso reale indica finalità, data e destinatari, allega bilanci, piano disponibile e fonti delle rettifiche. Conferma le ipotesi e fai rivedere scelta dei metodi, limiti e conclusione dal professionista."
+      "practice": "Prima prova: nello stesso incarico importa pratica-it.md, conferma entrambi i tassi al 12% e crea un run distinto mantenendo caso-it.md come fonte degli altri input. Confronta i riscontri e verifica che le revisioni dipendenti dal tasso vadano rifatte. Seconda prova: nello stesso fascicolo crea un run distinto usando soltanto evidenze-mancanti-it.md, senza ereditare la nota completa né il valore terminale precedente. Chiedi il DCF e apri il blocco: il professionista deve fornire un flusso terminale sostenibile con base, anno, unità e conferma, oppure scegliere un altro metodo supportato con proprie evidenze. Importa integrazione-it.md come nuova fonte, conferma l’ipotesi didattica e crea la revisione di recupero; conserva anche il tentativo incompleto. Poi riapri il run iniziale in una nuova chat.",
+      "success": "Hai quattro esecuzioni distinguibili: iniziale, tasso 12%, evidenza mancante e recupero. I valori iniziale, alternativo e recuperato coincidono con i riscontri entro €0,01; il tentativo incompleto non inventa il terminale. Puoi seguire debito e tasso alle fonti, trovare le informazioni di incarico mancanti e riaprire i risultati immutati. Questi controlli verificano il percorso tecnico; non provano comprensione o accettazione professionale.",
+      "repeat": "Per un cliente reale seleziona il suo fascicolo e incarico, fornisci bilanci, piano e fonti delle rettifiche, fissa finalità, data e destinatari e fai rivedere metodo e ipotesi. Un piano business-planning finalizzato può essere collegato solo come artefatto dello stesso incarico, con imposte e circolante documentati: la lezione non dimostra quel collegamento. Quali dati arrivano al modello: nella lettura e preparazione possono entrare testo delle note, identità del caso, importi, proiezioni, tassi, zeri, riferimenti e ricevute; nella revisione possono entrare tabelle, formule, risultati, limiti e decisioni del professionista. Il calcolo locale e il render non inviano il caso a servizi remoti e non rendono locale l’elaborazione del modello scelto nel tuo host. Questa lezione non usa acquisizione benchmark né richiede messaggi Discord o caricamento dei documenti su Mparanza. Il percorso tutorial locale dell’host con due conversazioni esclude il timbro server. Per i report durevoli costruiti dal builder Vera fuori da quel percorso è previsto il timbro automatico Mparanza: la richiesta contiene schema, UUID, versione e digest del report, più i normali metadati di connessione; non contiene il report, i documenti o i calcoli. In Cowork non assumere che il nome «tutorial» attivi l’esclusione documentata per l’altro host: leggi lo stato della ricevuta nel report salvato. Il report di run descrive le fasi osservate e i limiti di misurazione; non è una prova della consegna al provider né di anonimizzazione automatica."
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "bc2d4eb3b334c0ecfecfba93e96de84332caa6abe2c804e8f0037c11fa4c2a54"
+  "canonical_course_sha256": "2faafd5469c339e4d9f2ad79e493a90e3fd272f892f2697688bc0b192dc5ad38"
 }

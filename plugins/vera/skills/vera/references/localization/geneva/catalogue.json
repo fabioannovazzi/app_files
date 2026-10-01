@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/.codex/worktrees/fusione-p1-course/app_files/plugins/vera",
-  "version": "0.1.323",
-  "captured_at": "2026-10-01T19:19:08.000483+00:00",
-  "catalogue_fingerprint": "41473c727dc533eba0065566bfff0624d2bf16a89f2077b9d6a264d2c349ab66",
-  "manifest_sha256": "0ff2225a8a782d9834435edac5a1b30b043ce3ce7e14fe03d0cda45556c12cb6",
+  "version": "0.1.327",
+  "captured_at": "2026-10-01T20:12:08.224337+00:00",
+  "catalogue_fingerprint": "e68649785ba529f7e7505ae3ac68ef6e92156a44867649202a70f02f64823273",
+  "manifest_sha256": "afd30fd285f2e0fe08deff99eebc4bf7014c293e9da1a3915c15e1aee554dec4",
   "entries": [
     {
       "function_id": "adeguati-assetti",

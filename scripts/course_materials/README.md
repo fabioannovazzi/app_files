@@ -275,7 +275,7 @@ unreleasable until the real output reviews and all required runs are complete.
 
 `vera/fusione-guidata` is a prepared five-language course, revision
 `2026-10-01.1`. It adds one kit and five locales to the current inventory
-(48 kits / 216 locales). `inputs/fusione/` contains a readable localized source
+(51 kits / 231 locales). `inputs/fusione/` contains a readable localized source
 note, ordinary and direct-wholly-owned fictional fact packs, explicit synthetic
 calendar conventions and a separate changed creditor balance. Machine field
 names retain the component contract; no precomputed report or approval is shipped.
@@ -295,6 +295,23 @@ confirmations remain explicitly synthetic fixtures. Native voice, learner
 understanding, installed-host behavior and professional real-client validation
 are separate acceptance work. The ten demo/practice identities and inspected
 artifact hashes are in `release_reviews/vera/fusione-guidata.json`.
+
+## Italian Valutazione PMI course (1 October 2026)
+
+`kits_it_valuation.json` expands the existing `vera/business-valuation` lesson.
+The ordinary and rate-change notes remain unchanged. Three practice attachments
+add a standalone missing-terminal case, its later source-bound recovery and an
+independent manual checkpoint sheet. The checkpoint sheet is learning material,
+never economic evidence or a replacement workflow output. The extended practice
+allows 25–35 minutes plus execution within the existing six-stage course format.
+
+The learner creates/selects one Studio Archive tutorial engagement, imports exact
+receipts, selects and explains DCF FCFF, reviews assumptions and live formula
+workpapers, preserves four distinct runs, then reopens the original artifacts.
+The native regression seals actual outputs with truthful code-only model-data
+reports and verifies all initial hashes after rate change, blockage and recovery.
+This checks mechanics; paired voice, comprehension, installed-host acceptance and
+professional/PIV acceptance remain distinct and unverified.
 
 ## Trasformazione synthetic course (2026-10-01)
 
