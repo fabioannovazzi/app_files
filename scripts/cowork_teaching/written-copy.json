@@ -1,6 +1,10 @@
 {
   "en": [
     [
+      "Voice stays in the teaching chat;",
+      "The explanation stays written in this conversation;"
+    ],
+    [
       "In the working chat",
       "In this conversation"
     ],
@@ -103,6 +107,10 @@
   ],
   "it": [
     [
+      "La voce resta nel thread docente;",
+      "La spiegazione resta scritta in questa conversazione;"
+    ],
+    [
       "Nella chat di lavoro",
       "In questa conversazione"
     ],
@@ -188,6 +196,14 @@
     ]
   ],
   "fr": [
+    [
+      "Le chat de travail",
+      "L’assistant"
+    ],
+    [
+      "La voix reste dans le chat pédagogique ;",
+      "L’explication reste écrite dans cette conversation ;"
+    ],
     [
       "Dans le fil de travail",
       "Dans cette conversation"
@@ -283,6 +299,14 @@
   ],
   "de": [
     [
+      "Der Arbeitschat",
+      "Der Assistent"
+    ],
+    [
+      "Die Stimme bleibt im Lehrchat;",
+      "Die Erklärung bleibt schriftlich in diesem Gespräch;"
+    ],
+    [
       "Im Arbeitschat",
       "In diesem Chat"
     ],
@@ -356,6 +380,14 @@
     ]
   ],
   "es": [
+    [
+      "El chat de trabajo",
+      "El asistente"
+    ],
+    [
+      "La voz permanece en el chat docente;",
+      "La explicación permanece escrita en esta conversación;"
+    ],
     [
       "En el hilo de trabajo",
       "En esta conversación"
