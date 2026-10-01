@@ -61,7 +61,7 @@
     },
     {
       "path": "modules/browser-automation/references/econs-review.md",
-      "sha256": "8c5b74d912bffa3b3877647705edad0b46f4d8be7055cade2bc030fbbf8a2855"
+      "sha256": "9557af440ba4597ac8756fbfe7522ed0cd7aac244f87489c2f5f6d8bcaaf51dc"
     },
     {
       "path": "modules/browser-automation/references/ordinary-use.md",
@@ -69,7 +69,7 @@
     },
     {
       "path": "modules/browser-automation/references/passive-invoice-procedure.md",
-      "sha256": "c508b155748e8ead93283ef698faaf891052950d0d199c669ffe1ab6150f4e6d"
+      "sha256": "e71fd7dbac1114790b92cbda60cea6e02189892399f75ba5209e978cc3dfb929"
     },
     {
       "path": "modules/browser-automation/references/process-lifecycle.md",
@@ -145,15 +145,15 @@
     },
     {
       "path": "modules/browser-automation/scripts/econs_processing.mjs",
-      "sha256": "9115b543d05a83757d6efb54eaecf6282774cefe678db7b48916e7b70875ccc5"
+      "sha256": "31be0484088ed09a706c7aa202cf3d32847fc2b750aaa91275ce9040fd2a66dc"
     },
     {
       "path": "modules/browser-automation/scripts/econs_review.mjs",
-      "sha256": "0e4e06e1966090ed7affa5613d33671870d1c6316d7c52a4ea548064fcf4d557"
+      "sha256": "e52f40404a353a9140b89d88bce0067cf0eb7a558e062e3ba7bfb52a234eb451"
     },
     {
       "path": "modules/browser-automation/scripts/econs_setup.mjs",
-      "sha256": "0a7362f8cc36fc2644ee86f4eb7717953d22022a52866daa7a1da37a6ead91df"
+      "sha256": "05b2aad66eecd71a620814bb907a5326fb068de014ef8acf6f53efca1179104a"
     },
     {
       "path": "modules/browser-automation/scripts/process_lifecycle.py",
@@ -454,5 +454,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "42e07b878db450673725078eef124b0a504e13d4a1f5aac2ddbdd8eeebc95437"
+  "canonical_course_sha256": "cf76443facf1bd646c4adc72156841c592f2136080f823058a35fef44257e43d"
 }

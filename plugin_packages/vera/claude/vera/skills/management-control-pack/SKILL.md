@@ -1,6 +1,6 @@
 ---
 name: management-control-pack
-description: Use when Vera must prepare one connectorless management-control pack from reviewed accounting, Budget, remaining-month Forecast, open-item, bank, and sales exports.
+description: Use to turn reviewed accounting, Budget, remaining-month Forecast, open-item, bank and sales exports into one pacchetto di controllo di gestione with monthly P&L, aging, cash, customer concentration and margins. For a focused Actual/Budget or period scostamenti analysis use variance-analysis; this pack uses supplied exports, not a live gestionale connection.
 ---
 
 ## Cowork execution contract

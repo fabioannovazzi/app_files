@@ -141,7 +141,7 @@
     },
     {
       "path": "skills/management-control-pack/SKILL.md",
-      "sha256": "ea40e29c7964f4ddd84f3f2e9daa45553067bd4279048c56036ebabc900b4eb1"
+      "sha256": "692d971283ee8653cd34878777f2b4e95b754354827e5ba7dc22ce34cc98ebbc"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -315,5 +315,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d2c9804b68b2b1318927ee62968d54dc3403b510f099d15d7bf7e334455f5e10"
+  "canonical_course_sha256": "ceb611faac1dcb04fedd3d77dde01a1d6de8f4b101c49cfc353920f2cddce68c"
 }

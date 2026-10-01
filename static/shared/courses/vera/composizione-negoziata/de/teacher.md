@@ -1,4 +1,4 @@
-# Belege und Änderungen einer Composizione negoziata verfolgen
+# Composizione negoziata: von den Belegen zum Abschlussbericht
 
 Erklärung und kurze Übung dauern ungefähr 5–8 Minuten. Verarbeitung und Ihre Fragen können die Sitzung verlängern.
 
@@ -10,29 +10,35 @@ Vermitteln Sie mit dem vorbereiteten Material eine vollständige erste Anwendung
 
 Verbinden Sie die Funktion mit einer konkreten beruflichen Aufgabe.
 
-Einen Beratungsfall beginnen, einen Entwurf prüfen und nach einem verschobenen Zahlungseingang fortsetzen.
+Einen fiktiven Fall ausführen, Unternehmensberater und unabhängigen Experten trennen und einen Entwurf bei gescheiterten Verhandlungen mit verbleibenden Aufgaben liefern.
 
-Vollständig fiktives Unternehmen: 50.000 EUR Liquidität, 100.000 EUR erwarteter Eingang am 15. November 2026 und 80.000 EUR Zahlung am 30. November. Der Schuldner hat das Datum nicht bestätigt; Altersstruktur der Forderungen und Aufträge fehlen.
+Officina Arco CNC ist ein vollständig fiktives italienisches Unternehmen. Zum 31. Oktober 2026: Darlehen EUR 120.000, verfügbare Bankmittel EUR 50.000, gesperrte Einlage EUR 10.000, Lieferverbindlichkeiten EUR 80.000. Angenommener Eingang EUR 100.000 am 15. November, Zahlung EUR 80.000 am 30. November. Altersstruktur, Einbringlichkeitsnachweis, Aufträge, Bestellung und Einreichungsbelege fehlen. Die gelieferten Positionen sind unvollständig.
 
-Erster Arbeitsablauf: Rolle, Lücken, tatsächlich ausgeführte Liquiditätsanalyse, Vermerk und erneute Prüfung. Keine Zulässigkeitsbeurteilung und kein vollständiger Berufsfall.
+Erweiterter lokaler Kurs in mehreren Sitzungen: Beraterdemonstration, geführte Änderung und selbständige Expertenübung in getrenntem Mandat. 5–8 Minuten gelten für einen erklärten Abschnitt; Berechnung, Recherche, Prüfung und Übung benötigen zusätzliche Zeit. Keine Qualifikation oder automatische Zugangsbewertung.
 
 ## 2. Dateien und Anfrage · 60 s
 
 Öffnen Sie die Dateien im Arbeitsfenster und zeigen Sie die passende Anfrage.
 
-Öffnen Sie fall-de.md für Ausgangsfakten und Annahmen. aktualisierung-de.md enthält nur die neue Information für die Übungsphase.
+Fall, balances.csv und treasury-demo lesen. Leere Tabellen bedeuten nicht gelieferte Daten, nicht fehlende reale Geschäftsvorfälle. treasury-practice und treasury-independent begleiten Änderung und selbständige Übung. Der Rechercheauftrag enthält eine allgemeine öffentliche Frage und zu prüfende URLs, kein aktuelles Rechtskorpus oder genehmigtes Ergebnis.
 
-Vera, ich berate das Unternehmen. Prüfe die fiktiven Daten, kennzeichne Lücken, führe die Liquiditätsplanung aus und erstelle einen beleggestützten Vermerk. Unterstelle keine genehmigte Entscheidung.
+Vera, ich berate die fiktive Officina Arco CNC. Lies Belege, trenne Fakten, Annahmen und Lücken, führe vorhandene Finanz- und Liquiditätsanalysen aus und entwerfe einen belegabhängigen Vorschlag. Begleite meine Prüfung der exakten Fassung. Alles bleibt lokal, ohne Versand oder simulierte fachliche Genehmigung.
 
 ## 3. Den Ablauf ausführen · 105 s
 
 Erklären Sie den laufenden Schritt und warten Sie auf sein tatsächliches Ergebnis.
 
-Registrieren Sie im Arbeitsfenster den fiktiven Mandanten und das Übungsmandat. Vera trennt Rolle, Quellen, Annahmen und fehlende Belege vor dem Vorschlag der nächsten Tätigkeit.
+Intake: lokalen Übungsfall und Beratermandat erstellen, genaue Quellen importieren, Umfang, Datum, Währung, dringende Ereignisse und Lücken festhalten. Nur arbeitsrelevante Fragen stellen. Fehlende Bestellung verhindert die Übung nicht und wird nicht als geprüft bezeichnet. Erste Notiz öffnen und Beleganforderungen zuordnen.
 
-Vera führt die Prognose mit ausdrücklich begrenztem Umfang und Annahmen aus, verknüpft das gespeicherte Ergebnis mit dem Vermerk und erfasst eine Prüfung erst nach Ihrer Bestätigung dieser Version. Öffnen Sie den Bericht zur Modell-Datennutzung.
+Analyse: aktuelle Finanz- und Treasury-Skills lesen. Übungsdefinition der Nettoverschuldung prüfen: Darlehen abzüglich verfügbarer Bankmittel, gesperrte Einlage und Lieferverbindlichkeiten ausgeschlossen. net_debt und Forecast mit gelieferten Tabellen ausführen, Runs abschließen und deklarierte Ergebnisse im Folge-CNC-Run binden. Werte, Quellen und Abdeckung prüfen: Saldo beweist keine Einbringlichkeit; Forecast ist kein ministerieller Test.
 
-Setzen Sie denselben Fall mit der Aktualisierung fort. Erhalten Sie den ersten Vermerk, prüfen Sie betroffene Abhängigkeiten und fordern Sie eine neue Analyse an. Frühere Bestätigungen bleiben historisch.
+Recherche: quesito-legale-fiscale mit öffentlichem Auftrag nutzen. Gewöhnliche Recherche oder verfügbare Deep-Research-Route ausdrücklich nach Skill wählen, kein automatischer gehosteter Übergang. Planner und Review folgen, anwendbare Primärquellen lesen, Vertrag, Antwort, Quellen und Grenzen speichern und tatsächliches Ergebnis binden. URLs, Ausschnitte und gültige Register beweisen keine Aktualität oder Richtigkeit. Fehlender Zugriff bleibt offene Frage. Keine Übungsfakten in Suchanfragen.
+
+Entwurf und Prüfung: Chronologie, Belege, Annahmen, Analysen, bedingten Vorschlag und Fragen verfassen. Exakte Fassung öffnen und Teilnehmer nach Korrekturen fragen. Nur tatsächliche Entscheidung speichern: lokale Zuordnung prüft keine Identität und genehmigt keinen Handoff. cnc-review nicht aufrufen, keine Quittungen erfinden. Tatsächlichen Bericht zur Modell-Datennutzung zeigen.
+
+Geführte Änderung: Aktualisierung und practice-Tabellen im selben Mandat importieren; stabile IDs und alte Fassungen bewahren. Veraltete Nachfolger und weiteren semantischen Einfluss prüfen. Treasury neu rechnen, neues Ergebnis binden, Vorschlag und Bericht neu schreiben: verzögerter Eingang und Ablehnung, kein dokumentiertes Abkommen. Alte Entscheidung gilt nicht für neuen Entwurf.
+
+Übergabe: Unternehmensbericht mit no_agreement, Grundlagen, Grenzen, fehlenden Handlungen/Belegen, Aufgabenverantwortlichen und zu prüfenden Fristen öffnen. draft_handoff bleibt: Run-Abschluss ist weder Unterschrift, Einreichung noch rechtlicher Abschluss. Danach Expertenübung in getrenntem Mandat mit ausgewählten Dokumenten: neutrale Fragen, ungeprüfte Unabhängigkeit/Bestellung, eigener Bericht und getrennte Verantwortung.
 
 Während der Lektion führt der Arbeitschat die Funktion aus und erstellt das Ergebnis. Ist ein Schritt nicht verfügbar, erklären Sie, was fehlt, und lassen Sie die Lektion unvollständig.
 
@@ -40,19 +46,27 @@ Während der Lektion führt der Arbeitschat die Funktion aus und erstellt das Er
 
 Öffnen Sie das gerade erstellte Dokument und zeigen Sie den Einstieg.
 
-Fallvermerk mit Belegen, Lücken, Annahmen und nächster Tätigkeit.
+Intake-Notiz und Beleglücken mit Quellen und Verantwortlichen.
 
-Ausgeführte Prognose, gespeicherte Versionen und Bericht zur Datennutzung.
+Ausgeführtes Finanzpaket, ursprünglicher und neuer Forecast, geprüfte Rechercheantwort oder offene Lücke.
 
-Verfolgen Sie den Eingang von der Angabe zur Prognose und zum Vermerk. Eine Datei beweist keine Einbringlichkeit; eine erfasste Bestätigung ist keine Unterschrift.
+Unveränderte historische Revisionen, rollenbezogener Abschlussbericht, negative Übergabe und Restaufgaben.
+
+Lesbarer Modell-Datenbericht, Artefaktdeklaration und fortsetzbare Historie.
+
+Jede Zahl vom CSV über Ergebnis zum Bericht verfolgen. Nettoverschuldung, Banksaldo und minimale Liquidität trennen. Exakte Fassung, Grundlagen, Rolle und veralteten Zustand vor Entscheidung prüfen. Wirtschaftliches Urteil, Unabhängigkeit, Recht, Unterschrift und Pflichten verbleiben beim Fachmann; keine erfundenen Quittungen oder positiven Ergebnisse.
 
 ## 5. Gemeinsam prüfen · 45 s
 
 Führen Sie diese Prüfungen an den angegebenen Stellen durch.
 
-Unterscheiden Sie Unternehmensberater und unabhängigen Experten.
+Was fehlt und welche Arbeit kann weitergehen? Ist gesperrtes Geld verfügbar?
 
-Erkennen Sie unbestätigte Annahmen und nach dem Aufschub erneut zu prüfende Versionen.
+Welches Ergebnis wurde ausgeführt, welche Aufgabe nur vorgeschlagen?
+
+Welche Abhängigkeiten und Entscheidungen nach Verzögerung neu prüfen?
+
+Wie unterscheiden sich Berichte und wer trägt Restaufgaben?
 
 Diese Pausen helfen beim Erlernen der Funktion. Sie sind kein Quiz über technische Einzelheiten.
 
@@ -60,11 +74,11 @@ Diese Pausen helfen beim Erlernen der Funktion. Sie sind kein Quiz über technis
 
 Lassen Sie den Nutzer die Anfrage formulieren und begleiten Sie seinen Versuch.
 
-Fügen Sie aktualisierung-de.md hinzu: Der Schuldner schlägt nun den 15. Januar 2027 vor. Fordern Sie Analyse und Vermerk erneut an, ohne alte Bestätigungen auf die neue Version zu übertragen.
+Zunächst geführt aktualisierung-de.md importieren: Eingang am 15. Januar 2027 und Ablehnung. Ersten Forecast bewahren und negativen Bericht verfassen. Dann selbständig uebung-de.md im getrennten Expertenmandat: Eingang am 15. Februar außerhalb des Horizonts, kein Abkommen. treasury-independent nutzen, neutralen Entwurf liefern, Quellen nachweisen und in neuer Sitzung fortsetzen. Beraterprivatakte nicht automatisch kopieren.
 
-Sie können einen Fall beginnen, prüfen und fortsetzen und dabei Grenzen, Abhängigkeiten und erforderliche Entscheidungen ausdrücken.
+Sie erklären Abdeckung und Grenzen, zeigen Neuberechnung und Revisionen, trennen Mandate und erläutern ein negatives Ergebnis mit offenen Entscheidungen und Aufgaben. Tatsächliche Übung und eigene Erklärung erforderlich; Tests bescheinigen kein Lernen.
 
-Nennen Sie Rolle, Mandat, Stichtag und freigegebene Fallunterlagen. Prüfen Sie entscheidende Rechtsquellen bei Verwendung; Unabhängigkeit und Schlussfolgerungen beurteilt der Berufsträger.
+Für echte Arbeit neue Dokumente und professionelle Zielablage getrennt vom Tutorial auswählen, Rolle und Mandat bestätigen und aktuellen Vertrag befolgen. Welche Daten das Modell erreichen: importierte Quellen, Finanztabellen, Forecasts, Notizen, Abhängigkeiten, Entwürfe, Entscheidungen und besprochene öffentliche Quellen können vom gewählten Runtime gelesen werden. Lokale Helfer senden diese Dateien nicht an Mparanza; lokale Ablage bedeutet weder Offline-Inferenz noch Anonymisierung. Bericht beschreibt tatsächliche Nutzung, nicht jede Modelllektüre. Optionale gehostete Prüfung sendet opake IDs, Digest, Entscheidung, Konto und Zeit und ist im Tutorial ausgeschlossen. Kein Feedbackversand, keine Einreichung oder Parteienkommunikation.
 
 Das Material enthält fiktive Dateien und einen vorbereiteten Ablauf. Ergebnisse der Demonstration und Übung entstehen durch neue Ausführungen der aktuellen Funktion.
 

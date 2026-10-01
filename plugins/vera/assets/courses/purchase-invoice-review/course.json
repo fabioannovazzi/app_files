@@ -145,7 +145,7 @@
     {
       "path": "skills/purchase-invoice-review/SKILL.md",
       "repository_path": "plugins/vera/skills/purchase-invoice-review/SKILL.md",
-      "sha256": "41ec8d67a0e1ef3fc8d2d34f1cc530f1e2040ac97be7e4b7e924c4253f0663b1"
+      "sha256": "373d5de1cefb10a9ddff32cd3315af75bbee69c7fb1ebee093a9857d1247d600"
     },
     {
       "path": "vendor/modules/__init__.py",
