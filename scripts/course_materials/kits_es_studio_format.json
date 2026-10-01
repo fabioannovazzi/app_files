@@ -1,0 +1,27 @@
+{
+  "vera/studio-document-format": {
+    "title": "Enseñar a Vera el formato de los documentos del despacho",
+    "goal": "Convertir ejemplos seleccionados en un estándar Word revisado y reutilizable.",
+    "scenario": "El despacho ficticio Riva quiere fuentes, márgenes, encabezados, tablas y pies de página coherentes.",
+    "scope": "Formato Word para el generador de informes financieros. Configuración privada, sin entrenar el modelo ni copiar exactamente una plantilla Word. Otros generadores quedan fuera de esta primera integración.",
+    "inputs": "Abre demo-es.json. Vera genera localmente un ejemplo Word ficticio real y un CSV contable. Elige el espacio del despacho y revisa el ejemplo; no hacen falta documentos de clientes.",
+    "request": "Vera, aprende el formato de los informes de este despacho ficticio. Muéstrame las observaciones y propuestas, déjame revisar vistas corta y larga, guarda la versión que apruebo y úsala en un informe financiero.",
+    "steps": [
+      "Genera e inspecciona el ejemplo. Distingue ajustes observados, propuestas y estilos heredados inciertos. Elige un cambio con palabras corrientes.",
+      "Genera las vistas Word corta y larga. Abre las páginas reales, comprueba fuentes, continuación de tablas y pie de página; pide correcciones o adopta explícitamente la versión exacta.",
+      "Tras la aprobación, produce desde el CSV un pequeño informe financiero Word con el procedimiento actual y un encargo de cliente sintético real. Comprueba la identidad del despacho y la fuente de un importe sin cambios."
+    ],
+    "deliverables": [
+      "Evidencias del formato del ejemplo elegido y propuesta completa.",
+      "Vistas Word sintéticas corta y larga, estándar aprobado con versión e informe financiero que lo utiliza."
+    ],
+    "review": "Revisa todas las páginas, sustituciones de fuentes, logo seleccionado, fechas, presentación numérica e identidad guardada. Cifras y conclusiones necesitan la revisión habitual del informe. El código no demuestra que hayas visto o aceptado el documento.",
+    "checkpoints": [
+      "Explica qué ajuste procede del ejemplo y cuál elegiste tú.",
+      "Antes de guardar, abre ambas vistas y aprueba explícitamente o pide una corrección."
+    ],
+    "practice": "Empieza de forma independiente con practice-es.json para el despacho ficticio Selva y otros importes. Elige un cambio, revisa y adopta su estándar y genera su informe. Modifica después un ajuste, revisa nuevas vistas y comprueba que la versión anterior permanece archivada. El despacho Riva debe seguir igual.",
+    "success": "Sabes aportar ejemplos, corregir propuestas, adoptar una versión exacta, encontrarla, reutilizarla y revisarla sin cambiar otros despachos ni datos financieros.",
+    "repeat": "Elige el espacio privado autorizado del despacho y los ejemplos exactos. Pide a Vera que aprenda o revise su formato Word, revisa ambas vistas y adopta una versión. Después solicita un informe financiero compatible para ese despacho elegido explícitamente."
+  }
+}

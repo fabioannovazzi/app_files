@@ -9038,6 +9038,96 @@
       }
     ]
   },
+  "vera/studio-document-format": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "inspect_examples_propose_preview_adopt_reuse"
+    },
+    "files": [
+      {
+        "source": "studio-document-format/demo-it.json",
+        "path": "files/input/demo-it.json",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "studio-document-format/demo-en.json",
+        "path": "files/input/demo-en.json",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "studio-document-format/demo-fr.json",
+        "path": "files/input/demo-fr.json",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "studio-document-format/demo-de.json",
+        "path": "files/input/demo-de.json",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "studio-document-format/demo-es.json",
+        "path": "files/input/demo-es.json",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "studio-document-format/practice-it.json",
+        "path": "files/practice/practice-it.json",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "studio-document-format/practice-en.json",
+        "path": "files/practice/practice-en.json",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "studio-document-format/practice-fr.json",
+        "path": "files/practice/practice-fr.json",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "studio-document-format/practice-de.json",
+        "path": "files/practice/practice-de.json",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "studio-document-format/practice-es.json",
+        "path": "files/practice/practice-es.json",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
   "vera/scissione-guidata": {
     "group": "workflow",
     "execution": {

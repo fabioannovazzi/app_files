@@ -1,0 +1,27 @@
+{
+  "vera/studio-document-format": {
+    "title": "Insegna a Vera il formato dei documenti dello studio",
+    "goal": "Impara a trasformare esempi selezionati in uno standard Word verificato e riutilizzabile.",
+    "scenario": "Lo studio fittizio Riva vuole font, margini, intestazione, tabelle e piè di pagina coerenti nei report.",
+    "scope": "Formato Word per il generatore di report finanziari. È una configurazione privata, non addestramento del modello o copia esatta di un modello Word. Gli altri generatori restano fuori da questa prima integrazione.",
+    "inputs": "Apri demo-it.json. Vera genera localmente un vero esempio Word fittizio e un CSV contabile. Scegli lo spazio dello studio e verifica l’esempio; non servono documenti di clienti.",
+    "request": "Vera, impara il formato dei report di questo studio fittizio. Mostrami cosa hai osservato, proponi le impostazioni mancanti, fammi verificare anteprime brevi e lunghe, poi salva la versione che approvo e usala in un report finanziario.",
+    "steps": [
+      "Genera e ispeziona l’esempio reale. Distingui impostazioni osservate, proposte e formati ereditati incerti. Scegli una modifica con parole comuni.",
+      "Genera le anteprime Word breve e lunga. Apri le pagine effettive, controlla font, prosecuzione delle tabelle e piè di pagina, poi chiedi correzioni o adotta esplicitamente la versione esatta.",
+      "Dopo l’approvazione, produci dal CSV un piccolo report finanziario Word attraverso la procedura corrente e un vero incarico cliente sintetico. Verifica l’identità dello studio e risali alla fonte di un importo invariato."
+    ],
+    "deliverables": [
+      "Evidenze del formato dell’esempio selezionato e proposta completa.",
+      "Anteprime Word sintetiche breve e lunga, standard approvato con versione e report finanziario che lo usa."
+    ],
+    "review": "Controlla tutte le pagine, le sostituzioni dei font, il logo se scelto, le date, la visualizzazione dei numeri e l’identità salvata. Cifre e conclusioni richiedono la normale revisione del report. Il codice non dimostra che tu abbia visto o accettato il documento.",
+    "checkpoints": [
+      "Spiega quale impostazione viene dall’esempio e quale hai scelto tu.",
+      "Prima di salvare, apri entrambe le anteprime e approva esplicitamente o chiedi una correzione."
+    ],
+    "practice": "Riparti autonomamente da practice-it.json per lo studio fittizio Selva con importi diversi. Scegli una modifica, verifica e adotta il suo standard, poi genera il report. Modifica ancora un’impostazione, verifica nuove anteprime e la conservazione della versione precedente. Controlla che lo studio Riva non sia cambiato.",
+    "success": "Sai fornire esempi, correggere la proposta, verificare e adottare una versione esatta, ritrovarla, riusarla e modificarla senza cambiare altri studi o dati finanziari.",
+    "repeat": "Scegli lo spazio privato autorizzato dello studio e gli esempi esatti. Chiedi a Vera di imparare o modificare il formato Word, verifica le due anteprime e adotta una versione. Poi richiedi un report finanziario supportato per quello studio scelto esplicitamente."
+  }
+}

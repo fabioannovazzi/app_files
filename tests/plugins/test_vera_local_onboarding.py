@@ -1328,12 +1328,15 @@ def test_organization_kit_keeps_result_and_runs_reviewed_practice_copy(
     )
 
 
-def test_website_teaching_prepares_private_project_for_current_specialist(
-    store, module, tmp_path
+@pytest.mark.parametrize(
+    "studio_workflow", ["presenza-digitale-studio", "studio-document-format"]
+)
+def test_studio_teaching_prepares_private_project_for_current_specialist(
+    store, module, tmp_path, studio_workflow
 ):
     store.begin()
     change(store, "profile", confirmed_by_user=True, profile=profile())
-    workflows = ("presenza-digitale-studio", "fatture-xml-check", "variance-analysis")
+    workflows = (studio_workflow, "fatture-xml-check", "variance-analysis")
     change(
         store,
         "plan",

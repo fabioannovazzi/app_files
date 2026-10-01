@@ -105,6 +105,13 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
   independent expert, with separate role guidance, evidence gaps, existing Vera
   analyses, drafts, case revisions and dependency impact. Local review records
   do not authenticate professional identity or authorize filing.
+- `studio-document-format`: teach a studio's reusable Word report format from
+  exact selected examples and preferences; inspect formatting, review generated
+  short/long previews, explicitly adopt a private versioned standard, and reuse
+  or revise it in supported financial reports. Includes a prepared course with
+  fictional inputs and distinct practice. Studio-wide setup shares the authorized
+  communications workspace; it is not a client run or model fine-tuning.
+
 - `comunicazione-professionale`: decide whether a current tax, legal,
   regulatory, accounting, or professional development is worth communicating;
   learn only from exact prior studio communications selected by the
@@ -287,6 +294,5 @@ recreating a central function register.
 
 - `scissione-guidata`: prepare a versioned dossier and ownership/allocation schedules for an Italian OIC partial proportional scission into a new beneficiary. Require authorized entity evidence and exact-version professional decisions; preserve unknowns, separate book/tax/economic/shareholder tax values and reopen dependent approvals after changes. No automatic legal rules, accounting entries, statutory deadlines, signatures or filings. Other routes are explicitly unsupported.
 The prepared local lesson uses fictional inputs and an independent changed-evidence practice. Read `../../scissione-guidata/SKILL.md`; actual professional confirmations remain necessary.
-
 
 - `learn-with-vera`: learn an installed function in writing using prepared files, actual execution and practice in one conversation.

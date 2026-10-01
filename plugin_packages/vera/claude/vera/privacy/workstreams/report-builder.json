@@ -24,7 +24,7 @@
       {
         "id": "financial-report-evidence",
         "purpose": "Map source tables, write the report narrative, and review the generated report",
-        "content": "User instructions; a bounded inspection packet with source file and sheet names, table identifiers, row and column counts, header candidates, numeric-candidate row positions, extraction diagnostics, and at most eight preview rows per table with numeric values redacted; when the preview is insufficient, one purpose-labelled expansion containing one exact table, at most 16 selected columns and at most 100 selected source rows with cell text, number formats, formula/cache status and source coordinates; selected mappings; the editable narrative recipe; generated report diagnostics, drafts, artifacts and review decisions. The complete cell inventory is not model-visible by default and remains in private deterministic control state. After a valid source-bound numeric-measure review, generated report previews may also include the exact included literal measures, their physical source coordinates and explicit exclusions, capped at eight rows and six displayed columns. This affects reviewed report evidence, not the default raw-cell inspection boundary.",
+        "content": "User instructions; a bounded inspection packet with source file and sheet names, table identifiers, row and column counts, header candidates, numeric-candidate row positions, extraction diagnostics, and at most eight preview rows per table with numeric values redacted; when the preview is insufficient, one purpose-labelled expansion containing one exact table, at most 16 selected columns and at most 100 selected source rows with cell text, number formats, formula/cache status and source coordinates; selected mappings; the editable narrative recipe; generated report diagnostics, drafts, artifacts and review decisions. The complete cell inventory is not model-visible by default and remains in private deterministic control state. After a valid source-bound numeric-measure review, generated report previews may also include the exact included literal measures, their physical source coordinates and explicit exclusions, capped at eight rows and six displayed columns. This affects reviewed report evidence, not the default raw-cell inspection boundary. When the user selects an approved studio Word standard, the editable recipe also contains studio identity, version and format digest, presentation settings and frozen logo bytes. The selected model can read those settings and the generated report or its rendered pages. Selected studio examples, communications history and other clients’ material are not copied into this client report. The formatting layer changes presentation only; reviewed amounts, currency, scale and financial meaning remain governed by this report’s evidence and review controls.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -92,9 +92,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-28",
+    "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "e5835d01074b3d2278312a32cffc47cb74036760bf92134fa12e6c0bb035641d"
+    "source_fingerprint": "56b2be11cc9f49372c6f1635febf0ba5b144c6771c2fd00eef9cea77ad83f433"
   }
 }

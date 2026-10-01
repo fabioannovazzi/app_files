@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/app-files-valuation-course/plugins/vera",
-  "version": "0.1.325",
-  "captured_at": "2026-10-01T19:07:32.990290+00:00",
-  "catalogue_fingerprint": "5a6ff08c120ee1bb207d6fa4049ad90f57cd7454ae530c7d34d5f1e968009c65",
-  "manifest_sha256": "297d45154250a3dab5c852f3ad5d49f576650607af6be06f3c8499ba003414cb",
+  "root": "/private/tmp/app-files-studio-formatting/plugins/vera",
+  "version": "0.1.326",
+  "captured_at": "2026-10-01T20:00:52.199131+00:00",
+  "catalogue_fingerprint": "48fad5304246c8c3ff2840b3da29a228f89dba28a76e0c7f4d9d91f0470fab18",
+  "manifest_sha256": "4424949a5625e1fe4ac71d6e2ec5b701f73a46d8e0d0694ca327134c060e1827",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -212,6 +212,11 @@
       "sha256": "b2f8ad59567a7e390f0fb4afbfdb339f0f8d11b3576ff37497de55cc4172d7f3"
     },
     {
+      "function_id": "studio-document-format",
+      "skill_path": "skills/studio-document-format/SKILL.md",
+      "sha256": "958ba3ade4a41314ec9644ae680ca6cd2fd05a33ce31ac029e1756dd04c169f9"
+    },
+    {
       "function_id": "trasformazione",
       "skill_path": "skills/trasformazione/SKILL.md",
       "sha256": "cea3d8b860ab9745e93afe84baf2be2c4ebb1e3fdf69dbca20f36715f351abc9"
@@ -229,7 +234,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "c9510a0b86042d357ad2ab5a23300ff7018de5ea3a76ec27c2e4f9dbf911080b"
+      "sha256": "9704da3d1527737c291a3ec5024a3e98508e9e91f4b60a13a83dd50b1b294c0f"
     },
     {
       "function_id": "vouching",

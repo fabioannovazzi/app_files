@@ -10,6 +10,36 @@ permissions:
   contents: read
 
 jobs:
+  studio-document-format:
+    name: Studio document format pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install declared document dependencies and verification tools
+        run: >-
+          python -m pip install pytest pytest-cov 'coverage>=7.10' black==25.1.0 isort==6.0.1 mypy bandit
+          -r plugins/comunicazione-professionale/requirements.txt
+          -r plugins/report-builder/requirements.txt
+      - name: Verify previews, approval, revision and actual report reuse
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_studio_document_format.py
+          --cov --cov-config=tests/studio_document_format.coveragerc --cov-report=term-missing --cov-fail-under=80
+      - name: Check document format code quality
+        run: |
+          python -m black --check plugins/comunicazione-professionale/scripts/review_document_format.py plugins/comunicazione-professionale/scripts/studio_document_format.py plugins/report-builder/scripts/studio_formatting.py plugins/vera/scripts/studio_document_format.py tests/plugins/test_studio_document_format.py tests/plugins/test_teaching_studio_document_format_execution.py
+          python -m isort --check-only plugins/comunicazione-professionale/scripts/review_document_format.py plugins/comunicazione-professionale/scripts/studio_document_format.py plugins/report-builder/scripts/studio_formatting.py plugins/vera/scripts/studio_document_format.py tests/plugins/test_studio_document_format.py tests/plugins/test_teaching_studio_document_format_execution.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/comunicazione-professionale/scripts/review_document_format.py plugins/comunicazione-professionale/scripts/studio_document_format.py plugins/report-builder/scripts/studio_formatting.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/vera/scripts/studio_document_format.py
+          python -m bandit -q -ll plugins/comunicazione-professionale/scripts/review_document_format.py plugins/comunicazione-professionale/scripts/studio_document_format.py plugins/report-builder/scripts/studio_formatting.py plugins/vera/scripts/studio_document_format.py
+
   business-valuation:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -260,6 +290,7 @@ jobs:
           tests/plugins/test_teaching_patent_box_execution.py
           tests/plugins/test_teaching_cnc_execution.py
           tests/plugins/test_teaching_trasformazione_execution.py
+          tests/plugins/test_teaching_studio_document_format_execution.py
           tests/plugins/test_teaching_cnc_practical_execution.py
           tests/plugins/test_teaching_scissione_execution.py
           tests/plugins/test_cnc_integrations.py

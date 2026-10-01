@@ -26,6 +26,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "studio-document-format-setup",
+        "purpose": "Interpret selected presentation evidence, review synthetic previews and adopt a versioned studio Word format",
+        "content": "Local DOCX inspection produces formatting metadata, style identifiers and the file path without extracting document text. These metadata can identify the studio. The selected model may read selected metadata, studio identity, preferences, the selected logo, the proposal, synthetic previews and review decisions. Direct visual inspection of a selected document may also expose its text. If example text needs interpretation, the isolated stripping, pseudonymization and independent review steps of Professional Communication apply. The private standard retains configuration, assets and approval; a subsequent report receives only presentation settings and logo, without examples or communications history. That report’s accounting data follows its separate process. No archive scan, sending or automatic upload to Mparanza. Local storage does not make model processing offline or automatically anonymous. No model-service call is made by the local helper. Font availability and user visual acceptance are not proved by byte-integrity checks. Unobserved communications settings are labelled default proposals in first setup, not learned from examples. The setup or revision proposal can also expose the complete prior or proposed communications profile: studio voice, letter, email, web and social conventions, field provenance and adoption metadata. Those saved conventions are not prior communications text.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -142,12 +151,16 @@
     {
       "id": "qualified-editorial-and-claim-assurance",
       "control": "A live editorial assessor is accepted only when its exact provider, model and prompt-template SHA-256 has a current digest-bound result on the blinded product-reviewed high-bar corpus, with no false-ready critical case. History pseudonymization, derivative-only privacy review, generation, claim assurance, live editorial assessment, benchmark qualification and visual assessment record distinct host session IDs and exact prompt hashes; the provenance explicitly states that it is operator-attested and not provider-authenticated. Each contribution is also bound to an answer contract and a separate full-material-claim assurance record that covers every contract dimension and keeps source identity, semantic support, reasoning and professional judgment distinct. Deterministic code scores fixed benchmark outcomes and enforces record closure; it never assigns semantic quality, contextual identifiability or source support."
+    },
+    {
+      "id": "proposal-and-preview-bound-word-format-adoption",
+      "control": "Selected examples and the logo are snapshotted into the bound private workspace. Adoption rechecks proposal digest, studio identity, prior-standard hash, all selected input hashes and both short/long preview hashes. The common writer versions previous standards. Reviewer and visual acceptance are operator assertions, not authenticated proofs."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-28",
+    "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "3b8d6031581d0102b9eac87257c288fc202870c8998fc097f8cf1ad828948903"
+    "source_fingerprint": "89247f227aab5dc95a096eddc6ce049da8219693812cd63c9b3c680d46645aec"
   }
 }

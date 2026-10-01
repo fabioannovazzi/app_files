@@ -294,12 +294,13 @@ run; it sets server attestation to false. No external stamping for this prototyp
 ## Client-first workflow in Codex
 
 Every local client-bound Vera workflow run begins in Studio Archive, and the selected
-customer folder is its durable source of truth. Three studio-wide workflows are
+customer folder is its durable source of truth. Four studio-wide workflows are
 explicit exceptions. The pre-client `bandi-agevolazioni` opportunity radar
 cannot belong to one customer folder. `comunicazione-professionale` learns the
 studio's approved editorial voice and output formats across communications,
 while `presenza-digitale-studio` prepares the studio's website identity,
-working site, preview and release package. Neither belongs in one client's
+working site, preview and release package. `studio-document-format` teaches
+and versions Word report presentation in the communications workspace. None belongs in one client's
 engagement. Each exception uses its own owner-only,
 explicitly authorized local workspace bound to its exact path and retention
 owner. These studio-wide workflows do not create a portable client run. A selected, self-verifiable bandi
@@ -519,6 +520,11 @@ them without changing the capability catalog:
   compile, use available browser tools for fields, approved attachments and draft
   saving. Submit only after explicit approval of the exact final application,
   following the bandi portal-preparation reference.
+- `studio-document-format`: selected examples → model-interpreted presentation
+  proposal → actual short/long Word previews → explicit adoption → private
+  versioned studio standard → supported financial report reuse. Read its own
+  skill for setup, revisions and the prepared course; never infer global studio
+  identity or adoption from a prior chat.
 - `comunicazione-professionale`: event-driven editorial work from exact selected
   sources and prior studio communications in a private studio-wide workspace.
   The professional selects every prior communication; the workflow never scans

@@ -270,7 +270,7 @@
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
-      "sha256": "373770f23f7472879734b00cd64a4ef90d55b61563b7174f90d94982d1935a13",
+      "sha256": "8e3b6e323703135bfaa29e6e2d77bdcc4de41fa1681482fc1ca5639058f3bc5f",
       "languages": [
         "it",
         "en",
@@ -438,7 +438,7 @@
     },
     "financial-report-builder": {
       "path": "financial-report-builder/course.json",
-      "sha256": "e648774c1a9f04552655c2eacec780c7a04b96de7030527027dd8db23976a630",
+      "sha256": "d9ff636a6ccf5346ba9b808999f43f68d55e0559b38b970fc1ad405f688fe045",
       "languages": [
         "it",
         "en",
@@ -873,6 +873,34 @@
         "fr": "Apprendre à connecter un dossier de cabinet, chercher chez le bon client et obtenir une réponse reliée aux documents sources.",
         "de": "Lernen, einen Kanzleiordner anzubinden, beim richtigen Kunden zu suchen und eine Antwort mit Quellenverweisen zu erhalten.",
         "es": "Aprender a conectar una carpeta del despacho, buscar en el cliente correcto y obtener una respuesta vinculada a sus documentos."
+      }
+    },
+    "studio-document-format": {
+      "path": "studio-document-format/course.json",
+      "sha256": "20dc677ef35c35fe77100fd0dbfd61f24a2762ac74ac809cbc27315b8d54809e",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Insegna a Vera il formato dei documenti dello studio",
+        "en": "Teach Vera your studio’s document format",
+        "fr": "Enseigner à Vera le format des documents du cabinet",
+        "de": "Vera das Dokumentformat der Kanzlei beibringen",
+        "es": "Enseñar a Vera el formato de los documentos del despacho"
+      },
+      "goals": {
+        "it": "Impara a trasformare esempi selezionati in uno standard Word verificato e riutilizzabile.",
+        "en": "Learn to turn selected examples into a reviewed, reusable Word report standard.",
+        "fr": "Transformer des exemples choisis en un standard Word vérifié et réutilisable.",
+        "de": "Aus ausgewählten Beispielen einen geprüften, wiederverwendbaren Word-Standard erstellen.",
+        "es": "Convertir ejemplos seleccionados en un estándar Word revisado y reutilizable."
       }
     },
     "trasformazione": {
