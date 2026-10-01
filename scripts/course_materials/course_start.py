@@ -120,7 +120,9 @@ def add_course_start(
         '<section class="course-start" aria-labelledby="cowork-start-heading">'
         + f'<h2 id="cowork-start-heading">{html.escape(cowork["heading"])}</h2>'
     )
-    if product == "clara" and workflow in {"deck-correction", "transcribe"}:
+    if (product == "clara" and workflow in {"deck-correction", "transcribe"}) or (
+        product == "vera" and workflow == "trasformazione"
+    ):
         section += f'<p>{html.escape(cowork["unavailable"])}</p>'
     else:
         section += (
