@@ -5,7 +5,7 @@ construction contracts. Its fictional Officina Arco case retains the original
 31 March assessment, February operating example and 30 April follow-up. It adds
 localized discovery/construction and practice chapters, unapproved raw facts,
 and a separate financial lab. Revision: `2026-10-01.1`; package candidate:
-Vera `0.1.303`. This document does not claim merge, deployment or publication.
+Vera `0.1.311`. This document does not claim merge, deployment or publication.
 
 The six-stage, 390-second outline is the introduction. Construction, operating
 review and finance continue in resumable sessions; no measured full-course
@@ -45,7 +45,7 @@ Cowork retains the existing written, single-conversation course surface.
   preview suite then passes 14 tests with loopback permission. One unrelated
   prepared-course test is conditionally skipped.
 - Package, projection, update-notification and icon checks pass 430 tests.
-  Codex, ChatGPT upload and Cowork candidate archives match source at 0.1.303;
+  Codex, ChatGPT upload and Cowork candidate archives match source at 0.1.311;
   packaged MCP checks initialize all 18 servers.
 - Current per-language editorial/output reviews pin the exact course hash and
   successful demo/practice identities. Actual outputs remain outside the repo;

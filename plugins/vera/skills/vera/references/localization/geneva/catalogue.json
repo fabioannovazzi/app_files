@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/app-files-adeguati-assetti-course/plugins/vera",
-  "version": "0.1.303",
-  "captured_at": "2026-10-01T10:22:45.948409+00:00",
-  "catalogue_fingerprint": "cfe5ba35176480baa6d50834cc8bbd954f262ea698b0a5b49fa73b7787c46552",
-  "manifest_sha256": "0dd580b916c76c3e52ba520c8465a86dfa6199cfc9aa30c2d269c54ffcac5f45",
+  "version": "0.1.311",
+  "captured_at": "2026-10-01T11:22:36.379035+00:00",
+  "catalogue_fingerprint": "dfe10769f771fa407e94c95f668dcd59f2d20b300a6570b562089f73b7a37410",
+  "manifest_sha256": "23f10ff32836324d3aab654c8e6125c8b48bd9c0c2de0b10d0558b45a8be2ca7",
   "entries": [
     {
       "function_id": "adeguati-assetti",
