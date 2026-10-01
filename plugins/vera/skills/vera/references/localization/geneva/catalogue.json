@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/.codex/worktrees/fusione-p1-course/app_files/plugins/vera",
-  "version": "0.1.314",
-  "captured_at": "2026-10-01T11:43:45.374114+00:00",
-  "catalogue_fingerprint": "bfeab1131b1b91c8bfd74e2a0ed49e8834bba968d42c3a295c553fd96aaf7f72",
-  "manifest_sha256": "b7f8ea47b808097bfcfb90f7cb5393669a3b4a7849656b0607e712824363d0cc",
+  "version": "0.1.318",
+  "captured_at": "2026-10-01T12:30:54.995833+00:00",
+  "catalogue_fingerprint": "5d65354078e8f3838365b2825f577c55cfe6f8e306ae093729928f2d9bb0cbea",
+  "manifest_sha256": "0497edcf2c435b80288bd33ade3d636b2a11779fba06a840de13feba45fd79cf",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -44,7 +44,7 @@
     {
       "function_id": "browser-automation",
       "skill_path": "skills/browser-automation/SKILL.md",
-      "sha256": "2799b4e1049b7b7832f2a25006194892d030044d3b0c8ca1ebbaeec7d0ecdedf"
+      "sha256": "82a310fb6141d16a2e95248196bbcd6befdf30e4c5cd33af7555e784899bfabf"
     },
     {
       "function_id": "business-planning",

@@ -260,6 +260,7 @@ jobs:
           tests/plugins/test_teaching_patent_box_execution.py
           tests/plugins/test_teaching_cnc_execution.py
           tests/plugins/test_teaching_fusione_execution.py
+          tests/plugins/test_teaching_cnc_practical_execution.py
           tests/plugins/test_cnc_integrations.py
           tests/plugins/test_cowork_teaching.py
           tests/plugins/test_vera_get_started.py

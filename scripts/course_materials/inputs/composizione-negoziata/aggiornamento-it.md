@@ -1,1 +1,5 @@
-AGGIORNAMENTO SINTETICO. Il debitore propone ora il 15 gennaio 2027 per lo stesso incasso di EUR 100.000. Nessuna prova di pagamento o accettazione professionale è allegata. Le altre informazioni del caso restano quelle iniziali.
+Prima, con guida, importa aggiornamento-it.md: incasso al 15 gennaio 2027 e rifiuto della proposta. Preserva il primo forecast e prepara la relazione negativa. 
+
+receipt.expected_date=2027-01-15
+negotiation.outcome=no_agreement
+filing_receipts=not_supplied

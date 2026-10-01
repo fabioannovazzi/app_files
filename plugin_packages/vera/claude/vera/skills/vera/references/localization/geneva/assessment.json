@@ -1085,7 +1085,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "bfeab1131b1b91c8bfd74e2a0ed49e8834bba968d42c3a295c553fd96aaf7f72",
+  "catalogue_fingerprint": "5d65354078e8f3838365b2825f577c55cfe6f8e306ae093729928f2d9bb0cbea",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1157,5 +1157,11 @@
     "date": "2026-10-01",
     "source_version": "0.1.311",
     "scope": "Manifest version advanced; all 46 skill entrypoint hashes are unchanged. Existing Geneva dispositions and jurisdiction limits are retained. The Italian Adeguati assetti teaching expansion does not establish Geneva construction acceptance."
+  },
+  "cnc_discovery_release_binding": {
+    "date": "2026-10-01",
+    "version": "0.1.313",
+    "integrated_main": "a5b52b157ebbd2c90cbe591abb68165db53bbe54",
+    "scope": "Inspected all ten changed skill entrypoints: nine specialist descriptions clarify existing accounting outcome selection; router description and ordinary request section clarify routing and ambiguity. No jurisdiction law, calculation, target disposition or acceptance basis changes. Existing dated Geneva assessments and unresolved limitations are preserved; this binding does not assert professional acceptance."
   }
 }
