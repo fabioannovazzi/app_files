@@ -1,0 +1,31 @@
+{
+  "vera/fusione-guidata": {
+    "title": "Preparar y revisar una fusión por absorción P1",
+    "goal": "Seguir dos sociedades OIC desde los documentos hasta el expediente de revisión y reabrir trabajos dependientes al cambiar un saldo.",
+    "scenario": "Material totalmente ficticio. Demostración: Alpha absorbe a Beta independiente, valores económicos proporcionados de 600.000 y 400.000 EUR. Práctica: Alpha absorbe a Beta participada directamente al 100 %, inversión contable de 480.000 EUR y patrimonio neto de Beta de 300.000 EUR.",
+    "scope": "Dos sociedades italianas OIC, derechos ordinarios homogéneos y sin compensación en efectivo. Fuera del curso: 90 %, inversa, sociedades hermanas, MLBO, IFRS, transfronteriza, crisis y nueva sociedad. No es validación profesional con un cliente real.",
+    "inputs": "Abrir dossier-es.md y ordinary.json para la demostración; wholly-owned.json para la práctica y update.json solo al introducir el cambio. Los JSON separan hechos Alpha/Beta, balances, socios, valores fiscales e hipótesis del calendario. No hay resultados ni confirmaciones preaprobados.",
+    "request": "Vera, prepara un expediente de revisión para esta absorción ficticia P1. Selecciona documentos de ambas sociedades mediante Studio Archive, propone la rama justificada y muestra canje, conciliación contable y calendario. Pide las decisiones necesarias sin registrar aprobaciones en mi nombre.",
+    "steps": [
+      "Seleccionar ambos clientes y encargos ficticios, documentos autorizados y una carpeta separada del caso. Vera importa los documentos elegidos mediante Studio Archive, verifica recibos y bytes y cita página o campo. Revisar propiedad, derechos, mandato e hipótesis P1; los hechos ausentes siguen desconocidos.",
+      "Discutir método y fecha común de las valoraciones proporcionadas: el cálculo no valora la empresa. Revisar BranchDecision y Valuation, luego ExchangeModel con relación exacta, acciones nuevas y fracción de cada socio. Distinguir propuesta, decisión efectiva y confirmación sintética de prueba; nunca redondear para superar controles.",
+      "Revisar BookBridge: balances cerrados profesionalmente a la misma fecha, correspondencias, pares recíprocos y diferencias. Verificar cancelación de la participación al 100 % o aumento de capital en la rama ordinaria. Elegir asignación y política contable sustentadas, sin fondo de comercio automático. Abrir borrador del asiento inicial y registro fiscal separado.",
+      "Revisar Deadline con fuentes/versiones y fechas de ambas sociedades: días frente a meses naturales, última fecha pertinente, excepciones y eventos sin prueba. Las convenciones son hipótesis del ejercicio, no derecho vigente; un caso real exige fuentes primarias actuales y revisión. Una fecha calculada no prueba depósito, consentimiento o exención.",
+      "Vera redacta secciones sustentadas: mandato, diligencia debida, proyecto, derechos, fechas, fiscalidad, transición, responsables y controles posteriores; lagunas y revisiones pendientes siguen visibles. Exportar y abrir p1-workpapers.html, historial y reporte legible de datos recibidos por el modelo. Sin firma ni presentación.",
+      "Importar update.json en el mismo caso. Leer ChangeImpact y confirmaciones históricas: saldo, conciliación y expediente dependientes requieren revisión; el calendario independiente permanece. Aclarar cierre y asignación antes de un resultado nuevo; conservar exportaciones anteriores."
+    ],
+    "deliverables": [
+      "Expediente Markdown/HTML con rama, valores, canje y asignaciones exactas, conciliación y borrador del asiento inicial, calendario y cuestiones abiertas.",
+      "Historial de versiones y confirmaciones, recibos de ambos archivos, registro fiscal separado y reporte legible de datos que llegan al modelo."
+    ],
+    "review": "Relacionar cada importe con documento y decisión. Revisar congruencia de valores, asignación contable, residual inicial, fiscalidad separada, aplicabilidad de fuentes, recibos ausentes y responsabilidades. Las pruebas sintéticas no validan estas decisiones en un caso real.",
+    "checkpoints": [
+      "Encontrar un documento Alpha y otro Beta; verificar cliente, encargo, recibo y campo citado.",
+      "Explicar nuevas acciones en el caso independiente y su ausencia al 100 %; vincular diferencia con política propuesta.",
+      "Distinguir fecha calculada de recibo; identificar trabajos reabiertos después del nuevo saldo."
+    ],
+    "practice": "Repetir con wholly-owned.json: verificar propiedad directa total, cero nuevas acciones, proporciones Alpha intactas, cancelación y valores fiscales separados. Importar luego update.json en ese caso y explicar dependencias y confirmaciones que requieren revisión. No inventar un ajuste compensatorio.",
+    "success": "Saber elegir documentos y rama, discutir valores y política, leer tablas, verificar fuentes y retomar un caso cambiado separando evidencias y decisiones.",
+    "repeat": "Para un encargo real indicar mandato, ambas sociedades, propiedad, fechas y documentos autorizados. Si excede P1, detener esa rama y pedir trabajo especializado necesario. Registrar solo confirmaciones profesionales efectivas sobre la versión revisada."
+  }
+}

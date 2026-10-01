@@ -568,3 +568,43 @@ as the operational note, with `avviso/avviso_intake_memo.md` and its CSV as the
 extraction references. The practice adds a client's statement; documents said
 to be recovered remain unreceived until their actual files are supplied. Keep
 the explanation about the request, dates, evidence and next action.
+
+## Fusione per incorporazione P1
+
+The `fusione-guidata` kit teaches two companies, not two branches of one client's
+ledger. Start the bound tutorial intake with the selected source files as usual;
+retain that outer tutorial run and its local-only marker. Under its private
+output directory, prepare separate synthetic Alpha and Beta client roots and
+engagements using the current Studio Archive ledger. Bind both exact archive
+identities to the P1 case and import only the selected company evidence. Keep
+selected pack bytes and field locators so model-extracted facts can be traced
+back to the actual course documents. Never configure the user's studio archive,
+scan other clients or write a combined dossier into either company's archive.
+
+Read `dossier-<language>.md` and `ordinary.json` for the demonstration. The
+native field names stay unchanged across languages. Read the current component
+P1 contract, prepare requests from those inputs and discuss the branch, supplied
+valuations, difference allocation and source applicability with the learner.
+`demo-p1` and `prepare_case` are developer fixtures with synthetic approvals;
+do not run them as a substitute for the learner's demonstration or record their
+fixture confirmations as the learner's professional decisions. A pending decision
+remains pending in the newly executed draft. Author the dossier's professional
+sections from the available evidence; the source note explicitly identifies gaps.
+
+Use the P1 case/report records as native execution evidence, then declare the
+actual reports in the outer tutorial run. Show the opening journal, separate tax
+register, readable workpapers and model-data report. Finalize the outer run only
+under its normal contract after its actual outputs and review state are recorded.
+No signatures, postings, filings or real-client validation are demonstrated.
+
+Practice starts a separate wholly owned synthetic P1 case under the same lesson,
+using `wholly-owned.json`. Preserve the independent-company demonstration.
+Once the learner has inspected the practice result, import `update.json` into
+Beta's archive and revise that case's exact liability Fact. Inspect ChangeImpact,
+retain historic confirmations and reopen the dependent bridge and dossier.
+Recompute only with current references: the updated inputs have no revised
+closing equity or difference allocation and therefore retain a EUR 100 imbalance.
+Do not invent an offset, renew an approval or count that blocked follow-up as a
+successful computation. The successful base practice and its blocked update are
+separate checkpoints. All exercise calendar conventions are fictional hypotheses;
+real-case sources and actual professional confirmation remain required.

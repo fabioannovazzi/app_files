@@ -1,0 +1,33 @@
+# Eine P1-Verschmelzung durch Aufnahme vorbereiten und prüfen
+
+Vollständig fiktives Material. Demonstration: Alpha übernimmt die unabhängige Beta; vorgegebene Eigenkapitalwerte 600.000 und 400.000 EUR. Übung: Alpha übernimmt die unmittelbar zu 100 % gehaltene Beta; Beteiligungsbuchwert 480.000 EUR, Beta-Bucheigenkapital 300.000 EUR.
+
+Zwei italienische OIC-Gesellschaften, gleichartige gewöhnliche Rechte, keine Barabfindung. Ausgeschlossen: 90 %, umgekehrte Verschmelzung, Schwestergesellschaften, MLBO, IFRS, grenzüberschreitende Fälle, Krise und Neugründung. Keine professionelle Validierung an einem echten Mandanten.
+
+dossier-de.md und ordinary.json für die Demonstration öffnen; wholly-owned.json für die Übung, update.json erst beim Änderungsschritt. JSON trennt Alpha/Beta-Fakten, Salden, Anteilseigner, Steuerwerte und Kalenderannahmen. Kein Ergebnis und keine Bestätigung ist vorab genehmigt.
+
+## Studio Archive
+
+Beide fiktiven Mandanten und Aufträge, autorisierte Dokumente und einen separaten Fallordner auswählen. Vera importiert die ausgewählten Belege über Studio Archive, prüft Importbelege und Bytes und zitiert Seite oder Feld. Eigentum, Rechte, Auftrag und P1-Annahmen prüfen; fehlende Tatsachen bleiben unbekannt.
+
+## P1
+
+Methode und gemeinsamen Stichtag der vorgegebenen Bewertungen besprechen: die Berechnung bewertet das Unternehmen nicht. BranchDecision und Valuation prüfen, danach ExchangeModel mit exaktem Verhältnis, neuen Aktien und Anteil jedes Eigentümers. Vorschlag, tatsächliche Entscheidung und synthetische Testbestätigung unterscheiden; keine verdeckte Rundung.
+
+BookBridge prüfen: professionell abgeschlossene Salden am gleichen Stichtag, Zuordnungen, gegenseitige Salden und Differenzen. Bei 100 % die Beteiligungsausbuchung, im gewöhnlichen Fall die Kapitalerhöhung prüfen. Differenzzuordnung und Bilanzierungspolitik anhand von Belegen wählen, ohne automatischen Goodwill. Entwurf der Eröffnungsbuchung und separates Steuerregister öffnen.
+
+Deadline mit Quellen/versionen und Daten beider Gesellschaften prüfen: Tage oder Kalendermonate, spätester relevanter Anker, Ausnahmen und nicht belegte Ereignisse. Dateikonventionen sind Übungsannahmen, kein geltendes Recht; reale Fälle benötigen aktuelle Primärquellen und Prüfung. Ein errechnetes Datum beweist keine Einreichung, Zustimmung oder Befreiung.
+
+Vera verfasst beleggebundene Abschnitte zu Auftrag, Due Diligence, Projekt, Rechten, Daten, Steuern, Umstellung, Zuständigkeiten und Folgekontrollen; Lücken und ausstehende Prüfungen bleiben sichtbar. p1-workpapers.html, Fallhistorie und lesbaren Bericht über Modelldaten exportieren und öffnen. Keine Unterschrift oder Einreichung.
+
+update.json in denselben Fall importieren. ChangeImpact und historische Bestätigungen lesen: abhängige Salden-, Überleitungs- und Dossierarbeiten erneut prüfen; unabhängiger Kalender bleibt erhalten. Abschluss und Zuordnung vor einem neuen Ergebnis klären; frühere Exporte bewahren.
+
+Jeden Betrag zu Dokument und Entscheidung zurückverfolgen. Bewertung, Bilanzzuordnung, Eröffnungssaldo, getrennte Steuern, Quellenanwendbarkeit, fehlende Belege und Zuständigkeiten prüfen. Synthetische Tests validieren diese Entscheidungen nicht an einem realen Fall.
+
+## Fallbelege, keine genehmigten Ergebnisse
+
+Salden: Soll positiv, Haben negativ. Am 30. September 2026 gewöhnliche Alpha: Bank 500.000, Kapital -60.000, Rücklagen -440.000; Beta: Aktiva 350.000, Schulden -200.000, Eigenkapital -150.000. Alice hält 60.000 Alpha-Aktien, Bruno 20.000 Beta-Aktien; Nennwert 1 EUR. Wirtschaftliche Werte 600.000/400.000 EUR sind vorgegeben, nicht von Vera geschätzt. Vorgeschlagene Bilanzzuordnung: Rücklage -110.000, zu besprechen und bestätigen. Keine gegenseitigen Salden angegeben; keine vollständige Suche durchgeführt.
+
+Bei 100 % ergänzt Alpha Beteiligung 480.000 und Finanzierung -480.000; Beta: Aktiva 500.000, Schulden -200.000, Eigenkapital -300.000. Aktivaufwertung 180.000 ist eine zu begründende Bilanzannahme, kein automatischer Goodwill. Buchwert 680.000 und Steuerbasis 500.000 bleiben getrennt. Steuerkosten der Anteilseigner, Verluste, steuergebundene Rücklagen und latente Steuerpolitik fehlen.
+
+Fiktive Anker: Projektveröffentlichung 1./2. September; Unterlagen 2. September; Beschlussregistrierung 2./3. Oktober; Jahresabschluss 31. März; Zwischenabschluss 2. Juni. Annahmen: 30 Tage Projekt/Unterlagen, 60 Gläubiger, 6 Monate Jahresabschluss, 120 Tage Zwischenabschluss. Prüfdaten: 2. Oktober und 30. September. Keine geprüfte Primärquelle, Urkunde, Einreichung oder Empfangsbestätigung vorhanden. Auftrag, Protokolle, Verträge, Personal, Streitigkeiten und vollständiges gesetzliches Projekt fehlen: Lücken erhalten. Änderung: Schulden -200.100 ohne neuen Abschluss oder Zuordnung. Lücken nicht automatisch ergänzen.

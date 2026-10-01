@@ -412,7 +412,7 @@ def build(*, require_complete: bool = True, check: bool = False) -> dict[str, An
                 "schema": "mparanza.teaching_kit.v2",
                 "product": product,
                 "workflow": workflow,
-                "revision": "2026-09-14.2",
+                "revision": definition.get("revision", "2026-09-14.2"),
                 "seconds": [45, 60, 105, 75, 45, 60],
                 "supported_languages": supported,
                 "language_basis": (
