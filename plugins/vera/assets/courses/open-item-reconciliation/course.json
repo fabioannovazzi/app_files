@@ -199,7 +199,7 @@
     {
       "path": "skills/open-item-reconciliation/SKILL.md",
       "repository_path": "plugins/vera/skills/open-item-reconciliation/SKILL.md",
-      "sha256": "88b9e2b6afc2479588dca8d02c7864ad89535ffb411597a739c5ca47bf83f388"
+      "sha256": "a90d1fed368ea75c977adb304a60f614b0b856e5f003d1bc1bd0cddf1edb18a5"
     },
     {
       "path": "vendor/modules/__init__.py",
