@@ -113,3 +113,9 @@ The ESG deployment candidate 0.1.291 retains all 43 entries and the merged Fusio
 The 0.1.288 release refresh updates the package identity only. All 42 skill entrypoints are byte-identical to the recorded 0.1.287 catalogue; the professional assessments and unresolved Swiss scope remain unchanged.
 
 The 0.1.296 valuation beta integrates the current 45-entry catalogue. Its additional inventory and source bindings do not qualify any previously unresolved Geneva function.
+
+The 0.1.303 CNC teaching release refresh changes only the package identity binding. All recorded skill entrypoints are byte-identical to 0.1.299. The dated Geneva judgments and unresolved professional scope remain unchanged; the new fictional CNC course is not Swiss professional acceptance.
+
+The 0.1.309 CNC release integrates the Patent Box course from main. All 46 recorded skill entrypoints remain byte-identical to 0.1.304; the dated Geneva judgments and unresolved Swiss scope remain unchanged.
+
+The 0.1.312 CNC release integrates the Patent Box and Adeguati assetti courses from main. All 46 recorded skill entrypoints remain byte-identical to 0.1.311; the dated Geneva judgments and unresolved Swiss scope remain unchanged.

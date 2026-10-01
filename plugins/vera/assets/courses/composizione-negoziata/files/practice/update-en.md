@@ -1,1 +1,5 @@
-SYNTHETIC UPDATE. The debtor now proposes 15 January 2027 for the same EUR 100,000 receipt. No payment evidence or professional acceptance is attached. Other case information remains as initially supplied.
+First, guided, import update-en.md: receipt moves to 15 January 2027 and the creditor refuses. Preserve the first forecast and draft the negative report. 
+
+receipt.expected_date=2027-01-15
+negotiation.outcome=no_agreement
+filing_receipts=not_supplied

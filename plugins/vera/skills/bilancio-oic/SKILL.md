@@ -1,6 +1,6 @@
 ---
 name: bilancio-oic
-description: Use when an Italian professional accounting studio asks Vera to understand spreadsheet or readable/scanned PDF accounting evidence and intelligently prepare, update, reconcile, review, validate, or export an individual OIC civil-law annual financial statement; XBRL is a final output format, not the workflow identity.
+description: Use to prepare or review an individual Italian bilancio civilistico OIC from a bilancio di verifica in CSV/XLSX or readable/scanned PDF, prior XBRL and supporting schedules. Produces reviewed mappings, prospetti, nota integrativa and validation before XBRL export. For historical ratios or comparison alone use financial-analysis. Does not sign, approve corporate accounts or deposit/file them.
 ---
 
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->

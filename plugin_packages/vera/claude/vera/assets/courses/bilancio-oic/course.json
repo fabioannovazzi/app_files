@@ -258,7 +258,7 @@
     },
     {
       "path": "skills/bilancio-oic/SKILL.md",
-      "sha256": "410459f1f01539713e566fb450bcccfa68da898bb26f3c6dc6199bebc41fd152"
+      "sha256": "d92b8d897411023ad389b34ed9af3ec28db25ed18e2eaf8ee22f52fa496e0a70"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -492,5 +492,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ebaf05a7fbd3e2f7634970b1c513e8e9809d11a5f16e4e32216fe45a17ddac59"
+  "canonical_course_sha256": "aede842ef2486e929a0bfc3082340417603d24e6b436823e0cd5d94a5ecdddbe"
 }

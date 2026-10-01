@@ -164,7 +164,7 @@
     },
     {
       "path": "skills/open-item-reconciliation/SKILL.md",
-      "sha256": "a504cf2732fd42980942889ac2ca4a8553d840fdb602bae3b52a5931325b1ad1"
+      "sha256": "82453e22b1b3caf97a326921cb28449c06317c43312fdc5d7792afcd8eb850b7"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -521,5 +521,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "a154a71fff14ea97bcbba67cca2b3c61ad442bcd5a5e2de3ca1b1287461a34e9"
+  "canonical_course_sha256": "29a62db66b32c9b916ac05da80b8b5e1d3325749e4ea7c9830cc09c747448e3f"
 }

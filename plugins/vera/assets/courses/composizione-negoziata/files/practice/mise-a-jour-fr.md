@@ -1,1 +1,5 @@
-MISE À JOUR FICTIVE. Le débiteur propose désormais le 15 janvier 2027 pour le même encaissement de 100 000 EUR. Aucune preuve de paiement ni acceptation professionnelle jointe. Les autres informations restent celles du dossier initial.
+D’abord, avec guide, importer mise-a-jour-fr.md : encaissement au 15 janvier 2027 et refus. Garder le premier forecast, préparer le rapport négatif. 
+
+receipt.expected_date=2027-01-15
+negotiation.outcome=no_agreement
+filing_receipts=not_supplied

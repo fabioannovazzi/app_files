@@ -165,7 +165,7 @@
     {
       "path": "skills/financial-analysis/SKILL.md",
       "repository_path": "plugins/vera/skills/financial-analysis/SKILL.md",
-      "sha256": "859629fe6c5d9bf48be94001b464275d5738b3c4a4069c2feb594458960f96a1"
+      "sha256": "4297e46ac0167a0c215a79f24b7cf146ff8066951181ca83400f713f0ab2c5e9"
     },
     {
       "path": "vendor/modules/__init__.py",

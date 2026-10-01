@@ -270,3 +270,47 @@ These are review attestations and fresh regression evidence, not cryptographic
 proof of a human review, native voice quality or learner understanding. Never
 generate accepted records merely to satisfy the gate. This rebuild remains
 unreleasable until the real output reviews and all required runs are complete.
+
+
+## CNC practical course · 1 October 2026
+
+The existing `vera/composizione-negoziata` entry now supplies one extended
+fictional Officina Arco CNC case in IT/EN/FR/DE/ES; it replaces the limited
+introductory outline without adding a second catalogue entry. Use the current
+Codex voice/working-chat route or the existing Cowork written route. The six
+short explanation cues are not a promise that full execution, research and
+independent practice take six minutes; the outline explicitly allows several
+sessions. Italy remains the jurisdiction in every locale. Machine fields and
+the treasury report retain their supported native labels.
+
+`inputs/composizione-negoziata/` owns the authored case, a limited financial
+balance table, six treasury tables for each of three scenarios, a public-only
+research brief, the advisor update and a distinct independent expert challenge.
+Compiled filenames have demo/guided/expert prefixes so the learner can distinguish
+the two practice table sets. Empty tables mean data not supplied, not confirmed
+absence of activity. Review the exercise net-debt definition before running the
+current financial pack; neither that measure nor the forecast is the ministerial
+test or a finding on eligibility.
+
+The advisor demonstrates intake, gaps, existing specialist execution, exact-draft
+review and the January collection delay/creditor refusal. The independent exercise
+uses a separately selected expert engagement and a February receipt outside the
+forecast horizon. A negative report with open evidence and named residual owners
+is an intended result. The learner must decide and explain; tests do not supply
+their participation or a professional's confirmation. No authenticated review,
+filing, message, feedback submission or tutorial telemetry is permitted.
+
+`tests/plugins/test_teaching_cnc_practical_execution.py` imports the actual kit,
+executes the existing net-debt pack and both treasury versions, executes research
+intake/source-inspection helpers, binds sealed artifacts into CNC, checks changed
+dependencies, preserves baseline bytes and resumes the final negative handoff.
+Research inspection in regression is deliberately `--no-fetch`: it retains a
+law gap and never certifies current law or a generated legal answer. A live lesson
+must follow `quesito-legale-fiscale` through the chosen research route, generation
+and semantic review, or keep the missing step explicit. Test-authored prose and
+financial review fixtures do not establish professional acceptance. The execution
+file is registered in the existing teaching CI command and its demo/practice
+identities are pinned in the normal release review record.
+
+Release evidence and remaining host boundaries are documented in
+`docs/cnc-practical-course-evidence.md`.

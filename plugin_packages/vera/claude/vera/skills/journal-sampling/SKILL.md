@@ -1,6 +1,6 @@
 ---
 name: journal-sampling
-description: Use when qualifying accounting journal entries from reviewed CSV or Excel sources, normalizing exact monetary rows, and generating reproducible audit samples with diagnostics.
+description: Use to extract a reproducible campione di scritture from a giornale contabile in reviewed CSV/XLSX, including supported print layouts. Qualifies the population, normalizes monetary rows and returns the sample, diagnostics and selection trail. For checking an already qualified sample against fatture XML/PDF use vouching; this step does not verify supporting documents.
 ---
 
 ## Cowork execution contract

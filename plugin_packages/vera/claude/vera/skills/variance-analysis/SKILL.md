@@ -1,6 +1,6 @@
 ---
 name: variance-analysis
-description: Use when Vera must compare Actual, Budget, Forecast, or prior-period accounting performance, calculate controlled value or price-volume-mix variances, and produce reviewable variance plots and workpapers.
+description: Use to explain scostamenti Actual versus Budget, Forecast or prior-period accounting results by account, cost centre or available dimensions. Produces reconciled value or supported price-volume-mix variances, charts and reviewable workpapers. For an integrated pack with aging, cash and customer margins use management-control-pack.
 ---
 
 ## Cowork execution contract

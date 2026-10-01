@@ -57,7 +57,7 @@ while preserving every original file byte. POSIX read-only repair must fail,
 preserve cache bytes and still pass ordinary implementation validation. Existing
 source tests retain contract-mismatch, symlink and hardlink failure checks.
 
-Vera's candidate is 0.1.310. Lucia's candidate is 0.1.74 because its shared Vera
+Vera's candidate is 0.1.317. Lucia's candidate is 0.1.74 because its shared Vera
 components use the same generated contract; its source workflows are unchanged.
 All affected Codex, ChatGPT-upload and Cowork archives are generated from source.
 Clara is checked for parity without a source or package change. Shared-service

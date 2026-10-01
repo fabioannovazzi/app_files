@@ -132,7 +132,7 @@
     },
     {
       "path": "skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "841d51e17e8c521b7285516e56dbdab08c1bf98e59e8868d4114b6e6315661d4"
+      "sha256": "00d413a11e632fde2f7eda33aa3c3b1f2c77a7a76a261224f75544ee9541bc1f"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -457,5 +457,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "3544ac27835049f88f74dd84fc6bd903044237e72f13b2952e8b469c78ec3a9d"
+  "canonical_course_sha256": "0b111c43895b869b18210f812c01f4f4c89bbf2446362fce496201c630a6f6ab"
 }
