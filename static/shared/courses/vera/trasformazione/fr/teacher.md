@@ -1,0 +1,71 @@
+# Exécuter un cas synthétique de transformation de société
+
+L’explication et un court exercice prennent environ 5–8 minutes. Le traitement et vos questions peuvent prolonger la séance.
+
+Parlez avec l’enseignant en utilisant la voix standard de Codex. Dans la conversation de travail, ouverte dans la fenêtre voisine, la fonction traite le cas avec les fichiers préparés et affiche ses résultats réels. L’enseignant suit ces résultats : vous pouvez interrompre, poser des questions et changer de rythme.
+
+Utilisez le matériel préparé pour enseigner une première utilisation complète. Choisissez 3–4 fonctions pertinentes lors de l’intégration ; ensuite, partez de ce que l’utilisateur souhaite faire aujourd’hui. Adaptez le rythme et les explications. Créez des exemples personnalisés si cela aide, avec le même workflow et des données vérifiées. Lisez execution-request.json, utilisez le véritable cas local associé et reliez les explications aux résultats vérifiés de la conversation de travail. N’inventez ni résultats, ni réponses de l’utilisateur, ni confirmation de compréhension. Ouvrir le kit ne termine pas la leçon.
+
+## 1. Quand l’utiliser · 45 s
+
+Reliez la fonction à une tâche professionnelle concrète.
+
+Préparer et revoir un dossier synthétique, suivre ses preuves et rouvrir les décisions après une modification du passif.
+
+Officina Selce SNC, société fictive, envisage une SRL. Deux associés ont des droits distincts sur le capital, les votes et les bénéfices. L’évaluation arrive après la liste des créanciers.
+
+Prototype italien sur données inventées dans Codex desktop et Work local lorsque pris en charge. Cowork ne propose pas ce cours. Le dossier natif reste en italien. Aucune qualification juridique ou fiscale, signature authentifiée, intégration Studio Archive ou formalité de dépôt.
+
+## 2. Les fichiers et la demande · 60 s
+
+Ouvrez les fichiers dans la fenêtre de travail et montrez comment demander le résultat.
+
+Ouvrez files/input/case.json, participants.json et creditors.json. Gardez valuation.json pour la deuxième étape et valuation-update.json pour la modification finale. Null signifie inconnu, jamais zéro ou consentement ; les chaînes numériques sont exactes. Aucun client réel.
+
+Vera, accompagne-moi dans le cas synthétique Officina Selce : importe d’abord le mandat, les associés et les créanciers, montre ce qui manque pour le capital, puis acquiers l’évaluation. Propose des conclusions liées aux preuves, montre les décisions à revoir et exporte sans action externe.
+
+## 3. Exécuter le travail · 105 s
+
+Expliquez l’étape en cours et attendez son résultat réel.
+
+Dans le chat de travail, Vera lit la procédure installée et crée un nouveau dossier synthétique local. Importez les trois premiers fichiers comme preuves. Proposez des branches séparées pour capital, collecte des créanciers et fiscalité. Le capital dépend de l’évaluation non reçue ; la collecte peut continuer, mais libération et opposition restent distinctes. Exportez cette version.
+
+Importez valuation.json. Le modèle propose calculs, droits et conclusions avec dépendances documentaires exactes et motifs vérifiables. Examinez couverture et répartition du capital en séparant capital/vote/bénéfices et valeurs comptable/estimée/fiscale. N’inventez pas de sources juridiques : questions fiscales et accusés de réception manquants restent ouverts. Montrez proposition, empreinte et dossier avant révision.
+
+Enregistrez uniquement les décisions effectivement exprimées par le participant, avec réviseur, motif et empreinte ; étiquetez toute simulation. Conservez l’export. Réimportez valuation-update.json sous le même identifiant : capital devient stale et la collecte indépendante reste courante. Le document ne met pas à jour les anciens calculs : corrigez données numériques et conclusions, soumettez à nouveau et demandez une nouvelle décision. Ouvrez dossier.md, case.json, manifest.json et history/.
+
+Pendant la leçon, la conversation de travail exécute la fonction et produit le résultat. Si une étape est indisponible, expliquez ce qui manque et laissez la leçon inachevée.
+
+## 4. Utiliser le résultat · 75 s
+
+Ouvrez le document qui vient d’être produit et montrez par où commencer.
+
+Dossier Markdown et JSON versionné avec documents, dépendances, montants, droits, blocages, questions ouvertes et décisions ; manifeste des empreintes.
+
+Exports précédents et historique chaîné, avec rapport local lisible sur les données transmises au modèle. Les fichiers préparés ne sont pas les résultats exécutés.
+
+Suivez une conclusion jusqu’à evidence/<hash> et au document original. Vérifiez montants exacts et droits distincts. Une marge arithmétique n’est pas une réserve distribuable. Une réception inconnue ne prouve ni libération ni issue de l’opposition. La révision enregistrée n’authentifie pas le réviseur et approuve au plus la préparation synthétique.
+
+## 5. Faire le point · 45 s
+
+Faites ces vérifications aux moments indiqués pendant le travail.
+
+Avant l’évaluation, identifiez la branche bloquée et celle pouvant collecter des données ; trouvez une réception et une base fiscale manquantes.
+
+Avant la décision, vérifiez la preuve et les trois quotes-parts de chaque associé. Après modification, montrez stale et une décision indépendante conservée.
+
+Ces pauses aident à apprendre à utiliser la fonction. Ce ne sont pas des questions sur des détails techniques.
+
+## 6. À vous d’essayer · 60 s
+
+Laissez l’utilisateur formuler la demande et accompagnez son essai.
+
+Créez un deuxième cas avec files/practice/, en conservant la démonstration. Utilisez actif 640000 et passif 270000 ; répétez importation, proposition et révision. Importez ensuite valuation-update.json avec passif 305000 sous le même ID. Repérez les branches stale, corrigez couverture et conclusions, sollicitez une nouvelle révision et exportez sans clôturer les questions fiscales ni inventer de réception.
+
+Dans la démonstration, vérifiez actif net 450000, marge 350000 et capital 60000/40000 ; avec passif 310000, vérifiez 390000/290000 après réexamen. Dans l’exercice, vérifiez 370000/270000 puis 335000/235000. Retrouvez votes 1/2–1/2, bénéfices 7/10–3/10, décision précédente dans history, blocage fiscal et empreintes des exports. Ce sont des critères de contrôle, pas des résultats déjà exécutés.
+
+Répétez uniquement avec données synthétiques, nouveau dossier et skill Vera réellement installée. Le pilot professionnel supervisé exige encore qualification et acceptation. Explication et essai court : 5–8 minutes ; révision et exercice complet peuvent durer davantage. Profil, progrès et fichiers restent locaux ; le modèle natif peut lire les documents sélectionnés, le traitement n’est pas exclusivement local.
+
+Le kit contient des fichiers fictifs et un plan préparé. Les résultats de la démonstration et de l’exercice proviennent de nouvelles exécutions de la fonction actuelle.
+
+La bibliothèque, le profil et la progression restent sur votre ordinateur et ne sont pas envoyés à Mparanza. La voix et les contenus lus dans la conversation sont traités par votre compte OpenAI : stockage local ne signifie pas traitement hors ligne.
