@@ -64,7 +64,7 @@
     },
     {
       "path": "modules/centrale-rischi-review/skills/centrale-rischi-review/SKILL.md",
-      "sha256": "9055222bbf61c4d22e46cfd3732b5e90b2d3b465666d673374468714cb1ac470"
+      "sha256": "88e68b6fb917b2a51a7a4805a5a66932f9a4c115d5f390f41bad5d674911e1ad"
     },
     {
       "path": "modules/centrale-rischi-review/vendor/modules/__init__.py",
@@ -108,7 +108,7 @@
     },
     {
       "path": "skills/centrale-rischi-review/SKILL.md",
-      "sha256": "53ec1cba2002b739702e6cfe92ba9933944bf5124fed96ddc6f81296edc61b88"
+      "sha256": "e210e54e2a296ae9d5373ba870114951608e6ced13c89a95bbc036b1924555a0"
     },
     {
       "path": "vendor/modules/__init__.py",

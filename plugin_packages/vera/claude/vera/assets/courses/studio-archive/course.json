@@ -61,7 +61,7 @@
     },
     {
       "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
-      "sha256": "b7fb92f725087e825ed75e9f5634279b315a2b23d014d362fa84d5ea8d54b19c"
+      "sha256": "8883f723b22f0828c843bb54fe0c626330db50610f77eefb444215204908c0ee"
     },
     {
       "path": "modules/studio-archive/skills/studio-archive/agents/openai.yaml",
@@ -125,7 +125,7 @@
     },
     {
       "path": "skills/studio-archive/SKILL.md",
-      "sha256": "b7fb92f725087e825ed75e9f5634279b315a2b23d014d362fa84d5ea8d54b19c"
+      "sha256": "8883f723b22f0828c843bb54fe0c626330db50610f77eefb444215204908c0ee"
     },
     {
       "path": "vendor/modules/__init__.py",

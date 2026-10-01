@@ -65,7 +65,7 @@
     },
     {
       "path": "modules/trasformazione/skills/trasformazione/SKILL.md",
-      "sha256": "c17688dcddaffbe9657699ed421c2bf005f220e6057c490f07cd6917b9fce343"
+      "sha256": "fbab5917e62f04cbd75b135a3810b4bc926c3f02e7157b2ffa422e92b1893446"
     },
     {
       "path": "scripts/check_dependencies.py",
@@ -77,7 +77,7 @@
     },
     {
       "path": "skills/trasformazione/SKILL.md",
-      "sha256": "b5684dc8ffca4f118169be9c373b73ee7e8154a6c659b9410d226ecf895b41eb"
+      "sha256": "1f68da683e96e93fbf6ae2cc79d3465919dc18af76b79fcca33c1c66d51fdac7"
     },
     {
       "path": "vendor/modules/__init__.py",

@@ -300,9 +300,14 @@ COWORK_REVIEW_SECTIONS = {
 }
 COWORK_EXECUTION_CONTRACT = """## Cowork execution contract
 
+Public workflow names select skills; component IDs select module paths.
+`financial-report-builder` uses component `report-builder`, `vouching` (historically
+called Check Entries) uses `check-entries`, and `purchase-invoice-review` uses
+`passive-invoice-audit`. These component IDs are not additional workflows.
+
 For journal-sampling, open-item-reconciliation, journal-bank-reconciliation,
-concordato-plan-review, report-builder and check-entries only, optional cache
-cleanup is available from the installed Vera root:
+concordato-plan-review, financial-report-builder and vouching only, optional cache
+cleanup uses the corresponding component ID from the installed Vera root:
 
 ```bash
 python3 modules/<module>/scripts/implementation_bootstrap.py --repair
@@ -312,6 +317,13 @@ For a standalone module, use `python3 scripts/implementation_bootstrap.py --repa
 from its root. This validates the implementation first, then removes only regular,
 single-link `__pycache__/*.pyc` files under that module's own `vendor` tree. It
 leaves directories, other files, symlinks and shared vendor trees untouched.
+This supported maintenance command is the only cache-cleanup exception to the
+prohibition on editing the installed tree by hand. It is optional: ordinary
+validation and execution tolerate incidental bytecode without removing it.
+On a read-only installation, skip cleanup. If the command reports a permission
+error, retain that error and continue the ordinary validated workflow when its
+checks pass; do not chmod, delete files manually, copy or patch the installation,
+or bypass the host's permissions to make cleanup succeed.
 If `validate_implementation_tree` ever fails with a file/directory-contract
 mismatch, do not delete or modify files inside the installed plugin tree by hand
 and do not bypass a sandbox/permission rejection to do so. Stop and report the
@@ -397,6 +409,13 @@ For owner-only/private packages copied from scratch space, reapply and verify
 private delivery.
 Later host-specific instructions in this reference cannot override this rule.
 """
+COWORK_BROWSER_AUTOMATION_DESCRIPTION = (
+    "inspect, explain or edit a supplied sanitized developer pack or capability "
+    "JSON, and run packaged local evidence/capability pipelines through the "
+    "managed Python launcher. Live browser discovery, execution and replay "
+    "validation are unavailable in this package. Do not operate authenticated "
+    "websites or claim that local pipeline checks prove live validation."
+)
 RUNTIME_TEXT_SUFFIXES = frozenset(
     {
         ".cjs",
@@ -1119,15 +1138,21 @@ def _studio_archive_cowork_skill(source: str, reference: bytes) -> str:
 def _browser_automation_cowork_skill(source: str) -> str:
     """Project live Chrome work as unavailable while preserving artifact review."""
 
+    frontmatter = _sub_required(
+        _skill_frontmatter(source),
+        r"(?m)^description: .*$",
+        f"description: Use when a user wants Vera to {COWORK_BROWSER_AUTOMATION_DESCRIPTION}",
+        label="Cowork browser-automation description",
+    )
     return (
-        f"{_skill_frontmatter(source)}\n\n"
+        f"{frontmatter}\n\n"
         "# Automazione web\n\n"
         "Live process discovery, execution, and validation require Codex Desktop, "
         "the connected Chrome extension, and its Playwright browser runtime; "
         "those capabilities are unavailable in this Cowork package. Cowork may "
         "inspect, explain, or edit a supplied sanitized developer pack or "
         "capability JSON and may run the packaged deterministic evidence or "
-        "capability pipeline when local Python is already available, but it must "
+        "capability pipeline through Vera's managed Python launcher, but it must "
         "not claim live discovery or validation. Continue with useful process "
         "scoping, developer-pack review, or capability review. Do not request "
         "credentials, substitute a video or standalone browser, or operate an "
@@ -1136,6 +1161,12 @@ def _browser_automation_cowork_skill(source: str) -> str:
 
 
 def _project_main_cowork_scope(text: str) -> str:
+    text = _sub_required(
+        text,
+        r"(?ms)^- `browser-automation`:.*?(?=^- `)",
+        f"- `browser-automation`: {COWORK_BROWSER_AUTOMATION_DESCRIPTION}\n",
+        label="Vera Cowork browser-automation route",
+    )
     text = _replace_section(
         text,
         "## Client-first workflow in Codex",
@@ -1936,7 +1967,14 @@ def _project_cowork_reference(
     relative_path: str,
 ) -> bytes:
     text = content.decode("utf-8")
-    if relative_path == "modules/previdenza-inps/references/workflow-reference.md":
+    if relative_path == "skills/vera/references/workflow-catalog.md":
+        text = _sub_required(
+            text,
+            r"(?ms)^- `browser-automation`:.*?(?=^- `)",
+            f"- `browser-automation`: {COWORK_BROWSER_AUTOMATION_DESCRIPTION}\n",
+            label="Vera Cowork browser-automation catalogue",
+        )
+    elif relative_path == "modules/previdenza-inps/references/workflow-reference.md":
         text = _project_previdenza_workflow_reference(text)
     elif relative_path == "modules/previdenza-inps/references/inps-access-channels.md":
         text = _project_previdenza_access_reference(text)
@@ -2030,6 +2068,9 @@ def project_cowork_workflow_registry(
 ) -> bytes:
     """Keep explicit host exclusions; reject mechanically missing package paths."""
     registry = json.loads(content)
+    registry["host_qualification"]["browser_automation"][
+        "requirement"
+    ] = COWORK_BROWSER_AUTOMATION_DESCRIPTION
     omitted = (
         ROOT_OMITTED_PATHS
         | COWORK_OMITTED_PATHS

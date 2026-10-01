@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/app-files-trasformazione-course/plugins/vera",
-  "version": "0.1.317",
-  "captured_at": "2026-10-01T13:23:19.700100+00:00",
-  "catalogue_fingerprint": "3538bdec8b05585e790befc8f5dc03b322aca3f93aca7c76087c9e51018ea8c7",
-  "manifest_sha256": "643efa77f8c09caae25337439497baea63bb7cb1d6f4c5aef5fca3ae73f4063c",
+  "root": "/private/tmp/app-files-vera-audit-instructions/plugins/vera",
+  "version": "0.1.321",
+  "captured_at": "2026-10-01T17:20:34.685044+00:00",
+  "catalogue_fingerprint": "405dd335c57e6b1c916f9b533e38c9679bc42a6b5c67ca7be79f2c4155847b05",
+  "manifest_sha256": "dffbd3f8ac21d5bde82d3ce5b24d78a1d1493fae95cd347372e3e3f6114896c0",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -229,7 +229,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "76e32ad938e83f582b46ab093a035d5bb2fe5f0d75e5012f5e6724d2898250a2"
+      "sha256": "c9510a0b86042d357ad2ab5a23300ff7018de5ea3a76ec27c2e4f9dbf911080b"
     },
     {
       "function_id": "vouching",
