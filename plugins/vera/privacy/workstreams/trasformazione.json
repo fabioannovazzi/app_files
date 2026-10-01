@@ -23,6 +23,14 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "synthetic-teaching",
+        "purpose": "Explain the prepared synthetic case, inspect live demo/practice outputs and actual review choices",
+        "content": "The native OpenAI teaching session may read the selected fictional course inputs, proposed findings, versioned dossiers, actual review choices and lesson profile. Course rendering, case storage and progress are local and send no Mparanza telemetry; this does not make model inference local-only. Tutorial outputs and state are not public catalogue materials. Cowork has no native teaching skill. No Studio Archive preparation or server stamping is used for this course.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -42,9 +50,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-29",
+    "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "3ab0906720ba6ba6e0a1c30ad9c8759809666cb0122061bf396c9bdb989d1efa"
+    "source_fingerprint": "fe156973ffadd47d631b780c8cc85d99848445d1f3e910f8c246e590792b293f"
   }
 }

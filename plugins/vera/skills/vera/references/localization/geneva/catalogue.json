@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/.codex/worktrees/cnc-practical-course/app_files/plugins/vera",
-  "version": "0.1.313",
-  "captured_at": "2026-10-01T11:39:50.586871+00:00",
-  "catalogue_fingerprint": "8e43ea6f1d53c43ea98d7ffc06501dba5d31881106f347d28609c6cc7d12ecaf",
-  "manifest_sha256": "0b9487996790bddef3865bff7983603ab94e8308d10c3d91e2f63d8a93cd9274",
+  "root": "/private/tmp/app-files-valuation-course/plugins/vera",
+  "version": "0.1.318",
+  "captured_at": "2026-10-01T17:20:33.156221+00:00",
+  "catalogue_fingerprint": "628794a8b8e88bf27ced08b6b95fa6e855e103a8bc97e0f872b5570786bc4984",
+  "manifest_sha256": "ffad9b619295c1988b6a31396d017d56b97eb349287aad01da3f28f1579fba67",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -44,7 +44,7 @@
     {
       "function_id": "browser-automation",
       "skill_path": "skills/browser-automation/SKILL.md",
-      "sha256": "2799b4e1049b7b7832f2a25006194892d030044d3b0c8ca1ebbaeec7d0ecdedf"
+      "sha256": "82a310fb6141d16a2e95248196bbcd6befdf30e4c5cd33af7555e784899bfabf"
     },
     {
       "function_id": "business-planning",
@@ -134,7 +134,7 @@
     {
       "function_id": "learn-with-vera",
       "skill_path": "skills/learn-with-vera/SKILL.md",
-      "sha256": "8921927e4361244093541ac4b94b2ee1aa1ff5bd0966fbdef7dc1f6b3f2cc4e5"
+      "sha256": "643580dbeb0c8dbdcc5a0ff53b01e60974179d595e96f0599aff20f424a933e7"
     },
     {
       "function_id": "legal-tax-answer-planner",
@@ -214,7 +214,7 @@
     {
       "function_id": "trasformazione",
       "skill_path": "skills/trasformazione/SKILL.md",
-      "sha256": "b36f003f163ca249f5145b6983f17695fb2391318696bd9c258ecf67a19461ca"
+      "sha256": "cea3d8b860ab9745e93afe84baf2be2c4ebb1e3fdf69dbca20f36715f351abc9"
     },
     {
       "function_id": "treasury-forecast",

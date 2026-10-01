@@ -147,9 +147,7 @@ def test_public_catalogue_links_every_language_and_contains_no_local_requests():
     directory = ROOT / "static/shared/courses"
     guides = set(directory.glob("*/*/*/course.html"))
     introductions = set(directory.glob("vera/get-started/*/course.html"))
-    expected_public_guides = (
-        216  # Adds the five Patent Box languages to valuation and CNC.
-    )
+    expected_public_guides = 221  # Includes Patent Box and transformation locales.
     assert len(guides - introductions) == expected_public_guides
     assert {path.parent.name for path in introductions} == {
         "it",

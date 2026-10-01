@@ -93,7 +93,7 @@
     },
     {
       "id": "verified-result-reading",
-      "control": "Hash-verified Word and workbook files have escaped local text/table reading views; original downloads retain exact bytes. Workbook readers disclose unavailable formula values without calculating invented values. Validated website results retain only the native hash-bound inventory of local HTML, CSS, image and font files and are served under a passive CSP sandbox that blocks scripts, forms, popups and external loads. The teacher may read these selected views in the native model context; no new hosted recipient, model call or automatic approval is introduced.",
+      "control": "Hash-verified Word and workbook files have escaped local text/table reading views; original downloads retain exact bytes. Workbook readers disclose unavailable formula values without calculating invented values. Validated website results retain only the native hash-bound inventory of local HTML, CSS, image and font files and are served under a passive CSP sandbox that blocks scripts, forms, popups and external loads. The teacher may read these selected views in the native model context; no new hosted recipient, model call or automatic approval is introduced. Trasformazione lessons use a private synthetic component folder, without Studio Archive preparation or a transition to real client files; token and source/output identity checks still apply.",
       "implemented_by": [
         "scripts/local_courses.py",
         "skills/learn-with-vera/references/prepared-courses.md"
@@ -105,7 +105,7 @@
     "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "1b1af82f919c097508d0b8677d485ac788d39ecae532d5126bed802fbd45c9d0"
+    "source_fingerprint": "0b64697c4e55c97dd880cee71df2d56c685cafe342aedfd39223b865c7d265c6"
   },
   "governed_repository_paths": [
     "static/shared/learn-with-vera/index.html",
