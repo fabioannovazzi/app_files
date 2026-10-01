@@ -3394,3 +3394,25 @@ def test_sales_plan_kit_runs_current_reviewed_assumptions(
         language=language,
         phase=phase,
     )
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+@pytest.mark.parametrize("lesson_phase", ["demo", "practice"])
+def test_assetti_kit_constructs_resumes_and_preserves_review_boundaries(
+    tmp_path, monkeypatch, record_property, language, lesson_phase
+):
+    from tests.plugins._assetti_construction_teaching import (
+        execute_construction,
+        execute_financial_lab,
+    )
+
+    execute_construction(tmp_path, monkeypatch, language, lesson_phase)
+    execute_financial_lab(tmp_path / "financial-lab", monkeypatch, language)
+    record_native_check(
+        record_property,
+        root=ROOT,
+        product="vera",
+        workflow="adeguati-assetti",
+        language=language,
+        phase=lesson_phase,
+    )
