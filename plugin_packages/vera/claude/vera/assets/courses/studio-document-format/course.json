@@ -1,0 +1,766 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "studio-document-format",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "inspect_examples_propose_preview_adopt_reuse"
+  },
+  "sources": [
+    {
+      "path": "modules/comunicazione-professionale/assets/fonts/InstrumentSans-Bold.ttf",
+      "sha256": "735badeb8b2046cee6f5e1226412ab6c29db04accbca413af03d70e991dce10d"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/fonts/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/fonts/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/fonts/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/icon.svg",
+      "sha256": "9cad267791094a6a9b20ff3a4c7e44d730bc7e05de4d40e7865931392e7803b4"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/package-labels.json",
+      "sha256": "20037aadccc71638347356ae903084da35c4a155438b1ad7808ed34cfe18d88d"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/studio-document-format/baseline-profile-de.json",
+      "sha256": "26a10c0e443a8a2f6c1abe9eef08155f3d364e3669fc01ef9195c4b40750ca18"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/studio-document-format/baseline-profile-en.json",
+      "sha256": "c1c2d3f4533c52681a5e29519cc260c722e96dfa224a9d299289bff7dc8e98a4"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/studio-document-format/baseline-profile-es.json",
+      "sha256": "a10f5d3e0ea01cd9e1578f173671e7f5608368b955238e6a23117b692393ce91"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/studio-document-format/baseline-profile-fr.json",
+      "sha256": "76a92ea58a450a5fb5a1912db449eb6477a0115018d0e46db2ef722991d1ba50"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/studio-document-format/baseline-profile-it.json",
+      "sha256": "4b9f57be78573553a69a5f9343ed7a5eca21994f0911d85c9d595c87aea011e5"
+    },
+    {
+      "path": "modules/comunicazione-professionale/requirements.txt",
+      "sha256": "21d6d3b5742482d9d57790df8cea6e1f00bff4742683b748916f5d1223b472f8"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/answer_contract.schema.json",
+      "sha256": "1167a143aea147883d9c1961f8eaebfa652ea1c1e7b381907d14869ab45774d5"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/claim_assurance.schema.json",
+      "sha256": "6f560e9c2264349ce6e1333024b54241ed6352f2f5c771550e0889506b7bc728"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/communication_intake.schema.json",
+      "sha256": "a53683440b910d297838b87d7d2cb1b9ce9a1035f52f54da6f44207913412fe6"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/creative_direction_decision.schema.json",
+      "sha256": "7c08d51b1bb5f50e67c7493237f68b42fb77bfb147e05a8697e38312e0dc70e5"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/creative_direction_handoff.schema.json",
+      "sha256": "8a58f5037fed81655a1e3477a8e310e9a56e8344de5f7fb69bc3a2eefe010483"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/creative_direction_selection_input.schema.json",
+      "sha256": "59ddeb76e13171a8a793881c7b7bbd2713d5b67c01d70f8abee3dba201ae34e2"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/editorial_assessment.schema.json",
+      "sha256": "601cfc6f56620b71fc4dff91245a1df6980ab5ba1ee4f0f397bcaa9adb151b91"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/editorial_benchmark_results.schema.json",
+      "sha256": "ea70db0707f9e498c00d36593968045aba59b2497662232a2cd9441bd6bbe830"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/history_privacy_assessment.schema.json",
+      "sha256": "d2326990b65e8105d2bffaa7f38e0f5b841134fc5818325edce8841fdb908584"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/history_pseudonymization.schema.json",
+      "sha256": "f8f6825ac060568be8b629c4e0473d2cd08d08d60d9f01e561fbc5ec960e1c18"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/model_contribution.schema.json",
+      "sha256": "95c52ca07693397b394abd7e44514f728df0f8956a23a53e7b1baba325d03b35"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/review_bundle.schema.json",
+      "sha256": "a8352cd640680073c383181f3aeeeb136fe2ec132477b94e0f04e0107bd10462"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/visual_assessment.schema.json",
+      "sha256": "10c887b04f047b4cff4866717ca7908263e2a3d153693151d415139dc961101d"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/workspace.schema.json",
+      "sha256": "7b73a414fa43f7b098142c3c8feb987366d14a0d371c4a88092a3c2004680a79"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/check_dependencies.py",
+      "sha256": "580ea4e20a04f097f3b21bd4fb8279b594b5dccda2880344aee66bbb1a1c071d"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/history_privacy.py",
+      "sha256": "1b22ced235b168743888a1bc397d30b0ce6edff93a151c3e700e9ff5300f75ee"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/initialize_workspace.py",
+      "sha256": "4beedaf22e478a26174c8a09c23e99e4be54f3c7b02516b395299205b91d97db"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/package_communications.py",
+      "sha256": "b71677ef0500fca3770bb501d5e4f2ff68a5b1ae0077a8389d81c70eb705d60b"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/prepare_creative_direction_handoff.py",
+      "sha256": "b612df7130f0fa2a4e7ff7a960b79886059f69387e91b1b978df0b3840bc7468"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/prepare_model_phase.py",
+      "sha256": "9514479d1043407f024af9e2333fbcc6a36f580d24ce7b6ee3ea0e44315e731d"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/prepare_run.py",
+      "sha256": "294f8ae28f40afa3596295e1639f54270e9b96f0104d4c0ae0a71354ff989085"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/promote_studio_profile.py",
+      "sha256": "9365c82638e49c99d658bd5b7dc0c13581be4ab73d9cb0a7ff6e1d32ebb9e0a3"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/qualify_editorial_assessor.py",
+      "sha256": "2a587789eca2e2b970c9f388048d7ea14bd009c1499055c3d9bd3167ce18bef3"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_contribution.py",
+      "sha256": "c90888296819d48bbefbd6a4b8dbcc08e8433aafca6e4931d7de417f16a3e629"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_creative_direction_decision.py",
+      "sha256": "4bffbd20a0700c483987652cb350ebd13eb214ba02a3aeaeec82029d7c5697ba"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_external_delivery.py",
+      "sha256": "3cef3f7267012d1cac0bad8f1949e3e927f851ed2d4b9db23c9a37d78dd01d43"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_history_privacy_assessment.py",
+      "sha256": "2986ccb7ab027420a1d9e5ddfec09eec4c9b540d9d0900ea694ca132157f658b"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_history_pseudonymization.py",
+      "sha256": "248a5f5baad2b95639d0a336365a6337ae9bd4fe7b1181ca33d221b0bb7871cc"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_review.py",
+      "sha256": "6b40e370d916be6ec21a93614cdf2a498dbffaadb78b2190dcabc7a6de7d13ee"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_visual_assessment.py",
+      "sha256": "d86621b311eb8bedce1414000e99289cfefbbf1123598e3a4eca1701e51e7642"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/render_visuals.py",
+      "sha256": "c07ac4376bd254bcbd249e9e3a8432e1948999cf1678c5dd5cd9233ac03a033c"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/review_document_format.py",
+      "sha256": "7b0a6aff7147e56cc79df968455fbedc6c10e39eef609bccd77494f6a7f4052f"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/studio_document_format.py",
+      "sha256": "f95ed026ce9d288b6e1a6d1a16606288428f3b126a9dfe284dd1b746d2cca826"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/validate_run.py",
+      "sha256": "93410dfa2c1c87a8d950b5421bbb00960933341ae4fa8fb88e76ff75ff5004f5"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/workflow_core.py",
+      "sha256": "e7fb34cd0b443b0fab6e4afd1cc0ccedb05d0c8dcb9e7befb157e732bede3831"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
+      "sha256": "a194fce89e2f7bd93d5b68c164d0786ada447559613acfdffc468cc6f9e3570e"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/agents/openai.yaml",
+      "sha256": "1f89631cf95b1e7954a0430a0a64725ec0c729f9b37996641ddd4ac7ec365252"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/model-contribution-contract.md",
+      "sha256": "96789db8b67bdccf822f574fdfee09a077c9a724e66a375a37439bb18d217181"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/product-thesis.md",
+      "sha256": "5d4327d32cfb67b01c43085dcab635d0c4bcd0bd4a62d131ff2d7694a041751d"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/professional-circular-pattern.md",
+      "sha256": "b6e4caece0df1f610d90e6c7f302e5014423480c41e2c6563e3c4f5d3c38761e"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/visual-system.md",
+      "sha256": "fafeb05519cf3e34a46323e66db8232b874561ac201592815d9668bdd6a1cf8f"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/workflow-method.md",
+      "sha256": "a6b1846ea5367eef0d0a0c3fe54d060b1a1418024791b2d9ac47b45124224621"
+    },
+    {
+      "path": "modules/report-builder/assets/icon.svg",
+      "sha256": "8d92698b864f88707b957d28dc6b8b28f0b33f107fde22a742110ebdf0fa2159"
+    },
+    {
+      "path": "modules/report-builder/assets/report-builder-review-widget.html",
+      "sha256": "e7422f2a42d36e3e0d183b847664b2ba03405b01a882b6bef4539ec347fa0f97"
+    },
+    {
+      "path": "modules/report-builder/assets/review-workbench-adapter.json",
+      "sha256": "7cebe7dfc9e40b80a61c9291b324e42d35c72960a9ca23753ae397813eb3f70e"
+    },
+    {
+      "path": "modules/report-builder/assets/studio-docx-format.schema.json",
+      "sha256": "0f0c7c62dbe07fc65c0e2c9094ff5c71de9230b4ce457ef75b461279421c5f96"
+    },
+    {
+      "path": "modules/report-builder/references/studio-document-format.md",
+      "sha256": "b213cad8c1a7401fc7476bd23098a26cf5f0e3903f806cfcd0c2129ead4a11e9"
+    },
+    {
+      "path": "modules/report-builder/references/workflow-reference.md",
+      "sha256": "5112d137ef68cf32357f7a586b91b20daf57caa9f295a5b120e6dcf264e99804"
+    },
+    {
+      "path": "modules/report-builder/requirements.txt",
+      "sha256": "ee15516de98a1367562d8c098d149188c759330537462385aeafa86b5682ed45"
+    },
+    {
+      "path": "modules/report-builder/scripts/apply_review_edits.py",
+      "sha256": "fcd78bf2b90f4d45c6862e4fc98b213adea97fd165bfc7028318245524ce3f6c"
+    },
+    {
+      "path": "modules/report-builder/scripts/build_report.py",
+      "sha256": "c8051a0a61eb6b12d31e282e22e8d167d741f2f42a528ac597d01feb5e469437"
+    },
+    {
+      "path": "modules/report-builder/scripts/check_dependencies.py",
+      "sha256": "96f1c32d1a7bc660b9049d217a2a24b2c31f5c5e94ab1c29bfadb480e42af89c"
+    },
+    {
+      "path": "modules/report-builder/scripts/expand_model_context.py",
+      "sha256": "572d61a889e14fec059ae37f55fb3686698c9429b65deb43b0a90223719df255"
+    },
+    {
+      "path": "modules/report-builder/scripts/implementation_bootstrap.py",
+      "sha256": "c2775488e65a70846dbd995539615b4ad8ae38be26580932a67ff50e595ac6fc"
+    },
+    {
+      "path": "modules/report-builder/scripts/implementation_contract.py",
+      "sha256": "d59c4651e56803b009d6556bc1ddad1a45565a9adcd557447610c73a83d901bc"
+    },
+    {
+      "path": "modules/report-builder/scripts/inspect_inputs.py",
+      "sha256": "fffc80cc704e3dacabe1a071d0cf7f4056f44ec182270d5146196ae95ced8126"
+    },
+    {
+      "path": "modules/report-builder/scripts/physical_output_set.py",
+      "sha256": "bbf37f759e396ff7290902cf3bb7831bd9c0eeeed7f02351df9f7ff19989328e"
+    },
+    {
+      "path": "modules/report-builder/scripts/prepared_contract.py",
+      "sha256": "4e7faf5a8e989a6acc88bef5a332b80f9e06fb2fea92c074a2257b1fadf02b12"
+    },
+    {
+      "path": "modules/report-builder/scripts/report_builder_core.py",
+      "sha256": "6f286e8f9e1f25f9353cfe94e81e8c650b3314300e314a8584ebd5e1b5185efa"
+    },
+    {
+      "path": "modules/report-builder/scripts/report_builder_integrity.py",
+      "sha256": "70c995d30984ec59d16052d83ce563462585cbc3414428d75ddc727ac4139eea"
+    },
+    {
+      "path": "modules/report-builder/scripts/report_gates.py",
+      "sha256": "e6cba14b00486bffb60af393d0c769fac01f50bbfcb8e9bad758b2ab4a4f8d0b"
+    },
+    {
+      "path": "modules/report-builder/scripts/review_numeric_measures.py",
+      "sha256": "8b30b5925b125a210c25ebf63814e611fce85b3e83da3d52bc54457cc72e77ad"
+    },
+    {
+      "path": "modules/report-builder/scripts/review_session.py",
+      "sha256": "b6b8065c8fac0fd2208f68fb7cfdfb14a8d9ddda43b71d3dfc40bc3bcbb7b356"
+    },
+    {
+      "path": "modules/report-builder/scripts/review_successor.py",
+      "sha256": "97617a6f695429d86c0163bf63bd426b8f786662eca74858458aee0605308135"
+    },
+    {
+      "path": "modules/report-builder/scripts/seal_review_integrity.py",
+      "sha256": "1fc828a48a267ed81c940c6adc6dd86720b84fad06eddaf63dd39abfe70886ad"
+    },
+    {
+      "path": "modules/report-builder/scripts/studio_formatting.py",
+      "sha256": "fb239ee1c46f103146220accfaad40c1bc7190cb90a48b8a7d7574cae6f3ebb3"
+    },
+    {
+      "path": "modules/report-builder/scripts/validate_review_integrity.py",
+      "sha256": "c4632f361e2fda6be0e66e3242a8093a5e43696730a9cc51ea1c41d0eea60c39"
+    },
+    {
+      "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
+      "sha256": "e4b915e8e64e0071eb9aca1414273f305b4d0876c3a4e76e74d205f1c504dff5"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "089670445e91974b68e9eca35017948a8bac2d07e7e05dba29be05b32fb76e93"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "modules/studio-archive/assets/icon.svg",
+      "sha256": "9af9d82ba0869b79fca8ba154b1efe2eaa5970c2d3d589a588c987cf2952d7a4"
+    },
+    {
+      "path": "modules/studio-archive/requirements.txt",
+      "sha256": "e1410b9553859a73d5c30af448a442751c1599c66f84e2a72574111f1a4b0b94"
+    },
+    {
+      "path": "modules/studio-archive/scripts/archive_core.py",
+      "sha256": "ffe3b81746865ffe9011d3bd765495aa9272787e166f7f85459637eaba9ec33e"
+    },
+    {
+      "path": "modules/studio-archive/scripts/build_model_data_report.py",
+      "sha256": "57eebdae3bb98531ee030dda2fca05de45ce84331ac4f8fdede6a3c3b06ea409"
+    },
+    {
+      "path": "modules/studio-archive/scripts/check_dependencies.py",
+      "sha256": "9af5b8c81cdd7c1811d2a2d39c0d8db19c51d098cde5f4bb808df1af6ee18ea4"
+    },
+    {
+      "path": "modules/studio-archive/scripts/client_ledger.py",
+      "sha256": "cebe03cf64d188cbab8be95ce083227663cfc3b6f41a802fa7f88c63f449bf9e"
+    },
+    {
+      "path": "modules/studio-archive/scripts/google_drive.py",
+      "sha256": "7ea637902377f41bbc785f0d2224246bba69f7f5eb67526120ccbd9e7ed5e2e5"
+    },
+    {
+      "path": "modules/studio-archive/scripts/studio_archive.py",
+      "sha256": "eabd25d050c726a55d8975fa626ac8ceab265788bbb891fdc516488a19a34089"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/model-data-report-contract.md",
+      "sha256": "5f197764fb302393d549f49b16d6ce7301291356208f31ac1f9affcc9216c03c"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/model_data_report.py",
+      "sha256": "54fcde02508b195250c5a4c58758e10f796a63a32448115de64fccbce8b4022c"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "089670445e91974b68e9eca35017948a8bac2d07e7e05dba29be05b32fb76e93"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    },
+    {
+      "path": "scripts/studio_document_format.py",
+      "sha256": "6925c6bbc8b10708a4c4a7fd65593311f5ecbbaca22828654e3d7a3509cea8f6"
+    },
+    {
+      "path": "skills/studio-document-format/SKILL.md",
+      "sha256": "5932110dc94c75d71ae449d652aa60177967a085aa0fb7518fe836f953eb240d"
+    },
+    {
+      "path": "skills/studio-document-format/references/procedure.md",
+      "sha256": "7278b1a2176fad9c80613694ffc059c25f054254d741cb27cf18585caaeeff7f"
+    },
+    {
+      "path": "skills/studio-document-format/references/written-course.md",
+      "sha256": "34813c1851564a4fd4e163999d0c9096c53ae224604ddf7a8f857cb3495a44bf"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "089670445e91974b68e9eca35017948a8bac2d07e7e05dba29be05b32fb76e93"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/demo-it.json",
+      "sha256": "1de3d6ec872245f58ea48c531e0473eee017281fd2f970c85ce8306bbf03ff72",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/demo-en.json",
+      "sha256": "352b63fc6118373d0468751dced89ba3da1a88ef0f3512ed1a09e4e4826aa1d0",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/demo-fr.json",
+      "sha256": "9e7b9867c6e3f327d1f1478c78113e83dbddd255d242dbe8d593fe0884ac32b6",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/demo-de.json",
+      "sha256": "922afb2eb1090bd8215c3e3cc0476a4d74c86a8534ef79719bea20c8a78d29be",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/demo-es.json",
+      "sha256": "4cd3acd907b267923c5cfddbe5992e5f76147d185dd0762e7f0034d8762b6728",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/practice-it.json",
+      "sha256": "6eb5ad43731871b7029002a20b0b96cb07f4c6ad0ce18c9057b2dc8d921559c4",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-en.json",
+      "sha256": "7adc670d6f80e3fb263870b3b33ff91cf7dabc30d5bc0df4341f4ccd27686001",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-fr.json",
+      "sha256": "6ae699dcb037824ced874e467f214108e6ccb203eafce7476cf173187ec6c7cb",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-de.json",
+      "sha256": "3643ed219c1d8ee0a82fe5a3850320321e7b9d7efb70a0a76f6a96fabba95712",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-es.json",
+      "sha256": "8ac363ad41fae90a364efad62de9d29c235d0be10647a33ce8b936a1e03517d7",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Insegna a Vera il formato dei documenti dello studio",
+      "goal": "Impara a trasformare esempi selezionati in uno standard Word verificato e riutilizzabile.",
+      "scenario": "Lo studio fittizio Riva vuole font, margini, intestazione, tabelle e piè di pagina coerenti nei report.",
+      "scope": "Formato Word per il generatore di report finanziari. È una configurazione privata, non addestramento del modello o copia esatta di un modello Word. Gli altri generatori restano fuori da questa prima integrazione.",
+      "inputs": "Apri demo-it.json. Vera genera localmente un vero esempio Word fittizio e un CSV contabile. Scegli lo spazio dello studio e verifica l’esempio; non servono documenti di clienti.",
+      "request": "Vera, impara il formato dei report di questo studio fittizio. Mostrami cosa hai osservato, proponi le impostazioni mancanti, fammi verificare anteprime brevi e lunghe, poi salva la versione che approvo e usala in un report finanziario.",
+      "steps": [
+        "Genera e ispeziona l’esempio reale. Distingui impostazioni osservate, proposte e formati ereditati incerti. Scegli una modifica con parole comuni.",
+        "Genera le anteprime Word breve e lunga. Apri le pagine effettive, controlla font, prosecuzione delle tabelle e piè di pagina, poi chiedi correzioni o adotta esplicitamente la versione esatta.",
+        "Dopo l’approvazione, produci dal CSV un piccolo report finanziario Word attraverso la procedura corrente e un vero incarico cliente sintetico. Verifica l’identità dello studio e risali alla fonte di un importo invariato."
+      ],
+      "deliverables": [
+        "Evidenze del formato dell’esempio selezionato e proposta completa.",
+        "Anteprime Word sintetiche breve e lunga, standard approvato con versione e report finanziario che lo usa."
+      ],
+      "review": "Controlla tutte le pagine, le sostituzioni dei font, il logo se scelto, le date, la visualizzazione dei numeri e l’identità salvata. Cifre e conclusioni richiedono la normale revisione del report. Il codice non dimostra che tu abbia visto o accettato il documento.",
+      "checkpoints": [
+        "Spiega quale impostazione viene dall’esempio e quale hai scelto tu.",
+        "Prima di salvare, apri entrambe le anteprime e approva esplicitamente o chiedi una correzione."
+      ],
+      "practice": "Riparti autonomamente da practice-it.json per lo studio fittizio Selva con importi diversi. Scegli una modifica, verifica e adotta il suo standard, poi genera il report. Modifica ancora un’impostazione, verifica nuove anteprime e la conservazione della versione precedente. Controlla che lo studio Riva non sia cambiato.",
+      "success": "Sai fornire esempi, correggere la proposta, verificare e adottare una versione esatta, ritrovarla, riusarla e modificarla senza cambiare altri studi o dati finanziari.",
+      "repeat": "Scegli lo spazio privato autorizzato dello studio e gli esempi esatti. Chiedi a Vera di imparare o modificare il formato Word, verifica le due anteprime e adotta una versione. Poi richiedi un report finanziario supportato per quello studio scelto esplicitamente."
+    },
+    "en": {
+      "title": "Teach Vera your studio’s document format",
+      "goal": "Learn to turn selected examples into a reviewed, reusable Word report standard.",
+      "scenario": "Fictional Studio Riva wants its reports to use a consistent font, margins, header, tables and footer.",
+      "scope": "Word formatting for the financial report builder. This is private configuration, not model training or exact template cloning. Other document generators remain outside this first integration.",
+      "inputs": "Open demo-en.json. Vera uses it to generate a real fictional Word example and accounting CSV locally. Select the studio workspace and review the example; no client documents are needed.",
+      "request": "Vera, learn this fictional studio’s report format. Show what you observed, propose the missing settings, let me review short and long previews, then save the version I approve and use it in a financial report.",
+      "steps": [
+        "Generate and inspect the real example. Distinguish observed settings from proposals and uncertain inherited styling. Choose one change in ordinary language.",
+        "Generate the short and long Word previews. Open their actual pages, check fonts, table continuation and footer, then decide whether to correct or explicitly adopt the exact version.",
+        "After adoption, produce a small financial Word report from the CSV through the current report procedure and its real synthetic client run. Check the saved studio identity and trace an unchanged amount to its source."
+      ],
+      "deliverables": [
+        "Selected-example formatting evidence and a complete proposal.",
+        "Short and long synthetic Word previews, a versioned approved standard and a financial report using it."
+      ],
+      "review": "Review all preview pages, substitutions, logo if selected, dates, number display and the saved studio identity. Figures and conclusions remain subject to the report’s normal review. No script proves that you saw or accepted the document.",
+      "checkpoints": [
+        "Explain which setting came from the example and which you chose.",
+        "Before saving, open both previews and explicitly approve or request a correction."
+      ],
+      "practice": "Start independently with practice-en.json for fictional Studio Selva and different amounts. Choose a change, review and adopt its own standard, then generate its report. Revise one setting once more, review fresh previews and verify the previous version remains archived. Check that Studio Riva is unchanged.",
+      "success": "You can supply examples, correct the proposal, review and adopt an exact version, find it again, reuse it and revise it without changing another studio or financial data.",
+      "repeat": "Select your authorized private studio workspace and exact examples. Ask Vera to learn or revise its Word format, review both previews and adopt a version. Later request a supported financial report using that explicitly selected studio."
+    },
+    "fr": {
+      "title": "Enseigner à Vera le format des documents du cabinet",
+      "goal": "Transformer des exemples choisis en un standard Word vérifié et réutilisable.",
+      "scenario": "Le cabinet fictif Riva souhaite des polices, marges, en-têtes, tableaux et pieds de page cohérents.",
+      "scope": "Format Word pour le générateur de rapports financiers. Configuration privée, sans entraînement du modèle ni reproduction exacte d’un modèle Word. Les autres générateurs restent hors de cette première intégration.",
+      "inputs": "Ouvrez demo-fr.json. Vera génère localement un véritable exemple Word fictif et un CSV comptable. Choisissez l’espace du cabinet et vérifiez l’exemple ; aucun document client n’est nécessaire.",
+      "request": "Vera, apprends le format des rapports de ce cabinet fictif. Montre les observations et les propositions, laisse-moi examiner les aperçus court et long, puis enregistre la version que j’approuve et utilise-la dans un rapport financier.",
+      "steps": [
+        "Générez et inspectez l’exemple. Distinguez observations, propositions et styles hérités incertains. Choisissez une modification en langage courant.",
+        "Générez les aperçus Word court et long. Ouvrez les pages réelles, contrôlez polices, suite des tableaux et pied de page, puis demandez une correction ou adoptez explicitement la version exacte.",
+        "Après adoption, produisez un petit rapport financier Word à partir du CSV avec la procédure actuelle et un véritable dossier client synthétique. Vérifiez l’identité du cabinet et retrouvez la source d’un montant inchangé."
+      ],
+      "deliverables": [
+        "Éléments de format de l’exemple choisi et proposition complète.",
+        "Aperçus Word synthétiques court et long, standard approuvé versionné et rapport financier utilisant ce standard."
+      ],
+      "review": "Vérifiez toutes les pages, substitutions de polices, logo choisi, dates, affichage des nombres et identité enregistrée. Les chiffres et conclusions nécessitent la révision habituelle du rapport. Le code ne prouve pas que vous avez vu ou accepté le document.",
+      "checkpoints": [
+        "Expliquez quel réglage provient de l’exemple et lequel vous avez choisi.",
+        "Avant l’enregistrement, ouvrez les deux aperçus et approuvez explicitement ou demandez une correction."
+      ],
+      "practice": "Recommencez avec practice-fr.json pour le cabinet fictif Selva et de nouveaux montants. Choisissez une modification, vérifiez et adoptez son standard, puis générez son rapport. Révisez ensuite un réglage, examinez de nouveaux aperçus et vérifiez la conservation de la version précédente. Le cabinet Riva doit rester inchangé.",
+      "success": "Vous savez fournir des exemples, corriger la proposition, adopter une version exacte, la retrouver, la réutiliser et la réviser sans modifier un autre cabinet ou les données financières.",
+      "repeat": "Choisissez l’espace privé autorisé du cabinet et les exemples précis. Demandez à Vera d’apprendre ou de réviser le format Word, vérifiez les deux aperçus et adoptez une version. Demandez ensuite un rapport financier compatible pour ce cabinet explicitement choisi."
+    },
+    "de": {
+      "title": "Vera das Dokumentformat der Kanzlei beibringen",
+      "goal": "Aus ausgewählten Beispielen einen geprüften, wiederverwendbaren Word-Standard erstellen.",
+      "scenario": "Die fiktive Kanzlei Riva möchte einheitliche Schriftarten, Ränder, Kopfzeilen, Tabellen und Fußzeilen.",
+      "scope": "Word-Format für den Finanzberichtsgenerator. Private Konfiguration, kein Modelltraining und keine genaue Kopie einer Word-Vorlage. Andere Generatoren gehören nicht zu dieser ersten Integration.",
+      "inputs": "Öffnen Sie demo-de.json. Vera erzeugt daraus lokal ein echtes fiktives Word-Beispiel und eine Buchhaltungs-CSV. Wählen Sie den Kanzleiarbeitsbereich und prüfen Sie das Beispiel; Mandantenunterlagen sind nicht erforderlich.",
+      "request": "Vera, lerne das Berichtsformat dieser fiktiven Kanzlei. Zeige Beobachtungen und Vorschläge, lass mich kurze und lange Vorschauen prüfen und speichere die von mir genehmigte Version für einen Finanzbericht.",
+      "steps": [
+        "Erzeugen und prüfen Sie das Beispiel. Unterscheiden Sie beobachtete Einstellungen, Vorschläge und unklare vererbte Formatierungen. Wählen Sie eine Änderung in Alltagssprache.",
+        "Erzeugen Sie kurze und lange Word-Vorschauen. Öffnen Sie die tatsächlichen Seiten, prüfen Sie Schriften, Tabellenfortsetzung und Fußzeile und verlangen Sie Korrekturen oder übernehmen Sie ausdrücklich die genaue Version.",
+        "Erstellen Sie danach aus der CSV einen kleinen Word-Finanzbericht mit dem aktuellen Verfahren und einem echten synthetischen Mandantenauftrag. Prüfen Sie die Kanzleiidentität und die Quelle eines unveränderten Betrags."
+      ],
+      "deliverables": [
+        "Formatbelege des ausgewählten Beispiels und vollständiger Vorschlag.",
+        "Kurze und lange synthetische Word-Vorschauen, versionierter genehmigter Standard und damit erstellter Finanzbericht."
+      ],
+      "review": "Prüfen Sie alle Seiten, Schriftart-Ersetzungen, das gewählte Logo, Datums- und Zahlenanzeige sowie die gespeicherte Identität. Zahlen und Schlussfolgerungen benötigen die übliche Berichtsprüfung. Der Code beweist nicht, dass Sie das Dokument gesehen oder angenommen haben.",
+      "checkpoints": [
+        "Erklären Sie, welche Einstellung aus dem Beispiel stammt und welche Sie gewählt haben.",
+        "Öffnen Sie vor dem Speichern beide Vorschauen und genehmigen Sie ausdrücklich oder verlangen Sie eine Korrektur."
+      ],
+      "practice": "Beginnen Sie unabhängig mit practice-de.json für die fiktive Kanzlei Selva und andere Beträge. Wählen Sie eine Änderung, prüfen und übernehmen Sie ihren Standard und erstellen Sie ihren Bericht. Ändern Sie anschließend eine Einstellung, prüfen Sie neue Vorschauen und das Archiv der vorherigen Version. Kanzlei Riva bleibt unverändert.",
+      "success": "Sie können Beispiele liefern, Vorschläge korrigieren, eine genaue Version übernehmen, wiederfinden, verwenden und ändern, ohne andere Kanzleien oder Finanzdaten zu verändern.",
+      "repeat": "Wählen Sie den autorisierten privaten Kanzleiarbeitsbereich und genaue Beispiele. Lassen Sie Vera das Word-Format lernen oder ändern, prüfen Sie beide Vorschauen und übernehmen Sie eine Version. Fordern Sie danach einen unterstützten Finanzbericht für die ausdrücklich ausgewählte Kanzlei an."
+    },
+    "es": {
+      "title": "Enseñar a Vera el formato de los documentos del despacho",
+      "goal": "Convertir ejemplos seleccionados en un estándar Word revisado y reutilizable.",
+      "scenario": "El despacho ficticio Riva quiere fuentes, márgenes, encabezados, tablas y pies de página coherentes.",
+      "scope": "Formato Word para el generador de informes financieros. Configuración privada, sin entrenar el modelo ni copiar exactamente una plantilla Word. Otros generadores quedan fuera de esta primera integración.",
+      "inputs": "Abre demo-es.json. Vera genera localmente un ejemplo Word ficticio real y un CSV contable. Elige el espacio del despacho y revisa el ejemplo; no hacen falta documentos de clientes.",
+      "request": "Vera, aprende el formato de los informes de este despacho ficticio. Muéstrame las observaciones y propuestas, déjame revisar vistas corta y larga, guarda la versión que apruebo y úsala en un informe financiero.",
+      "steps": [
+        "Genera e inspecciona el ejemplo. Distingue ajustes observados, propuestas y estilos heredados inciertos. Elige un cambio con palabras corrientes.",
+        "Genera las vistas Word corta y larga. Abre las páginas reales, comprueba fuentes, continuación de tablas y pie de página; pide correcciones o adopta explícitamente la versión exacta.",
+        "Tras la aprobación, produce desde el CSV un pequeño informe financiero Word con el procedimiento actual y un encargo de cliente sintético real. Comprueba la identidad del despacho y la fuente de un importe sin cambios."
+      ],
+      "deliverables": [
+        "Evidencias del formato del ejemplo elegido y propuesta completa.",
+        "Vistas Word sintéticas corta y larga, estándar aprobado con versión e informe financiero que lo utiliza."
+      ],
+      "review": "Revisa todas las páginas, sustituciones de fuentes, logo seleccionado, fechas, presentación numérica e identidad guardada. Cifras y conclusiones necesitan la revisión habitual del informe. El código no demuestra que hayas visto o aceptado el documento.",
+      "checkpoints": [
+        "Explica qué ajuste procede del ejemplo y cuál elegiste tú.",
+        "Antes de guardar, abre ambas vistas y aprueba explícitamente o pide una corrección."
+      ],
+      "practice": "Empieza de forma independiente con practice-es.json para el despacho ficticio Selva y otros importes. Elige un cambio, revisa y adopta su estándar y genera su informe. Modifica después un ajuste, revisa nuevas vistas y comprueba que la versión anterior permanece archivada. El despacho Riva debe seguir igual.",
+      "success": "Sabes aportar ejemplos, corregir propuestas, adoptar una versión exacta, encontrarla, reutilizarla y revisarla sin cambiar otros despachos ni datos financieros.",
+      "repeat": "Elige el espacio privado autorizado del despacho y los ejemplos exactos. Pide a Vera que aprenda o revise su formato Word, revisa ambas vistas y adopta una versión. Después solicita un informe financiero compatible para ese despacho elegido explícitamente."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "314b07c315e2ec80b4ec0b56fb02a5a588a985ac4f65b68fec7ce10ddfef1a35"
+}

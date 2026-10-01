@@ -849,7 +849,12 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
         == (
             set(re.findall(r"^- `([^`]+)`:", catalog, re.MULTILINE))
             - _catalog_workflow_names(
-                catalog, "Learning and discovery", "Professional workflows"
+                catalog, "Learning and discovery", "Development preview"
+            )
+            - _catalog_workflow_names(
+                catalog,
+                "Synthetic development prototypes",
+                "Subordinate intake workflows",
             )
             - _catalog_workflow_names(
                 catalog,

@@ -44,7 +44,7 @@
   "security_controls": [
     {
       "id": "local-state-only",
-      "control": "The stdlib helper retains a confirmed work/preferences summary, language, thread IDs, lesson evidence hashes and optional feedback only in the OS user local onboarding directory. It stores no audio and implements no network transport or hosted interview. The native OpenAI host sees the conversation and the local summaries/results it reads, under the ordinary OpenAI model-processing boundary. This also applies to local ChatGPT Work; the current register calls that OpenAI account boundary openai-codex, and does not certify cloud access to local files. Repeated teaching reads the same confirmed profile and saves each session separately, with a local example collection derived from those checkpoints. The profile is not copied into a hosted teaching service. A specifically requested first course can create its local session and native chat pair without a profile interview; the profile remains unset, and no introduction or understanding is marked complete. Existing introduction records are preserved. The optional Get started with Vera introduction reuses a single supported course and its separate practice; a short resume note stays beside the lesson outputs. It does not reset or complete the separate multi-course programme or introduce a model API, hosted interview or feedback recipient.",
+      "control": "The stdlib helper retains a confirmed work/preferences summary, language, thread IDs, lesson evidence hashes and optional feedback only in the OS user local onboarding directory. It stores no audio and implements no network transport or hosted interview. The native OpenAI host sees the conversation and the local summaries/results it reads, under the ordinary OpenAI model-processing boundary. This also applies to local ChatGPT Work; the current register calls that OpenAI account boundary openai-codex, and does not certify cloud access to local files. Repeated teaching reads the same confirmed profile and saves each session separately, with a local example collection derived from those checkpoints. The profile is not copied into a hosted teaching service. A specifically requested first course can create its local session and native chat pair without a profile interview; the profile remains unset, and no introduction or understanding is marked complete. Existing introduction records are preserved. The optional Get started with Vera introduction reuses a single supported course and its separate practice; a short resume note stays beside the lesson outputs. It does not reset or complete the separate multi-course programme or introduce a model API, hosted interview or feedback recipient. The Patent Box kit supplies fictional software evidence and separate demo/practice ledgers. Rendering writes no approval or calculated result; actual selected files run through the same tutorial ledger. Historical synthetic rules and synthetic review cannot authorize real-client calculations; learner participation and understanding remain unconfirmed by fixture runs.",
       "implemented_by": [
         "scripts/local_onboarding.py",
         "skills/vera/references/local-onboarding.md",
@@ -93,7 +93,7 @@
     },
     {
       "id": "verified-result-reading",
-      "control": "Hash-verified Word and workbook files have escaped local text/table reading views; original downloads retain exact bytes. Workbook readers disclose unavailable formula values without calculating invented values. Validated website results retain only the native hash-bound inventory of local HTML, CSS, image and font files and are served under a passive CSP sandbox that blocks scripts, forms, popups and external loads. The teacher may read these selected views in the native model context; no new hosted recipient, model call or automatic approval is introduced.",
+      "control": "Hash-verified Word and workbook files have escaped local text/table reading views; original downloads retain exact bytes. Workbook readers disclose unavailable formula values without calculating invented values. Validated website results retain only the native hash-bound inventory of local HTML, CSS, image and font files and are served under a passive CSP sandbox that blocks scripts, forms, popups and external loads. The teacher may read these selected views in the native model context; no new hosted recipient, model call or automatic approval is introduced. Trasformazione lessons use a private synthetic component folder, without Studio Archive preparation or a transition to real client files; token and source/output identity checks still apply.",
       "implemented_by": [
         "scripts/local_courses.py",
         "skills/learn-with-vera/references/prepared-courses.md"
@@ -102,10 +102,10 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-30",
+    "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "dfbebd8836d905813fa3114c10269dcdf8db2dd572eb918a8d48ae519701da02"
+    "source_fingerprint": "4b96d6aa4328e3200253faf324e2b875019ffb5ce9c3966a16c3f192249f58fa"
   },
   "governed_repository_paths": [
     "static/shared/learn-with-vera/index.html",

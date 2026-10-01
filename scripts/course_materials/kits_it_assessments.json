@@ -25,28 +25,29 @@
     "repeat": "Chiedi a Vera una revisione per un cliente e un motivo preciso, fornendo i documenti e l’eventuale valutazione precedente. Esamina le evidenze e registra le decisioni professionali effettive."
   },
   "vera/adeguati-assetti": {
-    "title": "Valutare gli assetti aziendali con Vera",
-    "goal": "Imparare a richiedere una valutazione degli assetti, fornire evidenze del loro funzionamento e utilizzare rilievi e azioni proposte.",
-    "scenario": "Officina Arco vuole rivedere responsabilità, chiusura mensile e informazioni sugli incassi. Abbiamo il profilo aziendale, una procedura e un esempio reale nel caso fittizio.",
-    "scope": "Una prima valutazione mirata degli assetti organizzativi, amministrativi e contabili. Il perimetro è quello descritto nei documenti; non è una certificazione dell’intera azienda.",
-    "inputs": "Apri company-it.md, procedure-it.md e operation-it.md. Spiega a Vera impresa, incarico e data: 31 marzo 2026. Fornisci esempi di lavoro svolto insieme alle procedure scritte.",
-    "request": "Vera, valuta gli assetti di Officina Arco per responsabilità, chiusura mensile e gestione delle informazioni sugli incassi. Usa questi documenti e mostrami valutazione, limiti e azioni da discutere.",
+    "title": "Valutare e costruire gli assetti con Vera",
+    "goal": "Dalla valutazione alle procedure: raccogliere risposte, progettare un controllo proporzionato, rivedere il manuale e verificare separatamente adozione e funzionamento.",
+    "scenario": "Officina Arco, impresa italiana interamente fittizia con dodici addetti, vuole migliorare la chiusura mensile. Il ciclo di febbraio è documentato; quello di marzo arriva in ritardo durante l’assenza di Sara. Il corso continua in sessioni riprendibili: l’introduzione richiede circa 6–8 minuti, la costruzione e il laboratorio finanziario richiedono ulteriore tempo.",
+    "scope": "Valutazione mirata e costruzione sperimentale nello stesso dossier. Il metodo STUDIO-AA-0.1 e la scala 0–4 non sono una certificazione UNI né un verdetto di adeguatezza. Le prove sintetiche non costituiscono un pilota professionale su un’impresa reale.",
+    "inputs": "Apri company-it.md, procedure-it.md e operation-it.md per la valutazione al 31 marzo 2026; poi construction-it.md e construction-facts.json per la visita. Sono dichiarazioni fittizie e materiale didattico, non decisioni approvate né risultati. Leggi financial-lab-it.md per il laboratorio separato.",
+    "request": "Vera, valuta gli assetti di Officina Arco usando questi documenti. Poi aiutami a costruire un controllo proporzionato per la chiusura mensile nello stesso dossier, mantenendo ignoti, proposte, revisioni, adozione e prove di funzionamento distinti.",
     "steps": [
-      "Nel thread di lavoro Vera ricostruisce il funzionamento dell’impresa e propone il perimetro. La voce spiega perché una procedura e un esempio della sua applicazione sono entrambi utili.",
-      "Vera confronta responsabilità, scadenze, consegne e decisioni, verifica le fonti professionali pertinenti e prepara rilievi proporzionati. La voce segue le evidenze effettive e le domande che possono cambiare il giudizio.",
-      "Apri il memo prodotto. Leggi prima la valutazione complessiva, poi un rilievo, la sua fonte e l’azione collegata. Distingui chi e quando sono proposti da impegni già accettati."
+      "Nel thread di lavoro esegui la valutazione corrente, apri il memo e collega un rilievo alla fonte e all’azione. Avvia la costruzione nello stesso incarico; conserva il record di valutazione senza convertirne la consegna in un’approvazione.",
+      "Segui construction-it.md: visita guidata con una domanda contestuale per volta; conserva risposta originale, autore, data e sintesi separata. Apri il modulo HTML offline, esporta Markdown prima di chiudere e reimporta gli originali con ricevuta. Riprendi dallo stesso punto; allegati mancanti e risposte ignote restano visibili.",
+      "Qualifica le evidenze e mostra base, eventuale scelta professionale motivata e obiettivo. Collega evidenza → rischio/rilievo → controllo → azione. Progetta un controllo e un registro, poi compila e apri il manuale Word/PDF/Markdown e i CSV. Prosegui con riesame, adozione, cicli e laboratorio finanziario in sessioni distinte, senza inventare approvazioni."
     ],
     "deliverables": [
-      "Memo con valutazione motivata, osservazioni, rilievi e piano di miglioramento.",
-      "Record collegato alle fonti che consente un riesame successivo e conserva le decisioni effettivamente espresse."
+      "Memo e record di valutazione con fonti, limiti e azioni; originali della visita e snapshot riprendibili con storia delle versioni.",
+      "Manuale operativo in Word, PDF, Markdown e JSON, registri CSV modificabili e manifest di hash; revisione professionale, adozione e riesame operativo hanno stati separati.",
+      "Nel laboratorio: mapping Business Plan/Budget/Forecast riesaminati e versionati, osservazioni di indicatori con formula e popolazione congelate; nessun collegamento finanziario automatico non qualificato."
     ],
-    "review": "Controlla la corrispondenza tra giudizio e prove, il perimetro, le aree non esaminate e la proporzione delle azioni. Un documento scritto o un ciclo riuscito non prova continuità; una lacuna documentale non dimostra da sola che il processo non funzioni.",
+    "review": "Apri i file realmente prodotti, compresi Word e PDF. Non noto non significa zero; dichiarato non significa verificato. Non registrare revisioni, rettifiche o adozione senza istruzione esplicita del partecipante competente. Un manuale, una firma dichiarata o un singolo ciclo non provano efficacia continuativa. I titoli fissi degli export costruzione sono attualmente in italiano; la spiegazione segue la lingua della lezione.",
     "checkpoints": [
-      "Prima dell’analisi, identifica il processo e un esempio di funzionamento disponibile.",
-      "Nel memo, collega un’azione al rilievo e alla fonte che la motivano."
+      "Prima del giudizio, indica una risposta originale, un allegato mancante e una fonte datata: quale informazione potrebbe cambiare il giudizio?",
+      "Nel manuale, segui la catena evidenza–rilievo–controllo–azione e distingue bozza, revisione e adozione. Dopo nuove evidenze, mostra la decisione da riesaminare."
     ],
-    "practice": "Aggiungi update-it.md nello stesso dossier e chiedi il riesame al 30 aprile. Vera collega il record appena prodotto, rivaluta ogni azione precedente e conserva la prima versione. Spiega come le nuove evidenze cambiano il giudizio.",
-    "success": "Sai fornire documenti utili, richiedere la valutazione, usare il piano di azioni e chiedere un riesame basato su nuove evidenze.",
-    "repeat": "Descrivi impresa, finalità e perimetro della valutazione. Dai a Vera procedure, esempi operativi e precedenti pertinenti. Rivedi conclusioni e azioni prima di concordarle con l’impresa."
+    "practice": "In una prova distinta conserva il risultato iniziale, aggiungi update-it.md e construction-update-it.md nello stesso dossier e riesamina al 30 aprile. Riprendi lo snapshot e le fonti importate; verifica le scadenze effettive, rivedi ogni azione, modifica il controllo e confronta il vecchio manuale da riesaminare con la nuova bozza. Chiedi al partecipante una richiesta e una decisione reali: non simularne la partecipazione.",
+    "success": "Sai ripetere valutazione, visita e progettazione; seguire fonti e versioni; distinguere revisione, adozione ed esecuzione; spiegare perché un dato mancante, un export e un KPI non certificano gli assetti.",
+    "repeat": "Riparti da impresa, finalità, perimetro ed evidenze effettive. Usa lo stesso dossier e nuove versioni senza riscrivere la storia. Per un’impresa reale servono giudizio professionale, decisioni aziendali e un pilota operativo supervisionato. Quali dati arrivano al modello: conversazione, originali restituiti, fonti selezionate, manuali, decisioni e collegamenti finanziari possono essere letti dal modello dell’account del servizio scelto, senza anonimizzazione automatica. Il modulo offline non trasmette dati e non registra audio; restituire il Markdown porta quei dati nel contesto del modello. Profilo e progressi didattici restano locali, senza invio di feedback o ricevute didattiche al server."
   }
 }

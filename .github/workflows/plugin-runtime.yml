@@ -10,6 +10,36 @@ permissions:
   contents: read
 
 jobs:
+  studio-document-format:
+    name: Studio document format pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install declared document dependencies and verification tools
+        run: >-
+          python -m pip install pytest pytest-cov 'coverage>=7.10' black==25.1.0 isort==6.0.1 mypy bandit
+          -r plugins/comunicazione-professionale/requirements.txt
+          -r plugins/report-builder/requirements.txt
+      - name: Verify previews, approval, revision and actual report reuse
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_studio_document_format.py
+          --cov --cov-config=tests/studio_document_format.coveragerc --cov-report=term-missing --cov-fail-under=80
+      - name: Check document format code quality
+        run: |
+          python -m black --check plugins/comunicazione-professionale/scripts/review_document_format.py plugins/comunicazione-professionale/scripts/studio_document_format.py plugins/report-builder/scripts/studio_formatting.py plugins/vera/scripts/studio_document_format.py tests/plugins/test_studio_document_format.py
+          python -m isort --check-only plugins/comunicazione-professionale/scripts/review_document_format.py plugins/comunicazione-professionale/scripts/studio_document_format.py plugins/report-builder/scripts/studio_formatting.py plugins/vera/scripts/studio_document_format.py tests/plugins/test_studio_document_format.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/comunicazione-professionale/scripts/review_document_format.py plugins/comunicazione-professionale/scripts/studio_document_format.py plugins/report-builder/scripts/studio_formatting.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/vera/scripts/studio_document_format.py
+          python -m bandit -q -ll plugins/comunicazione-professionale/scripts/review_document_format.py plugins/comunicazione-professionale/scripts/studio_document_format.py plugins/report-builder/scripts/studio_formatting.py plugins/vera/scripts/studio_document_format.py
+
   business-valuation:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -212,6 +242,7 @@ jobs:
           -r plugins/management-control-pack/requirements.txt
           -r plugins/open-item-reconciliation/requirements.txt
           -r plugins/passive-invoice-audit/requirements.txt
+          -r plugins/patent-box-review/requirements.txt
           -r plugins/presenza-digitale-studio/requirements.txt
           -r plugins/previdenza-inps/requirements.txt
           -r plugins/prompt-optimizer/requirements.txt
@@ -256,7 +287,10 @@ jobs:
           tests/plugins/test_teaching_management_execution.py
           tests/plugins/test_business_valuation.py
           tests/plugins/test_teaching_clara_budget_execution.py
+          tests/plugins/test_teaching_patent_box_execution.py
           tests/plugins/test_teaching_cnc_execution.py
+          tests/plugins/test_teaching_trasformazione_execution.py
+          tests/plugins/test_teaching_cnc_practical_execution.py
           tests/plugins/test_cnc_integrations.py
           tests/plugins/test_cowork_teaching.py
           tests/plugins/test_vera_get_started.py
@@ -304,6 +338,10 @@ jobs:
           python -m bandit -q plugins/bilancio-xbrl-it/scripts/accounts_preview.py plugins/bilancio-xbrl-it/scripts/accounts_preview_text.py plugins/bilancio-xbrl-it/scripts/xbrl_case.py
       - name: Check course runtime and compiler
         run: |
+          python -m black --check tests/plugins/test_teaching_patent_box_execution.py
+          python -m isort --check-only tests/plugins/test_teaching_patent_box_execution.py
+          python -m mypy --follow-imports=skip tests/plugins/test_teaching_patent_box_execution.py
+          python -m bandit -q -ll tests/plugins/test_teaching_patent_box_execution.py
           python scripts/course_materials/build_catalog.py --check
           python scripts/course_materials/build_public_catalog.py --check
           python -m black --check tests/plugins/test_teaching_cnc_execution.py
@@ -315,8 +353,8 @@ jobs:
           python -m isort --check-only scripts/course_materials/build_presentation_baselines.py tests/plugins/_business_teaching.py tests/plugins/_presentation_teaching.py tests/plugins/test_teaching_presentation_execution.py
           python -m mypy --follow-imports=skip scripts/course_materials/build_presentation_baselines.py
           python -m bandit -q scripts/course_materials/build_presentation_baselines.py
-          python -m black --check scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py tests/plugins/test_teaching_release_review.py
-          python -m isort --check-only scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py tests/plugins/test_teaching_release_review.py
+          python -m black --check scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py tests/plugins/test_teaching_release_review.py tests/plugins/test_teaching_trasformazione_execution.py tests/plugins/test_teaching_execution_evidence.py
+          python -m isort --check-only scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py tests/plugins/test_teaching_release_review.py tests/plugins/test_teaching_trasformazione_execution.py tests/plugins/test_teaching_execution_evidence.py
           python -m mypy --follow-imports=skip scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py
           python -m bandit -q scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py
           python -m black --check scripts/archive_organization_review_widget.py

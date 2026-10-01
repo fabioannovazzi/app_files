@@ -524,7 +524,7 @@
     {
       "path": "skills/variance-analysis/SKILL.md",
       "repository_path": "plugins/vera/skills/variance-analysis/SKILL.md",
-      "sha256": "f05dd16e267bd6411c18ffc7cf8ad474659aea83447b2dce53331cb21dffcff8"
+      "sha256": "b537dae46cad7a4790a6618c93ea8440fe940272ad670e10752be5ce4f8b3fb4"
     },
     {
       "path": "vendor/modules/__init__.py",

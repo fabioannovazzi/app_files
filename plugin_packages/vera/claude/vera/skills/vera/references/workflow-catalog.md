@@ -17,13 +17,15 @@ skill to imitate a missing operational workflow.
 
 ## Development preview
 
-`patent-box-review` prepares selected evidence, reviewed ledger mappings and
+- `patent-box-review`: prepares selected evidence, reviewed ledger mappings and
 component controls for software, patents and designs, then exports draft A/B
 Word/PDF documents. Real calculation requires reviewed current sources and
 certificate-authenticated authorization under a firm-issued mandate. It verifies
 existing signatures and timestamps; it does not sign or file documents. All
 professional UAT and production acceptance boundaries remain explicit. Read
-`../../patent-box-review/SKILL.md`. This preview has no released teaching kit.
+`../../patent-box-review/SKILL.md`. Its prepared course uses fictional ordinary
+software evidence and a separate missing-link exercise. Synthetic execution does
+not establish professional acceptance.
 
 ## Merger workpapers
 
@@ -104,6 +106,13 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
   independent expert, with separate role guidance, evidence gaps, existing Vera
   analyses, drafts, case revisions and dependency impact. Local review records
   do not authenticate professional identity or authorize filing.
+- `studio-document-format`: teach a studio's reusable Word report format from
+  exact selected examples and preferences; inspect formatting, review generated
+  short/long previews, explicitly adopt a private versioned standard, and reuse
+  or revise it in supported financial reports. Includes a prepared course with
+  fictional inputs and distinct practice. Studio-wide setup shares the authorized
+  communications workspace; it is not a client run or model fine-tuning.
+
 - `comunicazione-professionale`: decide whether a current tax, legal,
   regulatory, accounting, or professional development is worth communicating;
   learn only from exact prior studio communications selected by the
@@ -192,7 +201,7 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
 
 ## Synthetic development prototypes
 
-Read `../../trasformazione/SKILL.md` to prepare a synthetic Italian company-transformation case,
+- `trasformazione`: prepare a synthetic Italian company-transformation case,
   import evidence, propose findings, check exact arithmetic, record explicit
   simulated/user review and export a versioned dossier. Changed evidence reopens
   dependent approvals. This increment does not accept real client mandates,

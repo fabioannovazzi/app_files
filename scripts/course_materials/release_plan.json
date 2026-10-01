@@ -39,6 +39,7 @@
     "vera/management-control-pack",
     "vera/new-client",
     "vera/open-item-reconciliation",
+    "vera/patent-box-review",
     "vera/presenza-digitale-studio",
     "vera/previdenza-inps",
     "vera/purchase-invoice-review",
@@ -49,7 +50,8 @@
     "vera/studio-document-format",
     "vera/treasury-forecast",
     "vera/variance-analysis",
-    "vera/vouching"
+    "vera/vouching",
+    "vera/trasformazione"
   ],
   "retained": {}
 }

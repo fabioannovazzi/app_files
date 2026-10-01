@@ -344,6 +344,7 @@
         "modules/comunicazione-professionale/scripts/record_visual_assessment.py",
         "modules/comunicazione-professionale/scripts/render_visuals.py",
         "modules/comunicazione-professionale/scripts/review_document_format.py",
+        "modules/comunicazione-professionale/scripts/studio_document_format.py",
         "modules/comunicazione-professionale/scripts/validate_run.py"
       ]
     },
@@ -582,6 +583,7 @@
     "skills/sales-plan/SKILL.md",
     "skills/scissione-guidata/SKILL.md",
     "skills/studio-archive/SKILL.md",
+    "skills/studio-document-format/SKILL.md",
     "skills/trasformazione/SKILL.md",
     "skills/treasury-forecast/SKILL.md",
     "skills/variance-analysis/SKILL.md",

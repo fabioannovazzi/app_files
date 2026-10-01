@@ -79,12 +79,34 @@ export async function loadEconsSetup({ directory = defaultEconsSetupDirectory(),
     status: "company_signal_update_required", procedurePath, ...payload, setupId: payload.id,
   };
   validateEconsProfile(payload.profile);
+  if (payload.processingProfile?.schema_version === "econs-processing-profile/v1") return {
+    status: "status_binding_update_required", procedurePath, ...payload, setupId: payload.id,
+    previousRunDirectory: payload.lastRunDirectory, executionAuthorized: false,
+  };
   if (payload.processingProfile) validateEconsProcessingProfile(payload.processingProfile);
   return { status: "saved_setup", procedurePath, ...payload,
     setupId: payload.id, previousRunDirectory: payload.lastRunDirectory,
     // The caller must reconcile any uncertain prior posting from these local
     // reports, and verify current account/client identity before new actions.
     executionAuthorized: false };
+}
+
+/** Read the known last run, never infer execution from installed files or chat claims. */
+export async function inspectEconsExecution(options = {}) {
+  const saved = await loadEconsSetup(options);
+  const directory = saved.previousRunDirectory ?? saved.lastRunDirectory;
+  if (!directory) return { status: "execution_evidence_missing", setup_status: saved.status, run_directory: null };
+  await privatePath(directory);
+  const evidence = {};
+  const missing = [];
+  for (const name of ["execution", "installation", "acquisition"]) {
+    const path = join(directory, `${name}.json`);
+    await privatePath(path);
+    try { evidence[name] = JSON.parse(await readFile(path, "utf8")); }
+    catch (error) { if (error.code !== "ENOENT") throw error; missing.push(name); }
+  }
+  return { status: evidence.execution ? "executor_invocation_recorded" : "execution_evidence_missing",
+    setup_status: saved.status, run_directory: directory, missing_evidence: missing, ...evidence };
 }
 
 /** Save reviewed bindings automatically; immutable revisions survive updates. */
@@ -130,7 +152,9 @@ export async function saveEconsSetup({ profile, processingProfile = null, exclud
     // A review-only run must not erase already learned registration bindings.
     processingProfile ??= previous?.payload.processingProfile ?? null;
     if (processingProfile && !incomplete) {
-      validateEconsProcessingProfile(processingProfile);
+      // Preserve a legacy setup during read-only acquisition; loading it still requires
+      // observed status bindings before any processing can be executed.
+      if (processingProfile.schema_version !== "econs-processing-profile/v1") validateEconsProcessingProfile(processingProfile);
       need(canonicalJson([...processingProfile.phases.post.site.allowed_origins].sort()) === origins,
         "processing_acquisition_origins_must_match");
     }

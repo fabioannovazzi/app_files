@@ -1,1 +1,5 @@
-FIKTIVE AKTUALISIERUNG. Der Schuldner schlägt für denselben Eingang von 100.000 EUR nun den 15. Januar 2027 vor. Kein Zahlungsnachweis und keine fachliche Zustimmung beigefügt. Sonstige Angaben bleiben wie ursprünglich geliefert.
+Zunächst geführt aktualisierung-de.md importieren: Eingang am 15. Januar 2027 und Ablehnung. Ersten Forecast bewahren und negativen Bericht verfassen. 
+
+receipt.expected_date=2027-01-15
+negotiation.outcome=no_agreement
+filing_receipts=not_supplied

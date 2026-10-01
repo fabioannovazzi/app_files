@@ -608,18 +608,8 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert manifest["version"] == source_manifest["version"]
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
-    assert prompts[0] == (
-        "Trasforma questi export contabili in un pacchetto di controllo di gestione "
-        "con P&L, Budget, aging, cassa e concentrazione."
-    )
-    assert any(
-        "sito dello studio" in prompt and "preview responsive" in prompt
-        for prompt in prompts
-    )
-    assert prompts[2] == (
-        "Prepara un bilancio OIC intelligente anche da PDF: fammi rivedere "
-        "estrazione e celle incerte, poi genera l’XBRL finale."
-    )
+    # Packaging must preserve the source-owned prompts, not a frozen copy.
+    assert prompts == source_manifest["interface"]["defaultPrompt"]
     approved_description = (
         (ROOT / "docs" / "marketplace_copy" / "vera-long-description.txt")
         .read_text(encoding="utf-8")

@@ -1,0 +1,11 @@
+{
+  "synthetic_only": true,
+  "assets": "700000",
+  "liabilities": "250000",
+  "proposed_capital": "100000",
+  "book_value": "100000",
+  "estimated_value": "150000",
+  "tax_value": null,
+  "reserve_amount": "120000",
+  "reserve_tax_origin": null
+}
