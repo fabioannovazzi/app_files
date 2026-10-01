@@ -1,4 +1,4 @@
-# Seguir evidencias y cambios de una composizione negoziata
+# Composizione negoziata: del expediente al informe final
 
 La explicación y una práctica breve requieren unos 5–8 minutos. El procesamiento y tus preguntas pueden alargar la sesión.
 
@@ -10,29 +10,35 @@ Utiliza el material preparado para enseñar un primer uso completo. Selecciona 3
 
 Relaciona la función con una tarea profesional concreta.
 
-Abrir un expediente como asesor, revisar un borrador y retomarlo cuando se retrasa un cobro.
+Ejecutar un caso ficticio, distinguir asesor de la empresa y experto independiente, y entregar un borrador con negociación fallida y responsabilidades pendientes.
 
-Empresa totalmente ficticia: caja de 50.000 EUR, cobro previsto de 100.000 EUR el 15 de noviembre de 2026 y pago de 80.000 EUR el 30 de noviembre. El deudor no ha confirmado la fecha; faltan antigüedad de saldos y pedidos.
+Officina Arco CNC es una sociedad italiana totalmente ficticia. Al 31 de octubre de 2026: préstamo EUR 120.000, caja disponible EUR 50.000, depósito restringido EUR 10.000, proveedores EUR 80.000. Cobro supuesto EUR 100.000 el 15 de noviembre; pago EUR 80.000 el 30 de noviembre. Faltan antigüedad de saldos, confirmación de recuperabilidad, pedidos, nombramiento y justificantes. Las posiciones aportadas son incompletas.
 
-Primer recorrido: rol, carencias, análisis de tesorería ejecutado, nota y revisión tras un cambio. No es un dictamen de admisibilidad ni un expediente profesional completo.
+Curso local ampliado en varias sesiones: demostración asesor, cambio guiado y ejercicio autónomo experto en otro encargo. Los 5–8 minutos corresponden a un segmento explicado; cálculo, investigación, revisión y práctica necesitan más tiempo. Sin habilitación ni evaluación automática de acceso.
 
 ## 2. Archivos y petición · 60 s
 
 Abre los archivos en la ventana de trabajo y muestra cómo pedir el resultado.
 
-Abre caso-es.md para los hechos e hipótesis iniciales. actualizacion-es.md contiene solo la nueva información de la práctica.
+Leer caso, balances.csv y treasury-demo. Tablas vacías significan datos no aportados, no ausencia de actividad real. treasury-practice y treasury-independent acompañan actualización y ejercicio autónomo. El brief de investigación incluye pregunta pública genérica y URL por verificar, no legislación actual ni respuesta aprobada.
 
-Vera, asesoro a la empresa. Examina los datos ficticios, señala carencias, ejecuta la previsión de tesorería y prepara una nota vinculada a evidencias. No presupongas decisiones aprobadas.
+Vera, asesoro a la ficticia Officina Arco CNC. Lee pruebas, separa hechos, supuestos y carencias, ejecuta los flujos financieros y de tesorería existentes y prepara una propuesta condicionada. Guía mi revisión de la versión exacta. Todo local, sin envíos ni aceptación profesional simulada.
 
 ## 3. Ejecutar el trabajo · 105 s
 
 Explica el paso que se está ejecutando y espera su resultado real.
 
-En la ventana de trabajo, registra el cliente ficticio y el encargo didáctico. Vera distingue rol, fuentes, hipótesis y evidencias ausentes antes de proponer la próxima actividad.
+Intake: crear caso tutorial local y encargo asesor, importar fuentes exactas y registrar alcance, fecha, moneda, urgencias y carencias. Preguntar solo lo que cambie el trabajo. Nombramiento ausente no impide entrenar ni pasa a verificado. Abrir primera nota y asignar solicitudes de documentos.
 
-Vera ejecuta la previsión con alcance e hipótesis explícitos, vincula el resultado guardado a la nota y registra una revisión solo tras tu confirmación de esa versión. Abre el informe de datos que llegan al modelo.
+Análisis: leer skills financieras y tesorería actuales. Revisar definición didáctica de deuda neta: préstamo menos caja disponible, excluyendo depósito restringido y proveedores. Ejecutar net_debt y forecast con tablas aportadas, completar sus runs y vincular resultados declarados al siguiente run CNC. Revisar cifras, pruebas y cobertura; un saldo no prueba recuperabilidad y el forecast no es el test ministerial.
 
-Retoma el mismo expediente con la actualización. Conserva la primera nota, examina dependencias afectadas y pide un nuevo análisis. Las confirmaciones anteriores quedan como históricas.
+Investigación: usar quesito-legale-fiscale con brief público. Elegir expresamente investigación ordinaria o ruta Deep Research disponible según skill, sin traspaso alojado automático. Seguir planner y revisión, leer fuentes primarias aplicables, guardar contrato, respuesta, fuentes y límites y vincular entregable real. URL, fragmentos y registros válidos no prueban vigencia ni corrección. Acceso fallido permanece cuestión abierta. Sin hechos tutorial en consultas.
+
+Borrador y revisión: redactar cronología, pruebas, supuestos, análisis, propuesta condicional y preguntas. Abrir versión exacta y preguntar al participante qué corregir. Registrar solo decisión real: atribución local no verifica identidad ni aprueba handoff. No llamar cnc-review ni fabricar recibos. Mostrar informe real de datos usados por el modelo.
+
+Cambio guiado: importar actualización y tablas practice en el mismo encargo, conservar IDs estables y versiones previas. Revisar descendientes obsoletos e impacto semántico adicional. Recalcular tesorería, vincular resultado y reescribir propuesta e informe: cobro aplazado y rechazo, sin acuerdo documentado. Decisión anterior no vale para nuevo borrador.
+
+Entrega: abrir informe a empresa con no_agreement, bases, límites, actos/justificantes ausentes, responsables de tareas y plazos por verificar. Mantener draft_handoff: completar run no firma, presenta ni cierra procedimiento. Después ejercicio experto en encargo separado con documentos elegidos: preguntas neutrales, independencia/nombramiento no verificados, informe propio y responsabilidades distintas.
 
 Durante la lección, la conversación de trabajo ejecuta la función y produce el resultado. Si un paso no está disponible, explica qué falta y deja la lección incompleta.
 
@@ -40,19 +46,27 @@ Durante la lección, la conversación de trabajo ejecuta la función y produce e
 
 Abre el documento recién producido y muestra por dónde empezar a leerlo.
 
-Nota con evidencias, carencias, hipótesis y próxima actividad.
+Nota inicial y solicitudes de pruebas con fuentes y responsables.
 
-Previsión ejecutada, revisiones guardadas e informe de datos utilizados.
+Pack financiero ejecutado, forecasts inicial y revisado, respuesta investigada y revisada o carencia explícita.
 
-Sigue el cobro desde la declaración hasta la previsión y la nota. Un archivo no prueba la cobrabilidad; una confirmación registrada no es una firma.
+Revisiones históricas conservadas, informe por rol, entrega negativa y tareas pendientes.
+
+Informe legible de datos modelo, declaración de artefactos e historia recuperable.
+
+Seguir cada cifra del CSV al resultado y al informe. Separar deuda neta, saldo bancario y caja mínima. Revisar versión exacta, bases, rol y estado obsoleto antes de decidir. Juicio económico, independencia, derecho aplicable, firma y obligaciones siguen siendo profesionales; no inventar justificantes ni resultado favorable.
 
 ## 5. Parar y comprobar · 45 s
 
 Haz estas comprobaciones en los momentos indicados durante el trabajo.
 
-Distingue al asesor de la empresa del experto independiente.
+¿Qué falta y qué trabajo puede continuar? ¿Está disponible el depósito restringido?
 
-Identifica hipótesis no confirmadas y versiones que revisar tras el retraso.
+¿Qué resultado se ejecutó y qué tarea solo se propuso?
+
+¿Qué dependencias y decisiones revisar tras el aplazamiento?
+
+¿Cómo difieren informes y quién asume tareas pendientes?
 
 Estas pausas ayudan a aprender a utilizar la función. No son un examen de detalles técnicos.
 
@@ -60,11 +74,11 @@ Estas pausas ayudan a aprender a utilizar la función. No son un examen de detal
 
 Deja que el usuario formule la petición y acompaña su intento.
 
-Introduce actualizacion-es.md: el deudor propone ahora el 15 de enero de 2027. Pide un nuevo análisis y una nueva nota sin trasladar confirmaciones antiguas a la nueva versión.
+Primero guiado importar actualizacion-es.md: cobro al 15 de enero de 2027 y rechazo. Preservar primer forecast, preparar informe negativo. Luego abrir ejercicio-es.md autónomamente en encargo experto separado: cobro el 15 de febrero fuera del horizonte, ningún acuerdo. Usar treasury-independent, entregar borrador neutral, demostrar fuentes y recuperar historia en nueva sesión. No copiar automáticamente expediente privado del asesor.
 
-Sabes abrir, revisar y retomar el expediente manteniendo explícitos límites, dependencias y decisiones pendientes.
+Puedes explicar cobertura y límites, demostrar recálculo y revisiones, distinguir encargos y explicar resultado negativo con decisiones y tareas abiertas. Se requiere práctica real y tu explicación; tests no certifican aprendizaje.
 
-Indica rol, encargo, fecha de referencia y documentos autorizados. Verifica las fuentes jurídicas decisivas al utilizarlas; independencia y conclusiones corresponden al profesional.
+Para trabajo real elegir documentos nuevos y destino profesional separado, confirmar rol y mandato y seguir contrato actual. Qué datos llegan al modelo: el runtime elegido puede leer fuentes importadas, tablas financieras, forecasts, notas, dependencias, borradores, decisiones y fuentes públicas discutidas. Helpers locales no envían archivos a Mparanza; almacenamiento local no significa inferencia offline ni anonimización. Informe registra uso real, no cada lectura modelo. Revisión alojada opcional envía IDs opacos, digest, decisión, cuenta y hora y queda excluida del tutorial. Sin feedback enviado, presentación o comunicación a partes.
 
 El kit contiene archivos ficticios y un guion preparado. Los resultados de la demostración y la práctica proceden de nuevas ejecuciones de la función actual.
 

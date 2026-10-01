@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "purchase-invoice-review",
-  "course_sha256": "10699d42f45e507443a1bdfeb535d2f2465c530014040c49ca9ffedbc72d5513",
+  "course_sha256": "590188edb4e4da04198b8934f8fa1c67e1e8b33c7c73865aa2b917cc3db79e7f",
   "reviewer": "Codex: localized first-use lessons, ten actual native executions and source-bound workbook/data review",
   "reviewed_at": "2026-09-23T16:07:48.557541+00:00",
   "review_scope": "Five localized fictional demonstration/practice pairs executed through the actual current Codex worker, with real launch receipts. All 35 invoice outcomes, ten exception workbooks and five lesson outlines inspected. Portable CI replays the exact retained semantic responses through the current matching, persistence and workbook workflow; it does not claim fresh model calls. Workbook cells and formatting inspected programmatically, not visually rendered. No learner completion, professional approval, measured lesson duration or live voice/Cowork acceptance is claimed. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -401,5 +401,14 @@
       "plugins/_shared/vendor/modules/vera_assurance/contracts.py"
     ],
     "review": "Every authored lesson field and input record matches current main. The sole shared source change adds scissione-guidata to the supported workflow IDs; existing workflow behavior is unchanged. Original reviewers, dates, judgments and output hashes are preserved. Fresh native teaching executions are required in CI; no new professional or learner acceptance is claimed."
+  },
+  "discovery_source_refresh": {
+    "reviewed_by": "Codex /root",
+    "reviewed_at": "2026-10-01T11:44:13.159033+00:00",
+    "previous_course_sha256": "10699d42f45e507443a1bdfeb535d2f2465c530014040c49ca9ffedbc72d5513",
+    "changed_sources": [
+      "skills/purchase-invoice-review/SKILL.md"
+    ],
+    "scope": "Inspected the specialist entrypoint diff: only its frontmatter description changes to clarify selection of the existing accounting workflow. All course content outside source fingerprints is exactly unchanged. Prior per-language editorial and artifact reviews remain historical evidence; current-source demo and practice cases are rerun as a release gate. No new learner or professional acceptance is asserted."
   }
 }

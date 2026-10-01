@@ -194,7 +194,7 @@ When authorized to process ECONS purchase invoices, read the processing section
 of `references/econs-review.md` in the resolved browser-automation module. Reuse
 the acquisition profile and add the reviewed processing phases. Run
 `collectEconsReview` with its `processing` option. Vera supplies the model-led
-queue classification, red-exception review, complete-invoice review, journal review and posting-approval callbacks in the host
+red-exception review, complete-invoice review, journal review and posting-approval callbacks in the host
 Node session; no separate model API is configured. Preserve the exact client's
 tax treatment and complete report, including green and orange invoices. A
 per-invoice review must confirm and save the full descriptions before opening
@@ -205,3 +205,12 @@ missing binding is a local setup gap to resolve from the actual screen, not a
 reason to ask the operator to rewrite selectors or repeat the whole lesson.
 Report this as implemented workflow support until two clean runs on the target
 ECONS environment have been recorded; synthetic tests cannot establish that.
+
+The executor classifies invoice indicators by exact reviewed DOM bindings read
+through Playwright. Never replace that check with model colour inference or an
+ad hoc registration path. Unknown or changed states stop the affected invoice.
+Reuse saved phases when `loadEconsSetup` requests a status-binding update; Vera
+inspects the missing controls itself. After execution, link the local report
+and identify the actual executor/version from its saved evidence. For a later
+complaint call `inspectEconsExecution` and inspect the saved raw-status decisions
+and phase receipts; do not ask the operator to provide Vera's internal rules.
