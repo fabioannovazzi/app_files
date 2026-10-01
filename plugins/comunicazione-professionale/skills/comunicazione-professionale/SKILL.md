@@ -620,7 +620,12 @@ python scripts/review_document_format.py prepare --workspace <studio-workspace> 
 For a new studio only, supply `--base-profile <proposed-profile.json>` containing
 `brand_profile` and the complete existing `profile` object. Its optional
 `brand_profile.logo_path` selects the PNG/JPEG asset. The helper snapshots the
-selected files and writes `format_review.json` and a readable review. It never
+selected files and writes `format_review.json` and a readable review. Before
+adoption, run `scripts/studio_document_format.py preview --review-dir <review-dir>`
+in the same ready environment; the paired report-builder component must be
+available. This creates both exact preview files and their manifest. The
+dedicated Vera `studio-document-format` skill automates preparation and preview
+and provides the full course. It never
 modifies the originals. Show the complete proposal and preview, then adopt only
 after the user confirms that exact proposal:
 

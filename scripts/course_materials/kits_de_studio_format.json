@@ -1,0 +1,27 @@
+{
+  "vera/studio-document-format": {
+    "title": "Vera das Dokumentformat der Kanzlei beibringen",
+    "goal": "Aus ausgewählten Beispielen einen geprüften, wiederverwendbaren Word-Standard erstellen.",
+    "scenario": "Die fiktive Kanzlei Riva möchte einheitliche Schriftarten, Ränder, Kopfzeilen, Tabellen und Fußzeilen.",
+    "scope": "Word-Format für den Finanzberichtsgenerator. Private Konfiguration, kein Modelltraining und keine genaue Kopie einer Word-Vorlage. Andere Generatoren gehören nicht zu dieser ersten Integration.",
+    "inputs": "Öffnen Sie demo-de.json. Vera erzeugt daraus lokal ein echtes fiktives Word-Beispiel und eine Buchhaltungs-CSV. Wählen Sie den Kanzleiarbeitsbereich und prüfen Sie das Beispiel; Mandantenunterlagen sind nicht erforderlich.",
+    "request": "Vera, lerne das Berichtsformat dieser fiktiven Kanzlei. Zeige Beobachtungen und Vorschläge, lass mich kurze und lange Vorschauen prüfen und speichere die von mir genehmigte Version für einen Finanzbericht.",
+    "steps": [
+      "Erzeugen und prüfen Sie das Beispiel. Unterscheiden Sie beobachtete Einstellungen, Vorschläge und unklare vererbte Formatierungen. Wählen Sie eine Änderung in Alltagssprache.",
+      "Erzeugen Sie kurze und lange Word-Vorschauen. Öffnen Sie die tatsächlichen Seiten, prüfen Sie Schriften, Tabellenfortsetzung und Fußzeile und verlangen Sie Korrekturen oder übernehmen Sie ausdrücklich die genaue Version.",
+      "Erstellen Sie danach aus der CSV einen kleinen Word-Finanzbericht mit dem aktuellen Verfahren und einem echten synthetischen Mandantenauftrag. Prüfen Sie die Kanzleiidentität und die Quelle eines unveränderten Betrags."
+    ],
+    "deliverables": [
+      "Formatbelege des ausgewählten Beispiels und vollständiger Vorschlag.",
+      "Kurze und lange synthetische Word-Vorschauen, versionierter genehmigter Standard und damit erstellter Finanzbericht."
+    ],
+    "review": "Prüfen Sie alle Seiten, Schriftart-Ersetzungen, das gewählte Logo, Datums- und Zahlenanzeige sowie die gespeicherte Identität. Zahlen und Schlussfolgerungen benötigen die übliche Berichtsprüfung. Der Code beweist nicht, dass Sie das Dokument gesehen oder angenommen haben.",
+    "checkpoints": [
+      "Erklären Sie, welche Einstellung aus dem Beispiel stammt und welche Sie gewählt haben.",
+      "Öffnen Sie vor dem Speichern beide Vorschauen und genehmigen Sie ausdrücklich oder verlangen Sie eine Korrektur."
+    ],
+    "practice": "Beginnen Sie unabhängig mit practice-de.json für die fiktive Kanzlei Selva und andere Beträge. Wählen Sie eine Änderung, prüfen und übernehmen Sie ihren Standard und erstellen Sie ihren Bericht. Ändern Sie anschließend eine Einstellung, prüfen Sie neue Vorschauen und das Archiv der vorherigen Version. Kanzlei Riva bleibt unverändert.",
+    "success": "Sie können Beispiele liefern, Vorschläge korrigieren, eine genaue Version übernehmen, wiederfinden, verwenden und ändern, ohne andere Kanzleien oder Finanzdaten zu verändern.",
+    "repeat": "Wählen Sie den autorisierten privaten Kanzleiarbeitsbereich und genaue Beispiele. Lassen Sie Vera das Word-Format lernen oder ändern, prüfen Sie beide Vorschauen und übernehmen Sie eine Version. Fordern Sie danach einen unterstützten Finanzbericht für die ausdrücklich ausgewählte Kanzlei an."
+  }
+}

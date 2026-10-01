@@ -108,6 +108,38 @@
         "type": "string",
         "maxLength": 300
       }
+    },
+    "margins_mm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "top",
+        "bottom",
+        "left",
+        "right"
+      ],
+      "properties": {
+        "top": {
+          "type": "number",
+          "minimum": 8,
+          "maximum": 70
+        },
+        "bottom": {
+          "type": "number",
+          "minimum": 8,
+          "maximum": 70
+        },
+        "left": {
+          "type": "number",
+          "minimum": 8,
+          "maximum": 70
+        },
+        "right": {
+          "type": "number",
+          "minimum": 8,
+          "maximum": 70
+        }
+      }
     }
   }
 }

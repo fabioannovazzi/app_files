@@ -39,6 +39,21 @@ def _command(
     )
 
 
+def _preview(review: Path) -> None:
+    subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "plugins/vera/scripts/studio_document_format.py"),
+            "preview",
+            "--review-dir",
+            str(review),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+
 def _json(path: Path, payload: Any) -> Path:
     path.write_text(json.dumps(payload), encoding="utf-8")
     return path
@@ -109,6 +124,7 @@ def _studio(
         str(base),
     )
     review = workspace / "runs/format-review-001"
+    _preview(review)
     payload = json.loads((review / "format_review.json").read_text())
     denied = _command(
         "review_document_format.py",
@@ -202,6 +218,7 @@ def test_profile_revision_archives_previous_standard_and_preserves_communication
         str(settings),
     )
     review = workspace / "runs/format-review-002"
+    _preview(review)
     digest = json.loads((review / "format_review.json").read_text())["review_digest"]
     _command(
         "review_document_format.py",
@@ -221,6 +238,11 @@ def test_profile_revision_archives_previous_standard_and_preserves_communication
         == before
     )
     assert after["profile"]["email"] == before["profile"]["email"]
+    assert (
+        after["profile"]["document"]["docx"]["number_format"]
+        == before["profile"]["document"]["docx"]["number_format"]
+    )
+    assert after["profile"]["document"]["docx"]["paragraph_after_pt"] == 12
     assert (
         after["profile"]["document"]["layout"]
         == before["profile"]["document"]["layout"]
@@ -454,4 +476,319 @@ def test_selected_format_survives_assured_native_review_regeneration(
         .sections[0]
         .header.paragraphs[0]
         .text.endswith("Studio Alpha")
+    )
+
+
+def _native(*args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "plugins/vera/scripts/studio_document_format.py"),
+            *args,
+        ],
+        check=check,
+        text=True,
+        capture_output=True,
+    )
+
+
+def test_raw_example_setup_requires_intact_previews_before_adoption(
+    tmp_path: Path,
+) -> None:
+    """Exercise raw source → evidence → reviewed proposal → previews → standard."""
+    material = tmp_path / "materials"
+    _native(
+        "practice-materials",
+        "--spec",
+        str(
+            ROOT / "scripts/course_materials/inputs/studio-document-format/demo-en.json"
+        ),
+        "--output-dir",
+        str(material),
+    )
+    example = material / "studio-example.docx"
+    document = Document(example)
+    assert round(document.sections[0].page_width.mm) == 210
+    # No example text reaches the emitted structural packet.
+    document.add_paragraph("CLIENT-CONTENT-SENTINEL-DO-NOT-COPY")
+    document.save(example)
+    evidence = tmp_path / "evidence.json"
+    _native("inspect", "--sample", str(example), "--output", str(evidence))
+    observed = json.loads(evidence.read_text())
+    assert observed["samples"][0]["sections"][0]["margins_mm"]["left"] == pytest.approx(
+        22, abs=0.02
+    )
+    assert "CLIENT-CONTENT-SENTINEL-DO-NOT-COPY" not in evidence.read_text()
+    workspace = tmp_path / "studio"
+    _command(
+        "initialize_workspace.py",
+        "--workspace",
+        str(workspace),
+        "--workspace-id",
+        "Studio-Riva",
+        "--owner",
+        "Synthetic reviewer",
+        "--retention-owner",
+        "Synthetic reviewer",
+        "--confirmed-by-user",
+    )
+    brand = _json(
+        tmp_path / "brand.json",
+        {
+            **_helpers("test_comunicazione_professionale")._brand(),
+            "studio_name": "Studio Riva",
+        },
+    )
+    # This fixture records explicitly chosen preferences, not model interpretation evidence.
+    settings = _json(
+        tmp_path / "settings.json",
+        {
+            "font_family": "Arial",
+            "body_font_size_pt": 10,
+            "heading_1_size_pt": 16,
+            "margins_mm": {"top": 30, "bottom": 22, "left": 22, "right": 22},
+            "header_text": "Studio Riva",
+            "page_numbers": True,
+        },
+    )
+    _native(
+        "prepare",
+        "--workspace",
+        str(workspace),
+        "--review-id",
+        "setup-001",
+        "--settings",
+        str(settings),
+        "--sample",
+        str(example),
+        "--brand",
+        str(brand),
+    )
+    review = workspace / "runs/setup-001"
+    digest = json.loads((review / "format_review.json").read_text())["review_digest"]
+    assert not (workspace / "studio_profile.json").exists()
+    short = review / "preview-short.docx"
+    short.write_bytes(short.read_bytes() + b"tamper")
+    result = _native(
+        "approve",
+        "--review-dir",
+        str(review),
+        "--review-digest",
+        digest,
+        "--reviewer",
+        "Synthetic reviewer",
+        "--confirmed-by-user",
+        check=False,
+    )
+    assert result.returncode != 0
+    assert "preview changed" in result.stderr
+    assert not (workspace / "studio_profile.json").exists()
+    _native("preview", "--review-dir", str(review))
+    _native(
+        "approve",
+        "--review-dir",
+        str(review),
+        "--review-digest",
+        digest,
+        "--reviewer",
+        "Synthetic reviewer",
+        "--confirmed-by-user",
+    )
+    core = _helpers("test_report_builder_plugin").load_core()
+    saved = core.load_studio_format(
+        workspace, studio_id="Studio-Riva", studio_name="Studio Riva"
+    )
+    assert saved["margins_mm"]["left"] == 22
+    assert "CLIENT-CONTENT-SENTINEL-DO-NOT-COPY" not in json.dumps(saved)
+    adopted = json.loads((workspace / "studio_profile.json").read_text())
+    assert adopted["profile"]["document"]["layout"]["left_margin_mm"] == 20
+    assert adopted["profile"]["derived_from_history_ids"] == []
+    assert adopted["approved_from"]["review_event"]["preview_manifest_sha256"]
+
+
+def test_adoption_requires_generated_previews_and_exact_review_digest(
+    tmp_path: Path,
+) -> None:
+    workspace, _ = _studio(tmp_path)
+    settings = _json(tmp_path / "settings.json", {"font_family": "Arial"})
+    _command(
+        "review_document_format.py",
+        "prepare",
+        "--workspace",
+        str(workspace),
+        "--review-id",
+        "missing-previews",
+        "--settings",
+        str(settings),
+    )
+    review = workspace / "runs/missing-previews"
+    digest = json.loads((review / "format_review.json").read_text())["review_digest"]
+    before = (workspace / "studio_profile.json").read_bytes()
+    result = _native(
+        "approve",
+        "--review-dir",
+        str(review),
+        "--review-digest",
+        digest,
+        "--reviewer",
+        "Synthetic reviewer",
+        "--confirmed-by-user",
+        check=False,
+    )
+    assert result.returncode != 0
+    assert "short and long previews" in result.stderr
+    assert (workspace / "studio_profile.json").read_bytes() == before
+    _native("preview", "--review-dir", str(review))
+    manifest = json.loads((review / "preview_manifest.json").read_text())
+    manifest["review_digest"] = "a-different-proposal"
+    _json(review / "preview_manifest.json", manifest)
+    result = _native(
+        "approve",
+        "--review-dir",
+        str(review),
+        "--review-digest",
+        digest,
+        "--reviewer",
+        "Synthetic reviewer",
+        "--confirmed-by-user",
+        check=False,
+    )
+    assert result.returncode != 0
+    assert "another format proposal" in result.stderr
+    assert (workspace / "studio_profile.json").read_bytes() == before
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_studio_course_has_distinct_raw_sources_and_real_generated_materials(
+    tmp_path: Path, language: str
+) -> None:
+    from scripts.course_materials.build_catalog import _eligible, _source_records
+
+    assert "studio-document-format" in _eligible("vera")
+    source_paths = {
+        record["repository_path"]
+        for record in _source_records("vera", "studio-document-format")
+    }
+    assert "plugins/vera/skills/studio-document-format/SKILL.md" in source_paths
+    assert (
+        "plugins/comunicazione-professionale/scripts/studio_document_format.py"
+        in source_paths
+    )
+    assert (
+        "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-en.json"
+        in source_paths
+    )
+    assert "plugins/report-builder/scripts/studio_formatting.py" in source_paths
+    for phase, studio in [("demo", "Studio Riva"), ("practice", "Studio Selva")]:
+        folder = tmp_path / phase
+        _native(
+            "practice-materials",
+            "--spec",
+            str(
+                ROOT
+                / f"scripts/course_materials/inputs/studio-document-format/{phase}-{language}.json"
+            ),
+            "--output-dir",
+            str(folder),
+        )
+        assert (
+            Document(folder / "studio-example.docx")
+            .sections[0]
+            .header.paragraphs[0]
+            .text
+            == studio
+        )
+        assert (folder / "financial-source.csv").is_file()
+    assert (tmp_path / "demo/financial-source.csv").read_bytes() != (
+        tmp_path / "practice/financial-source.csv"
+    ).read_bytes()
+
+
+def test_course_reuse_creates_a_real_separate_financial_client_run(
+    tmp_path: Path,
+) -> None:
+    output = tmp_path / "outputs"
+    output.mkdir()
+    workspace, _ = _studio(output, name="Studio Riva")
+    material = output / "sources"
+    _native(
+        "practice-materials",
+        "--spec",
+        str(
+            ROOT / "scripts/course_materials/inputs/studio-document-format/demo-en.json"
+        ),
+        "--output-dir",
+        str(material),
+    )
+    descriptor = _json(
+        tmp_path / "tutorial_case.json",
+        {
+            "tutorial": True,
+            "local_only": True,
+            "workflow_id": "studio-document-format",
+            "directory": str(tmp_path),
+            "output_dir": str(output),
+        },
+    )
+    _native(
+        "report-case",
+        "--tutorial-case",
+        str(descriptor),
+        "--source",
+        str(material / "financial-source.csv"),
+        "--studio-workspace",
+        str(workspace),
+    )
+    reuse = json.loads((tmp_path / "report_reuse_case.json").read_text())
+    helper = _helpers("test_report_builder_plugin")
+    core = helper.load_core()
+    context_path = Path(reuse["client_engagement_path"])
+    context = json.loads(context_path.read_text())
+    assert context["workflow_id"] == "report-builder"
+    assert not (workspace / "Vera/client.json").exists()
+    assert Path(reuse["client_root"]).is_relative_to(output)
+    sources = list(Path(reuse["input_dir"]).glob("**/*.csv"))
+    assert len(sources) == 1
+    inspected = core.inspect_inputs(
+        sources[0],
+        Path(reuse["output_dir"]) / "inspection",
+        language="en",
+        document_language="en",
+    )
+    table_id = inspected.inspection["tables"][0]["table_id"]
+    recipe = inspected.suggested_recipe
+    recipe.update(entity="Fictional course company", period="2026-09-01 to 2026-09-30")
+    recipe["sections"]["income_statement"]["assigned_table"] = table_id
+    recipe = core.review_numeric_measure_columns(
+        inspected.inspection,
+        recipe,
+        section_key="income_statement",
+        **helper._numeric_review_args(inspected.inspection, table_id, ["amount"]),
+        reviewer_ref="synthetic.course-test",
+        reviewed_on="2026-10-01",
+        numeric_locale="en",
+        currency="EUR",
+        unit="currency",
+        scale="1",
+        parse_policy="strict_all_nonblank_v1",
+    )
+    recipe_path = Path(reuse["output_dir"]) / "recipe.json"
+    core.write_json(recipe_path, recipe)
+    core.build_report(
+        sources[0],
+        Path(reuse["output_dir"]) / "report",
+        recipe_path=recipe_path,
+        run_id=context["run_id"],
+        client_engagement=context,
+        studio_workspace=workspace,
+        studio_id="Studio-Riva",
+        studio_name="Studio Riva",
+    )
+    report = Path(reuse["output_dir"]) / "report"
+    assert Document(report / "report.docx").styles["Normal"].font.name == "Arial"
+    analysis = core.read_json(report / "report_analysis.json")
+    assert analysis["sections"][1]["numeric_columns"][0]["sum"] == "14500"
+    assert (
+        core.read_json(report / "used_recipe.json")["studio_format"]["studio_id"]
+        == "Studio-Riva"
     )

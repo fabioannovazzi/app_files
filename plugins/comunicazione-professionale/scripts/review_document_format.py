@@ -71,6 +71,16 @@ def prepare_format_review(
                 raise ValueError(
                     "An existing studio profile is authoritative; revise only DOCX preferences here"
                 )
+            fields = {
+                key: stored[key]
+                for key in ("studio_name", "brand_profile", "brand_assets", "profile")
+            }
+            if stored.get(
+                "accepted_as_studio_standard"
+            ) is not True or canonical_digest(fields) != stored.get("format_digest"):
+                raise ValueError(
+                    "Existing studio standard is unapproved or its content changed"
+                )
             base = stored
         elif base_profile_path is not None:
             base = load_json(base_profile_path)
@@ -79,7 +89,10 @@ def prepare_format_review(
                 "First setup requires a complete proposed communications profile and brand_profile"
             )
         profile = copy.deepcopy(base["profile"])
-        settings = load_json(settings_path)
+        requested_settings = load_json(settings_path)
+        if not requested_settings:
+            raise ValueError("Supply at least one document preference")
+        settings = {**profile["document"].get("docx", {}), **requested_settings}
         profile["document"]["docx"] = settings
         _validate_profile(profile)
         brand = dict(base["brand_profile"])
@@ -114,9 +127,9 @@ def prepare_format_review(
         profile["field_provenance"] = old_records + [
             {
                 "field_paths": _leaf_paths(settings, "document.docx"),
-                "basis": "user_supplied",
+                "basis": "vera_default_proposal",
                 "history_ids": [],
-                "analysis": "Proposed DOCX presentation settings are supplied for explicit studio review; selected examples are style evidence only.",
+                "analysis": "Vera proposes DOCX presentation settings from the selected formatting evidence and user brief for explicit studio review; this record does not assert that every field was directly supplied by the user or observed in history.",
             }
         ]
         if not settings:
@@ -212,6 +225,33 @@ def approve_format_review(
                 raise ValueError(
                     "Selected format evidence changed or escapes its review"
                 )
+        preview_path = review_dir / "preview_manifest.json"
+        if not preview_path.is_file():
+            raise ValueError(
+                "Generate and review short and long previews before adoption"
+            )
+        preview = load_json(preview_path)
+        if (
+            preview.get("kind") != "document_format_previews"
+            or preview.get("review_digest") != review_digest
+        ):
+            raise ValueError("Previews belong to another format proposal")
+        outputs = preview.get("outputs", [])
+        if {record.get("path") for record in outputs} != {
+            "preview-short.docx",
+            "preview-long.docx",
+        } or len(outputs) != 2:
+            raise ValueError("Both short and long previews are required")
+        for record in outputs:
+            path = review_dir / record["path"]
+            if (
+                path.is_symlink()
+                or not path.is_file()
+                or file_digest(path) != record["sha256"]
+            ):
+                raise ValueError(
+                    "Format preview changed; regenerate and review before adoption"
+                )
         _validate_profile(payload["profile"])
         return persist_studio_profile(
             root,
@@ -227,6 +267,7 @@ def approve_format_review(
                     "reviewer": reviewer,
                     "confirmed_by_user": True,
                     "asserted_not_authenticated": True,
+                    "preview_manifest_sha256": file_digest(preview_path),
                 },
             },
         )

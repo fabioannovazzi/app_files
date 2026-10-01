@@ -20,6 +20,7 @@ from jsonschema import Draft202012Validator
 
 __all__ = [
     "load_studio_format",
+    "resolve_studio_format",
     "apply_studio_format",
     "display_number",
     "display_date",
@@ -64,7 +65,39 @@ def load_studio_format(
     }
     if _digest(fields) != payload["format_digest"]:
         raise ValueError("Studio profile digest does not match its approved content")
-    document = payload["profile"]["document"]
+    raw = None
+    if payload["profile"]["document"].get("docx", {}).get("use_logo"):
+        asset = payload["brand_assets"].get("logo")
+        if not isinstance(asset, dict):
+            raise ValueError("Approved DOCX logo was requested but is unavailable")
+        path = (root / asset["workspace_relative_path"]).resolve()
+        if not path.is_relative_to(
+            root / "studio_assets"
+        ) or path.suffix.lower() not in {".png", ".jpg", ".jpeg"}:
+            raise ValueError("DOCX logo must be a PNG/JPEG within studio_assets")
+        raw = path.read_bytes()
+        if len(raw) > 5_000_000 or hashlib.sha256(raw).hexdigest() != asset["sha256"]:
+            raise ValueError("Studio logo is too large or has changed since approval")
+    return resolve_studio_format(
+        payload["profile"]["document"],
+        studio_id=studio_id,
+        studio_name=studio_name,
+        version=payload["version"],
+        format_digest=payload["format_digest"],
+        logo_bytes=raw,
+    )
+
+
+def resolve_studio_format(
+    document: dict[str, Any],
+    *,
+    studio_id: str,
+    studio_name: str,
+    version: int,
+    format_digest: str,
+    logo_bytes: bytes | None = None,
+) -> dict[str, Any]:
+    """Resolve presentation for a proposal or approved profile without writing it."""
     layout = document["layout"]
     settings = {
         "font_family": {"Times": "Times New Roman", "Helvetica": "Arial"}.get(
@@ -106,6 +139,7 @@ def load_studio_format(
     margins = {
         side: layout[f"{side}_margin_mm"] for side in ("top", "bottom", "left", "right")
     }
+    margins = settings.get("margins_mm", margins)
     if (
         any(
             not isinstance(n, (int, float)) or not 8 <= n <= 70
@@ -125,25 +159,16 @@ def load_studio_format(
         raise ValueError("Studio report margins leave insufficient header/footer room")
     logo = None
     if settings["use_logo"]:
-        asset = payload["brand_assets"].get("logo")
-        if not isinstance(asset, dict):
-            raise ValueError("Approved DOCX logo was requested but is unavailable")
-        path = (root / asset["workspace_relative_path"]).resolve()
-        if not path.is_relative_to(
-            root / "studio_assets"
-        ) or path.suffix.lower() not in {".png", ".jpg", ".jpeg"}:
-            raise ValueError("DOCX logo must be a PNG/JPEG within studio_assets")
-        raw = path.read_bytes()
-        if len(raw) > 5_000_000 or hashlib.sha256(raw).hexdigest() != asset["sha256"]:
-            raise ValueError("Studio logo is too large or has changed since approval")
-        logo = base64.b64encode(raw).decode("ascii")
+        if not logo_bytes or len(logo_bytes) > 5_000_000:
+            raise ValueError("DOCX logo was requested but is unavailable or too large")
+        logo = base64.b64encode(logo_bytes).decode("ascii")
     # Only presentation and attribution enter a client run: no samples, voice,
     # source register, history, or other clients' content.
     return {
         "studio_id": studio_id,
         "studio_name": studio_name,
-        "version": payload["version"],
-        "format_digest": payload["format_digest"],
+        "version": version,
+        "format_digest": format_digest,
         "settings": settings,
         "margins_mm": margins,
         "logo_base64": logo,
