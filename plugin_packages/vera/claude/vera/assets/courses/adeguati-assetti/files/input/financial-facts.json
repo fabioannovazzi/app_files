@@ -1,0 +1,93 @@
+{
+  "fictional": true,
+  "entity": "Laboratorio AA — separate synthetic entity",
+  "currency": "EUR",
+  "periods": [
+    "2027-01",
+    "2027-02",
+    "2027-03"
+  ],
+  "opening_balance": {
+    "cash": "50",
+    "accounts_receivable": "0",
+    "inventory": "0",
+    "other_current_assets": "0",
+    "net_fixed_assets": "0",
+    "other_non_current_assets": "0",
+    "accounts_payable": "0",
+    "debt": "300",
+    "other_liabilities": "0",
+    "equity": "-250"
+  },
+  "base_schedule": [
+    {
+      "period": "2027-01",
+      "revenue": "1000",
+      "cogs": "600",
+      "operating_expenses": "500",
+      "depreciation_amortization": "0",
+      "interest_expense": "10",
+      "tax_expense": "0",
+      "capital_expenditure": "0",
+      "ending_accounts_receivable": "0",
+      "ending_inventory": "0",
+      "ending_other_current_assets": "0",
+      "ending_accounts_payable": "0",
+      "ending_other_liabilities": "0",
+      "debt_draws": "0",
+      "debt_repayments": "0",
+      "equity_contributions": "0",
+      "dividends": "0",
+      "variable_cogs": "600",
+      "variable_operating_expenses": "0"
+    },
+    {
+      "period": "2027-02",
+      "revenue": "1000",
+      "cogs": "600",
+      "operating_expenses": "500",
+      "depreciation_amortization": "0",
+      "interest_expense": "10",
+      "tax_expense": "0",
+      "capital_expenditure": "0",
+      "ending_accounts_receivable": "0",
+      "ending_inventory": "0",
+      "ending_other_current_assets": "0",
+      "ending_accounts_payable": "0",
+      "ending_other_liabilities": "0",
+      "debt_draws": "0",
+      "debt_repayments": "50",
+      "equity_contributions": "500",
+      "dividends": "0",
+      "variable_cogs": "600",
+      "variable_operating_expenses": "0"
+    },
+    {
+      "period": "2027-03",
+      "revenue": "1000",
+      "cogs": "600",
+      "operating_expenses": "500",
+      "depreciation_amortization": "0",
+      "interest_expense": "10",
+      "tax_expense": "0",
+      "capital_expenditure": "0",
+      "ending_accounts_receivable": "0",
+      "ending_inventory": "0",
+      "ending_other_current_assets": "0",
+      "ending_accounts_payable": "0",
+      "ending_other_liabilities": "0",
+      "debt_draws": "0",
+      "debt_repayments": "0",
+      "equity_contributions": "0",
+      "dividends": "0",
+      "variable_cogs": "600",
+      "variable_operating_expenses": "0"
+    }
+  ],
+  "approval_supplied": false,
+  "forecast_change": {
+    "period": "2027-01",
+    "operating_expenses": "550"
+  },
+  "limitations": "Technical financial lab only; assumptions require professional review. Not Officina Arco accounting."
+}
