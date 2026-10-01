@@ -195,6 +195,7 @@ def test_cowork_registry_removes_only_declared_host_exclusions() -> None:
     builder = load_builder()
     registry = {
         "routing_policy": "Use professional judgment.",
+        "host_qualification": {"browser_automation": {"requirement": "Live Chrome"}},
         "vera_wrapper_skills": [
             "skills/active/SKILL.md",
             "skills/datev-invoice-start/SKILL.md",
@@ -222,6 +223,11 @@ def test_cowork_registry_removes_only_declared_host_exclusions() -> None:
 
     assert json.loads(projected) == {
         "routing_policy": "Use professional judgment.",
+        "host_qualification": {
+            "browser_automation": {
+                "requirement": builder.COWORK_BROWSER_AUTOMATION_DESCRIPTION
+            }
+        },
         "vera_wrapper_skills": ["skills/active/SKILL.md"],
         "components": [
             {
@@ -238,6 +244,7 @@ def test_cowork_registry_removes_only_declared_host_exclusions() -> None:
 def test_cowork_registry_rejects_unexpected_missing_files(field: str) -> None:
     builder = load_builder()
     registry = {
+        "host_qualification": {"browser_automation": {"requirement": "Live Chrome"}},
         "vera_wrapper_skills": [],
         "components": [{"skills": [], "python_entrypoints": []}],
     }
@@ -258,6 +265,138 @@ def test_cowork_registry_rejects_unexpected_missing_files(field: str) -> None:
 def vera_entries(configured):
     builder, _, package = configured
     return builder.claude_package_entries(package)
+
+
+def test_audit_instructions_grants_keep_exact_final_approval_boundary(vera_entries):
+    paths = (
+        "skills/vera/SKILL.md",
+        "skills/vera/references/workflow-catalog.md",
+    )
+    for path in paths:
+        source = (ROOT / "plugins/vera" / path).read_text()
+        projected = vera_entries[path].decode()
+        for text in (source, projected):
+            assert "exact final application" in " ".join(text.split())
+            assert (
+                "declarations, signatures and payment remain with the user"
+                in " ".join(text.split())
+            )
+            assert "file on a client's behalf" not in text
+            assert (
+                "selection, without contacting clients, authenticating, signing, or filing"
+                not in " ".join(text.split())
+            )
+    portal = vera_entries[
+        "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/portal-preparation.md"
+    ].decode()
+    assert (
+        "Project approval and approval to compile do not authorize submission" in portal
+    )
+    assert (
+        "that also accepts declarations, signs or pays must still be handled by the user"
+        in " ".join(portal.split())
+    )
+
+
+def test_audit_instructions_catalogue_delegates_model_selection_to_installed_skill(
+    vera_entries,
+):
+    path = "skills/vera/references/workflow-catalog.md"
+    for text in (
+        (ROOT / "plugins/vera" / path).read_text(),
+        vera_entries[path].decode(),
+    ):
+        assert "configured native semantic worker" in text
+        assert (
+            "screening result is not professional approval or an audit opinion" in text
+        )
+        assert "GPT-5.6 Luna" not in text
+    assert json.loads(
+        vera_entries["modules/passive-invoice-audit/scripts/worker_config.json"]
+    ) == {"runtime": "cowork-haiku"}
+    assert "model: haiku" in vera_entries["agents/passive-invoice-reviewer.md"].decode()
+    assert (
+        "Distinguish configured Haiku from observed identity"
+        in vera_entries["skills/purchase-invoice-review/SKILL.md"].decode()
+    )
+
+
+def test_audit_instructions_treasury_is_professional_workflow_with_real_entrypoints(
+    vera_entries,
+):
+    path = "skills/vera/references/workflow-catalog.md"
+    for text in (
+        (ROOT / "plugins/vera" / path).read_text(),
+        vera_entries[path].decode(),
+    ):
+        section = text.split("## Professional workflows\n", 1)[1].split("\n## ", 1)[0]
+        assert "- `treasury-forecast`:" in section
+        assert text.count("- `treasury-forecast`:") == 1
+        assert (
+            "treasury-forecast"
+            not in text.split("## Public process explanations", 1)[1]
+        )
+    registry = json.loads(vera_entries["skills/vera/references/workflow-registry.json"])
+    treasury = next(
+        item
+        for item in registry["components"]
+        if item["component_id"] == "treasury-forecast"
+    )
+    assert "skills/treasury-forecast/SKILL.md" in registry["vera_wrapper_skills"]
+    assert treasury["skills"]
+    assert treasury["python_entrypoints"]
+    assert all(
+        path in vera_entries
+        for path in treasury["skills"] + treasury["python_entrypoints"]
+    )
+
+
+@pytest.mark.parametrize(
+    "path",
+    (
+        "skills/vera/SKILL.md",
+        "skills/vera/references/workflow-catalog.md",
+        "skills/browser-automation/SKILL.md",
+        "modules/browser-automation/skills/browser-automation/SKILL.md",
+    ),
+)
+def test_audit_instructions_cowork_browser_scope_matches_callable_pipeline(
+    vera_entries, path: str
+):
+    text = vera_entries[path].decode()
+    assert load_builder().COWORK_BROWSER_AUTOMATION_DESCRIPTION in text
+    assert "a Claude Desktop capability factory" not in text
+    assert "managed Python launcher" in text
+    assert (
+        "Live browser discovery, execution and replay validation are unavailable"
+        in text
+    )
+    for entry in ("capability_pipeline.py", "discovery_pack.py"):
+        assert f"modules/browser-automation/scripts/{entry}" in vera_entries
+    registry = json.loads(vera_entries["skills/vera/references/workflow-registry.json"])
+    assert registry["host_qualification"]["browser_automation"]["requirement"] == (
+        load_builder().COWORK_BROWSER_AUTOMATION_DESCRIPTION
+    )
+
+
+def test_audit_instructions_direct_skills_share_current_contract_and_component_names(
+    vera_entries,
+):
+    builder = load_builder()
+    for path, content in vera_entries.items():
+        if path.endswith("/SKILL.md"):
+            text = content.decode()
+            assert text.count(builder.COWORK_EXECUTION_CONTRACT.strip()) == 1, path
+    for workflow, component in (
+        ("financial-report-builder", "report-builder"),
+        ("vouching", "check-entries"),
+        ("purchase-invoice-review", "passive-invoice-audit"),
+    ):
+        assert f"skills/{workflow}/SKILL.md" in vera_entries
+        assert f"modules/{component}/skills/{workflow}/SKILL.md" in vera_entries
+    assert (
+        "On a read-only installation, skip cleanup" in builder.COWORK_EXECUTION_CONTRACT
+    )
 
 
 def test_cowork_package_has_no_dangling_onboarding_or_registry_paths(

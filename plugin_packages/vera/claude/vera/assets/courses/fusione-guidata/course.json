@@ -77,7 +77,7 @@
     },
     {
       "path": "modules/fusione-guidata/skills/fusione-guidata/SKILL.md",
-      "sha256": "e286352ffc09bed6f765b7b7f1fba6a4c8a815a8743aef047063801f1fbb9c21"
+      "sha256": "513ba8c80b161dea70187c831d9c532bcb29827a109c30d0c76e6f7b39bc3c58"
     },
     {
       "path": "modules/fusione-guidata/skills/fusione-guidata/agents/openai.yaml",
@@ -105,7 +105,7 @@
     },
     {
       "path": "skills/fusione-guidata/SKILL.md",
-      "sha256": "bd31d8cc0a89ef4bba75368d748d8927c7dae083e6a4e187dc426a356fdc0d83"
+      "sha256": "e6dda9b07d998403e38bad479d34aa9e02050dc98443490e67885506a0aa6034"
     },
     {
       "path": "vendor/modules/__init__.py",

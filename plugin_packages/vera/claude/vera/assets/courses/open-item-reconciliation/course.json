@@ -116,7 +116,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
-      "sha256": "9c18270f318f6a1ddeca6eb448071a5242577a12e4f8f77edd86d047c30d51e1"
+      "sha256": "024deea4706ccbe9bb0098caa99a135a206dfbe44abe51aaa23962489bfd6839"
     },
     {
       "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/references/geneva.md",
@@ -164,7 +164,7 @@
     },
     {
       "path": "skills/open-item-reconciliation/SKILL.md",
-      "sha256": "c9293a658ec8ef7b7f2b8aa218af5596c10567bd637fc7f4dfc04f32a55b8b39"
+      "sha256": "82453e22b1b3caf97a326921cb28449c06317c43312fdc5d7792afcd8eb850b7"
     },
     {
       "path": "vendor/modules/__init__.py",

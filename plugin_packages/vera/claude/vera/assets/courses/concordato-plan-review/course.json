@@ -105,7 +105,7 @@
     },
     {
       "path": "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
-      "sha256": "0d6d38e3e49f58dd71a2562fce31cdb46b34b35de075ba88b204310d54aa4332"
+      "sha256": "46c8a908037234ecaaa402c4244a3a509efed2c4558f35b11f5d8453347d6271"
     },
     {
       "path": "modules/concordato-plan-review/vendor/modules/__init__.py",
@@ -149,7 +149,7 @@
     },
     {
       "path": "skills/concordato-plan-review/SKILL.md",
-      "sha256": "2f686784058bffd08e96a34ab6fd86e9452b5a013ec55e7ce2c05463089f28e6"
+      "sha256": "257a6d02c2b50d5b65dd2eb5dae8de0e80a025ee5212acb08e91d24b99624f3e"
     },
     {
       "path": "vendor/modules/__init__.py",

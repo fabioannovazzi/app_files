@@ -101,7 +101,7 @@
     },
     {
       "path": "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
-      "sha256": "1178c3b98022a8c049c8d9696a232ce6ebe74ef03c68189be206fe249b0687eb"
+      "sha256": "75fa5068e27358f2000d130892feb7d71479e688beeef31b20dfe9f672c8a878"
     },
     {
       "path": "modules/adeguati-assetti/skills/adeguati-assetti/references/geneva.md",
@@ -149,7 +149,7 @@
     },
     {
       "path": "skills/adeguati-assetti/SKILL.md",
-      "sha256": "769db51d763ca5f9df954fd83080d6b800db6230b106215aefb73e7949c15295"
+      "sha256": "491b846f6dbd601ec5adc922e5b870e973af3f0d3e9b86b6d01eaa82bd6ef210"
     },
     {
       "path": "vendor/modules/__init__.py",

@@ -1,13 +1,18 @@
 ---
 name: browser-automation
-description: Use when an authorized operator or developer wants Vera to teach, discover, build, validate, or repair a repeatable process on Agenzia delle Entrate, TeamSystem, Gmail, or another website through the operator's existing Chrome session, including when the developer cannot access the target system.
+description: Use when a user wants Vera to inspect, explain or edit a supplied sanitized developer pack or capability JSON, and run packaged local evidence/capability pipelines through the managed Python launcher. Live browser discovery, execution and replay validation are unavailable in this package. Do not operate authenticated websites or claim that local pipeline checks prove live validation.
 ---
 
 ## Cowork execution contract
 
+Public workflow names select skills; component IDs select module paths.
+`financial-report-builder` uses component `report-builder`, `vouching` (historically
+called Check Entries) uses `check-entries`, and `purchase-invoice-review` uses
+`passive-invoice-audit`. These component IDs are not additional workflows.
+
 For journal-sampling, open-item-reconciliation, journal-bank-reconciliation,
-concordato-plan-review, report-builder and check-entries only, optional cache
-cleanup is available from the installed Vera root:
+concordato-plan-review, financial-report-builder and vouching only, optional cache
+cleanup uses the corresponding component ID from the installed Vera root:
 
 ```bash
 python3 modules/<module>/scripts/implementation_bootstrap.py --repair
@@ -17,6 +22,13 @@ For a standalone module, use `python3 scripts/implementation_bootstrap.py --repa
 from its root. This validates the implementation first, then removes only regular,
 single-link `__pycache__/*.pyc` files under that module's own `vendor` tree. It
 leaves directories, other files, symlinks and shared vendor trees untouched.
+This supported maintenance command is the only cache-cleanup exception to the
+prohibition on editing the installed tree by hand. It is optional: ordinary
+validation and execution tolerate incidental bytecode without removing it.
+On a read-only installation, skip cleanup. If the command reports a permission
+error, retain that error and continue the ordinary validated workflow when its
+checks pass; do not chmod, delete files manually, copy or patch the installation,
+or bypass the host's permissions to make cleanup succeed.
 If `validate_implementation_tree` ever fails with a file/directory-contract
 mismatch, do not delete or modify files inside the installed plugin tree by hand
 and do not bypass a sandbox/permission rejection to do so. Stop and report the
@@ -94,4 +106,4 @@ override this Cowork contract.
 
 # Automazione web
 
-Live process discovery, execution, and validation require Claude Desktop, the connected Chrome extension, and its Playwright browser runtime; those capabilities are unavailable in this Cowork package. Cowork may inspect, explain, or edit a supplied sanitized developer pack or capability JSON and may run the packaged deterministic evidence or capability pipeline when local Python is already available, but it must not claim live discovery or validation. Continue with useful process scoping, developer-pack review, or capability review. Do not request credentials, substitute a video or standalone browser, or operate an authenticated website.
+Live process discovery, execution, and validation require Claude Desktop, the connected Chrome extension, and its Playwright browser runtime; those capabilities are unavailable in this Cowork package. Cowork may inspect, explain, or edit a supplied sanitized developer pack or capability JSON and may run the packaged deterministic evidence or capability pipeline through Vera's managed Python launcher, but it must not claim live discovery or validation. Continue with useful process scoping, developer-pack review, or capability review. Do not request credentials, substitute a video or standalone browser, or operate an authenticated website.
