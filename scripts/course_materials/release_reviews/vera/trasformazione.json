@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "trasformazione",
-  "course_sha256": "6b0fb7b9c6248aef773c90fa01267424605212b204d03d7b377df3a90171eb89",
+  "course_sha256": "7a44605757cba0806884096ae8672eb01fb6b18afc0f7e6394fb3f7ecd844ad9",
   "reviewer": "Codex: authored outline and actual synthetic native output review",
   "reviewed_at": "2026-10-01T08:02:24.833788+00:00",
   "review_scope": "Reviewed five authored narratives, factual inputs and ten native synthetic demo/practice regressions. Italian lesson top and practice sections inspected in the browser. Review records in the regression are simulated, not learner decisions. Direct component execution and rendering do not establish installed enabled-plugin, native voice, paired-window or learner acceptance. No professional, legal or tax qualification is claimed.",
@@ -282,5 +282,11 @@
         ]
       }
     }
+  },
+  "esg_catalogue_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-01T17:33:03.580438+00:00",
+    "previous_course_sha256": "6b0fb7b9c6248aef773c90fa01267424605212b204d03d7b377df3a90171eb89",
+    "content_review": "Compared complete authored course and all input records with HEAD: unchanged. Only the pinned shared courseware policy changes: ESG is now available to Vera; hosted Clara exclusions remain. No execution, semantic method, external data route or old editorial judgment is replaced. Prior artifact reviews retained. Current native cases are required by the release gate; voice, learner and professional acceptance are not claimed."
   }
 }

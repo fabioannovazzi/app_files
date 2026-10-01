@@ -684,3 +684,33 @@ Fictional inputs, model proposals and results read by the native OpenAI host
 enter its account model context; local storage does not mean offline inference.
 Complete the normal report, declarations and local ledger finalization without
 telemetry or external feedback.
+
+## ESG evidence and corrected observations
+
+Use the `esg_evidence_then_same_engagement_update` route and the current ESG
+specialist. Render the exact language kit. Initially select only brief-<lang>.md
+and energy.csv through the tutorial adapter; reserve energy-update.csv for the
+successor run. The rendered input list includes that future source for discovery,
+not permission to treat it as initial evidence. Use the original filenames in
+the returned bindings. Bind row 1 as observed, row 2 as not_available and row 3
+as not_applicable only after reading the declared fictional scope in the brief.
+Zero is not missing, and a blank does not establish non-applicability.
+
+Ask for the participant’s actual decision before record_decision. A refused or
+unexpressed decision stays open; do not manufacture an approved history to finish
+a lesson. Any illustrative operator decision must be expressly described as a
+simulation. Build only partial drafts with exact dependencies. Preserve the first
+run, import the update as a new Archive source and prepare/start a successor in
+the same engagement with historical and new inputs. start_case references the
+first context; rebinding logical ID energy creates its new version. Inspect the
+current resume_case output and show the old decision/draft as outdated. Do not
+renew approval or present an outdated memo as current. Missing and non-applicable
+observations remain null with distinct status and rationale.
+
+Practice starts a fresh tutorial client from files/practice/, then follows the
+same within-engagement update. Preserve both attempts. Write codex_run_review.md,
+show the actual model-data report and finalize the normal Archive artifact
+manifest only when the ordinary specialist requirements are met. Developer
+regression outputs are not learner decisions, participation or professional
+acceptance. Cowork reuses these fictional materials through its existing written
+single-conversation lesson; native voice and teacher/worker chats do not apply.

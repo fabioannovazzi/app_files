@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "financial-analysis",
-  "course_sha256": "970366b7359c1441b24d688eaff70cd6766f68471934446c2a32edc0bfae2bc7",
+  "course_sha256": "38efd19bc5c800f4b9ea7d30496f99fea2e010e789f38d939b3dff1e1634c04b",
   "reviewer": "Codex: first-use material, native financial result and localized delivery-note review",
   "reviewed_at": "2026-09-14T18:31:25.025430+00:00",
   "review_scope": "Read both fictional four-balance statements and all five localized contexts and lesson outlines. Ten current registered net-debt executions pass and finalize their source-bound runs. Reviewed the actual prepared result, metrics and line items; those native files are byte-identical across languages within each phase. Read all five February delivery notes and verified that every March note differs only in the actual date, loan, cash, excluded payable and result values. The notes exercise the skill's ordinary Codex delivery stage through a test-only authored interpretation; they are not shipped answers or a deterministic engine report. No browser presentation, learner understanding, voice or two-window acceptance is claimed. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -494,5 +494,11 @@
       "skills/financial-analysis/SKILL.md"
     ],
     "scope": "Inspected the specialist entrypoint diff: only its frontmatter description changes to clarify selection of the existing accounting workflow. All course content outside source fingerprints is exactly unchanged. Prior per-language editorial and artifact reviews remain historical evidence; current-source demo and practice cases are rerun as a release gate. No new learner or professional acceptance is asserted."
+  },
+  "esg_catalogue_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-01T17:33:03.580438+00:00",
+    "previous_course_sha256": "970366b7359c1441b24d688eaff70cd6766f68471934446c2a32edc0bfae2bc7",
+    "content_review": "Compared complete authored course and all input records with HEAD: unchanged. Only the pinned shared courseware policy changes: ESG is now available to Vera; hosted Clara exclusions remain. No execution, semantic method, external data route or old editorial judgment is replaced. Prior artifact reviews retained. Current native cases are required by the release gate; voice, learner and professional acceptance are not claimed."
   }
 }

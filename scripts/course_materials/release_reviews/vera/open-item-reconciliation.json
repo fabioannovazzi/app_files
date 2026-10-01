@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "open-item-reconciliation",
-  "course_sha256": "29a62db66b32c9b916ac05da80b8b5e1d3325749e4ea7c9830cc09c747448e3f",
+  "course_sha256": "305f0da944e0f085f8953dc70c2179a59178840f19f7113c32ed6d8709222b4a",
   "reviewer": "Codex: source, first-use outline and actual native document/workbook review",
   "reviewed_at": "2026-09-14T17:59:18.652300+00:00",
   "review_scope": "Prepared full-payment matching example and cumulative April practice. All 51 Word pages from native run 07 and 34 summary/request worksheet views were visually inspected. All three operational sheets were also checked through a native LibreOffice conversion, which disproved the excessive row heights in the secondary preview renderer. Run 08 re-executes the final corrected outlines with unchanged inputs and production method: full Word body XML and both operational/request workbook cell values and styles match run 07 after exact managed-source and run-metadata substitutions. The local HTML review page could not be opened because of browser URL security policy; visual browser interaction, learner understanding, native voice and two-window behavior are not attested. Row review remains pending; this is not professional case approval. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -454,5 +454,11 @@
       "skills/open-item-reconciliation/SKILL.md"
     ],
     "scope": "Inspected the specialist entrypoint diff: only its frontmatter description changes to clarify selection of the existing accounting workflow. All course content outside source fingerprints is exactly unchanged. Prior per-language editorial and artifact reviews remain historical evidence; current-source demo and practice cases are rerun as a release gate. No new learner or professional acceptance is asserted."
+  },
+  "esg_catalogue_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-01T17:33:03.580438+00:00",
+    "previous_course_sha256": "29a62db66b32c9b916ac05da80b8b5e1d3325749e4ea7c9830cc09c747448e3f",
+    "content_review": "Compared complete authored course and all input records with HEAD: unchanged. Only the pinned shared courseware policy changes: ESG is now available to Vera; hosted Clara exclusions remain. No execution, semantic method, external data route or old editorial judgment is replaced. Prior artifact reviews retained. Current native cases are required by the release gate; voice, learner and professional acceptance are not claimed."
   }
 }

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "composizione-negoziata",
-  "course_sha256": "0b70de16e78dc2cd444fee6ca6cfaf651488da66e3b1f5d489c049bc67e1316f",
+  "course_sha256": "7e04d93bd12013784f0e160564c7fbee1282b9a91bdb536b10beb8d33bfe98ac",
   "reviewer": "Codex /root - authored outline, real local execution and saved artifact review",
   "reviewed_at": "2026-10-01T08:09:14.553451+00:00",
   "review_scope": "Expanded the existing introductory entry without adding a duplicate workflow. Reviewed all five full outlines, case/update/research inputs and independent challenges. Executed ten fresh role-specific native journeys and inspected actual net-debt metrics, original/revised treasury outputs, final no-agreement reports, closure/residual records and model-data disclosures. Native calculations and persistence execute real code. Professional prose and financial interpretation in regression runs are explicitly synthetic test fixtures; no learner or real professional approval is claimed. Research intake and no-fetch source inspection ran; full current-law acquisition, answer generation and semantic validation remain unexecuted, visibly retained as law_gap. Canonical JSON/helper headings are not promised to be localized. Native voice, learner understanding, installed-host and professional acceptance remain separate.",
@@ -362,5 +362,11 @@
         ]
       }
     }
+  },
+  "esg_catalogue_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-01T17:33:03.580438+00:00",
+    "previous_course_sha256": "0b70de16e78dc2cd444fee6ca6cfaf651488da66e3b1f5d489c049bc67e1316f",
+    "content_review": "Compared complete authored course and all input records with HEAD: unchanged. Only the pinned shared courseware policy changes: ESG is now available to Vera; hosted Clara exclusions remain. No execution, semantic method, external data route or old editorial judgment is replaced. Prior artifact reviews retained. Current native cases are required by the release gate; voice, learner and professional acceptance are not claimed."
   }
 }

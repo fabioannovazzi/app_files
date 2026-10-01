@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "adeguati-assetti",
-  "course_sha256": "525b9cb491566738ad8a6227e9be6ccf969195de364a2b7deb1d50f78659b99b",
+  "course_sha256": "67869d5444ace7d46c4b1c4a4111ada141250fabc222c749053fce3d35eb314e",
   "reviewer": "Codex /root: source, multilingual editorial and synthetic artifact review",
   "reviewed_at": "2026-10-01T08:03:58.950451+00:00",
   "review_scope": "Replaces the assessment-only outline with five localized resumable construction chapters and a separate financial lab. Read current specialist skill, native contract, intake, exports and adapters. Inspected original fictional inputs, localized Word/PDF/Markdown content, registers, snapshots, financial rows and KPI history. Rendered Italian course and chapter and English course in the Codex browser; visually inspected all pages of a generated manual. The PDF exporter may orphan its final version line on a second page; this remains a disclosed pre-existing export limitation, not a claim of client-ready layout. Fixed export headings are Italian and some test attribution/engineering labels are English. Native voice, window arrangement, learner participation/understanding, authenticated professional approval and real-company operating effectiveness are not established. Technical tests manufacture separately receipted synthetic decisions only at execution time; no approved case, approval or result is shipped as a teaching input. The 390-second metadata describes the introductory lesson; extended construction and financial labs require further resumable sessions. Deployment review: inspected the five localized data-context statements after replacing the ambiguous OpenAI/Cowork account name with the selected host or service account. The existing host-specific footer identifies OpenAI for Codex and Anthropic for Cowork. Inputs, execution code, reviewed output artifacts and processing boundaries are unchanged.",
@@ -602,5 +602,11 @@
         ]
       }
     }
+  },
+  "esg_catalogue_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-01T17:33:03.580438+00:00",
+    "previous_course_sha256": "525b9cb491566738ad8a6227e9be6ccf969195de364a2b7deb1d50f78659b99b",
+    "content_review": "Compared complete authored course and all input records with HEAD: unchanged. Only the pinned shared courseware policy changes: ESG is now available to Vera; hosted Clara exclusions remain. No execution, semantic method, external data route or old editorial judgment is replaced. Prior artifact reviews retained. Current native cases are required by the release gate; voice, learner and professional acceptance are not claimed."
   }
 }

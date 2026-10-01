@@ -9013,5 +9013,145 @@
         ]
       }
     ]
+  },
+  "vera/esg-reporting-assurance": {
+    "group": "workflow",
+    "parent_workflow": null,
+    "revision": "2026-10-01.1",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "esg_evidence_then_same_engagement_update"
+    },
+    "files": [
+      {
+        "source": "esg/demo/energy.csv",
+        "path": "files/input/energy.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "esg/demo/energy-update.csv",
+        "path": "files/input/energy-update.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "esg/demo/brief-it.md",
+        "path": "files/input/brief-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "esg/demo/brief-en.md",
+        "path": "files/input/brief-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "esg/demo/brief-fr.md",
+        "path": "files/input/brief-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "esg/demo/brief-de.md",
+        "path": "files/input/brief-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "esg/demo/brief-es.md",
+        "path": "files/input/brief-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "esg/practice/energy.csv",
+        "path": "files/practice/energy.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "esg/practice/energy-update.csv",
+        "path": "files/practice/energy-update.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "esg/practice/brief-it.md",
+        "path": "files/practice/brief-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "esg/practice/brief-en.md",
+        "path": "files/practice/brief-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "esg/practice/brief-fr.md",
+        "path": "files/practice/brief-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "esg/practice/brief-de.md",
+        "path": "files/practice/brief-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "esg/practice/brief-es.md",
+        "path": "files/practice/brief-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
   }
 }

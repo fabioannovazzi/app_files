@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "centrale-rischi-review",
-  "course_sha256": "f40251fc7ddb3f922d89e26e571c361b79055c58138e3fa9e583368cc9e96014",
+  "course_sha256": "b86a1863a308a94423a17bb1f313ff66a10aaf0494e10a7cce63e22af5e997f7",
   "reviewer": "Codex: Italian first-use lesson, native analysis and workbook/report material review",
   "reviewed_at": "2026-09-14T20:31:40.844503+00:00",
   "review_scope": "Read the Italian lesson and all four fictional sources. The demonstration and practice execute native inspection, reviewed column mapping, analysis and commentary finalization. The practice preserves a completed March run in the same engagement before producing April. The final 36 component, native teaching and bound-workflow checks pass without failures or skips. All 18 workbook sheets were rendered in 23 demonstration views; two additional practice views were inspected. Workbook values, styles and dimensions in the final run match those rendered files. Read the actual Markdown report, HTML content, source-bound metrics, commentary and exact delivery links. Browser URL policy blocked opening the local dashboard, so browser visual quality and interaction are not certified. No native voice, human comprehension, elapsed lesson duration or professional approval is claimed. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -295,5 +295,11 @@
       "plugins/_shared/vendor/modules/vera_assurance/contracts.py"
     ],
     "review": "Every authored lesson field and input record matches current main. The sole shared source change adds scissione-guidata to the supported workflow IDs; existing workflow behavior is unchanged. Original reviewers, dates, judgments and output hashes are preserved. Fresh native teaching executions are required in CI; no new professional or learner acceptance is claimed."
+  },
+  "esg_catalogue_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-01T17:33:03.580438+00:00",
+    "previous_course_sha256": "f40251fc7ddb3f922d89e26e571c361b79055c58138e3fa9e583368cc9e96014",
+    "content_review": "Compared complete authored course and all input records with HEAD: unchanged. Only the pinned shared courseware policy changes: ESG is now available to Vera; hosted Clara exclusions remain. No execution, semantic method, external data route or old editorial judgment is replaced. Prior artifact reviews retained. Current native cases are required by the release gate; voice, learner and professional acceptance are not claimed."
   }
 }
