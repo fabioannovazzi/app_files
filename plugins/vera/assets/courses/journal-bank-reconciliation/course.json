@@ -159,7 +159,7 @@
     {
       "path": "skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "5a1e731cc547ea844a4f7ee17f650c23f607de089d5230f448272486265ad0df"
+      "sha256": "72bbea35979953bb873a521fc5702ae2f73e27303b5d5e91f2f1bc3d05feab37"
     },
     {
       "path": "vendor/modules/__init__.py",

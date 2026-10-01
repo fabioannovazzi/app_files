@@ -171,7 +171,7 @@
     {
       "path": "skills/management-control-pack/SKILL.md",
       "repository_path": "plugins/vera/skills/management-control-pack/SKILL.md",
-      "sha256": "7fb8a6ab84851546e91d357f0923faf36e2589b7d08e7b509b3c57e48b839ccf"
+      "sha256": "33ad5ed98b04cadedf8485908821d58b1fc49e1b398e93c2586e891eb00ceb61"
     },
     {
       "path": "vendor/modules/__init__.py",
