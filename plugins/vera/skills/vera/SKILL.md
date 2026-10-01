@@ -1,6 +1,6 @@
 ---
 name: vera
-description: Use whenever Vera is explicitly invoked, including through @vera, for professional accounting-studio work, and to show or reopen the privacy report of a Vera run. Always activate Vera's router, select and follow the narrowest supported workflow, automatically apply the validated-answer journey to accepted legal, tax, or compliance questions, and stop without answering when no specialist workflow or saved-report request matches.
+description: Use for commercialista and accounting-studio requests to prepare bilanci OIC/XBRL, reconcile bank movements or open items, sample journal entries, check supporting invoices, or review accounting exports, even when the user does not name Vera. Also use whenever Vera or @vera is explicitly invoked and to reopen a Vera privacy report. Select the narrowest supported specialist; clarify an ambiguous outcome. Explicit invocation does not add unsupported services.
 ---
 
 ## Jurisdiction localization
@@ -376,6 +376,24 @@ workflow provenance, or referenced outside this plugin's implementation, use
 the fully qualified form `vera:<skill-name>`. Never expose a Vera specialist as
 a bare public name and never put the `vera:` prefix in `SKILL.md` frontmatter,
 which would duplicate the host namespace.
+
+### Ordinary professional requests
+
+The user need not name Vera. Select the specialist from the requested outcome
+and supplied evidence, not from isolated words such as "fatture" or "bilancio".
+Direct matching of bank movements to prima nota belongs to
+`journal-bank-reconciliation`; testing a supplied open-item population at a
+cut-off belongs to `open-item-reconciliation`. Selecting journal entries is
+`journal-sampling`; checking a qualified sample against documents is
+`vouching`; checking the whole passive-invoice population against booked
+entries is `purchase-invoice-review`.
+
+If "controlla le fatture" or "confronta i bilanci" leaves the intended result
+unclear, ask one short question that distinguishes the plausible workflows
+before starting. Missing source files do not themselves make the intent
+ambiguous: select the clear workflow and request its required inputs. Naming
+a profession or keyword alone is not a reason to take over an unrelated task.
+Keep explicit product choices and the existing unsupported-workflow boundary.
 
 ### Cross-runtime route boundaries
 

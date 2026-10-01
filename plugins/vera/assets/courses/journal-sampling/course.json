@@ -159,7 +159,7 @@
     {
       "path": "skills/journal-sampling/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-sampling/SKILL.md",
-      "sha256": "757f8c43e9a2fe31da7bf871c68569f414c5bbaeeb3d99af747e4d1bc149dfc5"
+      "sha256": "45735dd142235b40661f74c4509dd87e2e8533697103929d2b222a06eb909cb9"
     },
     {
       "path": "vendor/modules/__init__.py",
