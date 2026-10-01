@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "variance-analysis",
-  "course_sha256": "ecf60b433495712e813d60de0ef6c06f756da2ef30df3f130d9c043dd6adccd7",
+  "course_sha256": "65e22f868dee7a9a029a273884e384d5261959f26e254e9e0327d687dc437623",
   "reviewer": "Codex: first-use lesson and current native variance outputs",
   "reviewed_at": "2026-09-14T19:41:43.894547+00:00",
   "review_scope": "Read both fictional monthly input populations, all five localized contexts and first-use outlines, and the current calculation and interpretation outputs. Ten current native exercises pass within 92 component/native checks, without failures or skips. Visually inspected all 55 pages of the ten native Word reports, both distinct workbooks, and the four main chart families for every locale/phase. Final chart bytes match the previously inspected revision except the Spanish practice monthly chart, which was inspected separately. Workbook cells, styles and visibility match within each phase after resolving shared strings and equal-magnitude row order. Alternative sequences were reviewed through their native rows, reconciliation and authored interpretation; no visual inspection of every alternative PNG is claimed. Reports retain technical appendices, spacious chart pages and wrapped long German labels. This accepts prepared materials and their demonstrated current output, not learner understanding, voice interaction or professional approval. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -645,5 +645,14 @@
       "plugins/_shared/vendor/modules/vera_assurance/contracts.py"
     ],
     "review": "Every authored lesson field and input record matches current main. The sole shared source change adds scissione-guidata to the supported workflow IDs; existing workflow behavior is unchanged. Original reviewers, dates, judgments and output hashes are preserved. Fresh native teaching executions are required in CI; no new professional or learner acceptance is claimed."
+  },
+  "discovery_source_refresh": {
+    "reviewed_by": "Codex /root",
+    "reviewed_at": "2026-10-01T11:44:13.076890+00:00",
+    "previous_course_sha256": "ecf60b433495712e813d60de0ef6c06f756da2ef30df3f130d9c043dd6adccd7",
+    "changed_sources": [
+      "skills/variance-analysis/SKILL.md"
+    ],
+    "scope": "Inspected the specialist entrypoint diff: only its frontmatter description changes to clarify selection of the existing accounting workflow. All course content outside source fingerprints is exactly unchanged. Prior per-language editorial and artifact reviews remain historical evidence; current-source demo and practice cases are rerun as a release gate. No new learner or professional acceptance is asserted."
   }
 }

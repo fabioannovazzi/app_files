@@ -1,1 +1,5 @@
-ACTUALIZACIÓN FICTICIA. El deudor propone ahora el 15 de enero de 2027 para el mismo cobro de 100.000 EUR. No se adjunta prueba de pago ni aceptación profesional. Los demás datos siguen siendo los iniciales.
+Primero guiado importar actualizacion-es.md: cobro al 15 de enero de 2027 y rechazo. Preservar primer forecast, preparar informe negativo. 
+
+receipt.expected_date=2027-01-15
+negotiation.outcome=no_agreement
+filing_receipts=not_supplied

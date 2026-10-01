@@ -1,27 +1,34 @@
 {
   "vera/composizione-negoziata": {
-    "title": "Track evidence and changes in a composizione negoziata",
-    "goal": "Start an advisor case, review a draft and resume it when a receipt moves.",
-    "scenario": "Entirely synthetic company: EUR 50,000 cash, EUR 100,000 expected on 15 November 2026 and EUR 80,000 payable on 30 November. The debtor has not confirmed the date; aging and orders are absent.",
-    "scope": "First operational path: role, gaps, an actual treasury analysis, a note and review after a change. This is neither an eligibility opinion nor a complete professional case.",
-    "inputs": "Open case-en.md for initial facts and assumptions. update-en.md contains only the new information for the practice phase.",
-    "request": "Vera, I advise the company. Examine the synthetic inputs, flag gaps, run treasury forecasting and prepare an evidence-linked initial note. Do not assume any decision has been approved.",
+    "title": "Composizione negoziata: from evidence to the final report",
+    "goal": "Execute one fictional case, separate company advisor and independent expert, and deliver a negative-outcome draft with residual responsibilities.",
+    "scenario": "Officina Arco CNC is entirely fictional and Italian. At 31 October 2026: loan EUR 120,000, available cash EUR 50,000, restricted deposit EUR 10,000, trade payables EUR 80,000. Assumed receipt EUR 100,000 on 15 November; payment EUR 80,000 on 30 November. Aging, collectability confirmation, orders, appointment and filing receipts are absent. These selected positions are incomplete.",
+    "scope": "An extended local course across several sessions: advisor demonstration, guided change and independent expert exercise in a separate engagement. Five to eight minutes applies to one explained segment; computation, research, review and practice take additional time. No qualification or automatic eligibility assessment.",
+    "inputs": "Read the case, balances.csv and treasury-demo tables. Empty tables mean no supplied evidence, not no real activity. treasury-practice and treasury-independent accompany the update and independent exercise. The research brief contains a generic public question and URLs to verify, not current law or an approved answer.",
+    "request": "Vera, I advise fictional Officina Arco CNC. Read the evidence, separate facts, assumptions and gaps, execute the existing financial and treasury workflows and draft an evidence-conditioned proposal. Guide my exact-version review. Keep the tutorial local without external sends or simulated professional acceptance.",
     "steps": [
-      "In the working window, register the synthetic client and tutorial engagement. Vera distinguishes role, sources, assumptions and missing evidence before proposing the next activity.",
-      "Vera runs treasury forecasting with explicit coverage and assumptions, binds the saved result to the note and records a review only after your confirmation of that version. Open the model-data report.",
-      "Resume the same case with the update. Preserve the first note, inspect affected dependencies and request a new analysis. Previous confirmations remain historical."
+      "Intake: create the local tutorial case and advisor engagement, import exact sources and record scope, date, currency, urgent events and gaps. Ask only questions that change the work. An absent appointment does not block training and must not be called verified. Open the first note and assign evidence requests.",
+      "Analysis: read the current financial and treasury skills. Review the exercise definition of net debt: loan less available cash, excluding restricted deposit and trade payables. Execute net_debt and the supplied treasury tables, complete those runs and bind declared results to a successor CNC run. Check values, evidence and coverage; balances do not prove collectability and the forecast is not the ministerial test.",
+      "Research: use quesito-legale-fiscale with the public brief. Explicitly choose ordinary research or an available Deep Research route under the skill, without an automatic hosted handoff. Follow planner and review; inspect applicable primary sources, save contract, answer, sources and limits, and bind the actual deliverable. URLs, snippets and structurally valid records do not prove legal currency or correctness. Failed access remains an open question. No tutorial facts in queries.",
+      "Draft and review: write chronology, evidence, assumptions, analysis, conditional proposal and questions. Open the exact draft and ask the learner what to correct. Record only their actual decision: local attribution does not verify identity or approve a handoff. Do not call cnc-review or manufacture receipts. Show the actual model-data report.",
+      "Guided change: import the update and practice tables in the same engagement, retain stable IDs and earlier versions. Check stale descendants and wider semantic impact. Recompute treasury, bind the new output and rewrite proposal and report: delayed receipt and creditor refusal, with no documented agreement. Earlier decisions do not apply to the new draft.",
+      "Handoff: open the advisor report with no_agreement, bases, limits, missing acts/receipts, residual task owners and dates to verify. Keep draft_handoff: completing a run neither signs, files nor closes the procedure. Next perform the independent expert exercise in a separate engagement using only selected documents: neutral questions, unverified independence/appointment, the expert’s own report and distinct responsibilities."
     ],
     "deliverables": [
-      "Case note with evidence, gaps, assumptions and next activity.",
-      "Executed forecast, saved revisions and a report of actual data use."
+      "Intake note and evidence-gap requests with sources and owners.",
+      "Executed financial pack, initial and revised forecasts, research answer and review or explicit gap.",
+      "Immutable case revisions, role-specific final report, negative handoff and residual tasks.",
+      "Readable model-data report, artifact declaration and resumable history."
     ],
-    "review": "Trace the receipt from the reported fact to the forecast and note. A file does not establish collectability; a recorded confirmation is not a signature.",
+    "review": "Trace each figure from CSV to output to report. Separate net debt, bank balance and minimum cash. Check exact versions, bases, role and stale state before deciding. Economic judgment, independence, applicable law, signature and obligations remain professional responsibilities; do not invent receipts or a positive outcome.",
     "checkpoints": [
-      "Distinguish the company advisor from the independent expert.",
-      "Identify unsupported assumptions and versions to revisit after the delay."
+      "What is missing and what work can continue? Is restricted cash available?",
+      "Which result actually ran and which task is only proposed?",
+      "Which dependencies and decisions need review after the delay?",
+      "How do the two reports differ and who owns residual tasks?"
     ],
-    "practice": "Introduce update-en.md: the debtor now proposes 15 January 2027. Request a fresh analysis and note without carrying old confirmations into the new version.",
-    "success": "You can start, review and resume a case while keeping limitations, dependencies and required decisions explicit.",
-    "repeat": "Specify role, engagement, reference date and authorized real-case documents. Verify decisive legal sources at use; independence and conclusions remain professional responsibilities."
+    "practice": "First, guided, import update-en.md: receipt moves to 15 January 2027 and the creditor refuses. Preserve the first forecast and draft the negative report. Then independently open exercise-en.md in a separate expert engagement: receipt moves to 15 February, beyond the horizon, with no agreement. Use treasury-independent, deliver a neutral draft, demonstrate source links and resume in a fresh session. Do not automatically copy the advisor’s private case.",
+    "success": "You can explain source coverage and limits, demonstrate recalculation and revisions, distinguish the engagements and explain a negative outcome with outstanding decisions and work. Actual practice and your explanation are required; automated tests do not certify learning.",
+    "repeat": "For real work select fresh documents and a professional destination separate from training, confirm role and mandate and follow the current contract. What data reaches the model: the selected runtime may read imported sources, financial tables, forecasts, notes, dependencies, drafts, decisions and discussed public sources. Local helpers do not send these files to Mparanza; local storage is not offline inference or anonymization. The report records actual use, not every model read. Optional hosted review sends opaque identifiers, digest, decision, account and time, and is excluded from this tutorial. No feedback sends, filing or communications to parties."
   }
 }

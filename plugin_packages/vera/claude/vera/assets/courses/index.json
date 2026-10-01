@@ -242,7 +242,7 @@
     },
     "composizione-negoziata": {
       "path": "composizione-negoziata/course.json",
-      "sha256": "bb30e53e0529c4e257ce7d72878413f6e03142c1e3b624d8d321ee7487f8f733",
+      "sha256": "5b0d32e9cfa40dee7f55a34c03247c70e337304919c2081cde8b1b0e4a7f5485",
       "languages": [
         "it",
         "en",
@@ -254,18 +254,18 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Seguire evidenze e variazioni di una composizione negoziata",
-        "en": "Track evidence and changes in a composizione negoziata",
-        "fr": "Suivre les preuves et les changements d’une composizione negoziata",
-        "de": "Belege und Änderungen einer Composizione negoziata verfolgen",
-        "es": "Seguir evidencias y cambios de una composizione negoziata"
+        "it": "Composizione negoziata: dal fascicolo alla relazione finale",
+        "en": "Composizione negoziata: from evidence to the final report",
+        "fr": "Composizione negoziata : du dossier au rapport final",
+        "de": "Composizione negoziata: von den Belegen zum Abschlussbericht",
+        "es": "Composizione negoziata: del expediente al informe final"
       },
       "goals": {
-        "it": "Avviare una pratica come advisor, rivedere una bozza e riprenderla quando cambia un incasso.",
-        "en": "Start an advisor case, review a draft and resume it when a receipt moves.",
-        "fr": "Ouvrir un dossier de conseil, revoir un projet et le reprendre après le report d’un encaissement.",
-        "de": "Einen Beratungsfall beginnen, einen Entwurf prüfen und nach einem verschobenen Zahlungseingang fortsetzen.",
-        "es": "Abrir un expediente como asesor, revisar un borrador y retomarlo cuando se retrasa un cobro."
+        "it": "Eseguire un caso fittizio completo, distinguendo advisor ed esperto, e consegnare una bozza con esito negativo e responsabilità residue.",
+        "en": "Execute one fictional case, separate company advisor and independent expert, and deliver a negative-outcome draft with residual responsibilities.",
+        "fr": "Exécuter un cas fictif, distinguer conseil de l’entreprise et expert indépendant, puis livrer un projet avec échec des négociations et responsabilités restantes.",
+        "de": "Einen fiktiven Fall ausführen, Unternehmensberater und unabhängigen Experten trennen und einen Entwurf bei gescheiterten Verhandlungen mit verbleibenden Aufgaben liefern.",
+        "es": "Ejecutar un caso ficticio, distinguir asesor de la empresa y experto independiente, y entregar un borrador con negociación fallida y responsabilidades pendientes."
       }
     },
     "comunicazione-professionale": {
