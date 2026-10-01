@@ -17,7 +17,7 @@
     },
     "browser_automation": {
       "component": "browser-automation",
-      "requirement": "Connected Chrome with the documented Playwright tab API; native steps and unobservable downloads remain explicit gaps."
+      "requirement": "inspect, explain or edit a supplied sanitized developer pack or capability JSON, and run packaged local evidence/capability pipelines through the managed Python launcher. Live browser discovery, execution and replay validation are unavailable in this package. Do not operate authenticated websites or claim that local pipeline checks prove live validation."
     }
   },
   "components": [

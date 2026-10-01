@@ -123,4 +123,4 @@ The 0.1.312 CNC release integrates the Patent Box and Adeguati assetti courses f
 
 ## Studio document format release binding — 1 October 2026
 
-Vera 0.1.320 adds the studio Word-format pipeline and its course. The 47-entry snapshot records the new skill and refreshed manifest/entrypoint hashes. All 46 prior Geneva rows are preserved. The new row is Unresolved for CH-GE: generic format and synthetic report checks do not establish a French/CHF Geneva consumer case or professional acceptance. Language remains independent of jurisdiction.
+Vera 0.1.324 adds the studio Word-format pipeline and its course. The 47-entry snapshot records the new skill and refreshed manifest/entrypoint hashes. All 46 prior Geneva rows are preserved. The new row is Unresolved for CH-GE: generic format and synthetic report checks do not establish a French/CHF Geneva consumer case or professional acceptance. Language remains independent of jurisdiction.

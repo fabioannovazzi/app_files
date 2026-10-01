@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/client-file-preparation/skills/email-cliente/SKILL.md",
-      "sha256": "6f3aa94ca18ffb406515ec87aff28e608bb8022e71efcb808b922bf5bc469a90"
+      "sha256": "6105ac402dba44e387c5f7a28a4e93ae1a70792917b29e0f8562659887a75bee"
     },
     {
       "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
@@ -149,7 +149,7 @@
     },
     {
       "path": "skills/email-cliente/SKILL.md",
-      "sha256": "1f91c8bff55055a3096c648fede03212b8f3f1203e12fc6234784adff4c6cabe"
+      "sha256": "5ba442effc2a2fdec6586ae6d73067322c7047763cd09e500307f96109f72611"
     },
     {
       "path": "vendor/modules/__init__.py",

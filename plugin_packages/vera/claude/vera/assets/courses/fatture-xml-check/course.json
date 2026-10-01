@@ -96,7 +96,7 @@
     },
     {
       "path": "modules/client-file-preparation/skills/fatture-xml-check/SKILL.md",
-      "sha256": "c57a22a218050ce826b041a1c85cee152128d63fd0c68bbd6be6cf558fdf6db2"
+      "sha256": "99e614b287d703ac1c7afd83c4982381115c2edd52a3de05b315d26088f04b9e"
     },
     {
       "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
@@ -148,7 +148,7 @@
     },
     {
       "path": "skills/fatture-xml-check/SKILL.md",
-      "sha256": "a12daa2fbe5feaf79d32c62121ebefc3305718ee02cb55fa14cab03f5394233d"
+      "sha256": "05398df61fe99cf9d4da3e8c12e7419aeb56445752f92dea99b502a207f98848"
     },
     {
       "path": "vendor/modules/__init__.py",

@@ -1107,7 +1107,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "0deec93afa64dc28c095b368f8f54ebd3f3e6a3c6b3aefa92b31312c854f4a41",
+  "catalogue_fingerprint": "75b768599e3642baa05d070255fd58427d1190bd40e203563daef6838934f23c",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1199,7 +1199,7 @@
   },
   "studio_format_release_binding": {
     "reviewed_at": "2026-10-01",
-    "version": "0.1.320",
+    "version": "0.1.324",
     "previous_catalogue_fingerprint": "3538bdec8b05585e790befc8f5dc03b322aca3f93aca7c76087c9e51018ea8c7",
     "added_skills": [
       "studio-document-format"
@@ -1207,6 +1207,12 @@
     "changed_entrypoints": [
       "vera"
     ],
-    "review": "Register the new studio Word-format pipeline as Unresolved for CH-GE, refresh the manifest and reviewed entrypoint identity, and preserve all 46 earlier target rows. Report instructions add explicit approved-format reuse; teaching and router instructions add the studio-format route. This is release catalogue integration, not a Swiss professional qualification."
+    "review": "Register the new studio Word-format pipeline as Unresolved for CH-GE, refresh the manifest and reviewed entrypoint identity, and preserve all 46 earlier target rows. Report instructions add explicit approved-format reuse; teaching and router instructions add the studio-format route. This is release catalogue integration, not a Swiss professional qualification. Merge retains the newer 0.1.321 audit boundary instruction and all existing target dispositions."
+  },
+  "technical_instruction_audit_binding": {
+    "reviewed_at": "2026-10-01",
+    "version": "0.1.321",
+    "previous_catalogue_fingerprint": "3538bdec8b05585e790befc8f5dc03b322aca3f93aca7c76087c9e51018ea8c7",
+    "review": "Clarifies the existing final-approval grants submission boundary in the router. Refreshes catalogue identity; existing Geneva dispositions and professional-fit limits are preserved. No new jurisdictional acceptance or execution authority is inferred. The merged Patent Box, Adeguati assetti and CNC courses, discovery routing and their separate recorded limits are preserved."
   }
 }

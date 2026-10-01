@@ -73,7 +73,7 @@
     },
     {
       "path": "modules/passive-invoice-audit/skills/purchase-invoice-review/SKILL.md",
-      "sha256": "143d9dfa04625ca520db57b10f6826c7681a12d5dc6b4a678afd57c0addecaf9"
+      "sha256": "76692162ec6dc07fb140f088f94d908c61bdd792df5d42700c9095361db5dfeb"
     },
     {
       "path": "modules/passive-invoice-audit/skills/purchase-invoice-review/references/geneva.md",
@@ -121,7 +121,7 @@
     },
     {
       "path": "skills/purchase-invoice-review/SKILL.md",
-      "sha256": "143d9dfa04625ca520db57b10f6826c7681a12d5dc6b4a678afd57c0addecaf9"
+      "sha256": "76692162ec6dc07fb140f088f94d908c61bdd792df5d42700c9095361db5dfeb"
     },
     {
       "path": "vendor/modules/__init__.py",

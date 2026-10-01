@@ -217,7 +217,7 @@
     },
     {
       "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
-      "sha256": "a194fce89e2f7bd93d5b68c164d0786ada447559613acfdffc468cc6f9e3570e"
+      "sha256": "4131312fd1992510b22ffd394bdf90952295f433952f43e53ab9a53f83f3406f"
     },
     {
       "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/agents/openai.yaml",
@@ -345,7 +345,7 @@
     },
     {
       "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
-      "sha256": "e4b915e8e64e0071eb9aca1414273f305b4d0876c3a4e76e74d205f1c504dff5"
+      "sha256": "4b8c010199f7372db4a2e56f32e64c44fbfb8d99ea808e7b8af07da79c48210f"
     },
     {
       "path": "modules/report-builder/vendor/modules/__init__.py",
@@ -477,7 +477,7 @@
     },
     {
       "path": "skills/studio-document-format/SKILL.md",
-      "sha256": "5932110dc94c75d71ae449d652aa60177967a085aa0fb7518fe836f953eb240d"
+      "sha256": "99b159f96b6657145b1e169ba3f6db47da58b6cee80eb7583d1ea6b32db769bc"
     },
     {
       "path": "skills/studio-document-format/references/procedure.md",

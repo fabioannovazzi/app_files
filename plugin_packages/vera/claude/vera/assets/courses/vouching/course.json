@@ -93,7 +93,7 @@
     },
     {
       "path": "modules/check-entries/skills/vouching/SKILL.md",
-      "sha256": "f16ca02bd97da6ed20e9fe945c108a2a6b698c4d5517f2b803cafaaaa417a9b1"
+      "sha256": "bcb210a49411e7efb83e3a8025f8d16899c915def5d967d9c51b7acd76ff8565"
     },
     {
       "path": "modules/check-entries/skills/vouching/references/geneva.md",
@@ -141,7 +141,7 @@
     },
     {
       "path": "skills/vouching/SKILL.md",
-      "sha256": "7552c836c07e072319c771ef46b02b9306caf7b0b0e38146ca7bf60f757df965"
+      "sha256": "bc87b3789fd187b8fe67f06334a808b295c264a0d9f8c89da6df06b64c16a9e8"
     },
     {
       "path": "vendor/modules/__init__.py",

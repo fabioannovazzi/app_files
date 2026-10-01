@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "comunicazione-professionale",
-  "course_sha256": "47d18238615c5d067d9c44a9cc0dffb0dd0c866b90a1e24152cbe3c402f5f185",
+  "course_sha256": "de47ca0ae2e55039b2cb7bb5b832e7f98a1566beb14214b1fae554c9c01da869",
   "reviewer": "Codex: first-use/source/output inspection; independent claim session 01a0a0b8-d623-7cd0-870c-ec3921855b09 and independent editorial session /root/communication_editorial_isolated_07",
   "reviewed_at": "2026-09-14T17:03:02.450310+00:00",
   "review_scope": "Actual current local native packaging with explicitly synthetic professional-review transitions. Exact revised contributions and all 220 claims across both products were independently assessed, followed by a fresh editorial session separate from generation, source assurance and benchmark qualification. The final FAQs preserve the exact reviewed bodies once; root inspected the native packaging and all ten practice emails. Host identities are operator attestations, not API receipts. The outputs are Markdown FAQs and text emails; no HTML, rendered palette, professional approval, sending, real learner, or voice/two-window acceptance is claimed.",
@@ -450,5 +450,29 @@
     "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
     "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
     "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json"
+  },
+  "studio_format_source_binding_20261001": {
+    "reviewer": "Codex - bounded studio-format source compatibility review",
+    "reviewed_at": "2026-10-01T18:46:46.298437+00:00",
+    "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+    "previous_course_sha256": "47d18238615c5d067d9c44a9cc0dffb0dd0c866b90a1e24152cbe3c402f5f185",
+    "current_course_sha256": "de47ca0ae2e55039b2cb7bb5b832e7f98a1566beb14214b1fae554c9c01da869",
+    "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+    "changed_sources": [
+      "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-de.json",
+      "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-en.json",
+      "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-es.json",
+      "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-fr.json",
+      "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-it.json",
+      "plugins/comunicazione-professionale/requirements.txt",
+      "plugins/comunicazione-professionale/schemas/model_contribution.schema.json",
+      "plugins/comunicazione-professionale/scripts/promote_studio_profile.py",
+      "plugins/comunicazione-professionale/scripts/review_document_format.py",
+      "plugins/comunicazione-professionale/scripts/studio_document_format.py",
+      "plugins/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
+      "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+    ],
+    "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+    "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
   }
 }
