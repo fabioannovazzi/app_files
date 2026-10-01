@@ -81,7 +81,7 @@
     },
     {
       "path": "modules/composizione-negoziata/skills/composizione-negoziata/SKILL.md",
-      "sha256": "6618a1fa1734e70cd32d51d91116190d426b2b75e8e3febd005da849b76bd445"
+      "sha256": "ec9b2bb739ccc4b76df536dc61f9ffd2365e47e22599962445266a16e34d2111"
     },
     {
       "path": "modules/composizione-negoziata/skills/composizione-negoziata/agents/openai.yaml",
@@ -89,7 +89,7 @@
     },
     {
       "path": "skills/composizione-negoziata/SKILL.md",
-      "sha256": "fa87ac2a9ff089eda1c6e4d96721e98599785eef23c387027a84d821fbece0ec"
+      "sha256": "b6a5a4eae0ec2790c0375bf09e07d59a42a7069bb4e4e424a5660a70be5ab94a"
     },
     {
       "path": "vendor/modules/__init__.py",

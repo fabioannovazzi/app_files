@@ -173,11 +173,11 @@
     },
     {
       "path": "modules/browser-automation/skills/browser-automation/SKILL.md",
-      "sha256": "755001c4e67727767a8df08000a3bb8a02b3d093df4b8d6dde17e7e42d52417c"
+      "sha256": "451aed51a64052abc4fdf76a82b80f23c02bf5e63373806d1fdba7fe71885df4"
     },
     {
       "path": "skills/browser-automation/SKILL.md",
-      "sha256": "7a1a86b459d5f360774229270af502d946d34eeadcae05fa789c66745d3d85a3"
+      "sha256": "451aed51a64052abc4fdf76a82b80f23c02bf5e63373806d1fdba7fe71885df4"
     },
     {
       "path": "vendor/modules/__init__.py",

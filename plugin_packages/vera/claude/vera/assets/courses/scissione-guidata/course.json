@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/scissione-guidata/skills/scissione-guidata/SKILL.md",
-      "sha256": "c2ff3d2da6cc8ab763f2dac5d66e40011bb185733986af580ab7aee3d3c55c63"
+      "sha256": "42c8b99a3ee64787a93f6b39cf3b442b40f876f013aa06159ae2decd88249fab"
     },
     {
       "path": "modules/scissione-guidata/vendor/modules/__init__.py",
@@ -101,7 +101,7 @@
     },
     {
       "path": "skills/scissione-guidata/SKILL.md",
-      "sha256": "21a79125ef575447646416ba1d38b3c60ef2b9b12283f1cfc4cdb50d6f247f57"
+      "sha256": "e2fc688e87b2a55828c160cce0a54a4a7ab01695d8039f8cb63582236a69735c"
     },
     {
       "path": "vendor/modules/__init__.py",

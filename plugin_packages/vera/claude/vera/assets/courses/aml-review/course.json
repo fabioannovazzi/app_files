@@ -53,7 +53,7 @@
     },
     {
       "path": "modules/aml-review/skills/aml-review/SKILL.md",
-      "sha256": "21e469c580774ff8f28cf6c330a786d174e2ff3d224caaee7aa72ac2fa47a1cf"
+      "sha256": "d38bab4c1ce0089ae32573e8c5d1e81a79b997874bb1e8ef15d22b3af963167b"
     },
     {
       "path": "modules/aml-review/skills/aml-review/references/geneva.md",
@@ -101,7 +101,7 @@
     },
     {
       "path": "skills/aml-review/SKILL.md",
-      "sha256": "f4260020843efd52b04da55304d9715ffad693b1717190db6e71a3929191b255"
+      "sha256": "f9b83a988aa56bac7139569e15712dd7d944e985f3ddce6fd931996999a8db44"
     },
     {
       "path": "vendor/modules/__init__.py",

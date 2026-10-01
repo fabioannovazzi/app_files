@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/app-files-scissione-deploy/plugins/vera",
-  "version": "0.1.319",
-  "captured_at": "2026-10-01T17:19:27.233465+00:00",
-  "catalogue_fingerprint": "99d4faa72fe4f9fc3f19964b03ece44fc749105005c51b5fb28419aeec10b880",
-  "manifest_sha256": "79d6cf71f4d16c66786bf69d0c9226c087f3f47f9a52dc2810843079e0f1c2f3",
+  "version": "0.1.322",
+  "captured_at": "2026-10-01T18:04:32.160304+00:00",
+  "catalogue_fingerprint": "e1a0a2b5ad688a0cba32f932fd9ee74202a845ae45fc59766348850dbb2a508d",
+  "manifest_sha256": "22fec0e5cf3c1a052150e8eb1f6d09316f91d6a722463a872b937316b7dfe70e",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -229,7 +229,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "76e32ad938e83f582b46ab093a035d5bb2fe5f0d75e5012f5e6724d2898250a2"
+      "sha256": "c9510a0b86042d357ad2ab5a23300ff7018de5ea3a76ec27c2e4f9dbf911080b"
     },
     {
       "function_id": "vouching",

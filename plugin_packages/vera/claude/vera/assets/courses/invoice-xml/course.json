@@ -77,7 +77,7 @@
     },
     {
       "path": "modules/invoice-xml/skills/invoice-xml/SKILL.md",
-      "sha256": "c1cccb4994d918b1e344fb8429d97e3bb9abbaeb356b91deec08f2e551000736"
+      "sha256": "036fd2a1aa69ceb611daf83d6cf4758ec973fa3bfdf2f0def061f3fea3dadefa"
     },
     {
       "path": "modules/invoice-xml/vendor/modules/__init__.py",
@@ -121,7 +121,7 @@
     },
     {
       "path": "skills/invoice-xml/SKILL.md",
-      "sha256": "98c77e0927d709f59d46ab7daa197b629303f0c779e3ddbc1bdcc0c40e920b1c"
+      "sha256": "9588c27c1aa46be4f18512c3d13f84b617334c95586e48cdf579ad7f7af18354"
     },
     {
       "path": "vendor/modules/__init__.py",
