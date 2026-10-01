@@ -210,7 +210,7 @@
     },
     "business-valuation": {
       "path": "business-valuation/course.json",
-      "sha256": "4a90d33150b172529111739abd87763744b4340244a11c8fd59647dc952c6f83",
+      "sha256": "1c268b8c8f22b6c2aef2a7fc0bd44ce8eb5a9b2b2b48b7f47188faaa30e6bef9",
       "languages": [
         "it"
       ],
@@ -621,6 +621,34 @@
         "fr": "Apprendre à vérifier une liste d’impayés et distinguer les factures disposant d’une preuve de paiement de celles restant à clarifier à une date donnée.",
         "de": "Lernen, eine Liste gemeldeter offener Posten zu prüfen und Rechnungen mit Zahlungsnachweis von noch zu klärenden Rechnungen zum Stichtag zu unterscheiden.",
         "es": "Aprender a comprobar una lista de impagados y distinguir las facturas con prueba de pago de las que siguen pendientes de aclaración en una fecha concreta."
+      }
+    },
+    "patent-box-review": {
+      "path": "patent-box-review/course.json",
+      "sha256": "15c2b330fc00dc1a7cda55930380d0154a5d04405be749ef631cc65c6acd290f",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Preparare un dossier Patent Box da evidenze e costi",
+        "en": "Prepare a Patent Box dossier from evidence and costs",
+        "fr": "Préparer un dossier Patent Box à partir des preuves et des coûts",
+        "de": "Eine Patent-Box-Akte aus Belegen und Kosten vorbereiten",
+        "es": "Preparar un expediente Patent Box con evidencias y costes"
+      },
+      "goals": {
+        "it": "Imparare a fornire documenti sul software, riconciliare i costi, distinguere inclusioni, esclusioni e sospensioni e leggere un fascicolo A/B da rivedere.",
+        "en": "Learn to supply software evidence, reconcile costs, distinguish included, excluded and suspended components and read a draft A/B dossier.",
+        "fr": "Apprendre à fournir les pièces du logiciel, rapprocher les coûts, distinguer inclusion, exclusion et suspension et lire un dossier A/B à revoir.",
+        "de": "Softwarebelege bereitstellen, Kosten abstimmen, einbezogene, ausgeschlossene und ausgesetzte Teile unterscheiden und einen A/B-Entwurf lesen lernen.",
+        "es": "Aprender a aportar pruebas del software, conciliar costes, distinguir inclusión, exclusión y suspensión y leer un borrador A/B."
       }
     },
     "presenza-digitale-studio": {

@@ -1,5 +1,30 @@
 # Prepared teaching kits
 
+## Patent Box prepared course addition — 1 October 2026
+
+The prepared `vera/patent-box-review` kit supplies ordinary software evidence
+and a separate exercise with an undocumented additional payroll/project link
+in Italian, English, French, German and Spanish. Conversation and outline are
+localized; the engine retains Italian document titles/fields. Use the current
+Patent Box procedure, ledger inspection/normalization and exact proposal review.
+Only the labelled synthetic rules at historical date 2026-09-23 are permitted.
+No preapproved mapping, final proposal, decision or output is shipped.
+
+`tests/plugins/test_teaching_patent_box_execution.py` executes imported kit inputs
+through real archive, normalization, proposal, synthetic review, draft Word/PDF
+and local finalization. The test interpretations/confirmations are fixtures,
+not learner participation or professional authorization. The exercise preserves
+the first run and retains the missing linkage as NOT_TESTED/SUSPENDED. Installed
+Vera 0.1.295 was enabled on this authoring host and has no Patent Box course;
+source/package validation cannot update an open session. All 32 professional
+UAT scenarios remain NOT_RUN. Real rules, mandates and professional acceptance
+are unchanged by this course.
+
+The current compiler reports 48 owning-product kits and 216 localized lessons
+(Vera 35/154, Clara 9/42, Lucia 4/20). The counts and historical sections below
+are earlier release records. Native voice, paired-window visibility and real
+learner understanding require a live user session.
+
 The September 29 valuation addition supplies an Italian first-use kit for
 `vera/business-valuation`, matching its Italian document-output contract.
 `inputs/business-valuation` contains a fictional FCFF mandate and a separate

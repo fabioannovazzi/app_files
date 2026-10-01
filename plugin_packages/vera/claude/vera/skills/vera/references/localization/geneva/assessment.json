@@ -1085,7 +1085,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "bf072498ef5fbdaeea8e46e4c0cde6fe4e7161dee4313b9f96200efdc39aaec6",
+  "catalogue_fingerprint": "a7ec36b507049f73ad7298a050c296894434ce7868b52c68e86d27a6c547ffc1",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1146,5 +1146,11 @@
     "version": "0.1.299",
     "previous_catalogue_fingerprint": "8e3d54f9359fbca867287ad57183488948f1880e1ac89fa62be0b0a7efa9aecf",
     "review": "Refreshes the manifest/version binding for the Cowork packaging repair. All 46 canonical skill entrypoints are byte-identical to the previous catalogue. Existing Geneva judgments and evidence limits are preserved."
+  },
+  "patent_box_course_release_binding": {
+    "reviewed_at": "2026-10-01",
+    "version": "0.1.304",
+    "previous_catalogue_fingerprint": "bf072498ef5fbdaeea8e46e4c0cde6fe4e7161dee4313b9f96200efdc39aaec6",
+    "review": "Refreshes the manifest/version binding for the five-language fictional Patent Box course. All 46 skill entrypoints are byte-identical to the recorded baseline. Existing Geneva judgments are preserved; translated teaching does not qualify the Italian preview for Swiss use or establish professional acceptance."
   }
 }
