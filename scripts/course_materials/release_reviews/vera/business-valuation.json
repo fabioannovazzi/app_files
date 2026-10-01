@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-valuation",
-  "course_sha256": "61c87082e0a6e63cf86ecc62e655ea245bf537e271ff003c3a7940da21110954",
+  "course_sha256": "2faafd5469c339e4d9f2ad79e493a90e3fd272f892f2697688bc0b192dc5ad38",
   "reviewer": "Codex /root: course, receipt-bound lifecycle, arithmetic and artifact review",
   "reviewed_at": "2026-10-01T07:53:39.156413+00:00",
   "review_scope": "Expanded the existing Italian DCF course rather than creating a duplicate framework. Read all five fictional notes and the complete rendered lesson; checked source-preview/download links visually in Chrome. Native test executions cover demo/practice, missing terminal and recovery. A four-run same-engagement regression imports exact receipts, prepares and starts the real workflow, generates honest no-model disclosures for its code-only fixtures, seals every output, then lists and reopens the first run without recalculation and verifies unchanged artifact hashes. Independently checked textbook arithmetic and LibreOffice recalculation of all 60 calculation cells across complete cases; missing case has no numeric method output. Inspected all 16 native PDF pages and 17 DOCX-rendered pages. Reports remain partial or blocked with no accepted conclusion. Human comprehension, paired voice, fresh enabled installation and professional/PIV acceptance are unverified.",
