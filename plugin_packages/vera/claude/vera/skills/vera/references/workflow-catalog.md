@@ -295,5 +295,4 @@ recreating a central function register.
 - `scissione-guidata`: prepare a versioned dossier and ownership/allocation schedules for an Italian OIC partial proportional scission into a new beneficiary. Require authorized entity evidence and exact-version professional decisions; preserve unknowns, separate book/tax/economic/shareholder tax values and reopen dependent approvals after changes. No automatic legal rules, accounting entries, statutory deadlines, signatures or filings. Other routes are explicitly unsupported.
 The prepared local lesson uses fictional inputs and an independent changed-evidence practice. Read `../../scissione-guidata/SKILL.md`; actual professional confirmations remain necessary.
 
-
 - `learn-with-vera`: learn an installed function in writing using prepared files, actual execution and practice in one conversation.
