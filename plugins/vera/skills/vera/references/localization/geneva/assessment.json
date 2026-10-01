@@ -1085,7 +1085,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "405dd335c57e6b1c916f9b533e38c9679bc42a6b5c67ca7be79f2c4155847b05",
+  "catalogue_fingerprint": "e1a0a2b5ad688a0cba32f932fd9ee74202a845ae45fc59766348850dbb2a508d",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1180,5 +1180,13 @@
     "version": "0.1.321",
     "previous_catalogue_fingerprint": "3538bdec8b05585e790befc8f5dc03b322aca3f93aca7c76087c9e51018ea8c7",
     "review": "Clarifies the existing final-approval grants submission boundary in the router. Refreshes catalogue identity; existing Geneva dispositions and professional-fit limits are preserved. No new jurisdictional acceptance or execution authority is inferred. The merged Patent Box, Adeguati assetti and CNC courses, discovery routing and their separate recorded limits are preserved."
+  },
+  "scissione_course_release_binding": {
+    "reviewed_at": "2026-10-01",
+    "version": "0.1.308",
+    "previous_catalogue_fingerprint": "bf072498ef5fbdaeea8e46e4c0cde6fe4e7161dee4313b9f96200efdc39aaec6",
+    "review": "Refreshes only the canonical manifest/version binding. All 46 skill entrypoints are byte-identical to the previous catalogue. Preserves every Geneva disposition and evidence limit. The new five-language course demonstrates an Italian OIC synthetic case; translated lessons do not qualify Swiss applicability or professional acceptance.",
+    "integrated_main": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+    "source_version": "0.1.322"
   }
 }

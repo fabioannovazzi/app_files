@@ -1,0 +1,286 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "scissione-guidata",
+  "course_sha256": "6acc3c36475f0fa23d3e10585879e805d70f69b2f7159bf061211776387eab93",
+  "reviewer": "Codex: authored localized course and substantive synthetic output review",
+  "reviewed_at": "2026-10-01T07:54:45.892302+00:00",
+  "review_scope": "Read all five localized outlines and mandates, both allocation CSVs and actual native schedules/dossiers. Synthetic host interpretations and exact-version approvals live only in regression fixtures. Italian native dossier captions and stable field keys are explained in the lesson language; no engine translation, live voice, learner participation, legal correctness or professional acceptance is claimed. Separate same-engagement continuation preserves byte-identical prior run outputs. No source selection or legal qualification is established by these arithmetic checks.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Request a versioned Italian OIC partial proportional demerger into a new beneficiary, prepare a first unapproved dossier, review actual assumptions and read separate allocation/ownership schedules.",
+        "inputs_and_request": "Read the localized fictional Arco mandate and two-row CSV. Anna/Bruno own 60/40; the machine and loan distinguish book, tax and economic values. Missing lease, unexamined contingent liabilities and null shareholder tax costs are explicit. No pre-approved case or answer ships.",
+        "execution_and_checkpoints": "The actual current runner starts without approvals and blocks approval of a perimeter dependent on unknown facts. Test-only confirmations enable the bounded calculation; the dossier stays partial. Checkpoints occur at the missing-evidence review and the actual separate-value schedule. Ordinary learner choices remain natural-language decisions.",
+        "deliverable_and_next_action": "Open the actual review.html/review.md, ownership_before_after.json and allocations.json. Versioned revision, artifact hashes and change impact retain provenance. Mechanical completion does not produce a signature, filing, tax-neutrality conclusion or legal approval.",
+        "practice_and_repeat": "Import updated physical evidence in a new local run of the same engagement with the finalized exact prior revision as a genuine upstream artifact. The changed allocation source reopens machine/loan, valuation and calculation; unchanged route and ownership approvals remain. Compare the pre-review changed version with final schedules and retain the original run.",
+        "language_and_pacing": "Complete it lesson and input narrative reviewed. Native dossier headings remain Italian and field keys remain stable; the teacher explains them in the selected language. The six-stage outline totals 390 seconds as a pacing target, not a measured learner result. Codex teacher/worker and Cowork written projection remain distinct."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_scissione_execution::test_scissione_kit_runs_missing_evidence_and_selective_reopening[demo-it]",
+        "result_review": "Actual net book transfer is 90000, tax transfer 60000 and economic transfer 240000; owners receive economic amounts 144000/96000 and 6000/4000 whole units. Lease and contingencies remain unknown; shareholder tax costs stay null. Initial unreviewed revision has no calculation and cannot approve the dependent perimeter.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.html",
+            "sha256": "ac1254ab6b9ad149b4a797474d15fbaf3a468b12e740f570f4e5ae714c128a63"
+          },
+          {
+            "name": "ownership_before_after.json",
+            "sha256": "716a07e6886f7fad2a1615d9e4276b86ec7514f070bcf3450a33f6c7ce819528"
+          },
+          {
+            "name": "allocations.json",
+            "sha256": "3ff127a4c30a2ba62f30ccdb4345c9a8e4a7260f1d5f8526151a470a984a93dd"
+          },
+          {
+            "name": "change_impact.json",
+            "sha256": "18d8d3764ea93662e2f150ecede89702dbdc9f2eb35a69b9cc9d3fdf323f005b"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_scissione_execution::test_scissione_kit_runs_missing_evidence_and_selective_reopening[practice-it]",
+        "result_review": "Actual updated net economic transfer is 270000 and remaining 530000; owner transfers become 162000/108000, with unchanged whole units, book/tax values and null tax costs. Genuine finalized prior artifact provenance is verified, dependent reviews reopen before explicit test-only re-review, route/ownership approvals survive, and every prior run file stays byte-identical. The missing lease and contingencies keep the dossier partial.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.html",
+            "sha256": "6f067260af059046cebbbe32d42c3d157e174953f3d49f2406e489ba71504f6b"
+          },
+          {
+            "name": "ownership_before_after.json",
+            "sha256": "45044204cad1ae5fc19a669eb25b09a3527283e4bd6ff165e6f7f4293f0ee524"
+          },
+          {
+            "name": "allocations.json",
+            "sha256": "d2a6fb92e3f151e4370368e49aa9d4a6f80c1128fab237a4bd54e75c8a8103c9"
+          },
+          {
+            "name": "change_impact.json",
+            "sha256": "18d8d3764ea93662e2f150ecede89702dbdc9f2eb35a69b9cc9d3fdf323f005b"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Request a versioned Italian OIC partial proportional demerger into a new beneficiary, prepare a first unapproved dossier, review actual assumptions and read separate allocation/ownership schedules.",
+        "inputs_and_request": "Read the localized fictional Arco mandate and two-row CSV. Anna/Bruno own 60/40; the machine and loan distinguish book, tax and economic values. Missing lease, unexamined contingent liabilities and null shareholder tax costs are explicit. No pre-approved case or answer ships.",
+        "execution_and_checkpoints": "The actual current runner starts without approvals and blocks approval of a perimeter dependent on unknown facts. Test-only confirmations enable the bounded calculation; the dossier stays partial. Checkpoints occur at the missing-evidence review and the actual separate-value schedule. Ordinary learner choices remain natural-language decisions.",
+        "deliverable_and_next_action": "Open the actual review.html/review.md, ownership_before_after.json and allocations.json. Versioned revision, artifact hashes and change impact retain provenance. Mechanical completion does not produce a signature, filing, tax-neutrality conclusion or legal approval.",
+        "practice_and_repeat": "Import updated physical evidence in a new local run of the same engagement with the finalized exact prior revision as a genuine upstream artifact. The changed allocation source reopens machine/loan, valuation and calculation; unchanged route and ownership approvals remain. Compare the pre-review changed version with final schedules and retain the original run.",
+        "language_and_pacing": "Complete en lesson and input narrative reviewed. Native dossier headings remain Italian and field keys remain stable; the teacher explains them in the selected language. The six-stage outline totals 390 seconds as a pacing target, not a measured learner result. Codex teacher/worker and Cowork written projection remain distinct."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_scissione_execution::test_scissione_kit_runs_missing_evidence_and_selective_reopening[demo-en]",
+        "result_review": "Actual net book transfer is 90000, tax transfer 60000 and economic transfer 240000; owners receive economic amounts 144000/96000 and 6000/4000 whole units. Lease and contingencies remain unknown; shareholder tax costs stay null. Initial unreviewed revision has no calculation and cannot approve the dependent perimeter.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.html",
+            "sha256": "2a72c7a5e25ef1ec7e75201a1dfdc8836c88cf687b8e77a77098fabe3cf0c34c"
+          },
+          {
+            "name": "ownership_before_after.json",
+            "sha256": "716a07e6886f7fad2a1615d9e4276b86ec7514f070bcf3450a33f6c7ce819528"
+          },
+          {
+            "name": "allocations.json",
+            "sha256": "3ff127a4c30a2ba62f30ccdb4345c9a8e4a7260f1d5f8526151a470a984a93dd"
+          },
+          {
+            "name": "change_impact.json",
+            "sha256": "18d8d3764ea93662e2f150ecede89702dbdc9f2eb35a69b9cc9d3fdf323f005b"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_scissione_execution::test_scissione_kit_runs_missing_evidence_and_selective_reopening[practice-en]",
+        "result_review": "Actual updated net economic transfer is 270000 and remaining 530000; owner transfers become 162000/108000, with unchanged whole units, book/tax values and null tax costs. Genuine finalized prior artifact provenance is verified, dependent reviews reopen before explicit test-only re-review, route/ownership approvals survive, and every prior run file stays byte-identical. The missing lease and contingencies keep the dossier partial.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.html",
+            "sha256": "7426035bf9ee8bd2447ed1840b403ba751190e86703ca5cfeba5b1c635dbbb03"
+          },
+          {
+            "name": "ownership_before_after.json",
+            "sha256": "45044204cad1ae5fc19a669eb25b09a3527283e4bd6ff165e6f7f4293f0ee524"
+          },
+          {
+            "name": "allocations.json",
+            "sha256": "d2a6fb92e3f151e4370368e49aa9d4a6f80c1128fab237a4bd54e75c8a8103c9"
+          },
+          {
+            "name": "change_impact.json",
+            "sha256": "18d8d3764ea93662e2f150ecede89702dbdc9f2eb35a69b9cc9d3fdf323f005b"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Request a versioned Italian OIC partial proportional demerger into a new beneficiary, prepare a first unapproved dossier, review actual assumptions and read separate allocation/ownership schedules.",
+        "inputs_and_request": "Read the localized fictional Arco mandate and two-row CSV. Anna/Bruno own 60/40; the machine and loan distinguish book, tax and economic values. Missing lease, unexamined contingent liabilities and null shareholder tax costs are explicit. No pre-approved case or answer ships.",
+        "execution_and_checkpoints": "The actual current runner starts without approvals and blocks approval of a perimeter dependent on unknown facts. Test-only confirmations enable the bounded calculation; the dossier stays partial. Checkpoints occur at the missing-evidence review and the actual separate-value schedule. Ordinary learner choices remain natural-language decisions.",
+        "deliverable_and_next_action": "Open the actual review.html/review.md, ownership_before_after.json and allocations.json. Versioned revision, artifact hashes and change impact retain provenance. Mechanical completion does not produce a signature, filing, tax-neutrality conclusion or legal approval.",
+        "practice_and_repeat": "Import updated physical evidence in a new local run of the same engagement with the finalized exact prior revision as a genuine upstream artifact. The changed allocation source reopens machine/loan, valuation and calculation; unchanged route and ownership approvals remain. Compare the pre-review changed version with final schedules and retain the original run.",
+        "language_and_pacing": "Complete fr lesson and input narrative reviewed. Native dossier headings remain Italian and field keys remain stable; the teacher explains them in the selected language. The six-stage outline totals 390 seconds as a pacing target, not a measured learner result. Codex teacher/worker and Cowork written projection remain distinct."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_scissione_execution::test_scissione_kit_runs_missing_evidence_and_selective_reopening[demo-fr]",
+        "result_review": "Actual net book transfer is 90000, tax transfer 60000 and economic transfer 240000; owners receive economic amounts 144000/96000 and 6000/4000 whole units. Lease and contingencies remain unknown; shareholder tax costs stay null. Initial unreviewed revision has no calculation and cannot approve the dependent perimeter.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.html",
+            "sha256": "1791c168bf203ce49fea3f2f4597a4935deb09dd60a50cdd06f8dcefd8422eb4"
+          },
+          {
+            "name": "ownership_before_after.json",
+            "sha256": "716a07e6886f7fad2a1615d9e4276b86ec7514f070bcf3450a33f6c7ce819528"
+          },
+          {
+            "name": "allocations.json",
+            "sha256": "3ff127a4c30a2ba62f30ccdb4345c9a8e4a7260f1d5f8526151a470a984a93dd"
+          },
+          {
+            "name": "change_impact.json",
+            "sha256": "18d8d3764ea93662e2f150ecede89702dbdc9f2eb35a69b9cc9d3fdf323f005b"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_scissione_execution::test_scissione_kit_runs_missing_evidence_and_selective_reopening[practice-fr]",
+        "result_review": "Actual updated net economic transfer is 270000 and remaining 530000; owner transfers become 162000/108000, with unchanged whole units, book/tax values and null tax costs. Genuine finalized prior artifact provenance is verified, dependent reviews reopen before explicit test-only re-review, route/ownership approvals survive, and every prior run file stays byte-identical. The missing lease and contingencies keep the dossier partial.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.html",
+            "sha256": "71e6aef62a48f46999da5a145b6b2f180aa01d0ae9145bc8a1a01f6c3d0732a7"
+          },
+          {
+            "name": "ownership_before_after.json",
+            "sha256": "45044204cad1ae5fc19a669eb25b09a3527283e4bd6ff165e6f7f4293f0ee524"
+          },
+          {
+            "name": "allocations.json",
+            "sha256": "d2a6fb92e3f151e4370368e49aa9d4a6f80c1128fab237a4bd54e75c8a8103c9"
+          },
+          {
+            "name": "change_impact.json",
+            "sha256": "18d8d3764ea93662e2f150ecede89702dbdc9f2eb35a69b9cc9d3fdf323f005b"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Request a versioned Italian OIC partial proportional demerger into a new beneficiary, prepare a first unapproved dossier, review actual assumptions and read separate allocation/ownership schedules.",
+        "inputs_and_request": "Read the localized fictional Arco mandate and two-row CSV. Anna/Bruno own 60/40; the machine and loan distinguish book, tax and economic values. Missing lease, unexamined contingent liabilities and null shareholder tax costs are explicit. No pre-approved case or answer ships.",
+        "execution_and_checkpoints": "The actual current runner starts without approvals and blocks approval of a perimeter dependent on unknown facts. Test-only confirmations enable the bounded calculation; the dossier stays partial. Checkpoints occur at the missing-evidence review and the actual separate-value schedule. Ordinary learner choices remain natural-language decisions.",
+        "deliverable_and_next_action": "Open the actual review.html/review.md, ownership_before_after.json and allocations.json. Versioned revision, artifact hashes and change impact retain provenance. Mechanical completion does not produce a signature, filing, tax-neutrality conclusion or legal approval.",
+        "practice_and_repeat": "Import updated physical evidence in a new local run of the same engagement with the finalized exact prior revision as a genuine upstream artifact. The changed allocation source reopens machine/loan, valuation and calculation; unchanged route and ownership approvals remain. Compare the pre-review changed version with final schedules and retain the original run.",
+        "language_and_pacing": "Complete de lesson and input narrative reviewed. Native dossier headings remain Italian and field keys remain stable; the teacher explains them in the selected language. The six-stage outline totals 390 seconds as a pacing target, not a measured learner result. Codex teacher/worker and Cowork written projection remain distinct."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_scissione_execution::test_scissione_kit_runs_missing_evidence_and_selective_reopening[demo-de]",
+        "result_review": "Actual net book transfer is 90000, tax transfer 60000 and economic transfer 240000; owners receive economic amounts 144000/96000 and 6000/4000 whole units. Lease and contingencies remain unknown; shareholder tax costs stay null. Initial unreviewed revision has no calculation and cannot approve the dependent perimeter.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.html",
+            "sha256": "be77ccd84b0ee6f9aacc818e9a276dd4ccb714db54f7ba724ca7c752dd290a74"
+          },
+          {
+            "name": "ownership_before_after.json",
+            "sha256": "716a07e6886f7fad2a1615d9e4276b86ec7514f070bcf3450a33f6c7ce819528"
+          },
+          {
+            "name": "allocations.json",
+            "sha256": "3ff127a4c30a2ba62f30ccdb4345c9a8e4a7260f1d5f8526151a470a984a93dd"
+          },
+          {
+            "name": "change_impact.json",
+            "sha256": "18d8d3764ea93662e2f150ecede89702dbdc9f2eb35a69b9cc9d3fdf323f005b"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_scissione_execution::test_scissione_kit_runs_missing_evidence_and_selective_reopening[practice-de]",
+        "result_review": "Actual updated net economic transfer is 270000 and remaining 530000; owner transfers become 162000/108000, with unchanged whole units, book/tax values and null tax costs. Genuine finalized prior artifact provenance is verified, dependent reviews reopen before explicit test-only re-review, route/ownership approvals survive, and every prior run file stays byte-identical. The missing lease and contingencies keep the dossier partial.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.html",
+            "sha256": "944625ebafd812c33616d14cf28966754083e256203f5f5c82502d809be9a86e"
+          },
+          {
+            "name": "ownership_before_after.json",
+            "sha256": "45044204cad1ae5fc19a669eb25b09a3527283e4bd6ff165e6f7f4293f0ee524"
+          },
+          {
+            "name": "allocations.json",
+            "sha256": "d2a6fb92e3f151e4370368e49aa9d4a6f80c1128fab237a4bd54e75c8a8103c9"
+          },
+          {
+            "name": "change_impact.json",
+            "sha256": "18d8d3764ea93662e2f150ecede89702dbdc9f2eb35a69b9cc9d3fdf323f005b"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Request a versioned Italian OIC partial proportional demerger into a new beneficiary, prepare a first unapproved dossier, review actual assumptions and read separate allocation/ownership schedules.",
+        "inputs_and_request": "Read the localized fictional Arco mandate and two-row CSV. Anna/Bruno own 60/40; the machine and loan distinguish book, tax and economic values. Missing lease, unexamined contingent liabilities and null shareholder tax costs are explicit. No pre-approved case or answer ships.",
+        "execution_and_checkpoints": "The actual current runner starts without approvals and blocks approval of a perimeter dependent on unknown facts. Test-only confirmations enable the bounded calculation; the dossier stays partial. Checkpoints occur at the missing-evidence review and the actual separate-value schedule. Ordinary learner choices remain natural-language decisions.",
+        "deliverable_and_next_action": "Open the actual review.html/review.md, ownership_before_after.json and allocations.json. Versioned revision, artifact hashes and change impact retain provenance. Mechanical completion does not produce a signature, filing, tax-neutrality conclusion or legal approval.",
+        "practice_and_repeat": "Import updated physical evidence in a new local run of the same engagement with the finalized exact prior revision as a genuine upstream artifact. The changed allocation source reopens machine/loan, valuation and calculation; unchanged route and ownership approvals remain. Compare the pre-review changed version with final schedules and retain the original run.",
+        "language_and_pacing": "Complete es lesson and input narrative reviewed. Native dossier headings remain Italian and field keys remain stable; the teacher explains them in the selected language. The six-stage outline totals 390 seconds as a pacing target, not a measured learner result. Codex teacher/worker and Cowork written projection remain distinct."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_scissione_execution::test_scissione_kit_runs_missing_evidence_and_selective_reopening[demo-es]",
+        "result_review": "Actual net book transfer is 90000, tax transfer 60000 and economic transfer 240000; owners receive economic amounts 144000/96000 and 6000/4000 whole units. Lease and contingencies remain unknown; shareholder tax costs stay null. Initial unreviewed revision has no calculation and cannot approve the dependent perimeter.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.html",
+            "sha256": "05aacca6953fe77c2241836ae1ae7eb68b0905c83357e3ba45dc1a74217a5c5e"
+          },
+          {
+            "name": "ownership_before_after.json",
+            "sha256": "716a07e6886f7fad2a1615d9e4276b86ec7514f070bcf3450a33f6c7ce819528"
+          },
+          {
+            "name": "allocations.json",
+            "sha256": "3ff127a4c30a2ba62f30ccdb4345c9a8e4a7260f1d5f8526151a470a984a93dd"
+          },
+          {
+            "name": "change_impact.json",
+            "sha256": "18d8d3764ea93662e2f150ecede89702dbdc9f2eb35a69b9cc9d3fdf323f005b"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_scissione_execution::test_scissione_kit_runs_missing_evidence_and_selective_reopening[practice-es]",
+        "result_review": "Actual updated net economic transfer is 270000 and remaining 530000; owner transfers become 162000/108000, with unchanged whole units, book/tax values and null tax costs. Genuine finalized prior artifact provenance is verified, dependent reviews reopen before explicit test-only re-review, route/ownership approvals survive, and every prior run file stays byte-identical. The missing lease and contingencies keep the dossier partial.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.html",
+            "sha256": "6b1288f54762a8ceb39346b4e83a439bc9fc36d88f11e12c5be1cba8ff4f2ba1"
+          },
+          {
+            "name": "ownership_before_after.json",
+            "sha256": "45044204cad1ae5fc19a669eb25b09a3527283e4bd6ff165e6f7f4293f0ee524"
+          },
+          {
+            "name": "allocations.json",
+            "sha256": "d2a6fb92e3f151e4370368e49aa9d4a6f80c1128fab237a4bd54e75c8a8103c9"
+          },
+          {
+            "name": "change_impact.json",
+            "sha256": "18d8d3764ea93662e2f150ecede89702dbdc9f2eb35a69b9cc9d3fdf323f005b"
+          }
+        ]
+      }
+    }
+  }
+}

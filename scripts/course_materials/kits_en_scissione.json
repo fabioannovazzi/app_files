@@ -1,0 +1,27 @@
+{
+  "vera/scissione-guidata": {
+    "title": "Guided demerger with Vera",
+    "goal": "Prepare a versioned dossier, read its schedules and revisit decisions after a change.",
+    "scenario": "Arco Meccanica S.r.l. transfers a division to newly formed Arco Servizi S.r.l. Anna and Bruno own 60% and 40%. Every name, document and amount is fictional.",
+    "scope": "Italian OIC, EUR, partial proportional demerger into a new beneficiary, homogeneous rights and no reciprocal holdings. Existing beneficiaries, scorporo, asymmetric assignments, IFRS and foreign cases are unsupported. The dossier does not certify legal validity, sign or file.",
+    "inputs": "Open mandate-en.md and allocations.csv. The mandate records the entities, exercise-only authority, ownership, economic values, assumptions and missing contract. The CSV separates assets and debt, and book, tax and economic values. Shareholder tax costs are unknown. These are inputs, not approvals.",
+    "request": "Vera, prepare this partial proportional demerger dossier into a new beneficiary. Show missing evidence, schedules and decisions to review before using the result.",
+    "steps": [
+      "In the working chat import only selected documents into the local tutorial dossier. Vera proposes the perimeter and route from the evidence. Voice stays in the teaching chat; the professional confirms material choices in ordinary language.",
+      "Prepare the first version without approvals. Open review.html and locate the missing contract. Review route, ownership, allocations and assumptions; record only actual confirmations of the displayed version. Calculation requires the relevant reviews; the missing contract keeps the dossier partial.",
+      "Open the actual dossier and schedules. Trace one CSV row to its three value bases, then inspect both owners, null tax costs and open issues. Preserve version and hashes and show the report of data reaching the model."
+    ],
+    "deliverables": [
+      "review.html/review.md dossier with evidence, dependencies, decisions and limitations.",
+      "allocations.json and ownership_before_after.json separate values and ownership; revision.json, change_impact.json and the hash inventory preserve history."
+    ],
+    "review": "Check provenance, entity authority, reconciliation and valuation assumptions. Balanced figures do not prove contract completeness or tax neutrality. No legal source is approved by this exercise. The teacher never invents approvals or understanding. The native dossier retains Italian headings and technical keys: explain these references in the lesson language without promising an engine translation.",
+    "checkpoints": [
+      "Before review, identify the missing contract and explain why it does not become zero or “verified”.",
+      "While reading the schedules distinguish book, tax, economic and shareholder tax values."
+    ],
+    "practice": "Ask: “Vera, update the same dossier with mandate-update-en.md and allocations-update.csv: which decisions need review again?” The new estimate increases the economic value of the transferred asset; book values, tax values and ownership stay unchanged. Import the new evidence into a new run in the same engagement with the exact finalized previous revision.json as an upstream artifact. Compare change_impact.json and both schedules; review reopened decisions only after actual confirmation and preserve the earlier version.",
+    "success": "You can start the case, find a gap, read separate values and explain which reviews depend on the changed input. The tutorial does not establish professional acceptance.",
+    "repeat": "To repeat with your files select an engagement and authorized sources through the normal professional workflow. Keep tutorial files and feedback local; never reuse fictional confirmations."
+  }
+}
