@@ -1,6 +1,6 @@
 ---
 name: vouching
-description: Use when comparing qualified Journal Sampling entries with FatturaPA XML or supporting PDFs, running exact evidence checks, and producing lineage-bound review outputs.
+description: Use to check scritture campionate against fatture FatturaPA XML or supporting PDFs, using the qualified sample and lineage from Journal Sampling. Produces source-linked checks, exceptions and missing-document requests for those entries. To select the sample use journal-sampling; to review the whole passive-invoice population against booked entries use purchase-invoice-review.
 ---
 
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->

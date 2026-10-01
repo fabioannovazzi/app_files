@@ -1,6 +1,6 @@
 ---
 name: purchase-invoice-review
-description: Use when Vera must audit a population of passive FatturaPA invoices against actual booked accounting entries and surface only deterministic or native Codex semantic exceptions for professional review.
+description: Use to check a population of fatture passive FatturaPA XML against actual prima nota or booked ledger entries. Produces an exception workpaper for amounts, IVA, duplicates, reconciliation and reviewed account coherence. For only an already qualified journal sample use vouching; for XML validity without accounting entries use fatture-xml-check. Does not book invoices or write to the gestionale.
 ---
 
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
