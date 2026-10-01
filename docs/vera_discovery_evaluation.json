@@ -2,7 +2,7 @@
   "observed_on": "2026-10-01",
   "timezone": "Europe/Paris",
   "source_baseline": "484f85201f22f95055e45c577d4352ed96b5e293",
-  "candidate_version": "0.1.309",
+  "candidate_version": "0.1.310",
   "method": {
     "host": "Codex CLI 0.159.2",
     "model": "Host default; exact model ID not exposed in retained JSONL",
