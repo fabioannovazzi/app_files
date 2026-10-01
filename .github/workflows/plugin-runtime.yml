@@ -591,7 +591,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - run: python -m pip install pytest
+      # The packaged open-item bootstrap also loads its workpaper helper.
+      # openpyxl is declared in that component's requirements.txt.
+      - run: python -m pip install pytest openpyxl
       - name: Exercise clean ZIPs and reject broken releases
         # These stdlib/Node checks do not need the application-wide fixtures.
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_packaged_mcp_startup.py
