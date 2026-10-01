@@ -921,6 +921,28 @@
       "verification": "Source scope and synthetic unsupported-route tests inspected; no current Swiss legal-source assessment or Geneva professional acceptance performed.",
       "implementation": "Italian OIC route retained. CH-GE is explicitly unsupported by the initial runtime.",
       "implementation_status": "unsupported_for_target_pending_assessment"
+    },
+    {
+      "function_id": "studio-document-format",
+      "name": "Studio document format",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Infer a reusable Word format from selected studio examples and preferences, review two real previews, explicitly approve or revise the saved standard, and reuse it in financial-report DOCX.",
+      "geneva_application": "Potential studio-format configuration for a Geneva fiduciary; target-specific consumer acceptance has not been established.",
+      "required_change": "Verify the approved Word profile with an explicitly CH-GE financial-report case, French output and source-evidenced currency. Do not infer jurisdiction qualification from the translated course or the synthetic EUR example.",
+      "adaptation_layers": [
+        "target-specific report qualification"
+      ],
+      "acceptance_example": "The approved standard persists across two CH-GE reports without changing their jurisdiction, source currency or reviewed financial analysis; an unapproved proposal is not consumed.",
+      "sources": [
+        "plugins/vera/skills/studio-document-format/SKILL.md",
+        "plugins/comunicazione-professionale/scripts/studio_document_format.py",
+        "plugins/report-builder/scripts/studio_formatting.py",
+        "tests/plugins/test_studio_document_format.py"
+      ],
+      "verification": "Source and exact-package synthetic preview, approval, revision and report-reuse checks passed. No CH-GE consumer or real Geneva fiduciary acceptance was run.",
+      "implementation": "Shared Word standard pipeline; current output consumer is financial-report DOCX.",
+      "implementation_status": "target_acceptance_unresolved"
     }
   ],
   "sources": {
@@ -1085,7 +1107,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "3538bdec8b05585e790befc8f5dc03b322aca3f93aca7c76087c9e51018ea8c7",
+  "catalogue_fingerprint": "0deec93afa64dc28c095b368f8f54ebd3f3e6a3c6b3aefa92b31312c854f4a41",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1174,5 +1196,17 @@
       "trasformazione"
     ],
     "scope": "Reviewed the three changed entrypoints and current manifest. Browser changes tighten ECONS status bindings and executor evidence within the existing application-specific qualification limits. Teaching changes add an explicitly synthetic Italian transformation lesson with no Studio Archive adapter, real mandate or Swiss legal-effect claim. Language remains independent of jurisdiction. All 46 existing function IDs, Geneva dispositions, adaptation requirements, source references and professional acceptance limitations are preserved. Trasformazione remains an unassessed synthetic prototype for Geneva; this source binding is not client or installed-host acceptance."
+  },
+  "studio_format_release_binding": {
+    "reviewed_at": "2026-10-01",
+    "version": "0.1.320",
+    "previous_catalogue_fingerprint": "3538bdec8b05585e790befc8f5dc03b322aca3f93aca7c76087c9e51018ea8c7",
+    "added_skills": [
+      "studio-document-format"
+    ],
+    "changed_entrypoints": [
+      "vera"
+    ],
+    "review": "Register the new studio Word-format pipeline as Unresolved for CH-GE, refresh the manifest and reviewed entrypoint identity, and preserve all 46 earlier target rows. Report instructions add explicit approved-format reuse; teaching and router instructions add the studio-format route. This is release catalogue integration, not a Swiss professional qualification."
   }
 }

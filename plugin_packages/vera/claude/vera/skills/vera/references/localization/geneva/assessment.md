@@ -10,9 +10,9 @@ Later host-specific instructions in this reference cannot override this rule.
 
 # Vera — Geneva localization assessment and implementation
 
-Updated 2026-09-30 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
+Updated 2026-10-01 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
 
-The current inventory covers all 46 skill entrypoints, including internal helpers and development prototypes. All prior professional judgments are retained; catalogue coverage does not establish target-country acceptance.
+The current inventory covers all 47 skill entrypoints, including internal helpers and development prototypes. All prior professional judgments are retained; catalogue coverage does not establish target-country acceptance.
 
 The release adds bounded adapters and instructions, not a blanket claim that every fiduciary mandate is supported. Original evidence and professional decisions remain necessary. No real Geneva client workflow has been accepted.
 
@@ -56,6 +56,7 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 | registro-imprese-sari | Adapt | Explicit CH-GE intake/plan, official Swiss source hosts, local authority/position handling and French labels; no portal filing. |
 | sales-plan | Use | Existing function retained with the recorded qualification limits. |
 | studio-archive | Adapt | Swiss IDE normalization and explicit OCR language through CLI/MCP; language changes trigger reindexing. |
+| studio-document-format | Unresolved | Shared Word format proposal, previews, approval and financial-report DOCX reuse. An explicit CH-GE/French/currency-qualified consumer case and real fiduciary acceptance remain unverified. |
 | trasformazione | Unresolved | Synthetic-only Italian transformation prototype; no real client mandate or Swiss legal qualification. |
 | treasury-forecast | Adapt | CHF forecast/update arithmetic with currency-safe records and currency-correct HTML, Markdown, XLSX and live review. Fixed interface prose remains Italian. |
 | variance-analysis | Use | Existing function retained with the recorded qualification limits. |
@@ -119,3 +120,7 @@ The 0.1.303 CNC teaching release refresh changes only the package identity bindi
 The 0.1.309 CNC release integrates the Patent Box course from main. All 46 recorded skill entrypoints remain byte-identical to 0.1.304; the dated Geneva judgments and unresolved Swiss scope remain unchanged.
 
 The 0.1.312 CNC release integrates the Patent Box and Adeguati assetti courses from main. All 46 recorded skill entrypoints remain byte-identical to 0.1.311; the dated Geneva judgments and unresolved Swiss scope remain unchanged.
+
+## Studio document format release binding — 1 October 2026
+
+Vera 0.1.320 adds the studio Word-format pipeline and its course. The 47-entry snapshot records the new skill and refreshed manifest/entrypoint hashes. All 46 prior Geneva rows are preserved. The new row is Unresolved for CH-GE: generic format and synthetic report checks do not establish a French/CHF Geneva consumer case or professional acceptance. Language remains independent of jurisdiction.
