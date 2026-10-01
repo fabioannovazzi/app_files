@@ -271,6 +271,22 @@ proof of a human review, native voice quality or learner understanding. Never
 generate accepted records merely to satisfy the gate. This rebuild remains
 unreleasable until the real output reviews and all required runs are complete.
 
+## Italian Valutazione PMI course (1 October 2026)
+
+`kits_it_valuation.json` expands the existing `vera/business-valuation` lesson.
+The ordinary and rate-change notes remain unchanged. Three practice attachments
+add a standalone missing-terminal case, its later source-bound recovery and an
+independent manual checkpoint sheet. The checkpoint sheet is learning material,
+never economic evidence or a replacement workflow output. The extended practice
+allows 25–35 minutes plus execution within the existing six-stage course format.
+
+The learner creates/selects one Studio Archive tutorial engagement, imports exact
+receipts, selects and explains DCF FCFF, reviews assumptions and live formula
+workpapers, preserves four distinct runs, then reopens the original artifacts.
+The native regression seals actual outputs with truthful code-only model-data
+reports and verifies all initial hashes after rate change, blockage and recovery.
+This checks mechanics; paired voice, comprehension, installed-host acceptance and
+professional/PIV acceptance remain distinct and unverified.
 
 ## Trasformazione synthetic course (2026-10-01)
 

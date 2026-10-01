@@ -1107,7 +1107,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "75b768599e3642baa05d070255fd58427d1190bd40e203563daef6838934f23c",
+  "catalogue_fingerprint": "48fad5304246c8c3ff2840b3da29a228f89dba28a76e0c7f4d9d91f0470fab18",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1197,18 +1197,6 @@
     ],
     "scope": "Reviewed the three changed entrypoints and current manifest. Browser changes tighten ECONS status bindings and executor evidence within the existing application-specific qualification limits. Teaching changes add an explicitly synthetic Italian transformation lesson with no Studio Archive adapter, real mandate or Swiss legal-effect claim. Language remains independent of jurisdiction. All 46 existing function IDs, Geneva dispositions, adaptation requirements, source references and professional acceptance limitations are preserved. Trasformazione remains an unassessed synthetic prototype for Geneva; this source binding is not client or installed-host acceptance."
   },
-  "studio_format_release_binding": {
-    "reviewed_at": "2026-10-01",
-    "version": "0.1.324",
-    "previous_catalogue_fingerprint": "3538bdec8b05585e790befc8f5dc03b322aca3f93aca7c76087c9e51018ea8c7",
-    "added_skills": [
-      "studio-document-format"
-    ],
-    "changed_entrypoints": [
-      "vera"
-    ],
-    "review": "Register the new studio Word-format pipeline as Unresolved for CH-GE, refresh the manifest and reviewed entrypoint identity, and preserve all 46 earlier target rows. Report instructions add explicit approved-format reuse; teaching and router instructions add the studio-format route. This is release catalogue integration, not a Swiss professional qualification. Merge retains the newer 0.1.321 audit boundary instruction and all existing target dispositions. Preserves the separately merged Scissione course and its recorded Geneva limits."
-  },
   "technical_instruction_audit_binding": {
     "reviewed_at": "2026-10-01",
     "version": "0.1.321",
@@ -1222,5 +1210,24 @@
     "review": "Refreshes only the canonical manifest/version binding. All 46 skill entrypoints are byte-identical to the previous catalogue. Preserves every Geneva disposition and evidence limit. The new five-language course demonstrates an Italian OIC synthetic case; translated lessons do not qualify Swiss applicability or professional acceptance.",
     "integrated_main": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
     "source_version": "0.1.322"
+  },
+  "studio_format_release_binding": {
+    "reviewed_at": "2026-10-01",
+    "version": "0.1.324",
+    "previous_catalogue_fingerprint": "3538bdec8b05585e790befc8f5dc03b322aca3f93aca7c76087c9e51018ea8c7",
+    "added_skills": [
+      "studio-document-format"
+    ],
+    "changed_entrypoints": [
+      "vera"
+    ],
+    "review": "Register the new studio Word-format pipeline as Unresolved for CH-GE, refresh the manifest and reviewed entrypoint identity, and preserve all 46 earlier target rows. Report instructions add explicit approved-format reuse; teaching and router instructions add the studio-format route. This is release catalogue integration, not a Swiss professional qualification. Merge retains the newer 0.1.321 audit boundary instruction and all existing target dispositions. Preserves the separately merged Scissione course and its recorded Geneva limits."
+  },
+  "studio_format_valuation_integration_binding": {
+    "reviewed_at": "2026-10-01",
+    "version": "0.1.326",
+    "integrated_main": "53ecb8b3b71bf3aa266dfac683b729261052be5e",
+    "previous_catalogue_fingerprint": "75b768599e3642baa05d070255fd58427d1190bd40e203563daef6838934f23c",
+    "review": "All 47 skill entrypoints are byte-identical to the reviewed studio-format source. Preserves every current main target judgment and the additional unresolved studio-format row. Refreshes the canonical manifest/version binding after integrating the valuation course; no new Geneva professional acceptance is claimed."
   }
 }

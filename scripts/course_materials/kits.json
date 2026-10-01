@@ -8345,6 +8345,30 @@
         "languages": [
           "it"
         ]
+      },
+      {
+        "source": "business-valuation/evidenze-mancanti-it.md",
+        "path": "files/practice/evidenze-mancanti-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-valuation/integrazione-it.md",
+        "path": "files/practice/integrazione-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-valuation/riscontri-it.md",
+        "path": "files/practice/riscontri-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
       }
     ]
   },
