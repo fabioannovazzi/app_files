@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "comunicazione-professionale",
-  "course_sha256": "75006883778e1884fe2cd9440414c90365e0d180c83a877710cc379cbf8621d4",
+  "course_sha256": "a62933a7e78c902b080eb7a7b0cd33d9e8751ae592e00aa6ca25c63c75af1615",
   "reviewer": "Codex: first-use/source/output inspection; independent claim session 01a0a0b8-d623-7cd0-870c-ec3921855b09 and independent editorial session /root/communication_editorial_isolated_07",
   "reviewed_at": "2026-09-14T17:03:02.450310+00:00",
   "review_scope": "Actual current local native packaging with explicitly synthetic professional-review transitions. Exact revised contributions and all 220 claims across both products were independently assessed, followed by a fresh editorial session separate from generation, source assurance and benchmark qualification. The final FAQs preserve the exact reviewed bodies once; root inspected the native packaging and all ten practice emails. Host identities are operator attestations, not API receipts. The outputs are Markdown FAQs and text emails; no HTML, rendered palette, professional approval, sending, real learner, or voice/two-window acceptance is claimed. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -502,5 +502,19 @@
     ],
     "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
     "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+  },
+  "connected_studio_knowledge_source_binding_20261002": {
+    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+    "reviewed_at": "2026-10-01T22:12:55.607878+00:00",
+    "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+    "previous_course_sha256": "75006883778e1884fe2cd9440414c90365e0d180c83a877710cc379cbf8621d4",
+    "current_course_sha256": "a62933a7e78c902b080eb7a7b0cd33d9e8751ae592e00aa6ca25c63c75af1615",
+    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+    "changed_sources": [
+      "skills/comunicazione-professionale/SKILL.md",
+      "skills/vera/references/connected-studio-knowledge.md"
+    ],
+    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   }
 }

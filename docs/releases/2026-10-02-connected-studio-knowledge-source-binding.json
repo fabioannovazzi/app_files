@@ -1,0 +1,574 @@
+{
+  "reviews": [
+    {
+      "course": "vera/adeguati-assetti",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.360086+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "525b9cb491566738ad8a6227e9be6ccf969195de364a2b7deb1d50f78659b99b",
+      "current_course_sha256": "82413c3e8c57be5bc63246f6aca333099e6f2f9688b4a67984208ab76669d2af",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/adeguati-assetti/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/aml-review",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.388541+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "9b48bfff578bbe61ed8259f326b133b3f4bb29b3c6ff29e49f3d75eeedd79c17",
+      "current_course_sha256": "aaad9caff94ccfc484d725a9b614430c21f741d9a8b2268df16c817fba62691b",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/aml-review/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/archive-organization",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.405348+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "6ea634246d71520376dd3c4a44fc1ded33914a71808c56ea52b6a2b6a5c572de",
+      "current_course_sha256": "cce7641581ee38cbaaddd3cf92535ffd437839ce77fb995097079027d9130d41",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/archive-organization/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/avviso-intake",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.424970+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "6ab551fa094fd42eb3f50019e84e0c3175c9282711e09b002ca673b7e270f7ba",
+      "current_course_sha256": "81ea7924217af385189a852fbe8a3850a02d2b44f8ea82370472050c332cd09f",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/avviso-intake/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/bandi-agevolazioni",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.447987+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "b08367a5f7642284adcaf9c71c11fed0326180ba25d283917c94fda5b632aa2a",
+      "current_course_sha256": "76ada438940d874cbe20f9be74162dd821d52451f8b4fcbd0891f062485615c5",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/bandi-agevolazioni/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/bilancio-oic",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.470318+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "aede842ef2486e929a0bfc3082340417603d24e6b436823e0cd5d94a5ecdddbe",
+      "current_course_sha256": "193a2de91f00353f4b40f9ff797a4ddca9957e5d0adec4d43d3add1d643405bb",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/bilancio-oic/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/browser-automation",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.494354+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "cf76443facf1bd646c4adc72156841c592f2136080f823058a35fef44257e43d",
+      "current_course_sha256": "7abd86b6ae3a65e24b1cc34a829ebd06a51a79adecd45261cb688295bd3f708a",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/browser-automation/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/business-planning",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.515734+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "3c3014cb41a6bd9f63ad32265e921c5d813ab61e925623736d286fc5128fc624",
+      "current_course_sha256": "67922a535b8ba15a8df365c7f6d23178202b6b46797e8dd3d22977c7008bea04",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/business-planning/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/business-valuation",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.543414+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "2faafd5469c339e4d9f2ad79e493a90e3fd272f892f2697688bc0b192dc5ad38",
+      "current_course_sha256": "251b811db3eb07b5a9da2269be7af6e889121552f090206b2bc2c20823f373e6",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/business-valuation/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/centrale-rischi-review",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.564779+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "f40251fc7ddb3f922d89e26e571c361b79055c58138e3fa9e583368cc9e96014",
+      "current_course_sha256": "89ffb52ce9c9c12f9d8d804afd29efe23fed94002452d1c767be938426297aa3",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/centrale-rischi-review/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/composizione-negoziata",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.585083+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "0b70de16e78dc2cd444fee6ca6cfaf651488da66e3b1f5d489c049bc67e1316f",
+      "current_course_sha256": "e99f1a9943566eb44536177859745371dd8168257b952d52e7e0cca5935832c2",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/composizione-negoziata/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/comunicazione-professionale",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.607878+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "75006883778e1884fe2cd9440414c90365e0d180c83a877710cc379cbf8621d4",
+      "current_course_sha256": "a62933a7e78c902b080eb7a7b0cd33d9e8751ae592e00aa6ca25c63c75af1615",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/comunicazione-professionale/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/concordato-plan-review",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.627650+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "d542aacfaf989804ad2e29684a39128aefce37f14c5b91dd5de04c0530f37bf8",
+      "current_course_sha256": "6dfe1d4b12595897188590def7b28c658a3ce80ff0d504908f81458c248868bd",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/concordato-plan-review/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/dati-fiscali-strutturati",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.647219+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "08b1b28f3015bbb573b6f2df8dbbd7009e7fe6901730b5c69c5054eee1269474",
+      "current_course_sha256": "ebcd0a1bd2a8394a536ca331bf82c6eaebad0b734981d790a411a44ba0e9937b",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/dati-fiscali-strutturati/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/email-cliente",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.669183+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "333820ae92800717dafe54a7e99bfa377c4c480f02c58838b68c4dc57be8a60e",
+      "current_course_sha256": "482a6d434bdf3b6dce97460bd26057f41e619dfaeef988706fa65e5b42b2b9c7",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/email-cliente/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/fatture-xml-check",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.685090+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "221dff782f0f5f063ab79c28b836c44a1dd2f942bdfb922f2240a3a0c37a8584",
+      "current_course_sha256": "2c7d57e801888777c02278cd27acc52f8bf9b649b7ba6060ce91d10cb2ff27c2",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/fatture-xml-check/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/financial-analysis",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.704845+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "970366b7359c1441b24d688eaff70cd6766f68471934446c2a32edc0bfae2bc7",
+      "current_course_sha256": "79324605fd30eafd4e0e1376b177206c032d38ddce00421c6c9543c9a685c1f7",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/financial-analysis/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/financial-report-builder",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.728249+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "9cf8c8f3fdec5f674bdbe344a3b34f42f6396e06deb6fc7a3c20468426465026",
+      "current_course_sha256": "a5d71c4d5fef15dda95f126e81e0a2d0cb9d329407886e16586ffd3e81d1ed99",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/financial-report-builder/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/invoice-xml",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.743728+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "56300e4f53c4cd7fdb8ce4936542920a3045a06633b70b02b2c2dcfedd9c5fb9",
+      "current_course_sha256": "fcbc37318b88d53159049f668ede4a209e658a233f1cb70f2e761ed9e68d95bf",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/invoice-xml/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/journal-bank-reconciliation",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.764909+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "0b111c43895b869b18210f812c01f4f4c89bbf2446362fce496201c630a6f6ab",
+      "current_course_sha256": "2a448d3397c629800ae7f72c77815d9ed238a156940330561cc2503a811fd138",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/journal-bank-reconciliation/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/journal-sampling",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.782422+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "1c45fae0544e5e8cb3ec946a3eb81a49f9d58fb1e5c1f2935c72b19d95ab536e",
+      "current_course_sha256": "d7b06421377f23c14a4cc234d47e40bff9ba158892e54955a2cc87aeb038c0dc",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/journal-sampling/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/management-control-pack",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.800982+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "ceb611faac1dcb04fedd3d77dde01a1d6de8f4b101c49cfc353920f2cddce68c",
+      "current_course_sha256": "6c3f595588300136da05e21805d4e68451184eb7102a7d067992eab6b480ed60",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/management-control-pack/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/new-client",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.820056+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "d290d3bced686d345d97cd06c6954c05f05a3064b258fe03806fb4e46f4a7efc",
+      "current_course_sha256": "8a1c1b0192d5daf58b34650e5fffc918f66a4a5a6c83221a135ec7b0071a97a6",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/new-client/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/open-item-reconciliation",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.839368+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "29a62db66b32c9b916ac05da80b8b5e1d3325749e4ea7c9830cc09c747448e3f",
+      "current_course_sha256": "2086867c6d6fe148e2955d86a9551fafbb8d68ffc500462e2bf36987879381f3",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/open-item-reconciliation/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/patent-box-review",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.862641+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "ec36cf2e3a4c34556e9d31e78d2da17eacf278568ed34434f6610bdef26ab67b",
+      "current_course_sha256": "ab0a4589a0afa5124a5878f9285fc7e3cccbbf3d9d5d8fa8a859ab635d3096be",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/patent-box-review/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/presenza-digitale-studio",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.882090+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "d767a309c5e89bf68fa4e2be05e4806407e5e17ed4aba91b7f6779f86163e06f",
+      "current_course_sha256": "e6db8402a237bd5b44fe1c53ce6f16f7ab1f515f467f9213bec03004ac68b952",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/presenza-digitale-studio/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/previdenza-inps",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.900752+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "5038970bd939b1498c85a67b53a82c7288be08a9209f90146b8197c9286a9ddc",
+      "current_course_sha256": "93da64730292d4d395b7a508964aa4f5c51b7a189972e09d1e82d75c038234fe",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/previdenza-inps/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/purchase-invoice-review",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.919455+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "590188edb4e4da04198b8934f8fa1c67e1e8b33c7c73865aa2b917cc3db79e7f",
+      "current_course_sha256": "3e46fee10bb3ef621ba0fa23bb1ff0ff86e8c74677c6f05d734d62194adb580f",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/purchase-invoice-review/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/quesito-legale-fiscale",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.940946+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "fab6bb2b65082d0cf1a459dfc57b573f494c8edd7c3940978ecb53e4e4aca1ed",
+      "current_course_sha256": "fe233dc31c4984ac42d728a49a6a50cf79443e044cf6bb3bb84fadfd2a32e513",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/quesito-legale-fiscale/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/registro-imprese-sari",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.960124+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "db889cece8668bdda055ac85e6491e92536f3f83a703f075dede0957068e919d",
+      "current_course_sha256": "b6ce27d44294af12db5c5c112c2969e7d75fd0c7dd321999a44a0dd4b113e9cc",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/registro-imprese-sari/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/sales-plan",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:55.977035+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "a3b665c1271fb61a5a61bd001066e61778c1fb206184fd57602dfc5b8a28daa1",
+      "current_course_sha256": "7d00fd704f3d8a958104c34824b52267ca5d85843cfa9c0bc117005300f9821c",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/sales-plan/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/scissione-guidata",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:56.000958+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "6acc3c36475f0fa23d3e10585879e805d70f69b2f7159bf061211776387eab93",
+      "current_course_sha256": "9d3e14360293c05b7462292a391558cfdf95846c3b07dfcf5f001512832733f8",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/scissione-guidata/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/studio-archive",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:56.017026+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "cba83c4da30dd21b68343e14e12881eb598c501c92d6fbbb5f55fcd115a0315e",
+      "current_course_sha256": "77afd7bf8e6b3757b9786bc0cf9f156a8e90fd0109dca09847f59c77ad3f7e57",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/studio-archive/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/studio-document-format",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:56.036386+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "314b07c315e2ec80b4ec0b56fb02a5a588a985ac4f65b68fec7ce10ddfef1a35",
+      "current_course_sha256": "e945f61e0d67e1ab2211dde940d1e8943379656a1658300c66001d169d65cf5d",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/studio-document-format/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/trasformazione",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:56.058298+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "6b0fb7b9c6248aef773c90fa01267424605212b204d03d7b377df3a90171eb89",
+      "current_course_sha256": "e9ce55a19e00969198cb614c8de3ea36e3851738295f788c9231e2ecdd58beeb",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/trasformazione/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/treasury-forecast",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:56.073583+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "5a5edd648abff7a562c826f871d15ddd71540069c129a32a3183c93c8b05a1d0",
+      "current_course_sha256": "92d129436deee6a8994543c0270f084ccdd66242a480a9b5656d23d9181b214a",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/treasury-forecast/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/variance-analysis",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:56.093161+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "65e22f868dee7a9a029a273884e384d5261959f26e254e9e0327d687dc437623",
+      "current_course_sha256": "34cc05d90f347f2db7ffb72deefd2d30b99a5e42aae2e2a37ccc065fbb118381",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/variance-analysis/SKILL.md",
+        "skills/vera/references/connected-studio-knowledge.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    },
+    {
+      "course": "vera/vouching",
+      "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+      "reviewed_at": "2026-10-01T22:12:56.113434+00:00",
+      "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+      "previous_course_sha256": "c953e423b4c9d45816527f1c51686abedda1a98d270929c3e608f79e8516403b",
+      "current_course_sha256": "8a667eaa25da0a4cb866a3465ee6c487fda317d7d7321ea2382e363c13cf7f56",
+      "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+      "changed_sources": [
+        "skills/vera/references/connected-studio-knowledge.md",
+        "skills/vouching/SKILL.md"
+      ],
+      "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+      "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    }
+  ]
+}

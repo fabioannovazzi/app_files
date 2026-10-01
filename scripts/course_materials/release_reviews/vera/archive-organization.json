@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "archive-organization",
-  "course_sha256": "6ea634246d71520376dd3c4a44fc1ded33914a71808c56ea52b6a2b6a5c572de",
+  "course_sha256": "cce7641581ee38cbaaddd3cf92535ffd437839ce77fb995097079027d9130d41",
   "reviewer": "Codex: five-language archive organisation material, execution and browser presentation review",
   "reviewed_at": "2026-09-14T22:54:42.105288+00:00",
   "review_scope": "Reviewed all five full lesson outlines, fifteen unique fictional source documents and ten final artifact cards with actual approved destinations and operation-journal states. The current widget was rendered in a loopback-only browser harness using actual MCP render responses; all five language views were inspected, and the Italian destination edit and reviewer fields were exercised. The final compact list layout was checked in all five languages. Read-only browser geometry confirmed separate filename/control bounds in Italian and no horizontal overflow or overlapping rows in English at the desktop viewport. The complete shipped widget script generates the requests used by ten current MCP/pipeline regressions, with real local persistence and separately authorized fictional filesystem execution. These regression reviewers and semantic fixtures are not real learner approvals. Native in-chat widget hosting, native voice, two-window interaction, human elapsed time and comprehension remain unverified. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -424,5 +424,19 @@
       "plugins/_shared/vendor/modules/vera_assurance/contracts.py"
     ],
     "review": "Every authored lesson field and input record matches current main. The sole shared source change adds scissione-guidata to the supported workflow IDs; existing workflow behavior is unchanged. Original reviewers, dates, judgments and output hashes are preserved. Fresh native teaching executions are required in CI; no new professional or learner acceptance is claimed."
+  },
+  "connected_studio_knowledge_source_binding_20261002": {
+    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+    "reviewed_at": "2026-10-01T22:12:55.405348+00:00",
+    "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+    "previous_course_sha256": "6ea634246d71520376dd3c4a44fc1ded33914a71808c56ea52b6a2b6a5c572de",
+    "current_course_sha256": "cce7641581ee38cbaaddd3cf92535ffd437839ce77fb995097079027d9130d41",
+    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+    "changed_sources": [
+      "skills/archive-organization/SKILL.md",
+      "skills/vera/references/connected-studio-knowledge.md"
+    ],
+    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   }
 }
