@@ -17,13 +17,15 @@ skill to imitate a missing operational workflow.
 
 ## Development preview
 
-`patent-box-review` prepares selected evidence, reviewed ledger mappings and
+- `patent-box-review`: prepares selected evidence, reviewed ledger mappings and
 component controls for software, patents and designs, then exports draft A/B
 Word/PDF documents. Real calculation requires reviewed current sources and
 certificate-authenticated authorization under a firm-issued mandate. It verifies
 existing signatures and timestamps; it does not sign or file documents. All
 professional UAT and production acceptance boundaries remain explicit. Read
-`../../patent-box-review/SKILL.md`. This preview has no released teaching kit.
+`../../patent-box-review/SKILL.md`. Its prepared course uses fictional ordinary
+software evidence and a separate missing-link exercise. Synthetic execution does
+not establish professional acceptance.
 
 ## Merger workpapers
 
