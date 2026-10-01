@@ -1,0 +1,666 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "patent-box-review",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "inspect_normalize_review_then_synthetic_dossier"
+  },
+  "sources": [
+    {
+      "path": "modules/patent-box-review/assets/fonts/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "modules/patent-box-review/assets/fonts/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "modules/patent-box-review/assets/fonts/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "modules/patent-box-review/assets/icon.svg",
+      "sha256": "a684b93f49b57a452bbb9010d105300d11dadbad7fc45ea32aadd9e7d983896e"
+    },
+    {
+      "path": "modules/patent-box-review/config/control_catalog.json",
+      "sha256": "af20b47e2f446ff540d668beca48d0ce7002a8b4d5a9a0173c3c452b88679efa"
+    },
+    {
+      "path": "modules/patent-box-review/config/ruleset.proposed.json",
+      "sha256": "e13796ec7e15a79b4bb260a469d572c32d2d0e99e284899013eedd72e7d73b10"
+    },
+    {
+      "path": "modules/patent-box-review/config/source_monitor.json",
+      "sha256": "f0aef359bfd2917e077a9459e4420bbc578a2c89ec827e7df387aa8ea8b8bb45"
+    },
+    {
+      "path": "modules/patent-box-review/config/source_register.json",
+      "sha256": "388af5af8a2e25114d2e90a50c91eefde040c1c05c0723815c2e318b13ec478e"
+    },
+    {
+      "path": "modules/patent-box-review/config/workflow.json",
+      "sha256": "0920b24105413294b6f4eaf88bc8014584f2f9df658976e6621246c7e13a1826"
+    },
+    {
+      "path": "modules/patent-box-review/examples/case-index.json",
+      "sha256": "4e4e764b481d8a825b526c863b416f510df677f8cfe313e5eb07a5085a8da376"
+    },
+    {
+      "path": "modules/patent-box-review/examples/case.mixed.json",
+      "sha256": "9b9caabfcfddf8c37d850b1a64b67a3cc129740fede0dfa6e978c3e5ac9e30f3"
+    },
+    {
+      "path": "modules/patent-box-review/examples/case.ordinary.json",
+      "sha256": "0f973dffd0e4f702f01b8a9f83a7f85780aac77922290d0f47985d74985de8c7"
+    },
+    {
+      "path": "modules/patent-box-review/examples/case.penalty-incomplete.json",
+      "sha256": "d280e3fff4aacdf17ea1efe045debb2898cd6675bb5822395b4b893dd1b98e7c"
+    },
+    {
+      "path": "modules/patent-box-review/examples/case.premial.json",
+      "sha256": "476674066e110f573377d503cc8d65f9af862a56bdea40481d3d296a59493f6f"
+    },
+    {
+      "path": "modules/patent-box-review/examples/evidence/synthetic.txt",
+      "sha256": "6b9b337933085ca2bd017b4843cd0bc8a96a69b6c3541733d4b4089bfaf77715"
+    },
+    {
+      "path": "modules/patent-box-review/examples/rules.demo.json",
+      "sha256": "1f5e101eb31958d1a472b3f8082cf624584847e18da8bacceee3ba0428c5d962"
+    },
+    {
+      "path": "modules/patent-box-review/examples/sources.after.json",
+      "sha256": "73456056255eabd6d80ccc5e7efbf887d1463384e67d847edbaef24871936be4"
+    },
+    {
+      "path": "modules/patent-box-review/examples/sources.before.json",
+      "sha256": "026f5eaad634aae8d81d1a8770bbc76c2101220d11f6b3cd50e9586bc27e759d"
+    },
+    {
+      "path": "modules/patent-box-review/patent_box/__init__.py",
+      "sha256": "f88953328be6add43d27124680ee8b5333741f5bdd32ba6aaa11701116af49dc"
+    },
+    {
+      "path": "modules/patent-box-review/patent_box/authorization.py",
+      "sha256": "61d0d816110d3329c6dffc04ccc281373b571505f7e28af91160477c1b9814db"
+    },
+    {
+      "path": "modules/patent-box-review/patent_box/casebook.py",
+      "sha256": "f6c29b763050275ac798d428098ea2c2b860e525ee972622759edb667ee2d6a8"
+    },
+    {
+      "path": "modules/patent-box-review/patent_box/cli.py",
+      "sha256": "807211c0faaf064c365c122cb419fde92c23018197f999010064c0b6ef694c23"
+    },
+    {
+      "path": "modules/patent-box-review/patent_box/contracts.py",
+      "sha256": "ad2bbbad83e810f1f0d930ab4cd5e4f33ba15d9f644620ef66d41bc243f7d62f"
+    },
+    {
+      "path": "modules/patent-box-review/patent_box/coordination.py",
+      "sha256": "7228369f4ef2eb3f1883ac4c6f8b6cb6f808f489537114a85876775707d28ed7"
+    },
+    {
+      "path": "modules/patent-box-review/patent_box/documents.py",
+      "sha256": "e4792c56c81b38ee9fbb8b2ebc105548d7eac9be388b67e2b61ee94d781f5801"
+    },
+    {
+      "path": "modules/patent-box-review/patent_box/engine.py",
+      "sha256": "4ed73f66b3e63604de8ffd4ff0b87d14cec856e617c0ff49dc33bb9d2eaf4af6"
+    },
+    {
+      "path": "modules/patent-box-review/patent_box/formalities.py",
+      "sha256": "78489f90268db4f01a63ce5089e7c1df29907824bcede2f7b430dd343bba3a25"
+    },
+    {
+      "path": "modules/patent-box-review/patent_box/ledger_import.py",
+      "sha256": "c49e6c8b3d99c7d4c21b6f4cd122a9c0cd8c60bbe561c25c256ed40be261b1f7"
+    },
+    {
+      "path": "modules/patent-box-review/patent_box/monitor.py",
+      "sha256": "b4bdc40f2bb1b78c03c5fa2dcc71b985e68b9bac928e3b5ae5744ad522bd915a"
+    },
+    {
+      "path": "modules/patent-box-review/patent_box/monitor_service.py",
+      "sha256": "60bd26576965327d2f7ec24310118dc2dff8b17d11fab3194acd5c0d8f43cd2e"
+    },
+    {
+      "path": "modules/patent-box-review/patent_box/professional_review.py",
+      "sha256": "ff641b5ce49054087c280054169e88f7e9396770d0d2f11f76e2dc8cd3b401f8"
+    },
+    {
+      "path": "modules/patent-box-review/patent_box/render.py",
+      "sha256": "9d9420222230f0c963ee4febe3b724f55e620a89f635e9ccba5d013aaee990c9"
+    },
+    {
+      "path": "modules/patent-box-review/patent_box/source_acquisition.py",
+      "sha256": "f029787df7f4fde5deb3961305328b6908c93677bfe5e3843b0471d0de4f4d95"
+    },
+    {
+      "path": "modules/patent-box-review/patent_box/source_transport.py",
+      "sha256": "126576147803092b7279776720f0e4c877b5fbffcb4226bd67c1bbf4e731b63e"
+    },
+    {
+      "path": "modules/patent-box-review/references/DATA_BOUNDARY_REVIEW.md",
+      "sha256": "9e65f6ba188dfda97a84441f11f40e13145567d4d448acfa6950b7af64194110"
+    },
+    {
+      "path": "modules/patent-box-review/references/INTEGRAZIONE_VERA.md",
+      "sha256": "91634aa8a3c3e1f35708bd5fd87c43bb4f4d0fb8e179ed79fa407d137ef37763"
+    },
+    {
+      "path": "modules/patent-box-review/references/SPECIFICA_FUNZIONALE.md",
+      "sha256": "4b6caf1eeb1db2de271383f9192a0286e5747af333e1886954160d5f3d089a2e"
+    },
+    {
+      "path": "modules/patent-box-review/references/acceptance-matrix.json",
+      "sha256": "d2a4f80982de5dd14c593dc106186ae19f7c4a193aef3bab81f93404941afc5f"
+    },
+    {
+      "path": "modules/patent-box-review/references/formalities.md",
+      "sha256": "05b7eaf24570d982f6da5a1f77a0a143e56ce78f93b8b4ae94beacedc6859207"
+    },
+    {
+      "path": "modules/patent-box-review/references/implementation-status.md",
+      "sha256": "b8c3a01dd6b98ea8369f6fb72d509dd33ee65f227b9998592f703d9053098a17"
+    },
+    {
+      "path": "modules/patent-box-review/references/ledger-import.md",
+      "sha256": "8b141353a95b37bbf9122dc51da90ebf19155e1e36a8db246926cb71401cc31c"
+    },
+    {
+      "path": "modules/patent-box-review/references/monitor-service.md",
+      "sha256": "5a1325988eface96df71f941c7bd8df2ad9c30737f25f4a9557a3296639c5fa4"
+    },
+    {
+      "path": "modules/patent-box-review/references/professional-review.md",
+      "sha256": "f6d53245f9f960e8bfde29c54eaa6d61b2dc63deef8e15b74c05ae1addf6e640"
+    },
+    {
+      "path": "modules/patent-box-review/references/source-discovery.md",
+      "sha256": "4b5bd988bb2e3b88d2ddcc193fff8318c65cbb1dedd792dc34765c264e3036a1"
+    },
+    {
+      "path": "modules/patent-box-review/requirements.txt",
+      "sha256": "8b0fc2347659ed206cdb539b838aa729d547b88a353ffbad2168e97e5207c932"
+    },
+    {
+      "path": "modules/patent-box-review/schemas/authority-policy.schema.json",
+      "sha256": "6897aa7e7e37869d3013c3fe42e1f5b32efabf0c28081e72dc736b2b12088acc"
+    },
+    {
+      "path": "modules/patent-box-review/schemas/case-index.schema.json",
+      "sha256": "deb4d69cb57bd521e0211e698c9dafc905f2f58bcd2a92ba01dedf1eb66f4cf9"
+    },
+    {
+      "path": "modules/patent-box-review/schemas/case.schema.json",
+      "sha256": "7fde96ff1e57084d19411a93587943e397f0c02202359d8f18442d6c4272392b"
+    },
+    {
+      "path": "modules/patent-box-review/schemas/casebook.schema.json",
+      "sha256": "251c155d5abd5a6324d3d7bb1aac95fd723733934e34f69330b14e15d0e89fac"
+    },
+    {
+      "path": "modules/patent-box-review/schemas/formalities-plan.schema.json",
+      "sha256": "15c82e218d5da24f422f969f459fb6fe4b5cf44f506e0a1a8bbbe2a2e16da8b1"
+    },
+    {
+      "path": "modules/patent-box-review/schemas/ledger-normalization.schema.json",
+      "sha256": "f5c1faa3d58c6dbcfbcf7273230af69c631f8471b71214128f81a34bcd553457"
+    },
+    {
+      "path": "modules/patent-box-review/schemas/ledger-selection.schema.json",
+      "sha256": "55f4f7b5efc3e1180b891ac98a78008ea7f7d800beb6ae7c31c9d746c452159c"
+    },
+    {
+      "path": "modules/patent-box-review/schemas/professional-mandate.schema.json",
+      "sha256": "085e6e8e625c86d37bba161d29bf33ae06bb5dfbf625b7a27137311694cbfee9"
+    },
+    {
+      "path": "modules/patent-box-review/schemas/professional-request.schema.json",
+      "sha256": "5ca87def9c42d09be73ec065e40ea9217a3bbdb2e26276bd0458afcd054f52f1"
+    },
+    {
+      "path": "modules/patent-box-review/schemas/ruleset.schema.json",
+      "sha256": "0886ddafb74944831eb44f12b9cc78a118e26298505aaca0e69f5de85ba830a5"
+    },
+    {
+      "path": "modules/patent-box-review/schemas/source-coverage-review.schema.json",
+      "sha256": "24cc7d736ef61f2ffb4ee220ed9baad86d333cc8ac734ec0dede812ef92f1fdd"
+    },
+    {
+      "path": "modules/patent-box-review/schemas/source-plan.schema.json",
+      "sha256": "815940372893642ea36786384cfd8b3e1b5b0f641b8d2eb06b7f5ea9116534c9"
+    },
+    {
+      "path": "modules/patent-box-review/schemas/source-snapshot.schema.json",
+      "sha256": "6669aa085e05f506cea5cca4e8c32599ec0e14dcf08eedbf98cb28f90f9fa106"
+    },
+    {
+      "path": "modules/patent-box-review/scripts/check_dependencies.py",
+      "sha256": "f6af5909116cd0df5179e7e6c25bd7a5693dbbf4cd3f121f17181c9c9a8a84f3"
+    },
+    {
+      "path": "modules/patent-box-review/scripts/patent_box_sources.py",
+      "sha256": "889629fb7465c01acacb45c86f6dc9dc9dfefb1411e4f4260fe587a73b385b5f"
+    },
+    {
+      "path": "modules/patent-box-review/scripts/patent_box_workflow.py",
+      "sha256": "6b8c279ab270edbdaeba433bb2e54af560bf1d4206a9adfc417afb5d1aadb504"
+    },
+    {
+      "path": "modules/patent-box-review/skills/patent-box-review/SKILL.md",
+      "sha256": "af5135e9a03f57adbfe510a550540fba8ff4ad7fea8bac8d57ec5acbf648e8ed"
+    },
+    {
+      "path": "modules/patent-box-review/templates/declaration_bridge.csv",
+      "sha256": "57d6253107a776b5fc653929c99767e1de4d9a8852f8beeb29c779163edc66cc"
+    },
+    {
+      "path": "modules/patent-box-review/templates/fascicolo_A_B.md",
+      "sha256": "9c59acc6a8352703d5ee5b1c68392687146f48a82fa40ca95042979aa966d88d"
+    },
+    {
+      "path": "modules/patent-box-review/templates/incentive_matrix.csv",
+      "sha256": "461eab0fc1fb55c779950e679b8395d50fc216d594f671eb14d2b2db7757c45e"
+    },
+    {
+      "path": "modules/patent-box-review/templates/open_issues.csv",
+      "sha256": "ed610eb7c711c8ace4020a4e32b7dff6596efbefc6fef7e86c2e3875c9cc73fd"
+    },
+    {
+      "path": "modules/patent-box-review/templates/review_log.csv",
+      "sha256": "9fa3b6ebdf193df6a9d4c98dfeeb5133ae7f86d2bfcfe13e93ad6ac877db8ff2"
+    },
+    {
+      "path": "modules/patent-box-review/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/patent-box-review/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/patent-box-review/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "089670445e91974b68e9eca35017948a8bac2d07e7e05dba29be05b32fb76e93"
+    },
+    {
+      "path": "modules/patent-box-review/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/patent-box-review/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/patent-box-review/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "modules/patent-box-review/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/patent-box-review/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/patent-box-review/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/patent-box-review/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/patent-box-review/SKILL.md",
+      "sha256": "faa114ff9f63a26cd80dff2d1db6a4cb153171aebc0361def8bdfc6d5a2e05fc"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "089670445e91974b68e9eca35017948a8bac2d07e7e05dba29be05b32fb76e93"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/evidence-it.md",
+      "sha256": "b007782ff6b672f09f58aa98837364a5b7f74a2b83c7105cbcccdf87e4446cfe",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/evidence-practice-it.md",
+      "sha256": "6d4dfe369538c41c9d30bef4d0116bf8a0e146392cb94202738f90550eaeba61",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/evidence-en.md",
+      "sha256": "ebae6bf5915eaeedca7f2abf46cd21cd8171a5749dcf4b829ed93fff5a8d3105",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/evidence-practice-en.md",
+      "sha256": "e6251e216af474e121d1d77f6d41fec1beaca3d73903aeab177378b613cc7360",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/evidence-fr.md",
+      "sha256": "f55035cb1e54f7657b8f8c109ef24eed5e75c63c32258b05350a2b3cbdf64b46",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/evidence-practice-fr.md",
+      "sha256": "c1d06d9d07695a3412be770bb4064af011661d64b2e9df0ee991c6dc184ccc59",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/evidence-de.md",
+      "sha256": "d9d0a1f4ec8336a7f1dd02a03e749656d569e6e6b88b97a4c7f4523e3ab0da67",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/evidence-practice-de.md",
+      "sha256": "326d8e60612487100647fdfd239b07c2d07f6d8d30542cc0db710fb8ee099bc7",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/evidence-es.md",
+      "sha256": "768a6aed3a227f9933842fd952e86ae1daa9cf470457c67d1df1bbf0c6750f91",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/evidence-practice-es.md",
+      "sha256": "a7577798ae8c932ff117a64e15154ec26bf4390ec3bd1170aa0232b2fce55961",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/ledger-demo.csv",
+      "sha256": "48006a19b8fb69bb1329ca6ae46e4f621e6a26e0a4380fcad6e7607247e1f673",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/synthetic-rules.txt",
+      "sha256": "6b9b337933085ca2bd017b4843cd0bc8a96a69b6c3541733d4b4089bfaf77715",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/ledger-practice.csv",
+      "sha256": "df48ea689fc4dd454fa63667fdc6a54b8126b2b591467c662cf0dfdc5e7b83b4",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/synthetic-rules.txt",
+      "sha256": "6b9b337933085ca2bd017b4843cd0bc8a96a69b6c3541733d4b4089bfaf77715",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Preparare un dossier Patent Box da evidenze e costi",
+      "goal": "Imparare a fornire documenti sul software, riconciliare i costi, distinguere inclusioni, esclusioni e sospensioni e leggere un fascicolo A/B da rivedere.",
+      "scenario": "Arco Software è una società inventata. Il progetto Faro riguarda un modulo originale usato internamente nel 2025; il registro separa personale di sviluppo e manutenzione ordinaria.",
+      "scope": "Anteprima controllata italiana: primo caso software ordinario. La conversazione è in italiano; i documenti del motore hanno titoli e campi italiani. Brevetti, disegni e ramo premiale richiedono altre prove e non sono dimostrati. Tutti i 32 scenari UAT professionali sono ancora NOT_RUN; accettazione professionale e sul computer installato non verificata.",
+      "inputs": "Apri evidence-it.md, ledger-demo.csv e synthetic-rules.txt. Individua titolarità, attività, periodo, progetto, riga e basi candidate redditi/IRAP. I fatti sono inventati, i valori fiscali sono ipotesi didattiche. La fonte sintetica serve solo al test storico del 23 settembre 2026, non è normativa attuale.",
+      "request": "Vera, prepara un dossier Patent Box didattico per il software Faro con questi documenti. Mostrami evidenze, riconciliazione, controlli proposti e questioni aperte; dopo la mia conferma usa soltanto il calcolo sintetico e mostrami la bozza A/B.",
+      "steps": [
+        "Vera importa solo questi file in un caso tutorial locale separato, legge i documenti e propone il perimetro. La voce collega software, titolarità, attività e uso alle sezioni della nota; identifica le prove che servirebbero per un brevetto o disegno senza inventarle.",
+        "Vera ispeziona le righe del CSV e propone la mappatura, il totale contabile e le basi distinte. Rivedi con Vera esclusione della manutenzione, collegamento dei costi al progetto, assenza dichiarata di altri incentivi e limiti delle dichiarazioni. Nessuna mappatura o approvazione è già fornita.",
+        "Apri la revisione leggibile della proposta. Solo dopo conferma effettiva della versione esatta si registra una revisione sintetica e si esegue il motore con demo e regole sintetiche alla data storica. Il tutorial non configura mandati o fonti reali. Apri riepilogo, riconciliazione e fascicolo Word/PDF realmente prodotti, poi il rapporto sui dati al modello."
+      ],
+      "deliverables": [
+        "Riepilogo del caso, documenti mancanti, matrice controlli e riconciliazione dei costi con righe e fonti.",
+        "Workpaper, fascicolo A/B Word e PDF non firmati, record di calcolo e rapporto sui dati al modello."
+      ],
+      "review": "Parti dal riepilogo e segui un importo fino alla riga del registro. Distingui maggiorazione della deduzione e risparmio fiscale: il motore non calcola il risparmio. Un controllo sospeso non prova inammissibilità. Il fascicolo resta bozza: niente invio, firma, dichiarazione o protezione sanzionatoria. Un caso reale richiede fonti/regole attuali riviste e autorizzazione autenticata del professionista; la conferma didattica non le sostituisce.",
+      "checkpoints": [
+        "Prima del calcolo, collega una riga a progetto e attività e spiega perché le due basi possono differire.",
+        "Nella bozza trova un costo escluso, la motivazione e la fonte. Controlla se la prova documentale è sufficiente per un cliente reale."
+      ],
+      "practice": "Chiedi un nuovo caso con evidence-practice-it.md, ledger-practice.csv e la stessa fonte sintetica. Il registro aggiunge un costo di personale privo di collegamento documentato al progetto. Non inventare il collegamento: rivedi la proposta, conserva il risultato dimostrativo e cerca nella nuova bozza il costo sospeso e il documento da chiedere.",
+      "success": "Sai scegliere i file, formulare la richiesta, riconciliare un importo, spiegare esclusione e sospensione e indicare la verifica professionale ancora necessaria.",
+      "repeat": "Per un cliente reale indica impresa, periodo, bene e finalità, fornisci titolarità, attività, costi e storia degli incentivi. Rivedi mappature e controlli con il professionista e segui la normale autorizzazione. Non riusare fonte, approvazione o data sintetiche."
+    },
+    "en": {
+      "title": "Prepare a Patent Box dossier from evidence and costs",
+      "goal": "Learn to supply software evidence, reconcile costs, distinguish included, excluded and suspended components and read a draft A/B dossier.",
+      "scenario": "Arco Software is fictional. Its Faro project is an original module used internally in 2025; the ledger separates development personnel from ordinary maintenance.",
+      "scope": "Controlled Italian preview: ordinary software first use. Conversation is in English; engine documents retain Italian titles and fields. Patents, designs and the premial branch need different evidence and are not demonstrated. All 32 professional UAT scenarios remain NOT_RUN; professional and installed-host acceptance is unverified.",
+      "inputs": "Open evidence-en.md, ledger-demo.csv and synthetic-rules.txt. Identify rights, activities, period, project, ledger rows and proposed income/IRAP bases. Facts are invented and fiscal bases are teaching assumptions. The synthetic source is only for the historical test date 23 September 2026, not current law.",
+      "request": "Vera, prepare a fictional Patent Box dossier for Faro using these files. Show evidence, reconciliation, proposed controls and open questions; after my confirmation run only the synthetic calculation and show the draft A/B dossier.",
+      "steps": [
+        "Vera imports only these files into a separate local tutorial case, reads them and proposes scope. The voice teacher links software, rights, activities and use to note sections; explain what evidence a patent or design would need without inventing it.",
+        "Vera inspects the CSV rows and proposes mapping, book total and separate bases. Review maintenance exclusion, cost-to-project links, the declared absence of other incentives and the limits of declarations. No mapping or approval is supplied.",
+        "Open the readable proposal review. Only after actual confirmation of its exact version record a synthetic review and execute the engine with demo and synthetic rules at the historical date. The tutorial configures no real mandate or sources. Open the actual summary, reconciliation and Word/PDF dossier, then the model-data report."
+      ],
+      "deliverables": [
+        "Case summary, missing documents, control matrix and cost reconciliation with rows and sources.",
+        "Workpaper, unsigned Word/PDF A/B dossier, calculation record and model-data report."
+      ],
+      "review": "Start with the summary and trace an amount to its ledger row. Additional deduction is not a tax saving: the engine does not calculate savings. A suspended control does not prove ineligibility. The dossier remains a draft: no sending, signing, filing or penalty protection. Real cases require current reviewed sources/rules and authenticated professional authorization; teaching confirmation cannot replace them.",
+      "checkpoints": [
+        "Before calculation link a row to a project and activity and explain why the bases may differ.",
+        "Find an excluded cost, its reason and source in the draft. Consider whether the evidence would suffice for a real client."
+      ],
+      "practice": "Request a fresh case using evidence-practice-en.md, ledger-practice.csv and the same synthetic source. The ledger adds personnel cost without a documented project link. Do not invent it: review the proposal, preserve demonstration outputs and find the suspended cost and document request in the new draft.",
+      "success": "You can select files, make the request, reconcile an amount, explain exclusion versus suspension and identify outstanding professional checks.",
+      "repeat": "For real work specify company, period, asset and purpose; supply rights, activities, costs and incentive history. Review mapping and controls with the professional and follow normal authorization. Never reuse synthetic sources, approval or date."
+    },
+    "fr": {
+      "title": "Préparer un dossier Patent Box à partir des preuves et des coûts",
+      "goal": "Apprendre à fournir les pièces du logiciel, rapprocher les coûts, distinguer inclusion, exclusion et suspension et lire un dossier A/B à revoir.",
+      "scenario": "Arco Software est fictive. Le projet Faro est un module original utilisé en interne en 2025 ; le registre distingue personnel de développement et maintenance ordinaire.",
+      "scope": "Aperçu contrôlé italien : premier cas de logiciel ordinaire. Conversation en français ; titres et champs des documents du moteur restent italiens. Brevets, dessins et branche premial exigent d’autres preuves et ne sont pas démontrés. Les 32 scénarios UAT professionnels restent NOT_RUN ; acceptation professionnelle et sur le poste installé non vérifiée.",
+      "inputs": "Ouvrez evidence-fr.md, ledger-demo.csv et synthetic-rules.txt. Identifiez droits, activités, période, projet, lignes et bases proposées revenus/IRAP. Faits inventés et bases fiscales pédagogiques. La source synthétique ne sert qu’au test historique du 23 septembre 2026, pas au droit actuel.",
+      "request": "Vera, prépare un dossier Patent Box fictif pour Faro avec ces fichiers. Montre preuves, rapprochement, contrôles proposés et questions ouvertes ; après ma confirmation, exécute uniquement le calcul synthétique et montre le projet A/B.",
+      "steps": [
+        "Vera importe ces seuls fichiers dans un cas pédagogique local séparé, les lit et propose le périmètre. La voix relie logiciel, droits, activités et utilisation aux sections de la note ; explique les preuves nécessaires pour un brevet ou dessin sans les inventer.",
+        "Vera inspecte les lignes CSV et propose correspondances, total comptable et bases distinctes. Revoyez exclusion de la maintenance, liens au projet, absence déclarée d’autres aides et limites des déclarations. Aucune correspondance ni approbation n’est fournie.",
+        "Ouvrez la revue lisible de la proposition. Après confirmation réelle de la version exacte seulement, enregistrez une revue synthétique et exécutez le moteur en demo avec règles synthétiques à la date historique. Aucun mandat ni source réelle n’est configuré. Ouvrez résumé, rapprochement et dossier Word/PDF réellement produits, puis le rapport des données au modèle."
+      ],
+      "deliverables": [
+        "Résumé, documents manquants, matrice de contrôles et rapprochement avec lignes et sources.",
+        "Feuille de travail, dossier A/B Word/PDF non signé, calcul et rapport des données au modèle."
+      ],
+      "review": "Commencez par le résumé et remontez un montant à sa ligne. La déduction supplémentaire n’est pas une économie fiscale : le moteur ne calcule pas celle-ci. Une suspension ne prouve pas l’inéligibilité. Dossier provisoire : aucun envoi, signature, dépôt ou protection contre les sanctions. Un cas réel nécessite sources/règles actuelles revues et autorisation professionnelle authentifiée ; la confirmation pédagogique ne les remplace pas.",
+      "checkpoints": [
+        "Avant calcul, reliez une ligne au projet et à l’activité et expliquez la différence des bases.",
+        "Trouvez un coût exclu, son motif et sa source. Évaluez si la preuve suffirait pour un client réel."
+      ],
+      "practice": "Demandez un nouveau cas avec evidence-practice-fr.md, ledger-practice.csv et la même source synthétique. Un coût de personnel supplémentaire n’a pas de lien documenté au projet. Ne l’inventez pas : revoyez la proposition, préservez la démonstration et trouvez le coût suspendu et la pièce à demander dans le nouveau dossier.",
+      "success": "Vous savez choisir les fichiers, demander la revue, rapprocher un montant, expliquer exclusion et suspension et identifier les vérifications professionnelles restantes.",
+      "repeat": "Pour un client réel, précisez entreprise, période, bien et finalité ; fournissez droits, activités, coûts et historique des aides. Revoyez correspondances et contrôles avec le professionnel et suivez l’autorisation normale. Ne réutilisez ni source, ni approbation, ni date synthétique."
+    },
+    "de": {
+      "title": "Eine Patent-Box-Akte aus Belegen und Kosten vorbereiten",
+      "goal": "Softwarebelege bereitstellen, Kosten abstimmen, einbezogene, ausgeschlossene und ausgesetzte Teile unterscheiden und einen A/B-Entwurf lesen lernen.",
+      "scenario": "Arco Software ist erfunden. Faro ist ein originales Modul, das 2025 intern genutzt wird; das Register trennt Entwicklungspersonal und gewöhnliche Wartung.",
+      "scope": "Kontrollierte italienische Vorschau: gewöhnlicher Softwarefall. Gespräch auf Deutsch; Dokumenttitel und Motorfelder bleiben italienisch. Patente, Designs und der premial-Zweig brauchen andere Belege und werden nicht vorgeführt. Alle 32 fachlichen UAT-Szenarien bleiben NOT_RUN; fachliche und installierte Host-Abnahme unbestätigt.",
+      "inputs": "Öffnen Sie evidence-de.md, ledger-demo.csv und synthetic-rules.txt. Erkennen Sie Rechte, Tätigkeiten, Zeitraum, Projekt, Zeilen und vorgeschlagene Einkommen-/IRAP-Basen. Fakten sind erfunden und Steuerbasen Übungsannahmen. Die synthetische Quelle gilt nur für den historischen Test am 23. September 2026, nicht als aktuelles Recht.",
+      "request": "Vera, bereite mit diesen Dateien eine fiktive Patent-Box-Akte für Faro vor. Zeige Belege, Abstimmung, vorgeschlagene Kontrollen und offene Fragen; führe nach meiner Bestätigung nur die synthetische Berechnung aus und zeige den A/B-Entwurf.",
+      "steps": [
+        "Vera importiert nur diese Dateien in einen getrennten lokalen Übungsfall, liest sie und schlägt den Umfang vor. Die Stimme verbindet Software, Rechte, Tätigkeiten und Nutzung mit den Notizabschnitten; erläutern Sie benötigte Patent- oder Designbelege ohne sie zu erfinden.",
+        "Vera prüft CSV-Zeilen und schlägt Zuordnung, Buchsumme und getrennte Basen vor. Prüfen Sie Wartungsausschluss, Projektbezug, erklärte Abwesenheit anderer Förderungen und Grenzen der Erklärungen. Keine Zuordnung oder Genehmigung wird mitgeliefert.",
+        "Öffnen Sie die lesbare Vorschlagsprüfung. Erst nach tatsächlicher Bestätigung der genauen Fassung eine synthetische Prüfung erfassen und den Motor mit demo und synthetischen Regeln am historischen Datum ausführen. Keine echten Mandate oder Quellen werden eingerichtet. Öffnen Sie tatsächliche Zusammenfassung, Abstimmung und Word/PDF-Akte, danach den Modell-Datenbericht."
+      ],
+      "deliverables": [
+        "Fallübersicht, fehlende Dokumente, Kontrollmatrix und Kostenabstimmung mit Zeilen und Quellen.",
+        "Arbeitspapier, unsignierte A/B-Akte in Word/PDF, Berechnungsnachweis und Modell-Datenbericht."
+      ],
+      "review": "Beginnen Sie bei der Übersicht und verfolgen Sie einen Betrag zur Buchzeile. Zusätzlicher Abzug ist keine Steuerersparnis; der Motor berechnet diese nicht. Aussetzung beweist keine Unzulässigkeit. Die Akte bleibt Entwurf: kein Versand, Signieren, Einreichen oder Sanktionsschutz. Echte Fälle erfordern aktuelle geprüfte Quellen/Regeln und authentifizierte fachliche Autorisierung; Übungsbestätigung ersetzt sie nicht.",
+      "checkpoints": [
+        "Verbinden Sie vor Berechnung eine Zeile mit Projekt und Tätigkeit und erklären Sie unterschiedliche Basen.",
+        "Finden Sie ausgeschlossene Kosten, Grund und Quelle. Prüfen Sie, ob die Belege für einen echten Mandanten reichen würden."
+      ],
+      "practice": "Fordern Sie einen neuen Fall mit evidence-practice-de.md, ledger-practice.csv und derselben synthetischen Quelle an. Neue Personalkosten haben keinen belegten Projektbezug. Erfinden Sie ihn nicht: prüfen Sie den Vorschlag, erhalten Sie die Demonstration und finden Sie ausgesetzte Kosten und die Dokumentanforderung im neuen Entwurf.",
+      "success": "Sie können Dateien wählen, den Auftrag formulieren, einen Betrag abstimmen, Ausschluss und Aussetzung erklären und offene fachliche Prüfungen nennen.",
+      "repeat": "Für echte Fälle Unternehmen, Zeitraum, Gut und Zweck nennen; Rechte, Tätigkeiten, Kosten und Förderhistorie liefern. Zuordnung und Kontrollen fachlich prüfen und normale Autorisierung befolgen. Synthetische Quelle, Genehmigung oder Datum nie wiederverwenden."
+    },
+    "es": {
+      "title": "Preparar un expediente Patent Box con evidencias y costes",
+      "goal": "Aprender a aportar pruebas del software, conciliar costes, distinguir inclusión, exclusión y suspensión y leer un borrador A/B.",
+      "scenario": "Arco Software es ficticia. Faro es un módulo original usado internamente en 2025; el registro separa personal de desarrollo y mantenimiento ordinario.",
+      "scope": "Vista previa controlada italiana: primer caso de software ordinario. Conversación en español; títulos y campos del motor permanecen en italiano. Patentes, diseños y rama premial requieren otras pruebas y no se demuestran. Los 32 escenarios UAT profesionales siguen NOT_RUN; aceptación profesional y del equipo instalado no verificada.",
+      "inputs": "Abre evidence-es.md, ledger-demo.csv y synthetic-rules.txt. Identifica derechos, actividades, periodo, proyecto, filas y bases propuestas renta/IRAP. Hechos inventados y bases fiscales didácticas. La fuente sintética solo sirve para el test histórico del 23 de septiembre de 2026, no como normativa actual.",
+      "request": "Vera, prepara un expediente Patent Box ficticio para Faro con estos archivos. Muestra evidencias, conciliación, controles propuestos y preguntas abiertas; tras mi confirmación ejecuta solo el cálculo sintético y muestra el borrador A/B.",
+      "steps": [
+        "Vera importa solo estos archivos en un caso didáctico local separado, los lee y propone el alcance. La voz relaciona software, derechos, actividades y uso con secciones de la nota; explica las pruebas de una patente o diseño sin inventarlas.",
+        "Vera inspecciona filas CSV y propone mapeo, total contable y bases distintas. Revisa exclusión del mantenimiento, vínculos al proyecto, ausencia declarada de otras ayudas y límites de las declaraciones. No se suministra mapeo ni aprobación.",
+        "Abre la revisión legible de la propuesta. Solo tras confirmar realmente la versión exacta, registra una revisión sintética y ejecuta el motor con demo y reglas sintéticas a la fecha histórica. No se configuran mandatos ni fuentes reales. Abre resumen, conciliación y expediente Word/PDF realmente producidos, luego el informe de datos al modelo."
+      ],
+      "deliverables": [
+        "Resumen, documentos pendientes, matriz de controles y conciliación con filas y fuentes.",
+        "Papel de trabajo, expediente A/B Word/PDF sin firmar, registro del cálculo e informe de datos al modelo."
+      ],
+      "review": "Empieza por el resumen y sigue un importe hasta su fila. La deducción adicional no es ahorro fiscal: el motor no calcula ahorro. La suspensión no demuestra inadmisibilidad. El expediente es borrador: sin envío, firma, presentación ni protección sancionadora. Un caso real exige fuentes/reglas actuales revisadas y autorización profesional autenticada; la confirmación didáctica no las sustituye.",
+      "checkpoints": [
+        "Antes del cálculo relaciona una fila con proyecto y actividad y explica por qué las bases pueden diferir.",
+        "Busca un coste excluido, motivo y fuente. Considera si las pruebas bastarían para un cliente real."
+      ],
+      "practice": "Pide un caso nuevo con evidence-practice-es.md, ledger-practice.csv y la misma fuente sintética. Añade personal sin vínculo documentado al proyecto. No lo inventes: revisa la propuesta, conserva la demostración y encuentra el coste suspendido y el documento que falta en el nuevo borrador.",
+      "success": "Sabes elegir archivos, pedir la revisión, conciliar un importe, explicar exclusión y suspensión e identificar verificaciones profesionales pendientes.",
+      "repeat": "Para un cliente real indica empresa, periodo, activo y finalidad; aporta derechos, actividades, costes e historial de ayudas. Revisa mapeos y controles con el profesional y sigue la autorización normal. Nunca reutilices fuente, aprobación o fecha sintéticas."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "ec36cf2e3a4c34556e9d31e78d2da17eacf278568ed34434f6610bdef26ab67b"
+}
