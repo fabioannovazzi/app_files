@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "studio-document-format",
-  "course_sha256": "314b07c315e2ec80b4ec0b56fb02a5a588a985ac4f65b68fec7ce10ddfef1a35",
+  "course_sha256": "e945f61e0d67e1ab2211dde940d1e8943379656a1658300c66001d169d65cf5d",
   "reviewer": "Codex: authored five-language course and actual synthetic native output review",
   "reviewed_at": "2026-10-01T18:41:07.117136+00:00",
   "review_scope": "Reviewed all five complete authored narratives and the actual DOCX structure, profiles and financial analysis from ten independent native demo/practice regressions. Regression approvals are expressly simulated, never learner decisions. Structural artifact inspection does not establish visual pagination, font availability on a learner host, installed enabled-plugin execution, native voice, paired-window or learner acceptance. Tests run local component code without model or network calls. No jurisdiction qualification is claimed.",
@@ -322,5 +322,19 @@
         ]
       }
     }
+  },
+  "connected_studio_knowledge_source_binding_20261002": {
+    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+    "reviewed_at": "2026-10-01T22:12:56.036386+00:00",
+    "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+    "previous_course_sha256": "314b07c315e2ec80b4ec0b56fb02a5a588a985ac4f65b68fec7ce10ddfef1a35",
+    "current_course_sha256": "e945f61e0d67e1ab2211dde940d1e8943379656a1658300c66001d169d65cf5d",
+    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+    "changed_sources": [
+      "skills/studio-document-format/SKILL.md",
+      "skills/vera/references/connected-studio-knowledge.md"
+    ],
+    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   }
 }

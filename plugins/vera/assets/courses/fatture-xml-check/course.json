@@ -179,7 +179,12 @@
     {
       "path": "skills/fatture-xml-check/SKILL.md",
       "repository_path": "plugins/vera/skills/fatture-xml-check/SKILL.md",
-      "sha256": "09259e844b55b8cf287cb0553c8199432c28e6b511a6c05a67aabd10219c4351"
+      "sha256": "e810f4306c99d9b3bbc2fd9d6545ed80e97a2db652baf797e83c801664a90334"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

@@ -160,7 +160,12 @@
     {
       "path": "skills/presenza-digitale-studio/SKILL.md",
       "repository_path": "plugins/vera/skills/presenza-digitale-studio/SKILL.md",
-      "sha256": "0d8dcb3a6247c34a919b2933788ef33f1d6a4f142b2b00d12245bbfa18a1e1a1"
+      "sha256": "2a4c3fc9a527c9cb3d46720480d9673ee8f586cef0d2859e55e4043f25af1f84"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

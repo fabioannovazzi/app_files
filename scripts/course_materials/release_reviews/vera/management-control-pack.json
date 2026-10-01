@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "management-control-pack",
-  "course_sha256": "ceb611faac1dcb04fedd3d77dde01a1d6de8f4b101c49cfc353920f2cddce68c",
+  "course_sha256": "6c3f595588300136da05e21805d4e68451184eb7102a7d067992eab6b480ed60",
   "reviewer": "Codex lesson and actual generated report review",
   "reviewed_at": "2026-09-23T11:51:00.787581+00:00",
   "review_scope": "Reviewed localized lessons, prepared workbook meanings and generated demo/practice narratives and tables. Current native execution checks recalculate the workbook and retain the previous report. Authored commentary is replayed as a fixture, not represented as fresh model inference. The shared Italian dashboard was also inspected in Chrome and its February selector verified. No learner participation, professional approval, live voice or all-locale visual inspection is claimed. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -203,5 +203,19 @@
       "skills/management-control-pack/SKILL.md"
     ],
     "scope": "Inspected the specialist entrypoint diff: only its frontmatter description changes to clarify selection of the existing accounting workflow. All course content outside source fingerprints is exactly unchanged. Prior per-language editorial and artifact reviews remain historical evidence; current-source demo and practice cases are rerun as a release gate. No new learner or professional acceptance is asserted."
+  },
+  "connected_studio_knowledge_source_binding_20261002": {
+    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+    "reviewed_at": "2026-10-01T22:12:55.800982+00:00",
+    "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+    "previous_course_sha256": "ceb611faac1dcb04fedd3d77dde01a1d6de8f4b101c49cfc353920f2cddce68c",
+    "current_course_sha256": "6c3f595588300136da05e21805d4e68451184eb7102a7d067992eab6b480ed60",
+    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+    "changed_sources": [
+      "skills/management-control-pack/SKILL.md",
+      "skills/vera/references/connected-studio-knowledge.md"
+    ],
+    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   }
 }

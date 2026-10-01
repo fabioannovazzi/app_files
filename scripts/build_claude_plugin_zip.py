@@ -1953,6 +1953,20 @@ def project_cowork_skill(
     text = _remove_optional_section(text, "## Plugin Improvement Feedback")
     text = _inject_cowork_execution_contract(text)
     text = _project_natural_language_runtime(text)
+    # Some public wrappers are replaced by Cowork-specific bodies. Retain their
+    # optional knowledge contract without altering shared component skill bytes.
+    if relative_path.startswith("skills/"):
+        knowledge = re.search(
+            r"(?s)<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->.*?"
+            r"<!-- VERA_CONNECTED_KNOWLEDGE_END -->",
+            content.decode("utf-8"),
+        )
+        if knowledge is not None and knowledge.group() not in text:
+            text = _inject_named_execution_contract(
+                text,
+                heading="## Connected studio knowledge",
+                contract=knowledge.group(),
+            )
     for marker in (*PROMOTION_MARKERS, *CALL_HOME_MARKERS):
         if marker in text:
             raise ValueError(

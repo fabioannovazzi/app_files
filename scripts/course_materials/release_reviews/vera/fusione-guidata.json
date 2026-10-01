@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "fusione-guidata",
-  "course_sha256": "e6cb9f5ca427a7cd60675b916e6209e120cb22d542d39cbe9caefd32b24b5a48",
+  "course_sha256": "10f1f97b834bdaa95969f6a17dfeead064d32e91042f5b32269b1a6c635420a1",
   "reviewer": "Codex /root - source, native execution and artifact review",
   "reviewed_at": "2026-10-01T08:04:10.681899+00:00",
   "review_scope": "Read the five complete outlines and source notes, both fictional data packs and changed balance. Executed and inspected ten native source-tree cases driven by the shipped facts and calendar conventions. Alpha/Beta receipts, exact allocations, draft journals, separate fiscal values, source-bound calendars, pending event receipts and immutable histories were inspected. Test narrative and reviewer confirmations are explicitly synthetic fixtures; no live voice, learner comprehension, installed-host acceptance or professional validation on a real client is claimed. Native workpaper headings and structural fields retain the P1 language contract; localized lesson guidance does not promise a fully localized helper report.",
@@ -282,5 +282,19 @@
         ]
       }
     }
+  },
+  "connected_knowledge_fusione_integration_20261002": {
+    "reviewer": "Codex - bounded connected knowledge and Fusione source integration review",
+    "reviewed_at": "2026-10-01T22:39:20.874424+00:00",
+    "baseline_commit": "5b1cc09afc599862d87a609648303073187b587e",
+    "previous_course_sha256": "e6cb9f5ca427a7cd60675b916e6209e120cb22d542d39cbe9caefd32b24b5a48",
+    "current_course_sha256": "10f1f97b834bdaa95969f6a17dfeead064d32e91042f5b32269b1a6c635420a1",
+    "content_review": "Complete compiled JSON equality except source bindings: all authored localized content, input definitions, checkpoints, practice and timing remain unchanged. Preserves original named editorial judgments and historical artifact reviews; no new independent learner or professional acceptance is inferred.",
+    "changed_sources": [
+      "skills/fusione-guidata/SKILL.md",
+      "skills/vera/references/connected-studio-knowledge.md"
+    ],
+    "source_review": "Preserves main’s synthetic Italian Fusione P1 teaching expansion and task’s optional host-connected repository consultation gates. Synthetic lessons use their bound inputs and do not query private repositories. Specialist calculations and qualification limits are unchanged.",
+    "execution_requirement": "Fresh CI must execute the existing demo and practice cases bound to this exact compiled course digest before merge."
   }
 }

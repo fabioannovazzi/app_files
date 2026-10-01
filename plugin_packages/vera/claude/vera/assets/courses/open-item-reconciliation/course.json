@@ -164,7 +164,11 @@
     },
     {
       "path": "skills/open-item-reconciliation/SKILL.md",
-      "sha256": "82453e22b1b3caf97a326921cb28449c06317c43312fdc5d7792afcd8eb850b7"
+      "sha256": "48dcbed2bd9765b3ead3b00df7a5a0c83111beb88ed6cb494945c72d48dcdcfc"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -521,5 +525,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "29a62db66b32c9b916ac05da80b8b5e1d3325749e4ea7c9830cc09c747448e3f"
+  "canonical_course_sha256": "2086867c6d6fe148e2955d86a9551fafbb8d68ffc500462e2bf36987879381f3"
 }

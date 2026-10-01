@@ -137,7 +137,11 @@
     },
     {
       "path": "skills/financial-analysis/SKILL.md",
-      "sha256": "a2abaa1328f0655a9e89a3e7927f4e9bd1c96b8e56e96c3f918c34936603c9f7"
+      "sha256": "5f26196e4f62a24040d22298a3482618229df1a1bb4d75c38711e4f773374142"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -438,5 +442,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "970366b7359c1441b24d688eaff70cd6766f68471934446c2a32edc0bfae2bc7"
+  "canonical_course_sha256": "79324605fd30eafd4e0e1376b177206c032d38ddce00421c6c9543c9a685c1f7"
 }

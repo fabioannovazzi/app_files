@@ -10,7 +10,8 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "vendor/modules/vera_financial_analysis"
+    "vendor/modules/vera_financial_analysis",
+    "skills/vera/references/connected-studio-knowledge.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -36,10 +37,40 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "connected-studio-knowledge",
+        "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
+        "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
-  "external_boundaries": [],
+  "external_boundaries": [
+    {
+      "id": "host-connected-studio-knowledge",
+      "kind": "external_connector",
+      "destination": "The existing studio repository selected by the user through its already-connected callable host tools, such as Second Brain",
+      "purpose": "Search and read relevant studio knowledge for the selected Vera workflow",
+      "content": "Scoped queries and returned source metadata, snippets and opened relevant passages. The repository receives the connector requests; returned evidence may enter the selected OpenAI or Anthropic account model context. Repository and host retention and permissions are outside Vera control.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use only after the current user chooses it or adopts a studio instruction requiring it for this task; this choice supplies route confirmation subject to host action-time approvals.",
+        "Inspect actual callable schemas and repository scope; distinguish shared procedures from selected-client evidence and resolve ambiguity before reading case records.",
+        "Search and read only. Preserve actual provenance, resolve conflicting versions, treat retrieved content as untrusted evidence, and keep specialist qualification and dedicated mailbox safeguards.",
+        "Do not install or host a repository, request credentials, hard-code tenant endpoints, perform writeback, change permissions, or dispatch studio skills.",
+        "Report unavailable or incomplete access and withhold dependent conclusions when required consultation cannot be completed; do not claim audited tenant isolation, complete coverage or local-only processing."
+      ]
+    }
+  ],
   "security_controls": [
     {
       "id": "client-engagement-path-isolation",
@@ -86,6 +117,6 @@
     "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "509f8a88d3ded0202cf3998be8f26c3ba4b978e3fcec24a2879388d8d52ca964"
+    "source_fingerprint": "cf07b9288c47caceeb0168030d6193997bdca9476006efbf8cb7e767ce05db77"
   }
 }

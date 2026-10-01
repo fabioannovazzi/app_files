@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "presenza-digitale-studio",
-  "course_sha256": "d767a309c5e89bf68fa4e2be05e4806407e5e17ed4aba91b7f6779f86163e06f",
+  "course_sha256": "e6db8402a237bd5b44fe1c53ce6f16f7ab1f515f467f9213bec03004ac68b952",
   "reviewer": "Codex: five-language first-use website material, native execution and rendered output review",
   "reviewed_at": "2026-09-15T01:19:06.368130+00:00",
   "review_scope": "Read the complete five-language outlines, fictional studio profiles and hours updates. Reviewed all 20 exact demonstration/practice pages for Vera and Lucia through actual full-page desktop and phone browser captures, with observed navigation, widths and console state. The browser returned JPEG bytes: their original bytes were preserved and filenames corrected, and the current workflow now accepts PNG or JPEG evidence with matching headers, dimensions and hashes. Each reviewed run has a real recorded quality assessment and valid quality_ready state. Fresh native preparation/implementation/mechanical checks in website-teaching-release-04 reproduce every reviewed site digest after that repair. Those tests use explicitly authored fictional briefs and HTML, not simulated browser acceptance. This accepts prepared local teaching material; it does not attest a professional publication decision, human lesson timing/comprehension or live native voice and paired-window learner interaction. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -693,5 +693,19 @@
       "plugins/_shared/vendor/modules/vera_assurance/contracts.py"
     ],
     "review": "Every authored lesson field and input record matches current main. The sole shared source change adds scissione-guidata to the supported workflow IDs; existing workflow behavior is unchanged. Original reviewers, dates, judgments and output hashes are preserved. Fresh native teaching executions are required in CI; no new professional or learner acceptance is claimed."
+  },
+  "connected_studio_knowledge_source_binding_20261002": {
+    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+    "reviewed_at": "2026-10-01T22:12:55.882090+00:00",
+    "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+    "previous_course_sha256": "d767a309c5e89bf68fa4e2be05e4806407e5e17ed4aba91b7f6779f86163e06f",
+    "current_course_sha256": "e6db8402a237bd5b44fe1c53ce6f16f7ab1f515f467f9213bec03004ac68b952",
+    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+    "changed_sources": [
+      "skills/presenza-digitale-studio/SKILL.md",
+      "skills/vera/references/connected-studio-knowledge.md"
+    ],
+    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   }
 }

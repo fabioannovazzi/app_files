@@ -125,7 +125,12 @@
     {
       "path": "skills/fusione-guidata/SKILL.md",
       "repository_path": "plugins/vera/skills/fusione-guidata/SKILL.md",
-      "sha256": "ba18a24db267eb7a2cc2f4d70a768622b208e05f3ac43b50b488859d7209a45c"
+      "sha256": "9a39ed663d732bcc80e41823e31a97a20857934ac50c87d8004ff80c9adf6e7f"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

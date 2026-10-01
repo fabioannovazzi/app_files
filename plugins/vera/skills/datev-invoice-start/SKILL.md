@@ -3,6 +3,17 @@ name: datev-invoice-start
 description: Avviare o riprendere una prova reale delle fatture passive in DATEV nativo Windows con la procedura ECONS già nota, controllo nativo dell'host quando disponibile, progressi locali, report per cliente e richiesta di adattamento revisionabile.
 ---
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
+
 # Prima prova DATEV su Windows
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`. The explicit adaptation request below uses its capability-request route; do not add a survey or invent a failure.

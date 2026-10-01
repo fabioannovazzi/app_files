@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "treasury-forecast",
-  "course_sha256": "5a5edd648abff7a562c826f871d15ddd71540069c129a32a3183c93c8b05a1d0",
+  "course_sha256": "92d129436deee6a8994543c0270f084ccdd66242a480a9b5656d23d9181b214a",
   "reviewer": "Codex: Italian first-use treasury lesson, native forecast and delivery review",
   "reviewed_at": "2026-09-14T19:47:49.498130+00:00",
   "review_scope": "Read the Italian first-use outline, both fictional contexts and six source-table roles. Two current bound native teaching cases run preparation and versioned date review; practice also runs the native hypothetical-date scenario, preserving the baseline. All 62 component/native checks pass without failures or skips. Reviewed actual events, daily/weekly balances, version inventory, delivery note and exact artifact links. Visually inspected all six workbook sheets through eight views; the practice baseline workbook has identical cells, styles, widths and row heights. Read both native HTML reports as parsed source text and the Markdown report. Browser URL security policy blocked opening the local HTML report; visual browser presentation and interactive learner behavior remain unverified. Material acceptance does not claim live voice, learner understanding or professional approval. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -291,5 +291,19 @@
       "plugins/_shared/vendor/modules/vera_assurance/contracts.py"
     ],
     "review": "Every authored lesson field and input record matches current main. The sole shared source change adds scissione-guidata to the supported workflow IDs; existing workflow behavior is unchanged. Original reviewers, dates, judgments and output hashes are preserved. Fresh native teaching executions are required in CI; no new professional or learner acceptance is claimed."
+  },
+  "connected_studio_knowledge_source_binding_20261002": {
+    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+    "reviewed_at": "2026-10-01T22:12:56.073583+00:00",
+    "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+    "previous_course_sha256": "5a5edd648abff7a562c826f871d15ddd71540069c129a32a3183c93c8b05a1d0",
+    "current_course_sha256": "92d129436deee6a8994543c0270f084ccdd66242a480a9b5656d23d9181b214a",
+    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+    "changed_sources": [
+      "skills/treasury-forecast/SKILL.md",
+      "skills/vera/references/connected-studio-knowledge.md"
+    ],
+    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   }
 }

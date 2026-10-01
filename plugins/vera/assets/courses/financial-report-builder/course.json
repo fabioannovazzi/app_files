@@ -210,7 +210,12 @@
     {
       "path": "skills/financial-report-builder/SKILL.md",
       "repository_path": "plugins/vera/skills/financial-report-builder/SKILL.md",
-      "sha256": "f6208a7e9b9b235949ff1276a1cc3614fbbf479869b0dc370e332125f7b0cf62"
+      "sha256": "9564207bb5058957476686a2dbda8cf47f0f5cf381c11aaab6f16d309cefedbc"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

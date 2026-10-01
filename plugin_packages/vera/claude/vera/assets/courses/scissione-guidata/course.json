@@ -101,7 +101,11 @@
     },
     {
       "path": "skills/scissione-guidata/SKILL.md",
-      "sha256": "e2fc688e87b2a55828c160cce0a54a4a7ab01695d8039f8cb63582236a69735c"
+      "sha256": "47344a2d031bc9fb9c4c1a679a3e434b693fbfc69a42f15c931589c005953bfd"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -442,5 +446,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "6acc3c36475f0fa23d3e10585879e805d70f69b2f7159bf061211776387eab93"
+  "canonical_course_sha256": "9d3e14360293c05b7462292a391558cfdf95846c3b07dfcf5f001512832733f8"
 }

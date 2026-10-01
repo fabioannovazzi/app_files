@@ -108,6 +108,17 @@ Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
+
 ## Jurisdiction localization
 
 For a CH-GE mandate, read `references/localization/geneva.md` before specialist routing. Keep jurisdiction independent of language; use each existing function’s documented Geneva adapter and scope. Do not apply Italian rules merely because the function retains its existing ID. For other jurisdictions, inspect and adapt the existing function rather than inventing services or assuming this example qualifies them.

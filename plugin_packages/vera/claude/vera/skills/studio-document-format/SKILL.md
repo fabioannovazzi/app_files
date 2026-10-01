@@ -104,6 +104,17 @@ Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
+
 # Teach Vera our studio format
 
 

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "patent-box-review",
-  "course_sha256": "ec36cf2e3a4c34556e9d31e78d2da17eacf278568ed34434f6610bdef26ab67b",
+  "course_sha256": "ab0a4589a0afa5124a5878f9285fc7e3cccbbf3d9d5d8fa8a859ab635d3096be",
   "reviewer": "Codex /root: source, teaching and document engineering review",
   "reviewed_at": "2026-10-01T08:06:30.198517+00:00",
   "review_scope": "Read all five complete localized outlines and demo/practice source notes. Executed ten separate native Studio Archive to normalized ledger to proposal to synthetic decision to actual Word/PDF dossier and local finalization runs. Read summaries, missing-document lists, control matrices, reconciliations and calculated records; extracted both document formats. Visually inspected all fifty native PDF pages and fifty-five LibreOffice Word-rendered pages, plus browser-rendered lesson titles in every locale and Italian execution/results sections. No clipping or overlap observed; practice Word exports place the closing disclaimer on a separate final page, retained as an engine layout limitation. All generated A/B paragraphs remain explicitly open because no professional template/casebook approval is supplied. Automated semantic interpretations and confirmations are synthetic fixtures outside the shipped course, not live model execution or learner/professional approval. Test no-model reports describe those automated runs only; live teaching must report actual native model reading. Native voice, user participation, learner understanding, two visible windows, installation acceptance and professional UAT remain unverified. The compiler source-binding correction pins the actual patent_box engine, config and examples directories. Their execution bytes and the lesson text are unchanged; the final thirteen-case regression reran against this corrected course inventory. Reviewed artifact hashes retain the inspected authoring runs rather than claiming new visual review of later duplicate runs.",
@@ -442,5 +442,19 @@
         ]
       }
     }
+  },
+  "connected_studio_knowledge_source_binding_20261002": {
+    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+    "reviewed_at": "2026-10-01T22:12:55.862641+00:00",
+    "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+    "previous_course_sha256": "ec36cf2e3a4c34556e9d31e78d2da17eacf278568ed34434f6610bdef26ab67b",
+    "current_course_sha256": "ab0a4589a0afa5124a5878f9285fc7e3cccbbf3d9d5d8fa8a859ab635d3096be",
+    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+    "changed_sources": [
+      "skills/patent-box-review/SKILL.md",
+      "skills/vera/references/connected-studio-knowledge.md"
+    ],
+    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   }
 }

@@ -120,7 +120,12 @@
     {
       "path": "skills/sales-plan/SKILL.md",
       "repository_path": "plugins/vera/skills/sales-plan/SKILL.md",
-      "sha256": "4ccc0c104086d1f90aae18a6ebb5ce1e3b9ca1b22e753b09b24b2dbe5d4a53d5"
+      "sha256": "68d5a9d66f59d93f4976ef752d5484628250d40ba5ab3c2deded18b7296a33c5"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

@@ -29,5 +29,7 @@ jobs:
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_installed_product.py
       - name: Verify all product packages against canonical source and version
         run: python scripts/build_product_release.py --check
+      - name: Verify optional studio knowledge instruction packaging
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_vera_connected_knowledge.py
       - name: Verify renamed skill identities in every host package
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_skill_name_alignment.py
