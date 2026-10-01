@@ -1,0 +1,27 @@
+{
+  "vera/trasformazione": {
+    "title": "Ejecutar un caso sintético de transformación societaria",
+    "goal": "Preparar y revisar un expediente sintético, seguir sus evidencias y reabrir decisiones cuando cambia un pasivo.",
+    "scenario": "Officina Selce SNC, empresa inventada, considera una SRL. Dos socios tienen derechos distintos de capital, voto y beneficios. La valoración llega después de la lista de acreedores.",
+    "scope": "Prototipo italiano con datos inventados en Codex desktop y Work local donde esté admitido. Cowork no ofrece este curso. El expediente nativo sigue en italiano. Sin calificación jurídica o fiscal, firma autenticada, integración Studio Archive ni presentación oficial.",
+    "inputs": "Abre files/input/case.json, participants.json y creditors.json. Reserva valuation.json para el segundo paso y valuation-update.json para el cambio final. Null significa desconocido, nunca cero o consentimiento; las cadenas numéricas son exactas. No uses clientes reales.",
+    "request": "Vera, guíame por el caso sintético Officina Selce: importa primero encargo, socios y acreedores, muestra qué falta para el capital y después incorpora la valoración. Propón conclusiones vinculadas a evidencias, muestra decisiones pendientes de revisión y exporta sin acciones externas.",
+    "steps": [
+      "En el chat de trabajo, Vera lee el procedimiento instalado y crea una carpeta sintética local nueva. Importa los tres primeros archivos como evidencias. Propón ramas separadas para capital, recopilación de acreedores y fiscalidad. El capital depende de la valoración aún no recibida; la recopilación puede continuar, pero liberación y oposición siguen siendo cuestiones distintas. Exporta esta versión.",
+      "Importa valuation.json. El modelo propone cálculos, derechos y conclusiones con dependencias documentales exactas y motivos comprobables. Examina cobertura y reparto de capital, separando capital/voto/beneficios y valores contable/estimado/fiscal. No inventes autoridades jurídicas: las cuestiones fiscales y los acuses ausentes siguen abiertos. Muestra propuesta, resumen criptográfico y expediente antes de revisar.",
+      "Registra únicamente decisiones expresadas realmente por el participante, con revisor, motivo y resumen criptográfico; etiqueta cualquier simulación. Conserva la exportación. Reimporta valuation-update.json con el mismo ID de valoración: capital pasa a stale y la recopilación independiente sigue vigente. El documento no actualiza cálculos antiguos: corrige datos numéricos y conclusiones, vuelve a someterlos y solicita una decisión nueva. Abre dossier.md, case.json, manifest.json y history/."
+    ],
+    "deliverables": [
+      "Expediente Markdown y JSON versionado con documentos, dependencias, importes, derechos, bloqueos, cuestiones abiertas y decisiones; manifiesto de hashes.",
+      "Exportaciones anteriores e historial encadenado, más informe local legible sobre datos que llegan al modelo. Los archivos preparados no son resultados ejecutados."
+    ],
+    "review": "Sigue una conclusión hasta evidence/<hash> y su documento original. Comprueba importes exactos y derechos distintos. Un margen aritmético no es una reserva distribuible. Una recepción desconocida no demuestra liberación ni resultado de oposición. La revisión registrada no autentica al revisor y aprueba como máximo la preparación sintética.",
+    "checkpoints": [
+      "Antes de la valoración, identifica la rama bloqueada y la que puede recopilar datos; encuentra una recepción y una base fiscal ausentes.",
+      "Antes de decidir, comprueba la evidencia y las tres cuotas de cada socio. Tras el cambio, muestra stale y una decisión independiente conservada."
+    ],
+    "practice": "Crea un segundo caso con files/practice/, conservando la demostración. Usa activos 640000 y pasivos 270000; repite importación, propuesta y revisión. Después importa valuation-update.json con pasivos 305000 bajo el mismo ID. Identifica ramas stale, corrige cobertura y conclusiones, solicita nueva revisión y exporta sin cerrar cuestiones fiscales ni inventar recepciones.",
+    "success": "En la demostración comprueba patrimonio neto 450000, margen 350000 y capital 60000/40000; con pasivos 310000 comprueba 390000/290000 tras revisar. En la práctica comprueba 370000/270000 y después 335000/235000. Encuentra votos 1/2–1/2, beneficios 7/10–3/10, decisión anterior en history, bloqueo fiscal y hashes del expediente. Son criterios de revisión, no resultados ya ejecutados.",
+    "repeat": "Repite solo con datos sintéticos, carpeta nueva y skill Vera realmente instalada. Un piloto profesional supervisado todavía requiere calificación y aceptación. Explicación y prueba breve: 5–8 minutos; revisión y práctica completa pueden durar más. Perfil, progreso y archivos siguen locales; el modelo nativo puede leer documentos seleccionados, así que el procesamiento no es exclusivamente local."
+  }
+}
