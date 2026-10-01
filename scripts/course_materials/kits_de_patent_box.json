@@ -1,0 +1,27 @@
+{
+  "vera/patent-box-review": {
+    "title": "Eine Patent-Box-Akte aus Belegen und Kosten vorbereiten",
+    "goal": "Softwarebelege bereitstellen, Kosten abstimmen, einbezogene, ausgeschlossene und ausgesetzte Teile unterscheiden und einen A/B-Entwurf lesen lernen.",
+    "scenario": "Arco Software ist erfunden. Faro ist ein originales Modul, das 2025 intern genutzt wird; das Register trennt Entwicklungspersonal und gewöhnliche Wartung.",
+    "scope": "Kontrollierte italienische Vorschau: gewöhnlicher Softwarefall. Gespräch auf Deutsch; Dokumenttitel und Motorfelder bleiben italienisch. Patente, Designs und der premial-Zweig brauchen andere Belege und werden nicht vorgeführt. Alle 32 fachlichen UAT-Szenarien bleiben NOT_RUN; fachliche und installierte Host-Abnahme unbestätigt.",
+    "inputs": "Öffnen Sie evidence-de.md, ledger-demo.csv und synthetic-rules.txt. Erkennen Sie Rechte, Tätigkeiten, Zeitraum, Projekt, Zeilen und vorgeschlagene Einkommen-/IRAP-Basen. Fakten sind erfunden und Steuerbasen Übungsannahmen. Die synthetische Quelle gilt nur für den historischen Test am 23. September 2026, nicht als aktuelles Recht.",
+    "request": "Vera, bereite mit diesen Dateien eine fiktive Patent-Box-Akte für Faro vor. Zeige Belege, Abstimmung, vorgeschlagene Kontrollen und offene Fragen; führe nach meiner Bestätigung nur die synthetische Berechnung aus und zeige den A/B-Entwurf.",
+    "steps": [
+      "Vera importiert nur diese Dateien in einen getrennten lokalen Übungsfall, liest sie und schlägt den Umfang vor. Die Stimme verbindet Software, Rechte, Tätigkeiten und Nutzung mit den Notizabschnitten; erläutern Sie benötigte Patent- oder Designbelege ohne sie zu erfinden.",
+      "Vera prüft CSV-Zeilen und schlägt Zuordnung, Buchsumme und getrennte Basen vor. Prüfen Sie Wartungsausschluss, Projektbezug, erklärte Abwesenheit anderer Förderungen und Grenzen der Erklärungen. Keine Zuordnung oder Genehmigung wird mitgeliefert.",
+      "Öffnen Sie die lesbare Vorschlagsprüfung. Erst nach tatsächlicher Bestätigung der genauen Fassung eine synthetische Prüfung erfassen und den Motor mit demo und synthetischen Regeln am historischen Datum ausführen. Keine echten Mandate oder Quellen werden eingerichtet. Öffnen Sie tatsächliche Zusammenfassung, Abstimmung und Word/PDF-Akte, danach den Modell-Datenbericht."
+    ],
+    "deliverables": [
+      "Fallübersicht, fehlende Dokumente, Kontrollmatrix und Kostenabstimmung mit Zeilen und Quellen.",
+      "Arbeitspapier, unsignierte A/B-Akte in Word/PDF, Berechnungsnachweis und Modell-Datenbericht."
+    ],
+    "review": "Beginnen Sie bei der Übersicht und verfolgen Sie einen Betrag zur Buchzeile. Zusätzlicher Abzug ist keine Steuerersparnis; der Motor berechnet diese nicht. Aussetzung beweist keine Unzulässigkeit. Die Akte bleibt Entwurf: kein Versand, Signieren, Einreichen oder Sanktionsschutz. Echte Fälle erfordern aktuelle geprüfte Quellen/Regeln und authentifizierte fachliche Autorisierung; Übungsbestätigung ersetzt sie nicht.",
+    "checkpoints": [
+      "Verbinden Sie vor Berechnung eine Zeile mit Projekt und Tätigkeit und erklären Sie unterschiedliche Basen.",
+      "Finden Sie ausgeschlossene Kosten, Grund und Quelle. Prüfen Sie, ob die Belege für einen echten Mandanten reichen würden."
+    ],
+    "practice": "Fordern Sie einen neuen Fall mit evidence-practice-de.md, ledger-practice.csv und derselben synthetischen Quelle an. Neue Personalkosten haben keinen belegten Projektbezug. Erfinden Sie ihn nicht: prüfen Sie den Vorschlag, erhalten Sie die Demonstration und finden Sie ausgesetzte Kosten und die Dokumentanforderung im neuen Entwurf.",
+    "success": "Sie können Dateien wählen, den Auftrag formulieren, einen Betrag abstimmen, Ausschluss und Aussetzung erklären und offene fachliche Prüfungen nennen.",
+    "repeat": "Für echte Fälle Unternehmen, Zeitraum, Gut und Zweck nennen; Rechte, Tätigkeiten, Kosten und Förderhistorie liefern. Zuordnung und Kontrollen fachlich prüfen und normale Autorisierung befolgen. Synthetische Quelle, Genehmigung oder Datum nie wiederverwenden."
+  }
+}
