@@ -1,10 +1,5 @@
 # Prepared teaching kits
 
-For repeated native Cowork release acceptance using these same exercises, see
-[`docs/vera-cowork-acceptance.md`](../../docs/vera-cowork-acceptance.md).
-The guided and ordinary routes have separate demo, practice and new-session
-recovery evidence. Preparing courses or passing local CI does not certify Cowork.
-
 The September 29 valuation addition supplies an Italian first-use kit for
 `vera/business-valuation`, matching its Italian document-output contract.
 `inputs/business-valuation` contains a fictional FCFF mandate and a separate

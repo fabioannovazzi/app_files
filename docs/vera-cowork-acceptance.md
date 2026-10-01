@@ -35,7 +35,7 @@ calling it the public download. Use a new isolated folder for every package/run.
 
 ```bash
 source /Users/fabio/Documents/GitHub/app_files/.venv/bin/activate
-python scripts/course_materials/cowork_acceptance.py prepare \
+python scripts/cowork_acceptance/cowork_acceptance.py prepare \
   --package /private/tmp/vera-cowork-public.zip \
   --package-url https://mparanza.com/static/shared/vera/downloads/vera-cowork-plugin.zip \
   --output /private/tmp/vera-cowork-run-NEW
@@ -124,7 +124,7 @@ Hash actual native output files in `artifacts` and saved review/registry files i
 `durable_records`. Do not use prepared course files as execution results.
 
 ```bash
-python scripts/course_materials/cowork_acceptance.py verify /private/tmp/vera-cowork-run-NEW
+python scripts/cowork_acceptance/cowork_acceptance.py verify /private/tmp/vera-cowork-run-NEW
 make check-cowork-acceptance COWORK_ACCEPTANCE_RUN=/private/tmp/vera-cowork-run-NEW
 ```
 

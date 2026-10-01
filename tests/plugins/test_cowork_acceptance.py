@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.course_materials import cowork_acceptance as acceptance
+from scripts.cowork_acceptance import cowork_acceptance as acceptance
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE = ROOT / "static/shared/vera/downloads/vera-cowork-plugin.zip"
@@ -393,7 +393,7 @@ def test_cli_release_gate_fails_when_no_host_steps_ran(prepared):
     result = subprocess.run(
         [
             sys.executable,
-            str(ROOT / "scripts/course_materials/cowork_acceptance.py"),
+            str(ROOT / "scripts/cowork_acceptance/cowork_acceptance.py"),
             "verify",
             str(prepared),
             "--require-core-passed",

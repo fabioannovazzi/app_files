@@ -28,4 +28,4 @@ check-product-releases:
 .PHONY: check-cowork-acceptance
 check-cowork-acceptance:
 	@test -n "$(COWORK_ACCEPTANCE_RUN)" || (echo "Set COWORK_ACCEPTANCE_RUN to the inspected bundle" >&2; exit 1)
-	python scripts/course_materials/cowork_acceptance.py verify "$(COWORK_ACCEPTANCE_RUN)" --require-core-passed
+	python scripts/cowork_acceptance/cowork_acceptance.py verify "$(COWORK_ACCEPTANCE_RUN)" --require-core-passed

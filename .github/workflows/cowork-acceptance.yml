@@ -22,10 +22,10 @@ jobs:
       - name: Install declared scan-fixture dependency and check tools
         run: python -m pip install -r plugins/client-file-preparation/requirements.txt pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit
       - name: Verify evidence gating with explicitly synthetic attestations
-        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_cowork_acceptance.py --cov=scripts.course_materials.cowork_acceptance --cov-report=term-missing --cov-fail-under=80
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_cowork_acceptance.py --cov=scripts.cowork_acceptance.cowork_acceptance --cov-report=term-missing --cov-fail-under=80
       - name: Check formatting, types and security
         run: |
-          python -m black --check scripts/course_materials/cowork_acceptance.py tests/plugins/test_cowork_acceptance.py
-          python -m isort --check-only scripts/course_materials/cowork_acceptance.py tests/plugins/test_cowork_acceptance.py
-          python -m mypy --follow-imports=skip scripts/course_materials/cowork_acceptance.py
-          python -m bandit -q scripts/course_materials/cowork_acceptance.py
+          python -m black --check scripts/cowork_acceptance/cowork_acceptance.py tests/plugins/test_cowork_acceptance.py
+          python -m isort --check-only scripts/cowork_acceptance/cowork_acceptance.py tests/plugins/test_cowork_acceptance.py
+          python -m mypy --follow-imports=skip scripts/cowork_acceptance/cowork_acceptance.py
+          python -m bandit -q scripts/cowork_acceptance/cowork_acceptance.py
