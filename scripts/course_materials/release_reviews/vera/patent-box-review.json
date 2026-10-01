@@ -1,0 +1,446 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "patent-box-review",
+  "course_sha256": "ec36cf2e3a4c34556e9d31e78d2da17eacf278568ed34434f6610bdef26ab67b",
+  "reviewer": "Codex /root: source, teaching and document engineering review",
+  "reviewed_at": "2026-10-01T08:06:30.198517+00:00",
+  "review_scope": "Read all five complete localized outlines and demo/practice source notes. Executed ten separate native Studio Archive to normalized ledger to proposal to synthetic decision to actual Word/PDF dossier and local finalization runs. Read summaries, missing-document lists, control matrices, reconciliations and calculated records; extracted both document formats. Visually inspected all fifty native PDF pages and fifty-five LibreOffice Word-rendered pages, plus browser-rendered lesson titles in every locale and Italian execution/results sections. No clipping or overlap observed; practice Word exports place the closing disclaimer on a separate final page, retained as an engine layout limitation. All generated A/B paragraphs remain explicitly open because no professional template/casebook approval is supplied. Automated semantic interpretations and confirmations are synthetic fixtures outside the shipped course, not live model execution or learner/professional approval. Test no-model reports describe those automated runs only; live teaching must report actual native model reading. Native voice, user participation, learner understanding, two visible windows, installation acceptance and professional UAT remain unverified. The compiler source-binding correction pins the actual patent_box engine, config and examples directories. Their execution bytes and the lesson text are unchanged; the final thirteen-case regression reran against this corrected course inventory. Reviewed artifact hashes retain the inspected authoring runs rather than claiming new visual review of later duplicate runs.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Complete ordinary software first use, before any patent/design/premial path. The lesson labels the Italian controlled preview and all 32 professional UAT scenarios NOT_RUN; fictional declarations are distinct from corroborated client evidence.",
+        "inputs_and_request": "Localized evidence note plus a closed ledger and unchanged synthetic source. The natural request asks for evidence, reconciliation and exact proposal confirmation. No reviewed mapping, case JSON, approval, output specimen or professional identity is shipped.",
+        "execution_and_checkpoints": "Exact imported receipts produced inspected source rows, distinct income/IRAP candidate bases, full book-total reconciliation, detailed cost controls, readable proposal and synthetic calculation at historical date 2026-09-23. The lesson pauses for scope/mapping and actual proposal confirmation. Negative tests refuse pre-review calculation and existing-result overwrite; real calculation remains covered by unchanged authorization tests.",
+        "deliverable_and_next_action": "Open actual summary first, then cost reconciliation, controls and Word/PDF A/B dossier. The exercise reveals NOT_TESTED linkage, suspended bases and a document request. Additional deduction is distinguished from tax saving; open template paragraphs and unsigned status retain professional review boundaries.",
+        "practice_and_repeat": "Fresh practice inputs add EUR 20000 personnel with no documented project/activity link and preserve demo bytes. Test results suspend only that component. Repetition identifies ordinary real sources and authorization rather than reusing synthetic rules, date or review. Rendering does not record demo/practice/understanding.",
+        "language_and_pacing": "Complete authored it outline, note and separate exercise reviewed for matching facts and ordinary first-use pacing. The six existing stages total 390 seconds; processing/questions may extend them. Italian engine headings/fields are disclosed rather than claiming translated fiscal outputs. No live duration or comprehension claim."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[demo-it]",
+        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. No suspended cost in the ordinary demonstration. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "case_summary.md",
+            "sha256": "dd6ae926fb7dc33804758608e4ad834da775d958a063bcf38303d94ae3b3f612"
+          },
+          {
+            "name": "missing_documents.md",
+            "sha256": "e15fe658ff94d75d3c216a939ad39d8583a19fbcafed3a5a717612facbc4dcd2"
+          },
+          {
+            "name": "control_matrix.csv",
+            "sha256": "a3769f1680c3377351b7ed68d7c4e28030c700e1eb4c758393f03c8a16894cbf"
+          },
+          {
+            "name": "cost_reconciliation.csv",
+            "sha256": "c7a4f02f5dcf35801884239b11c3a0a85c7bd4ec05cf219dd3baa8a9fd9be19a"
+          },
+          {
+            "name": "result.json",
+            "sha256": "a25ff05ace53b04a2efdfec5331eb291212631491f9b2a25c9f79aa7c4e769a3"
+          },
+          {
+            "name": "workpaper.md",
+            "sha256": "7c7b4b692e24c01e9803749da2e97d205bf24e54429fbb4941e3efa0dbc8590d"
+          },
+          {
+            "name": "fascicolo_A_B.docx",
+            "sha256": "ab924cc52b307efd771053ab7458385b000dd605725956e465680a51b0764f42"
+          },
+          {
+            "name": "fascicolo_A_B.pdf",
+            "sha256": "0d4f978c6e6e7e75265ec948bbe7f013a608dc1139da988bf1168d0acf76de6c"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[practice-it]",
+        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. Missing GL.3 linkage remains NOT_TESTED: EUR 20000/16000 suspended; request records, no invented failure. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "case_summary.md",
+            "sha256": "dc58b16e876a96bf9bbf7d25339b3d2c7e53b6ee6683afe7e8a9235d646c7c36"
+          },
+          {
+            "name": "missing_documents.md",
+            "sha256": "01aeec63a736e9afd1489ad7dd628f6fd6a4b089450c0895eaf6cc27726691da"
+          },
+          {
+            "name": "control_matrix.csv",
+            "sha256": "06c45e157acc73fbdb4a3563ada1e8f901c1001d7b759aa78676f63725428a72"
+          },
+          {
+            "name": "cost_reconciliation.csv",
+            "sha256": "d3c2bff77903d75b49434561cc880b027a0573172d3009adfbe2b5374558a301"
+          },
+          {
+            "name": "result.json",
+            "sha256": "473e4e42264ed61082d8d45428e8f2edb5693da10d4da232ef8f0219624d4d33"
+          },
+          {
+            "name": "workpaper.md",
+            "sha256": "a044eaaac5c1da29fd88bf459fd4f01d37d6867381fdc9984561ee3192a45e4f"
+          },
+          {
+            "name": "fascicolo_A_B.docx",
+            "sha256": "863ba4ac979950ef6e22dd8032d3c825cb451e7f63a7b18b9bc77685fcf4642f"
+          },
+          {
+            "name": "fascicolo_A_B.pdf",
+            "sha256": "4dd82f957dcf51a6825b442af0f99fe6f1288d6210b1d8dddb02566ef34eb8c7"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Complete ordinary software first use, before any patent/design/premial path. The lesson labels the Italian controlled preview and all 32 professional UAT scenarios NOT_RUN; fictional declarations are distinct from corroborated client evidence.",
+        "inputs_and_request": "Localized evidence note plus a closed ledger and unchanged synthetic source. The natural request asks for evidence, reconciliation and exact proposal confirmation. No reviewed mapping, case JSON, approval, output specimen or professional identity is shipped.",
+        "execution_and_checkpoints": "Exact imported receipts produced inspected source rows, distinct income/IRAP candidate bases, full book-total reconciliation, detailed cost controls, readable proposal and synthetic calculation at historical date 2026-09-23. The lesson pauses for scope/mapping and actual proposal confirmation. Negative tests refuse pre-review calculation and existing-result overwrite; real calculation remains covered by unchanged authorization tests.",
+        "deliverable_and_next_action": "Open actual summary first, then cost reconciliation, controls and Word/PDF A/B dossier. The exercise reveals NOT_TESTED linkage, suspended bases and a document request. Additional deduction is distinguished from tax saving; open template paragraphs and unsigned status retain professional review boundaries.",
+        "practice_and_repeat": "Fresh practice inputs add EUR 20000 personnel with no documented project/activity link and preserve demo bytes. Test results suspend only that component. Repetition identifies ordinary real sources and authorization rather than reusing synthetic rules, date or review. Rendering does not record demo/practice/understanding.",
+        "language_and_pacing": "Complete authored en outline, note and separate exercise reviewed for matching facts and ordinary first-use pacing. The six existing stages total 390 seconds; processing/questions may extend them. Italian engine headings/fields are disclosed rather than claiming translated fiscal outputs. No live duration or comprehension claim."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[demo-en]",
+        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. No suspended cost in the ordinary demonstration. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "case_summary.md",
+            "sha256": "6d6254422566f211191803abdafad2a145024d946c8fdcc394787e50744e4039"
+          },
+          {
+            "name": "missing_documents.md",
+            "sha256": "e15fe658ff94d75d3c216a939ad39d8583a19fbcafed3a5a717612facbc4dcd2"
+          },
+          {
+            "name": "control_matrix.csv",
+            "sha256": "a3769f1680c3377351b7ed68d7c4e28030c700e1eb4c758393f03c8a16894cbf"
+          },
+          {
+            "name": "cost_reconciliation.csv",
+            "sha256": "c7a4f02f5dcf35801884239b11c3a0a85c7bd4ec05cf219dd3baa8a9fd9be19a"
+          },
+          {
+            "name": "result.json",
+            "sha256": "627d44f33f0f0b649a13f4f87a4aac38b3310cd471ec570222cde098dfcd5581"
+          },
+          {
+            "name": "workpaper.md",
+            "sha256": "81dcb709a6883df613293a64ce5c6d0f7034e963f46f91fbadb7f2e8fd75d9c8"
+          },
+          {
+            "name": "fascicolo_A_B.docx",
+            "sha256": "63613278059a9e975d5d68960037ce9ffa3cff6a72bc706f30350e4c9aff0f21"
+          },
+          {
+            "name": "fascicolo_A_B.pdf",
+            "sha256": "f94c31a2e30d822fc536cc389a9ddc547967f95467833a97aa2a1f9b1c7866af"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[practice-en]",
+        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. Missing GL.3 linkage remains NOT_TESTED: EUR 20000/16000 suspended; request records, no invented failure. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "case_summary.md",
+            "sha256": "ab7934d723bf8db09afb0272be9e1dec4138225b782afb7fa8dfb3715b9f06a6"
+          },
+          {
+            "name": "missing_documents.md",
+            "sha256": "01aeec63a736e9afd1489ad7dd628f6fd6a4b089450c0895eaf6cc27726691da"
+          },
+          {
+            "name": "control_matrix.csv",
+            "sha256": "06c45e157acc73fbdb4a3563ada1e8f901c1001d7b759aa78676f63725428a72"
+          },
+          {
+            "name": "cost_reconciliation.csv",
+            "sha256": "d3c2bff77903d75b49434561cc880b027a0573172d3009adfbe2b5374558a301"
+          },
+          {
+            "name": "result.json",
+            "sha256": "bd3713552adb999ff3a5222fb8f17b3016e4f783b583aef95f5567fffdec7393"
+          },
+          {
+            "name": "workpaper.md",
+            "sha256": "0e3a49251f6ddfdaaf6add6de2b0be0d49481d1b17c1f3f9e8839fb880ec4191"
+          },
+          {
+            "name": "fascicolo_A_B.docx",
+            "sha256": "7dde0eb8a6f617b0db699833fb60024ed1622c85c2fff0d47ae41178a9e8bdfe"
+          },
+          {
+            "name": "fascicolo_A_B.pdf",
+            "sha256": "890862d9e2349f273f4a1456cf8a7d0b660af81d1e7971fbc7f8b4d5fb16ec50"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Complete ordinary software first use, before any patent/design/premial path. The lesson labels the Italian controlled preview and all 32 professional UAT scenarios NOT_RUN; fictional declarations are distinct from corroborated client evidence.",
+        "inputs_and_request": "Localized evidence note plus a closed ledger and unchanged synthetic source. The natural request asks for evidence, reconciliation and exact proposal confirmation. No reviewed mapping, case JSON, approval, output specimen or professional identity is shipped.",
+        "execution_and_checkpoints": "Exact imported receipts produced inspected source rows, distinct income/IRAP candidate bases, full book-total reconciliation, detailed cost controls, readable proposal and synthetic calculation at historical date 2026-09-23. The lesson pauses for scope/mapping and actual proposal confirmation. Negative tests refuse pre-review calculation and existing-result overwrite; real calculation remains covered by unchanged authorization tests.",
+        "deliverable_and_next_action": "Open actual summary first, then cost reconciliation, controls and Word/PDF A/B dossier. The exercise reveals NOT_TESTED linkage, suspended bases and a document request. Additional deduction is distinguished from tax saving; open template paragraphs and unsigned status retain professional review boundaries.",
+        "practice_and_repeat": "Fresh practice inputs add EUR 20000 personnel with no documented project/activity link and preserve demo bytes. Test results suspend only that component. Repetition identifies ordinary real sources and authorization rather than reusing synthetic rules, date or review. Rendering does not record demo/practice/understanding.",
+        "language_and_pacing": "Complete authored fr outline, note and separate exercise reviewed for matching facts and ordinary first-use pacing. The six existing stages total 390 seconds; processing/questions may extend them. Italian engine headings/fields are disclosed rather than claiming translated fiscal outputs. No live duration or comprehension claim."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[demo-fr]",
+        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. No suspended cost in the ordinary demonstration. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "case_summary.md",
+            "sha256": "c41e471d343d31950fe02a49f09a894d8f675cdace3d14d30905d02eb445a61b"
+          },
+          {
+            "name": "missing_documents.md",
+            "sha256": "e15fe658ff94d75d3c216a939ad39d8583a19fbcafed3a5a717612facbc4dcd2"
+          },
+          {
+            "name": "control_matrix.csv",
+            "sha256": "a3769f1680c3377351b7ed68d7c4e28030c700e1eb4c758393f03c8a16894cbf"
+          },
+          {
+            "name": "cost_reconciliation.csv",
+            "sha256": "c7a4f02f5dcf35801884239b11c3a0a85c7bd4ec05cf219dd3baa8a9fd9be19a"
+          },
+          {
+            "name": "result.json",
+            "sha256": "bcc817647567ff07008838032b1544d6a1d07e99c3ee4e1c153f043982234ad7"
+          },
+          {
+            "name": "workpaper.md",
+            "sha256": "91fec601607aee1bb2965efa15327413184a7b16e302efe20b3908abfa21241e"
+          },
+          {
+            "name": "fascicolo_A_B.docx",
+            "sha256": "0e82e69d2542807e15cd068a36024152db72e989fc21bd79dd2ede9646851157"
+          },
+          {
+            "name": "fascicolo_A_B.pdf",
+            "sha256": "3febfe1affd1c8d193bfdb7547cd916b084857d35df02e7a0275b89f9c6a0719"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[practice-fr]",
+        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. Missing GL.3 linkage remains NOT_TESTED: EUR 20000/16000 suspended; request records, no invented failure. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "case_summary.md",
+            "sha256": "c75991f047d9653c526313e5d7dc4e6630ab6da14bcd5be301f3317621ac536c"
+          },
+          {
+            "name": "missing_documents.md",
+            "sha256": "01aeec63a736e9afd1489ad7dd628f6fd6a4b089450c0895eaf6cc27726691da"
+          },
+          {
+            "name": "control_matrix.csv",
+            "sha256": "06c45e157acc73fbdb4a3563ada1e8f901c1001d7b759aa78676f63725428a72"
+          },
+          {
+            "name": "cost_reconciliation.csv",
+            "sha256": "d3c2bff77903d75b49434561cc880b027a0573172d3009adfbe2b5374558a301"
+          },
+          {
+            "name": "result.json",
+            "sha256": "0c6e4d3320d6c9cb8d8860eaa8c7f773e6a01446cdde88c562a4ea935be29fd7"
+          },
+          {
+            "name": "workpaper.md",
+            "sha256": "023f969adc7ad3ac2033f6cd80513ef77b45a4ab01c794259ecea69f239b4ce6"
+          },
+          {
+            "name": "fascicolo_A_B.docx",
+            "sha256": "b27182aef199a574767a422f82bc65cc0e2904bb4dd27be0294d793df26560fd"
+          },
+          {
+            "name": "fascicolo_A_B.pdf",
+            "sha256": "56e315d7e7b0d18d5751587a7a9ee945d5098da92ebb67196fcdd59ffef913a4"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Complete ordinary software first use, before any patent/design/premial path. The lesson labels the Italian controlled preview and all 32 professional UAT scenarios NOT_RUN; fictional declarations are distinct from corroborated client evidence.",
+        "inputs_and_request": "Localized evidence note plus a closed ledger and unchanged synthetic source. The natural request asks for evidence, reconciliation and exact proposal confirmation. No reviewed mapping, case JSON, approval, output specimen or professional identity is shipped.",
+        "execution_and_checkpoints": "Exact imported receipts produced inspected source rows, distinct income/IRAP candidate bases, full book-total reconciliation, detailed cost controls, readable proposal and synthetic calculation at historical date 2026-09-23. The lesson pauses for scope/mapping and actual proposal confirmation. Negative tests refuse pre-review calculation and existing-result overwrite; real calculation remains covered by unchanged authorization tests.",
+        "deliverable_and_next_action": "Open actual summary first, then cost reconciliation, controls and Word/PDF A/B dossier. The exercise reveals NOT_TESTED linkage, suspended bases and a document request. Additional deduction is distinguished from tax saving; open template paragraphs and unsigned status retain professional review boundaries.",
+        "practice_and_repeat": "Fresh practice inputs add EUR 20000 personnel with no documented project/activity link and preserve demo bytes. Test results suspend only that component. Repetition identifies ordinary real sources and authorization rather than reusing synthetic rules, date or review. Rendering does not record demo/practice/understanding.",
+        "language_and_pacing": "Complete authored de outline, note and separate exercise reviewed for matching facts and ordinary first-use pacing. The six existing stages total 390 seconds; processing/questions may extend them. Italian engine headings/fields are disclosed rather than claiming translated fiscal outputs. No live duration or comprehension claim."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[demo-de]",
+        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. No suspended cost in the ordinary demonstration. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "case_summary.md",
+            "sha256": "c782fe26679b3ae6609be6c9aa8c7ce99fd9033046821269cdc17e4298a94c84"
+          },
+          {
+            "name": "missing_documents.md",
+            "sha256": "e15fe658ff94d75d3c216a939ad39d8583a19fbcafed3a5a717612facbc4dcd2"
+          },
+          {
+            "name": "control_matrix.csv",
+            "sha256": "a3769f1680c3377351b7ed68d7c4e28030c700e1eb4c758393f03c8a16894cbf"
+          },
+          {
+            "name": "cost_reconciliation.csv",
+            "sha256": "c7a4f02f5dcf35801884239b11c3a0a85c7bd4ec05cf219dd3baa8a9fd9be19a"
+          },
+          {
+            "name": "result.json",
+            "sha256": "e7cbe8ed11db258a221766bad6d78b924234f8d5c81d567b51755cbeb0e7cb70"
+          },
+          {
+            "name": "workpaper.md",
+            "sha256": "ae23773814466031d9fb8b35bf6f1924a90bc4c2f111fc5b29f88388a9c4ca32"
+          },
+          {
+            "name": "fascicolo_A_B.docx",
+            "sha256": "f37f37255851b73f121fcb4de91b0e0847265273f2a9f62c103deaa9881f5c85"
+          },
+          {
+            "name": "fascicolo_A_B.pdf",
+            "sha256": "b38f6f8b09fde0959c964ffb048596503771ad5c2bf894b75bd1eedf767cec2f"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[practice-de]",
+        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. Missing GL.3 linkage remains NOT_TESTED: EUR 20000/16000 suspended; request records, no invented failure. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "case_summary.md",
+            "sha256": "b19bd8644a4f1a46e353e8f181f8d5751fda6f8ea37182dddcbdc7c8fa36adc3"
+          },
+          {
+            "name": "missing_documents.md",
+            "sha256": "01aeec63a736e9afd1489ad7dd628f6fd6a4b089450c0895eaf6cc27726691da"
+          },
+          {
+            "name": "control_matrix.csv",
+            "sha256": "06c45e157acc73fbdb4a3563ada1e8f901c1001d7b759aa78676f63725428a72"
+          },
+          {
+            "name": "cost_reconciliation.csv",
+            "sha256": "d3c2bff77903d75b49434561cc880b027a0573172d3009adfbe2b5374558a301"
+          },
+          {
+            "name": "result.json",
+            "sha256": "753923816889fb6e2cac76aa4693ce5c5f8bf42b8226b3accdb5c1b3d9319808"
+          },
+          {
+            "name": "workpaper.md",
+            "sha256": "0fb33f59383e553385de723afee2d9904ef0493ddfe8887967dfbb7532838718"
+          },
+          {
+            "name": "fascicolo_A_B.docx",
+            "sha256": "28218275635771fa3d135c5e5bd1b4b9eac5ba6af19d714ab774eac4286f20fd"
+          },
+          {
+            "name": "fascicolo_A_B.pdf",
+            "sha256": "909f210eeb181c9a5339f2a88de208bfca83c6a641db37685e0fd2061b5d8528"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Complete ordinary software first use, before any patent/design/premial path. The lesson labels the Italian controlled preview and all 32 professional UAT scenarios NOT_RUN; fictional declarations are distinct from corroborated client evidence.",
+        "inputs_and_request": "Localized evidence note plus a closed ledger and unchanged synthetic source. The natural request asks for evidence, reconciliation and exact proposal confirmation. No reviewed mapping, case JSON, approval, output specimen or professional identity is shipped.",
+        "execution_and_checkpoints": "Exact imported receipts produced inspected source rows, distinct income/IRAP candidate bases, full book-total reconciliation, detailed cost controls, readable proposal and synthetic calculation at historical date 2026-09-23. The lesson pauses for scope/mapping and actual proposal confirmation. Negative tests refuse pre-review calculation and existing-result overwrite; real calculation remains covered by unchanged authorization tests.",
+        "deliverable_and_next_action": "Open actual summary first, then cost reconciliation, controls and Word/PDF A/B dossier. The exercise reveals NOT_TESTED linkage, suspended bases and a document request. Additional deduction is distinguished from tax saving; open template paragraphs and unsigned status retain professional review boundaries.",
+        "practice_and_repeat": "Fresh practice inputs add EUR 20000 personnel with no documented project/activity link and preserve demo bytes. Test results suspend only that component. Repetition identifies ordinary real sources and authorization rather than reusing synthetic rules, date or review. Rendering does not record demo/practice/understanding.",
+        "language_and_pacing": "Complete authored es outline, note and separate exercise reviewed for matching facts and ordinary first-use pacing. The six existing stages total 390 seconds; processing/questions may extend them. Italian engine headings/fields are disclosed rather than claiming translated fiscal outputs. No live duration or comprehension claim."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[demo-es]",
+        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. No suspended cost in the ordinary demonstration. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "case_summary.md",
+            "sha256": "ba4fb07df3124ed1881fd81439d1a0c3ce167d27ec9d55cc72f241e9ab58e25a"
+          },
+          {
+            "name": "missing_documents.md",
+            "sha256": "e15fe658ff94d75d3c216a939ad39d8583a19fbcafed3a5a717612facbc4dcd2"
+          },
+          {
+            "name": "control_matrix.csv",
+            "sha256": "a3769f1680c3377351b7ed68d7c4e28030c700e1eb4c758393f03c8a16894cbf"
+          },
+          {
+            "name": "cost_reconciliation.csv",
+            "sha256": "c7a4f02f5dcf35801884239b11c3a0a85c7bd4ec05cf219dd3baa8a9fd9be19a"
+          },
+          {
+            "name": "result.json",
+            "sha256": "f1b6c2e1c1469953d6113f0266d86a69b4f061e5f157e35c085b36c364ac019a"
+          },
+          {
+            "name": "workpaper.md",
+            "sha256": "7d58ab19470fd649e4bb30c983e56bc93b170bd9a59eb1970f7bdad82091df6e"
+          },
+          {
+            "name": "fascicolo_A_B.docx",
+            "sha256": "b6e4325eea15d64015f4c36bdb5192d5b11b2cfa3dfa7a789842aefd56ec1476"
+          },
+          {
+            "name": "fascicolo_A_B.pdf",
+            "sha256": "d94ff72829c227e01db51bd8c315462b8702a809ad3a4a68f28dd0c3db72fca0"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[practice-es]",
+        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. Missing GL.3 linkage remains NOT_TESTED: EUR 20000/16000 suspended; request records, no invented failure. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "case_summary.md",
+            "sha256": "53bc6ff0169ebeac9cf0748dd1816c30707e5c31c764a028f518d94d2cfc3839"
+          },
+          {
+            "name": "missing_documents.md",
+            "sha256": "01aeec63a736e9afd1489ad7dd628f6fd6a4b089450c0895eaf6cc27726691da"
+          },
+          {
+            "name": "control_matrix.csv",
+            "sha256": "06c45e157acc73fbdb4a3563ada1e8f901c1001d7b759aa78676f63725428a72"
+          },
+          {
+            "name": "cost_reconciliation.csv",
+            "sha256": "d3c2bff77903d75b49434561cc880b027a0573172d3009adfbe2b5374558a301"
+          },
+          {
+            "name": "result.json",
+            "sha256": "195009ecae3666ccf59e0d27d63d23bd0e5a7c345c38a5de145360ad431b64fe"
+          },
+          {
+            "name": "workpaper.md",
+            "sha256": "4d673dfe11e20d9b0e239a8efff185fcb650e03d6d5a6068fb8108ef6d26dc33"
+          },
+          {
+            "name": "fascicolo_A_B.docx",
+            "sha256": "4621ff3d5f4fa446d0df90b0aede2cef451b283ea17304bb496eab097adf2111"
+          },
+          {
+            "name": "fascicolo_A_B.pdf",
+            "sha256": "54b2adf708722fa0f545e0dd9735858f9e4ef2569341ad440f5596820108c264"
+          }
+        ]
+      }
+    }
+  }
+}

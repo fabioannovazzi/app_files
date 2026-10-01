@@ -1,0 +1,4 @@
+cost_id,ledger_row_key,period_id,account,category,book_amount,income_max,irap_max
+C1,GL.1,P2025,Development personnel,PERSONNEL,100000.00,100000.00,80000.00
+C2,GL.2,P2025,Ordinary maintenance,PERSONNEL,10000.00,10000.00,10000.00
+C3,GL.3,P2025,Unlinked personnel,PERSONNEL,20000.00,20000.00,16000.00
