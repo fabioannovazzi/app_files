@@ -66,7 +66,7 @@ In a distinct exercise preserve the initial output, add update-en.md and constru
 
 You can repeat assessment, discovery and design; trace sources and versions; distinguish review, adoption and execution; explain why missing data, an export and a KPI do not certify arrangements.
 
-Start from entity, purpose, scope and actual evidence. Reuse the engagement with new versions and preserve history. Real work requires professional judgment, company decisions and a supervised operating pilot. What data reaches the model: conversation, returned originals, selected evidence, manuals, decisions and financial links may be read by the selected OpenAI/Cowork account’s model, without automatic anonymization. The offline form sends nothing and captures no audio; returning Markdown brings it into model context. Teaching profile and progress stay local, without server feedback or teaching receipts.
+Start from entity, purpose, scope and actual evidence. Reuse the engagement with new versions and preserve history. Real work requires professional judgment, company decisions and a supervised operating pilot. What data reaches the model: conversation, returned originals, selected evidence, manuals, decisions and financial links may be read by the selected host account’s model, without automatic anonymization. The offline form sends nothing and captures no audio; returning Markdown brings it into model context. Teaching profile and progress stay local, without server feedback or teaching receipts.
 
 The kit contains fictional files and a prepared outline. Demonstration and practice results come from fresh runs of the current function.
 

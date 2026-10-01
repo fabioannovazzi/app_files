@@ -80,3 +80,12 @@ Teaching profile, progress and feedback remain local; no tutorial receipt or
 change request is sent to the server. The construction workstream boundary is
 unchanged; the affected teaching and version-bound service fingerprints were
 reviewed and refreshed.
+
+## Deployment follow-up
+
+The selected model account wording was corrected in all five languages so the
+existing Cowork projection does not name OpenAI as its provider. Twenty fresh
+native execution cases and their five localized release reviews pass after this
+copy change. Clara’s teaching privacy fingerprint also covers the shared course
+source tree; it was reviewed and refreshed without changing Clara’s data routes.
+The affected generated packages were rebuilt from canonical source.

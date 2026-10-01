@@ -66,7 +66,7 @@ Conserve el primer resultado, añada update-es.md y construction-update-es.md al
 
 Puede repetir evaluación, entrevista y diseño; seguir fuentes y versiones; distinguir revisión, adopción y ejecución; explicar por qué dato ausente, export e indicador no certifican la organización.
 
-Parta de empresa, finalidad, alcance y pruebas reales. Mantenga expediente e historial mediante nuevas versiones. El trabajo real requiere juicio profesional, decisiones empresariales y piloto supervisado. Qué datos llegan al modelo: conversación, originales devueltos, pruebas seleccionadas, manuales, decisiones y vínculos financieros pueden ser leídos por el modelo de la cuenta OpenAI/Cowork elegida, sin anonimización automática. El formulario sin conexión no transmite nada ni graba audio; devolver Markdown incorpora sus datos al contexto del modelo. Perfil y progreso didácticos permanecen locales, sin feedback ni recibos didácticos al servidor.
+Parta de empresa, finalidad, alcance y pruebas reales. Mantenga expediente e historial mediante nuevas versiones. El trabajo real requiere juicio profesional, decisiones empresariales y piloto supervisado. Qué datos llegan al modelo: conversación, originales devueltos, pruebas seleccionadas, manuales, decisiones y vínculos financieros pueden ser leídos por el modelo de la cuenta del servicio elegido, sin anonimización automática. El formulario sin conexión no transmite nada ni graba audio; devolver Markdown incorpora sus datos al contexto del modelo. Perfil y progreso didácticos permanecen locales, sin feedback ni recibos didácticos al servidor.
 
 El kit contiene archivos ficticios y un guion preparado. Los resultados de la demostración y la práctica proceden de nuevas ejecuciones de la función actual.
 
