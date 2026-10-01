@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/app-files-studio-formatting/plugins/vera",
-  "version": "0.1.326",
-  "captured_at": "2026-10-01T20:00:52.199131+00:00",
-  "catalogue_fingerprint": "48fad5304246c8c3ff2840b3da29a228f89dba28a76e0c7f4d9d91f0470fab18",
-  "manifest_sha256": "4424949a5625e1fe4ac71d6e2ec5b701f73a46d8e0d0694ca327134c060e1827",
+  "root": "/Users/fabio/.codex/worktrees/fusione-p1-course/app_files/plugins/vera",
+  "version": "0.1.327",
+  "captured_at": "2026-10-01T21:04:43.383445+00:00",
+  "catalogue_fingerprint": "23556d385b5dac842eefd9722ee777565ed4e65d531e2f65a11a5758ddc8dd3c",
+  "manifest_sha256": "afd30fd285f2e0fe08deff99eebc4bf7014c293e9da1a3915c15e1aee554dec4",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -234,7 +234,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "9704da3d1527737c291a3ec5024a3e98508e9e91f4b60a13a83dd50b1b294c0f"
+      "sha256": "2f25b88f87c59b5a762101b5c2d6619244c7d3fd2927644331fa1ca9016bd2c3"
     },
     {
       "function_id": "vouching",

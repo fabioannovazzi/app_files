@@ -289,6 +289,7 @@ jobs:
           tests/plugins/test_teaching_clara_budget_execution.py
           tests/plugins/test_teaching_patent_box_execution.py
           tests/plugins/test_teaching_cnc_execution.py
+          tests/plugins/test_teaching_fusione_execution.py
           tests/plugins/test_teaching_trasformazione_execution.py
           tests/plugins/test_teaching_studio_document_format_execution.py
           tests/plugins/test_teaching_cnc_practical_execution.py

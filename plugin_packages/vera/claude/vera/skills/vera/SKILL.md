@@ -411,11 +411,12 @@ them without changing the capability catalog:
   ambiguous between installed operations, clarify the intended business outcome.
   A local tested procedure is not an installed public skill.
 - `browser-automation`: inspect, explain or edit a supplied sanitized developer pack or capability JSON, and run packaged local evidence/capability pipelines through the managed Python launcher. Live browser discovery, execution and replay validation are unavailable in this package. Do not operate authenticated websites or claim that local pipeline checks prove live validation.
-- `fusione-guidata`: P0 multi-company merger case preparation, explicit evidence
-  imports, known/unknown/disputed facts, versioned sources/rules, scoped approval
-  history and selective dependency review. Legal merger branches, concambio,
-  statutory calendars, filings and a live multi-company Studio Archive adapter
-  are not implemented.
+- `fusione-guidata`: P1 domestic OIC incorporation workpapers for independent or
+  directly wholly owned companies: verified two-company Studio Archive imports,
+  supplied valuations, exact exchange allocations, accounting bridges, source-bound
+  calendars and versioned review dossiers. Its prepared fictional course includes
+  changed-input review. Advanced branches, signatures and filings are unsupported;
+  synthetic software checks do not establish real-client professional validation.
 - `studio-archive`: the portable client, engagement, input, run, lifecycle, and artifact ledger in the connected studio folder; optional local indexing when its declared dependencies are already callable; and one client's callable, read-only Anthropic Gmail connector. The current guarded WhatsApp and native Google Drive OAuth routes remain unavailable;
 - `open-item-reconciliation`: test a population reported as open at a cut-off
   and determine which items are closed, partly closed, or still open from the

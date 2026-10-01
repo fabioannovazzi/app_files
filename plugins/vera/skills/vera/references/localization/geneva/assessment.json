@@ -1107,7 +1107,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "48fad5304246c8c3ff2840b3da29a228f89dba28a76e0c7f4d9d91f0470fab18",
+  "catalogue_fingerprint": "23556d385b5dac842eefd9722ee777565ed4e65d531e2f65a11a5758ddc8dd3c",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
