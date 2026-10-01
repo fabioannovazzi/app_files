@@ -1,5 +1,12 @@
 # Vera
 
+Vera can consult an existing studio knowledge repository, such as Second Brain,
+through search/read tools already connected in the user's host, when requested
+by the user or an adopted studio instruction. See
+`skills/vera/references/connected-studio-knowledge.md` for scope, source citation,
+access limitations and model-context boundaries. Vera does not supply or require
+a repository or Microsoft 365. Studio skills remain independently invoked.
+
 [Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/vera) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Vera is a bounded AI colleague and reviewer for professional accounting

@@ -3,6 +3,17 @@ name: purchase-invoice-review
 description: Use to check a population of fatture passive FatturaPA XML against actual prima nota or booked ledger entries. Produces an exception workpaper for amounts, IVA, duplicates, reconciliation and reviewed account coherence. For only an already qualified journal sample use vouching; for XML validity without accounting entries use fatture-xml-check. Does not book invoices or write to the gestionale.
 ---
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
+
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
 Onboarding is optional. Continue ordinary professional work immediately,
 including direct specialist invocation, without checking or completing a local

@@ -3,6 +3,17 @@ name: legal-tax-answer-review
 description: Use automatically before Vera delivers any generated or supplied legal, tax, or compliance answer—including a research report, memo, or one-page letter—against its answer contract and available sources, with source support, reasoning, and professional judgment separated. Do not use this skill to imply operational completeness for a return, declaration, filing, or form that lacks a dedicated workflow.
 ---
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
+
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
 Onboarding is optional. Continue ordinary professional work immediately,
 including direct specialist invocation, without checking or completing a local

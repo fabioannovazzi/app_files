@@ -3,6 +3,17 @@ name: comunicazione-professionale
 description: Use when Vera must decide whether a professional development is worth communicating and prepare claim-assured, source-backed client emails, LinkedIn posts, newsletters, articles, FAQs, client alerts, or branded visual explainers in an evidence-aware approved studio voice, with optional selected Creative Production art direction, without sending or publishing before professional review.
 ---
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
+
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
 Onboarding is optional. Continue ordinary professional work immediately,
 including direct specialist invocation, without checking or completing a local

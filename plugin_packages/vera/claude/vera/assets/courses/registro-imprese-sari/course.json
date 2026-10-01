@@ -149,7 +149,11 @@
     },
     {
       "path": "skills/registro-imprese-sari/SKILL.md",
-      "sha256": "954c7210313f3812718413afe06abcf417e99a16b6d18f5aa8a23969199497f9"
+      "sha256": "daa69bc30a6452ee4a319560e342e752b307eaf9d71b441327ca147efdaac63c"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -570,5 +574,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "db889cece8668bdda055ac85e6491e92536f3f83a703f075dede0957068e919d"
+  "canonical_course_sha256": "b6ce27d44294af12db5c5c112c2969e7d75fd0c7dd321999a44a0dd4b113e9cc"
 }

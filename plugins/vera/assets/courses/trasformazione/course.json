@@ -90,7 +90,12 @@
     {
       "path": "skills/trasformazione/SKILL.md",
       "repository_path": "plugins/vera/skills/trasformazione/SKILL.md",
-      "sha256": "cea3d8b860ab9745e93afe84baf2be2c4ebb1e3fdf69dbca20f36715f351abc9"
+      "sha256": "6b07de01234575894ac6369036991a70a4ebd0e151878f83a4150af0406a0ec4"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

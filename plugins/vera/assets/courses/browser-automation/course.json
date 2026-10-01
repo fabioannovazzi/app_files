@@ -215,7 +215,12 @@
     {
       "path": "skills/browser-automation/SKILL.md",
       "repository_path": "plugins/vera/skills/browser-automation/SKILL.md",
-      "sha256": "82a310fb6141d16a2e95248196bbcd6befdf30e4c5cd33af7555e784899bfabf"
+      "sha256": "0f0de0d1fe6ae670e244bb50f637d05155ea3f5955e81e1274fcf48df4d0cecc"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

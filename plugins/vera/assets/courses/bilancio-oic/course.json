@@ -317,7 +317,12 @@
     {
       "path": "skills/bilancio-oic/SKILL.md",
       "repository_path": "plugins/vera/skills/bilancio-oic/SKILL.md",
-      "sha256": "3433883f9d0747f434358ae9bd52ac5f54958240b1c137016553098716d25ffe"
+      "sha256": "4eaf50e376856a3215343fc19f46296aa8318916da0a19af9edaa220a74b76f4"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

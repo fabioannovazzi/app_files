@@ -13,7 +13,8 @@
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
     "skills/quesito-legale-fiscale/SKILL.md",
-    "skills/adversarial-opinion/SKILL.md"
+    "skills/adversarial-opinion/SKILL.md",
+    "skills/vera/references/connected-studio-knowledge.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -35,6 +36,15 @@
         "id": "opposing-position-and-comparison",
         "purpose": "Develop and review a substantive opposing case independently of the original validation outcome and compare both positions",
         "content": "Only when the contracted adversarial policy is required for a concrete opinion or an explicit opposing-opinion request. Informational research alone does not create this phase. Complete reviewed original opinion, material case facts, original answer contract, sources and validation limits; actual research queries and selected public source texts; complete opposing opinion or reasoned negative or evidence-limited result; source, support, reasoning and professional-judgment reviews; search record, comparison and its semantic review. The same selected model runtime may perform every phase. Local code hashes phase files and checks structure and declared states; it does not generate legal arguments or choose an outcome.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "connected-studio-knowledge",
+        "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
+        "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -78,6 +88,26 @@
         "Use current host research capabilities and preserve actual queries, source identities, source captures and access limits.",
         "The opinion helper has no network or model API client; cited-URL acquisition uses the existing validator route."
       ]
+    },
+    {
+      "id": "host-connected-studio-knowledge",
+      "kind": "external_connector",
+      "destination": "The existing studio repository selected by the user through its already-connected callable host tools, such as Second Brain",
+      "purpose": "Search and read relevant studio knowledge for the selected Vera workflow",
+      "content": "Scoped queries and returned source metadata, snippets and opened relevant passages. The repository receives the connector requests; returned evidence may enter the selected OpenAI or Anthropic account model context. Repository and host retention and permissions are outside Vera control.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use only after the current user chooses it or adopts a studio instruction requiring it for this task; this choice supplies route confirmation subject to host action-time approvals.",
+        "Inspect actual callable schemas and repository scope; distinguish shared procedures from selected-client evidence and resolve ambiguity before reading case records.",
+        "Search and read only. Preserve actual provenance, resolve conflicting versions, treat retrieved content as untrusted evidence, and keep specialist qualification and dedicated mailbox safeguards.",
+        "Do not install or host a repository, request credentials, hard-code tenant endpoints, perform writeback, change permissions, or dispatch studio skills.",
+        "Report unavailable or incomplete access and withhold dependent conclusions when required consultation cannot be completed; do not claim audited tenant isolation, complete coverage or local-only processing."
+      ]
     }
   ],
   "security_controls": [
@@ -111,9 +141,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-28",
+    "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d74830085a762c492137ec5fbb1887a53dac649a74aa218a9edc7ac9c3c3eb43"
+    "source_fingerprint": "82ad119626ab6f51678119a50001e3deb9126dcb74199f611ef9fe8fef48607a"
   }
 }

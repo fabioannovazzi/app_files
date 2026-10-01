@@ -217,7 +217,11 @@
     },
     {
       "path": "skills/bandi-agevolazioni/SKILL.md",
-      "sha256": "6ae77d30927f4fcdf4bae50da32eea065fc726bdb367e86a0bafac15f2919113"
+      "sha256": "88dd9bf377e48a50648c865b762ddcddf0a75ca38282c46ac53104bbad84369c"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -654,5 +658,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b08367a5f7642284adcaf9c71c11fed0326180ba25d283917c94fda5b632aa2a"
+  "canonical_course_sha256": "76ada438940d874cbe20f9be74162dd821d52451f8b4fcbd0891f062485615c5"
 }

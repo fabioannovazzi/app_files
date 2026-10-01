@@ -134,6 +134,7 @@ def test_vera_external_routes_name_their_applicable_runtime_profiles() -> None:
 def test_vera_cowork_services_include_shared_runtime_and_run_receipts() -> None:
     manifests = _service_manifests()
     expected = {
+        "cnc-authenticated-review": RUNTIME_PROFILE_IDS,
         "datev-starter": ["openai-codex"],
         "local-onboarding": ["openai-codex"],
         "managed-python-runtime": RUNTIME_PROFILE_IDS,

@@ -415,7 +415,12 @@
     {
       "path": "skills/patent-box-review/SKILL.md",
       "repository_path": "plugins/vera/skills/patent-box-review/SKILL.md",
-      "sha256": "2223683d89b7b73b3ab813cb9c690612a88038075459ec2cd423fa108b6299b8"
+      "sha256": "7b2cfcee6b296e0f7f2a84c137809c114f67b36ca1bf6bd8ea7869025a7a5147"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

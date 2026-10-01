@@ -605,7 +605,7 @@
     {
       "path": "skills/studio-document-format/SKILL.md",
       "repository_path": "plugins/vera/skills/studio-document-format/SKILL.md",
-      "sha256": "958ba3ade4a41314ec9644ae680ca6cd2fd05a33ce31ac029e1756dd04c169f9"
+      "sha256": "a2dfae939f5078c3f8894e9e2593820e2b947aa4a747f4670c2067128c3d0012"
     },
     {
       "path": "skills/studio-document-format/references/procedure.md",
@@ -616,6 +616,11 @@
       "path": "skills/studio-document-format/references/written-course.md",
       "repository_path": "plugins/vera/skills/studio-document-format/references/written-course.md",
       "sha256": "d4f9339f01894eb7235e58f6c412a3a2b3f0e199b9e03b273348ba7e1b27f65b"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

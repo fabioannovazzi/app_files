@@ -179,7 +179,12 @@
     {
       "path": "skills/avviso-intake/SKILL.md",
       "repository_path": "plugins/vera/skills/avviso-intake/SKILL.md",
-      "sha256": "ef00f3f82df3bc43a814ca01179a5a7f9942c25eaa1bd14e5306f107af2148cb"
+      "sha256": "57a96dd9ea76aa5bf45dc36db05d00c2a6c0dc1cd4c5617e6d72b6bf284ac765"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

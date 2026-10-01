@@ -145,7 +145,12 @@
     {
       "path": "skills/purchase-invoice-review/SKILL.md",
       "repository_path": "plugins/vera/skills/purchase-invoice-review/SKILL.md",
-      "sha256": "373d5de1cefb10a9ddff32cd3315af75bbee69c7fb1ebee093a9857d1247d600"
+      "sha256": "66bf1fd90fcb2d6dd2efca12615ae9a3a96c934e74de0b0d8865eabe34c8bd42"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

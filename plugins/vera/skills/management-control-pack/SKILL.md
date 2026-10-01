@@ -3,6 +3,17 @@ name: management-control-pack
 description: Use to turn reviewed accounting, Budget, remaining-month Forecast, open-item, bank and sales exports into one pacchetto di controllo di gestione with monthly P&L, aging, cash, customer concentration and margins. For a focused Actual/Budget or period scostamenti analysis use variance-analysis; this pack uses supplied exports, not a live gestionale connection.
 ---
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
+
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
 Onboarding is optional. Continue ordinary professional work immediately,
 including direct specialist invocation, without checking or completing a local

@@ -136,7 +136,11 @@
     },
     {
       "path": "skills/treasury-forecast/SKILL.md",
-      "sha256": "3722545dedcfc92109b72c2fc0b48a91a2d3df46f074e0aabdb547a0bf6eacc7"
+      "sha256": "9fe01120ad377ba5a9af83f78fd31d69f2cfe4406b19afbfb74b1a946f789451"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -346,5 +350,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "5a5edd648abff7a562c826f871d15ddd71540069c129a32a3183c93c8b05a1d0"
+  "canonical_course_sha256": "92d129436deee6a8994543c0270f084ccdd66242a480a9b5656d23d9181b214a"
 }

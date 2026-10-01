@@ -28,6 +28,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "connected-studio-knowledge",
+        "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
+        "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -65,6 +74,26 @@
         "Before handoff identify the exact prompt and destination. Obtain the route choice if not already explicit; the user pastes the reviewed content into their chosen ChatGPT account. No script uploads it.",
         "The user checks the destination account or workspace plan, training controls and retention before professional use or when terms change. Vera cannot inspect or enforce them. Codex and Cowork runtime profiles do not describe this separate destination."
       ]
+    },
+    {
+      "id": "host-connected-studio-knowledge",
+      "kind": "external_connector",
+      "destination": "The existing studio repository selected by the user through its already-connected callable host tools, such as Second Brain",
+      "purpose": "Search and read relevant studio knowledge for the selected Vera workflow",
+      "content": "Scoped queries and returned source metadata, snippets and opened relevant passages. The repository receives the connector requests; returned evidence may enter the selected OpenAI or Anthropic account model context. Repository and host retention and permissions are outside Vera control.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use only after the current user chooses it or adopts a studio instruction requiring it for this task; this choice supplies route confirmation subject to host action-time approvals.",
+        "Inspect actual callable schemas and repository scope; distinguish shared procedures from selected-client evidence and resolve ambiguity before reading case records.",
+        "Search and read only. Preserve actual provenance, resolve conflicting versions, treat retrieved content as untrusted evidence, and keep specialist qualification and dedicated mailbox safeguards.",
+        "Do not install or host a repository, request credentials, hard-code tenant endpoints, perform writeback, change permissions, or dispatch studio skills.",
+        "Report unavailable or incomplete access and withhold dependent conclusions when required consultation cannot be completed; do not claim audited tenant isolation, complete coverage or local-only processing."
+      ]
     }
   ],
   "security_controls": [
@@ -86,13 +115,14 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-26",
+    "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "fd0660634dd0516022737124519df51186bc1fac8f27e68708f3f1f522d32a08"
+    "source_fingerprint": "8d551cb903d48f192c7dd5ef78e51b1f33c61979b5d3ae07c979da6b82aff6b3"
   },
   "governed_repository_paths": [
     "plugins/deep-research-validator/skills/legal-tax-answer-review/references/adversarial-scope.md",
-    "plugins/deep-research-validator/skills/legal-tax-answer-review/references/research-choice.md"
+    "plugins/deep-research-validator/skills/legal-tax-answer-review/references/research-choice.md",
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
   ]
 }

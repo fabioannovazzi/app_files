@@ -120,7 +120,12 @@
     {
       "path": "skills/scissione-guidata/SKILL.md",
       "repository_path": "plugins/vera/skills/scissione-guidata/SKILL.md",
-      "sha256": "fd61a00253e1596ce7c570a217d66e122a4195c7adddda17f8888e3b79aaf8c8"
+      "sha256": "b8fbf6b8fc6ba01d59efcdf135a2bc884c4cb7bcdb3deeda9f438da82d5db4fe"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

@@ -3,6 +3,17 @@ name: journal-bank-reconciliation
 description: Use to reconcile estratti conto bancari with prima nota, giornale contabile or mastrini from reviewed CSV/XLSX or consistently labelled text-PDF tables. Produces matched movements, unmatched rows, residuals and reviewable workpapers. For checking a supplied elenco partite aperte at a cut-off use open-item-reconciliation. OCR-only bank statements are unsupported.
 ---
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
+
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
 Onboarding is optional. Continue ordinary professional work immediately,
 including direct specialist invocation, without checking or completing a local

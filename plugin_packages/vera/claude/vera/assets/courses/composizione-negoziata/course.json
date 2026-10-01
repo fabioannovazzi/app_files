@@ -89,7 +89,11 @@
     },
     {
       "path": "skills/composizione-negoziata/SKILL.md",
-      "sha256": "b6a5a4eae0ec2790c0375bf09e07d59a42a7069bb4e4e424a5660a70be5ab94a"
+      "sha256": "fb7582323d9b1831505eaae217dd66be38ec20b713cd3c05182b74dc958237cd"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -709,5 +713,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "0b70de16e78dc2cd444fee6ca6cfaf651488da66e3b1f5d489c049bc67e1316f"
+  "canonical_course_sha256": "e99f1a9943566eb44536177859745371dd8168257b952d52e7e0cca5935832c2"
 }

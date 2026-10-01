@@ -3,6 +3,17 @@ name: browser-automation
 description: Use when a user wants Vera to inspect, explain or edit a supplied sanitized developer pack or capability JSON, and run packaged local evidence/capability pipelines through the managed Python launcher. Live browser discovery, execution and replay validation are unavailable in this package. Do not operate authenticated websites or claim that local pipeline checks prove live validation.
 ---
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
+
 ## Cowork execution contract
 
 Public workflow names select skills; component IDs select module paths.

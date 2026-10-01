@@ -10,7 +10,8 @@
   ],
   "governed_repository_paths": [
     "plugins/vera/scripts/model_data_report.py",
-    "plugins/studio-archive/scripts/client_ledger.py"
+    "plugins/studio-archive/scripts/client_ledger.py",
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -36,6 +37,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "connected-studio-knowledge",
+        "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
+        "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -55,6 +65,26 @@
       "controls": [
         "Record source rank, dates, inspected scope, applicability and limits.",
         "Keep names, tax identifiers, credentials, private amounts and case text out of public research queries."
+      ]
+    },
+    {
+      "id": "host-connected-studio-knowledge",
+      "kind": "external_connector",
+      "destination": "The existing studio repository selected by the user through its already-connected callable host tools, such as Second Brain",
+      "purpose": "Search and read relevant studio knowledge for the selected Vera workflow",
+      "content": "Scoped queries and returned source metadata, snippets and opened relevant passages. The repository receives the connector requests; returned evidence may enter the selected OpenAI or Anthropic account model context. Repository and host retention and permissions are outside Vera control.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use only after the current user chooses it or adopts a studio instruction requiring it for this task; this choice supplies route confirmation subject to host action-time approvals.",
+        "Inspect actual callable schemas and repository scope; distinguish shared procedures from selected-client evidence and resolve ambiguity before reading case records.",
+        "Search and read only. Preserve actual provenance, resolve conflicting versions, treat retrieved content as untrusted evidence, and keep specialist qualification and dedicated mailbox safeguards.",
+        "Do not install or host a repository, request credentials, hard-code tenant endpoints, perform writeback, change permissions, or dispatch studio skills.",
+        "Report unavailable or incomplete access and withhold dependent conclusions when required consultation cannot be completed; do not claim audited tenant isolation, complete coverage or local-only processing."
       ]
     }
   ],
@@ -77,9 +107,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-30",
+    "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "217abc331041ca71b88a70c4e57d7e58746a3a6401132dcbddcfc06eb8ad38bc"
+    "source_fingerprint": "768e651eef1bdb60941eacc7ce2e79965f15ecef837a293df75a28da868b43d8"
   }
 }

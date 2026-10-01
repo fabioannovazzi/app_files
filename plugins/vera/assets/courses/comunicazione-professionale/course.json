@@ -300,7 +300,12 @@
     {
       "path": "skills/comunicazione-professionale/SKILL.md",
       "repository_path": "plugins/vera/skills/comunicazione-professionale/SKILL.md",
-      "sha256": "50af60a05507b119f9b51cf9bb3b1800d9cabe65a41e51bea578b2ab5ecb3cfe"
+      "sha256": "5fa15ab9a048aabcd9b28bc60bedde76cfd920e884f95d3a1be7fa28674a1ad9"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

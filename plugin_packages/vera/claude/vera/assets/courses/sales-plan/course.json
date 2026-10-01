@@ -101,7 +101,11 @@
     },
     {
       "path": "skills/sales-plan/SKILL.md",
-      "sha256": "8f121d41ee28085b1dad4e6c280f5ccb99b955fd6200ee1f3ba920031684a47e"
+      "sha256": "5cd4d1dfdce986fc1a157508e403103bae68e5abb843e0eb356b60b21325c244"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -402,5 +406,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "a3b665c1271fb61a5a61bd001066e61778c1fb206184fd57602dfc5b8a28daa1"
+  "canonical_course_sha256": "7d00fd704f3d8a958104c34824b52267ca5d85843cfa9c0bc117005300f9821c"
 }

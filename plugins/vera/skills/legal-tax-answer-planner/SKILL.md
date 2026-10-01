@@ -3,6 +3,17 @@ name: legal-tax-answer-planner
 description: Use automatically before Vera answers any accepted substantive legal, tax, or compliance question or prepares source-backed professional drafting that needs an answer contract and generation instructions for direct Codex work or a ChatGPT Deep Research handoff. The user never needs to request prompt optimization. Do not use this skill as a substitute for a missing operational return, declaration, filing, or form workflow.
 ---
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
+
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
 Onboarding is optional. Continue ordinary professional work immediately,
 including direct specialist invocation, without checking or completing a local

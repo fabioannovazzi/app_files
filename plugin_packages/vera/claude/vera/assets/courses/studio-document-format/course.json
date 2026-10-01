@@ -477,7 +477,7 @@
     },
     {
       "path": "skills/studio-document-format/SKILL.md",
-      "sha256": "99b159f96b6657145b1e169ba3f6db47da58b6cee80eb7583d1ea6b32db769bc"
+      "sha256": "f1c7bdd238c836fea734f85a835da8c004df933473705d0e6565f8e4bd8dc276"
     },
     {
       "path": "skills/studio-document-format/references/procedure.md",
@@ -486,6 +486,10 @@
     {
       "path": "skills/studio-document-format/references/written-course.md",
       "sha256": "34813c1851564a4fd4e163999d0c9096c53ae224604ddf7a8f857cb3495a44bf"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -762,5 +766,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "314b07c315e2ec80b4ec0b56fb02a5a588a985ac4f65b68fec7ce10ddfef1a35"
+  "canonical_course_sha256": "e945f61e0d67e1ab2211dde940d1e8943379656a1658300c66001d169d65cf5d"
 }

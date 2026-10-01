@@ -108,7 +108,11 @@
     },
     {
       "path": "skills/centrale-rischi-review/SKILL.md",
-      "sha256": "e210e54e2a296ae9d5373ba870114951608e6ced13c89a95bbc036b1924555a0"
+      "sha256": "b7943d54aebd8d4473bfb3efcab83d1fd651f735c54467befbf15e9541d204a0"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -240,5 +244,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "f40251fc7ddb3f922d89e26e571c361b79055c58138e3fa9e583368cc9e96014"
+  "canonical_course_sha256": "89ffb52ce9c9c12f9d8d804afd29efe23fed94002452d1c767be938426297aa3"
 }

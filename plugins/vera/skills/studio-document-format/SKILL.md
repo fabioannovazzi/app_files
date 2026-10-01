@@ -3,6 +3,17 @@ name: studio-document-format
 description: Teach Vera a professional studio's reusable Word report format from selected examples and preferences, show short and long previews, adopt an explicitly approved standard, or revise and reuse it. Use for requests such as “learn our house style”, “use our letterhead” or “teach Vera our studio format”.
 ---
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
+
 # Teach Vera our studio format
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
