@@ -1,0 +1,3 @@
+flow_id,side,amount,expected_date,description,basis
+receipt,receivable,100000.00,2026-11-15,Fictional receipt,Reported date; collectability unverified
+payment,payable,80000.00,2026-11-30,Fictional supplier payment,Management schedule; underlying invoice absent
