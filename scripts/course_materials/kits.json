@@ -8188,5 +8188,135 @@
         ]
       }
     ]
+  },
+  "vera/trasformazione": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "synthetic_evidence_review_stale_dossier"
+    },
+    "files": [
+      {
+        "source": "trasformazione/input/case.json",
+        "path": "files/input/case.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/input/participants.json",
+        "path": "files/input/participants.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/input/creditors.json",
+        "path": "files/input/creditors.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/input/valuation.json",
+        "path": "files/input/valuation.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/input/valuation-update.json",
+        "path": "files/input/valuation-update.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/practice/case.json",
+        "path": "files/practice/case.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/practice/participants.json",
+        "path": "files/practice/participants.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/practice/creditors.json",
+        "path": "files/practice/creditors.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/practice/valuation.json",
+        "path": "files/practice/valuation.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/practice/valuation-update.json",
+        "path": "files/practice/valuation-update.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      }
+    ]
   }
 }

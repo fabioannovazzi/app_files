@@ -48,7 +48,8 @@
     "vera/studio-archive",
     "vera/treasury-forecast",
     "vera/variance-analysis",
-    "vera/vouching"
+    "vera/vouching",
+    "vera/trasformazione"
   ],
   "retained": {}
 }
