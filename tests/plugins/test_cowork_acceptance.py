@@ -9,6 +9,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pymupdf  # Keep native bindings in the test isolation import snapshot.
 import pytest
 
 from scripts.cowork_acceptance import cowork_acceptance as acceptance
