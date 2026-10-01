@@ -23,3 +23,9 @@ release-products:
 
 check-product-releases:
 	python scripts/build_product_release.py --check
+
+# Native Cowork evidence is supplied explicitly; CI/shell tests cannot create it.
+.PHONY: check-cowork-acceptance
+check-cowork-acceptance:
+	@test -n "$(COWORK_ACCEPTANCE_RUN)" || (echo "Set COWORK_ACCEPTANCE_RUN to the inspected bundle" >&2; exit 1)
+	python scripts/cowork_acceptance/cowork_acceptance.py verify "$(COWORK_ACCEPTANCE_RUN)" --require-core-passed

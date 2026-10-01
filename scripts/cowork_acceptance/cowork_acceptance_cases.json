@@ -1,0 +1,93 @@
+{
+  "schema": "vera.cowork_acceptance_cases.v1",
+  "language": "it",
+  "cases": {
+    "bank": {
+      "workflow": "journal-bank-reconciliation",
+      "expected": {
+        "demo": {
+          "matched_count": 2,
+          "unmatched_bank_count": 0,
+          "unmatched_journal_count": 0
+        },
+        "practice": {
+          "matched_count": 3,
+          "unmatched_bank_count": 0,
+          "unmatched_journal_count": 0
+        }
+      },
+      "review": "Trace every pair to Reference and Document in both original rows, same sign/currency/exact amount, no reused evidence. Amount/date-only candidates must remain review items. March outflow 1952 EUR and closing cash 4048; cumulative April outflow 2440 and closing cash 3560. These inputs contain no ambiguous pairs; do not claim that boundary was exercised. Inspect Excel and notes, not just audit counts. Save a review note that TRN-001 was checked to both sources; recover it in the fresh session."
+    },
+    "fiscal": {
+      "workflow": "dati-fiscali-strutturati",
+      "expected": {
+        "demo": {
+          "CU-income.md": {
+            "redditi_lavoro_dipendente": "28000.00",
+            "ritenute_irpef": "5000.00"
+          },
+          "F24-first.md": {
+            "importo_debito": "1200.00"
+          }
+        },
+        "practice": {
+          "CU-income.md": {
+            "redditi_lavoro_dipendente": "28000.00",
+            "ritenute_irpef": "5000.00"
+          },
+          "F24-first.md": {
+            "importo_debito": "1200.00"
+          },
+          "F24-second.md": {
+            "importo_debito": "900.00"
+          }
+        }
+      },
+      "review": "Inspect all fields against source, including CU tax period 2025/document 2026, regional 350 and communal 180 EUR. First F24 code 4001/year 2025/date 30 June 2026; second code 4034/year 2026/date 30 November 2026, credits zero. Neither invented F24 is a payment receipt. Preserve first extraction, distinguish second F24 from replacement. Save and recover this evidence-status limitation."
+    },
+    "report": {
+      "workflow": "financial-report-builder",
+      "expected": {
+        "demo": {
+          "Income Statement": "53000",
+          "Balance Sheet": "0",
+          "Cash Flow": "7000"
+        },
+        "practice": {
+          "Income Statement": "85000",
+          "Balance Sheet": "0",
+          "Cash Flow": "15000"
+        }
+      },
+      "review": "Open and inspect actual Word pages, tables, headings and readable pagination; also Markdown and Excel. January-February operating profit 53000, balance check zero, cash movement 7000 and closing cash 32000. January-March profit 85000, balance check zero, movement 15000, closing cash 40000. Subtotals are excluded from resumming. Trace an amount to its original workbook cell. Missing sections and commercial causes must remain unsupported; no invented tax or audit conclusions. Save a comment requesting source support for commercial causes; recover it in a fresh session."
+    },
+    "fiscal-scan": {
+      "workflow": "dati-fiscali-strutturati",
+      "derived_from": "F24-first.md",
+      "expected": {
+        "demo": {
+          "CU-income.md": {
+            "redditi_lavoro_dipendente": "28000.00",
+            "ritenute_irpef": "5000.00"
+          },
+          "F24-first-scan.pdf": {
+            "importo_debito": "1200.00"
+          }
+        },
+        "practice": {
+          "CU-income.md": {
+            "redditi_lavoro_dipendente": "28000.00",
+            "ritenute_irpef": "5000.00"
+          },
+          "F24-first-scan.pdf": {
+            "importo_debito": "1200.00"
+          },
+          "F24-second.md": {
+            "importo_debito": "900.00"
+          }
+        }
+      },
+      "review": "Optional image-only rendering of the existing first F24, with derivation hashes, not a new curriculum. Check capabilities first; OCR installation requires separate explicit approval. If unavailable, record blocked with the actual diagnostic, never silently use the Markdown instead. Review OCR fields against the scan visually and preserve the absence of payment evidence. Guided route follows the fiscal course with the declared scan substitution; it cannot certify the unmodified course."
+    }
+  }
+}
