@@ -10,7 +10,7 @@ Later host-specific instructions in this reference cannot override this rule.
 
 # Procedura condivisa di revisione delle fatture passive
 
-Versione della procedura: `passive-invoice-procedure/v2`.
+Versione della procedura: `passive-invoice-procedure/v3`.
 
 Questa è la procedura professionale già sviluppata per TeamSystem Studio ECONS.
 CR-42 è stato chiuso per accettazione di Fabio, senza due replay live puliti
@@ -41,8 +41,11 @@ conversazioni, i file, le credenziali o i profili del precedente Francesco.
    punto 6. Se l'eccezione non è confermata, lasciala da parte. Più di due rossi
    consecutivi sospendono il resto del cliente; una coda rossa non elimina
    la verifica dell'eccezione sulle prime due fatture.
-   Verdi e arancioni restano nella popolazione e nel report. Interpreta gli stati
-   con il modello e le indicazioni professionali: nessun colore approva una
+   Verdi e arancioni restano nella popolazione e nel report. In ECONS leggi il
+   valore DOM del pallino con Playwright e applica soltanto il binding locale
+   verificato: non chiedere al modello di indovinare il colore. Un valore ignoto
+   sospende la fattura prima di modifiche. Salva valore, binding ed esito del
+   controllo. Il modello valuta il trattamento e le eccezioni: nessun colore approva una
    registrazione. Non trasferire i nomi/colori ECONS a DATEV senza verificarli.
 
 ## Conti e IVA
@@ -73,7 +76,9 @@ conversazioni, i file, le credenziali o i profili del precedente Francesco.
 9. Registra solo con autorizzazione per la prima nota corrente e nel rispetto
    delle conferme dell'host. Salva prima dell'azione uno stato non verificato:
    invio/esito ancora da confermare. Se la prima nota cambia, rivaluta anche
-   l'autorizzazione. Il report non concede autorità a contabilizzare.
+   l'autorizzazione. In ECONS rileggi anche la fattura dopo l'approvazione e
+   blocca la registrazione se lo stato o gli altri valori sono cambiati.
+   Il report non concede autorità a contabilizzare.
    Nel percorso ECONS osservato, «Contabilizza» apre la prima nota e «Conferma
    reg.» esegue la conferma definitiva. Salva i valori della prima nota prima
    della revisione, anche se la registrazione verrà sospesa. Questi due passaggi

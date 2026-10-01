@@ -5,7 +5,8 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
-import { loadEconsSetup, saveEconsSetup } from "../plugins/browser-automation/scripts/econs_setup.mjs";
+import { inspectEconsExecution, loadEconsSetup, saveEconsSetup } from "../plugins/browser-automation/scripts/econs_setup.mjs";
+import { canonicalJson, sha256Text } from "../plugins/browser-automation/scripts/capability_runtime.mjs";
 
 import { collectEconsReview, validateEconsProfile } from "../plugins/browser-automation/scripts/econs_review.mjs";
 
@@ -359,7 +360,8 @@ function processingProfile() {
     cap.completion = { terminal_milestones: [name], required_outputs: outputNames };
     phases[name] = cap;
   }
-  return { schema_version: 'econs-processing-profile/v1', complete_status: 'complete', non_posted_view: 'non-posted', phases };
+  return { schema_version: 'econs-processing-profile/v2', complete_status: 'complete', non_posted_view: 'non-posted',
+    status_bindings: ['red', 'green', 'orange', 'complete'].map((value) => ({ value, state: value === 'complete' ? 'green' : value, evidence: 'Observed synthetic DOM status' })), phases };
 }
 
 class ProcessingTab extends EconsTab {
@@ -371,6 +373,8 @@ class ProcessingTab extends EconsTab {
     const locator = super.output(key);
     const id = /^detail-(.+)$/.exec(this.phase)?.[1] ?? '1';
     const mapped = this.mappedIds.has(id);
+    if (key === 'invoices' && !this.verifying && this.options.statuses) locator.nodes.forEach((item) => { item.status = this.options.statuses[item['invoice-id']] ?? item.status; });
+    if (key === 'invoice' && this.options.statuses) locator.nodes[0].status = this.options.statuses[id] ?? locator.nodes[0].status;
     if (key === 'lines') locator.nodes = [
       { 'line-id': '1', description: 'Long full source description', account: 'COST', 'vat-code': '22', amount: '10,00' },
       { 'line-id': '2', description: 'Second invoice line', account: this.options.discordant ? 'OTHER' : 'COST', 'vat-code': '22', amount: '10,00' },
@@ -395,7 +399,7 @@ class ProcessingTab extends EconsTab {
   }
 }
 function processing(changes = {}) {
-  return { profile: processingProfile(), classifyInvoices: async ({ invoices }) => ({ company_code: 'A', red_invoice_ids: invoices.filter((item) => item['invoice-id'] === '2').map((item) => item['invoice-id']), reason: 'Operator-reviewed synthetic red indicator' }),
+  return { profile: processingProfile(),
     reviewRedException: async () => ({ eligible: false, reason: 'The model did not approve the taught exception for this synthetic invoice' }),
     reviewInvoice: async ({ invoice, detail_sha256 }) => ({ approved: true, descriptions_complete: true,
       company_code: invoice['company-code'], invoice_id: invoice['invoice-id'], detail_sha256,
@@ -436,9 +440,8 @@ test('unapproved posting never dispatches registration', async () => {
 });
 
 test('a second invoice with truncated descriptions never opens its journal and preserves the first posting', async () => {
-  const tab = new ProcessingTab();
+  const tab = new ProcessingTab({ statuses: { '2': 'green' } });
   const result = await run(tab, { processing: processing({
-    classifyInvoices: async () => ({ company_code: 'A', red_invoice_ids: [], reason: 'Both selected invoices reviewed' }),
     reviewInvoice: async ({ invoice, detail_sha256 }) => ({ approved: invoice['invoice-id'] === '1',
       descriptions_complete: invoice['invoice-id'] === '1', company_code: 'A', invoice_id: invoice['invoice-id'], detail_sha256,
       reason: invoice['invoice-id'] === '1' ? 'Complete source descriptions read' : 'Second invoice still shows truncated descriptions' }),
@@ -550,7 +553,7 @@ for (const scenario of ['one-anchor', 'discordant', 'declined']) test(`a red exc
   assert.equal(result.completed, 0);
   assert.equal(tab.postCount, 0);
   assert.deepEqual(tab.checkboxValues, []);
-  assert.match(await readFile(result.client_reviews[0], 'utf8'), /eccezione delle due associazioni concordanti non verificata/);
+  assert.match(await readFile(result.client_reviews[0], 'utf8'), /red_mapping_exception_not_verified/);
 });
 
 test('an already mapped invoice registers without rewriting its mappings', async () => {
@@ -561,9 +564,7 @@ test('an already mapped invoice registers without rewriting its mappings', async
     if (key === 'lines') locator.nodes[2].account = 'COST';
     return locator;
   };
-  const result = await run(tab, { invoiceSelection: { A: ['1'] }, processing: processing({
-    classifyInvoices: async () => ({ company_code: 'A', red_invoice_ids: [], reason: 'Reviewed selected green invoice' }),
-  }) });
+  const result = await run(tab, { invoiceSelection: { A: ['1'] }, processing: processing() });
   assert.equal(result.completed, 1);
   assert.deepEqual(tab.checkboxValues, []);
   assert.equal(tab.opened.includes('open-mapping'), false);
@@ -595,7 +596,7 @@ test('a new process finds the installed procedure and saved registration setup w
   const result = JSON.parse(stdout);
   assert.equal(result.status, 'saved_setup');
   assert.equal(result.profile, 'econs-review-profile/v2');
-  assert.equal(result.posting, 'econs-processing-profile/v1');
+  assert.equal(result.posting, 'econs-processing-profile/v2');
   assert.deepEqual(result.excluded, ['EXCLUDED']);
   assert.match(await readFile(result.procedure, 'utf8'), /almeno due righe/);
   assert.equal(result.authority, false);
@@ -645,7 +646,7 @@ test('a later read-only run retains the learned posting setup and previous run r
   await saveEconsSetup({ directory, profile: profile(), excludedCompanyCodes: [] });
   const result = await loadEconsSetup({ directory });
   assert.equal(result.status, 'saved_setup');
-  assert.equal(result.processingProfile.schema_version, 'econs-processing-profile/v1');
+  assert.equal(result.processingProfile.schema_version, 'econs-processing-profile/v2');
   assert.equal(result.previousRunDirectory, join(directory, 'prior-run'));
 });
 
@@ -667,11 +668,6 @@ test('the old nightly flag cannot silently stand in for newly arrived invoices',
 for (const approved of [false, true]) test(`a selected invoice posts only with current approval (${approved})`, async () => {
   const tab = new ProcessingTab();
   const options = processing({
-    classifyInvoices: async ({ company, invoices }) => {
-      assert.equal(company['company-code'], 'A');
-      assert.deepEqual(invoices.map((item) => item['invoice-id']), ['1']);
-      return { company_code: 'A', red_invoice_ids: [], reason: 'Selected synthetic invoice is green' };
-    },
     approvePosting: async () => approved,
   });
 
@@ -722,11 +718,117 @@ test('more than two consecutive red items suspend the remaining client and prese
     if (key === 'invoice-count' && !tab.verifying) locator.nodes = [{ text: '5' }];
     return locator;
   };
-  const result = await run(tab, { processing: processing({ classifyInvoices: async () => ({ company_code: 'A', red_invoice_ids: ['2', '3', '4'], reason: 'Reviewed synthetic indicators' }) }) });
+  const result = await run(tab, { processing: processing() });
   assert.equal(result.completed, 1);
   assert.equal(tab.postCount, 1);
   assert.ok(!tab.opened.includes('detail-5'));
   const report = JSON.parse(await readFile(result.client_reviews[0].replace(/\.html$/, '.json'), 'utf8'));
   assert.equal(report.payload.entries.length, 5);
   assert.match(report.payload.entries[4].outcome, /oltre due rossi/);
+});
+
+for (const observedStatus of ['red', 'unrecognized-indicator', 'almost-green']) test(`an already mapped ${observedStatus} invoice cannot be cleared by a model classification`, async () => {
+  const tab = new ProcessingTab({ statuses: { '1': observedStatus } });
+  const original = tab.output.bind(tab);
+  tab.output = (key) => {
+    const locator = original(key);
+    if (key === 'lines') locator.nodes[2].account = 'COST';
+    return locator;
+  };
+  let classifierCalls = 0;
+  const result = await run(tab, { invoiceSelection: { A: ['1'] }, processing: processing({
+    classifyInvoices: async () => { classifierCalls += 1; return { company_code: 'A', red_invoice_ids: [], reason: 'Incorrect model answer' }; },
+    reviewRedException: async () => ({ eligible: true, reason: 'Even model approval cannot bypass the mechanical exception check' }),
+  }) });
+  assert.equal(tab.postCount, 0);
+  assert.equal(result.completed, 0);
+  assert.equal(classifierCalls, 0);
+  assert.equal(tab.opened.includes('open-journal'), false);
+  const report = JSON.parse(await readFile(result.review_path.replace(/\.html$/, '.json'), 'utf8'));
+  assert.equal(report.payload.entries[0].status, 'set_aside');
+});
+
+test('an observed orange invoice follows the same reviewed processing route without a colour-model callback', async () => {
+  const tab = new ProcessingTab({ statuses: { '1': 'orange' } });
+  const result = await run(tab, { invoiceSelection: { A: ['1'] }, processing: processing() });
+  assert.equal(result.completed, 1);
+  assert.equal(tab.postCount, 1);
+});
+
+test('a status change during approval stops before the posting action and records the reread value', async () => {
+  const tab = new ProcessingTab();
+  const original = tab.output.bind(tab);
+  let changed = false;
+  tab.output = (key) => {
+    const locator = original(key);
+    if (changed && key === 'invoice') locator.nodes[0].status = 'red';
+    return locator;
+  };
+  const result = await run(tab, { invoiceSelection: { A: ['1'] }, processing: processing({
+    approvePosting: async () => { changed = true; return true; },
+  }) });
+  assert.equal(tab.postCount, 0);
+  assert.equal(result.completed, 0);
+  const report = JSON.parse(await readFile(result.review_path.replace(/\.html$/, '.json'), 'utf8'));
+  assert.ok(report.payload.entries[0].evidence.some((item) => item.value === 'invoice_changed_before_posting'));
+  assert.ok(report.payload.entries[0].evidence.some((item) => item.label === 'Stato ECONS prima della registrazione' && item.value === 'red'));
+});
+
+for (const change of ['missing', 'ambiguous', 'unreviewed', 'legacy']) test(`${change} status bindings stop before any browser action`, async () => {
+  const tab = new ProcessingTab();
+  const options = processing();
+  if (change === 'missing') delete options.profile.status_bindings;
+  if (change === 'ambiguous') options.profile.status_bindings.push({ value: 'red', state: 'green', evidence: 'Conflicting synthetic rule' });
+  if (change === 'unreviewed') options.profile.status_bindings[0].evidence = '';
+  if (change === 'legacy') options.profile.schema_version = 'econs-processing-profile/v1';
+  await assert.rejects(run(tab, { processing: options }), /reviewed_status_bindings_required|invalid_processing_profile/);
+  assert.deepEqual(tab.opened, []);
+});
+
+test('a processing run persists executor, installation and exact raw-status decisions for later diagnosis', async () => {
+  const result = await run(new ProcessingTab({ statuses: { '1': 'unrecognized-indicator' } }), {
+    invoiceSelection: { A: ['1'] }, processing: processing(),
+  });
+  const execution = JSON.parse(await readFile(result.execution_path, 'utf8'));
+  const installation = JSON.parse(await readFile(result.installation_path, 'utf8'));
+  const queue = JSON.parse(await readFile(join(result.review_directory, '..', `queue-${sha256Text('A').slice(0, 24)}.json`), 'utf8'));
+  assert.equal(execution.executor, 'collectEconsReview');
+  assert.equal(execution.mechanical_driver, 'playwright');
+  assert.equal(execution.status_classifier, 'exact_reviewed_dom_binding');
+  assert.match(execution.module_sha256['econs_processing.mjs'], /^[a-f0-9]{64}$/);
+  assert.match(installation.plugin.version, /^\d+\.\d+\.\d+$/);
+  assert.equal(queue.invoices[0].raw_status, 'unrecognized-indicator');
+  assert.equal(queue.invoices[0].state, 'unknown');
+  assert.equal(queue.invoices[0].reason_code, 'unbound_invoice_status');
+  assert.equal(queue.processing_profile_sha256, result.processing_profile_sha256);
+});
+
+test('a later conversation finds the executor evidence through the known setup store', async () => {
+  const result = await run(new EconsTab());
+  const inspection = await inspectEconsExecution({ directory: join(result.review_directory, '..', '..', 'setups') });
+  assert.equal(inspection.status, 'executor_invocation_recorded');
+  assert.equal(inspection.execution.mode, 'read_only');
+  assert.equal(inspection.acquisition.status, 'acquired');
+  assert.deepEqual(inspection.missing_evidence, []);
+});
+
+test('missing run evidence is reported as unknown rather than proof of an executor replay', async () => {
+  const directory = await mkdtemp(join(privateTmp, 'econs-no-execution-'));
+  const inspection = await inspectEconsExecution({ directory });
+  assert.equal(inspection.status, 'execution_evidence_missing');
+  assert.equal(inspection.run_directory, null);
+});
+
+test('a saved legacy posting setup retains all phases while requesting only status-binding verification', async () => {
+  const directory = await mkdtemp(join(privateTmp, 'econs-legacy-status-'));
+  const saved = await saveEconsSetup({ directory, profile: profile(), processingProfile: processingProfile(), excludedCompanyCodes: [] });
+  const record = JSON.parse(await readFile(saved.setupPath, 'utf8'));
+  record.payload.processingProfile.schema_version = 'econs-processing-profile/v1';
+  delete record.payload.processingProfile.status_bindings;
+  record.sha256 = sha256Text(canonicalJson(record.payload));
+  await writeFile(saved.setupPath, canonicalJson(record));
+  const loaded = await loadEconsSetup({ directory });
+  assert.equal(loaded.status, 'status_binding_update_required');
+  assert.equal(loaded.executionAuthorized, false);
+  assert.deepEqual(loaded.processingProfile.phases, record.payload.processingProfile.phases);
 });
