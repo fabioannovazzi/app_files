@@ -55,6 +55,43 @@ At delivery, link outputs and state their purpose, review status, unresolved
 items, and next action. Create `run_review.md` when a durable review index
 is useful; never edit plugin source or generated ZIPs during a user-data run.
 
+## Reusable studio document format
+
+Ask for the studio's selected private/connected communications workspace only
+when a format is requested and no studio selection is already established.
+Never search client folders or a global cache for a profile. Reuse the explicit
+workspace ID and studio name from the studio selection; the client engagement
+continues to own sources and outputs. On Cowork the selected studio workspace
+must be accessible in the connected folder; otherwise use defaults and explain
+the unavailable studio format instead of claiming it was applied.
+
+A studio can provide its logo/letterhead, two or three representative documents,
+and preferences in normal language. Use the existing communications profile
+setup, including its focused `review_document_format.py` path, to propose and
+review the supported settings once. Show a synthetic DOCX preview before asking
+for adoption. Do not change source documents or infer financial conclusions
+from style examples. Read `references/studio-document-format.md` for setup,
+coverage, and limitations. Users do not operate these internal commands.
+
+After adoption, add `--studio-workspace <selected-private-workspace>
+--studio-id <exact-workspace-id> --studio-name <exact-studio-name>` to
+`build_report.py`. With no selection, existing report defaults apply. Explicit
+invalid, changed, or unapproved profiles fail; resolve the issue with the user
+rather than silently substituting another studio. The approved presentation
+and selected logo are frozen in `used_recipe.json`, covered by the run's
+integrity receipts, and reused by native DOCX regeneration and replay. A future
+studio revision affects newly built reports after an explicit studio selection;
+it does not silently restyle old runs. The saved snapshot contains no sample
+files, communications history, or other client content.
+
+Explain that DOCX fonts are requested, not embedded/downloaded. Check the actual
+renderer and inspect all rendered pages before claiming the requested font was
+rendered. Report substitutions or unavailable rendering plainly. Letterhead is
+a supported logo plus header/footer text; arbitrary Word templates, floating
+objects, scanned full-page backgrounds, or exact reproduction of a supplied
+layout are not supported. Signature lines are plain text, never a digital
+signature or professional acceptance.
+
 ## Core Principle
 
 Deterministic Python code owns stable source-byte capture, source receipts, Excel/CSV/PDF text extraction, table inventory, section assignment suggestions, exact numeric diagnostics, source-to-prepared-to-rendered numeric replay, Markdown/DOCX rendering, and audit outputs. Claude owns judgment: interpreting ambiguous tables, deciding report structure with the user, writing the narrative, and reviewing the draft.

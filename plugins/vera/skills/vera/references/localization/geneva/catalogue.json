@@ -2,8 +2,8 @@
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/.codex/worktrees/fusione-p1-course/app_files/plugins/vera",
   "version": "0.1.327",
-  "captured_at": "2026-10-01T20:12:08.224337+00:00",
-  "catalogue_fingerprint": "e68649785ba529f7e7505ae3ac68ef6e92156a44867649202a70f02f64823273",
+  "captured_at": "2026-10-01T21:04:43.383445+00:00",
+  "catalogue_fingerprint": "23556d385b5dac842eefd9722ee777565ed4e65d531e2f65a11a5758ddc8dd3c",
   "manifest_sha256": "afd30fd285f2e0fe08deff99eebc4bf7014c293e9da1a3915c15e1aee554dec4",
   "entries": [
     {
@@ -212,6 +212,11 @@
       "sha256": "b2f8ad59567a7e390f0fb4afbfdb339f0f8d11b3576ff37497de55cc4172d7f3"
     },
     {
+      "function_id": "studio-document-format",
+      "skill_path": "skills/studio-document-format/SKILL.md",
+      "sha256": "958ba3ade4a41314ec9644ae680ca6cd2fd05a33ce31ac029e1756dd04c169f9"
+    },
+    {
       "function_id": "trasformazione",
       "skill_path": "skills/trasformazione/SKILL.md",
       "sha256": "cea3d8b860ab9745e93afe84baf2be2c4ebb1e3fdf69dbca20f36715f351abc9"
@@ -229,7 +234,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "48daebc12acedcad307b16a18e8ff5a6ea30bf874612af999c12bae2f01bf6bb"
+      "sha256": "2f25b88f87c59b5a762101b5c2d6619244c7d3fd2927644331fa1ca9016bd2c3"
     },
     {
       "function_id": "vouching",

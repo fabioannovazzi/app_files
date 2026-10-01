@@ -275,7 +275,7 @@ unreleasable until the real output reviews and all required runs are complete.
 
 `vera/fusione-guidata` is a prepared five-language course, revision
 `2026-10-01.1`. It adds one kit and five locales to the current inventory
-(51 kits / 231 locales). `inputs/fusione/` contains a readable localized source
+(52 kits / 236 locales). `inputs/fusione/` contains a readable localized source
 note, ordinary and direct-wholly-owned fictional fact packs, explicit synthetic
 calendar conventions and a separate changed creditor balance. Machine field
 names retain the component contract; no precomputed report or approval is shipped.

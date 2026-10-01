@@ -469,6 +469,11 @@ them without changing the capability catalog:
   compile, use available browser tools for fields, approved attachments and draft
   saving. Submit only after explicit approval of the exact final application,
   following the bandi portal-preparation reference.
+- `studio-document-format`: selected examples → model-interpreted presentation
+  proposal → actual short/long Word previews → explicit adoption → private
+  versioned studio standard → supported financial report reuse. Read its own
+  skill for setup, revisions and the prepared course; never infer global studio
+  identity or adoption from a prior chat.
 - `comunicazione-professionale`: event-driven editorial work from exact selected
   sources and prior studio communications in a private studio-wide workspace.
   The professional selects every prior communication; the workflow never scans

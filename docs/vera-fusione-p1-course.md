@@ -3,8 +3,8 @@
 The prepared `vera/fusione-guidata` course is registered in Vera's native
 workflow catalogue, compiled lesson index and public course catalogue. Revision
 `2026-10-01.1` provides Italian, English, French, German and Spanish guidance.
-The owning-product inventory is now Vera 38 workflows / 169 locales, and all
-products total 51 workflows / 231 locales. Vera 0.1.327 is a release candidate;
+The owning-product inventory is now Vera 39 workflows / 174 locales, and all
+products total 52 workflows / 236 locales. Vera 0.1.327 is a release candidate;
 this document does not assert deployment, Marketplace publication or installation.
 
 ## Lesson and source material
@@ -91,7 +91,7 @@ are refreshed after that review. Existing account boundaries remain applicable.
 Candidate 0.1.327 is above the observed open Vera candidates through 0.1.326.
 The combined source preserves Patent Box, expanded Assetti, ordinary-request
 discovery, practical CNC, Trasformazione, Scissione and the revised Italian
-Valutazione PMI lesson. Clara remains current-main 0.1.236 and Lucia 0.1.74.
+Valutazione PMI lesson and Studio Document Format course. Clara remains current-main 0.1.238 and Lucia 0.1.76.
 Generated catalogues and packages are rebuilt from the combined source.
 
 The Geneva catalogue snapshot is refreshed for this source identity; it does

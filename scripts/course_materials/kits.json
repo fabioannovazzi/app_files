@@ -9038,92 +9038,95 @@
       }
     ]
   },
-  "vera/fusione-guidata": {
+  "vera/studio-document-format": {
     "group": "workflow",
     "execution": {
       "mode": "current_native_workflow",
       "local_tutorial": true,
-      "route": "review_two_company_p1_workpapers_then_reopen_changed_inputs"
+      "route": "inspect_examples_propose_preview_adopt_reuse"
     },
     "files": [
       {
-        "source": "fusione/ordinary.json",
-        "path": "files/input/ordinary.json",
-        "role": "source",
-        "languages": [
-          "it",
-          "en",
-          "fr",
-          "de",
-          "es"
-        ]
-      },
-      {
-        "source": "fusione/wholly-owned.json",
-        "path": "files/practice/wholly-owned.json",
-        "role": "practice",
-        "languages": [
-          "it",
-          "en",
-          "fr",
-          "de",
-          "es"
-        ]
-      },
-      {
-        "source": "fusione/update.json",
-        "path": "files/practice/update.json",
-        "role": "practice",
-        "languages": [
-          "it",
-          "en",
-          "fr",
-          "de",
-          "es"
-        ]
-      },
-      {
-        "source": "fusione/dossier-it.md",
-        "path": "files/input/dossier-it.md",
+        "source": "studio-document-format/demo-it.json",
+        "path": "files/input/demo-it.json",
         "role": "source",
         "languages": [
           "it"
         ]
       },
       {
-        "source": "fusione/dossier-en.md",
-        "path": "files/input/dossier-en.md",
+        "source": "studio-document-format/demo-en.json",
+        "path": "files/input/demo-en.json",
         "role": "source",
         "languages": [
           "en"
         ]
       },
       {
-        "source": "fusione/dossier-fr.md",
-        "path": "files/input/dossier-fr.md",
+        "source": "studio-document-format/demo-fr.json",
+        "path": "files/input/demo-fr.json",
         "role": "source",
         "languages": [
           "fr"
         ]
       },
       {
-        "source": "fusione/dossier-de.md",
-        "path": "files/input/dossier-de.md",
+        "source": "studio-document-format/demo-de.json",
+        "path": "files/input/demo-de.json",
         "role": "source",
         "languages": [
           "de"
         ]
       },
       {
-        "source": "fusione/dossier-es.md",
-        "path": "files/input/dossier-es.md",
+        "source": "studio-document-format/demo-es.json",
+        "path": "files/input/demo-es.json",
         "role": "source",
         "languages": [
           "es"
         ]
+      },
+      {
+        "source": "studio-document-format/practice-it.json",
+        "path": "files/practice/practice-it.json",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "studio-document-format/practice-en.json",
+        "path": "files/practice/practice-en.json",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "studio-document-format/practice-fr.json",
+        "path": "files/practice/practice-fr.json",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "studio-document-format/practice-de.json",
+        "path": "files/practice/practice-de.json",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "studio-document-format/practice-es.json",
+        "path": "files/practice/practice-es.json",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
       }
-    ],
-    "revision": "2026-10-01.1"
+    ]
   },
   "vera/scissione-guidata": {
     "group": "workflow",
@@ -9278,5 +9281,92 @@
         ]
       }
     ]
+  },
+  "vera/fusione-guidata": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "review_two_company_p1_workpapers_then_reopen_changed_inputs"
+    },
+    "files": [
+      {
+        "source": "fusione/ordinary.json",
+        "path": "files/input/ordinary.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "fusione/wholly-owned.json",
+        "path": "files/practice/wholly-owned.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "fusione/update.json",
+        "path": "files/practice/update.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "fusione/dossier-it.md",
+        "path": "files/input/dossier-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "fusione/dossier-en.md",
+        "path": "files/input/dossier-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "fusione/dossier-fr.md",
+        "path": "files/input/dossier-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "fusione/dossier-de.md",
+        "path": "files/input/dossier-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "fusione/dossier-es.md",
+        "path": "files/input/dossier-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      }
+    ],
+    "revision": "2026-10-01.1"
   }
 }

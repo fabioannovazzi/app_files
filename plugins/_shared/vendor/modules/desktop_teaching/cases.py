@@ -76,7 +76,10 @@ def prepare_case(
         )
     case = root / f"{phase}-{secrets.token_hex(8)}"
     case.mkdir(mode=0o700)
-    if store.product == "clara" or workflow == "presenza-digitale-studio":
+    if store.product == "clara" or workflow in {
+        "presenza-digitale-studio",
+        "studio-document-format",
+    }:
         inputs = case / "inputs"
         outputs = case / "outputs"
         inputs.mkdir()

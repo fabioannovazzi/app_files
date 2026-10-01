@@ -40,12 +40,20 @@
       "sha256": "7cebe7dfc9e40b80a61c9291b324e42d35c72960a9ca23753ae397813eb3f70e"
     },
     {
+      "path": "modules/report-builder/assets/studio-docx-format.schema.json",
+      "sha256": "0f0c7c62dbe07fc65c0e2c9094ff5c71de9230b4ce457ef75b461279421c5f96"
+    },
+    {
+      "path": "modules/report-builder/references/studio-document-format.md",
+      "sha256": "b213cad8c1a7401fc7476bd23098a26cf5f0e3903f806cfcd0c2129ead4a11e9"
+    },
+    {
       "path": "modules/report-builder/references/workflow-reference.md",
       "sha256": "5112d137ef68cf32357f7a586b91b20daf57caa9f295a5b120e6dcf264e99804"
     },
     {
       "path": "modules/report-builder/requirements.txt",
-      "sha256": "6735c9cbdb32c51d03324c6f2528b3f586b4545c54b022c1da0b0b5d44692b9a"
+      "sha256": "ee15516de98a1367562d8c098d149188c759330537462385aeafa86b5682ed45"
     },
     {
       "path": "modules/report-builder/scripts/apply_review_edits.py",
@@ -53,7 +61,7 @@
     },
     {
       "path": "modules/report-builder/scripts/build_report.py",
-      "sha256": "ec1458ec55c988fae0434d46abb5a9078d0ce8a217223b70df7b9decc093bb46"
+      "sha256": "c8051a0a61eb6b12d31e282e22e8d167d741f2f42a528ac597d01feb5e469437"
     },
     {
       "path": "modules/report-builder/scripts/check_dependencies.py",
@@ -65,11 +73,11 @@
     },
     {
       "path": "modules/report-builder/scripts/implementation_bootstrap.py",
-      "sha256": "27d620df59440f8f26a06d1043bcd5bbab728bedb49bbfe835b8ac3112cf3087"
+      "sha256": "c2775488e65a70846dbd995539615b4ad8ae38be26580932a67ff50e595ac6fc"
     },
     {
       "path": "modules/report-builder/scripts/implementation_contract.py",
-      "sha256": "d219e3b1e24ad3c3d80de4f954629324ba2c6b9e45178ad6f778906bd7eb9bb6"
+      "sha256": "d59c4651e56803b009d6556bc1ddad1a45565a9adcd557447610c73a83d901bc"
     },
     {
       "path": "modules/report-builder/scripts/inspect_inputs.py",
@@ -85,7 +93,7 @@
     },
     {
       "path": "modules/report-builder/scripts/report_builder_core.py",
-      "sha256": "11f8d8dd14f80b8c8607c47642aae15b5546174f48f53a2ed6e8a9cf803b8dc5"
+      "sha256": "6f286e8f9e1f25f9353cfe94e81e8c650b3314300e314a8584ebd5e1b5185efa"
     },
     {
       "path": "modules/report-builder/scripts/report_builder_integrity.py",
@@ -112,12 +120,16 @@
       "sha256": "1fc828a48a267ed81c940c6adc6dd86720b84fad06eddaf63dd39abfe70886ad"
     },
     {
+      "path": "modules/report-builder/scripts/studio_formatting.py",
+      "sha256": "fb239ee1c46f103146220accfaad40c1bc7190cb90a48b8a7d7574cae6f3ebb3"
+    },
+    {
       "path": "modules/report-builder/scripts/validate_review_integrity.py",
       "sha256": "c4632f361e2fda6be0e66e3242a8093a5e43696730a9cc51ea1c41d0eea60c39"
     },
     {
       "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
-      "sha256": "2c9ee3054d735bb4c5b928de69a58cd707969ff8bd5b1967bf2379771dd2af4a"
+      "sha256": "4b8c010199f7372db4a2e56f32e64c44fbfb8d99ea808e7b8af07da79c48210f"
     },
     {
       "path": "modules/report-builder/vendor/modules/__init__.py",
@@ -462,5 +474,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b04c38e802e71652c8f330296ed7f6a8bf5ac5ad05baada9e15732fdaf16a7b7"
+  "canonical_course_sha256": "9cf8c8f3fdec5f674bdbe344a3b34f42f6396e06deb6fc7a3c20468426465026"
 }
