@@ -94,6 +94,12 @@ def _ensure_vendor_import_path() -> None:
 
 
 _ensure_vendor_import_path()
+from studio_formatting import (  # noqa: E402
+    apply_studio_format,
+    display_date,
+    display_number,
+    load_studio_format,
+)
 from vera_assurance import (  # noqa: E402
     MoneyValidationError,
     artifact_receipt,
@@ -3469,6 +3475,9 @@ def add_key_value_table(document: Any, rows: Sequence[tuple[str, Any]]) -> None:
     """Add a compact two-column metadata table."""
 
     table = document.add_table(rows=0, cols=2)
+    caption = OxmlElement("w:tblCaption")
+    caption.set(qn("w:val"), "Report metadata")
+    table._tbl.tblPr.append(caption)
     table.alignment = WD_TABLE_ALIGNMENT.LEFT
     table.style = "Table Grid"
     for label, value in rows:
@@ -3528,12 +3537,16 @@ def add_numeric_totals_table(
     numeric_columns: Sequence[dict[str, Any]],
     *,
     language: str = "en",
+    format_settings: dict[str, Any] | None = None,
 ) -> None:
     """Add every reviewed, ledger-backed numeric total."""
 
     if not numeric_columns:
         return
     table = document.add_table(rows=1, cols=5)
+    caption = OxmlElement("w:tblCaption")
+    caption.set(qn("w:val"), "Reviewed numeric totals")
+    table._tbl.tblPr.append(caption)
     table.alignment = WD_TABLE_ALIGNMENT.LEFT
     table.style = "Table Grid"
     headers = (
@@ -3552,7 +3565,9 @@ def add_numeric_totals_table(
     for column in numeric_columns:
         cells = table.add_row().cells
         cells[0].text = clean_text(column.get("column"))
-        cells[1].text = clean_text(column.get("sum"))
+        cells[1].text = display_number(
+            clean_text(column.get("sum")), format_settings or {}
+        )
         cells[2].text = clean_text(column.get("currency")) or "none"
         cells[3].text = display_numeric_unit(column.get("unit"), language)
         cells[4].text = clean_text(column.get("scale"))
@@ -3597,6 +3612,13 @@ def write_report_docx(
     title_paragraph.alignment = WD_ALIGN_PARAGRAPH.LEFT
     subtitle = document.add_paragraph(docx_label("draft", language))
     set_paragraph_font(subtitle, size=10, color="667085")
+
+    profile = recipe.get("studio_format")
+    settings = profile["settings"] if profile else {}
+    if recipe.get("report_date"):
+        document.add_paragraph(
+            display_date(recipe["report_date"], {"date_format": "iso", **settings})
+        )
 
     add_key_value_table(
         document,
@@ -3661,7 +3683,9 @@ def write_report_docx(
         numeric_columns = section_analysis.get("numeric_columns") or []
         if numeric_columns:
             document.add_heading(docx_label("numeric_totals", language), level=2)
-            add_numeric_totals_table(document, numeric_columns, language=language)
+            add_numeric_totals_table(
+                document, numeric_columns, language=language, format_settings=settings
+            )
 
         preview_rows = section_analysis.get("preview_rows") or []
         if preview_rows and recipe.get("render", {}).get(
@@ -3669,6 +3693,10 @@ def write_report_docx(
         ):
             document.add_heading(docx_label("table_preview", language), level=2)
             add_dataframe_table(document, display_preview(preview_rows, language))
+
+    if settings.get("signature_lines"):
+        signature = document.add_paragraph("\n".join(settings["signature_lines"]))
+        signature.paragraph_format.keep_together = True
 
     document.add_section(WD_SECTION.NEW_PAGE)
     document.add_heading(docx_label("audit_appendix", language), level=1)
@@ -3710,6 +3738,8 @@ def write_report_docx(
                 border.set(qn(f"w:{key}"), value)
             borders.append(border)
         table._tbl.tblPr.append(borders)
+    if profile:
+        apply_studio_format(document, profile)
     document.save(output_path)
     _stabilize_office_package(output_path)
 
@@ -4102,6 +4132,7 @@ def _docx_numeric_locations(
     evidence_rows: Sequence[dict[str, Any]],
     *,
     language: str,
+    format_settings: dict[str, Any] | None = None,
 ) -> dict[str, tuple[str, str]]:
     """Reopen Word output and locate each numeric-summary cell."""
 
@@ -4148,7 +4179,7 @@ def _docx_numeric_locations(
     ) in zip(evidence_rows, rendered, strict=True):
         if (
             column != evidence["column"]
-            or value != evidence["value"]
+            or value != display_number(evidence["value"], format_settings or {})
             or currency != (evidence["currency"] or "none")
             or unit != display_numeric_unit(evidence["unit"], language)
             or scale != evidence["scale"]
@@ -4159,7 +4190,7 @@ def _docx_numeric_locations(
             )
         locations[str(evidence["evidence_id"])] = (
             f"table:{table_index}/row:{row_index}/cell:2",
-            value,
+            evidence["value"],
         )
     return locations
 
@@ -4427,6 +4458,9 @@ def write_numeric_evidence_ledger(
         output_dir / "report.docx",
         evidence_rows,
         language=language,
+        format_settings=read_json(source_resolution_dir / "used_recipe.json")
+        .get("studio_format", {})
+        .get("settings", {}),
     )
     preview_evidence = _preview_evidence_rows(prepared)
     preview_locations = _preview_numeric_locations(
@@ -4525,6 +4559,9 @@ def _build_report_in_place(
     report_type: object | None = None,
     run_id: str | None = None,
     client_engagement: Mapping[str, Any] | None = None,
+    studio_workspace: Path | None = None,
+    studio_id: str | None = None,
+    studio_name: str | None = None,
 ) -> BuildResult:
     """Build report outputs from inspected files and an editable recipe."""
 
@@ -4555,6 +4592,14 @@ def _build_report_in_place(
         recipe["document_language"] = assumptions["document_language"]
     if report_type is not None:
         recipe["report_type"] = normalize_report_type(report_type)
+    if studio_workspace is not None:
+        if not studio_id or not studio_name:
+            raise ValueError("Studio workspace requires an explicit studio ID and name")
+        recipe["studio_format"] = load_studio_format(
+            studio_workspace, studio_id=studio_id, studio_name=studio_name
+        )
+    elif studio_id is not None or studio_name is not None:
+        raise ValueError("Studio identity requires a selected studio workspace")
     validate_narrative_numeric_boundary(recipe)
 
     run_intake = write_run_intake(
@@ -4741,6 +4786,9 @@ def build_report(
     report_type: object | None = None,
     run_id: str | None = None,
     client_engagement: Mapping[str, Any] | None = None,
+    studio_workspace: Path | None = None,
+    studio_id: str | None = None,
+    studio_name: str | None = None,
 ) -> BuildResult:
     """Build atomically, restoring the exact prior run after any failure."""
 
@@ -4774,6 +4822,9 @@ def build_report(
             report_type=report_type,
             run_id=run_id,
             client_engagement=client_engagement,
+            studio_workspace=studio_workspace,
+            studio_id=studio_id,
+            studio_name=studio_name,
         )
         completed = True
         return result

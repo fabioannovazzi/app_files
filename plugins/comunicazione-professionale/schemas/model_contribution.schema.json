@@ -283,7 +283,120 @@
         "contact_rail_lines": {"type": "array", "maxItems": 40, "items": {"type": "string", "maxLength": 300}},
         "footer_pattern": {"type": "string", "maxLength": 300},
         "closing": {"type": "string", "maxLength": 500},
-        "signature_lines": {"type": "array", "maxItems": 12, "items": {"type": "string", "maxLength": 300}}
+        "signature_lines": {"type": "array", "maxItems": 12, "items": {"type": "string", "maxLength": 300}},
+        "docx": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "font_family": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "body_font_size_pt": {
+              "type": "number",
+              "minimum": 8,
+              "maximum": 14
+            },
+            "line_spacing_pt": {
+              "type": "number",
+              "minimum": 10,
+              "maximum": 24
+            },
+            "paragraph_after_pt": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 24
+            },
+            "paragraph_before_pt": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 24
+            },
+            "heading_1_size_pt": {
+              "type": "number",
+              "minimum": 10,
+              "maximum": 24
+            },
+            "heading_2_size_pt": {
+              "type": "number",
+              "minimum": 9,
+              "maximum": 20
+            },
+            "heading_color": {
+              "type": "string",
+              "pattern": "^[0-9A-Fa-f]{6}$"
+            },
+            "header_text": {
+              "type": "string",
+              "maxLength": 300
+            },
+            "footer_text": {
+              "type": "string",
+              "maxLength": 300
+            },
+            "page_numbers": {
+              "type": "boolean"
+            },
+            "use_logo": {
+              "type": "boolean"
+            },
+            "logo_width_mm": {
+              "type": "number",
+              "minimum": 10,
+              "maximum": 70
+            },
+            "header_distance_mm": {
+              "type": "number",
+              "minimum": 5,
+              "maximum": 15
+            },
+            "footer_distance_mm": {
+              "type": "number",
+              "minimum": 5,
+              "maximum": 15
+            },
+            "table_font_size_pt": {
+              "type": "number",
+              "minimum": 8,
+              "maximum": 12
+            },
+            "table_header_fill": {
+              "type": "string",
+              "pattern": "^[0-9A-Fa-f]{6}$"
+            },
+            "table_header_color": {
+              "type": "string",
+              "pattern": "^[0-9A-Fa-f]{6}$"
+            },
+            "table_alternate_fill": {
+              "type": "string",
+              "pattern": "^[0-9A-Fa-f]{6}$"
+            },
+            "number_format": {
+              "enum": [
+                "canonical",
+                "decimal_comma",
+                "decimal_point"
+              ]
+            },
+            "date_format": {
+              "enum": [
+                "iso",
+                "dmy",
+                "mdy"
+              ]
+            },
+            "signature_lines": {
+              "type": "array",
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "maxLength": 300
+              }
+            }
+          }
+        }
       }
     },
     "emailProfile": {

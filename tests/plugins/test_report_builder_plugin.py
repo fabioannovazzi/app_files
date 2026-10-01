@@ -1122,7 +1122,7 @@ def test_review_integrity_receipts_exact_transitive_implementation_set(
 
     # Assert
     assert integrity["schema_version"] == "report_builder.review_integrity.v4"
-    assert len(references) == 33
+    assert len(references) == 35
     assert [receipt["artifact_id"] for receipt in receipts] == references
     assert {
         "implementation.report_builder.scripts.report_builder_core.py",

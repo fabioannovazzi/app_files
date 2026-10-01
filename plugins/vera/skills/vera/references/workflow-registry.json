@@ -343,6 +343,7 @@
         "modules/comunicazione-professionale/scripts/record_review.py",
         "modules/comunicazione-professionale/scripts/record_visual_assessment.py",
         "modules/comunicazione-professionale/scripts/render_visuals.py",
+        "modules/comunicazione-professionale/scripts/review_document_format.py",
         "modules/comunicazione-professionale/scripts/validate_run.py"
       ]
     },
