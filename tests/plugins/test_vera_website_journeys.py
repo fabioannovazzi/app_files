@@ -853,6 +853,11 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
             )
             - _catalog_workflow_names(
                 catalog,
+                "Synthetic development prototypes",
+                "Subordinate intake workflows",
+            )
+            - _catalog_workflow_names(
+                catalog,
                 "Subordinate intake workflows",
                 "Cross-cutting answer assurance",
             )
