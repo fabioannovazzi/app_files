@@ -34,8 +34,8 @@ jobs:
           --cov --cov-config=tests/studio_document_format.coveragerc --cov-report=term-missing --cov-fail-under=80
       - name: Check document format code quality
         run: |
-          python -m black --check plugins/comunicazione-professionale/scripts/review_document_format.py plugins/comunicazione-professionale/scripts/studio_document_format.py plugins/report-builder/scripts/studio_formatting.py plugins/vera/scripts/studio_document_format.py tests/plugins/test_studio_document_format.py
-          python -m isort --check-only plugins/comunicazione-professionale/scripts/review_document_format.py plugins/comunicazione-professionale/scripts/studio_document_format.py plugins/report-builder/scripts/studio_formatting.py plugins/vera/scripts/studio_document_format.py tests/plugins/test_studio_document_format.py
+          python -m black --check plugins/comunicazione-professionale/scripts/review_document_format.py plugins/comunicazione-professionale/scripts/studio_document_format.py plugins/report-builder/scripts/studio_formatting.py plugins/vera/scripts/studio_document_format.py tests/plugins/test_studio_document_format.py tests/plugins/test_teaching_studio_document_format_execution.py
+          python -m isort --check-only plugins/comunicazione-professionale/scripts/review_document_format.py plugins/comunicazione-professionale/scripts/studio_document_format.py plugins/report-builder/scripts/studio_formatting.py plugins/vera/scripts/studio_document_format.py tests/plugins/test_studio_document_format.py tests/plugins/test_teaching_studio_document_format_execution.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/comunicazione-professionale/scripts/review_document_format.py plugins/comunicazione-professionale/scripts/studio_document_format.py plugins/report-builder/scripts/studio_formatting.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/vera/scripts/studio_document_format.py
           python -m bandit -q -ll plugins/comunicazione-professionale/scripts/review_document_format.py plugins/comunicazione-professionale/scripts/studio_document_format.py plugins/report-builder/scripts/studio_formatting.py plugins/vera/scripts/studio_document_format.py
@@ -290,6 +290,7 @@ jobs:
           tests/plugins/test_teaching_patent_box_execution.py
           tests/plugins/test_teaching_cnc_execution.py
           tests/plugins/test_teaching_trasformazione_execution.py
+          tests/plugins/test_teaching_studio_document_format_execution.py
           tests/plugins/test_teaching_cnc_practical_execution.py
           tests/plugins/test_cnc_integrations.py
           tests/plugins/test_cowork_teaching.py
