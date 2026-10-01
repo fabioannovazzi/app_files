@@ -1,0 +1,27 @@
+{
+  "vera/scissione-guidata": {
+    "title": "Scission guidée avec Vera",
+    "goal": "Préparer un dossier versionné, lire les tableaux et réexaminer les décisions après un changement.",
+    "scenario": "Arco Meccanica S.r.l. transfère une branche à la nouvelle Arco Servizi S.r.l. Anna et Bruno détiennent 60 % et 40 %. Noms, documents et montants sont fictifs.",
+    "scope": "Scission italienne OIC, EUR, partielle proportionnelle vers une nouvelle bénéficiaire, droits homogènes et sans participations réciproques. Bénéficiaire existante, scorporo, attributions asymétriques, IFRS et cas étrangers ne sont pas exécutés. Le dossier ne certifie pas la validité juridique ; aucune signature ni dépôt.",
+    "inputs": "Ouvrez mandate-fr.md et allocations.csv. Le mandat décrit sociétés, autorisations limitées à l’exercice, parts, valeurs économiques, hypothèses et contrat absent. Le CSV distingue actif et dette ainsi que valeurs comptables, fiscales et économiques. Le coût fiscal des associés est inconnu. Ces pièces ne sont pas des approbations.",
+    "request": "Vera, prépare le dossier de cette scission partielle proportionnelle vers une nouvelle bénéficiaire. Montre les pièces manquantes, les tableaux et les décisions à revoir avant utilisation.",
+    "steps": [
+      "Le chat de travail importe seulement les pièces choisies dans le dossier local du tutoriel. Vera propose périmètre et parcours à partir des pièces. La voix reste dans le chat pédagogique ; le professionnel confirme les choix importants en langage courant.",
+      "Préparez la première version sans approbations. Ouvrez review.html et trouvez le contrat absent. Revoyez parcours, parts, attributions et hypothèses ; enregistrez seulement les confirmations effectives de la version affichée. Le calcul exige les revues correspondantes ; le contrat absent maintient le dossier partiel.",
+      "Ouvrez le dossier et les tableaux effectivement produits. Reliez une ligne du CSV aux trois bases de valeur, puis examinez les deux associés, les coûts fiscaux nuls et les questions ouvertes. Conservez version et empreintes et présentez le rapport sur les données reçues par le modèle."
+    ],
+    "deliverables": [
+      "Dossier review.html/review.md avec preuves, dépendances, décisions et limites.",
+      "allocations.json et ownership_before_after.json distinguent valeurs et parts ; revision.json, change_impact.json et l’inventaire des empreintes conservent l’historique."
+    ],
+    "review": "Contrôlez provenance, autorisations, rapprochements et hypothèses économiques. L’équilibre ne prouve ni exhaustivité des contrats ni neutralité fiscale. Aucune source juridique n’est approuvée par l’exercice. Le professeur n’invente pas d’approbation ni de compréhension. Le dossier natif conserve titres italiens et clés techniques : expliquez-les dans la langue de la leçon sans promettre une traduction du moteur.",
+    "checkpoints": [
+      "Avant la revue, identifiez le contrat absent et expliquez pourquoi il ne devient ni zéro ni « vérifié ».",
+      "À la lecture, distinguez valeur comptable, fiscale, économique et coût fiscal des associés."
+    ],
+    "practice": "Demandez : « Vera, actualise le même dossier avec mandate-update-fr.md et allocations-update.csv : quelles décisions faut-il revoir ? » La nouvelle estimation augmente la valeur économique de l’actif transféré ; comptabilité, fiscalité et parts restent inchangées. Importez les nouvelles pièces dans un nouveau run du même engagement avec le revision.json antérieur exactement finalisé comme artefact amont. Comparez change_impact.json et les tableaux ; confirmez réellement les décisions rouvertes et conservez la version précédente.",
+    "success": "Vous savez commencer, trouver une lacune, lire les valeurs séparées et expliquer les revues dépendantes. Le tutoriel ne vaut pas acceptation professionnelle.",
+    "repeat": "Pour vos documents, choisissez engagement et sources autorisées par le parcours professionnel normal. Tutoriel et retours restent locaux ; ne réutilisez aucune confirmation fictive."
+  }
+}

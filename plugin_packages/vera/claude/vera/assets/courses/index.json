@@ -791,6 +791,34 @@
         "es": "Aprender a convertir ventas realizadas e hipótesis comerciales en un escenario futuro y comprobar qué cambia y por qué."
       }
     },
+    "scissione-guidata": {
+      "path": "scissione-guidata/course.json",
+      "sha256": "2275c4c060c375add08b25044d60f29fc76c5d07f11aca436f4a583d880e56d7",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Scissione guidata con Vera",
+        "en": "Guided demerger with Vera",
+        "fr": "Scission guidée avec Vera",
+        "de": "Geführte Spaltung mit Vera",
+        "es": "Escisión guiada con Vera"
+      },
+      "goals": {
+        "it": "Preparare un fascicolo versionato, leggere i prospetti e rivedere le decisioni dopo un cambiamento.",
+        "en": "Prepare a versioned dossier, read its schedules and revisit decisions after a change.",
+        "fr": "Préparer un dossier versionné, lire les tableaux et réexaminer les décisions après un changement.",
+        "de": "Eine versionierte Akte vorbereiten, Aufstellungen lesen und Entscheidungen nach Änderungen erneut prüfen.",
+        "es": "Preparar un expediente versionado, leer cuadros y revisar decisiones tras un cambio."
+      }
+    },
     "studio-archive": {
       "path": "studio-archive/course.json",
       "sha256": "daeff8bd3285d4751f2aad9d0c2612a34ca60394998731896a6d24a33a40409f",

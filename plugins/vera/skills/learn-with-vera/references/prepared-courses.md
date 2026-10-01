@@ -568,3 +568,20 @@ as the operational note, with `avviso/avviso_intake_memo.md` and its CSV as the
 extraction references. The practice adds a client's statement; documents said
 to be recovered remain unreceived until their actual files are supplied. Keep
 the explanation about the request, dates, evidence and next action.
+
+## Scissione guidata
+
+The fictional Arco mandate and allocation CSV exercise the Italian OIC partial
+proportional route into a new beneficiary. Start without approvals. The missing
+lease, unexamined contingent liabilities and null shareholder tax costs remain
+visible; a calculation does not close those gaps. The teacher explains actual
+Italian dossier headings and stable machine fields in the learner's language.
+The learner reviews the displayed exact revision in ordinary professional terms;
+never copy the test-only reviewer or manufacture participation.
+
+Practice imports the updated mandate and CSV in a fresh run of the same tutorial
+engagement, with the exact finalized prior revision as an upstream artifact.
+Changed allocation evidence reopens its dependent reviews; unchanged route and
+ownership evidence can retain theirs. Preserve the demo outputs. Codex uses its
+teacher/worker pair; Cowork uses the packaged written single-conversation lesson.
+Both keep tutorial state local and require actual learner confirmation.
