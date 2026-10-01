@@ -13,407 +13,409 @@
       "No competing external catalogues",
       "One batch per phase; no statistical recall estimate",
       "No public conversational recommendation observed"
-    ]
+    ],
+    "case_ids": "Opaque C01-C32; expected labels and descriptive source IDs withheld",
+    "pilot": "An initial run used descriptive case IDs. It was repeated with opaque IDs; only the neutral-ID run is used for final counts."
   },
   "paired_results": {
     "before": {
       "catalogue_sha256": "60b8ea57ed27441565972dbd379ff472b27310c0b07cb7733c360dcb0db35126",
-      "prompt_sha256": "d8c8f5b0046ae7757610ab91e95a45c5f1bca73d98a67bbce4aeed766ccd6be4",
-      "raw_trace_sha256": "3d4cf53b5ac5af7bc1e4e50af0d2e03a8b0c3d6a6dcfe4cdd2402e22471b1008",
+      "prompt_sha256": "37c4e9fcef88deb8e8bf67aaad1f652049ef704236408eb3463fd1d5f6b0c5e9",
+      "raw_trace_sha256": "b1c6ed3974df6eafff62eccf16de1546dbc9a60455f54948ecf9a3e83e6d6779",
       "response": {
         "results": [
           {
-            "id": "bank-direct",
+            "id": "C01",
             "workflow": "journal-bank-reconciliation",
             "action": "select",
-            "reason": "Abbinamento diretto tra estratti conto e prima nota."
+            "reason": "Abbina estratti conto e prima nota con risultati revisionabili."
           },
           {
-            "id": "bank-residuals",
+            "id": "C02",
             "workflow": "journal-bank-reconciliation",
             "action": "select",
-            "reason": "Confronto banca-mastrino per individuare movimenti non registrati e differenze da rivedere."
+            "reason": "Confronta banca e mastrino per individuare movimenti non abbinati e residui."
           },
           {
-            "id": "open-items",
+            "id": "C03",
             "workflow": "open-item-reconciliation",
             "action": "select",
-            "reason": "Verifica delle partite aperte a una data di riferimento, inclusi pagamenti tramite factoring."
+            "reason": "Verifica le partite aperte alla data di riferimento anche contro pagamenti e factoring."
           },
           {
-            "id": "sample",
+            "id": "C04",
             "workflow": "journal-sampling",
             "action": "select",
-            "reason": "Campionamento riproducibile del giornale Excel con criterio e diagnostica conservabili."
+            "reason": "Produce campioni riproducibili dal giornale Excel con criteri e diagnostica."
           },
           {
-            "id": "sample-controls",
+            "id": "C05",
             "workflow": "journal-sampling",
             "action": "select",
-            "reason": "La qualificazione della popolazione e la normalizzazione degli importi precedono il campionamento."
+            "reason": "Qualifica popolazione e importi prima del campionamento delle scritture."
           },
           {
-            "id": "vouch",
+            "id": "C06",
             "workflow": "vouching",
             "action": "select",
-            "reason": "Confronto di scritture qualificate da Journal Sampling con XML e PDF, evidenziando le prove mancanti."
+            "reason": "Confronta scritture qualificate con XML e PDF, mantenendo tracciabilità e lacune documentali."
           },
           {
-            "id": "invoice-population",
+            "id": "C07",
             "workflow": "purchase-invoice-review",
             "action": "select",
-            "reason": "Revisione dell’intera popolazione di fatture passive contro le registrazioni effettive, con sole eccezioni supportate."
+            "reason": "Verifica la popolazione delle fatture passive contro registrazioni effettive e presenta eccezioni revisionabili."
           },
           {
-            "id": "xml-only",
+            "id": "C08",
             "workflow": "fatture-xml-check",
             "action": "select",
-            "reason": "Controllo di XML malformati e duplicati candidati; non richiede il giornale."
+            "reason": "Controlla XML malformati e duplicati candidati senza richiedere il giornale."
           },
           {
-            "id": "oic",
+            "id": "C09",
             "workflow": "bilancio-oic",
             "action": "select",
-            "reason": "Preparazione del bilancio civilistico OIC dalle evidenze contabili e identificazione delle informazioni mancanti."
+            "reason": "Prepara il bilancio civilistico OIC dalle evidenze contabili e identifica gli elementi mancanti."
           },
           {
-            "id": "oic-pdf",
+            "id": "C10",
             "workflow": "bilancio-oic",
             "action": "select",
-            "reason": "Sono supportati PDF scansionati e preparazione revisionabile; le letture incerte richiedono verifica."
+            "reason": "Supporta PDF scansionati e preparazione di una bozza OIC con revisione delle evidenze incerte."
           },
           {
-            "id": "historical",
+            "id": "C11",
             "workflow": "financial-analysis",
             "action": "select",
-            "reason": "Analisi contabile storica controllata di redditività e indebitamento, riconciliata alle fonti."
+            "reason": "Supporta analisi contabili storiche controllate e indicatori riconciliati alle fonti."
           },
           {
-            "id": "variance",
+            "id": "C12",
             "workflow": "variance-analysis",
             "action": "select",
-            "reason": "Confronto Actual-Budget e spiegazione degli scostamenti contabili."
+            "reason": "Confronta Actual e Budget e produce analisi revisionabili degli scostamenti."
           },
           {
-            "id": "management",
+            "id": "C13",
             "workflow": "management-control-pack",
             "action": "select",
-            "reason": "Pacchetto unitario di controllo di gestione da export; va verificata la disponibilità degli input richiesti."
+            "reason": "Prepara un unico pacchetto dagli export previsti; eventuali input mancanti vanno raccolti."
           },
           {
-            "id": "archive",
+            "id": "C14",
             "workflow": "studio-archive",
             "action": "select",
-            "reason": "Ripresa di un incarico durevole e importazione dei documenti nel fascicolo cliente."
+            "reason": "Riprende un incarico durevole e importa documenti nel fascicolo del cliente."
           },
           {
-            "id": "notice",
+            "id": "C15",
             "workflow": "avviso-intake",
             "action": "select",
-            "reason": "Prima nota di intake per una cartella di pagamento; occorre individuare il relativo fascicolo cliente."
+            "reason": "Prepara una prima nota di intake per una cartella di pagamento e le relative lacune."
           },
           {
-            "id": "plan",
+            "id": "C16",
             "workflow": "business-planning",
             "action": "select",
-            "reason": "Piano per startup con ipotesi, scenari, economia e fabbisogno di cassa."
+            "reason": "Prepara un piano per startup con ipotesi, opzioni economiche e fabbisogno di cassa."
           },
           {
-            "id": "invoices-vague",
+            "id": "C17",
             "workflow": null,
             "action": "clarify",
-            "reason": "Non è chiaro se servano controlli XML, confronto con contabilizzazioni o verifica dei giustificativi."
+            "reason": "Occorre distinguere controllo XML, confronto con registrazioni e verifica documentale di un campione."
           },
           {
-            "id": "reconcile-vague",
+            "id": "C18",
             "workflow": null,
             "action": "clarify",
-            "reason": "Occorre specificare le popolazioni da riconciliare e la data di riferimento."
+            "reason": "Non sono indicati oggetto e fonti della riconciliazione."
           },
           {
-            "id": "sample-vague",
+            "id": "C19",
             "workflow": null,
             "action": "clarify",
-            "reason": "Il catalogo supporta campioni di scritture contabili; va chiarito se le fatture rappresentano quella popolazione."
+            "reason": "Occorre chiarire popolazione e finalità: il catalogo supporta campionamento di scritture contabili."
           },
           {
-            "id": "budget-vague",
+            "id": "C20",
             "workflow": null,
             "action": "clarify",
-            "reason": "Va chiarito se si richiede un piano commerciale, un business plan o un altro tipo di budget."
+            "reason": "Il tipo di budget e il risultato richiesto non sono specificati."
           },
           {
-            "id": "balance-vague",
+            "id": "C21",
             "workflow": null,
             "action": "clarify",
-            "reason": "Occorre chiarire standard, documento e intervento richiesto sul bilancio."
+            "reason": "Occorre chiarire tipo di bilancio e intervento richiesto."
           },
           {
-            "id": "support-missing",
+            "id": "C22",
             "workflow": "vouching",
             "action": "select",
-            "reason": "L’intento è definito; mancano i giustificativi, quindi il confronto resta in attesa del caricamento."
+            "reason": "L'intento è chiaro; i documenti mancanti sono input necessari prima della verifica."
           },
           {
-            "id": "unsupported-vat",
+            "id": "C23",
             "workflow": null,
             "action": "unsupported",
-            "reason": "Nessuna descrizione supporta preparazione completa e invio telematico della dichiarazione IVA."
+            "reason": "Il catalogo non offre preparazione e invio della dichiarazione IVA annuale."
           },
           {
-            "id": "us-gaap",
+            "id": "C24",
             "workflow": null,
             "action": "unsupported",
-            "reason": "Il catalogo non supporta preparazione e certificazione di un consolidato US GAAP completo."
+            "reason": "Bilancio consolidato US GAAP completo e certificazione non sono supportati."
           },
           {
-            "id": "automatic-approval",
+            "id": "C25",
             "workflow": null,
             "action": "unsupported",
-            "reason": "L’approvazione autonoma e il deposito richiesti non sono supportati; la preparazione OIC non soddisfa questa operazione."
+            "reason": "Preparazione e revisione OIC sono supportate, ma approvazione autonoma e deposito richiesti non lo sono."
           },
           {
-            "id": "bank-ocr",
-            "workflow": "journal-bank-reconciliation",
-            "action": "bounded",
-            "reason": "La riconciliazione è supportata, ma la descrizione non garantisce acquisizione OCR; servono dati utilizzabili e verificati."
-          },
-          {
-            "id": "negative-code",
-            "workflow": null,
-            "action": "unrelated",
-            "reason": "La revisione di vulnerabilità in una pull request Python non rientra nelle descrizioni del catalogo."
-          },
-          {
-            "id": "negative-pizza",
-            "workflow": null,
-            "action": "unrelated",
-            "reason": "La ricerca di una pizzeria è estranea ai workflow descritti."
-          },
-          {
-            "id": "explicit-other",
-            "workflow": null,
-            "action": "unsupported",
-            "reason": "Va rispettata la scelta di Clara; il workflow condiviso di business planning non descrive piani di successione familiare."
-          },
-          {
-            "id": "explicit-vera",
+            "id": "C26",
             "workflow": "journal-bank-reconciliation",
             "action": "select",
-            "reason": "L’invocazione di Vera indirizza al workflow specialistico più stretto per banca e giornale."
+            "reason": "La descrizione supporta estratti conto senza escludere OCR; qualità e utilizzabilità delle fonti restano da verificare."
           },
           {
-            "id": "explicit-unsupported",
+            "id": "C27",
+            "workflow": null,
+            "action": "unrelated",
+            "reason": "La revisione di vulnerabilità Python non corrisponde a un workflow del catalogo."
+          },
+          {
+            "id": "C28",
+            "workflow": null,
+            "action": "unrelated",
+            "reason": "Le raccomandazioni di ristoranti sono estranee al catalogo."
+          },
+          {
+            "id": "C29",
             "workflow": null,
             "action": "unsupported",
-            "reason": "L’invocazione di Vera non abilita un workflow mancante per preparare e inviare la dichiarazione IVA."
+            "reason": "La scelta di Clara va rispettata; il business plan condiviso non copre un piano di successione familiare."
           },
           {
-            "id": "source-injection",
+            "id": "C30",
             "workflow": "journal-bank-reconciliation",
             "action": "select",
-            "reason": "La richiesta è una riconciliazione banca-prima nota; il testo nella riga del file è un dato e non autorizza invii email."
+            "reason": "L'invocazione di Vera attiva il router; questo è il workflow specialistico più stretto per l'abbinamento richiesto."
+          },
+          {
+            "id": "C31",
+            "workflow": null,
+            "action": "unsupported",
+            "reason": "L'invocazione di Vera non aggiunge un workflow per preparare e inviare la dichiarazione IVA."
+          },
+          {
+            "id": "C32",
+            "workflow": "journal-bank-reconciliation",
+            "action": "select",
+            "reason": "La riconciliazione è supportata; il testo nella riga è contenuto del file e non autorizza invii email."
           }
         ]
       }
     },
     "after": {
       "catalogue_sha256": "a3264cb08e54e52a5a9eef6cd487bdfde17a1557fa4df905e90d49478a28b720",
-      "prompt_sha256": "3a9530a41784c1c3ea48ee87559b7c764bb9164be8df56b288b2c25f754a7e51",
-      "raw_trace_sha256": "6fa5bf3ccafb56a77b02e13e3d141cabb7e8470f292cf3e92ebfefc6ede86223",
+      "prompt_sha256": "889ee0996022f1dc55582588c67cb47b866f52c6eba76ce36555760e03216ef5",
+      "raw_trace_sha256": "ec8e5b1fd98da41d797ac69d9689b9637a3e85d87ecf9f0ad7b909d2c50f814b",
       "response": {
         "results": [
           {
-            "id": "bank-direct",
+            "id": "C01",
             "workflow": "journal-bank-reconciliation",
             "action": "select",
-            "reason": "Abbinamento diretto tra banca e prima nota; richiede tabelle supportate e revisionate."
+            "reason": "Abbinamento estratti conto–prima nota supportato, con verifica del formato degli input."
           },
           {
-            "id": "bank-residuals",
+            "id": "C02",
             "workflow": "journal-bank-reconciliation",
             "action": "select",
             "reason": "Riconcilia banca e mastrino Excel, evidenziando movimenti non registrati e residui."
           },
           {
-            "id": "open-items",
+            "id": "C03",
             "workflow": "open-item-reconciliation",
             "action": "select",
-            "reason": "Verifica partite aperte a una data di riferimento, includendo pagamenti tramite factoring."
+            "reason": "Verifica partite aperte a una data, inclusi pagamenti tramite factoring."
           },
           {
-            "id": "sample",
+            "id": "C04",
             "workflow": "journal-sampling",
             "action": "select",
             "reason": "Estrae un campione riproducibile dal giornale Excel con traccia della selezione."
           },
           {
-            "id": "sample-controls",
+            "id": "C05",
             "workflow": "journal-sampling",
             "action": "select",
-            "reason": "Qualifica popolazione e importi prima di estrarre il campione."
+            "reason": "Qualifica popolazione e importi prima di selezionare le scritture."
           },
           {
-            "id": "vouch",
+            "id": "C06",
             "workflow": "vouching",
             "action": "select",
-            "reason": "Verifica il campione qualificato contro XML e PDF e identifica giustificativi mancanti."
+            "reason": "Verifica un campione qualificato e tracciabile contro XML/PDF e identifica giustificativi mancanti."
           },
           {
-            "id": "invoice-population",
+            "id": "C07",
             "workflow": "purchase-invoice-review",
             "action": "select",
-            "reason": "Confronta l’intera popolazione di fatture passive con registrazioni effettive e produce eccezioni."
+            "reason": "Confronta l'intera popolazione di fatture passive con registrazioni effettive e produce eccezioni."
           },
           {
-            "id": "xml-only",
+            "id": "C08",
             "workflow": "fatture-xml-check",
             "action": "select",
-            "reason": "Controlla validità XML e duplicati candidati senza richiedere registrazioni contabili."
+            "reason": "Controlla validità XML e duplicati senza richiedere registrazioni contabili."
           },
           {
-            "id": "oic",
+            "id": "C09",
             "workflow": "bilancio-oic",
             "action": "select",
-            "reason": "Prepara prospetti OIC dal bilancio di verifica e identifica supporti mancanti per la nota integrativa."
+            "reason": "Prepara prospetti OIC dal bilancio di verifica e rileva evidenze mancanti per la nota integrativa."
           },
           {
-            "id": "oic-pdf",
+            "id": "C10",
             "workflow": "bilancio-oic",
             "action": "select",
-            "reason": "Supporta bilanci di verifica scansionati e mappature da sottoporre a revisione."
+            "reason": "Supporta PDF scansionati e mappature sottoposte a revisione prima della bozza OIC."
           },
           {
-            "id": "historical",
+            "id": "C11",
             "workflow": "financial-analysis",
             "action": "select",
             "reason": "Confronta bilanci storici con indicatori riconciliati alle fonti."
           },
           {
-            "id": "variance",
+            "id": "C12",
             "workflow": "variance-analysis",
             "action": "select",
             "reason": "Spiega scostamenti Actual/Budget per conto e dimensioni disponibili."
           },
           {
-            "id": "management",
+            "id": "C13",
             "workflow": "management-control-pack",
             "action": "select",
-            "reason": "Integra P&L, aging, cassa, concentrazione e margini da export revisionati."
+            "reason": "Produce un pacchetto integrato con P&L, aging, cassa, concentrazione e margini da export."
           },
           {
-            "id": "archive",
+            "id": "C14",
             "workflow": "studio-archive",
             "action": "select",
             "reason": "Riprende un incarico durevole e importa documenti nel fascicolo del cliente."
           },
           {
-            "id": "notice",
+            "id": "C15",
             "workflow": "avviso-intake",
             "action": "select",
-            "reason": "Prepara una prima nota di intake per una cartella; richiede il documento nel fascicolo cliente."
+            "reason": "Prepara una prima nota di intake per una cartella di pagamento con verifiche e documenti mancanti."
           },
           {
-            "id": "plan",
+            "id": "C16",
             "workflow": "business-planning",
             "action": "select",
             "reason": "Prepara un piano per startup con ipotesi, opzioni economiche e fabbisogno di cassa."
           },
           {
-            "id": "invoices-vague",
+            "id": "C17",
             "workflow": null,
             "action": "clarify",
-            "reason": "Occorre distinguere validità XML, confronto con contabilità e verifica di un campione."
+            "reason": "Il controllo richiesto è ambiguo: validità XML, confronto con contabilità o verifica di un campione."
           },
           {
-            "id": "reconcile-vague",
+            "id": "C18",
             "workflow": null,
             "action": "clarify",
-            "reason": "Non sono specificati oggetto, fonti e risultato della riconciliazione."
+            "reason": "Occorre distinguere abbinamento banca–contabilità da verifica di partite aperte."
           },
           {
-            "id": "sample-vague",
+            "id": "C19",
             "workflow": null,
             "action": "clarify",
-            "reason": "Occorre chiarire se si vuole campionare scritture contabili o una diversa popolazione di fatture."
+            "reason": "Occorre chiarire se si intende campionare scritture del giornale; il campionamento diretto di fatture non è descritto."
           },
           {
-            "id": "budget-vague",
+            "id": "C20",
             "workflow": null,
             "action": "clarify",
-            "reason": "Occorre precisare se si tratta di piano vendite, piano aziendale o altro budget."
+            "reason": "Occorre precisare se serve un piano vendite, un business plan o un altro tipo di budget."
           },
           {
-            "id": "balance-vague",
+            "id": "C21",
             "workflow": null,
             "action": "clarify",
-            "reason": "Occorre distinguere preparazione OIC, revisione contabile e analisi storica."
+            "reason": "Occorre chiarire se serve preparazione OIC, analisi storica o un'altra revisione."
           },
           {
-            "id": "support-missing",
+            "id": "C22",
             "workflow": "vouching",
             "action": "select",
-            "reason": "L’esito richiesto è chiaro; la verifica resta in attesa delle fatture e della tracciabilità del campione."
+            "reason": "L'esito richiesto è chiaro; documenti e tracciabilità necessari sono input da acquisire prima della verifica."
           },
           {
-            "id": "unsupported-vat",
+            "id": "C23",
             "workflow": null,
             "action": "unsupported",
-            "reason": "Il catalogo non offre preparazione completa e invio della dichiarazione IVA annuale."
+            "reason": "Il catalogo non supporta preparazione completa e invio telematico della dichiarazione IVA."
           },
           {
-            "id": "us-gaap",
+            "id": "C24",
             "workflow": null,
             "action": "unsupported",
             "reason": "Bilancio consolidato US GAAP e certificazione non sono supportati."
           },
           {
-            "id": "automatic-approval",
+            "id": "C25",
             "workflow": null,
             "action": "unsupported",
-            "reason": "Approvazione autonoma e deposito del bilancio non sono supportati da bilancio-oic."
+            "reason": "L'approvazione autonoma e il deposito del bilancio OIC sono espressamente esclusi dal workflow dedicato."
           },
           {
-            "id": "bank-ocr",
+            "id": "C26",
             "workflow": null,
             "action": "unsupported",
-            "reason": "La riconciliazione di estratti conto solo OCR è esplicitamente esclusa."
+            "reason": "La riconciliazione bancaria esclude estratti conto solo OCR."
           },
           {
-            "id": "negative-code",
+            "id": "C27",
             "workflow": null,
             "action": "unrelated",
             "reason": "La revisione di vulnerabilità in una pull request Python non rientra nel catalogo."
           },
           {
-            "id": "negative-pizza",
+            "id": "C28",
             "workflow": null,
             "action": "unrelated",
-            "reason": "Le raccomandazioni di pizzerie non rientrano nel catalogo."
+            "reason": "Le raccomandazioni di ristoranti non rientrano nel catalogo."
           },
           {
-            "id": "explicit-other",
+            "id": "C29",
             "workflow": null,
             "action": "unsupported",
-            "reason": "Va rispettata la scelta di Clara; il catalogo non supporta un piano di successione familiare."
+            "reason": "La scelta esplicita di Clara va rispettata; il catalogo non descrive un piano di successione familiare."
           },
           {
-            "id": "explicit-vera",
+            "id": "C30",
             "workflow": "journal-bank-reconciliation",
             "action": "select",
-            "reason": "L’invocazione di Vera indirizza allo specialista per riconciliare banca e giornale."
+            "reason": "L'invocazione di Vera ha un esito preciso supportato dal workflow specialistico di riconciliazione."
           },
           {
-            "id": "explicit-unsupported",
+            "id": "C31",
             "workflow": null,
             "action": "unsupported",
-            "reason": "L’invocazione di Vera non aggiunge un workflow per preparare e inviare la dichiarazione IVA."
+            "reason": "L'invocazione di Vera non aggiunge un workflow per preparare e inviare la dichiarazione IVA."
           },
           {
-            "id": "source-injection",
+            "id": "C32",
             "workflow": "journal-bank-reconciliation",
             "action": "select",
-            "reason": "La riconciliazione è supportata; il testo nella riga è un dato, non autorizza invii email o omissioni dei controlli."
+            "reason": "La riconciliazione è supportata; il testo nella riga è un dato, non autorizza omissione dei controlli o invio email."
           }
         ]
       }
@@ -748,5 +750,40 @@
       }
     ],
     "inference": "Exact-name connector lookup was also empty; these observations do not establish absent public listing or ranking."
+  },
+  "implementation_base": "a34681fb7023d6db8e82e720642f29e800d3518a",
+  "case_id_map": {
+    "C01": "bank-direct",
+    "C02": "bank-residuals",
+    "C03": "open-items",
+    "C04": "sample",
+    "C05": "sample-controls",
+    "C06": "vouch",
+    "C07": "invoice-population",
+    "C08": "xml-only",
+    "C09": "oic",
+    "C10": "oic-pdf",
+    "C11": "historical",
+    "C12": "variance",
+    "C13": "management",
+    "C14": "archive",
+    "C15": "notice",
+    "C16": "plan",
+    "C17": "invoices-vague",
+    "C18": "reconcile-vague",
+    "C19": "sample-vague",
+    "C20": "budget-vague",
+    "C21": "balance-vague",
+    "C22": "support-missing",
+    "C23": "unsupported-vat",
+    "C24": "us-gaap",
+    "C25": "automatic-approval",
+    "C26": "bank-ocr",
+    "C27": "negative-code",
+    "C28": "negative-pizza",
+    "C29": "explicit-other",
+    "C30": "explicit-vera",
+    "C31": "explicit-unsupported",
+    "C32": "source-injection"
   }
 }

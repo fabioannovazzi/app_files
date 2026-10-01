@@ -137,7 +137,7 @@
     },
     {
       "path": "skills/financial-analysis/SKILL.md",
-      "sha256": "078b4a2f56bede3377afd01dee3b24b1604ec754b889126f7f5b1c8040e2c999"
+      "sha256": "f99eaa98c7446824367e3f710e17d55a9a53de35da3dc5114f1b63289ed56aff"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -438,5 +438,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "560518537073a8e39cd52638e98e5e9aa167d9c6ec4085ec805d9fa83bfb4ceb"
+  "canonical_course_sha256": "970366b7359c1441b24d688eaff70cd6766f68471934446c2a32edc0bfae2bc7"
 }

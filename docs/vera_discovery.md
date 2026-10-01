@@ -22,11 +22,14 @@ boundaries. It does not change accounting engines, native UI or MCP transport.
 
 ## Evidence and limits
 
-Source baseline: `484f85201f22f95055e45c577d4352ed96b5e293`.
+Evaluation baseline: `484f85201f22f95055e45c577d4352ed96b5e293`.
+Implementation rebased onto `a34681fb7023d6db8e82e720642f29e800d3518a` to
+preserve the subsequently merged Patent Box course.
 Observed on 1 October 2026 using Codex CLI 0.159.2, the host's default model,
 read-only ephemeral runs, a supplied complete 46-entry skill-description
-catalogue and the same 32 fictional requests. Expected labels were withheld
-from the evaluator. Full source files, engines and client documents were not
+catalogue and the same 32 fictional requests. Expected labels and descriptive case IDs were withheld
+from the evaluator; it received only opaque IDs C01-C32. An initial pilot
+with descriptive IDs was repeated and is not used for the final counts. Full source files, engines and client documents were not
 supplied. This is a **model metadata-matching experiment**, not an observed
 installed-plugin invocation, task completion or public recommendation test.
 The evaluator was explicitly asked to route requests; there were no competing
@@ -43,8 +46,8 @@ selection-rate estimate.
 
 Both catalogues respected the request to use Clara and declined autonomous OIC
 approval/filing. For OCR-only bank statements, the baseline selected the
-reconciliation route conditionally and said OCR was not guaranteed; the
-candidate declined that input explicitly. Source requires a labelled text-PDF
+reconciliation route because its metadata did not exclude OCR, reserving input
+quality checks; the candidate declined that input explicitly. Source requires a labelled text-PDF
 table or reviewed CSV/XLSX, so the candidate explanation is more precise.
 These boundary cases are reviewed semantically: do not treat their action labels
 as an exact automated pass/fail score. The original corpus's suggested related
@@ -118,7 +121,7 @@ The privacy review dates/fingerprints are refreshed to the inspected source.
 
 ## Catalogue-wide intent inventory
 
-These source-owned starter intents and output labels map all exposed skill
+These source-owned starter intents and output labels map all source skill
 cards, including internal review/teaching functions. They are inspected metadata,
 not evidence that every workflow has completed a professional acceptance run.
 Each workflow's full skill remains authoritative for supported inputs, host

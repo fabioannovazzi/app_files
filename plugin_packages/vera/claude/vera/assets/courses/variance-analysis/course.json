@@ -424,7 +424,7 @@
     },
     {
       "path": "skills/variance-analysis/SKILL.md",
-      "sha256": "a3688406e312a117266b9b030bf94f3a06351d98ca591907bcbbbaaa18b69626"
+      "sha256": "d22ffaeeda865352d57b5d0326dcbbe5f6fed1cd8740b7bc418cba908a692503"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -725,5 +725,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ecf60b433495712e813d60de0ef6c06f756da2ef30df3f130d9c043dd6adccd7"
+  "canonical_course_sha256": "65e22f868dee7a9a029a273884e384d5261959f26e254e9e0327d687dc437623"
 }
