@@ -2,44 +2,48 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-valuation",
-  "course_sha256": "bc2d4eb3b334c0ecfecfba93e96de84332caa6abe2c804e8f0037c11fa4c2a54",
-  "reviewer": "Codex /root: source, calculation and document engineering review",
-  "reviewed_at": "2026-09-30T07:10:05.839673+00:00",
-  "review_scope": "Read the entire Italian lesson and both fictional source notes. Ran separate receipt-bound native demo and practice using this exact course source inventory; inspected the Markdown reports and canonical JSON calculations. Rendered each DOCX and native PDF and visually inspected all sixteen pages (four pages per format per case): no clipping, overlap or orphaned mandate/source pairs observed. LibreOffice independently recalculated all forty calculation cells within relative 1e-12 and absolute 1e-9 tolerance. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior remains a lesson instruction plus separate archive regressions, not a witnessed learner test. No PIV conformity or purpose activation is attested. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
+  "course_sha256": "da92868dbda18ac31a377c9cea24bf9667be5e4043ef9a5df5575f02bbbbd432",
+  "reviewer": "Codex /root: course, receipt-bound lifecycle, arithmetic and artifact review",
+  "reviewed_at": "2026-10-01T07:53:39.156413+00:00",
+  "review_scope": "Expanded the existing Italian DCF course rather than creating a duplicate framework. Read all five fictional notes and the complete rendered lesson; checked source-preview/download links visually in Chrome. Native test executions cover demo/practice, missing terminal and recovery. A four-run same-engagement regression imports exact receipts, prepares and starts the real workflow, generates honest no-model disclosures for its code-only fixtures, seals every output, then lists and reopens the first run without recalculation and verifies unchanged artifact hashes. Independently checked textbook arithmetic and LibreOffice recalculation of all 60 calculation cells across complete cases; missing case has no numeric method output. Inspected all 16 native PDF pages and 17 DOCX-rendered pages. Reports remain partial or blocked with no accepted conclusion. Human comprehension, paired voice, fresh enabled installation and professional/PIV acceptance are unverified.",
   "languages": {
     "it": {
       "verdict": "accepted",
       "editorial": {
-        "purpose_and_first_use": "The lesson explains mandate, sources, hypotheses, a DCF FCFF and the equity bridge before changing a rate. It labels all inputs as fictional and workpapers as requiring review.",
-        "inputs_and_request": "One readable note supplies 100000 EUR annual and terminal FCFF, a 10% rate, zero growth, 300000 debt and 50000 excess cash. The prompt asks for a confirmation table before execution; it does not require the learner to author JSON or approve a precomputed result.",
-        "execution_and_checkpoints": "The native runner used exact imported source receipts and a business-valuation context for both cases. Checkpoints ask the learner to identify assumptions and follow a bridge amount to its source. Test confirmations are synthetic fixtures, not evidence of user approval.",
-        "deliverable_and_next_action": "Both inspected reports distinguish operating value and equity, preserve terminal share and source hashes, and identify unavailable mandate fields. The updated lesson points to the Incarico worksheet and explains that arithmetic does not complete an engagement letter. No mandate or conclusion approval is invented.",
-        "practice_and_repeat": "The separate practice note changes both rates to 12% while retaining all other assumptions. The result changes as expected; the lesson directs a separate revision and explains review invalidation. Ordinary tests also verify dependency-bound review and immutable/idempotent exports.",
-        "language_and_pacing": "The complete guide and source notes are Italian, matching the fixed Italian output renderer. Six stages total 390 seconds; processing and questions may extend this. No claim about actual live teaching duration or comprehension."
+        "purpose_and_first_use": "A practical Italian accountant course covers Studio Archive engagement selection, immutable receipt import, semantic method choice, assumptions, real execution, review and saved-run reopening.",
+        "inputs_and_request": "The ordinary note supplies fictional annual and terminal FCFF 100000, rate 10%, growth zero, debt 300000 and excess cash 50000. Practice changes both rates to 12%. The standalone missing-evidence note omits terminal flow and explicitly prevents inheriting another run. The recovery note supplies it as new evidence. The manual checkpoint sheet is explicitly excluded from economic evidence.",
+        "execution_and_checkpoints": "Five fresh native regressions include the two release-gated demo/practice identities, blocked terminal, recovered result and a four-run same-engagement lifecycle. Independent manual checkpoints expose PV flow, terminal, PV terminal, enterprise/equity and terminal share. Fixture confirmations do not attest learner/professional approval.",
+        "deliverable_and_next_action": "Real outputs include editable formula XLSX, HTML, DOCX, PDF and registers. The guide identifies actual Sintesi, Dati, Calcoli, Fonti and Incarico sheets, source lineage, report limitations and run-level model-data reporting. Manual Excel changes must not overwrite sealed output; a new run updates canonical workpapers.",
+        "practice_and_repeat": "Preserve the base run, import rate-change note for a separate run, use only missing-evidence note for the blocked attempt, import terminal recovery note for a fourth run, then reopen original artifact hashes. The same-engagement regression proves archive mechanics; no witnessed fresh-chat learner acceptance is claimed.",
+        "language_and_pacing": "Italian only, matching existing renderer contract. The course keeps the standard six-stage introduction and explicitly allows 25–35 minutes plus processing for the full workbook, both exercises and reopening; no measured learner duration claimed."
       },
       "demo": {
         "test_case": "tests.plugins.test_business_valuation::test_valuation_teaching_sources_run_the_bound_workflow[demo]",
-        "result_review": "Operating value 1000000.000000000000000000000000000000000 EUR and equity 750000.000000000000000000000000000000000 EUR. The report remains incomplete because the fictional note does not provide the complete engagement or an explicit standards selection. The numerical method is review-pending; no conclusion or PIV/purpose acceptance is recorded. Sources and changed-rate lineage are retained. All four DOCX and four native PDF pages were inspected, and all twenty workbook calculation cells independently agree with LibreOffice. Statement balance, movement and continuity records remain explicitly unavailable.",
+        "result_review": "Enterprise 1000000 / equity 750000 EUR. Real native output, partial mandate, method awaiting professional review, no conclusion, no profile enabled for professional use. Workbook cells match independent calculations; all four DOCX/native PDF pages reviewed.",
         "reviewed_artifacts": [
           {
             "name": "valuation.json",
-            "sha256": "edac743067c083f7bc4b41e80894a7471b1105f022258e28df7874d86d872ca3"
+            "sha256": "df9d2a09663da04b2be6431e5551b444ba54577515cee0d56f1ca146f9e9c9c8"
           },
           {
-            "name": "valuation_report.docx",
-            "sha256": "cee1877421b66b506d884bab4c4f8c825d513f87b32bbce0d5db683f993c5626"
+            "name": "valuation_report.html",
+            "sha256": "2329bd7643def6f087c7869b1fb0ee498a47d05f3c8d578214346341de64107a"
           },
           {
             "name": "valuation_report.md",
-            "sha256": "8a7da48ea8cbca8b6e65fce1c62d48c369b8c50a457455001ea51391a12951ee"
-          },
-          {
-            "name": "valuation_report.pdf",
-            "sha256": "8f9bf08cf593c75824acfc93d55fb64edf93a8c396b9fe452a8f54c2a485499f"
+            "sha256": "f9cbad7c03ac15df2cf23e4b094d53257865f7616199a62e55b76c7e60998c93"
           },
           {
             "name": "valuation_workbook.xlsx",
-            "sha256": "893a97ce74afe5f8b09e3dad926ad9f816e59cedf7a4c54bea63d0d6eaac866c"
+            "sha256": "fe6f48eb45a20ec28d3a85e5e7d1b51996eb081068ce66d334ffade6d3ed6829"
+          },
+          {
+            "name": "valuation_report.docx",
+            "sha256": "7d69a4e1f93cbfb406d499be0978dbe8de0e71d6fb3b6a1e30ded8584c436402"
+          },
+          {
+            "name": "valuation_report.pdf",
+            "sha256": "143b1ddaea1712d9b01d6770e869dba3786453fd22f1359573e0e2214cf2fef6"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -200,27 +204,31 @@
       },
       "practice": {
         "test_case": "tests.plugins.test_business_valuation::test_valuation_teaching_sources_run_the_bound_workflow[practice]",
-        "result_review": "Operating value 833333.3333333333333333333333333333333333 EUR and equity 583333.3333333333333333333333333333333333 EUR. The report remains incomplete because the fictional note does not provide the complete engagement or an explicit standards selection. The numerical method is review-pending; no conclusion or PIV/purpose acceptance is recorded. Sources and changed-rate lineage are retained. All four DOCX and four native PDF pages were inspected, and all twenty workbook calculation cells independently agree with LibreOffice. Statement balance, movement and continuity records remain explicitly unavailable.",
+        "result_review": "Enterprise 833333.333333 / equity 583333.333333 EUR. Real native output, partial mandate, method awaiting professional review, no conclusion, no profile enabled for professional use. Workbook cells match independent calculations; all four DOCX/native PDF pages reviewed.",
         "reviewed_artifacts": [
           {
             "name": "valuation.json",
-            "sha256": "3ac44e1a7a1e83f054b47566992735840aae088d715fa4e3942a03229616e368"
+            "sha256": "77a295b6eab9cd4d681ccb42bb0374292f710cfd13a399245405b2db92e7adeb"
           },
           {
-            "name": "valuation_report.docx",
-            "sha256": "dba20d6dd163ac4a1144851b30643f0aea9988d44401853888ec87dfe05c9981"
+            "name": "valuation_report.html",
+            "sha256": "9c09c3e65c1582a524a89312c9882055d7c8e3228abe0e57d59322ebfeb10b3f"
           },
           {
             "name": "valuation_report.md",
-            "sha256": "6fa6a6dea6f4d758b6e53c19fa95ebc07042a601361db628158915ce70426d70"
-          },
-          {
-            "name": "valuation_report.pdf",
-            "sha256": "2a3f0f07ca15fab2f091d275b954bb9a230a5baa30a94bab068e4132d95227e6"
+            "sha256": "3319972c3067e11ba7431025c20fc75d511561ad78f0e0ea3eb5c0c5bb212da9"
           },
           {
             "name": "valuation_workbook.xlsx",
-            "sha256": "cf0fe41d9fa60f423b32b1be1ded8c4a9a75692b63561f4da8e1c42cd19c3b5b"
+            "sha256": "e7f6724e929c962a795221da2d656db608e400726d83856f1d25011609ac1b55"
+          },
+          {
+            "name": "valuation_report.docx",
+            "sha256": "b8ded0a1d5e273b31ca7fbe5a8657db552531f06c5c532d0e716e22a90fb0491"
+          },
+          {
+            "name": "valuation_report.pdf",
+            "sha256": "fa8bdbc44e93617d29f5d972fd0526f9e36101fe241c2f44270c93296b3f0116"
           }
         ],
         "prior_reviewed_artifacts": [
@@ -498,6 +506,394 @@
           }
         ]
       }
+    },
+    {
+      "reviewed_at": "2026-09-30T07:10:05.839673+00:00",
+      "course_sha256": "bc2d4eb3b334c0ecfecfba93e96de84332caa6abe2c804e8f0037c11fa4c2a54",
+      "review_scope": "Read the entire Italian lesson and both fictional source notes. Ran separate receipt-bound native demo and practice using this exact course source inventory; inspected the Markdown reports and canonical JSON calculations. Rendered each DOCX and native PDF and visually inspected all sixteen pages (four pages per format per case): no clipping, overlap or orphaned mandate/source pairs observed. LibreOffice independently recalculated all forty calculation cells within relative 1e-12 and absolute 1e-9 tolerance. Native voice, learner understanding, current installed-plugin delivery and professional acceptance remain unverified. The two teaching regressions use separate synthetic bound runs; same-engagement revision behavior remains a lesson instruction plus separate archive regressions, not a witnessed learner test. No PIV conformity or purpose activation is attested. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
+      "languages": {
+        "it": {
+          "verdict": "accepted",
+          "editorial": {
+            "purpose_and_first_use": "A practical Italian accountant course covers Studio Archive engagement selection, immutable receipt import, semantic method choice, assumptions, real execution, review and saved-run reopening.",
+            "inputs_and_request": "The ordinary note supplies fictional annual and terminal FCFF 100000, rate 10%, growth zero, debt 300000 and excess cash 50000. Practice changes both rates to 12%. The standalone missing-evidence note omits terminal flow and explicitly prevents inheriting another run. The recovery note supplies it as new evidence. The manual checkpoint sheet is explicitly excluded from economic evidence.",
+            "execution_and_checkpoints": "Five fresh native regressions include the two release-gated demo/practice identities, blocked terminal, recovered result and a four-run same-engagement lifecycle. Independent manual checkpoints expose PV flow, terminal, PV terminal, enterprise/equity and terminal share. Fixture confirmations do not attest learner/professional approval.",
+            "deliverable_and_next_action": "Real outputs include editable formula XLSX, HTML, DOCX, PDF and registers. The guide identifies actual Sintesi, Dati, Calcoli, Fonti and Incarico sheets, source lineage, report limitations and run-level model-data reporting. Manual Excel changes must not overwrite sealed output; a new run updates canonical workpapers.",
+            "practice_and_repeat": "Preserve the base run, import rate-change note for a separate run, use only missing-evidence note for the blocked attempt, import terminal recovery note for a fourth run, then reopen original artifact hashes. The same-engagement regression proves archive mechanics; no witnessed fresh-chat learner acceptance is claimed.",
+            "language_and_pacing": "Italian only, matching existing renderer contract. The course keeps the standard six-stage introduction and explicitly allows 25–35 minutes plus processing for the full workbook, both exercises and reopening; no measured learner duration claimed."
+          },
+          "demo": {
+            "test_case": "tests.plugins.test_business_valuation::test_valuation_teaching_sources_run_the_bound_workflow[demo]",
+            "result_review": "Enterprise 1000000 / equity 750000 EUR. Real native output, partial mandate, method awaiting professional review, no conclusion, no profile enabled for professional use. Workbook cells match independent calculations; all four DOCX/native PDF pages reviewed.",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation.json",
+                "sha256": "df9d2a09663da04b2be6431e5551b444ba54577515cee0d56f1ca146f9e9c9c8"
+              },
+              {
+                "name": "valuation_report.html",
+                "sha256": "2329bd7643def6f087c7869b1fb0ee498a47d05f3c8d578214346341de64107a"
+              },
+              {
+                "name": "valuation_report.md",
+                "sha256": "f9cbad7c03ac15df2cf23e4b094d53257865f7616199a62e55b76c7e60998c93"
+              },
+              {
+                "name": "valuation_workbook.xlsx",
+                "sha256": "fe6f48eb45a20ec28d3a85e5e7d1b51996eb081068ce66d334ffade6d3ed6829"
+              },
+              {
+                "name": "valuation_report.docx",
+                "sha256": "7d69a4e1f93cbfb406d499be0978dbe8de0e71d6fb3b6a1e30ded8584c436402"
+              },
+              {
+                "name": "valuation_report.pdf",
+                "sha256": "143b1ddaea1712d9b01d6770e869dba3786453fd22f1359573e0e2214cf2fef6"
+              }
+            ],
+            "prior_reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "ac0631b40caa651d9bb336ddd74ae7e6f818ea2ed71e305f95a2fb6878e33478"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "9da2c8fdee8f47acbd9bb167efc001685709b19ab00dacb5da7ee0f3475b71a8"
+              },
+              {
+                "reviewed_at": "2026-09-29T22:15:33.243210+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "bd81933d45aefc8762103d3a3310359f6bc3bcf7983a4a28fb6ecdadc93ab4db"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "99f1c734c9ce1adf4e42764bf06a19c365e39f3667621a59169acbbc643121d0"
+                  }
+                ]
+              }
+            ],
+            "review_history": [
+              {
+                "reviewed_at": "2026-09-29T18:16:00.914541+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "de6a71f284f3d273dd13ee55653576faef7b3f8f755ae8bd07eb36bdef2f321a"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "60492aeafad6e50bca50b6059190522372e4deb021e5ec836dfe0690e159d939"
+                  }
+                ]
+              },
+              {
+                "reviewed_at": "2026-09-29T18:42:03.899149+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "b62f2574c2080e4f1c4c25702a0efd93562d402a4acad3667c4de209cc36296d"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "6e4f8b8d6d1971e1aa2308ad8a5bf7a69fdacc0df74f10188a2c2dc941b2dbf0"
+                  }
+                ]
+              },
+              {
+                "reviewed_at": "2026-09-29T18:56:11.711307+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "5831545b2ee50fab11ba5da9d367a1c6eb0e00abd4d960d46504256ab9f397c6"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "0c4954be6a5d49a73bc9677fa34f31bd4b05ccbffbe60a7f04a1ae89dbb8fe5d"
+                  }
+                ]
+              },
+              {
+                "reviewed_at": "2026-09-29T19:15:08.903348+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "4c3bce5282b3b526497d2842e3748f7b55c8e541eaf9d1f46e31de69824e33c9"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "17bf642e139b54463c4e04902837ce8dbc19adc8663d41afcb7a89f2863251ac"
+                  }
+                ]
+              },
+              {
+                "reviewed_at": "2026-09-29T19:29:57.892588+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "ac0631b40caa651d9bb336ddd74ae7e6f818ea2ed71e305f95a2fb6878e33478"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "9da2c8fdee8f47acbd9bb167efc001685709b19ab00dacb5da7ee0f3475b71a8"
+                  }
+                ]
+              },
+              {
+                "reviewed_at": "2026-09-29T19:59:46.447104+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "205782ab51e2caef992b684b450ca1b38f970788e195c21fde98ef60be0ab258"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "0316cc5c243d6b23c74a1b36d7a308b711598d1e9549a6703b45f517d73bd02a"
+                  }
+                ]
+              },
+              {
+                "reviewed_at": "2026-09-29T20:40:10.735452+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "4bdefd31a7f71d9cc6a680d149537cb9faae518e30936189b25e17856da645e2"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "a43a47f2309472a0ae1831396a627dae73c69e2bb86e26ff6d82cc793fae5d64"
+                  }
+                ]
+              },
+              {
+                "reviewed_at": "2026-09-29T21:03:18.112278+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "8972a1267a81a666c077109a210fafa362fe284301a5d5d69eb0b67d2376bd8b"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "5d8b6a9ccfcafe6d5af3d76119bda90af10fbdbf1eee71bca249891c71bf2d4f"
+                  }
+                ]
+              },
+              {
+                "reviewed_at": "2026-09-29T21:30:30.700945+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "758cc7eddca1d62108aaf686bf5a34427e32888a3b0488ad752f552a98aa3111"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "2d6302a04600ad61a372a4ba4ee2d58bdab38a9d02d0d404ad8ee4958c77e296"
+                  }
+                ]
+              },
+              {
+                "reviewed_at": "2026-09-29T21:56:11.634342+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "3a7f7cd9b3e015c2a4a54135f8fd79024fd0700ce63caaf4be16f68c11b5a6e9"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "b6837cc1f087195b05a3ca186e7a8162f00654022e9b07d225823e29a063a8dd"
+                  }
+                ]
+              }
+            ]
+          },
+          "practice": {
+            "test_case": "tests.plugins.test_business_valuation::test_valuation_teaching_sources_run_the_bound_workflow[practice]",
+            "result_review": "Enterprise 833333.333333 / equity 583333.333333 EUR. Real native output, partial mandate, method awaiting professional review, no conclusion, no profile enabled for professional use. Workbook cells match independent calculations; all four DOCX/native PDF pages reviewed.",
+            "reviewed_artifacts": [
+              {
+                "name": "valuation.json",
+                "sha256": "77a295b6eab9cd4d681ccb42bb0374292f710cfd13a399245405b2db92e7adeb"
+              },
+              {
+                "name": "valuation_report.html",
+                "sha256": "9c09c3e65c1582a524a89312c9882055d7c8e3228abe0e57d59322ebfeb10b3f"
+              },
+              {
+                "name": "valuation_report.md",
+                "sha256": "3319972c3067e11ba7431025c20fc75d511561ad78f0e0ea3eb5c0c5bb212da9"
+              },
+              {
+                "name": "valuation_workbook.xlsx",
+                "sha256": "e7f6724e929c962a795221da2d656db608e400726d83856f1d25011609ac1b55"
+              },
+              {
+                "name": "valuation_report.docx",
+                "sha256": "b8ded0a1d5e273b31ca7fbe5a8657db552531f06c5c532d0e716e22a90fb0491"
+              },
+              {
+                "name": "valuation_report.pdf",
+                "sha256": "fa8bdbc44e93617d29f5d972fd0526f9e36101fe241c2f44270c93296b3f0116"
+              }
+            ],
+            "prior_reviewed_artifacts": [
+              {
+                "name": "valuation_report.md",
+                "sha256": "e2c2eff888423b1621125f39abf120c370a845d3b1778b1eb16d40412f3e2753"
+              },
+              {
+                "name": "valuation.json",
+                "sha256": "7a8546ead0468247ac1f1a64f1041871e80490887a3a2f0e78a359210a38a895"
+              },
+              {
+                "reviewed_at": "2026-09-29T22:15:33.243210+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "9d8272c31eb92bd0541b1aa4802e7565c9aaf6f935a93bed709784e509132473"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "50697ea1b359ecf0f6d04f39d1edb1bb1a6deb9ed2da5a2ee80c139db3c87407"
+                  }
+                ]
+              }
+            ],
+            "review_history": [
+              {
+                "reviewed_at": "2026-09-29T18:16:00.914541+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "5689d7888a47fb7c89c7a4e7bc460d67fabf7efe6c04e050a341f1f4e9a1069e"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "2a7590f22a1bc21dd2898c375b3aebab3edf0e543c25356fd9c56eea23c1fbb6"
+                  }
+                ]
+              },
+              {
+                "reviewed_at": "2026-09-29T18:42:03.899149+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "74a501c8e6ddb426ea900fdee8282f732372bb051ad466e91ed58dc840571ee9"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "7337a0ad02762ad2880db23180ee468756ce15515ba161a21bf21cece611e82d"
+                  }
+                ]
+              },
+              {
+                "reviewed_at": "2026-09-29T18:56:11.711307+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "9a3c783dae646cc88d189fe4a063ad06c5cdf16f59440a9fa2036788e4338290"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "7001f1e9b1e0ce8f9d8e231a4b87630ee1a7a98dd28d47b101c02dd35b46dc21"
+                  }
+                ]
+              },
+              {
+                "reviewed_at": "2026-09-29T19:15:08.903348+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "5d9b0491a59e3251fc2005dcaf6a4daa7595aca1dc67ca83816f595e4b895fcc"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "1f7e0bb19eac79a738d3d834ca1c69ddc13ec51285a7f25cbea2f445a0018dce"
+                  }
+                ]
+              },
+              {
+                "reviewed_at": "2026-09-29T19:29:57.892588+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "e2c2eff888423b1621125f39abf120c370a845d3b1778b1eb16d40412f3e2753"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "7a8546ead0468247ac1f1a64f1041871e80490887a3a2f0e78a359210a38a895"
+                  }
+                ]
+              },
+              {
+                "reviewed_at": "2026-09-29T19:59:46.447104+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "d5a6dc59eccc7f858d19642e43bbc5baf27620fbc5211724fecfb7251c3c217c"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "715dca4e34a54054920e026dc5d0f83f3734abe9d2841a570e95e3a1755706ed"
+                  }
+                ]
+              },
+              {
+                "reviewed_at": "2026-09-29T20:40:10.735452+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "443b6f4c674cd5147b807fe1dcd4105c358b8177f47c82eb4cda4ddb70d8099b"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "84bad7a3243bfadff979c3670b448df36594ea179583a7f4922ff69ba2bf0791"
+                  }
+                ]
+              },
+              {
+                "reviewed_at": "2026-09-29T21:03:18.112278+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "7d2d70534bddea93c31e85afe0edfd093a49f48a329dbe73fa649eb10d18ba2a"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "1ffd8e525dd2c51f3e92c316d34d2b1e078a8d5f047aa2f16e503d5b5596d794"
+                  }
+                ]
+              },
+              {
+                "reviewed_at": "2026-09-29T21:30:30.700945+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "8e7f42e0f84741a1817e4a09eef5cc9d29d01ee283d60ec1c5895abebd6502f8"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "174f2ef25cc03d22225b046d67889083928a22e747d14ebc0b04fce5a4ae19bb"
+                  }
+                ]
+              },
+              {
+                "reviewed_at": "2026-09-29T21:56:11.634342+00:00",
+                "reviewed_artifacts": [
+                  {
+                    "name": "valuation_report.md",
+                    "sha256": "4a162bc45f53704dffec8c338bb259039849c2a24cb02ecf59e539a92bd53a74"
+                  },
+                  {
+                    "name": "valuation.json",
+                    "sha256": "823a432e57e43224e2fbdfeb3c79b4351f9076f7b29a601b82a19cc18eb85c29"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
     }
   ],
   "scissione_integration_refresh_20260930": {
@@ -507,5 +903,77 @@
       "plugins/_shared/vendor/modules/vera_assurance/contracts.py"
     ],
     "review": "Every authored lesson field and input record matches current main. The sole shared source change adds scissione-guidata to the supported workflow IDs; existing workflow behavior is unchanged. Original reviewers, dates, judgments and output hashes are preserved. Fresh native teaching executions are required in CI; no new professional or learner acceptance is claimed."
+  },
+  "course_expansion_20261001": {
+    "same_engagement_test": "tests.plugins.test_business_valuation::test_valuation_teaching_four_runs_reopen_sealed_artifacts_in_one_engagement",
+    "missing_test": "tests.plugins.test_business_valuation::test_valuation_teaching_missing_terminal_requires_new_evidence[missing]",
+    "recovery_test": "tests.plugins.test_business_valuation::test_valuation_teaching_missing_terminal_requires_new_evidence[recovery]",
+    "observed_states": [
+      "partial",
+      "partial",
+      "blocked",
+      "partial"
+    ],
+    "recovery_equity": "750000",
+    "artifacts": {
+      "missing": [
+        {
+          "name": "valuation.json",
+          "sha256": "83cd4cc021b0ebda6b377a69c90bb75225420e046074f4339bf98bdca147afd1"
+        },
+        {
+          "name": "valuation_report.md",
+          "sha256": "e46553a3fad35cb6fd7e5d1ad6671dd0dc5fed5eb50457bc6acf95fe09b2bd2c"
+        },
+        {
+          "name": "valuation_report.docx",
+          "sha256": "1c970065d95cd71397c60197890abac1190760d199d2b431820dfa44302c2f5e"
+        },
+        {
+          "name": "valuation_report.pdf",
+          "sha256": "7a6d6398ee164f72d79f422c54c8a98900cea365bdfb26dec624dbfd70cb9dad"
+        },
+        {
+          "name": "valuation_workbook.xlsx",
+          "sha256": "131b8abd25fb44ee4ef950ff1115c5c0655d11e65c471978c5fa2b455dd23933"
+        }
+      ],
+      "recovery": [
+        {
+          "name": "valuation.json",
+          "sha256": "9194b1245307bb6cbdee35a3f505e06379c39c1a4543468520ef2dcc1658d979"
+        },
+        {
+          "name": "valuation_report.md",
+          "sha256": "289a17a0c9628a31a16fea843a7a70785a75e4b9bda5ed3214bd420b4fb05d87"
+        },
+        {
+          "name": "valuation_report.docx",
+          "sha256": "bb37730cd16683799f3730461eefc8fe3168408e73f3cbd112400b6853c2dc08"
+        },
+        {
+          "name": "valuation_report.pdf",
+          "sha256": "888ed07cd9315cecf7935986d9c21fe9ba44cd65a4fe283f52bcafe5c05dcbc9"
+        },
+        {
+          "name": "valuation_workbook.xlsx",
+          "sha256": "3895d2f7c05bf7a4c3ac4ca442e00096948eac5d6cf172b5146d72a950f9bc64"
+        }
+      ]
+    },
+    "privacy": "No new workflow destination or API. The fictional notes and outputs may enter selected host model context during reading/modeling/review. Test fixtures execute no model call; their no-model disclosure does not establish a real lesson transmission boundary.",
+    "packaged_checks": {
+      "hosts": [
+        "Codex ZIP",
+        "Cowork ZIP"
+      ],
+      "runs": [
+        "demo",
+        "practice",
+        "missing",
+        "recovery"
+      ],
+      "result": "Fresh extracted packages ran native calculations and rendered the Italian course; independent expected equity values matched; missing terminal blocked; all conclusions remained null. This is extracted-package verification, not fresh installed-host or learner acceptance."
+    }
   }
 }

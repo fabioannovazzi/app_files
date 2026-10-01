@@ -210,7 +210,7 @@
     },
     "business-valuation": {
       "path": "business-valuation/course.json",
-      "sha256": "bc2d4eb3b334c0ecfecfba93e96de84332caa6abe2c804e8f0037c11fa4c2a54",
+      "sha256": "da92868dbda18ac31a377c9cea24bf9667be5e4043ef9a5df5575f02bbbbd432",
       "languages": [
         "it"
       ],
@@ -218,10 +218,10 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Preparare carte di lavoro per una valutazione d’impresa"
+        "it": "Valutazione PMI: dal fascicolo alle carte di lavoro DCF"
       },
       "goals": {
-        "it": "Imparare a fornire incarico, fonti e ipotesi, distinguere valore operativo e capitale proprio e rivedere un risultato quando cambia il tasso."
+        "it": "Aprire un incarico in Studio Archive, tracciare le fonti, riprodurre un DCF, rivedere Excel e report, cambiare il tasso e recuperare il lavoro salvato."
       }
     },
     "centrale-rischi-review": {
