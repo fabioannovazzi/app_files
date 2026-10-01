@@ -180,7 +180,7 @@
     {
       "path": "modules/browser-automation/scripts/econs_review.mjs",
       "repository_path": "plugins/browser-automation/scripts/econs_review.mjs",
-      "sha256": "2379066d4373b8cd4943869ef05a217e95f78f69d67772827aab0ccbd704962e"
+      "sha256": "e52f40404a353a9140b89d88bce0067cf0eb7a558e062e3ba7bfb52a234eb451"
     },
     {
       "path": "modules/browser-automation/scripts/econs_setup.mjs",

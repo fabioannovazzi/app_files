@@ -307,7 +307,7 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
           stopCompany ||= consecutiveRed > 2;
           if (stopCompany) {
             entry.status = "set_aside";
-            entry.outcome = stopCompany ? "Ditta sospesa dopo oltre due rossi consecutivi." : "Fattura rossa esclusa dalla registrazione secondo la classificazione del modello.";
+            entry.outcome = "Ditta sospesa dopo oltre due rossi consecutivi.";
             entry.question = "Rivedere la fattura e riprendere il cliente dopo aver risolto le eccezioni.";
             await save();
             continue;
