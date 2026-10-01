@@ -84,7 +84,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "0c04c1b826b023fe49f7b795d91784b35466225ae798220ad24497165986954b"
+      "sha256": "11dc73670ea89a996a9623edd7773fa295f655a8bff06b6f40c04a21fb22a3c5"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/references/geneva.md",
@@ -132,7 +132,7 @@
     },
     {
       "path": "skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "57f313baa7357fcdc4951d943807dc7bc47c7defb4dd0ab73a30c9a23f5dd402"
+      "sha256": "00d413a11e632fde2f7eda33aa3c3b1f2c77a7a76a261224f75544ee9541bc1f"
     },
     {
       "path": "vendor/modules/__init__.py",

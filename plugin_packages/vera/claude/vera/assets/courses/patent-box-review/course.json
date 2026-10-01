@@ -273,7 +273,7 @@
     },
     {
       "path": "modules/patent-box-review/skills/patent-box-review/SKILL.md",
-      "sha256": "d6fb11568e1b416d6a7af9201ae92be75c1efeefaf8e122817e0282392b7a6b0"
+      "sha256": "af5135e9a03f57adbfe510a550540fba8ff4ad7fea8bac8d57ec5acbf648e8ed"
     },
     {
       "path": "modules/patent-box-review/templates/declaration_bridge.csv",
@@ -337,7 +337,7 @@
     },
     {
       "path": "skills/patent-box-review/SKILL.md",
-      "sha256": "6fe82aa449fb6928dc768b76591b59c7ae4a5bd7e8e425ccde0d45bd5a38ec03"
+      "sha256": "faa114ff9f63a26cd80dff2d1db6a4cb153171aebc0361def8bdfc6d5a2e05fc"
     },
     {
       "path": "vendor/modules/__init__.py",

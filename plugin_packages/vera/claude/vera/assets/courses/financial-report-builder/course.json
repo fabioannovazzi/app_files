@@ -117,7 +117,7 @@
     },
     {
       "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
-      "sha256": "5200713f96bb19536a151aebf03f24eda553b52720ea9afb95e457b16ad46d53"
+      "sha256": "2c9ee3054d735bb4c5b928de69a58cd707969ff8bd5b1967bf2379771dd2af4a"
     },
     {
       "path": "modules/report-builder/vendor/modules/__init__.py",
@@ -161,7 +161,7 @@
     },
     {
       "path": "skills/financial-report-builder/SKILL.md",
-      "sha256": "434569fd134b580c483a99ac95342869e6d00914b90ceac1c3655d68aec94a86"
+      "sha256": "d8ef1598eeadfcbd8a7fe335b86f7804df9b1bf074799b037ef81e1eecdbbd84"
     },
     {
       "path": "vendor/modules/__init__.py",

@@ -88,7 +88,7 @@
     },
     {
       "path": "modules/treasury-forecast/skills/treasury-forecast/SKILL.md",
-      "sha256": "88d9470bc713051a9c96cfbce0c89e00e795ced3f5fe9fa427cff700f798218f"
+      "sha256": "531404f0176ec9da15c71842d0a651a112277b4a15e13bb59dd0f95d0d60fd61"
     },
     {
       "path": "modules/treasury-forecast/skills/treasury-forecast/references/geneva.md",
@@ -136,7 +136,7 @@
     },
     {
       "path": "skills/treasury-forecast/SKILL.md",
-      "sha256": "1ad71898d97df1ea2c6fdf99f17866530ca6224a7d729100a8f0c57becd27c1f"
+      "sha256": "3722545dedcfc92109b72c2fc0b48a91a2d3df46f074e0aabdb547a0bf6eacc7"
     },
     {
       "path": "vendor/modules/__init__.py",
