@@ -4,7 +4,7 @@
   "courses": {
     "adeguati-assetti": {
       "path": "adeguati-assetti/course.json",
-      "sha256": "f41c5cb3cb64c77da40a183dd3ddd3dee268a1673ba431ca7924de1248860ee3",
+      "sha256": "525b9cb491566738ad8a6227e9be6ccf969195de364a2b7deb1d50f78659b99b",
       "languages": [
         "it",
         "en",
@@ -16,18 +16,18 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Valutare gli assetti aziendali con Vera",
-        "en": "Assess company arrangements with Vera",
-        "fr": "Évaluer l’organisation de l’entreprise avec Vera",
-        "de": "Unternehmensorganisation mit Vera beurteilen",
-        "es": "Evaluar la organización de la empresa con Vera"
+        "it": "Valutare e costruire gli assetti con Vera",
+        "en": "Assess and construct company arrangements with Vera",
+        "fr": "Évaluer et construire les dispositifs de l’entreprise avec Vera",
+        "de": "Unternehmensstrukturen mit Vera beurteilen und aufbauen",
+        "es": "Evaluar y construir la organización empresarial con Vera"
       },
       "goals": {
-        "it": "Imparare a richiedere una valutazione degli assetti, fornire evidenze del loro funzionamento e utilizzare rilievi e azioni proposte.",
-        "en": "Learn to request an assessment of company arrangements, supply evidence of their operation and use findings and proposed actions.",
-        "fr": "Apprendre à demander une évaluation des dispositifs de l’entreprise, fournir des preuves de fonctionnement et utiliser constats et actions proposées.",
-        "de": "Lernen, eine Beurteilung betrieblicher Vorkehrungen anzufordern, Nachweise ihrer Anwendung zu liefern und Feststellungen sowie Maßnahmenvorschläge zu nutzen.",
-        "es": "Aprender a solicitar una evaluación de los mecanismos empresariales, aportar pruebas de funcionamiento y utilizar hallazgos y acciones propuestas."
+        "it": "Dalla valutazione alle procedure: raccogliere risposte, progettare un controllo proporzionato, rivedere il manuale e verificare separatamente adozione e funzionamento.",
+        "en": "Move from assessment to procedures: collect answers, design a proportionate control, review the manual and check adoption and operation separately.",
+        "fr": "Passer de l’évaluation aux procédures : recueillir les réponses, concevoir un contrôle proportionné, revoir le manuel et vérifier séparément adoption et fonctionnement.",
+        "de": "Von der Beurteilung zu Verfahren: Antworten erfassen, eine angemessene Kontrolle entwerfen, das Handbuch prüfen sowie Einführung und Betrieb getrennt bewerten.",
+        "es": "Pasar de evaluación a procedimientos: recoger respuestas, diseñar un control proporcionado, revisar el manual y comprobar adopción y funcionamiento por separado."
       }
     },
     "aml-review": {
