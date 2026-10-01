@@ -1,0 +1,21 @@
+# Discovery and construction — wholly fictional case
+
+## 1. Listen and resume
+Elena, 31 March: “When Sara is absent Paolo collects invoices, but I do not know whether he can open the due-date register.” Sara: “I sent February documents on 10 March; I have no proof of the promised collection.” No substitute is appointed; the requested budget is missing. This does not prove that no budget exists.
+Ask for an example, one contextual question at a time. Preserve words, speaker and date, with a separate summary; never invent learner answers. Use the offline HTML form with C02/C09 questions; mark collection and the attachment to verify. Export Markdown before closing: no automatic browser persistence. Import the original into Studio Archive and the same practice; check identity, revision and ancestry. Show the cursor and resume.
+
+## 2. Qualify without certifying
+Bind February records to period, author, limits and C09; substitution concerns C02. Other criteria stay unknown, not zero. After explicit qualification review, BASE-1 maps unknown/absence/partial/designed/operating/monitored to null/0/1/2/3/4. Reported and verified differ; N/A requires reason and review. Material contradictions leave the base unverified.
+A professional override may differ anywhere on 0–4; preserve reason, alternative, residual risk, action impact and review trigger. Show a proposal, not an approved score. Record only the professional’s actual instruction; a declared name is no authenticated signature. Show base, choice, target and coverage without UNI certification or an automatic adequacy verdict.
+
+## 3. Design a proportionate control
+Trace source → late-delivery risk/finding → close control → action. Propose Sara prepares, Elena decides, substitute to agree; collect documents, check completeness, send to the accountant, receive the report, review and respond to exceptions. Specify inputs, output/recipient, frequency, proposed timing, exceptions, archive and retained evidence. One control for twelve staff without unjustified bureaucracy. Register: period, dispatch date, preparer/substitute, report received, review date, anomaly, decision, closure evidence. A document alone cannot close the operating action.
+
+## 4. Deliver and decide
+Compile a manual version; open Word, PDF, Markdown and editable empty CSV. Compare the procedure and hash manifest; visually inspect pages and tables. Fixed headings remain Italian. Draft, professional review and company adoption are distinct; never create them merely to finish a lesson. Adoption needs a competent person, explicit decision, exact version, effective date, reservations and proof. Manual production does not alter evidence scores.
+
+## 5. Observe and change
+Record a cycle with exact control/manual version, period, performer, recipient, anomalies, decision and evidence. Every execution here is simulation. Review the sample and every action: retain design_only and process limits, without real effectiveness. In a real mandate distinguish operating_supported, operating_not_supported and limited from written design. New answers/evidence stale dependent qualifications and decisions; changing a control makes the old manual need review. Preserve originals, create a new draft and obtain new review/adoption where required.
+
+## What data reaches the model
+The offline form embeds practice data and keeps answers in memory, without network, audio, telemetry or localStorage. It exports only on explicit action. Returning Markdown lets conversation, originals, evidence, decisions, manuals, registers, KPIs and selected financial artifacts enter the chosen account’s model context. No automatic anonymization or local-inference guarantee. Public research uses generic topics without client identifiers. No business connector or external send is built in. Teaching profile/progress remain local.
