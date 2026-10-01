@@ -89,7 +89,7 @@
     },
     {
       "path": "modules/management-control-pack/skills/management-control-pack/SKILL.md",
-      "sha256": "eb50ed6752fc8d437f1d3c3d7630c4c8c454a3f94e88702d1a6c6277117b3464"
+      "sha256": "03618cdf09c1e17f03c5d23112337a4ef66b389081280c9ea4ad28d78cb90c77"
     },
     {
       "path": "modules/management-control-pack/skills/management-control-pack/references/sites-delivery.md",
@@ -141,7 +141,7 @@
     },
     {
       "path": "skills/management-control-pack/SKILL.md",
-      "sha256": "ea40e29c7964f4ddd84f3f2e9daa45553067bd4279048c56036ebabc900b4eb1"
+      "sha256": "08747722b75014e3179ee852f7fe110577d7e6ed46e43355b2136ea74a89db28"
     },
     {
       "path": "vendor/modules/__init__.py",

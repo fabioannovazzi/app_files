@@ -84,7 +84,7 @@
     },
     {
       "path": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
-      "sha256": "e94202693e0b1475c68bc2356b99266099a6cd53ae3460663643f376b81d8fe6"
+      "sha256": "740d024da66054a03622c2fc337ae5da0ae3740544a11069345817ad4fec45de"
     },
     {
       "path": "modules/journal-sampling/skills/journal-sampling/references/geneva.md",
@@ -132,7 +132,7 @@
     },
     {
       "path": "skills/journal-sampling/SKILL.md",
-      "sha256": "4b296c0613de514ef2d60de09d68ad5a3c0cd56fea68a4eb48d5f4391efb8141"
+      "sha256": "b6b5f6d792bbb9810f780826c9043b22b668e93523518debd44571f1afbdebf4"
     },
     {
       "path": "vendor/modules/__init__.py",

@@ -83,18 +83,17 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
   selection for every territory and category, and explicit temporal scans of
   institutional sources before complementary semantic web search; match them to
   opaque client profiles and prepare a traceable application dossier after
-  selection, without contacting clients, authenticating, signing, or filing.
+  selection, without contacting clients, authenticating or signing. After project
+  approval and a request to compile, prepare the approved portal draft using
+  available host browser tools. Submit only after explicit approval of the exact
+  final application under the workflow's portal-preparation contract;
+  declarations, signatures and payment remain with the user.
 - `avviso-intake`: prepare first-intake analysis for Italian notices, avvisi,
   cartelle, HMRC letters, or Swiss cantonal tax letters.
 - `bilancio-oic`: understand accounting evidence and prepare, update,
   reconcile, review, validate, or export an individual Italian OIC civil-law
   annual financial statement; XBRL is an output, not the workflow identity.
-- `browser-automation`: teach, develop, test or repair an exact professional browser
-  process, keeping demonstrations, attempts and CRs linked across conversations.
-  Ordinary work uses a separately installed named operation skill, with its own
-  scope, inputs, result checks and adjacent process binding. Do not use the local
-  development catalog as the ordinary-use menu. No matching released skill means
-  the operation is unavailable; do not improvise a substitute.
+- `browser-automation`: inspect, explain or edit a supplied sanitized developer pack or capability JSON, and run packaged local evidence/capability pipelines through the managed Python launcher. Live browser discovery, execution and replay validation are unavailable in this package. Do not operate authenticated websites or claim that local pipeline checks prove live validation.
 - `vouching`: compare a qualified Journal Sampling population with
   FatturaPA XML or supporting PDFs using exact evidence bindings.
 - `concordato-plan-review`: review an Italian concordato preventivo across the
@@ -145,8 +144,10 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
   being tested.
 - `purchase-invoice-review`: screen passive FatturaPA XML populations against
   actual booked ledger movements, apply deterministic arithmetic and matching
-  checks, then use native Claude GPT-5.6 Luna on compact matched-invoice packets
-  to produce an exception-focused professional workpaper.
+  checks, then use the workflow's configured native semantic worker on compact
+  matched-invoice packets to produce an exception-focused professional workpaper.
+  Read the selected skill for the host's worker and qualification requirements;
+  a screening result is not professional approval or an audit opinion.
 - `journal-sampling`: qualify and normalize journal entries and generate
   reproducible audit samples with diagnostics.
 - `new-client`: prepare a source-bound client setup covering files, identity,
@@ -172,6 +173,12 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
   reviewable Markdown, DOCX, or JSON reports.
 - `sales-plan`: create a forward-looking sales Plan from reviewed Actuals and
   confirmed commercial or FX assumptions.
+- `treasury-forecast`: prepare and maintain a dated cash forecast from the documented
+  bank, outstanding-item, planned-flow, allocation and adjustment tables. Review
+  expected dates, preserve applicable decisions, compare successive accepted
+  forecasts and produce Excel/HTML workpapers. Required missing data stops this
+  workflow; optional supplied XML is invoice evidence, not payment proof. No
+  business-planning dependency or automatic Agenzia download.
 - `business-valuation`: prepare source-backed PMI valuation workpapers using selected
   DCF, income, NAV, mixed, multiples and APV methods; reuse the same-engagement
   business plan, retain calculations and review decisions, and export reports
@@ -274,14 +281,11 @@ identity, allowed status, order and localization; it never chooses the status
 or validates the professional reason. Keep `/data-handling` global rather than
 recreating a central function register.
 
-- `treasury-forecast`: prepare and maintain a dated cash forecast from the documented bank, outstanding-item, planned-flow, allocation and adjustment tables. Review expected dates, preserve applicable decisions, compare successive accepted forecasts and produce Excel/HTML workpapers. Required missing data stops this workflow; optional supplied XML is invoice evidence, not payment proof. No business-planning dependency or automatic Agenzia download.
-
 ## Scissione: initial operational path
 
 For a versioned scissione dossier, read `../../scissione-guidata/SKILL.md`.
 prepare a versioned dossier and ownership/allocation schedules for an Italian OIC partial proportional scission into a new beneficiary. Require authorized entity evidence and exact-version professional decisions; preserve unknowns, separate book/tax/economic/shareholder tax values and reopen dependent approvals after changes. No automatic legal rules, accounting entries, statutory deadlines, signatures or filings. Other routes are explicitly unsupported.
 This operational path has synthetic acceptance tests but no prepared voice lesson
 yet. Do not present another lesson as a scissione execution.
-
 
 - `learn-with-vera`: learn an installed function in writing using prepared files, actual execution and practice in one conversation.

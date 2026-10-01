@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/sales-plan/skills/sales-plan/SKILL.md",
-      "sha256": "5b4706af345ac47647dae77b53221ef391b103367bf170139a18488d6b22ad4a"
+      "sha256": "9b33e97145ad0359ef13d9294dd9c8e10ec6c8051c9af7e7bf1d736e72f1add6"
     },
     {
       "path": "modules/sales-plan/vendor/modules/__init__.py",
@@ -101,7 +101,7 @@
     },
     {
       "path": "skills/sales-plan/SKILL.md",
-      "sha256": "a7f8a4f0dcab70f2c4b661642e7cb2a94ff81f898ee8965a6397b0c5ff456bbf"
+      "sha256": "8f121d41ee28085b1dad4e6c280f5ccb99b955fd6200ee1f3ba920031684a47e"
     },
     {
       "path": "vendor/modules/__init__.py",

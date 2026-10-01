@@ -206,7 +206,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
-      "sha256": "19e770971fc5d7dfb18e022b40243519bb828546461e40dcc13ff65444442c82"
+      "sha256": "c7bc8703a96df6ea0e319b7303aea529045092df2e0cea5e4bedb3a8eca11fd3"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/agents/openai.yaml",
@@ -258,7 +258,7 @@
     },
     {
       "path": "skills/bilancio-oic/SKILL.md",
-      "sha256": "e23fae6ab2ab9c2c700ca2507f1f7be441e2df9bb386523ad618b9bc979c5b62"
+      "sha256": "410459f1f01539713e566fb450bcccfa68da898bb26f3c6dc6199bebc41fd152"
     },
     {
       "path": "vendor/modules/__init__.py",

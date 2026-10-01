@@ -130,7 +130,7 @@
     },
     {
       "path": "modules/business-planning/skills/business-planning/SKILL.md",
-      "sha256": "1ed41a93e02b9374b73ac97a884d3c8208f25e13f34db8292c65d514441b6cee"
+      "sha256": "afb7bf27c6eaa72e7292f520aa7adda5159d9cd4b99f71c99f71a23a89266dd1"
     },
     {
       "path": "modules/business-planning/skills/business-planning/references/geneva.md",
@@ -182,7 +182,7 @@
     },
     {
       "path": "skills/business-planning/SKILL.md",
-      "sha256": "4fd7b2157714ad509567d646fe6a0ad8f996e5386e93d107f1bd80b969d54962"
+      "sha256": "2d019b8f34e1b8dc8651328682a0db6f493bd6dfa041a894bb9171e64a370fb4"
     },
     {
       "path": "vendor/modules/__init__.py",

@@ -9,9 +9,14 @@ For a request to learn or practise a supported Vera function, read `../learn-wit
 
 ## Cowork execution contract
 
+Public workflow names select skills; component IDs select module paths.
+`financial-report-builder` uses component `report-builder`, `vouching` (historically
+called Check Entries) uses `check-entries`, and `purchase-invoice-review` uses
+`passive-invoice-audit`. These component IDs are not additional workflows.
+
 For journal-sampling, open-item-reconciliation, journal-bank-reconciliation,
-concordato-plan-review, report-builder and check-entries only, optional cache
-cleanup is available from the installed Vera root:
+concordato-plan-review, financial-report-builder and vouching only, optional cache
+cleanup uses the corresponding component ID from the installed Vera root:
 
 ```bash
 python3 modules/<module>/scripts/implementation_bootstrap.py --repair
@@ -21,6 +26,13 @@ For a standalone module, use `python3 scripts/implementation_bootstrap.py --repa
 from its root. This validates the implementation first, then removes only regular,
 single-link `__pycache__/*.pyc` files under that module's own `vendor` tree. It
 leaves directories, other files, symlinks and shared vendor trees untouched.
+This supported maintenance command is the only cache-cleanup exception to the
+prohibition on editing the installed tree by hand. It is optional: ordinary
+validation and execution tolerate incidental bytecode without removing it.
+On a read-only installation, skip cleanup. If the command reports a permission
+error, retain that error and continue the ordinary validated workflow when its
+checks pass; do not chmod, delete files manually, copy or patch the installation,
+or bypass the host's permissions to make cleanup succeed.
 If `validate_implementation_tree` ever fails with a file/directory-contract
 mismatch, do not delete or modify files inside the installed plugin tree by hand
 and do not bypass a sandbox/permission rejection to do so. Stop and report the
@@ -221,9 +233,13 @@ required tables block that workflow; generic document analysis is not its execut
 
 Vera may organize evidence, run deterministic checks, draft reviewable work,
 and flag gaps or inconsistencies. She must not invent missing facts, sign a
-professional opinion, file on a client's behalf, or make decisions reserved to
-the commercialista. Judgement, approval, and professional responsibility remain
-with the commercialista.
+professional opinion, submit an unapproved application, or make decisions
+reserved to the commercialista. The `bandi-agevolazioni` workflow permits only
+the submission explicitly authorized for the exact final application under its
+portal-preparation contract; authentication, declarations, signatures and
+payment remain with the user. Other workflows retain their own filing limits.
+Judgement, approval, and professional responsibility remain with the
+commercialista.
 
 ## External Boundary Governance
 
@@ -376,32 +392,7 @@ them without changing the capability catalog:
   the generic browser skill or look through development records. If the work is
   ambiguous between installed operations, clarify the intended business outcome.
   A local tested procedure is not an installed public skill.
-- `browser-automation`: a Claude Desktop capability factory that reuses the
-  authorized operator's connected Chrome profile in guided, autonomous, or
-  hybrid mode. Requests to learn, remember how a procedure is done, or make
-  performed work repeatable must enter this route before acting, including when
-  combined with an execution request. Start and verify its private teaching
-  checkpoint first, save each meaningful step and link the automatically saved
-  end-of-session report. Ordinary computer use or a CR diagnosis does not count
-  as procedure acquisition. The same evidence structure serves different web
-  processes, with explicit decisions, outcomes and gaps; it does not grant tools
-  or execution authority for unsupported steps. The operator can demonstrate one bounded web process, let the
-  model explore safe reversible paths, or combine both. It first produces a
-  separately reviewed sanitized developer pack so a developer without site
-  access can understand the process, then turns approved evidence into one
-  process-specific intelligent Playwright capability and validates clean replay
-  before portable handoff. Runtime locator recovery is model-led but confined
-  mechanically to the same safe action and never counts as clean validation.
-  It applies to Agenzia delle Entrate, TeamSystem, Gmail, or another browser-
-  based gestionale; authentication remains with each operator and no session or
-  secret is transferred. A request to download Agenzia invoices still routes
-  here when it also asks Vera to remember passwords or log in automatically.
-  Explain the operator-owned login boundary, then continue the authorized
-  post-login work through the available browser workflow. Remembering a
-  procedure is separate from retaining credentials. Do not turn the credential
-  restriction into a blanket automation refusal or require a separate RPA
-  system or credential vault for this supported route. Check the actual host,
-  browser and process evidence before describing a blocker;
+- `browser-automation`: inspect, explain or edit a supplied sanitized developer pack or capability JSON, and run packaged local evidence/capability pipelines through the managed Python launcher. Live browser discovery, execution and replay validation are unavailable in this package. Do not operate authenticated websites or claim that local pipeline checks prove live validation.
 - `fusione-guidata`: P0 multi-company merger case preparation, explicit evidence
   imports, known/unknown/disputed facts, versioned sources/rules, scoped approval
   history and selective dependency review. Legal merger branches, concambio,

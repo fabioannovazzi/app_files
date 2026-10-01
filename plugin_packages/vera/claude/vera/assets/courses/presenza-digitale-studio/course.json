@@ -105,7 +105,7 @@
     },
     {
       "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/SKILL.md",
-      "sha256": "ebcac618e54662d0c68d516321fdc2a19bd4fbfb77130a54af3d161ec948018b"
+      "sha256": "7e8ba97ab0f1081da2ea203e192a4c5eb091200c74709ad31181127f34d5dc15"
     },
     {
       "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/agents/openai.yaml",
@@ -133,7 +133,7 @@
     },
     {
       "path": "skills/presenza-digitale-studio/SKILL.md",
-      "sha256": "7f95011c11e64b7ec82b315ce2201a653dfc674193c201a577ef79bc14f5fe35"
+      "sha256": "5fbf6dddfd1f3b4adabe22a9162cb660349b00a6732b9124a86e7a38406c89bc"
     },
     {
       "path": "vendor/modules/__init__.py",

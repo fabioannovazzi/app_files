@@ -77,7 +77,7 @@
     },
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md",
-      "sha256": "d7666205cc67deacd734baa1db45da896edf89c87525cdcfeeadd56a59d6c6ca"
+      "sha256": "d2144ced97a7a2838858c84e5feb8ed6a0a96712b8ea986c862f7dd49ae0a2fe"
     },
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/adversarial-scope.md",
@@ -133,7 +133,7 @@
     },
     {
       "path": "skills/quesito-legale-fiscale/SKILL.md",
-      "sha256": "546a696534d5b3846d4cdafe711fbf26bbde14f5e1334136a87050db883077a5"
+      "sha256": "eb8187df3ba678650fe48257a59855ea7148854e3e1f96e4335950ba75690eaa"
     },
     {
       "path": "vendor/modules/__init__.py",
