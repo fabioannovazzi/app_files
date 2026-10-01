@@ -34,7 +34,7 @@
     },
     "journalSamplingWidgets": {
       "title": "Journal Sampling",
-      "description": "Validate and render Journal Sampling review-session payloads.",
+      "description": "Review an already prepared accounting journal sample (campione di scritture): validate its review payload, inspect diagnostics and persist reviewed decisions. Source qualification and sample extraction use the journal-sampling workflow.",
       "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
       "cwd": ".",
       "command": "node",
@@ -42,7 +42,7 @@
     },
     "checkEntriesWidgets": {
       "title": "Check Entries",
-      "description": "Validate and render Check Entries review-session payloads.",
+      "description": "Review document checks for an already qualified journal sample against invoices and supporting PDFs (verifica documentale): inspect coverage, exceptions and missing evidence, then persist reviewed decisions. Not a whole-population invoice audit.",
       "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
       "cwd": ".",
       "command": "node",
@@ -50,7 +50,7 @@
     },
     "journalBankWidgets": {
       "title": "Journal-Bank Reconciliation",
-      "description": "Validate and render Journal-Bank Reconciliation review-session payloads.",
+      "description": "Review an already prepared bank-to-journal reconciliation (estratti conto versus prima nota): inspect matched movements, unmatched rows and residuals, then persist decisions. Intake and matching use the journal-bank-reconciliation workflow.",
       "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
       "cwd": ".",
       "command": "node",

@@ -1,6 +1,6 @@
 ---
 name: journal-bank-reconciliation
-description: Use when reconciling bank statements with journal or ledger exports, mapping customer formats, matching exact amounts, dates, and references, and producing reviewable outputs.
+description: Use to reconcile estratti conto bancari with prima nota, giornale contabile or mastrini from reviewed CSV/XLSX or consistently labelled text-PDF tables. Produces matched movements, unmatched rows, residuals and reviewable workpapers. For checking a supplied elenco partite aperte at a cut-off use open-item-reconciliation. OCR-only bank statements are unsupported.
 ---
 
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
