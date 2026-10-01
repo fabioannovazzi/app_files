@@ -79,3 +79,20 @@ a pre-approved current legal rule pack. A real case requires current applicable
 primary sources, evidenced facts and actual exact-version professional review.
 Native voice/window behavior, installed-host acceptance, deployment and exact
 Marketplace Published status require separate verification.
+
+## Pending release checks
+
+The initial remote CI exposed a stale privacy fingerprint in Clara's learning
+record because its governed paths include the shared authoring corpus and public
+catalogue. Vera's six shared-service fingerprints also need review refresh after
+the main skill/catalogue and candidate manifest changes. Source review found no
+new external recipient or route; the refresh and affected package rebuilds remain
+pending explicit owner authorization. No review timestamp or fingerprint has been
+changed to bypass that gate. A newer parallel Vera candidate 0.1.302 appeared
+while this PR was prepared, so this candidate must advance to 0.1.303 before
+release; the submitted snapshot still declares 0.1.300.
+
+The website inventory test also used the entire interval from Learning to
+Professional workflows as a learning exclusion. That interval now contains the
+registered merger bullet. The test is corrected to the actual learning section,
+ending at DATEV installation trial; the existing public merger entry is preserved.
