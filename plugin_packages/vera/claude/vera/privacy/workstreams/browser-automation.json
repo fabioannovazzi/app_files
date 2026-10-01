@@ -89,7 +89,7 @@
       {
         "id": "econs-mapping-and-registration-review",
         "purpose": "Review and execute the authorized client-specific ECONS mapping and registration procedure",
-        "content": "Full authorized invoice identities and lines, existing account and VAT mappings, exact client-specific pro rata basis, displayed journal amounts and accounting review reasons, posting approval, registration protocol, complete Non contab. verification population and per-client outcome reports. These values may enter the current Codex model context. They stay outside sanitized developer packs and public packages; no second model API is used. Red invoices are read within the consecutive-red bound so the model can review the taught exception against complete observed lines; an eligible model decision still requires the exact two-concordant-association and VAT checks before mapping. The current model separately reviews whether every invoice description is complete before the journal opens; its invoice-bound reason and evidence hash are saved locally. Displayed journal values are saved before journal review, including when that review is interrupted. Contabilizza and final Conferma reg. remain separate stages; a click alone does not establish a completed posting.",
+        "content": "Full authorized invoice identities and lines, existing account and VAT mappings, exact client-specific pro rata basis, displayed journal amounts and accounting review reasons, posting approval, registration protocol, complete Non contab. verification population and per-client outcome reports. These values may enter the current Codex model context. They stay outside sanitized developer packs and public packages; no second model API is used. Red invoices are read within the consecutive-red bound so the model can review the taught exception against complete observed lines; an eligible model decision still requires the exact two-concordant-association and VAT checks before mapping. The current model separately reviews whether every invoice description is complete before the journal opens; its invoice-bound reason and evidence hash are saved locally. Displayed journal values are saved before journal review, including when that review is interrupted. Contabilizza and final Conferma reg. remain separate stages; a click alone does not establish a completed posting. Invoice indicator classification now uses exact reviewed DOM status bindings in code, not a model colour decision. Private queue records retain each raw status, matched state and reason, while the invoice report retains the status reread after posting approval. Unknown or changed values stop writes. The model may read these records for the authorized review or diagnosis.",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -105,7 +105,7 @@
       {
         "id": "econs-new-conversation-local-setup",
         "purpose": "Recover installed professional instructions and saved or partial screen bindings in a new conversation without retrieving old chats",
-        "content": "The host Node helper reads only Vera's known user-local ECONS setup directory. It saves private, hash-bound acquisition and processing profiles, allowed origins and inspected selectors, a studio label, exclusion codes, incomplete setup notes and a prior local run path. The model can read those selected local records and the shipped procedure. It does not scan chats, Downloads, browser profile storage or the rest of the disk, and performs no network calls, package installation or browser actions. Immutable revisions preserve earlier setup; a read-only run retains learned processing bindings. No invoice rows are copied into this setup store, and credentials, cookies, session URLs and reusable approval are prohibited. Prior run references lead only to local reports under the existing invoice-data boundary; saved setup never grants authority for a new posting. The store is excluded from developer packs, remote feedback and public packages.",
+        "content": "The host Node helper reads only Vera's known user-local ECONS setup directory. It saves private, hash-bound acquisition and processing profiles, allowed origins and inspected selectors, a studio label, exclusion codes, incomplete setup notes and a prior local run path. The model can read those selected local records and the shipped procedure. It does not scan chats, Downloads, browser profile storage or the rest of the disk, and performs no network calls, package installation or browser actions. Immutable revisions preserve earlier setup; a read-only run retains learned processing bindings. No invoice rows are copied into this setup store, and credentials, cookies, session URLs and reusable approval are prohibited. Prior run references lead only to local reports under the existing invoice-data boundary; saved setup never grants authority for a new posting. The store is excluded from developer packs, remote feedback and public packages. A diagnostic helper follows only the saved prior-run path and reads executor invocation/mode, code hashes, owning manifest/version and acquisition results. Invocation alone does not prove completion; missing records remain unverified. These private records add no external transmission.",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -243,9 +243,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-15",
+    "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5cb8ae501e5577e60360fcca1bc66c4e908161d1ef5f3cef90b3674b3040ef14"
+    "source_fingerprint": "4034612e4416dc5f8f966629315f1870360944d53acfcb2642284d38f20f066d"
   }
 }

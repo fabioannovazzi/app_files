@@ -12,8 +12,14 @@ function need(value, code) { if (!value) throw new EconsProcessingError(code); }
 const actions = (phase) => phase.milestones.flatMap((milestone) => milestone.actions);
 
 export function validateEconsProcessingProfile(profile) {
-  need(profile?.schema_version === 'econs-processing-profile/v1' && text(profile.complete_status) && text(profile.non_posted_view) &&
+  need(profile?.schema_version === 'econs-processing-profile/v2' && text(profile.complete_status) && text(profile.non_posted_view) &&
     Object.keys(profile.phases ?? {}).length === PHASES.length && PHASES.every((name) => profile.phases[name]), 'invalid_processing_profile');
+  need(Array.isArray(profile.status_bindings) && profile.status_bindings.length > 0 &&
+    profile.status_bindings.every((binding) => text(binding.value) && binding.value === binding.value.trim() &&
+      ['red', 'green', 'orange'].includes(binding.state) && text(binding.evidence)) &&
+    new Set(profile.status_bindings.map((binding) => binding.value)).size === profile.status_bindings.length,
+    'reviewed_status_bindings_required');
+  need(classifyEconsStatus(profile, profile.complete_status).state === 'green', 'complete_status_must_be_bound_green');
   let origins;
   for (const name of PHASES) {
     const phase = profile.phases[name];
@@ -47,6 +53,14 @@ export function validateEconsProcessingProfile(profile) {
   const posting = actions(profile.phases.post).filter((action) => action.effect === 'consequential');
   need(posting.length === 1 && posting[0].id === 'confirm-registration' && posting[0].operation === 'click' &&
     posting[0].confirmation === 'action_time', 'posting_requires_exact_confirmation');
+}
+
+/** Exact observed DOM values are mechanically verifiable; unknown values never authorize writes. */
+export function classifyEconsStatus(profile, value) {
+  const binding = profile.status_bindings.find((item) => item.value === value);
+  return { raw_status: value, state: binding?.state ?? 'unknown',
+    reason_code: binding ? 'matched_reviewed_status_binding' : 'unbound_invoice_status',
+    binding_evidence: binding?.evidence ?? null };
 }
 
 /** Strict Italian money parsing avoids guessing whether a dot is a decimal. */
@@ -111,7 +125,7 @@ export function verifyEconsJournal(journal, invoice, detail, plan, review) {
  * An exception after posting is unverified and is never automatically retried.
  */
 export async function processEconsInvoice({ tab, profile, invoice, detail, entry, readDetail,
-  phaseDirectory, save, reviewInvoice, reviewJournal, approvePosting, environment = {} }) {
+  phaseDirectory, save, reviewRedException, reviewInvoice, reviewJournal, approvePosting, environment = {} }) {
   validateEconsProcessingProfile(profile);
   let dispatched = false;
   let phaseIndex = 0;
@@ -131,6 +145,13 @@ export async function processEconsInvoice({ tab, profile, invoice, detail, entry
     const current = await readDetail();
     identity(current.invoice, invoice);
     need(canonicalJson(current) === canonicalJson(detail), 'invoice_changed_since_acquisition');
+    const status = classifyEconsStatus(profile, current.invoice.status);
+    need(status.state !== 'unknown', 'unbound_invoice_status');
+    if (status.state === 'red') {
+      const decision = await reviewRedException(structuredClone({ invoice, detail: current }));
+      if (text(decision?.reason)) entry.evidence.push({ label: 'Eccezione alla fattura rossa', value: decision.reason, source: 'Revisione del modello sulle righe complete' });
+      need(decision?.eligible === true && text(decision.reason) && hasEconsMappingException(current), 'red_mapping_exception_not_verified');
+    }
     const plan = planEconsMapping(current);
     // Non-empty text cannot establish that a description is complete. The host
     // model reviews the observed full values; code binds that review to this
@@ -173,6 +194,10 @@ export async function processEconsInvoice({ tab, profile, invoice, detail, entry
     await save();
     // Bind host approval to the exact current journal; callbacks cannot mutate it.
     need(await approvePosting(structuredClone({ invoice, journal, journal_sha256: sha256Text(canonicalJson(journal)), action: 'confirm-registration' })) === true, 'posting_not_approved');
+    const beforePosting = await readDetail();
+    entry.evidence.push({ label: 'Stato ECONS prima della registrazione', value: beforePosting.invoice?.status || 'Non disponibile', source: 'Rilettura Playwright dopo approvazione, prima di Conferma reg.' });
+    await save();
+    need(canonicalJson(beforePosting) === canonicalJson(detail), 'invoice_changed_before_posting');
     const currentJournal = (await phase('journal', values)).journal;
     need(canonicalJson(currentJournal) === canonicalJson(journal), 'journal_changed_after_approval');
     entry.status = 'unverified'; entry.question = 'Controllare protocollo e lista Non contab. della stessa ditta prima di qualsiasi nuovo tentativo.';

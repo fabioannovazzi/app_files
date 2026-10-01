@@ -5,14 +5,14 @@
  * never changes a mapping or posts.
  */
 import { execFile } from "node:child_process";
-import { mkdir, realpath, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, realpath, stat, writeFile } from "node:fs/promises";
 import { dirname, isAbsolute, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 
 import { canonicalJson, executeCapability, sha256Text } from "./capability_runtime.mjs";
 
-import { hasEconsMappingException, processEconsInvoice, validateEconsProcessingProfile } from "./econs_processing.mjs";
+import { classifyEconsStatus, processEconsInvoice, validateEconsProcessingProfile } from "./econs_processing.mjs";
 import { defaultEconsSetupDirectory, saveEconsSetup } from "./econs_setup.mjs";
 
 const runFile = promisify(execFile);
@@ -135,6 +135,18 @@ function reviewEntry(company, item, id) {
 export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
   runDirectory, pythonExecutable, maxCompanies = 50, maxInvoices = 200, invoiceSelection = null,
   environment = {}, processing = null, setupDirectory = defaultEconsSetupDirectory(), setupId = null }) {
+  requireCondition(typeof runDirectory === "string" && isAbsolute(runDirectory), "absolute_private_directory_required");
+  const directory = await privateDirectory(runDirectory);
+  const executionPath = join(directory, "execution.json");
+  // Persist invocation before validation: absence is never proof that this executor ran.
+  const moduleHashes = Object.fromEntries(await Promise.all(
+    ["econs_review.mjs", "econs_processing.mjs", "capability_runtime.mjs"].map(async (name) =>
+      [name, sha256Text(await readFile(join(scripts, name), "utf8"))])));
+  await writePrivate(executionPath, { schema_version: "econs-execution/v1", executor: "collectEconsReview",
+    mechanical_driver: "playwright", status_classifier: processing ? "exact_reviewed_dom_binding" : null,
+    mode: processing ? "processing" : "read_only", started_at: new Date().toISOString(),
+    module_root: dirname(scripts), module_sha256: moduleHashes,
+    completion_evidence: "acquisition.json", installation_evidence: "installation.json" });
   profile = structuredClone(profile);
   validateEconsProfile(profile);
   if (processing) {
@@ -142,7 +154,7 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
     validateEconsProcessingProfile(processing.profile);
     requireCondition(canonicalJson([...processing.profile.phases.post.site.allowed_origins].sort()) ===
       canonicalJson([...profile.phases.detail.site.allowed_origins].sort()), "processing_acquisition_origins_must_match");
-    requireCondition([processing.classifyInvoices, processing.reviewRedException, processing.reviewInvoice, processing.reviewJournal, processing.approvePosting].every((callback) => typeof callback === "function"), "model_review_callbacks_required");
+    requireCondition([processing.reviewRedException, processing.reviewInvoice, processing.reviewJournal, processing.approvePosting].every((callback) => typeof callback === "function"), "model_review_callbacks_required");
   }
   requireCondition(Array.isArray(excludedCompanyCodes) && excludedCompanyCodes.every((code) => typeof code === "string" && code.trim()), "explicit_exclusion_list_required");
   excludedCompanyCodes = [...excludedCompanyCodes];
@@ -161,8 +173,6 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
       Object.values(invoiceSelection).reduce((count, ids) => count + ids.length, 0) <= maxInvoices,
       "selection_exceeds_batch_limits");
   }
-  requireCondition(typeof runDirectory === "string" && isAbsolute(runDirectory), "absolute_private_directory_required");
-  const directory = await privateDirectory(runDirectory);
   let revision = 0;
   let phaseNumber = 0;
   let acquired = 0;
@@ -185,7 +195,8 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
   }
   async function python(script, args) {
     // Fixed local scripts and argv; no shell, package installation or external API.
-    await runFile(pythonExecutable, [join(scripts, script), ...args], { maxBuffer: 1024 * 1024 });
+    const result = await runFile(pythonExecutable, [join(scripts, script), ...args], { maxBuffer: 1024 * 1024 });
+    return result.stdout;
   }
   async function save() {
     const input = join(directory, `review-input-${revision + 1}.json`);
@@ -220,7 +231,8 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
   await writePrivate(join(directory, "selection.json"), { excluded_company_codes: excludedCompanyCodes,
     max_companies: maxCompanies, max_invoices: maxInvoices, invoice_selection: invoiceSelection });
   // Validate every phase before the first browser operation, not halfway through.
-  await python("check_installation.py", []);
+  const installation = JSON.parse(await python("check_installation.py", []));
+  await writePrivate(join(directory, "installation.json"), installation);
   await python("check_dependencies.py", []);
   for (const name of PHASES) {
     const path = join(directory, `${name}.capability.json`);
@@ -266,20 +278,31 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
       companyReviews.set(company["company-code"], { id: `client-${sha256Text(company["company-code"]).slice(0, 24)}`,
         ids: new Set(pending.map(({ entry }) => entry.id)), count: invoices.length, revision: 0 });
       await save();
-      let redIds = new Set();
+      const statusDecisions = new Map();
       if (processing) {
-        const decision = await processing.classifyInvoices(structuredClone({ company, invoices }));
-        requireCondition(decision?.company_code === company["company-code"] && typeof decision.reason === "string" && decision.reason.trim() &&
-          Array.isArray(decision.red_invoice_ids) && new Set(decision.red_invoice_ids).size === decision.red_invoice_ids.length &&
-          decision.red_invoice_ids.every((id) => invoices.some((item) => item["invoice-id"] === id)), "explicit_model_queue_classification_required");
-        redIds = new Set(decision.red_invoice_ids);
-        await writePrivate(join(directory, `queue-${sha256Text(company["company-code"]).slice(0, 24)}.json`), decision);
+        for (const invoice of invoices) statusDecisions.set(invoice["invoice-id"], classifyEconsStatus(processing.profile, invoice.status));
+        await writePrivate(join(directory, `queue-${sha256Text(company["company-code"]).slice(0, 24)}.json`), {
+          schema_version: "econs-status-decisions/v1", company_code: company["company-code"],
+          classifier: "exact_reviewed_dom_binding", processing_profile_sha256: sha256Text(canonicalJson(processing.profile)),
+          invoices: invoices.map((invoice) => ({ invoice_id: invoice["invoice-id"], ...statusDecisions.get(invoice["invoice-id"]) })),
+        });
       }
       let consecutiveRed = 0;
       let stopCompany = false;
       for (const { invoice, entry } of pending) {
-        const red = processing && redIds.has(invoice["invoice-id"]);
+        const status = statusDecisions.get(invoice["invoice-id"]);
+        const red = status?.state === "red";
         if (processing) {
+          entry.evidence.push({ label: "Controllo deterministico dello stato", value: `${status.raw_status || 'Non disponibile'} → ${status.state} · ${status.reason_code}`,
+            source: `Playwright e binding locale verificato · ${executionPath}` });
+          if (status.state === "unknown") {
+            consecutiveRed = 0;
+            entry.status = "set_aside";
+            entry.outcome = "Stato ECONS non riconosciuto: nessuna mappatura o registrazione eseguita.";
+            entry.question = "Verificare il valore DOM del pallino e aggiornare il binding locale sulla schermata osservata.";
+            await save();
+            continue;
+          }
           consecutiveRed = red ? consecutiveRed + 1 : 0;
           stopCompany ||= consecutiveRed > 2;
           if (stopCompany) {
@@ -312,29 +335,13 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
         }
         acquired += 1;
         await save();
-        if (red) {
-          // The model interprets the exception from complete observed lines.
-          // The taught two-anchor condition is then checked by exact values.
-          const decision = await processing.reviewRedException(structuredClone({ company, invoice, detail }));
-          requireCondition(sameKeys(decision, ["eligible", "reason"]) && typeof decision.eligible === "boolean" &&
-            typeof decision.reason === "string" && decision.reason.trim(), "invalid_red_exception_review");
-          entry.evidence.push({ label: "Eccezione alla fattura rossa", value: decision.reason, source: "Revisione del modello sulle righe complete" });
-          const eligible = decision.eligible && hasEconsMappingException(detail);
-          if (!eligible) {
-            entry.status = "set_aside";
-            entry.outcome = "Fattura rossa lasciata da parte: eccezione delle due associazioni concordanti non verificata.";
-            entry.question = "Verificare l'eccezione e le associazioni senza registrare automaticamente il documento.";
-            await save();
-            activeEntry = null;
-            continue;
-          }
-        }
         if (processing) {
           await processEconsInvoice({ tab, profile: processing.profile,
             invoice: { "company-code": company["company-code"], ...invoice }, detail, entry,
             readDetail: () => phase("detail", { "company-code": company["company-code"], "invoice-id": invoice["invoice-id"], "invoice-number": invoice["invoice-number"] }),
             phaseDirectory: async (name) => join(directory, `process-${entry.id}-${name}`),
-            save, reviewInvoice: processing.reviewInvoice, reviewJournal: processing.reviewJournal, approvePosting: processing.approvePosting, environment });
+            save, reviewRedException: (values) => processing.reviewRedException({ company: structuredClone(company), ...values }),
+            reviewInvoice: processing.reviewInvoice, reviewJournal: processing.reviewJournal, approvePosting: processing.approvePosting, environment });
         }
         activeEntry = null;
       }
@@ -352,6 +359,8 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
   const summary = {
     schema_version: "econs-review-acquisition/v1", status: failure ? "partial" : processing ? "processed" : "acquired",
     profile_sha256: sha256Text(canonicalJson(profile)), acquired_invoices: acquired,
+    execution_path: executionPath, installation_path: join(directory, "installation.json"),
+    processing_profile_sha256: processing ? sha256Text(canonicalJson(processing.profile)) : null,
     setup_id: setup.setupId, setup_path: setup.setupPath,
     selection_mode: invoiceSelection ? "explicit_invoices" : "eligible_population",
     pending_review: review.entries.filter((entry) => entry.status === "pending").length,

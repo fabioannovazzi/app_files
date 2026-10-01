@@ -570,7 +570,7 @@ When authorized to process ECONS purchase invoices, read the processing section
 of `references/econs-review.md` in the resolved browser-automation module. Reuse
 the acquisition profile and add the reviewed processing phases. Run
 `collectEconsReview` with its `processing` option. Vera supplies the model-led
-queue classification, red-exception review, complete-invoice review, journal review and posting-approval callbacks in the host
+red-exception review, complete-invoice review, journal review and posting-approval callbacks in the host
 Node session; no separate model API is configured. Preserve the exact client's
 tax treatment and complete report, including green and orange invoices. A
 per-invoice review must confirm and save the full descriptions before opening
