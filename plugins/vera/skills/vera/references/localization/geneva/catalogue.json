@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/app-files-scissione-deploy/plugins/vera",
-  "version": "0.1.316",
-  "captured_at": "2026-10-01T12:03:04.887340+00:00",
-  "catalogue_fingerprint": "8ca9b44901997e86804af3b77f476cd046ab681b105caa7d6b95d5a2e5e69ea5",
-  "manifest_sha256": "191fb4ae353449dbdbdeae35ab617a1dedcdd7a74367923e8213f6cb2b408e37",
+  "version": "0.1.319",
+  "captured_at": "2026-10-01T12:58:13.242444+00:00",
+  "catalogue_fingerprint": "5df7fd823625a66bff4341c690baa11d0f53c6e4389f353456065da0acbe2c6e",
+  "manifest_sha256": "79d6cf71f4d16c66786bf69d0c9226c087f3f47f9a52dc2810843079e0f1c2f3",
   "entries": [
     {
       "function_id": "adeguati-assetti",

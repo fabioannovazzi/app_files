@@ -1085,7 +1085,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "8ca9b44901997e86804af3b77f476cd046ab681b105caa7d6b95d5a2e5e69ea5",
+  "catalogue_fingerprint": "5df7fd823625a66bff4341c690baa11d0f53c6e4389f353456065da0acbe2c6e",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1170,6 +1170,6 @@
     "previous_catalogue_fingerprint": "bf072498ef5fbdaeea8e46e4c0cde6fe4e7161dee4313b9f96200efdc39aaec6",
     "review": "Refreshes only the canonical manifest/version binding. All 46 skill entrypoints are byte-identical to the previous catalogue. Preserves every Geneva disposition and evidence limit. The new five-language course demonstrates an Italian OIC synthetic case; translated lessons do not qualify Swiss applicability or professional acceptance.",
     "integrated_main": "a34681fb7023d6db8e82e720642f29e800d3518a",
-    "source_version": "0.1.316"
+    "source_version": "0.1.319"
   }
 }
