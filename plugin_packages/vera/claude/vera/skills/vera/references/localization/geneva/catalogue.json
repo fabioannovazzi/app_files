@@ -2,8 +2,8 @@
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/app-files-scissione-deploy/plugins/vera",
   "version": "0.1.319",
-  "captured_at": "2026-10-01T12:58:13.242444+00:00",
-  "catalogue_fingerprint": "5df7fd823625a66bff4341c690baa11d0f53c6e4389f353456065da0acbe2c6e",
+  "captured_at": "2026-10-01T17:19:27.233465+00:00",
+  "catalogue_fingerprint": "99d4faa72fe4f9fc3f19964b03ece44fc749105005c51b5fb28419aeec10b880",
   "manifest_sha256": "79d6cf71f4d16c66786bf69d0c9226c087f3f47f9a52dc2810843079e0f1c2f3",
   "entries": [
     {
@@ -134,7 +134,7 @@
     {
       "function_id": "learn-with-vera",
       "skill_path": "skills/learn-with-vera/SKILL.md",
-      "sha256": "8921927e4361244093541ac4b94b2ee1aa1ff5bd0966fbdef7dc1f6b3f2cc4e5"
+      "sha256": "643580dbeb0c8dbdcc5a0ff53b01e60974179d595e96f0599aff20f424a933e7"
     },
     {
       "function_id": "legal-tax-answer-planner",
@@ -214,7 +214,7 @@
     {
       "function_id": "trasformazione",
       "skill_path": "skills/trasformazione/SKILL.md",
-      "sha256": "b36f003f163ca249f5145b6983f17695fb2391318696bd9c258ecf67a19461ca"
+      "sha256": "cea3d8b860ab9745e93afe84baf2be2c4ebb1e3fdf69dbca20f36715f351abc9"
     },
     {
       "function_id": "treasury-forecast",

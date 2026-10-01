@@ -39,8 +39,14 @@ def test_installed_cowork_prepares_every_supported_course_and_language(installed
     result = run(root, "list")
     assert result.returncode == 0, result.stderr
     catalog = json.loads(result.stdout)
-    assert len(catalog) == {"vera": 36, "clara": 7, "lucia": 4}[product]
-    for entry in catalog:
+    assert len(catalog) == {"vera": 37, "clara": 7, "lucia": 4}[product]
+    # Native-only outlines retain their platform limitation; checked separately.
+    written_courses = [
+        entry
+        for entry in catalog
+        if (product, entry["workflow"]) != ("vera", "trasformazione")
+    ]
+    for entry in written_courses:
         workflow = entry["workflow"]
         assert (root / f"skills/{workflow}/SKILL.md").is_file()
         for language in entry["languages"]:
@@ -78,6 +84,42 @@ def test_installed_cowork_prepares_every_supported_course_and_language(installed
             assert (
                 "execution-request.json" not in (destination / "teacher.md").read_text()
             )
+
+
+@pytest.mark.parametrize("installed", ["vera"], indirect=True)
+@pytest.mark.parametrize(
+    "language,unavailability",
+    [
+        ("it", "Cowork non offre questo corso"),
+        ("en", "Cowork has no teaching course"),
+        ("fr", "Cowork ne propose pas ce cours"),
+        ("de", "Cowork bietet diesen Kurs nicht"),
+        ("es", "Cowork no ofrece este curso"),
+    ],
+)
+def test_cowork_native_only_outline_preserves_limit_and_no_execution(
+    installed, language, unavailability
+):
+    """Reading prepared material does not make its native-only course available."""
+    _, root, output = installed
+    destination = output / "native-only" / language
+    result = run(
+        root,
+        "prepare",
+        "trasformazione",
+        "--language",
+        language,
+        "--output-dir",
+        destination,
+    )
+    assert result.returncode == 0, result.stderr
+    receipt = json.loads(result.stdout)
+    guide = (destination / "course.html").read_text()
+    assert unavailability in guide
+    assert "Codex" in guide
+    assert receipt["execution_receipt"] is False
+    assert receipt["understanding_confirmed"] is False
+    assert not (destination / "execution-request.json").exists()
 
 
 def test_cowork_rejects_foreign_missing_or_unsupported_lesson(installed):

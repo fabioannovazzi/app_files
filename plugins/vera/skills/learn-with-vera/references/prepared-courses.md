@@ -629,6 +629,44 @@ ownership evidence can retain theirs. Preserve the demo outputs. Codex uses its
 teacher/worker pair; Cowork uses the packaged written single-conversation lesson.
 Both keep tutorial state local and require actual learner confirmation.
 
+
+## Trasformazione: synthetic preparation only
+
+Use the prepared `trasformazione` kit only after an explicit synthetic lesson
+request. This is preparation for a supervised pilot, never a real mandate.
+Read the installed Vera wrapper and complete module contract. The Italian
+source JSON and native dossier remain Italian in all five conversation locales.
+Explain their fields in the selected language; do not translate schema keys.
+
+After validating the paired worker token, use a fresh private lesson output
+folder for the component's `CaseStore` or CLI, not Studio Archive preparation.
+This workflow has no Studio Archive adapter. Preserve exact input bindings in
+the local execution record, and capture output paths/hashes through the existing
+course execution mechanism. Do not call a hosted adapter or stamping service.
+The generic local model-data report builder remains required; show its readable
+report with the actual phases and selected model-visible files.
+
+Import case, participants and creditors first. Keep valuation withheld until
+the first blocked-capital export. The worker model authors findings, calculations
+and explicit dependencies from these inputs, not from a preapproved recipe.
+Do not use `demo.py` to substitute its internally generated inputs for this kit.
+Capital/vote/profit rights and book/estimated/tax values remain distinct. Missing
+tax basis, sources, receipts and consents stay unknown. Review only the limited
+creditor collection branch; never infer release or opposition from collection.
+Show dossier, proposal digest and blockers before recording the learner's actual
+decision. Automated test reviewers are labelled simulations and never count as
+learner decisions, participation or understanding.
+
+Import valuation-update.json under the original valuation evidence ID. Inspect
+selective staleness before changing numeric inputs: historical arithmetic is not
+a recomputation from changed document text. Correct the calculations and findings,
+resubmit and seek a new decision. Keep all prior exports and chained history.
+Practice starts a separate case using files/practice; preserve the demonstration.
+The 46-scenario matrix is not professional acceptance: only 11 scenarios had
+mechanical subsets tested in the recovered increment; remaining professional
+coverage is pending. This lesson creates no authenticated review, legal/tax
+qualification, statutory filing, real-client acceptance or publication evidence.
+
 ## Patent Box controlled preview
 
 `patent-box-review` supplies fictional ordinary software evidence, a ledger and

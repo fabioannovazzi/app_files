@@ -259,6 +259,7 @@ jobs:
           tests/plugins/test_teaching_clara_budget_execution.py
           tests/plugins/test_teaching_patent_box_execution.py
           tests/plugins/test_teaching_cnc_execution.py
+          tests/plugins/test_teaching_trasformazione_execution.py
           tests/plugins/test_teaching_cnc_practical_execution.py
           tests/plugins/test_teaching_scissione_execution.py
           tests/plugins/test_cnc_integrations.py
@@ -323,8 +324,8 @@ jobs:
           python -m isort --check-only scripts/course_materials/build_presentation_baselines.py tests/plugins/_business_teaching.py tests/plugins/_presentation_teaching.py tests/plugins/test_teaching_presentation_execution.py
           python -m mypy --follow-imports=skip scripts/course_materials/build_presentation_baselines.py
           python -m bandit -q scripts/course_materials/build_presentation_baselines.py
-          python -m black --check scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py tests/plugins/test_teaching_release_review.py
-          python -m isort --check-only scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py tests/plugins/test_teaching_release_review.py
+          python -m black --check scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py tests/plugins/test_teaching_release_review.py tests/plugins/test_teaching_trasformazione_execution.py tests/plugins/test_teaching_execution_evidence.py
+          python -m isort --check-only scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py tests/plugins/test_teaching_release_review.py tests/plugins/test_teaching_trasformazione_execution.py tests/plugins/test_teaching_execution_evidence.py
           python -m mypy --follow-imports=skip scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py
           python -m bandit -q scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py
           python -m black --check scripts/archive_organization_review_widget.py

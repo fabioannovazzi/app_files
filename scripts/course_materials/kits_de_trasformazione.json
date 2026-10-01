@@ -1,0 +1,27 @@
+{
+  "vera/trasformazione": {
+    "title": "Einen synthetischen Umwandlungsfall bearbeiten",
+    "goal": "Ein synthetisches Dossier erstellen und prüfen, Belege verfolgen und Entscheidungen nach geänderten Verbindlichkeiten neu prüfen.",
+    "scenario": "Die erfundene Officina Selce SNC erwägt eine SRL. Zwei Gesellschafter haben unterschiedliche Kapital-, Stimm- und Gewinnrechte. Die Bewertung kommt nach der Gläubigerliste.",
+    "scope": "Italienischer Prototyp mit erfundenen Daten in Codex Desktop und lokalem Work, soweit unterstützt. Cowork bietet diesen Kurs nicht. Das native Dossier bleibt italienisch. Keine rechtliche oder steuerliche Qualifizierung, authentifizierte Unterschrift, Studio-Archive-Integration oder Einreichung.",
+    "inputs": "Öffnen Sie files/input/case.json, participants.json und creditors.json. valuation.json folgt im zweiten Schritt, valuation-update.json bei der letzten Änderung. Null bedeutet unbekannt, nicht null Euro oder Zustimmung; Zahlenzeichenfolgen sind exakt. Keine echten Mandanten.",
+    "request": "Vera, führe mich durch den synthetischen Fall Officina Selce: importiere zuerst Auftrag, Gesellschafter und Gläubiger, zeige die fehlenden Kapitalbelege und erfasse dann die Bewertung. Schlage beleggebundene Schlussfolgerungen vor, zeige die zu prüfenden Entscheidungen und exportiere ohne externe Aktionen.",
+    "steps": [
+      "Im Arbeitschat liest Vera das installierte Verfahren und erstellt einen neuen lokalen synthetischen Ordner. Importieren Sie die ersten drei Dateien als Belege. Schlagen Sie getrennte Zweige für Kapital, Gläubigererfassung und Steuern vor. Kapital hängt von der noch fehlenden Bewertung ab; die Erfassung kann weitergehen, während Haftungsbefreiung und Widerspruch getrennte offene Fragen bleiben. Exportieren Sie diese Version.",
+      "Importieren Sie valuation.json. Das Modell schlägt Berechnungen, Rechte und Schlussfolgerungen mit genauen Belegabhängigkeiten und prüfbaren Gründen vor. Prüfen Sie Kapitaldeckung und Verteilung; unterscheiden Sie Kapital/Stimmen/Gewinn sowie Buch-/Schätz-/Steuerwert. Erfinden Sie keine Rechtsquellen: Steuerfragen und fehlende Empfangsnachweise bleiben offen. Zeigen Sie Vorschlag, Digest und Dossier vor der Prüfung.",
+      "Erfassen Sie nur tatsächlich geäußerte Entscheidungen des Teilnehmers mit Prüfer, Grund und Digest; kennzeichnen Sie Simulationen. Bewahren Sie den Export auf. Importieren Sie valuation-update.json unter derselben Bewertungs-ID: Kapital wird stale, unabhängige Erfassung bleibt aktuell. Neue Dokumente ändern alte Berechnungen nicht: korrigieren Sie Zahlen und Aussagen, reichen Sie erneut zur Prüfung ein und erfragen Sie eine neue Entscheidung. Öffnen Sie dossier.md, case.json, manifest.json und history/."
+    ],
+    "deliverables": [
+      "Versioniertes Markdown- und JSON-Dossier mit Belegen, Abhängigkeiten, Beträgen, Rechten, Blockaden, offenen Fragen und Entscheidungen; Hash-Manifest.",
+      "Frühere Exporte und verkettete Historie sowie lesbarer lokaler Bericht zu Modelldaten. Vorbereitete Dateien sind keine Ausführungsergebnisse."
+    ],
+    "review": "Verfolgen Sie eine Aussage zu evidence/<hash> und zum Originalbeleg. Prüfen Sie exakte Beträge und getrennte Rechte. Ein Rechenüberschuss ist keine ausschüttbare Rücklage. Ein unbekannter Empfangsnachweis belegt weder Haftungsbefreiung noch Widerspruchsausgang. Der Prüfvermerk authentifiziert keinen Prüfer und erlaubt höchstens synthetische Vorbereitung.",
+    "checkpoints": [
+      "Benennen Sie vor der Bewertung den blockierten und den weiterarbeitenden Zweig; finden Sie fehlenden Empfangsnachweis und Steuerbasis.",
+      "Prüfen Sie vor der Entscheidung Beleg und drei Rechteanteile je Gesellschafter. Zeigen Sie nach der Änderung stale und eine erhaltene unabhängige Entscheidung."
+    ],
+    "practice": "Erstellen Sie mit files/practice/ einen zweiten Fall und bewahren Sie die Demo. Verwenden Sie Aktiva 640000 und Verbindlichkeiten 270000; wiederholen Sie Import, Vorschlag und Prüfung. Importieren Sie dann valuation-update.json mit Verbindlichkeiten 305000 unter derselben ID. Finden Sie stale-Zweige, korrigieren Sie Deckung und Aussagen, fordern Sie neue Prüfung an und exportieren Sie ohne Steuerfragen zu schließen oder Empfangsnachweise zu erfinden.",
+    "success": "Prüfen Sie in der Demo Nettovermögen 450000, Rechenüberschuss 350000 und Kapitalbeträge 60000/40000; bei Verbindlichkeiten 310000 nach Neubewertung 390000/290000. In der Übung: 370000/270000, danach 335000/235000. Finden Sie Stimmen 1/2–1/2, Gewinn 7/10–3/10, frühere Entscheidung in history, Steuerblockade und Export-Hashes. Dies sind Prüfkriterien, keine bereits ausgeführten Ergebnisse.",
+    "repeat": "Nur mit synthetischen Daten, neuem Ordner und tatsächlich installierter Vera-Skill wiederholen. Ein beaufsichtigter professioneller Pilot benötigt noch Qualifizierung und Abnahme. Erklärung und Kurzversuch: 5–8 Minuten; vollständige Prüfung und Übung können länger dauern. Profil, Fortschritt und Dateien bleiben lokal; ausgewählte Dokumente können vom nativen Modell gelesen werden, Verarbeitung ist nicht ausschließlich lokal."
+  }
+}

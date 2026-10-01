@@ -8746,6 +8746,274 @@
       }
     ]
   },
+  "vera/trasformazione": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "synthetic_evidence_review_stale_dossier"
+    },
+    "files": [
+      {
+        "source": "trasformazione/input/case.json",
+        "path": "files/input/case.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/input/participants.json",
+        "path": "files/input/participants.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/input/creditors.json",
+        "path": "files/input/creditors.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/input/valuation.json",
+        "path": "files/input/valuation.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/input/valuation-update.json",
+        "path": "files/input/valuation-update.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/practice/case.json",
+        "path": "files/practice/case.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/practice/participants.json",
+        "path": "files/practice/participants.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/practice/creditors.json",
+        "path": "files/practice/creditors.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/practice/valuation.json",
+        "path": "files/practice/valuation.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/practice/valuation-update.json",
+        "path": "files/practice/valuation-update.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/patent-box-review": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "inspect_normalize_review_then_synthetic_dossier"
+    },
+    "files": [
+      {
+        "source": "patent-box/evidence-it.md",
+        "path": "files/input/evidence-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-practice-it.md",
+        "path": "files/practice/evidence-practice-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-en.md",
+        "path": "files/input/evidence-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-practice-en.md",
+        "path": "files/practice/evidence-practice-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-fr.md",
+        "path": "files/input/evidence-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-practice-fr.md",
+        "path": "files/practice/evidence-practice-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-de.md",
+        "path": "files/input/evidence-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-practice-de.md",
+        "path": "files/practice/evidence-practice-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-es.md",
+        "path": "files/input/evidence-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-practice-es.md",
+        "path": "files/practice/evidence-practice-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "patent-box/ledger-demo.csv",
+        "path": "files/input/ledger-demo.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "patent-box/synthetic-rules.txt",
+        "path": "files/input/synthetic-rules.txt",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "patent-box/ledger-practice.csv",
+        "path": "files/practice/ledger-practice.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "patent-box/synthetic-rules.txt",
+        "path": "files/practice/synthetic-rules.txt",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      }
+    ]
+  },
   "vera/scissione-guidata": {
     "group": "workflow",
     "execution": {
@@ -8889,144 +9157,6 @@
       {
         "source": "scissione/allocations-update.csv",
         "path": "files/practice/allocations-update.csv",
-        "role": "practice",
-        "languages": [
-          "it",
-          "en",
-          "fr",
-          "de",
-          "es"
-        ]
-      }
-    ]
-  },
-  "vera/patent-box-review": {
-    "group": "workflow",
-    "execution": {
-      "mode": "current_native_workflow",
-      "local_tutorial": true,
-      "route": "inspect_normalize_review_then_synthetic_dossier"
-    },
-    "files": [
-      {
-        "source": "patent-box/evidence-it.md",
-        "path": "files/input/evidence-it.md",
-        "role": "source",
-        "languages": [
-          "it"
-        ]
-      },
-      {
-        "source": "patent-box/evidence-practice-it.md",
-        "path": "files/practice/evidence-practice-it.md",
-        "role": "practice",
-        "languages": [
-          "it"
-        ]
-      },
-      {
-        "source": "patent-box/evidence-en.md",
-        "path": "files/input/evidence-en.md",
-        "role": "source",
-        "languages": [
-          "en"
-        ]
-      },
-      {
-        "source": "patent-box/evidence-practice-en.md",
-        "path": "files/practice/evidence-practice-en.md",
-        "role": "practice",
-        "languages": [
-          "en"
-        ]
-      },
-      {
-        "source": "patent-box/evidence-fr.md",
-        "path": "files/input/evidence-fr.md",
-        "role": "source",
-        "languages": [
-          "fr"
-        ]
-      },
-      {
-        "source": "patent-box/evidence-practice-fr.md",
-        "path": "files/practice/evidence-practice-fr.md",
-        "role": "practice",
-        "languages": [
-          "fr"
-        ]
-      },
-      {
-        "source": "patent-box/evidence-de.md",
-        "path": "files/input/evidence-de.md",
-        "role": "source",
-        "languages": [
-          "de"
-        ]
-      },
-      {
-        "source": "patent-box/evidence-practice-de.md",
-        "path": "files/practice/evidence-practice-de.md",
-        "role": "practice",
-        "languages": [
-          "de"
-        ]
-      },
-      {
-        "source": "patent-box/evidence-es.md",
-        "path": "files/input/evidence-es.md",
-        "role": "source",
-        "languages": [
-          "es"
-        ]
-      },
-      {
-        "source": "patent-box/evidence-practice-es.md",
-        "path": "files/practice/evidence-practice-es.md",
-        "role": "practice",
-        "languages": [
-          "es"
-        ]
-      },
-      {
-        "source": "patent-box/ledger-demo.csv",
-        "path": "files/input/ledger-demo.csv",
-        "role": "source",
-        "languages": [
-          "it",
-          "en",
-          "fr",
-          "de",
-          "es"
-        ]
-      },
-      {
-        "source": "patent-box/synthetic-rules.txt",
-        "path": "files/input/synthetic-rules.txt",
-        "role": "source",
-        "languages": [
-          "it",
-          "en",
-          "fr",
-          "de",
-          "es"
-        ]
-      },
-      {
-        "source": "patent-box/ledger-practice.csv",
-        "path": "files/practice/ledger-practice.csv",
-        "role": "practice",
-        "languages": [
-          "it",
-          "en",
-          "fr",
-          "de",
-          "es"
-        ]
-      },
-      {
-        "source": "patent-box/synthetic-rules.txt",
-        "path": "files/practice/synthetic-rules.txt",
         "role": "practice",
         "languages": [
           "it",
