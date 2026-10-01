@@ -1455,15 +1455,22 @@ def prepare_archive_run(
     *,
     supplied_case: dict | None = None,
     source_files: list[Path] | None = None,
+    existing_context: Path | None = None,
 ) -> tuple[Path, Path]:
     from tests.plugins.test_vera_client_workflow_filesystem import _load_customer_ledger
 
     ledger = _load_customer_ledger()
-    client = tmp_path / "Client"
-    client.mkdir()
-    identity = "client_111111111111111111111111"
-    ledger.create_client_manifest(client, identity)
-    engagement = ledger.create_engagement(client, identity, "Synthetic valuation")
+    if existing_context is None:
+        client = tmp_path / "Client"
+        client.mkdir()
+        identity = "client_111111111111111111111111"
+        ledger.create_client_manifest(client, identity)
+        engagement = ledger.create_engagement(client, identity, "Synthetic valuation")
+    else:
+        context = read_json(existing_context)
+        client = existing_context.parents[5]
+        identity = context["client_id"]
+        engagement = {"engagement_id": context["engagement_id"]}
     case = deepcopy(supplied_case) if supplied_case is not None else case_data()
     input_ids = []
     for index, source_file in enumerate(source_files or [FIXTURE / "evidence.txt"]):
@@ -1498,15 +1505,12 @@ def prepare_archive_run(
     return case_path, Path(running["context_path"])
 
 
-@pytest.mark.parametrize("phase", ["demo", "practice"])
-def test_valuation_teaching_sources_run_the_bound_workflow(
-    tmp_path: Path, phase: str, record_property
-) -> None:
-    """Interpret the supplied fictional note explicitly; never ship a preapproved case."""
-    from tests.plugins._teaching_release import record_native_check
-
+def teaching_valuation_case(phase: str) -> tuple[dict, list[Path]]:
+    """Interpret course facts separately from expected arithmetic and engine code."""
     folder = ROOT / "plugins/vera/assets/courses/business-valuation/files"
     sources = [folder / "input/caso-it.md"]
+    if phase in {"missing", "recovery"}:
+        sources = [folder / "practice/evidenze-mancanti-it.md"]
     case = case_data()
     case["entity_name"] = "Officina Arco — esercizio sintetico"
     # The teaching note is not a complete engagement letter: preserve unknowns.
@@ -1525,13 +1529,13 @@ def test_valuation_teaching_sources_run_the_bound_workflow(
             "value": value,
             "status": "confirmed",
             "source_ids": ["evidence"],
-            "locator": "caso-it.md: carte interne e intera attività operativa",
+            "locator": f"{sources[0].name}: carte interne e intera attività operativa",
         }
     case["purpose_profile"] = {
         "id": "strategy",
         "selection_reason": "La nota richiede un confronto interno su ipotesi didattiche, senza finalità legale.",
         "source_ids": [case["sources"][0]["id"]],
-        "locator": "caso-it.md: incarico e base ipotetica per confronto interno",
+        "locator": f"{sources[0].name}: incarico e confronto interno",
     }
     case["methods"] = [case["methods"][0]]
     case["methods"][0][
@@ -1546,30 +1550,50 @@ def test_valuation_teaching_sources_run_the_bound_workflow(
         if item["unit"] == "EUR":
             item["value"] = str(Decimal(item["value"]) * 1000)
         item["description"] = f"Ipotesi didattica: {item['id']}"
-        item["locator"] = "caso-it.md: flussi, tassi e raccordo"
+        item["locator"] = f"{sources[0].name}: flussi, tassi e raccordo"
+    if phase == "missing":
+        terminal = next(item for item in case["inputs"] if item["id"] == "terminal")
+        terminal.update(
+            value=None,
+            status="proposed",
+            source_ids=["evidence"],
+            locator="evidenze-mancanti-it.md: terminale assente",
+        )
     assert "100.000" in sources[0].read_text()
     case["sources"][0].update(
         path="caso-it.md",
         description="Nota didattica sintetica",
         sha256=hashlib.sha256(sources[0].read_bytes()).hexdigest(),
     )
-    if phase == "practice":
-        sources.append(folder / "practice/pratica-it.md")
-        assert "12%" in sources[1].read_text()
+    if phase in {"practice", "recovery"}:
+        name = "pratica-it.md" if phase == "practice" else "integrazione-it.md"
+        sources.append(folder / "practice" / name)
         case["sources"].append(
             {
                 **case["sources"][0],
                 "id": "update",
-                "path": "pratica-it.md",
+                "path": name,
                 "sha256": hashlib.sha256(sources[1].read_bytes()).hexdigest(),
             }
         )
-        rate = next(item for item in case["inputs"] if item["id"] == "rate")
+        changed = "rate" if phase == "practice" else "terminal"
+        rate = next(item for item in case["inputs"] if item["id"] == changed)
         rate.update(
-            value="0.12",
+            value="0.12" if phase == "practice" else "100000",
             source_ids=["update"],
-            locator="pratica-it.md: tasso di sconto e terminale",
+            locator=f"{name}: ipotesi modificata",
         )
+    return case, sources
+
+
+@pytest.mark.parametrize("phase", ["demo", "practice"])
+def test_valuation_teaching_sources_run_the_bound_workflow(
+    tmp_path: Path, phase: str, record_property
+) -> None:
+    """Interpret the supplied fictional note explicitly; never ship a preapproved case."""
+    from tests.plugins._teaching_release import record_native_check
+
+    case, sources = teaching_valuation_case(phase)
     case_path, context = prepare_archive_run(
         tmp_path, supplied_case=case, source_files=sources
     )
@@ -1583,6 +1607,21 @@ def test_valuation_teaching_sources_run_the_bound_workflow(
         else Decimal("583333.3333333333333333333333333333333333")
     )
     assert abs(amounts["fcff/equity"] - expected) < Decimal("0.000001")
+    # Independent textbook computation, without engine helpers or stored results.
+    chosen_rate = Decimal("0.10") if phase == "demo" else Decimal("0.12")
+    assert abs(amounts["fcff/pv/1"] - Decimal("100000") / (1 + chosen_rate)) < Decimal(
+        "0.000001"
+    )
+    assert abs(
+        amounts["fcff/terminal_value"] - Decimal("100000") / chosen_rate
+    ) < Decimal("0.000001")
+    assert abs(
+        amounts["fcff/pv_terminal"]
+        - Decimal("100000") / chosen_rate / (1 + chosen_rate)
+    ) < Decimal("0.000001")
+    assert abs(amounts["fcff/value"] - Decimal("100000") / chosen_rate) < Decimal(
+        "0.000001"
+    )
     assert report["status"] == "partial"
     assert report["mandate_assessment"]["status"] == "partial"
     assert report["conclusion"] is None
@@ -1596,6 +1635,126 @@ def test_valuation_teaching_sources_run_the_bound_workflow(
         workflow="business-valuation",
         language="it",
         phase=phase,
+    )
+
+
+@pytest.mark.parametrize("phase", ["missing", "recovery"])
+def test_valuation_teaching_missing_terminal_requires_new_evidence(
+    tmp_path: Path, phase: str
+) -> None:
+    """An unavailable terminal never inherits the complete demo's number."""
+    case, sources = teaching_valuation_case(phase)
+    case_path, context = prepare_archive_run(
+        tmp_path, supplied_case=case, source_files=sources
+    )
+
+    output = run_valuation.run_case(case_path, context)
+
+    report = read_json(Path(output["output_dir"]) / "valuation.json")
+    assert report["conclusion"] is None
+    if phase == "missing":
+        assert report["methods"][0]["status"] == "blocked"
+        assert "fcff/equity" not in {row["id"] for row in report["calculations"]}
+    else:
+        equity = next(
+            row for row in report["calculations"] if row["id"] == "fcff/equity"
+        )
+        assert Decimal(equity["value"]) == Decimal("750000")
+        terminal = next(
+            row for row in report["case"]["inputs"] if row["id"] == "terminal"
+        )
+        assert terminal["source_ids"] == ["update"]
+
+
+def test_valuation_teaching_four_runs_reopen_sealed_artifacts_in_one_engagement(
+    tmp_path: Path,
+) -> None:
+    """Execute the actual archive lifecycle; reopening reads the sealed run."""
+    import mimetypes
+
+    from tests.model_data_helpers import write_no_model_report
+    from tests.plugins.test_vera_client_workflow_filesystem import _load_customer_ledger
+
+    ledger = _load_customer_ledger()
+    previous_context = None
+    outputs = {}
+    contexts = {}
+    initial_hashes = {}
+    for phase in ("demo", "practice", "missing", "recovery"):
+        phase_root = tmp_path / phase
+        phase_root.mkdir()
+        case, sources = teaching_valuation_case(phase)
+        case_path, context_path = prepare_archive_run(
+            phase_root,
+            supplied_case=case,
+            source_files=sources,
+            existing_context=previous_context,
+        )
+        previous_context = context_path
+        context = {
+            **read_json(context_path),
+            "client_root": str(context_path.parents[5]),
+            "output_dir": str(context_path.parent / "outputs"),
+        }
+        contexts[phase] = context
+        output = run_valuation.run_case(case_path, context_path)
+        outputs[phase] = output
+        if phase == "demo":
+            initial_hashes = {
+                path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+                for path in Path(output["output_dir"]).iterdir()
+            }
+        run_output = Path(context["output_dir"])
+        declarations = write_no_model_report(
+            run_output,
+            "business-valuation",
+            context["run_id"],
+        )
+        for index, artifact in enumerate(Path(output["output_dir"]).iterdir()):
+            declarations.append(
+                {
+                    "artifact_id": f"valuation.artifact_{index}",
+                    "path": artifact.relative_to(run_output).as_posix(),
+                    "purpose": f"Synthetic course calculation output: {artifact.name}",
+                    "audience": "review",
+                    "media_type": mimetypes.guess_type(artifact)[0]
+                    or "application/octet-stream",
+                }
+            )
+        ledger.finalize_run(
+            Path(context["client_root"]),
+            context["engagement_id"],
+            context["run_id"],
+            declarations,
+        )
+    initial = contexts["demo"]
+    client = Path(initial["client_root"])
+
+    reopened = ledger.load_run(client, initial["engagement_id"], initial["run_id"])
+    manifest = ledger.validate_run_artifacts(
+        client, initial["engagement_id"], initial["run_id"]
+    )
+
+    assert len(ledger.list_engagements(client, initial["client_id"])) == 1
+    assert len(ledger.list_runs(client, initial["engagement_id"])) == 4
+    assert len({row["run_id"] for row in contexts.values()}) == 4
+    assert reopened["run"]["status"] == "ready_for_review"
+    assert {
+        Path(row["path"]).name: row["sha256"]
+        for row in manifest["artifacts"]
+        if Path(row["path"]).name in initial_hashes
+    } == initial_hashes
+    assert outputs["missing"]["status"] in {"partial", "blocked"}
+    assert all(
+        row["engagement_id"] == initial["engagement_id"] for row in contexts.values()
+    )
+    assert all(
+        ledger.validate_run_artifacts(client, initial["engagement_id"], row["run_id"])
+        for row in contexts.values()
+    )
+    assert (
+        read_json(Path(outputs["demo"]["output_dir"]) / "valuation.json")["conclusion"]
+        is None
     )
 
 
