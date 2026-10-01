@@ -840,7 +840,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
         re.findall(r"`\.\./\.\./([a-z0-9-]+)/SKILL\.md`", initial_section)
     )
     assert initial_skills == {"scissione-guidata"}
-    assert "no prepared voice lesson" in initial_section
+    assert "prepared local lesson" in initial_section
 
     # Exact identity closure is mechanically verifiable and prevents public
     # inventory drift. Page component IDs resolve to the current skill names.

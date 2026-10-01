@@ -9103,5 +9103,159 @@
         ]
       }
     ]
+  },
+  "vera/scissione-guidata": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "versioned_partial_proportional_new_beneficiary"
+    },
+    "files": [
+      {
+        "source": "scissione/mandate-it.md",
+        "path": "files/input/mandate-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "scissione/mandate-update-it.md",
+        "path": "files/practice/mandate-update-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "scissione/mandate-it.md",
+        "path": "files/practice/mandate-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "scissione/mandate-en.md",
+        "path": "files/input/mandate-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "scissione/mandate-update-en.md",
+        "path": "files/practice/mandate-update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "scissione/mandate-en.md",
+        "path": "files/practice/mandate-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "scissione/mandate-fr.md",
+        "path": "files/input/mandate-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "scissione/mandate-update-fr.md",
+        "path": "files/practice/mandate-update-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "scissione/mandate-fr.md",
+        "path": "files/practice/mandate-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "scissione/mandate-de.md",
+        "path": "files/input/mandate-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "scissione/mandate-update-de.md",
+        "path": "files/practice/mandate-update-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "scissione/mandate-de.md",
+        "path": "files/practice/mandate-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "scissione/mandate-es.md",
+        "path": "files/input/mandate-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "scissione/mandate-update-es.md",
+        "path": "files/practice/mandate-update-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "scissione/mandate-es.md",
+        "path": "files/practice/mandate-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "scissione/allocations.csv",
+        "path": "files/input/allocations.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "scissione/allocations-update.csv",
+        "path": "files/practice/allocations-update.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      }
+    ]
   }
 }

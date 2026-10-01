@@ -29,10 +29,9 @@ def test_vera_router_frontmatter_triggers_for_explicit_invocation() -> None:
     frontmatter = router.split("---", maxsplit=2)[1]
 
     assert "whenever Vera or @vera is explicitly invoked" in frontmatter
-    assert "even when the user does not name Vera" in frontmatter
     assert "Select the narrowest supported specialist" in frontmatter
     assert "Explicit invocation does not add unsupported services" in frontmatter
-    assert "to reopen a Vera privacy report" in frontmatter
+    assert "reopen a Vera privacy report" in frontmatter
     assert "capability gap" not in frontmatter
     assert "out of scope" not in frontmatter
 

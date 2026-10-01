@@ -1,0 +1,27 @@
+{
+  "vera/scissione-guidata": {
+    "title": "Escisión guiada con Vera",
+    "goal": "Preparar un expediente versionado, leer cuadros y revisar decisiones tras un cambio.",
+    "scenario": "Arco Meccanica S.r.l. transfiere una rama a la nueva Arco Servizi S.r.l. Anna y Bruno tienen el 60 % y el 40 %. Nombres, documentos e importes son ficticios.",
+    "scope": "OIC italiano, EUR, escisión parcial proporcional hacia una nueva beneficiaria, derechos homogéneos y sin participaciones recíprocas. Beneficiarias existentes, scorporo, asignaciones asimétricas, IFRS y casos extranjeros quedan fuera. El expediente no certifica validez jurídica, firma ni presenta documentos.",
+    "inputs": "Abre mandate-es.md y allocations.csv. El mandato indica sociedades, autorización limitada al ejercicio, participaciones, valores económicos, hipótesis y contrato ausente. El CSV separa activo y deuda y valores contables, fiscales y económicos. Los costes fiscales de los socios son desconocidos. Son datos de partida, no aprobaciones.",
+    "request": "Vera, prepara el expediente de esta escisión parcial proporcional hacia una nueva beneficiaria. Muéstrame documentación ausente, cuadros y decisiones que revisar antes de usarlo.",
+    "steps": [
+      "El chat de trabajo importa solo documentos seleccionados al expediente local del tutorial. Vera propone alcance y ruta desde las fuentes. La voz permanece en el chat docente; el profesional confirma decisiones materiales en lenguaje corriente.",
+      "Prepara la primera versión sin aprobaciones. Abre review.html y localiza el contrato ausente. Revisa ruta, participaciones, asignaciones e hipótesis; registra solo confirmaciones reales de la versión mostrada. El cálculo requiere las revisiones correspondientes; el contrato ausente mantiene el expediente parcial.",
+      "Abre el expediente y los cuadros realmente producidos. Sigue una fila del CSV hasta sus tres valores y examina los dos socios, costes fiscales nulos y cuestiones abiertas. Conserva versión y hashes y muestra el informe de datos recibidos por el modelo."
+    ],
+    "deliverables": [
+      "Expediente review.html/review.md con evidencias, dependencias, decisiones y límites.",
+      "allocations.json y ownership_before_after.json separan valores y participaciones; revision.json, change_impact.json e inventario de hashes conservan el historial."
+    ],
+    "review": "Comprueba procedencia, autorizaciones, conciliaciones e hipótesis económicas. Cuadrar cifras no prueba integridad contractual ni neutralidad fiscal. El ejercicio no aprueba fuentes jurídicas. El docente no inventa aprobaciones ni comprensión. El expediente nativo conserva títulos italianos y claves técnicas: explícalos en el idioma de la lección sin prometer una traducción del motor.",
+    "checkpoints": [
+      "Antes de revisar, identifica el contrato ausente y explica por qué no pasa a cero ni a « verificado ».",
+      "Al leer, distingue valor contable, fiscal, económico y coste fiscal de los socios."
+    ],
+    "practice": "Pide: « Vera, actualiza el mismo expediente con mandate-update-es.md y allocations-update.csv: ¿qué decisiones requieren nueva revisión? » La nueva estimación aumenta el valor económico del activo transferido; contabilidad, fiscalidad y participaciones no cambian. Importa documentos nuevos en otro run del mismo encargo con el revision.json anterior exactamente finalizado como artefacto previo. Compara change_impact.json y cuadros; confirma realmente las decisiones reabiertas y conserva la versión anterior.",
+    "success": "Sabes iniciar, encontrar una laguna, leer valores separados y explicar revisiones dependientes. El tutorial no acredita aceptación profesional.",
+    "repeat": "Para tus documentos elige encargo y fuentes autorizadas mediante el procedimiento profesional normal. Tutorial y comentarios permanecen locales; no reutilices confirmaciones ficticias."
+  }
+}
