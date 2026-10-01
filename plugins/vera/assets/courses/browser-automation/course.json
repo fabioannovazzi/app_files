@@ -70,7 +70,7 @@
     {
       "path": "modules/browser-automation/references/econs-review.md",
       "repository_path": "plugins/browser-automation/references/econs-review.md",
-      "sha256": "38695555c377722a9fd6768823243797d89a58b9d4aa7c21d4280755161acb9f"
+      "sha256": "4c1a52e804fb8775cfa79958e3cd5c54278d359d429047ba6f956ae3188529d9"
     },
     {
       "path": "modules/browser-automation/references/ordinary-use.md",
@@ -80,7 +80,7 @@
     {
       "path": "modules/browser-automation/references/passive-invoice-procedure.md",
       "repository_path": "plugins/browser-automation/references/passive-invoice-procedure.md",
-      "sha256": "ac4e805ce23f2b407ea45898f0c32cad489055d655a739e73e0dd2f30c85fb37"
+      "sha256": "faa51ed908624a14b13bdfc45ff57a6c00e7a6f2def829f8e7448e67d756e503"
     },
     {
       "path": "modules/browser-automation/references/process-lifecycle.md",
@@ -175,17 +175,17 @@
     {
       "path": "modules/browser-automation/scripts/econs_processing.mjs",
       "repository_path": "plugins/browser-automation/scripts/econs_processing.mjs",
-      "sha256": "9115b543d05a83757d6efb54eaecf6282774cefe678db7b48916e7b70875ccc5"
+      "sha256": "31be0484088ed09a706c7aa202cf3d32847fc2b750aaa91275ce9040fd2a66dc"
     },
     {
       "path": "modules/browser-automation/scripts/econs_review.mjs",
       "repository_path": "plugins/browser-automation/scripts/econs_review.mjs",
-      "sha256": "0e4e06e1966090ed7affa5613d33671870d1c6316d7c52a4ea548064fcf4d557"
+      "sha256": "e52f40404a353a9140b89d88bce0067cf0eb7a558e062e3ba7bfb52a234eb451"
     },
     {
       "path": "modules/browser-automation/scripts/econs_setup.mjs",
       "repository_path": "plugins/browser-automation/scripts/econs_setup.mjs",
-      "sha256": "0a7362f8cc36fc2644ee86f4eb7717953d22022a52866daa7a1da37a6ead91df"
+      "sha256": "05b2aad66eecd71a620814bb907a5326fb068de014ef8acf6f53efca1179104a"
     },
     {
       "path": "modules/browser-automation/scripts/process_lifecycle.py",
@@ -210,12 +210,12 @@
     {
       "path": "modules/browser-automation/skills/browser-automation/SKILL.md",
       "repository_path": "plugins/browser-automation/skills/browser-automation/SKILL.md",
-      "sha256": "2af706613235d06f73492efdab8c768b021faa5883ff77e9c079e6828eed75e6"
+      "sha256": "404d6f04a80ff0620cb104f2d41b2fee6e00c8deed73bf05d1ab321715e1ba1b"
     },
     {
       "path": "skills/browser-automation/SKILL.md",
       "repository_path": "plugins/vera/skills/browser-automation/SKILL.md",
-      "sha256": "2799b4e1049b7b7832f2a25006194892d030044d3b0c8ca1ebbaeec7d0ecdedf"
+      "sha256": "82a310fb6141d16a2e95248196bbcd6befdf30e4c5cd33af7555e784899bfabf"
     },
     {
       "path": "vendor/modules/__init__.py",

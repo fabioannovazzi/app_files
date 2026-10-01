@@ -52,8 +52,14 @@ handoff is not a prerequisite.
    company phase to be rebound to the actual new-invoice arrival signal and the
    profile schema changed to v2. Do not relabel a nightly-synchronization switch
    as proof of new invoices. Retain the invoice/detail and processing bindings.
-6. Connect or recover the authorized Chrome session using `browser-session.md`.
-   For registration, finish only missing processing phases and create the five
+6. `status_binding_update_required` preserves a legacy processing profile. Inspect
+   the actual status DOM controls with Playwright, add reviewed `status_bindings`
+   and update that profile to `econs-processing-profile/v2`. Retain its existing
+   phases and exclusions. Never guess the status from screenshots or infer a
+   colour from row order, missing mappings or invoice content. An unbound value
+   stops that invoice; it is not a request for the model to classify it.
+7. Connect or recover the authorized Chrome session using `browser-session.md`.
+   For registration, finish only missing processing phases and create the four
    model callbacks from the installed processing instructions. Do not silently
    replace registration with read-only review. Provision/reuse the shared managed
    Python environment when its helpers are needed, once for this setup; never
@@ -75,6 +81,28 @@ The store keeps immutable setup revisions, hashes and private file permissions;
 it contains no cookies, credentials, browser session or reusable approval.
 Technical errors must preserve a specific next step and partial local evidence;
 do not repeatedly restart discovery or make the operator reconstruct the setup.
+
+## Diagnose an execution without asking the operator for internal files
+
+In the host Node runtime call `inspectEconsExecution()` from `econs_setup.mjs`.
+It finds the known setup's last run and reads only its `execution.json`,
+`installation.json` and `acquisition.json`. No disk search or browser session
+is needed. `execution.json` records invocation, requested mode, Playwright
+driver and runtime file hashes before input validation. `installation.json`
+records the actual owning manifest/version after preflight. `acquisition.json`
+records results, report paths and the processing-profile hash. Invocation alone
+does not establish successful browser execution; inspect the phase receipts.
+Missing evidence means unverified execution, never proof of success or bypass.
+
+For an indicator complaint, inspect that run's private `queue-*.json`, saved
+profiles and invoice report. They retain exact raw statuses, binding evidence,
+decisions and stops, including the pre-registration reread. Locate these files
+yourself from the helper's returned run directory; do not ask the operator for
+Vera's own rules or code. Link the local report and explain the actual mode and
+version. Do not substitute ad hoc clicks for a failed processing executor or
+claim an executor run from a skill being loaded. These files are private client
+evidence; external developer feedback still requires the existing sanitized,
+separately authorized development-request route.
 
 ## First use: finish the screen binding, not the teaching
 
@@ -109,7 +137,8 @@ column formatting choices, or a complete repeated demonstration.
    an origin, row identity, count, approval record or replay receipt.
 4. Each phase must start from the preceding phase's actual end state. The
    invoice-list phase must also work after the previous company's final detail;
-   the detail phase must work from the list and from the previous detail. Include
+   the detail phase must work from the list, the previous detail and the displayed
+   journal, because it is reread after approval before reopening the journal. Include
    the observed reversible return/open/select actions. Prefer exact stable row
    identifiers over invoice number alone. The selected invoice header must
    prove both company and document identity.
@@ -253,13 +282,23 @@ after each invoice and before any mapping or registration attempt. The returned
 `client_reviews` links identify those files. Keep later human checks and linked
 corrections through `batch_review.py`; never rewrite completed postings.
 
-`processing` contains `profile`, `classifyInvoices`, `reviewRedException`,
+`processing` contains `profile`, `reviewRedException`,
 `reviewInvoice`, `reviewJournal` and `approvePosting`. Vera implements these callbacks using the current host model
 and available authorization; they are not an invitation for the professional
 to write code or an automatic source of approval. No helper calls a second LLM.
 
-The private profile has `schema_version: "econs-processing-profile/v1"`,
+The private profile has `schema_version: "econs-processing-profile/v2"`,
 `complete_status` and `non_posted_view` with the exact observed state labels,
+and `status_bindings`, an array of `{value, state, evidence}` objects. `value`
+is one exact observed DOM text or attribute value extracted by both acquisition
+phases; `state` is `red`, `green` or `orange`; `evidence` records the inspected
+control and the verified meaning of that value. Values must be unique and
+nonempty; `complete_status` must have a green binding. Bind only observed values,
+never copy synthetic labels or selectors. Record acquisition locators and reads
+in the phase capabilities. A missing, unrecognized or conflicting value does
+not become green. Classification is an exact code lookup, not model inference.
+This is a mechanical UI-state check; accounting treatment remains model-led.
+The profile also contains
 and `phases: {select, map, journal, post, verify, exit}`. Every phase is a
 reviewed `browser-capability/v2`, with the same authorized origins as acquisition
 and the actual observed frame path. Do not invent a selector, a discovery hash
@@ -282,9 +321,11 @@ actual source value or keep a format gap; do not silently reinterpret a decimal
 dot. Zero remaining invoices requires the observed no-result branch and an
 independent zero count, not a missing table or unavailable iframe.
 
-`classifyInvoices({company, invoices})` returns `company_code`,
-`red_invoice_ids` and a reason from the model's interpretation of the observed
-indicator and saved professional guidance. Green and orange items stay in the
+The runtime reads `status` through Playwright and uses the reviewed bindings
+to build the queue. It saves raw values, matched states and reasons before any
+invoice writes. It never calls `classifyInvoices`; supplying that old callback
+cannot override a red or unknown value. Unknown states are set aside with no
+mapping or journal action. Green and orange items stay in the
 processing population and report. The queue reads the complete details of the first two consecutive red invoices
 before deciding whether the taught mapping exception applies.
 `reviewRedException({company, invoice, detail})` returns `{eligible, reason}`
@@ -294,6 +335,10 @@ the existing complete-population/VAT checks. Unsupported or unapproved red
 exceptions remain in the report without posting. More than two consecutive reds
 suspends the remaining client. A tail of reds must not bypass exception review.
 The studio exclusion list is unchanged. Colours never approve accounting.
+The executor independently rechecks the red exception against the current
+invoice, including already mapped invoices. After posting approval it rereads
+the invoice through Playwright and stops if any observed value changed, then
+reopens and compares the journal before dispatching final registration.
 
 `reviewInvoice({invoice, detail, detail_sha256})` returns `approved`,
 `descriptions_complete`, `company_code`, `invoice_id`, `detail_sha256` and `reason`.
