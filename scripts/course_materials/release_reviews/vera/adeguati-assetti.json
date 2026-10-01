@@ -2,62 +2,126 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "adeguati-assetti",
-  "course_sha256": "f41c5cb3cb64c77da40a183dd3ddd3dee268a1673ba431ca7924de1248860ee3",
-  "reviewer": "Codex: localized teaching materials and actual native draft/follow-up evidence review",
-  "reviewed_at": "2026-09-14T20:09:40.718058+00:00",
-  "review_scope": "All five lesson outlines and original fictional documents were read. Reviewed all unique semantic content of the twenty native memos across these two workflows and both phases, actual output structure, local source links, saved record identity/status/predecessor and delivery/source-challenge companions. Final output comparison confirms only the intended empty-evidence-label removal after the semantic review; exact current artifact hashes are recorded. The 113 focused tests have no failures or skips. These are Markdown/JSON outputs; no browser, native GUI rendering, live voice, learner comprehension or independent professional acceptance is claimed. CNDCEC source indices were checked as research starting points, without claiming article-level legal analysis. Fixture narratives exercise the normal Codex-authored stage and are not shipped as predetermined lesson answers. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
+  "course_sha256": "153343b7626eabf35a62f873d5fc28625b256662887ffde07271f3e2408e3522",
+  "reviewer": "Codex /root: source, multilingual editorial and synthetic artifact review",
+  "reviewed_at": "2026-10-01T08:03:58.950451+00:00",
+  "review_scope": "Replaces the assessment-only outline with five localized resumable construction chapters and a separate financial lab. Read current specialist skill, native contract, intake, exports and adapters. Inspected original fictional inputs, localized Word/PDF/Markdown content, registers, snapshots, financial rows and KPI history. Rendered Italian course and chapter and English course in the Codex browser; visually inspected all pages of a generated manual. The PDF exporter may orphan its final version line on a second page; this remains a disclosed pre-existing export limitation, not a claim of client-ready layout. Fixed export headings are Italian and some test attribution/engineering labels are English. Native voice, window arrangement, learner participation/understanding, authenticated professional approval and real-company operating effectiveness are not established. Technical tests manufacture separately receipted synthetic decisions only at execution time; no approved case, approval or result is shipped as a teaching input. The 390-second metadata describes the introductory lesson; extended construction and financial labs require further resumable sessions.",
   "languages": {
     "it": {
       "verdict": "accepted",
       "editorial": {
-        "purpose_and_first_use": "The plain title introduces requesting an assessment of company arrangements, supplying both procedures and operating examples, reading the reasoned assessment and improvement plan, then requesting a follow-up. The absence example follows the complete first-use sequence rather than replacing it.",
-        "inputs_and_request": "Read company, procedure and February-cycle evidence in all five languages and the April update. Officina Arco has one site and twelve staff, with distinct management, document and external-accounting roles. The natural-language request fixes the Italian company, responsibilities, monthly close and collection-information scope at 31 March; other processes remain unassessed.",
-        "deliverable_and_next_action": "The actual Markdown memo starts with scope, company context, assessment and decisions to discuss. It retains coverage, process responsibilities, questions, dated operation, finding F1 and proposed action A1 with owner, timing and completion evidence. Local source links resolve to the exact imported files. The material review preserves the successful February cycle without inferring continuous operation or payment from a customer promise. The native output is a memo and versioned JSON, not a fabricated Word/PDF preview.",
-        "practice_and_repeat": "The separate practice executes the initial review, imports its finalized record in the same engagement and adds the April evidence. The new memo identifies actual late dispatch/delivery, recognizes Paolo’s limited invoice collection, and keeps A1 open. Elena’s review is unrecorded at 30 April but the five-day period from 28 April is still open. The previous record stays byte-identical. The lesson ends by explaining how to repeat with a real scoped engagement and dated evidence.",
-        "execution_and_checkpoints": "Separate native demonstration and practice checks start the current workflow in an isolated tutorial archive. Codex-authored interpretation is saved by the ordinary helper; source bytes and predecessor records are bound to the same engagement. The lesson checkpoints precede analysis and ask the learner to trace a finding to a source. Script execution is verified; a live learner and native voice/window behavior are not certified by these checks.",
-        "language_and_pacing": "Language it. Read the complete localized outline and fictional inputs and the unique content of both actual native memos. Headings, statuses, interpretation and delivery notes use the selected language; filenames and record keys remain technical references. Six stages total 390 seconds. The teacher reads the assessment and one linked finding/action, leaving the full supporting memo available. Questions and processing may extend elapsed time; no measured learner duration is claimed."
+        "purpose_and_first_use": "The localized title teaches both assessment and construction in the same engagement. Officina Arco has twelve staff and one site. Retains the original March assessment and April chronology; construction begins from an attributed discovery visit and one scoped monthly-close control.",
+        "inputs_and_request": "Read all it outline fields and construction, construction-update and financial-lab chapters, plus company/procedure/February operation/April update. Shared JSON contains unapproved raw fictional facts, no case model, mapping, plan output or professional approvals. Financial-lab entity is explicitly separate from Officina Arco and the existing Ciclo Arco lesson.",
+        "execution_and_checkpoints": "Current native assessment tests pass separately. New native CLI checks import exact kit bytes in a genuine local archive, open the case/form, export/import Markdown, finalize and resume a snapshot with every original source, qualify evidence, compare unknown/base/override, and retain evidence-finding-control-action links. Checkpoints ask the real learner to trace evidence; no learner answers are manufactured in the lesson.",
+        "deliverable_and_next_action": "Inspected actual localized control prose in DOCX/PDF/Markdown, the editable register, JSON/hash manifest and construction snapshots. Draft, test-only attributed professional review, adoption and simulated execution are separate states; producing/reviewing the manual does not change evidence scores. Simulation remains design_only with A1 open. Italian fixed headings and the final PDF version-line pagination limit are explicit.",
+        "practice_and_repeat": "Distinct practice resumes the same engagement with April evidence, stales the exact qualification and recorded override, changes the control, retains M1 and compiles draft M2 without transferring approval. The original KPI observation remains immutable after population/formula version changes. A separate native v3 financial lab rejects unreviewed/partial plans and unreconciled totals, preserves Budget -100 and Forecast -150, and rejects stale financial narrative before re-authoring it.",
+        "language_and_pacing": "Language it: complete outline, discovery chapter, practice and lab translated with the same facts; jurisdiction remains Italy. The ordinary introductory outline uses six stages totaling 390 seconds; construction and finance continue in further resumable sessions. Do not treat this as a measured end-to-end lesson duration. Business Planning’s separate Ciclo Arco kit supports it/en; the current teacher explains those sources in their actual language. Fixed construction-export headings remain Italian, with engineering test labels explicitly outside learner-facing copy."
       },
       "demo": {
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[demo-it]",
-        "result_review": "The current native helper writes a draft memo and versioned record for the 31 March review. The procedure and dated February cycle support the stated roles and successful dispatch/review in that cycle, but no named substitute or payment proof. The assessment links F1 to proposed A1, with ownership/timing explicitly subject to agreement. The detailed source challenge corrects chronology and preserves limitations; no professional approval is recorded.",
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_constructs_resumes_and_preserves_review_boundaries[demo-it]",
+        "result_review": "Inspected current demo artifacts: exact archive resume, original unknown answers and missing attachment retained; manual M1 and editable register preserve source/risk/control/action trace. Reviews/adoption use separately receipted automated synthetic fixture evidence, not real professional decisions. Simulated operating review is design_only; action stays open. KPI missing/zero-denominator values remain null. No adoption or execution exists after draft compilation; recorded qualification/override are distinct from declared level. Native v3 financial outputs preserve distinct reviewed test-only Budget and Forecast mappings with exact calculation IDs and totals; earlier Budget CSV remains byte-identical. No voice, user understanding or real-company acceptance claimed.",
         "reviewed_artifacts": [
           {
-            "name": "adeguati-assetti-b9e15bcc6be08fc44d117ab2f857a0c6d46675edeae6d08af8f4bfb91f705b36.md",
-            "sha256": "50aa6e2707f489695e8e9523058a3ce8147bf3c763e70fac994f4afd55e8abd7"
+            "name": "assetti-construction-3a4201a8a56faf60d6dc6dbd23209cf79d83946812e7b78ad62cdfece2c49fdf.json",
+            "sha256": "27be07c6922d1e75d356365a09bb53b92dd7d65c9ffb467f3f8d4ba4510eb49b"
           },
           {
-            "name": "adeguati-assetti-b9e15bcc6be08fc44d117ab2f857a0c6d46675edeae6d08af8f4bfb91f705b36.json",
-            "sha256": "0d33f8bf4a77876cf8d00706cd0ec53e9301159c06a51b20a283e065efec8554"
+            "name": "assetti-construction-3a4201a8a56faf60d6dc6dbd23209cf79d83946812e7b78ad62cdfece2c49fdf.md",
+            "sha256": "c562905ad54ede181a9d9fa613d8cc90dc6533fc245011150f3fcfbf9f4349c8"
           },
           {
-            "name": "artifact_card.md",
-            "sha256": "19caa2da9781a79a25029ff859ce441002d3f4b2d8a6b9b6e73f49074c9e3151"
+            "name": "manuale.docx",
+            "sha256": "05dbe0c3e58f431cedfe373c497701d9e210a41cfd00bf1682fad50a04f6860a"
           },
           {
-            "name": "codex_run_review.md",
-            "sha256": "c7d6ddca78388bae4ef5384b62c477823020d1a29a4707861bb4cb30028df32b"
+            "name": "manuale.pdf",
+            "sha256": "8a0ddeaf0e9e4caffa70950b7db760129cccce0cc63c4f13b58e41b0fdcd137e"
+          },
+          {
+            "name": "manuale.md",
+            "sha256": "8d3cb957ea7a3eb8c1253a2d384da5b2806dd5e693d46c099315faa4a5a62699"
+          },
+          {
+            "name": "manuale.json",
+            "sha256": "d5aa6edf3086e5e75f8f98a65309510b9bbcedce562d5e37091f00fc7e825f0d"
+          },
+          {
+            "name": "registro-01.csv",
+            "sha256": "e6883d170f30b732638987aede5384a0e1fbd794f8137108190283fbdf93673a"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "149249abbdf6df6b89b32ee433fd4b3ae0692bc103780e34de4dc29f4f4b5790"
+          },
+          {
+            "name": "budget-a22bf3acd3c14a8e2225ed885485f9b4e6bc8bca787702f954da48dd6fac51bf.json",
+            "sha256": "65c87992ecdad20760bf2edec446744040957eb400e508abdb1fd383f14cc2e4"
+          },
+          {
+            "name": "budget-b884b5cc07dc3c457a816220a08571eb1dfa3dced73542a0d1efb456ecc724f3.json",
+            "sha256": "0628d99f3f23090386bf50436311d1f6a0f2f50cf6d2e3ed2b343c64395cb5f9"
+          },
+          {
+            "name": "budget-a22bf3acd3c14a8e2225ed885485f9b4e6bc8bca787702f954da48dd6fac51bf.csv",
+            "sha256": "7c8736b6ab27723feda5f5162d3680969adab598747b64f1dc432f4fabcf3bcb"
+          },
+          {
+            "name": "budget-b884b5cc07dc3c457a816220a08571eb1dfa3dced73542a0d1efb456ecc724f3.csv",
+            "sha256": "b384f612d945b0a8e0e25cec464a57ab8996b53f4ee81ca5774b824f5ae371f0"
           }
         ]
       },
       "practice": {
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[practice-it]",
-        "result_review": "A finalized initial record is imported into the same engagement before the 30 April native run. The new record links its exact hash and leaves its bytes unchanged. It distinguishes missed document/report deadlines from Elena’s still-open review period, recognizes Paolo’s partial contribution and keeps A1 open. The full memo, changed assessment and local delivery/review companions were checked against the source update.",
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_constructs_resumes_and_preserves_review_boundaries[practice-it]",
+        "result_review": "Inspected current practice artifacts: exact archive resume, original unknown answers and missing attachment retained; manual M2 and editable register preserve source/risk/control/action trace. Reviews/adoption use separately receipted automated synthetic fixture evidence, not real professional decisions. Simulated operating review is design_only; action stays open. KPI missing/zero-denominator values remain null. April evidence stales D1 and qualification; modified P1 makes M1 need review, M2 remains draft and old snapshots/observations are unchanged. Native v3 financial outputs preserve distinct reviewed test-only Budget and Forecast mappings with exact calculation IDs and totals; earlier Budget CSV remains byte-identical. No voice, user understanding or real-company acceptance claimed.",
         "reviewed_artifacts": [
           {
-            "name": "adeguati-assetti-628a2363405d265c6e9ad794150ada763a5c517a3b6a7c9147bb1f0b98095188.md",
-            "sha256": "e66d057de520de42205998400dda488bac75485185189def633b282dc690f262"
+            "name": "assetti-construction-92dd70dea7c43a598e6b402dd21f4baf73379c916e355bf6733d126b9ba3043c.json",
+            "sha256": "0d30495bc69bda65f3b8fc3014174350a11901f66da25d954a34c7dcc5f17e4d"
           },
           {
-            "name": "adeguati-assetti-628a2363405d265c6e9ad794150ada763a5c517a3b6a7c9147bb1f0b98095188.json",
-            "sha256": "9fe345919e70e745473591b8e7b8d5cfe627320aec15e4b6971236d832430f9f"
+            "name": "assetti-construction-92dd70dea7c43a598e6b402dd21f4baf73379c916e355bf6733d126b9ba3043c.md",
+            "sha256": "1c6780d7eeb702f907ef1bcac4d9d09014d094be85abd23f58079db64251e4c4"
           },
           {
-            "name": "artifact_card.md",
-            "sha256": "fff057ce1337ae857a803fdbbfbf8ba5a303811f2cf7404a602cd3bba2145541"
+            "name": "manuale.docx",
+            "sha256": "62dfb6990c428ac4346fdcd0998555ccc30051b4eaa25a3cafb5d1fe756c0473"
           },
           {
-            "name": "codex_run_review.md",
-            "sha256": "4aacc757ef17b9d0f9b00ecbc1d79ec3a0d42c764caff5b253ee99a7afd98ae8"
+            "name": "manuale.pdf",
+            "sha256": "46c4845beaa22aae3551c24dc2ecaf6622e366bdf0616365854c391450001ec1"
+          },
+          {
+            "name": "manuale.md",
+            "sha256": "493dae92e706aaa17d85f25713f41268575d9cba1c801245755114199e8a8346"
+          },
+          {
+            "name": "manuale.json",
+            "sha256": "0503d24fad4f3785b67a4a6b00581cf13ab46c993cd63befbe5963770df013ae"
+          },
+          {
+            "name": "registro-01.csv",
+            "sha256": "e6883d170f30b732638987aede5384a0e1fbd794f8137108190283fbdf93673a"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "4261df9b9f10d7225c06e8db5a1598e8f3ea17e613606358ade7b1981a3eb92a"
+          },
+          {
+            "name": "budget-ec3df2f51e410b02003cef9dd712d524e5d7368c06aec0dddce6892069c6eebe.json",
+            "sha256": "e55c93f0d15208c44799fa4e77527c7be68b7dbdd32eb8fd7d30d4c272bb3082"
+          },
+          {
+            "name": "budget-95efc6425819a293a04e25329c918eab617dbb25cad19ce62b32581ac66c1db7.json",
+            "sha256": "dce1e3f8b0156da3fa07117d3aa0369583f38bcc4c9be401acee6b147fa0f2f8"
+          },
+          {
+            "name": "budget-95efc6425819a293a04e25329c918eab617dbb25cad19ce62b32581ac66c1db7.csv",
+            "sha256": "c76987b7b27d7ed5abdf326cc59399e9450339d86ce5e16d07144ef3364ec807"
+          },
+          {
+            "name": "budget-ec3df2f51e410b02003cef9dd712d524e5d7368c06aec0dddce6892069c6eebe.csv",
+            "sha256": "576b0f733814df5383a59a367dc1f2c99b5888c8690775895899325c133bd02e"
           }
         ]
       }
@@ -65,54 +129,118 @@
     "en": {
       "verdict": "accepted",
       "editorial": {
-        "purpose_and_first_use": "The plain title introduces requesting an assessment of company arrangements, supplying both procedures and operating examples, reading the reasoned assessment and improvement plan, then requesting a follow-up. The absence example follows the complete first-use sequence rather than replacing it.",
-        "inputs_and_request": "Read company, procedure and February-cycle evidence in all five languages and the April update. Officina Arco has one site and twelve staff, with distinct management, document and external-accounting roles. The natural-language request fixes the Italian company, responsibilities, monthly close and collection-information scope at 31 March; other processes remain unassessed.",
-        "deliverable_and_next_action": "The actual Markdown memo starts with scope, company context, assessment and decisions to discuss. It retains coverage, process responsibilities, questions, dated operation, finding F1 and proposed action A1 with owner, timing and completion evidence. Local source links resolve to the exact imported files. The material review preserves the successful February cycle without inferring continuous operation or payment from a customer promise. The native output is a memo and versioned JSON, not a fabricated Word/PDF preview.",
-        "practice_and_repeat": "The separate practice executes the initial review, imports its finalized record in the same engagement and adds the April evidence. The new memo identifies actual late dispatch/delivery, recognizes Paolo’s limited invoice collection, and keeps A1 open. Elena’s review is unrecorded at 30 April but the five-day period from 28 April is still open. The previous record stays byte-identical. The lesson ends by explaining how to repeat with a real scoped engagement and dated evidence.",
-        "execution_and_checkpoints": "Separate native demonstration and practice checks start the current workflow in an isolated tutorial archive. Codex-authored interpretation is saved by the ordinary helper; source bytes and predecessor records are bound to the same engagement. The lesson checkpoints precede analysis and ask the learner to trace a finding to a source. Script execution is verified; a live learner and native voice/window behavior are not certified by these checks.",
-        "language_and_pacing": "Language en. Read the complete localized outline and fictional inputs and the unique content of both actual native memos. Headings, statuses, interpretation and delivery notes use the selected language; filenames and record keys remain technical references. Six stages total 390 seconds. The teacher reads the assessment and one linked finding/action, leaving the full supporting memo available. Questions and processing may extend elapsed time; no measured learner duration is claimed."
+        "purpose_and_first_use": "The localized title teaches both assessment and construction in the same engagement. Officina Arco has twelve staff and one site. Retains the original March assessment and April chronology; construction begins from an attributed discovery visit and one scoped monthly-close control.",
+        "inputs_and_request": "Read all en outline fields and construction, construction-update and financial-lab chapters, plus company/procedure/February operation/April update. Shared JSON contains unapproved raw fictional facts, no case model, mapping, plan output or professional approvals. Financial-lab entity is explicitly separate from Officina Arco and the existing Ciclo Arco lesson.",
+        "execution_and_checkpoints": "Current native assessment tests pass separately. New native CLI checks import exact kit bytes in a genuine local archive, open the case/form, export/import Markdown, finalize and resume a snapshot with every original source, qualify evidence, compare unknown/base/override, and retain evidence-finding-control-action links. Checkpoints ask the real learner to trace evidence; no learner answers are manufactured in the lesson.",
+        "deliverable_and_next_action": "Inspected actual localized control prose in DOCX/PDF/Markdown, the editable register, JSON/hash manifest and construction snapshots. Draft, test-only attributed professional review, adoption and simulated execution are separate states; producing/reviewing the manual does not change evidence scores. Simulation remains design_only with A1 open. Italian fixed headings and the final PDF version-line pagination limit are explicit.",
+        "practice_and_repeat": "Distinct practice resumes the same engagement with April evidence, stales the exact qualification and recorded override, changes the control, retains M1 and compiles draft M2 without transferring approval. The original KPI observation remains immutable after population/formula version changes. A separate native v3 financial lab rejects unreviewed/partial plans and unreconciled totals, preserves Budget -100 and Forecast -150, and rejects stale financial narrative before re-authoring it.",
+        "language_and_pacing": "Language en: complete outline, discovery chapter, practice and lab translated with the same facts; jurisdiction remains Italy. The ordinary introductory outline uses six stages totaling 390 seconds; construction and finance continue in further resumable sessions. Do not treat this as a measured end-to-end lesson duration. Business Planning’s separate Ciclo Arco kit supports it/en; the current teacher explains those sources in their actual language. Fixed construction-export headings remain Italian, with engineering test labels explicitly outside learner-facing copy."
       },
       "demo": {
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[demo-en]",
-        "result_review": "The current native helper writes a draft memo and versioned record for the 31 March review. The procedure and dated February cycle support the stated roles and successful dispatch/review in that cycle, but no named substitute or payment proof. The assessment links F1 to proposed A1, with ownership/timing explicitly subject to agreement. The detailed source challenge corrects chronology and preserves limitations; no professional approval is recorded.",
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_constructs_resumes_and_preserves_review_boundaries[demo-en]",
+        "result_review": "Inspected current demo artifacts: exact archive resume, original unknown answers and missing attachment retained; manual M1 and editable register preserve source/risk/control/action trace. Reviews/adoption use separately receipted automated synthetic fixture evidence, not real professional decisions. Simulated operating review is design_only; action stays open. KPI missing/zero-denominator values remain null. No adoption or execution exists after draft compilation; recorded qualification/override are distinct from declared level. Native v3 financial outputs preserve distinct reviewed test-only Budget and Forecast mappings with exact calculation IDs and totals; earlier Budget CSV remains byte-identical. No voice, user understanding or real-company acceptance claimed.",
         "reviewed_artifacts": [
           {
-            "name": "adeguati-assetti-7674d38a1b9bd4c8b430cd07bb6fffad793219cc5e28f1874a6b93460bea1fe6.md",
-            "sha256": "68285d30c45a8857fd77077c52128c2f6366a243249bcffd128c4a4c2f39bda9"
+            "name": "assetti-construction-f23757b187ee4382588f8b398dc133f73d11497a430aeab7b22af0cd1f253626.json",
+            "sha256": "472a1af14fb7f5ef9b2db700f32f260649510de88e273449a920f19bf9aa86cd"
           },
           {
-            "name": "adeguati-assetti-7674d38a1b9bd4c8b430cd07bb6fffad793219cc5e28f1874a6b93460bea1fe6.json",
-            "sha256": "a92e61e158a3579540f36400265bea193ccbb89f3597a9073de5a738ae73ebf3"
+            "name": "assetti-construction-f23757b187ee4382588f8b398dc133f73d11497a430aeab7b22af0cd1f253626.md",
+            "sha256": "86c2cb81b5c636ee8f21eb96bf55de48d36e15f20e9ea6f2b0099025c40e3a3b"
           },
           {
-            "name": "artifact_card.md",
-            "sha256": "d3e0041a3f74a23bcdbc626484ef9b7455591d4acd91623b369fda0d303170a6"
+            "name": "manuale.docx",
+            "sha256": "95cf4417e3850db817006c5ca9c5efd6daada785112442906739e60eba3d0168"
           },
           {
-            "name": "codex_run_review.md",
-            "sha256": "46bc1a799cd67a0adf30e52e17a06c0f1418584e33842fcf91116fcc5dd70605"
+            "name": "manuale.pdf",
+            "sha256": "ff49eb67ce583daf854f343d75df07a5f3c03d06dcb071a0d40cbac73ecc8ddf"
+          },
+          {
+            "name": "manuale.md",
+            "sha256": "744cdbd12050aa6f3801135b17119769aa65848e4356a6818e04f7b9529a697c"
+          },
+          {
+            "name": "manuale.json",
+            "sha256": "216d9c53f5d01503d2bafeb413fda209efc345f97a4ae081b7a475f93afd1e69"
+          },
+          {
+            "name": "registro-01.csv",
+            "sha256": "6c6ec423a6d8c20b3126a4f36cc3b856661a0f8857580019b314b64f145bea6b"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "2b8a852777a14cfd5e876104552e00f9586fdd10f85308f73b5118ddc6659805"
+          },
+          {
+            "name": "budget-537c81085f56a77c1a9522df1027d88eed48331e977a9062c98908f00f1c361d.json",
+            "sha256": "d3b982c93fba4cf18dca7914db78badacb1541d74a91626e71759d7581dee2fd"
+          },
+          {
+            "name": "budget-372ba7d8c85c5b6fc1c5c76e66012228f779f05f7597ab796cf361e165a5b850.json",
+            "sha256": "b846085690409221d138b07f4efbda5fdd8d3fd457cbeb9f200730ca1fa2edc0"
+          },
+          {
+            "name": "budget-372ba7d8c85c5b6fc1c5c76e66012228f779f05f7597ab796cf361e165a5b850.csv",
+            "sha256": "46b7823ee49586464236b245bd195e3076b1c45ad15af589a16c7fb217a08869"
+          },
+          {
+            "name": "budget-537c81085f56a77c1a9522df1027d88eed48331e977a9062c98908f00f1c361d.csv",
+            "sha256": "ae219c14fcf35c23e7498d57c1e78d11fba361f4e5badf77552590b4358e9633"
           }
         ]
       },
       "practice": {
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[practice-en]",
-        "result_review": "A finalized initial record is imported into the same engagement before the 30 April native run. The new record links its exact hash and leaves its bytes unchanged. It distinguishes missed document/report deadlines from Elena’s still-open review period, recognizes Paolo’s partial contribution and keeps A1 open. The full memo, changed assessment and local delivery/review companions were checked against the source update.",
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_constructs_resumes_and_preserves_review_boundaries[practice-en]",
+        "result_review": "Inspected current practice artifacts: exact archive resume, original unknown answers and missing attachment retained; manual M2 and editable register preserve source/risk/control/action trace. Reviews/adoption use separately receipted automated synthetic fixture evidence, not real professional decisions. Simulated operating review is design_only; action stays open. KPI missing/zero-denominator values remain null. April evidence stales D1 and qualification; modified P1 makes M1 need review, M2 remains draft and old snapshots/observations are unchanged. Native v3 financial outputs preserve distinct reviewed test-only Budget and Forecast mappings with exact calculation IDs and totals; earlier Budget CSV remains byte-identical. No voice, user understanding or real-company acceptance claimed.",
         "reviewed_artifacts": [
           {
-            "name": "adeguati-assetti-6628f3933ac9cb7f995ee175bacd8570f6a53976f0d59ccb717d7643e0aaf7c3.md",
-            "sha256": "ae7153011089f3bb45e89b3b123bbd7b68ef5a421ddbdf8bb96a519dfd5ab1f9"
+            "name": "assetti-construction-5179a39d1833ae432164cb03290753c0de3b9a4278e5720e27d874c5bf87e950.json",
+            "sha256": "4a3beb57953206bb075099dab3106425e9d72de2e254949bb585571fe54eaf72"
           },
           {
-            "name": "adeguati-assetti-6628f3933ac9cb7f995ee175bacd8570f6a53976f0d59ccb717d7643e0aaf7c3.json",
-            "sha256": "42590d0b9ddc35c4841bdd72f4ce6ef78c5548685c17e636879dd4acb855837c"
+            "name": "assetti-construction-5179a39d1833ae432164cb03290753c0de3b9a4278e5720e27d874c5bf87e950.md",
+            "sha256": "9aad9a04097e4ac6ac1ff555bebc556e4526334288fbde56f8936f4032b91415"
           },
           {
-            "name": "artifact_card.md",
-            "sha256": "85f1c2e12c78fe25d7aa44c92001e428da9c824abfbaf4eae83aca4a6727f739"
+            "name": "manuale.docx",
+            "sha256": "dadb8b1998a0a576464fe70b10e0d6859d1c67593a4d4ac04b67b92418a737db"
           },
           {
-            "name": "codex_run_review.md",
-            "sha256": "1a511a7060d84d794107d4f0e7c2bbd72d264e6ffcd504b8de66240291f96994"
+            "name": "manuale.pdf",
+            "sha256": "7ff4d80a7ad9ccc12b746ef579bbd17b35709f7113886a02d1705518137e3893"
+          },
+          {
+            "name": "manuale.md",
+            "sha256": "4dcaa8ca3dac23d45acad18583b7c8ebbabee059bd3731d867e756c658b54da6"
+          },
+          {
+            "name": "manuale.json",
+            "sha256": "70c717ca92f65c27784f9c7840e1ed8c05fbb4fdce5a58a72159ea2f22469d25"
+          },
+          {
+            "name": "registro-01.csv",
+            "sha256": "6c6ec423a6d8c20b3126a4f36cc3b856661a0f8857580019b314b64f145bea6b"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "f9aeaf2d9319cb7f0ed72c8c40bd144cdc6eb79c9b622ffd60023d2995874cbb"
+          },
+          {
+            "name": "budget-cb48aed1edce3caf4f460729aadaa4bb1d524e71bfb38e66af0954b4407d0595.json",
+            "sha256": "4f9af5f2a431d12467d1e98ddbfab301471f96d58c46acbde8426dfbf8ff7977"
+          },
+          {
+            "name": "budget-e1e2dd681c818ef6fdb5c7868c3c323615bf9885b62aadcc236784cd29a9286b.json",
+            "sha256": "c5e9e0c2c647f1e39576db5a5389fe7680a294250ee50b6c2416d4efc1df3a27"
+          },
+          {
+            "name": "budget-cb48aed1edce3caf4f460729aadaa4bb1d524e71bfb38e66af0954b4407d0595.csv",
+            "sha256": "efde23661618fc5023e450b52fe640bcc2206dcfded478931d30931b197366fb"
+          },
+          {
+            "name": "budget-e1e2dd681c818ef6fdb5c7868c3c323615bf9885b62aadcc236784cd29a9286b.csv",
+            "sha256": "da4e602acdab13cb974c488cd56f4944a4fae31bc0e20505b5d88115a16af6c6"
           }
         ]
       }
@@ -120,54 +248,118 @@
     "fr": {
       "verdict": "accepted",
       "editorial": {
-        "purpose_and_first_use": "The plain title introduces requesting an assessment of company arrangements, supplying both procedures and operating examples, reading the reasoned assessment and improvement plan, then requesting a follow-up. The absence example follows the complete first-use sequence rather than replacing it.",
-        "inputs_and_request": "Read company, procedure and February-cycle evidence in all five languages and the April update. Officina Arco has one site and twelve staff, with distinct management, document and external-accounting roles. The natural-language request fixes the Italian company, responsibilities, monthly close and collection-information scope at 31 March; other processes remain unassessed.",
-        "deliverable_and_next_action": "The actual Markdown memo starts with scope, company context, assessment and decisions to discuss. It retains coverage, process responsibilities, questions, dated operation, finding F1 and proposed action A1 with owner, timing and completion evidence. Local source links resolve to the exact imported files. The material review preserves the successful February cycle without inferring continuous operation or payment from a customer promise. The native output is a memo and versioned JSON, not a fabricated Word/PDF preview.",
-        "practice_and_repeat": "The separate practice executes the initial review, imports its finalized record in the same engagement and adds the April evidence. The new memo identifies actual late dispatch/delivery, recognizes Paolo’s limited invoice collection, and keeps A1 open. Elena’s review is unrecorded at 30 April but the five-day period from 28 April is still open. The previous record stays byte-identical. The lesson ends by explaining how to repeat with a real scoped engagement and dated evidence.",
-        "execution_and_checkpoints": "Separate native demonstration and practice checks start the current workflow in an isolated tutorial archive. Codex-authored interpretation is saved by the ordinary helper; source bytes and predecessor records are bound to the same engagement. The lesson checkpoints precede analysis and ask the learner to trace a finding to a source. Script execution is verified; a live learner and native voice/window behavior are not certified by these checks.",
-        "language_and_pacing": "Language fr. Read the complete localized outline and fictional inputs and the unique content of both actual native memos. Headings, statuses, interpretation and delivery notes use the selected language; filenames and record keys remain technical references. Six stages total 390 seconds. The teacher reads the assessment and one linked finding/action, leaving the full supporting memo available. Questions and processing may extend elapsed time; no measured learner duration is claimed."
+        "purpose_and_first_use": "The localized title teaches both assessment and construction in the same engagement. Officina Arco has twelve staff and one site. Retains the original March assessment and April chronology; construction begins from an attributed discovery visit and one scoped monthly-close control.",
+        "inputs_and_request": "Read all fr outline fields and construction, construction-update and financial-lab chapters, plus company/procedure/February operation/April update. Shared JSON contains unapproved raw fictional facts, no case model, mapping, plan output or professional approvals. Financial-lab entity is explicitly separate from Officina Arco and the existing Ciclo Arco lesson.",
+        "execution_and_checkpoints": "Current native assessment tests pass separately. New native CLI checks import exact kit bytes in a genuine local archive, open the case/form, export/import Markdown, finalize and resume a snapshot with every original source, qualify evidence, compare unknown/base/override, and retain evidence-finding-control-action links. Checkpoints ask the real learner to trace evidence; no learner answers are manufactured in the lesson.",
+        "deliverable_and_next_action": "Inspected actual localized control prose in DOCX/PDF/Markdown, the editable register, JSON/hash manifest and construction snapshots. Draft, test-only attributed professional review, adoption and simulated execution are separate states; producing/reviewing the manual does not change evidence scores. Simulation remains design_only with A1 open. Italian fixed headings and the final PDF version-line pagination limit are explicit.",
+        "practice_and_repeat": "Distinct practice resumes the same engagement with April evidence, stales the exact qualification and recorded override, changes the control, retains M1 and compiles draft M2 without transferring approval. The original KPI observation remains immutable after population/formula version changes. A separate native v3 financial lab rejects unreviewed/partial plans and unreconciled totals, preserves Budget -100 and Forecast -150, and rejects stale financial narrative before re-authoring it.",
+        "language_and_pacing": "Language fr: complete outline, discovery chapter, practice and lab translated with the same facts; jurisdiction remains Italy. The ordinary introductory outline uses six stages totaling 390 seconds; construction and finance continue in further resumable sessions. Do not treat this as a measured end-to-end lesson duration. Business Planning’s separate Ciclo Arco kit supports it/en; the current teacher explains those sources in their actual language. Fixed construction-export headings remain Italian, with engineering test labels explicitly outside learner-facing copy."
       },
       "demo": {
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[demo-fr]",
-        "result_review": "The current native helper writes a draft memo and versioned record for the 31 March review. The procedure and dated February cycle support the stated roles and successful dispatch/review in that cycle, but no named substitute or payment proof. The assessment links F1 to proposed A1, with ownership/timing explicitly subject to agreement. The detailed source challenge corrects chronology and preserves limitations; no professional approval is recorded.",
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_constructs_resumes_and_preserves_review_boundaries[demo-fr]",
+        "result_review": "Inspected current demo artifacts: exact archive resume, original unknown answers and missing attachment retained; manual M1 and editable register preserve source/risk/control/action trace. Reviews/adoption use separately receipted automated synthetic fixture evidence, not real professional decisions. Simulated operating review is design_only; action stays open. KPI missing/zero-denominator values remain null. No adoption or execution exists after draft compilation; recorded qualification/override are distinct from declared level. Native v3 financial outputs preserve distinct reviewed test-only Budget and Forecast mappings with exact calculation IDs and totals; earlier Budget CSV remains byte-identical. No voice, user understanding or real-company acceptance claimed.",
         "reviewed_artifacts": [
           {
-            "name": "adeguati-assetti-ed37cf38aa9efa0c620fec52c102b1994fffcc72781a66c3792c625dca436a9d.md",
-            "sha256": "558545015f0011ea4f710aaa2bad7b08aa8ac6e1049ae81a66c50217d368ffaa"
+            "name": "assetti-construction-ac73700e3c1d33f16b0fac695b3fdabb9531a2d7fc7da7a1420d180f3fe36fcc.json",
+            "sha256": "2e43d1b69a9baa5d1cf124626c1180b377c5f3315d430412279ad808520cc2cc"
           },
           {
-            "name": "adeguati-assetti-ed37cf38aa9efa0c620fec52c102b1994fffcc72781a66c3792c625dca436a9d.json",
-            "sha256": "dfabea63e808425c9f610bcb6ed4e4d0c81cd8df730a86ad2eb83a4f7b1db887"
+            "name": "assetti-construction-ac73700e3c1d33f16b0fac695b3fdabb9531a2d7fc7da7a1420d180f3fe36fcc.md",
+            "sha256": "61a5f5a881362f6f2a72688c23e874cc13318728357b9660bfe89d3552da9016"
           },
           {
-            "name": "artifact_card.md",
-            "sha256": "ca33fabf13fdb31b1c4ac7099d78a1059360624ffa07ff024db4b895bf1291cb"
+            "name": "manuale.docx",
+            "sha256": "d2e686abe8923599bb12aafc1dfa41556a29cc39c4bd73a9453a8d3295f78bfa"
           },
           {
-            "name": "codex_run_review.md",
-            "sha256": "2930560e0ec3f4e8ee291344e96c6a84b1d299949fcc6c8079e393333b588319"
+            "name": "manuale.pdf",
+            "sha256": "03ba1496b7662a4ceaca92c19a11dbea0c368be0d925d19a25e11eaf3a5a6793"
+          },
+          {
+            "name": "manuale.md",
+            "sha256": "a6fb1ab0517422498db4222aa0a2a459987c673c58f71f37686464c95e8789e5"
+          },
+          {
+            "name": "manuale.json",
+            "sha256": "6800ee9bad203a806e93f534116f3074f778f4fb8d54c287f29a88de95a777e9"
+          },
+          {
+            "name": "registro-01.csv",
+            "sha256": "5589ad4a97c8bedb18c50ff9081d6fa24b53d2ec513a0bacfc40be90d8d2135a"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "194fdd4608d48c8987918b2894ac9281548f01583bb0c5f5d11154c408dea674"
+          },
+          {
+            "name": "budget-67cfea2774673762115f6beb4a6e5d2ce26af784cc44f47bcfefd3ef2bcb773b.json",
+            "sha256": "1b6a319cc3e7f5d75dcfc6c4bf5c244b524f597facccf67a233fa1f9027bc966"
+          },
+          {
+            "name": "budget-a61caa0fabf965f133ceb696c74ec2cd6be54d343846c2dd6bc600e75db26921.json",
+            "sha256": "f4bec8cbd1e7618122a23e6994352a60cec9805a5fd7338ed2f70490396af62e"
+          },
+          {
+            "name": "budget-a61caa0fabf965f133ceb696c74ec2cd6be54d343846c2dd6bc600e75db26921.csv",
+            "sha256": "ad7c114b4334ade4f46e7face3d466108a9c0c2b53c8b307b7756d9c8a07a438"
+          },
+          {
+            "name": "budget-67cfea2774673762115f6beb4a6e5d2ce26af784cc44f47bcfefd3ef2bcb773b.csv",
+            "sha256": "98347fcc2eaad2360d143ef6267e5d2596051ff795fa25bdcf42897bff2630c9"
           }
         ]
       },
       "practice": {
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[practice-fr]",
-        "result_review": "A finalized initial record is imported into the same engagement before the 30 April native run. The new record links its exact hash and leaves its bytes unchanged. It distinguishes missed document/report deadlines from Elena’s still-open review period, recognizes Paolo’s partial contribution and keeps A1 open. The full memo, changed assessment and local delivery/review companions were checked against the source update.",
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_constructs_resumes_and_preserves_review_boundaries[practice-fr]",
+        "result_review": "Inspected current practice artifacts: exact archive resume, original unknown answers and missing attachment retained; manual M2 and editable register preserve source/risk/control/action trace. Reviews/adoption use separately receipted automated synthetic fixture evidence, not real professional decisions. Simulated operating review is design_only; action stays open. KPI missing/zero-denominator values remain null. April evidence stales D1 and qualification; modified P1 makes M1 need review, M2 remains draft and old snapshots/observations are unchanged. Native v3 financial outputs preserve distinct reviewed test-only Budget and Forecast mappings with exact calculation IDs and totals; earlier Budget CSV remains byte-identical. No voice, user understanding or real-company acceptance claimed.",
         "reviewed_artifacts": [
           {
-            "name": "adeguati-assetti-bb306f545a40572782d678b6c7fad14bdf3d755403d909ee90cfb32932213bed.md",
-            "sha256": "ad1a010fd253d29a8e543bef3faa161094624d057e1ec3398ec81ec46dbd6872"
+            "name": "assetti-construction-4be9abb4ad5b3d22b29e0720907c1c4152467d2a628987bc3db7191d974d1398.json",
+            "sha256": "992143bede4806c8d0b2f4642789ee38004b1f79346ffc378bea47457d7b77b8"
           },
           {
-            "name": "adeguati-assetti-bb306f545a40572782d678b6c7fad14bdf3d755403d909ee90cfb32932213bed.json",
-            "sha256": "76290aaf2d69f20ef77900864e0d13c82953f95225965d73b36acec174556ede"
+            "name": "assetti-construction-4be9abb4ad5b3d22b29e0720907c1c4152467d2a628987bc3db7191d974d1398.md",
+            "sha256": "2ca0fe3c24f77037cbc1a95dd1a0d6c2db5471f4942b5bc23521e7eecc45a6d4"
           },
           {
-            "name": "artifact_card.md",
-            "sha256": "b80642e271c4af8e4b933c97c53a1ba64af174be22bc8f6c83f06b01bff84c81"
+            "name": "manuale.docx",
+            "sha256": "531deedbd3a70ccf40f7f18c2d771a9f26f9ac3d7b0eec0ca9ea205602d1624e"
           },
           {
-            "name": "codex_run_review.md",
-            "sha256": "53f659418271c63df8394b31df727532ce1ed551061331a0ad442442c7130ea2"
+            "name": "manuale.pdf",
+            "sha256": "bda35466246d9ed1a3377e80c40be1214c85d20950dbd9b050f38b25206d92c7"
+          },
+          {
+            "name": "manuale.md",
+            "sha256": "d5da359913ea8d86dd911144ff1743f75d6b8c5a22e65be3ea05334c9216e5bc"
+          },
+          {
+            "name": "manuale.json",
+            "sha256": "ca37ce0ae2d320b8bfde2e105115bf312e3b62c6d9b9c6af9f7307fc3c200fca"
+          },
+          {
+            "name": "registro-01.csv",
+            "sha256": "5589ad4a97c8bedb18c50ff9081d6fa24b53d2ec513a0bacfc40be90d8d2135a"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "b44257c90e91b5a8229dfcb2cd75b0ea365ee27c77ac30e9d1bff44e36721c03"
+          },
+          {
+            "name": "budget-f248fa00a6b28cd1a4b5b4f07b88d0980e268a8c09677f4f784b303fab24a844.json",
+            "sha256": "9b086e2a1b81f8e1d819039f1d1c9f884a1f20be2f115d0a9599d0d456754e6e"
+          },
+          {
+            "name": "budget-d65d3b3cb24771dc7a9d114b240aa1927f1b807cef1bdc189328b39b7de3c8ea.json",
+            "sha256": "241620504f37251b64a6ff73bfd9d8b722cac3739ce250277dedc1d249b7578d"
+          },
+          {
+            "name": "budget-d65d3b3cb24771dc7a9d114b240aa1927f1b807cef1bdc189328b39b7de3c8ea.csv",
+            "sha256": "a4932be2826715389d11c0337f950bef47be3de9e39076f877049a8a7d860f72"
+          },
+          {
+            "name": "budget-f248fa00a6b28cd1a4b5b4f07b88d0980e268a8c09677f4f784b303fab24a844.csv",
+            "sha256": "6560079951745bb4f39d9da99b6010b32b84c6dae3c0dfc5b80631cf4b9f084d"
           }
         ]
       }
@@ -175,54 +367,118 @@
     "de": {
       "verdict": "accepted",
       "editorial": {
-        "purpose_and_first_use": "The plain title introduces requesting an assessment of company arrangements, supplying both procedures and operating examples, reading the reasoned assessment and improvement plan, then requesting a follow-up. The absence example follows the complete first-use sequence rather than replacing it.",
-        "inputs_and_request": "Read company, procedure and February-cycle evidence in all five languages and the April update. Officina Arco has one site and twelve staff, with distinct management, document and external-accounting roles. The natural-language request fixes the Italian company, responsibilities, monthly close and collection-information scope at 31 March; other processes remain unassessed.",
-        "deliverable_and_next_action": "The actual Markdown memo starts with scope, company context, assessment and decisions to discuss. It retains coverage, process responsibilities, questions, dated operation, finding F1 and proposed action A1 with owner, timing and completion evidence. Local source links resolve to the exact imported files. The material review preserves the successful February cycle without inferring continuous operation or payment from a customer promise. The native output is a memo and versioned JSON, not a fabricated Word/PDF preview.",
-        "practice_and_repeat": "The separate practice executes the initial review, imports its finalized record in the same engagement and adds the April evidence. The new memo identifies actual late dispatch/delivery, recognizes Paolo’s limited invoice collection, and keeps A1 open. Elena’s review is unrecorded at 30 April but the five-day period from 28 April is still open. The previous record stays byte-identical. The lesson ends by explaining how to repeat with a real scoped engagement and dated evidence.",
-        "execution_and_checkpoints": "Separate native demonstration and practice checks start the current workflow in an isolated tutorial archive. Codex-authored interpretation is saved by the ordinary helper; source bytes and predecessor records are bound to the same engagement. The lesson checkpoints precede analysis and ask the learner to trace a finding to a source. Script execution is verified; a live learner and native voice/window behavior are not certified by these checks.",
-        "language_and_pacing": "Language de. Read the complete localized outline and fictional inputs and the unique content of both actual native memos. Headings, statuses, interpretation and delivery notes use the selected language; filenames and record keys remain technical references. Six stages total 390 seconds. The teacher reads the assessment and one linked finding/action, leaving the full supporting memo available. Questions and processing may extend elapsed time; no measured learner duration is claimed."
+        "purpose_and_first_use": "The localized title teaches both assessment and construction in the same engagement. Officina Arco has twelve staff and one site. Retains the original March assessment and April chronology; construction begins from an attributed discovery visit and one scoped monthly-close control.",
+        "inputs_and_request": "Read all de outline fields and construction, construction-update and financial-lab chapters, plus company/procedure/February operation/April update. Shared JSON contains unapproved raw fictional facts, no case model, mapping, plan output or professional approvals. Financial-lab entity is explicitly separate from Officina Arco and the existing Ciclo Arco lesson.",
+        "execution_and_checkpoints": "Current native assessment tests pass separately. New native CLI checks import exact kit bytes in a genuine local archive, open the case/form, export/import Markdown, finalize and resume a snapshot with every original source, qualify evidence, compare unknown/base/override, and retain evidence-finding-control-action links. Checkpoints ask the real learner to trace evidence; no learner answers are manufactured in the lesson.",
+        "deliverable_and_next_action": "Inspected actual localized control prose in DOCX/PDF/Markdown, the editable register, JSON/hash manifest and construction snapshots. Draft, test-only attributed professional review, adoption and simulated execution are separate states; producing/reviewing the manual does not change evidence scores. Simulation remains design_only with A1 open. Italian fixed headings and the final PDF version-line pagination limit are explicit.",
+        "practice_and_repeat": "Distinct practice resumes the same engagement with April evidence, stales the exact qualification and recorded override, changes the control, retains M1 and compiles draft M2 without transferring approval. The original KPI observation remains immutable after population/formula version changes. A separate native v3 financial lab rejects unreviewed/partial plans and unreconciled totals, preserves Budget -100 and Forecast -150, and rejects stale financial narrative before re-authoring it.",
+        "language_and_pacing": "Language de: complete outline, discovery chapter, practice and lab translated with the same facts; jurisdiction remains Italy. The ordinary introductory outline uses six stages totaling 390 seconds; construction and finance continue in further resumable sessions. Do not treat this as a measured end-to-end lesson duration. Business Planning’s separate Ciclo Arco kit supports it/en; the current teacher explains those sources in their actual language. Fixed construction-export headings remain Italian, with engineering test labels explicitly outside learner-facing copy."
       },
       "demo": {
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[demo-de]",
-        "result_review": "The current native helper writes a draft memo and versioned record for the 31 March review. The procedure and dated February cycle support the stated roles and successful dispatch/review in that cycle, but no named substitute or payment proof. The assessment links F1 to proposed A1, with ownership/timing explicitly subject to agreement. The detailed source challenge corrects chronology and preserves limitations; no professional approval is recorded.",
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_constructs_resumes_and_preserves_review_boundaries[demo-de]",
+        "result_review": "Inspected current demo artifacts: exact archive resume, original unknown answers and missing attachment retained; manual M1 and editable register preserve source/risk/control/action trace. Reviews/adoption use separately receipted automated synthetic fixture evidence, not real professional decisions. Simulated operating review is design_only; action stays open. KPI missing/zero-denominator values remain null. No adoption or execution exists after draft compilation; recorded qualification/override are distinct from declared level. Native v3 financial outputs preserve distinct reviewed test-only Budget and Forecast mappings with exact calculation IDs and totals; earlier Budget CSV remains byte-identical. No voice, user understanding or real-company acceptance claimed.",
         "reviewed_artifacts": [
           {
-            "name": "adeguati-assetti-6b635239c509598db5298a72686b9383255aef5e8b99f1e097111510ccbb92ec.md",
-            "sha256": "b154faf0dff78ee5ea15d33b036a322db542463dede17ea541000ac6dddbce0e"
+            "name": "assetti-construction-7ae38a448f0e7651cceb0ea1fd989ebc38501c4dd9991701057473617862f21d.json",
+            "sha256": "7a05cbe4b83685251a356f3e179df1ad2c8d5dcd06f77c1cabd417b23a51a472"
           },
           {
-            "name": "adeguati-assetti-6b635239c509598db5298a72686b9383255aef5e8b99f1e097111510ccbb92ec.json",
-            "sha256": "8c09564867c0c7f9cf4ba9018d0557086283c2464d308848ecc43a522e99bf56"
+            "name": "assetti-construction-7ae38a448f0e7651cceb0ea1fd989ebc38501c4dd9991701057473617862f21d.md",
+            "sha256": "bda89a979cdcd614db4fff23ee95a9d687f3dc74effc6005d2c82386ba8f73c9"
           },
           {
-            "name": "artifact_card.md",
-            "sha256": "950a7f606d250165469b4cd94fb7d70cca5831e98a4c163cbd24d0947dafd12c"
+            "name": "manuale.docx",
+            "sha256": "197cdb2718256ff2585bd3436e36469f3da966f5306171fc87cadf4f590a6ad0"
           },
           {
-            "name": "codex_run_review.md",
-            "sha256": "4321063fdfea2ff6f9ddf5319c8b414e1aeb60b27edef672f44be22e312a80c1"
+            "name": "manuale.pdf",
+            "sha256": "c9443a56cbf9c14cee39d6ebbdcfeee48a314a2e7d5ad0afe9c1933327c5eeed"
+          },
+          {
+            "name": "manuale.md",
+            "sha256": "32c28b9787c095072d6394a7eb39eef7a7afd501276c619824d86333a56606f6"
+          },
+          {
+            "name": "manuale.json",
+            "sha256": "49a6a44d2fb128de4978496ced5e949e44279912963343b3e9148f16dd9a6f60"
+          },
+          {
+            "name": "registro-01.csv",
+            "sha256": "6216874678da02f0df1600f4cce469af2ffe4e2b514d95620510fc83ed6e1a2f"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "c5a2435576b6f91f7aafb7964ebe5d2da3c19e01c78108048a0a93965cfd8124"
+          },
+          {
+            "name": "budget-ce2364b896bde98324a9fd4d07d70a92982acec75cd7fe78264839ff2c91c060.json",
+            "sha256": "ea47f6861d144aa43453a9232ed1bd166f35126a35f8051fa640f6adf3e2f80e"
+          },
+          {
+            "name": "budget-741dae4bbec6da8b277c534d2314f3c44f88a72fc3ced88add95bfacd4a24e72.json",
+            "sha256": "f11a40cc353aba40ffa24022ac3a1a9fb81e0c9706933d4120856fe5e33ef482"
+          },
+          {
+            "name": "budget-741dae4bbec6da8b277c534d2314f3c44f88a72fc3ced88add95bfacd4a24e72.csv",
+            "sha256": "22ad7ef6d8db16a42ec9e0ec1584adfefe8d76a0cee00f94dca541e198e1c961"
+          },
+          {
+            "name": "budget-ce2364b896bde98324a9fd4d07d70a92982acec75cd7fe78264839ff2c91c060.csv",
+            "sha256": "02ae7c7a4e2b4ab53bdc34bc7daaf881f7130f4e00efc76cecd0d90386dc4f4e"
           }
         ]
       },
       "practice": {
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[practice-de]",
-        "result_review": "A finalized initial record is imported into the same engagement before the 30 April native run. The new record links its exact hash and leaves its bytes unchanged. It distinguishes missed document/report deadlines from Elena’s still-open review period, recognizes Paolo’s partial contribution and keeps A1 open. The full memo, changed assessment and local delivery/review companions were checked against the source update.",
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_constructs_resumes_and_preserves_review_boundaries[practice-de]",
+        "result_review": "Inspected current practice artifacts: exact archive resume, original unknown answers and missing attachment retained; manual M2 and editable register preserve source/risk/control/action trace. Reviews/adoption use separately receipted automated synthetic fixture evidence, not real professional decisions. Simulated operating review is design_only; action stays open. KPI missing/zero-denominator values remain null. April evidence stales D1 and qualification; modified P1 makes M1 need review, M2 remains draft and old snapshots/observations are unchanged. Native v3 financial outputs preserve distinct reviewed test-only Budget and Forecast mappings with exact calculation IDs and totals; earlier Budget CSV remains byte-identical. No voice, user understanding or real-company acceptance claimed.",
         "reviewed_artifacts": [
           {
-            "name": "adeguati-assetti-4f469cd57e6637bcbb5191416bcc54bb990205c34f565baa20a1965e9740ff99.md",
-            "sha256": "142d66c533e1fa5f0948db8c14e4afc898423dc5e700da98fcc1dba87137b9ee"
+            "name": "assetti-construction-bd1cc32554c4692169edeaeff6e8da79dda89f84eb3f615f12126c5159ef05fc.json",
+            "sha256": "8e2543b589c2f3edaf37fdb3b05d693a02e1ed1f56000831ec31871119517ac8"
           },
           {
-            "name": "adeguati-assetti-4f469cd57e6637bcbb5191416bcc54bb990205c34f565baa20a1965e9740ff99.json",
-            "sha256": "48646f214ca1570cd805004e8e1ef3c85db6cca46e89c2178137ba5303179ccb"
+            "name": "assetti-construction-bd1cc32554c4692169edeaeff6e8da79dda89f84eb3f615f12126c5159ef05fc.md",
+            "sha256": "34696cd985d439e937c3d1b9ccfbb1aff586257ac6cb5a478eac19d2620fa58e"
           },
           {
-            "name": "artifact_card.md",
-            "sha256": "34e8ad0b85570958ce8658a655c3d4e4fa5e3825c64cc3802727cfc1694fe382"
+            "name": "manuale.docx",
+            "sha256": "863c470aede914e02d4c22cc43d891fd6e383e7f863084a82849a45453b7003e"
           },
           {
-            "name": "codex_run_review.md",
-            "sha256": "7aba0d022850459bbc892cd1e61800e91a643d62387467b5ccf510360466ab5c"
+            "name": "manuale.pdf",
+            "sha256": "d66d9b0dea70b254f128748afec1d59826bb059cd3c14cc5cfec2856733c073c"
+          },
+          {
+            "name": "manuale.md",
+            "sha256": "e3ac344575b0ff4eed6698a281023874dd9f6d9004c2c499a22a85135c101b0f"
+          },
+          {
+            "name": "manuale.json",
+            "sha256": "49eb973fa58a4f1b4f954d582ad9104d100d6fbc01cf17ef63fe4d50b1ca6646"
+          },
+          {
+            "name": "registro-01.csv",
+            "sha256": "6216874678da02f0df1600f4cce469af2ffe4e2b514d95620510fc83ed6e1a2f"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "864795a54e090157e1570ac91c344f94329d53ace2e7c7e93bba3717c362a7ea"
+          },
+          {
+            "name": "budget-4e391978c8bf00f2b9115001dae451c27acbd84eb9da00f8933f1b3732c74a99.json",
+            "sha256": "533d6e9263bf5651a216282ba1b1daa9626ea46adffee9679659a4e68441ee23"
+          },
+          {
+            "name": "budget-35cb97f19db941cc7e5a9d3fe0cf861100c0a73aa4898e7fc9378546fcde19c5.json",
+            "sha256": "c67e2e54d39bf7641dabcf40150ea11cfb8406c5c8f2f3560dc4f6a99f13c9d9"
+          },
+          {
+            "name": "budget-35cb97f19db941cc7e5a9d3fe0cf861100c0a73aa4898e7fc9378546fcde19c5.csv",
+            "sha256": "070f4d9b749fd7d6656928e5d188034fcbc2f2794993184f086bf7b2fc249a5f"
+          },
+          {
+            "name": "budget-4e391978c8bf00f2b9115001dae451c27acbd84eb9da00f8933f1b3732c74a99.csv",
+            "sha256": "87149f0d0e913410a5d47b58a47fd53b141c08bcc035d02042d25a9ce4c356de"
           }
         ]
       }
@@ -230,290 +486,121 @@
     "es": {
       "verdict": "accepted",
       "editorial": {
-        "purpose_and_first_use": "The plain title introduces requesting an assessment of company arrangements, supplying both procedures and operating examples, reading the reasoned assessment and improvement plan, then requesting a follow-up. The absence example follows the complete first-use sequence rather than replacing it.",
-        "inputs_and_request": "Read company, procedure and February-cycle evidence in all five languages and the April update. Officina Arco has one site and twelve staff, with distinct management, document and external-accounting roles. The natural-language request fixes the Italian company, responsibilities, monthly close and collection-information scope at 31 March; other processes remain unassessed.",
-        "deliverable_and_next_action": "The actual Markdown memo starts with scope, company context, assessment and decisions to discuss. It retains coverage, process responsibilities, questions, dated operation, finding F1 and proposed action A1 with owner, timing and completion evidence. Local source links resolve to the exact imported files. The material review preserves the successful February cycle without inferring continuous operation or payment from a customer promise. The native output is a memo and versioned JSON, not a fabricated Word/PDF preview.",
-        "practice_and_repeat": "The separate practice executes the initial review, imports its finalized record in the same engagement and adds the April evidence. The new memo identifies actual late dispatch/delivery, recognizes Paolo’s limited invoice collection, and keeps A1 open. Elena’s review is unrecorded at 30 April but the five-day period from 28 April is still open. The previous record stays byte-identical. The lesson ends by explaining how to repeat with a real scoped engagement and dated evidence.",
-        "execution_and_checkpoints": "Separate native demonstration and practice checks start the current workflow in an isolated tutorial archive. Codex-authored interpretation is saved by the ordinary helper; source bytes and predecessor records are bound to the same engagement. The lesson checkpoints precede analysis and ask the learner to trace a finding to a source. Script execution is verified; a live learner and native voice/window behavior are not certified by these checks.",
-        "language_and_pacing": "Language es. Read the complete localized outline and fictional inputs and the unique content of both actual native memos. Headings, statuses, interpretation and delivery notes use the selected language; filenames and record keys remain technical references. Six stages total 390 seconds. The teacher reads the assessment and one linked finding/action, leaving the full supporting memo available. Questions and processing may extend elapsed time; no measured learner duration is claimed."
+        "purpose_and_first_use": "The localized title teaches both assessment and construction in the same engagement. Officina Arco has twelve staff and one site. Retains the original March assessment and April chronology; construction begins from an attributed discovery visit and one scoped monthly-close control.",
+        "inputs_and_request": "Read all es outline fields and construction, construction-update and financial-lab chapters, plus company/procedure/February operation/April update. Shared JSON contains unapproved raw fictional facts, no case model, mapping, plan output or professional approvals. Financial-lab entity is explicitly separate from Officina Arco and the existing Ciclo Arco lesson.",
+        "execution_and_checkpoints": "Current native assessment tests pass separately. New native CLI checks import exact kit bytes in a genuine local archive, open the case/form, export/import Markdown, finalize and resume a snapshot with every original source, qualify evidence, compare unknown/base/override, and retain evidence-finding-control-action links. Checkpoints ask the real learner to trace evidence; no learner answers are manufactured in the lesson.",
+        "deliverable_and_next_action": "Inspected actual localized control prose in DOCX/PDF/Markdown, the editable register, JSON/hash manifest and construction snapshots. Draft, test-only attributed professional review, adoption and simulated execution are separate states; producing/reviewing the manual does not change evidence scores. Simulation remains design_only with A1 open. Italian fixed headings and the final PDF version-line pagination limit are explicit.",
+        "practice_and_repeat": "Distinct practice resumes the same engagement with April evidence, stales the exact qualification and recorded override, changes the control, retains M1 and compiles draft M2 without transferring approval. The original KPI observation remains immutable after population/formula version changes. A separate native v3 financial lab rejects unreviewed/partial plans and unreconciled totals, preserves Budget -100 and Forecast -150, and rejects stale financial narrative before re-authoring it.",
+        "language_and_pacing": "Language es: complete outline, discovery chapter, practice and lab translated with the same facts; jurisdiction remains Italy. The ordinary introductory outline uses six stages totaling 390 seconds; construction and finance continue in further resumable sessions. Do not treat this as a measured end-to-end lesson duration. Business Planning’s separate Ciclo Arco kit supports it/en; the current teacher explains those sources in their actual language. Fixed construction-export headings remain Italian, with engineering test labels explicitly outside learner-facing copy."
       },
       "demo": {
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[demo-es]",
-        "result_review": "The current native helper writes a draft memo and versioned record for the 31 March review. The procedure and dated February cycle support the stated roles and successful dispatch/review in that cycle, but no named substitute or payment proof. The assessment links F1 to proposed A1, with ownership/timing explicitly subject to agreement. The detailed source challenge corrects chronology and preserves limitations; no professional approval is recorded.",
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_constructs_resumes_and_preserves_review_boundaries[demo-es]",
+        "result_review": "Inspected current demo artifacts: exact archive resume, original unknown answers and missing attachment retained; manual M1 and editable register preserve source/risk/control/action trace. Reviews/adoption use separately receipted automated synthetic fixture evidence, not real professional decisions. Simulated operating review is design_only; action stays open. KPI missing/zero-denominator values remain null. No adoption or execution exists after draft compilation; recorded qualification/override are distinct from declared level. Native v3 financial outputs preserve distinct reviewed test-only Budget and Forecast mappings with exact calculation IDs and totals; earlier Budget CSV remains byte-identical. No voice, user understanding or real-company acceptance claimed.",
         "reviewed_artifacts": [
           {
-            "name": "adeguati-assetti-3e47fbf6c328bd8c7bcce908dbed1b22dfe57c241fd9bfeef46104d0d799b00b.md",
-            "sha256": "7d2a1ad3f11bef8ce2ec68f90026003b80311116bc572a8e9ce4ab9a1f46b788"
+            "name": "assetti-construction-996d47be5521023b878485eac1ef3aef4a023fc48c3bc91d02a8028b397d7765.json",
+            "sha256": "c7f261488307d71f4ac38c304dc9bdf970c7514cb24b69c431f15a4c9313090a"
           },
           {
-            "name": "adeguati-assetti-3e47fbf6c328bd8c7bcce908dbed1b22dfe57c241fd9bfeef46104d0d799b00b.json",
-            "sha256": "de5bda55b86c5ebb1c210fd06be93134c2d7233dfc429e616cb208299cac9804"
+            "name": "assetti-construction-996d47be5521023b878485eac1ef3aef4a023fc48c3bc91d02a8028b397d7765.md",
+            "sha256": "4cc8c414d9054f905ce3bcd1653e221a047a41f93b058e5488350027b5edb46a"
           },
           {
-            "name": "artifact_card.md",
-            "sha256": "a73aba3680c7b9e8788d5b92ab41c14da7a50794e31cc4e32ac427e301d7fcb4"
+            "name": "manuale.docx",
+            "sha256": "2651bfad72f4303d097e7afa5bfac5b7d93afe2ae8a6aa8e368585adf60927ca"
           },
           {
-            "name": "codex_run_review.md",
-            "sha256": "441a384f92c2a2ddfe7662c33ab3e3d6f62c40bb7eb4e864301f75753b5cc34d"
+            "name": "manuale.pdf",
+            "sha256": "45cec4009490f5fc019056d47cb8646d6ea01d69637bf2db0e1b868875e27a87"
+          },
+          {
+            "name": "manuale.md",
+            "sha256": "acec1e2e978d81724fb09e44eb24b0ccf87fd8a8b2868d26627dc1bbd82a26fe"
+          },
+          {
+            "name": "manuale.json",
+            "sha256": "0bc87a220fbaa2431b0b9628c8174395220df56c1490fccad653db732668c22a"
+          },
+          {
+            "name": "registro-01.csv",
+            "sha256": "2656487e63e082a294e1b5bb98a4ef12afa8b175bd9df33af1e93d541f536ed0"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "dcf585637653b523aedc760fc8971e2f0449769f8c17b836b6d1030259eefb62"
+          },
+          {
+            "name": "budget-4688f668cbc44297e984e1d5c66f11c827ea1f1e5d565570a6028428ef89a90e.json",
+            "sha256": "4ef82cdf54fb06e7bfed56bc8f6f3122a6c8fbe82a3b4e5715df3c6eb86a4e55"
+          },
+          {
+            "name": "budget-58618609d4266d4977cbe2b4c0699791607f0c93f9b272afe224d1dcb0826a00.json",
+            "sha256": "4bdbe927b320fc7820d716623b397d23324da8d0d004461496c5551175310922"
+          },
+          {
+            "name": "budget-4688f668cbc44297e984e1d5c66f11c827ea1f1e5d565570a6028428ef89a90e.csv",
+            "sha256": "15b6f8c0fafc663696394e895e898adcf3b173d8b9fbe3f00d0c0f4df2d1089b"
+          },
+          {
+            "name": "budget-58618609d4266d4977cbe2b4c0699791607f0c93f9b272afe224d1dcb0826a00.csv",
+            "sha256": "862fd9a5e2c8f451931fb6a979e70e7e7507971fa18328bf654ada0d2d2bf588"
           }
         ]
       },
       "practice": {
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_runs_assessment_and_same_case_follow_up[practice-es]",
-        "result_review": "A finalized initial record is imported into the same engagement before the 30 April native run. The new record links its exact hash and leaves its bytes unchanged. It distinguishes missed document/report deadlines from Elena’s still-open review period, recognizes Paolo’s partial contribution and keeps A1 open. The full memo, changed assessment and local delivery/review companions were checked against the source update.",
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_assetti_kit_constructs_resumes_and_preserves_review_boundaries[practice-es]",
+        "result_review": "Inspected current practice artifacts: exact archive resume, original unknown answers and missing attachment retained; manual M2 and editable register preserve source/risk/control/action trace. Reviews/adoption use separately receipted automated synthetic fixture evidence, not real professional decisions. Simulated operating review is design_only; action stays open. KPI missing/zero-denominator values remain null. April evidence stales D1 and qualification; modified P1 makes M1 need review, M2 remains draft and old snapshots/observations are unchanged. Native v3 financial outputs preserve distinct reviewed test-only Budget and Forecast mappings with exact calculation IDs and totals; earlier Budget CSV remains byte-identical. No voice, user understanding or real-company acceptance claimed.",
         "reviewed_artifacts": [
           {
-            "name": "adeguati-assetti-0bf32fd0dc36455e3575ee6c05bf3f00d3d3de9ebe4227c9b1bd729cc21d8121.md",
-            "sha256": "2283d2fa95322a80fecec8a14dae9edcc058c23f4e82b3cea8e593cb28dfcadf"
+            "name": "assetti-construction-820a2b477832360812e93c423608bfa007a34b7023492ee2cf8dff5110e05389.json",
+            "sha256": "8ba6f7e12510d27b1fc7369a05c4602c8ea02d0f4bae8deee3bf64db857c15f6"
           },
           {
-            "name": "adeguati-assetti-0bf32fd0dc36455e3575ee6c05bf3f00d3d3de9ebe4227c9b1bd729cc21d8121.json",
-            "sha256": "9cf3e1cefe539b62f4d738a22d0cf37fd016214f7eb9b21b10c38a8fa151387b"
+            "name": "assetti-construction-820a2b477832360812e93c423608bfa007a34b7023492ee2cf8dff5110e05389.md",
+            "sha256": "787d0b757589e043f2fbac73e9d6cf2552a35411c33575dbfdd6acabcdf00596"
           },
           {
-            "name": "artifact_card.md",
-            "sha256": "c9584659bc65b25153fd1cc80450271e41ba6c6dc24be156efebefd0819a103e"
+            "name": "manuale.docx",
+            "sha256": "d77ac04fabdfddc6a1f28f0185504ccce6da2e0cb4f87f54dedc5a9c97cfd7d9"
           },
           {
-            "name": "codex_run_review.md",
-            "sha256": "8754335198aa6c2798233468707786f4398da200b640af51d951b1158fa12a88"
+            "name": "manuale.pdf",
+            "sha256": "c21f6b38577cad0bdc0192d83e237f595f13271cf1efba7d38df54b2e569aeb5"
+          },
+          {
+            "name": "manuale.md",
+            "sha256": "bba519b3e350ea3bd983d0ffa356119818946ae656ff4b4927df3c8810c0a977"
+          },
+          {
+            "name": "manuale.json",
+            "sha256": "f6cbfe9f61809ff6e38ca1aa0f459dfb08e950801f148c85811f0ec0b1f84a4f"
+          },
+          {
+            "name": "registro-01.csv",
+            "sha256": "2656487e63e082a294e1b5bb98a4ef12afa8b175bd9df33af1e93d541f536ed0"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "cd62c715ba996f797750918ce116617745a1191e650f4fbbb234ab6abecd9088"
+          },
+          {
+            "name": "budget-fb3b1fee73e2f0761859a9afbdc8cd85e817059f5b0346ef423cbd8c0bc0444f.json",
+            "sha256": "3261cddb937178c1706e986fe0660dac07335fd3cec5c0afed266f1c70dec8eb"
+          },
+          {
+            "name": "budget-68d60c870562ef6a5a7b1814696b684a85b8d4601c8b40cc81c086a5a1a8dbba.json",
+            "sha256": "e69df3321e54f6b3a172291f7f5fedbd7a5e5fd68adde559d1c0a3cabbdbc123"
+          },
+          {
+            "name": "budget-68d60c870562ef6a5a7b1814696b684a85b8d4601c8b40cc81c086a5a1a8dbba.csv",
+            "sha256": "a7250696e2f019a316e882dc718aa688607396e78f45f254eab091509af46f2a"
+          },
+          {
+            "name": "budget-fb3b1fee73e2f0761859a9afbdc8cd85e817059f5b0346ef423cbd8c0bc0444f.csv",
+            "sha256": "bc46b37275af12d6d2535f895769b1767764d39fdd74f8a0ce9c6448319f1f97"
           }
         ]
       }
     }
-  },
-  "freshness_review": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-09-15T07:45:34.148205+00:00",
-    "previous_course_sha256": "3500a49c218193b73c87cea9e9b9fcfad6eaa64633a659ec17b19c0a64634f89",
-    "source_snapshot": "/private/tmp/assetti-aml-teaching-release-05/test_assetti_kit_runs_assessme8/kit/course-provenance.json",
-    "source_changes": [
-      {
-        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
-        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
-      },
-      {
-        "path": "plugins/_shared/vendor/modules/reporting_table.py",
-        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
-        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
-      }
-    ],
-    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
-    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
-    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
-    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
-    "prior_artifact_reviews_preserved": true,
-    "voice_or_learner_completion_claimed": false
-  },
-  "interim_release_refresh": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-09-15T09:39:25.247268+00:00",
-    "previous_course_sha256": "e3e28f78b72e29b984a87b6f00dc2315e1d752d206e6e77b5b317144f1e35c93",
-    "previous_source_commit": "312b51de",
-    "source_changes": [
-      {
-        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
-        "before": null,
-        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
-      },
-      {
-        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
-        "before": null,
-        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
-      },
-      {
-        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
-        "before": null,
-        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
-      },
-      {
-        "path": "plugins/_shared/vendor/modules/courseware/library.py",
-        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
-        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
-      },
-      {
-        "path": "plugins/vera/skills/adeguati-assetti/SKILL.md",
-        "before": "295332691d871c1b4b99419fedaf8a4873039f235fcdf0025fec58ea43a4a698",
-        "after": "3979b63d8ad3058c4747b70947599efb4f989e8a4e65c5ac98d36c25795bcf20"
-      }
-    ],
-    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
-    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
-    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
-    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
-  },
-  "browser_preview_refresh": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-09-17",
-    "previous_course_sha256": "47fda948d8397212cd03a8d8423b24b89493a4a2b9330ae3e2bed4db9d37057a",
-    "previous_source_commit": "19399a8c",
-    "source_changes": [
-      {
-        "path": "vendor/modules/courseware/library.py",
-        "before": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24",
-        "after": "22c5ea8d39a6ffa376c63f12bd31e3282b435a913e8027ee44c4261a5e704a74"
-      },
-      {
-        "path": "vendor/modules/courseware/preview.py",
-        "before": null,
-        "after": "36ff10a3d93772a927765c395eb19c5073664c1447b0b267cf9bd9455c4ad6f3"
-      }
-    ],
-    "content_review": "Compared the complete course object with the reviewed main baseline: localized teaching content, input definitions, requests, checkpoints, exercises and timing are byte-equivalent as JSON values. Existing editorial judgments and artifact reviews remain preserved. This refresh does not assert a new independent editorial or learner review.",
-    "source_review": "Reviewed the shared CLI serve dispatch and loopback helper. Listing, loading and rendering retain their original implementation. Browser preview serves the complete rendered kit on an OS-selected loopback port and rejects resolved paths outside the kit and directory lists. Teaching instructions now require a browser target, preserve relative assets and distinguish queued/opened actions from learner-confirmed visibility.",
-    "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
-    "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
-    "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
-  },
-  "codex_course_qa_20260927": {
-    "scope": "Italian native Codex teacher/working demo and same-dossier April follow-up, actual source/memo reading, saved reopening.",
-    "fix": "Readable Markdown document title; clickable verified previous JSON input; follow-up instructions retain every material prior-action requirement. Model review corrections preserve absent-evidence limits, actual lateness versus still-open review window, formal-agreement qualification and unresolved weekly-control requirement.",
-    "evidence": "Local codex-course-21.md; demo/practice 6 archived files each, 11/13 execution hashes verified; exact predecessor and unchanged demo confirmed.",
-    "limits": "Simulated QA learner, not professional approval or human understanding. Other languages, native voice hardware and physical windows unverified. No deployment or publication."
-  },
-  "release_freshness_20260928": {
-    "reviewer": "Codex /root - bounded release freshness review",
-    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
-    "previous_course_sha256": "c42bb45e382cbaef9185d5f477582b300f3c6649e1f58186daa5557e775030c3",
-    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
-    "changed_compiled_fields": [
-      "sources"
-    ],
-    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
-    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
-    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-21.md",
-    "italian_course_qa_sha256": "f99b97a337d6f2ae8dd4a0c7b27b320ecb1cd1d771e80fe08c2fd2988e4975e8",
-    "native_execution_evidence": {
-      "commit": "2431fbd29",
-      "run": 36392851481,
-      "job": 108832365397,
-      "passed": 1152,
-      "skipped": 3,
-      "phase": "Verify teaching-kit languages, real executions and native packages",
-      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
-    },
-    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
-  },
-  "geneva_release_refresh": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-09-28T08:17:18.379368+00:00",
-    "previous_course_sha256": "c42bb45e382cbaef9185d5f477582b300f3c6649e1f58186daa5557e775030c3",
-    "previous_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
-    "content_review": "Compared the complete course object with the exact previously reviewed baseline. All authored locale content, input definitions, requests, checkpoints, practice, timing and other non-source fields are unchanged. Only source bindings differ. Original editorial judgments and historical artifact reviews are retained.",
-    "source_review": "The common-core Geneva release adds explicit jurisdiction and source handling, French/CHF presentation where applicable, and the source-bound adapters described in docs/releases/2026-09-28-vera-geneva.md. This course retains its existing professional purpose and sample jurisdiction; adding Geneva capability does not relabel an Italian exercise as Swiss. Exact changed bindings are recorded by kit in docs/releases/2026-09-28-vera-geneva-course-review.json.",
-    "native_evidence": "GitHub Actions run 36393675234, job 108834959892, commit 989e523529fccd09a60a8ed29dc63d87b863d21e: native teaching stage passed 998 tests with 3 explicit skips and 89.73% courseware coverage. New Client, Geneva adapters and annual-account stages also passed. The later editorial-fingerprint check failed; this is not a claim that the full run passed. Fresh CI must independently validate all required demo/practice identities and current course hashes.",
-    "limits": "This is a bounded release-source refresh, not a new independent editorial, visual, professional or learner review. Earlier artifact hashes remain historical evidence. No Geneva lesson acceptance, real-client acceptance or installed-runtime update is claimed."
-  },
-  "combined_geneva_release_refresh": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-09-28T08:57:48.956746+00:00",
-    "previous_course_sha256": "f7b37ad4838abab25a94cbd7ea0d41ff2dae6e4aa4c104ec24948a7eec616820",
-    "course_qa_commit": "1b9883c484ad7c877bd304914c53c277f7a71ab2",
-    "integrated_main_commit": "655c5a7ea",
-    "content_review": "The complete authored course object is unchanged from the verified course QA commit when source bindings are excluded. Retains both the prior Italian Codex QA record and the Geneva source-bound review from main. No new lesson, language-journey acceptance or professional approval is asserted.",
-    "source_review": "Integrated additive Geneva jurisdiction/currency adapters and French presentation from PR #692; course QA source/result readers, saved-review controls, parser hardening and teacher/working roles are preserved. Generated assets and packages are rebuilt from this combined source.",
-    "native_execution_requirement": "The combined candidate must pass the unchanged required native demo/practice checks and dedicated Geneva regressions before deployment."
-  },
-  "cnc_integration_freshness": {
-    "reviewer": "Codex /root - bounded source freshness review",
-    "reviewed_at": "2026-09-29T22:10:28.758468+00:00",
-    "comparison_commit": "d728392e712b82049b9fc8f196aa44df51cbbaed",
-    "previous_course_sha256": "6c06178888fce4c7fbc572aae6ea6ec93962ea916ffc5375084d2e712e8b2711",
-    "source_changes": [
-      {
-        "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/contracts.py",
-        "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
-        "after": "c4c791eab77b3077554dbbc40d90247a347b62b832bb7fdbdc21f73dbe679294"
-      },
-      {
-        "path": "vendor/modules/vera_assurance/contracts.py",
-        "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
-        "after": "c4c791eab77b3077554dbbc40d90247a347b62b832bb7fdbdc21f73dbe679294"
-      }
-    ],
-    "content_review": "Compared the complete compiled course with the reviewed main baseline. Every field except sources is identical, including authored locales, fictional inputs, checkpoints, practice and pacing. Original editorial explanations and inspected artifact hashes are preserved.",
-    "source_review": "Reviewed the sole shared-contract change: adding composizione-negoziata to the recognized managed workflow IDs. The Studio Archive lesson also binds the additive sealed snapshot history/read/append methods under the existing engagement lock. An AST comparison confirms that every pre-existing ledger function and class is unchanged. No existing lesson behavior or external recipient is added by these changes.",
-    "execution_evidence": "GitHub run 36633858670, job 109629617115 at 7ef49b804: 1171 native teaching tests passed, three skipped; one stale public-catalogue count assertion failed and has been corrected separately. This is not a green whole-run claim. Ten additional CNC native demo/practice cases pass locally.",
-    "limits": "Historical artifact reviews remain historical. No new independent editorial, live learner, voice, installed-host or professional acceptance is claimed. The release gate must validate current native demo/practice identities against these exact course hashes."
-  },
-  "construction_source_release_refresh": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-09-29T21:47:09.787596+00:00",
-    "previous_course_sha256": "6c06178888fce4c7fbc572aae6ea6ec93962ea916ffc5375084d2e712e8b2711",
-    "content_review": "Compared the complete course JSON with origin/main at d728392e712b82049b9fc8f196aa44df51cbbaed. Only sources differ; all five localized lesson outlines, checkpoints, inputs, demo/practice instructions and outputs are unchanged. Existing editorial judgments are retained for the assessment-mode lesson. This does not certify a new construction-mode lesson.",
-    "source_review": "Source bindings now include the additive construction workflow, its intake/export/adapters/storage helpers and references, declared dependencies, dependency checker and combined skill. The existing assetti_review.py assessment implementation is unchanged. The assessment lesson continues to exercise the assessment mode.",
-    "native_execution_review": "All ten native assessment demo/practice cases passed locally on 2026-09-29 using the current course hash (test_assetti_kit_runs_assessment_and_same_case_follow_up; 10 passed in 1.27 seconds). The full native execution stage also passed in CI run 36632351720 before the stale editorial binding was detected. Fresh CI must validate all current course identities and hashes.",
-    "limits": "This is a bounded source-binding refresh, not a new independent editorial, visual, learner or professional acceptance. Earlier output-artifact hashes remain historical evidence. No construction-mode teaching acceptance or Geneva construction qualification is claimed."
-  },
-  "combined_assetti_cnc_freshness": {
-    "reviewer": "Codex /root - bounded integration review",
-    "reviewed_at": "2026-09-29T22:56:34.477155+00:00",
-    "main_commit": "f09267a16fc906f813de80675b2b8328f33c979d",
-    "review": "Preserves the complete assetti construction implementation and its source-bound review from main unchanged. All non-source course fields are identical to that reviewed main course. The remaining shared source difference adds only composizione-negoziata to the allowed managed workflow IDs. Both prior review records and their historical artifact hashes remain intact. Current native assessment and CNC cases must pass against the combined course identity.",
-    "limits": "No new construction-mode lesson, Geneva qualification, live learner or professional acceptance is inferred."
-  },
-  "esg_source_refresh_20260930": {
-    "reviewer": "Codex /root - bounded source review",
-    "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
-    "baseline_commit": "5f4c3324b9efe209e9e6f99a3a38d7ac002df81a",
-    "previous_course_sha256": "7e4231e7dff2e7eedfcb8f1bee9ae0dab0c3473a220f0bd6fc0c73450c928ba3",
-    "current_course_sha256": "f66143bcbc80a947846d9377fb34d8f143fc92f95b43a79cb5d5d0df6c420542",
-    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
-    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
-    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
-    "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json"
-  },
-  "valuation_integration_review": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-09-29T17:43:56.264741+00:00",
-    "previous_course_sha256": "6c06178888fce4c7fbc572aae6ea6ec93962ea916ffc5375084d2e712e8b2711",
-    "scope": "Compared every lesson field and input record with origin/main: identical outside source fingerprints. Inspected the sole shared dependency change: adding business-valuation to VERA_CLIENT_WORKFLOW_IDS. No existing workflow semantics, lesson text or input bytes changed. Preserve prior editorial and artifact reviews; fresh native executions remain required in CI.",
-    "source_changes": [
-      {
-        "path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-        "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
-        "after": "291b0c14d84c2498581ba6e8da92ecbb948df5abfa329bcab9d24ef0924da9a1"
-      },
-      {
-        "path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-        "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
-        "after": "291b0c14d84c2498581ba6e8da92ecbb948df5abfa329bcab9d24ef0924da9a1"
-      }
-    ]
-  },
-  "combined_valuation_construction_integration": {
-    "reviewed_at": "2026-09-29T22:58:01.745580+00:00",
-    "upstream_main": "f09267a16fc906f813de80675b2b8328f33c979d",
-    "content_review": "Compared every course field with both merge parents: only source fingerprints differ. All five localized outlines, inputs and demo/practice instructions are identical. Retain both earlier editorial records without claiming new construction-mode teaching acceptance.",
-    "source_review": "The merged source retains the complete upstream construction workflow and the additive business-valuation assurance registration. Existing assessment implementation and lesson semantics are unchanged. No additional external recipient or model-data route is introduced by this merge.",
-    "native_verification": "All ten native assessment demo/practice cases pass against this exact course hash. The same invocation passes 114 construction/transformation cases (124 total). The first invocation excluded the repository fixture and produced three setup errors; the corrected invocation includes it, without source or test edits.",
-    "limits": "Mechanical regression and source-binding integration only; no new visual, learner, professional or Geneva construction acceptance."
-  },
-  "valuation_cnc_integration": {
-    "reviewed_at": "2026-09-29T23:43:34.898187+00:00",
-    "scope": "Lesson content unchanged from HEAD, MERGE_HEAD outside the source inventory. Reviewed additive workflow-ID registration and Studio Archive immutable snapshot functions. Prior editorial/artifact acceptance and professional limits retained; native CNC and valuation execution is verified separately.",
-    "integrated_main": "8f662195f00bac3b605ac73077e1a0bd31d30253"
-  },
-  "patent_box_source_refresh_20260930": {
-    "reviewer": "Codex /root - bounded source compatibility review",
-    "reviewed_at": "2026-09-30T11:04:31.688736+00:00",
-    "baseline_commit": "bcda5096b53af83584f73b645a0d9e78b29de104",
-    "previous_course_sha256": "f66143bcbc80a947846d9377fb34d8f143fc92f95b43a79cb5d5d0df6c420542",
-    "current_course_sha256": "599b9b8be812e366aa2b806ea3eea601dda8f3be6890508deb6be535323f7c24",
-    "content_review": "The complete compiled course object is identical to the previously reviewed main baseline except for source bindings. All authored locales, fictional inputs, requests, checkpoints, outputs, practice and pacing are unchanged. Original editorial judgments and artifact reviews are preserved.",
-    "source_review": "The only changed source adds patent-box-review to VERA_CLIENT_WORKFLOW_IDS. An AST comparison confirms all other shared contract statements are identical. Existing workflow IDs and their behavior are unchanged.",
-    "native_execution_evidence": "GitHub Actions run 36703497570, job 109848196461, source 437abcd61eca512a4da8c591386ffdbd0895bec7: the native teaching batch passed 1183 tests, with three explicit skips and 92.10% courseware coverage. The later stale editorial-digest gate failed; this is not a green whole-run claim. Fresh CI must validate every required demo/practice identity against the current digest.",
-    "limits": "Source compatibility review only; no new independent editorial, visual, learner, installed-host or professional acceptance. Earlier reviewed artifacts remain historical evidence.",
-    "detail": "docs/releases/2026-09-30-patent-box-course-source-review.json"
-  },
-  "scissione_integration_refresh_20260930": {
-    "previous_course_sha256": "1b9a279e9b3b524508d9cf6b3dad2b4987a7d4d80f84a9245ddcc8f3c28c1a0f",
-    "new_course_sha256": "f41c5cb3cb64c77da40a183dd3ddd3dee268a1673ba431ca7924de1248860ee3",
-    "changed_sources": [
-      "plugins/_shared/vendor/modules/vera_assurance/contracts.py"
-    ],
-    "review": "Every authored lesson field and input record matches current main. The sole shared source change adds scissione-guidata to the supported workflow IDs; existing workflow behavior is unchanged. Original reviewers, dates, judgments and output hashes are preserved. Fresh native teaching executions are required in CI; no new professional or learner acceptance is claimed."
   }
 }

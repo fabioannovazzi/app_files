@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "adeguati-assetti",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-01.1",
   "seconds": [
     45,
     60,
@@ -24,7 +24,7 @@
   "execution": {
     "mode": "current_native_workflow",
     "local_tutorial": true,
-    "route": "assess_arrangements_then_review_new_evidence"
+    "route": "assess_then_construct_resume_and_review_operation"
   },
   "sources": [
     {
@@ -633,133 +633,386 @@
         "es"
       ],
       "role": "practice"
+    },
+    {
+      "path": "files/input/construction-it.md",
+      "sha256": "904679bc5775846440362dc148df9859aa2bfcd01e86b8cc5ffe77d7fd1e94aa",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/financial-lab-it.md",
+      "sha256": "b311c4edc4344b9698f5c89c300ba6e0d351cbd7add7edc059b2aa0e3104a666",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/construction-it.md",
+      "sha256": "904679bc5775846440362dc148df9859aa2bfcd01e86b8cc5ffe77d7fd1e94aa",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/financial-lab-it.md",
+      "sha256": "b311c4edc4344b9698f5c89c300ba6e0d351cbd7add7edc059b2aa0e3104a666",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/construction-update-it.md",
+      "sha256": "10f440ac68804321f7bfd4594d942ae15a68e2065dd6b10e71c82b7b0073cb5a",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/construction-en.md",
+      "sha256": "ef169241523edfbbb98d0c461941420fe3915f32734bf80b143e410d5bc2d4ab",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/financial-lab-en.md",
+      "sha256": "9dff518cd6ca0a0c6f1dc06e8e0f63144617125bf42fe1cc309e2419849fef0f",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/construction-en.md",
+      "sha256": "ef169241523edfbbb98d0c461941420fe3915f32734bf80b143e410d5bc2d4ab",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/financial-lab-en.md",
+      "sha256": "9dff518cd6ca0a0c6f1dc06e8e0f63144617125bf42fe1cc309e2419849fef0f",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/construction-update-en.md",
+      "sha256": "a0319f73125fc4bc323457428986d578d455bb1c50f76f8b70f58d08bab73bf0",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/construction-fr.md",
+      "sha256": "b2560a09537d0cace301dfc733654272480c5d5816eb92e131164b8622306b68",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/financial-lab-fr.md",
+      "sha256": "a01cadf1fb280e9d47bd17a0e8860086a485f68918fe51cb6ff87c07fb880071",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/construction-fr.md",
+      "sha256": "b2560a09537d0cace301dfc733654272480c5d5816eb92e131164b8622306b68",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/financial-lab-fr.md",
+      "sha256": "a01cadf1fb280e9d47bd17a0e8860086a485f68918fe51cb6ff87c07fb880071",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/construction-update-fr.md",
+      "sha256": "8b95a345b6976f72b8590b5864755901af8b3a8f1a2e2ba3fead71357c7b51df",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/construction-de.md",
+      "sha256": "9d435aca6b13e1473aac6cf557f73e0922334316751a7c9fb7224c00a876d828",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/financial-lab-de.md",
+      "sha256": "f9d2ddcf2dc5fa426424590c039e5b2abf9ca5ad76c2e4c2d52b8e8b1f231a29",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/construction-de.md",
+      "sha256": "9d435aca6b13e1473aac6cf557f73e0922334316751a7c9fb7224c00a876d828",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/financial-lab-de.md",
+      "sha256": "f9d2ddcf2dc5fa426424590c039e5b2abf9ca5ad76c2e4c2d52b8e8b1f231a29",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/construction-update-de.md",
+      "sha256": "503ef709036ce1a78aa06da7aca1fac0fc9bfaaf54af3c56d7f04d15e406c5f6",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/construction-es.md",
+      "sha256": "72881bf01b6edf306e56bf870e7660f4b3d2e2b1a382432e6608c2ddcc1ab459",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/financial-lab-es.md",
+      "sha256": "24409e5700fe1aa5714f452d6be26f6a846cd00efbf23299052f3e48790e0ddf",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/construction-es.md",
+      "sha256": "72881bf01b6edf306e56bf870e7660f4b3d2e2b1a382432e6608c2ddcc1ab459",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/financial-lab-es.md",
+      "sha256": "24409e5700fe1aa5714f452d6be26f6a846cd00efbf23299052f3e48790e0ddf",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/construction-update-es.md",
+      "sha256": "41368dbf0f5ea2f1f2f9d9eaa0d239b428b3431e3c83f60a650a7537e27aec80",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/construction-facts.json",
+      "sha256": "c7c37efb2945322cb9e31bc6a474e2d238177578ab8adcbd990e26e9db81ba7b",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/construction-facts.json",
+      "sha256": "c7c37efb2945322cb9e31bc6a474e2d238177578ab8adcbd990e26e9db81ba7b",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/financial-facts.json",
+      "sha256": "7f8984f4d9cc905556de9b01911ee76b7d76d22257e32c9f860ae9a759ffd519",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/financial-facts.json",
+      "sha256": "7f8984f4d9cc905556de9b01911ee76b7d76d22257e32c9f860ae9a759ffd519",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
     }
   ],
   "locales": {
     "it": {
-      "title": "Valutare gli assetti aziendali con Vera",
-      "goal": "Imparare a richiedere una valutazione degli assetti, fornire evidenze del loro funzionamento e utilizzare rilievi e azioni proposte.",
-      "scenario": "Officina Arco vuole rivedere responsabilità, chiusura mensile e informazioni sugli incassi. Abbiamo il profilo aziendale, una procedura e un esempio reale nel caso fittizio.",
-      "scope": "Una prima valutazione mirata degli assetti organizzativi, amministrativi e contabili. Il perimetro è quello descritto nei documenti; non è una certificazione dell’intera azienda.",
-      "inputs": "Apri company-it.md, procedure-it.md e operation-it.md. Spiega a Vera impresa, incarico e data: 31 marzo 2026. Fornisci esempi di lavoro svolto insieme alle procedure scritte.",
-      "request": "Vera, valuta gli assetti di Officina Arco per responsabilità, chiusura mensile e gestione delle informazioni sugli incassi. Usa questi documenti e mostrami valutazione, limiti e azioni da discutere.",
+      "title": "Valutare e costruire gli assetti con Vera",
+      "goal": "Dalla valutazione alle procedure: raccogliere risposte, progettare un controllo proporzionato, rivedere il manuale e verificare separatamente adozione e funzionamento.",
+      "scenario": "Officina Arco, impresa italiana interamente fittizia con dodici addetti, vuole migliorare la chiusura mensile. Il ciclo di febbraio è documentato; quello di marzo arriva in ritardo durante l’assenza di Sara. Il corso continua in sessioni riprendibili: l’introduzione richiede circa 6–8 minuti, la costruzione e il laboratorio finanziario richiedono ulteriore tempo.",
+      "scope": "Valutazione mirata e costruzione sperimentale nello stesso dossier. Il metodo STUDIO-AA-0.1 e la scala 0–4 non sono una certificazione UNI né un verdetto di adeguatezza. Le prove sintetiche non costituiscono un pilota professionale su un’impresa reale.",
+      "inputs": "Apri company-it.md, procedure-it.md e operation-it.md per la valutazione al 31 marzo 2026; poi construction-it.md e construction-facts.json per la visita. Sono dichiarazioni fittizie e materiale didattico, non decisioni approvate né risultati. Leggi financial-lab-it.md per il laboratorio separato.",
+      "request": "Vera, valuta gli assetti di Officina Arco usando questi documenti. Poi aiutami a costruire un controllo proporzionato per la chiusura mensile nello stesso dossier, mantenendo ignoti, proposte, revisioni, adozione e prove di funzionamento distinti.",
       "steps": [
-        "Nel thread di lavoro Vera ricostruisce il funzionamento dell’impresa e propone il perimetro. La voce spiega perché una procedura e un esempio della sua applicazione sono entrambi utili.",
-        "Vera confronta responsabilità, scadenze, consegne e decisioni, verifica le fonti professionali pertinenti e prepara rilievi proporzionati. La voce segue le evidenze effettive e le domande che possono cambiare il giudizio.",
-        "Apri il memo prodotto. Leggi prima la valutazione complessiva, poi un rilievo, la sua fonte e l’azione collegata. Distingui chi e quando sono proposti da impegni già accettati."
+        "Nel thread di lavoro esegui la valutazione corrente, apri il memo e collega un rilievo alla fonte e all’azione. Avvia la costruzione nello stesso incarico; conserva il record di valutazione senza convertirne la consegna in un’approvazione.",
+        "Segui construction-it.md: visita guidata con una domanda contestuale per volta; conserva risposta originale, autore, data e sintesi separata. Apri il modulo HTML offline, esporta Markdown prima di chiudere e reimporta gli originali con ricevuta. Riprendi dallo stesso punto; allegati mancanti e risposte ignote restano visibili.",
+        "Qualifica le evidenze e mostra base, eventuale scelta professionale motivata e obiettivo. Collega evidenza → rischio/rilievo → controllo → azione. Progetta un controllo e un registro, poi compila e apri il manuale Word/PDF/Markdown e i CSV. Prosegui con riesame, adozione, cicli e laboratorio finanziario in sessioni distinte, senza inventare approvazioni."
       ],
       "deliverables": [
-        "Memo con valutazione motivata, osservazioni, rilievi e piano di miglioramento.",
-        "Record collegato alle fonti che consente un riesame successivo e conserva le decisioni effettivamente espresse."
+        "Memo e record di valutazione con fonti, limiti e azioni; originali della visita e snapshot riprendibili con storia delle versioni.",
+        "Manuale operativo in Word, PDF, Markdown e JSON, registri CSV modificabili e manifest di hash; revisione professionale, adozione e riesame operativo hanno stati separati.",
+        "Nel laboratorio: mapping Business Plan/Budget/Forecast riesaminati e versionati, osservazioni di indicatori con formula e popolazione congelate; nessun collegamento finanziario automatico non qualificato."
       ],
-      "review": "Controlla la corrispondenza tra giudizio e prove, il perimetro, le aree non esaminate e la proporzione delle azioni. Un documento scritto o un ciclo riuscito non prova continuità; una lacuna documentale non dimostra da sola che il processo non funzioni.",
+      "review": "Apri i file realmente prodotti, compresi Word e PDF. Non noto non significa zero; dichiarato non significa verificato. Non registrare revisioni, rettifiche o adozione senza istruzione esplicita del partecipante competente. Un manuale, una firma dichiarata o un singolo ciclo non provano efficacia continuativa. I titoli fissi degli export costruzione sono attualmente in italiano; la spiegazione segue la lingua della lezione.",
       "checkpoints": [
-        "Prima dell’analisi, identifica il processo e un esempio di funzionamento disponibile.",
-        "Nel memo, collega un’azione al rilievo e alla fonte che la motivano."
+        "Prima del giudizio, indica una risposta originale, un allegato mancante e una fonte datata: quale informazione potrebbe cambiare il giudizio?",
+        "Nel manuale, segui la catena evidenza–rilievo–controllo–azione e distingue bozza, revisione e adozione. Dopo nuove evidenze, mostra la decisione da riesaminare."
       ],
-      "practice": "Aggiungi update-it.md nello stesso dossier e chiedi il riesame al 30 aprile. Vera collega il record appena prodotto, rivaluta ogni azione precedente e conserva la prima versione. Spiega come le nuove evidenze cambiano il giudizio.",
-      "success": "Sai fornire documenti utili, richiedere la valutazione, usare il piano di azioni e chiedere un riesame basato su nuove evidenze.",
-      "repeat": "Descrivi impresa, finalità e perimetro della valutazione. Dai a Vera procedure, esempi operativi e precedenti pertinenti. Rivedi conclusioni e azioni prima di concordarle con l’impresa."
+      "practice": "In una prova distinta conserva il risultato iniziale, aggiungi update-it.md e construction-update-it.md nello stesso dossier e riesamina al 30 aprile. Riprendi lo snapshot e le fonti importate; verifica le scadenze effettive, rivedi ogni azione, modifica il controllo e confronta il vecchio manuale da riesaminare con la nuova bozza. Chiedi al partecipante una richiesta e una decisione reali: non simularne la partecipazione.",
+      "success": "Sai ripetere valutazione, visita e progettazione; seguire fonti e versioni; distinguere revisione, adozione ed esecuzione; spiegare perché un dato mancante, un export e un KPI non certificano gli assetti.",
+      "repeat": "Riparti da impresa, finalità, perimetro ed evidenze effettive. Usa lo stesso dossier e nuove versioni senza riscrivere la storia. Per un’impresa reale servono giudizio professionale, decisioni aziendali e un pilota operativo supervisionato. Quali dati arrivano al modello: conversazione, originali restituiti, fonti selezionate, manuali, decisioni e collegamenti finanziari possono essere letti dal modello dell’account OpenAI/Cowork scelto, senza anonimizzazione automatica. Il modulo offline non trasmette dati e non registra audio; restituire il Markdown porta quei dati nel contesto del modello. Profilo e progressi didattici restano locali, senza invio di feedback o ricevute didattiche al server."
     },
     "en": {
-      "title": "Assess company arrangements with Vera",
-      "goal": "Learn to request an assessment of company arrangements, supply evidence of their operation and use findings and proposed actions.",
-      "scenario": "Officina Arco wants to review responsibilities, monthly closing and collection information. We have its company profile, a procedure and one operating example in the fictional case.",
-      "scope": "An initial focused assessment of organizational, administrative and accounting arrangements in an Italian company. Scope follows the documents; this is not a whole-company certificate.",
-      "inputs": "Open company-en.md, procedure-en.md and operation-en.md. State company, assignment and date: 31 March 2026. Provide operating examples alongside written procedures.",
-      "request": "Vera, assess Officina Arco’s arrangements for responsibilities, monthly closing and collection information. Use these documents and show the assessment, limits and actions to discuss.",
+      "title": "Assess and construct company arrangements with Vera",
+      "goal": "Move from assessment to procedures: collect answers, design a proportionate control, review the manual and check adoption and operation separately.",
+      "scenario": "Officina Arco is a wholly fictional Italian company with twelve staff improving its monthly close. February is documented; March is late during Sara’s absence. Use resumable sessions: the introduction takes about 6–8 minutes; construction and the financial lab need additional time.",
+      "scope": "Scoped assessment and experimental construction in the same engagement. STUDIO-AA-0.1 and its 0–4 scale provide neither UNI certification nor an adequacy verdict. Synthetic checks are not a real-company professional pilot.",
+      "inputs": "Open company-en.md, procedure-en.md and operation-en.md for 31 March 2026; then construction-en.md and construction-facts.json for discovery. These are fictional statements and teaching inputs, not approved decisions or results. Read financial-lab-en.md for the separate lab.",
+      "request": "Vera, assess Officina Arco’s arrangements using these files. Then help me construct a proportionate monthly-close control in the same engagement, keeping unknowns, proposals, reviews, adoption and operating evidence distinct.",
       "steps": [
-        "In the working chat, Vera reconstructs how the company operates and proposes scope. Voice explains why both a procedure and an example of its use are useful.",
-        "Vera compares responsibilities, deadlines, deliveries and decisions, verifies relevant professional sources and prepares proportionate findings. Voice follows actual evidence and questions that could change the assessment.",
-        "Open the generated memo. Read the overall assessment first, then one finding, its source and linked action. Distinguish proposed owners and timing from accepted commitments."
+        "Run the current assessment in the working chat, open its memo and trace a finding to its source and action. Start construction in the same engagement; retain the assessment record without converting delivery into approval.",
+        "Follow construction-en.md: ask one contextual question at a time; preserve original answer, speaker, date and a separate summary. Open the offline HTML form, export Markdown before closing and import receipted originals. Resume the same practice; missing attachments and unknown answers remain visible.",
+        "Qualify evidence and compare base, any reasoned professional override and target. Trace evidence → risk/finding → control → action. Design one control and register, then compile and open Word/PDF/Markdown and CSV outputs. Continue review, adoption, cycles and the financial lab in separate sessions without inventing approvals."
       ],
       "deliverables": [
-        "Memo with reasoned assessment, observations, findings and improvement plan.",
-        "Source-linked record for subsequent assessment and decisions actually expressed."
+        "Assessment memo and record with sources, limits and actions; interview originals and resumable snapshots with version history.",
+        "Operating manual in Word, PDF, Markdown and JSON, editable CSV registers and hash manifest; professional review, adoption and operating review have separate states.",
+        "In the lab: reviewed and versioned Business Plan/Budget/Forecast mappings and indicator observations with frozen formula/population; no unqualified automatic financial connection."
       ],
-      "review": "Check the link between assessment and evidence, scope, unassessed areas and proportionate actions. A written policy or one successful cycle does not prove continuity; a documentation gap alone does not prove the process fails.",
+      "review": "Open the actual files, including Word and PDF. Unknown is not zero; reported is not verified. Record reviews, overrides or adoption only on the competent participant’s explicit instruction. A manual, a declared signature or one cycle cannot prove continuous effectiveness. Construction export headings currently remain Italian; explain them in the lesson language.",
       "checkpoints": [
-        "Before analysis, identify the process and one available operating example.",
-        "In the memo, link an action to the finding and source that justify it."
+        "Before judging, identify an original answer, missing attachment and dated source: what information could change the judgment?",
+        "Trace evidence–finding–control–action in the manual and distinguish draft, review and adoption. After new evidence, show the decision requiring review."
       ],
-      "practice": "Add update-en.md to the same file and request review at 30 April. Vera links the newly generated record, reassesses every earlier action and preserves the first version. Explain how the new evidence changes the assessment.",
-      "success": "You can provide useful documents, request the assessment, use the action plan and request a reassessment based on new evidence.",
-      "repeat": "Describe company, purpose and scope. Give Vera relevant procedures, operating examples and prior reviews. Review conclusions and actions before agreeing them with the company."
+      "practice": "In a distinct exercise preserve the initial output, add update-en.md and construction-update-en.md to the same engagement and reassess at 30 April. Resume the imported snapshot and sources; check actual deadlines, review every action, change the control and compare the old manual needing review with a new draft. Ask for the learner’s actual request and decision; never simulate participation.",
+      "success": "You can repeat assessment, discovery and design; trace sources and versions; distinguish review, adoption and execution; explain why missing data, an export and a KPI do not certify arrangements.",
+      "repeat": "Start from entity, purpose, scope and actual evidence. Reuse the engagement with new versions and preserve history. Real work requires professional judgment, company decisions and a supervised operating pilot. What data reaches the model: conversation, returned originals, selected evidence, manuals, decisions and financial links may be read by the selected OpenAI/Cowork account’s model, without automatic anonymization. The offline form sends nothing and captures no audio; returning Markdown brings it into model context. Teaching profile and progress stay local, without server feedback or teaching receipts."
     },
     "fr": {
-      "title": "Évaluer l’organisation de l’entreprise avec Vera",
-      "goal": "Apprendre à demander une évaluation des dispositifs de l’entreprise, fournir des preuves de fonctionnement et utiliser constats et actions proposées.",
-      "scenario": "Officina Arco revoit responsabilités, clôture mensuelle et informations de recouvrement. Le cas fictif fournit profil, procédure et un exemple de fonctionnement.",
-      "scope": "Une première évaluation ciblée des dispositifs organisationnels, administratifs et comptables d’une entreprise italienne. Le périmètre suit les documents ; aucune certification de toute l’entreprise.",
-      "inputs": "Ouvrez company-fr.md, procedure-fr.md et operation-fr.md. Précisez entreprise, mission et date : 31 mars 2026. Fournissez des exemples de travail avec les procédures écrites.",
-      "request": "Vera, évalue les dispositifs d’Officina Arco pour responsabilités, clôture mensuelle et informations de recouvrement. Utilise ces documents et montre évaluation, limites et actions à discuter.",
+      "title": "Évaluer et construire les dispositifs de l’entreprise avec Vera",
+      "goal": "Passer de l’évaluation aux procédures : recueillir les réponses, concevoir un contrôle proportionné, revoir le manuel et vérifier séparément adoption et fonctionnement.",
+      "scenario": "Officina Arco est une entreprise italienne entièrement fictive de douze personnes. Le cycle de février est documenté ; celui de mars est tardif pendant l’absence de Sara. Sessions reprenables : introduction de 6–8 minutes environ ; construction et atelier financier demandent du temps supplémentaire.",
+      "scope": "Évaluation ciblée et construction expérimentale dans le même dossier. STUDIO-AA-0.1 et son échelle 0–4 ne constituent ni certification UNI ni verdict d’adéquation. Les tests synthétiques ne sont pas un pilote professionnel en entreprise réelle.",
+      "inputs": "Ouvrez company-fr.md, procedure-fr.md et operation-fr.md au 31 mars 2026, puis construction-fr.md et construction-facts.json. Déclarations fictives et supports pédagogiques, sans décisions approuvées ni résultats. financial-lab-fr.md décrit l’atelier séparé.",
+      "request": "Vera, évalue les dispositifs d’Officina Arco avec ces fichiers, puis aide-moi à construire un contrôle proportionné de clôture mensuelle dans le même dossier. Distingue inconnues, propositions, revues, adoption et preuves de fonctionnement.",
       "steps": [
-        "Dans la conversation de travail, Vera reconstitue le fonctionnement et propose le périmètre. La voix explique l’utilité conjointe d’une procédure et d’un exemple de son application.",
-        "Vera compare responsabilités, échéances, livraisons et décisions, vérifie les sources professionnelles pertinentes et prépare des constats proportionnés. La voix suit les preuves réelles et questions pouvant modifier le jugement.",
-        "Ouvrez le mémo produit. Lisez l’évaluation globale, puis un constat, sa source et l’action liée. Distinguez responsables et délais proposés des engagements acceptés."
+        "Exécutez l’évaluation actuelle dans la conversation de travail ; ouvrez le mémo et reliez un constat à sa source et à son action. Commencez la construction dans la même mission ; la livraison de l’évaluation ne vaut pas approbation.",
+        "Suivez construction-fr.md : une question contextuelle à la fois ; réponse originale, auteur, date et synthèse séparée. Ouvrez le formulaire HTML hors ligne, exportez en Markdown avant de fermer puis importez les originaux avec reçu. Reprenez la même visite ; pièces manquantes et réponses inconnues restent visibles.",
+        "Qualifiez les preuves et comparez base, éventuelle dérogation professionnelle motivée et cible. Reliez preuve → risque/constat → contrôle → action. Concevez un contrôle et un registre ; compilez et ouvrez Word/PDF/Markdown et CSV. Poursuivez revue, adoption, cycles et atelier financier en sessions séparées, sans inventer d’approbation."
       ],
       "deliverables": [
-        "Mémo avec évaluation motivée, observations, constats et plan d’amélioration.",
-        "Version liée aux sources permettant un réexamen et la conservation des décisions exprimées."
+        "Mémo et enregistrement d’évaluation avec sources, limites et actions ; originaux de visite et instantanés reprenables avec historique.",
+        "Manuel Word, PDF, Markdown et JSON, registres CSV modifiables et manifeste de hachages ; revue professionnelle, adoption et revue opérationnelle distinctes.",
+        "Atelier : correspondances Business Plan/Budget/Forecast revues et versionnées, observations d’indicateurs avec formule et population figées ; aucune connexion financière automatique non qualifiée."
       ],
-      "review": "Vérifiez lien entre jugement et preuves, périmètre, domaines non examinés et proportion des actions. Une procédure ou un cycle réussi ne prouve pas la continuité ; une lacune documentaire ne prouve pas seule un dysfonctionnement.",
+      "review": "Ouvrez les fichiers effectivement produits, y compris Word et PDF. Inconnu ne signifie pas zéro ; déclaré ne signifie pas vérifié. Enregistrez revues, dérogations ou adoption uniquement sur instruction explicite de la personne compétente. Un manuel, une signature déclarée ou un cycle ne prouvent pas une efficacité continue. Les titres fixes des exports de construction restent italiens ; expliquez-les dans la langue du cours.",
       "checkpoints": [
-        "Avant l’analyse, identifiez le processus et un exemple disponible de son fonctionnement.",
-        "Dans le mémo, reliez une action au constat et à sa source."
+        "Avant de juger, identifiez réponse originale, pièce manquante et source datée : quelle information pourrait modifier le jugement ?",
+        "Suivez preuve–constat–contrôle–action et distinguez projet, revue et adoption. Après une nouvelle preuve, montrez la décision à revoir."
       ],
-      "practice": "Ajoutez update-fr.md au même dossier et demandez un réexamen au 30 avril. Vera relie la version produite, réévalue chaque action antérieure et conserve la première version. Expliquez l’effet des nouvelles preuves.",
-      "success": "Vous savez fournir les pièces, demander l’évaluation, utiliser le plan d’actions et solliciter un réexamen avec de nouvelles preuves.",
-      "repeat": "Décrivez entreprise, finalité et périmètre. Fournissez procédures, exemples et revues antérieures pertinentes. Revoyez conclusions et actions avant de les convenir avec l’entreprise."
+      "practice": "Conservez le premier résultat ; ajoutez update-fr.md et construction-update-fr.md au même dossier et réévaluez au 30 avril dans un exercice distinct. Reprenez instantané et sources importés ; vérifiez les échéances réelles, revoyez chaque action, modifiez le contrôle et comparez ancien manuel à revoir et nouveau projet. Demandez la requête et la décision réelles du participant ; ne simulez pas sa participation.",
+      "success": "Vous savez répéter évaluation, visite et conception ; suivre sources et versions ; distinguer revue, adoption et exécution ; expliquer pourquoi donnée manquante, export et indicateur ne certifient pas les dispositifs.",
+      "repeat": "Partez de l’entreprise, de l’objectif, du périmètre et des preuves réelles. Conservez dossier et historique avec de nouvelles versions. Le travail réel exige jugement professionnel, décisions d’entreprise et pilote supervisé. Quelles données parviennent au modèle : conversation, originaux restitués, preuves sélectionnées, manuels, décisions et liens financiers peuvent être lus par le modèle du compte OpenAI/Cowork choisi, sans anonymisation automatique. Le formulaire hors ligne ne transmet rien et ne capte pas d’audio ; restituer le Markdown le place dans le contexte du modèle. Profil et progression pédagogiques restent locaux, sans retour ni reçu pédagogique au serveur."
     },
     "de": {
-      "title": "Unternehmensorganisation mit Vera beurteilen",
-      "goal": "Lernen, eine Beurteilung betrieblicher Vorkehrungen anzufordern, Nachweise ihrer Anwendung zu liefern und Feststellungen sowie Maßnahmenvorschläge zu nutzen.",
-      "scenario": "Officina Arco prüft Zuständigkeiten, Monatsabschluss und Informationen zum Forderungseinzug. Der fiktive Fall enthält Unternehmensprofil, Verfahren und ein Betriebsbeispiel.",
-      "scope": "Eine erste gezielte Beurteilung organisatorischer, administrativer und buchhalterischer Vorkehrungen eines italienischen Unternehmens. Der Umfang folgt den Unterlagen; keine Zertifizierung des gesamten Unternehmens.",
-      "inputs": "Öffnen Sie company-de.md, procedure-de.md und operation-de.md. Nennen Sie Unternehmen, Auftrag und Stichtag: 31. März 2026. Liefern Sie Betriebsbeispiele neben schriftlichen Verfahren.",
-      "request": "Vera, beurteile bei Officina Arco Zuständigkeiten, Monatsabschluss und Informationen zum Forderungseinzug. Nutze diese Unterlagen und zeige Beurteilung, Grenzen und zu besprechende Maßnahmen.",
+      "title": "Unternehmensstrukturen mit Vera beurteilen und aufbauen",
+      "goal": "Von der Beurteilung zu Verfahren: Antworten erfassen, eine angemessene Kontrolle entwerfen, das Handbuch prüfen sowie Einführung und Betrieb getrennt bewerten.",
+      "scenario": "Officina Arco ist ein vollständig fiktives italienisches Unternehmen mit zwölf Beschäftigten. Februar ist dokumentiert; März verspätet sich während Saras Abwesenheit. Fortsetzbare Sitzungen: Einführung etwa 6–8 Minuten, Aufbau und Finanzübung benötigen zusätzliche Zeit.",
+      "scope": "Begrenzte Beurteilung und experimenteller Aufbau im selben Mandat. STUDIO-AA-0.1 und die Skala 0–4 sind weder UNI-Zertifizierung noch Angemessenheitsurteil. Synthetische Prüfungen sind kein professioneller Pilot in einem realen Unternehmen.",
+      "inputs": "Öffnen Sie company-de.md, procedure-de.md und operation-de.md zum 31. März 2026, dann construction-de.md und construction-facts.json. Fiktive Aussagen und Lernmaterial, keine genehmigten Entscheidungen oder Ergebnisse. financial-lab-de.md erläutert die getrennte Übung.",
+      "request": "Vera, beurteile Officina Arcos Strukturen anhand dieser Dateien. Hilf mir danach, im selben Mandat eine angemessene Monatsabschlusskontrolle aufzubauen. Halte Unbekanntes, Vorschläge, Prüfungen, Einführung und Betriebsnachweise getrennt.",
       "steps": [
-        "Im Arbeitschat rekonstruiert Vera die Abläufe und schlägt den Umfang vor. Die Stimme erklärt, warum Verfahren und Anwendungsbeispiel gemeinsam nützlich sind.",
-        "Vera vergleicht Zuständigkeiten, Fristen, Übergaben und Entscheidungen, prüft relevante Fachquellen und erarbeitet verhältnismäßige Feststellungen. Die Stimme folgt den tatsächlichen Nachweisen und entscheidungsrelevanten Fragen.",
-        "Öffnen Sie das Memo. Lesen Sie zuerst Gesamtbeurteilung, dann eine Feststellung mit Quelle und Maßnahme. Unterscheiden Sie vorgeschlagene Zuständige und Termine von vereinbarten Zusagen."
+        "Führen Sie die aktuelle Beurteilung im Arbeitschat aus, öffnen Sie das Memo und verfolgen Sie einen Befund zu Quelle und Maßnahme. Beginnen Sie den Aufbau im selben Mandat; die Lieferung der Beurteilung ist keine Genehmigung.",
+        "Folgen Sie construction-de.md: jeweils eine kontextbezogene Frage, Originalantwort, Sprecher, Datum und getrennte Zusammenfassung. Öffnen Sie das Offline-HTML-Formular, exportieren Sie vor dem Schließen Markdown und importieren Sie die Originale mit Beleg. Setzen Sie denselben Vorgang fort; fehlende Anlagen und unbekannte Antworten bleiben sichtbar.",
+        "Qualifizieren Sie Nachweise und vergleichen Sie Basis, gegebenenfalls begründete fachliche Abweichung und Ziel. Verknüpfen Sie Nachweis → Risiko/Befund → Kontrolle → Maßnahme. Entwerfen Sie eine Kontrolle und ein Register; erstellen und öffnen Sie Word/PDF/Markdown und CSV. Prüfung, Einführung, Zyklen und Finanzübung folgen in getrennten Sitzungen ohne erfundene Genehmigungen."
       ],
       "deliverables": [
-        "Memo mit begründeter Beurteilung, Beobachtungen, Feststellungen und Verbesserungsplan.",
-        "Quellengebundene Version für spätere Beurteilungen und tatsächlich geäußerte Entscheidungen."
+        "Beurteilungsmemo und Datensatz mit Quellen, Grenzen und Maßnahmen; Intervieworiginale und fortsetzbare Snapshots mit Versionshistorie.",
+        "Handbuch in Word, PDF, Markdown und JSON, bearbeitbare CSV-Register und Hashmanifest; fachliche Prüfung, Einführung und Betriebsprüfung haben getrennte Zustände.",
+        "Finanzübung: geprüfte versionierte Business-Plan/Budget/Forecast-Zuordnungen und Kennzahlen mit eingefrorener Formel/Grundgesamtheit; keine ungeprüfte automatische Finanzanbindung."
       ],
-      "review": "Prüfen Sie Beleggrundlage, Umfang, ungeprüfte Bereiche und Verhältnismäßigkeit. Ein Verfahren oder erfolgreicher Zyklus beweist keine Kontinuität; eine Dokumentationslücke allein beweist kein Versagen.",
+      "review": "Öffnen Sie die tatsächlich erzeugten Dateien einschließlich Word und PDF. Unbekannt ist nicht null; erklärt ist nicht verifiziert. Prüfungen, Abweichungen oder Einführung nur nach ausdrücklicher Anweisung der zuständigen Person erfassen. Handbuch, erklärte Unterschrift oder einzelner Zyklus belegen keine dauerhafte Wirksamkeit. Feste Überschriften der Aufbau-Exporte sind derzeit italienisch; erklären Sie diese in der Kurssprache.",
       "checkpoints": [
-        "Benennen Sie vor der Analyse Prozess und verfügbares Betriebsbeispiel.",
-        "Verbinden Sie im Memo eine Maßnahme mit Feststellung und Quelle."
+        "Identifizieren Sie vor dem Urteil Originalantwort, fehlende Anlage und datierte Quelle: Welche Information könnte das Urteil ändern?",
+        "Verfolgen Sie Nachweis–Befund–Kontrolle–Maßnahme und unterscheiden Sie Entwurf, Prüfung und Einführung. Zeigen Sie nach neuen Nachweisen die erneut zu prüfende Entscheidung."
       ],
-      "practice": "Fügen Sie update-de.md derselben Akte hinzu und bitten Sie um Prüfung zum 30. April. Vera verknüpft die erzeugte Version, bewertet jede frühere Maßnahme neu und bewahrt die erste Version. Erklären Sie die Wirkung der neuen Nachweise.",
-      "success": "Sie können geeignete Unterlagen liefern, die Beurteilung anfordern, den Maßnahmenplan nutzen und mit neuen Belegen erneut prüfen lassen.",
-      "repeat": "Beschreiben Sie Unternehmen, Zweck und Umfang. Geben Sie Vera relevante Verfahren, Betriebsbeispiele und frühere Beurteilungen. Prüfen Sie Schlussfolgerungen und Maßnahmen vor der Abstimmung mit dem Unternehmen."
+      "practice": "Bewahren Sie das erste Ergebnis auf; ergänzen Sie update-de.md und construction-update-de.md im selben Mandat und beurteilen Sie zum 30. April in einer eigenen Übung neu. Setzen Sie mit importiertem Snapshot und Quellen fort, prüfen Sie tatsächliche Fristen und jede Maßnahme, ändern Sie die Kontrolle und vergleichen Sie altes prüfbedürftiges Handbuch mit neuem Entwurf. Fragen Sie nach dem tatsächlichen Auftrag und der Entscheidung des Teilnehmenden; simulieren Sie keine Teilnahme.",
+      "success": "Sie können Beurteilung, Interview und Entwurf wiederholen, Quellen und Versionen verfolgen, Prüfung, Einführung und Ausführung trennen sowie erklären, warum fehlende Daten, Export und Kennzahl keine Zertifizierung ergeben.",
+      "repeat": "Beginnen Sie mit Unternehmen, Zweck, Umfang und tatsächlichen Nachweisen. Erhalten Sie Mandat und Historie mit neuen Versionen. Reale Arbeit erfordert fachliches Urteil, Unternehmensentscheidungen und einen beaufsichtigten Betriebspiloten. Welche Daten das Modell erreichen: Gespräch, zurückgegebene Originale, ausgewählte Nachweise, Handbücher, Entscheidungen und Finanzverknüpfungen können vom Modell des gewählten OpenAI/Cowork-Kontos gelesen werden, ohne automatische Anonymisierung. Das Offline-Formular sendet nichts und nimmt kein Audio auf; zurückgegebenes Markdown gelangt in den Modellkontext. Lernprofil und Fortschritt bleiben lokal, ohne Feedback oder Lernbelege an den Server."
     },
     "es": {
-      "title": "Evaluar la organización de la empresa con Vera",
-      "goal": "Aprender a solicitar una evaluación de los mecanismos empresariales, aportar pruebas de funcionamiento y utilizar hallazgos y acciones propuestas.",
-      "scenario": "Officina Arco revisa responsabilidades, cierre mensual e información de cobros. El caso ficticio aporta perfil, procedimiento y un ejemplo operativo.",
-      "scope": "Una primera evaluación concreta de mecanismos organizativos, administrativos y contables de una empresa italiana. El alcance sigue los documentos; no es certificación de toda la empresa.",
-      "inputs": "Abre company-es.md, procedure-es.md y operation-es.md. Indica empresa, encargo y fecha: 31 de marzo de 2026. Aporta ejemplos operativos junto a procedimientos escritos.",
-      "request": "Vera, evalúa los mecanismos de Officina Arco para responsabilidades, cierre mensual e información de cobros. Usa estos documentos y muestra evaluación, límites y acciones que discutir.",
+      "title": "Evaluar y construir la organización empresarial con Vera",
+      "goal": "Pasar de evaluación a procedimientos: recoger respuestas, diseñar un control proporcionado, revisar el manual y comprobar adopción y funcionamiento por separado.",
+      "scenario": "Officina Arco es una empresa italiana totalmente ficticia con doce empleados. Febrero está documentado; marzo se retrasa durante la ausencia de Sara. Sesiones reanudables: introducción de unos 6–8 minutos; construcción y taller financiero necesitan tiempo adicional.",
+      "scope": "Evaluación delimitada y construcción experimental en el mismo expediente. STUDIO-AA-0.1 y su escala 0–4 no son certificación UNI ni un dictamen de adecuación. Las pruebas sintéticas no son un piloto profesional en una empresa real.",
+      "inputs": "Abra company-es.md, procedure-es.md y operation-es.md al 31 de marzo de 2026, después construction-es.md y construction-facts.json. Declaraciones ficticias y material didáctico, sin decisiones aprobadas ni resultados. financial-lab-es.md explica el taller separado.",
+      "request": "Vera, evalúa la organización de Officina Arco con estos archivos. Después ayúdame a construir un control proporcionado del cierre mensual en el mismo expediente, distinguiendo desconocidos, propuestas, revisiones, adopción y pruebas de funcionamiento.",
       "steps": [
-        "En la conversación de trabajo, Vera reconstruye el funcionamiento y propone alcance. La voz explica por qué son útiles tanto procedimiento como ejemplo de aplicación.",
-        "Vera compara responsabilidades, plazos, entregas y decisiones, verifica fuentes profesionales pertinentes y prepara hallazgos proporcionados. La voz sigue pruebas reales y preguntas que pueden cambiar la evaluación.",
-        "Abre el memo generado. Lee primero la evaluación global, después un hallazgo, su fuente y acción vinculada. Distingue responsables y fechas propuestos de compromisos aceptados."
+        "Ejecute la evaluación actual en la conversación de trabajo; abra el memo y conecte un hallazgo con su fuente y acción. Inicie la construcción en el mismo encargo; entregar la evaluación no equivale a aprobarla.",
+        "Siga construction-es.md: una pregunta contextual cada vez; respuesta original, autor, fecha y síntesis separada. Abra el formulario HTML sin conexión, exporte Markdown antes de cerrar e importe originales con recibo. Reanude la misma visita; adjuntos ausentes y respuestas desconocidas permanecen visibles.",
+        "Califique las pruebas y compare base, eventual modificación profesional motivada y objetivo. Conecte prueba → riesgo/hallazgo → control → acción. Diseñe un control y registro; compile y abra Word/PDF/Markdown y CSV. Continúe revisión, adopción, ciclos y taller financiero en sesiones separadas sin inventar aprobaciones."
       ],
       "deliverables": [
-        "Memo con evaluación razonada, observaciones, hallazgos y plan de mejora.",
-        "Versión vinculada a fuentes para revisiones posteriores y decisiones realmente expresadas."
+        "Memo y registro de evaluación con fuentes, límites y acciones; originales de entrevista e instantáneas reanudables con historial.",
+        "Manual Word, PDF, Markdown y JSON, registros CSV editables y manifiesto de hashes; revisión profesional, adopción y revisión operativa tienen estados distintos.",
+        "Taller: correspondencias Business Plan/Budget/Forecast revisadas y versionadas, observaciones de indicadores con fórmula y población congeladas; ninguna conexión financiera automática no calificada."
       ],
-      "review": "Comprueba relación entre juicio y pruebas, alcance, áreas no examinadas y proporción de acciones. Un procedimiento o ciclo correcto no prueba continuidad; una carencia documental no demuestra por sí sola fallo del proceso.",
+      "review": "Abra los archivos realmente generados, incluidos Word y PDF. Desconocido no significa cero; declarado no significa verificado. Registre revisiones, modificaciones o adopción solo por instrucción explícita de la persona competente. Un manual, una firma declarada o un ciclo no prueban eficacia continua. Los títulos fijos de los exports de construcción siguen en italiano; explíquelos en el idioma del curso.",
       "checkpoints": [
-        "Antes del análisis, identifica proceso y ejemplo operativo disponible.",
-        "En el memo, relaciona una acción con el hallazgo y su fuente."
+        "Antes del juicio, identifique respuesta original, adjunto ausente y fuente fechada: ¿qué información podría cambiar el juicio?",
+        "Siga prueba–hallazgo–control–acción y distinga borrador, revisión y adopción. Tras nuevas pruebas, muestre la decisión que debe revisarse."
       ],
-      "practice": "Añade update-es.md al mismo expediente y pide revisión al 30 de abril. Vera enlaza la versión generada, reevalúa cada acción anterior y conserva la primera. Explica cómo cambian la evaluación las nuevas pruebas.",
-      "success": "Sabes aportar documentos útiles, pedir la evaluación, usar el plan de acciones y solicitar revisión con nuevas pruebas.",
-      "repeat": "Describe empresa, finalidad y alcance. Da a Vera procedimientos, ejemplos y revisiones anteriores pertinentes. Revisa conclusiones y acciones antes de acordarlas con la empresa."
+      "practice": "Conserve el primer resultado, añada update-es.md y construction-update-es.md al mismo expediente y reevalúe al 30 de abril en una prueba distinta. Reanude instantánea y fuentes importadas; compruebe plazos reales, revise cada acción, cambie el control y compare el manual anterior pendiente de revisión con el nuevo borrador. Pida la solicitud y decisión reales del participante; no simule su participación.",
+      "success": "Puede repetir evaluación, entrevista y diseño; seguir fuentes y versiones; distinguir revisión, adopción y ejecución; explicar por qué dato ausente, export e indicador no certifican la organización.",
+      "repeat": "Parta de empresa, finalidad, alcance y pruebas reales. Mantenga expediente e historial mediante nuevas versiones. El trabajo real requiere juicio profesional, decisiones empresariales y piloto supervisado. Qué datos llegan al modelo: conversación, originales devueltos, pruebas seleccionadas, manuales, decisiones y vínculos financieros pueden ser leídos por el modelo de la cuenta OpenAI/Cowork elegida, sin anonimización automática. El formulario sin conexión no transmite nada ni graba audio; devolver Markdown incorpora sus datos al contexto del modelo. Perfil y progreso didácticos permanecen locales, sin feedback ni recibos didácticos al servidor."
     }
   }
 }
