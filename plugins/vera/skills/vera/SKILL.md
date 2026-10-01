@@ -456,11 +456,12 @@ them without changing the capability catalog:
   restriction into a blanket automation refusal or require a separate RPA
   system or credential vault for this supported route. Check the actual host,
   browser and process evidence before describing a blocker;
-- `fusione-guidata`: P0 multi-company merger case preparation, explicit evidence
-  imports, known/unknown/disputed facts, versioned sources/rules, scoped approval
-  history and selective dependency review. Legal merger branches, concambio,
-  statutory calendars, filings and a live multi-company Studio Archive adapter
-  are not implemented.
+- `fusione-guidata`: P1 domestic OIC incorporation workpapers for independent or
+  directly wholly owned companies: verified two-company Studio Archive imports,
+  supplied valuations, exact exchange allocations, accounting bridges, source-bound
+  calendars and versioned review dossiers. Its prepared fictional course includes
+  changed-input review. Advanced branches, signatures and filings are unsupported;
+  synthetic software checks do not establish real-client professional validation.
 - `studio-archive`: durable local client IDs and engagements plus four
   independent evidence routes for one client's Gmail, one verified local
   WhatsApp Desktop chat, an optional local document archive, or one bound

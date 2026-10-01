@@ -1107,7 +1107,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "850d8492bbbaa2a772498a12a75390ac6ba96d8877415a8d8278e73f68c033c1",
+  "catalogue_fingerprint": "3ed69a4373f439989bd6ca5450529c4ed5aa8e4c3c09fc8192bcd7089f01698b",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1283,5 +1283,11 @@
       "vouching"
     ],
     "review": "Reviewed the optional host-connected studio knowledge consultation contract and its professional entrypoint gates. No function IDs, Geneva dispositions, jurisdiction qualification, calculations or professional acceptance limits change. Studio knowledge supplies cited task context only and cannot replace current primary legal verification. Studios independently invoke their own skills. Neither a repository nor Microsoft 365 is required. Source/package checks do not establish Nicola-host connector acceptance."
+  },
+  "connected_studio_knowledge_fusione_integration": {
+    "reviewed_at": "2026-10-02",
+    "version": "0.1.328",
+    "integrated_main": "5b1cc09afc599862d87a609648303073187b587e",
+    "review": "Preserves the newly merged synthetic Italian Fusione P1 course, its router description and all existing Geneva target judgments. Optional source consultation gates remain intact. This source integration does not qualify Swiss merger implementation or Nicola-host connector acceptance."
   }
 }

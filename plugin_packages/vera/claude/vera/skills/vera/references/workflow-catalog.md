@@ -29,11 +29,12 @@ not establish professional acceptance.
 
 ## Merger workpapers
 
-`fusione-guidata` prepares reviewed P1 domestic OIC incorporation workpapers for
+- `fusione-guidata`: prepares reviewed P1 domestic OIC incorporation workpapers for
 independent or directly wholly owned companies: verified Studio Archive imports,
 valuation bridges, exact shareholder allocations, accounting bridges, event
 calendars and versioned review dossiers. Its two complete synthetic cases are
-available through `demo-p1`. It is not a prepared onboarding lesson. Later
+available through `demo-p1`. Its prepared course uses fictional independent and
+directly wholly owned cases, with professional review and changed-input practice. Later
 branches, signatures and filings remain unsupported. Use the specialist skill.
 
 ## Professional workflows

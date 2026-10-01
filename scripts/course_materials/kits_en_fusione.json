@@ -1,0 +1,31 @@
+{
+  "vera/fusione-guidata": {
+    "title": "Prepare and review a P1 incorporation merger",
+    "goal": "Follow two OIC companies from evidence to a review dossier and reopen dependent work after a balance changes.",
+    "scenario": "Entirely fictional material. Demo: Alpha absorbs independent Beta, with supplied equity values EUR 600,000 and 400,000. Practice: Alpha absorbs directly wholly owned Beta, with investment carrying value EUR 480,000 and Beta book equity EUR 300,000.",
+    "scope": "Two Italian OIC companies, ordinary homogeneous rights and no cash adjustment. Outside this course: 90%, reverse, sister-company, MLBO, IFRS, cross-border, crisis and new-company mergers. This is not professional validation on a real client.",
+    "inputs": "Open dossier-en.md and ordinary.json for the demo; wholly-owned.json for practice and update.json only at the change step. The JSON files separate Alpha/Beta facts, balances, shareholders, tax values and calendar hypotheses. No result or confirmation is pre-approved.",
+    "request": "Vera, prepare a review dossier for this fictional P1 incorporation. Select both companies’ documents through Studio Archive, propose the evidenced branch and show exchange allocations, accounting reconciliation and calendar. Ask for necessary decisions without recording approvals in my name.",
+    "steps": [
+      "Select both fictional clients and engagements, authorized documents and a separate case folder. Vera imports selected inputs through Studio Archive, verifies receipts and bytes and cites the page or field. Review ownership, rights, mandate and P1 assumptions before selecting the branch; missing facts stay unknown.",
+      "Discuss the method and matching date of the supplied valuations: calculation does not estimate economic value. Review BranchDecision and Valuation, then ExchangeModel with exact ratio, new shares and each shareholder’s fraction. Distinguish proposal, your actual decision and a synthetic test confirmation; never round fractions to pass scope checks.",
+      "Review BookBridge: professionally closed balances at one date, mappings, reciprocal pairs and differences. Check investment cancellation in the wholly owned branch and capital increase in the ordinary branch. Select evidence-backed difference allocation and policy, with no automatic goodwill. Open the draft opening journal and separate tax register.",
+      "Review Deadline with sources, versions and both companies’ anchors: days versus calendar months, last relevant anchor, exceptions and unevidenced dates. File conventions are exercise hypotheses, not current law: a real case requires current primary sources and review. A calculated date proves no filing, consent or exemption.",
+      "Vera authors dossier sections from evidence: mandate, due diligence, project, rights, dates, tax, cut-over, responsibilities and later checks; gaps and pending reviews remain visible. Export and open p1-workpapers.html, case history and the readable model-data report. No signing or filing.",
+      "Import update.json into the same case. Read ChangeImpact and historical confirmations: dependent balance, bridge and dossier need review; the independent calendar remains. Clarify closing equity and allocation before a new result; preserve prior exports."
+    ],
+    "deliverables": [
+      "Markdown/HTML dossier with branch, valuations, exact exchange allocations, accounting reconciliation and draft opening journal, calendar and open questions.",
+      "Version and confirmation history, both archive receipts, separate tax register and readable report of data reaching the model."
+    ],
+    "review": "Trace each amount to a document and decision. Review valuation congruity, accounting allocation, opening residual, separate tax treatment, source applicability, missing receipts and responsibilities. Synthetic tests do not validate these decisions on a real case.",
+    "checkpoints": [
+      "Locate one Alpha and one Beta document; verify client, engagement, receipt and cited field.",
+      "Explain why the independent branch can issue shares and the wholly owned branch issues none; connect the difference to the proposed policy.",
+      "Distinguish a calculated date from a receipt; identify reopened work after the new balance."
+    ],
+    "practice": "Repeat using wholly-owned.json: verify direct 100% ownership, zero new shares, unchanged Alpha shareholder proportions, cancellation and separate tax bases. Then import update.json into that case and explain which dependencies and confirmations need review. Do not invent an offsetting adjustment.",
+    "success": "You can select documents and branch, discuss values and policy, read workpapers, check sources and resume a changed case while keeping evidence and decisions distinct.",
+    "repeat": "For a real engagement identify mandate, both companies, ownership, dates and authorized documents. If the case exceeds P1, stop that branch and request the necessary specialist work. Record only actual professional confirmations for the examined version."
+  }
+}

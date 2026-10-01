@@ -271,6 +271,31 @@ proof of a human review, native voice quality or learner understanding. Never
 generate accepted records merely to satisfy the gate. This rebuild remains
 unreleasable until the real output reviews and all required runs are complete.
 
+## Fusione per incorporazione P1 course
+
+`vera/fusione-guidata` is a prepared five-language course, revision
+`2026-10-01.1`. It adds one kit and five locales to the current inventory
+(52 kits / 236 locales). `inputs/fusione/` contains a readable localized source
+note, ordinary and direct-wholly-owned fictional fact packs, explicit synthetic
+calendar conventions and a separate changed creditor balance. Machine field
+names retain the component contract; no precomputed report or approval is shipped.
+
+The facts reuse the current P1 acceptance cases. Unlike running `demo-p1` as a
+lesson, the guide asks the learner to select both archives, review proposed
+branch/valuation/accounting/source decisions and inspect newly produced artifacts.
+The calendar conventions are test hypotheses, not an approved legal rule pack.
+The draft dossier must expose missing due-diligence and execution evidence.
+
+`tests/plugins/test_teaching_fusione_execution.py` reads the shipped fact packs,
+executes real archive imports and P1 workpapers, verifies exact allocations,
+draft opening journals and separate tax bases, then imports the changed balance,
+reopens dependent work and persists a revised bridge with the unresolved EUR 100
+imbalance. It preserves earlier exports and approval history. Its narrative and
+confirmations remain explicitly synthetic fixtures. Native voice, learner
+understanding, installed-host behavior and professional real-client validation
+are separate acceptance work. The ten demo/practice identities and inspected
+artifact hashes are in `release_reviews/vera/fusione-guidata.json`.
+
 ## Italian Valutazione PMI course (1 October 2026)
 
 `kits_it_valuation.json` expands the existing `vera/business-valuation` lesson.

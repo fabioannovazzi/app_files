@@ -1,0 +1,531 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "fusione-guidata",
+  "revision": "2026-10-01.1",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "review_two_company_p1_workpapers_then_reopen_changed_inputs"
+  },
+  "sources": [
+    {
+      "path": "modules/fusione-guidata/assets/icon.svg",
+      "repository_path": "plugins/fusione-guidata/assets/icon.svg",
+      "sha256": "37e321d066e79681b15d0a52941145f947492dc07d5a911e0dce11cf5d1724ca"
+    },
+    {
+      "path": "modules/fusione-guidata/requirements.txt",
+      "repository_path": "plugins/fusione-guidata/requirements.txt",
+      "sha256": "cbbe338724048bcb12d75167bf3897746199654013fbd2be6eac5c7391fa3299"
+    },
+    {
+      "path": "modules/fusione-guidata/scripts/check_dependencies.py",
+      "repository_path": "plugins/fusione-guidata/scripts/check_dependencies.py",
+      "sha256": "ada01607185a6db87f15c082882c9e4138ab3126cedf1a7447a3302d6ca1dbd0"
+    },
+    {
+      "path": "modules/fusione-guidata/scripts/fusione_archive.py",
+      "repository_path": "plugins/fusione-guidata/scripts/fusione_archive.py",
+      "sha256": "58ea9e573c63cd6ab01a9c28f1d544372fb278d06c976ea3a78de20f65507169"
+    },
+    {
+      "path": "modules/fusione-guidata/scripts/fusione_case.py",
+      "repository_path": "plugins/fusione-guidata/scripts/fusione_case.py",
+      "sha256": "576822eaf309a83360d7062aefdd8c7e1fe2c8fc600fcc3ed0f751cdbfeb49ec"
+    },
+    {
+      "path": "modules/fusione-guidata/scripts/fusione_demo.py",
+      "repository_path": "plugins/fusione-guidata/scripts/fusione_demo.py",
+      "sha256": "9eb96c03c08307c814a22b8ff3bb3a998536c44dea228a86fd828043bc81ed9d"
+    },
+    {
+      "path": "modules/fusione-guidata/scripts/fusione_dossier.py",
+      "repository_path": "plugins/fusione-guidata/scripts/fusione_dossier.py",
+      "sha256": "816642abf56afa89878239166cba3dd4a16296f9ebbe95efbe7f894c5ebeb7b0"
+    },
+    {
+      "path": "modules/fusione-guidata/scripts/fusione_model.py",
+      "repository_path": "plugins/fusione-guidata/scripts/fusione_model.py",
+      "sha256": "953c41b6516c3d374d9541eeafcc3d1fe9ed052af7283d128f2e061335ea91d7"
+    },
+    {
+      "path": "modules/fusione-guidata/scripts/fusione_p1.py",
+      "repository_path": "plugins/fusione-guidata/scripts/fusione_p1.py",
+      "sha256": "30f11ec68822545c58b0bc666aba756932acd46182eebfd8142d145729e45d6f"
+    },
+    {
+      "path": "modules/fusione-guidata/scripts/fusione_p1_demo.py",
+      "repository_path": "plugins/fusione-guidata/scripts/fusione_p1_demo.py",
+      "sha256": "9724903e50ac35cff3310e20c961c70f602deb69c95d56541698ec228cd7b218"
+    },
+    {
+      "path": "modules/fusione-guidata/scripts/fusione_report.py",
+      "repository_path": "plugins/fusione-guidata/scripts/fusione_report.py",
+      "sha256": "44cf535075561c4430f8d1b6b8a24d6462b58cc1b4bb5bf7a52f3a7ec0ae4281"
+    },
+    {
+      "path": "modules/fusione-guidata/scripts/run_fusione.py",
+      "repository_path": "plugins/fusione-guidata/scripts/run_fusione.py",
+      "sha256": "dd170dd5f281a2849474e59bb023267c56d797065259f92feacf894c01246f8f"
+    },
+    {
+      "path": "modules/fusione-guidata/skills/fusione-guidata/SKILL.md",
+      "repository_path": "plugins/fusione-guidata/skills/fusione-guidata/SKILL.md",
+      "sha256": "c359c231afdd5c38296b0323af1fa4acfcdc09b5f33735e23a83eb7fe04a11e7"
+    },
+    {
+      "path": "modules/fusione-guidata/skills/fusione-guidata/agents/openai.yaml",
+      "repository_path": "plugins/fusione-guidata/skills/fusione-guidata/agents/openai.yaml",
+      "sha256": "041027b5beaf1613b3a5e31fcd85b63c59542c2a929a154b1bd532d6d9a98ebc"
+    },
+    {
+      "path": "modules/fusione-guidata/skills/fusione-guidata/references/case-contract.md",
+      "repository_path": "plugins/fusione-guidata/skills/fusione-guidata/references/case-contract.md",
+      "sha256": "0c414d89fd5bda113440f767f7ff1f98d5c57bd82f9c4bc2baab4713835c9369"
+    },
+    {
+      "path": "modules/fusione-guidata/skills/fusione-guidata/references/p1-contract.md",
+      "repository_path": "plugins/fusione-guidata/skills/fusione-guidata/references/p1-contract.md",
+      "sha256": "6db090807051d4e64f29f99e98987f617104021d499bb8b03729c50b85de1869"
+    },
+    {
+      "path": "modules/fusione-guidata/skills/fusione-guidata/references/p1-source-review.md",
+      "repository_path": "plugins/fusione-guidata/skills/fusione-guidata/references/p1-source-review.md",
+      "sha256": "83bb2789fc90e19470314fb5f7a96547c8873a196e98a4b0546da9efaf96ad03"
+    },
+    {
+      "path": "modules/fusione-guidata/vendor/modules/client_ledger.py",
+      "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
+      "sha256": "cebe03cf64d188cbab8be95ce083227663cfc3b6f41a802fa7f88c63f449bf9e"
+    },
+    {
+      "path": "modules/fusione-guidata/vendor/modules/model_data_report.py",
+      "repository_path": "plugins/vera/scripts/model_data_report.py",
+      "sha256": "54fcde02508b195250c5a4c58758e10f796a63a32448115de64fccbce8b4022c"
+    },
+    {
+      "path": "skills/fusione-guidata/SKILL.md",
+      "repository_path": "plugins/vera/skills/fusione-guidata/SKILL.md",
+      "sha256": "9a39ed663d732bcc80e41823e31a97a20857934ac50c87d8004ff80c9adf6e7f"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "5b28ac597f0a3deaf4cfc907b8a33bb40aae21719206ad0c976b605950f89dc7"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "507967ae7dcf07ae4e138fff4333adb5fd709484731dcef45d531152c54ede45"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
+      "path": "vendor/modules/courseware/deck_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/deck_view.py",
+      "sha256": "96f75ea3078c9e0c6e509cdefb0beeb876677e2e7884777d213d9b03c6c27b80"
+    },
+    {
+      "path": "vendor/modules/courseware/document_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/document_view.py",
+      "sha256": "9982c9d6ce83e7feb26165308fa9a136a744891a7e623ce23ff9bb778e6b7403"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/html_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/html_view.py",
+      "sha256": "57280e82460bd8c7982294c4be6e0cff7da969800d4282e6da15059571cce0b1"
+    },
+    {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "d8b2f02f666deaecbe04f3fff02bb3351c6ea4fb636fa9ac2a2aac2ee4ec566a"
+    },
+    {
+      "path": "vendor/modules/courseware/preview.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/preview.py",
+      "sha256": "1a6e56141cdd554a6510100f47745f7b31472c9d22f45407f4f86ac7981aee10"
+    },
+    {
+      "path": "vendor/modules/courseware/sales_plan_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/sales_plan_view.py",
+      "sha256": "115977d03c034ed5f363d6fd5c8c82648ed1349067ac61e48d0701b10caa7e7b"
+    },
+    {
+      "path": "vendor/modules/courseware/website_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/website_view.py",
+      "sha256": "f230f86272201bae7bc34f1868d8cb6013b47ce9ccc8b876acdfb0bc257637d5"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "089670445e91974b68e9eca35017948a8bac2d07e7e05dba29be05b32fb76e93"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/ordinary.json",
+      "sha256": "73c6bab7ca55b2b913653ef1f59cc03b8b435181d2414ef59b2fe190ecb4e8c3",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/wholly-owned.json",
+      "sha256": "04f8a536f8a430ddf177951d0e214dac015ebca1a1d10b3306e61ad8df0c6c51",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update.json",
+      "sha256": "0fce8de5ff688609c6e73d9f9ff62e477f5177727386f431145d20d3bf2cd4c6",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/dossier-it.md",
+      "sha256": "906a77c5aeb5078c78478edaca3d3380c923ec1b2aaa90dcb8a097a5766ff1b9",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/dossier-en.md",
+      "sha256": "c0c4fd0c241e40075b3ed202388ae3d92225697b12af1755abeddad4f1c0d205",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/dossier-fr.md",
+      "sha256": "2e1e4c1ae02ae9d9a8534e225706a3eb9a3db7228548be82e6bfa1b13d93d7b5",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/dossier-de.md",
+      "sha256": "3a4ba6a4aa56b9f14eee142d42fa3d15651861bdac11d80db15a9f4caa104184",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/dossier-es.md",
+      "sha256": "efa938afb5f4fa3fdb746e9375737589686cd8f1e9d30a390fb4b3963ac27d30",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Preparare e rivedere una fusione per incorporazione P1",
+      "goal": "Seguire due società OIC dalle evidenze al dossier di revisione e riaprire il lavoro quando cambia un saldo.",
+      "scenario": "Materiale interamente sintetico. Dimostrazione: Alpha incorpora Beta indipendente, con valori economici forniti di EUR 600.000 e 400.000. Pratica: Alpha incorpora Beta detenuta direttamente al 100%, con partecipazione contabile di EUR 480.000 e patrimonio netto di Beta di EUR 300.000.",
+      "scope": "Due società italiane OIC, diritti ordinari omogenei, nessun conguaglio. Fuori corso: 90%, inversa, sorelle, MLBO, IFRS, transfrontaliera, crisi e nuova società. Non è una validazione professionale su un cliente reale.",
+      "inputs": "Apri dossier-it.md e ordinary.json per la dimostrazione; wholly-owned.json per la pratica e update.json solo nella fase di variazione. I due JSON separano i fatti Alpha/Beta, le situazioni contabili, i soci, i valori fiscali e le ipotesi del calendario. Nessun risultato o conferma è già approvato.",
+      "request": "Vera, prepara un dossier di revisione per questa incorporazione sintetica P1. Seleziona i documenti di entrambe le società in Studio Archive, proponi il ramo motivato e mostrami concambio, riconciliazione contabile e calendario. Chiedimi le decisioni necessarie senza registrare approvazioni a mio nome.",
+      "steps": [
+        "Seleziona i due clienti e incarichi sintetici, i documenti autorizzati e la cartella separata del caso. Vera importa gli input selezionati attraverso Studio Archive, verifica ricevute e byte e cita pagina o campo. Confronta compagine, diritti, mandato e assunzioni P1 prima di scegliere il ramo; i fatti mancanti restano sconosciuti.",
+        "Discuti metodo e data delle valutazioni già fornite: il calcolo non stima il valore economico. Rivedi BranchDecision e Valuation, poi ExchangeModel con rapporto esatto, nuove azioni e frazione di ogni socio. Distingui proposta, decisione tua effettiva e conferma sintetica di un test; mai arrotondare frazioni per far passare il caso.",
+        "Rivedi BookBridge: saldi chiusi alla stessa data, mappature, coppie reciproche e differenze. Nel ramo al 100% controlla l’annullamento della partecipazione; nell’ordinario l’aumento di capitale. Decidi l’allocazione della differenza con evidenza e policy, senza avviamento automatico. Apri la bozza di scrittura iniziale e il registro fiscale separato.",
+        "Rivedi Deadline con fonti/versioni e ancore di entrambe le società: giorni e mesi di calendario, ultima ancora pertinente, eccezioni e date non provate. Le convenzioni dei file sono ipotesi di esercizio, non norme vigenti: per un caso reale vanno acquisite e confermate le fonti primarie. Una scadenza calcolata non prova deposito, consenso o esenzione.",
+        "Vera redige le sezioni del dossier dai fatti: mandato, due diligence, progetto, diritti, date, fiscalità, cut-over, responsabilità e controlli successivi; lacune e revisioni pendenti restano visibili. Esporta e apri p1-workpapers.html, storico del caso e report dei dati arrivati al modello. Non firmare né depositare.",
+        "Nella stessa pratica importa update.json. Leggi ChangeImpact e le vecchie conferme storiche: saldo, bridge e dossier dipendenti vanno riesaminati, il calendario indipendente rimane. Chiedi chiarimenti su chiusura e allocazione prima di un nuovo risultato; conserva gli export precedenti."
+      ],
+      "deliverables": [
+        "Dossier Markdown/HTML con workpaper di ramo, valori, concambio e assegnazioni esatte, riconciliazione e bozza della scrittura iniziale, calendario e questioni aperte.",
+        "Storico delle revisioni e conferme riferite alla versione, ricevute dei due archivi, registro fiscale distinto e report leggibile dei dati arrivati al modello."
+      ],
+      "review": "Risalire da ogni numero al documento e alla decisione. Controllare congruità delle valutazioni, allocazione contabile, residuo di apertura, trattamento fiscale distinto, applicabilità delle fonti, ricevute mancanti e responsabili. Il test sintetico non prova queste decisioni su un caso reale.",
+      "checkpoints": [
+        "Individua un documento di Alpha e uno di Beta e verifica cliente, incarico, ricevuta e campo citato.",
+        "Spiega perché il ramo indipendente può emettere azioni e quello al 100% non ne emette; collega la differenza alla policy proposta.",
+        "Distingui una data calcolata da una ricevuta; indica cosa si riapre dopo il nuovo saldo."
+      ],
+      "practice": "Ripeti il percorso con wholly-owned.json: verifica la proprietà diretta totale, zero nuove azioni e proporzioni invariate dei soci Alpha, annullamento e valori fiscali separati. Poi importa update.json nello stesso caso e spiega quali dipendenze e conferme richiedono riesame. Non compensare il nuovo saldo con una rettifica inventata.",
+      "success": "Sai scegliere documenti e ramo, discutere valori e policy, leggere i prospetti, verificare fonti e riprendere una versione modificata mantenendo evidenze e decisioni distinte.",
+      "repeat": "Per un incarico reale indica mandato, due società, compagine, date e documenti autorizzati. Se il caso supera P1, fermane quel ramo e richiedi il lavoro specialistico necessario. Ottieni soltanto conferme professionali effettive sulla versione esaminata."
+    },
+    "en": {
+      "title": "Prepare and review a P1 incorporation merger",
+      "goal": "Follow two OIC companies from evidence to a review dossier and reopen dependent work after a balance changes.",
+      "scenario": "Entirely fictional material. Demo: Alpha absorbs independent Beta, with supplied equity values EUR 600,000 and 400,000. Practice: Alpha absorbs directly wholly owned Beta, with investment carrying value EUR 480,000 and Beta book equity EUR 300,000.",
+      "scope": "Two Italian OIC companies, ordinary homogeneous rights and no cash adjustment. Outside this course: 90%, reverse, sister-company, MLBO, IFRS, cross-border, crisis and new-company mergers. This is not professional validation on a real client.",
+      "inputs": "Open dossier-en.md and ordinary.json for the demo; wholly-owned.json for practice and update.json only at the change step. The JSON files separate Alpha/Beta facts, balances, shareholders, tax values and calendar hypotheses. No result or confirmation is pre-approved.",
+      "request": "Vera, prepare a review dossier for this fictional P1 incorporation. Select both companies’ documents through Studio Archive, propose the evidenced branch and show exchange allocations, accounting reconciliation and calendar. Ask for necessary decisions without recording approvals in my name.",
+      "steps": [
+        "Select both fictional clients and engagements, authorized documents and a separate case folder. Vera imports selected inputs through Studio Archive, verifies receipts and bytes and cites the page or field. Review ownership, rights, mandate and P1 assumptions before selecting the branch; missing facts stay unknown.",
+        "Discuss the method and matching date of the supplied valuations: calculation does not estimate economic value. Review BranchDecision and Valuation, then ExchangeModel with exact ratio, new shares and each shareholder’s fraction. Distinguish proposal, your actual decision and a synthetic test confirmation; never round fractions to pass scope checks.",
+        "Review BookBridge: professionally closed balances at one date, mappings, reciprocal pairs and differences. Check investment cancellation in the wholly owned branch and capital increase in the ordinary branch. Select evidence-backed difference allocation and policy, with no automatic goodwill. Open the draft opening journal and separate tax register.",
+        "Review Deadline with sources, versions and both companies’ anchors: days versus calendar months, last relevant anchor, exceptions and unevidenced dates. File conventions are exercise hypotheses, not current law: a real case requires current primary sources and review. A calculated date proves no filing, consent or exemption.",
+        "Vera authors dossier sections from evidence: mandate, due diligence, project, rights, dates, tax, cut-over, responsibilities and later checks; gaps and pending reviews remain visible. Export and open p1-workpapers.html, case history and the readable model-data report. No signing or filing.",
+        "Import update.json into the same case. Read ChangeImpact and historical confirmations: dependent balance, bridge and dossier need review; the independent calendar remains. Clarify closing equity and allocation before a new result; preserve prior exports."
+      ],
+      "deliverables": [
+        "Markdown/HTML dossier with branch, valuations, exact exchange allocations, accounting reconciliation and draft opening journal, calendar and open questions.",
+        "Version and confirmation history, both archive receipts, separate tax register and readable report of data reaching the model."
+      ],
+      "review": "Trace each amount to a document and decision. Review valuation congruity, accounting allocation, opening residual, separate tax treatment, source applicability, missing receipts and responsibilities. Synthetic tests do not validate these decisions on a real case.",
+      "checkpoints": [
+        "Locate one Alpha and one Beta document; verify client, engagement, receipt and cited field.",
+        "Explain why the independent branch can issue shares and the wholly owned branch issues none; connect the difference to the proposed policy.",
+        "Distinguish a calculated date from a receipt; identify reopened work after the new balance."
+      ],
+      "practice": "Repeat using wholly-owned.json: verify direct 100% ownership, zero new shares, unchanged Alpha shareholder proportions, cancellation and separate tax bases. Then import update.json into that case and explain which dependencies and confirmations need review. Do not invent an offsetting adjustment.",
+      "success": "You can select documents and branch, discuss values and policy, read workpapers, check sources and resume a changed case while keeping evidence and decisions distinct.",
+      "repeat": "For a real engagement identify mandate, both companies, ownership, dates and authorized documents. If the case exceeds P1, stop that branch and request the necessary specialist work. Record only actual professional confirmations for the examined version."
+    },
+    "fr": {
+      "title": "Préparer et revoir une fusion par absorption P1",
+      "goal": "Suivre deux sociétés OIC des pièces au dossier de revue et rouvrir les travaux après un changement de solde.",
+      "scenario": "Documents entièrement fictifs. Démonstration : Alpha absorbe Beta indépendante, valeurs économiques fournies de 600 000 et 400 000 EUR. Exercice : Alpha absorbe Beta détenue directement à 100 %, participation comptable de 480 000 EUR et capitaux propres de Beta de 300 000 EUR.",
+      "scope": "Deux sociétés italiennes OIC, droits ordinaires homogènes, sans soulte. Hors cours : 90 %, fusion inversée, sociétés sœurs, MLBO, IFRS, transfrontalière, crise et création d’une société. Aucune validation professionnelle sur un client réel.",
+      "inputs": "Ouvrir dossier-fr.md et ordinary.json pour la démonstration ; wholly-owned.json pour l’exercice et update.json seulement lors du changement. Les JSON distinguent faits Alpha/Beta, comptes, associés, valeurs fiscales et hypothèses du calendrier. Aucun résultat ni accord préapprouvé.",
+      "request": "Vera, prépare un dossier de revue pour cette absorption fictive P1. Sélectionne les documents des deux sociétés dans Studio Archive, propose le périmètre motivé et montre parité, rapprochement comptable et calendrier. Demande les décisions nécessaires sans enregistrer d’approbation en mon nom.",
+      "steps": [
+        "Sélectionner les deux clients et missions fictifs, les pièces autorisées et un dossier de cas séparé. Vera importe les pièces choisies via Studio Archive, vérifie reçus et octets, cite page ou champ. Revoir propriété, droits, mandat et hypothèses P1 ; les faits manquants restent inconnus.",
+        "Discuter méthode et date commune des valeurs fournies : le calcul n’effectue pas une valorisation. Revoir BranchDecision et Valuation, puis ExchangeModel avec parité exacte, actions nouvelles et fraction de chaque associé. Distinguer proposition, décision réelle et accord fictif de test ; aucun arrondi masqué.",
+        "Revoir BookBridge : comptes clôturés à la même date, correspondances, soldes réciproques et écarts. Contrôler annulation de la participation à 100 % ou augmentation du capital dans le cas ordinaire. Choisir une affectation justifiée et une politique comptable, sans goodwill automatique. Ouvrir l’écriture initiale provisoire et le registre fiscal séparé.",
+        "Revoir Deadline : sources/version et dates des deux sociétés, jours ou mois calendaires, dernière date pertinente, exceptions et événements non prouvés. Les conventions sont des hypothèses pédagogiques, pas le droit actuel ; un cas réel exige sources primaires et revue. Une date calculée ne prouve ni dépôt, ni consentement, ni exemption.",
+        "Vera rédige les sections liées aux pièces : mandat, due diligence, projet, droits, dates, fiscalité, bascule opérationnelle, responsables et contrôles ultérieurs ; lacunes et revues en attente restent visibles. Exporter et ouvrir p1-workpapers.html, historique et rapport lisible des données transmises au modèle. Aucune signature ni formalité.",
+        "Importer update.json dans le même cas. Lire ChangeImpact et les accords historiques : solde, rapprochement et dossier dépendants exigent une revue ; le calendrier indépendant demeure. Clarifier clôture et affectation avant un nouveau résultat ; conserver les anciens exports."
+      ],
+      "deliverables": [
+        "Dossier Markdown/HTML : périmètre, valeurs, parité et allocations exactes, rapprochement et écriture initiale provisoire, calendrier et questions ouvertes.",
+        "Historique des versions et accords, reçus des deux archives, registre fiscal distinct et rapport lisible des données reçues par le modèle."
+      ],
+      "review": "Relier chaque montant à sa pièce et sa décision. Revoir congruité des valeurs, affectation comptable, équilibre initial, fiscalité séparée, applicabilité des sources, reçus absents et responsables. Les tests fictifs ne valident pas ces choix sur un cas réel.",
+      "checkpoints": [
+        "Trouver une pièce Alpha et une pièce Beta ; vérifier client, mission, reçu et champ cité.",
+        "Expliquer les actions nouvelles du cas indépendant et leur absence à 100 % ; relier l’écart à la politique proposée.",
+        "Distinguer date calculée et reçu ; identifier les travaux rouverts après le nouveau solde."
+      ],
+      "practice": "Recommencer avec wholly-owned.json : vérifier détention directe totale, zéro action nouvelle, proportions des associés Alpha inchangées, annulation et valeurs fiscales distinctes. Importer ensuite update.json dans ce cas ; expliquer les dépendances et accords à revoir. Ne pas inventer de correction compensatrice.",
+      "success": "Savoir sélectionner pièces et périmètre, discuter valeurs et politique, lire les tableaux, vérifier sources et reprendre un cas modifié en séparant pièces et décisions.",
+      "repeat": "Pour une mission réelle préciser mandat, deux sociétés, propriété, dates et pièces autorisées. Si le cas dépasse P1, arrêter cette branche et demander le travail spécialisé requis. Enregistrer seulement les accords professionnels réellement donnés sur la version examinée."
+    },
+    "de": {
+      "title": "Eine P1-Verschmelzung durch Aufnahme vorbereiten und prüfen",
+      "goal": "Zwei OIC-Gesellschaften von den Belegen bis zum Prüfungsdossier begleiten und abhängige Arbeiten nach einer Saldenänderung erneut prüfen.",
+      "scenario": "Vollständig fiktives Material. Demonstration: Alpha übernimmt die unabhängige Beta; vorgegebene Eigenkapitalwerte 600.000 und 400.000 EUR. Übung: Alpha übernimmt die unmittelbar zu 100 % gehaltene Beta; Beteiligungsbuchwert 480.000 EUR, Beta-Bucheigenkapital 300.000 EUR.",
+      "scope": "Zwei italienische OIC-Gesellschaften, gleichartige gewöhnliche Rechte, keine Barabfindung. Ausgeschlossen: 90 %, umgekehrte Verschmelzung, Schwestergesellschaften, MLBO, IFRS, grenzüberschreitende Fälle, Krise und Neugründung. Keine professionelle Validierung an einem echten Mandanten.",
+      "inputs": "dossier-de.md und ordinary.json für die Demonstration öffnen; wholly-owned.json für die Übung, update.json erst beim Änderungsschritt. JSON trennt Alpha/Beta-Fakten, Salden, Anteilseigner, Steuerwerte und Kalenderannahmen. Kein Ergebnis und keine Bestätigung ist vorab genehmigt.",
+      "request": "Vera, erstelle ein Prüfungsdossier für diese fiktive P1-Aufnahme. Wähle die Dokumente beider Gesellschaften über Studio Archive, begründe den Zweig und zeige Umtausch, Kontenabstimmung und Kalender. Frage nach notwendigen Entscheidungen, ohne Genehmigungen in meinem Namen zu erfassen.",
+      "steps": [
+        "Beide fiktiven Mandanten und Aufträge, autorisierte Dokumente und einen separaten Fallordner auswählen. Vera importiert die ausgewählten Belege über Studio Archive, prüft Importbelege und Bytes und zitiert Seite oder Feld. Eigentum, Rechte, Auftrag und P1-Annahmen prüfen; fehlende Tatsachen bleiben unbekannt.",
+        "Methode und gemeinsamen Stichtag der vorgegebenen Bewertungen besprechen: die Berechnung bewertet das Unternehmen nicht. BranchDecision und Valuation prüfen, danach ExchangeModel mit exaktem Verhältnis, neuen Aktien und Anteil jedes Eigentümers. Vorschlag, tatsächliche Entscheidung und synthetische Testbestätigung unterscheiden; keine verdeckte Rundung.",
+        "BookBridge prüfen: professionell abgeschlossene Salden am gleichen Stichtag, Zuordnungen, gegenseitige Salden und Differenzen. Bei 100 % die Beteiligungsausbuchung, im gewöhnlichen Fall die Kapitalerhöhung prüfen. Differenzzuordnung und Bilanzierungspolitik anhand von Belegen wählen, ohne automatischen Goodwill. Entwurf der Eröffnungsbuchung und separates Steuerregister öffnen.",
+        "Deadline mit Quellen/versionen und Daten beider Gesellschaften prüfen: Tage oder Kalendermonate, spätester relevanter Anker, Ausnahmen und nicht belegte Ereignisse. Dateikonventionen sind Übungsannahmen, kein geltendes Recht; reale Fälle benötigen aktuelle Primärquellen und Prüfung. Ein errechnetes Datum beweist keine Einreichung, Zustimmung oder Befreiung.",
+        "Vera verfasst beleggebundene Abschnitte zu Auftrag, Due Diligence, Projekt, Rechten, Daten, Steuern, Umstellung, Zuständigkeiten und Folgekontrollen; Lücken und ausstehende Prüfungen bleiben sichtbar. p1-workpapers.html, Fallhistorie und lesbaren Bericht über Modelldaten exportieren und öffnen. Keine Unterschrift oder Einreichung.",
+        "update.json in denselben Fall importieren. ChangeImpact und historische Bestätigungen lesen: abhängige Salden-, Überleitungs- und Dossierarbeiten erneut prüfen; unabhängiger Kalender bleibt erhalten. Abschluss und Zuordnung vor einem neuen Ergebnis klären; frühere Exporte bewahren."
+      ],
+      "deliverables": [
+        "Markdown/HTML-Dossier mit Zweig, Bewertungen, exakten Umtauschzuordnungen, Kontenabstimmung und Eröffnungsbuchungsentwurf, Kalender und offenen Fragen.",
+        "Versions- und Bestätigungshistorie, Importbelege beider Archive, separates Steuerregister und lesbarer Bericht über die Daten im Modell."
+      ],
+      "review": "Jeden Betrag zu Dokument und Entscheidung zurückverfolgen. Bewertung, Bilanzzuordnung, Eröffnungssaldo, getrennte Steuern, Quellenanwendbarkeit, fehlende Belege und Zuständigkeiten prüfen. Synthetische Tests validieren diese Entscheidungen nicht an einem realen Fall.",
+      "checkpoints": [
+        "Ein Alpha- und ein Beta-Dokument finden; Mandant, Auftrag, Importbeleg und zitiertes Feld prüfen.",
+        "Neue Aktien im unabhängigen Fall und keine neuen Aktien bei 100 % erklären; Differenz mit der vorgeschlagenen Politik verbinden.",
+        "Berechnetes Datum und Beleg unterscheiden; nach neuem Saldo wieder zu prüfende Arbeiten nennen."
+      ],
+      "practice": "Mit wholly-owned.json wiederholen: unmittelbaren Vollbesitz, null neue Aktien, unveränderte Alpha-Anteilseignerquoten, Ausbuchung und getrennte Steuerwerte prüfen. Danach update.json im selben Fall importieren und abhängige Arbeiten und Bestätigungen zur erneuten Prüfung erläutern. Keine ausgleichende Korrektur erfinden.",
+      "success": "Dokumente und Zweig auswählen, Werte und Politik diskutieren, Tabellen lesen, Quellen prüfen und geänderte Fälle mit getrennten Belegen und Entscheidungen fortsetzen können.",
+      "repeat": "Für reale Aufträge Mandat, beide Gesellschaften, Eigentum, Daten und autorisierte Dokumente angeben. Überschreitet der Fall P1, diesen Zweig anhalten und erforderliche Spezialarbeit anfordern. Nur tatsächliche professionelle Bestätigungen zur geprüften Version erfassen."
+    },
+    "es": {
+      "title": "Preparar y revisar una fusión por absorción P1",
+      "goal": "Seguir dos sociedades OIC desde los documentos hasta el expediente de revisión y reabrir trabajos dependientes al cambiar un saldo.",
+      "scenario": "Material totalmente ficticio. Demostración: Alpha absorbe a Beta independiente, valores económicos proporcionados de 600.000 y 400.000 EUR. Práctica: Alpha absorbe a Beta participada directamente al 100 %, inversión contable de 480.000 EUR y patrimonio neto de Beta de 300.000 EUR.",
+      "scope": "Dos sociedades italianas OIC, derechos ordinarios homogéneos y sin compensación en efectivo. Fuera del curso: 90 %, inversa, sociedades hermanas, MLBO, IFRS, transfronteriza, crisis y nueva sociedad. No es validación profesional con un cliente real.",
+      "inputs": "Abrir dossier-es.md y ordinary.json para la demostración; wholly-owned.json para la práctica y update.json solo al introducir el cambio. Los JSON separan hechos Alpha/Beta, balances, socios, valores fiscales e hipótesis del calendario. No hay resultados ni confirmaciones preaprobados.",
+      "request": "Vera, prepara un expediente de revisión para esta absorción ficticia P1. Selecciona documentos de ambas sociedades mediante Studio Archive, propone la rama justificada y muestra canje, conciliación contable y calendario. Pide las decisiones necesarias sin registrar aprobaciones en mi nombre.",
+      "steps": [
+        "Seleccionar ambos clientes y encargos ficticios, documentos autorizados y una carpeta separada del caso. Vera importa los documentos elegidos mediante Studio Archive, verifica recibos y bytes y cita página o campo. Revisar propiedad, derechos, mandato e hipótesis P1; los hechos ausentes siguen desconocidos.",
+        "Discutir método y fecha común de las valoraciones proporcionadas: el cálculo no valora la empresa. Revisar BranchDecision y Valuation, luego ExchangeModel con relación exacta, acciones nuevas y fracción de cada socio. Distinguir propuesta, decisión efectiva y confirmación sintética de prueba; nunca redondear para superar controles.",
+        "Revisar BookBridge: balances cerrados profesionalmente a la misma fecha, correspondencias, pares recíprocos y diferencias. Verificar cancelación de la participación al 100 % o aumento de capital en la rama ordinaria. Elegir asignación y política contable sustentadas, sin fondo de comercio automático. Abrir borrador del asiento inicial y registro fiscal separado.",
+        "Revisar Deadline con fuentes/versiones y fechas de ambas sociedades: días frente a meses naturales, última fecha pertinente, excepciones y eventos sin prueba. Las convenciones son hipótesis del ejercicio, no derecho vigente; un caso real exige fuentes primarias actuales y revisión. Una fecha calculada no prueba depósito, consentimiento o exención.",
+        "Vera redacta secciones sustentadas: mandato, diligencia debida, proyecto, derechos, fechas, fiscalidad, transición, responsables y controles posteriores; lagunas y revisiones pendientes siguen visibles. Exportar y abrir p1-workpapers.html, historial y reporte legible de datos recibidos por el modelo. Sin firma ni presentación.",
+        "Importar update.json en el mismo caso. Leer ChangeImpact y confirmaciones históricas: saldo, conciliación y expediente dependientes requieren revisión; el calendario independiente permanece. Aclarar cierre y asignación antes de un resultado nuevo; conservar exportaciones anteriores."
+      ],
+      "deliverables": [
+        "Expediente Markdown/HTML con rama, valores, canje y asignaciones exactas, conciliación y borrador del asiento inicial, calendario y cuestiones abiertas.",
+        "Historial de versiones y confirmaciones, recibos de ambos archivos, registro fiscal separado y reporte legible de datos que llegan al modelo."
+      ],
+      "review": "Relacionar cada importe con documento y decisión. Revisar congruencia de valores, asignación contable, residual inicial, fiscalidad separada, aplicabilidad de fuentes, recibos ausentes y responsabilidades. Las pruebas sintéticas no validan estas decisiones en un caso real.",
+      "checkpoints": [
+        "Encontrar un documento Alpha y otro Beta; verificar cliente, encargo, recibo y campo citado.",
+        "Explicar nuevas acciones en el caso independiente y su ausencia al 100 %; vincular diferencia con política propuesta.",
+        "Distinguir fecha calculada de recibo; identificar trabajos reabiertos después del nuevo saldo."
+      ],
+      "practice": "Repetir con wholly-owned.json: verificar propiedad directa total, cero nuevas acciones, proporciones Alpha intactas, cancelación y valores fiscales separados. Importar luego update.json en ese caso y explicar dependencias y confirmaciones que requieren revisión. No inventar un ajuste compensatorio.",
+      "success": "Saber elegir documentos y rama, discutir valores y política, leer tablas, verificar fuentes y retomar un caso cambiado separando evidencias y decisiones.",
+      "repeat": "Para un encargo real indicar mandato, ambas sociedades, propiedad, fechas y documentos autorizados. Si excede P1, detener esa rama y pedir trabajo especializado necesario. Registrar solo confirmaciones profesionales efectivas sobre la versión revisada."
+    }
+  }
+}

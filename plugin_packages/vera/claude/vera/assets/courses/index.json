@@ -464,6 +464,34 @@
         "es": "Aprender a convertir estados contables en un informe legible, con tablas, comentarios y referencias para comprobar cifras."
       }
     },
+    "fusione-guidata": {
+      "path": "fusione-guidata/course.json",
+      "sha256": "568667bcf766dd07ff9b3670b26c83ecb4a8b890d9298a7638f57470d7399273",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Preparare e rivedere una fusione per incorporazione P1",
+        "en": "Prepare and review a P1 incorporation merger",
+        "fr": "Préparer et revoir une fusion par absorption P1",
+        "de": "Eine P1-Verschmelzung durch Aufnahme vorbereiten und prüfen",
+        "es": "Preparar y revisar una fusión por absorción P1"
+      },
+      "goals": {
+        "it": "Seguire due società OIC dalle evidenze al dossier di revisione e riaprire il lavoro quando cambia un saldo.",
+        "en": "Follow two OIC companies from evidence to a review dossier and reopen dependent work after a balance changes.",
+        "fr": "Suivre deux sociétés OIC des pièces au dossier de revue et rouvrir les travaux après un changement de solde.",
+        "de": "Zwei OIC-Gesellschaften von den Belegen bis zum Prüfungsdossier begleiten und abhängige Arbeiten nach einer Saldenänderung erneut prüfen.",
+        "es": "Seguir dos sociedades OIC desde los documentos hasta el expediente de revisión y reabrir trabajos dependientes al cambiar un saldo."
+      }
+    },
     "invoice-xml": {
       "path": "invoice-xml/course.json",
       "sha256": "e30cb3f68bd95657f07d6ec771f8bd087baa27c65eefb622b027a97680da0290",
