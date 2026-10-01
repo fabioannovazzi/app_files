@@ -1085,7 +1085,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "0309fb1bd4a806d9687341acf533bbe93adb20a6dfdfa0436e415c0288a0c4c4",
+  "catalogue_fingerprint": "bef85bc4f47a443e9230fab623e591842757578ba9e2d40b1e3ddccdb735083f",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1149,8 +1149,15 @@
   },
   "scissione_course_release_binding": {
     "reviewed_at": "2026-10-01",
-    "version": "0.1.307",
+    "version": "0.1.308",
     "previous_catalogue_fingerprint": "bf072498ef5fbdaeea8e46e4c0cde6fe4e7161dee4313b9f96200efdc39aaec6",
-    "review": "Refreshes only the canonical manifest/version binding. All 46 skill entrypoints are byte-identical to the previous catalogue. Preserves every Geneva disposition and evidence limit. The new five-language course demonstrates an Italian OIC synthetic case; translated lessons do not qualify Swiss applicability or professional acceptance."
+    "review": "Refreshes only the canonical manifest/version binding. All 46 skill entrypoints are byte-identical to the previous catalogue. Preserves every Geneva disposition and evidence limit. The new five-language course demonstrates an Italian OIC synthetic case; translated lessons do not qualify Swiss applicability or professional acceptance.",
+    "integrated_main": "a34681fb7023d6db8e82e720642f29e800d3518a"
+  },
+  "patent_box_course_release_binding": {
+    "reviewed_at": "2026-10-01",
+    "version": "0.1.304",
+    "previous_catalogue_fingerprint": "bf072498ef5fbdaeea8e46e4c0cde6fe4e7161dee4313b9f96200efdc39aaec6",
+    "review": "Refreshes the manifest/version binding for the five-language fictional Patent Box course. All 46 skill entrypoints are byte-identical to the recorded baseline. Existing Geneva judgments are preserved; translated teaching does not qualify the Italian preview for Swiss use or establish professional acceptance."
   }
 }
