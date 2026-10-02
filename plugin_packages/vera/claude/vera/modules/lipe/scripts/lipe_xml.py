@@ -9,6 +9,8 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
+from urllib.request import url2pathname
 
 from lipe_core import ROOT, ContractError, calculate, read_json
 from lxml import etree
@@ -43,10 +45,16 @@ class _OfflineResolver(etree.Resolver):  # type: ignore[misc]
         self.allowed = allowed
 
     def resolve(self, url: str, pubid: str, context: Any) -> Any:
-        path = Path(url.removeprefix("file://")).resolve()
+        if url.startswith("file:"):
+            parsed = urlsplit(url)
+            if parsed.netloc or parsed.query or parsed.fragment:
+                raise ContractError("Unexpected XML schema dependency")
+            path = Path(url2pathname(parsed.path)).resolve()
+        else:
+            path = Path(url).resolve()
         if path not in self.allowed:
             raise ContractError("Unexpected XML schema dependency")
-        return self.resolve_filename(str(path), context)
+        return self.resolve_string(path.read_bytes(), context, base_url=path.as_uri())
 
 
 def _schema() -> Any:
@@ -64,7 +72,7 @@ def _schema() -> Any:
     parser = etree.XMLParser(resolve_entities=False, load_dtd=False, no_network=True)
     parser.resolvers.add(_OfflineResolver(allowed))
     return etree.XMLSchema(
-        etree.parse(str(root / "sco/ivp/fornituraIvp_2018_v1.xsd"), parser)
+        etree.parse((root / "sco/ivp/fornituraIvp_2018_v1.xsd").as_uri(), parser)
     )
 
 

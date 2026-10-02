@@ -6,6 +6,7 @@ import copy
 import hashlib
 import importlib.util
 import json
+import shutil
 import sys
 from pathlib import Path
 
@@ -484,6 +485,18 @@ def test_real_xml_export_is_closed_until_acceptance() -> None:
     case["data_origin"] = "REAL"
     with pytest.raises(ContractError, match="Real XML export unavailable"):
         build_test_xml(case, PLUGIN / "examples")
+
+
+def test_xml_schema_resolves_from_installation_with_escaped_path(
+    tmp_path: Path, monkeypatch
+) -> None:
+    installation = tmp_path / "LIPE installation # percent% à"
+    shutil.copytree(PLUGIN / "references/xsd", installation / "references/xsd")
+    monkeypatch.setattr("lipe_xml.ROOT", installation)
+
+    payload = build_test_xml(case_data(), PLUGIN / "examples")
+
+    assert b"IVP18" in payload
 
 
 def test_xml_does_not_accept_an_old_or_modified_result(tmp_path: Path) -> None:
