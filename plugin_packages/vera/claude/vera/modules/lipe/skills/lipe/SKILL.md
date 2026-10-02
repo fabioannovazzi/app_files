@@ -112,6 +112,7 @@ Read `references/sources.json`, `references/rules.json` and
 `references/acceptance.md`. The current implementation is a review pilot for
 ordinary Italian VAT in 2024–2026. It is not a filing system or a compliance
 certification. Do not describe a passing XSD as acceptance by Agenzia Entrate.
+Read `references/anomaly-review.md` before proposing or resolving observations.
 
 ## Inspect and qualify
 
@@ -213,7 +214,7 @@ something changes; the case, rules and engine hashes identify the revision.
 Open `workpaper.md`, show the VP table, findings and unresolved requirements,
 and make the row composition in `result.json` available. Explain each difference
 against the customer's liquidation; it does not replace the register source.
-Supply `liquidations` for every period using case contract 1.1. Each sales or
+Supply `liquidations` for every period using case contract 1.2. Each sales or
 purchase section explicitly declares its taxable-base basis (registration,
 chargeability or deduction) and VAT basis (recorded, output or deductible).
 Confirm that meaning against the actual print; do not choose a basis merely to
@@ -229,10 +230,19 @@ workbook uses standard numeric cells; separators follow the spreadsheet viewer's
 locale. It is an inspectable draft, not an approval or a replacement case file.
 Change evidence/decisions in the case and rerun to produce a new revision. Never
 treat a manually edited workbook as the approved result.
-Prepare a source-backed colleague message from the model's reviewed findings,
-using `review-request.md` as a request template only. Do not send it without an
-explicit user request. The named reviewer is an attributed local record, not
-an authenticated identity or a tax approval issued by Vera.
+Record supported semantic proposals in `observations`, with invoice/protocol
+references, source quotations, proposed VP6 effects (null when unknown), actions
+and links to the exact comparison/finding identifiers. Follow the review guide
+for `anomaly_review`, professional decisions and their current content bindings.
+Open or stale decisions block VP output. A proposed effect never changes the
+arithmetic automatically: amend the reviewed inputs and recalculate.
+
+Inspect the generated `anomalies.md`/JSON dossier, `summary.pdf` and per-client
+`review-request.md`. The draft preserves unknown recipients, facts and deadlines;
+provide `correspondence` with source-backed dates only. Review the rendered PDF,
+figures and letter before delivery. Do not send correspondence without an explicit
+user request. The named reviewer is an attributed local record, not an
+authenticated identity or a tax approval issued by Vera.
 
 ## Acceptance and XML boundary
 
@@ -260,7 +270,8 @@ Current user restrictions govern any optional external attestation or publishing
 
 ## Cowork-native Run UX
 
-Default output policy: the Markdown and Excel workpapers, VP table, findings and readable model-data
+Default output policy: the Markdown and Excel workpapers, PDF summary, anomaly dossier,
+unsent colleague draft, VP table, findings and readable model-data
 report are normal outputs. Prepare `run_review.md` beside them with actual
 checks, unresolved questions and output paths.
 Never write run outputs inside this Git workspace or a published directory.

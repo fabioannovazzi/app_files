@@ -13,13 +13,14 @@ from pathlib import Path
 from xml.etree import ElementTree
 
 import pytest
-from pypdf import PdfWriter
+from pypdf import PdfReader, PdfWriter
 
 ROOT = Path(__file__).resolve().parents[2]
 PLUGIN = ROOT / "plugins/lipe"
 sys.path.insert(0, str(PLUGIN / "scripts"))
 from lipe import extract, main, save_result
 from lipe_core import ContractError, calculate, digest, money, read_json, validate
+from lipe_review import review_bindings
 from lipe_xml import build_test_xml
 
 XLSX_NS = {"s": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
@@ -62,6 +63,17 @@ def prepare(case: dict, root: Path) -> Path:
                     f"LIQUIDATION {document['period']} {section['side']} "
                     f"{section['tax_basis']} {row['code']}: {row['base']} {row['tax']}."
                 )
+    for observation in case["observations"]:
+        observation["evidence"] = [case["registers"][0]["rows"][0]["evidence"]]
+        for document in observation["documents"]:
+            document["evidence"] = ref(
+                f"DOCUMENT {observation['observation_id']}: protocol {document['protocol']}; "
+                f"invoice {document['invoice_number']}; date {document['date']}; "
+                f"party {document['counterparty']}; amount {document['amount']}."
+            )
+    if case["correspondence"] and case["correspondence"]["filing_deadline"]:
+        deadline = case["correspondence"]["filing_deadline"]
+        deadline["evidence"] = ref(f"FICTIONAL calendar date {deadline['date']}.")
     path = root / "evidence.txt"
     path.write_text("\n".join(lines))
     case["sources"] = [
@@ -98,6 +110,346 @@ def quarterly(quarter: int = 2, regime: str = "QUARTERLY_OPTION") -> dict:
             base_period=quarter, tax_period=quarter, deduction_period=quarter
         )
     return case
+
+
+def observation(case: dict) -> dict:
+    """An explicitly invented proposal, not a rule for finding real anomalies."""
+    return {
+        "observation_id": "OBS-1",
+        "category": "OTHER",
+        "title": "Documento da chiarire",
+        "assessment": "Valutazione sintetica, da sottoporre al revisore.",
+        "periods": [4],
+        "row_ids": [case["registers"][0]["rows"][0]["row_id"]],
+        "evidence": [case["registers"][0]["rows"][0]["evidence"]],
+        "documents": [
+            {
+                "protocol": "PROT-SYN-01",
+                "invoice_number": "INV-SYN-01",
+                "date": "2026-04-10",
+                "counterparty": "Società sintetica",
+                "amount": "1000.00",
+                "amount_basis": "imponibile",
+                "number_format": "en-US",
+                "evidence": case["registers"][0]["rows"][0]["evidence"],
+            }
+        ],
+        "vp6_effect": [
+            {
+                "period": 4,
+                "amount": None,
+                "basis": "Da verificare; nessuna variazione automatica.",
+            }
+        ],
+        "proposed_action": "Richiedere il documento completo e la decisione professionale.",
+        "related_comparisons": [],
+        "related_findings": [],
+        "decision": None,
+    }
+
+
+def record_decision(case: dict, item: dict) -> None:
+    """Record a synthetic decision only after the test's final source preparation."""
+    item["decision"] = {
+        "resolution": "NO_CHANGE",
+        "bindings": review_bindings(case, item),
+        "review": copy.deepcopy(case["scope_review"]),
+    }
+
+
+def test_open_observation_blocks_vp_without_turning_unknown_effect_into_zero(
+    tmp_path: Path,
+) -> None:
+    case = case_data()
+    case["observations"] = [observation(case)]
+    result = calculate(case, prepare(case, tmp_path))
+    assert result["modules"] == []
+    assert result["blockers"] == ["OBSERVATION_OPEN:OBS-1"]
+    assert result["observations"][0]["vp6_effect"][0]["amount"] is None
+
+
+def test_recorded_proposal_does_not_apply_its_estimated_tax_effect(
+    tmp_path: Path,
+) -> None:
+    case = case_data()
+    item = observation(case)
+    item["vp6_effect"][0]["amount"] = "-999.00"
+    case["observations"] = [item]
+    prepare(case, tmp_path)
+    record_decision(case, item)
+    result = calculate(case, tmp_path)
+    assert result["status"] == "DRAFT_FOR_REVIEW"
+    assert result["observations"][0]["state"] == "RESOLUTION_RECORDED"
+    assert result["modules"][0]["rows"]["vp14_debit"] == "110.00"
+
+
+@pytest.mark.parametrize("changed", ["facts", "proposal", "review", "engine", "rules"])
+def test_observation_decision_becomes_stale_after_its_reviewed_content_changes(
+    tmp_path: Path, changed: str
+) -> None:
+    case = case_data()
+    item = observation(case)
+    case["observations"] = [item]
+    prepare(case, tmp_path)
+    record_decision(case, item)
+    if changed == "facts":
+        case["modules"][0]["principal_paid"] = "120.00"
+    elif changed == "proposal":
+        item["assessment"] = "Different proposed interpretation."
+    elif changed == "review":
+        case["anomaly_review"]["reason"] = "The review scope changed."
+    else:
+        item["decision"]["bindings"][changed + "_hash"] = "0" * 64
+    result = calculate(case, tmp_path)
+    assert result["observations"][0]["state"] == "STALE_DECISION"
+    assert result["modules"] == []
+
+
+def test_proposed_decision_cannot_resolve_an_observation(tmp_path: Path) -> None:
+    case = case_data()
+    item = observation(case)
+    case["observations"] = [item]
+    prepare(case, tmp_path)
+    record_decision(case, item)
+    item["decision"]["review"]["status"] = "PROPOSED"
+    result = calculate(case, tmp_path)
+    assert result["observations"][0]["state"] == "OPEN"
+
+
+def test_missing_anomaly_review_does_not_imply_no_anomalies(tmp_path: Path) -> None:
+    case = case_data()
+    case["anomaly_review"] = None
+    result = calculate(case, prepare(case, tmp_path))
+    assert result["blockers"] == ["ANOMALY_REVIEW_NOT_CONFIRMED"]
+    assert result["modules"] == []
+
+
+@pytest.mark.parametrize(
+    "invalid",
+    ["duplicate", "row", "comparison", "finding", "period", "effect", "amount_basis"],
+)
+def test_anomaly_dossier_rejects_unsupported_or_ambiguous_references(
+    tmp_path: Path, invalid: str
+) -> None:
+    case = case_data()
+    item = observation(case)
+    case["observations"] = [item]
+    if invalid == "duplicate":
+        case["observations"].append(copy.deepcopy(item))
+    elif invalid == "row":
+        item["row_ids"] = ["missing-row"]
+    elif invalid == "comparison":
+        item["related_comparisons"] = ["0" * 64]
+    elif invalid == "finding":
+        item["related_findings"] = ["0" * 64]
+    elif invalid == "period":
+        item["periods"] = [1]
+    elif invalid == "effect":
+        item["vp6_effect"].append(copy.deepcopy(item["vp6_effect"][0]))
+    else:
+        item["documents"][0]["amount_basis"] = None
+    with pytest.raises(ContractError):
+        calculate(case, prepare(case, tmp_path))
+
+
+def test_anomaly_document_amount_must_match_its_quotation(tmp_path: Path) -> None:
+    case = case_data()
+    item = observation(case)
+    case["observations"] = [item]
+    prepare(case, tmp_path)
+    item["documents"][0]["amount"] = "123.00"
+    with pytest.raises(ContractError, match="absent from source quotation"):
+        calculate(case, tmp_path)
+
+
+@pytest.mark.parametrize(
+    "field", ["protocol", "invoice_number", "counterparty", "date"]
+)
+def test_anomaly_document_identity_must_be_supported_by_quoted_source(
+    tmp_path: Path, field: str
+) -> None:
+    case = case_data()
+    item = observation(case)
+    case["observations"] = [item]
+    prepare(case, tmp_path)
+    item["documents"][0][field] = "2026-04-11" if field == "date" else "invented"
+    with pytest.raises(ContractError, match="absent from source quotation"):
+        calculate(case, tmp_path)
+
+
+def test_dossier_and_letter_keep_invoice_details_and_unknowns_explicit(
+    tmp_path: Path,
+) -> None:
+    case = case_data()
+    case["observations"] = [observation(case)]
+    result = calculate(case, prepare(case, tmp_path))
+    folder = save_result(case, result, tmp_path)
+    dossier = (folder / "anomalies.md").read_text()
+    letter = (folder / "review-request.md").read_text()
+    payload = read_json(folder / "anomalies.json")
+    assert "PROT-SYN-01" in dossier
+    assert "INV-SYN-01" in dossier
+    assert "10/04/2026" in dossier
+    assert "Società sintetica" in dossier
+    assert "1.000,00 €" in dossier
+    assert "non determinato" in dossier
+    assert "evidence.txt, p. 1" in dossier
+    assert "non inviata" in letter
+    assert "non sono disponibili righi da inserire" in letter
+    assert "Scadenza della comunicazione: da verificare" in letter
+    assert payload["result_hash"] == result["result_hash"]
+    assert payload["proposed_effects_applied_automatically"] is False
+
+
+def test_review_outputs_escape_source_markup(tmp_path: Path) -> None:
+    case = case_data()
+    item = observation(case)
+    item["assessment"] = (
+        '<img src="https://example.invalid/x"> ![leak](https://example.invalid/y)'
+    )
+    case["observations"] = [item]
+    result = calculate(case, prepare(case, tmp_path))
+    folder = save_result(case, result, tmp_path)
+    text = (folder / "anomalies.md").read_text()
+    assert "<img" not in text
+    assert "![leak](" not in text
+    assert "&lt;img" in text
+
+
+@pytest.mark.parametrize(
+    "status,label",
+    [
+        ("CONFIRMED", "Scadenza registrata dal revisore"),
+        ("PROPOSED", "Scadenza proposta, da verificare"),
+    ],
+)
+def test_letter_distinguishes_confirmed_and_proposed_deadline(
+    tmp_path: Path, status: str, label: str
+) -> None:
+    case = case_data()
+    review = dict(case["scope_review"], status=status)
+    case["correspondence"] = {
+        "client_label": "Cliente sintetico",
+        "recipient": "Collega sintetico",
+        "filing_deadline": {
+            "date": "2026-11-30",
+            "review": review,
+            "evidence": case["opening"]["evidence"],
+        },
+    }
+    result = calculate(case, prepare(case, tmp_path))
+    folder = save_result(case, result, tmp_path)
+    letter = (folder / "review-request.md").read_text()
+    assert label + ": 30/11/2026" in letter
+    assert "Cliente sintetico" in letter
+    assert "Destinatario: Collega sintetico" in letter
+    assert "evidence.txt, p. 1" in letter
+
+
+def test_pdf_summary_preserves_figures_sources_and_draft_status(tmp_path: Path) -> None:
+    case = case_data()
+    result = calculate(case, PLUGIN / "examples")
+    folder = save_result(case, result, tmp_path)
+    reader = PdfReader(folder / "summary.pdf")
+    text = "\n".join(page.extract_text() for page in reader.pages)
+    assert "DATI SINTETICI" in text
+    assert "1.000,00 EUR" in text
+    assert "500,00 EUR" in text
+    assert "110,00 EUR" in text
+    assert "VP14 - Da versare" in text
+    assert case["sources"][0]["sha256"] in text
+    assert result["result_hash"] in text
+    assert "p. 1" in text
+    assert reader.get_fields() is None
+    assert reader.trailer["/Root"].get("/OpenAction") is None
+
+
+def test_blocked_pdf_keeps_proposal_and_invoice_without_plausible_vp_rows(
+    tmp_path: Path,
+) -> None:
+    case = case_data()
+    case["observations"] = [observation(case)]
+    result = calculate(case, prepare(case, tmp_path))
+    folder = save_result(case, result, tmp_path)
+    reader = PdfReader(folder / "summary.pdf")
+    text = "\n".join(page.extract_text() for page in reader.pages)
+    assert "calcolo bloccato" in text
+    assert "OBSERVATION_OPEN:OBS-1" in text
+    assert "INV-SYN-01" in text
+    assert "PROT-SYN-01" in text
+    assert "non determinato" in text
+    assert "VP14 - Da versare" not in text
+
+
+def test_pdf_handles_long_proposals_and_preserves_unsupported_unicode_explicitly(
+    tmp_path: Path,
+) -> None:
+    case = case_data()
+    item = observation(case)
+    item["assessment"] = (
+        "<img src='https://example.invalid'> 客 "
+        + "Verifica della fonte sintetica. " * 300
+    )
+    case["observations"] = [item]
+    prepare(case, tmp_path)
+    record_decision(case, item)
+    result = calculate(case, tmp_path)
+    folder = save_result(case, result, tmp_path)
+    reader = PdfReader(folder / "summary.pdf")
+    text = "\n".join(page.extract_text() for page in reader.pages)
+    assert len(reader.pages) > 3
+    assert "[U+5BA2]" in text
+    assert "<img src='https://example.invalid'>" in " ".join(text.split())
+    assert "Dati confermati senza modifiche" in text
+    assert "codice Unicode" in text
+    assert "\u25a0" not in text
+
+
+def test_q4_pdf_keeps_non_applicable_rows_distinct_from_zero(tmp_path: Path) -> None:
+    case = quarterly(4)
+    result = calculate(case, prepare(case, tmp_path))
+    folder = save_result(case, result, tmp_path)
+    text = "\n".join(
+        page.extract_text() for page in PdfReader(folder / "summary.pdf").pages
+    )
+    assert "VP14 - Da versare\n non compilato" in text
+    assert "non confrontabile con liquidazione annuale" in text
+
+
+def test_recorded_explanation_is_linked_to_code_reconciliation_and_workbook(
+    tmp_path: Path,
+) -> None:
+    case = case_data()
+    baseline = calculate(case, PLUGIN / "examples")
+    item = observation(case)
+    item["related_comparisons"] = [baseline["reconciliation"][0]["comparison_id"]]
+    case["observations"] = [item]
+    prepare(case, tmp_path)
+    record_decision(case, item)
+    result = calculate(case, tmp_path)
+    folder = save_result(case, result, tmp_path)
+    assert result["reconciliation"][0]["explanations"][0]["observation_id"] == "OBS-1"
+    with zipfile.ZipFile(folder / "workpaper.xlsx") as archive:
+        shared = archive.read("xl/sharedStrings.xml").decode()
+    assert item["assessment"] in shared
+    assert "Spiegazione registrata" in shared
+
+
+def test_recorded_payment_explanation_is_not_requested_again(tmp_path: Path) -> None:
+    case = case_data()
+    case["modules"][0]["principal_paid"] = "0.00"
+    item = observation(case)
+    case["observations"] = [item]
+    prepare(case, tmp_path)
+    proposal = calculate(case, tmp_path)
+    item["related_findings"] = [proposal["findings"][0]["finding_id"]]
+    record_decision(case, item)
+    result = calculate(case, tmp_path)
+    folder = save_result(case, result, tmp_path)
+    letter = (folder / "review-request.md").read_text()
+    assert "Decisione già registrata per OBS-1" in letter
+    assert "Verificare ricevuta, tributo e periodo" not in letter
+    assert result["modules"][0]["payment_status"] == "DIFFERENCE_TO_REVIEW"
 
 
 def test_monthly_fixture_has_independently_known_vp_values() -> None:

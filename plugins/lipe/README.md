@@ -3,7 +3,7 @@
 Evidence-linked review pilot for Italian periodic VAT communications. The
 pipeline reads reviewed register extractions, reconciles totals, calculates VP
 drafts, and retains source hashes, row composition and payment differences.
-Case contract 1.1 requires each period's liquidation sections, their reviewed
+Case contract 1.2 requires each period's liquidation sections, their reviewed
 comparison bases and source quotations. Reconciliation compares each VAT code;
 absence is not a printed zero and offsetting errors remain visible.
 
@@ -13,6 +13,14 @@ Formulas have cached draft values and an explicit comparison against the Decimal
 engine. Source contributions, carry-forward steps and adjustments remain visible.
 Editing Excel does not amend or approve the saved case: update the evidence and
 rerun LIPE. Blocked cases show blockers instead of plausible tax figures.
+
+Structured anomaly proposals preserve invoice/protocol references, quoted facts,
+unknown or estimated VP6 effects, actions and content-bound local decisions.
+Open/stale decisions block VP output. Proposals are not tax classifiers and their
+effects are never applied automatically. `anomalies.md`/JSON, an unsent per-client
+`review-request.md` and a paginated `summary.pdf` accompany each valid-contract
+revision. The PDF uses embedded fonts and Italian money formatting. Unsupported
+glyphs are identified by Unicode code point; original text remains in JSON.
 
 Run `scripts/check_dependencies.py`, then follow `skills/lipe/SKILL.md`.
 The exact JSON contract is `schemas/case.schema.json`. The example is entirely

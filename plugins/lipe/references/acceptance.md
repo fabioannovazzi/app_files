@@ -43,13 +43,22 @@ separate tax periods, partial deduction, reverse-charge mirrors, reviewed
 opening balances and manual adjustments, payment differences, content-bound
 revisions and source-text/PDF-page evidence. Text extraction requires visual
 review. Real cases require Studio Archive identity and unchanged input receipts.
-Case contract 1.1 also requires reviewed liquidation sections for each period.
+Case contract 1.2 also requires reviewed liquidation sections for each period.
 Code-level comparisons preserve their explicit date and VAT-measure bases,
 unmatched codes and unknown amounts. The three-tab Excel workpaper exposes
 source contributions, VP formulas, carry steps, engine comparison and F24 checks.
 The portable exporter uses the already-supported Python XlsxWriter library;
 the desktop artifact-tool library is used for independent development validation,
 not required in the installed Python runtime.
+
+Structured semantic proposals now preserve invoice/protocol references, source
+quotations, proposed VP6 effects and attributable local decisions. Changed facts
+or proposals invalidate the matching decision; proposed effects are never
+automatically added to VP. The per-client unsent draft follows the specification's
+sections, keeps missing facts explicit and uses only source-backed recorded
+deadlines. A paginated PDF summary retains the same draft/blocked status and
+source references. These output checks do not authenticate reviewers or establish
+the tax validity of their explanations.
 
 Development validation includes independent workbook recalculation and changed-
 input checks for monthly values, partial reverse-charge deduction, credit and
@@ -84,12 +93,6 @@ blocked until the principal/interest basis is independently reviewed.
 - Durable vendor/version, studio and client mapping catalog with explicit
   precedence, revocation and curator-controlled promotion. Current mappings
   belong to the single reviewed case.
-- A structured semantic-anomaly dossier with invoice/protocol references,
-  proposed tax effects and recorded resolutions. Current mechanical findings
-  and model review instructions do not constitute this full dossier.
-- The complete per-client correspondence package and PDF summary. The current
-  review-request file is a template; it does not invent invoice references,
-  recipients, filing deadlines or explanations.
 - Authenticated approval/front-page contract for real XML and supplied-receipt
   processing. The synthetic XML command is not the real export workflow.
 

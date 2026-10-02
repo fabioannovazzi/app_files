@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Callable
 
-from lipe_core import TREATMENTS, ZERO, ContractError, money
+from lipe_core import TREATMENTS, ZERO, ContractError, digest, money
 
 __all__ = ["reconcile"]
 
@@ -116,6 +116,7 @@ def reconcile(
                     )
                 )
                 item = {
+                    "comparison_id": digest([period, *basis, code]),
                     "period": period,
                     "side": side,
                     "code": code,
@@ -131,6 +132,7 @@ def reconcile(
                     "register_rows": [row["row_id"] for row in rows],
                     "register_evidence": [row["evidence"] for row in rows],
                     "liquidation_evidence": declared["evidence"] if declared else None,
+                    "explanations": [],
                 }
                 output.append(item)
                 if status != "MATCH":

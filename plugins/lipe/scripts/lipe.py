@@ -89,9 +89,11 @@ def save_result(case: dict, result: dict, output: Path) -> Path:
     _write_json(folder / "case.json", case)
     _write_json(folder / "result.json", result)
     if result["status"] != "BLOCKED_INVALID_INPUT":
+        from lipe_pdf import write_pdf
         from lipe_workbook import write_workbook
 
         write_workbook(case, result, folder / "workpaper.xlsx")
+        write_pdf(case, result, folder / "summary.pdf")
     with (folder / "vp.csv").open("x", encoding="utf-8", newline="") as handle:
         fields = [
             "period",
@@ -183,6 +185,11 @@ def save_result(case: dict, result: dict, output: Path) -> Path:
             if result["status"] != "BLOCKED_INVALID_INPUT"
             else "Workpaper Excel non generato: contratto di input non valido."
         ),
+        (
+            "[Dossier anomalie](anomalies.md) · [Bozza per il collega](review-request.md) · [Sintesi PDF](summary.pdf)"
+            if result["status"] != "BLOCKED_INVALID_INPUT"
+            else ""
+        ),
         "",
     ]
     lines += ["## Scarti da esaminare", ""]
@@ -215,10 +222,15 @@ def save_result(case: dict, result: dict, output: Path) -> Path:
             "model_data_report_status": "HOST_MUST_RECORD_ACTUAL_PHASES",
         },
     )
-    (folder / "review-request.md").write_text(
-        "# Bozza richiesta di revisione — non inviata\n\nVerificare fonti e copertura di tutti i sezionali, classificazioni, periodi IVA, detraibilità, saldi iniziali, rettifiche e versamenti. Esaminare gli scarti nel workpaper e ricondurre ogni correzione alla fonte. Nessun importo è approvato da questa bozza.\n",
-        encoding="utf-8",
-    )
+    if result["status"] != "BLOCKED_INVALID_INPUT":
+        from lipe_review_outputs import write_review_documents
+
+        write_review_documents(case, result, folder)
+    else:
+        (folder / "review-request.md").write_text(
+            "# Bozza richiesta di revisione — non inviata\n\nContratto di input non valido: risolvere i blocchi nel workpaper prima di predisporre il dossier o comunicare importi.\n",
+            encoding="utf-8",
+        )
     for path in folder.iterdir():
         path.chmod(0o600)
     return folder

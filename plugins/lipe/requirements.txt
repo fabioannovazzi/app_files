@@ -2,3 +2,4 @@ jsonschema>=4.23,<5
 lxml>=5.0,<7,!=6.0.0
 pypdf>=5,<7
 xlsxwriter>=3.2
+reportlab>=4.0,<5

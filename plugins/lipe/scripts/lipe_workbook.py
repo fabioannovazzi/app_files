@@ -76,6 +76,7 @@ def _formats(book: Any) -> dict:
     common = {"font_name": "Arial", "font_size": 10, "valign": "vcenter"}
     return {
         "text": book.add_format(common),
+        "wrapped": book.add_format({**common, "text_wrap": True, "valign": "top"}),
         "title": book.add_format({**common, "font_size": 16, "font_color": "#123A5C"}),
         "header": book.add_format(
             {
@@ -161,12 +162,14 @@ def _reconciliation(sheet: Any, result: dict, fmt: dict) -> None:
         "Fonti registro",
         "Fonte liquidazione",
         "Righe registro",
+        "Spiegazione registrata",
     ]
     sheet.write_row("B7", headers, fmt["header"])
     sheet.set_row(6, 32)
     sheet.set_column("B:B", 10)
     sheet.set_column("M:M", 29)
     sheet.set_column("N:P", 34)
+    sheet.set_column("Q:Q", 65, fmt["wrapped"])
     for index, item in enumerate(result["reconciliation"], 8):
         values = [
             item["period"],
@@ -193,8 +196,35 @@ def _reconciliation(sheet: Any, result: dict, fmt: dict) -> None:
             "; ".join(dict.fromkeys(_source(ref) for ref in item["register_evidence"])),
             _source(item["liquidation_evidence"]),
             "; ".join(item["register_rows"]),
+            "\n".join(
+                f"{explanation['observation_id']}: {explanation['assessment']} "
+                + (
+                    "(decisione registrata)"
+                    if explanation["state"] == "RESOLUTION_RECORDED"
+                    else "(proposta da rivedere)"
+                )
+                for explanation in item["explanations"]
+            )
+            or (
+                "Nessuno scarto numerico"
+                if item["status"] == "MATCH"
+                else "Da chiarire"
+            ),
         ]
         sheet.write_row(index - 1, 1, values, fmt["text"])
+        sheet.write_string(index - 1, 16, values[-1], fmt["wrapped"])
+        # Excel caps row height: retain the full text and point to the dossier.
+        # Long explanations remain inspectable in the formula bar and dossier.
+        explanation_lines = sum(
+            max(1, (len(line) + 59) // 60) for line in values[-1].splitlines()
+        )
+        sheet.set_row(index - 1, min(400, max(20, explanation_lines * 15 + 5)))
+        if explanation_lines > 26:
+            sheet.write_comment(
+                index - 1,
+                16,
+                "Testo completo in anomalies.md; ogni osservazione conserva fonti e decisione.",
+            )
         for col in (6, 7, 9, 10):
             sheet.write(index - 1, col, values[col - 1], fmt["input"])
         for target, left, right, key in (
@@ -215,14 +245,14 @@ def _reconciliation(sheet: Any, result: dict, fmt: dict) -> None:
             STATUS[item["status"]],
         )
     end = max(8, len(result["reconciliation"]) + 7)
-    sheet.autofilter(f"B7:P{end}")
+    sheet.autofilter(f"B7:Q{end}")
     sheet.freeze_panes(7, 4)
     for col in ("I", "L"):
         sheet.conditional_format(
             f"{col}8:{col}{end}",
             {"type": "cell", "criteria": "!=", "value": 0, "format": fmt["warning"]},
         )
-    sheet.print_area(f"B2:P{end}")
+    sheet.print_area(f"B2:Q{end}")
 
 
 def _vp(sheet: Any, case: dict, result: dict, fmt: dict) -> None:

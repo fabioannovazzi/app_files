@@ -4,7 +4,7 @@
   "properties": {
     "schema_version": {
       "enum": [
-        "1.1"
+        "1.2"
       ]
     },
     "pipeline": {
@@ -563,7 +563,8 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "Reported output VAT less deductible VAT before prior-period credit, VP9–13 adjustments or interest; not the final amount payable."
           },
           "review": {
             "type": "object",
@@ -800,6 +801,33 @@
           "sections"
         ]
       }
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/observation"
+      },
+      "minItems": 0
+    },
+    "anomaly_review": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/review"
+        }
+      ]
+    },
+    "correspondence": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/correspondence"
+        }
+      ]
     }
   },
   "required": [
@@ -820,8 +848,412 @@
     "mappings",
     "registers",
     "modules",
-    "liquidations"
+    "liquidations",
+    "observations",
+    "anomaly_review",
+    "correspondence"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "LIPE: reviewed evidence and exact arithmetic for one client and quarter"
+  "title": "LIPE: reviewed evidence and exact arithmetic for one client and quarter",
+  "$defs": {
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "PROPOSED",
+            "CONFIRMED"
+          ]
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewed_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "status",
+        "reviewer",
+        "reviewed_on",
+        "reason"
+      ]
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "source_id",
+        "page",
+        "quote"
+      ]
+    },
+    "observationBindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "facts_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "observation_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "engine_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "rules_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "facts_hash",
+        "observation_hash",
+        "engine_hash",
+        "rules_hash"
+      ]
+    },
+    "observationDocument": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "protocol": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "invoice_number": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "date": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "counterparty": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "amount": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^-?(0|[1-9][0-9]{0,10})\\.[0-9]{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "amount_basis": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "number_format": {
+          "enum": [
+            "it-IT",
+            "en-US"
+          ]
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidence"
+        }
+      },
+      "required": [
+        "protocol",
+        "invoice_number",
+        "date",
+        "counterparty",
+        "amount",
+        "amount_basis",
+        "number_format",
+        "evidence"
+      ]
+    },
+    "observationDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "resolution": {
+          "enum": [
+            "NO_CHANGE",
+            "INPUTS_REVISED"
+          ]
+        },
+        "bindings": {
+          "$ref": "#/$defs/observationBindings"
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        }
+      },
+      "required": [
+        "resolution",
+        "bindings",
+        "review"
+      ]
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "observation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "enum": [
+            "A1",
+            "A2",
+            "A3",
+            "A4",
+            "A5",
+            "A6",
+            "A7",
+            "A8",
+            "A9",
+            "A10",
+            "A11",
+            "A12",
+            "A13",
+            "OTHER"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assessment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "periods": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "row_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          },
+          "minItems": 1
+        },
+        "documents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/observationDocument"
+          },
+          "minItems": 0
+        },
+        "vp6_effect": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "period": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 12
+              },
+              "amount": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^-?(0|[1-9][0-9]{0,10})\\.[0-9]{2}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "basis": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "period",
+              "amount",
+              "basis"
+            ]
+          },
+          "minItems": 0
+        },
+        "proposed_action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "related_comparisons": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "decision": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/observationDecision"
+            }
+          ]
+        },
+        "related_findings": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "observation_id",
+        "category",
+        "title",
+        "assessment",
+        "periods",
+        "row_ids",
+        "evidence",
+        "documents",
+        "vp6_effect",
+        "proposed_action",
+        "related_comparisons",
+        "decision",
+        "related_findings"
+      ]
+    },
+    "correspondence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "client_label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recipient": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "filing_deadline": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "date": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "evidence": {
+                  "$ref": "#/$defs/evidence"
+                },
+                "review": {
+                  "$ref": "#/$defs/review"
+                }
+              },
+              "required": [
+                "date",
+                "evidence",
+                "review"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "client_label",
+        "recipient",
+        "filing_deadline"
+      ]
+    }
+  }
 }

@@ -16,7 +16,16 @@ from typing import Any
 
 import jsonschema
 
-__all__ = ["ContractError", "calculate", "digest", "money", "read_json", "validate"]
+__all__ = [
+    "ContractError",
+    "calculate",
+    "digest",
+    "engine_hash",
+    "money",
+    "read_json",
+    "rules_hash",
+    "validate",
+]
 
 ROOT = Path(__file__).resolve().parents[1]
 ZERO = Decimal("0.00")
@@ -44,6 +53,21 @@ def digest(value: Any) -> str:
     return hashlib.sha256(
         json.dumps(value, sort_keys=True, ensure_ascii=False, allow_nan=False).encode()
     ).hexdigest()
+
+
+def engine_hash() -> str:
+    """Bind all LIPE calculation and output helpers used by this revision."""
+    return digest(
+        {
+            path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in sorted(Path(__file__).parent.glob("lipe*.py"))
+        }
+    )
+
+
+def rules_hash() -> str:
+    """Identify the reviewed rule register independently of case facts."""
+    return hashlib.sha256((ROOT / "references/rules.json").read_bytes()).hexdigest()
 
 
 def _pairs(pairs: list[tuple[str, Any]]) -> dict:
@@ -159,6 +183,7 @@ def _periods(case: dict) -> list[int]:
 def calculate(case: dict, source_root: Path) -> dict:
     """Return a persisted-ready draft or an explicit blocker, never a filed return."""
     from lipe_reconcile import reconcile
+    from lipe_review import assess_observations
 
     validate(case)
     sources = _evidence(case, source_root)
@@ -327,8 +352,19 @@ def calculate(case: dict, source_root: Path) -> dict:
         blockers,
         findings,
     )
+    modules = _settle(case, totals, findings) if not blockers else []
+    for finding in findings:
+        finding["finding_id"] = digest(finding)
+    observations = assess_observations(
+        case,
+        reconciliation,
+        findings,
+        lambda ref: _reference(ref, sources),
+        _amount_in_quote,
+        blockers,
+    )
     result = {
-        "schema_version": "1.1",
+        "schema_version": "1.2",
         "pipeline": "LIPE",
         "status": "BLOCKED" if blockers else "DRAFT_FOR_REVIEW",
         "case_id": case["case_id"],
@@ -339,25 +375,17 @@ def calculate(case: dict, source_root: Path) -> dict:
         "regime": case["regime"],
         "data_origin": case["data_origin"],
         "input_hash": digest(case),
-        "rules_hash": hashlib.sha256(
-            (ROOT / "references/rules.json").read_bytes()
-        ).hexdigest(),
-        "engine_hash": digest(
-            {
-                path.name: hashlib.sha256(path.read_bytes()).hexdigest()
-                for path in sorted(Path(__file__).parent.glob("lipe*.py"))
-            }
-        ),
+        "rules_hash": rules_hash(),
+        "engine_hash": engine_hash(),
         "blockers": sorted(set(blockers)),
         "findings": findings,
-        "modules": [],
+        "modules": modules if not blockers else [],
         "composition": composition,
         "reconciliation": reconciliation,
+        "observations": observations,
         "qualification": "PILOT_NOT_PROFESSIONALLY_ACCEPTED",
         "export_status": "NOT_AUTHORIZED",
     }
-    if not blockers:
-        result["modules"] = _settle(case, totals, findings)
     result["result_hash"] = digest(result)
     return result
 

@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "pipeline": "LIPE",
   "case_id": "synthetic-quarter",
   "client_id": "synthetic-client",
@@ -550,5 +550,13 @@
         }
       ]
     }
-  ]
+  ],
+  "observations": [],
+  "anomaly_review": {
+    "status": "CONFIRMED",
+    "reviewer": "SYNTHETIC TEST ACTOR",
+    "reviewed_on": "2026-10-02",
+    "reason": "Synthetic fixture only; no professional validation claimed."
+  },
+  "correspondence": null
 }
