@@ -60,7 +60,7 @@ UNIFIED_PLUGIN_NAMES = {"vera"}
 VERA_DISCOVERY_TERMS = (
     "commercialista",
     "studi professionali",
-    "contabilità",
+    "contabilita",  # Preserve the canonical keyword independently of prose.
     "controlli contabili",
     "scritture contabili",
     "riconciliazione bancaria",
@@ -620,7 +620,8 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert len(approved_description.split("\n\n")) == 3
     assert "bilancio civilistico OIC" in approved_description
     assert "concordato preventivo" in approved_description
-    assert "ricerche fiscali o normative" in approved_description
+    assert "quesiti fiscali e legali" in approved_description
+    assert "revisione contabile e le riconciliazioni" in approved_description
     assert "Cerca la corrispondenza del cliente." not in approved_description
     assert "giudizio professionale restano al commercialista." in approved_description
     assert "New Client" not in approved_description
