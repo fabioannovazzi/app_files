@@ -39,6 +39,12 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
 
 ## Professional workflows
 
+- `rating-legalita`: prepare an Italian AGCM initial-application dossier, even
+  from no documents; distinguish declarations, verified evidence, obstacles,
+  optional premiums and conditional improvements. Preserve T0, link every
+  conclusion to sources, and stop at professional review. Renewal, monitoring
+  and WebRating submission are outside this initial-application implementation.
+
 - `esg-reporting-assurance`: organize the first ESG evidence and decision
   foundation inside an existing client engagement; bind CSV cells or text lines,
   retain versions and decisions, flag stale dependencies and export partial drafts.

@@ -10,6 +10,27 @@ permissions:
   contents: read
 
 jobs:
+  rating-legalita:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit -r plugins/rating-legalita/requirements.txt
+      - name: Verify rating evidence, history, arithmetic and archive binding
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_rating_legalita_case.py tests/plugins/test_rating_legalita_core.py
+          --cov --cov-config=tests/rating_legalita.coveragerc --cov-report=term-missing
+      - name: Check rating code quality
+        run: |
+          python -m black --check plugins/rating-legalita/scripts tests/plugins/test_rating_legalita_case.py tests/plugins/test_rating_legalita_core.py
+          python -m isort --check-only plugins/rating-legalita/scripts tests/plugins/test_rating_legalita_case.py tests/plugins/test_rating_legalita_core.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/rating-legalita/scripts
+          python -m bandit -q -ll -r plugins/rating-legalita/scripts
+
   studio-document-format:
     name: Studio document format pipeline
     runs-on: ubuntu-latest

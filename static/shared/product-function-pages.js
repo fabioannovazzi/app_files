@@ -164,6 +164,87 @@
 };
 
   window.MPARANZA_FUNCTION_PAGES = {
+    "rating-legalita": {
+  "product": "Vera",
+  "defaultLanguage": "it",
+  "copy": {
+    "it": {
+      "name": "Rating di legalità",
+      "summary": "Prepara il dossier per la prima attribuzione del rating di legalità AGCM: ammissibilità, soggetti, ostacoli, requisiti premiali e piano dei documenti mancanti.",
+      "useWhen": "Per una prima domanda in Italia, anche partendo senza un fascicolo completo. Rinnovo, mantenimento e invio su WebRating richiedono percorsi separati, non inclusi in questa versione.",
+      "input": "L’impresa e l’obiettivo, se già noti; visura o dati REA, bilanci, ruoli e procure, dichiarazioni, provvedimenti e prove delle premialità disponibili. Se manca tutto, Vera prepara le prime domande e una richiesta documentale motivata.",
+      "work": "Legge le prove selezionate e distingue quanto dichiarato da quanto verificato. Esamina accesso, soggetti e ostacoli prima delle premialità; collega ogni decisione a fonte, passaggio e motivazione. Conserva T0 e separa gli aggiornamenti documentati dagli scenari obiettivo.",
+      "output": "Dossier Markdown e JSON con requisiti, soggetti, citazioni, decisioni e questioni aperte; stima documentata quando la base è verificata; piano dei gap con azione, responsabile, termine e prova di chiusura. Anche un caso incompleto o non ammissibile produce una restituzione motivata.",
+      "responsibilityIntro": "Il dossier è una bozza per revisione professionale. Il rating è attribuito da AGCM; una stima o un miglioramento programmato non equivale a un risultato ottenuto.",
+      "productRole": "Organizza le evidenze, prepara le richieste, verifica collegamenti e calcoli e rende consultabili le versioni del dossier. Non autentica i documenti né la persona indicata come revisore.",
+      "professionalRole": "Conferma il perimetro, valuta fatti e rilevanza degli atti, decide gli esiti e controlla il formulario vigente e gli allegati. Firma del rappresentante legale e trasmissione restano separate. Vera non accede al portale né invia la domanda.",
+      "prompt": "Devo preparare la prima domanda di rating di legalità per un cliente. Parti dai documenti disponibili, verifica cosa manca e prepara il dossier con prove, dubbi e prossime azioni.",
+      "modelDataStatus": "relevant",
+      "modelDataConclusion": "Il modello legge le prove necessarie e propone la valutazione; il codice locale verifica citazioni, impronte e calcoli.",
+      "modelData": "In Codex o Cowork, il modello selezionato può ricevere documenti societari, nomi e ruoli delle persone, informazioni giudiziarie, fiscali e sui pagamenti, dichiarazioni, estratti con citazioni, domande, risposte, decisioni e bozze. I PDF richiedono un’estrazione leggibile e controllata, mantenendo il collegamento all’originale. Non sono garantite anonimizzazione automatica o elaborazione solo locale.\n\nPer un caso reale il generatore richiede un incarico Studio Archive e controlla identità e ricevute degli input. Python legge le prove testuali importate, verifica hash e citazioni e salva il dossier nel run; non chiama modelli o servizi di rete. La ricerca normativa usa query pubbliche prive di identificativi del cliente e di dettagli giudiziari identificativi. Il workflow non trasmette dati a WebRating.\n\nIl dossier conserva dati e riferimenti del caso: non è un documento automaticamente anonimizzato da condividere. Il report finale sui dati deve descrivere i materiali effettivamente visibili al modello. Si applicano le condizioni dell’account Codex o Cowork scelto dallo studio."
+    },
+    "en": {
+      "name": "Italian legality rating",
+      "summary": "Prepare an evidence dossier for an initial AGCM legality-rating application: eligibility, relevant people, obstacles, bonus requirements and missing documents.",
+      "useWhen": "For an initial application in Italy, including a start without documents. Renewal, maintenance and WebRating submission are outside this version.",
+      "input": "The company and objective, if known; registry records, accounts, roles and powers, declarations, official acts and available bonus evidence. With no documents, Vera prepares focused questions and a reasoned document request.",
+      "work": "Reads selected evidence and separates declarations from verified facts. Reviews eligibility, people and obstacles before bonuses, linking decisions to sources, passages and reasons. Preserves the initial snapshot and separates documented updates from target scenarios.",
+      "output": "Markdown and JSON dossiers containing requirements, people, quotations, decisions and open issues; an estimate when the base is verified; a gap plan with actions, owners, dates and closure evidence. Incomplete and ineligible cases also receive a reasoned report.",
+      "responsibilityIntro": "The dossier is a draft for professional review. AGCM awards the rating. An estimate or planned improvement is not an awarded result.",
+      "productRole": "Organizes evidence, drafts requests, checks references and arithmetic, and preserves dossier versions. It does not authenticate documents or reviewer identity.",
+      "professionalRole": "Confirms scope, assesses facts and legal relevance, decides outcomes and checks the current form and attachments. The legal representative’s signature and submission remain separate. Vera does not access the portal or submit applications.",
+      "prompt": "Prepare the client’s initial Italian legality-rating application. Start from available documents and show evidence, uncertainties, missing items and next actions.",
+      "modelDataStatus": "relevant",
+      "modelDataConclusion": "The model reads relevant evidence and proposes assessments; local code checks quotations, hashes and arithmetic.",
+      "modelData": "The selected Codex or Cowork model may receive corporate records, names and roles, judicial, tax and payment information, declarations, quoted extracts, questions, answers, decisions and drafts. PDFs require a reviewed readable extraction linked to the original. There is no automatic anonymization or local-only guarantee.\n\nReal-case generation requires a Studio Archive engagement and checks identity and input receipts. Python reads imported text evidence, verifies hashes and quotations and saves the dossier in the run, without model or network calls. Public legal research excludes client identifiers and identifying judicial details. No data is sent to WebRating.\n\nThe dossier retains case data and references and is not automatically anonymized for sharing. The final data report must describe what the model actually saw. The firm’s selected Codex or Cowork account terms apply."
+    },
+    "fr": {
+      "name": "Rating de légalité italien",
+      "summary": "Prépare un dossier pour une première attribution du rating de légalité AGCM : admissibilité, personnes concernées, obstacles, critères supplémentaires et pièces manquantes.",
+      "useWhen": "Pour une première demande en Italie, même sans documents au départ. Le renouvellement, le suivi et l’envoi sur WebRating ne sont pas inclus dans cette version.",
+      "input": "L’entreprise et l’objectif, si connus ; registre, comptes, fonctions et pouvoirs, déclarations, décisions officielles et preuves disponibles. Sans pièces, Vera prépare les questions initiales et une demande documentaire motivée.",
+      "work": "Lit les preuves choisies et distingue déclarations et faits vérifiés. Examine l’accès, les personnes et les obstacles avant les critères supplémentaires ; relie chaque décision à une source, un passage et un motif. Conserve T0 et distingue mises à jour documentées et scénarios cibles.",
+      "output": "Dossier Markdown et JSON avec critères, personnes, citations, décisions et questions ouvertes ; estimation si la base est vérifiée ; plan des écarts avec action, responsable, échéance et preuve de clôture. Les cas incomplets ou non admissibles reçoivent aussi une restitution motivée.",
+      "responsibilityIntro": "Le dossier est un projet à revoir par le professionnel. L’AGCM attribue le rating ; une estimation ou une amélioration prévue n’est pas un résultat obtenu.",
+      "productRole": "Organise les preuves, prépare les demandes, contrôle les références et les calculs et conserve les versions. N’authentifie ni les documents ni l’identité du réviseur.",
+      "professionalRole": "Confirme le périmètre, apprécie les faits et les actes, décide des conclusions et vérifie le formulaire courant et les annexes. Signature du représentant légal et transmission restent séparées. Vera n’accède pas au portail et n’envoie pas la demande.",
+      "prompt": "Prépare la première demande de rating de légalité italien de ce client à partir des pièces disponibles, avec preuves, incertitudes, pièces manquantes et prochaines actions.",
+      "modelDataStatus": "relevant",
+      "modelDataConclusion": "Le modèle lit les preuves utiles et propose une appréciation ; le code local contrôle citations, empreintes et calculs.",
+      "modelData": "Le modèle Codex ou Cowork choisi peut recevoir documents d’entreprise, noms et fonctions, informations judiciaires, fiscales et de paiement, déclarations, extraits cités, questions, réponses, décisions et projets. Les PDF nécessitent une extraction lisible contrôlée et liée à l’original. Aucune anonymisation automatique ni garantie de traitement exclusivement local.\n\nUn cas réel exige un mandat Studio Archive avec vérification d’identité et des reçus d’entrée. Python lit les preuves textuelles importées, vérifie empreintes et citations et enregistre le dossier dans le run, sans appel réseau ou de modèle. La recherche publique exclut identifiants client et détails judiciaires identifiants. Aucune donnée n’est envoyée à WebRating.\n\nLe dossier conserve les données du cas : il n’est pas automatiquement anonymisé pour partage. Le rapport final doit préciser les données effectivement vues par le modèle. Les conditions du compte Codex ou Cowork choisi par le cabinet s’appliquent."
+    },
+    "de": {
+      "name": "Italienisches Legalitätsrating",
+      "summary": "Erstellt ein Dossier für die erstmalige Vergabe des AGCM-Legalitätsratings: Zulässigkeit, relevante Personen, Hindernisse, Zusatzkriterien und fehlende Unterlagen.",
+      "useWhen": "Für einen Erstantrag in Italien, auch ohne vorhandene Unterlagen. Verlängerung, laufende Überwachung und WebRating-Einreichung sind in dieser Version nicht enthalten.",
+      "input": "Unternehmen und Ziel, soweit bekannt; Registerauszüge, Abschlüsse, Rollen und Vollmachten, Erklärungen, Bescheide und Nachweise. Ohne Unterlagen erstellt Vera erste Fragen und eine begründete Unterlagenanforderung.",
+      "work": "Liest ausgewählte Nachweise und trennt Angaben von geprüften Tatsachen. Prüft Zugang, Personen und Hindernisse vor Zusatzkriterien. Verknüpft Entscheidungen mit Quelle, Textstelle und Begründung. Bewahrt T0 und trennt belegte Aktualisierungen von Zielszenarien.",
+      "output": "Markdown- und JSON-Dossier mit Anforderungen, Personen, Zitaten, Entscheidungen und offenen Fragen; Schätzung bei geprüfter Grundlage; Maßnahmenplan mit Verantwortlichen, Termin und Abschlussnachweis. Auch unvollständige oder unzulässige Fälle erhalten eine begründete Auswertung.",
+      "responsibilityIntro": "Das Dossier ist ein Entwurf zur fachlichen Prüfung. AGCM vergibt das Rating; eine Schätzung oder geplante Verbesserung ist kein erteiltes Ergebnis.",
+      "productRole": "Ordnet Belege, entwirft Anfragen, prüft Verweise und Berechnungen und bewahrt Versionen. Authentifiziert weder Dokumente noch die Identität der prüfenden Person.",
+      "professionalRole": "Bestätigt den Umfang, beurteilt Tatsachen und Rechtsrelevanz, entscheidet über Ergebnisse und prüft aktuelles Formular und Anlagen. Unterschrift des gesetzlichen Vertreters und Einreichung bleiben getrennt. Vera greift nicht auf das Portal zu und reicht keinen Antrag ein.",
+      "prompt": "Bereite den ersten Antrag auf das italienische Legalitätsrating für diesen Mandanten vor. Zeige Belege, Unsicherheiten, fehlende Unterlagen und nächste Schritte.",
+      "modelDataStatus": "relevant",
+      "modelDataConclusion": "Das Modell liest relevante Belege und schlägt Bewertungen vor; lokaler Code prüft Zitate, Hashes und Berechnungen.",
+      "modelData": "Das gewählte Codex- oder Cowork-Modell kann Unternehmensunterlagen, Namen und Rollen, Justiz-, Steuer- und Zahlungsinformationen, Erklärungen, zitierte Auszüge, Fragen, Antworten, Entscheidungen und Entwürfe erhalten. PDFs benötigen eine geprüfte lesbare Extraktion mit Bezug zum Original. Keine automatische Anonymisierung oder Garantie ausschließlich lokaler Verarbeitung.\n\nReale Fälle erfordern ein Studio-Archive-Mandat mit Prüfung von Identität und Eingangsbelegen. Python liest importierte Textbelege, prüft Hashes und Zitate und speichert das Dossier im Lauf; es ruft weder Modelle noch Netzwerkdienste auf. Öffentliche Rechtsrecherche schließt Mandantenkennungen und identifizierende Justizdetails aus. Keine Daten werden an WebRating gesendet.\n\nDas Dossier enthält Falldaten und ist nicht automatisch zum Teilen anonymisiert. Der abschließende Datenbericht muss tatsächlich vom Modell gelesene Inhalte benennen. Es gelten die Bedingungen des von der Kanzlei gewählten Codex- oder Cowork-Kontos."
+    },
+    "es": {
+      "name": "Rating de legalidad italiano",
+      "summary": "Prepara un expediente para la primera concesión del rating de legalidad AGCM: admisibilidad, personas pertinentes, impedimentos, requisitos adicionales y documentos pendientes.",
+      "useWhen": "Para una primera solicitud en Italia, incluso sin documentos iniciales. La renovación, el seguimiento y el envío por WebRating no están incluidos en esta versión.",
+      "input": "La empresa y el objetivo, si se conocen; registros, cuentas, cargos y poderes, declaraciones, resoluciones y pruebas disponibles. Sin documentos, Vera prepara preguntas iniciales y una solicitud documental motivada.",
+      "work": "Lee las pruebas seleccionadas y distingue declaraciones y hechos verificados. Revisa acceso, personas e impedimentos antes de los requisitos adicionales. Vincula decisiones con fuente, pasaje y motivo. Conserva T0 y separa actualizaciones documentadas de escenarios objetivo.",
+      "output": "Expedientes Markdown y JSON con requisitos, personas, citas, decisiones y cuestiones abiertas; estimación cuando la base está verificada; plan de carencias con acción, responsable, fecha y prueba de cierre. También los casos incompletos o no admisibles reciben una explicación motivada.",
+      "responsibilityIntro": "El expediente es un borrador para revisión profesional. AGCM concede el rating; una estimación o mejora prevista no es un resultado obtenido.",
+      "productRole": "Organiza pruebas, prepara solicitudes, comprueba referencias y cálculos y conserva versiones. No autentica los documentos ni la identidad del revisor.",
+      "professionalRole": "Confirma el alcance, valora hechos y relevancia jurídica, decide resultados y comprueba el formulario vigente y anexos. Firma del representante legal y envío siguen separados. Vera no accede al portal ni presenta la solicitud.",
+      "prompt": "Prepara la primera solicitud del rating de legalidad italiano de este cliente. Parte de los documentos disponibles y muestra pruebas, dudas, carencias y próximos pasos.",
+      "modelDataStatus": "relevant",
+      "modelDataConclusion": "El modelo lee las pruebas necesarias y propone valoraciones; el código local comprueba citas, huellas y cálculos.",
+      "modelData": "El modelo elegido en Codex o Cowork puede recibir documentos societarios, nombres y cargos, información judicial, fiscal y de pagos, declaraciones, extractos citados, preguntas, respuestas, decisiones y borradores. Los PDF requieren una extracción legible revisada y vinculada al original. No hay anonimización automática ni garantía de procesamiento exclusivamente local.\n\nUn caso real exige un encargo Studio Archive y comprobación de identidad y recibos de entrada. Python lee pruebas textuales importadas, verifica huellas y citas y guarda el expediente en la ejecución, sin llamadas a modelos ni red. La investigación jurídica pública excluye identificadores del cliente y detalles judiciales identificativos. No se envían datos a WebRating.\n\nEl expediente conserva datos del caso y no se anonimiza automáticamente para compartir. El informe final debe explicar qué contenidos vio realmente el modelo. Se aplican las condiciones de la cuenta Codex o Cowork elegida por el despacho."
+    }
+  }
+},
     "studio-document-format": {
       product: "Vera",
       defaultLanguage: "it",
