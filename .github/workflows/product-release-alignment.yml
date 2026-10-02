@@ -29,6 +29,8 @@ jobs:
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_product_release_alignment.py --cov --cov-config=tests/product_release.coveragerc
       - name: Verify stale and duplicate installed-plugin rejection
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_installed_product.py
+      - name: Verify Antigravity download integrity checks
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_antigravity_package.py
       - name: Verify all product packages against canonical source and version
         run: python scripts/build_product_release.py --check
       - name: Verify optional studio knowledge instruction packaging
