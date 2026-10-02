@@ -30,6 +30,12 @@ quarter against the current catalog. No classification or promotion is inferred
 from code strings or agreement counts, and declared roles are not authenticated.
 See `references/code-catalog.md` for commands and outstanding limits.
 
+The private measurement ledger preserves first-pass populations and subsequent
+professional class changes. Reports expose review coverage and denominators,
+deduplicate repeat runs and separate real from synthetic cohorts. Literal class
+changes are not a tax-error rate. Follow `references/code-measurements.md` before
+confirming case mappings; no real performance rate has been established.
+
 Run `scripts/check_dependencies.py`, then follow `skills/lipe/SKILL.md`.
 The exact JSON contract is `schemas/case.schema.json`. The example is entirely
 synthetic. Its three monthly modules each have VP2 1,000.00, VP3 500.00, VP4
@@ -51,4 +57,7 @@ it does not establish Agenzia Entrate or accounting-software acceptance.
 The host model can read register pages, identifiers, amounts, tax codes, periods,
 payment excerpts, decisions and review outputs. The Python helpers make no model
 or network requests; this does not describe what the host already received.
+Authorized catalog/measurement reads can also expose preserved proposals,
+complete source documents, client/engagement identities, reviewer records and
+software-specific counts. Aggregate reports are not guaranteed anonymous.
 Actual model exposure is recorded separately in the run's model-data report.

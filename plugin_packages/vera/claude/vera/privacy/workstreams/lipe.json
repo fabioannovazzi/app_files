@@ -24,7 +24,7 @@
       {
         "id": "vat-case-evidence",
         "purpose": "Read and review VAT registers, timing, codes, balances and VP drafts",
-        "content": "Selected full PDF pages or readable extracts, client and counterparty names, identifiers, dates, VAT codes, taxable bases, VAT and deductible amounts, liquidation and F24 evidence, code proposals, reviewer records, exceptions and outputs may enter the selected host model. The helpers inspect local sources, hashes, quotations and arithmetic without model or network requests. The local processing receipt cannot measure host exposure. No automatic anonymization or local-only model guarantee. The selected model may also read catalog classes, confidence, client/studio scope identifiers, source quotations or original bytes, attributed curator/disclosure decisions and explicitly requested local history. A catalog history can contain other authorized studio entries. No remote catalog transfer is performed.",
+        "content": "Selected full PDF pages or readable extracts, client and counterparty names, identifiers, dates, VAT codes, taxable bases, VAT and deductible amounts, liquidation and F24 evidence, code proposals, reviewer records, exceptions and outputs may enter the selected host model. The helpers inspect local sources, hashes, quotations and arithmetic without model or network requests. The local processing receipt cannot measure host exposure. No automatic anonymization or local-only model guarantee. The selected model may also read catalog classes, confidence, client/studio scope identifiers, source quotations or original bytes, attributed curator/disclosure decisions and explicitly requested local history. A catalog history can contain other authorized studio entries. No remote catalog transfer is performed. Private measurements preserve first-pass code inventories, source documents, client/engagement identities, model proposals, review outcomes and vendor/version counts. Reports omit client IDs but small cohorts are not guaranteed anonymous. Timing and professional identity remain attributed; no telemetry is sent.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -87,12 +87,16 @@
     {
       "id": "catalog-revision-binding",
       "control": "SQLite transactions reject stale expected heads; content-linked revisions retain original source objects and detect changed/missing evidence. Calculation rechecks the selected catalog identity and bound mapping revisions at validity boundaries throughout the quarter. Central-reference records reject private-case source labels and require attributed curator/disclosure review; these labels and roles are not authenticated and no automatic privacy classification or remote sharing is performed."
+    },
+    {
+      "id": "measurement-history",
+      "control": "First-pass units have stable client/engagement/quarter/vendor/version/side/code keys. Repeated runs cannot reset them; already-confirmed new mappings are rejected. Source objects and append-only review revisions are retained; reports separate real and synthetic data and show missing-review denominators."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-02",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ef3f40184a1158f1efae6b1d442c87c7c378f7f4727f6411611f351eb15c75ee"
+    "source_fingerprint": "5515f1da9444948b6f6f244ea9d92ea23b0063b95ea26864283fdaf6fca33fb0"
   }
 }

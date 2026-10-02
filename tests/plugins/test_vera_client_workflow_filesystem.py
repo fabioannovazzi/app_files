@@ -137,6 +137,10 @@ CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
 CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     ("rating-legalita", "check_dependencies.py"),
     ("lipe", "check_dependencies.py"),
+    # Studio maintenance/measurements reuse existing cases rather than start a run.
+    # Real first-pass measurements verify the selected Archive input receipts.
+    ("lipe", "lipe_catalog.py"),
+    ("lipe", "lipe_metrics.py"),
     ("scissione-guidata", "check_dependencies.py"),
     ("patent-box-review", "check_dependencies.py"),
     # Public-source acquisition and monitoring have no client case lifecycle.

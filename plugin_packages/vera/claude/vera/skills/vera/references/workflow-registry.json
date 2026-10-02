@@ -557,7 +557,8 @@
       "python_entrypoints": [
         "modules/lipe/scripts/check_dependencies.py",
         "modules/lipe/scripts/lipe.py",
-        "modules/lipe/scripts/lipe_catalog.py"
+        "modules/lipe/scripts/lipe_catalog.py",
+        "modules/lipe/scripts/lipe_metrics.py"
       ]
     }
   ],

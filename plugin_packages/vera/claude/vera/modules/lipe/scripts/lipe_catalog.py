@@ -32,6 +32,7 @@ __all__ = [
     "record",
     "revoke",
     "lookup",
+    "validate_tax_class",
     "main",
 ]
 
@@ -249,6 +250,31 @@ def _entry_at(state: dict, row: dict) -> dict:
     )
 
 
+def validate_tax_class(side: str, tax_class: dict) -> None:
+    """Check class shape and mechanical consistency, never infer its tax meaning."""
+    _validate(tax_class, read_json(SCHEMA)["properties"]["tax_class"])
+    treatment = tax_class["treatment"]
+    if treatment is not None and TREATMENTS[treatment][0] != side:
+        raise ContractError("Catalog treatment and register side disagree")
+    deduction = tax_class["deductibility"]
+    percent = deduction["percent"]
+    if (deduction["mode"] in {"UNKNOWN", "CASE_SPECIFIC"}) != (percent is None):
+        raise ContractError(
+            "A fixed deduction percentage requires an explicit fixed mode"
+        )
+    if percent is not None:
+        amount = Decimal(percent)
+        if (
+            not 0 <= amount <= 100
+            or (deduction["mode"] == "FULL" and amount != 100)
+            or (deduction["mode"] == "NONE" and amount != 0)
+            or (deduction["mode"] == "PARTIAL" and not 0 < amount < 100)
+        ):
+            raise ContractError("Catalog deduction mode and percentage disagree")
+    if tax_class["vat_rate"] is not None and Decimal(tax_class["vat_rate"]) > 100:
+        raise ContractError("Invalid percentage")
+
+
 def record(
     path: Path,
     entry: dict,
@@ -268,29 +294,7 @@ def record(
         and entry["tax_class"]["treatment"] is None
     ):
         raise ContractError("Cannot confirm a mapping with unknown treatment")
-    treatment = entry["tax_class"]["treatment"]
-    if treatment is not None and TREATMENTS[treatment][0] != entry["side"]:
-        raise ContractError("Catalog treatment and register side disagree")
-    deduction = entry["tax_class"]["deductibility"]
-    percent = deduction["percent"]
-    if (deduction["mode"] in {"UNKNOWN", "CASE_SPECIFIC"}) != (percent is None):
-        raise ContractError(
-            "A fixed deduction percentage requires an explicit fixed mode"
-        )
-    if percent is not None:
-        amount = Decimal(percent)
-        if (
-            not 0 <= amount <= 100
-            or (deduction["mode"] == "FULL" and amount != 100)
-            or (deduction["mode"] == "NONE" and amount != 0)
-            or (deduction["mode"] == "PARTIAL" and not 0 < amount < 100)
-        ):
-            raise ContractError("Catalog deduction mode and percentage disagree")
-    if (
-        entry["tax_class"]["vat_rate"] is not None
-        and Decimal(entry["tax_class"]["vat_rate"]) > 100
-    ):
-        raise ContractError("Invalid percentage")
+    validate_tax_class(entry["side"], entry["tax_class"])
     check_references(entry["sources"], entry["evidence"], source_root)
     if not any(
         re.search(r"(?<!\w)" + re.escape(entry["code"]) + r"(?!\w)", ref["quote"])

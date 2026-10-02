@@ -144,6 +144,6 @@ before retrying; the database event is the authoritative persistence record.
 ## Remaining acceptance
 
 This local implementation does not authenticate professional/curator roles or
-synchronize a shared central service. Recognition and correction-rate measurement
-is still to be implemented from real first-pass lookup and review events; do not
-claim a rate from the synthetic tests or count repeated lookups as new cases.
+synchronize a shared central service. Follow `code-measurements.md` to capture
+first-pass proposals and subsequent professional class changes. No real
+recognition or correction rate has been established by the synthetic tests.

@@ -71,6 +71,10 @@ the allocation in the row review.
 Propose each `(side, code)` meaning with a reason. The case's software, version,
 client and engagement bound its mappings. Use `PROPOSED` until the professional
 actually confirms; never manufacture `CONFIRMED` to enable a calculation.
+Before that confirmation, record the first-pass population following
+`references/code-measurements.md`. Preserve unsuccessful recognition and unknown
+codes as well as proposals; do not retrospectively label a reviewed case as a
+first pass. The measurement ledger never supplies approval or changes a mapping.
 Consult the selected catalog in client, studio, then central-reference order.
 Preserve exact revisions and case applicability following the catalog guide;
 pass `--catalog` when calculating a bound case. Do not remove a binding or switch
