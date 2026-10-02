@@ -81,7 +81,7 @@
     },
     {
       "path": "modules/composizione-negoziata/skills/composizione-negoziata/SKILL.md",
-      "sha256": "6618a1fa1734e70cd32d51d91116190d426b2b75e8e3febd005da849b76bd445"
+      "sha256": "ec9b2bb739ccc4b76df536dc61f9ffd2365e47e22599962445266a16e34d2111"
     },
     {
       "path": "modules/composizione-negoziata/skills/composizione-negoziata/agents/openai.yaml",
@@ -89,7 +89,11 @@
     },
     {
       "path": "skills/composizione-negoziata/SKILL.md",
-      "sha256": "fa87ac2a9ff089eda1c6e4d96721e98599785eef23c387027a84d821fbece0ec"
+      "sha256": "fb7582323d9b1831505eaae217dd66be38ec20b713cd3c05182b74dc958237cd"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -709,5 +713,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "7e04d93bd12013784f0e160564c7fbee1282b9a91bdb536b10beb8d33bfe98ac"
+  "canonical_course_sha256": "bb97e5b42009e5d3877f79c33b9ceb637bb4494590a35bdf9a888cec21723263"
 }

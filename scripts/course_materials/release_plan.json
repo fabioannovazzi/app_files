@@ -46,11 +46,14 @@
     "vera/quesito-legale-fiscale",
     "vera/registro-imprese-sari",
     "vera/sales-plan",
+    "vera/scissione-guidata",
     "vera/studio-archive",
+    "vera/studio-document-format",
     "vera/treasury-forecast",
     "vera/variance-analysis",
     "vera/vouching",
     "vera/trasformazione",
+    "vera/fusione-guidata",
     "vera/esg-reporting-assurance"
   ],
   "retained": {}

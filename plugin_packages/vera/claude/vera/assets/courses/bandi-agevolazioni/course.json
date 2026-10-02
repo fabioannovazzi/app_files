@@ -133,7 +133,7 @@
     },
     {
       "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md",
-      "sha256": "c62972d2c1c24176287ccf33d770b58d268dacc32b934a73f9c7d92f77b4ea52"
+      "sha256": "529ea86def8e5770bd0a1046b0d60c37e550c27c33a87cb660cb6736efc1ccf2"
     },
     {
       "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/agents/openai.yaml",
@@ -217,7 +217,11 @@
     },
     {
       "path": "skills/bandi-agevolazioni/SKILL.md",
-      "sha256": "eee4f1645c8aaaaf7fe0b3ba9366dca18c7001f18da522756e5476f719aec7ee"
+      "sha256": "88dd9bf377e48a50648c865b762ddcddf0a75ca38282c46ac53104bbad84369c"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -654,5 +658,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "069e8dcb717bc7d0586a8d844bf0ba30c335a984498329a87d808db8ea689e94"
+  "canonical_course_sha256": "144e84ee70d104a53190c8627267d1cd6c73c0092196516e7a8b11be019c55e2"
 }

@@ -85,6 +85,9 @@ def main() -> int:
         default=None,
         help="Editable recipe JSON produced by inspect_inputs.py.",
     )
+    parser.add_argument("--studio-workspace", type=Path)
+    parser.add_argument("--studio-id")
+    parser.add_argument("--studio-name")
     args = parser.parse_args()
     configure_logging(args.verbose)
     input_paths = [args.input_path]
@@ -108,6 +111,9 @@ def main() -> int:
         report_type=args.report_type,
         run_id=str(client_context["run_id"]),
         client_engagement=client_context,
+        studio_workspace=args.studio_workspace,
+        studio_id=args.studio_id,
+        studio_name=args.studio_name,
     )
     print(
         "OK: built report draft; "

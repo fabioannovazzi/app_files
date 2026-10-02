@@ -105,7 +105,7 @@
     },
     {
       "path": "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
-      "sha256": "0d6d38e3e49f58dd71a2562fce31cdb46b34b35de075ba88b204310d54aa4332"
+      "sha256": "46c8a908037234ecaaa402c4244a3a509efed2c4558f35b11f5d8453347d6271"
     },
     {
       "path": "modules/concordato-plan-review/vendor/modules/__init__.py",
@@ -149,7 +149,11 @@
     },
     {
       "path": "skills/concordato-plan-review/SKILL.md",
-      "sha256": "2f686784058bffd08e96a34ab6fd86e9452b5a013ec55e7ce2c05463089f28e6"
+      "sha256": "0a5321c08ba31d1789bb9d3464bde978052a9e7af6b897b9d2ef3bd11b984fde"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -506,5 +510,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b153f40ee9acb061c34c7d11b60dd559341ec28bf7c271d297e0dd6af268108a"
+  "canonical_course_sha256": "069a430570bc1ec2e60301f0707d36e964e6c61b55b7f823518d4c503964d31c"
 }

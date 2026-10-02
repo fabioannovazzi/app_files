@@ -17,7 +17,7 @@
     },
     "browser_automation": {
       "component": "browser-automation",
-      "requirement": "Connected Chrome with the documented Playwright tab API; native steps and unobservable downloads remain explicit gaps."
+      "requirement": "inspect, explain or edit a supplied sanitized developer pack or capability JSON, and run packaged local evidence/capability pipelines through the managed Python launcher. Live browser discovery, execution and replay validation are unavailable in this package. Do not operate authenticated websites or claim that local pipeline checks prove live validation."
     }
   },
   "components": [
@@ -343,6 +343,8 @@
         "modules/comunicazione-professionale/scripts/record_review.py",
         "modules/comunicazione-professionale/scripts/record_visual_assessment.py",
         "modules/comunicazione-professionale/scripts/render_visuals.py",
+        "modules/comunicazione-professionale/scripts/review_document_format.py",
+        "modules/comunicazione-professionale/scripts/studio_document_format.py",
         "modules/comunicazione-professionale/scripts/validate_run.py"
       ]
     },
@@ -578,6 +580,7 @@
     "skills/sales-plan/SKILL.md",
     "skills/scissione-guidata/SKILL.md",
     "skills/studio-archive/SKILL.md",
+    "skills/studio-document-format/SKILL.md",
     "skills/trasformazione/SKILL.md",
     "skills/treasury-forecast/SKILL.md",
     "skills/variance-analysis/SKILL.md",

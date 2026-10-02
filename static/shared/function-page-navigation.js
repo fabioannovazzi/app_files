@@ -170,6 +170,7 @@
     "clara-research-video": [["clara", "area-deliverables"]],
     "clara-retailer-signals": [["clara", "area-retail"]],
     "clara-transcribe": [["clara", "area-recordings"]],
+    "studio-document-format": [["vera", "area-studio"]],
     "comunicazione-professionale": [["lucia", "area-studio"], ["vera", "area-studio"]],
     "concordato-plan-review": [["vera", "area-matters"]],
     "patent-box-review": [["vera", "area-matters"]],

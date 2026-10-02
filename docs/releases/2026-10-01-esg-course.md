@@ -60,7 +60,7 @@ format/type/security checks. Per-language editorial/output review is recorded in
 Existing lesson content and files are unchanged; their prior reviews retain a
 bounded refresh for the shared policy fingerprint that now allows ESG teaching.
 
-Candidate product versions: Vera 0.1.322, Clara 0.1.237, Lucia 0.1.75;
+Candidate product versions: Vera 0.1.329, Clara 0.1.239, Lucia 0.1.77;
 ESG component 0.1.1. Shared courseware is bundled by all three products, so their
 packages are rebuilt together. These are candidate versions, not evidence of
 Marketplace publication or installed acceptance. Recheck concurrent releases and
@@ -83,3 +83,7 @@ versions, decisions and partial Markdown/JSON drafts. It provides no complete
 VSME/ESRS report, taxonomy calculations, metric calculation or assurance opinion.
 Actual model reads must follow the normal Vera model-data reporting contract.
 Local files do not guarantee local model inference or automatic anonymisation.
+
+## Deployment integration, 2026-10-02
+
+Integrated current main without dropping Fusione, Scissione or studio document format lessons. The combined catalogue contains 53 kits / 241 locales. Rebuilt all product packages from the reconciled source. Publishing remains prohibited; server deployment is separately authorized.

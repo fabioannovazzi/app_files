@@ -118,6 +118,8 @@ def _source_records(product: str, workflow: str) -> list[dict[str, str]]:
     root = ROOT / "plugins" / product
     skill = root / "skills" / workflow / "SKILL.md"
     paths = {skill}
+    if product == "vera":
+        paths.add(root / "skills/vera/references/connected-studio-knowledge.md")
     paths.update(
         path for path in skill.parent.rglob("*.md") if path.name != "cowork-runtime.md"
     )

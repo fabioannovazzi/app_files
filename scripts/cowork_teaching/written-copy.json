@@ -5,6 +5,10 @@
       "ESG evidence foundation in Cowork: an interactive written lesson in this conversation. No complete ESG report, VSME/ESRS or taxonomy calculation, assurance opinion, signing or sending."
     ],
     [
+      "Voice stays in the teaching chat;",
+      "The explanation stays written in this conversation;"
+    ],
+    [
       "In the working chat",
       "In this conversation"
     ],
@@ -111,6 +115,10 @@
       "Fondazione documentale ESG in Cowork: una lezione scritta e interattiva in questa conversazione. Nessun report ESG completo, calcolo VSME/ESRS o tassonomia, conclusione di assurance, firma o invio."
     ],
     [
+      "La voce resta nel thread docente;",
+      "La spiegazione resta scritta in questa conversazione;"
+    ],
+    [
       "Nella chat di lavoro",
       "In questa conversazione"
     ],
@@ -199,6 +207,14 @@
     [
       "Fondation documentaire ESG dans Codex desktop et Work local lorsque pris en charge. Dans Cowork le cours utilise une seule conversation écrite. Aucun rapport ESG complet, calcul VSME/ESRS ou taxonomie, avis d’assurance, signature ou envoi.",
       "Fondation documentaire ESG dans Cowork : une leçon écrite interactive dans cette conversation. Aucun rapport ESG complet, calcul VSME/ESRS ou taxonomie, avis d’assurance, signature ou envoi."
+    ],
+    [
+      "Le chat de travail",
+      "L’assistant"
+    ],
+    [
+      "La voix reste dans le chat pédagogique ;",
+      "L’explication reste écrite dans cette conversation ;"
     ],
     [
       "Dans le fil de travail",
@@ -299,6 +315,14 @@
       "ESG-Beleggrundlage in Cowork: eine interaktive schriftliche Lektion in diesem Gespräch. Kein vollständiger ESG-Bericht, VSME/ESRS- oder Taxonomieberechnung, Prüfungsurteil, Signieren oder Senden."
     ],
     [
+      "Der Arbeitschat",
+      "Der Assistent"
+    ],
+    [
+      "Die Stimme bleibt im Lehrchat;",
+      "Die Erklärung bleibt schriftlich in diesem Gespräch;"
+    ],
+    [
       "Im Arbeitschat",
       "In diesem Chat"
     ],
@@ -375,6 +399,14 @@
     [
       "Base documental ESG en Codex desktop y Work local cuando sea compatible. En Cowork el curso utiliza una sola conversación escrita. Ningún informe ESG completo, cálculo VSME/ESRS o taxonomía, opinión de assurance, firma o envío.",
       "Base documental ESG en Cowork: lección escrita e interactiva en esta conversación. Ningún informe ESG completo, cálculo VSME/ESRS o taxonomía, opinión de assurance, firma o envío."
+    ],
+    [
+      "El chat de trabajo",
+      "El asistente"
+    ],
+    [
+      "La voz permanece en el chat docente;",
+      "La explicación permanece escrita en esta conversación;"
     ],
     [
       "En el hilo de trabajo",

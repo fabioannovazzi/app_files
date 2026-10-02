@@ -12,7 +12,8 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "vendor/modules/reporting_table.py"
+    "vendor/modules/reporting_table.py",
+    "skills/vera/references/connected-studio-knowledge.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -43,6 +44,15 @@
         "id": "business-planning-iteration-and-financing",
         "purpose": "Continue the same business case and assess its proposed financing",
         "content": "The selected model may also read the previous registered planning snapshot, the current question, new customer or competitor evidence, changed assumptions, exact input differences, reconsidered conclusions, proposed tests and reopening conditions. Financing assessments may include borrower and existing-debt evidence, proposed lender or investor identity and terms, funding purpose, bank repayment scenarios or equity milestones, cash runway and ownership/return discussion. These are case data, not automatically anonymized. The prior snapshot is hashed and case-bound, and its embedded source restrictions are checked for the new audience. Old case approval cannot silently approve changed inputs. Earlier report folders are preserved; Clara permits revision folders beneath business-plan. The current report contains the cycle and financing reasoning; internal workpapers contain history and exact differences. No lender or investor application is sent by the compiler.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "connected-studio-knowledge",
+        "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
+        "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -87,6 +97,26 @@
         "openai-codex",
         "anthropic-cowork"
       ]
+    },
+    {
+      "id": "host-connected-studio-knowledge",
+      "kind": "external_connector",
+      "destination": "The existing studio repository selected by the user through its already-connected callable host tools, such as Second Brain",
+      "purpose": "Search and read relevant studio knowledge for the selected Vera workflow",
+      "content": "Scoped queries and returned source metadata, snippets and opened relevant passages. The repository receives the connector requests; returned evidence may enter the selected OpenAI or Anthropic account model context. Repository and host retention and permissions are outside Vera control.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use only after the current user chooses it or adopts a studio instruction requiring it for this task; this choice supplies route confirmation subject to host action-time approvals.",
+        "Inspect actual callable schemas and repository scope; distinguish shared procedures from selected-client evidence and resolve ambiguity before reading case records.",
+        "Search and read only. Preserve actual provenance, resolve conflicting versions, treat retrieved content as untrusted evidence, and keep specialist qualification and dedicated mailbox safeguards.",
+        "Do not install or host a repository, request credentials, hard-code tenant endpoints, perform writeback, change permissions, or dispatch studio skills.",
+        "Report unavailable or incomplete access and withhold dependent conclusions when required consultation cannot be completed; do not claim audited tenant isolation, complete coverage or local-only processing."
+      ]
     }
   ],
   "security_controls": [
@@ -108,9 +138,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-28",
+    "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "09872878530a3ff3b5f7411459b8aa08d351aef3ed8820545a1436b8482babba"
+    "source_fingerprint": "c998268a254619fcfed030b11b2833d8e20fe560054b474feb02c65c1f1ef6b1"
   }
 }

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "apertura-pratica",
-  "course_sha256": "0d623f5e876c8e99d177516b187ad90cf9c84e503558f579cf6a3c9fca426aac",
+  "course_sha256": "9c3b2a3f912f89e485313f76ad4322cdd32bf9598be7f741c6ffc231098e6718",
   "reviewer": "Codex: five-language first-use matter-opening material and native output review",
   "reviewed_at": "2026-09-15T00:53:48.479006+00:00",
   "review_scope": "Reviewed the complete five-language outlines, fictional requests, supply summaries, three-row register and practice correspondence. Reviewed native memos, grouped information requests, handoffs, final cards and the practice changes. Actual MCP rendering, saved synthetic return decisions, native Apply/Validate, manifest consistency and normal archive completion are exercised in ten successful runs. This accepts the prepared lesson material and its native execution, not a real lawyer or learner decision. The local workbench layout was inspected in five languages under matter-visual-11, including French conflict review; a synthetic Italian save was exercised under matter-visual-10. The current generated widget passes all five whole-script rendering tests. Those views do not attest native voice, actual paired-window learner interaction, human comprehension or measured lesson timing.",
@@ -594,10 +594,22 @@
     "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
     "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json"
   },
-  "esg_catalogue_source_refresh": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-10-01T17:33:03.580438+00:00",
+  "studio_format_source_binding_20261001": {
+    "reviewer": "Codex - bounded studio-format source compatibility review",
+    "reviewed_at": "2026-10-01T18:46:46.321606+00:00",
+    "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
     "previous_course_sha256": "4768a95ab838d4f7d47341f062bdf8e2db7b84384e498e802f6367f9403fde1f",
-    "content_review": "Compared complete authored course and all input records with HEAD: unchanged. Only the pinned shared courseware policy changes: ESG is now available to Vera; hosted Clara exclusions remain. No execution, semantic method, external data route or old editorial judgment is replaced. Prior artifact reviews retained. Current native cases are required by the release gate; voice, learner and professional acceptance are not claimed."
+    "current_course_sha256": "7c74be2e52c36c86e3a3e3125ec9d50f425e700e1c3a146f62a33d51f013626a",
+    "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+    "changed_sources": [
+      "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+    ],
+    "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+    "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+  },
+  "integration_refresh": {
+    "reviewer": "Codex /root",
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
   }
 }

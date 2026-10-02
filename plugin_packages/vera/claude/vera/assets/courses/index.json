@@ -4,7 +4,7 @@
   "courses": {
     "adeguati-assetti": {
       "path": "adeguati-assetti/course.json",
-      "sha256": "366f22db61061e18c0f918dbf5baf553f6142cab19ee017be1fd18db91d2db33",
+      "sha256": "398a2027cf8582917d1b9c9e404612c7f6cdcb84d5146900ed6801efef894910",
       "languages": [
         "it",
         "en",
@@ -32,7 +32,7 @@
     },
     "aml-review": {
       "path": "aml-review/course.json",
-      "sha256": "adad8a24e81f9f6df177746f8b1279f2f6b4e9ec27da8c0e365cddfe6bf82ee8",
+      "sha256": "dec96a4054e2b029c75661a5387fa4e534947778c2ef2dca1e21ffb7dddb11ee",
       "languages": [
         "it",
         "en",
@@ -60,7 +60,7 @@
     },
     "archive-organization": {
       "path": "archive-organization/course.json",
-      "sha256": "5e34635643089672be38daf576f4c056523a4684b48511d04b4b668fa0f90578",
+      "sha256": "c7dfb8a9ae5587ed216a6aa833581bba77a167a1d302d30e1d85426132c8a9a7",
       "languages": [
         "it",
         "en",
@@ -88,7 +88,7 @@
     },
     "avviso-intake": {
       "path": "avviso-intake/course.json",
-      "sha256": "ec0adb26549db379496869ee793b39f2d7a4aa416afd6d9c7fd77c3141eece99",
+      "sha256": "d96144953bb52074ef07161d6574a33c58b600b93f4b836df73f15a70cb4fbce",
       "languages": [
         "it",
         "en",
@@ -116,7 +116,7 @@
     },
     "bandi-agevolazioni": {
       "path": "bandi-agevolazioni/course.json",
-      "sha256": "821e72754b58b8c4ea64963b7aa8eae1892e1e82a79c6135837493fd9d5fd786",
+      "sha256": "f20372983b512b330bcb4499b3004d74c69e1c3eef4267b2cd43cade4b619085",
       "languages": [
         "it",
         "en",
@@ -144,7 +144,7 @@
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "7d7fc2df4009e420e3046924d1617c3dba22d74ecbe2521ebb4c7fb124e0b539",
+      "sha256": "11eebd3d9f2ad77f4f3605319c161926285342c847ccd7dad09ee8a92f0486eb",
       "languages": [
         "it",
         "en"
@@ -163,7 +163,7 @@
     },
     "browser-automation": {
       "path": "browser-automation/course.json",
-      "sha256": "2c4f33945f9d9a6aea54e3d1aa27a7b2c85a51047a9dcafe68dc6e302f0431ed",
+      "sha256": "6c1b60998ae90c1800dc71f338731ab51d34e943942666d53dff884616258734",
       "languages": [
         "it",
         "en",
@@ -191,7 +191,7 @@
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "d3c452dc1501910708c505aef57136265877fd43404f4e537381ce60ea1093c2",
+      "sha256": "f2fd327ccc897e8671ef9bdc3f7c4440016294f9cbe58c1cd67948c29a85ce3c",
       "languages": [
         "it",
         "en"
@@ -210,7 +210,7 @@
     },
     "business-valuation": {
       "path": "business-valuation/course.json",
-      "sha256": "bd44904ddcd29e065c4a43587a7411023d5bc6f00c7c4fdc6dfe24bb97a470e7",
+      "sha256": "43e8731b830381b00a7427860c0760824440b17696430527370194174ac2cc7b",
       "languages": [
         "it"
       ],
@@ -218,15 +218,15 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Preparare carte di lavoro per una valutazione d’impresa"
+        "it": "Valutazione PMI: dal fascicolo alle carte di lavoro DCF"
       },
       "goals": {
-        "it": "Imparare a fornire incarico, fonti e ipotesi, distinguere valore operativo e capitale proprio e rivedere un risultato quando cambia il tasso."
+        "it": "Aprire un incarico in Studio Archive, tracciare le fonti, riprodurre un DCF, rivedere Excel e report, cambiare il tasso e recuperare il lavoro salvato."
       }
     },
     "centrale-rischi-review": {
       "path": "centrale-rischi-review/course.json",
-      "sha256": "208fd6b607e00ba93fc891550ee29ca7ff0194bf4ffc1555ed86ff993b8654eb",
+      "sha256": "46cfb3f0ae8d3c4a199741e7788efee4ccc5ef89e1bc4b2384948f30989f7077",
       "languages": [
         "it"
       ],
@@ -242,7 +242,7 @@
     },
     "composizione-negoziata": {
       "path": "composizione-negoziata/course.json",
-      "sha256": "f46b65977113c5faa0fd7c93591bb44a814a5ab619b7dfe064762393e3e344fd",
+      "sha256": "46270682a935d920b61d241a21027c88bbb4ca33580d0ec22be6e4a5f03e6665",
       "languages": [
         "it",
         "en",
@@ -270,7 +270,7 @@
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
-      "sha256": "45ba20c9691e589bcdfef22ae288f0cb7f03beaeb00f11345d49571984c76f63",
+      "sha256": "fbd6c41f90bb58b73430b407924618e612dd756aaac0dfe4b71390b4cc8ef810",
       "languages": [
         "it",
         "en",
@@ -298,7 +298,7 @@
     },
     "concordato-plan-review": {
       "path": "concordato-plan-review/course.json",
-      "sha256": "731439bad924125268bcca725ed30e5de0d476afa100541a9180e46e4822c15e",
+      "sha256": "6e249f5bb42439040b43e0b27815180fc768a5dec216da64f75a90b90eb71d71",
       "languages": [
         "it",
         "en",
@@ -326,7 +326,7 @@
     },
     "dati-fiscali-strutturati": {
       "path": "dati-fiscali-strutturati/course.json",
-      "sha256": "353e2e9b44315ff050a1163f4a5eb9517a0b06a8134242abd2f50a532c01d34c",
+      "sha256": "f0731031eb4624ee5b724db117f9e987ee7ab911d3a6bb3987c976885bdc079e",
       "languages": [
         "it",
         "en",
@@ -354,7 +354,7 @@
     },
     "email-cliente": {
       "path": "email-cliente/course.json",
-      "sha256": "8f66a5f71876684e749a38404c74f9b6407f8973a7fa0ff0d16b906b19d87a12",
+      "sha256": "1e7a5f12878a153595a0f4cefa8f520debe11d13b686a39b603a4f906e385efa",
       "languages": [
         "it",
         "en",
@@ -382,7 +382,7 @@
     },
     "esg-reporting-assurance": {
       "path": "esg-reporting-assurance/course.json",
-      "sha256": "6c0ca2d87256c41d0c5ee907526474341fb4aae59aef40e0120f2465ad25532f",
+      "sha256": "df6c7c0fb6d96ec44cd26cf715cf89e74c4b36f2985bceddfde3e55a999aab6a",
       "languages": [
         "it",
         "en",
@@ -410,7 +410,7 @@
     },
     "fatture-xml-check": {
       "path": "fatture-xml-check/course.json",
-      "sha256": "09352f5a1b4e7e7c845d52ceb4de1958da70ef41c8d847655675fa7f8e708407",
+      "sha256": "8dce240ccf382260e05d458e80272bcae3d5ae54012bc561e3ae7609da3bed6d",
       "languages": [
         "it",
         "en",
@@ -438,7 +438,7 @@
     },
     "financial-analysis": {
       "path": "financial-analysis/course.json",
-      "sha256": "d89cfa8c3d69ee411400514e304cb514fa07330a38c9237c0cf3502cfd536007",
+      "sha256": "25d753f8d0c72f0dd4576613c432de27b24eb8df16e9e8db2295b5c96d2849fd",
       "languages": [
         "it",
         "en",
@@ -466,7 +466,7 @@
     },
     "financial-report-builder": {
       "path": "financial-report-builder/course.json",
-      "sha256": "01be66485841692e2324c22845dd41fe27e68f85fad6eaf85f799d99c9e2727a",
+      "sha256": "73338bdecdd5c9febdd886cf898d29aa0ad013f47812857c5ed5252517850252",
       "languages": [
         "it",
         "en",
@@ -492,9 +492,37 @@
         "es": "Aprender a convertir estados contables en un informe legible, con tablas, comentarios y referencias para comprobar cifras."
       }
     },
+    "fusione-guidata": {
+      "path": "fusione-guidata/course.json",
+      "sha256": "a4bd791bd3b84c55b38daf34125e36d56823528b2c5a4e2c23a91fbd0bf0a59c",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Preparare e rivedere una fusione per incorporazione P1",
+        "en": "Prepare and review a P1 incorporation merger",
+        "fr": "Préparer et revoir une fusion par absorption P1",
+        "de": "Eine P1-Verschmelzung durch Aufnahme vorbereiten und prüfen",
+        "es": "Preparar y revisar una fusión por absorción P1"
+      },
+      "goals": {
+        "it": "Seguire due società OIC dalle evidenze al dossier di revisione e riaprire il lavoro quando cambia un saldo.",
+        "en": "Follow two OIC companies from evidence to a review dossier and reopen dependent work after a balance changes.",
+        "fr": "Suivre deux sociétés OIC des pièces au dossier de revue et rouvrir les travaux après un changement de solde.",
+        "de": "Zwei OIC-Gesellschaften von den Belegen bis zum Prüfungsdossier begleiten und abhängige Arbeiten nach einer Saldenänderung erneut prüfen.",
+        "es": "Seguir dos sociedades OIC desde los documentos hasta el expediente de revisión y reabrir trabajos dependientes al cambiar un saldo."
+      }
+    },
     "invoice-xml": {
       "path": "invoice-xml/course.json",
-      "sha256": "c43f5d9e0a690b5d927c6bacd4c18eb841bde8d27609d402165efb4ac8d9d0af",
+      "sha256": "f8040d4e99bad964a82c1b878180c01040d0c11f8ca732edcf48881e4c54d088",
       "languages": [
         "it",
         "en",
@@ -522,7 +550,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "072baeb6ad4b1838ae6576e16e23e8353f2e278dbbb27f99c56d7f872bfeb6e4",
+      "sha256": "b5b96a7dba2a3520e53bc7351ffbe7c3b2569c37cee94de601477f7272039467",
       "languages": [
         "it",
         "en",
@@ -550,7 +578,7 @@
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
-      "sha256": "bedf16a0b3a0254b17e677c398c5949ead0c20c32155ded5f12064da6bd084a3",
+      "sha256": "a54d2a8981bf6583e64f80f2876e11ebf3a8b02df051eae21beef8bba3ad06b8",
       "languages": [
         "it",
         "en",
@@ -578,7 +606,7 @@
     },
     "management-control-pack": {
       "path": "management-control-pack/course.json",
-      "sha256": "28b42bd23872e4be67fd1edafa4e0d1ca96fa5aece764fbf031be03a7d1d13d1",
+      "sha256": "f1a32bcdf7b9ae78ade328772393428f76292d7064c4a1b140b9b7a7ab9570f8",
       "languages": [
         "it",
         "en"
@@ -597,7 +625,7 @@
     },
     "new-client": {
       "path": "new-client/course.json",
-      "sha256": "59ee6c0249f3d535a83e92195df0acd35af6e1e3d96c39bb819349a83a7e4565",
+      "sha256": "5f0654e728b060ea0b87847c02b24fa2f32394b16c88fcb39b5d9749f4636046",
       "languages": [
         "it",
         "en",
@@ -625,7 +653,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "bf5f604f7bea926a88a2c804e08a7673faa778fb51391614d20b8a8f2e8004ba",
+      "sha256": "0e663c52439f264f928ee28f232ab2066ae48f2a91e1e960ef727185c060dbee",
       "languages": [
         "it",
         "en",
@@ -653,7 +681,7 @@
     },
     "patent-box-review": {
       "path": "patent-box-review/course.json",
-      "sha256": "092d248382ad28438eb45f6247ece8ea3c2b3d238910a9f5a665d594da7dd939",
+      "sha256": "19d918dce51e3774592ed01434bca858456f0e32f93a13ea61ae7cb42c1d392d",
       "languages": [
         "it",
         "en",
@@ -681,7 +709,7 @@
     },
     "presenza-digitale-studio": {
       "path": "presenza-digitale-studio/course.json",
-      "sha256": "35dfce75a5778e11fa0ba25eb6d9ace355232c8954600c302a6bc20ceed8289f",
+      "sha256": "5123a13d128a305236f181a88debd13bd9932ac04ec1e82af62d750a215d3ad7",
       "languages": [
         "it",
         "en",
@@ -709,7 +737,7 @@
     },
     "previdenza-inps": {
       "path": "previdenza-inps/course.json",
-      "sha256": "88ea92ab485fc8cd5d7fa8cb8b034c99bf21682cf915bcf295d6b0a4e6b70d87",
+      "sha256": "32b5498a5c74e6a847940d01c92e93517d56bbf96d0350d984f3f987293179ee",
       "languages": [
         "it",
         "en",
@@ -737,7 +765,7 @@
     },
     "purchase-invoice-review": {
       "path": "purchase-invoice-review/course.json",
-      "sha256": "f950ba2fa1568560794bc800df7c978d8f3d15bf853d1a3b5f5ef5d3a69891cf",
+      "sha256": "2ff1c004d8bee592253effb78f18d334741c901222c6771e24f25b485be84380",
       "languages": [
         "it",
         "en",
@@ -765,7 +793,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "41787ac01baf9bc72e360a74a0f89968b0dc00f6812bc7c39f96c94cc75036d9",
+      "sha256": "64501e8a3fae3d0f8a1b38d2cc9c13580013df8b145cabf0ea27e6251fd47d94",
       "languages": [
         "it",
         "en",
@@ -793,7 +821,7 @@
     },
     "registro-imprese-sari": {
       "path": "registro-imprese-sari/course.json",
-      "sha256": "92603632800c2084f60e04417063388a0cfae09e06dc7918aa50759cb3a9646b",
+      "sha256": "33764d0ffba182915fe618f9451f218e07afaec996e43365d73fea4385785fc4",
       "languages": [
         "it",
         "en",
@@ -821,7 +849,7 @@
     },
     "sales-plan": {
       "path": "sales-plan/course.json",
-      "sha256": "2ef238fc5475e8b9b3000bffd7c34713473bb1a94720a2fa20ed7681f903968e",
+      "sha256": "163f435b6889922c140157eb9b9ee458ac1d181a6cef372be269f1d6eef3ee2e",
       "languages": [
         "it",
         "en",
@@ -847,9 +875,37 @@
         "es": "Aprender a convertir ventas realizadas e hipótesis comerciales en un escenario futuro y comprobar qué cambia y por qué."
       }
     },
+    "scissione-guidata": {
+      "path": "scissione-guidata/course.json",
+      "sha256": "6f95c0867fea9a82d9a123f5b590d5ab7d10997799559338f6b040f01443f2f1",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Scissione guidata con Vera",
+        "en": "Guided demerger with Vera",
+        "fr": "Scission guidée avec Vera",
+        "de": "Geführte Spaltung mit Vera",
+        "es": "Escisión guiada con Vera"
+      },
+      "goals": {
+        "it": "Preparare un fascicolo versionato, leggere i prospetti e rivedere le decisioni dopo un cambiamento.",
+        "en": "Prepare a versioned dossier, read its schedules and revisit decisions after a change.",
+        "fr": "Préparer un dossier versionné, lire les tableaux et réexaminer les décisions après un changement.",
+        "de": "Eine versionierte Akte vorbereiten, Aufstellungen lesen und Entscheidungen nach Änderungen erneut prüfen.",
+        "es": "Preparar un expediente versionado, leer cuadros y revisar decisiones tras un cambio."
+      }
+    },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "2405299dfeabd2c0d2ea1733e619255fac2281603f00ea1899ae1d387611f142",
+      "sha256": "827fe1e19fac5f5392d3a047d2c529e81aa4c728c524aa6b0ba257414e55b20d",
       "languages": [
         "it",
         "en",
@@ -875,9 +931,37 @@
         "es": "Aprender a conectar una carpeta del despacho, buscar en el cliente correcto y obtener una respuesta vinculada a sus documentos."
       }
     },
+    "studio-document-format": {
+      "path": "studio-document-format/course.json",
+      "sha256": "5fe4593d5d2c202093537752c13962717fa848a5708b410b554b0b52e7aaf80c",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Insegna a Vera il formato dei documenti dello studio",
+        "en": "Teach Vera your studio’s document format",
+        "fr": "Enseigner à Vera le format des documents du cabinet",
+        "de": "Vera das Dokumentformat der Kanzlei beibringen",
+        "es": "Enseñar a Vera el formato de los documentos del despacho"
+      },
+      "goals": {
+        "it": "Impara a trasformare esempi selezionati in uno standard Word verificato e riutilizzabile.",
+        "en": "Learn to turn selected examples into a reviewed, reusable Word report standard.",
+        "fr": "Transformer des exemples choisis en un standard Word vérifié et réutilisable.",
+        "de": "Aus ausgewählten Beispielen einen geprüften, wiederverwendbaren Word-Standard erstellen.",
+        "es": "Convertir ejemplos seleccionados en un estándar Word revisado y reutilizable."
+      }
+    },
     "trasformazione": {
       "path": "trasformazione/course.json",
-      "sha256": "e33adbd99111d3da0e560a194b3de0c0d08287410f11e1968000ef7e859c10d3",
+      "sha256": "f1898252114b21f9d6a6447e935582caf94ea81d03a3572f705fd3aff6f00135",
       "languages": [
         "it",
         "en",
@@ -905,7 +989,7 @@
     },
     "treasury-forecast": {
       "path": "treasury-forecast/course.json",
-      "sha256": "8756fbff3d69a95ae13e4fef9aa89e425272f8c613f6c0804ad8b12ea6f1611f",
+      "sha256": "d3a8f13768cd98cac3becca0e8ea5e8a5bbcf62896dd240047fac6ca239dcddc",
       "languages": [
         "it"
       ],
@@ -921,7 +1005,7 @@
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "7aa28791d81f6578a7e6d4bad2a454c8aa562b09ceb775e6b6206755888ba659",
+      "sha256": "13e0dc455f4a5119cb9641bd3dec17b5a546dc6eb160fabcd519dba3f7d11021",
       "languages": [
         "it",
         "en",
@@ -949,7 +1033,7 @@
     },
     "vouching": {
       "path": "vouching/course.json",
-      "sha256": "4ce01961c471e0c8e640c6ecc8d70986bb96236b0fe2a7da8b6136030b86a070",
+      "sha256": "f8d447d621d7fdfaa4deac61f364834a26e1552373b49da7a601a41b56f4f7f7",
       "languages": [
         "it",
         "en",

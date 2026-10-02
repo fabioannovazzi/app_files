@@ -53,11 +53,15 @@
     },
     {
       "path": "modules/esg-reporting-assurance/skills/esg-reporting-assurance/SKILL.md",
-      "sha256": "2e5482da5e38f5a55392d3eaa42f78744a78de52bcaf55b0a2837f1a4769cd43"
+      "sha256": "825c1638c7c6b9fc2356f64c65fe52b8a0b4e83579e94f51c2800e37423bc769"
     },
     {
       "path": "skills/esg-reporting-assurance/SKILL.md",
-      "sha256": "84ff5b6aeb7006de6d88299ff1ee196290d8d68378c976a381728e04e0363e5e"
+      "sha256": "7283775f7503ead4581f4152bde53499b186386d306633f3991f2e0ab925d123"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -382,5 +386,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "792308e50db39d9216dde82295441272d40d6fab049204bc176e9bb7af86d89a"
+  "canonical_course_sha256": "d65ba8ec262ad3a8d8da282d3fcdc0ef37786bf7d0678febbcc2b89bab776635"
 }

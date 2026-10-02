@@ -1,0 +1,243 @@
+{
+  "reviews": [
+    {
+      "course": "vera/comunicazione-professionale",
+      "reviewer": "Codex - bounded studio-format source compatibility review",
+      "reviewed_at": "2026-10-01T18:46:46.007046+00:00",
+      "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+      "previous_course_sha256": "0144c81905b4fa7f0b4525dbbabccf30a77f31368ec6bc194dacb64f5ea249a9",
+      "current_course_sha256": "75006883778e1884fe2cd9440414c90365e0d180c83a877710cc379cbf8621d4",
+      "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+      "changed_sources": [
+        "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-de.json",
+        "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-en.json",
+        "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-es.json",
+        "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-fr.json",
+        "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-it.json",
+        "plugins/comunicazione-professionale/requirements.txt",
+        "plugins/comunicazione-professionale/schemas/model_contribution.schema.json",
+        "plugins/comunicazione-professionale/scripts/promote_studio_profile.py",
+        "plugins/comunicazione-professionale/scripts/review_document_format.py",
+        "plugins/comunicazione-professionale/scripts/studio_document_format.py",
+        "plugins/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md"
+      ],
+      "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+      "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+    },
+    {
+      "course": "vera/financial-report-builder",
+      "reviewer": "Codex - bounded studio-format source compatibility review",
+      "reviewed_at": "2026-10-01T18:46:46.087400+00:00",
+      "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+      "previous_course_sha256": "b04c38e802e71652c8f330296ed7f6a8bf5ac5ad05baada9e15732fdaf16a7b7",
+      "current_course_sha256": "9cf8c8f3fdec5f674bdbe344a3b34f42f6396e06deb6fc7a3c20468426465026",
+      "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+      "changed_sources": [
+        "plugins/report-builder/assets/studio-docx-format.schema.json",
+        "plugins/report-builder/references/studio-document-format.md",
+        "plugins/report-builder/requirements.txt",
+        "plugins/report-builder/scripts/build_report.py",
+        "plugins/report-builder/scripts/implementation_bootstrap.py",
+        "plugins/report-builder/scripts/implementation_contract.py",
+        "plugins/report-builder/scripts/report_builder_core.py",
+        "plugins/report-builder/scripts/studio_formatting.py",
+        "plugins/report-builder/skills/financial-report-builder/SKILL.md"
+      ],
+      "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+      "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+    },
+    {
+      "course": "clara/advisory-case-director",
+      "reviewer": "Codex - bounded studio-format source compatibility review",
+      "reviewed_at": "2026-10-01T18:46:46.124490+00:00",
+      "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+      "previous_course_sha256": "2a7e084f9a7c37982971afe5b4db64f1e52d9df235f60be00fe3a17c13aa3908",
+      "current_course_sha256": "3b12c368ffb3759215310086d574b7bbf31b73390103877b84f1b61cbfd5ca71",
+      "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+      "changed_sources": [
+        "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+      ],
+      "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+      "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+    },
+    {
+      "course": "clara/advisory-brief-planner",
+      "reviewer": "Codex - bounded studio-format source compatibility review",
+      "reviewed_at": "2026-10-01T18:46:46.141516+00:00",
+      "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+      "previous_course_sha256": "98582f9b70a2b4cd1da8710a19e5125fa7f72d56e1d701472a0a033b4f0a3d9c",
+      "current_course_sha256": "4159e6812acd76f38010e1a901d71d9f52c178b3ac245ca70a6df089b63c3a8a",
+      "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+      "changed_sources": [
+        "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+      ],
+      "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+      "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+    },
+    {
+      "course": "clara/advisory-deliverable-validator",
+      "reviewer": "Codex - bounded studio-format source compatibility review",
+      "reviewed_at": "2026-10-01T18:46:46.163236+00:00",
+      "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+      "previous_course_sha256": "a8c5517a737a30bd370170335e485a1eaacfcb5402176c4829b00882d3752964",
+      "current_course_sha256": "754b236d118587b28ea1252078be5bb60fd1ae42bdc049897c0e80ded399ea04",
+      "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+      "changed_sources": [
+        "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+      ],
+      "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+      "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+    },
+    {
+      "course": "clara/reporting-engine",
+      "reviewer": "Codex - bounded studio-format source compatibility review",
+      "reviewed_at": "2026-10-01T18:46:46.181981+00:00",
+      "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+      "previous_course_sha256": "2d5709426546461a6b97cf4beb62ed7dc0a825df4bac3debb716b24b57937fd3",
+      "current_course_sha256": "09969fb6e92a3acd0546a33f0dc1fa276c965d32a2fcd5da203873d2841e767d",
+      "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+      "changed_sources": [
+        "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+      ],
+      "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+      "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+    },
+    {
+      "course": "clara/deck-correction",
+      "reviewer": "Codex - bounded studio-format source compatibility review",
+      "reviewed_at": "2026-10-01T18:46:46.204713+00:00",
+      "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+      "previous_course_sha256": "0197a2691717d5e0c2b6692bcdf9d69dac05900d282ce33beaa2fa250d13850d",
+      "current_course_sha256": "cf0ce7b79b1254c967619439e79b6ac5dc0d88c90da07aee96d005ab1318a3e4",
+      "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+      "changed_sources": [
+        "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+      ],
+      "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+      "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+    },
+    {
+      "course": "clara/business-planning",
+      "reviewer": "Codex - bounded studio-format source compatibility review",
+      "reviewed_at": "2026-10-01T18:46:46.223101+00:00",
+      "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+      "previous_course_sha256": "aa42d6a29cbb3cdc9a0412de67962a1195e17d4f7034cb715711b4e007f05ad9",
+      "current_course_sha256": "cf138ffe698c7702763bbe40c34555fc78447b8cfd09fdbe04708d46075d3c88",
+      "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+      "changed_sources": [
+        "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+      ],
+      "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+      "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+    },
+    {
+      "course": "clara/transcribe",
+      "reviewer": "Codex - bounded studio-format source compatibility review",
+      "reviewed_at": "2026-10-01T18:46:46.241246+00:00",
+      "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+      "previous_course_sha256": "db0b75ed53dc6fb69c8e17ad718bcc8ce0651275c1e7e18ed5156ac35c547d8b",
+      "current_course_sha256": "53dafa23d4bbd2c2ef9861fd49064cd3be8e4ed1b948e0dfb9d4f8a8edc298be",
+      "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+      "changed_sources": [
+        "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+      ],
+      "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+      "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+    },
+    {
+      "course": "clara/html-deck",
+      "reviewer": "Codex - bounded studio-format source compatibility review",
+      "reviewed_at": "2026-10-01T18:46:46.256998+00:00",
+      "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+      "previous_course_sha256": "a54b222cffa806e6b1adc5d1b272c639749fe495d4de53f1b011705abd1f7289",
+      "current_course_sha256": "8f5f40a5a2c7e21d513d88f3d1309d834a1a6fccabd7af0d13e00e07aa3d3c4b",
+      "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+      "changed_sources": [
+        "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+      ],
+      "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+      "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+    },
+    {
+      "course": "clara/attribute-reporting",
+      "reviewer": "Codex - bounded studio-format source compatibility review",
+      "reviewed_at": "2026-10-01T18:46:46.276496+00:00",
+      "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+      "previous_course_sha256": "3cd301f9ca321a2cc3093496bcf0d1c04b351a921cfcb0e271d32f184eef15c1",
+      "current_course_sha256": "11e4c24dfad346738d521950bd435cb2e8f9bddd179c2c9730b76d0705ea4df2",
+      "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+      "changed_sources": [
+        "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+      ],
+      "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+      "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+    },
+    {
+      "course": "lucia/comunicazione-professionale",
+      "reviewer": "Codex - bounded studio-format source compatibility review",
+      "reviewed_at": "2026-10-01T18:46:46.298437+00:00",
+      "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+      "previous_course_sha256": "47d18238615c5d067d9c44a9cc0dffb0dd0c866b90a1e24152cbe3c402f5f185",
+      "current_course_sha256": "de47ca0ae2e55039b2cb7bb5b832e7f98a1566beb14214b1fae554c9c01da869",
+      "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+      "changed_sources": [
+        "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-de.json",
+        "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-en.json",
+        "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-es.json",
+        "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-fr.json",
+        "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-it.json",
+        "plugins/comunicazione-professionale/requirements.txt",
+        "plugins/comunicazione-professionale/schemas/model_contribution.schema.json",
+        "plugins/comunicazione-professionale/scripts/promote_studio_profile.py",
+        "plugins/comunicazione-professionale/scripts/review_document_format.py",
+        "plugins/comunicazione-professionale/scripts/studio_document_format.py",
+        "plugins/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
+        "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+      ],
+      "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+      "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+    },
+    {
+      "course": "lucia/apertura-pratica",
+      "reviewer": "Codex - bounded studio-format source compatibility review",
+      "reviewed_at": "2026-10-01T18:46:46.321606+00:00",
+      "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+      "previous_course_sha256": "4768a95ab838d4f7d47341f062bdf8e2db7b84384e498e802f6367f9403fde1f",
+      "current_course_sha256": "7c74be2e52c36c86e3a3e3125ec9d50f425e700e1c3a146f62a33d51f013626a",
+      "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+      "changed_sources": [
+        "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+      ],
+      "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+      "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+    },
+    {
+      "course": "lucia/presenza-digitale-studio",
+      "reviewer": "Codex - bounded studio-format source compatibility review",
+      "reviewed_at": "2026-10-01T18:46:46.342128+00:00",
+      "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+      "previous_course_sha256": "2f4c9dd12d05e00737f70534d0c5e223376dea34dfddee4fcd08d897f9162975",
+      "current_course_sha256": "921e550c9f4a9e433c3a4757219644ff5cbc7df24fd1c6830de62a8d7a51e7fe",
+      "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+      "changed_sources": [
+        "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+      ],
+      "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+      "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+    },
+    {
+      "course": "lucia/quesito-legale-fiscale",
+      "reviewer": "Codex - bounded studio-format source compatibility review",
+      "reviewed_at": "2026-10-01T18:46:46.363938+00:00",
+      "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+      "previous_course_sha256": "454e0efd5aec69fd32f8326e73431d8f386e9dfae1f7dd200b4293e3b5e5d9e6",
+      "current_course_sha256": "ac7b3fda98d587e485fd618af72001ff7f20359639f74151f372a164c9dd5d9e",
+      "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+      "changed_sources": [
+        "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+      ],
+      "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+      "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+    }
+  ]
+}

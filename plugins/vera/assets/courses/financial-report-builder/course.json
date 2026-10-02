@@ -43,6 +43,16 @@
       "sha256": "7cebe7dfc9e40b80a61c9291b324e42d35c72960a9ca23753ae397813eb3f70e"
     },
     {
+      "path": "modules/report-builder/assets/studio-docx-format.schema.json",
+      "repository_path": "plugins/report-builder/assets/studio-docx-format.schema.json",
+      "sha256": "0f0c7c62dbe07fc65c0e2c9094ff5c71de9230b4ce457ef75b461279421c5f96"
+    },
+    {
+      "path": "modules/report-builder/references/studio-document-format.md",
+      "repository_path": "plugins/report-builder/references/studio-document-format.md",
+      "sha256": "6187980ff057a82df3411e6283b3588f533ddb6cfe6eecbefe05773344555d3a"
+    },
+    {
       "path": "modules/report-builder/references/workflow-reference.md",
       "repository_path": "plugins/report-builder/references/workflow-reference.md",
       "sha256": "c419fcefc3184b225bb595b3eb8942fc73c752c9f89e989374e7da474bbbe4d2"
@@ -50,7 +60,7 @@
     {
       "path": "modules/report-builder/requirements.txt",
       "repository_path": "plugins/report-builder/requirements.txt",
-      "sha256": "6735c9cbdb32c51d03324c6f2528b3f586b4545c54b022c1da0b0b5d44692b9a"
+      "sha256": "ee15516de98a1367562d8c098d149188c759330537462385aeafa86b5682ed45"
     },
     {
       "path": "modules/report-builder/scripts/apply_review_edits.py",
@@ -60,7 +70,7 @@
     {
       "path": "modules/report-builder/scripts/build_report.py",
       "repository_path": "plugins/report-builder/scripts/build_report.py",
-      "sha256": "b8c910b0188572a441ed74a36e13d125edbb7c510fe8559b81059fb465f930b6"
+      "sha256": "6a8e4eed6aa458d536785670fa242d814ed6340c79bc31cd86f3934b01f55c3a"
     },
     {
       "path": "modules/report-builder/scripts/check_dependencies.py",
@@ -75,12 +85,12 @@
     {
       "path": "modules/report-builder/scripts/implementation_bootstrap.py",
       "repository_path": "plugins/report-builder/scripts/implementation_bootstrap.py",
-      "sha256": "27d620df59440f8f26a06d1043bcd5bbab728bedb49bbfe835b8ac3112cf3087"
+      "sha256": "c2775488e65a70846dbd995539615b4ad8ae38be26580932a67ff50e595ac6fc"
     },
     {
       "path": "modules/report-builder/scripts/implementation_contract.py",
       "repository_path": "plugins/report-builder/scripts/implementation_contract.py",
-      "sha256": "d219e3b1e24ad3c3d80de4f954629324ba2c6b9e45178ad6f778906bd7eb9bb6"
+      "sha256": "d59c4651e56803b009d6556bc1ddad1a45565a9adcd557447610c73a83d901bc"
     },
     {
       "path": "modules/report-builder/scripts/inspect_inputs.py",
@@ -100,7 +110,7 @@
     {
       "path": "modules/report-builder/scripts/report_builder_core.py",
       "repository_path": "plugins/report-builder/scripts/report_builder_core.py",
-      "sha256": "3a385c0c8498ae8ffa77345d76901cb1d9b953e6522d2707120d7bf2efbe8a21"
+      "sha256": "ffa39c414084c49a403140a2dc33a9461de89d1f32f9dd66158a89d1857ad702"
     },
     {
       "path": "modules/report-builder/scripts/report_builder_integrity.py",
@@ -133,6 +143,11 @@
       "sha256": "1fc828a48a267ed81c940c6adc6dd86720b84fad06eddaf63dd39abfe70886ad"
     },
     {
+      "path": "modules/report-builder/scripts/studio_formatting.py",
+      "repository_path": "plugins/report-builder/scripts/studio_formatting.py",
+      "sha256": "fb239ee1c46f103146220accfaad40c1bc7190cb90a48b8a7d7574cae6f3ebb3"
+    },
+    {
       "path": "modules/report-builder/scripts/validate_review_integrity.py",
       "repository_path": "plugins/report-builder/scripts/validate_review_integrity.py",
       "sha256": "c4632f361e2fda6be0e66e3242a8093a5e43696730a9cc51ea1c41d0eea60c39"
@@ -140,7 +155,7 @@
     {
       "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
       "repository_path": "plugins/report-builder/skills/financial-report-builder/SKILL.md",
-      "sha256": "fc263c61b3f5fe3ee90ea6e7122b2ae4498f8627337ec7c9e70ce44e36eeb679"
+      "sha256": "3b74151cb454476aa3f93d94a40e272406128b953a746931e4d97f0b3a9669b8"
     },
     {
       "path": "modules/report-builder/vendor/modules/__init__.py",
@@ -195,7 +210,12 @@
     {
       "path": "skills/financial-report-builder/SKILL.md",
       "repository_path": "plugins/vera/skills/financial-report-builder/SKILL.md",
-      "sha256": "f6208a7e9b9b235949ff1276a1cc3614fbbf479869b0dc370e332125f7b0cf62"
+      "sha256": "9564207bb5058957476686a2dbda8cf47f0f5cf381c11aaab6f16d309cefedbc"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

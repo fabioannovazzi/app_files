@@ -130,7 +130,7 @@
     },
     {
       "path": "modules/business-planning/skills/business-planning/SKILL.md",
-      "sha256": "1ed41a93e02b9374b73ac97a884d3c8208f25e13f34db8292c65d514441b6cee"
+      "sha256": "afb7bf27c6eaa72e7292f520aa7adda5159d9cd4b99f71c99f71a23a89266dd1"
     },
     {
       "path": "modules/business-planning/skills/business-planning/references/geneva.md",
@@ -182,7 +182,11 @@
     },
     {
       "path": "skills/business-planning/SKILL.md",
-      "sha256": "4fd7b2157714ad509567d646fe6a0ad8f996e5386e93d107f1bd80b969d54962"
+      "sha256": "3cb771ec90e9a334aef66c80dac7f43c4cb87bf940b38bba50b11db023836c0f"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -434,5 +438,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "8cf37ebe9a936417467bad2350aac6e2fb8d4f64766579a60718a4a5b8f2325d"
+  "canonical_course_sha256": "ecd0827ce78144c0ce163471f650b8e85e425f336c6982823810a88c7b33442e"
 }

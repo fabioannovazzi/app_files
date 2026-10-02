@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "registro-imprese-sari",
-  "course_sha256": "68e4932737f6fd16a452773f7e5ceee7000ef74697cbaaf72cbb4e51082bc90e",
+  "course_sha256": "e20bcda09ad96bd632a54c8866274569869e890b2eabbba4c164561c1a994487",
   "reviewer": "Codex: direct lesson, source-file, native artifact and browser review",
   "reviewed_at": "2026-09-15T01:54:14.804674+00:00",
   "languages": {
@@ -609,10 +609,23 @@
     ],
     "review": "Every authored lesson field and input record matches current main. The sole shared source change adds scissione-guidata to the supported workflow IDs; existing workflow behavior is unchanged. Original reviewers, dates, judgments and output hashes are preserved. Fresh native teaching executions are required in CI; no new professional or learner acceptance is claimed."
   },
-  "esg_catalogue_source_refresh": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-10-01T17:33:03.580438+00:00",
+  "connected_studio_knowledge_source_binding_20261002": {
+    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+    "reviewed_at": "2026-10-01T22:12:55.960124+00:00",
+    "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
     "previous_course_sha256": "db889cece8668bdda055ac85e6491e92536f3f83a703f075dede0957068e919d",
-    "content_review": "Compared complete authored course and all input records with HEAD: unchanged. Only the pinned shared courseware policy changes: ESG is now available to Vera; hosted Clara exclusions remain. No execution, semantic method, external data route or old editorial judgment is replaced. Prior artifact reviews retained. Current native cases are required by the release gate; voice, learner and professional acceptance are not claimed."
+    "current_course_sha256": "b6ce27d44294af12db5c5c112c2969e7d75fd0c7dd321999a44a0dd4b113e9cc",
+    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+    "changed_sources": [
+      "skills/registro-imprese-sari/SKILL.md",
+      "skills/vera/references/connected-studio-knowledge.md"
+    ],
+    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+  },
+  "integration_refresh": {
+    "reviewer": "Codex /root",
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
   }
 }

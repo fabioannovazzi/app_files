@@ -179,7 +179,12 @@
     {
       "path": "skills/dati-fiscali-strutturati/SKILL.md",
       "repository_path": "plugins/vera/skills/dati-fiscali-strutturati/SKILL.md",
-      "sha256": "85949239c975aa8e9f3ceb75700cd2bfe930e6578c163b56be81ce8f90cf2415"
+      "sha256": "55d9bb3e4447e4898b0e4bbd8b6ac6744fccf3c65860d1453d5856761e790c5b"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

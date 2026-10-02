@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "browser-automation",
-  "course_sha256": "7b3ad2655861a4bf3cdbb39b3febe8ce1834e1b3339f449ce88c2763b1723c30",
+  "course_sha256": "09d84084efe6f275555273eac00b3bb6fe1e9e5d71dd676ef9d1bb1882c57f9a",
   "reviewer": "Codex source-inventory integration review; original Codex connected-Chrome result review retained as historical evidence",
   "reviewed_at": "2026-10-01T13:02:52.499506+00:00",
   "review_scope": "Reviewed all five localized lessons and fictional input notes. Actual shipped executeCapability and executeProcess ran in connected Chrome against the supplied loopback page; two clean demo runs finalized the capability, and ten distinct process attempts cover demo/practice for each teaching language. Browser controls and native technical report are English/Italian as disclosed; language labels do not claim five browser locales. CI separately executes the shipped driver against the real HTML in headless Chromium, honestly marked unverified and ineligible for live qualification. No learner completion, professional approval, real portal access, ordinary-use performance qualification or server transfer is claimed. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.317 integration review confirms byte-identical authored lesson fields and files against the reviewed parent; only source inventory hashes changed after ECONS status-binding and executor-evidence updates. Ten current headless local-fixture regressions passed (five locales, demo and practice), produced the expected Invoice/Credit note confirmations, and remained unverified and ineligible for live qualification. Connected-Chrome output reviews and their recorded artifact hashes remain the historical 2026-09-23 evidence; this refresh does not re-attest current connected-Chrome qualification, ECONS execution, learner participation or professional acceptance.",
@@ -378,10 +378,23 @@
     ],
     "review": "Every authored lesson field and input record matches current main. The sole shared source change adds scissione-guidata to the supported workflow IDs; existing workflow behavior is unchanged. Original reviewers, dates, judgments and output hashes are preserved. Fresh native teaching executions are required in CI; no new professional or learner acceptance is claimed."
   },
-  "esg_catalogue_source_refresh": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-10-01T17:33:03.580438+00:00",
+  "connected_studio_knowledge_source_binding_20261002": {
+    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+    "reviewed_at": "2026-10-01T22:12:55.494354+00:00",
+    "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
     "previous_course_sha256": "cf76443facf1bd646c4adc72156841c592f2136080f823058a35fef44257e43d",
-    "content_review": "Compared complete authored course and all input records with HEAD: unchanged. Only the pinned shared courseware policy changes: ESG is now available to Vera; hosted Clara exclusions remain. No execution, semantic method, external data route or old editorial judgment is replaced. Prior artifact reviews retained. Current native cases are required by the release gate; voice, learner and professional acceptance are not claimed."
+    "current_course_sha256": "7abd86b6ae3a65e24b1cc34a829ebd06a51a79adecd45261cb688295bd3f708a",
+    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+    "changed_sources": [
+      "skills/browser-automation/SKILL.md",
+      "skills/vera/references/connected-studio-knowledge.md"
+    ],
+    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+  },
+  "integration_refresh": {
+    "reviewer": "Codex /root",
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
   }
 }

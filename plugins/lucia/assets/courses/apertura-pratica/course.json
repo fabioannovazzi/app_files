@@ -239,7 +239,7 @@
     {
       "path": "vendor/modules/desktop_teaching/cases.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/cases.py",
-      "sha256": "933e93d2d446dec29719e276eec34a8bda5c1cf5fc4747bdd1d756abe13a61c2"
+      "sha256": "17c5796df886818346bae0873da3dfd324c55a4e43d37ec5bb2457b9ef2fc2a2"
     },
     {
       "path": "vendor/modules/desktop_teaching/onboarding.py",

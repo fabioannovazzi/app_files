@@ -840,7 +840,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
         re.findall(r"`\.\./\.\./([a-z0-9-]+)/SKILL\.md`", initial_section)
     )
     assert initial_skills == {"scissione-guidata"}
-    assert "no prepared voice lesson" in initial_section
+    assert "prepared local lesson" in initial_section
 
     # Exact identity closure is mechanically verifiable and prevents public
     # inventory drift. Page component IDs resolve to the current skill names.
@@ -849,7 +849,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
         == (
             set(re.findall(r"^- `([^`]+)`:", catalog, re.MULTILINE))
             - _catalog_workflow_names(
-                catalog, "Learning and discovery", "Development preview"
+                catalog, "Learning and discovery", "DATEV installation trial"
             )
             - _catalog_workflow_names(
                 catalog,
@@ -891,7 +891,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    expected_module_count = 41
+    expected_module_count = 42
     module_hrefs = re.findall(
         r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
     )
@@ -973,6 +973,7 @@ def test_vera_hub_separates_research_from_studio_communication() -> None:
         "../adversarial-opinion/index.html",
     }
     assert set(re.findall(r'href="([^"]+)"', communication)) == {
+        "../studio-document-format/index.html",
         "../comunicazione-professionale/index.html",
         "../presenza-digitale-studio/index.html",
     }
@@ -1037,6 +1038,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Bandi e agevolazioni",
         "Risposta a quesiti legali e fiscali",
         "Parere contrapposto",
+        "Formato dei documenti dello studio",
         "Comunicazione professionale",
         "Sito dello studio",
     ]
@@ -1062,6 +1064,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "module.treasury.title": "Budget di tesoreria",
         "module.managementPack.title": "Pacchetto controllo di gestione",
         "module.centraleRischi.title": "Analisi Centrale Rischi",
+        "module.studio-format.title": "Formato dei documenti dello studio",
         "module.communication.title": "Comunicazione professionale",
         "module.website.title": "Sito dello studio",
         "module.report.title": "Preparazione report finanziario",
@@ -1084,6 +1087,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "composizione-negoziata": "Composizione negoziata",
         "concordato-plan-review": "Revisione concordato preventivo",
         "fusione-guidata": "Fusione per incorporazione",
+        "studio-document-format": "Formato dei documenti dello studio",
         "comunicazione-professionale": "Comunicazione professionale",
         "dati-fiscali-strutturati": "Estrazione dati fiscali",
         "legal-tax-answer-review": "Validazione ricerca",
@@ -1117,7 +1121,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 41
+    assert len(labels) == 42
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
@@ -1656,7 +1660,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 41
+    expected_module_link_count = 42
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',

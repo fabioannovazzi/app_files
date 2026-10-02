@@ -160,7 +160,12 @@
     {
       "path": "skills/quesito-legale-fiscale/SKILL.md",
       "repository_path": "plugins/vera/skills/quesito-legale-fiscale/SKILL.md",
-      "sha256": "df29d499affd919cc3a6ac71d9b5fa9bf1fd08f72052f048ea417634e19db0fb"
+      "sha256": "d95a7b5f242d71ae53c1b4f92d819bee39586255c05d69628f8eea4eac6f9155"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

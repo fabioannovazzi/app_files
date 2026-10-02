@@ -2962,6 +2962,17 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
             ):
                 assert lucia_native_references[skill_file.parent.name] in skill_text
                 continue
+            if (
+                plugin_root.name == "vera"
+                and skill_file.parent.name == "studio-document-format"
+            ):
+                assert "references/procedure.md" in skill_text
+                assert "scripts/studio_document_format.py" in skill_text
+                assert "references/written-course.md" in skill_text
+                assert "short and long" in normalized_skill_text
+                assert "user's explicit adoption" in normalized_skill_text
+                assert "financial report builder" in normalized_skill_text
+                continue
             if plugin_root.name in {"lucia", "vera"} and (
                 skill_file.parent.name != plugin_root.name
             ):
@@ -4019,8 +4030,8 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 41
-    assert core.count('class="module-row"') == 41
+    assert core.count(" data-module-link") == 42
+    assert core.count('class="module-row"') == 42
     assert core.count('data-jurisdiction-item="it"') == 14
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core

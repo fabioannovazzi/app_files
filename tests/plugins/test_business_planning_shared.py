@@ -71,11 +71,12 @@ def test_both_entry_points_have_identical_plans_and_html() -> None:
     assert vera["calculations"]["base/2027-03/sources_uses_difference"]["value"] == "0"
 
 
-def test_registered_business_workflow_and_marketplace_cards_are_identical() -> None:
+def test_registered_business_workflow_preserves_shared_analysis_contract() -> None:
     vera_root = REPO_ROOT / "plugins/vera"
     clara_root = REPO_ROOT / "plugins/clara"
     skill = "skills/business-planning/SKILL.md"
-    # Product onboarding and feedback happen outside the shared analysis.
+    # Product onboarding, optional knowledge intake and feedback happen outside
+    # the shared analysis.
     # Compare every other byte so Vera cannot acquire a different planning angle.
     feedback_heading = "## Plugin Improvement Feedback"
     vera_workflow = (vera_root / skill).read_text().split(feedback_heading, 1)[0]
@@ -91,6 +92,16 @@ def test_registered_business_workflow_and_marketplace_cards_are_identical() -> N
             flags=re.DOTALL,
         )
         assert onboarding_blocks == 1
+        if product == "VERA":
+            normalized, knowledge_blocks = re.subn(
+                r"<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->\n.*?"
+                r"<!-- VERA_CONNECTED_KNOWLEDGE_END -->\n\n",
+                "",
+                normalized,
+                count=1,
+                flags=re.DOTALL,
+            )
+            assert knowledge_blocks == 1
         workflows.append(normalized)
     vera_workflow, clara_workflow = workflows
     assert vera_workflow == clara_workflow
@@ -100,10 +111,13 @@ def test_registered_business_workflow_and_marketplace_cards_are_identical() -> N
     clara_cards = json.loads(
         (clara_root / "marketplace_skill_instructions.json").read_text()
     )
-    assert (
-        vera_cards["skills"]["business-planning"]
-        == clara_cards["skills"]["business-planning"]
+    vera_card = deepcopy(vera_cards["skills"]["business-planning"])
+    shared_instructions, knowledge_marker, _ = vera_card["instructions"].partition(
+        " Se l’utente o una procedura di studio adottata richiede "
     )
+    assert knowledge_marker
+    vera_card["instructions"] = shared_instructions
+    assert vera_card == clara_cards["skills"]["business-planning"]
 
 
 @pytest.mark.parametrize("entry_point", ["Vera", "Clara"])

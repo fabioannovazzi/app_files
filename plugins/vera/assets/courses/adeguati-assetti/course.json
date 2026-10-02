@@ -180,7 +180,12 @@
     {
       "path": "skills/adeguati-assetti/SKILL.md",
       "repository_path": "plugins/vera/skills/adeguati-assetti/SKILL.md",
-      "sha256": "36784a969f013cced40be83232646924d901adcd01f83c944ad3b59a6c1a1f24"
+      "sha256": "b9ded26c74e719a57e6d63e245c59eab64a9089c39e992aeaafdaec5c061d152"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

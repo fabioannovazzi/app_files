@@ -1384,7 +1384,7 @@ def test_professional_communication_builds_studio_formatted_multichannel_package
     assert final["status"] == "final_ready"
     assert "editorial_model_assessment" in output_kinds
     assert "visual_model_assessment" in output_kinds
-    assert "## Independent editorial assessment" in (
+    assert "## Revisione editoriale indipendente" in (
         run_dir / "technical_basis.md"
     ).read_text(encoding="utf-8")
     assert "Studio Aurora | Nuova misura" in email

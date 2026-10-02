@@ -93,7 +93,7 @@
     },
     {
       "path": "modules/check-entries/skills/vouching/SKILL.md",
-      "sha256": "f16ca02bd97da6ed20e9fe945c108a2a6b698c4d5517f2b803cafaaaa417a9b1"
+      "sha256": "bcb210a49411e7efb83e3a8025f8d16899c915def5d967d9c51b7acd76ff8565"
     },
     {
       "path": "modules/check-entries/skills/vouching/references/geneva.md",
@@ -140,8 +140,12 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
+    },
+    {
       "path": "skills/vouching/SKILL.md",
-      "sha256": "7552c836c07e072319c771ef46b02b9306caf7b0b0e38146ca7bf60f757df965"
+      "sha256": "ba7740e858f30e032a04fe1e98944aa125eccf616fe9f602bc78bfe82fde3759"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -514,5 +518,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "7f7a5c10d9b9031364130f56c3297a5ba4b40814726fda6ab4c691e787f07133"
+  "canonical_course_sha256": "b576c06a56b00173acc188df5fbb4de27dbc01629f98c6614306034e96f3d29c"
 }

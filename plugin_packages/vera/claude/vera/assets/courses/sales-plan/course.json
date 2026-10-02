@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/sales-plan/skills/sales-plan/SKILL.md",
-      "sha256": "5b4706af345ac47647dae77b53221ef391b103367bf170139a18488d6b22ad4a"
+      "sha256": "9b33e97145ad0359ef13d9294dd9c8e10ec6c8051c9af7e7bf1d736e72f1add6"
     },
     {
       "path": "modules/sales-plan/vendor/modules/__init__.py",
@@ -101,7 +101,11 @@
     },
     {
       "path": "skills/sales-plan/SKILL.md",
-      "sha256": "a7f8a4f0dcab70f2c4b661642e7cb2a94ff81f898ee8965a6397b0c5ff456bbf"
+      "sha256": "5cd4d1dfdce986fc1a157508e403103bae68e5abb843e0eb356b60b21325c244"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -402,5 +406,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "09bfeb45ff581e4098bf0902699b0c0f94a347ca40e299b8c445864d8099e2d8"
+  "canonical_course_sha256": "70b1aeb097a0236cb8a9730ccf1f80d1068284e53bcd3aa851d4f2c08315502e"
 }

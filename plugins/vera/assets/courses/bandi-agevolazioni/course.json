@@ -265,7 +265,12 @@
     {
       "path": "skills/bandi-agevolazioni/SKILL.md",
       "repository_path": "plugins/vera/skills/bandi-agevolazioni/SKILL.md",
-      "sha256": "33172fef23c99abf6ec0bdb8a5616d12e10e266671e9120e27c908def8a83359"
+      "sha256": "4325200e466df51609234748df951bd84babd578ed3988a41bad848961cf7940"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

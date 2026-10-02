@@ -77,7 +77,7 @@
     },
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md",
-      "sha256": "d7666205cc67deacd734baa1db45da896edf89c87525cdcfeeadd56a59d6c6ca"
+      "sha256": "d2144ced97a7a2838858c84e5feb8ed6a0a96712b8ea986c862f7dd49ae0a2fe"
     },
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/adversarial-scope.md",
@@ -133,7 +133,11 @@
     },
     {
       "path": "skills/quesito-legale-fiscale/SKILL.md",
-      "sha256": "546a696534d5b3846d4cdafe711fbf26bbde14f5e1334136a87050db883077a5"
+      "sha256": "e824bbea84573f315c36bc07c47ad4774d8bdec5dc0f17a51ff09fb10db6103c"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -714,5 +718,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "beed8ddce8101f65420cc10f836670d2fb1c8f7e4fd51a5581b1bdf268367849"
+  "canonical_course_sha256": "a34ce10adc621463b4046ca48a3efd14a6b00d299a9d7e3aac7ed6e26f089bdc"
 }

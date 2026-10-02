@@ -612,6 +612,135 @@ extraction references. The practice adds a client's statement; documents said
 to be recovered remain unreceived until their actual files are supplied. Keep
 the explanation about the request, dates, evidence and next action.
 
+## Scissione guidata
+
+The fictional Arco mandate and allocation CSV exercise the Italian OIC partial
+proportional route into a new beneficiary. Start without approvals. The missing
+lease, unexamined contingent liabilities and null shareholder tax costs remain
+visible; a calculation does not close those gaps. The teacher explains actual
+Italian dossier headings and stable machine fields in the learner's language.
+The learner reviews the displayed exact revision in ordinary professional terms;
+never copy the test-only reviewer or manufacture participation.
+
+Practice imports the updated mandate and CSV in a fresh run of the same tutorial
+engagement, with the exact finalized prior revision as an upstream artifact.
+Changed allocation evidence reopens its dependent reviews; unchanged route and
+ownership evidence can retain theirs. Preserve the demo outputs. Codex uses its
+teacher/worker pair; Cowork uses the packaged written single-conversation lesson.
+Both keep tutorial state local and require actual learner confirmation.
+
+
+## Trasformazione: synthetic preparation only
+
+Use the prepared `trasformazione` kit only after an explicit synthetic lesson
+request. This is preparation for a supervised pilot, never a real mandate.
+Read the installed Vera wrapper and complete module contract. The Italian
+source JSON and native dossier remain Italian in all five conversation locales.
+Explain their fields in the selected language; do not translate schema keys.
+
+After validating the paired worker token, use a fresh private lesson output
+folder for the component's `CaseStore` or CLI, not Studio Archive preparation.
+This workflow has no Studio Archive adapter. Preserve exact input bindings in
+the local execution record, and capture output paths/hashes through the existing
+course execution mechanism. Do not call a hosted adapter or stamping service.
+The generic local model-data report builder remains required; show its readable
+report with the actual phases and selected model-visible files.
+
+Import case, participants and creditors first. Keep valuation withheld until
+the first blocked-capital export. The worker model authors findings, calculations
+and explicit dependencies from these inputs, not from a preapproved recipe.
+Do not use `demo.py` to substitute its internally generated inputs for this kit.
+Capital/vote/profit rights and book/estimated/tax values remain distinct. Missing
+tax basis, sources, receipts and consents stay unknown. Review only the limited
+creditor collection branch; never infer release or opposition from collection.
+Show dossier, proposal digest and blockers before recording the learner's actual
+decision. Automated test reviewers are labelled simulations and never count as
+learner decisions, participation or understanding.
+
+Import valuation-update.json under the original valuation evidence ID. Inspect
+selective staleness before changing numeric inputs: historical arithmetic is not
+a recomputation from changed document text. Correct the calculations and findings,
+resubmit and seek a new decision. Keep all prior exports and chained history.
+Practice starts a separate case using files/practice; preserve the demonstration.
+The 46-scenario matrix is not professional acceptance: only 11 scenarios had
+mechanical subsets tested in the recovered increment; remaining professional
+coverage is pending. This lesson creates no authenticated review, legal/tax
+qualification, statutory filing, real-client acceptance or publication evidence.
+
+## Patent Box controlled preview
+
+`patent-box-review` supplies fictional ordinary software evidence, a ledger and
+an unchanged synthetic source. Use the normal tutorial adapter, exact selected
+receipts and current Patent Box module. Inspect the ledger, review its mapping
+and source total, normalize, then propose detailed controls and located A/B text.
+The ordinary maintenance row is distinct from development. Practice starts a
+fresh bound case with an additional personnel row whose project link is missing.
+Keep it suspended and request evidence; absence does not establish failure.
+Preserve demonstration bytes and obtain a new actual proposal confirmation.
+
+Only explicitly synthetic initialization (`--demo`) and the shipped demo rules
+at their historical test date 2026-09-23 are permitted in this exercise. Never
+refresh or promote them into real rules. Read the readable proposal before actual
+learner confirmation; `--synthetic` requires an explicitly synthetic reviewer
+and the actual confirmation reference. Automated fixtures use test identities
+only and do not attest learner participation. Without confirmation calculation
+stays pending. No tutorial exception configures a firm policy, signs a mandate,
+or authorizes real-client calculation.
+
+Open the actual summary, missing-document list, controls, reconciliation,
+workpaper, unsigned Word/PDF A/B dossier and model-data report. Explain the
+additional deduction versus a tax saving and the separate income/IRAP bases.
+Engine titles and fields remain Italian; conversation, outline and authored
+narrative follow the selected supported language. Patents, designs, premial
+events and signature/timestamp verification are separate fact-dependent paths,
+not demonstrated executions. The implementation remains a controlled preview:
+32 professional UAT scenarios are NOT_RUN and professional/installed-host
+acceptance is unverified. Synthetic success changes none of those boundaries.
+The lesson has no public research, schedule, notification, signing or filing.
+Fictional inputs, model proposals and results read by the native OpenAI host
+enter its account model context; local storage does not mean offline inference.
+Complete the normal report, declarations and local ledger finalization without
+telemetry or external feedback.
+
+## Fusione per incorporazione P1
+
+The `fusione-guidata` kit teaches two companies, not two branches of one client's
+ledger. Start the bound tutorial intake with the selected source files as usual;
+retain that outer tutorial run and its local-only marker. Under its private
+output directory, prepare separate synthetic Alpha and Beta client roots and
+engagements using the current Studio Archive ledger. Bind both exact archive
+identities to the P1 case and import only the selected company evidence. Keep
+selected pack bytes and field locators so model-extracted facts can be traced
+back to the actual course documents. Never configure the user's studio archive,
+scan other clients or write a combined dossier into either company's archive.
+
+Read `dossier-<language>.md` and `ordinary.json` for the demonstration. The
+native field names stay unchanged across languages. Read the current component
+P1 contract, prepare requests from those inputs and discuss the branch, supplied
+valuations, difference allocation and source applicability with the learner.
+`demo-p1` and `prepare_case` are developer fixtures with synthetic approvals;
+do not run them as a substitute for the learner's demonstration or record their
+fixture confirmations as the learner's professional decisions. A pending decision
+remains pending in the newly executed draft. Author the dossier's professional
+sections from the available evidence; the source note explicitly identifies gaps.
+
+Use the P1 case/report records as native execution evidence, then declare the
+actual reports in the outer tutorial run. Show the opening journal, separate tax
+register, readable workpapers and model-data report. Finalize the outer run only
+under its normal contract after its actual outputs and review state are recorded.
+No signatures, postings, filings or real-client validation are demonstrated.
+
+Practice starts a separate wholly owned synthetic P1 case under the same lesson,
+using `wholly-owned.json`. Preserve the independent-company demonstration.
+Once the learner has inspected the practice result, import `update.json` into
+Beta's archive and revise that case's exact liability Fact. Inspect ChangeImpact,
+retain historic confirmations and reopen the dependent bridge and dossier.
+Recompute only with current references: the updated inputs have no revised
+closing equity or difference allocation and therefore retain a EUR 100 imbalance.
+Do not invent an offset, renew an approval or count that blocked follow-up as a
+successful computation. The successful base practice and its blocked update are
+separate checkpoints. All exercise calendar conventions are fictional hypotheses;
+real-case sources and actual professional confirmation remain required.
 
 ## Trasformazione: synthetic preparation only
 

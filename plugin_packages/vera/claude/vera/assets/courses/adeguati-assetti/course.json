@@ -101,7 +101,7 @@
     },
     {
       "path": "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
-      "sha256": "1178c3b98022a8c049c8d9696a232ce6ebe74ef03c68189be206fe249b0687eb"
+      "sha256": "75fa5068e27358f2000d130892feb7d71479e688beeef31b20dfe9f672c8a878"
     },
     {
       "path": "modules/adeguati-assetti/skills/adeguati-assetti/references/geneva.md",
@@ -149,7 +149,11 @@
     },
     {
       "path": "skills/adeguati-assetti/SKILL.md",
-      "sha256": "769db51d763ca5f9df954fd83080d6b800db6230b106215aefb73e7949c15295"
+      "sha256": "983166c48c63de22da5d7365bf0795f51546a7db7a12927c82e01efaf9f028b8"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -879,5 +883,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "67869d5444ace7d46c4b1c4a4111ada141250fabc222c749053fce3d35eb314e"
+  "canonical_course_sha256": "204863e9de92b998c13c53fb0cf7c37b9061835ce621bb79b95843c25485a6b1"
 }

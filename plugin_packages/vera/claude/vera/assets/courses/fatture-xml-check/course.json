@@ -96,7 +96,7 @@
     },
     {
       "path": "modules/client-file-preparation/skills/fatture-xml-check/SKILL.md",
-      "sha256": "c57a22a218050ce826b041a1c85cee152128d63fd0c68bbd6be6cf558fdf6db2"
+      "sha256": "99e614b287d703ac1c7afd83c4982381115c2edd52a3de05b315d26088f04b9e"
     },
     {
       "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
@@ -148,7 +148,11 @@
     },
     {
       "path": "skills/fatture-xml-check/SKILL.md",
-      "sha256": "a12daa2fbe5feaf79d32c62121ebefc3305718ee02cb55fa14cab03f5394233d"
+      "sha256": "8c4654c717fce7a24089cd2d13066cd0f932ae6734be9254c9d3580fbf4f0ab9"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -469,5 +473,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b8e068b498db41b5e28ab34f5274592b88aab75292527dc89fb8be6519bcb76a"
+  "canonical_course_sha256": "644c9d3292bbd22e32737ff4516728ab4fc63fdc2cf00907d1ed0249e4c0a08e"
 }

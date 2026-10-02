@@ -1,0 +1,450 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "scissione-guidata",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "versioned_partial_proportional_new_beneficiary"
+  },
+  "sources": [
+    {
+      "path": "modules/scissione-guidata/assets/icon.svg",
+      "sha256": "eeaf2f342a0f566db519389c7ea56394aee325fb04f3d2ceacaf20ef65354c57"
+    },
+    {
+      "path": "modules/scissione-guidata/references/data-contract.md",
+      "sha256": "9b31adf27fcff3a13be151246f544826a1d63e3d44cdab521ec020ef9dcfa82b"
+    },
+    {
+      "path": "modules/scissione-guidata/references/synthetic-case.json",
+      "sha256": "8e1dc0e9a76612251980eded95ec1c7598d5ff1ad7933dac1d84968b154cb239"
+    },
+    {
+      "path": "modules/scissione-guidata/requirements.txt",
+      "sha256": "044d7700193a0027f884a68de63a30560c26809e8a70572e7b4d1d99b750fbd8"
+    },
+    {
+      "path": "modules/scissione-guidata/scripts/check_dependencies.py",
+      "sha256": "cd62515f1a27b4a7597b4b3eed3e6005671cabec72c33de756fa656441425b64"
+    },
+    {
+      "path": "modules/scissione-guidata/scripts/run_scissione.py",
+      "sha256": "ba464976b2d4d6ac0e4432e67cd21236321998776468497f01104b4f3fee55fe"
+    },
+    {
+      "path": "modules/scissione-guidata/scripts/scissione_core.py",
+      "sha256": "7e74ac30a6fe34c2b7a585c01c987f852f35098daa57cb81530184ac8fcaf9bf"
+    },
+    {
+      "path": "modules/scissione-guidata/skills/scissione-guidata/SKILL.md",
+      "sha256": "42c8b99a3ee64787a93f6b39cf3b442b40f876f013aa06159ae2decd88249fab"
+    },
+    {
+      "path": "modules/scissione-guidata/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/scissione-guidata/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/scissione-guidata/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "089670445e91974b68e9eca35017948a8bac2d07e7e05dba29be05b32fb76e93"
+    },
+    {
+      "path": "modules/scissione-guidata/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/scissione-guidata/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/scissione-guidata/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "modules/scissione-guidata/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/scissione-guidata/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/scissione-guidata/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/scissione-guidata/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
+    },
+    {
+      "path": "skills/scissione-guidata/SKILL.md",
+      "sha256": "47344a2d031bc9fb9c4c1a679a3e434b693fbfc69a42f15c931589c005953bfd"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "089670445e91974b68e9eca35017948a8bac2d07e7e05dba29be05b32fb76e93"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/mandate-it.md",
+      "sha256": "5afdb39201785c742685883562cf9daa023c70699b6e879f0497d8801d4c835f",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/mandate-update-it.md",
+      "sha256": "576b3c0c87becba74eeaf74d542093782b9cc505b03bfb140ee97af02018ade1",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/mandate-it.md",
+      "sha256": "5afdb39201785c742685883562cf9daa023c70699b6e879f0497d8801d4c835f",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/mandate-en.md",
+      "sha256": "0b674797e67845b5361b6c9f855bbc4ccd67acef415e2c1298673a271eb7e843",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/mandate-update-en.md",
+      "sha256": "e47881cf0967a7bb629f6c98bc66a9d41697ef82379eeac56ad0cd690c9b7368",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/mandate-en.md",
+      "sha256": "0b674797e67845b5361b6c9f855bbc4ccd67acef415e2c1298673a271eb7e843",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/mandate-fr.md",
+      "sha256": "8079a0d109bcdb077ba62a23ac75631677578d3cdb54c425fad2be221b139ac7",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/mandate-update-fr.md",
+      "sha256": "c6a41cc2b82333e84c9c0c7cabcf9e82cb381aeb209c3d3c3f21a331419fa056",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/mandate-fr.md",
+      "sha256": "8079a0d109bcdb077ba62a23ac75631677578d3cdb54c425fad2be221b139ac7",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/mandate-de.md",
+      "sha256": "45eda66d10a49c4467c4e5931a2166fc0c67ba19852bb1c5c3491398849b35be",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/mandate-update-de.md",
+      "sha256": "14ca831a3c18aa6555fcb76bc95b5a3af7484cd0aa7c380d0dbf302be725cf65",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/mandate-de.md",
+      "sha256": "45eda66d10a49c4467c4e5931a2166fc0c67ba19852bb1c5c3491398849b35be",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/mandate-es.md",
+      "sha256": "2245e692c43cc5853d5e5c999101f4c065ad40879f7da9a347e6925eb871663c",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/mandate-update-es.md",
+      "sha256": "f2e46579581bb26d29f387d2ab8918ff1dd93cc95aaa08026f281d65a887ecc7",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/mandate-es.md",
+      "sha256": "2245e692c43cc5853d5e5c999101f4c065ad40879f7da9a347e6925eb871663c",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/allocations.csv",
+      "sha256": "62a9ed009d93da44ed5bd667e984f3fbb2e150dd104631c71c405c50559c96b8",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/allocations-update.csv",
+      "sha256": "43b5d78be584d79069bcad52a8396600af19f3094d7023937430f830b9fb630a",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Scissione guidata con Vera",
+      "goal": "Preparare un fascicolo versionato, leggere i prospetti e rivedere le decisioni dopo un cambiamento.",
+      "scenario": "Arco Meccanica S.r.l. separa un ramo verso la nuova Arco Servizi S.r.l. Anna e Bruno possiedono il 60% e il 40%. Tutti i nomi, documenti e valori sono fittizi.",
+      "scope": "Percorso italiano OIC, EUR, parziale proporzionale verso nuova beneficiaria, diritti omogenei e nessuna partecipazione reciproca. Beneficiaria preesistente, scorporo, assegnazioni asimmetriche, IFRS e casi esteri non sono eseguiti. Il dossier non certifica validità giuridica e non firma né deposita.",
+      "inputs": "Apri mandate-it.md e allocations.csv. Il mandato descrive società, autorizzazioni limitate all’esercizio, quote, valori economici, ipotesi e contratto non fornito. Il CSV separa attività e debito e valori contabili, fiscali ed economici. I costi fiscali dei soci sono sconosciuti. Sono dati di partenza, non approvazioni.",
+      "request": "Vera, prepara il fascicolo di questa scissione parziale proporzionale verso nuova beneficiaria. Mostrami documenti mancanti, prospetti e decisioni da rivedere prima di usare il risultato.",
+      "steps": [
+        "In questa conversazione importa i soli documenti selezionati nel fascicolo locale del tutorial. Vera propone perimetro e percorso dai documenti. La spiegazione resta scritta in questa conversazione; il professionista conferma le scelte sostanziali in linguaggio ordinario.",
+        "Prepara la prima versione senza approvazioni. Apri review.html e individua il contratto mancante. Rivedi percorso, quote, assegnazioni e ipotesi: registra solo conferme realmente espresse sulla versione mostrata. Il calcolo parte solo dopo le revisioni richieste; il contratto mancante mantiene il fascicolo parziale.",
+        "Apri il dossier e i prospetti realmente prodotti. Collega una riga del CSV ai tre valori assegnati, poi leggi le quote dei due soci, i costi fiscali nulli e le questioni aperte. Conserva versione e hash e mostra il rapporto sui dati arrivati al modello."
+      ],
+      "deliverables": [
+        "Dossier review.html/review.md con evidenze, dipendenze, decisioni e limiti.",
+        "allocations.json e ownership_before_after.json con valori distinti e quote; revision.json, change_impact.json e inventario degli hash conservano lo storico."
+      ],
+      "review": "Controlla provenienza, autorizzazione delle società, quadrature e ipotesi economiche. Una quadratura non dimostra completezza dei contratti o neutralità fiscale. Nessuna fonte giuridica è approvata dall’esercizio. Il docente non inventa approvazioni o comprensione. Il dossier nativo conserva titoli italiani e chiavi tecniche: spiega questi riferimenti nella lingua della lezione, senza promettere una traduzione del motore.",
+      "checkpoints": [
+        "Prima della prima revisione, indica il contratto assente e spiega perché non diventa zero o “verificato”.",
+        "Durante la lettura dei prospetti, distingui valore contabile, fiscale, economico e costo fiscale dei soci."
+      ],
+      "practice": "Chiedi: “Vera, aggiorna lo stesso fascicolo con mandate-update-it.md e allocations-update.csv: quali decisioni richiedono nuova revisione?” La nuova stima aumenta la parte economica dell’attività trasferita; contabilità, fiscalità e quote non cambiano. Importa i nuovi documenti in un nuovo run dello stesso incarico insieme all’esatto revision.json precedente finalizzato. Confronta change_impact.json e i due prospetti; rivedi solo le decisioni riaperte quando confermate, conservando la versione precedente.",
+      "success": "Sai avviare il caso, trovare una lacuna, leggere i valori distinti e spiegare quali revisioni dipendono dal nuovo dato. Il tutorial non prova accettazione professionale.",
+      "repeat": "Per ripetere su documenti propri scegli un incarico e le sole fonti autorizzate attraverso il percorso professionale normale. Mantieni tutorial e feedback locali; non riutilizzare conferme fittizie."
+    },
+    "en": {
+      "title": "Guided demerger with Vera",
+      "goal": "Prepare a versioned dossier, read its schedules and revisit decisions after a change.",
+      "scenario": "Arco Meccanica S.r.l. transfers a division to newly formed Arco Servizi S.r.l. Anna and Bruno own 60% and 40%. Every name, document and amount is fictional.",
+      "scope": "Italian OIC, EUR, partial proportional demerger into a new beneficiary, homogeneous rights and no reciprocal holdings. Existing beneficiaries, scorporo, asymmetric assignments, IFRS and foreign cases are unsupported. The dossier does not certify legal validity, sign or file.",
+      "inputs": "Open mandate-en.md and allocations.csv. The mandate records the entities, exercise-only authority, ownership, economic values, assumptions and missing contract. The CSV separates assets and debt, and book, tax and economic values. Shareholder tax costs are unknown. These are inputs, not approvals.",
+      "request": "Vera, prepare this partial proportional demerger dossier into a new beneficiary. Show missing evidence, schedules and decisions to review before using the result.",
+      "steps": [
+        "In this conversation import only selected documents into the local tutorial dossier. Vera proposes the perimeter and route from the evidence. The explanation stays written in this conversation; the professional confirms material choices in ordinary language.",
+        "Prepare the first version without approvals. Open review.html and locate the missing contract. Review route, ownership, allocations and assumptions; record only actual confirmations of the displayed version. Calculation requires the relevant reviews; the missing contract keeps the dossier partial.",
+        "Open the actual dossier and schedules. Trace one CSV row to its three value bases, then inspect both owners, null tax costs and open issues. Preserve version and hashes and show the report of data reaching the model."
+      ],
+      "deliverables": [
+        "review.html/review.md dossier with evidence, dependencies, decisions and limitations.",
+        "allocations.json and ownership_before_after.json separate values and ownership; revision.json, change_impact.json and the hash inventory preserve history."
+      ],
+      "review": "Check provenance, entity authority, reconciliation and valuation assumptions. Balanced figures do not prove contract completeness or tax neutrality. No legal source is approved by this exercise. The teacher never invents approvals or understanding. The native dossier retains Italian headings and technical keys: explain these references in the lesson language without promising an engine translation.",
+      "checkpoints": [
+        "Before review, identify the missing contract and explain why it does not become zero or “verified”.",
+        "While reading the schedules distinguish book, tax, economic and shareholder tax values."
+      ],
+      "practice": "Ask: “Vera, update the same dossier with mandate-update-en.md and allocations-update.csv: which decisions need review again?” The new estimate increases the economic value of the transferred asset; book values, tax values and ownership stay unchanged. Import the new evidence into a new run in the same engagement with the exact finalized previous revision.json as an upstream artifact. Compare change_impact.json and both schedules; review reopened decisions only after actual confirmation and preserve the earlier version.",
+      "success": "You can start the case, find a gap, read separate values and explain which reviews depend on the changed input. The tutorial does not establish professional acceptance.",
+      "repeat": "To repeat with your files select an engagement and authorized sources through the normal professional workflow. Keep tutorial files and feedback local; never reuse fictional confirmations."
+    },
+    "fr": {
+      "title": "Scission guidée avec Vera",
+      "goal": "Préparer un dossier versionné, lire les tableaux et réexaminer les décisions après un changement.",
+      "scenario": "Arco Meccanica S.r.l. transfère une branche à la nouvelle Arco Servizi S.r.l. Anna et Bruno détiennent 60 % et 40 %. Noms, documents et montants sont fictifs.",
+      "scope": "Scission italienne OIC, EUR, partielle proportionnelle vers une nouvelle bénéficiaire, droits homogènes et sans participations réciproques. Bénéficiaire existante, scorporo, attributions asymétriques, IFRS et cas étrangers ne sont pas exécutés. Le dossier ne certifie pas la validité juridique ; aucune signature ni dépôt.",
+      "inputs": "Ouvrez mandate-fr.md et allocations.csv. Le mandat décrit sociétés, autorisations limitées à l’exercice, parts, valeurs économiques, hypothèses et contrat absent. Le CSV distingue actif et dette ainsi que valeurs comptables, fiscales et économiques. Le coût fiscal des associés est inconnu. Ces pièces ne sont pas des approbations.",
+      "request": "Vera, prépare le dossier de cette scission partielle proportionnelle vers une nouvelle bénéficiaire. Montre les pièces manquantes, les tableaux et les décisions à revoir avant utilisation.",
+      "steps": [
+        "L’assistant importe seulement les pièces choisies dans le dossier local du tutoriel. Vera propose périmètre et parcours à partir des pièces. L’explication reste écrite dans cette conversation ; le professionnel confirme les choix importants en langage courant.",
+        "Préparez la première version sans approbations. Ouvrez review.html et trouvez le contrat absent. Revoyez parcours, parts, attributions et hypothèses ; enregistrez seulement les confirmations effectives de la version affichée. Le calcul exige les revues correspondantes ; le contrat absent maintient le dossier partiel.",
+        "Ouvrez le dossier et les tableaux effectivement produits. Reliez une ligne du CSV aux trois bases de valeur, puis examinez les deux associés, les coûts fiscaux nuls et les questions ouvertes. Conservez version et empreintes et présentez le rapport sur les données reçues par le modèle."
+      ],
+      "deliverables": [
+        "Dossier review.html/review.md avec preuves, dépendances, décisions et limites.",
+        "allocations.json et ownership_before_after.json distinguent valeurs et parts ; revision.json, change_impact.json et l’inventaire des empreintes conservent l’historique."
+      ],
+      "review": "Contrôlez provenance, autorisations, rapprochements et hypothèses économiques. L’équilibre ne prouve ni exhaustivité des contrats ni neutralité fiscale. Aucune source juridique n’est approuvée par l’exercice. Le professeur n’invente pas d’approbation ni de compréhension. Le dossier natif conserve titres italiens et clés techniques : expliquez-les dans la langue de la leçon sans promettre une traduction du moteur.",
+      "checkpoints": [
+        "Avant la revue, identifiez le contrat absent et expliquez pourquoi il ne devient ni zéro ni « vérifié ».",
+        "À la lecture, distinguez valeur comptable, fiscale, économique et coût fiscal des associés."
+      ],
+      "practice": "Demandez : « Vera, actualise le même dossier avec mandate-update-fr.md et allocations-update.csv : quelles décisions faut-il revoir ? » La nouvelle estimation augmente la valeur économique de l’actif transféré ; comptabilité, fiscalité et parts restent inchangées. Importez les nouvelles pièces dans un nouveau run du même engagement avec le revision.json antérieur exactement finalisé comme artefact amont. Comparez change_impact.json et les tableaux ; confirmez réellement les décisions rouvertes et conservez la version précédente.",
+      "success": "Vous savez commencer, trouver une lacune, lire les valeurs séparées et expliquer les revues dépendantes. Le tutoriel ne vaut pas acceptation professionnelle.",
+      "repeat": "Pour vos documents, choisissez engagement et sources autorisées par le parcours professionnel normal. Tutoriel et retours restent locaux ; ne réutilisez aucune confirmation fictive."
+    },
+    "de": {
+      "title": "Geführte Spaltung mit Vera",
+      "goal": "Eine versionierte Akte vorbereiten, Aufstellungen lesen und Entscheidungen nach Änderungen erneut prüfen.",
+      "scenario": "Arco Meccanica S.r.l. überträgt einen Geschäftsbereich auf die neue Arco Servizi S.r.l. Anna und Bruno halten 60 % und 40 %. Namen, Unterlagen und Beträge sind fiktiv.",
+      "scope": "Italienische OIC, EUR, proportionale Teilspaltung auf eine neue Gesellschaft, einheitliche Rechte und keine gegenseitigen Beteiligungen. Bestehende Begünstigte, scorporo, asymmetrische Zuteilung, IFRS und ausländische Fälle werden nicht ausgeführt. Keine Bestätigung rechtlicher Wirksamkeit, Unterschrift oder Einreichung.",
+      "inputs": "Öffnen Sie mandate-de.md und allocations.csv. Der Auftrag nennt Gesellschaften, auf die Übung beschränkte Berechtigungen, Anteile, wirtschaftliche Werte, Annahmen und den fehlenden Vertrag. Die CSV trennt Vermögenswert und Schuld sowie Buch-, Steuer- und wirtschaftliche Werte. Steuerliche Anschaffungskosten der Gesellschafter sind unbekannt. Dies sind Eingaben, keine Freigaben.",
+      "request": "Vera, bereite die Akte dieser proportionalen Teilspaltung auf eine neue Gesellschaft vor. Zeige fehlende Nachweise, Aufstellungen und zu prüfende Entscheidungen.",
+      "steps": [
+        "Der Assistent importiert nur ausgewählte Unterlagen in die lokale Übungsakte. Vera schlägt Umfang und Verfahren anhand der Nachweise vor. Die Erklärung bleibt schriftlich in diesem Gespräch; der Fachverantwortliche bestätigt wesentliche Entscheidungen in Alltagssprache.",
+        "Erstellen Sie die erste Version ohne Freigaben. Öffnen Sie review.html und suchen Sie den fehlenden Vertrag. Prüfen Sie Verfahren, Anteile, Zuteilungen und Annahmen; erfassen Sie nur tatsächliche Bestätigungen der gezeigten Version. Die Berechnung setzt entsprechende Prüfungen voraus; die Vertragslücke hält die Akte unvollständig.",
+        "Öffnen Sie die tatsächlich erzeugte Akte und Aufstellungen. Verfolgen Sie eine CSV-Zeile zu ihren drei Wertgrundlagen, dann beide Gesellschafter, unbekannte Steuerkosten und offene Fragen. Bewahren Sie Version und Hashwerte und zeigen Sie den Bericht über die Modelldaten."
+      ],
+      "deliverables": [
+        "review.html/review.md mit Nachweisen, Abhängigkeiten, Entscheidungen und Grenzen.",
+        "allocations.json und ownership_before_after.json trennen Werte und Anteile; revision.json, change_impact.json und Hashinventar erhalten den Verlauf."
+      ],
+      "review": "Prüfen Sie Herkunft, Berechtigungen, Abstimmungen und Bewertungsannahmen. Rechnerische Abstimmung beweist weder Vertragsvollständigkeit noch Steuerneutralität. Die Übung genehmigt keine Rechtsquelle. Lehrende erfinden keine Freigaben oder Verständnisbestätigungen. Die native Akte behält italienische Überschriften und technische Schlüssel: erläutern Sie diese in der Unterrichtssprache, ohne eine Übersetzung der Engine zu versprechen.",
+      "checkpoints": [
+        "Benennen Sie vor der Prüfung den fehlenden Vertrag und erklären Sie, warum er weder null noch „geprüft“ wird.",
+        "Unterscheiden Sie beim Lesen Buchwert, Steuerwert, wirtschaftlichen Wert und Steuerkosten der Gesellschafter."
+      ],
+      "practice": "Fragen Sie: „Vera, aktualisiere dieselbe Akte mit mandate-update-de.md und allocations-update.csv: Welche Entscheidungen müssen erneut geprüft werden?“ Der neue Schätzwert erhöht den wirtschaftlichen Wert des übertragenen Vermögens; Buchwerte, Steuerwerte und Anteile bleiben gleich. Importieren Sie neue Nachweise in einen neuen Lauf desselben Auftrags mit der exakt finalisierten früheren revision.json als vorgelagertem Artefakt. Vergleichen Sie change_impact.json und Aufstellungen; bestätigen Sie wieder geöffnete Entscheidungen tatsächlich und bewahren Sie die frühere Version.",
+      "success": "Sie können beginnen, eine Lücke finden, getrennte Werte lesen und abhängige Prüfungen erklären. Das Tutorial belegt keine fachliche Abnahme.",
+      "repeat": "Wählen Sie für eigene Unterlagen Auftrag und berechtigte Quellen im normalen Fachverfahren. Tutorial und Feedback bleiben lokal; fiktive Bestätigungen werden nicht übernommen."
+    },
+    "es": {
+      "title": "Escisión guiada con Vera",
+      "goal": "Preparar un expediente versionado, leer cuadros y revisar decisiones tras un cambio.",
+      "scenario": "Arco Meccanica S.r.l. transfiere una rama a la nueva Arco Servizi S.r.l. Anna y Bruno tienen el 60 % y el 40 %. Nombres, documentos e importes son ficticios.",
+      "scope": "OIC italiano, EUR, escisión parcial proporcional hacia una nueva beneficiaria, derechos homogéneos y sin participaciones recíprocas. Beneficiarias existentes, scorporo, asignaciones asimétricas, IFRS y casos extranjeros quedan fuera. El expediente no certifica validez jurídica, firma ni presenta documentos.",
+      "inputs": "Abre mandate-es.md y allocations.csv. El mandato indica sociedades, autorización limitada al ejercicio, participaciones, valores económicos, hipótesis y contrato ausente. El CSV separa activo y deuda y valores contables, fiscales y económicos. Los costes fiscales de los socios son desconocidos. Son datos de partida, no aprobaciones.",
+      "request": "Vera, prepara el expediente de esta escisión parcial proporcional hacia una nueva beneficiaria. Muéstrame documentación ausente, cuadros y decisiones que revisar antes de usarlo.",
+      "steps": [
+        "El asistente importa solo documentos seleccionados al expediente local del tutorial. Vera propone alcance y ruta desde las fuentes. La explicación permanece escrita en esta conversación; el profesional confirma decisiones materiales en lenguaje corriente.",
+        "Prepara la primera versión sin aprobaciones. Abre review.html y localiza el contrato ausente. Revisa ruta, participaciones, asignaciones e hipótesis; registra solo confirmaciones reales de la versión mostrada. El cálculo requiere las revisiones correspondientes; el contrato ausente mantiene el expediente parcial.",
+        "Abre el expediente y los cuadros realmente producidos. Sigue una fila del CSV hasta sus tres valores y examina los dos socios, costes fiscales nulos y cuestiones abiertas. Conserva versión y hashes y muestra el informe de datos recibidos por el modelo."
+      ],
+      "deliverables": [
+        "Expediente review.html/review.md con evidencias, dependencias, decisiones y límites.",
+        "allocations.json y ownership_before_after.json separan valores y participaciones; revision.json, change_impact.json e inventario de hashes conservan el historial."
+      ],
+      "review": "Comprueba procedencia, autorizaciones, conciliaciones e hipótesis económicas. Cuadrar cifras no prueba integridad contractual ni neutralidad fiscal. El ejercicio no aprueba fuentes jurídicas. El docente no inventa aprobaciones ni comprensión. El expediente nativo conserva títulos italianos y claves técnicas: explícalos en el idioma de la lección sin prometer una traducción del motor.",
+      "checkpoints": [
+        "Antes de revisar, identifica el contrato ausente y explica por qué no pasa a cero ni a « verificado ».",
+        "Al leer, distingue valor contable, fiscal, económico y coste fiscal de los socios."
+      ],
+      "practice": "Pide: « Vera, actualiza el mismo expediente con mandate-update-es.md y allocations-update.csv: ¿qué decisiones requieren nueva revisión? » La nueva estimación aumenta el valor económico del activo transferido; contabilidad, fiscalidad y participaciones no cambian. Importa documentos nuevos en otro run del mismo encargo con el revision.json anterior exactamente finalizado como artefacto previo. Compara change_impact.json y cuadros; confirma realmente las decisiones reabiertas y conserva la versión anterior.",
+      "success": "Sabes iniciar, encontrar una laguna, leer valores separados y explicar revisiones dependientes. El tutorial no acredita aceptación profesional.",
+      "repeat": "Para tus documentos elige encargo y fuentes autorizadas mediante el procedimiento profesional normal. Tutorial y comentarios permanecen locales; no reutilices confirmaciones ficticias."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "20bd99b4d98f866a45faf0ecb32582b1ade8191974fdecb528db2b5efb8e9f71"
+}

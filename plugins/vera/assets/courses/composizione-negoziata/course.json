@@ -105,7 +105,12 @@
     {
       "path": "skills/composizione-negoziata/SKILL.md",
       "repository_path": "plugins/vera/skills/composizione-negoziata/SKILL.md",
-      "sha256": "f9f1b8d1e3a4ce9b643f5f2c68065820200cc89d6d4bf2d780a321b61f75a6b2"
+      "sha256": "a0bb63bc0cef7d5c905bce40dbdf93f0e327b856ef4f57a01b7f143cc1e78393"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

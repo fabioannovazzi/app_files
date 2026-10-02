@@ -1,0 +1,12 @@
+[run]
+include =
+    */plugins/comunicazione-professionale/scripts/review_document_format.py
+    */plugins/comunicazione-professionale/scripts/studio_document_format.py
+    */plugins/report-builder/scripts/studio_formatting.py
+    */plugins/vera/scripts/studio_document_format.py
+patch = subprocess
+parallel = true
+
+[report]
+fail_under = 80
+show_missing = true

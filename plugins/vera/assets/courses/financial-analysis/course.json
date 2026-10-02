@@ -165,7 +165,12 @@
     {
       "path": "skills/financial-analysis/SKILL.md",
       "repository_path": "plugins/vera/skills/financial-analysis/SKILL.md",
-      "sha256": "4297e46ac0167a0c215a79f24b7cf146ff8066951181ca83400f713f0ab2c5e9"
+      "sha256": "c1ac248077d9a4d396dae8fe374d6831fe507816e2afe889de42968f465084ef"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

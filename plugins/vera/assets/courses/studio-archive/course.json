@@ -155,7 +155,7 @@
     {
       "path": "skills/studio-archive/SKILL.md",
       "repository_path": "plugins/vera/skills/studio-archive/SKILL.md",
-      "sha256": "b2f8ad59567a7e390f0fb4afbfdb339f0f8d11b3576ff37497de55cc4172d7f3"
+      "sha256": "a3c6abfa0110af81f88421044857369b5d6e7bc575320407d21fcbe876057d12"
     },
     {
       "path": "skills/studio-archive/references/marketplace-gmail.md",
@@ -166,6 +166,11 @@
       "path": "skills/studio-archive/references/whatsapp-desktop.md",
       "repository_path": "plugins/vera/skills/studio-archive/references/whatsapp-desktop.md",
       "sha256": "4d91c200a6af11294d90b004fcadb1eb38adbf999f1f026bcaf064976904e704"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

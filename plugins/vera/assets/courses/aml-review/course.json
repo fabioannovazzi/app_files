@@ -120,7 +120,12 @@
     {
       "path": "skills/aml-review/SKILL.md",
       "repository_path": "plugins/vera/skills/aml-review/SKILL.md",
-      "sha256": "d25fab11300e60cd729a772ec08b3824cfe5feea3a577c90955102ffe4b2de12"
+      "sha256": "e9ed60bbe25622a6792d48aa30e37cd654e49dfdc2ddc4934dda1f87642862d5"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

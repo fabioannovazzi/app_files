@@ -1,0 +1,305 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "fusione-guidata",
+  "course_sha256": "08da36581c28ee8898391cd8aabc8b71aeec326c98ee3af2d9434ac1f8f4d0eb",
+  "reviewer": "Codex /root - source, native execution and artifact review",
+  "reviewed_at": "2026-10-01T08:04:10.681899+00:00",
+  "review_scope": "Read the five complete outlines and source notes, both fictional data packs and changed balance. Executed and inspected ten native source-tree cases driven by the shipped facts and calendar conventions. Alpha/Beta receipts, exact allocations, draft journals, separate fiscal values, source-bound calendars, pending event receipts and immutable histories were inspected. Test narrative and reviewer confirmations are explicitly synthetic fixtures; no live voice, learner comprehension, installed-host acceptance or professional validation on a real client is claimed. Native workpaper headings and structural fields retain the P1 language contract; localized lesson guidance does not promise a fully localized helper report.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the it outline: ordinary incorporation demo, direct wholly owned practice and changed-input review. P1 exclusions and synthetic-only acceptance are explicit.",
+        "inputs_and_request": "Readable localized note plus exact machine-input facts for both companies; selected clients, engagements, receipts and locators must be verified. Supplied economic values and proposed accounting allocations are hypotheses to discuss, not valuations or approvals produced by the kit.",
+        "execution_and_checkpoints": "Read all six execution steps and three checkpoints. The shipped facts are imported through genuine Studio Archive APIs before P1 workpapers. Calendar inputs retain separate Beta anchors and exact rule references. The test fixture supplies expressly synthetic confirmations and gap-bearing prose; live decisions belong to the learner/professional.",
+        "deliverable_and_next_action": "Inspected before/after HTML, Markdown, JSON and readable model-data reports. Demo: exact ratio 2/1, 40,000 new shares and Bruno 2/5. Wholly owned: no new shares, cancellation difference 180,000 and book 680,000 versus tax 500,000. Both opening and journal residuals are initially zero. Creditor boundary 2 December is unevidenced; annual-account calendar-month boundary is 30 September. No signature, filing or posting occurs.",
+        "practice_and_repeat": "Practice selects a distinct ownership and accounting branch. The separate -200,100 balance is imported into Beta, makes dependent bridge/dossier stale and preserves prior approval history and independent calendar. Recomputed opening and journal residuals are -100, with target imbalance retained; no invented correction or renewed approval. Earlier export bytes remain unchanged and durable reopen recovers revision 2.",
+        "language_and_pacing": "Read the complete it guidance and linked note. Both JSON packs use native field names; localized teaching does not translate machine formats or broaden jurisdiction. The standard 390-second outline is explanation and short practice pacing only; full work, questions and decisions can require longer sessions. No voice or understanding evidence is asserted."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[demo-it]",
+        "result_review": "Independent incorporation produces exact 2/1 ratio, 40,000 new shares, 2/5 target-holder fraction and -110,000 proposed exchange reserve. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
+        "reviewed_artifacts": [
+          {
+            "name": "p1-workpapers.md",
+            "sha256": "fe3e09b0b8097610a49be1196d0e8890ec52a698ae2d9a7d2b893aea00ac7f28"
+          },
+          {
+            "name": "p1-workpapers.html",
+            "sha256": "4dff4c905b22f53608b948f657084e2750431e059477cf73b55785744f3b07b6"
+          },
+          {
+            "name": "case-report.json",
+            "sha256": "79d5d88ae5ea15f443a936227f9785b9af2cbc2456e5fb99fc92c1ab4651ac03"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "e20a054d068b930e541dc22454fdd1a723512a0a3bd47e3c869129cde8b668df"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[practice-it]",
+        "result_review": "Direct wholly owned incorporation produces zero new shares, 180,000 cancellation difference, unchanged acquirer holdings and distinct book/tax values. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
+        "reviewed_artifacts": [
+          {
+            "name": "p1-workpapers.md",
+            "sha256": "f668692fd38a9c6d9148034b92207d2b6375e238725a341ea15523d8b6250d43"
+          },
+          {
+            "name": "p1-workpapers.html",
+            "sha256": "f84f6d6bca4b17bbcca070e7cee6d945414c3887f9d70341e3fbdd70e38ae4a1"
+          },
+          {
+            "name": "case-report.json",
+            "sha256": "4fd3d6290608c633acc1b9720a69111bf2bb6265a68d66dd720f71373a86e684"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "75d030ccfb38623c977b35733dc112edb8ba8f4231478e75fbaf552c09780d21"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the en outline: ordinary incorporation demo, direct wholly owned practice and changed-input review. P1 exclusions and synthetic-only acceptance are explicit.",
+        "inputs_and_request": "Readable localized note plus exact machine-input facts for both companies; selected clients, engagements, receipts and locators must be verified. Supplied economic values and proposed accounting allocations are hypotheses to discuss, not valuations or approvals produced by the kit.",
+        "execution_and_checkpoints": "Read all six execution steps and three checkpoints. The shipped facts are imported through genuine Studio Archive APIs before P1 workpapers. Calendar inputs retain separate Beta anchors and exact rule references. The test fixture supplies expressly synthetic confirmations and gap-bearing prose; live decisions belong to the learner/professional.",
+        "deliverable_and_next_action": "Inspected before/after HTML, Markdown, JSON and readable model-data reports. Demo: exact ratio 2/1, 40,000 new shares and Bruno 2/5. Wholly owned: no new shares, cancellation difference 180,000 and book 680,000 versus tax 500,000. Both opening and journal residuals are initially zero. Creditor boundary 2 December is unevidenced; annual-account calendar-month boundary is 30 September. No signature, filing or posting occurs.",
+        "practice_and_repeat": "Practice selects a distinct ownership and accounting branch. The separate -200,100 balance is imported into Beta, makes dependent bridge/dossier stale and preserves prior approval history and independent calendar. Recomputed opening and journal residuals are -100, with target imbalance retained; no invented correction or renewed approval. Earlier export bytes remain unchanged and durable reopen recovers revision 2.",
+        "language_and_pacing": "Read the complete en guidance and linked note. Both JSON packs use native field names; localized teaching does not translate machine formats or broaden jurisdiction. The standard 390-second outline is explanation and short practice pacing only; full work, questions and decisions can require longer sessions. No voice or understanding evidence is asserted."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[demo-en]",
+        "result_review": "Independent incorporation produces exact 2/1 ratio, 40,000 new shares, 2/5 target-holder fraction and -110,000 proposed exchange reserve. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
+        "reviewed_artifacts": [
+          {
+            "name": "p1-workpapers.md",
+            "sha256": "0d7e3978d89697026652e31b203c87bdb99740392b6fee46907184322b4bbc82"
+          },
+          {
+            "name": "p1-workpapers.html",
+            "sha256": "1e9488acff56341cf3b50a9ee965b5a45e32a0a2a845bb79e21902f0100842cb"
+          },
+          {
+            "name": "case-report.json",
+            "sha256": "db0b3cd06380ab999e14cb17d9b4e1cc377bc6a7726929f691916a8b7b98ec19"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "7b3a56552d66cd4f2a004ed9cc4ab3e6fba84230e29ff94eb6c4477524c89c5a"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[practice-en]",
+        "result_review": "Direct wholly owned incorporation produces zero new shares, 180,000 cancellation difference, unchanged acquirer holdings and distinct book/tax values. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
+        "reviewed_artifacts": [
+          {
+            "name": "p1-workpapers.md",
+            "sha256": "84a8d1781b7cf926dcb4ab8a5de8b6fe68c7e8d22e06aa5fe003fff1957b848c"
+          },
+          {
+            "name": "p1-workpapers.html",
+            "sha256": "0daeec561b3871ab9deb9038d74a250826eb0bfb02282b86136740747d833272"
+          },
+          {
+            "name": "case-report.json",
+            "sha256": "c18a39c197e7c9c321bbd8b81efc23e8bd806cbb1c4bcda7ca476ce3ea4b3d1f"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "fe81953dba9ea29474ee98d03bd9855c4cb6ccb4b8ecd1a8ab34d2cc14cd3d7a"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the fr outline: ordinary incorporation demo, direct wholly owned practice and changed-input review. P1 exclusions and synthetic-only acceptance are explicit.",
+        "inputs_and_request": "Readable localized note plus exact machine-input facts for both companies; selected clients, engagements, receipts and locators must be verified. Supplied economic values and proposed accounting allocations are hypotheses to discuss, not valuations or approvals produced by the kit.",
+        "execution_and_checkpoints": "Read all six execution steps and three checkpoints. The shipped facts are imported through genuine Studio Archive APIs before P1 workpapers. Calendar inputs retain separate Beta anchors and exact rule references. The test fixture supplies expressly synthetic confirmations and gap-bearing prose; live decisions belong to the learner/professional.",
+        "deliverable_and_next_action": "Inspected before/after HTML, Markdown, JSON and readable model-data reports. Demo: exact ratio 2/1, 40,000 new shares and Bruno 2/5. Wholly owned: no new shares, cancellation difference 180,000 and book 680,000 versus tax 500,000. Both opening and journal residuals are initially zero. Creditor boundary 2 December is unevidenced; annual-account calendar-month boundary is 30 September. No signature, filing or posting occurs.",
+        "practice_and_repeat": "Practice selects a distinct ownership and accounting branch. The separate -200,100 balance is imported into Beta, makes dependent bridge/dossier stale and preserves prior approval history and independent calendar. Recomputed opening and journal residuals are -100, with target imbalance retained; no invented correction or renewed approval. Earlier export bytes remain unchanged and durable reopen recovers revision 2.",
+        "language_and_pacing": "Read the complete fr guidance and linked note. Both JSON packs use native field names; localized teaching does not translate machine formats or broaden jurisdiction. The standard 390-second outline is explanation and short practice pacing only; full work, questions and decisions can require longer sessions. No voice or understanding evidence is asserted."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[demo-fr]",
+        "result_review": "Independent incorporation produces exact 2/1 ratio, 40,000 new shares, 2/5 target-holder fraction and -110,000 proposed exchange reserve. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
+        "reviewed_artifacts": [
+          {
+            "name": "p1-workpapers.md",
+            "sha256": "8020c2eec2500bbb3d67090c178fc89748f8cbd1345bd68ed4626b8ca320504e"
+          },
+          {
+            "name": "p1-workpapers.html",
+            "sha256": "5f993278302415fd0f1086641375da8e21968a1c6510f6b512cbfc5c8be208cd"
+          },
+          {
+            "name": "case-report.json",
+            "sha256": "f6c2bb3c0d958ee4b2d1d723ab774a62610a6bc0dd0bae47e3807db8c8495211"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "97d118f92a34df3c53d0e71aac9a8a60a08807ab59d93e118ef6d0eaa5f86bbb"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[practice-fr]",
+        "result_review": "Direct wholly owned incorporation produces zero new shares, 180,000 cancellation difference, unchanged acquirer holdings and distinct book/tax values. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
+        "reviewed_artifacts": [
+          {
+            "name": "p1-workpapers.md",
+            "sha256": "bebf22b0dbc84152dbc7ff35d2602f657b484498b931269763daa280409956e5"
+          },
+          {
+            "name": "p1-workpapers.html",
+            "sha256": "ce37af378cec3558778f610942da3eff36b7f565afa8ef391df7121850a88ae8"
+          },
+          {
+            "name": "case-report.json",
+            "sha256": "fce64bda5cc920ff9d060c633935a776f16a2cd598685da7c61d16657ebd46c5"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "cdd04299a568e74c2470b2c0f3624c46b62045385707ad4a16fc31e528f6018a"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the de outline: ordinary incorporation demo, direct wholly owned practice and changed-input review. P1 exclusions and synthetic-only acceptance are explicit.",
+        "inputs_and_request": "Readable localized note plus exact machine-input facts for both companies; selected clients, engagements, receipts and locators must be verified. Supplied economic values and proposed accounting allocations are hypotheses to discuss, not valuations or approvals produced by the kit.",
+        "execution_and_checkpoints": "Read all six execution steps and three checkpoints. The shipped facts are imported through genuine Studio Archive APIs before P1 workpapers. Calendar inputs retain separate Beta anchors and exact rule references. The test fixture supplies expressly synthetic confirmations and gap-bearing prose; live decisions belong to the learner/professional.",
+        "deliverable_and_next_action": "Inspected before/after HTML, Markdown, JSON and readable model-data reports. Demo: exact ratio 2/1, 40,000 new shares and Bruno 2/5. Wholly owned: no new shares, cancellation difference 180,000 and book 680,000 versus tax 500,000. Both opening and journal residuals are initially zero. Creditor boundary 2 December is unevidenced; annual-account calendar-month boundary is 30 September. No signature, filing or posting occurs.",
+        "practice_and_repeat": "Practice selects a distinct ownership and accounting branch. The separate -200,100 balance is imported into Beta, makes dependent bridge/dossier stale and preserves prior approval history and independent calendar. Recomputed opening and journal residuals are -100, with target imbalance retained; no invented correction or renewed approval. Earlier export bytes remain unchanged and durable reopen recovers revision 2.",
+        "language_and_pacing": "Read the complete de guidance and linked note. Both JSON packs use native field names; localized teaching does not translate machine formats or broaden jurisdiction. The standard 390-second outline is explanation and short practice pacing only; full work, questions and decisions can require longer sessions. No voice or understanding evidence is asserted."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[demo-de]",
+        "result_review": "Independent incorporation produces exact 2/1 ratio, 40,000 new shares, 2/5 target-holder fraction and -110,000 proposed exchange reserve. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
+        "reviewed_artifacts": [
+          {
+            "name": "p1-workpapers.md",
+            "sha256": "4d95a3f2d412770b64afbc2c49ce53bd7b672a1a63f51b76e301f0a78ff55c69"
+          },
+          {
+            "name": "p1-workpapers.html",
+            "sha256": "f75c7f12def56cefebd7e0fed61edf0e9f6d6e4466198434a5119b8e49a7c09e"
+          },
+          {
+            "name": "case-report.json",
+            "sha256": "5dcea83744ff769678cabbfe827e8a736138835cffaee8d09d44dce736b1de16"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "d247a3e37c9aef41465b19830fb124d03b2e7de297a0b6bc35c717d85fbb0998"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[practice-de]",
+        "result_review": "Direct wholly owned incorporation produces zero new shares, 180,000 cancellation difference, unchanged acquirer holdings and distinct book/tax values. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
+        "reviewed_artifacts": [
+          {
+            "name": "p1-workpapers.md",
+            "sha256": "169d5bb91689acfa40333e4f52a29613b4067adff5424bf349ec4fff77d8363d"
+          },
+          {
+            "name": "p1-workpapers.html",
+            "sha256": "950d9676c54363084413ca710284b0a522280bf1857fd53f96a4ac74bd052873"
+          },
+          {
+            "name": "case-report.json",
+            "sha256": "1656e6d76c70f9179d4f013ccd9985dfad6d51f0d16849ecf5032c3373ec2bee"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "f9101c49719574aaef048284fd2cc8caa101e7416b4948e730f79325f2ca94e2"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the es outline: ordinary incorporation demo, direct wholly owned practice and changed-input review. P1 exclusions and synthetic-only acceptance are explicit.",
+        "inputs_and_request": "Readable localized note plus exact machine-input facts for both companies; selected clients, engagements, receipts and locators must be verified. Supplied economic values and proposed accounting allocations are hypotheses to discuss, not valuations or approvals produced by the kit.",
+        "execution_and_checkpoints": "Read all six execution steps and three checkpoints. The shipped facts are imported through genuine Studio Archive APIs before P1 workpapers. Calendar inputs retain separate Beta anchors and exact rule references. The test fixture supplies expressly synthetic confirmations and gap-bearing prose; live decisions belong to the learner/professional.",
+        "deliverable_and_next_action": "Inspected before/after HTML, Markdown, JSON and readable model-data reports. Demo: exact ratio 2/1, 40,000 new shares and Bruno 2/5. Wholly owned: no new shares, cancellation difference 180,000 and book 680,000 versus tax 500,000. Both opening and journal residuals are initially zero. Creditor boundary 2 December is unevidenced; annual-account calendar-month boundary is 30 September. No signature, filing or posting occurs.",
+        "practice_and_repeat": "Practice selects a distinct ownership and accounting branch. The separate -200,100 balance is imported into Beta, makes dependent bridge/dossier stale and preserves prior approval history and independent calendar. Recomputed opening and journal residuals are -100, with target imbalance retained; no invented correction or renewed approval. Earlier export bytes remain unchanged and durable reopen recovers revision 2.",
+        "language_and_pacing": "Read the complete es guidance and linked note. Both JSON packs use native field names; localized teaching does not translate machine formats or broaden jurisdiction. The standard 390-second outline is explanation and short practice pacing only; full work, questions and decisions can require longer sessions. No voice or understanding evidence is asserted."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[demo-es]",
+        "result_review": "Independent incorporation produces exact 2/1 ratio, 40,000 new shares, 2/5 target-holder fraction and -110,000 proposed exchange reserve. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
+        "reviewed_artifacts": [
+          {
+            "name": "p1-workpapers.md",
+            "sha256": "b9a97778eaed8a269390fda53b31882144acd7efb28a5fa8b661a1d1f42b24f8"
+          },
+          {
+            "name": "p1-workpapers.html",
+            "sha256": "938800a8669ea32663c41b9e57888bfd03df9b5086059ef687393f99d91a3c2f"
+          },
+          {
+            "name": "case-report.json",
+            "sha256": "bd430399511cdcdc9ca75252048590be32b9332efdb96572ed22b9de02989119"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "0aaf6b962e4948b2f4226ca53e58f38af388c3fbc08d239613f0b07c121e82ef"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[practice-es]",
+        "result_review": "Direct wholly owned incorporation produces zero new shares, 180,000 cancellation difference, unchanged acquirer holdings and distinct book/tax values. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
+        "reviewed_artifacts": [
+          {
+            "name": "p1-workpapers.md",
+            "sha256": "d06753f9ebda83ed27d090278d48c14258849fdccf321a83aa4264afe85f5b69"
+          },
+          {
+            "name": "p1-workpapers.html",
+            "sha256": "f0b8479360fcab0e6ab3d796ba913c9e819e49c35571563ac1a5730b51d1e8d9"
+          },
+          {
+            "name": "case-report.json",
+            "sha256": "0bb891525624000ff1ba83f0fb5c92db3c076416b2bd1fb74ecde124f3fd8d94"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "e19da59fdc5501ff4a50d3db792627f04401d95e42d65244bf174972b58b3d31"
+          }
+        ]
+      }
+    }
+  },
+  "connected_knowledge_fusione_integration_20261002": {
+    "reviewer": "Codex - bounded connected knowledge and Fusione source integration review",
+    "reviewed_at": "2026-10-01T22:39:20.874424+00:00",
+    "baseline_commit": "5b1cc09afc599862d87a609648303073187b587e",
+    "previous_course_sha256": "e6cb9f5ca427a7cd60675b916e6209e120cb22d542d39cbe9caefd32b24b5a48",
+    "current_course_sha256": "10f1f97b834bdaa95969f6a17dfeead064d32e91042f5b32269b1a6c635420a1",
+    "content_review": "Complete compiled JSON equality except source bindings: all authored localized content, input definitions, checkpoints, practice and timing remain unchanged. Preserves original named editorial judgments and historical artifact reviews; no new independent learner or professional acceptance is inferred.",
+    "changed_sources": [
+      "skills/fusione-guidata/SKILL.md",
+      "skills/vera/references/connected-studio-knowledge.md"
+    ],
+    "source_review": "Preserves main’s synthetic Italian Fusione P1 teaching expansion and task’s optional host-connected repository consultation gates. Synthetic lessons use their bound inputs and do not query private repositories. Specialist calculations and qualification limits are unchanged.",
+    "execution_requirement": "Fresh CI must execute the existing demo and practice cases bound to this exact compiled course digest before merge."
+  },
+  "integration_refresh": {
+    "reviewer": "Codex /root",
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
+  }
+}

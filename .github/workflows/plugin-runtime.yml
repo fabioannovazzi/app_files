@@ -10,6 +10,36 @@ permissions:
   contents: read
 
 jobs:
+  studio-document-format:
+    name: Studio document format pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install declared document dependencies and verification tools
+        run: >-
+          python -m pip install pytest pytest-cov 'coverage>=7.10' black==25.1.0 isort==6.0.1 mypy bandit
+          -r plugins/comunicazione-professionale/requirements.txt
+          -r plugins/report-builder/requirements.txt
+      - name: Verify previews, approval, revision and actual report reuse
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_studio_document_format.py
+          --cov --cov-config=tests/studio_document_format.coveragerc --cov-report=term-missing --cov-fail-under=80
+      - name: Check document format code quality
+        run: |
+          python -m black --check plugins/comunicazione-professionale/scripts/review_document_format.py plugins/comunicazione-professionale/scripts/studio_document_format.py plugins/report-builder/scripts/studio_formatting.py plugins/vera/scripts/studio_document_format.py tests/plugins/test_studio_document_format.py tests/plugins/test_teaching_studio_document_format_execution.py
+          python -m isort --check-only plugins/comunicazione-professionale/scripts/review_document_format.py plugins/comunicazione-professionale/scripts/studio_document_format.py plugins/report-builder/scripts/studio_formatting.py plugins/vera/scripts/studio_document_format.py tests/plugins/test_studio_document_format.py tests/plugins/test_teaching_studio_document_format_execution.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/comunicazione-professionale/scripts/review_document_format.py plugins/comunicazione-professionale/scripts/studio_document_format.py plugins/report-builder/scripts/studio_formatting.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/vera/scripts/studio_document_format.py
+          python -m bandit -q -ll plugins/comunicazione-professionale/scripts/review_document_format.py plugins/comunicazione-professionale/scripts/studio_document_format.py plugins/report-builder/scripts/studio_formatting.py plugins/vera/scripts/studio_document_format.py
+
   business-valuation:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -260,8 +290,11 @@ jobs:
           tests/plugins/test_teaching_esg_execution.py
           tests/plugins/test_teaching_patent_box_execution.py
           tests/plugins/test_teaching_cnc_execution.py
+          tests/plugins/test_teaching_fusione_execution.py
           tests/plugins/test_teaching_trasformazione_execution.py
+          tests/plugins/test_teaching_studio_document_format_execution.py
           tests/plugins/test_teaching_cnc_practical_execution.py
+          tests/plugins/test_teaching_scissione_execution.py
           tests/plugins/test_cnc_integrations.py
           tests/plugins/test_cowork_teaching.py
           tests/plugins/test_vera_get_started.py
@@ -315,8 +348,8 @@ jobs:
           python -m bandit -q -ll tests/plugins/test_teaching_patent_box_execution.py
           python scripts/course_materials/build_catalog.py --check
           python scripts/course_materials/build_public_catalog.py --check
-          python -m black --check tests/plugins/test_teaching_cnc_execution.py
-          python -m isort --check-only tests/plugins/test_teaching_cnc_execution.py
+          python -m black --check tests/plugins/test_teaching_cnc_execution.py tests/plugins/test_teaching_scissione_execution.py
+          python -m isort --check-only tests/plugins/test_teaching_cnc_execution.py tests/plugins/test_teaching_scissione_execution.py
           python scripts/build_matter_review_assets.py --check
           python scripts/course_materials/verify_release.py --junit "$RUNNER_TEMP/teaching-native.xml"
           python scripts/course_materials/build_presentation_baselines.py --check
@@ -600,16 +633,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - run: python -m pip install pytest
+      # The packaged open-item bootstrap also loads its workpaper helper.
+      # Install that component's declared dependencies in the clean CI environment.
+      - run: python -m pip install pytest -r plugins/open-item-reconciliation/requirements.txt
       - name: Exercise clean ZIPs and reject broken releases
         # These stdlib/Node checks do not need the application-wide fixtures.
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_packaged_mcp_startup.py
       - name: Verify cache tolerance without weakening source or link checks
-        run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_vera_implementation_bytecode.py -k mcp
+        run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_vera_implementation_bytecode.py -k "mcp or read_only or packaged_repair"
       - name: Enforce Cowork manifest description limits
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_claude_plugin_packages.py -k "description or projected_cowork_skills_remove"
       - name: Reject dangling Cowork workflow references
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_claude_plugin_packages.py -k "cowork_skill_removes_openai_blocks or cowork_registry or cowork_package_has_no_dangling or cowork_build_rejects_unremoved"
+      - name: Verify audited instruction and catalogue boundaries
+        run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_claude_plugin_packages.py -k audit_instructions
       - name: Verify distributed Cowork artifacts and runtime
         run: python scripts/build_claude_plugin_zip.py vera --check
       - name: Verify Lucia's shared archive privacy binding

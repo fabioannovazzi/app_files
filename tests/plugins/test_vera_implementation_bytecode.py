@@ -8,6 +8,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from zipfile import ZipFile
 
 import pytest
 
@@ -34,6 +35,20 @@ def module_copy(request: pytest.FixtureRequest, tmp_path: Path) -> Path:
         root / "vendor/modules/vera_assurance",
         ignore=ignore,
     )
+    return root
+
+
+@pytest.fixture(params=MODULES)
+def packaged_module_copy(request: pytest.FixtureRequest, tmp_path: Path) -> Path:
+    """Use the exact distributed Cowork implementation, including its own vendor."""
+    root = tmp_path / request.param
+    prefix = f"modules/{request.param}/"
+    with ZipFile(ROOT / "plugin_packages/vera/vera-claude-plugin.zip") as archive:
+        for name in archive.namelist():
+            if name.startswith(prefix) and not name.endswith("/"):
+                target = root / name.removeprefix(prefix)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(archive.read(name))
     return root
 
 
@@ -167,6 +182,70 @@ def test_repair_refuses_contract_mismatch_without_removing_cache(
     assert result.returncode != 0
     assert "contract" in result.stderr
     assert bytecode.read_bytes() == b"retain on failure"
+
+
+@pytest.mark.skipif(
+    os.name != "posix", reason="Exercises POSIX read-only directory permissions"
+)
+def test_read_only_repair_fails_without_blocking_validated_execution(
+    packaged_module_copy: Path,
+) -> None:
+    module_copy = packaged_module_copy
+    cache = module_copy / "vendor/modules/vera_assurance/__pycache__"
+    cache.mkdir()
+    bytecode = cache / "incidental.pyc"
+    bytecode.write_bytes(b"inert bytecode")
+    paths = [module_copy, *module_copy.rglob("*")]
+    modes = {path: path.stat().st_mode for path in paths}
+    try:
+        for path in paths:
+            path.chmod(0o555 if path.is_dir() else 0o444)
+        if os.access(cache, os.W_OK):
+            pytest.skip("The executing user can override read-only permissions")
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(module_copy / "scripts/implementation_bootstrap.py"),
+                "--repair",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        assert result.returncode != 0
+        assert "PermissionError" in result.stderr
+        assert bytecode.read_bytes() == b"inert bytecode"
+        ordinary = validate(module_copy)
+        assert ordinary.returncode == 0, ordinary.stderr
+    finally:
+        for path, mode in modes.items():
+            path.chmod(mode)
+
+
+def test_packaged_repair_removes_only_bytecode_without_mutating_source(
+    packaged_module_copy: Path,
+) -> None:
+    root = packaged_module_copy
+    original = {path: path.read_bytes() for path in root.rglob("*") if path.is_file()}
+    cache = root / "vendor/modules/vera_assurance/__pycache__"
+    cache.mkdir()
+    bytecode = cache / "incidental.pyc"
+    bytecode.write_bytes(b"inert bytecode")
+
+    result = subprocess.run(
+        [sys.executable, str(root / "scripts/implementation_bootstrap.py"), "--repair"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert not bytecode.exists()
+    assert {
+        path: path.read_bytes() for path in root.rglob("*") if path.is_file()
+    } == original
 
 
 @pytest.mark.parametrize(

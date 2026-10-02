@@ -88,7 +88,7 @@
     },
     {
       "path": "modules/treasury-forecast/skills/treasury-forecast/SKILL.md",
-      "sha256": "88d9470bc713051a9c96cfbce0c89e00e795ced3f5fe9fa427cff700f798218f"
+      "sha256": "531404f0176ec9da15c71842d0a651a112277b4a15e13bb59dd0f95d0d60fd61"
     },
     {
       "path": "modules/treasury-forecast/skills/treasury-forecast/references/geneva.md",
@@ -136,7 +136,11 @@
     },
     {
       "path": "skills/treasury-forecast/SKILL.md",
-      "sha256": "1ad71898d97df1ea2c6fdf99f17866530ca6224a7d729100a8f0c57becd27c1f"
+      "sha256": "9fe01120ad377ba5a9af83f78fd31d69f2cfe4406b19afbfb74b1a946f789451"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -346,5 +350,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "9eff5666d77f4bde2dcb7e7db789d2c0982f799d274635dc8e390971a53df2cf"
+  "canonical_course_sha256": "4253cbc2d2ed6b558b4d8fba87547932123c1a6220838fbdb341f1c586ed88ed"
 }

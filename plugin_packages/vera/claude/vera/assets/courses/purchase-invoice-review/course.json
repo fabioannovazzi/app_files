@@ -73,7 +73,7 @@
     },
     {
       "path": "modules/passive-invoice-audit/skills/purchase-invoice-review/SKILL.md",
-      "sha256": "143d9dfa04625ca520db57b10f6826c7681a12d5dc6b4a678afd57c0addecaf9"
+      "sha256": "76692162ec6dc07fb140f088f94d908c61bdd792df5d42700c9095361db5dfeb"
     },
     {
       "path": "modules/passive-invoice-audit/skills/purchase-invoice-review/references/geneva.md",
@@ -121,7 +121,11 @@
     },
     {
       "path": "skills/purchase-invoice-review/SKILL.md",
-      "sha256": "143d9dfa04625ca520db57b10f6826c7681a12d5dc6b4a678afd57c0addecaf9"
+      "sha256": "a6893e686c1f815f604e7669c868d5030d8467ce1517d70f1d6da68d8d0bf908"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -506,5 +510,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "febf05d0b73c78ed75ea6f32d37198730a0eed79aabaaebfe141114773d0098f"
+  "canonical_course_sha256": "d2f5211e7e2d96053147f12bfd207cc176ab34b24045637e9b69615d5dfefd8a"
 }

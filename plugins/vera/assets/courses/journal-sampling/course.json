@@ -159,7 +159,12 @@
     {
       "path": "skills/journal-sampling/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-sampling/SKILL.md",
-      "sha256": "45735dd142235b40661f74c4509dd87e2e8533697103929d2b222a06eb909cb9"
+      "sha256": "27e59641a06440aae0014bbfda8fdae48c28dde126843d94dbd625c46eca629c"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

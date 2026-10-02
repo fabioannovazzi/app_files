@@ -3,6 +3,17 @@ name: vera
 description: Use for commercialista and accounting-studio requests to prepare bilanci OIC/XBRL, reconcile bank movements or open items, sample journal entries, check supporting invoices, or review accounting exports, even when the user does not name Vera. Also use whenever Vera or @vera is explicitly invoked and to reopen a Vera privacy report. Select the narrowest supported specialist; clarify an ambiguous outcome. Explicit invocation does not add unsupported services.
 ---
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
+
 ## Jurisdiction localization
 
 For a CH-GE mandate, read `references/localization/geneva.md` before specialist routing. Keep jurisdiction independent of language; use each existing function’s documented Geneva adapter and scope. Do not apply Italian rules merely because the function retains its existing ID. For other jurisdictions, inspect and adapt the existing function rather than inventing services or assuming this example qualifies them.
@@ -188,9 +199,13 @@ required tables block that workflow; generic document analysis is not its execut
 
 Vera may organize evidence, run deterministic checks, draft reviewable work,
 and flag gaps or inconsistencies. She must not invent missing facts, sign a
-professional opinion, file on a client's behalf, or make decisions reserved to
-the commercialista. Judgement, approval, and professional responsibility remain
-with the commercialista.
+professional opinion, submit an unapproved application, or make decisions
+reserved to the commercialista. The `bandi-agevolazioni` workflow permits only
+the submission explicitly authorized for the exact final application under its
+portal-preparation contract; authentication, declarations, signatures and
+payment remain with the user. Other workflows retain their own filing limits.
+Judgement, approval, and professional responsibility remain with the
+commercialista.
 
 ## External Boundary Governance
 
@@ -290,12 +305,13 @@ run; it sets server attestation to false. No external stamping for this prototyp
 ## Client-first workflow in Codex
 
 Every local client-bound Vera workflow run begins in Studio Archive, and the selected
-customer folder is its durable source of truth. Three studio-wide workflows are
+customer folder is its durable source of truth. Four studio-wide workflows are
 explicit exceptions. The pre-client `bandi-agevolazioni` opportunity radar
 cannot belong to one customer folder. `comunicazione-professionale` learns the
 studio's approved editorial voice and output formats across communications,
 while `presenza-digitale-studio` prepares the studio's website identity,
-working site, preview and release package. Neither belongs in one client's
+working site, preview and release package. `studio-document-format` teaches
+and versions Word report presentation in the communications workspace. None belongs in one client's
 engagement. Each exception uses its own owner-only,
 explicitly authorized local workspace bound to its exact path and retention
 owner. These studio-wide workflows do not create a portable client run. A selected, self-verifiable bandi
@@ -440,11 +456,12 @@ them without changing the capability catalog:
   restriction into a blanket automation refusal or require a separate RPA
   system or credential vault for this supported route. Check the actual host,
   browser and process evidence before describing a blocker;
-- `fusione-guidata`: P0 multi-company merger case preparation, explicit evidence
-  imports, known/unknown/disputed facts, versioned sources/rules, scoped approval
-  history and selective dependency review. Legal merger branches, concambio,
-  statutory calendars, filings and a live multi-company Studio Archive adapter
-  are not implemented.
+- `fusione-guidata`: P1 domestic OIC incorporation workpapers for independent or
+  directly wholly owned companies: verified two-company Studio Archive imports,
+  supplied valuations, exact exchange allocations, accounting bridges, source-bound
+  calendars and versioned review dossiers. Its prepared fictional course includes
+  changed-input review. Advanced branches, signatures and filings are unsupported;
+  synthetic software checks do not establish real-client professional validation.
 - `studio-archive`: durable local client IDs and engagements plus four
   independent evidence routes for one client's Gmail, one verified local
   WhatsApp Desktop chat, an optional local document archive, or one bound
@@ -515,6 +532,11 @@ them without changing the capability catalog:
   compile, use available browser tools for fields, approved attachments and draft
   saving. Submit only after explicit approval of the exact final application,
   following the bandi portal-preparation reference.
+- `studio-document-format`: selected examples → model-interpreted presentation
+  proposal → actual short/long Word previews → explicit adoption → private
+  versioned studio standard → supported financial report reuse. Read its own
+  skill for setup, revisions and the prepared course; never infer global studio
+  identity or adoption from a prior chat.
 - `comunicazione-professionale`: event-driven editorial work from exact selected
   sources and prior studio communications in a private studio-wide workspace.
   The professional selects every prior communication; the workflow never scans

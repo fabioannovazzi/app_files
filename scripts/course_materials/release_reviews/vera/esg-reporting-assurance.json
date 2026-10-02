@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "esg-reporting-assurance",
-  "course_sha256": "792308e50db39d9216dde82295441272d40d6fab049204bc176e9bb7af86d89a",
+  "course_sha256": "d65ba8ec262ad3a8d8da282d3fcdc0ef37786bf7d0678febbcc2b89bab776635",
   "reviewer": "Codex /root",
   "reviewed_at": "2026-10-01T17:54:24.948053+00:00",
   "languages": {
@@ -363,5 +363,10 @@
     }
   },
   "limits": "Source/material editorial review and synthetic helper execution only. Not independent professional ESG review, live model/learner execution, native voice/windows, installed runtime acceptance, publication or deployment. The current native output has a fixed English partial-foundation notice and technical keys; the ordinary memo body is localized.",
-  "synthetic_output_directory": "outputs/vera-esg-course/native"
+  "synthetic_output_directory": "outputs/vera-esg-course/native",
+  "integration_refresh": {
+    "reviewer": "Codex /root",
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
+  }
 }

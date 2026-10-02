@@ -273,7 +273,7 @@
     },
     {
       "path": "modules/patent-box-review/skills/patent-box-review/SKILL.md",
-      "sha256": "d6fb11568e1b416d6a7af9201ae92be75c1efeefaf8e122817e0282392b7a6b0"
+      "sha256": "af5135e9a03f57adbfe510a550540fba8ff4ad7fea8bac8d57ec5acbf648e8ed"
     },
     {
       "path": "modules/patent-box-review/templates/declaration_bridge.csv",
@@ -337,7 +337,11 @@
     },
     {
       "path": "skills/patent-box-review/SKILL.md",
-      "sha256": "6fe82aa449fb6928dc768b76591b59c7ae4a5bd7e8e425ccde0d45bd5a38ec03"
+      "sha256": "ea028146e0f1acc97dd0e53b5638eee72c5f013dc07febeb46fe86e66b94ebde"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -662,5 +666,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ff47bd75802e7607d6032049fe51c9d2be97616112916c67a651b0f6320e5388"
+  "canonical_course_sha256": "5ba2143b05d5f308308f729d9c3683063dddf065e201d3eff13efde1c1bfea38"
 }

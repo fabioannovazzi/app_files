@@ -159,7 +159,12 @@
     {
       "path": "skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "72bbea35979953bb873a521fc5702ae2f73e27303b5d5e91f2f1bc3d05feab37"
+      "sha256": "5ac9421e513bb6be6232d93b1968d10fbd2c8d22c0e94a2bd2a1aacefe146459"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",

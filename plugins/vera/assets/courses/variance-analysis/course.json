@@ -524,7 +524,12 @@
     {
       "path": "skills/variance-analysis/SKILL.md",
       "repository_path": "plugins/vera/skills/variance-analysis/SKILL.md",
-      "sha256": "b537dae46cad7a4790a6618c93ea8440fe940272ad670e10752be5ce4f8b3fb4"
+      "sha256": "cb919a08fd37793fd7f776f8348d1f2efa7f19d213ec4831df45869998c55826"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
     },
     {
       "path": "vendor/modules/__init__.py",
