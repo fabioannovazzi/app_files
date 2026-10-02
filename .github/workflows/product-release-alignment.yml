@@ -33,6 +33,8 @@ jobs:
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_antigravity_package.py
       - name: Verify all product packages against canonical source and version
         run: python scripts/build_product_release.py --check
+      - name: Verify the recorded Vera catalogue matches the release
+        run: python .agents/skills/localize-vera/scripts/catalogue.py check --root plugins/vera --inventory plugins/vera/skills/vera/references/localization/geneva/catalogue.json --assessment plugins/vera/skills/vera/references/localization/geneva/assessment.json
       - name: Verify optional studio knowledge instruction packaging
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_vera_connected_knowledge.py
       - name: Verify optional connector download and host setup guides
