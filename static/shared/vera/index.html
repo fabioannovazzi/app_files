@@ -356,13 +356,8 @@
     .connections__body h3 { margin-bottom: 18px; }
     .connections__body p { max-width: 60ch; color: var(--blue); line-height: 1.6; }
     .connections__body p + p { margin-top: 16px; }
-    .connections__data {
-      max-width: 85ch;
-      margin-top: 36px;
-      color: var(--blue);
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
+    .connections__privacy { grid-column: 1 / -1; }
+    .connections__privacy p { max-width: 85ch; }
 
     .contributors { scroll-margin-top: 88px; }
     .contributors .section-head { margin-bottom: clamp(38px, 6vw, 64px); }
@@ -1668,13 +1663,21 @@
           <h3 id="connections-knowledge-title" data-i18n="connections.knowledge.title">Usare Vera con Second Brain</h3>
           <p data-i18n="connections.knowledge.copy">Se hai già Second Brain, collegalo nell’app in cui usi Vera e autorizza gli strumenti di ricerca e lettura. Poi chiedi a Vera di consultare una procedura, un precedente o un modello dello studio per il lavoro che stai svolgendo.</p>
           <p data-i18n="connections.knowledge.limits">Vera consulta le fonti disponibili senza modificarle. Non fornisce Second Brain, non richiede Microsoft 365 e funziona anche senza un archivio collegato. La disponibilità della consultazione dipende dal connettore e dagli strumenti accessibili nella sessione.</p>
+          <p data-i18n="connections.data">Query, risultati di ricerca e testi consultati possono entrare nel contesto del modello dell’app scelta. Login, permessi e conservazione dipendono dall’app e dal servizio collegato.</p>
         </article>
         <article aria-labelledby="connections-skills-title">
           <h3 id="connections-skills-title" data-i18n="connections.skills.title">Usare le proprie skill</h3>
           <p data-i18n="connections.skills.copy">Se vuoi svolgere un lavoro con una tua skill, richiamala direttamente nell’app in cui l’hai installata. Collegare Second Brain non importa, seleziona o esegue le skill dello studio in Vera.</p>
         </article>
+        <article class="connections__privacy" aria-labelledby="connections-privacy-title">
+          <h3 id="connections-privacy-title" data-i18n="connections.privacy.title">OpenAI Privacy Filter</h3>
+          <p data-i18n="connections.privacy.status">Connettore opzionale previsto per Codex desktop; non ancora disponibile.</p>
+          <p data-i18n="connections.privacy.copy">Privacy Filter è un modello open source di OpenAI che individua nel testo dati personali, come nomi, indirizzi, email e numeri di telefono, e sostituisce quelli rilevati con segnaposto. L’elaborazione avviene sul computer su cui è installato.</p>
+          <p data-i18n="connections.privacy.workflow">Il connettore sarà installabile separatamente da Vera e utilizzabile su richiesta. La prima versione prevista leggerà file TXT, Markdown, DOCX e PDF con testo estraibile e salverà copie di testo filtrate in formato .txt. Le scansioni richiederanno prima l’OCR.</p>
+          <p data-i18n="connections.privacy.data">Il flusso previsto elaborerà gli originali localmente e renderà disponibili a Codex soltanto il testo filtrato e il riepilogo dell’elaborazione. Il download iniziale del modello richiederà Internet; il filtraggio avverrà in locale.</p>
+          <p><a href="https://github.com/openai/privacy-filter" target="_blank" rel="noopener noreferrer" data-i18n="connections.privacy.source">Codice e documentazione di OpenAI Privacy Filter ↗</a></p>
+        </article>
       </div>
-      <p class="connections__data" data-i18n="connections.data">Query, risultati di ricerca e testi consultati possono entrare nel contesto del modello dell’app scelta. Login, permessi e conservazione dipendono dall’app e dal servizio collegato.</p>
     </section>
 
   </main>
@@ -1905,6 +1908,12 @@
         "connections.knowledge.limits": "Vera consulta le fonti disponibili senza modificarle. Non fornisce Second Brain, non richiede Microsoft 365 e funziona anche senza un archivio collegato. La disponibilità della consultazione dipende dal connettore e dagli strumenti accessibili nella sessione.",
         "connections.skills.title": "Usare le proprie skill",
         "connections.skills.copy": "Se vuoi svolgere un lavoro con una tua skill, richiamala direttamente nell’app in cui l’hai installata. Collegare Second Brain non importa, seleziona o esegue le skill dello studio in Vera.",
+        "connections.privacy.title": "OpenAI Privacy Filter",
+        "connections.privacy.status": "Connettore opzionale previsto per Codex desktop; non ancora disponibile.",
+        "connections.privacy.copy": "Privacy Filter è un modello open source di OpenAI che individua nel testo dati personali, come nomi, indirizzi, email e numeri di telefono, e sostituisce quelli rilevati con segnaposto. L’elaborazione avviene sul computer su cui è installato.",
+        "connections.privacy.workflow": "Il connettore sarà installabile separatamente da Vera e utilizzabile su richiesta. La prima versione prevista leggerà file TXT, Markdown, DOCX e PDF con testo estraibile e salverà copie di testo filtrate in formato .txt. Le scansioni richiederanno prima l’OCR.",
+        "connections.privacy.data": "Il flusso previsto elaborerà gli originali localmente e renderà disponibili a Codex soltanto il testo filtrato e il riepilogo dell’elaborazione. Il download iniziale del modello richiederà Internet; il filtraggio avverrà in locale.",
+        "connections.privacy.source": "Codice e documentazione di OpenAI Privacy Filter ↗",
         "connections.data": "Query, risultati di ricerca e testi consultati possono entrare nel contesto del modello dell’app scelta. Login, permessi e conservazione dipendono dall’app e dal servizio collegato.",
         "contributors.index": "Collaborazione",
         "contributors.title": "Contributors",
@@ -2135,6 +2144,12 @@
         "connections.knowledge.limits": "Vera consults available sources without changing them. It does not supply Second Brain or require Microsoft 365, and works without a connected repository. Consultation depends on the connector and the tools accessible in the current session.",
         "connections.skills.title": "Using your own skills",
         "connections.skills.copy": "To carry out a task with your own skill, invoke it directly in the app where you installed it. Connecting Second Brain does not import, select or execute the firm’s skills inside Vera.",
+        "connections.privacy.title": "OpenAI Privacy Filter",
+        "connections.privacy.status": "Optional connector planned for Codex desktop; not yet available.",
+        "connections.privacy.copy": "Privacy Filter is an open-source OpenAI model that identifies personal information in text, such as names, addresses, emails and phone numbers, and replaces detected values with placeholders. Processing runs on the computer where it is installed.",
+        "connections.privacy.workflow": "The connector will be installed separately from Vera and used on request. The planned first version will read TXT, Markdown, DOCX and PDFs with extractable text and save redacted text copies as .txt files. Scans will need OCR first.",
+        "connections.privacy.data": "The planned workflow will process originals locally and make only redacted text and a processing summary available to Codex. The initial model download will require Internet access; filtering will run locally.",
+        "connections.privacy.source": "OpenAI Privacy Filter code and documentation ↗",
         "connections.data": "Queries, search results and consulted texts can enter the model context of your chosen app. Login, permissions and retention depend on the app and the connected service.",
         "contributors.index": "Collaboration",
         "contributors.title": "Contributors",
@@ -2365,6 +2380,12 @@
         "connections.knowledge.limits": "Vera consulte les sources disponibles sans les modifier. Elle ne fournit pas Second Brain, ne nécessite pas Microsoft 365 et fonctionne sans archive connectée. La consultation dépend du connecteur et des outils accessibles dans la session.",
         "connections.skills.title": "Utiliser ses propres skills",
         "connections.skills.copy": "Pour effectuer un travail avec votre propre skill, invoquez-la directement dans l’application où vous l’avez installée. Connecter Second Brain n’importe, ne sélectionne et n’exécute pas les skills du cabinet dans Vera.",
+        "connections.privacy.title": "OpenAI Privacy Filter",
+        "connections.privacy.status": "Connecteur facultatif prévu pour Codex desktop ; pas encore disponible.",
+        "connections.privacy.copy": "Privacy Filter est un modèle open source d’OpenAI qui repère dans le texte des données personnelles, comme les noms, adresses, emails et numéros de téléphone, et remplace les valeurs détectées par des libellés génériques. Le traitement s’exécute sur l’ordinateur où il est installé.",
+        "connections.privacy.workflow": "Le connecteur s’installera séparément de Vera et s’utilisera à la demande. La première version prévue lira les fichiers TXT, Markdown, DOCX et les PDF contenant du texte extractible et enregistrera des copies de texte filtré au format .txt. Les documents numérisés nécessiteront d’abord une reconnaissance optique de caractères (OCR).",
+        "connections.privacy.data": "Le fonctionnement prévu traitera les originaux localement et ne mettra à disposition de Codex que le texte filtré et un résumé du traitement. Le téléchargement initial du modèle nécessitera Internet ; le filtrage s’exécutera en local.",
+        "connections.privacy.source": "Code et documentation d’OpenAI Privacy Filter ↗",
         "connections.data": "Les requêtes, les résultats de recherche et les textes consultés peuvent entrer dans le contexte du modèle de l’application choisie. La connexion, les autorisations et la conservation dépendent de l’application et du service connecté.",
         "contributors.index": "Collaboration",
         "contributors.title": "Contributeurs",
@@ -2595,6 +2616,12 @@
         "connections.knowledge.limits": "Vera liest verfügbare Quellen, ohne sie zu ändern. Vera stellt Second Brain nicht bereit, benötigt kein Microsoft 365 und funktioniert auch ohne verbundenes Archiv. Die Abfrage hängt vom Konnektor und den in der Sitzung verfügbaren Werkzeugen ab.",
         "connections.skills.title": "Eigene Skills verwenden",
         "connections.skills.copy": "Um eine Aufgabe mit einem eigenen Skill auszuführen, rufen Sie ihn direkt in der App auf, in der Sie ihn installiert haben. Die Verbindung mit Second Brain importiert, wählt oder startet die Skills der Kanzlei nicht innerhalb von Vera.",
+        "connections.privacy.title": "OpenAI Privacy Filter",
+        "connections.privacy.status": "Optionaler Konnektor für Codex desktop geplant; noch nicht verfügbar.",
+        "connections.privacy.copy": "Privacy Filter ist ein Open-Source-Modell von OpenAI. Es erkennt personenbezogene Angaben im Text, etwa Namen, Adressen, E-Mail-Adressen und Telefonnummern, und ersetzt erkannte Werte durch Platzhalter. Die Verarbeitung erfolgt auf dem Computer, auf dem das Modell installiert ist.",
+        "connections.privacy.workflow": "Der Konnektor wird unabhängig von Vera installiert und bei Bedarf verwendet. Die geplante erste Version liest TXT-, Markdown- und DOCX-Dateien sowie PDFs mit extrahierbarem Text und speichert gefilterte Textkopien im Format .txt. Scans benötigen zuvor eine Texterkennung (OCR).",
+        "connections.privacy.data": "Der geplante Ablauf verarbeitet Originale lokal und stellt Codex nur den gefilterten Text und eine Zusammenfassung der Verarbeitung bereit. Der erste Modelldownload benötigt Internetzugang; die Filterung erfolgt lokal.",
+        "connections.privacy.source": "Code und Dokumentation von OpenAI Privacy Filter ↗",
         "connections.data": "Abfragen, Suchergebnisse und eingesehene Texte können in den Modellkontext der gewählten App gelangen. Anmeldung, Berechtigungen und Aufbewahrung hängen von der App und dem verbundenen Dienst ab.",
         "contributors.index": "Zusammenarbeit",
         "contributors.title": "Mitwirkende",
@@ -2825,6 +2852,12 @@
         "connections.knowledge.limits": "Vera consulta las fuentes disponibles sin modificarlas. No proporciona Second Brain, no requiere Microsoft 365 y funciona sin un archivo conectado. La consulta depende del conector y de las herramientas accesibles en la sesión.",
         "connections.skills.title": "Usar tus propias skills",
         "connections.skills.copy": "Para realizar un trabajo con tu propia skill, invócala directamente en la aplicación donde la instalaste. Conectar Second Brain no importa, selecciona ni ejecuta las skills del despacho dentro de Vera.",
+        "connections.privacy.title": "OpenAI Privacy Filter",
+        "connections.privacy.status": "Conector opcional previsto para Codex desktop; todavía no disponible.",
+        "connections.privacy.copy": "Privacy Filter es un modelo de código abierto de OpenAI que identifica datos personales en el texto, como nombres, direcciones, correos electrónicos y números de teléfono, y sustituye los valores detectados por marcadores. El procesamiento se realiza en el ordenador donde está instalado.",
+        "connections.privacy.workflow": "El conector se instalará por separado de Vera y se utilizará cuando lo solicites. La primera versión prevista leerá archivos TXT, Markdown, DOCX y PDF con texto extraíble y guardará copias de texto filtrado en formato .txt. Los documentos escaneados necesitarán primero reconocimiento óptico de caracteres (OCR).",
+        "connections.privacy.data": "El funcionamiento previsto procesará los originales localmente y pondrá a disposición de Codex únicamente el texto filtrado y un resumen del procesamiento. La descarga inicial del modelo requerirá Internet; el filtrado se realizará en local.",
+        "connections.privacy.source": "Código y documentación de OpenAI Privacy Filter ↗",
         "connections.data": "Las consultas, los resultados de búsqueda y los textos consultados pueden entrar en el contexto del modelo de la aplicación elegida. El acceso, los permisos y la conservación dependen de la aplicación y del servicio conectado.",
         "contributors.index": "Colaboración",
         "contributors.title": "Colaboradores",
