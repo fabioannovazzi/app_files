@@ -1107,7 +1107,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "aae3c95ef0ab64acc930ed7b29bae6f8df9075a28af8aac7a469a742e99c2f64",
+  "catalogue_fingerprint": "51d6d9dac2621f2b1de16251e3b6490294d256b1eba4d51fabbe86d03fdaafd1",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1294,8 +1294,10 @@
     "date": "2026-10-02",
     "reviewer": "Codex /root",
     "previous_version": "0.1.328",
-    "version": "0.1.329",
-    "changed_skill_ids": [],
-    "note": "Version and ESG prepared-course availability refreshed. Existing jurisdiction dispositions and professional capability boundaries retained; teaching availability does not establish Geneva qualification."
+    "version": "0.1.331",
+    "changed_skill_ids": [
+      "vera"
+    ],
+    "note": "Integrated main fiscal, annual-accounts and audit entry points plus ESG course. Function identities and existing jurisdiction dispositions retained; no new jurisdiction capability claimed."
   }
 }

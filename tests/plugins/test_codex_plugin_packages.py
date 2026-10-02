@@ -60,7 +60,7 @@ UNIFIED_PLUGIN_NAMES = {"vera"}
 VERA_DISCOVERY_TERMS = (
     "commercialista",
     "studi professionali",
-    "contabilità",
+    "contabilita",  # Preserve the canonical keyword independently of prose.
     "controlli contabili",
     "scritture contabili",
     "riconciliazione bancaria",
@@ -610,11 +610,27 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     # Packaging must preserve the source-owned prompts, not a frozen copy.
     assert prompts == source_manifest["interface"]["defaultPrompt"]
-    # Current source metadata owns the description; old editorial drafts can lag.
-    source_description = source_manifest["interface"]["longDescription"]
-    assert manifest["interface"]["longDescription"] == source_description
-    assert source_description.strip()
-    assert "giudizio professionale" in source_description
+    approved_description = (
+        (ROOT / "docs" / "marketplace_copy" / "vera-long-description.txt")
+        .read_text(encoding="utf-8")
+        .strip()
+    )
+    assert manifest["interface"]["longDescription"] == approved_description
+    assert len(approved_description.split()) <= 120
+    assert len(approved_description.split("\n\n")) == 3
+    assert "bilancio civilistico OIC" in approved_description
+    assert "concordato preventivo" in approved_description
+    assert "quesiti fiscali e legali" in approved_description
+    assert "revisione contabile e le riconciliazioni" in approved_description
+    assert "Cerca la corrispondenza del cliente." not in approved_description
+    assert "giudizio professionale restano al commercialista." in approved_description
+    assert "New Client" not in approved_description
+    assert "indicizzare" not in approved_description
+    assert "consiglia Codex Desktop" not in approved_description
+    assert "sessioni host" not in approved_description
+    assert "claim assurance" not in approved_description
+    assert "token" not in approved_description
+    assert "Creative Production" not in approved_description
     assert "commercialista" in manifest["keywords"]
     assert "ricerca-fiscale" in manifest["keywords"]
 
