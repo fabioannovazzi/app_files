@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mparanza-privacy-filter"
-version = "0.2.0"
-description = "Optional local OpenAI Privacy Filter and GLiNER2-PII MCP connectors"
+version = "0.3.0"
+description = "Optional local OpenAI Privacy Filter, GLiNER2-PII and Rizzo PII connectors"
 requires-python = ">=3.12"
 dynamic = ["dependencies"]
 

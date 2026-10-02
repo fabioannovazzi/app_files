@@ -78,18 +78,24 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--model-dir", type=Path, required=True)
+    parser.add_argument("--model-dir", type=Path)
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
-    parser.add_argument("--engine", choices=("openai", "gliner2"), default="openai")
+    parser.add_argument(
+        "--engine", choices=("openai", "gliner2", "rizzo"), default="openai"
+    )
+    parser.add_argument("--rizzo-port", type=int, default=5005)
     args = parser.parse_args()
+    if args.engine != "rizzo" and args.model_dir is None:
+        parser.error("--model-dir is required for this engine")
     try:
         service = FilterService(
             Settings(
                 args.input_dir,
                 args.output_dir,
-                args.model_dir,
+                args.model_dir or Path.cwd(),
                 args.device,
                 args.engine,
+                args.rizzo_port,
             )
         )
     except (OSError, FilterError):
