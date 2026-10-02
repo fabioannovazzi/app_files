@@ -56,7 +56,7 @@ def test_repeated_values_and_unicode_are_replaced_at_exact_offsets(
 ) -> None:
     text = "È Anna; Anna scrive."
     path = tmp_path / "example.txt"
-    path.write_text(text)
+    path.write_text(text, encoding="utf-8")
     result = filter_document(
         path, model_with({"person": [span(text, 2, 6), span(text, 8, 12)]})
     )
