@@ -1,4 +1,4 @@
-"""Codex desktop MCP server over local stdio, with no web listener."""
+"""Desktop MCP server over local stdio, with no web listener."""
 
 from __future__ import annotations
 

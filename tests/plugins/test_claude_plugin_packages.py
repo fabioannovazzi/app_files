@@ -1095,6 +1095,13 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
     assert "Never run desktop profile/session commands there" in introduction
     assert references
     for name, content in references.items():
+        if name == "skills/vera/references/optional-integrations.md":
+            # Setup for an explicitly selected external tool requires that tool;
+            # the general draft-delivery fallback is not a substitute for it.
+            assert "Ordinary Vera work requires none of them" in content
+            assert "Never substitute another engine or cloud processing" in content
+            assert "not inside Cowork's Linux VM" in content
+            continue
         if name == "skills/learn-with-vera/references/get-started.md":
             # The written-course projection installs this shared guide after
             # ordinary reference projection; it delegates to its parent contract.

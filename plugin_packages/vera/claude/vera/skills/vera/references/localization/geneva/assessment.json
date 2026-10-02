@@ -1137,7 +1137,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "7e1e095a856a6f1d4c56f41d9f6c0f405086b2da0bfb8e173cddc993c9d8ab7a",
+  "catalogue_fingerprint": "ae2d3201b5d87f1d12c566ba4bfa236d2532c1d9f5be7ce9808f940afc75c336",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1340,5 +1340,14 @@
     "changed_existing_entrypoints": [],
     "review": "Register the new Italian AGCM workflow as Unresolved for CH-GE, refresh the manifest and entrypoint identity, and preserve all prior target judgments. Translated explanation pages do not qualify Swiss applicability; professional document-led pilot acceptance remains pending. Preserves the newer French discovery keywords and Antigravity documentation; neither changes the recorded jurisdiction qualifications.",
     "integrated_main": "67bb16e247170f60a2d6122d0decf1e0dc9c7a9a"
+  },
+  "optional_connectors_release_binding": {
+    "reviewed_at": "2026-10-02",
+    "version": "0.1.335",
+    "previous_catalogue_fingerprint": "7e1e095a856a6f1d4c56f41d9f6c0f405086b2da0bfb8e173cddc993c9d8ab7a",
+    "changed_existing_entrypoints": [
+      "vera"
+    ],
+    "review": "The Vera router now links optional connector setup for Codex, Cowork and Antigravity. No function IDs, Geneva dispositions, jurisdiction adaptations or professional acceptance claims change. The standalone installer and Second Brain guidance do not establish acceptance in a user account."
   }
 }

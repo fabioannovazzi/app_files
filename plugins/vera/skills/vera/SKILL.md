@@ -14,6 +14,13 @@ Without a repository, continue ordinary work. Studio skills remain independently
 invoked by the user; Vera does not dispatch them.
 <!-- VERA_CONNECTED_KNOWLEDGE_END -->
 
+## Optional connector setup
+
+For requests to install or use an anonymization connector, or to configure an
+external studio repository, read `references/optional-integrations.md`.
+The connectors have a separate download for Codex, Cowork and Antigravity.
+Vera does not install or activate them automatically. The user chooses the engine.
+
 ## Jurisdiction localization
 
 For a CH-GE mandate, read `references/localization/geneva.md` before specialist routing. Keep jurisdiction independent of language; use each existing function’s documented Geneva adapter and scope. Do not apply Italian rules merely because the function retains its existing ID. For other jurisdictions, inspect and adapt the existing function rather than inventing services or assuming this example qualifies them.

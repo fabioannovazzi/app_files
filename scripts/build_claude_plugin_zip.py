@@ -3138,6 +3138,10 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             ).replace(b"    # VERA_OPENAI_ONBOARDING_END\n", b"")
         if relative == ".mcp.json":
             content = project_claude_mcp(content)
+        elif relative == "skills/vera/references/optional-integrations.md":
+            # This setup guide compares named hosts. Rebranding Codex as Claude
+            # would incorrectly tell Cowork users to install a TOML configuration.
+            pass
         elif relative.endswith("/SKILL.md"):
             content = project_cowork_skill(
                 content,

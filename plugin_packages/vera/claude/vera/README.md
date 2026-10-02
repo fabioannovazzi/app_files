@@ -1,5 +1,12 @@
 # Vera
 
+Optional anonymization connectors have a
+[separate download](https://mparanza.com/static/shared/vera-integrazioni/downloads/anonymization-connectors.zip)
+with setup for Codex, Claude Cowork and Google Antigravity desktop. See
+`skills/vera/references/optional-integrations.md`. Choose an engine during setup;
+installing Vera does not install a model or activate a connector. Second Brain
+uses its provider's existing connection and has no installer supplied by Vera.
+
 Vera can consult an existing studio knowledge repository, such as Second Brain,
 through search/read tools already connected in the user's host, when requested
 by the user or an adopted studio instruction. See

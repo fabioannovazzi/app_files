@@ -1,0 +1,15 @@
+{
+  "version": "0.4.0",
+  "sha256": "5eda3cc6f13d1c1c1901a9d56eac2cd30b3e235e1def9f8dc7a6fdb789e88668",
+  "bytes": 48957,
+  "engines": [
+    "openai",
+    "gliner2",
+    "rizzo"
+  ],
+  "hosts": [
+    "codex",
+    "cowork",
+    "antigravity"
+  ]
+}
