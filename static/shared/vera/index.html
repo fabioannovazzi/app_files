@@ -1053,7 +1053,7 @@
     .footer-links a { min-height: 44px; display: inline-flex; align-items: center; color: var(--blue); text-decoration: none; }
     .footer-links a:hover { color: var(--navy); }
 
-    a:focus-visible, button:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+    a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
 
     @media (max-width: 900px) {
       main, .footer-shell { width: min(var(--content), calc(100% - 40px)); }
@@ -1062,6 +1062,7 @@
         grid-template-areas:
           "copy"
           "action"
+          "antigravity"
           "video";
         grid-template-columns: 1fr;
         align-items: start;
