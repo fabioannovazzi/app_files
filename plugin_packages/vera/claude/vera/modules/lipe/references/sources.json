@@ -29,5 +29,35 @@
     "channel_message": "https://discord.com/channels/1550191335917625474/1554906410947715243/1555530487215423568",
     "sha256": "043d3128f927ed98b0c1215f84a57a6447ff9b67e43162dc088711facc5550eb",
     "use": "Requirements and defect review only. Real aggregate example amounts are not shipped."
-  }
+  },
+  "supporting_web_sources": [
+    {
+      "id": "dm-1976-art7",
+      "official_url": "https://def.finanze.it/DocTribFrontend/executePrintArticolo.do?articolo=Articolo+7&codiceOrdinamento=200000700000000&id=%7B8D93A450-E5FE-47FC-A6F0-F938769051BF%7D",
+      "inspected_on": "2026-10-03",
+      "status": "WEB_TEXT_INSPECTED_NO_LOCAL_BYTE_HASH",
+      "use": "Alphabetic fiscal-code transcription checksum."
+    },
+    {
+      "id": "dm-1976-art9",
+      "official_url": "https://def.finanze.it/DocTribFrontend/executePrintArticolo.do?codiceOrdinamento=200000900000000&id=%7B9BCC7F03-1710-4C43-8F59-C157797D746E%7D&idAttoNormativo=%7B8D93A450-E5FE-47FC-A6F0-F938769051BF%7D",
+      "inspected_on": "2026-10-03",
+      "status": "WEB_TEXT_INSPECTED_NO_LOCAL_BYTE_HASH",
+      "use": "Numeric identifier transcription checksum."
+    },
+    {
+      "id": "ae-registry-cf",
+      "official_url": "https://telematici.agenziaentrate.gov.it/VerificaCF/Scegli.jsp",
+      "inspected_on": "2026-10-03",
+      "status": "WEB_TEXT_INSPECTED_NO_LOCAL_BYTE_HASH",
+      "use": "Registry existence/correspondence is distinct from a checksum and from VAT-number verification."
+    },
+    {
+      "id": "openssl-cms",
+      "official_url": "https://docs.openssl.org/3.0/man1/openssl-cms/",
+      "inspected_on": "2026-10-03",
+      "status": "WEB_TEXT_INSPECTED_NO_LOCAL_BYTE_HASH",
+      "use": "Exact binary CMS verification is distinct from chain, revocation, powers and qualified-signature status."
+    }
+  ]
 }

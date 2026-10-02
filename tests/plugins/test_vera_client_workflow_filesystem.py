@@ -141,6 +141,8 @@ CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     # Real first-pass measurements verify the selected Archive input receipts.
     ("lipe", "lipe_catalog.py"),
     ("lipe", "lipe_metrics.py"),
+    # Approval adds evidence to the selected existing Archive run.
+    ("lipe", "lipe_approval.py"),
     ("scissione-guidata", "check_dependencies.py"),
     ("patent-box-review", "check_dependencies.py"),
     # Public-source acquisition and monitoring have no client case lifecycle.

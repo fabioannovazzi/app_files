@@ -36,6 +36,13 @@ deduplicate repeat runs and separate real from synthetic cohorts. Literal class
 changes are not a tax-error rate. Follow `references/code-measurements.md` before
 confirming case mappings; no real performance rate has been established.
 
+Front-page checks now bind identifiers, representative/intermediary fields and
+registry-evidence declarations to preserved sources. Approval packets bind the
+exact reviewed version and verify external CMS signatures under an independently
+configured firm mandate, including chain and revocation checks. These are local
+cryptographic checks, not qualified-signature, professional-register or filing
+acceptance. See `references/approval.md`. Real export remains unavailable.
+
 Run `scripts/check_dependencies.py`, then follow `skills/lipe/SKILL.md`.
 The exact JSON contract is `schemas/case.schema.json`. The example is entirely
 synthetic. Its three monthly modules each have VP2 1,000.00, VP3 500.00, VP4
@@ -60,4 +67,6 @@ or network requests; this does not describe what the host already received.
 Authorized catalog/measurement reads can also expose preserved proposals,
 complete source documents, client/engagement identities, reviewer records and
 software-specific counts. Aggregate reports are not guaranteed anonymous.
-Actual model exposure is recorded separately in the run's model-data report.
+Front-page evidence, public certificates, signed review requests, mandates and
+professional-authority references may also enter the selected model context.
+Private signing keys are never requested. Actual model exposure is recorded separately in the run's model-data report.

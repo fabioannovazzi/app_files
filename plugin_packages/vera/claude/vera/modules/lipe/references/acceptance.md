@@ -85,6 +85,14 @@ synthetic cohorts, expose denominators and missing review, and leave empty rates
 null. Literal class changes include textual edits and are not a measured tax-
 error rate. No real recognition performance has been established.
 
+The front-page contract checks ordinary identifiers and source-bound registry
+review declarations. The approval adapter binds the case, sources, output files,
+front page, result, runtime and run disclosure. It verifies external CMS signatures
+under a host-configured firm policy and signed mandate, including chain and CRLs.
+The policy needs independent host administration; certificate subjects do not
+establish professional powers. Qualified-signature status is not tested. No real
+studio has configured or accepted this path, and it does not enable XML export.
+
 Development validation includes independent workbook recalculation and changed-
 input checks for monthly values, partial reverse-charge deduction, credit and
 small-debt carry, quarterly interest rounding and Q4 exclusions, plus visual
@@ -104,8 +112,9 @@ blocked until the principal/interest basis is independently reviewed.
    totals independently verified. The channel ZIP does not contain these files.
 3. Additional unseen cases, including period boundaries, partial deduction,
    pro-rata/special cases explicitly excluded, Q4/acconto and missing sections.
-4. Authenticated professional approval bound to exact case, front page, results,
-   reviewed anomalies and current source bytes before any real XML export.
+4. Live acceptance of the implemented source-bound front page and signed approval
+   path with the actual studio authority, professional mandate and current CRLs.
+   Synthetic cryptographic tests do not establish this real authority.
 5. Importer acceptance on at least two selected accounting/submission systems
    and checks with the current Agenzia Entrate control software. No tax return
    may be sent merely to test this implementation.
@@ -117,8 +126,9 @@ blocked until the principal/interest basis is independently reviewed.
 
 - Authenticated catalog roles and optional shared central-catalog distribution. Current central
   reference records are local and do not synchronize between studios.
-- Authenticated approval/front-page contract for real XML and supplied-receipt
-  processing. The synthetic XML command is not the real export workflow.
+- Real XML serialization with current approval re-verification and supplied-receipt
+  processing. The front-page contract and external CMS/mandate approval adapter
+  are implemented; the synthetic XML command is not the real export workflow.
 
 These are engineering gaps, separate from the missing original-register and
 professional acceptance evidence above. The overall goal remains in progress.

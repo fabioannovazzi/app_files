@@ -153,6 +153,20 @@ figures and letter before delivery. Do not send correspondence without an explic
 user request. The named reviewer is an attributed local record, not an
 authenticated identity or a tax approval issued by Vera.
 
+## Prepare and verify professional approval
+
+Follow `references/approval.md` for the source-bound front-page contract, the
+readable exact-version request and external signature verification. Preserve
+actual registry evidence and professional judgments; format/checksum checks do
+not establish Anagrafe registration or ownership. Reuse the current Archive run
+and complete its actual model-data disclosure before preparing a request.
+
+Only the independently configured firm authority and externally signed mandate
+can authorize a signer. Do not create real keys, trusted administrator pins or
+mandates, or treat a named reviewer/JSON status as authenticated approval.
+`prepare` creates a request; `accept` verifies supplied originals and preserves
+proof. Neither enables real XML export or constitutes a signature on a return.
+
 ## Acceptance and XML boundary
 
 `xml-test` recalculates a **synthetic** case, uses fictional identifiers and

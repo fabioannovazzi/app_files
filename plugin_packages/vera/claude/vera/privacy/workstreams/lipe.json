@@ -12,7 +12,13 @@
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
     "skills/lipe/SKILL.md",
-    "skills/vera/references/connected-studio-knowledge.md"
+    "skills/vera/references/connected-studio-knowledge.md",
+    "modules/patent-box-review/patent_box/__init__.py",
+    "modules/patent-box-review/patent_box/contracts.py",
+    "modules/patent-box-review/patent_box/formalities.py",
+    "modules/fusione-guidata/vendor/modules/model_data_report.py",
+    "modules/studio-archive/vendor/modules/model_data_report.py",
+    "scripts/model_data_report.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -24,7 +30,7 @@
       {
         "id": "vat-case-evidence",
         "purpose": "Read and review VAT registers, timing, codes, balances and VP drafts",
-        "content": "Selected full PDF pages or readable extracts, client and counterparty names, identifiers, dates, VAT codes, taxable bases, VAT and deductible amounts, liquidation and F24 evidence, code proposals, reviewer records, exceptions and outputs may enter the selected host model. The helpers inspect local sources, hashes, quotations and arithmetic without model or network requests. The local processing receipt cannot measure host exposure. No automatic anonymization or local-only model guarantee. The selected model may also read catalog classes, confidence, client/studio scope identifiers, source quotations or original bytes, attributed curator/disclosure decisions and explicitly requested local history. A catalog history can contain other authorized studio entries. No remote catalog transfer is performed. Private measurements preserve first-pass code inventories, source documents, client/engagement identities, model proposals, review outcomes and vendor/version counts. Reports omit client IDs but small cohorts are not guaranteed anonymous. Timing and professional identity remain attributed; no telemetry is sent.",
+        "content": "Selected full PDF pages or readable extracts, client and counterparty names, identifiers, dates, VAT codes, taxable bases, VAT and deductible amounts, liquidation and F24 evidence, code proposals, reviewer records, exceptions and outputs may enter the selected host model. The helpers inspect local sources, hashes, quotations and arithmetic without model or network requests. The local processing receipt cannot measure host exposure. No automatic anonymization or local-only model guarantee. The selected model may also read catalog classes, confidence, client/studio scope identifiers, source quotations or original bytes, attributed curator/disclosure decisions and explicitly requested local history. A catalog history can contain other authorized studio entries. No remote catalog transfer is performed. Private measurements preserve first-pass code inventories, source documents, client/engagement identities, model proposals, review outcomes and vendor/version counts. Reports omit client IDs but small cohorts are not guaranteed anonymous. Timing and professional identity remain attributed; no telemetry is sent. Front-page sources, registry-check declarations, public certificates, signed requests, mandates, professional names and authority references may also enter host model context when opened. The CMS helper runs locally with host-selected OpenSSL and supplied trust/CRL files; no network, model call or private signing key is used.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -91,12 +97,16 @@
     {
       "id": "measurement-history",
       "control": "First-pass units have stable client/engagement/quarter/vendor/version/side/code keys. Repeated runs cannot reset them; already-confirmed new mappings are rejected. Source objects and append-only review revisions are retained; reports separate real and synthetic data and show missing-review denominators."
+    },
+    {
+      "id": "signed-review-binding",
+      "control": "Exact-version requests expire after 24 hours and require an independently host-configured firm policy, firm-signed scope-specific mandate and external professional CMS signature. Current certificate chains and supplied CRLs must verify. Original evidence is preserved, with recalculation and artifact hashes checked before and after verification. Host filesystem administration protects trust configuration; professional powers are firm assertions, and qualified or filing signatures are not established."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-02",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5515f1da9444948b6f6f244ea9d92ea23b0063b95ea26864283fdaf6fca33fb0"
+    "source_fingerprint": "33e60a88aac4b7747a8cea54bf72c45e94719b26dabdf161fc5423a9cc7794cb"
   }
 }

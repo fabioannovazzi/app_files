@@ -1044,8 +1044,10 @@ def dependency_checker():
     return module
 
 
-def test_dependency_checker_accepts_declared_available_runtime() -> None:
-    assert dependency_checker().main([]) == 0
+def test_dependency_checker_accepts_declared_available_runtime(monkeypatch) -> None:
+    checker = dependency_checker()
+    monkeypatch.setattr(checker.importlib.util, "find_spec", lambda name: object())
+    assert checker.main([]) == 0
 
 
 def test_dependency_checker_reports_missing_requirements() -> None:

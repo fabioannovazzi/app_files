@@ -237,7 +237,10 @@ def save_result(case: dict, result: dict, output: Path) -> Path:
 
 
 def _archive(
-    case: dict, case_path: Path, context_path: Path | None
+    case: dict,
+    case_path: Path,
+    context_path: Path | None,
+    extra_inputs: list[Path] | None = None,
 ) -> tuple[Path, Path]:
     if context_path is None:
         raise ContractError(
@@ -263,6 +266,7 @@ def _archive(
         raise ContractError("Case and portable archive identity differ")
     root = Path(context["run_root"]) / "inputs"
     paths = [(root / item["path"]).resolve() for item in case["sources"]]
+    paths.extend(path.resolve() for path in (extra_inputs or []))
     if any(not path.is_relative_to(root.resolve()) for path in paths):
         raise ContractError("Source escapes archive inputs")
     load_client_engagement_context_file(
