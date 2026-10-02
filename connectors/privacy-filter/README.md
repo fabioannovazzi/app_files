@@ -1,4 +1,10 @@
-# Privacy Filter connector for Codex desktop
+# Privacy Filter connector for desktop apps
+
+Use the [separate installer download](https://mparanza.com/static/shared/vera-integrazioni/downloads/anonymization-connectors.zip)
+and [SETUP.md](SETUP.md) for **Codex, Claude Cowork and Google Antigravity**.
+Guided setup: `python3.12 install.py --setup` (Windows: `py -3.12 install.py --setup`).
+The installer generates all three host formats; it does not edit host settings.
+The command-line examples below also remain available.
 
 An optional local MCP server using [OpenAI Privacy Filter](https://github.com/openai/privacy-filter).
 It is installed separately from Vera. Vera, Clara and Lucia do not import it,

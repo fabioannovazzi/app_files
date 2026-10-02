@@ -4,11 +4,15 @@ on:
   pull_request:
     paths:
       - 'connectors/privacy-filter/**'
+      - 'scripts/build_anonymization_connectors.py'
+      - 'static/shared/vera-integrazioni/downloads/**'
       - '.github/workflows/privacy-filter.yml'
   push:
     branches: [main]
     paths:
       - 'connectors/privacy-filter/**'
+      - 'scripts/build_anonymization_connectors.py'
+      - 'static/shared/vera-integrazioni/downloads/**'
       - '.github/workflows/privacy-filter.yml'
 
 permissions:
@@ -16,7 +20,10 @@ permissions:
 
 jobs:
   connector:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
@@ -29,7 +36,9 @@ jobs:
         run: python -m pytest connectors/privacy-filter/tests --cov=mparanza_privacy_filter --cov-report=term-missing --cov-fail-under=80
       - name: Check code quality
         run: |
-          python -m black --check connectors/privacy-filter
-          python -m isort --check-only --profile black connectors/privacy-filter
+          python -m black --check connectors/privacy-filter scripts/build_anonymization_connectors.py
+          python -m isort --check-only --profile black connectors/privacy-filter scripts/build_anonymization_connectors.py
           python -m mypy --config-file=connectors/privacy-filter/mypy.ini connectors/privacy-filter/src connectors/privacy-filter/install.py
-          python -m bandit -q -ll -r connectors/privacy-filter/src connectors/privacy-filter/install.py
+          python -m bandit -q -ll -r connectors/privacy-filter/src connectors/privacy-filter/install.py scripts/build_anonymization_connectors.py
+      - name: Verify downloadable connector ZIP matches source
+        run: python scripts/build_anonymization_connectors.py --check

@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: python -m pip install pytest pytest-cov
+      - run: python -m pip install pytest pytest-cov beautifulsoup4
       - name: Verify website ZIP version labels
         run: node --test tests/test_plugin_download_versions.mjs
       - name: Verify stale-package rejection
@@ -35,5 +35,7 @@ jobs:
         run: python scripts/build_product_release.py --check
       - name: Verify optional studio knowledge instruction packaging
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_vera_connected_knowledge.py
+      - name: Verify optional connector download and host setup guides
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_optional_connector_downloads.py
       - name: Verify renamed skill identities in every host package
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_skill_name_alignment.py
