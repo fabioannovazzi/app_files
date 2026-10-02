@@ -130,6 +130,7 @@
       grid-template-areas:
         "copy"
         "action"
+        "antigravity"
         "video";
       grid-template-columns: minmax(0, 1fr);
       gap: 20px;
@@ -163,6 +164,20 @@
       font-size: 0.82rem;
       line-height: 1.45;
     }
+    .hero-install__antigravity {
+      grid-area: antigravity;
+      width: min(100%, 720px);
+      color: var(--blue);
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+    .hero-install__antigravity summary {
+      color: var(--navy);
+      font-weight: 650;
+      cursor: pointer;
+    }
+    .hero-install__antigravity p { margin-top: 12px; max-width: 68ch; }
+    .hero-install__antigravity a { text-underline-offset: 0.2em; }
     .hero-install__video {
       grid-area: video;
       width: min(100%, 520px);
@@ -1249,6 +1264,14 @@
               <p class="install-option__note" data-plugin-zip-version="vera" hidden></p>
             </div>
           </div>
+          <!-- Test evidence: https://chatgpt.com/s/cx_6abf6fd4fb248191900079bafdd78ca8
+               Local package v0.1.268 and installation registry rechecked 2026-10-02. -->
+          <details class="hero-install__antigravity" id="antigravity">
+            <summary data-i18n="install.antigravity.title">Google Antigravity · versione sperimentale</summary>
+            <p data-i18n="install.antigravity.scope">Verificati l’installazione locale, il caricamento delle skill e un test in sola lettura degli strumenti di Vera. L’uso in chat con il modello resta da verificare.</p>
+            <p data-i18n="install.antigravity.package">Pacchetto di prova: Vera v0.1.268. ZIP non ancora disponibile sul sito.</p>
+            <p><a href="https://antigravity.google/docs/plugins" target="_blank" rel="noopener noreferrer" data-i18n="install.antigravity.docs">Come funzionano i plugin di Antigravity →</a></p>
+          </details>
           <a class="hero-install__video" id="vera-install-video-link" href="https://youtu.be/yAnkIabnQ1M" target="_blank" rel="noopener noreferrer" aria-label="Collega ChatGPT al computer con Codex" data-i18n-aria-label="install.video.title">
             <span class="overview-video__thumb" aria-hidden="true">
               <img id="vera-install-video-thumbnail" src="https://i.ytimg.com/vi/yAnkIabnQ1M/maxresdefault.jpg" alt="" width="1280" height="720" loading="eager">
@@ -1899,6 +1922,10 @@
         "install.title": "Installazione",
         "install.copy": "Installa Vera per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.",
         "install.actions.label": "Opzioni di installazione di Vera",
+        "install.antigravity.title": "Google Antigravity · versione sperimentale",
+        "install.antigravity.scope": "Verificati l’installazione locale, il caricamento delle skill e un test in sola lettura degli strumenti di Vera. L’uso in chat con il modello resta da verificare.",
+        "install.antigravity.package": "Pacchetto di prova: Vera v0.1.268. ZIP non ancora disponibile sul sito.",
+        "install.antigravity.docs": "Come funzionano i plugin di Antigravity →",
         "install.button": "Installa per ChatGPT Work e Codex",
         "install.zipButton": "Scarica ZIP per ChatGPT Work e Codex",
         "install.coworkButton": "Vai al marketplace Cowork",
@@ -2133,6 +2160,10 @@
         "install.title": "Installation",
         "install.copy": "Install Vera for ChatGPT Work and Codex, or download the package for Claude Cowork.",
         "install.actions.label": "Vera installation options",
+        "install.antigravity.title": "Google Antigravity · experimental version",
+        "install.antigravity.scope": "Local installation, skill loading and a read-only test of Vera’s tools have been verified. Chat execution with the model remains unverified.",
+        "install.antigravity.package": "Test package: Vera v0.1.268. The ZIP is not yet available on this website.",
+        "install.antigravity.docs": "How Antigravity plugins work →",
         "install.button": "Install for ChatGPT Work and Codex",
         "install.zipButton": "Download ZIP for ChatGPT Work and Codex",
         "install.coworkButton": "Go to Cowork marketplace",
@@ -2367,6 +2398,10 @@
         "install.title": "Installation",
         "install.copy": "Installez Vera pour ChatGPT Work et Codex ou téléchargez le paquet pour Claude Cowork.",
         "install.actions.label": "Options d’installation de Vera",
+        "install.antigravity.title": "Google Antigravity · version expérimentale",
+        "install.antigravity.scope": "L’installation locale, le chargement des skills et un test en lecture seule des outils de Vera ont été vérifiés. L’utilisation en conversation avec le modèle reste à vérifier.",
+        "install.antigravity.package": "Paquet de test : Vera v0.1.268. Le ZIP n’est pas encore disponible sur ce site.",
+        "install.antigravity.docs": "Fonctionnement des plugins Antigravity →",
         "install.button": "Installer pour ChatGPT Work et Codex",
         "install.zipButton": "Télécharger le ZIP pour ChatGPT Work et Codex",
         "install.coworkButton": "Aller au marketplace Cowork",
@@ -2601,6 +2636,10 @@
         "install.title": "Installation",
         "install.copy": "Installieren Sie Vera für ChatGPT Work und Codex oder laden Sie das Paket für Claude Cowork herunter.",
         "install.actions.label": "Installationsoptionen für Vera",
+        "install.antigravity.title": "Google Antigravity · experimentelle Version",
+        "install.antigravity.scope": "Die lokale Installation, das Laden der Skills und ein Lesetest der Vera-Werkzeuge wurden überprüft. Die Nutzung im Chat mit dem Modell wurde noch nicht überprüft.",
+        "install.antigravity.package": "Testpaket: Vera v0.1.268. Die ZIP-Datei ist auf dieser Website noch nicht verfügbar.",
+        "install.antigravity.docs": "So funktionieren Antigravity-Plugins →",
         "install.button": "Für ChatGPT Work und Codex installieren",
         "install.zipButton": "ZIP für ChatGPT Work und Codex herunterladen",
         "install.coworkButton": "Zum Cowork-Marketplace",
@@ -2835,6 +2874,10 @@
         "install.title": "Instalación",
         "install.copy": "Instala Vera para ChatGPT Work y Codex o descarga el paquete para Claude Cowork.",
         "install.actions.label": "Opciones de instalación de Vera",
+        "install.antigravity.title": "Google Antigravity · versión experimental",
+        "install.antigravity.scope": "Se han verificado la instalación local, la carga de skills y una prueba de solo lectura de las herramientas de Vera. El uso en el chat con el modelo queda pendiente de verificación.",
+        "install.antigravity.package": "Paquete de prueba: Vera v0.1.268. El ZIP aún no está disponible en este sitio.",
+        "install.antigravity.docs": "Cómo funcionan los plugins de Antigravity →",
         "install.button": "Instalar para ChatGPT Work y Codex",
         "install.zipButton": "Descargar ZIP para ChatGPT Work y Codex",
         "install.coworkButton": "Ir al marketplace de Cowork",
