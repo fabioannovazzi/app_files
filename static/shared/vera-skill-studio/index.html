@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="it">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="#ffffff" name="theme-color"/>
+  <title>
+   Usare le skill dello studio · Vera
+  </title>
+  <meta content="Installa la tua skill nell’app in cui lavori e richiamala direttamente. Per usarla non occorre invocare Vera." name="description"/>
+  <link href="https://mparanza.com/static/shared/vera-skill-studio/index.html?lang=it" rel="canonical"/>
+  <link href="https://mparanza.com/static/shared/vera-skill-studio/index.html?lang=it" hreflang="it" rel="alternate"/>
+  <link href="https://mparanza.com/static/shared/vera-skill-studio/index.html?lang=en" hreflang="en" rel="alternate"/>
+  <link href="https://mparanza.com/static/shared/vera-skill-studio/index.html?lang=fr" hreflang="fr" rel="alternate"/>
+  <link href="https://mparanza.com/static/shared/vera-skill-studio/index.html?lang=de" hreflang="de" rel="alternate"/>
+  <link href="https://mparanza.com/static/shared/vera-skill-studio/index.html?lang=es" hreflang="es" rel="alternate"/>
+  <link href="https://mparanza.com/static/shared/vera-skill-studio/index.html?lang=it" hreflang="x-default" rel="alternate"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   :root { color-scheme: light; --navy: #06245c; --blue: #006fc9; --cyan: #00a6d7; --line: #d8e4ef; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #fff; color: var(--navy); font: 17px/1.65 "Instrument Sans", sans-serif; }
+    a { color: var(--blue); text-underline-offset: .2em; }
+    a:hover { color: var(--navy); }
+    :focus-visible { outline: 3px solid var(--cyan); outline-offset: 4px; }
+    .shell { width: min(100% - 48px, 940px); margin-inline: auto; }
+    header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; padding-block: 26px; border-bottom: 1px solid var(--line); }
+    .brand { color: var(--navy); font-size: 22px; font-weight: 700; text-decoration: none; letter-spacing: -.04em; }
+    .languages { display: flex; gap: 18px; font-size: 14px; }
+    .languages a[aria-current="page"] { color: var(--navy); font-weight: 700; text-decoration: none; }
+    main { padding-block: 48px 64px; }
+    .back { display: inline-block; font-size: 15px; margin-bottom: 34px; }
+    h1 { font-size: clamp(36px, 6vw, 62px); font-weight: 600; letter-spacing: -.045em; line-height: 1.1; margin: 0 0 24px; max-width: 820px; }
+    .lead { font-size: 21px; line-height: 1.55; }
+    p { margin: 0 0 18px; max-width: 78ch; }
+    .jump-links { display: flex; flex-wrap: wrap; gap: 10px 26px; font-size: 15px; margin-block: 30px 44px; }
+    section { border-top: 1px solid var(--cyan); padding-top: 30px; margin-top: 42px; scroll-margin-top: 24px; }
+    h2 { font-size: clamp(26px, 4vw, 34px); line-height: 1.2; font-weight: 600; letter-spacing: -.025em; margin: 0 0 24px; }
+    h3 { font-size: 19px; font-weight: 600; line-height: 1.4; margin: 24px 0 8px; }
+    .steps { padding-left: 26px; max-width: 78ch; margin: 0 0 24px; }
+    .steps li { padding-left: 8px; margin-bottom: 20px; }
+    .steps li::marker { color: var(--blue); font-weight: 700; }
+    blockquote { margin: 20px 0 28px; padding: 20px 24px; border-left: 2px solid var(--cyan); background: #f5f9fd; max-width: 78ch; }
+    .note { font-size: 15px; }
+    footer { padding-block: 24px 40px; border-top: 1px solid var(--line); font-size: 14px; }
+    @media (max-width: 580px) { .shell { width: calc(100% - 36px); } main { padding-top: 32px; } .lead { font-size: 19px; } .steps { padding-left: 22px; } .steps li { padding-left: 4px; } blockquote { padding: 16px 18px; } }
+  
+    li, p, blockquote { overflow-wrap: anywhere; }
+  </style>
+ </head>
+ <body>
+  <header class="shell">
+   <a class="brand" data-vera-link="" href="../vera/index.html?lang=it">
+    Vera
+   </a>
+   <nav aria-label="Lingua" class="languages">
+    <a aria-current="page" data-lang="it" href="?lang=it" lang="it">
+     IT
+    </a>
+    <a data-lang="en" href="?lang=en" lang="en">
+     EN
+    </a>
+    <a data-lang="fr" href="?lang=fr" lang="fr">
+     FR
+    </a>
+    <a data-lang="de" href="?lang=de" lang="de">
+     DE
+    </a>
+    <a data-lang="es" href="?lang=es" lang="es">
+     ES
+    </a>
+   </nav>
+  </header>
+  <main class="shell" id="main-content">
+   <a class="back" data-i18n="back" data-vera-link="" href="../vera/index.html?lang=it#connections">
+    ← Torna a Integrazioni
+   </a>
+   <h1 data-i18n="title">
+    Usare le skill dello studio
+   </h1>
+   <p class="lead" data-i18n="lead">
+    Installa la tua skill nell’app in cui lavori e richiamala direttamente. Per usarla non occorre invocare Vera.
+   </p>
+   <nav aria-label="Passaggi della guida" class="jump-links" data-nav="">
+    <a data-i18n="prepare" href="#prepare">
+     Prima di iniziare
+    </a>
+    <a data-i18n="claude" href="#claude">
+     Claude e Cowork
+    </a>
+    <a data-i18n="codex" href="#codex">
+     Codex sul computer
+    </a>
+    <a data-i18n="choose" href="#choose">
+     Scegliere la propria skill
+    </a>
+    <a data-i18n="verify" href="#verify">
+     Verificare che funzioni
+    </a>
+   </nav>
+   <section aria-labelledby="prepare-title" id="prepare">
+    <h2 data-i18n="prepare" id="prepare-title">
+     Prima di iniziare
+    </h2>
+    <p data-i18n="package">
+     Chiedi a chi mantiene la skill il pacchetto completo, il nome esatto e l’app per cui è stato preparato. Una skill contiene un file SKILL.md con istruzioni, nome e descrizione, ed eventualmente modelli, riferimenti e script. Un PDF di procedura, da solo, è un documento: non è una skill installata.
+    </p>
+    <p data-i18n="compatibility">
+     Una skill che funziona in Claude va verificata separatamente in Codex: script, strumenti richiesti e modalità di accesso possono differire. Questa guida non certifica la compatibilità delle skill dello studio. Non devi riscriverle da solo: chiedi al loro gestore una versione adatta alla tua app.
+    </p>
+   </section>
+   <section aria-labelledby="claude-title" id="claude">
+    <h2 data-i18n="claude" id="claude-title">
+     Claude e Cowork
+    </h2>
+    <ol class="steps">
+     <li data-i18n="claude1">
+      Apri Personalizza (Customize) → Skills. Premi + → + Create skill → Upload a skill e carica lo ZIP della skill fornito dal gestore.
+     </li>
+     <li data-i18n="claude2">
+      Lo ZIP deve contenere la cartella della skill con il suo file di istruzioni e tutte le risorse. Non caricare soltanto un modello o il file di istruzioni separato dal resto.
+     </li>
+     <li data-i18n="claude3">
+      Abilita la skill nell’elenco. Se mancano queste opzioni, verifica in Settings → Capabilities che Code execution and file creation sia attivo; con un account di studio chiedi all’amministratore di verificare le autorizzazioni per le skill.
+     </li>
+     <li data-i18n="claude4">
+      Apri una nuova conversazione o attività Cowork e chiedi esplicitamente di usare la skill con il suo nome. Usa questo esempio sostituendo il nome inventato e allegando un documento di prova:
+     </li>
+    </ol>
+    <blockquote data-i18n="prompt">
+     Usa la skill «revisione-avvisi-studio» per questo documento di prova. Leggi le sue istruzioni e applica la procedura dello studio. Se non trovi la skill o manca uno strumento, segnalalo prima di procedere.
+    </blockquote>
+    <a data-i18n="claudeDocs" href="https://support.claude.com/en/articles/12512180-use-skills-in-claude" rel="noopener noreferrer" target="_blank">
+     Istruzioni ufficiali Claude per usare le skill ↗
+    </a>
+   </section>
+   <section aria-labelledby="codex-title" id="codex">
+    <h2 data-i18n="codex" id="codex-title">
+     Codex sul computer
+    </h2>
+    <ol class="steps">
+     <li data-i18n="codex1">
+      Fornisci a Codex la cartella completa della skill o il suo percorso sul computer. Per l’installazione personale puoi chiedere: «Installa questa skill nella mia cartella personale ~/.agents/skills/, mantenendo istruzioni e risorse. Verifica nome e descrizione nel file SKILL.md».
+     </li>
+     <li data-i18n="codex2">
+      Il percorso finale è ~/.agents/skills/nome-skill/SKILL.md. Per una skill limitata a un progetto si usa invece .agents/skills/nome-skill/SKILL.md dentro quel progetto. Lo ZIP va estratto: non basta allegarlo alla conversazione. Se non sai quale cartella usare, fatti assistere dal gestore.
+     </li>
+     <li data-i18n="codex3">
+      Apri un’attività locale e controlla che la skill compaia tra quelle disponibili. Se non compare dopo l’installazione, riavvia l’app. Questa installazione sul computer non la rende automaticamente disponibile nella chat web, in cloud o ai colleghi.
+     </li>
+     <li data-i18n="codex4">
+      Nel selettore delle skill dell’app ChatGPT digita @ e scegli la tua skill. Nel terminale Codex o nell’estensione IDE usa /skills oppure $ seguito dal nome. Seleziona la skill effettivamente disponibile, poi descrivi il lavoro e fornisci i materiali.
+     </li>
+    </ol>
+    <a data-i18n="codexDocs" href="https://learn.chatgpt.com/docs/build-skills" rel="noopener noreferrer" target="_blank">
+     Istruzioni ufficiali OpenAI per le skill ↗
+    </a>
+   </section>
+   <section aria-labelledby="choose-title" id="choose">
+    <h2 data-i18n="choose" id="choose-title">
+     Scegliere la propria skill
+    </h2>
+    <p data-i18n="choice">
+     Se vuoi il metodo dello studio, richiama quella skill. Se vuoi un flusso di Vera, richiama Vera o la sua funzione. Installare entrambe non impone di usare Vera e non richiede di copiare la tua skill nel plugin Vera.
+    </p>
+    <p data-i18n="brain">
+     Collegare Second Brain dà accesso ai documenti: non installa né seleziona le skill. Se la tua skill deve consultarlo, il connettore e gli strumenti necessari devono essere disponibili nella stessa attività. Specifica l’archivio e il ramo da consultare.
+    </p>
+    <a data-i18n="brainGuide" data-integration-link="" href="../vera-integrazioni/index.html?lang=it#prepare">
+     Come collegare Second Brain e verificare l’accesso →
+    </a>
+   </section>
+   <section aria-labelledby="verify-title" id="verify">
+    <h2 data-i18n="verify" id="verify-title">
+     Verificare che funzioni
+    </h2>
+    <p data-i18n="verify1">
+     Fai una prova con dati inventati. Controlla prima che la skill sia installata e attiva, poi cerca nella conversazione l’indicazione di caricamento delle istruzioni o la lettura del suo SKILL.md, quando l’app la mostra.
+    </p>
+    <p data-i18n="verify2">
+     Confronta il risultato con i passaggi e il modello di output previsti dalla skill. La sola frase «ho usato la skill» non è una prova. Se l’app non mostra il caricamento, quel dettaglio resta non verificato; chiedi al gestore di controllare con te.
+    </p>
+   </section>
+   <section aria-labelledby="help-title" id="help">
+    <h2 data-i18n="help" id="help-title">
+     Se qualcosa manca
+    </h2>
+    <p data-i18n="helpCopy">
+     Skill assente? Verifica account, cartella o caricamento ZIP e stato di attivazione. Due skill con lo stesso nome? Controlla quale hai selezionato. Uno script o un connettore non funziona? Comunica al gestore app, sistema operativo ed errore: l’installazione delle istruzioni non garantisce tutte le dipendenze.
+    </p>
+    <p class="note" data-i18n="docsDate">
+     Passaggi verificati sulla documentazione ufficiale il 2 ottobre 2026. Nomi dei menu e disponibilità possono cambiare con versione, lingua e account.
+    </p>
+   </section>
+   <section aria-labelledby="data-title" id="model-data">
+    <h2 data-i18n="data" id="data-title">
+     Quali dati arrivano al modello
+    </h2>
+    <p data-i18n="dataCopy">
+     Questa pagina non installa skill e non legge file. Quando usi una skill, il nome e la descrizione possono essere forniti al modello; le istruzioni caricate, i riferimenti letti, i materiali della richiesta e gli output degli strumenti possono entrare nel contesto. Gli script possono elaborare file sul computer, ma questo non rende l’intero lavoro solo locale. Il percorso effettivo dipende dalla skill e dall’app: chiedi al gestore quali file, strumenti e servizi utilizza. Installare una skill non equivale a inviare automaticamente tutte le cartelle dei clienti. Vera non certifica il trattamento dei dati delle skill dello studio.
+    </p>
+    <a data-data-link="" data-i18n="dataPage" href="https://mparanza.com/data-handling?lang=it">
+     Trattamento dei dati di Mparanza
+    </a>
+   </section>
+  </main>
+  <footer class="shell">
+   <a data-i18n="back" data-vera-link="" href="../vera/index.html?lang=it#connections">
+    ← Torna a Integrazioni
+   </a>
+  </footer>
+  <script>
+   const copy = {
+  "it": {
+    "title": "Usare le skill dello studio",
+    "lead": "Installa la tua skill nell’app in cui lavori e richiamala direttamente. Per usarla non occorre invocare Vera.",
+    "back": "← Torna a Integrazioni",
+    "nav": "Passaggi della guida",
+    "prepare": "Prima di iniziare",
+    "claude": "Claude e Cowork",
+    "codex": "Codex sul computer",
+    "choose": "Scegliere la propria skill",
+    "verify": "Verificare che funzioni",
+    "help": "Se qualcosa manca",
+    "data": "Quali dati arrivano al modello",
+    "package": "Chiedi a chi mantiene la skill il pacchetto completo, il nome esatto e l’app per cui è stato preparato. Una skill contiene un file SKILL.md con istruzioni, nome e descrizione, ed eventualmente modelli, riferimenti e script. Un PDF di procedura, da solo, è un documento: non è una skill installata.",
+    "compatibility": "Una skill che funziona in Claude va verificata separatamente in Codex: script, strumenti richiesti e modalità di accesso possono differire. Questa guida non certifica la compatibilità delle skill dello studio. Non devi riscriverle da solo: chiedi al loro gestore una versione adatta alla tua app.",
+    "claude1": "Apri Personalizza (Customize) → Skills. Premi + → + Create skill → Upload a skill e carica lo ZIP della skill fornito dal gestore.",
+    "claude2": "Lo ZIP deve contenere la cartella della skill con il suo file di istruzioni e tutte le risorse. Non caricare soltanto un modello o il file di istruzioni separato dal resto.",
+    "claude3": "Abilita la skill nell’elenco. Se mancano queste opzioni, verifica in Settings → Capabilities che Code execution and file creation sia attivo; con un account di studio chiedi all’amministratore di verificare le autorizzazioni per le skill.",
+    "claude4": "Apri una nuova conversazione o attività Cowork e chiedi esplicitamente di usare la skill con il suo nome. Usa questo esempio sostituendo il nome inventato e allegando un documento di prova:",
+    "prompt": "Usa la skill «revisione-avvisi-studio» per questo documento di prova. Leggi le sue istruzioni e applica la procedura dello studio. Se non trovi la skill o manca uno strumento, segnalalo prima di procedere.",
+    "claudeDocs": "Istruzioni ufficiali Claude per usare le skill ↗",
+    "codex1": "Fornisci a Codex la cartella completa della skill o il suo percorso sul computer. Per l’installazione personale puoi chiedere: «Installa questa skill nella mia cartella personale ~/.agents/skills/, mantenendo istruzioni e risorse. Verifica nome e descrizione nel file SKILL.md».",
+    "codex2": "Il percorso finale è ~/.agents/skills/nome-skill/SKILL.md. Per una skill limitata a un progetto si usa invece .agents/skills/nome-skill/SKILL.md dentro quel progetto. Lo ZIP va estratto: non basta allegarlo alla conversazione. Se non sai quale cartella usare, fatti assistere dal gestore.",
+    "codex3": "Apri un’attività locale e controlla che la skill compaia tra quelle disponibili. Se non compare dopo l’installazione, riavvia l’app. Questa installazione sul computer non la rende automaticamente disponibile nella chat web, in cloud o ai colleghi.",
+    "codex4": "Nel selettore delle skill dell’app ChatGPT digita @ e scegli la tua skill. Nel terminale Codex o nell’estensione IDE usa /skills oppure $ seguito dal nome. Seleziona la skill effettivamente disponibile, poi descrivi il lavoro e fornisci i materiali.",
+    "codexDocs": "Istruzioni ufficiali OpenAI per le skill ↗",
+    "choice": "Se vuoi il metodo dello studio, richiama quella skill. Se vuoi un flusso di Vera, richiama Vera o la sua funzione. Installare entrambe non impone di usare Vera e non richiede di copiare la tua skill nel plugin Vera.",
+    "brain": "Collegare Second Brain dà accesso ai documenti: non installa né seleziona le skill. Se la tua skill deve consultarlo, il connettore e gli strumenti necessari devono essere disponibili nella stessa attività. Specifica l’archivio e il ramo da consultare.",
+    "brainGuide": "Come collegare Second Brain e verificare l’accesso →",
+    "verify1": "Fai una prova con dati inventati. Controlla prima che la skill sia installata e attiva, poi cerca nella conversazione l’indicazione di caricamento delle istruzioni o la lettura del suo SKILL.md, quando l’app la mostra.",
+    "verify2": "Confronta il risultato con i passaggi e il modello di output previsti dalla skill. La sola frase «ho usato la skill» non è una prova. Se l’app non mostra il caricamento, quel dettaglio resta non verificato; chiedi al gestore di controllare con te.",
+    "helpCopy": "Skill assente? Verifica account, cartella o caricamento ZIP e stato di attivazione. Due skill con lo stesso nome? Controlla quale hai selezionato. Uno script o un connettore non funziona? Comunica al gestore app, sistema operativo ed errore: l’installazione delle istruzioni non garantisce tutte le dipendenze.",
+    "dataCopy": "Questa pagina non installa skill e non legge file. Quando usi una skill, il nome e la descrizione possono essere forniti al modello; le istruzioni caricate, i riferimenti letti, i materiali della richiesta e gli output degli strumenti possono entrare nel contesto. Gli script possono elaborare file sul computer, ma questo non rende l’intero lavoro solo locale. Il percorso effettivo dipende dalla skill e dall’app: chiedi al gestore quali file, strumenti e servizi utilizza. Installare una skill non equivale a inviare automaticamente tutte le cartelle dei clienti. Vera non certifica il trattamento dei dati delle skill dello studio.",
+    "dataPage": "Trattamento dei dati di Mparanza",
+    "docsDate": "Passaggi verificati sulla documentazione ufficiale il 2 ottobre 2026. Nomi dei menu e disponibilità possono cambiare con versione, lingua e account.",
+    "guideLink": "Come installare e usare le skill dello studio →"
+  },
+  "en": {
+    "title": "Using your firm’s skills",
+    "lead": "Install your skill in the app where you work and invoke it directly. You do not need to invoke Vera to use it.",
+    "back": "← Back to Integrations",
+    "nav": "Guide steps",
+    "prepare": "Before you start",
+    "claude": "Claude and Cowork",
+    "codex": "Codex on your computer",
+    "choose": "Choosing your own skill",
+    "verify": "Checking that it works",
+    "help": "If something is missing",
+    "data": "What data reaches the model",
+    "package": "Ask the skill maintainer for the complete package, its exact name and the app it was prepared for. A skill contains a SKILL.md file with instructions, a name and a description, and may include templates, references and scripts. A procedure PDF on its own is a document, not an installed skill.",
+    "compatibility": "A skill that works in Claude needs separate verification in Codex: scripts, required tools and access methods can differ. This guide does not certify your firm’s skills as compatible. Ask the maintainer for a version suited to your app; you do not need to rewrite it yourself.",
+    "claude1": "Open Customize → Skills. Select + → + Create skill → Upload a skill, then upload the skill ZIP supplied by its maintainer.",
+    "claude2": "The ZIP must contain the skill folder, its instructions file and all resources. Do not upload only a template or an instructions file separated from the rest.",
+    "claude3": "Enable the skill in the list. If these options are missing, check Settings → Capabilities for Code execution and file creation; with a firm account, ask the administrator to check skill permissions.",
+    "claude4": "Start a new chat or Cowork task and explicitly request the skill by name. Replace the invented name in this example and attach a test document:",
+    "prompt": "Use the “firm-notice-review” skill for this test document. Read its instructions and apply the firm’s procedure. If you cannot find the skill or a tool is missing, report that before proceeding.",
+    "claudeDocs": "Official Claude instructions for using skills ↗",
+    "codex1": "Give Codex the complete skill folder or its location on your computer. For personal installation, ask: “Install this skill in my personal ~/.agents/skills/ folder, preserving instructions and resources. Check the name and description in SKILL.md.”",
+    "codex2": "The final path is ~/.agents/skills/skill-name/SKILL.md. For a project-only skill, use .agents/skills/skill-name/SKILL.md inside that project instead. Extract the ZIP: attaching it to a conversation is insufficient. Ask the maintainer if you are unsure which folder to use.",
+    "codex3": "Open a local task and check that the skill is available. Restart the app if it does not appear after installation. Installing it on your computer does not automatically make it available in web chats, cloud tasks or to colleagues.",
+    "codex4": "In the ChatGPT app’s skill picker, type @ and choose your skill. In the Codex terminal or IDE extension, use /skills or $ followed by its name. Select the skill that is actually available, then describe the task and provide materials.",
+    "codexDocs": "Official OpenAI instructions for skills ↗",
+    "choice": "To use your firm’s method, invoke that skill. To use a Vera workflow, invoke Vera or its function. Installing both does not require you to use Vera or copy your skill into the Vera plugin.",
+    "brain": "Connecting Second Brain provides document access; it does not install or select skills. If your skill needs to consult it, the connector and required tools must be available in the same task. Specify the archive and branch to consult.",
+    "brainGuide": "How to connect Second Brain and verify access →",
+    "verify1": "Test with invented data. First check that the skill is installed and enabled, then look in the conversation for an indication that its instructions were loaded or its SKILL.md read, where the app displays this.",
+    "verify2": "Compare the result with the steps and output template prescribed by the skill. “I used the skill” alone is not proof. If the app does not show loading, that detail remains unverified; ask the maintainer to check with you.",
+    "helpCopy": "Missing skill? Check your account, folder or ZIP upload, and enablement. Two skills with the same name? Check which you selected. A script or connector fails? Give the maintainer the app, operating system and error: installing instructions does not guarantee all dependencies.",
+    "dataCopy": "This page does not install skills or read files. When you use a skill, its name and description may be provided to the model; loaded instructions, read references, task materials and tool outputs may enter its context. Scripts may process files on your computer, but that does not make the whole task local-only. The actual path depends on the skill and app: ask the maintainer which files, tools and services it uses. Installing a skill does not automatically send every client folder. Vera does not certify how your firm’s skills handle data.",
+    "dataPage": "Mparanza data handling",
+    "docsDate": "Steps checked against official documentation on 2 October 2026. Menu names and availability may vary by version, language and account.",
+    "guideLink": "How to install and use your firm’s skills →"
+  },
+  "fr": {
+    "title": "Utiliser les skills du cabinet",
+    "lead": "Installez votre skill dans l’application où vous travaillez et invoquez-la directement. Vous n’avez pas besoin d’invoquer Vera pour l’utiliser.",
+    "back": "← Retour aux Intégrations",
+    "nav": "Étapes du guide",
+    "prepare": "Avant de commencer",
+    "claude": "Claude et Cowork",
+    "codex": "Codex sur votre ordinateur",
+    "choose": "Choisir sa propre skill",
+    "verify": "Vérifier le fonctionnement",
+    "help": "Si un élément manque",
+    "data": "Quelles données arrivent au modèle",
+    "package": "Demandez au responsable de la skill le paquet complet, son nom exact et l’application prévue. Une skill contient un fichier SKILL.md avec des instructions, un nom et une description, et peut inclure des modèles, références et scripts. Un PDF de procédure seul est un document, pas une skill installée.",
+    "compatibility": "Une skill qui fonctionne dans Claude doit être vérifiée séparément dans Codex : scripts, outils et accès peuvent différer. Ce guide ne certifie pas la compatibilité des skills du cabinet. Demandez au responsable une version adaptée à votre application ; vous n’avez pas à la réécrire vous-même.",
+    "claude1": "Ouvrez Personnaliser (Customize) → Skills. Choisissez + → + Create skill → Upload a skill, puis chargez le ZIP fourni par le responsable.",
+    "claude2": "Le ZIP doit contenir le dossier de la skill, son fichier d’instructions et toutes ses ressources. Ne chargez pas seulement un modèle ou les instructions séparées du reste.",
+    "claude3": "Activez la skill dans la liste. Si ces options manquent, vérifiez Code execution and file creation dans Settings → Capabilities ; avec un compte de cabinet, demandez à l’administrateur de vérifier les autorisations des skills.",
+    "claude4": "Ouvrez une nouvelle conversation ou tâche Cowork et demandez explicitement la skill par son nom. Remplacez le nom fictif dans cet exemple et joignez un document de test :",
+    "prompt": "Utilise la skill « examen-avis-cabinet » pour ce document de test. Lis ses instructions et applique la procédure du cabinet. Si la skill est introuvable ou si un outil manque, signale-le avant de poursuivre.",
+    "claudeDocs": "Instructions officielles Claude pour utiliser les skills ↗",
+    "codex1": "Fournissez à Codex le dossier complet de la skill ou son emplacement sur l’ordinateur. Pour une installation personnelle, demandez : « Installe cette skill dans mon dossier personnel ~/.agents/skills/, en conservant instructions et ressources. Vérifie le nom et la description dans SKILL.md. »",
+    "codex2": "Le chemin final est ~/.agents/skills/nom-skill/SKILL.md. Pour une skill limitée à un projet, utilisez .agents/skills/nom-skill/SKILL.md dans ce projet. Extrayez le ZIP : le joindre à une conversation ne suffit pas. En cas de doute sur le dossier, demandez au responsable.",
+    "codex3": "Ouvrez une tâche locale et vérifiez que la skill est disponible. Redémarrez l’application si elle n’apparaît pas après installation. L’installation sur votre ordinateur ne la rend pas automatiquement disponible sur le web, dans le cloud ou chez vos collègues.",
+    "codex4": "Dans le sélecteur de skills de l’application ChatGPT, tapez @ et choisissez votre skill. Dans le terminal Codex ou l’extension IDE, utilisez /skills ou $ suivi du nom. Sélectionnez la skill réellement disponible, puis décrivez le travail et fournissez les documents.",
+    "codexDocs": "Instructions officielles OpenAI pour les skills ↗",
+    "choice": "Pour suivre la méthode du cabinet, invoquez cette skill. Pour un processus Vera, invoquez Vera ou sa fonction. Installer les deux n’impose pas d’utiliser Vera ni de copier votre skill dans son plugin.",
+    "brain": "Connecter Second Brain donne accès aux documents ; cela n’installe ni ne sélectionne les skills. Si votre skill doit le consulter, le connecteur et les outils nécessaires doivent être disponibles dans la même tâche. Précisez l’archive et la branche à consulter.",
+    "brainGuide": "Connecter Second Brain et vérifier l’accès →",
+    "verify1": "Testez avec des données fictives. Vérifiez d’abord l’installation et l’activation, puis cherchez dans la conversation l’indication du chargement des instructions ou de la lecture du SKILL.md, lorsque l’application l’affiche.",
+    "verify2": "Comparez le résultat aux étapes et au modèle de sortie prescrits. La phrase « j’ai utilisé la skill » ne suffit pas. Si le chargement n’est pas affiché, ce point reste non vérifié ; demandez au responsable de contrôler avec vous.",
+    "helpCopy": "Skill absente ? Vérifiez compte, dossier ou chargement ZIP et activation. Deux skills de même nom ? Vérifiez votre sélection. Un script ou un connecteur échoue ? Communiquez au responsable application, système et erreur : installer les instructions ne garantit pas toutes les dépendances.",
+    "dataCopy": "Cette page n’installe aucune skill et ne lit aucun fichier. Lors de l’utilisation, le nom et la description peuvent être fournis au modèle ; instructions chargées, références lues, documents de la demande et résultats des outils peuvent entrer dans son contexte. Des scripts peuvent traiter des fichiers sur l’ordinateur sans rendre tout le travail exclusivement local. Le parcours réel dépend de la skill et de l’application : demandez au responsable quels fichiers, outils et services elle utilise. L’installation n’envoie pas automatiquement tous les dossiers clients. Vera ne certifie pas le traitement des données des skills du cabinet.",
+    "dataPage": "Traitement des données de Mparanza",
+    "docsDate": "Étapes vérifiées dans la documentation officielle le 2 octobre 2026. Menus et disponibilité peuvent varier selon version, langue et compte.",
+    "guideLink": "Installer et utiliser les skills du cabinet →"
+  },
+  "de": {
+    "title": "Skills der Kanzlei verwenden",
+    "lead": "Installieren Sie Ihren Skill in der App, in der Sie arbeiten, und rufen Sie ihn direkt auf. Dafür müssen Sie Vera nicht aufrufen.",
+    "back": "← Zurück zu Integrationen",
+    "nav": "Schritte der Anleitung",
+    "prepare": "Vor dem Start",
+    "claude": "Claude und Cowork",
+    "codex": "Codex auf Ihrem Computer",
+    "choose": "Den eigenen Skill auswählen",
+    "verify": "Die Funktion prüfen",
+    "help": "Wenn etwas fehlt",
+    "data": "Welche Daten das Modell erreichen",
+    "package": "Bitten Sie die verantwortliche Person um das vollständige Paket, den genauen Namen und die vorgesehene App. Ein Skill enthält eine SKILL.md mit Anweisungen, Name und Beschreibung sowie gegebenenfalls Vorlagen, Referenzen und Skripte. Eine PDF mit einer Verfahrensanweisung allein ist ein Dokument, kein installierter Skill.",
+    "compatibility": "Ein in Claude funktionierender Skill muss in Codex separat geprüft werden: Skripte, Werkzeuge und Zugriff können abweichen. Diese Anleitung bestätigt keine Kompatibilität Ihrer Kanzlei-Skills. Bitten Sie die verantwortliche Person um eine für Ihre App geeignete Version; Sie müssen sie nicht selbst umschreiben.",
+    "claude1": "Öffnen Sie Customize → Skills. Wählen Sie + → + Create skill → Upload a skill und laden Sie die bereitgestellte ZIP-Datei hoch.",
+    "claude2": "Die ZIP-Datei muss den Skill-Ordner mit Anweisungsdatei und allen Ressourcen enthalten. Laden Sie nicht nur eine Vorlage oder die vom Rest getrennte Anweisungsdatei hoch.",
+    "claude3": "Aktivieren Sie den Skill in der Liste. Fehlen die Optionen, prüfen Sie Code execution and file creation unter Settings → Capabilities. Bei einem Kanzleikonto lassen Sie die Skill-Berechtigungen durch die Administration prüfen.",
+    "claude4": "Starten Sie einen neuen Chat oder eine Cowork-Aufgabe und fordern Sie den Skill ausdrücklich mit seinem Namen an. Ersetzen Sie den erfundenen Namen im Beispiel und fügen Sie ein Testdokument bei:",
+    "prompt": "Verwende den Skill „kanzlei-bescheidpruefung“ für dieses Testdokument. Lies seine Anweisungen und wende das Kanzleiverfahren an. Falls der Skill oder ein Werkzeug fehlt, melde dies vor dem Fortfahren.",
+    "claudeDocs": "Offizielle Claude-Anleitung zur Verwendung von Skills ↗",
+    "codex1": "Geben Sie Codex den vollständigen Skill-Ordner oder dessen Speicherort. Für die persönliche Installation können Sie bitten: „Installiere diesen Skill in meinem persönlichen Ordner ~/.agents/skills/ und erhalte Anweisungen und Ressourcen. Prüfe Name und Beschreibung in SKILL.md.“",
+    "codex2": "Der endgültige Pfad lautet ~/.agents/skills/skill-name/SKILL.md. Für einen projektspezifischen Skill verwenden Sie .agents/skills/skill-name/SKILL.md im Projekt. Entpacken Sie die ZIP-Datei; Anhängen an einen Chat reicht nicht. Lassen Sie sich bei der Ordnerwahl helfen.",
+    "codex3": "Öffnen Sie eine lokale Aufgabe und prüfen Sie die Verfügbarkeit des Skills. Erscheint er nach der Installation nicht, starten Sie die App neu. Die Installation auf Ihrem Computer macht ihn nicht automatisch im Web, in Cloud-Aufgaben oder für Kollegen verfügbar.",
+    "codex4": "Tippen Sie in der Skill-Auswahl der ChatGPT-App @ und wählen Sie Ihren Skill. Im Codex-Terminal oder der IDE-Erweiterung verwenden Sie /skills oder $ mit dem Namen. Wählen Sie den tatsächlich verfügbaren Skill, beschreiben Sie dann die Aufgabe und geben Sie die Unterlagen an.",
+    "codexDocs": "Offizielle OpenAI-Anleitung für Skills ↗",
+    "choice": "Für die Kanzleimethode rufen Sie Ihren Skill auf. Für einen Vera-Ablauf rufen Sie Vera oder die entsprechende Funktion auf. Die Installation beider verlangt weder die Verwendung von Vera noch das Kopieren Ihres Skills in das Vera-Plugin.",
+    "brain": "Second Brain zu verbinden ermöglicht Dokumentenzugriff; es installiert oder wählt keine Skills. Soll Ihr Skill darauf zugreifen, müssen Konnektor und Werkzeuge in derselben Aufgabe verfügbar sein. Geben Sie Archiv und Zweig an.",
+    "brainGuide": "Second Brain verbinden und den Zugriff prüfen →",
+    "verify1": "Testen Sie mit erfundenen Daten. Prüfen Sie zuerst Installation und Aktivierung. Suchen Sie anschließend im Chat nach dem Laden der Anweisungen oder dem Lesen der SKILL.md, soweit die App dies anzeigt.",
+    "verify2": "Vergleichen Sie das Ergebnis mit den vorgeschriebenen Schritten und der Ausgabevorlage. „Ich habe den Skill verwendet“ allein ist kein Nachweis. Zeigt die App das Laden nicht, bleibt dies ungeprüft; bitten Sie die verantwortliche Person um gemeinsame Prüfung.",
+    "helpCopy": "Skill fehlt? Prüfen Sie Konto, Ordner oder ZIP-Upload und Aktivierung. Zwei gleichnamige Skills? Prüfen Sie Ihre Auswahl. Ein Skript oder Konnektor schlägt fehl? Melden Sie App, Betriebssystem und Fehler: Installierte Anweisungen garantieren nicht alle Abhängigkeiten.",
+    "dataCopy": "Diese Seite installiert keine Skills und liest keine Dateien. Bei der Skill-Verwendung können Name und Beschreibung dem Modell bereitgestellt werden; geladene Anweisungen, gelesene Referenzen, Aufgabenunterlagen und Werkzeugausgaben können in seinen Kontext gelangen. Skripte können Dateien auf dem Computer verarbeiten, ohne dass die gesamte Aufgabe ausschließlich lokal bleibt. Der tatsächliche Weg hängt von Skill und App ab: Fragen Sie nach verwendeten Dateien, Werkzeugen und Diensten. Die Installation sendet nicht automatisch alle Mandantenordner. Vera bestätigt nicht die Datenverarbeitung Ihrer Kanzlei-Skills.",
+    "dataPage": "Datenverarbeitung bei Mparanza",
+    "docsDate": "Schritte am 2. Oktober 2026 anhand offizieller Dokumentation geprüft. Menüs und Verfügbarkeit können je nach Version, Sprache und Konto abweichen.",
+    "guideLink": "Skills der Kanzlei installieren und verwenden →"
+  },
+  "es": {
+    "title": "Usar las skills del despacho",
+    "lead": "Instala tu skill en la aplicación donde trabajas e invócala directamente. No necesitas invocar Vera para usarla.",
+    "back": "← Volver a Integraciones",
+    "nav": "Pasos de la guía",
+    "prepare": "Antes de empezar",
+    "claude": "Claude y Cowork",
+    "codex": "Codex en tu ordenador",
+    "choose": "Elegir tu propia skill",
+    "verify": "Verificar que funciona",
+    "help": "Si falta algo",
+    "data": "Qué datos llegan al modelo",
+    "package": "Pide al responsable el paquete completo, el nombre exacto y la aplicación para la que se preparó. Una skill contiene un archivo SKILL.md con instrucciones, nombre y descripción, y puede incluir plantillas, referencias y scripts. Un PDF de procedimiento por sí solo es un documento, no una skill instalada.",
+    "compatibility": "Una skill que funciona en Claude debe verificarse por separado en Codex: scripts, herramientas y acceso pueden diferir. Esta guía no certifica la compatibilidad de las skills del despacho. Pide al responsable una versión adecuada; no necesitas reescribirla tú.",
+    "claude1": "Abre Personalizar (Customize) → Skills. Elige + → + Create skill → Upload a skill y carga el ZIP proporcionado por el responsable.",
+    "claude2": "El ZIP debe contener la carpeta de la skill, su archivo de instrucciones y todos sus recursos. No cargues solo una plantilla o las instrucciones separadas del resto.",
+    "claude3": "Activa la skill en la lista. Si faltan estas opciones, comprueba Code execution and file creation en Settings → Capabilities; con una cuenta de despacho, pide al administrador que revise los permisos de skills.",
+    "claude4": "Abre una nueva conversación o tarea Cowork y pide explícitamente la skill por su nombre. Sustituye el nombre inventado del ejemplo y adjunta un documento de prueba:",
+    "prompt": "Usa la skill « revision-notificaciones-despacho » para este documento de prueba. Lee sus instrucciones y aplica el procedimiento del despacho. Si no encuentras la skill o falta una herramienta, indícalo antes de continuar.",
+    "claudeDocs": "Instrucciones oficiales de Claude para usar skills ↗",
+    "codex1": "Proporciona a Codex la carpeta completa de la skill o su ubicación en el ordenador. Para instalarla de forma personal, pide: «Instala esta skill en mi carpeta personal ~/.agents/skills/, conservando instrucciones y recursos. Revisa el nombre y la descripción en SKILL.md».",
+    "codex2": "La ruta final es ~/.agents/skills/nombre-skill/SKILL.md. Para limitarla a un proyecto, usa .agents/skills/nombre-skill/SKILL.md dentro del proyecto. Extrae el ZIP: adjuntarlo a la conversación no basta. Si dudas sobre la carpeta, pide ayuda al responsable.",
+    "codex3": "Abre una tarea local y comprueba que la skill esté disponible. Reinicia la aplicación si no aparece tras instalarla. Instalarla en el ordenador no la hace disponible automáticamente en la web, la nube ni para tus compañeros.",
+    "codex4": "En el selector de skills de la aplicación ChatGPT, escribe @ y elige tu skill. En el terminal Codex o la extensión IDE, usa /skills o $ seguido del nombre. Selecciona la skill realmente disponible, describe el trabajo y proporciona los materiales.",
+    "codexDocs": "Instrucciones oficiales de OpenAI para las skills ↗",
+    "choice": "Para seguir el método del despacho, invoca esa skill. Para un flujo de Vera, invoca Vera o su función. Instalar ambas no obliga a usar Vera ni a copiar tu skill dentro del plugin Vera.",
+    "brain": "Conectar Second Brain da acceso a documentos; no instala ni selecciona skills. Si tu skill debe consultarlo, el conector y las herramientas necesarias deben estar disponibles en la misma tarea. Indica el archivo y la rama que consultar.",
+    "brainGuide": "Conectar Second Brain y verificar el acceso →",
+    "verify1": "Prueba con datos inventados. Comprueba primero instalación y activación; después busca en la conversación la indicación de carga de instrucciones o lectura de SKILL.md, cuando la aplicación la muestre.",
+    "verify2": "Compara el resultado con los pasos y la plantilla de salida previstos. La frase «he usado la skill» no demuestra su uso. Si la aplicación no muestra la carga, ese detalle sigue sin verificarse; pide al responsable que lo compruebe contigo.",
+    "helpCopy": "¿No aparece la skill? Revisa cuenta, carpeta o carga ZIP y activación. ¿Dos skills con el mismo nombre? Comprueba cuál seleccionaste. ¿Falla un script o conector? Comunica aplicación, sistema operativo y error: instalar las instrucciones no garantiza todas las dependencias.",
+    "dataCopy": "Esta página no instala skills ni lee archivos. Al usar una skill, el nombre y la descripción pueden proporcionarse al modelo; instrucciones cargadas, referencias leídas, materiales de la petición y resultados de herramientas pueden entrar en su contexto. Los scripts pueden procesar archivos en el ordenador sin que todo el trabajo sea solo local. La ruta real depende de la skill y la aplicación: pregunta qué archivos, herramientas y servicios utiliza. Instalar una skill no envía automáticamente todas las carpetas de clientes. Vera no certifica el tratamiento de datos de las skills del despacho.",
+    "dataPage": "Tratamiento de datos de Mparanza",
+    "docsDate": "Pasos revisados en la documentación oficial el 2 de octubre de 2026. Menús y disponibilidad pueden variar según versión, idioma y cuenta.",
+    "guideLink": "Instalar y usar las skills del despacho →"
+  }
+};
+    const requested = new URLSearchParams(location.search).get('lang');
+    const lang = Object.hasOwn(copy, requested) ? requested : 'it';
+    const text = copy[lang];
+    document.documentElement.lang = lang;
+    document.title = text.title + ' · Vera';
+    document.querySelector('meta[name="description"]').content = text.lead;
+    document.querySelector('link[rel="canonical"]').href = "https://mparanza.com/static/shared/vera-skill-studio/index.html" + '?lang=' + lang;
+    document.querySelectorAll('[data-i18n]').forEach(node => { node.textContent = text[node.dataset.i18n]; });
+    const languageLabels = {it:'Lingua', en:'Language', fr:'Langue', de:'Sprache', es:'Idioma'};
+    document.querySelector('.languages').setAttribute('aria-label', languageLabels[lang]);
+    document.querySelector('[data-nav]').setAttribute('aria-label', text.nav);
+    document.querySelectorAll('[data-lang]').forEach(link => {
+      if (link.dataset.lang === lang) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
+    document.querySelectorAll('[data-vera-link], [data-integration-link]').forEach(link => {
+      const target = new URL(link.getAttribute('href'), location.href);
+      target.searchParams.set('lang', lang);
+      link.href = target.href;
+    });
+    document.querySelector('[data-data-link]').href = 'https://mparanza.com/data-handling?lang=' + lang;
+  </script>
+ </body>
+</html>

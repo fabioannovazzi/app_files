@@ -216,6 +216,7 @@
     <p data-i18n="skillsCopy">
      Il connettore dà accesso ai documenti, non installa le skill dello studio. Se vuoi usare una tua skill, installala e richiamala direttamente nell’app che la supporta, con il nome o comando previsto da quell’app. Puoi usare la tua skill senza invocare Vera. Non occorre copiarla nel plugin Vera.
     </p>
+    <p><a data-skills-link href="../vera-skill-studio/index.html?lang=it" data-i18n="skillsGuide">Come installare e usare le skill dello studio →</a></p>
    </section>
    <section aria-labelledby="help-title" id="help">
     <h2 data-i18n="help" id="help-title">
@@ -337,6 +338,7 @@
     "exampleTitle": "Esempio per un lavoro reale",
     "example": "Usa Vera per esaminare questo avviso. Prima consulta la procedura approvata dello studio nel ramo «contenzioso» di Second Brain. Cita le fonti effettivamente aperte e segnala eventuali versioni in conflitto o informazioni mancanti.",
     "skillsCopy": "Il connettore dà accesso ai documenti, non installa le skill dello studio. Se vuoi usare una tua skill, installala e richiamala direttamente nell’app che la supporta, con il nome o comando previsto da quell’app. Puoi usare la tua skill senza invocare Vera. Non occorre copiarla nel plugin Vera.",
+    "skillsGuide": "Come installare e usare le skill dello studio →",
     "missingTitle": "Non compare Aggiungi connettore / Aggiungi server",
     "missing": "Verifica di essere nell’app e nell’account corretti. Chiedi all’amministratore se il tuo ruolo può aggiungere connessioni personalizzate.",
     "deniedTitle": "Accesso negato o richiesta di login",
@@ -400,6 +402,7 @@
     "exampleTitle": "Example for a real task",
     "example": "Use Vera to examine this notice. First consult the firm’s approved procedure in the “litigation” branch of Second Brain. Cite the sources actually opened and flag conflicting versions or missing information.",
     "skillsCopy": "The connector gives access to documents; it does not install the firm’s skills. To use your own skill, install and invoke it directly in the app that supports it, using that app’s name or command. You can use your skill without invoking Vera. You do not need to copy it into the Vera plugin.",
+    "skillsGuide": "How to install and use your firm’s skills →",
     "missingTitle": "Add connector / Add server is missing",
     "missing": "Check that you are in the right app and account. Ask the administrator whether your role may add custom connections.",
     "deniedTitle": "Access denied or sign-in requested",
@@ -463,6 +466,7 @@
     "exampleTitle": "Exemple pour un travail réel",
     "example": "Utilise Vera pour examiner cet avis. Consulte d’abord la procédure approuvée du cabinet dans la branche « contentieux » de Second Brain. Cite les sources effectivement ouvertes et signale les versions contradictoires ou les informations manquantes.",
     "skillsCopy": "Le connecteur donne accès aux documents ; il n’installe pas les skills du cabinet. Pour utiliser votre skill, installez-la et invoquez-la directement dans l’application compatible, avec le nom ou la commande prévu. Vous pouvez l’utiliser sans invoquer Vera et sans la copier dans le plugin Vera.",
+    "skillsGuide": "Installer et utiliser les skills du cabinet →",
     "missingTitle": "Ajouter un connecteur / un serveur est absent",
     "missing": "Vérifiez l’application et le compte. Demandez à l’administrateur si votre rôle peut ajouter des connexions personnalisées.",
     "deniedTitle": "Accès refusé ou connexion demandée",
@@ -526,6 +530,7 @@
     "exampleTitle": "Beispiel für eine echte Aufgabe",
     "example": "Prüfe diesen Bescheid mit Vera. Lies zuerst das freigegebene Kanzleiverfahren im Bereich „Streitverfahren“ von Second Brain. Zitiere tatsächlich geöffnete Quellen und benenne widersprüchliche Versionen oder fehlende Informationen.",
     "skillsCopy": "Der Konnektor erschließt Dokumente und installiert keine Kanzlei-Skills. Installieren und starten Sie Ihren eigenen Skill direkt in einer unterstützten App mit deren vorgesehenem Namen oder Befehl. Sie können ihn ohne Vera verwenden und müssen ihn nicht in das Vera-Plugin kopieren.",
+    "skillsGuide": "Skills der Kanzlei installieren und verwenden →",
     "missingTitle": "Konnektor / Server hinzufügen fehlt",
     "missing": "Prüfen Sie App und Konto. Fragen Sie den Administrator, ob Ihre Rolle eigene Verbindungen hinzufügen darf.",
     "deniedTitle": "Zugriff verweigert oder Anmeldung verlangt",
@@ -589,6 +594,7 @@
     "exampleTitle": "Ejemplo para un trabajo real",
     "example": "Usa Vera para examinar esta notificación. Consulta primero el procedimiento aprobado del despacho en la rama «contencioso» de Second Brain. Cita las fuentes realmente abiertas y señala versiones contradictorias o información que falta.",
     "skillsCopy": "El conector da acceso a documentos; no instala las skills del despacho. Para usar tu skill, instálala e invócala directamente en la aplicación compatible, con el nombre o comando previsto. Puedes usarla sin invocar Vera y sin copiarla al plugin Vera.",
+    "skillsGuide": "Instalar y usar las skills del despacho →",
     "missingTitle": "No aparece Añadir conector / servidor",
     "missing": "Comprueba la aplicación y la cuenta. Pregunta al administrador si tu rol puede añadir conexiones personalizadas.",
     "deniedTitle": "Acceso denegado o solicitud de inicio de sesión",
@@ -629,7 +635,7 @@
       if (link.dataset.lang === lang) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     });
-    document.querySelectorAll('[data-vera-link]').forEach(link => {
+    document.querySelectorAll('[data-vera-link], [data-skills-link]').forEach(link => {
       const target = new URL(link.getAttribute('href'), location.href);
       target.searchParams.set('lang', lang);
       link.href = target.href;
