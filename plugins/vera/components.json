@@ -37,7 +37,8 @@
     "esg-reporting-assurance",
     "trasformazione",
     "fusione-guidata",
-    "patent-box-review"
+    "patent-box-review",
+    "rating-legalita"
   ],
   "shared_services": [
     "managed-python-runtime",

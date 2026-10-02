@@ -539,6 +539,16 @@
         "modules/patent-box-review/scripts/patent_box_sources.py",
         "modules/patent-box-review/scripts/patent_box_workflow.py"
       ]
+    },
+    {
+      "component_id": "rating-legalita",
+      "skills": [
+        "modules/rating-legalita/skills/rating-legalita/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/rating-legalita/scripts/check_dependencies.py",
+        "modules/rating-legalita/scripts/rating_case.py"
+      ]
     }
   ],
   "vera_wrapper_skills": [
@@ -579,6 +589,7 @@
     "skills/privacy-surface-review/SKILL.md",
     "skills/purchase-invoice-review/SKILL.md",
     "skills/quesito-legale-fiscale/SKILL.md",
+    "skills/rating-legalita/SKILL.md",
     "skills/registro-imprese-sari/SKILL.md",
     "skills/sales-plan/SKILL.md",
     "skills/scissione-guidata/SKILL.md",

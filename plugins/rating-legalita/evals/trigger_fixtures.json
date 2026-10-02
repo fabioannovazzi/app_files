@@ -1,0 +1,34 @@
+{
+  "plugin": "rating-legalita",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "first-without-documents",
+      "prompt": "Devo fare la prima domanda di rating di legalità per un cliente e non ho ancora documenti.",
+      "required_signals": [
+        "rating-legalita",
+        "pre-intake",
+        "nessun cliente fittizio"
+      ]
+    },
+    {
+      "id": "documented-application",
+      "prompt": "Esamina questi documenti per la prima attribuzione AGCM, separa dichiarazioni e prove e prepara i gap.",
+      "required_signals": [
+        "rating-legalita",
+        "evidence",
+        "professional review"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "bank-credit-rating",
+      "prompt": "Calcola il rating creditizio per un finanziamento bancario."
+    },
+    {
+      "id": "renewal-boundary",
+      "prompt": "Invia il rinnovo del rating AGCM già ottenuto."
+    }
+  ]
+}

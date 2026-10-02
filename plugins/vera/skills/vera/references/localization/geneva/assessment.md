@@ -1,8 +1,8 @@
 # Vera — Geneva localization assessment and implementation
 
-Updated 2026-10-01 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
+Updated 2026-10-02 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
 
-The current inventory covers all 47 skill entrypoints, including internal helpers and development prototypes. All prior professional judgments are retained; catalogue coverage does not establish target-country acceptance.
+The current inventory covers all 48 skill entrypoints, including internal helpers and development prototypes. All prior professional judgments are retained; catalogue coverage does not establish target-country acceptance.
 
 The release adds bounded adapters and instructions, not a blanket claim that every fiduciary mandate is supported. Original evidence and professional decisions remain necessary. No real Geneva client workflow has been accepted.
 
@@ -43,6 +43,7 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 | privacy-surface-review | Use | Existing function retained with the recorded qualification limits. |
 | purchase-invoice-review | Adapt | Reviewed Swiss document population adapter feeding the existing matching, arithmetic and semantic audit; exact source and extraction-review hashes checked. |
 | quesito-legale-fiscale | Use | Existing function retained with the recorded qualification limits. |
+| rating-legalita | Unresolved | First Italian AGCM application only. No Geneva adaptation or equivalent domestic mandate established; translated output does not establish Swiss applicability. |
 | registro-imprese-sari | Adapt | Explicit CH-GE intake/plan, official Swiss source hosts, local authority/position handling and French labels; no portal filing. |
 | sales-plan | Use | Existing function retained with the recorded qualification limits. |
 | studio-archive | Adapt | Swiss IDE normalization and explicit OCR language through CLI/MCP; language changes trigger reindexing. |
@@ -114,3 +115,7 @@ The 0.1.312 CNC release integrates the Patent Box and Adeguati assetti courses f
 ## Studio document format release binding — 1 October 2026
 
 Vera 0.1.324 adds the studio Word-format pipeline and its course. The 47-entry snapshot records the new skill and refreshed manifest/entrypoint hashes. All 46 prior Geneva rows are preserved. The new row is Unresolved for CH-GE: generic format and synthetic report checks do not establish a French/CHF Geneva consumer case or professional acceptance. Language remains independent of jurisdiction.
+
+## Rating di legalità catalogue integration — 2 October 2026
+
+Vera 0.1.334 adds the Italian first-attribution workflow, preserving the intervening French discovery keywords and Antigravity documentation. The 48-entry catalogue retains all 47 prior target rows and records this new function as Unresolved for CH-GE. The evidence dossier, event dates and pilot safeguards implement the Italian scope only. No equivalent Geneva procedure or professional acceptance is claimed.

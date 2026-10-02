@@ -943,6 +943,25 @@
       "verification": "Source and exact-package synthetic preview, approval, revision and report-reuse checks passed. No CH-GE consumer or real Geneva fiduciary acceptance was run.",
       "implementation": "Shared Word standard pipeline; current output consumer is financial-report DOCX.",
       "implementation_status": "target_acceptance_unresolved"
+    },
+    {
+      "function_id": "rating-legalita",
+      "name": "Italian AGCM legality-rating dossier",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Organize source-linked application evidence, professional control decisions, missing documents, event dates and measured review time.",
+      "geneva_application": "The implementation supports only a first Italian AGCM application. Equivalent domestic Geneva professional work has not been established; French output does not select Swiss rules.",
+      "required_change": "No Geneva adaptation is implemented. Establish an actual mandate and applicable target procedure before assessing adaptation; retain the existing function for explicitly Italian AGCM work.",
+      "adaptation_layers": [
+        "mandate and jurisdiction qualification"
+      ],
+      "acceptance_example": "A French-language request must retain the explicit Italian AGCM scope or leave Swiss applicability unresolved; it must not claim to prepare a Geneva rating application.",
+      "sources": [
+        "rating_legalita_implementation"
+      ],
+      "verification": "Component instructions, schema, arithmetic and evidence-history tests inspected. Synthetic cases do not establish legal interpretation from client documents or Geneva professional acceptance.",
+      "implementation": "Italy-only first-attribution dossier, event calendar and practical pilot safeguards; no submission and no Geneva adapter.",
+      "implementation_status": "unresolved_not_qualified_for_target"
     }
   ],
   "sources": {
@@ -1032,6 +1051,17 @@
       ],
       "basis": "Inspected scope and unsupported-route tests establish IT/OIC/EUR boundaries; no Swiss professional applicability or equivalence is inferred.",
       "consulted": "2026-09-29"
+    },
+    "rating_legalita_implementation": {
+      "title": "Italian AGCM legality-rating implementation scope",
+      "paths": [
+        "plugins/rating-legalita/skills/rating-legalita/SKILL.md",
+        "plugins/rating-legalita/references/case-contract.md",
+        "tests/plugins/test_rating_legalita_case.py",
+        "tests/plugins/test_rating_legalita_practice.py"
+      ],
+      "basis": "The current source limits the procedure to first attribution in Italy. No equivalent Swiss procedure or real Geneva client acceptance has been established.",
+      "consulted": "2026-10-02"
     }
   },
   "course_qa_release_binding": {
@@ -1107,7 +1137,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "51d6d9dac2621f2b1de16251e3b6490294d256b1eba4d51fabbe86d03fdaafd1",
+  "catalogue_fingerprint": "7e1e095a856a6f1d4c56f41d9f6c0f405086b2da0bfb8e173cddc993c9d8ab7a",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1299,5 +1329,16 @@
       "vera"
     ],
     "note": "Integrated main fiscal, annual-accounts and audit entry points plus ESG course. Function identities and existing jurisdiction dispositions retained; no new jurisdiction capability claimed."
+  },
+  "rating_legalita_release_binding": {
+    "reviewed_at": "2026-10-02",
+    "version": "0.1.334",
+    "previous_catalogue_fingerprint": "51d6d9dac2621f2b1de16251e3b6490294d256b1eba4d51fabbe86d03fdaafd1",
+    "added_skills": [
+      "rating-legalita"
+    ],
+    "changed_existing_entrypoints": [],
+    "review": "Register the new Italian AGCM workflow as Unresolved for CH-GE, refresh the manifest and entrypoint identity, and preserve all prior target judgments. Translated explanation pages do not qualify Swiss applicability; professional document-led pilot acceptance remains pending. Preserves the newer French discovery keywords and Antigravity documentation; neither changes the recorded jurisdiction qualifications.",
+    "integrated_main": "67bb16e247170f60a2d6122d0decf1e0dc9c7a9a"
   }
 }

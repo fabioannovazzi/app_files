@@ -1,0 +1,822 @@
+{
+  "reviews": [
+    {
+      "course": "clara/advisory-brief-planner",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "a138df95bd7d834a9b0731f67692f4967c1db67b43e0363fdef51c813db75175",
+      "current_course_sha256": "338c7542e963c80fbea41ca7f4d1ae529811e094486a012af7612494ecf86cd5",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "clara/advisory-case-director",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "940c8335a3e83cc0e47120d0ce3937013f06e73a8517d92dc3d4f9309af889f0",
+      "current_course_sha256": "4bfc006f48bc32625c2ac5997a356933d68d18c9b5015eedce48477ca8577cc4",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "clara/advisory-deliverable-validator",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "dfc56d1354d0f1dd6230388c68964b297b0f69df70fc3a9aa005bc05b3056a4a",
+      "current_course_sha256": "34effdf03cbac3e51093e061ec6ea9c8a620ec1cf5378c657d9e1d9fa0137106",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "clara/attribute-reporting",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "5ee26d7f0f5c95530d2c8d5ce26ec5481c67d941a6330bf7ad43cea3b1eeaeb4",
+      "current_course_sha256": "9859210f304e5150ce11cda8da4b2dfa5f547bbcd90a29423f0fc2804a659acc",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "clara/business-planning",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "12a242316aa9d9aadc87fc827156ecb4993e5e398cabd96aec9651f12b43bd91",
+      "current_course_sha256": "c4612a074a494c9492f67fbdb0bb3bdc1ee3a9456645c60dbd8cd94c3f9972cc",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "clara/deck-correction",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "c40e2a6bfadae86828fac587d4cfd7a5ebd79ef88788fe19de5d7c6de677ac3c",
+      "current_course_sha256": "03152e3fa9cd50e1d138e28d7ed97282ce18c2baac9fc46ad86174e757eef575",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "clara/html-deck",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "e59cfea91caacdb2f4416f22d0fb3b4d669f9af171a47101333a2c79c61a1f6b",
+      "current_course_sha256": "3aa0242c21e4afe7f0fceb74cba430a0f8b60550918036bfaec56c0050ba1962",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "clara/reporting-engine",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "72c41283362bc8f312d087bdadc2c842351322a0f78bf10c172fd96564ad19fc",
+      "current_course_sha256": "717b6d48cfff55aab26b1e93ee52b7aa297d8ae2114daf28f199bf9ab3529251",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "clara/transcribe",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "f589d77e9b65b6366458f202297d68b73a1ff8bfbd34eb9db20118f2d9cbaa24",
+      "current_course_sha256": "c1f130518a11715f19f326da61256bb0c60465d4fb7e748b0f56ce32c9d75b42",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "lucia/apertura-pratica",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "9c3b2a3f912f89e485313f76ad4322cdd32bf9598be7f741c6ffc231098e6718",
+      "current_course_sha256": "054f7b62345dbbcab9ffe936d89fddf1aa1727d7c45192b071bf7c244b7adde7",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "lucia/comunicazione-professionale",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "2fa1227b331312026420c0bf71793c80285fa8cef272e7e30a0aecb7f9d9df77",
+      "current_course_sha256": "2f35ca467ad9d801035286f8c6d81ff7ace41395f639541cecf66f8eedac8d4c",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "lucia/presenza-digitale-studio",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "6015b4a0677887932991f162547435c5f29fdb29b35d10c6281f95b14b13352d",
+      "current_course_sha256": "08bd243e04c1991190d5a7f003c9102fa2909c6c4be5a5ad17f7f6da07f9d34f",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "lucia/quesito-legale-fiscale",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "104775561ce28fc1185c4b005674872c00bfaeaeff81fe1e7205c57731153335",
+      "current_course_sha256": "e2ad4c420ec334509f560c52a9a65e56818454d0163af39a12f56e4a0e2a500b",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/adeguati-assetti",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "204863e9de92b998c13c53fb0cf7c37b9061835ce621bb79b95843c25485a6b1",
+      "current_course_sha256": "8846f84ecc5a70bca87f1581e8afc4375b80a1b611aca2d3d32a94b1a95c497c",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/adeguati-assetti/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/aml-review",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "987d1b4cbca3c05725c067d4c4e0d0f3ef65170737b3eafab8cc59c8edc2e847",
+      "current_course_sha256": "b8fa3a1f198aa6d3f6164b10d0adf39b65a156a6d2bc5f8f43ef20419d10089a",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/aml-review/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/archive-organization",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "d811c6c94ef7c29401c72c3f9ef6dc259abff8a2d09158408047aad08dcbf92c",
+      "current_course_sha256": "992808f22a2e280e944c93c3d7370d178eb437f049b81e7c770c45895c5436e7",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/archive-organization/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/avviso-intake",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "74d5401c228edd739cae58878bc9ff12f457213114c9cb36c25791f0f835c423",
+      "current_course_sha256": "a4f085446db4ff4829ced55ddf45c447ae4aa4bca13692b395198f601caaa8b9",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/bandi-agevolazioni",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "144e84ee70d104a53190c8627267d1cd6c73c0092196516e7a8b11be019c55e2",
+      "current_course_sha256": "50cc9002978aa515d1cf19c1c788ae0448fbc1af9aa4b7ec4c3878618b6d775e",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/bandi-agevolazioni/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/bilancio-oic",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "1c83b95223fe0b6e9704c24d67948a14f32a461b686ab86f3a8037a80fd1c4ff",
+      "current_course_sha256": "1a91f00c7c7a0912c19aa8672d379ee967db6e399a3ffa62086dbb56fa9cd17d",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/browser-automation",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "09d84084efe6f275555273eac00b3bb6fe1e9e5d71dd676ef9d1bb1882c57f9a",
+      "current_course_sha256": "d996c7b2000811700ed597288cb8622ef9f5ab12bf769b0a535e9749948e972c",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/business-planning",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "ecd0827ce78144c0ce163471f650b8e85e425f336c6982823810a88c7b33442e",
+      "current_course_sha256": "809829d870817be3e6921ad5af4adae7b15f2c2a7482d6492bd1d42bca8d81b1",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/business-valuation",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "a3c8a15cc1ab08de0fdbba92db545b38ad234e27d08a76dfb11243d7977574b6",
+      "current_course_sha256": "e80a4dc45e7a4563123af3feb8c4c74109588c5f113b4c42aae777b4d9ecc872",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/business-valuation/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/centrale-rischi-review",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "dbaafff02eab28cad1cc84b91e8f2963d3dadfb349ac34edeb1b13b069d2b908",
+      "current_course_sha256": "18377297813483da9df458209b33edc45c36c31ea23b49026250db746f231d78",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/centrale-rischi-review/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/composizione-negoziata",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "bb97e5b42009e5d3877f79c33b9ceb637bb4494590a35bdf9a888cec21723263",
+      "current_course_sha256": "b089d170182d02317d686c0c4b6f5f0e5a9f6af515c16bf77cfe72885f886107",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/comunicazione-professionale",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "eafbeacb48de9cef7d8d529f275312f02287c6528f09c55e697c4f2f408ba56d",
+      "current_course_sha256": "e7229b471ff761feb9d5d141db6602444e6e1925ca7e079237a3ba5810dfbe39",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/concordato-plan-review",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "069a430570bc1ec2e60301f0707d36e964e6c61b55b7f823518d4c503964d31c",
+      "current_course_sha256": "250a96591597f5ab3354236214e51ab6ab98094580e4abd92ba826ac8259bf24",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/concordato-plan-review/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/dati-fiscali-strutturati",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "b96d01276566b1e1482ec6dadd5cbd02e11bc17d85c3ed42e73ca114c2d99315",
+      "current_course_sha256": "5fd8a50cbe72919e1b6e054e0eaf4b0e069d0b00e3bbdcdc6d84f17d92f0a58c",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/email-cliente",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "97d275550cdca25364c280013698f0cc9772b91b0b337760b313155bb0062051",
+      "current_course_sha256": "f1d7a9f704cb0c0171f92e302f6f32fc9d8f7a83c2296c04dd70b054975290c1",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/esg-reporting-assurance",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "d65ba8ec262ad3a8d8da282d3fcdc0ef37786bf7d0678febbcc2b89bab776635",
+      "current_course_sha256": "8e025b043b8ef04ee02d79461108502adaa200a1a38fef1a32c0d5889bb6f613",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/fatture-xml-check",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "644c9d3292bbd22e32737ff4516728ab4fc63fdc2cf00907d1ed0249e4c0a08e",
+      "current_course_sha256": "754968065f6dc067a5426b50b419783d04c7f162cbec36118eb40ee7be6ceaed",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/financial-analysis",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "3216d3c26e9e397c61a42c9df7034330968b451fed5aafd7dc7c9d24898bc600",
+      "current_course_sha256": "1e89451238df7ccaffe0c264b716b88ebffcff24c3e324a0a233c8327aa12b11",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/financial-analysis/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/financial-report-builder",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "f061f5a08133a4bd1ff6c42f4d8c34181bf95d558492c00d24f8683ce6f370d0",
+      "current_course_sha256": "2483305c196f9528ebcdf9ff3c1cac0672636060cd84edc089051aded8e17174",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/fusione-guidata",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "08da36581c28ee8898391cd8aabc8b71aeec326c98ee3af2d9434ac1f8f4d0eb",
+      "current_course_sha256": "a782108a162c354e6d47291ae88b17863e5c5c7951762f922f75734a8b98884b",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/invoice-xml",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "113ad0949537e27acb0781942de0fc5cb2602d3fe7beb2c01bd8019634e180d2",
+      "current_course_sha256": "d892883b4181d7d038ae13f23bdbd9ab65f130710786060f10a5afbeee2ce8b5",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/invoice-xml/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/journal-bank-reconciliation",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "6fe131c21d7da0fce5286d088b03a0e8bffcc58c7191fe0d0807aed98467d3d3",
+      "current_course_sha256": "4556a20460b29f2a49b04b634642ea5f47c82da8de02817d6c73885cd11131eb",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/journal-sampling",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "3afe7fd82c78fc91ee8b044245a18702b544bbcec45051d9febf604aacd6f0b0",
+      "current_course_sha256": "f28c85c4e230a04654eab8985862087a24208671387925b9ae522c4ed0b5bdea",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/journal-sampling/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/management-control-pack",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "d092feb2ee34c65247848a39034ead8005aa4123fd66ba9c0982ce3f9c3e60e9",
+      "current_course_sha256": "934cc5091dfda36d5898428f87ed770fd571de0b048bf176b98c9233b7f85be9",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/management-control-pack/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/new-client",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "47a6a9a2924f431ebd2dc7f73118a065b3a3ae92d225d87f8d3e20f4bbee742f",
+      "current_course_sha256": "0bf7058154b9bef862c93b2960b5f410c769178c12134ed94f029978b7a0db4a",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+        "modules/new-client/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/open-item-reconciliation",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "28b4749cfaa10971eb37518dbce0f93bd37c5f5d850c0d8cb5b7b5c319413290",
+      "current_course_sha256": "3d5851c627a4cce5dbf096d066406e942a2597846f510f81ffe3a1c758e40044",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/open-item-reconciliation/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/patent-box-review",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "5ba2143b05d5f308308f729d9c3683063dddf065e201d3eff13efde1c1bfea38",
+      "current_course_sha256": "687fe777cd0ddca3173f9bd2f4674190940f8abe353adfd7518b8d1fb60254d9",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/patent-box-review/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/presenza-digitale-studio",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "6c6b6fcb2cd3ba360b61021332e37dcd8483c1d37c5e5e8d5f6d5d2ca7e2ee5b",
+      "current_course_sha256": "62ac36ba9d4ba8224c3fbf0f5ae7c747dda9395e6a08b15323898880b5b6d08a",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/previdenza-inps",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "b3101f5588467a7fe5df60af760c3ebc534da65082a1b797892aaf95324db354",
+      "current_course_sha256": "3a004036e507fa5bff0a5024d34e4e9405b7b0ef01116d149d50879656744a8b",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/previdenza-inps/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/purchase-invoice-review",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "d2f5211e7e2d96053147f12bfd207cc176ab34b24045637e9b69615d5dfefd8a",
+      "current_course_sha256": "9bd126b47f8fc265cf8abe6e378bf55c7b3b91d0d316fa94be260a61bf130ad8",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/passive-invoice-audit/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/quesito-legale-fiscale",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "a34ce10adc621463b4046ca48a3efd14a6b00d299a9d7e3aac7ed6e26f089bdc",
+      "current_course_sha256": "d6f8f9436e528e5f293560110f95c4319665bee7de535c05073b299840271afa",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/registro-imprese-sari",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "e20bcda09ad96bd632a54c8866274569869e890b2eabbba4c164561c1a994487",
+      "current_course_sha256": "0c1fd9062e75ce5836bc25ea53abb7071e5f258782b645e86f24f8694c635cba",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/registro-imprese-sari/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/sales-plan",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "70b1aeb097a0236cb8a9730ccf1f80d1068284e53bcd3aa851d4f2c08315502e",
+      "current_course_sha256": "7721b3378719a0d489d37822fb28660a7a01944bf609bc20188db272663f14fa",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/sales-plan/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/scissione-guidata",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "20bd99b4d98f866a45faf0ecb32582b1ade8191974fdecb528db2b5efb8e9f71",
+      "current_course_sha256": "acf60ca46508f9b3a207544f75fee4b33122242b28e1436485d5575846f8f285",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/scissione-guidata/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/studio-archive",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "cb44c19810e02c35555b61a262d242fe684870fc8729770e0557a668ec81bc3a",
+      "current_course_sha256": "dc0a6c46b55851a67bb6a074dd50202fb1f5055349aa88506064e2bb232b1ab1",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/studio-document-format",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "d2b859ee050349ab5e2bf719d82ee5142ba4f3c8041eac6e3ecf354d39156005",
+      "current_course_sha256": "1d4e249980916069072e259eda72d24e1475313aa5aad53cbeee2eaef6a87f04",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
+        "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/trasformazione",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "ba877b7b35492f7975f6783b2f621a376f7560e8327397a96b1ac5d78a9e1bce",
+      "current_course_sha256": "7b34e1cbe24025e7ce5c296bd970e5970a550772f47dcefdf942f8bf7ec24133",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/treasury-forecast",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "4253cbc2d2ed6b558b4d8fba87547932123c1a6220838fbdb341f1c586ed88ed",
+      "current_course_sha256": "48cf11599fbd1de14c25c1cc9cf30630139914ea1ae7d3a980fe92093aeb7c28",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/treasury-forecast/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/variance-analysis",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "49d340edc198b2bbb61e33e5fa28d0579da2cd2e1f5c4914853cc3fa8d8c3950",
+      "current_course_sha256": "e4da1919d815bc4625496dbc2cf00e279daf4f8935770ecf036d651d51adcc15",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/variance-analysis/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    },
+    {
+      "course": "vera/vouching",
+      "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+      "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+      "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+      "previous_course_sha256": "b576c06a56b00173acc188df5fbb4de27dbc01629f98c6614306034e96f3d29c",
+      "current_course_sha256": "5cddaad01de73f6720351d6f1a59ef461f43c96473cb552e2c4665058b0a6583",
+      "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+      "changed_sources": [
+        "modules/check-entries/vendor/modules/vera_assurance/contracts.py",
+        "vendor/modules/courseware/policy.py",
+        "vendor/modules/vera_assurance/contracts.py"
+      ],
+      "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+      "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    }
+  ]
+}

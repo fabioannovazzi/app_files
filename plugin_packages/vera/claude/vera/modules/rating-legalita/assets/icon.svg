@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vera · Rating di legalità" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="7" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+<path d="M15 13h30v37H15zM21 22h12M21 29h9" fill="none" stroke="#F7F0DF" stroke-width="3"/><path d="m37 28 3 7 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1z" fill="#F7F0DF"/>
+</svg>

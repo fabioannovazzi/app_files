@@ -29,6 +29,7 @@ from vera_assurance import (  # noqa: E402
 )
 
 CLIENT_WORKFLOW_ENTRYPOINTS = (
+    ("rating-legalita", "rating_case.py"),
     ("scissione-guidata", "run_scissione.py"),
     ("patent-box-review", "patent_box_workflow.py"),
     ("esg-reporting-assurance", "esg_case.py"),
@@ -133,6 +134,7 @@ CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
 
 # Maintenance, inspection and validated-report delivery do not start a workflow.
 CLIENT_WORKFLOW_CLI_ALLOWLIST = (
+    ("rating-legalita", "check_dependencies.py"),
     ("scissione-guidata", "check_dependencies.py"),
     ("patent-box-review", "check_dependencies.py"),
     # Public-source acquisition and monitoring have no client case lifecycle.
@@ -971,9 +973,25 @@ def test_previdenza_run_resumes_after_customer_folder_rename(tmp_path: Path) -> 
 def test_client_workflow_entrypoint_requires_managed_context(
     workflow_id: str,
     script_name: str,
+    tmp_path: Path,
 ) -> None:
     plugin_root = ROOT / "plugins" / workflow_id
     script_path = plugin_root / "scripts" / script_name
+    if workflow_id == "rating-legalita":
+        # Pre-intake permits no client; real cases still require archive binding.
+        case = tmp_path / "case.json"
+        case.write_text(
+            json.dumps({"synthetic": False, "client": {"legal_name": "Fixture"}})
+        )
+        result = subprocess.run(
+            [sys.executable, str(script_path), "render", "--case", str(case)],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert result.returncode != 0
+        assert "Real cases require a Studio Archive" in result.stderr
+        return
     if workflow_id == "esg-reporting-assurance":
         # ESG names the required portable context --context. Verify the public
         # CLI contract rather than demanding another workflow's option spelling.

@@ -1,0 +1,1332 @@
+{
+  "schema_version": "1.0",
+  "module_id": "rating-legalita",
+  "status": "specification_not_installed",
+  "checked_at": "2026-10-02",
+  "jurisdiction": "Italia / AGCM",
+  "ruleset": "AGCM-31812-2026",
+  "sources": [
+    {
+      "id": "S01",
+      "title": "Regolamento AGCM, delibera 31812 del 27 gennaio 2026",
+      "url": "https://www.agcm.it/competenze/rating-di-legalita/dettaglio?id=6572e19a-5d14-4055-8ba6-0c22c203bf6a&parent=Regolamenti+e+Comunicazioni&parentUrl=/competenze/rating-di-legalita/normativa/regolamenti-e-comunicazioni",
+      "type": "normativa",
+      "effective_from": "2026-03-16",
+      "checked_at": "2026-10-02",
+      "qualification": "Letto integralmente; base normativa del catalogo. Delibera liberamente riproducibile secondo S12."
+    },
+    {
+      "id": "S02",
+      "title": "Gazzetta Ufficiale n. 33 del 10 febbraio 2026, 26A00505",
+      "url": "https://www.gazzettaufficiale.it/eli/id/2026/02/10/26A00505/sg",
+      "type": "pubblicazione_ufficiale",
+      "effective_from": "2026-03-16",
+      "checked_at": "2026-10-02",
+      "qualification": "Riscontro di identità; letti separatamente gli artt. 7 e 10 dell’allegato."
+    },
+    {
+      "id": "S03",
+      "title": "FAQ AGCM — Regolamento Rating 2026",
+      "url": "https://www.agcm.it/competenze/rating-di-legalita/FAQ-Regolamento-Rating-2026",
+      "type": "prassi_ufficiale",
+      "effective_from": null,
+      "checked_at": "2026-10-02",
+      "qualification": "Consultate le sezioni I-VIII. Collegare la fonte; non distribuire la pagina integrale nel plugin."
+    },
+    {
+      "id": "S04",
+      "title": "Istruzioni operative WebRating, file v8",
+      "url": "https://www.agcm.it/dotcmsdoc/rating/Istruzioni_WebRating_mod_reg_v8.pdf",
+      "type": "manuale_ufficiale",
+      "effective_from": null,
+      "checked_at": "2026-10-02",
+      "qualification": "17 pagine, testo estratto e consultato. Non è una cattura dell’area riservata corrente."
+    },
+    {
+      "id": "S05",
+      "title": "Modello comunicazione requisiti obbligatori art. 21.1",
+      "url": "https://www.agcm.it/dotcmsdoc/rating/modello_comunicazione_modifiche_requisiti_obbligatori_art_21_c1.pdf",
+      "type": "modello_ufficiale",
+      "effective_from": null,
+      "checked_at": "2026-10-02",
+      "qualification": "8 pagine. Pagina 1: firma digitale LR, PEC, separazione evento/soggetto. Scaricare l’originale vigente per la pratica."
+    },
+    {
+      "id": "S06",
+      "title": "Comunicato AGCM sul nuovo regolamento",
+      "url": "https://www.agcm.it/competenze/rating-di-legalita/Comunicato-alle-imprese",
+      "type": "prassi_ufficiale",
+      "effective_from": null,
+      "checked_at": "2026-10-02",
+      "qualification": "Disciplina transitoria, sez.III. Le regole temporali sono anche nell’art. 25 S01."
+    },
+    {
+      "id": "S07",
+      "title": "Art.5-ter DL 1/2012 — indice ufficiale AGCM e rimando Normattiva",
+      "url": "https://www.agcm.it/per-le-imprese/rating-di-legalita/normativa/dettaglio?id=01499dba-915b-4ebe-8765-1935adc4dad3&parent=Normativa+primaria&parentUrl=/per-le-imprese/rating-di-legalita/normativa/index",
+      "type": "normativa_primaria",
+      "effective_from": null,
+      "checked_at": "2026-10-02",
+      "qualification": "Identità verificata su AGCM; collegamento Normattiva ha restituito errore di caricamento. Non dichiarare lettura consolidata riuscita."
+    },
+    {
+      "id": "S08",
+      "title": "DM 20 febbraio 2014 n. 57, artt. 3-4",
+      "url": "https://www.gazzettaufficiale.it/eli/id/2014/04/07/14G00068/sg",
+      "type": "normativa",
+      "effective_from": "2014-04-08",
+      "checked_at": "2026-10-02",
+      "qualification": "Letti gli artt. 3-4: benefici PA/banche condizionati alla procedura; nessuna promessa di credito o contributi."
+    },
+    {
+      "id": "S09",
+      "title": "Modalità di inoltro AGCM",
+      "url": "https://www.agcm.it/competenze/rating-di-legalita/Domanda-e-procedimento-di-attribuzione/index",
+      "type": "istruzioni_ufficiali",
+      "effective_from": null,
+      "checked_at": "2026-10-02",
+      "qualification": "Pagina pubblica verificata. Per art. 21.1 prevale l’istruzione specifica nel modello S05."
+    },
+    {
+      "id": "S10",
+      "title": "Fabio Sartori, checklist operativa — EC News, 25 febbraio 2026",
+      "url": "https://www.ecnews.it/fiscale/societa-e-bilancio/bilancio/nuovo-rating-di-legalita-dal-16-marzo-2026-la-check-list-operativa-per-commercialisti-e-legali-dimpresa/",
+      "type": "checklist_editoriale",
+      "effective_from": null,
+      "checked_at": "2026-10-02",
+      "qualification": "Accessibile; tabella sintetica di controlli. Nessuna licenza di incorporazione accertata. Citata, non copiata."
+    },
+    {
+      "id": "S11",
+      "title": "Camillo Bernardini, Protocolli operativi — ADICU, 16 febbraio 2026",
+      "url": "https://www.adicu.it/2026/02/16/protocolli-operativi-per-il-rating-di-legalita-delibera-agcm-31812-2026/",
+      "type": "guida_associativa",
+      "effective_from": null,
+      "checked_at": "2026-10-02",
+      "qualification": "Accessibile. Non elevare suggerimenti organizzativi a requisiti di legge; nessuna licenza aperta accertata."
+    },
+    {
+      "id": "S12",
+      "title": "AGCM — Copyright",
+      "url": "https://www.agcm.it/copyright",
+      "type": "condizioni_riuso",
+      "effective_from": null,
+      "checked_at": "2026-10-02",
+      "qualification": "Distingue delibere/determine e open data dagli altri contenuti del sito. Non autorizza indistintamente il riuso delle FAQ."
+    },
+    {
+      "id": "S13",
+      "title": "Camera dei Deputati — Riordino legislazione fiscale, TU sanzioni",
+      "url": "https://temi.camera.it/leg19/post/decreti-legislativi-recanti-testi-unici.html",
+      "type": "documentazione_istituzionale",
+      "effective_from": null,
+      "checked_at": "2026-10-02",
+      "qualification": "Conferma applicazione D.Lgs. 173/2024 dal 1 gennaio 2027 per art. 4.1 DL 200/2025; non confondere entrata in vigore formale ed efficacia."
+    },
+    {
+      "id": "S14",
+      "title": "Indice AGCM regolamenti e comunicazioni",
+      "url": "https://www.agcm.it/competenze/rating-di-legalita/normativa/regolamenti-e-comunicazioni",
+      "type": "indice_vigenza",
+      "effective_from": null,
+      "checked_at": "2026-10-02",
+      "qualification": "Al controllo espone la delibera 31812/2026. Ricerca aggiornamenti svolta; ripetere prima di ogni pratica finale."
+    },
+    {
+      "id": "S15",
+      "title": "Corte costituzionale — reg.ord.121/2026, ordinanza di rimessione",
+      "url": "https://www.cortecostituzionale.it/scheda-ordinanza/2026/121",
+      "type": "riscontro_istituzionale",
+      "effective_from": null,
+      "checked_at": "2026-10-02",
+      "qualification": "Richiama la soglia contante 5000 euro dal 2023. E un atto di promovimento, non una decisione della Corte. Verificare art. 49 vigente per il periodo esaminato."
+    }
+  ],
+  "rules": [
+    {
+      "id": "A01",
+      "area": "ammissibilita",
+      "title": "Identità e attività d’impresa",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "artt. 1.1.c, 2",
+      "review_question": "Qual è la singola entità richiedente e svolge attività d’impresa?",
+      "proposed_evidence": "CF/PIVA, visura o REA, attività effettiva, denominazione, forma giuridica.",
+      "action_if_open": "Identificare l’entità con il professionista; se ignota, aprire pre-istruttoria senza cliente fittizio.",
+      "common_error": "Il solo essere professionista, associazione o parte di un gruppo non decide l’ammissibilità.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "A02",
+      "area": "ammissibilita",
+      "title": "Sede operativa italiana",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "artt. 1.1.d, 2.1.a",
+      "review_question": "Esiste in Italia una sede in cui l’attività e materialmente esercitata con poteri di rappresentanza verso terzi?",
+      "proposed_evidence": "Visura, sede secondaria, titolo/contratto, descrizione attività e rappresentante.",
+      "action_if_open": "Chiedere ubicazione e operatività; verificare la sostanza prima di predisporre la domanda.",
+      "common_error": "Una domiciliazione non dimostra da sola la sede operativa.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "A03",
+      "area": "ammissibilita",
+      "title": "Anzianità RI o REA",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 2.1.c",
+      "review_question": "Alla data prevista di trasmissione sono trascorsi almeno due anni dall’iscrizione?",
+      "proposed_evidence": "Visura storica; data prima iscrizione e operazioni straordinarie.",
+      "action_if_open": "Calcolare la prima data utile; approfondire successioni e continuità con atti.",
+      "common_error": "Due anni di calendario, non due esercizi o mera data costituzione.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "A04",
+      "area": "ammissibilita",
+      "title": "Fatturato qualificato almeno 2 milioni",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "artt. 1.1.e, 2.1.b",
+      "review_question": "Quale valore e quale esercizio integrano la definizione normativa alla data della domanda?",
+      "proposed_evidence": "Bilancio, dettaglio A1 e altri ricavi fatturati, oppure dichiarazione IVA presentata; raccordo documentato.",
+      "action_if_open": "Costruire carta di calcolo con il criterio pertinente; eliminare duplicazioni, qualificare eventuali importi intermediati e non usare previsioni.",
+      "common_error": "Non sommare indiscriminatamente A1, A5 e volume d’affari IVA.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "A05",
+      "area": "ammissibilita",
+      "title": "Casi speciali fatturato e continuità",
+      "kind": "norma_con_prassi",
+      "source_ids": [
+        "S01",
+        "S03"
+      ],
+      "basis": "art. 1.1.e; FAQ II.3, II.5-9",
+      "review_question": "Servono le discipline su bilancio non pubblicato, gruppo, ramo acquisito o incorporazione?",
+      "proposed_evidence": "Atti, bilanci, dettaglio consolidamento e infragruppo, fatturato del ramo.",
+      "action_if_open": "Aprire sottocarta; leggere il punto FAQ applicabile e approvare raccordo/anno.",
+      "common_error": "Nessun cumulo di imprese soltanto collegate da soci comuni, rete o RTI.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "S01",
+      "area": "soggetti",
+      "title": "Tutti i ruoli rilevanti",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 4.1",
+      "review_question": "Sono censiti titolare, tutti gli amministratori/consiglieri, institore, DG e direttore tecnico?",
+      "proposed_evidence": "Visura storica, organigramma, nomine e deleghe.",
+      "action_if_open": "Produrre anagrafe soggetti con motivazione di inclusione/esclusione.",
+      "common_error": "Non limitarsi al legale rappresentante.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "S02",
+      "area": "soggetti",
+      "title": "Soggetti cessati",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 4.2",
+      "review_question": "Quali ruoli/posizioni rilevanti sono cessati nell’anno precedente la domanda?",
+      "proposed_evidence": "Visura storica, verbali di cessazione, date.",
+      "action_if_open": "Estendere richieste e controlli agli ex soggetti; aggiornare la finestra alla data invio.",
+      "common_error": "Cessazione non equivale ad automatica irrilevanza.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "S03",
+      "area": "soggetti",
+      "title": "Soci persone fisiche di controllo o maggioranza anche relativa",
+      "kind": "norma_con_prassi",
+      "source_ids": [
+        "S01",
+        "S03"
+      ],
+      "basis": "art. 4.1; FAQ III.2",
+      "review_question": "Chi detiene controllo, maggiore quota o pari maggioranze? Vi sono usufrutti con voto?",
+      "proposed_evidence": "Assetti proprietari, patti, quote e diritti di voto.",
+      "action_if_open": "Ricostruire la posizione; rinviare alla FAQ per parità e usufrutto.",
+      "common_error": "La soglia AML del 25% non è il criterio del rating.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "S04",
+      "area": "soggetti",
+      "title": "Procure e deleghe sensibili",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 4.1",
+      "review_question": "Quali procure sono assimilabili ai poteri gestionali degli amministratori o riguardano reati rilevanti, gare, ambiente, salute e sicurezza?",
+      "proposed_evidence": "Testo delle procure e deleghe, non soltanto titolo del ruolo.",
+      "action_if_open": "Leggere poteri, limiti e periodo; acquisire quelle mancanti.",
+      "common_error": "L’etichetta procuratore commerciale non basta per decidere.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "S05",
+      "area": "soggetti",
+      "title": "Raccolta informazioni per il rappresentante",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 12.1",
+      "review_question": "Il LR ha acquisito informazioni da ogni soggetto incluso?",
+      "proposed_evidence": "Schede informative individuali datate, risposte/atti di supporto, attestazione LR.",
+      "action_if_open": "Preparare richieste mirate senza presumere risposta negativa dal silenzio.",
+      "common_error": "Una scheda non restituita resta aperta, anche con visura completa.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "B01",
+      "area": "ostativi_penali",
+      "title": "Catalogo reati vigente e fase procedimentale",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 5.1",
+      "review_question": "Quale reato, norma vigente, soggetto, provvedimento e fase ricorrono?",
+      "proposed_evidence": "Atti integrali pertinenti, attestazioni processuali, cronologia; mappa dei rinvii 231/2001, 74/2000/173/2024, 81/2008, codice penale, crisi e contributi.",
+      "action_if_open": "Aprire scheda evento; demandare qualificazioni controverse a legale con domanda specifica.",
+      "common_error": "Indagine, azione penale e condanna non sono sinonimi.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "B02",
+      "area": "ostativi_penali",
+      "title": "Misure su soggetti rilevanti",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 5.2.a",
+      "review_question": "Sono efficaci misure di prevenzione o cautelari relative ai reati del comma 1?",
+      "proposed_evidence": "Provvedimento, persona, reato, efficacia e successive modifiche.",
+      "action_if_open": "Approfondire efficacia e collegamento; bloccare conclusione positiva se irrisolto.",
+      "common_error": "",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "B03",
+      "area": "ostativi_penali",
+      "title": "Azione penale su soggetti rilevanti",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 5.2.b",
+      "review_question": "È stata esercitata azione penale per le specifiche fattispecie del comma 2.b?",
+      "proposed_evidence": "Atto processuale ex art. 407-bis c.p.p.; reato e soggetto.",
+      "action_if_open": "Verificare il sottoinsieme: 416-bis.1, 603-bis, 629, 644 c.p. e reati richiamati da artt. 24,25,25-octies D.Lgs. 231/2001.",
+      "common_error": "Non estendere questo ostacolo a qualsiasi indagine o qualsiasi reato.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "B04",
+      "area": "ostativi_penali",
+      "title": "Condanne personali",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 5.2.c e 5.6.a",
+      "review_question": "Esiste sentenza di condanna, anche non definitiva, per reati rilevanti?",
+      "proposed_evidence": "Sentenza, data emissione e giudicato; cronologia.",
+      "action_if_open": "Verificare eventuale decorso quinquennale dal giudicato o deroga applicabile.",
+      "common_error": "Assenza di giudicato non elimina la condanna ostativa.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "B05",
+      "area": "ostativi_penali",
+      "title": "Patteggiamenti personali",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 5.2.d e 5.6.b",
+      "review_question": "Esiste sentenza ex art. 444 c.p.p., anche non definitiva?",
+      "proposed_evidence": "Sentenza e date emissione/giudicato.",
+      "action_if_open": "Valutare termine triennale dal giudicato e deroghe specifiche.",
+      "common_error": "",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "B06",
+      "area": "ostativi_penali",
+      "title": "Decreto penale personale",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 5.2.e e 5.6.c",
+      "review_question": "Esiste decreto penale irrevocabile per reato rilevante?",
+      "proposed_evidence": "Decreto, attestazione irrevocabilità, date.",
+      "action_if_open": "Verificare decorso biennale dall’irrevocabilità.",
+      "common_error": "La sola data del decreto non avvia automaticamente il termine.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "B07",
+      "area": "ostativi_penali",
+      "title": "Impresa: misure cautelari 231",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 5.3.a e 5.4",
+      "review_question": "Sono efficaci misure cautelari per illeciti amministrativi dipendenti da reato?",
+      "proposed_evidence": "Provvedimento sull’ente ed efficacia.",
+      "action_if_open": "Valutazione dedicata all’ente, distinta dalla posizione delle persone.",
+      "common_error": "",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "B08",
+      "area": "ostativi_penali",
+      "title": "Impresa: azione penale 231",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 5.3.b",
+      "review_question": "È esercitata azione penale per illeciti dipendenti dai reati degli artt. 24,25,25-octies?",
+      "proposed_evidence": "Atto sull’ente, norme richiamate, fase.",
+      "action_if_open": "Confermare qualificazione con il legale.",
+      "common_error": "",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "B09",
+      "area": "ostativi_penali",
+      "title": "Impresa: condanna o patteggiamento 231",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 5.3.c-d; 5.6; 5.8",
+      "review_question": "Sono presenti sentenze anche non definitive sull’ente?",
+      "proposed_evidence": "Sentenze, date emissione/giudicato, assetto attuale.",
+      "action_if_open": "Esaminare termini ordinari e, separatamente, deroga per dissociazione.",
+      "common_error": "",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "B10",
+      "area": "ostativi_penali",
+      "title": "Interdittive antimafia",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 5.3.e e 5.4",
+      "review_question": "L’impresa e destinataria della misura e questa e ancora efficace?",
+      "proposed_evidence": "Comunicazioni/informazioni antimafia e stato di efficacia",
+      "action_if_open": "Acquisire atti e stato aggiornato; qualificare effetto prima del punteggio.",
+      "common_error": "Il carattere collaborativo della misura non ne esclude l’ostativita regolamentare.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "B11",
+      "area": "ostativi_penali",
+      "title": "Misure straordinarie ex DL 90/2014",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 5.3.f e 5.4",
+      "review_question": "L’impresa e destinataria della misura e questa e ancora efficace?",
+      "proposed_evidence": "Provvedimenti ex art. 32 DL 90/2014 ed efficacia",
+      "action_if_open": "Acquisire atti e stato aggiornato; qualificare effetto prima del punteggio.",
+      "common_error": "Il carattere collaborativo della misura non ne esclude l’ostativita regolamentare.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "B12",
+      "area": "ostativi_penali",
+      "title": "Controllo giudiziario legge199/2016",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 5.3.g e 5.4",
+      "review_question": "L’impresa e destinataria della misura e questa e ancora efficace?",
+      "proposed_evidence": "Provvedimento ex art. 3 L 199/2016 ed efficacia",
+      "action_if_open": "Acquisire atti e stato aggiornato; qualificare effetto prima del punteggio.",
+      "common_error": "Il carattere collaborativo della misura non ne esclude l’ostativita regolamentare.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "B13",
+      "area": "ostativi_penali",
+      "title": "Amministrazione giudiziaria",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 5.3.h e 5.4",
+      "review_question": "L’impresa e destinataria della misura e questa e ancora efficace?",
+      "proposed_evidence": "Provvedimento art. 34 D.Lgs. 159/2011 ed efficacia",
+      "action_if_open": "Acquisire atti e stato aggiornato; qualificare effetto prima del punteggio.",
+      "common_error": "Il carattere collaborativo della misura non ne esclude l’ostativita regolamentare.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "B14",
+      "area": "ostativi_penali",
+      "title": "Controllo giudiziario antimafia",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 5.3.i e 5.4",
+      "review_question": "L’impresa e destinataria della misura e questa e ancora efficace?",
+      "proposed_evidence": "Provvedimento art. 34-bis D.Lgs. 159/2011 ed efficacia",
+      "action_if_open": "Acquisire atti e stato aggiornato; qualificare effetto prima del punteggio.",
+      "common_error": "Il carattere collaborativo della misura non ne esclude l’ostativita regolamentare.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "B15",
+      "area": "ostativi_penali",
+      "title": "Prevenzione collaborativa",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 5.3.j e 5.4",
+      "review_question": "L’impresa e destinataria della misura e questa e ancora efficace?",
+      "proposed_evidence": "Provvedimento art. 94-bis D.Lgs. 159/2011 ed efficacia",
+      "action_if_open": "Acquisire atti e stato aggiornato; qualificare effetto prima del punteggio.",
+      "common_error": "Il carattere collaborativo della misura non ne esclude l’ostativita regolamentare.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "B16",
+      "area": "ostativi_penali",
+      "title": "Prevenzione personale/patrimoniale",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 5.5",
+      "review_question": "Vi sono misure efficaci ex D.Lgs. 159/2011 sull’impresa o sui soggetti?",
+      "proposed_evidence": "Provvedimenti e, per confisca partecipazioni, atti pertinenti all’art. 48.8.",
+      "action_if_open": "Valutare separatamente la stretta deroga relativa a confisca definitiva delle partecipazioni.",
+      "common_error": "Non applicare genericamente la deroga a qualunque confisca.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "B17",
+      "area": "deroghe",
+      "title": "Dissociazione da soggetti cessati",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 5.7",
+      "review_question": "Sono provate completa ed effettiva dissociazione e comunicazione tempestiva?",
+      "proposed_evidence": "Atti societari, rimedi realmente attuati, cronologia, prova comunicazioni.",
+      "action_if_open": "Redigere memo con fatti favorevoli e contrari; sottoporre il caso ad AGCM.",
+      "common_error": "Dimissioni o sostituzione della persona, da sole, non provano dissociazione.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "B18",
+      "area": "deroghe",
+      "title": "Dissociazione dell’attuale struttura dell’ente",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 5.8",
+      "review_question": "Sono trascorsi 3 anni dall’emissione della condanna o 2 dal patteggiamento, con dissociazione e comunicazione tempestiva?",
+      "proposed_evidence": "Sentenza, modifiche organizzative effettive, evidenze attuative e comunicazioni.",
+      "action_if_open": "Memo motivato; nessuna sanatoria automatica prodotta dal software.",
+      "common_error": "Non scambiare data emissione della deroga con data giudicato dei termini ordinari.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "C01",
+      "area": "ostativi_impresa",
+      "title": "Illeciti antitrust",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 6.1.a",
+      "review_question": "Ricorre il provvedimento sanzionatorio qualificato dalla norma, inoppugnabile o confermato in appello nel biennio?",
+      "proposed_evidence": "Provvedimento, sanzione, data inoppugnabilita/decisione d’appello; per antitrust anche Commissione/Corte UE.",
+      "action_if_open": "Ricostruire cronologia; solo per lett.a verificare eccezione programma di clemenza.",
+      "common_error": "Il pagamento della sanzione non rimuove automaticamente questo ostacolo.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "C02",
+      "area": "ostativi_impresa",
+      "title": "Abuso dipendenza economica",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 6.1.b",
+      "review_question": "Ricorre il provvedimento sanzionatorio qualificato dalla norma, inoppugnabile o confermato in appello nel biennio?",
+      "proposed_evidence": "Provvedimento, sanzione, data inoppugnabilita/decisione d’appello; per antitrust anche Commissione/Corte UE.",
+      "action_if_open": "Ricostruire cronologia; solo per lett.a verificare eccezione programma di clemenza.",
+      "common_error": "Il pagamento della sanzione non rimuove automaticamente questo ostacolo.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "C03",
+      "area": "ostativi_impresa",
+      "title": "Pratiche commerciali scorrette",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 6.1.c",
+      "review_question": "Ricorre il provvedimento sanzionatorio qualificato dalla norma, inoppugnabile o confermato in appello nel biennio?",
+      "proposed_evidence": "Provvedimento, sanzione, data inoppugnabilita/decisione d’appello; per antitrust anche Commissione/Corte UE.",
+      "action_if_open": "Ricostruire cronologia; solo per lett.a verificare eccezione programma di clemenza.",
+      "common_error": "Il pagamento della sanzione non rimuove automaticamente questo ostacolo.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "C04",
+      "area": "ostativi_impresa",
+      "title": "Inottemperanza AGCM",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 6.1.d",
+      "review_question": "Ricorre il provvedimento sanzionatorio qualificato dalla norma, inoppugnabile o confermato in appello nel biennio?",
+      "proposed_evidence": "Provvedimento, sanzione, data inoppugnabilita/decisione d’appello; per antitrust anche Commissione/Corte UE.",
+      "action_if_open": "Ricostruire cronologia; solo per lett.a verificare eccezione programma di clemenza.",
+      "common_error": "Il pagamento della sanzione non rimuove automaticamente questo ostacolo.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "C05",
+      "area": "ostativi_impresa",
+      "title": "Violazioni definitive fiscali, retributive, contributive, assicurative",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 7.1",
+      "review_question": "Esistono atti definitivi per ciascuna delle quattro aree?",
+      "proposed_evidence": "Atti fiscali/enti, estratti, contenzioso, DURC come riscontro parziale, attestazioni consulente lavoro e LR.",
+      "action_if_open": "Costruire inventario debiti/atti con natura, capitale, accessori, definitività e coperture.",
+      "common_error": "Non introdurre un biennio che l’art. 7.1 non prevede; DURC non copre tutta l’area.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "C06",
+      "area": "deroghe",
+      "title": "Estinzione integrale",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 7.2.a",
+      "review_question": "Sono stati pagati o estinti anche interessi e sanzioni?",
+      "proposed_evidence": "Quietanze e riconciliazione atto-debito-versamenti.",
+      "action_if_open": "Chiedere prova del saldo effettivo, non soltanto ordine di bonifico.",
+      "common_error": "",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "C07",
+      "area": "deroghe",
+      "title": "Definizione agevolata o rateazione efficace",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 7.2.b",
+      "review_question": "Adesione perfezionata e assenza di decadenza sono dimostrate?",
+      "proposed_evidence": "Piano/adesione, scadenze, pagamenti e stato aggiornato.",
+      "action_if_open": "Verificare copertura dei singoli debiti e condizioni della misura.",
+      "common_error": "Una richiesta di rateazione o una rata pagata non dimostrano da sole la deroga.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "C08",
+      "area": "deroghe",
+      "title": "Soglia quantitativa debiti",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 7.2.c",
+      "review_question": "Il debito qualificato non supera min(0,5% del fatturato, 50.000 euro)?",
+      "proposed_evidence": "Raccordo fatturato e debiti pertinenti; elenco completo e accessori.",
+      "action_if_open": "Calcolo esatto e revisione del perimetro, soprattutto in presenza di debiti misti/gruppo.",
+      "common_error": "Soglia complessiva, non franchigia sottratta o limite per ogni atto.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "C09",
+      "area": "ostativi_impresa",
+      "title": "Revoca finanziamenti pubblici",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 7.3",
+      "review_question": "Revoca definitiva nel biennio con restituzione non assolta?",
+      "proposed_evidence": "Provvedimento, data definitività, somme dovute e restituite.",
+      "action_if_open": "Ricostruire restituzione e conseguenze specifiche.",
+      "common_error": "Non estendere automaticamente le deroghe del comma 2 al comma 3.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "C10",
+      "area": "ostativi_impresa",
+      "title": "Sicurezza: provvedimenti amministrativi",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 8.1",
+      "review_question": "Ci sono accertamenti definitivi nel biennio diversi da atti endoprocedimentali?",
+      "proposed_evidence": "Atti ASL/ITL/autorità competente, natura amministrativa, date e importi.",
+      "action_if_open": "Distinguere dal penale art. 5; acquisire gli atti dal responsabile aziendale o consulente sicurezza.",
+      "common_error": "Una check generale sulla sicurezza non sostituisce la lettura degli atti.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "C11",
+      "area": "deroghe",
+      "title": "Sicurezza: soglie minime",
+      "kind": "norma_e_metodo",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 8.2",
+      "review_question": "Sono rispettati 1.200 euro per accertamento e 3.600 euro nel complesso di più provvedimenti?",
+      "proposed_evidence": "Elenco completo dei provvedimenti rilevanti e importi qualificati.",
+      "action_if_open": "Applicare confronto numerico dopo qualifica; esplicitare lettura cumulativa prudenziale.",
+      "common_error": "Sanzione penale non beneficia di questa deroga amministrativa.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "C12",
+      "area": "ostativi_impresa",
+      "title": "Interdizioni ANAC",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 9",
+      "review_question": "Ricorrono interdizioni qualificate, inoppugnabili o confermate in appello nel biennio?",
+      "proposed_evidence": "Atto ANAC, divieti contrattuali/gare, cronologia.",
+      "action_if_open": "Acquisire atto e stato; se database non accessibile registrare copertura mancante.",
+      "common_error": "Non confondere interdizione ostativa con annotazione che riduce un +.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "P01",
+      "area": "premialita",
+      "title": "Protocolli di legalità",
+      "kind": "norma_con_prassi",
+      "source_ids": [
+        "S01",
+        "S03"
+      ],
+      "basis": "art. 10.2.a; FAQ V.2",
+      "review_question": "Adesione volontaria a protocollo/intesa vigente del Ministero Interno o Prefettura con associazione?",
+      "proposed_evidence": "Protocollo, adesione perfezionata, affiliazione, date.",
+      "action_if_open": "Verificare adesione e vigenza; preparare richiesta all’associazione.",
+      "common_error": "Iscrizione associativa da sola o protocollo imposto in gara non bastano.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "P02",
+      "area": "premialita",
+      "title": "Tracciabilità sotto soglia",
+      "kind": "norma_e_metodo",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 10.2.b",
+      "review_question": "È tracciata più della metà dei pagamenti sotto la soglia legale pertinente?",
+      "proposed_evidence": "Popolazione pagamenti/cassa e banca, metodo, periodo e soglia verificati.",
+      "action_if_open": "Ricostruire popolazione e rapporto; progettare procedura futura soltanto per fatti futuri.",
+      "common_error": "Nel metodo proposto, non sostituire il conteggio con il solo totale monetario; il 50% non basta.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "P03",
+      "area": "premialita",
+      "title": "Compliance oppure modello 231",
+      "kind": "norma_con_prassi",
+      "source_ids": [
+        "S01",
+        "S03"
+      ],
+      "basis": "art. 10.2.c; FAQ V.4",
+      "review_question": "Esiste funzione/struttura di compliance, anche esterna, oppure MOG 231 adottato?",
+      "proposed_evidence": "Atto adozione, incarico, perimetro, risorse, attività; per MOG parti e presidi pertinenti.",
+      "action_if_open": "Confrontare alternative proporzionate; coinvolgere specialista se si costruisce un MOG.",
+      "common_error": "Non imporre MOG 231 a tutte le imprese o contare le due alternative due volte.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "P04",
+      "area": "premialita",
+      "title": "Responsabilità sociale",
+      "kind": "norma_con_prassi",
+      "source_ids": [
+        "S01",
+        "S03"
+      ],
+      "basis": "art. 10.2.d; FAQ V.5",
+      "review_question": "Sono documentati processi CSR idonei secondo norma e prassi corrente?",
+      "proposed_evidence": "Processi, certificazioni, scadenze, eventuale report revisionato o altra via ammessa.",
+      "action_if_open": "Aprire la FAQ V.5 e verificare la via esatta; non equiparare qualsiasi documento ESG.",
+      "common_error": "Una policy generica o una certificazione scelta a caso non prova automaticamente il requisito.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "P05",
+      "area": "premialita",
+      "title": "White list / Anagrafe antimafia",
+      "kind": "norma_con_prassi",
+      "source_ids": [
+        "S01",
+        "S03"
+      ],
+      "basis": "art. 10.2.e; FAQ V.6",
+      "review_question": "Ricorre una via riconosciuta dalla norma e dalla FAQ V.6?",
+      "proposed_evidence": "Settori effettivi, iscrizione prefettizia/Anagrafe e stato, oppure motivazione specifica della via da prassi.",
+      "action_if_open": "Verificare fonte e settore: prima domanda e rinnovo iscrizione sono fatti diversi.",
+      "common_error": "Non trasformare il requisito in obbligo indiscriminato di iscrizione.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "P06",
+      "area": "premialita",
+      "title": "Codici associativi / mediazione / conciliazione",
+      "kind": "norma_con_prassi",
+      "source_ids": [
+        "S01",
+        "S03"
+      ],
+      "basis": "art. 10.2.f; FAQ V.7",
+      "review_question": "È soddisfatta almeno una alternativa prevista dalla lettera f?",
+      "proposed_evidence": "Adesione al codice associativo o contratti applicati con clausole volontarie o protocollo conciliazione.",
+      "action_if_open": "Leggere testo e applicazione; eventuali nuove clausole richiedono adozione effettiva.",
+      "common_error": "Codice interno da solo non equivale ad adesione al codice associativo; massimo un +.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "P07",
+      "area": "premialita",
+      "title": "Prevenzione corruzione",
+      "kind": "norma_con_prassi",
+      "source_ids": [
+        "S01",
+        "S03"
+      ],
+      "basis": "art. 10.2.g; FAQ V.8",
+      "review_question": "Esiste un modello idoneo di prevenzione e contrasto corruzione?",
+      "proposed_evidence": "Documenti anticorruzione, adozione, ambito e prova operativa; certificazioni se pertinenti.",
+      "action_if_open": "Verificare copertura; una prova può sostenere P03 e P07 solo con due motivazioni distinte.",
+      "common_error": "Niente raddoppio automatico per la semplice presenza del file MOG.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "P08",
+      "area": "premialita",
+      "title": "Denuncia di reati subiti",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 10.2.h",
+      "review_question": "Denuncia per reato previsto, a danno dei soggetti indicati, seguita da azione penale?",
+      "proposed_evidence": "Denuncia, identificativi, reato, soggetto leso, atto/prova esercizio azione penale.",
+      "action_if_open": "Verificare fatto gia esistente e fase; escludere da piani di miglioramento se non pertinente.",
+      "common_error": "Non suggerire denunce strumentali per ottenere punteggio.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "P09",
+      "area": "punteggio",
+      "title": "Decurtazione ANAC",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 10.3",
+      "review_question": "Annotazioni per condotte qualificate, non impugnate o definitive e pubblicate nel biennio?",
+      "proposed_evidence": "Estratto/atto casellario, data pubblicazione, eventuale impugnazione e decisione.",
+      "action_if_open": "Verificare prima del conteggio finale; massimo decurtazione normativa di un +.",
+      "common_error": "La stella base non può essere ridotta per questa sola annotazione.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "P10",
+      "area": "punteggio",
+      "title": "Continuità dei rinnovi",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 10.4; art. 18.3",
+      "review_question": "Questa e una domanda tempestiva di rinnovo dopo almeno tre rinnovi precedenti continuativi?",
+      "proposed_evidence": "Storico delibere e ricevute, scadenze e continuità.",
+      "action_if_open": "Ricostruire la catena; non contare il primo rilascio come rinnovo.",
+      "common_error": "Tre periodi di possesso non sono necessariamente tre rinnovi.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "D01",
+      "area": "domanda",
+      "title": "Dichiarazioni, tracciabilità e veridicità",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 12",
+      "review_question": "Sono predisposte tutte le dichiarazioni richieste, compresa la tracciabilità sopra soglia e la permanenza dei premiali?",
+      "proposed_evidence": "Bozza dati, informazioni soggetti, fatti e riscontri pertinenti; attestazioni LR.",
+      "action_if_open": "Confrontare frase per frase con formulario vigente.",
+      "common_error": "Il software non può dichiarare sotto la responsabilità del professionista o LR.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "D02",
+      "area": "domanda",
+      "title": "Precedenti provvedimenti sul rating",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 12.2",
+      "review_question": "Sono dichiarati diniego, annullamento, revoca o sospensione precedenti e fatti sopravvenuti?",
+      "proposed_evidence": "Storico provvedimenti e documenti sui cambiamenti.",
+      "action_if_open": "Predisporre nota di raccordo; verificare eventuale divieto di ripresentazione.",
+      "common_error": "Nuova domanda non azzera la storia.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "D03",
+      "area": "domanda",
+      "title": "Firma digitale LR e pacchetto esatto",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 11.2",
+      "review_question": "Il file ufficiale e firmato dal LR con certificato valido e coincide con il pacchetto approvato?",
+      "proposed_evidence": "PDF ufficiale, file firmato, verifica firma, hash, versione dati/allegati.",
+      "action_if_open": "Produrre cartella di consegna; rigenerare approvazione se il contenuto cambia.",
+      "common_error": "La bozza Vera non sostituisce il formulario generato dal portale.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "D04",
+      "area": "domanda",
+      "title": "Mappe e allegati correnti",
+      "kind": "procedura_ufficiale",
+      "source_ids": [
+        "S01",
+        "S04",
+        "S09"
+      ],
+      "basis": "art. 11.1; istruzioni AGCM",
+      "review_question": "Ogni campo richiesto dalla versione corrente e mappato e ogni allegato obbligatorio e presente?",
+      "proposed_evidence": "Mappa semantica campi, export formulario, elenco allegati con motivo.",
+      "action_if_open": "Completare mappa su formulario autentico; non inventare selettori o XML ministeriali.",
+      "common_error": "",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "M01",
+      "area": "mantenimento",
+      "title": "Durata e scadenza ufficiale",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 18.1; art. 25.7",
+      "review_question": "Si applica durata triennale nuova o residua biennale precedente?",
+      "proposed_evidence": "Delibera/attestazione ed elenco ufficiale, data rilascio e scadenza.",
+      "action_if_open": "Conservare scadenza autoritativa e controllo di coerenza separato.",
+      "common_error": "L’entrata in vigore non converte automaticamente i vecchi rating in triennali.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "M02",
+      "area": "mantenimento",
+      "title": "Finestra rinnovo",
+      "kind": "norma_con_prassi",
+      "source_ids": [
+        "S01",
+        "S03"
+      ],
+      "basis": "art. 18.3; FAQ VII.5",
+      "review_question": "Invio tra sei mesi prima e almeno 60 giorni prima della scadenza?",
+      "proposed_evidence": "Scadenza ufficiale, data effettiva trasmissione e ricevuta.",
+      "action_if_open": "Pianificare istruttoria; dopo limite usare nuova attribuzione secondo istruzioni.",
+      "common_error": "Bozza salvata non conserva il diritto al rinnovo tempestivo.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "M03",
+      "area": "mantenimento",
+      "title": "Incremento",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 18.4-5",
+      "review_question": "Quali nuovi premiali sono effettivamente documentati?",
+      "proposed_evidence": "Nuove prove, domanda incremento, punteggio precedente.",
+      "action_if_open": "Predisporre variazione con dichiarazione aggiuntiva.",
+      "common_error": "L’incremento non sposta la scadenza originaria.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "M04",
+      "area": "mantenimento",
+      "title": "Evento su obbligatori",
+      "kind": "norma",
+      "source_ids": [
+        "S01",
+        "S05"
+      ],
+      "basis": "art. 21.1-3",
+      "review_question": "Qual è la data dell’evento e il termine di comunicazione di 30 giorni?",
+      "proposed_evidence": "Evento, data, soggetti, modello art. 21.1, firma LR e ricevute PEC.",
+      "action_if_open": "Preparare comunicazione separata per evento/soggetto; escalation immediata se tardiva.",
+      "common_error": "Il dies a quo non diventa la data in cui lo studio scopre il fatto.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "M05",
+      "area": "mantenimento",
+      "title": "Perdita premiali / annotazione ANAC",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 21.4-5",
+      "review_question": "È intervenuta perdita di premialita o annotazione rilevante?",
+      "proposed_evidence": "Evento, data perdita/pubblicazione, prove e comunicazione.",
+      "action_if_open": "Preparare variazione entro 30 giorni e valutare impatto sul rating ufficiale.",
+      "common_error": "Omissione può comportare riduzione alla stella base per durata residua.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "M06",
+      "area": "mantenimento",
+      "title": "Controlli periodici e su eventi",
+      "kind": "norma_e_metodo",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "artt. 12.4,22,23; metodo Vera",
+      "review_question": "Sono ancora attuali soggetti, prove, scadenze certificati e obblighi informativi?",
+      "proposed_evidence": "Registro eventi, verifiche datate, aggiornamenti periodici.",
+      "action_if_open": "Piano proporzionato e referente aziendale; riesame immediato per eventi.",
+      "common_error": "Verifica annuale da sola non presidia il termine legale di 30 giorni.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "M07",
+      "area": "mantenimento",
+      "title": "Pubblicità corretta",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 24.2-3",
+      "review_question": "L’azienda dichiara solo lo stato e il punteggio ufficiali, senza logo AGCM o pubblicazioni vietate?",
+      "proposed_evidence": "Testi sito/offerte scelti dal cliente, delibera ed elenco ufficiale.",
+      "action_if_open": "Predisporre frase informativa con scadenza; correggere usi non ammessi.",
+      "common_error": "Nessun logo AGCM nel report cliente di Vera.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "T01",
+      "area": "transitorio",
+      "title": "Domande pendenti al 16 marzo 2026",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 25.2",
+      "review_question": "La domanda pendente e stata ripresentata entro 30 giorni?",
+      "proposed_evidence": "Vecchia ricevuta, nuova domanda/ricevuta, stato AGCM.",
+      "action_if_open": "Ricostruire cronologia; in assenza valutare nuova attribuzione.",
+      "common_error": "Non trattare la vecchia domanda come ancora pendente senza verifica.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "T02",
+      "area": "transitorio",
+      "title": "Nuovi ostacoli preesistenti su vecchi rating",
+      "kind": "norma",
+      "source_ids": [
+        "S01"
+      ],
+      "basis": "art. 25.4-6",
+      "review_question": "Esistevano gli eventi tassativamente indicati e sono stati comunicati entro 60 giorni?",
+      "proposed_evidence": "Provvedimenti, rating in essere, comunicazione specifica e ricevute.",
+      "action_if_open": "Verificare esito AGCM e data min(scadenza biennale,16 novembre 2026).",
+      "common_error": "Nessuna proroga generalizzata al 16 novembre 2026 per tutte le imprese.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    },
+    {
+      "id": "T03",
+      "area": "transitorio",
+      "title": "Proroga speciale termine rinnovo",
+      "kind": "norma",
+      "source_ids": [
+        "S01",
+        "S06"
+      ],
+      "basis": "art. 25.9; comunicato punto17",
+      "review_question": "Il termine ordinario ricadeva tra 10 febbraio e 16 marzo 2026?",
+      "proposed_evidence": "Scadenza, calcolo termine, invio e ricevuta.",
+      "action_if_open": "Applicare proroga di 30 giorni solo alla fattispecie transitoria documentata.",
+      "common_error": "Non usarla per rinnovi successivi.",
+      "default_status": "unknown",
+      "evidence_policy": "Proposta istruttoria Vera: proporzionare i riscontri; non trasformare ogni documento suggerito in allegato obbligatorio AGCM.",
+      "decision_owner": "commercialista; valutazione finale AGCM",
+      "current_fact_inference_allowed": false
+    }
+  ],
+  "states": [
+    "unknown",
+    "claimed",
+    "evidence_pending",
+    "verified",
+    "failed",
+    "not_applicable_reviewed",
+    "disputed",
+    "stale"
+  ],
+  "invariants": [
+    "Nessuna inferenza sostituisce un fatto del cliente.",
+    "Norma, prassi ufficiale, metodo istruttorio e decisione professionale sono campi distinti.",
+    "Un requisito applicabile non verificato impedisce la conclusione positiva dipendente, non il lavoro sulle altre aree.",
+    "Una dichiarazione negativa va attribuita al dichiarante; non è un controllo universale delle banche dati.",
+    "Il report distingue rating ufficiale, stima documentata T0 e scenario condizionato T1.",
+    "La checklist e espandibile per soggetto, evento, debito e certificato; non è una lista piatta di soli si/no.",
+    "La presentazione della domanda e il risultato AGCM richiedono ricevute e provvedimenti autentici.",
+    "Il metodo può essere inferito; possesso dei requisiti, firme, adozioni e stato del procedimento mai."
+  ]
+}

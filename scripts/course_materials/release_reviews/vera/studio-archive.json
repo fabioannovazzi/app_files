@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "studio-archive",
-  "course_sha256": "cb44c19810e02c35555b61a262d242fe684870fc8729770e0557a668ec81bc3a",
+  "course_sha256": "dc0a6c46b55851a67bb6a074dd50202fb1f5055349aa88506064e2bb232b1ab1",
   "reviewer": "Codex: five-language local archive lesson and delivered answer review",
   "reviewed_at": "2026-09-14T21:43:59.684693+00:00",
   "review_scope": "Prepared material and native local document-search review. Read all five complete outlines, all fifteen fictional input documents and all ten final answer captures. Nineteen checks pass, including ten distinct phase/language exercises through the real staging, archive configuration, refresh, exact-scope search and source opening functions. Semantic answers are authored regression fixtures outside the shipped kits and do not replace live host reasoning. Native voice, GUI presentation, actual elapsed lesson time and learner comprehension remain unverified. Gmail, WhatsApp, Drive and the separate engagement lifecycle are not exercised by this local-search lesson. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -445,5 +445,20 @@
     "reviewer": "Codex /root",
     "date": "2026-10-02",
     "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
+  },
+  "rating_legalita_source_binding_20261002": {
+    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+    "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+    "previous_course_sha256": "cb44c19810e02c35555b61a262d242fe684870fc8729770e0557a668ec81bc3a",
+    "current_course_sha256": "dc0a6c46b55851a67bb6a074dd50202fb1f5055349aa88506064e2bb232b1ab1",
+    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+    "changed_sources": [
+      "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+      "vendor/modules/courseware/policy.py",
+      "vendor/modules/vera_assurance/contracts.py"
+    ],
+    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
   }
 }
