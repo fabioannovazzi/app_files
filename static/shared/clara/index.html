@@ -89,6 +89,8 @@
             <div class="install-option">
               <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57b17fb5848191be710192d93fe03a" target="_blank" rel="noopener noreferrer" data-clara-install-link data-i18n="install.button">Install for ChatGPT Work and Codex</a>
               <p class="install-option__note" data-i18n="install.chatgptHelp">Opens Clara’s installation page for ChatGPT Work and Codex.</p>
+              <a class="button install-option__download" href="../plugin-downloads/index.html?product=clara&amp;lang=en" data-codex-download-link data-i18n="install.zipButton">Download ZIP for ChatGPT Work and Codex</a>
+              <p class="install-option__note" data-i18n="install.zipHelp">Latest available ZIP and installation or update instructions, including before the Marketplace update.</p>
             </div>
           </div>
           <a class="hero-install__video" id="clara-install-video-link" href="https://youtu.be/vU4eow_MMDA" target="_blank" rel="noopener noreferrer" aria-label="Connect ChatGPT to your computer with Codex" data-i18n-aria-label="install.video.title">
@@ -322,7 +324,7 @@
         "install.actions.label": "Clara installation options",
         "install.video.title": "Connect ChatGPT to your computer with Codex",
         "install.button": "Install for ChatGPT Work and Codex",
-        "install.chatgptHelp": "Opens Clara’s installation page for ChatGPT Work and Codex.",
+        "install.chatgptHelp": "Opens Clara’s installation page for ChatGPT Work and Codex.", "install.zipButton": "Download ZIP for ChatGPT Work and Codex", "install.zipHelp": "Latest available ZIP and installation or update instructions, including before the Marketplace update.",
         "install.coworkButton": "Go to Cowork marketplace",
         "install.coworkHelp": "We have submitted the plugin to the Cowork marketplace. Awaiting approval.",
         "install.coworkGuide": "Download ZIP for Cowork",
@@ -474,7 +476,7 @@
         "install.actions.label": "Opzioni di installazione di Clara",
         "install.video.title": "Collega ChatGPT al computer con Codex",
         "install.button": "Installa per ChatGPT Work e Codex",
-        "install.chatgptHelp": "Apre la pagina di installazione di Clara per ChatGPT Work e Codex.",
+        "install.chatgptHelp": "Apre la pagina di installazione di Clara per ChatGPT Work e Codex.", "install.zipButton": "Scarica ZIP per ChatGPT Work e Codex", "install.zipHelp": "Ultimo ZIP disponibile e istruzioni per installare o aggiornare, anche prima dell’aggiornamento sul Marketplace.",
         "install.coworkButton": "Vai al marketplace Cowork",
         "install.coworkHelp": "Abbiamo inviato il plugin al marketplace Cowork. In attesa di approvazione.",
         "install.coworkGuide": "Scarica ZIP per Cowork",
@@ -626,7 +628,7 @@
         "install.actions.label": "Options d’installation de Clara",
         "install.video.title": "Connectez ChatGPT à votre ordinateur avec Codex",
         "install.button": "Installer pour ChatGPT Work et Codex",
-        "install.chatgptHelp": "Ouvre la page d’installation de Clara pour ChatGPT Work et Codex.",
+        "install.chatgptHelp": "Ouvre la page d’installation de Clara pour ChatGPT Work et Codex.", "install.zipButton": "Télécharger le ZIP pour ChatGPT Work et Codex", "install.zipHelp": "Dernier ZIP disponible et instructions d’installation ou de mise à jour, même avant la mise à jour du Marketplace.",
         "install.coworkButton": "Aller au marketplace Cowork",
         "install.coworkHelp": "Nous avons soumis le plugin au marketplace Cowork. En attente d’approbation.",
         "install.coworkGuide": "Télécharger le ZIP pour Cowork",
@@ -778,7 +780,7 @@
         "install.actions.label": "Installationsoptionen für Clara",
         "install.video.title": "ChatGPT mit Codex mit Ihrem Computer verbinden",
         "install.button": "Für ChatGPT Work und Codex installieren",
-        "install.chatgptHelp": "Öffnet Claras Installationsseite für ChatGPT Work und Codex.",
+        "install.chatgptHelp": "Öffnet Claras Installationsseite für ChatGPT Work und Codex.", "install.zipButton": "ZIP für ChatGPT Work und Codex herunterladen", "install.zipHelp": "Aktuellste verfügbare ZIP-Datei und Anleitung zur Installation oder Aktualisierung, auch vor dem Marketplace-Update.",
         "install.coworkButton": "Zum Cowork-Marketplace",
         "install.coworkHelp": "Wir haben das Plugin beim Cowork-Marketplace eingereicht. Die Freigabe steht aus.",
         "install.coworkGuide": "ZIP für Cowork herunterladen",
@@ -930,7 +932,7 @@
         "install.actions.label": "Opciones de instalación de Clara",
         "install.video.title": "Conecta ChatGPT al ordenador con Codex",
         "install.button": "Instalar para ChatGPT Work y Codex",
-        "install.chatgptHelp": "Abre la página de instalación de Clara para ChatGPT Work y Codex.",
+        "install.chatgptHelp": "Abre la página de instalación de Clara para ChatGPT Work y Codex.", "install.zipButton": "Descargar ZIP para ChatGPT Work y Codex", "install.zipHelp": "Último ZIP disponible e instrucciones para instalar o actualizar, incluso antes de la actualización del Marketplace.",
         "install.coworkButton": "Ir al marketplace de Cowork",
         "install.coworkHelp": "Hemos enviado el plugin al marketplace de Cowork. Pendiente de aprobación.",
         "install.coworkGuide": "Descargar ZIP para Cowork",
@@ -982,6 +984,8 @@
       if (typeof value === "string") node.setAttribute("content", value);
     });
 
+    document.querySelector("[data-codex-download-link]").href =
+      "../plugin-downloads/index.html?product=clara&lang=" + (safeLang === "it" ? "it" : "en");
     document.querySelector("[data-cowork-guide-link]").href =
       "../cowork-downloads/index.html?lang=" + (safeLang === "it" ? "it" : "en");
     document.querySelectorAll("[data-current-language]").forEach((node) => {

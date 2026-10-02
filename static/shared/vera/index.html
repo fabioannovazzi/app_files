@@ -1243,6 +1243,8 @@
             <div class="install-option">
               <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-vera-install-link data-i18n="install.button">Installa per ChatGPT Work e Codex</a>
               <p class="install-option__note" data-i18n="install.chatgptHelp">Apre la pagina di installazione di Vera per ChatGPT Work e Codex.</p>
+              <a class="button install-option__download" href="../plugin-downloads/index.html?product=vera&amp;lang=it" data-codex-download-link data-i18n="install.zipButton">Scarica ZIP per ChatGPT Work e Codex</a>
+              <p class="install-option__note" data-i18n="install.zipHelp">Ultimo ZIP disponibile e istruzioni per installare o aggiornare, anche prima dell’aggiornamento sul Marketplace.</p>
             </div>
           </div>
           <a class="hero-install__video" id="vera-install-video-link" href="https://youtu.be/yAnkIabnQ1M" target="_blank" rel="noopener noreferrer" aria-label="Collega ChatGPT al computer con Codex" data-i18n-aria-label="install.video.title">
@@ -1890,7 +1892,7 @@
         "install.copy": "Installa Vera per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.",
         "install.actions.label": "Opzioni di installazione di Vera",
         "install.button": "Installa per ChatGPT Work e Codex",
-        "install.chatgptHelp": "Apre la pagina di installazione di Vera per ChatGPT Work e Codex.",
+        "install.chatgptHelp": "Apre la pagina di installazione di Vera per ChatGPT Work e Codex.", "install.zipButton": "Scarica ZIP per ChatGPT Work e Codex", "install.zipHelp": "Ultimo ZIP disponibile e istruzioni per installare o aggiornare, anche prima dell’aggiornamento sul Marketplace.",
         "install.coworkButton": "Vai al marketplace Cowork",
         "install.coworkHelp": "Abbiamo inviato il plugin al marketplace Cowork. In attesa di approvazione.",
         "install.coworkGuide": "Scarica ZIP per Cowork",
@@ -2120,7 +2122,7 @@
         "install.copy": "Install Vera for ChatGPT Work and Codex, or download the package for Claude Cowork.",
         "install.actions.label": "Vera installation options",
         "install.button": "Install for ChatGPT Work and Codex",
-        "install.chatgptHelp": "Opens Vera’s installation page for ChatGPT Work and Codex.",
+        "install.chatgptHelp": "Opens Vera’s installation page for ChatGPT Work and Codex.", "install.zipButton": "Download ZIP for ChatGPT Work and Codex", "install.zipHelp": "Latest available ZIP and installation or update instructions, including before the Marketplace update.",
         "install.coworkButton": "Go to Cowork marketplace",
         "install.coworkHelp": "We have submitted the plugin to the Cowork marketplace. Awaiting approval.",
         "install.coworkGuide": "Download ZIP for Cowork",
@@ -2350,7 +2352,7 @@
         "install.copy": "Installez Vera pour ChatGPT Work et Codex ou téléchargez le paquet pour Claude Cowork.",
         "install.actions.label": "Options d’installation de Vera",
         "install.button": "Installer pour ChatGPT Work et Codex",
-        "install.chatgptHelp": "Ouvre la page d’installation de Vera pour ChatGPT Work et Codex.",
+        "install.chatgptHelp": "Ouvre la page d’installation de Vera pour ChatGPT Work et Codex.", "install.zipButton": "Télécharger le ZIP pour ChatGPT Work et Codex", "install.zipHelp": "Dernier ZIP disponible et instructions d’installation ou de mise à jour, même avant la mise à jour du Marketplace.",
         "install.coworkButton": "Aller au marketplace Cowork",
         "install.coworkHelp": "Nous avons soumis le plugin au marketplace Cowork. En attente d’approbation.",
         "install.coworkGuide": "Télécharger le ZIP pour Cowork",
@@ -2580,7 +2582,7 @@
         "install.copy": "Installieren Sie Vera für ChatGPT Work und Codex oder laden Sie das Paket für Claude Cowork herunter.",
         "install.actions.label": "Installationsoptionen für Vera",
         "install.button": "Für ChatGPT Work und Codex installieren",
-        "install.chatgptHelp": "Öffnet Veras Installationsseite für ChatGPT Work und Codex.",
+        "install.chatgptHelp": "Öffnet Veras Installationsseite für ChatGPT Work und Codex.", "install.zipButton": "ZIP für ChatGPT Work und Codex herunterladen", "install.zipHelp": "Aktuellste verfügbare ZIP-Datei und Anleitung zur Installation oder Aktualisierung, auch vor dem Marketplace-Update.",
         "install.coworkButton": "Zum Cowork-Marketplace",
         "install.coworkHelp": "Wir haben das Plugin beim Cowork-Marketplace eingereicht. Die Freigabe steht aus.",
         "install.coworkGuide": "ZIP für Cowork herunterladen",
@@ -2810,7 +2812,7 @@
         "install.copy": "Instala Vera para ChatGPT Work y Codex o descarga el paquete para Claude Cowork.",
         "install.actions.label": "Opciones de instalación de Vera",
         "install.button": "Instalar para ChatGPT Work y Codex",
-        "install.chatgptHelp": "Abre la página de instalación de Vera para ChatGPT Work y Codex.",
+        "install.chatgptHelp": "Abre la página de instalación de Vera para ChatGPT Work y Codex.", "install.zipButton": "Descargar ZIP para ChatGPT Work y Codex", "install.zipHelp": "Último ZIP disponible e instrucciones para instalar o actualizar, incluso antes de la actualización del Marketplace.",
         "install.coworkButton": "Ir al marketplace de Cowork",
         "install.coworkHelp": "Hemos enviado el plugin al marketplace de Cowork. Pendiente de aprobación.",
         "install.coworkGuide": "Descargar ZIP para Cowork",
@@ -2925,6 +2927,8 @@
         if (Object.prototype.hasOwnProperty.call(strings, key)) node.setAttribute("aria-label", strings[key]);
       });
 
+      document.querySelector("[data-codex-download-link]").href =
+        "../plugin-downloads/index.html?product=vera&lang=" + (lang === "it" ? "it" : "en");
       document.querySelector("[data-cowork-guide-link]").href =
         "../cowork-downloads/index.html?lang=" + (lang === "it" ? "it" : "en");
       document.querySelectorAll("[data-current-language]").forEach((node) => {
