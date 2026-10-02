@@ -43,7 +43,22 @@
     "website-articles",
     "presenza-digitale-studio",
     "website-refresh",
-    "first-website"
+    "first-website",
+    "fiduciaire",
+    "fiduciaires",
+    "expert-comptable",
+    "experts-comptables",
+    "comptabilité",
+    "fiscalité",
+    "questions-fiscales",
+    "questions-juridiques",
+    "comptes-annuels",
+    "états-financiers",
+    "révision-comptable",
+    "rapprochement-bancaire",
+    "rapprochement-comptable",
+    "analyse-financière",
+    "genève"
   ],
   "skills": "./skills/",
   "agents": [

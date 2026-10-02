@@ -1,6 +1,6 @@
 {
   "name": "vera",
-  "version": "0.1.331",
+  "version": "0.1.333",
   "description": "Vera affianca commercialisti e studi professionali nei quesiti fiscali e legali, nel bilancio OIC/XBRL e nella revisione contabile e riconciliazione: risposte con fonti, analisi, controlli e carte di lavoro da rivedere.",
   "author": {
     "name": "Fabio Annovazzi · Mparanza",
@@ -83,7 +83,22 @@
     "website-refresh",
     "first-website",
     "fusione",
-    "merger-case"
+    "merger-case",
+    "fiduciaire",
+    "fiduciaires",
+    "expert-comptable",
+    "experts-comptables",
+    "comptabilité",
+    "fiscalité",
+    "questions-fiscales",
+    "questions-juridiques",
+    "comptes-annuels",
+    "états-financiers",
+    "révision-comptable",
+    "rapprochement-bancaire",
+    "rapprochement-comptable",
+    "analyse-financière",
+    "genève"
   ],
   "skills": "./skills/",
   "apps": "./.app.json",
