@@ -87,7 +87,7 @@
     "reviewed_at": "2026-10-02",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "05e194e313e7a6d925db3242991705d3b1fb4e860e39a8ecacc89af26a1741a3"
+    "source_fingerprint": "5d9ac60646611d539fe3efe500e051c9a72e11f97917701c6065e62476df283f"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/rating-legalita/SKILL.md",

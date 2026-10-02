@@ -1,0 +1,399 @@
+{
+  "schema_version": "1.0",
+  "pipeline": "LIPE",
+  "case_id": "synthetic-quarter",
+  "client_id": "synthetic-client",
+  "engagement_id": "synthetic-engagement",
+  "data_origin": "SYNTHETIC",
+  "tax_year": 2026,
+  "quarter": 2,
+  "regime": "MONTHLY",
+  "software": {
+    "name": "SYNTHETIC",
+    "version": "1"
+  },
+  "scope_review": {
+    "status": "CONFIRMED",
+    "reviewer": "SYNTHETIC TEST ACTOR",
+    "reviewed_on": "2026-10-02",
+    "reason": "Synthetic fixture only; no professional validation claimed."
+  },
+  "unsupported_features": [],
+  "sources": [
+    {
+      "source_id": "synthetic-source",
+      "path": "synthetic-registers.txt",
+      "sha256": "4e4acb57843e953d2c8915178fe7e3c42ec12fa4bce2b8da6c8585e075824b08"
+    }
+  ],
+  "opening": {
+    "credit": "0.00",
+    "small_debit": "0.00",
+    "review": {
+      "status": "CONFIRMED",
+      "reviewer": "SYNTHETIC TEST ACTOR",
+      "reviewed_on": "2026-10-02",
+      "reason": "Synthetic fixture only; no professional validation claimed."
+    },
+    "evidence": {
+      "source_id": "synthetic-source",
+      "page": 1,
+      "quote": "Opening credit 0.00; small debit 0.00. Synthetic prior-period evidence."
+    }
+  },
+  "mappings": [
+    {
+      "code": "V22",
+      "side": "SALES",
+      "treatment": "SALE_TAXABLE",
+      "review": {
+        "status": "CONFIRMED",
+        "reviewer": "SYNTHETIC TEST ACTOR",
+        "reviewed_on": "2026-10-02",
+        "reason": "Synthetic fixture only; no professional validation claimed."
+      }
+    },
+    {
+      "code": "A22",
+      "side": "PURCHASES",
+      "treatment": "PURCHASE",
+      "review": {
+        "status": "CONFIRMED",
+        "reviewer": "SYNTHETIC TEST ACTOR",
+        "reviewed_on": "2026-10-02",
+        "reason": "Synthetic fixture only; no professional validation claimed."
+      }
+    }
+  ],
+  "registers": [
+    {
+      "register_id": "SALES-4",
+      "side": "SALES",
+      "period": 4,
+      "number_format": "en-US",
+      "printed_base": "1000.00",
+      "printed_tax": "220.00",
+      "evidence": {
+        "source_id": "synthetic-source",
+        "page": 1,
+        "quote": "SALES-4: base 1000.00; tax 220.00."
+      },
+      "review": {
+        "status": "CONFIRMED",
+        "reviewer": "SYNTHETIC TEST ACTOR",
+        "reviewed_on": "2026-10-02",
+        "reason": "Synthetic fixture only; no professional validation claimed."
+      },
+      "rows": [
+        {
+          "row_id": "SALES-4-1",
+          "code": "V22",
+          "base": "1000.00",
+          "tax": "220.00",
+          "deductible_tax": "0.00",
+          "base_period": 4,
+          "tax_period": 4,
+          "deduction_period": 4,
+          "evidence": {
+            "source_id": "synthetic-source",
+            "page": 1,
+            "quote": "SALES-4: base 1000.00; tax 220.00."
+          },
+          "review": {
+            "status": "CONFIRMED",
+            "reviewer": "SYNTHETIC TEST ACTOR",
+            "reviewed_on": "2026-10-02",
+            "reason": "Synthetic fixture only; no professional validation claimed."
+          },
+          "mirror_of": []
+        }
+      ]
+    },
+    {
+      "register_id": "PURCHASES-4",
+      "side": "PURCHASES",
+      "period": 4,
+      "number_format": "en-US",
+      "printed_base": "500.00",
+      "printed_tax": "110.00",
+      "evidence": {
+        "source_id": "synthetic-source",
+        "page": 1,
+        "quote": "PURCHASES-4: base 500.00; tax 110.00."
+      },
+      "review": {
+        "status": "CONFIRMED",
+        "reviewer": "SYNTHETIC TEST ACTOR",
+        "reviewed_on": "2026-10-02",
+        "reason": "Synthetic fixture only; no professional validation claimed."
+      },
+      "rows": [
+        {
+          "row_id": "PURCHASES-4-1",
+          "code": "A22",
+          "base": "500.00",
+          "tax": "110.00",
+          "deductible_tax": "110.00",
+          "base_period": 4,
+          "tax_period": 4,
+          "deduction_period": 4,
+          "evidence": {
+            "source_id": "synthetic-source",
+            "page": 1,
+            "quote": "PURCHASES-4: base 500.00; tax 110.00."
+          },
+          "review": {
+            "status": "CONFIRMED",
+            "reviewer": "SYNTHETIC TEST ACTOR",
+            "reviewed_on": "2026-10-02",
+            "reason": "Synthetic fixture only; no professional validation claimed."
+          },
+          "mirror_of": []
+        }
+      ]
+    },
+    {
+      "register_id": "SALES-5",
+      "side": "SALES",
+      "period": 5,
+      "number_format": "en-US",
+      "printed_base": "1000.00",
+      "printed_tax": "220.00",
+      "evidence": {
+        "source_id": "synthetic-source",
+        "page": 1,
+        "quote": "SALES-5: base 1000.00; tax 220.00."
+      },
+      "review": {
+        "status": "CONFIRMED",
+        "reviewer": "SYNTHETIC TEST ACTOR",
+        "reviewed_on": "2026-10-02",
+        "reason": "Synthetic fixture only; no professional validation claimed."
+      },
+      "rows": [
+        {
+          "row_id": "SALES-5-1",
+          "code": "V22",
+          "base": "1000.00",
+          "tax": "220.00",
+          "deductible_tax": "0.00",
+          "base_period": 5,
+          "tax_period": 5,
+          "deduction_period": 5,
+          "evidence": {
+            "source_id": "synthetic-source",
+            "page": 1,
+            "quote": "SALES-5: base 1000.00; tax 220.00."
+          },
+          "review": {
+            "status": "CONFIRMED",
+            "reviewer": "SYNTHETIC TEST ACTOR",
+            "reviewed_on": "2026-10-02",
+            "reason": "Synthetic fixture only; no professional validation claimed."
+          },
+          "mirror_of": []
+        }
+      ]
+    },
+    {
+      "register_id": "PURCHASES-5",
+      "side": "PURCHASES",
+      "period": 5,
+      "number_format": "en-US",
+      "printed_base": "500.00",
+      "printed_tax": "110.00",
+      "evidence": {
+        "source_id": "synthetic-source",
+        "page": 1,
+        "quote": "PURCHASES-5: base 500.00; tax 110.00."
+      },
+      "review": {
+        "status": "CONFIRMED",
+        "reviewer": "SYNTHETIC TEST ACTOR",
+        "reviewed_on": "2026-10-02",
+        "reason": "Synthetic fixture only; no professional validation claimed."
+      },
+      "rows": [
+        {
+          "row_id": "PURCHASES-5-1",
+          "code": "A22",
+          "base": "500.00",
+          "tax": "110.00",
+          "deductible_tax": "110.00",
+          "base_period": 5,
+          "tax_period": 5,
+          "deduction_period": 5,
+          "evidence": {
+            "source_id": "synthetic-source",
+            "page": 1,
+            "quote": "PURCHASES-5: base 500.00; tax 110.00."
+          },
+          "review": {
+            "status": "CONFIRMED",
+            "reviewer": "SYNTHETIC TEST ACTOR",
+            "reviewed_on": "2026-10-02",
+            "reason": "Synthetic fixture only; no professional validation claimed."
+          },
+          "mirror_of": []
+        }
+      ]
+    },
+    {
+      "register_id": "SALES-6",
+      "side": "SALES",
+      "period": 6,
+      "number_format": "en-US",
+      "printed_base": "1000.00",
+      "printed_tax": "220.00",
+      "evidence": {
+        "source_id": "synthetic-source",
+        "page": 1,
+        "quote": "SALES-6: base 1000.00; tax 220.00."
+      },
+      "review": {
+        "status": "CONFIRMED",
+        "reviewer": "SYNTHETIC TEST ACTOR",
+        "reviewed_on": "2026-10-02",
+        "reason": "Synthetic fixture only; no professional validation claimed."
+      },
+      "rows": [
+        {
+          "row_id": "SALES-6-1",
+          "code": "V22",
+          "base": "1000.00",
+          "tax": "220.00",
+          "deductible_tax": "0.00",
+          "base_period": 6,
+          "tax_period": 6,
+          "deduction_period": 6,
+          "evidence": {
+            "source_id": "synthetic-source",
+            "page": 1,
+            "quote": "SALES-6: base 1000.00; tax 220.00."
+          },
+          "review": {
+            "status": "CONFIRMED",
+            "reviewer": "SYNTHETIC TEST ACTOR",
+            "reviewed_on": "2026-10-02",
+            "reason": "Synthetic fixture only; no professional validation claimed."
+          },
+          "mirror_of": []
+        }
+      ]
+    },
+    {
+      "register_id": "PURCHASES-6",
+      "side": "PURCHASES",
+      "period": 6,
+      "number_format": "en-US",
+      "printed_base": "500.00",
+      "printed_tax": "110.00",
+      "evidence": {
+        "source_id": "synthetic-source",
+        "page": 1,
+        "quote": "PURCHASES-6: base 500.00; tax 110.00."
+      },
+      "review": {
+        "status": "CONFIRMED",
+        "reviewer": "SYNTHETIC TEST ACTOR",
+        "reviewed_on": "2026-10-02",
+        "reason": "Synthetic fixture only; no professional validation claimed."
+      },
+      "rows": [
+        {
+          "row_id": "PURCHASES-6-1",
+          "code": "A22",
+          "base": "500.00",
+          "tax": "110.00",
+          "deductible_tax": "110.00",
+          "base_period": 6,
+          "tax_period": 6,
+          "deduction_period": 6,
+          "evidence": {
+            "source_id": "synthetic-source",
+            "page": 1,
+            "quote": "PURCHASES-6: base 500.00; tax 110.00."
+          },
+          "review": {
+            "status": "CONFIRMED",
+            "reviewer": "SYNTHETIC TEST ACTOR",
+            "reviewed_on": "2026-10-02",
+            "reason": "Synthetic fixture only; no professional validation claimed."
+          },
+          "mirror_of": []
+        }
+      ]
+    }
+  ],
+  "modules": [
+    {
+      "period": 4,
+      "vp9": "0.00",
+      "vp10": "0.00",
+      "vp11": "0.00",
+      "vp13": "0.00",
+      "credit_withheld": "0.00",
+      "vp13_method": null,
+      "defer_small_debit": false,
+      "principal_paid": "110.00",
+      "liquidation_vat": "110.00",
+      "review": {
+        "status": "CONFIRMED",
+        "reviewer": "SYNTHETIC TEST ACTOR",
+        "reviewed_on": "2026-10-02",
+        "reason": "Synthetic fixture only; no professional validation claimed."
+      },
+      "evidence": {
+        "source_id": "synthetic-source",
+        "page": 1,
+        "quote": "Module 4: VP9 0.00; VP10 0.00; VP11 0.00; VP13 0.00; credit withheld 0.00; paid 110.00; liquidation VAT 110.00."
+      }
+    },
+    {
+      "period": 5,
+      "vp9": "0.00",
+      "vp10": "0.00",
+      "vp11": "0.00",
+      "vp13": "0.00",
+      "credit_withheld": "0.00",
+      "vp13_method": null,
+      "defer_small_debit": false,
+      "principal_paid": "110.00",
+      "liquidation_vat": "110.00",
+      "review": {
+        "status": "CONFIRMED",
+        "reviewer": "SYNTHETIC TEST ACTOR",
+        "reviewed_on": "2026-10-02",
+        "reason": "Synthetic fixture only; no professional validation claimed."
+      },
+      "evidence": {
+        "source_id": "synthetic-source",
+        "page": 1,
+        "quote": "Module 5: VP9 0.00; VP10 0.00; VP11 0.00; VP13 0.00; credit withheld 0.00; paid 110.00; liquidation VAT 110.00."
+      }
+    },
+    {
+      "period": 6,
+      "vp9": "0.00",
+      "vp10": "0.00",
+      "vp11": "0.00",
+      "vp13": "0.00",
+      "credit_withheld": "0.00",
+      "vp13_method": null,
+      "defer_small_debit": false,
+      "principal_paid": "110.00",
+      "liquidation_vat": "110.00",
+      "review": {
+        "status": "CONFIRMED",
+        "reviewer": "SYNTHETIC TEST ACTOR",
+        "reviewed_on": "2026-10-02",
+        "reason": "Synthetic fixture only; no professional validation claimed."
+      },
+      "evidence": {
+        "source_id": "synthetic-source",
+        "page": 1,
+        "quote": "Module 6: VP9 0.00; VP10 0.00; VP11 0.00; VP13 0.00; credit withheld 0.00; paid 110.00; liquidation VAT 110.00."
+      }
+    }
+  ]
+}

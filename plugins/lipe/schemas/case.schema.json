@@ -1,0 +1,660 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "1.0"
+      ]
+    },
+    "pipeline": {
+      "enum": [
+        "LIPE"
+      ]
+    },
+    "case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "client_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "engagement_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "data_origin": {
+      "enum": [
+        "SYNTHETIC",
+        "REAL"
+      ]
+    },
+    "tax_year": {
+      "type": "integer",
+      "minimum": 2024,
+      "maximum": 2026
+    },
+    "quarter": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4
+    },
+    "regime": {
+      "enum": [
+        "MONTHLY",
+        "QUARTERLY_OPTION",
+        "QUARTERLY_SPECIAL"
+      ]
+    },
+    "software": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ]
+    },
+    "scope_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "PROPOSED",
+            "CONFIRMED"
+          ]
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewed_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "status",
+        "reviewer",
+        "reviewed_on",
+        "reason"
+      ]
+    },
+    "unsupported_features": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "required": [
+          "source_id",
+          "path",
+          "sha256"
+        ]
+      }
+    },
+    "opening": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "credit": {
+              "type": "string",
+              "pattern": "^-?(0|[1-9][0-9]{0,10})\\.[0-9]{2}$"
+            },
+            "small_debit": {
+              "type": "string",
+              "pattern": "^-?(0|[1-9][0-9]{0,10})\\.[0-9]{2}$"
+            },
+            "review": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "status": {
+                  "enum": [
+                    "PROPOSED",
+                    "CONFIRMED"
+                  ]
+                },
+                "reviewer": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "reviewed_on": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "status",
+                "reviewer",
+                "reviewed_on",
+                "reason"
+              ]
+            },
+            "evidence": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "source_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "page": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "quote": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "source_id",
+                "page",
+                "quote"
+              ]
+            }
+          },
+          "required": [
+            "credit",
+            "small_debit",
+            "review",
+            "evidence"
+          ]
+        }
+      ]
+    },
+    "mappings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1
+          },
+          "side": {
+            "enum": [
+              "SALES",
+              "PURCHASES",
+              "INTEGRATION"
+            ]
+          },
+          "treatment": {
+            "enum": [
+              "SALE_TAXABLE",
+              "SALE_NO_OUTPUT_VAT",
+              "SALE_EXCLUDED",
+              "PURCHASE",
+              "PURCHASE_REVERSE_CHARGE",
+              "PURCHASE_EXCLUDED",
+              "INTEGRATION_MIRROR"
+            ]
+          },
+          "review": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "status": {
+                "enum": [
+                  "PROPOSED",
+                  "CONFIRMED"
+                ]
+              },
+              "reviewer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reviewed_on": {
+                "type": "string",
+                "format": "date"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "status",
+              "reviewer",
+              "reviewed_on",
+              "reason"
+            ]
+          }
+        },
+        "required": [
+          "code",
+          "side",
+          "treatment",
+          "review"
+        ]
+      }
+    },
+    "registers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "register_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "side": {
+            "enum": [
+              "SALES",
+              "PURCHASES",
+              "INTEGRATION"
+            ]
+          },
+          "period": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
+          },
+          "number_format": {
+            "enum": [
+              "it-IT",
+              "en-US"
+            ]
+          },
+          "printed_base": {
+            "type": "string",
+            "pattern": "^-?(0|[1-9][0-9]{0,10})\\.[0-9]{2}$"
+          },
+          "printed_tax": {
+            "type": "string",
+            "pattern": "^-?(0|[1-9][0-9]{0,10})\\.[0-9]{2}$"
+          },
+          "evidence": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "source_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "page": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "quote": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "source_id",
+              "page",
+              "quote"
+            ]
+          },
+          "review": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "status": {
+                "enum": [
+                  "PROPOSED",
+                  "CONFIRMED"
+                ]
+              },
+              "reviewer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reviewed_on": {
+                "type": "string",
+                "format": "date"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "status",
+              "reviewer",
+              "reviewed_on",
+              "reason"
+            ]
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "row_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "code": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "base": {
+                  "type": "string",
+                  "pattern": "^-?(0|[1-9][0-9]{0,10})\\.[0-9]{2}$"
+                },
+                "tax": {
+                  "type": "string",
+                  "pattern": "^-?(0|[1-9][0-9]{0,10})\\.[0-9]{2}$"
+                },
+                "deductible_tax": {
+                  "type": "string",
+                  "pattern": "^-?(0|[1-9][0-9]{0,10})\\.[0-9]{2}$"
+                },
+                "base_period": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 12
+                },
+                "tax_period": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 12
+                },
+                "deduction_period": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 12
+                },
+                "evidence": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "source_id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "page": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "quote": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "source_id",
+                    "page",
+                    "quote"
+                  ]
+                },
+                "review": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "PROPOSED",
+                        "CONFIRMED"
+                      ]
+                    },
+                    "reviewer": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "reviewed_on": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "reviewer",
+                    "reviewed_on",
+                    "reason"
+                  ]
+                },
+                "mirror_of": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "row_id",
+                "code",
+                "base",
+                "tax",
+                "deductible_tax",
+                "base_period",
+                "tax_period",
+                "deduction_period",
+                "evidence",
+                "review",
+                "mirror_of"
+              ]
+            }
+          }
+        },
+        "required": [
+          "register_id",
+          "side",
+          "period",
+          "number_format",
+          "printed_base",
+          "printed_tax",
+          "evidence",
+          "review",
+          "rows"
+        ]
+      }
+    },
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "period": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
+          },
+          "vp9": {
+            "type": "string",
+            "pattern": "^-?(0|[1-9][0-9]{0,10})\\.[0-9]{2}$"
+          },
+          "vp10": {
+            "type": "string",
+            "pattern": "^-?(0|[1-9][0-9]{0,10})\\.[0-9]{2}$"
+          },
+          "vp11": {
+            "type": "string",
+            "pattern": "^-?(0|[1-9][0-9]{0,10})\\.[0-9]{2}$"
+          },
+          "vp13": {
+            "type": "string",
+            "pattern": "^-?(0|[1-9][0-9]{0,10})\\.[0-9]{2}$"
+          },
+          "vp13_method": {
+            "enum": [
+              null,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "credit_withheld": {
+            "type": "string",
+            "pattern": "^-?(0|[1-9][0-9]{0,10})\\.[0-9]{2}$"
+          },
+          "defer_small_debit": {
+            "enum": [
+              null,
+              true,
+              false
+            ]
+          },
+          "principal_paid": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^-?(0|[1-9][0-9]{0,10})\\.[0-9]{2}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "liquidation_vat": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^-?(0|[1-9][0-9]{0,10})\\.[0-9]{2}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "review": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "status": {
+                "enum": [
+                  "PROPOSED",
+                  "CONFIRMED"
+                ]
+              },
+              "reviewer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reviewed_on": {
+                "type": "string",
+                "format": "date"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "status",
+              "reviewer",
+              "reviewed_on",
+              "reason"
+            ]
+          },
+          "evidence": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "source_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "page": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "quote": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "source_id",
+              "page",
+              "quote"
+            ]
+          }
+        },
+        "required": [
+          "period",
+          "vp9",
+          "vp10",
+          "vp11",
+          "vp13",
+          "vp13_method",
+          "credit_withheld",
+          "defer_small_debit",
+          "principal_paid",
+          "liquidation_vat",
+          "review",
+          "evidence"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "pipeline",
+    "case_id",
+    "client_id",
+    "engagement_id",
+    "data_origin",
+    "tax_year",
+    "quarter",
+    "regime",
+    "software",
+    "scope_review",
+    "unsupported_features",
+    "sources",
+    "opening",
+    "mappings",
+    "registers",
+    "modules"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LIPE: reviewed evidence and exact arithmetic for one client and quarter"
+}

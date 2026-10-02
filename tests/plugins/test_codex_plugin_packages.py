@@ -16,6 +16,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 COMMERCIALISTA_MODULE_NAMES = {
+    "lipe",
     "rating-legalita",
     "scissione-guidata",
     "patent-box-review",
@@ -1586,6 +1587,7 @@ def test_vera_routes_every_commercialista_module() -> None:
     assert components["schema_version"] == 1
     assert set(components["plugins"]) == COMMERCIALISTA_MODULE_NAMES
     assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {
+        "lipe",
         "scissione-guidata",
         "patent-box-review",
         "esg-reporting-assurance",
@@ -2335,6 +2337,13 @@ def test_all_plugin_skills_define_material_choice_intake() -> None:
             )
             continue
 
+        if plugin_name == "lipe":
+            normalized = " ".join(combined_skill_text.split())
+            assert "Inspect the supplied documents first" in normalized
+            assert "reuse confirmed answers" in normalized
+            assert "Use the current host model to propose" in normalized
+            assert "unresolved material choices" in normalized
+            continue
         if plugin_name == "trasformazione":
             assert (
                 "inspect provided synthetic inputs before asking" in lowered_skill_text
@@ -3014,6 +3023,20 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 assert (
                     "actual professional confirmation still belongs to the named reviewer"
                     in normalized_skill_text
+                )
+                continue
+            if plugin_root.name == "lipe":
+                assert (
+                    "workpaper, VP table, findings and readable model-data report are normal outputs"
+                    in normalized_skill_text
+                )
+                assert "codex_run_review.md" in normalized_skill_text
+                assert (
+                    "Never write run outputs inside this Git workspace"
+                    in normalized_skill_text
+                )
+                assert (
+                    "Do not close the managed run without them" in normalized_skill_text
                 )
                 continue
             for snippet in required_snippets:
@@ -4026,6 +4049,7 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         "../patent-box-review/index.html",
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
+        "../lipe/index.html",
     ):
         module = re.search(
             rf'<a class="module-row"[^>]+href="{re.escape(module_link)}"[^>]*>',
@@ -4033,9 +4057,9 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 43
-    assert core.count('class="module-row"') == 43
-    assert core.count('data-jurisdiction-item="it"') == 15
+    assert core.count(" data-module-link") == 44
+    assert core.count('class="module-row"') == 44
+    assert core.count('data-jurisdiction-item="it"') == 16
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for area_id in (
@@ -5675,6 +5699,7 @@ def test_reporting_component_manifests_use_clara_homepage() -> None:
 
 def test_standard_family_plugin_manifests_use_family_homepages() -> None:
     expected_homepages = {
+        "lipe": "https://mparanza.com/static/shared/lipe/index.html",
         "rating-legalita": "https://mparanza.com/static/shared/rating-legalita/index.html",
         "scissione-guidata": "https://mparanza.com/static/shared/scissione-guidata/index.html",
         "esg-reporting-assurance": "https://mparanza.com/static/shared/esg-reporting-assurance/index.html",

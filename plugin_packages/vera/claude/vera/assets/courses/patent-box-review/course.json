@@ -305,7 +305,7 @@
     },
     {
       "path": "modules/patent-box-review/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f0e6a7b600b36b7a82a4f2a42e2e013142bde80d153f78d57a379cceb6463e8e"
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
     },
     {
       "path": "modules/patent-box-review/vendor/modules/vera_assurance/decisions.py",
@@ -357,7 +357,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f0e6a7b600b36b7a82a4f2a42e2e013142bde80d153f78d57a379cceb6463e8e"
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -666,5 +666,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "687fe777cd0ddca3173f9bd2f4674190940f8abe353adfd7518b8d1fb60254d9"
+  "canonical_course_sha256": "a6cd5cd9988efda4f9d5b838aa2a6d00a210bc55df3c3a65c21fd15d212da7ce"
 }

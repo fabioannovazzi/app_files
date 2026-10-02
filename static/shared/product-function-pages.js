@@ -164,6 +164,87 @@
 };
 
   window.MPARANZA_FUNCTION_PAGES = {
+    "lipe": {
+  "product": "Vera",
+  "defaultLanguage": "it",
+  "copy": {
+    "it": {
+      "name": "LIPE",
+      "summary": "Riconcilia i registri IVA e prepara una bozza dei righi VP con fonti, quadrature e decisioni professionali.",
+      "useWhen": "Per controllare liquidazioni mensili o trimestrali ordinarie italiane degli anni 2024–2026. È un pilota: la validazione professionale su documenti reali resta da eseguire.",
+      "input": "Registri vendite, acquisti, corrispettivi e integrative, tutti i sezionali, liquidazioni, saldi precedenti, rettifiche e versamenti disponibili. Codici e periodi devono essere confermati.",
+      "work": "Collega le righe a documento e pagina, controlla impronte e totali, separa periodo di registrazione, esigibilità e detrazione e calcola gli importi con aritmetica decimale. Dati mancanti o non confermati bloccano il risultato.",
+      "output": "Bozza VP, composizione per riga, scarti con liquidazioni e versamenti, carta di lavoro e richiesta di revisione. Ogni correzione produce una nuova versione.",
+      "responsibilityIntro": "La bozza richiede revisione professionale. Nessun risultato costituisce certificazione fiscale o accettazione telematica.",
+      "productRole": "Verifica prove e calcoli sul perimetro supportato. L’estrazione del testo non certifica la lettura della tabella; il revisore indicato non è autenticato.",
+      "professionalRole": "Conferma completezza, natura dei codici, periodi e detraibilità, saldi e rettifiche. Regimi particolari non supportati e questioni irrisolte bloccano il calcolo. XML reale, firma e invio non disponibili.",
+      "prompt": "Avvia LIPE dai registri IVA di questo cliente. Verifica le fonti, proponi il mapping dei codici e prepara la bozza VP con i punti da confermare.",
+      "modelDataStatus": "relevant",
+      "modelDataConclusion": "Il modello può leggere le pagine dei registri e le decisioni; il codice locale verifica fonti e importi.",
+      "modelData": "Codex o Cowork può ricevere nomi, identificativi, fatture, date, codici IVA, imponibili, imposte, liquidazioni, estratti F24, proposte e carte di lavoro. Il programma locale legge le fonti selezionate, verifica hash e citazioni e salva versioni; non chiama modelli o servizi di rete. Questo non misura ciò che l’host ha già letto. Non è prevista anonimizzazione automatica. La ricerca normativa usa query prive di dati del cliente; il report della sessione descrive l’esposizione effettiva."
+    },
+    "en": {
+      "name": "LIPE",
+      "summary": "Reconcile Italian VAT registers and prepare a VP draft with sources, reconciliations and professional decisions.",
+      "useWhen": "For ordinary Italian monthly or quarterly VAT periods in 2024–2026. This is a pilot; professional acceptance on original documents is pending.",
+      "input": "All sales, purchase, receipt and integration registers, settlements, prior balances, adjustments and available payment evidence. Confirm codes and periods.",
+      "work": "Links rows to source pages, checks hashes and totals, separates registration, chargeability and deduction periods, and calculates exact decimal amounts. Missing or unconfirmed inputs block the result.",
+      "output": "VP draft, row composition, settlement and payment differences, workpaper and review request. Corrections produce new revisions.",
+      "responsibilityIntro": "The draft requires professional review. It is not tax certification or electronic filing acceptance.",
+      "productRole": "Checks evidence and calculations within the supported scope. Text extraction does not verify table interpretation or authenticate reviewers.",
+      "professionalRole": "Confirms completeness, codes, periods, deductibility, balances and adjustments. Unsupported regimes and unresolved issues block calculation. Real XML export, signing and submission are unavailable.",
+      "prompt": "Start LIPE from this client’s VAT registers. Verify sources, propose code mappings and prepare a VP draft with points requiring confirmation.",
+      "modelDataStatus": "relevant",
+      "modelDataConclusion": "The model may read register pages and decisions; local code checks sources and amounts.",
+      "modelData": "Codex or Cowork may receive names, identifiers, invoices, dates, VAT codes, bases, tax, settlements, payment excerpts, proposals and workpapers. Local helpers verify selected sources, hashes and quotations and save revisions without model or network calls. This does not measure what the host already read. There is no automatic anonymization. Public research excludes client data; the session report records actual model exposure."
+    },
+    "fr": {
+      "name": "LIPE",
+      "summary": "Rapproche les registres de TVA italiens et prépare un projet des lignes VP avec sources, contrôles et décisions professionnelles.",
+      "useWhen": "Pour les liquidations italiennes ordinaires mensuelles ou trimestrielles de 2024 à 2026. Version pilote : validation professionnelle sur les documents originaux en attente.",
+      "input": "Tous les registres de ventes, achats, recettes et intégrations, liquidations, soldes antérieurs, ajustements et justificatifs de paiement disponibles. Codes et périodes à confirmer.",
+      "work": "Relie les lignes aux pages sources, vérifie empreintes et totaux et distingue enregistrement, exigibilité et déduction. Les données manquantes ou non confirmées bloquent le calcul.",
+      "output": "Projet VP, détail des montants, écarts, feuille de travail et demande de révision. Les corrections créent une nouvelle version.",
+      "responsibilityIntro": "Le projet nécessite une révision professionnelle. Il ne certifie ni la conformité fiscale ni l’acceptation d’une déclaration.",
+      "productRole": "Contrôle les sources et les calculs dans le périmètre couvert. L’extraction du texte ne valide pas la lecture des tableaux et n’authentifie pas le réviseur.",
+      "professionalRole": "Confirme exhaustivité, codes, périodes, déductibilité, soldes et ajustements. Les cas non couverts bloquent le calcul. Export XML réel, signature et transmission indisponibles.",
+      "prompt": "Lance LIPE à partir des registres de TVA italiens de ce client, vérifie les sources et prépare un projet VP avec les points à confirmer.",
+      "modelDataStatus": "relevant",
+      "modelDataConclusion": "Le modèle peut lire les pages des registres et les décisions ; le code local vérifie sources et montants.",
+      "modelData": "Codex ou Cowork peut recevoir noms, identifiants, factures, dates, codes TVA, bases, taxes, liquidations, extraits de paiement et documents de travail. Les scripts locaux ne contactent aucun modèle ni réseau, sans mesurer ce que l’hôte a déjà lu. Aucune anonymisation automatique. La recherche publique exclut les données du client ; le rapport de session décrit l’exposition effective."
+    },
+    "de": {
+      "name": "LIPE",
+      "summary": "Gleicht italienische Umsatzsteuerregister ab und erstellt einen VP-Entwurf mit Quellen, Abstimmungen und fachlichen Entscheidungen.",
+      "useWhen": "Für gewöhnliche monatliche oder vierteljährliche italienische Umsatzsteuerabrechnungen 2024–2026. Pilot: Die fachliche Abnahme anhand von Originalunterlagen steht aus.",
+      "input": "Alle Verkaufs-, Einkaufs-, Einnahmen- und Ergänzungsregister, Abrechnungen, Vorperiodensalden, Anpassungen und verfügbare Zahlungsnachweise. Codes und Perioden müssen bestätigt werden.",
+      "work": "Verknüpft Zeilen mit Quellseiten, prüft Hashwerte und Summen und trennt Erfassung, Steuerentstehung und Vorsteuerabzug. Fehlende oder unbestätigte Daten blockieren das Ergebnis.",
+      "output": "VP-Entwurf, Betragszusammensetzung, Abweichungen, Arbeitspapier und Prüfanforderung. Korrekturen erzeugen neue Versionen.",
+      "responsibilityIntro": "Der Entwurf erfordert fachliche Prüfung und bestätigt weder Steuerkonformität noch die Annahme einer Meldung.",
+      "productRole": "Prüft Quellen und Berechnungen im unterstützten Umfang. Textextraktion bestätigt weder Tabelleninterpretation noch Prüferidentität.",
+      "professionalRole": "Bestätigt Vollständigkeit, Codes, Perioden, Abzug, Salden und Anpassungen. Nicht unterstützte Fälle blockieren die Berechnung. Echter XML-Export, Signatur und Übermittlung sind nicht verfügbar.",
+      "prompt": "Starte LIPE mit den italienischen Umsatzsteuerregistern dieses Mandanten und erstelle einen belegten VP-Entwurf mit offenen Prüfpunkten.",
+      "modelDataStatus": "relevant",
+      "modelDataConclusion": "Das Modell kann Registerseiten und Entscheidungen lesen; lokaler Code prüft Quellen und Beträge.",
+      "modelData": "Codex oder Cowork kann Namen, Kennungen, Rechnungen, Daten, Steuercodes, Beträge, Abrechnungen, Zahlungsnachweise und Arbeitspapiere verarbeiten. Lokale Helfer rufen weder Modelle noch Netzwerkdienste auf. Dies misst nicht, was der Host bereits gelesen hat. Keine automatische Anonymisierung. Öffentliche Recherche enthält keine Mandantendaten; der Sitzungsbericht dokumentiert die tatsächliche Modellverarbeitung."
+    },
+    "es": {
+      "name": "LIPE",
+      "summary": "Concilia registros italianos de IVA y prepara un borrador VP con fuentes, comprobaciones y decisiones profesionales.",
+      "useWhen": "Para liquidaciones italianas ordinarias mensuales o trimestrales de 2024–2026. Piloto: la aceptación profesional con documentos originales está pendiente.",
+      "input": "Todos los registros de ventas, compras, cobros e integraciones, liquidaciones, saldos anteriores, ajustes y pruebas de pago disponibles. Códigos y periodos deben confirmarse.",
+      "work": "Vincula filas a páginas fuente, verifica huellas y totales y separa registro, exigibilidad y deducción. Los datos ausentes o sin confirmar bloquean el resultado.",
+      "output": "Borrador VP, composición de importes, diferencias, papel de trabajo y solicitud de revisión. Las correcciones generan nuevas versiones.",
+      "responsibilityIntro": "El borrador requiere revisión profesional. No certifica cumplimiento tributario ni aceptación de la declaración.",
+      "productRole": "Comprueba pruebas y cálculos dentro del alcance admitido. La extracción de texto no valida tablas ni autentica revisores.",
+      "professionalRole": "Confirma integridad, códigos, periodos, deducibilidad, saldos y ajustes. Los casos no admitidos bloquean el cálculo. Exportación XML real, firma y envío no disponibles.",
+      "prompt": "Inicia LIPE con los registros italianos de IVA de este cliente, verifica las fuentes y prepara un borrador VP con los puntos por confirmar.",
+      "modelDataStatus": "relevant",
+      "modelDataConclusion": "El modelo puede leer páginas y decisiones; el código local verifica fuentes e importes.",
+      "modelData": "Codex o Cowork puede recibir nombres, identificadores, facturas, fechas, códigos IVA, bases, impuestos, liquidaciones, pruebas de pago y papeles de trabajo. Los programas locales no llaman a modelos ni a servicios de red; esto no mide lo que el host ya leyó. No hay anonimización automática. La investigación pública excluye datos del cliente; el informe de sesión registra la exposición real."
+    }
+  }
+},
     "rating-legalita": {
   "product": "Vera",
   "defaultLanguage": "it",

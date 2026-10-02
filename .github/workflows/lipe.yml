@@ -1,0 +1,30 @@
+name: LIPE
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lipe:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit -r plugins/lipe/requirements.txt
+      - name: Verify evidence, tax arithmetic and export boundaries
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_lipe.py --cov=plugins/lipe/scripts --cov-report=term-missing --cov-fail-under=80
+      - run: python -m black --check plugins/lipe/scripts tests/plugins/test_lipe.py
+      - run: python -m isort --check-only plugins/lipe/scripts tests/plugins/test_lipe.py
+      - run: python -m mypy --follow-imports=skip --ignore-missing-imports plugins/lipe/scripts
+      - run: python -m bandit -q -ll -r plugins/lipe/scripts

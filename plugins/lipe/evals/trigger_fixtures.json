@@ -1,0 +1,26 @@
+{
+  "plugin": "lipe",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "registers-to-vp",
+      "prompt": "Prepara la LIPE del secondo trimestre da questi registri IVA Reviso e dalle liquidazioni mensili.",
+      "required_signals": ["lipe", "register", "professional"]
+    },
+    {
+      "id": "reconcile-mexal",
+      "prompt": "Controlla i codici IVA Mexal e le differenze tra registri, liquidazioni e F24 prima della LIPE.",
+      "required_signals": ["lipe", "mapping", "evidence"]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "electronic-invoice",
+      "prompt": "Genera una fattura elettronica XML per questa prestazione."
+    },
+    {
+      "id": "annual-vat-return",
+      "prompt": "Compila e trasmetti la dichiarazione IVA annuale."
+    }
+  ]
+}

@@ -153,6 +153,7 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "treasury-forecast": "modules/treasury-forecast/skills/treasury-forecast/SKILL.md",
     "aml-review": "modules/aml-review/skills/aml-review/SKILL.md",
     "adeguati-assetti": "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
+    "lipe": "modules/lipe/skills/lipe/SKILL.md",
     "rating-legalita": "modules/rating-legalita/skills/rating-legalita/SKILL.md",
     "archive-organization": "modules/archive-organization/skills/archive-organization/SKILL.md",
     "open-item-reconciliation": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",

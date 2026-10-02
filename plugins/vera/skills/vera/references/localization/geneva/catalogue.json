@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/app-files-connector-downloads/plugins/vera",
-  "version": "0.1.335",
-  "captured_at": "2026-10-02T17:18:14.311618+00:00",
-  "catalogue_fingerprint": "ae2d3201b5d87f1d12c566ba4bfa236d2532c1d9f5be7ce9808f940afc75c336",
-  "manifest_sha256": "728888421d1cf0594b058c555661f11fc485336866de98c409459e9916d5e355",
+  "root": "/Users/fabio/.codex/worktrees/lipe-pipeline/app_files/plugins/vera",
+  "version": "0.1.336",
+  "captured_at": "2026-10-02T18:38:17.392566+00:00",
+  "catalogue_fingerprint": "c92a4175a52c31e930a52d064c39e76131731a89159d8bec4f42204fd5c029b8",
+  "manifest_sha256": "67c94bbbef2828712240309e1930ad9c4a8cc388edb1a41594f6862d2c4cfa35",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -145,6 +145,11 @@
       "function_id": "legal-tax-answer-review",
       "skill_path": "skills/legal-tax-answer-review/SKILL.md",
       "sha256": "288ed254af5641659a0ab51cad0d45ac3d83469c0cb8c95022e78e3c8cf6f445"
+    },
+    {
+      "function_id": "lipe",
+      "skill_path": "skills/lipe/SKILL.md",
+      "sha256": "331972d37d99a4208e4b0794a48d520cc24b64d150aac2e4d2f70afcf4439816"
     },
     {
       "function_id": "management-control-pack",

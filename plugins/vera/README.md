@@ -22,6 +22,13 @@ limitations, and professional-review steps visible. Vera does not replace the
 commercialista: decisions, approval, and responsibility remain with the
 qualified professional.
 
+## LIPE
+
+`lipe` reconciles VAT-register evidence and produces VP review drafts. It is a
+2024–2026 ordinary-VAT pilot with explicit source, mapping and balance checks.
+Real XML export is blocked pending professional, authentication and importer
+acceptance. See `modules/lipe/skills/lipe/SKILL.md` in the installed package.
+
 ## Business valuation
 
 `business-valuation` prepares client-bound PMI valuation workpapers with selected

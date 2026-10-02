@@ -1,0 +1,10 @@
+Opening credit 0.00; small debit 0.00. Synthetic prior-period evidence.
+SALES-4: base 1000.00; tax 220.00.
+PURCHASES-4: base 500.00; tax 110.00.
+Module 4: VP9 0.00; VP10 0.00; VP11 0.00; VP13 0.00; credit withheld 0.00; paid 110.00; liquidation VAT 110.00.
+SALES-5: base 1000.00; tax 220.00.
+PURCHASES-5: base 500.00; tax 110.00.
+Module 5: VP9 0.00; VP10 0.00; VP11 0.00; VP13 0.00; credit withheld 0.00; paid 110.00; liquidation VAT 110.00.
+SALES-6: base 1000.00; tax 220.00.
+PURCHASES-6: base 500.00; tax 110.00.
+Module 6: VP9 0.00; VP10 0.00; VP11 0.00; VP13 0.00; credit withheld 0.00; paid 110.00; liquidation VAT 110.00.

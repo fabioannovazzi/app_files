@@ -117,7 +117,7 @@
     },
     {
       "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f0e6a7b600b36b7a82a4f2a42e2e013142bde80d153f78d57a379cceb6463e8e"
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
     },
     {
       "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/decisions.py",
@@ -169,7 +169,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f0e6a7b600b36b7a82a4f2a42e2e013142bde80d153f78d57a379cceb6463e8e"
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -510,5 +510,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "250a96591597f5ab3354236214e51ab6ab98094580e4abd92ba826ac8259bf24"
+  "canonical_course_sha256": "e8ad936a24791732a89e4c8b9b9d58f49d3df8b486301307f8077b60a2656096"
 }

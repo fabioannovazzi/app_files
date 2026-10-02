@@ -1,0 +1,33 @@
+{
+  "sources": [
+    {
+      "id": "ae-istruzioni.pdf",
+      "official_url": "https://www.agenziaentrate.gov.it/portale/documents/20143/5986193/IVA+period_2024.pdf/04990f53-edc9-048a-c953-49592ebea05f",
+      "retrieved_on": "2026-10-02",
+      "sha256": "881ba066042942c651653ccb505381ddfa79bb109fb4735615a32b1dea455050",
+      "status": "RETRIEVED_AND_INSPECTED",
+      "professional_acceptance": "PENDING"
+    },
+    {
+      "id": "ae-specifiche.pdf",
+      "official_url": "https://www.agenziaentrate.gov.it/portale/documents/20143/5986193/SpecificheIVP18_2024.pdf/86501570-9d0c-9593-6e8c-1e538b720490",
+      "retrieved_on": "2026-10-02",
+      "sha256": "032b1e1bff0b9204e913fea6c7c7d4c613d9feb695a5aa2cfd4f7bb006f35dc8",
+      "status": "RETRIEVED_AND_INSPECTED",
+      "professional_acceptance": "PENDING"
+    },
+    {
+      "id": "ae-xsd.zip",
+      "official_url": "https://www.agenziaentrate.gov.it/portale/documents/20143/289347/Specifiche+IVP2018_SchemaIV18.zip/c650c70c-4318-b27a-2209-81d1a10d463d",
+      "retrieved_on": "2026-10-02",
+      "sha256": "ea4f9a6cf9d356c02c27852ecafaabdc2b89c0d53a7f50f13fd152ecc1f5dcdd",
+      "status": "RETRIEVED_AND_INSPECTED",
+      "professional_acceptance": "PENDING"
+    }
+  ],
+  "developer_pack": {
+    "channel_message": "https://discord.com/channels/1550191335917625474/1554906410947715243/1555530487215423568",
+    "sha256": "043d3128f927ed98b0c1215f84a57a6447ff9b67e43162dc088711facc5550eb",
+    "use": "Requirements and defect review only. Real aggregate example amounts are not shipped."
+  }
+}
