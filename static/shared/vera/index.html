@@ -130,6 +130,7 @@
       grid-template-areas:
         "copy"
         "action"
+        "antigravity"
         "video";
       grid-template-columns: minmax(0, 1fr);
       gap: 20px;
@@ -163,6 +164,20 @@
       font-size: 0.82rem;
       line-height: 1.45;
     }
+    .hero-install__antigravity {
+      grid-area: antigravity;
+      width: min(100%, 720px);
+      color: var(--blue);
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+    .hero-install__antigravity summary {
+      color: var(--navy);
+      font-weight: 650;
+      cursor: pointer;
+    }
+    .hero-install__antigravity p { margin-top: 12px; max-width: 68ch; }
+    .hero-install__antigravity a { text-underline-offset: 0.2em; }
     .hero-install__video {
       grid-area: video;
       width: min(100%, 520px);
@@ -354,7 +369,16 @@
       gap: clamp(28px, 6vw, 72px);
     }
     .connections__body article { padding-top: 24px; border-top: 1px solid var(--cyan); }
-    .connections__body h3 { margin-bottom: 18px; }
+    .connections__body .module-row {
+      min-height: 0;
+      padding: 0;
+      grid-template-columns: minmax(0, 1fr) 32px;
+      gap: 18px;
+      margin-bottom: 18px;
+      border-bottom: 0;
+    }
+    .connections__body .module-row h3 { margin: 0; }
+    .connections__body .module-row__arrow { grid-column: 2; grid-row: 1; }
     .connections__body p { max-width: 60ch; color: var(--blue); line-height: 1.6; }
     .connections__body p + p { margin-top: 16px; }
     .connections__data {
@@ -1038,7 +1062,7 @@
     .footer-links a { min-height: 44px; display: inline-flex; align-items: center; color: var(--blue); text-decoration: none; }
     .footer-links a:hover { color: var(--navy); }
 
-    a:focus-visible, button:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+    a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
 
     @media (max-width: 900px) {
       main, .footer-shell { width: min(var(--content), calc(100% - 40px)); }
@@ -1047,6 +1071,7 @@
         grid-template-areas:
           "copy"
           "action"
+          "antigravity"
           "video";
         grid-template-columns: 1fr;
         align-items: start;
@@ -1249,6 +1274,14 @@
               <p class="install-option__note" data-plugin-zip-version="vera" hidden></p>
             </div>
           </div>
+          <!-- Test evidence: https://chatgpt.com/s/cx_6abf6fd4fb248191900079bafdd78ca8
+               Local package v0.1.268 and installation registry rechecked 2026-10-02. -->
+          <details class="hero-install__antigravity" id="antigravity">
+            <summary data-i18n="install.antigravity.title">Google Antigravity · versione sperimentale</summary>
+            <p data-i18n="install.antigravity.scope">Verificati l’installazione locale, il caricamento delle skill e un test in sola lettura degli strumenti di Vera. L’uso in chat con il modello resta da verificare.</p>
+            <p data-i18n="install.antigravity.package">Pacchetto di prova: Vera v0.1.268. ZIP non ancora disponibile sul sito.</p>
+            <p><a href="https://antigravity.google/docs/plugins" target="_blank" rel="noopener noreferrer" data-i18n="install.antigravity.docs">Come funzionano i plugin di Antigravity →</a></p>
+          </details>
           <a class="hero-install__video" id="vera-install-video-link" href="https://youtu.be/yAnkIabnQ1M" target="_blank" rel="noopener noreferrer" aria-label="Collega ChatGPT al computer con Codex" data-i18n-aria-label="install.video.title">
             <span class="overview-video__thumb" aria-hidden="true">
               <img id="vera-install-video-thumbnail" src="https://i.ytimg.com/vi/yAnkIabnQ1M/maxresdefault.jpg" alt="" width="1280" height="720" loading="eager">
@@ -1668,22 +1701,28 @@
       </div>
       <div class="connections__body">
         <article aria-labelledby="connections-knowledge-title">
-          <h3 id="connections-knowledge-title" data-i18n="connections.knowledge.title">Usare Vera con Second Brain</h3>
+          <a class="module-row" href="../vera-integrazioni/index.html?lang=it#prepare" data-module-link>
+            <h3 id="connections-knowledge-title" data-i18n="connections.knowledge.title">Usare Vera con Second Brain</h3>
+            <span class="module-row__arrow" aria-hidden="true">↗</span>
+          </a>
           <p data-i18n="connections.knowledge.copy">Se hai già Second Brain, collegalo nell’app in cui usi Vera e autorizza gli strumenti di ricerca e lettura. Poi chiedi a Vera di consultare una procedura, un precedente o un modello dello studio per il lavoro che stai svolgendo.</p>
           <p data-i18n="connections.knowledge.limits">Vera consulta le fonti disponibili senza modificarle. Non fornisce Second Brain, non richiede Microsoft 365 e funziona anche senza un archivio collegato. La disponibilità della consultazione dipende dal connettore e dagli strumenti accessibili nella sessione.</p>
         </article>
         <article aria-labelledby="connections-skills-title">
-          <h3 id="connections-skills-title" data-i18n="connections.skills.title">Usare le proprie skill</h3>
+          <a class="module-row" href="../vera-skill-studio/index.html?lang=it" data-module-link>
+            <h3 id="connections-skills-title" data-i18n="connections.skills.title">Usare le proprie skill</h3>
+            <span class="module-row__arrow" aria-hidden="true">↗</span>
+          </a>
           <p data-i18n="connections.skills.copy">Se vuoi svolgere un lavoro con una tua skill, richiamala direttamente nell’app in cui l’hai installata. Collegare Second Brain non importa, seleziona o esegue le skill dello studio in Vera.</p>
-          <p><a href="../vera-skill-studio/index.html?lang=it" data-module-link data-i18n="connections.skillsGuide">Come installare e usare le skill dello studio →</a></p>
         </article>
         <article aria-labelledby="connections-privacy-title">
-          <h3 id="connections-privacy-title" data-i18n="connections.privacy.title">OpenAI Privacy Filter</h3>
+          <a class="module-row" href="../vera-integrazioni/index.html?lang=it#privacy-filter" data-module-link>
+            <h3 id="connections-privacy-title" data-i18n="connections.privacy.title">OpenAI Privacy Filter</h3>
+            <span class="module-row__arrow" aria-hidden="true">↗</span>
+          </a>
           <p data-i18n="connections.privacy.status">Connettore locale opzionale per Codex desktop, da installare separatamente.</p>
-          <p><a href="../vera-integrazioni/index.html?lang=it#privacy-filter" data-module-link data-i18n="connections.privacy.link">Installare e usare Privacy Filter →</a></p>
         </article>
       </div>
-      <p><a href="../vera-integrazioni/index.html?lang=it" data-module-link data-i18n="connections.guide">Come collegare Second Brain e verificare l’accesso →</a></p>
       <p class="connections__data" data-i18n="connections.data">Query, risultati di ricerca e testi consultati possono entrare nel contesto del modello dell’app scelta. Login, permessi e conservazione dipendono dall’app e dal servizio collegato.</p>
     </section>
 
@@ -1902,6 +1941,10 @@
         "install.title": "Installazione",
         "install.copy": "Installa Vera per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.",
         "install.actions.label": "Opzioni di installazione di Vera",
+        "install.antigravity.title": "Google Antigravity · versione sperimentale",
+        "install.antigravity.scope": "Verificati l’installazione locale, il caricamento delle skill e un test in sola lettura degli strumenti di Vera. L’uso in chat con il modello resta da verificare.",
+        "install.antigravity.package": "Pacchetto di prova: Vera v0.1.268. ZIP non ancora disponibile sul sito.",
+        "install.antigravity.docs": "Come funzionano i plugin di Antigravity →",
         "install.button": "Installa per ChatGPT Work e Codex",
         "install.zipButton": "Scarica ZIP per ChatGPT Work e Codex",
         "install.coworkButton": "Vai al marketplace Cowork",
@@ -1910,8 +1953,6 @@
         "install.coworkZipHelp": "Pacchetto per Cowork e istruzioni per installare o aggiornare.",
         "install.video.title": "Collega ChatGPT al computer con Codex",
         "connections.title": "Integrazioni",
-        "connections.guide": "Come collegare Second Brain e verificare l’accesso →",
-        "connections.skillsGuide": "Come installare e usare le skill dello studio →",
         "connections.intro": "Il collegamento dei tuoi strumenti si gestisce nell’app in cui usi Vera.",
         "connections.knowledge.title": "Usare Vera con Second Brain",
         "connections.knowledge.copy": "Se hai già Second Brain, collegalo nell’app in cui usi Vera e autorizza gli strumenti di ricerca e lettura. Poi chiedi a Vera di consultare una procedura, un precedente o un modello dello studio per il lavoro che stai svolgendo.",
@@ -1920,7 +1961,6 @@
         "connections.skills.copy": "Se vuoi svolgere un lavoro con una tua skill, richiamala direttamente nell’app in cui l’hai installata. Collegare Second Brain non importa, seleziona o esegue le skill dello studio in Vera.",
         "connections.privacy.title": "OpenAI Privacy Filter",
         "connections.privacy.status": "Connettore locale opzionale per Codex desktop, da installare separatamente.",
-        "connections.privacy.link": "Installare e usare Privacy Filter →",
         "connections.data": "Query, risultati di ricerca e testi consultati possono entrare nel contesto del modello dell’app scelta. Login, permessi e conservazione dipendono dall’app e dal servizio collegato.",
         "contributors.index": "Collaborazione",
         "contributors.title": "Contributors",
@@ -2138,6 +2178,10 @@
         "install.title": "Installation",
         "install.copy": "Install Vera for ChatGPT Work and Codex, or download the package for Claude Cowork.",
         "install.actions.label": "Vera installation options",
+        "install.antigravity.title": "Google Antigravity · experimental version",
+        "install.antigravity.scope": "Local installation, skill loading and a read-only test of Vera’s tools have been verified. Chat execution with the model remains unverified.",
+        "install.antigravity.package": "Test package: Vera v0.1.268. The ZIP is not yet available on this website.",
+        "install.antigravity.docs": "How Antigravity plugins work →",
         "install.button": "Install for ChatGPT Work and Codex",
         "install.zipButton": "Download ZIP for ChatGPT Work and Codex",
         "install.coworkButton": "Go to Cowork marketplace",
@@ -2146,8 +2190,6 @@
         "install.coworkZipHelp": "Cowork package and instructions to install or update.",
         "install.video.title": "Connect ChatGPT to your computer with Codex",
         "connections.title": "Integrations",
-        "connections.guide": "How to connect Second Brain and verify access →",
-        "connections.skillsGuide": "How to install and use your firm’s skills →",
         "connections.intro": "Connect your tools in the app where you use Vera.",
         "connections.knowledge.title": "Using Vera with Second Brain",
         "connections.knowledge.copy": "If you already have Second Brain, connect it in the app where you use Vera and authorize its search and read tools. Then ask Vera to consult a firm procedure, precedent or template for the task you are working on.",
@@ -2156,7 +2198,6 @@
         "connections.skills.copy": "To carry out a task with your own skill, invoke it directly in the app where you installed it. Connecting Second Brain does not import, select or execute the firm’s skills inside Vera.",
         "connections.privacy.title": "OpenAI Privacy Filter",
         "connections.privacy.status": "Optional local connector for Codex desktop, installed separately.",
-        "connections.privacy.link": "Install and use Privacy Filter →",
         "connections.data": "Queries, search results and consulted texts can enter the model context of your chosen app. Login, permissions and retention depend on the app and the connected service.",
         "contributors.index": "Collaboration",
         "contributors.title": "Contributors",
@@ -2374,6 +2415,10 @@
         "install.title": "Installation",
         "install.copy": "Installez Vera pour ChatGPT Work et Codex ou téléchargez le paquet pour Claude Cowork.",
         "install.actions.label": "Options d’installation de Vera",
+        "install.antigravity.title": "Google Antigravity · version expérimentale",
+        "install.antigravity.scope": "L’installation locale, le chargement des skills et un test en lecture seule des outils de Vera ont été vérifiés. L’utilisation en conversation avec le modèle reste à vérifier.",
+        "install.antigravity.package": "Paquet de test : Vera v0.1.268. Le ZIP n’est pas encore disponible sur ce site.",
+        "install.antigravity.docs": "Fonctionnement des plugins Antigravity →",
         "install.button": "Installer pour ChatGPT Work et Codex",
         "install.zipButton": "Télécharger le ZIP pour ChatGPT Work et Codex",
         "install.coworkButton": "Aller au marketplace Cowork",
@@ -2382,8 +2427,6 @@
         "install.coworkZipHelp": "Paquet pour Cowork et instructions d’installation ou de mise à jour.",
         "install.video.title": "Connectez ChatGPT à votre ordinateur avec Codex",
         "connections.title": "Intégrations",
-        "connections.guide": "Comment connecter Second Brain et vérifier l’accès →",
-        "connections.skillsGuide": "Installer et utiliser les skills du cabinet →",
         "connections.intro": "Le raccordement de vos outils se gère dans l’application où vous utilisez Vera.",
         "connections.knowledge.title": "Utiliser Vera avec Second Brain",
         "connections.knowledge.copy": "Si vous avez déjà Second Brain, connectez-le dans l’application où vous utilisez Vera et autorisez ses outils de recherche et de lecture. Demandez ensuite à Vera de consulter une procédure, un précédent ou un modèle du cabinet pour le travail en cours.",
@@ -2392,7 +2435,6 @@
         "connections.skills.copy": "Pour effectuer un travail avec votre propre skill, invoquez-la directement dans l’application où vous l’avez installée. Connecter Second Brain n’importe, ne sélectionne et n’exécute pas les skills du cabinet dans Vera.",
         "connections.privacy.title": "OpenAI Privacy Filter",
         "connections.privacy.status": "Connecteur local facultatif pour Codex desktop, à installer séparément.",
-        "connections.privacy.link": "Installer et utiliser Privacy Filter →",
         "connections.data": "Les requêtes, les résultats de recherche et les textes consultés peuvent entrer dans le contexte du modèle de l’application choisie. La connexion, les autorisations et la conservation dépendent de l’application et du service connecté.",
         "contributors.index": "Collaboration",
         "contributors.title": "Contributeurs",
@@ -2610,6 +2652,10 @@
         "install.title": "Installation",
         "install.copy": "Installieren Sie Vera für ChatGPT Work und Codex oder laden Sie das Paket für Claude Cowork herunter.",
         "install.actions.label": "Installationsoptionen für Vera",
+        "install.antigravity.title": "Google Antigravity · experimentelle Version",
+        "install.antigravity.scope": "Die lokale Installation, das Laden der Skills und ein Lesetest der Vera-Werkzeuge wurden überprüft. Die Nutzung im Chat mit dem Modell wurde noch nicht überprüft.",
+        "install.antigravity.package": "Testpaket: Vera v0.1.268. Die ZIP-Datei ist auf dieser Website noch nicht verfügbar.",
+        "install.antigravity.docs": "So funktionieren Antigravity-Plugins →",
         "install.button": "Für ChatGPT Work und Codex installieren",
         "install.zipButton": "ZIP für ChatGPT Work und Codex herunterladen",
         "install.coworkButton": "Zum Cowork-Marketplace",
@@ -2618,8 +2664,6 @@
         "install.coworkZipHelp": "Cowork-Paket und Anleitung zum Installieren oder Aktualisieren.",
         "install.video.title": "ChatGPT mit Codex mit Ihrem Computer verbinden",
         "connections.title": "Integrationen",
-        "connections.guide": "Second Brain verbinden und den Zugriff prüfen →",
-        "connections.skillsGuide": "Skills der Kanzlei installieren und verwenden →",
         "connections.intro": "Verbinden Sie Ihre Werkzeuge in der App, in der Sie Vera verwenden.",
         "connections.knowledge.title": "Vera mit Second Brain verwenden",
         "connections.knowledge.copy": "Wenn Sie Second Brain bereits nutzen, verbinden Sie es in der App, in der Sie Vera verwenden, und erlauben Sie die Such- und Lesewerkzeuge. Bitten Sie Vera anschließend, für Ihre aktuelle Aufgabe ein Verfahren, einen früheren Fall oder eine Vorlage der Kanzlei einzusehen.",
@@ -2628,7 +2672,6 @@
         "connections.skills.copy": "Um eine Aufgabe mit einem eigenen Skill auszuführen, rufen Sie ihn direkt in der App auf, in der Sie ihn installiert haben. Die Verbindung mit Second Brain importiert, wählt oder startet die Skills der Kanzlei nicht innerhalb von Vera.",
         "connections.privacy.title": "OpenAI Privacy Filter",
         "connections.privacy.status": "Optionaler lokaler Konnektor für Codex desktop zur separaten Installation.",
-        "connections.privacy.link": "Privacy Filter installieren und verwenden →",
         "connections.data": "Abfragen, Suchergebnisse und eingesehene Texte können in den Modellkontext der gewählten App gelangen. Anmeldung, Berechtigungen und Aufbewahrung hängen von der App und dem verbundenen Dienst ab.",
         "contributors.index": "Zusammenarbeit",
         "contributors.title": "Mitwirkende",
@@ -2846,6 +2889,10 @@
         "install.title": "Instalación",
         "install.copy": "Instala Vera para ChatGPT Work y Codex o descarga el paquete para Claude Cowork.",
         "install.actions.label": "Opciones de instalación de Vera",
+        "install.antigravity.title": "Google Antigravity · versión experimental",
+        "install.antigravity.scope": "Se han verificado la instalación local, la carga de skills y una prueba de solo lectura de las herramientas de Vera. El uso en el chat con el modelo queda pendiente de verificación.",
+        "install.antigravity.package": "Paquete de prueba: Vera v0.1.268. El ZIP aún no está disponible en este sitio.",
+        "install.antigravity.docs": "Cómo funcionan los plugins de Antigravity →",
         "install.button": "Instalar para ChatGPT Work y Codex",
         "install.zipButton": "Descargar ZIP para ChatGPT Work y Codex",
         "install.coworkButton": "Ir al marketplace de Cowork",
@@ -2854,8 +2901,6 @@
         "install.coworkZipHelp": "Paquete para Cowork e instrucciones para instalar o actualizar.",
         "install.video.title": "Conecta ChatGPT al ordenador con Codex",
         "connections.title": "Integraciones",
-        "connections.guide": "Cómo conectar Second Brain y verificar el acceso →",
-        "connections.skillsGuide": "Instalar y usar las skills del despacho →",
         "connections.intro": "La conexión de tus herramientas se gestiona en la aplicación donde usas Vera.",
         "connections.knowledge.title": "Usar Vera con Second Brain",
         "connections.knowledge.copy": "Si ya tienes Second Brain, conéctalo en la aplicación donde usas Vera y autoriza sus herramientas de búsqueda y lectura. Después pide a Vera que consulte un procedimiento, un precedente o una plantilla del despacho para el trabajo en curso.",
@@ -2864,7 +2909,6 @@
         "connections.skills.copy": "Para realizar un trabajo con tu propia skill, invócala directamente en la aplicación donde la instalaste. Conectar Second Brain no importa, selecciona ni ejecuta las skills del despacho dentro de Vera.",
         "connections.privacy.title": "OpenAI Privacy Filter",
         "connections.privacy.status": "Conector local opcional para Codex desktop, de instalación independiente.",
-        "connections.privacy.link": "Instalar y utilizar Privacy Filter →",
         "connections.data": "Las consultas, los resultados de búsqueda y los textos consultados pueden entrar en el contexto del modelo de la aplicación elegida. El acceso, los permisos y la conservación dependen de la aplicación y del servicio conectado.",
         "contributors.index": "Colaboración",
         "contributors.title": "Colaboradores",

@@ -128,4 +128,4 @@ Vera 0.1.324 adds the studio Word-format pipeline and its course. The 47-entry s
 
 ## Rating di legalità catalogue integration — 2 October 2026
 
-Vera 0.1.332 adds the Italian first-attribution workflow. The 48-entry catalogue retains all 47 prior target rows and records this new function as Unresolved for CH-GE. The evidence dossier, event dates and pilot safeguards implement the Italian scope only. No equivalent Geneva procedure or professional acceptance is claimed.
+Vera 0.1.334 adds the Italian first-attribution workflow, preserving the intervening French discovery keywords and Antigravity documentation. The 48-entry catalogue retains all 47 prior target rows and records this new function as Unresolved for CH-GE. The evidence dossier, event dates and pilot safeguards implement the Italian scope only. No equivalent Geneva procedure or professional acceptance is claimed.
