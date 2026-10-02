@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/app-files-esg-course/plugins/vera",
-  "version": "0.1.331",
-  "captured_at": "2026-10-02T06:30:00.265192+00:00",
-  "catalogue_fingerprint": "51d6d9dac2621f2b1de16251e3b6490294d256b1eba4d51fabbe86d03fdaafd1",
-  "manifest_sha256": "a76b83b0ea23d014bda3241b1398644540196a0a366663db1599dca4614d96e0",
+  "root": "/private/tmp/app-files-rating-legalita/plugins/vera",
+  "version": "0.1.332",
+  "captured_at": "2026-10-02T09:58:56.101263+00:00",
+  "catalogue_fingerprint": "0714a99d2207f80d52d6c38debf6159589188fb2e59876da57035392fbeba387",
+  "manifest_sha256": "26853b015cacf0b75cdfe59ae27c11a4ead48200799ad1ab800aced3f8b4e72b",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -190,6 +190,11 @@
       "function_id": "quesito-legale-fiscale",
       "skill_path": "skills/quesito-legale-fiscale/SKILL.md",
       "sha256": "d95a7b5f242d71ae53c1b4f92d819bee39586255c05d69628f8eea4eac6f9155"
+    },
+    {
+      "function_id": "rating-legalita",
+      "skill_path": "skills/rating-legalita/SKILL.md",
+      "sha256": "8d07a5f5168ca133097cc35a14fc5ec0c031c2f81e8ca82761ea652d6bbf2af0"
     },
     {
       "function_id": "registro-imprese-sari",
