@@ -1,6 +1,6 @@
 ---
 name: vera
-description: Use for commercialista and accounting-studio requests to prepare bilanci OIC/XBRL, reconcile bank movements or open items, sample journal entries, check supporting invoices, or review accounting exports, even when the user does not name Vera. Also use whenever Vera or @vera is explicitly invoked and to reopen a Vera privacy report. Select the narrowest supported specialist; clarify an ambiguous outcome. Explicit invocation does not add unsupported services.
+description: Use for commercialista and accounting-studio requests to answer fiscal or legal questions through the reviewed-report workflow, prepare bilanci OIC/XBRL and financial analysis, or support auditing through bank and open-item reconciliations, journal sampling, invoice checks and accounting-export review, even when the user does not name Vera. Also use whenever Vera or @vera is explicitly invoked and to reopen a Vera privacy report. Select the narrowest supported specialist; clarify an ambiguous outcome. Explicit invocation does not add unsupported services.
 ---
 
 <!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
@@ -397,6 +397,11 @@ which would duplicate the host namespace.
 
 The user need not name Vera. Select the specialist from the requested outcome
 and supplied evidence, not from isolated words such as "fatture" or "bilancio".
+A substantive fiscal or legal question belongs to `quesito-legale-fiscale`,
+which owns the complete question-to-reviewed-answer journey. Preparing OIC
+statements belongs to `bilancio-oic`; analyzing supplied financial statements
+belongs to `financial-analysis`. Auditing is an area of support, not a promise
+of certification or a signed audit opinion: choose the specific requested check.
 Direct matching of bank movements to prima nota belongs to
 `journal-bank-reconciliation`; testing a supplied open-item population at a
 cut-off belongs to `open-item-reconciliation`. Selecting journal entries is

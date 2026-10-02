@@ -1,7 +1,7 @@
 {
   "name": "vera",
-  "version": "0.1.328",
-  "description": "Vera affianca commercialisti e studi professionali in contabilità, analisi degli scostamenti, bilanci OIC/XBRL, riconciliazioni, ricerche e comunicazioni rivedibili.",
+  "version": "0.1.330",
+  "description": "Vera affianca commercialisti e studi professionali nei quesiti fiscali e legali, nel bilancio OIC/XBRL e nella revisione contabile e riconciliazione: risposte con fonti, analisi, controlli e carte di lavoro da rivedere.",
   "author": {
     "name": "Fabio Annovazzi · Mparanza",
     "email": "fabio@mparanza.com",
@@ -92,7 +92,7 @@
   "interface": {
     "displayName": "Vera",
     "shortDescription": "Assistente AI x commercialisti",
-    "longDescription": "Vera affianca commercialisti e studi professionali. Organizza documenti, controlla scritture, riconcilia movimenti e prepara report. Da Excel o CSV costruisce un pacchetto di controllo di gestione con P&L mensile, Budget, aging, cassa, concentrazione clienti e marginalità.\n\nPrepara il piano economico-finanziario e il fabbisogno di startup e imprese consolidate con ipotesi confermate, conto economico, cassa, stato patrimoniale, scenari e riconciliazione. Vera resta responsabile del risultato; un eventuale contributo strategico di Clara è integrato internamente nello stesso piano. Supporta inoltre bilancio civilistico OIC fino all’XBRL, bandi, avvisi e cartelle, INPS, Registro Imprese e DIRE, concordato preventivo e ricerche fiscali o normative.\n\nVera mostra fonti, passaggi, ambiguità e informazioni mancanti. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano al commercialista.",
+    "longDescription": "Vera affianca commercialisti e studi professionali nei quesiti fiscali e legali, nel bilancio e nella revisione contabile. Prepara risposte e report con verifica delle fonti e del ragionamento. Da CSV, Excel o PDF supportati prepara il bilancio civilistico OIC/XBRL e analisi finanziarie.\n\nPer la revisione contabile e le riconciliazioni prepara abbinamenti bancari, verifiche delle partite aperte, campioni, controlli documentali ed eccezioni. Supporta anche controllo di gestione, piani economico-finanziari, bandi, avvisi e cartelle, INPS, Registro Imprese e DIRE, concordato preventivo e comunicazioni.\n\nVera mostra fonti, passaggi, ambiguità e informazioni mancanti. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano al commercialista.",
     "developerName": "Fabio Annovazzi · Mparanza",
     "category": "Productivity",
     "capabilities": [
@@ -106,9 +106,9 @@
     "termsOfServiceURL": "https://mparanza.com/terms",
     "supportURL": "https://mparanza.com/support",
     "defaultPrompt": [
-      "Trasforma questi export contabili in un pacchetto di controllo di gestione con P&L, Budget, aging, cassa e concentrazione.",
-      "Analizza il sito dello studio o costruiscine uno iniziale dai materiali verificati, poi prepara una preview responsive.",
-      "Prepara un bilancio OIC intelligente anche da PDF: fammi rivedere estrazione e celle incerte, poi genera l’XBRL finale."
+      "Prepara una risposta a questo quesito fiscale o legale, con fonti verificate, revisione del ragionamento e report finale.",
+      "Da questo bilancio di verifica prepara i prospetti OIC e indicami quali informazioni mancano per la nota integrativa.",
+      "Aiutami nella revisione contabile: riconcilia estratti conto e prima nota e prepara eccezioni e carte di lavoro da rivedere."
     ],
     "brandColor": "#002060",
     "composerIcon": "./assets/icon.svg",
