@@ -201,3 +201,38 @@ Per comunicazioni art. 21.1 usare il modello ufficiale corrente, non questo mode
 | Policy appena scritta | Una bozza non prova adozione né attività del presidio | Delibera/incarico e riscontri di funzionamento | Tenere distinto gap documentale e sostanziale |
 
 **Debrief finale per il professionista:** «In questa pratica hai distinto [ ], verificato [ ] e risolto [ ] sulla base di [ ]. Nel prossimo caso parti da [ ]. Restano specialistici i punti [ ], per i quali il fascicolo contiene una domanda precisa e le prove da esaminare.»
+
+## M15 — Presupposti del pilot reale e trattamento dei dati
+
+Compilare prima di richiedere o leggere schede giudiziarie reali. Non è un'informativa
+pronta da consegnare né un parere sulla liceità: il titolare e il professionista
+qualificano il caso e conservano i documenti effettivamente adottati.
+
+**Incarico:** [versione, prova, revisore e data]. Il legale rappresentante acquisisce
+le informazioni dai soggetti e rende le proprie dichiarazioni, ne conferma
+completezza e veridicità e firma. Lo studio [istruisce le prove, valuta le questioni,
+predispone bozze: precisare il perimetro]. Attività escluse: [invio, monitoraggio,
+contenzioso o altro]. Referente eventi dell'impresa: [ ]; canale: [ ]; interlocutore
+dello studio: [ ]. Dichiarazioni e verifiche restano attribuite ai rispettivi autori.
+
+**Titolare e ruoli:** [ ]. **Base del trattamento:** [norma e applicabilità].
+**Dati giudiziari:** [autorità/condizione applicabile ai sensi dell'art. 10 GDPR
+e della disciplina italiana, garanzie e revisione; non solo consenso].
+**Informativa:** [documento, destinatari, modalità/data di resa o eccezione motivata].
+**Accessi:** [ruoli autorizzati, cartelle e modalità di condivisione].
+**Conservazione:** [finalità, criterio/termine motivato, cancellazione o restituzione,
+eccezioni e responsabile]. **Prossima revisione:** [data].
+**Modello e account:** [materiali ammessi, account scelto, condizioni esaminate,
+minimizzazione, limiti, eventuale repository connesso]. **Decisione:** [revisore,
+data, motivazione e prove]. Nessuna durata universale è precompilata.
+
+## M16 — Tempo effettivo di revisione
+
+| Sessione | Revisore | Fase | Inizio con fuso | Fine con fuso | Pause (min) |
+|---|---|---|---|---|---:|
+| [ ] | [ ] | [intake/soggetti/accesso/ostacoli/premi/eventi/dossier/rilavorazione] | [ ] | [ ] | [ ] |
+
+Usare tempi rilevati, non tempi stimati dal modello. Distinguere rilavorazione e
+attesa; evitare intervalli sovrapposti dello stesso revisore. Indicare attività
+non misurate e copertura della rilevazione. Confrontare i tre pilot senza attribuire
+ai soli minuti una conclusione automatica sulla sostenibilità economica.

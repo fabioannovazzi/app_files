@@ -118,7 +118,10 @@ the shipped catalog records research on 2026-10-02, not perpetual validity.
 
 This implementation covers pre-intake through a reviewable initial-application
 dossier. Renewal, maintenance, transitional cases and portal automation are not
-implemented workflows. The catalog retains their source controls as reference.
+implemented workflows. A minimal event register and reviewed 30-day calendar
+are included from intake, including events arising while an application is pending.
+They do not provide automatic surveillance, reminders or transmission. The catalog
+retains the other maintenance controls as reference.
 Identify such requests explicitly and explain this boundary before proceeding;
 do not relabel a renewal or notification as an initial application.
 
@@ -140,6 +143,29 @@ ad-hoc pip install. Then:
 python scripts/rating_case.py init --case-id intake-001 --as-of YYYY-MM-DD --output /absolute/work/case.json
 python scripts/rating_case.py render --case /absolute/work/case.json --source-root /absolute/work --output /absolute/work/output
 ```
+
+## Before a real pilot
+
+Before requesting individual judicial-information sheets or reading real judicial
+documents into the model, have the studio review the engagement and data plan.
+Record them in `practice.mandate` and `practice.data_governance`, with the actual
+reviewer, date and imported evidence IDs. Unreviewed records remain null.
+The engagement distinguishes the representative's declarations, completeness
+and signature from the studio's evidence gathering, legal assessment and drafts.
+Name the company contact responsible for reporting events, the agreed channel
+and excluded services. Do not transfer the representative's attestations to Vera.
+
+The data plan identifies the controller, information notice and its provision,
+general processing basis and specific authority for judicial data, authorized
+roles, purpose-based retention/deletion criteria, responsible person and next
+review date. Review the actual selected model/account data path as well.
+An information notice or consent alone does not establish authority under GDPR
+Article 10 and Italian law. Do not invent a standard retention period.
+Use M15 in `references/templates.md`; legal adequacy is a professional decision.
+Without these records, use synthetic material or non-sensitive pre-intake only.
+The CLI refuses real-case evidence processing without recorded prerequisites;
+it cannot prevent the host from receiving material pasted or uploaded beforehand.
+It does not enforce access permissions or delete files automatically.
 
 ## Bind the real client and read evidence
 
@@ -199,6 +225,23 @@ perimeter to be reviewed, as explained in its docstrings and source register.
 
 ## Preserve facts, goals and decisions
 
+Register events immediately with separate occurrence and knowledge dates.
+Append a `practice.event_reviews` entry only after professional qualification:
+`art21_1_mandatory`, `art21_4_premium`, or reasoned `not_reportable`.
+The reviewed legal scope must distinguish an applicant from a rating holder.
+Link evidence and owner; leave unknown dates unresolved and flag urgency.
+The helper adds 30 calendar days to the occurrence date, never the knowledge
+date, with no automatic holiday extension. Qualification and date computation
+must be reviewed on the actual case. Reopen affected substantive controls when
+an event changes their evidence; the register alone does not requalify them.
+Record an actual communication only with its external date and imported receipt.
+Never generate an AGCM action or receipt. Mandatory-requirement breaches under
+Article 21(1–3) differ from premium changes under Article 21(4–5). The 18-month
+restriction starts when the obstacle ceases to be relevant, not at occurrence,
+discovery or automatically at revocation. No automatic sanction decision or
+reapplication date is produced. Preserve earlier events and review entries;
+record corrections as new events and append reviews instead of overwriting them.
+
 Save T0 first. Append observed snapshots with dates when new evidence is
 reviewed; never overwrite T0. A `conditional_scenario` is titled **Scenario
 obiettivo — non realizzato**. Only the last observed snapshot drives current
@@ -212,6 +255,16 @@ costs, implementation times or likelihood of acceptance. Reuse one document
 across controls with distinct locators rather than repeatedly requesting it.
 
 ## Deliver and close the run
+
+Record actual professional review sessions in `practice.review_sessions`:
+reviewer, stage, timezone-aware start/end and breaks. Include rework separately;
+never infer time from a test run, file timestamp, model latency or the number of
+controls. The dossier totals active minutes by stage, rejects overlapping sessions
+for the same reviewer and reports absent measurements as unknown, not zero.
+Agree case-level coverage and business criteria before comparing the positive,
+incomplete and ineligible pilots. Synthetic timings must remain labelled synthetic.
+See `references/pilot-scenarios.md` for the three document-led acceptance exercises;
+passing helper tests does not complete those professional exercises.
 
 Read and check the generated `dossier.md` and `dossier.json`; do not infer
 completion from file existence. Explain what is supported, what prevents a

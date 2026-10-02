@@ -213,7 +213,10 @@ def test_preserves_t0_and_rejects_rewritten_history(tmp_path):
 
 
 def test_real_case_rejects_synthetic_evidence(tmp_path):
+    from tests.plugins.test_rating_legalita_practice import pilot_records
+
     case = prepared_case(tmp_path)
+    pilot_records(case)
     case["synthetic"] = False
 
     with pytest.raises(ValueError, match="Synthetic evidence"):
@@ -354,6 +357,9 @@ def test_cli_real_archive_receipts_produce_a_dossier(tmp_path, monkeypatch):
             Path(row["path"]) for row in running["context"]["input_bindings"]
         ],
     }
+    from tests.plugins.test_rating_legalita_practice import pilot_records
+
+    pilot_records(case)
     case["synthetic"] = False
     case["client"].update(
         archive_client_id=workspace["context"]["client_id"],

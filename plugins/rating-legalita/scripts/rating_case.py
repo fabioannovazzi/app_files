@@ -18,6 +18,7 @@ from typing import Any
 
 import jsonschema
 from core_rating import score
+from practice_controls import practice_summary
 
 __all__ = ["assess_case", "new_case", "render_dossier", "save_dossier", "main"]
 
@@ -57,6 +58,12 @@ def new_case(case_id: str, as_of: str, *, synthetic: bool = False) -> dict:
             "id": "AGCM-31812-2026",
             "checked_at": as_of,
             "catalog_sha256": hashlib.sha256(CATALOG.read_bytes()).hexdigest(),
+        },
+        "practice": {
+            "mandate": None,
+            "data_governance": None,
+            "event_reviews": [],
+            "review_sessions": [],
         },
         "subjects": [],
         "events": [],
@@ -134,6 +141,9 @@ def assess_case(case: dict, source_root: Path, previous: dict | None = None) -> 
         retained = {row["evidence_id"]: row for row in case["evidence"]}
         if any(retained.get(row["evidence_id"]) != row for row in old["evidence"]):
             raise ValueError("Earlier evidence records are immutable")
+    practice = practice_summary(
+        case, source_root, previous["case"] if previous else None
+    )
     catalog = json.loads(CATALOG.read_text())
     source_ids = {row["id"] for row in catalog["sources"]}
     subjects = unique(case["subjects"], "subject_id")
@@ -151,7 +161,7 @@ def assess_case(case: dict, source_root: Path, previous: dict | None = None) -> 
     if current["as_of"] > case["as_of"]:
         raise ValueError("Observed snapshot is in the future")
     texts: dict[str, str] = {}
-    blockers = []
+    blockers = list(practice["blockers"])
     checked_at = case["ruleset"]["checked_at"]
     if checked_at != case["as_of"]:
         blockers.append("Fonti da verificare alla data del caso")
@@ -284,6 +294,7 @@ def assess_case(case: dict, source_root: Path, previous: dict | None = None) -> 
             raise ValueError("Gap references an unknown current instance")
     payload = {
         "case": copy.deepcopy(case),
+        "practice_summary": practice,
         "assessment": {
             "base_status": base,
             "score": estimate,
@@ -350,7 +361,32 @@ def render_dossier(record: dict) -> str:
                     f"Fonti normative: {', '.join(decision['source_ids'])}",
                 ]
         lines += [f"Condizione: {item}" for item in snapshot["conditions"]]
-    lines += ["", "## Cosa fare adesso · piano dei gap"]
+    practice = record["practice_summary"]
+    lines += [
+        "",
+        "## Incarico e presupposti del pilot",
+        json.dumps(
+            {
+                "mandate": case["practice"]["mandate"],
+                "data_governance": case["practice"]["data_governance"],
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+        "La registrazione dei presupposti non certifica la liceità del trattamento. Nessuna cancellazione automatica o controllo dei permessi dell'host.",
+        "",
+        "## Registro eventi e scadenzario",
+        json.dumps(practice["events"], ensure_ascii=False, indent=2),
+        "Art. 21: 30 giorni dall'evento qualificato, non dalla conoscenza. Nessun invio o promemoria automatico. Distinguere obbligatori (commi 1–3) e premiali (commi 4–5).",
+        "Il divieto di nuova domanda del comma 3 decorre dalla cessazione della rilevanza del motivo ostativo: non è calcolato dall'evento o dalla scoperta.",
+        "",
+        "## Tempo di revisione registrato",
+        f"Minuti attivi: {practice['review_minutes'] if practice['review_minutes'] is not None else 'non misurati'} · Sessioni: {practice['measured_sessions']}",
+        json.dumps(practice["minutes_by_stage"], ensure_ascii=False),
+        "Tempi dichiarati dal professionista, al netto delle pause registrate. Non sono una misura di risparmio o sostenibilità economica.",
+        "",
+        "## Cosa fare adesso · piano dei gap",
+    ]
     for gap in case["gaps"]:
         lines += [
             f"### {gap['gap_id']} · {gap['kind']}",

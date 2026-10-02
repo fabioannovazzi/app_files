@@ -47,3 +47,41 @@ from the official site. The inherited source register preserves the original
 author's retrieval claims for other references; refresh applicable references
 on each real case. Renewal/calendar functions in `core_rating.py` remain
 tested reference arithmetic and are not exposed as a complete renewal process.
+
+## Anna's practical review, 2 October 2026
+
+The changes below respond to the comment at
+https://discord.com/channels/1550191335917625474/1555470084464578570/1555496326966415401.
+
+`practice` records the mandate and data-governance review before a real pilot,
+append-only event reviews, and actual professional time intervals. Required
+review metadata and evidence hashes establish a recorded decision, not legal
+adequacy, authenticity of a signature or authority to process judicial data.
+Pre-intake and synthetic cases can leave prerequisites null. Real evidence is
+refused without both reviews; the host may already have seen uploaded material,
+so the skill requires the review before requesting or reading judicial sheets.
+
+The event calendar uses qualified occurrence dates plus 30 calendar days. Unknown
+or unreviewed events remain urgent questions; no deadline is inferred from the
+date of discovery. A recorded receipt records someone else's actual transmission,
+not an action by this helper. Events, event-review history and time records cannot
+be rewritten when continuing with the prior dossier. New legal judgments require
+new reviews and revisiting affected substantive controls. No automatic reminders,
+portal filings, sanctions, retention deletion or permission changes are provided.
+
+Primary sources checked on 2026-10-02: AGCM Regulation 31812/2026, Articles 12
+and 21 (S01). Article 21(3) measures eighteen months from cessation of the obstacle's
+legal relevance; paragraphs 4–5 govern premium changes separately. The calendar
+does not decide those classifications or calculate that reapplication date.
+For judicial-data qualification, see GDPR Articles 5, 6, 10, 13–14 and applicable
+Italian law; the Garante's decision 10113493 and transparency guidance in decision
+10009033 illustrate that a notice alone is insufficient and retention must be
+purpose-bound. These sources do not establish this particular studio's authority:
+https://www.garanteprivacy.it/home/docweb/-/docweb-display/docweb/10113493
+https://www.garanteprivacy.it/home/docweb/-/docweb-display/docweb/10009033
+
+Professional time is entered as actual timezone-aware start/end timestamps and
+breaks, grouped by stage. No measured session means unknown time. The helper
+rejects duplicate IDs, negative durations and overlapping intervals for one person.
+It does not measure unrecorded work or infer profitability. The three document-led
+pilot exercises remain distinct from tests on prequalified synthetic facts.

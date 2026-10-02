@@ -22,12 +22,12 @@ jobs:
       - name: Verify rating evidence, history, arithmetic and archive binding
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
-          tests/plugins/test_rating_legalita_case.py tests/plugins/test_rating_legalita_core.py
+          tests/plugins/test_rating_legalita_case.py tests/plugins/test_rating_legalita_core.py tests/plugins/test_rating_legalita_practice.py
           --cov --cov-config=tests/rating_legalita.coveragerc --cov-report=term-missing
       - name: Check rating code quality
         run: |
-          python -m black --check plugins/rating-legalita/scripts tests/plugins/test_rating_legalita_case.py tests/plugins/test_rating_legalita_core.py
-          python -m isort --check-only plugins/rating-legalita/scripts tests/plugins/test_rating_legalita_case.py tests/plugins/test_rating_legalita_core.py
+          python -m black --check plugins/rating-legalita/scripts tests/plugins/test_rating_legalita_case.py tests/plugins/test_rating_legalita_core.py tests/plugins/test_rating_legalita_practice.py
+          python -m isort --check-only plugins/rating-legalita/scripts tests/plugins/test_rating_legalita_case.py tests/plugins/test_rating_legalita_core.py tests/plugins/test_rating_legalita_practice.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/rating-legalita/scripts
           python -m bandit -q -ll -r plugins/rating-legalita/scripts
 

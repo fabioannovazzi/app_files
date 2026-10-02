@@ -394,6 +394,320 @@
         "type": "string",
         "minLength": 1
       }
+    },
+    "practice": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mandate": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "reviewer": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "reviewed_on": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "review_kind": {
+                  "enum": [
+                    "professional",
+                    "synthetic_assumption"
+                  ]
+                },
+                "evidence_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                },
+                "representative_declarations": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "studio_investigation": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "excluded_activities": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "event_reporting_owner": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "event_reporting_channel": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                }
+              },
+              "required": [
+                "reviewer",
+                "reviewed_on",
+                "review_kind",
+                "evidence_ids",
+                "representative_declarations",
+                "studio_investigation",
+                "excluded_activities",
+                "event_reporting_owner",
+                "event_reporting_channel"
+              ]
+            }
+          ]
+        },
+        "data_governance": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "reviewer": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "reviewed_on": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "review_kind": {
+                  "enum": [
+                    "professional",
+                    "synthetic_assumption"
+                  ]
+                },
+                "evidence_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                },
+                "notice_status_and_delivery": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "processing_legal_basis": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "judicial_data_authority": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "retention_rule": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "retention_owner": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "model_processing_review": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "next_review_on": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "access_roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "reviewer",
+                "reviewed_on",
+                "review_kind",
+                "evidence_ids",
+                "notice_status_and_delivery",
+                "processing_legal_basis",
+                "judicial_data_authority",
+                "retention_rule",
+                "retention_owner",
+                "model_processing_review",
+                "next_review_on",
+                "access_roles"
+              ]
+            }
+          ]
+        },
+        "event_reviews": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "reviewer": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "reviewed_on": {
+                "type": "string",
+                "format": "date"
+              },
+              "review_kind": {
+                "enum": [
+                  "professional",
+                  "synthetic_assumption"
+                ]
+              },
+              "evidence_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "event_id": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "basis": {
+                "enum": [
+                  "art21_1_mandatory",
+                  "art21_4_premium",
+                  "not_reportable"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "owner": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "notice_sent_on": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "notice_receipt_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "reviewer",
+              "reviewed_on",
+              "review_kind",
+              "evidence_ids",
+              "event_id",
+              "basis",
+              "reason",
+              "owner",
+              "notice_sent_on",
+              "notice_receipt_id"
+            ]
+          }
+        },
+        "review_sessions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "session_id": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "reviewer": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "stage": {
+                "enum": [
+                  "intake",
+                  "subjects",
+                  "eligibility",
+                  "obstacles",
+                  "premiums",
+                  "event_review",
+                  "dossier",
+                  "rework"
+                ]
+              },
+              "started_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "ended_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "break_minutes": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "session_id",
+              "reviewer",
+              "stage",
+              "started_at",
+              "ended_at",
+              "break_minutes"
+            ]
+          }
+        }
+      },
+      "required": [
+        "mandate",
+        "data_governance",
+        "event_reviews",
+        "review_sessions"
+      ]
     }
   },
   "required": [
@@ -416,7 +730,8 @@
     "official_rating",
     "approvals",
     "external_actions",
-    "limitations"
+    "limitations",
+    "practice"
   ],
   "$defs": {
     "review": {
