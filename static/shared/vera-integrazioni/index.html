@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="it">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="#ffffff" name="theme-color"/>
+  <title>
+   Integrazioni di Vera · Vera
+  </title>
+  <meta content="Collega Second Brain, usa le skill dello studio e consulta il progetto del connettore locale Privacy Filter per Codex desktop." name="description"/>
+  <link href="https://mparanza.com/static/shared/vera-integrazioni/index.html?lang=it" rel="canonical"/>
+  <link href="https://mparanza.com/static/shared/vera-integrazioni/index.html?lang=it" hreflang="it" rel="alternate"/>
+  <link href="https://mparanza.com/static/shared/vera-integrazioni/index.html?lang=en" hreflang="en" rel="alternate"/>
+  <link href="https://mparanza.com/static/shared/vera-integrazioni/index.html?lang=fr" hreflang="fr" rel="alternate"/>
+  <link href="https://mparanza.com/static/shared/vera-integrazioni/index.html?lang=de" hreflang="de" rel="alternate"/>
+  <link href="https://mparanza.com/static/shared/vera-integrazioni/index.html?lang=es" hreflang="es" rel="alternate"/>
+  <link href="https://mparanza.com/static/shared/vera-integrazioni/index.html?lang=it" hreflang="x-default" rel="alternate"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   :root { color-scheme: light; --navy: #06245c; --blue: #006fc9; --cyan: #00a6d7; --line: #d8e4ef; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #fff; color: var(--navy); font: 17px/1.65 "Instrument Sans", sans-serif; }
+    a { color: var(--blue); text-underline-offset: .2em; }
+    a:hover { color: var(--navy); }
+    :focus-visible { outline: 3px solid var(--cyan); outline-offset: 4px; }
+    .shell { width: min(100% - 48px, 940px); margin-inline: auto; }
+    header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; padding-block: 26px; border-bottom: 1px solid var(--line); }
+    .brand { color: var(--navy); font-size: 22px; font-weight: 700; text-decoration: none; letter-spacing: -.04em; }
+    .languages { display: flex; gap: 18px; font-size: 14px; }
+    .languages a[aria-current="page"] { color: var(--navy); font-weight: 700; text-decoration: none; }
+    main { padding-block: 48px 64px; }
+    .back { display: inline-block; font-size: 15px; margin-bottom: 34px; }
+    h1 { font-size: clamp(36px, 6vw, 62px); font-weight: 600; letter-spacing: -.045em; line-height: 1.1; margin: 0 0 24px; max-width: 820px; }
+    .lead { font-size: 21px; line-height: 1.55; }
+    p { margin: 0 0 18px; max-width: 78ch; }
+    .jump-links { display: flex; flex-wrap: wrap; gap: 10px 26px; font-size: 15px; margin-block: 30px 44px; }
+    section { border-top: 1px solid var(--cyan); padding-top: 30px; margin-top: 42px; scroll-margin-top: 24px; }
+    h2 { font-size: clamp(26px, 4vw, 34px); line-height: 1.2; font-weight: 600; letter-spacing: -.025em; margin: 0 0 24px; }
+    h3 { font-size: 19px; font-weight: 600; line-height: 1.4; margin: 24px 0 8px; }
+    .steps { padding-left: 26px; max-width: 78ch; margin: 0 0 24px; }
+    .steps li { padding-left: 8px; margin-bottom: 20px; }
+    .steps li::marker { color: var(--blue); font-weight: 700; }
+    blockquote { margin: 20px 0 28px; padding: 20px 24px; border-left: 2px solid var(--cyan); background: #f5f9fd; max-width: 78ch; }
+    .note { font-size: 15px; }
+    footer { padding-block: 24px 40px; border-top: 1px solid var(--line); font-size: 14px; }
+    @media (max-width: 580px) { .shell { width: calc(100% - 36px); } main { padding-top: 32px; } .lead { font-size: 19px; } .steps { padding-left: 22px; } .steps li { padding-left: 4px; } blockquote { padding: 16px 18px; } }
+  </style>
+ </head>
+ <body>
+  <header class="shell">
+   <a class="brand" data-vera-link="" href="../vera/index.html?lang=it">
+    Vera
+   </a>
+   <nav aria-label="Lingua" class="languages">
+    <a aria-current="page" data-lang="it" href="?lang=it" lang="it">
+     IT
+    </a>
+    <a data-lang="en" href="?lang=en" lang="en">
+     EN
+    </a>
+    <a data-lang="fr" href="?lang=fr" lang="fr">
+     FR
+    </a>
+    <a data-lang="de" href="?lang=de" lang="de">
+     DE
+    </a>
+    <a data-lang="es" href="?lang=es" lang="es">
+     ES
+    </a>
+   </nav>
+  </header>
+  <main class="shell" id="main-content">
+   <a class="back" data-i18n="back" data-vera-link="" href="../vera/index.html?lang=it#connections">
+    ← Torna a Integrazioni
+   </a>
+   <h1 data-i18n="title">
+    Integrazioni di Vera
+   </h1>
+   <p class="lead" data-i18n="lead">
+    Collega Second Brain, usa le skill dello studio e consulta il progetto del connettore locale Privacy Filter per Codex desktop.
+   </p>
+   <p data-i18n="scope">
+    Per seguire la guida Second Brain serve un Second Brain già esistente con un connettore MCP compatibile. Vera non fornisce questo servizio e non richiede Microsoft 365. Se non hai un archivio esterno, puoi usare Vera senza questa configurazione.
+   </p>
+   <nav aria-label="Passaggi della guida" class="jump-links" data-nav="">
+    <a data-i18n="prepare" href="#prepare">
+     Prima di iniziare
+    </a>
+    <a data-i18n="claude" href="#claude">
+     Claude e Cowork
+    </a>
+    <a data-i18n="codex" href="#codex">
+     Codex e app desktop ChatGPT
+    </a>
+    <a data-i18n="verify" href="#verify">
+     Verificare il collegamento
+    </a>
+    <a data-i18n="skills" href="#skills">
+     Le skill dello studio
+    </a>
+    <a data-i18n="help" href="#help">
+     Se il collegamento non funziona
+    </a>
+    <a data-i18n="privacy.title" href="#privacy-filter">OpenAI Privacy Filter</a>
+   </nav>
+   <section aria-labelledby="prepare-title" id="prepare">
+    <h2 data-i18n="prepare" id="prepare-title">
+     Prima di iniziare
+    </h2>
+    <p data-i18n="mcpMeaning">
+     Il connettore MCP è il collegamento che consente all’app di cercare e leggere i documenti del tuo Second Brain.
+    </p>
+    <ol class="steps">
+     <li data-i18n="before1">
+      Recupera l’URL del server MCP dalle istruzioni del tuo Second Brain o chiedilo a chi lo gestisce. È l’indirizzo del connettore, che può essere diverso dall’indirizzo del sito o della pagina di accesso. Non esiste un URL unico fornito da Vera.
+     </li>
+     <li data-i18n="before2">
+      Chiedi al gestore quale metodo di accesso usare e se il connettore funziona con la tua app. Per questi passaggi Codex richiede un server Streamable HTTP; un collegamento funzionante in Claude va verificato separatamente in Codex.
+     </li>
+     <li data-i18n="before3">
+      Usa il tuo account dello studio e individua l’archivio, la cartella o il ramo da consultare. Per la consultazione servono strumenti di ricerca e lettura; disabilita gli strumenti che scrivono o eliminano dati dove l’app lo consente.
+     </li>
+     <li data-i18n="before4">
+      Verifica che Vera sia installata e attiva nell’app scelta. L’installazione di Vera e il collegamento a Second Brain sono due operazioni distinte.
+     </li>
+    </ol>
+    <p data-i18n="already">
+     Second Brain è già collegato nella stessa app? Passa direttamente alla prova di lettura qui sotto.
+    </p>
+   </section>
+   <section aria-labelledby="claude-title" id="claude">
+    <h2 data-i18n="claude" id="claude-title">
+     Claude e Cowork
+    </h2>
+    <ol class="steps">
+     <li data-i18n="claude1">
+      Apri Personalizza (Customize) → Connettori (Connectors). Scegli + Aggiungi (Add) → Aggiungi connettore personalizzato (Add custom connector).
+     </li>
+     <li data-i18n="claude2">
+      Inserisci un nome, ad esempio Second Brain, e l’URL MCP ricevuto dal gestore. Premi Continua (Continue).
+     </li>
+     <li data-i18n="claude3">
+      Controlla il metodo di autenticazione rilevato e segui le istruzioni del gestore. Completa Aggiungi (Add) e Connetti (Connect) o Sign in now quando richiesto; accedi con il tuo account. Password e credenziali vanno nella schermata del servizio, non nella chat.
+     </li>
+     <li data-i18n="claude4">
+      Nella scheda del connettore controlla le autorizzazioni degli strumenti. Abilita ricerca e lettura, per esempio Search memory e Read memory se presenti. I nomi effettivi dipendono dal servizio.
+     </li>
+     <li data-i18n="claude5">
+      Apri un’attività Cowork con Vera attiva. Nel menu + della conversazione → Connettori, abilita Second Brain, poi esegui la prova di lettura.
+     </li>
+    </ol>
+    <p class="note" data-i18n="team">
+     Con Team o Enterprise, un proprietario o un ruolo autorizzato deve prima aggiungere il connettore in Organization settings → Connectors. Ogni utente completa poi il proprio collegamento. Se l’opzione manca, chiedi all’amministratore. I connettori remoti devono essere raggiungibili dall’infrastruttura Anthropic.
+    </p>
+    <a data-i18n="claudeDocs" href="https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp" rel="noopener noreferrer" target="_blank">
+     Istruzioni ufficiali Claude per i connettori personalizzati
+    </a>
+   </section>
+   <section aria-labelledby="codex-title" id="codex">
+    <h2 data-i18n="codex" id="codex-title">
+     Codex e app desktop ChatGPT
+    </h2>
+    <ol class="steps">
+     <li data-i18n="codex1">
+      Nell’app desktop apri Impostazioni (Settings) → Server MCP (MCP servers) → Aggiungi server (Add server).
+     </li>
+     <li data-i18n="codex2">
+      Assegna un nome, ad esempio Second Brain, scegli Streamable HTTP e inserisci l’URL MCP fornito dal gestore.
+     </li>
+     <li data-i18n="codex3">
+      Salva, seleziona Restart e, se compare, Authenticate per accedere al servizio. Usa il metodo previsto dal gestore. Se è richiesta una chiave o una configurazione diversa, fatti assistere dal gestore senza incollare credenziali nella chat.
+     </li>
+     <li data-i18n="codex4">
+      Apri una nuova attività con Vera. Scrivi /mcp nel campo del messaggio per vedere i server collegati; verifica Second Brain ed esegui la prova di lettura.
+     </li>
+    </ol>
+    <p class="note" data-i18n="cloud">
+     Questi passaggi riguardano la configurazione desktop. La disponibilità nella chat web o in Work Cloud va verificata nella sessione in cui lavori: collegare il servizio in un’app non garantisce l’accesso in un’altra.
+    </p>
+    <a data-i18n="codexDocs" href="https://learn.chatgpt.com/docs/extend/mcp?surface=cli" rel="noopener noreferrer" target="_blank">
+     Istruzioni ufficiali OpenAI per i server MCP
+    </a>
+   </section>
+   <section aria-labelledby="verify-title" id="verify">
+    <h2 data-i18n="verify" id="verify-title">
+     Verificare il collegamento
+    </h2>
+    <p data-i18n="test1">
+     Nel tuo Second Brain crea manualmente un documento senza dati dei clienti, intitolato «Prova collegamento Vera». Scrivi una frase inventata che saprai riconoscere. Non includere quella frase nel messaggio inviato a Vera.
+    </p>
+    <p data-i18n="test2">
+     Nella nuova attività con Vera, invia questo messaggio:
+    </p>
+    <blockquote data-i18n="prompt">
+     Cerca il documento «Prova collegamento Vera» nel mio Second Brain, aprilo e riportane il testo con titolo e identificativo o collegamento. Non creare o modificare nulla. Se non puoi accedere, dimmi quale passaggio manca.
+    </blockquote>
+    <p data-i18n="test3">
+     Controlla che la conversazione mostri una ricerca e una lettura tramite il connettore. Confronta il testo restituito con la frase scritta nel documento e apri il riferimento, se disponibile. La sola risposta «sono collegato» non dimostra la lettura.
+    </p>
+    <p data-i18n="test4">
+     Dopo questa prova, indica a Vera il lavoro e il ramo o la cartella da consultare. Se la ricerca non riesce, risolvi l’accesso prima di richiedere conclusioni basate su quell’archivio.
+    </p>
+    <h3 data-i18n="exampleTitle">
+     Esempio per un lavoro reale
+    </h3>
+    <blockquote data-i18n="example">
+     Usa Vera per esaminare questo avviso. Prima consulta la procedura approvata dello studio nel ramo «contenzioso» di Second Brain. Cita le fonti effettivamente aperte e segnala eventuali versioni in conflitto o informazioni mancanti.
+    </blockquote>
+   </section>
+   <section aria-labelledby="skills-title" id="skills">
+    <h2 data-i18n="skills" id="skills-title">
+     Le skill dello studio
+    </h2>
+    <p data-i18n="skillsCopy">
+     Il connettore dà accesso ai documenti, non installa le skill dello studio. Se vuoi usare una tua skill, installala e richiamala direttamente nell’app che la supporta, con il nome o comando previsto da quell’app. Puoi usare la tua skill senza invocare Vera. Non occorre copiarla nel plugin Vera.
+    </p>
+   </section>
+   <section aria-labelledby="help-title" id="help">
+    <h2 data-i18n="help" id="help-title">
+     Se il collegamento non funziona
+    </h2>
+    <h3 data-i18n="missingTitle">
+     Non compare Aggiungi connettore / Aggiungi server
+    </h3>
+    <p data-i18n="missing">
+     Verifica di essere nell’app e nell’account corretti. Chiedi all’amministratore se il tuo ruolo può aggiungere connessioni personalizzate.
+    </p>
+    <h3 data-i18n="deniedTitle">
+     Accesso negato o richiesta di login
+    </h3>
+    <p data-i18n="denied">
+     Riapri Connetti / Authenticate e controlla l’account. Il gestore deve verificare che tu abbia accesso all’archivio richiesto.
+    </p>
+    <h3 data-i18n="emptyTitle">
+     La ricerca non trova il documento
+    </h3>
+    <p data-i18n="empty">
+     Controlla il titolo, il ramo o la cartella e che il documento sia ricercabile in Second Brain. Non ampliare la ricerca ad altri clienti.
+    </p>
+    <h3 data-i18n="readTitle">
+     Il server è elencato ma Vera non legge
+    </h3>
+    <p data-i18n="read">
+     Abilita il connettore nella conversazione e gli strumenti di lettura, poi avvia una nuova attività. Verifica una chiamata reale: l’elenco dei server da solo non basta.
+    </p>
+    <h3 data-i18n="authTitle">
+     URL non valido o errore di autenticazione
+    </h3>
+    <p data-i18n="auth">
+     Chiedi al gestore di verificare URL MCP, compatibilità con l’app e autenticazione. Comunica app, sistema operativo e testo dell’errore, senza documenti, password o token.
+    </p>
+    <p class="note" data-i18n="status">
+     Questa guida descrive la configurazione; non attesta una prova di funzionamento con il tuo Second Brain. L’esito della prova di lettura va verificato nel tuo account.
+    </p>
+    <h3 data-i18n="sources">
+     Documentazione dei fornitori
+    </h3>
+    <a data-i18n="claudeDocs" href="https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp" rel="noopener noreferrer" target="_blank">
+     Istruzioni ufficiali Claude per i connettori personalizzati
+    </a>
+    <br/>
+    <a data-i18n="codexDocs" href="https://learn.chatgpt.com/docs/extend/mcp?surface=cli" rel="noopener noreferrer" target="_blank">
+     Istruzioni ufficiali OpenAI per i server MCP
+    </a>
+    <p class="note" data-i18n="docsDate">
+     Passaggi verificati sulla documentazione ufficiale il 2 ottobre 2026. I nomi dei comandi possono cambiare con lingua e versione dell’app.
+    </p>
+   </section>
+   <section aria-labelledby="privacy-filter-title" id="privacy-filter">
+    <h2 data-i18n="privacy.title" id="privacy-filter-title">OpenAI Privacy Filter</h2>
+    <p data-i18n="privacy.status">Connettore opzionale previsto per Codex desktop; non ancora disponibile.</p>
+    <p data-i18n="privacy.copy">Privacy Filter è un modello open source di OpenAI che individua nel testo dati personali, come nomi, indirizzi, email e numeri di telefono, e sostituisce quelli rilevati con segnaposto. L’elaborazione avviene sul computer su cui è installato.</p>
+    <p data-i18n="privacy.workflow">Il connettore sarà installabile separatamente da Vera e utilizzabile su richiesta. La prima versione prevista leggerà file TXT, Markdown, DOCX e PDF con testo estraibile e salverà copie di testo filtrate in formato .txt. Le scansioni richiederanno prima l’OCR.</p>
+    <a data-i18n="privacy.source" href="https://github.com/openai/privacy-filter" rel="noopener noreferrer" target="_blank">Codice e documentazione di OpenAI Privacy Filter ↗</a>
+   </section>
+   <section aria-labelledby="model-data-title" id="model-data">
+    <h2 data-i18n="data" id="model-data-title">
+     Quali dati arrivano al modello
+    </h2>
+    <h3>Second Brain</h3>
+    <p data-i18n="dataCopy">
+     Questa pagina non registra l’URL del tuo connettore, non avvia login e non legge Second Brain. Quando chiedi una consultazione a Vera, la query, i metadati e gli estratti restituiti dalla ricerca, e il testo delle fonti aperte possono entrare nel contesto del modello dell’app scelta. Per la prova usa un documento senza dati dei clienti. La consultazione non è solo locale: accesso, conservazione e trattamento dipendono dall’app e dal servizio Second Brain. Collegare l’archivio non invia automaticamente tutto il suo contenuto a Vera; i dati effettivamente consultati dipendono dagli strumenti e dalle richieste.
+    </p>
+    <h3 data-i18n="privacy.title">OpenAI Privacy Filter</h3>
+    <p data-i18n="privacy.data">Il flusso previsto elaborerà gli originali localmente e renderà disponibili a Codex soltanto il testo filtrato e il riepilogo dell’elaborazione. Il download iniziale del modello richiederà Internet; il filtraggio avverrà in locale.</p>
+    <a data-data-link="" data-i18n="dataPage" href="https://mparanza.com/data-handling?lang=it">
+     Gestione dei dati Mparanza
+    </a>
+   </section>
+  </main>
+  <footer class="shell">
+   <a data-i18n="back" data-vera-link="" href="../vera/index.html?lang=it#connections">
+    ← Torna a Integrazioni
+   </a>
+  </footer>
+  <script>
+   const copy = {
+  "it": {
+    "title": "Integrazioni di Vera",
+    "lead": "Collega Second Brain, usa le skill dello studio e consulta il progetto del connettore locale Privacy Filter per Codex desktop.",
+    "scope": "Per seguire la guida Second Brain serve un Second Brain già esistente con un connettore MCP compatibile. Vera non fornisce questo servizio e non richiede Microsoft 365. Se non hai un archivio esterno, puoi usare Vera senza questa configurazione.",
+    "back": "← Torna a Integrazioni",
+    "nav": "Passaggi della guida",
+    "prepare": "Prima di iniziare",
+    "claude": "Claude e Cowork",
+    "codex": "Codex e app desktop ChatGPT",
+    "verify": "Verificare il collegamento",
+    "skills": "Le skill dello studio",
+    "help": "Se il collegamento non funziona",
+    "data": "Quali dati arrivano al modello",
+    "before1": "Recupera l’URL del server MCP dalle istruzioni del tuo Second Brain o chiedilo a chi lo gestisce. È l’indirizzo del connettore, che può essere diverso dall’indirizzo del sito o della pagina di accesso. Non esiste un URL unico fornito da Vera.",
+    "before2": "Chiedi al gestore quale metodo di accesso usare e se il connettore funziona con la tua app. Per questi passaggi Codex richiede un server Streamable HTTP; un collegamento funzionante in Claude va verificato separatamente in Codex.",
+    "before3": "Usa il tuo account dello studio e individua l’archivio, la cartella o il ramo da consultare. Per la consultazione servono strumenti di ricerca e lettura; disabilita gli strumenti che scrivono o eliminano dati dove l’app lo consente.",
+    "before4": "Verifica che Vera sia installata e attiva nell’app scelta. L’installazione di Vera e il collegamento a Second Brain sono due operazioni distinte.",
+    "already": "Second Brain è già collegato nella stessa app? Passa direttamente alla prova di lettura qui sotto.",
+    "claude1": "Apri Personalizza (Customize) → Connettori (Connectors). Scegli + Aggiungi (Add) → Aggiungi connettore personalizzato (Add custom connector).",
+    "claude2": "Inserisci un nome, ad esempio Second Brain, e l’URL MCP ricevuto dal gestore. Premi Continua (Continue).",
+    "claude3": "Controlla il metodo di autenticazione rilevato e segui le istruzioni del gestore. Completa Aggiungi (Add) e Connetti (Connect) o Sign in now quando richiesto; accedi con il tuo account. Password e credenziali vanno nella schermata del servizio, non nella chat.",
+    "claude4": "Nella scheda del connettore controlla le autorizzazioni degli strumenti. Abilita ricerca e lettura, per esempio Search memory e Read memory se presenti. I nomi effettivi dipendono dal servizio.",
+    "claude5": "Apri un’attività Cowork con Vera attiva. Nel menu + della conversazione → Connettori, abilita Second Brain, poi esegui la prova di lettura.",
+    "team": "Con Team o Enterprise, un proprietario o un ruolo autorizzato deve prima aggiungere il connettore in Organization settings → Connectors. Ogni utente completa poi il proprio collegamento. Se l’opzione manca, chiedi all’amministratore. I connettori remoti devono essere raggiungibili dall’infrastruttura Anthropic.",
+    "claudeDocs": "Istruzioni ufficiali Claude per i connettori personalizzati",
+    "codex1": "Nell’app desktop apri Impostazioni (Settings) → Server MCP (MCP servers) → Aggiungi server (Add server).",
+    "codex2": "Assegna un nome, ad esempio Second Brain, scegli Streamable HTTP e inserisci l’URL MCP fornito dal gestore.",
+    "codex3": "Salva, seleziona Restart e, se compare, Authenticate per accedere al servizio. Usa il metodo previsto dal gestore. Se è richiesta una chiave o una configurazione diversa, fatti assistere dal gestore senza incollare credenziali nella chat.",
+    "codex4": "Apri una nuova attività con Vera. Scrivi /mcp nel campo del messaggio per vedere i server collegati; verifica Second Brain ed esegui la prova di lettura.",
+    "cloud": "Questi passaggi riguardano la configurazione desktop. La disponibilità nella chat web o in Work Cloud va verificata nella sessione in cui lavori: collegare il servizio in un’app non garantisce l’accesso in un’altra.",
+    "codexDocs": "Istruzioni ufficiali OpenAI per i server MCP",
+    "test1": "Nel tuo Second Brain crea manualmente un documento senza dati dei clienti, intitolato «Prova collegamento Vera». Scrivi una frase inventata che saprai riconoscere. Non includere quella frase nel messaggio inviato a Vera.",
+    "test2": "Nella nuova attività con Vera, invia questo messaggio:",
+    "prompt": "Cerca il documento «Prova collegamento Vera» nel mio Second Brain, aprilo e riportane il testo con titolo e identificativo o collegamento. Non creare o modificare nulla. Se non puoi accedere, dimmi quale passaggio manca.",
+    "test3": "Controlla che la conversazione mostri una ricerca e una lettura tramite il connettore. Confronta il testo restituito con la frase scritta nel documento e apri il riferimento, se disponibile. La sola risposta «sono collegato» non dimostra la lettura.",
+    "test4": "Dopo questa prova, indica a Vera il lavoro e il ramo o la cartella da consultare. Se la ricerca non riesce, risolvi l’accesso prima di richiedere conclusioni basate su quell’archivio.",
+    "exampleTitle": "Esempio per un lavoro reale",
+    "example": "Usa Vera per esaminare questo avviso. Prima consulta la procedura approvata dello studio nel ramo «contenzioso» di Second Brain. Cita le fonti effettivamente aperte e segnala eventuali versioni in conflitto o informazioni mancanti.",
+    "skillsCopy": "Il connettore dà accesso ai documenti, non installa le skill dello studio. Se vuoi usare una tua skill, installala e richiamala direttamente nell’app che la supporta, con il nome o comando previsto da quell’app. Puoi usare la tua skill senza invocare Vera. Non occorre copiarla nel plugin Vera.",
+    "missingTitle": "Non compare Aggiungi connettore / Aggiungi server",
+    "missing": "Verifica di essere nell’app e nell’account corretti. Chiedi all’amministratore se il tuo ruolo può aggiungere connessioni personalizzate.",
+    "deniedTitle": "Accesso negato o richiesta di login",
+    "denied": "Riapri Connetti / Authenticate e controlla l’account. Il gestore deve verificare che tu abbia accesso all’archivio richiesto.",
+    "emptyTitle": "La ricerca non trova il documento",
+    "empty": "Controlla il titolo, il ramo o la cartella e che il documento sia ricercabile in Second Brain. Non ampliare la ricerca ad altri clienti.",
+    "readTitle": "Il server è elencato ma Vera non legge",
+    "read": "Abilita il connettore nella conversazione e gli strumenti di lettura, poi avvia una nuova attività. Verifica una chiamata reale: l’elenco dei server da solo non basta.",
+    "authTitle": "URL non valido o errore di autenticazione",
+    "auth": "Chiedi al gestore di verificare URL MCP, compatibilità con l’app e autenticazione. Comunica app, sistema operativo e testo dell’errore, senza documenti, password o token.",
+    "status": "Questa guida descrive la configurazione; non attesta una prova di funzionamento con il tuo Second Brain. L’esito della prova di lettura va verificato nel tuo account.",
+    "sources": "Documentazione dei fornitori",
+    "docsDate": "Passaggi verificati sulla documentazione ufficiale il 2 ottobre 2026. I nomi dei comandi possono cambiare con lingua e versione dell’app.",
+    "dataCopy": "Questa pagina non registra l’URL del tuo connettore, non avvia login e non legge Second Brain. Quando chiedi una consultazione a Vera, la query, i metadati e gli estratti restituiti dalla ricerca, e il testo delle fonti aperte possono entrare nel contesto del modello dell’app scelta. Per la prova usa un documento senza dati dei clienti. La consultazione non è solo locale: accesso, conservazione e trattamento dipendono dall’app e dal servizio Second Brain. Collegare l’archivio non invia automaticamente tutto il suo contenuto a Vera; i dati effettivamente consultati dipendono dagli strumenti e dalle richieste.",
+    "dataPage": "Gestione dei dati Mparanza",
+    "mcpMeaning": "Il connettore MCP è il collegamento che consente all’app di cercare e leggere i documenti del tuo Second Brain.",
+    "privacy.title": "OpenAI Privacy Filter",
+    "privacy.status": "Connettore opzionale previsto per Codex desktop; non ancora disponibile.",
+    "privacy.copy": "Privacy Filter è un modello open source di OpenAI che individua nel testo dati personali, come nomi, indirizzi, email e numeri di telefono, e sostituisce quelli rilevati con segnaposto. L’elaborazione avviene sul computer su cui è installato.",
+    "privacy.workflow": "Il connettore sarà installabile separatamente da Vera e utilizzabile su richiesta. La prima versione prevista leggerà file TXT, Markdown, DOCX e PDF con testo estraibile e salverà copie di testo filtrate in formato .txt. Le scansioni richiederanno prima l’OCR.",
+    "privacy.data": "Il flusso previsto elaborerà gli originali localmente e renderà disponibili a Codex soltanto il testo filtrato e il riepilogo dell’elaborazione. Il download iniziale del modello richiederà Internet; il filtraggio avverrà in locale.",
+    "privacy.source": "Codice e documentazione di OpenAI Privacy Filter ↗"
+  },
+  "en": {
+    "title": "Vera integrations",
+    "lead": "Connect Second Brain, use your firm’s skills and read about the planned local Privacy Filter connector for Codex desktop.",
+    "scope": "For the Second Brain setup guide, you need an existing Second Brain with a compatible MCP connector. Vera does not supply this service or require Microsoft 365. You can use Vera without this setup if you have no external repository.",
+    "back": "← Back to Integrations",
+    "nav": "Guide steps",
+    "prepare": "Before you begin",
+    "claude": "Claude and Cowork",
+    "codex": "Codex and the ChatGPT desktop app",
+    "verify": "Verify the connection",
+    "skills": "Your firm’s skills",
+    "help": "If the connection fails",
+    "data": "What data reaches the model",
+    "before1": "Get the MCP server URL from your Second Brain instructions or its administrator. This connector address may differ from the website or sign-in address. Vera does not provide a universal URL.",
+    "before2": "Ask the administrator which sign-in method to use and whether the connector supports your app. These Codex steps require a Streamable HTTP server; a connection working in Claude must be verified separately in Codex.",
+    "before3": "Use your firm account and identify the repository, folder or branch to consult. Search and reading tools are needed; disable tools that write or delete data where the app allows it.",
+    "before4": "Check that Vera is installed and enabled in your chosen app. Installing Vera and connecting Second Brain are separate steps.",
+    "already": "Second Brain is already connected in the same app? Go straight to the reading test below.",
+    "claude1": "Open Customize → Connectors. Select + Add → Add custom connector.",
+    "claude2": "Enter a name such as Second Brain and the MCP URL supplied by the administrator. Select Continue.",
+    "claude3": "Review the detected authentication method and follow the administrator’s instructions. Complete Add and Connect or Sign in now when prompted, using your own account. Enter credentials on the service’s sign-in screen, not in chat.",
+    "claude4": "Check tool permissions in the connector details. Enable search and reading, such as Search memory and Read memory if present. Actual names depend on the service.",
+    "claude5": "Start a Cowork task with Vera enabled. In the conversation’s + menu → Connectors, enable Second Brain, then run the reading test.",
+    "team": "On Team or Enterprise, an owner or authorized role must first add the connector in Organization settings → Connectors. Each user then connects their own account. If the option is missing, ask your administrator. Remote connectors must be reachable from Anthropic’s infrastructure.",
+    "claudeDocs": "Official Claude custom connector instructions",
+    "codex1": "In the desktop app, open Settings → MCP servers → Add server.",
+    "codex2": "Name the server, for example Second Brain, select Streamable HTTP, and enter the MCP URL supplied by its administrator.",
+    "codex3": "Save, select Restart and, if shown, Authenticate to sign in. Use the method specified by the administrator. If a key or different configuration is required, ask the administrator for help without pasting credentials in chat.",
+    "codex4": "Start a new task with Vera. Type /mcp in the composer to see connected servers; check Second Brain and run the reading test.",
+    "cloud": "These steps configure the desktop app. Verify access separately in the web chat or Work Cloud session where you work: connecting a service in one app does not guarantee access in another.",
+    "codexDocs": "Official OpenAI MCP server instructions",
+    "test1": "Manually create a document in Second Brain with no client data, titled “Vera connection test”. Add an invented sentence you can recognize. Do not include that sentence in the message you send to Vera.",
+    "test2": "In the new task with Vera, send this message:",
+    "prompt": "Find the document “Vera connection test” in my Second Brain, open it and return its text with its title and identifier or link. Do not create or change anything. If access is unavailable, tell me which step is missing.",
+    "test3": "Check that the conversation shows a connector search and read. Compare the returned text with your sentence and open the source reference if available. A reply saying “I am connected” does not prove that the document was read.",
+    "test4": "After this test, tell Vera the task and the branch or folder to consult. If search fails, resolve access before requesting conclusions based on that repository.",
+    "exampleTitle": "Example for a real task",
+    "example": "Use Vera to examine this notice. First consult the firm’s approved procedure in the “litigation” branch of Second Brain. Cite the sources actually opened and flag conflicting versions or missing information.",
+    "skillsCopy": "The connector gives access to documents; it does not install the firm’s skills. To use your own skill, install and invoke it directly in the app that supports it, using that app’s name or command. You can use your skill without invoking Vera. You do not need to copy it into the Vera plugin.",
+    "missingTitle": "Add connector / Add server is missing",
+    "missing": "Check that you are in the right app and account. Ask the administrator whether your role may add custom connections.",
+    "deniedTitle": "Access denied or sign-in requested",
+    "denied": "Open Connect / Authenticate again and check the account. The administrator must confirm access to the intended repository.",
+    "emptyTitle": "Search does not find the document",
+    "empty": "Check the title, branch or folder and whether the document is searchable in Second Brain. Do not broaden the search to other clients.",
+    "readTitle": "The server is listed but Vera does not read",
+    "read": "Enable the connector in the conversation and its reading tools, then start a new task. Verify an actual tool call: the server list alone is insufficient.",
+    "authTitle": "Invalid URL or authentication error",
+    "auth": "Ask the administrator to check the MCP URL, app compatibility and authentication. Share the app, operating system and error text, without documents, passwords or tokens.",
+    "status": "This guide describes configuration; it does not certify a working connection to your Second Brain. Verify the reading test in your own account.",
+    "sources": "Provider documentation",
+    "docsDate": "Steps checked against official documentation on 2 October 2026. Control names may change with the app language and version.",
+    "dataCopy": "This page does not record your connector URL, start sign-in or read Second Brain. When you ask Vera to consult it, the query, source metadata and search excerpts, and the text of opened sources may enter your chosen app’s model context. Use a document without client data for the test. Consultation is not local-only: access, retention and processing depend on the app and Second Brain service. Connecting the repository does not automatically send all its contents to Vera; the material actually consulted depends on the tools and requests.",
+    "dataPage": "Mparanza data handling",
+    "mcpMeaning": "The MCP connector is the connection that lets your app search and read documents in your Second Brain.",
+    "privacy.title": "OpenAI Privacy Filter",
+    "privacy.status": "Optional connector planned for Codex desktop; not yet available.",
+    "privacy.copy": "Privacy Filter is an open-source OpenAI model that identifies personal information in text, such as names, addresses, emails and phone numbers, and replaces detected values with placeholders. Processing runs on the computer where it is installed.",
+    "privacy.workflow": "The connector will be installed separately from Vera and used on request. The planned first version will read TXT, Markdown, DOCX and PDFs with extractable text and save redacted text copies as .txt files. Scans will need OCR first.",
+    "privacy.data": "The planned workflow will process originals locally and make only redacted text and a processing summary available to Codex. The initial model download will require Internet access; filtering will run locally.",
+    "privacy.source": "OpenAI Privacy Filter code and documentation ↗"
+  },
+  "fr": {
+    "title": "Intégrations de Vera",
+    "lead": "Connectez Second Brain, utilisez les skills du cabinet et découvrez le projet de connecteur local Privacy Filter pour Codex desktop.",
+    "scope": "Pour suivre le guide Second Brain, il faut un Second Brain existant avec un connecteur MCP compatible. Vera ne fournit pas ce service et ne nécessite pas Microsoft 365. Sans archive externe, vous pouvez utiliser Vera sans cette configuration.",
+    "back": "← Retour aux intégrations",
+    "nav": "Étapes du guide",
+    "prepare": "Avant de commencer",
+    "claude": "Claude et Cowork",
+    "codex": "Codex et l’application de bureau ChatGPT",
+    "verify": "Vérifier la connexion",
+    "skills": "Les skills du cabinet",
+    "help": "Si la connexion échoue",
+    "data": "Quelles données parviennent au modèle",
+    "before1": "Obtenez l’URL du serveur MCP dans les instructions de votre Second Brain ou auprès de son gestionnaire. Cette adresse peut différer de celle du site ou de la page de connexion. Vera ne fournit pas d’URL universelle.",
+    "before2": "Demandez au gestionnaire le mode de connexion et la compatibilité avec votre application. Ces étapes Codex nécessitent un serveur Streamable HTTP ; une connexion fonctionnelle dans Claude doit être vérifiée séparément dans Codex.",
+    "before3": "Utilisez votre compte du cabinet et identifiez l’archive, le dossier ou la branche à consulter. Il faut des outils de recherche et de lecture ; désactivez les outils d’écriture ou de suppression lorsque l’application le permet.",
+    "before4": "Vérifiez que Vera est installée et activée dans l’application choisie. Installer Vera et connecter Second Brain sont deux opérations distinctes.",
+    "already": "Second Brain est déjà connecté dans la même application ? Passez au test de lecture ci-dessous.",
+    "claude1": "Ouvrez Personnaliser (Customize) → Connecteurs (Connectors). Sélectionnez + Ajouter (Add) → Ajouter un connecteur personnalisé (Add custom connector).",
+    "claude2": "Saisissez un nom, par exemple Second Brain, et l’URL MCP fournie par le gestionnaire. Sélectionnez Continuer (Continue).",
+    "claude3": "Vérifiez le mode d’authentification détecté et suivez les instructions du gestionnaire. Terminez avec Add et Connect ou Sign in now lorsque demandé, avec votre compte. Saisissez les identifiants sur l’écran du service, pas dans la conversation.",
+    "claude4": "Vérifiez les autorisations dans la fiche du connecteur. Activez la recherche et la lecture, par exemple Search memory et Read memory si présents. Les noms dépendent du service.",
+    "claude5": "Démarrez une tâche Cowork avec Vera activée. Dans le menu + de la conversation → Connecteurs, activez Second Brain, puis effectuez le test de lecture.",
+    "team": "Sur Team ou Enterprise, un propriétaire ou un rôle autorisé doit d’abord ajouter le connecteur dans Organization settings → Connectors. Chaque utilisateur connecte ensuite son compte. Si l’option manque, demandez à l’administrateur. Les connecteurs distants doivent être accessibles depuis l’infrastructure Anthropic.",
+    "claudeDocs": "Instructions officielles Claude pour les connecteurs personnalisés",
+    "codex1": "Dans l’application de bureau, ouvrez Paramètres (Settings) → Serveurs MCP (MCP servers) → Ajouter un serveur (Add server).",
+    "codex2": "Nommez le serveur, par exemple Second Brain, choisissez Streamable HTTP et saisissez l’URL MCP du gestionnaire.",
+    "codex3": "Enregistrez, sélectionnez Restart puis Authenticate si proposé. Utilisez le mode indiqué par le gestionnaire. Si une clé ou une autre configuration est nécessaire, demandez son aide sans coller d’identifiants dans la conversation.",
+    "codex4": "Démarrez une nouvelle tâche avec Vera. Saisissez /mcp dans le champ du message pour voir les serveurs connectés ; vérifiez Second Brain et effectuez le test de lecture.",
+    "cloud": "Ces étapes configurent l’application de bureau. Vérifiez séparément l’accès dans votre session web ou Work Cloud : connecter un service dans une application ne garantit pas son accès dans une autre.",
+    "codexDocs": "Instructions officielles OpenAI pour les serveurs MCP",
+    "test1": "Créez manuellement dans Second Brain un document sans données clients, intitulé « Test de connexion Vera ». Ajoutez une phrase inventée que vous reconnaîtrez. Ne l’incluez pas dans le message envoyé à Vera.",
+    "test2": "Dans la nouvelle tâche avec Vera, envoyez ce message :",
+    "prompt": "Cherche le document « Test de connexion Vera » dans mon Second Brain, ouvre-le et restitue son texte avec son titre et son identifiant ou lien. Ne crée ni ne modifie rien. Si l’accès est indisponible, indique quelle étape manque.",
+    "test3": "Vérifiez que la conversation montre une recherche et une lecture via le connecteur. Comparez le texte à votre phrase et ouvrez la référence si disponible. Une réponse « je suis connecté » ne prouve pas la lecture.",
+    "test4": "Après ce test, précisez à Vera le travail et la branche ou le dossier à consulter. Si la recherche échoue, résolvez l’accès avant de demander des conclusions fondées sur cette archive.",
+    "exampleTitle": "Exemple pour un travail réel",
+    "example": "Utilise Vera pour examiner cet avis. Consulte d’abord la procédure approuvée du cabinet dans la branche « contentieux » de Second Brain. Cite les sources effectivement ouvertes et signale les versions contradictoires ou les informations manquantes.",
+    "skillsCopy": "Le connecteur donne accès aux documents ; il n’installe pas les skills du cabinet. Pour utiliser votre skill, installez-la et invoquez-la directement dans l’application compatible, avec le nom ou la commande prévu. Vous pouvez l’utiliser sans invoquer Vera et sans la copier dans le plugin Vera.",
+    "missingTitle": "Ajouter un connecteur / un serveur est absent",
+    "missing": "Vérifiez l’application et le compte. Demandez à l’administrateur si votre rôle peut ajouter des connexions personnalisées.",
+    "deniedTitle": "Accès refusé ou connexion demandée",
+    "denied": "Rouvrez Connect / Authenticate et vérifiez le compte. Le gestionnaire doit confirmer votre accès à l’archive visée.",
+    "emptyTitle": "La recherche ne trouve pas le document",
+    "empty": "Vérifiez le titre, la branche ou le dossier et la disponibilité du document dans la recherche Second Brain. N’étendez pas la recherche à d’autres clients.",
+    "readTitle": "Le serveur est listé mais Vera ne lit pas",
+    "read": "Activez le connecteur dans la conversation et ses outils de lecture, puis démarrez une nouvelle tâche. Vérifiez un appel réel : la liste des serveurs ne suffit pas.",
+    "authTitle": "URL incorrecte ou erreur d’authentification",
+    "auth": "Demandez au gestionnaire de vérifier l’URL MCP, la compatibilité et l’authentification. Communiquez l’application, le système et le texte de l’erreur, sans documents, mots de passe ni tokens.",
+    "status": "Ce guide décrit la configuration ; il n’atteste pas une connexion fonctionnelle à votre Second Brain. Vérifiez le test de lecture dans votre compte.",
+    "sources": "Documentation des fournisseurs",
+    "docsDate": "Étapes vérifiées dans la documentation officielle le 2 octobre 2026. Les noms peuvent changer selon la langue et la version.",
+    "dataCopy": "Cette page n’enregistre pas l’URL de votre connecteur, ne lance pas de connexion et ne lit pas Second Brain. Lors d’une consultation par Vera, la requête, les métadonnées et extraits de recherche, ainsi que le texte des sources ouvertes peuvent entrer dans le contexte du modèle de l’application choisie. Utilisez un document sans données clients pour le test. La consultation n’est pas uniquement locale : accès, conservation et traitement dépendent de l’application et du service Second Brain. Connecter l’archive n’envoie pas automatiquement tout son contenu à Vera ; les éléments consultés dépendent des outils et des demandes.",
+    "dataPage": "Traitement des données Mparanza",
+    "mcpMeaning": "Le connecteur MCP est la connexion qui permet à l’application de rechercher et de lire les documents de votre Second Brain.",
+    "privacy.title": "OpenAI Privacy Filter",
+    "privacy.status": "Connecteur facultatif prévu pour Codex desktop ; pas encore disponible.",
+    "privacy.copy": "Privacy Filter est un modèle open source d’OpenAI qui repère dans le texte des données personnelles, comme les noms, adresses, emails et numéros de téléphone, et remplace les valeurs détectées par des libellés génériques. Le traitement s’exécute sur l’ordinateur où il est installé.",
+    "privacy.workflow": "Le connecteur s’installera séparément de Vera et s’utilisera à la demande. La première version prévue lira les fichiers TXT, Markdown, DOCX et les PDF contenant du texte extractible et enregistrera des copies de texte filtré au format .txt. Les documents numérisés nécessiteront d’abord une reconnaissance optique de caractères (OCR).",
+    "privacy.data": "Le fonctionnement prévu traitera les originaux localement et ne mettra à disposition de Codex que le texte filtré et un résumé du traitement. Le téléchargement initial du modèle nécessitera Internet ; le filtrage s’exécutera en local.",
+    "privacy.source": "Code et documentation d’OpenAI Privacy Filter ↗"
+  },
+  "de": {
+    "title": "Vera-Integrationen",
+    "lead": "Verbinden Sie Second Brain, nutzen Sie die Skills Ihrer Kanzlei und informieren Sie sich über den geplanten lokalen Privacy-Filter-Konnektor für Codex desktop.",
+    "scope": "Für die Second-Brain-Anleitung benötigen Sie ein vorhandenes Second Brain mit kompatiblem MCP-Konnektor. Vera stellt diesen Dienst nicht bereit und benötigt kein Microsoft 365. Ohne externes Archiv können Sie Vera ohne diese Einrichtung nutzen.",
+    "back": "← Zurück zu Integrationen",
+    "nav": "Schritte der Anleitung",
+    "prepare": "Vorbereitung",
+    "claude": "Claude und Cowork",
+    "codex": "Codex und die ChatGPT-Desktop-App",
+    "verify": "Verbindung prüfen",
+    "skills": "Skills der Kanzlei",
+    "help": "Wenn die Verbindung nicht funktioniert",
+    "data": "Welche Daten das Modell erreichen",
+    "before1": "Besorgen Sie die MCP-Server-URL aus der Anleitung Ihres Second Brain oder von dessen Administrator. Diese Adresse kann von der Website oder Anmeldeseite abweichen. Vera stellt keine allgemeingültige URL bereit.",
+    "before2": "Fragen Sie den Administrator nach dem Anmeldeverfahren und der App-Kompatibilität. Diese Codex-Schritte benötigen einen Streamable-HTTP-Server. Eine in Claude funktionierende Verbindung muss in Codex separat geprüft werden.",
+    "before3": "Nutzen Sie Ihr Kanzleikonto und bestimmen Sie Archiv, Ordner oder Bereich für die Abfrage. Sie benötigen Such- und Lesewerkzeuge. Deaktivieren Sie Schreib- und Löschwerkzeuge, soweit die App dies erlaubt.",
+    "before4": "Prüfen Sie, dass Vera in der gewählten App installiert und aktiviert ist. Vera installieren und Second Brain verbinden sind getrennte Schritte.",
+    "already": "Second Brain ist bereits in derselben App verbunden? Gehen Sie direkt zum Lesetest weiter.",
+    "claude1": "Öffnen Sie Anpassen (Customize) → Konnektoren (Connectors). Wählen Sie + Hinzufügen (Add) → Benutzerdefinierten Konnektor hinzufügen (Add custom connector).",
+    "claude2": "Geben Sie einen Namen wie Second Brain und die MCP-URL des Administrators ein. Wählen Sie Weiter (Continue).",
+    "claude3": "Prüfen Sie das erkannte Anmeldeverfahren und folgen Sie der Anleitung des Administrators. Schließen Sie Add und Connect oder Sign in now ab und melden Sie sich mit Ihrem Konto an. Zugangsdaten gehören in die Anmeldemaske des Dienstes, nicht in den Chat.",
+    "claude4": "Prüfen Sie die Werkzeugberechtigungen des Konnektors. Aktivieren Sie Suche und Lesen, etwa Search memory und Read memory, falls vorhanden. Die Namen hängen vom Dienst ab.",
+    "claude5": "Starten Sie eine Cowork-Aufgabe mit aktiviertem Vera. Aktivieren Sie Second Brain im + Menü der Unterhaltung → Connectors. Führen Sie dann den Lesetest durch.",
+    "team": "Bei Team oder Enterprise muss ein Eigentümer oder eine berechtigte Rolle den Konnektor zuerst unter Organization settings → Connectors hinzufügen. Danach verbindet jeder Nutzer sein Konto. Fragen Sie bei fehlender Option den Administrator. Remote-Konnektoren müssen aus der Anthropic-Infrastruktur erreichbar sein.",
+    "claudeDocs": "Offizielle Claude-Anleitung für benutzerdefinierte Konnektoren",
+    "codex1": "Öffnen Sie in der Desktop-App Einstellungen (Settings) → MCP-Server (MCP servers) → Server hinzufügen (Add server).",
+    "codex2": "Vergeben Sie einen Namen wie Second Brain, wählen Sie Streamable HTTP und tragen Sie die MCP-URL des Administrators ein.",
+    "codex3": "Speichern Sie, wählen Sie Restart und gegebenenfalls Authenticate für die Anmeldung. Nutzen Sie das vorgegebene Verfahren. Bei erforderlichem Schlüssel oder anderer Konfiguration hilft der Administrator; fügen Sie keine Zugangsdaten in den Chat ein.",
+    "codex4": "Starten Sie eine neue Aufgabe mit Vera. Geben Sie /mcp im Nachrichtenfeld ein, um verbundene Server zu sehen. Prüfen Sie Second Brain und führen Sie den Lesetest durch.",
+    "cloud": "Diese Schritte richten die Desktop-App ein. Prüfen Sie den Zugriff in Web-Chat oder Work Cloud separat in der verwendeten Sitzung. Eine Verbindung in einer App garantiert keinen Zugriff in einer anderen.",
+    "codexDocs": "Offizielle OpenAI-Anleitung für MCP-Server",
+    "test1": "Erstellen Sie in Second Brain manuell ein Dokument ohne Mandantendaten mit dem Titel „Vera-Verbindungstest“. Schreiben Sie einen erfundenen Satz hinein, den Sie wiedererkennen. Nennen Sie diesen Satz nicht in Ihrer Nachricht an Vera.",
+    "test2": "Senden Sie in der neuen Aufgabe mit Vera diese Nachricht:",
+    "prompt": "Suche das Dokument „Vera-Verbindungstest“ in meinem Second Brain, öffne es und gib seinen Text mit Titel und Kennung oder Link zurück. Erstelle und ändere nichts. Wenn kein Zugriff möglich ist, nenne den fehlenden Schritt.",
+    "test3": "Prüfen Sie, dass die Unterhaltung eine Suche und einen Leseaufruf über den Konnektor zeigt. Vergleichen Sie den Text mit Ihrem Satz und öffnen Sie die Quellenreferenz, falls verfügbar. „Ich bin verbunden“ beweist keinen Lesezugriff.",
+    "test4": "Nennen Sie Vera nach dem Test die Aufgabe und den Bereich oder Ordner. Falls die Suche fehlschlägt, klären Sie den Zugriff vor Schlussfolgerungen auf Basis dieses Archivs.",
+    "exampleTitle": "Beispiel für eine echte Aufgabe",
+    "example": "Prüfe diesen Bescheid mit Vera. Lies zuerst das freigegebene Kanzleiverfahren im Bereich „Streitverfahren“ von Second Brain. Zitiere tatsächlich geöffnete Quellen und benenne widersprüchliche Versionen oder fehlende Informationen.",
+    "skillsCopy": "Der Konnektor erschließt Dokumente und installiert keine Kanzlei-Skills. Installieren und starten Sie Ihren eigenen Skill direkt in einer unterstützten App mit deren vorgesehenem Namen oder Befehl. Sie können ihn ohne Vera verwenden und müssen ihn nicht in das Vera-Plugin kopieren.",
+    "missingTitle": "Konnektor / Server hinzufügen fehlt",
+    "missing": "Prüfen Sie App und Konto. Fragen Sie den Administrator, ob Ihre Rolle eigene Verbindungen hinzufügen darf.",
+    "deniedTitle": "Zugriff verweigert oder Anmeldung verlangt",
+    "denied": "Öffnen Sie Connect / Authenticate erneut und prüfen Sie das Konto. Der Administrator muss Ihren Zugriff auf das gewünschte Archiv bestätigen.",
+    "emptyTitle": "Die Suche findet das Dokument nicht",
+    "empty": "Prüfen Sie Titel, Bereich oder Ordner sowie die Suchbarkeit in Second Brain. Erweitern Sie die Suche nicht auf andere Mandanten.",
+    "readTitle": "Der Server ist aufgeführt, aber Vera liest nicht",
+    "read": "Aktivieren Sie Konnektor und Lesewerkzeuge in der Unterhaltung und starten Sie eine neue Aufgabe. Prüfen Sie einen echten Werkzeugaufruf; die Serverliste reicht nicht.",
+    "authTitle": "Ungültige URL oder Anmeldefehler",
+    "auth": "Bitten Sie den Administrator, MCP-URL, App-Kompatibilität und Anmeldung zu prüfen. Teilen Sie App, Betriebssystem und Fehlertext mit, ohne Dokumente, Passwörter oder Tokens.",
+    "status": "Diese Anleitung beschreibt die Einrichtung und bestätigt keine funktionierende Verbindung zu Ihrem Second Brain. Prüfen Sie den Lesetest in Ihrem Konto.",
+    "sources": "Dokumentation der Anbieter",
+    "docsDate": "Schritte am 2. Oktober 2026 anhand offizieller Dokumentation geprüft. Bezeichnungen können je nach Sprache und App-Version abweichen.",
+    "dataCopy": "Diese Seite speichert Ihre Konnektor-URL nicht, startet keine Anmeldung und liest Second Brain nicht. Bei einer Abfrage durch Vera können Suchanfrage, Quellenmetadaten und Suchauszüge sowie der Text geöffneter Quellen in den Modellkontext der gewählten App gelangen. Nutzen Sie für den Test ein Dokument ohne Mandantendaten. Die Abfrage ist nicht ausschließlich lokal: Zugriff, Aufbewahrung und Verarbeitung hängen von App und Second-Brain-Dienst ab. Das Verbinden des Archivs übermittelt nicht automatisch dessen gesamten Inhalt an Vera; tatsächlich gelesene Inhalte hängen von Werkzeugen und Anfragen ab.",
+    "dataPage": "Datenverarbeitung bei Mparanza",
+    "mcpMeaning": "Der MCP-Konnektor ist die Verbindung, über die Ihre App Dokumente in Ihrem Second Brain suchen und lesen kann.",
+    "privacy.title": "OpenAI Privacy Filter",
+    "privacy.status": "Optionaler Konnektor für Codex desktop geplant; noch nicht verfügbar.",
+    "privacy.copy": "Privacy Filter ist ein Open-Source-Modell von OpenAI. Es erkennt personenbezogene Angaben im Text, etwa Namen, Adressen, E-Mail-Adressen und Telefonnummern, und ersetzt erkannte Werte durch Platzhalter. Die Verarbeitung erfolgt auf dem Computer, auf dem das Modell installiert ist.",
+    "privacy.workflow": "Der Konnektor wird unabhängig von Vera installiert und bei Bedarf verwendet. Die geplante erste Version liest TXT-, Markdown- und DOCX-Dateien sowie PDFs mit extrahierbarem Text und speichert gefilterte Textkopien im Format .txt. Scans benötigen zuvor eine Texterkennung (OCR).",
+    "privacy.data": "Der geplante Ablauf verarbeitet Originale lokal und stellt Codex nur den gefilterten Text und eine Zusammenfassung der Verarbeitung bereit. Der erste Modelldownload benötigt Internetzugang; die Filterung erfolgt lokal.",
+    "privacy.source": "Code und Dokumentation von OpenAI Privacy Filter ↗"
+  },
+  "es": {
+    "title": "Integraciones de Vera",
+    "lead": "Conecta Second Brain, utiliza las skills del despacho y consulta el proyecto del conector local Privacy Filter para Codex desktop.",
+    "scope": "Para seguir la guía de Second Brain necesitas un Second Brain existente con un conector MCP compatible. Vera no proporciona este servicio ni requiere Microsoft 365. Sin archivo externo puedes usar Vera sin esta configuración.",
+    "back": "← Volver a Integraciones",
+    "nav": "Pasos de la guía",
+    "prepare": "Antes de empezar",
+    "claude": "Claude y Cowork",
+    "codex": "Codex y la aplicación de escritorio ChatGPT",
+    "verify": "Verificar la conexión",
+    "skills": "Las skills del despacho",
+    "help": "Si la conexión falla",
+    "data": "Qué datos llegan al modelo",
+    "before1": "Obtén la URL del servidor MCP de las instrucciones de tu Second Brain o de su administrador. Esta dirección puede ser distinta de la web o de la página de acceso. Vera no proporciona una URL universal.",
+    "before2": "Pregunta al administrador qué método de acceso usar y si el conector admite tu aplicación. Estos pasos de Codex requieren un servidor Streamable HTTP; una conexión que funciona en Claude debe verificarse por separado en Codex.",
+    "before3": "Usa tu cuenta del despacho e identifica el archivo, carpeta o rama que consultar. Necesitas herramientas de búsqueda y lectura; desactiva las de escritura o eliminación donde la aplicación lo permita.",
+    "before4": "Comprueba que Vera esté instalada y activa en la aplicación elegida. Instalar Vera y conectar Second Brain son operaciones distintas.",
+    "already": "¿Second Brain ya está conectado en la misma aplicación? Pasa directamente a la prueba de lectura.",
+    "claude1": "Abre Personalizar (Customize) → Conectores (Connectors). Elige + Añadir (Add) → Añadir conector personalizado (Add custom connector).",
+    "claude2": "Introduce un nombre, por ejemplo Second Brain, y la URL MCP del administrador. Pulsa Continuar (Continue).",
+    "claude3": "Revisa el método de autenticación detectado y sigue las instrucciones del administrador. Completa Add y Connect o Sign in now cuando se solicite, con tu cuenta. Introduce credenciales en la pantalla del servicio, no en el chat.",
+    "claude4": "Revisa los permisos de herramientas en la ficha del conector. Activa búsqueda y lectura, por ejemplo Search memory y Read memory si aparecen. Los nombres dependen del servicio.",
+    "claude5": "Inicia una tarea Cowork con Vera activa. En el menú + de la conversación → Connectors, activa Second Brain y ejecuta la prueba de lectura.",
+    "team": "En Team o Enterprise, un propietario o rol autorizado debe añadir primero el conector en Organization settings → Connectors. Cada usuario conecta después su cuenta. Si falta la opción, pregunta al administrador. Los conectores remotos deben ser accesibles desde la infraestructura de Anthropic.",
+    "claudeDocs": "Instrucciones oficiales de Claude para conectores personalizados",
+    "codex1": "En la aplicación de escritorio abre Ajustes (Settings) → Servidores MCP (MCP servers) → Añadir servidor (Add server).",
+    "codex2": "Asigna un nombre, por ejemplo Second Brain, elige Streamable HTTP e introduce la URL MCP del administrador.",
+    "codex3": "Guarda, selecciona Restart y Authenticate si aparece para acceder al servicio. Usa el método indicado por el administrador. Si se necesita una clave u otra configuración, pide su ayuda sin pegar credenciales en el chat.",
+    "codex4": "Inicia una nueva tarea con Vera. Escribe /mcp en el campo del mensaje para ver los servidores conectados, comprueba Second Brain y ejecuta la prueba de lectura.",
+    "cloud": "Estos pasos configuran la aplicación de escritorio. Verifica por separado el acceso en la sesión web o Work Cloud donde trabajas: conectar un servicio en una aplicación no garantiza el acceso en otra.",
+    "codexDocs": "Instrucciones oficiales de OpenAI para servidores MCP",
+    "test1": "Crea manualmente en Second Brain un documento sin datos de clientes titulado «Prueba de conexión Vera». Añade una frase inventada que puedas reconocer. No incluyas esa frase en el mensaje enviado a Vera.",
+    "test2": "En la nueva tarea con Vera, envía este mensaje:",
+    "prompt": "Busca el documento «Prueba de conexión Vera» en mi Second Brain, ábrelo y devuelve su texto con título e identificador o enlace. No crees ni modifiques nada. Si no puedes acceder, indica qué paso falta.",
+    "test3": "Comprueba que la conversación muestre una búsqueda y una lectura mediante el conector. Compara el texto con tu frase y abre la referencia si está disponible. Una respuesta «estoy conectado» no demuestra la lectura.",
+    "test4": "Después de la prueba, indica a Vera el trabajo y la rama o carpeta que consultar. Si la búsqueda falla, resuelve el acceso antes de pedir conclusiones basadas en ese archivo.",
+    "exampleTitle": "Ejemplo para un trabajo real",
+    "example": "Usa Vera para examinar esta notificación. Consulta primero el procedimiento aprobado del despacho en la rama «contencioso» de Second Brain. Cita las fuentes realmente abiertas y señala versiones contradictorias o información que falta.",
+    "skillsCopy": "El conector da acceso a documentos; no instala las skills del despacho. Para usar tu skill, instálala e invócala directamente en la aplicación compatible, con el nombre o comando previsto. Puedes usarla sin invocar Vera y sin copiarla al plugin Vera.",
+    "missingTitle": "No aparece Añadir conector / servidor",
+    "missing": "Comprueba la aplicación y la cuenta. Pregunta al administrador si tu rol puede añadir conexiones personalizadas.",
+    "deniedTitle": "Acceso denegado o solicitud de inicio de sesión",
+    "denied": "Abre Connect / Authenticate de nuevo y comprueba la cuenta. El administrador debe confirmar tu acceso al archivo previsto.",
+    "emptyTitle": "La búsqueda no encuentra el documento",
+    "empty": "Comprueba título, rama o carpeta y que el documento se pueda buscar en Second Brain. No amplíes la búsqueda a otros clientes.",
+    "readTitle": "El servidor aparece pero Vera no lee",
+    "read": "Activa el conector en la conversación y sus herramientas de lectura; inicia una nueva tarea. Verifica una llamada real: la lista de servidores no basta.",
+    "authTitle": "URL no válida o error de autenticación",
+    "auth": "Pide al administrador que revise URL MCP, compatibilidad y autenticación. Comparte aplicación, sistema operativo y texto del error, sin documentos, contraseñas ni tokens.",
+    "status": "Esta guía describe la configuración; no acredita una conexión funcional con tu Second Brain. Verifica la prueba de lectura en tu cuenta.",
+    "sources": "Documentación de los proveedores",
+    "docsDate": "Pasos revisados en la documentación oficial el 2 de octubre de 2026. Los nombres pueden cambiar según el idioma y la versión.",
+    "dataCopy": "Esta página no registra la URL del conector, no inicia sesión ni lee Second Brain. Cuando pides una consulta a Vera, la búsqueda, los metadatos y extractos devueltos, y el texto de las fuentes abiertas pueden entrar en el contexto del modelo de la aplicación elegida. Usa un documento sin datos de clientes para la prueba. La consulta no es solo local: acceso, conservación y tratamiento dependen de la aplicación y del servicio Second Brain. Conectar el archivo no envía automáticamente todo su contenido a Vera; el material consultado depende de las herramientas y las solicitudes.",
+    "dataPage": "Tratamiento de datos de Mparanza",
+    "mcpMeaning": "El conector MCP es la conexión que permite a la aplicación buscar y leer documentos de tu Second Brain.",
+    "privacy.title": "OpenAI Privacy Filter",
+    "privacy.status": "Conector opcional previsto para Codex desktop; todavía no disponible.",
+    "privacy.copy": "Privacy Filter es un modelo de código abierto de OpenAI que identifica datos personales en el texto, como nombres, direcciones, correos electrónicos y números de teléfono, y sustituye los valores detectados por marcadores. El procesamiento se realiza en el ordenador donde está instalado.",
+    "privacy.workflow": "El conector se instalará por separado de Vera y se utilizará cuando lo solicites. La primera versión prevista leerá archivos TXT, Markdown, DOCX y PDF con texto extraíble y guardará copias de texto filtrado en formato .txt. Los documentos escaneados necesitarán primero reconocimiento óptico de caracteres (OCR).",
+    "privacy.data": "El funcionamiento previsto procesará los originales localmente y pondrá a disposición de Codex únicamente el texto filtrado y un resumen del procesamiento. La descarga inicial del modelo requerirá Internet; el filtrado se realizará en local.",
+    "privacy.source": "Código y documentación de OpenAI Privacy Filter ↗"
+  }
+};
+    const requested = new URLSearchParams(location.search).get('lang');
+    const lang = Object.hasOwn(copy, requested) ? requested : 'it';
+    const text = copy[lang];
+    document.documentElement.lang = lang;
+    document.title = text.title + ' · Vera';
+    document.querySelector('meta[name="description"]').content = text.lead;
+    document.querySelector('link[rel="canonical"]').href = "https://mparanza.com/static/shared/vera-integrazioni/index.html" + '?lang=' + lang;
+    document.querySelectorAll('[data-i18n]').forEach(node => { node.textContent = text[node.dataset.i18n]; });
+    const languageLabels = {it:'Lingua', en:'Language', fr:'Langue', de:'Sprache', es:'Idioma'};
+    document.querySelector('.languages').setAttribute('aria-label', languageLabels[lang]);
+    document.querySelector('[data-nav]').setAttribute('aria-label', text.nav);
+    document.querySelectorAll('[data-lang]').forEach(link => {
+      if (link.dataset.lang === lang) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
+    document.querySelectorAll('[data-vera-link]').forEach(link => {
+      const target = new URL(link.getAttribute('href'), location.href);
+      target.searchParams.set('lang', lang);
+      link.href = target.href;
+    });
+    document.querySelector('[data-data-link]').href = 'https://mparanza.com/data-handling?lang=' + lang;
+  </script>
+ </body>
+</html>
