@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 from .contracts import LABELS, MODEL_REVISION, FilterError
 
-__all__ = ["Engine", "engine_for", "GLINER2"]
+__all__ = ["Engine", "engine_for", "GLINER2", "RIZZO"]
 
 
 @dataclass(frozen=True)
@@ -96,10 +96,51 @@ GLINER2 = Engine(
 )
 
 
+RIZZO = Engine(
+    "rizzo",
+    "Rizzo PII",
+    "rizzo_pii",
+    "managed-by-local-rizzo-app",
+    frozenset(
+        (
+            "FULLNAME",
+            "AGE",
+            "GENDER",
+            "DATE",
+            "TIME",
+            "STREET",
+            "BUILDINGNUM",
+            "ZIPCODE",
+            "CITY",
+            "PROVINCE",
+            "EMAIL",
+            "TELEPHONENUM",
+            "CF",
+            "PIVA",
+            "ID_DOC",
+            "IBAN",
+            "CREDITCARDNUMBER",
+            "AMOUNT",
+            "TARGA",
+            "ORG",
+            "DOCID",
+            "CATASTO",
+            "URL",
+            "IPADDR",
+        )
+    ),
+    "mparanza_privacy_filter.rizzo_worker",
+    (),
+    (),
+)
+
+
 def engine_for(name: str) -> Engine:
     """Resolve only explicitly supported engines."""
     if name == "openai":
         return OPENAI
     if name == "gliner2":
         return GLINER2
+    if name == "rizzo":
+        return RIZZO
     raise FilterError("unsupported_engine")

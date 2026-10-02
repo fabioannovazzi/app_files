@@ -15,6 +15,8 @@ from typing import Any, Callable
 from . import __version__
 from .contracts import FORMATS, LABELS, FilteredDocument, FilterError
 from .engines import Engine, engine_for
+from .rizzo_api import health as rizzo_health
+from .rizzo_api import validate_port
 
 __all__ = ["Settings", "FilterService", "run_worker"]
 
@@ -32,6 +34,9 @@ _WORKER_ERRORS = frozenset(
         "invalid_model_spans",
         "outside_input_directory",
         "processing_failed",
+        "rizzo_unavailable",
+        "invalid_rizzo_response",
+        "invalid_rizzo_port",
     )
 )
 
@@ -45,6 +50,7 @@ class Settings:
     model_root: Path
     device: str = "cpu"
     engine: str = "openai"
+    rizzo_port: int = 5005
 
     @property
     def spec(self) -> Engine:
@@ -60,6 +66,11 @@ class Settings:
 
     def ready(self) -> bool:
         """Require the explicit preparation receipt, weights and tokenizer cache."""
+        if self.engine == "rizzo":
+            try:
+                return bool(rizzo_health(self.rizzo_port)["model_ready"])
+            except FilterError:
+                return False
         try:
             receipt = json.loads((self.model_root / "ready.json").read_text())
             if receipt["model_revision"] != self.spec.revision:
@@ -107,6 +118,7 @@ def run_worker(path: Path, settings: Settings) -> FilteredDocument:
         "checkpoint": str(settings.checkpoint),
         "tokenizer_cache": str(settings.tokenizer_cache),
         "device": settings.device,
+        "rizzo_port": settings.rizzo_port,
     }
     try:
         result = subprocess.run(  # nosec B603
@@ -146,6 +158,7 @@ class FilterService:
         backend: Callable[[Path, Settings], FilteredDocument] = run_worker,
     ) -> None:
         engine_for(settings.engine)
+        validate_port(settings.rizzo_port)
         self.settings = replace(
             settings,
             input_root=settings.input_root.expanduser().resolve(strict=True),
@@ -162,9 +175,11 @@ class FilterService:
 
     def status(self) -> dict[str, Any]:
         """Report readiness without scanning documents or downloading anything."""
-        return {
+        result = {
             "version": __version__,
-            "model_ready": self.settings.ready(),
+            "model_ready": (
+                False if self.settings.engine == "rizzo" else self.settings.ready()
+            ),
             "engine": self.settings.engine,
             "model_revision": self.settings.spec.revision,
             "device": self.settings.device,
@@ -173,11 +188,22 @@ class FilterService:
             "max_file_bytes": 25 * 1024 * 1024,
             "max_text_characters": 500_000,
         }
+        if self.settings.engine == "rizzo":
+            result["device"] = "managed-by-local-rizzo-app"
+            try:
+                result.update(rizzo_health(self.settings.rizzo_port))
+            except FilterError as exc:
+                result.update(model_ready=False, error=str(exc))
+        return result
 
     def filter_file(self, path: str) -> dict[str, Any]:
         """Filter one explicit path inside the configured input directory."""
         if not self.settings.ready():
-            raise FilterError("model_not_prepared")
+            raise FilterError(
+                "rizzo_unavailable"
+                if self.settings.engine == "rizzo"
+                else "model_not_prepared"
+            )
         candidate = Path(path)
         if not candidate.is_absolute():
             candidate = self.settings.input_root / candidate

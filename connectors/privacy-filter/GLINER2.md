@@ -2,8 +2,9 @@
 
 An optional local MCP connector for Fastino's
 [GLiNER2-PII model](https://huggingface.co/fastino/gliner2-privacy-filter-PII-multi).
-Users choose this connector or [OpenAI Privacy Filter](README.md), and may install
-both separately. Neither is part of Vera's runtime. No API key is used.
+Users choose this connector, [OpenAI Privacy Filter](README.md) or
+[Rizzo PII](RIZZO.md), and may install more than one separately. None is part of
+Vera's runtime. No API key is used.
 
 ## Install
 
@@ -89,7 +90,7 @@ The model can miss information or remove useful text. Its model card describes
 synthetic training data covering seven languages, including Italian. This is
 not a promise that all Italian tax, company or other identifiers will be found.
 Review the copy for the intended use. The choice of engine belongs to the user;
-this integration does not rank the two models.
+this integration does not rank the models.
 
 ## Versions and removal
 
