@@ -96,6 +96,8 @@ def main(argv: list[str] | None = None) -> int:
         for name in products
     )
     commands.append(["scripts/build_claude_plugin_zip.py", *products, *suffix])
+    if "vera" in products:
+        commands.append(["scripts/build_antigravity_plugin.py", *suffix])
     try:
         for command in commands:
             subprocess.run([sys.executable, *command], cwd=ROOT, check=True)

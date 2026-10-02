@@ -124,7 +124,7 @@ function checkServer(root, name, config) {
 
 async function main() {
   const root = path.resolve(process.argv[2]);
-  const config = JSON.parse(fs.readFileSync(path.join(root, ".mcp.json"), "utf8"));
+  const config = JSON.parse(fs.readFileSync(path.join(root, process.argv[3] || ".mcp.json"), "utf8"));
   const servers = config.mcpServers;
   if (!servers || !Object.keys(servers).length) {
     throw new Error("Empty MCP server configuration");
