@@ -1696,7 +1696,9 @@ def verify_zip_entries(zip_path: Path, entries: dict[str, bytes]) -> None:
                 raise ValueError(f"Temporary ZIP verification failed: {name}")
 
 
-def verify_packaged_mcp(zip_path: Path, plugin_roots: list[str]) -> list[str]:
+def verify_packaged_mcp(
+    zip_path: Path, plugin_roots: list[str], config_name: str = ".mcp.json"
+) -> list[str]:
     """Require real initialize/tools-list replies from each packaged launcher.
 
     This is a mechanical release gate, not a professional-workflow verdict.
@@ -1719,7 +1721,7 @@ def verify_packaged_mcp(zip_path: Path, plugin_roots: list[str]) -> list[str]:
             archive.extractall(staging)
         for relative_root in plugin_roots:
             root = staging / relative_root
-            config_path = root / ".mcp.json"
+            config_path = root / config_name
             if not config_path.is_file():
                 errors.append(f"{relative_root}: packaged MCP configuration is missing")
                 continue
@@ -1727,7 +1729,12 @@ def verify_packaged_mcp(zip_path: Path, plugin_roots: list[str]) -> list[str]:
             count = len(configuration["mcpServers"])
             try:
                 result = subprocess.run(
-                    [node, str(ROOT / "scripts" / "check_packaged_mcp.cjs"), str(root)],
+                    [
+                        node,
+                        str(ROOT / "scripts" / "check_packaged_mcp.cjs"),
+                        str(root),
+                        config_name,
+                    ],
                     cwd=staging,
                     capture_output=True,
                     text=True,
