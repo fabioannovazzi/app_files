@@ -23,6 +23,8 @@ jobs:
         with:
           node-version: '22'
       - run: python -m pip install pytest pytest-cov
+      - name: Verify website ZIP version labels
+        run: node --test tests/test_plugin_download_versions.mjs
       - name: Verify stale-package rejection
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_product_release_alignment.py --cov --cov-config=tests/product_release.coveragerc
       - name: Verify stale and duplicate installed-plugin rejection
