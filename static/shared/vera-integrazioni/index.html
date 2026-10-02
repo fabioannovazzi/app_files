@@ -79,7 +79,7 @@
     Integrazioni di Vera
    </h1>
    <p class="lead" data-i18n="lead">
-    Collega Second Brain, usa le skill dello studio e installa il connettore locale opzionale Privacy Filter per Codex desktop.
+    Collega Second Brain, usa le skill dello studio o scegli un connettore locale opzionale tra OpenAI Privacy Filter e GLiNER2-PII per Codex desktop.
    </p>
    <p data-i18n="scope">
     Per seguire la guida Second Brain serve un Second Brain già esistente con un connettore MCP compatibile. Vera non fornisce questo servizio e non richiede Microsoft 365. Se non hai un archivio esterno, puoi usare Vera senza questa configurazione.
@@ -104,6 +104,7 @@
      Se il collegamento non funziona
     </a>
     <a data-i18n="privacy.title" href="#privacy-filter">OpenAI Privacy Filter</a>
+    <a data-i18n="gliner.title" href="#gliner2-pii">GLiNER2-PII</a>
    </nav>
    <section aria-labelledby="prepare-title" id="prepare">
     <h2 data-i18n="prepare" id="prepare-title">
@@ -269,6 +270,7 @@
      Passaggi verificati sulla documentazione ufficiale il 2 ottobre 2026. I nomi dei comandi possono cambiare con lingua e versione dell’app.
     </p>
    </section>
+   <p class="note" data-i18n="gliner.choice">Scegli tu se usare OpenAI Privacy Filter o GLiNER2-PII. Sono integrazioni opzionali, indipendenti da Vera; puoi installarne una o entrambe. Questa pagina non indica quale scegliere.</p>
    <section aria-labelledby="privacy-filter-title" id="privacy-filter">
     <h2 data-i18n="privacy.title" id="privacy-filter-title">OpenAI Privacy Filter</h2>
     <p data-i18n="privacy.status">Connettore locale opzionale per Codex desktop, da installare separatamente.</p>
@@ -276,6 +278,15 @@
     <p data-i18n="privacy.workflow">Il connettore si installa separatamente da Vera e si usa su richiesta. Legge file TXT, Markdown, DOCX e PDF con testo estraibile e salva copie di testo filtrate in formato .txt. Le scansioni richiedono prima l’OCR.</p>
     <p><a data-i18n="privacy.setup" href="https://github.com/fabioannovazzi/app_files/tree/main/connectors/privacy-filter" rel="noopener noreferrer" target="_blank">Installare e usare il connettore Privacy Filter ↗</a></p>
     <a data-i18n="privacy.source" href="https://github.com/openai/privacy-filter" rel="noopener noreferrer" target="_blank">Codice e documentazione di OpenAI Privacy Filter ↗</a>
+   </section>
+   <section aria-labelledby="gliner2-pii-title" id="gliner2-pii">
+    <h2 data-i18n="gliner.title" id="gliner2-pii-title">GLiNER2-PII</h2>
+    <p data-i18n="gliner.status">Connettore locale opzionale per Codex desktop, da installare separatamente.</p>
+    <p data-i18n="gliner.copy">GLiNER2-PII è un modello open source di Fastino per individuare dati personali nel testo. Il connettore richiede le 42 categorie supportate dal modello, tra cui nomi, email, indirizzi, identificativi fiscali e IBAN, e sostituisce le rilevazioni con segnaposto. Il modello dichiara dati di addestramento in sette lingue, incluso l’italiano.</p>
+    <p data-i18n="gliner.workflow">Il connettore legge file TXT, Markdown, DOCX e PDF con testo estraibile dal percorso locale indicato e salva una copia .txt filtrata. Gli originali restano invariati. Le scansioni richiedono prima l’OCR. Installa Python 3.12 o successivo; il modello viene scaricato durante la configurazione.</p>
+    <p data-i18n="gliner.limit">Le rilevazioni possono omettere dati o rimuovere testo utile. Controlla la copia locale prima di usarla; non è garantita la rimozione di tutti gli identificativi personali o aziendali.</p>
+    <p><a data-i18n="gliner.setup" href="https://github.com/fabioannovazzi/app_files/blob/main/connectors/privacy-filter/GLINER2.md" rel="noopener noreferrer" target="_blank">Installare e usare il connettore GLiNER2-PII ↗</a></p>
+    <a data-i18n="gliner.source" href="https://huggingface.co/fastino/gliner2-privacy-filter-PII-multi" rel="noopener noreferrer" target="_blank">Modello e documentazione di GLiNER2-PII ↗</a>
    </section>
    <section aria-labelledby="model-data-title" id="model-data">
     <h2 data-i18n="data" id="model-data-title">
@@ -287,6 +298,8 @@
     </p>
     <h3 data-i18n="privacy.title">OpenAI Privacy Filter</h3>
     <p data-i18n="privacy.data">Il connettore elabora gli originali localmente. A Codex arrivano i percorsi indicati nella richiesta, il percorso della copia filtrata e un riepilogo con i conteggi. Il testo filtrato entra nella conversazione quando ne chiedi la lettura. L’installazione scarica il modello e il tokenizer; il filtraggio avviene in locale, senza chiamate API.</p>
+    <h3 data-i18n="gliner.title">GLiNER2-PII</h3>
+    <p data-i18n="gliner.data">Il testo estratto dal documento arriva al modello GLiNER2 sul tuo computer. Il processo locale applica i segnaposto senza restituire i valori rilevati. A Codex arrivano i percorsi della richiesta e del risultato, i conteggi e i metadati del modello; il testo filtrato entra nella conversazione quando ne chiedi la lettura. Modello e tokenizer vengono scaricati durante l’installazione. Il filtraggio usa i file locali e non chiama API.</p>
     <a data-data-link="" data-i18n="dataPage" href="https://mparanza.com/data-handling?lang=it">
      Gestione dei dati Mparanza
     </a>
@@ -301,7 +314,7 @@
    const copy = {
   "it": {
     "title": "Integrazioni di Vera",
-    "lead": "Collega Second Brain, usa le skill dello studio e installa il connettore locale opzionale Privacy Filter per Codex desktop.",
+    "lead": "Collega Second Brain, usa le skill dello studio o scegli un connettore locale opzionale tra OpenAI Privacy Filter e GLiNER2-PII per Codex desktop.",
     "scope": "Per seguire la guida Second Brain serve un Second Brain già esistente con un connettore MCP compatibile. Vera non fornisce questo servizio e non richiede Microsoft 365. Se non hai un archivio esterno, puoi usare Vera senza questa configurazione.",
     "back": "← Torna a Integrazioni",
     "nav": "Passaggi della guida",
@@ -361,11 +374,20 @@
     "privacy.workflow": "Il connettore si installa separatamente da Vera e si usa su richiesta. Legge file TXT, Markdown, DOCX e PDF con testo estraibile e salva copie di testo filtrate in formato .txt. Le scansioni richiedono prima l’OCR.",
     "privacy.data": "Il connettore elabora gli originali localmente. A Codex arrivano i percorsi indicati nella richiesta, il percorso della copia filtrata e un riepilogo con i conteggi. Il testo filtrato entra nella conversazione quando ne chiedi la lettura. L’installazione scarica il modello e il tokenizer; il filtraggio avviene in locale, senza chiamate API.",
     "privacy.source": "Codice e documentazione di OpenAI Privacy Filter ↗",
-    "privacy.setup": "Installare e usare il connettore Privacy Filter ↗"
+    "privacy.setup": "Installare e usare il connettore Privacy Filter ↗",
+    "gliner.title": "GLiNER2-PII",
+    "gliner.status": "Connettore locale opzionale per Codex desktop, da installare separatamente.",
+    "gliner.copy": "GLiNER2-PII è un modello open source di Fastino per individuare dati personali nel testo. Il connettore richiede le 42 categorie supportate dal modello, tra cui nomi, email, indirizzi, identificativi fiscali e IBAN, e sostituisce le rilevazioni con segnaposto. Il modello dichiara dati di addestramento in sette lingue, incluso l’italiano.",
+    "gliner.choice": "Scegli tu se usare OpenAI Privacy Filter o GLiNER2-PII. Sono integrazioni opzionali, indipendenti da Vera; puoi installarne una o entrambe. Questa pagina non indica quale scegliere.",
+    "gliner.workflow": "Il connettore legge file TXT, Markdown, DOCX e PDF con testo estraibile dal percorso locale indicato e salva una copia .txt filtrata. Gli originali restano invariati. Le scansioni richiedono prima l’OCR. Installa Python 3.12 o successivo; il modello viene scaricato durante la configurazione.",
+    "gliner.limit": "Le rilevazioni possono omettere dati o rimuovere testo utile. Controlla la copia locale prima di usarla; non è garantita la rimozione di tutti gli identificativi personali o aziendali.",
+    "gliner.setup": "Installare e usare il connettore GLiNER2-PII ↗",
+    "gliner.source": "Modello e documentazione di GLiNER2-PII ↗",
+    "gliner.data": "Il testo estratto dal documento arriva al modello GLiNER2 sul tuo computer. Il processo locale applica i segnaposto senza restituire i valori rilevati. A Codex arrivano i percorsi della richiesta e del risultato, i conteggi e i metadati del modello; il testo filtrato entra nella conversazione quando ne chiedi la lettura. Modello e tokenizer vengono scaricati durante l’installazione. Il filtraggio usa i file locali e non chiama API."
   },
   "en": {
     "title": "Vera integrations",
-    "lead": "Connect Second Brain, use your firm’s skills and install the optional local Privacy Filter connector for Codex desktop.",
+    "lead": "Connect Second Brain, use your firm’s skills, or choose an optional local OpenAI Privacy Filter or GLiNER2-PII connector for Codex desktop.",
     "scope": "For the Second Brain setup guide, you need an existing Second Brain with a compatible MCP connector. Vera does not supply this service or require Microsoft 365. You can use Vera without this setup if you have no external repository.",
     "back": "← Back to Integrations",
     "nav": "Guide steps",
@@ -425,11 +447,20 @@
     "privacy.workflow": "Install the connector separately from Vera and use it on request. It reads TXT, Markdown, DOCX and PDFs with extractable text and saves redacted text copies as .txt files. Scans need OCR first.",
     "privacy.data": "The connector processes originals locally. Codex receives the paths supplied in the request, the filtered copy’s path and a summary with counts. Filtered text enters the conversation when you ask to read it. Installation downloads the model and tokenizer; filtering runs locally without API calls.",
     "privacy.source": "OpenAI Privacy Filter code and documentation ↗",
-    "privacy.setup": "Install and use the Privacy Filter connector ↗"
+    "privacy.setup": "Install and use the Privacy Filter connector ↗",
+    "gliner.title": "GLiNER2-PII",
+    "gliner.status": "Optional local connector for Codex desktop, installed separately.",
+    "gliner.copy": "GLiNER2-PII is an open-source Fastino model for detecting personal information in text. The connector requests the model’s 42 supported categories, including names, emails, addresses, tax identifiers and IBANs, and replaces detections with placeholders. The model reports training data in seven languages, including Italian.",
+    "gliner.choice": "You choose whether to use OpenAI Privacy Filter or GLiNER2-PII. Both are optional integrations independent of Vera; you can install either or both. This page does not recommend one over the other.",
+    "gliner.workflow": "The connector reads TXT, Markdown, DOCX and PDFs with extractable text from the specified local path and saves a filtered .txt copy. Originals remain unchanged. Scans need OCR first. Install Python 3.12 or later; the model is downloaded during setup.",
+    "gliner.limit": "Detection can miss data or remove useful text. Review the local copy before using it; removal of every personal or company identifier is not guaranteed.",
+    "gliner.setup": "Install and use the GLiNER2-PII connector ↗",
+    "gliner.source": "GLiNER2-PII model and documentation ↗",
+    "gliner.data": "Extracted document text reaches the GLiNER2 model on your computer. The local process applies placeholders without returning detected values. Codex receives request and result paths, counts and model metadata; filtered text enters the conversation when you ask to read it. The model and tokenizer are downloaded during installation. Filtering uses local files and makes no API calls."
   },
   "fr": {
     "title": "Intégrations de Vera",
-    "lead": "Connectez Second Brain, utilisez les skills du cabinet et installez le connecteur local facultatif Privacy Filter pour Codex desktop.",
+    "lead": "Connectez Second Brain, utilisez les skills du cabinet ou choisissez un connecteur local facultatif OpenAI Privacy Filter ou GLiNER2-PII pour Codex desktop.",
     "scope": "Pour suivre le guide Second Brain, il faut un Second Brain existant avec un connecteur MCP compatible. Vera ne fournit pas ce service et ne nécessite pas Microsoft 365. Sans archive externe, vous pouvez utiliser Vera sans cette configuration.",
     "back": "← Retour aux intégrations",
     "nav": "Étapes du guide",
@@ -489,11 +520,20 @@
     "privacy.workflow": "Le connecteur s’installe séparément de Vera et s’utilise à la demande. Il lit les fichiers TXT, Markdown, DOCX et les PDF contenant du texte extractible et enregistre des copies de texte filtré au format .txt. Les documents numérisés nécessitent d’abord une reconnaissance optique de caractères (OCR).",
     "privacy.data": "Le connecteur traite les originaux localement. Codex reçoit les chemins indiqués dans la demande, le chemin de la copie filtrée et un résumé avec les décomptes. Le texte filtré entre dans la conversation lorsque vous demandez sa lecture. L’installation télécharge le modèle et le tokenizer ; le filtrage s’exécute en local, sans appels API.",
     "privacy.source": "Code et documentation d’OpenAI Privacy Filter ↗",
-    "privacy.setup": "Installer et utiliser le connecteur Privacy Filter ↗"
+    "privacy.setup": "Installer et utiliser le connecteur Privacy Filter ↗",
+    "gliner.title": "GLiNER2-PII",
+    "gliner.status": "Connecteur local facultatif pour Codex desktop, à installer séparément.",
+    "gliner.copy": "GLiNER2-PII est un modèle open source de Fastino qui repère des données personnelles dans le texte. Le connecteur recherche les 42 catégories prises en charge, dont les noms, emails, adresses, identifiants fiscaux et IBAN, puis remplace les éléments détectés par des libellés génériques. Le modèle déclare des données d’entraînement dans sept langues, dont l’italien.",
+    "gliner.choice": "Vous choisissez OpenAI Privacy Filter ou GLiNER2-PII. Ces intégrations sont facultatives et indépendantes de Vera ; vous pouvez en installer une ou les deux. Cette page ne recommande pas l’une plutôt que l’autre.",
+    "gliner.workflow": "Le connecteur lit les fichiers TXT, Markdown, DOCX et PDF contenant du texte extractible au chemin local indiqué et enregistre une copie .txt filtrée. Les originaux restent inchangés. Les documents numérisés nécessitent d’abord un OCR. Installez Python 3.12 ou ultérieur ; le modèle est téléchargé lors de la configuration.",
+    "gliner.limit": "La détection peut omettre des données ou supprimer du texte utile. Vérifiez la copie locale avant utilisation ; la suppression de tous les identifiants personnels ou d’entreprise n’est pas garantie.",
+    "gliner.setup": "Installer et utiliser le connecteur GLiNER2-PII ↗",
+    "gliner.source": "Modèle et documentation GLiNER2-PII ↗",
+    "gliner.data": "Le texte extrait du document est transmis au modèle GLiNER2 sur votre ordinateur. Le processus local applique les libellés sans restituer les valeurs détectées. Codex reçoit les chemins de la demande et du résultat, les décomptes et les métadonnées du modèle ; le texte filtré entre dans la conversation à votre demande. Le modèle et le tokenizer sont téléchargés à l’installation. Le filtrage utilise les fichiers locaux sans appel API."
   },
   "de": {
     "title": "Vera-Integrationen",
-    "lead": "Verbinden Sie Second Brain, nutzen Sie die Skills Ihrer Kanzlei und installieren Sie den optionalen lokalen Privacy-Filter-Konnektor für Codex desktop.",
+    "lead": "Verbinden Sie Second Brain, verwenden Sie Kanzlei-Skills oder wählen Sie einen optionalen lokalen Konnektor für OpenAI Privacy Filter oder GLiNER2-PII in Codex desktop.",
     "scope": "Für die Second-Brain-Anleitung benötigen Sie ein vorhandenes Second Brain mit kompatiblem MCP-Konnektor. Vera stellt diesen Dienst nicht bereit und benötigt kein Microsoft 365. Ohne externes Archiv können Sie Vera ohne diese Einrichtung nutzen.",
     "back": "← Zurück zu Integrationen",
     "nav": "Schritte der Anleitung",
@@ -553,11 +593,20 @@
     "privacy.workflow": "Der Konnektor wird unabhängig von Vera installiert und bei Bedarf verwendet. Er liest TXT-, Markdown- und DOCX-Dateien sowie PDFs mit extrahierbarem Text und speichert gefilterte Textkopien im Format .txt. Scans benötigen zuvor eine Texterkennung (OCR).",
     "privacy.data": "Der Konnektor verarbeitet Originale lokal. Codex erhält die in der Anfrage angegebenen Pfade, den Pfad der gefilterten Kopie und eine Zusammenfassung mit Anzahlen. Gefilterter Text gelangt erst auf Ihre Leseanfrage in die Unterhaltung. Die Installation lädt Modell und Tokenizer herunter; die Filterung erfolgt lokal ohne API-Aufrufe.",
     "privacy.source": "Code und Dokumentation von OpenAI Privacy Filter ↗",
-    "privacy.setup": "Privacy-Filter-Konnektor installieren und verwenden ↗"
+    "privacy.setup": "Privacy-Filter-Konnektor installieren und verwenden ↗",
+    "gliner.title": "GLiNER2-PII",
+    "gliner.status": "Optionaler lokaler Konnektor für Codex desktop zur separaten Installation.",
+    "gliner.copy": "GLiNER2-PII ist ein Open-Source-Modell von Fastino zur Erkennung personenbezogener Angaben im Text. Der Konnektor fragt alle 42 unterstützten Kategorien ab, darunter Namen, E-Mail-Adressen, Anschriften, Steuerkennungen und IBANs, und ersetzt erkannte Angaben durch Platzhalter. Laut Modellbeschreibung stammen die Trainingsdaten aus sieben Sprachen, einschließlich Italienisch.",
+    "gliner.choice": "Sie wählen zwischen OpenAI Privacy Filter und GLiNER2-PII. Beide Integrationen sind optional und unabhängig von Vera; Sie können eine oder beide installieren. Diese Seite gibt keine Empfehlung für eines der Modelle.",
+    "gliner.workflow": "Der Konnektor liest TXT-, Markdown- und DOCX-Dateien sowie PDFs mit extrahierbarem Text aus dem angegebenen lokalen Pfad und speichert eine gefilterte .txt-Kopie. Originale bleiben unverändert. Scans benötigen zuvor OCR. Installieren Sie Python 3.12 oder neuer; das Modell wird bei der Einrichtung heruntergeladen.",
+    "gliner.limit": "Die Erkennung kann Angaben übersehen oder nützlichen Text entfernen. Prüfen Sie die lokale Kopie vor der Verwendung; die Entfernung sämtlicher Personen- oder Unternehmenskennungen ist nicht garantiert.",
+    "gliner.setup": "GLiNER2-PII-Konnektor installieren und verwenden ↗",
+    "gliner.source": "GLiNER2-PII-Modell und Dokumentation ↗",
+    "gliner.data": "Der extrahierte Dokumenttext wird vom GLiNER2-Modell auf Ihrem Computer verarbeitet. Der lokale Prozess setzt Platzhalter ein, ohne erkannte Werte zurückzugeben. Codex erhält Anfrage- und Ergebnispfade, Anzahlen und Modellmetadaten; gefilterter Text gelangt erst auf Ihre Leseanfrage in das Gespräch. Modell und Tokenizer werden bei der Installation heruntergeladen. Die Filterung verwendet lokale Dateien ohne API-Aufrufe."
   },
   "es": {
     "title": "Integraciones de Vera",
-    "lead": "Conecta Second Brain, utiliza las skills del despacho e instala el conector local opcional Privacy Filter para Codex desktop.",
+    "lead": "Conecta Second Brain, utiliza las skills del despacho o elige un conector local opcional de OpenAI Privacy Filter o GLiNER2-PII para Codex desktop.",
     "scope": "Para seguir la guía de Second Brain necesitas un Second Brain existente con un conector MCP compatible. Vera no proporciona este servicio ni requiere Microsoft 365. Sin archivo externo puedes usar Vera sin esta configuración.",
     "back": "← Volver a Integraciones",
     "nav": "Pasos de la guía",
@@ -617,7 +666,16 @@
     "privacy.workflow": "El conector se instala por separado de Vera y se utiliza cuando lo solicitas. Lee archivos TXT, Markdown, DOCX y PDF con texto extraíble y guarda copias de texto filtrado en formato .txt. Los documentos escaneados necesitan primero reconocimiento óptico de caracteres (OCR).",
     "privacy.data": "El conector procesa los originales localmente. Codex recibe las rutas indicadas en la solicitud, la ruta de la copia filtrada y un resumen con los recuentos. El texto filtrado entra en la conversación cuando pides leerlo. La instalación descarga el modelo y el tokenizer; el filtrado se realiza en local, sin llamadas API.",
     "privacy.source": "Código y documentación de OpenAI Privacy Filter ↗",
-    "privacy.setup": "Instalar y utilizar el conector Privacy Filter ↗"
+    "privacy.setup": "Instalar y utilizar el conector Privacy Filter ↗",
+    "gliner.title": "GLiNER2-PII",
+    "gliner.status": "Conector local opcional para Codex desktop, de instalación independiente.",
+    "gliner.copy": "GLiNER2-PII es un modelo de código abierto de Fastino para detectar datos personales en texto. El conector solicita las 42 categorías admitidas, incluidos nombres, emails, direcciones, identificadores fiscales e IBAN, y sustituye las detecciones por marcadores. El modelo declara datos de entrenamiento en siete idiomas, incluido el italiano.",
+    "gliner.choice": "Tú eliges OpenAI Privacy Filter o GLiNER2-PII. Son integraciones opcionales e independientes de Vera; puedes instalar una o ambas. Esta página no recomienda una sobre la otra.",
+    "gliner.workflow": "El conector lee archivos TXT, Markdown, DOCX y PDF con texto extraíble desde la ruta local indicada y guarda una copia .txt filtrada. Los originales no se modifican. Los documentos escaneados necesitan OCR previo. Instala Python 3.12 o posterior; el modelo se descarga durante la configuración.",
+    "gliner.limit": "La detección puede omitir datos o eliminar texto útil. Revisa la copia local antes de usarla; no se garantiza la eliminación de todos los identificadores personales o empresariales.",
+    "gliner.setup": "Instalar y usar el conector GLiNER2-PII ↗",
+    "gliner.source": "Modelo y documentación de GLiNER2-PII ↗",
+    "gliner.data": "El texto extraído del documento llega al modelo GLiNER2 en tu ordenador. El proceso local aplica los marcadores sin devolver los valores detectados. Codex recibe las rutas de la solicitud y del resultado, los recuentos y los metadatos del modelo; el texto filtrado entra en la conversación cuando solicitas leerlo. El modelo y el tokenizador se descargan durante la instalación. El filtrado utiliza archivos locales sin llamadas API."
   }
 };
     const requested = new URLSearchParams(location.search).get('lang');

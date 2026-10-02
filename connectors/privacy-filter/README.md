@@ -4,6 +4,11 @@ An optional local MCP server using [OpenAI Privacy Filter](https://github.com/op
 It is installed separately from Vera. Vera, Clara and Lucia do not import it,
 start it or install its model. No OpenAI API key is used.
 
+[GLiNER2-PII](GLINER2.md) is also available as a separate optional local
+connector. Choose the engine you want to install; each has its own runtime,
+model and MCP tool names. The connectors share file-handling code, without
+installing the other engine's model dependencies.
+
 ## Install
 
 Requirements: Python 3.12+, Internet access during installation, and disk space

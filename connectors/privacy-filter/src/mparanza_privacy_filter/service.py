@@ -8,12 +8,13 @@ import subprocess
 import sys
 import threading
 import uuid
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Any, Callable
 
 from . import __version__
-from .contracts import FORMATS, LABELS, MODEL_REVISION, FilteredDocument, FilterError
+from .contracts import FORMATS, LABELS, FilteredDocument, FilterError
+from .engines import Engine, engine_for
 
 __all__ = ["Settings", "FilterService", "run_worker"]
 
@@ -43,10 +44,15 @@ class Settings:
     output_root: Path
     model_root: Path
     device: str = "cpu"
+    engine: str = "openai"
+
+    @property
+    def spec(self) -> Engine:
+        return engine_for(self.engine)
 
     @property
     def checkpoint(self) -> Path:
-        return self.model_root / "checkpoint" / "original"
+        return self.model_root.joinpath(*self.spec.checkpoint_parts)
 
     @property
     def tokenizer_cache(self) -> Path:
@@ -56,19 +62,23 @@ class Settings:
         """Require the explicit preparation receipt, weights and tokenizer cache."""
         try:
             receipt = json.loads((self.model_root / "ready.json").read_text())
-            if receipt["model_revision"] != MODEL_REVISION:
+            if receipt["model_revision"] != self.spec.revision:
                 return False
         except (OSError, ValueError, KeyError, TypeError):
             return False
-        return (
-            (self.checkpoint / "config.json").is_file()
-            and (self.checkpoint / "model.safetensors").is_file()
-            and self.tokenizer_cache.is_dir()
+        if not all(
+            (self.checkpoint / name).is_file() for name in self.spec.required_files
+        ):
+            return False
+        return self.engine == "gliner2" or (
+            self.tokenizer_cache.is_dir()
             and any(p.is_file() for p in self.tokenizer_cache.iterdir())
         )
 
 
-def _validated_document(payload: dict[str, Any]) -> FilteredDocument:
+def _validated_document(
+    payload: dict[str, Any], labels: frozenset[str] = LABELS
+) -> FilteredDocument:
     """Reject unexpected fields rather than forward an upstream JSON result."""
     if set(payload) != {"redacted_text", "detection_counts", "source_characters"}:
         raise FilterError("invalid_worker_response")
@@ -80,7 +90,7 @@ def _validated_document(payload: dict[str, Any]) -> FilteredDocument:
     if (
         not isinstance(text, str)
         or not isinstance(counts, dict)
-        or not set(counts).issubset(LABELS)
+        or not set(counts).issubset(labels)
         or any(type(value) is not int or value < 0 for value in counts.values())
         or type(characters) is not int
         or characters < 0
@@ -100,7 +110,7 @@ def run_worker(path: Path, settings: Settings) -> FilteredDocument:
     }
     try:
         result = subprocess.run(  # nosec B603
-            [sys.executable, "-I", "-m", "mparanza_privacy_filter.worker"],
+            [sys.executable, "-I", "-m", settings.spec.worker],
             input=json.dumps(request),
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,
@@ -120,7 +130,7 @@ def run_worker(path: Path, settings: Settings) -> FilteredDocument:
                 if isinstance(code, str) and code in _WORKER_ERRORS
                 else "processing_failed"
             )
-        return _validated_document(payload)
+        return _validated_document(payload, settings.spec.labels)
     except subprocess.TimeoutExpired:
         raise FilterError("processing_timeout") from None
     except (OSError, json.JSONDecodeError):
@@ -135,11 +145,12 @@ class FilterService:
         settings: Settings,
         backend: Callable[[Path, Settings], FilteredDocument] = run_worker,
     ) -> None:
-        self.settings = Settings(
-            settings.input_root.expanduser().resolve(strict=True),
-            settings.output_root.expanduser().resolve(),
-            settings.model_root.expanduser().resolve(),
-            settings.device,
+        engine_for(settings.engine)
+        self.settings = replace(
+            settings,
+            input_root=settings.input_root.expanduser().resolve(strict=True),
+            output_root=settings.output_root.expanduser().resolve(),
+            model_root=settings.model_root.expanduser().resolve(),
         )
         if not self.settings.input_root.is_dir():
             raise FilterError("invalid_input_directory")
@@ -154,7 +165,8 @@ class FilterService:
         return {
             "version": __version__,
             "model_ready": self.settings.ready(),
-            "model_revision": MODEL_REVISION,
+            "engine": self.settings.engine,
+            "model_revision": self.settings.spec.revision,
             "device": self.settings.device,
             "formats": list(FORMATS),
             "max_batch_files": 5,
@@ -179,7 +191,8 @@ class FilterService:
                 raise FilterError("unsupported_format")
             with self.lock:
                 document = _validated_document(
-                    asdict(self.backend(candidate, self.settings))
+                    asdict(self.backend(candidate, self.settings)),
+                    self.settings.spec.labels,
                 )
             return self._save(document)
         except OSError:
@@ -208,7 +221,8 @@ class FilterService:
             "redacted_characters": len(document.redacted_text),
             "detection_counts": document.detection_counts,
             "sha256": hashlib.sha256(data).hexdigest(),
-            "model_revision": MODEL_REVISION,
+            "engine": self.settings.engine,
+            "model_revision": self.settings.spec.revision,
         }
         for name, content in (
             ("redacted.txt", data),

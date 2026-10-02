@@ -18,14 +18,15 @@ __all__ = ["create_server", "main"]
 
 def create_server(service: FilterService) -> FastMCP:
     """Expose only filtered artifacts and non-identifying processing metadata."""
+    spec = service.settings.spec
     server = FastMCP(
-        "Privacy Filter",
+        spec.title,
         instructions=(
-            "Optional local OpenAI Privacy Filter connector. Use only when requested. "
+            f"Optional local {spec.title} connector. Use only when requested. "
             "Pass paths to local files; do not read originals into chat first. "
             "filter_file and filter_batch save plain UTF-8 .txt artifacts. "
             "read_result reads only those filtered artifacts. No layout preservation. "
-            "Detection can miss data, especially outside English; review the copy "
+            "Detection can miss data; review the copy "
             "locally before sharing it. A completed run is not an anonymity guarantee."
         ),
         log_level="ERROR",
@@ -65,10 +66,10 @@ def create_server(service: FilterService) -> FastMCP:
         except FilterError as exc:
             raise ToolError(str(exc)) from None
 
-    server.add_tool(status, name="privacy_filter_status", annotations=read_only)
-    server.add_tool(filter_file, name="privacy_filter_file", annotations=writes)
-    server.add_tool(filter_batch, name="privacy_filter_batch", annotations=writes)
-    server.add_tool(read_result, name="privacy_filter_read", annotations=read_only)
+    server.add_tool(status, name=f"{spec.prefix}_status", annotations=read_only)
+    server.add_tool(filter_file, name=f"{spec.prefix}_file", annotations=writes)
+    server.add_tool(filter_batch, name=f"{spec.prefix}_batch", annotations=writes)
+    server.add_tool(read_result, name=f"{spec.prefix}_read", annotations=read_only)
     return server
 
 
@@ -79,10 +80,17 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--model-dir", type=Path, required=True)
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
+    parser.add_argument("--engine", choices=("openai", "gliner2"), default="openai")
     args = parser.parse_args()
     try:
         service = FilterService(
-            Settings(args.input_dir, args.output_dir, args.model_dir, args.device)
+            Settings(
+                args.input_dir,
+                args.output_dir,
+                args.model_dir,
+                args.device,
+                args.engine,
+            )
         )
     except (OSError, FilterError):
         parser.exit(2, "Privacy Filter: invalid local directory configuration.\n")
