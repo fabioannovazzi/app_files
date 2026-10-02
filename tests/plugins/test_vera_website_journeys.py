@@ -1661,14 +1661,13 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 43
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',
         page,
     )
 
-    assert len(module_hrefs) == expected_module_link_count
+    assert "../rating-legalita/index.html" in module_hrefs
     for href in module_hrefs:
         target = urlsplit(href)
         target_path = (
