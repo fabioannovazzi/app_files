@@ -5,9 +5,9 @@
   <meta content="width=device-width, initial-scale=1" name="viewport"/>
   <meta content="#ffffff" name="theme-color"/>
   <title>
-   Collegare Second Brain a Vera · Vera
+   Integrazioni di Vera · Vera
   </title>
-  <meta content="Configura ricerca e lettura nell’app in cui usi Vera, poi verifica l’accesso con un documento di prova." name="description"/>
+  <meta content="Collega Second Brain, usa le skill dello studio e consulta il progetto del connettore locale Privacy Filter per Codex desktop." name="description"/>
   <link href="https://mparanza.com/static/shared/vera-integrazioni/index.html?lang=it" rel="canonical"/>
   <link href="https://mparanza.com/static/shared/vera-integrazioni/index.html?lang=it" hreflang="it" rel="alternate"/>
   <link href="https://mparanza.com/static/shared/vera-integrazioni/index.html?lang=en" hreflang="en" rel="alternate"/>
@@ -76,13 +76,13 @@
     ← Torna a Integrazioni
    </a>
    <h1 data-i18n="title">
-    Collegare Second Brain a Vera
+    Integrazioni di Vera
    </h1>
    <p class="lead" data-i18n="lead">
-    Configura ricerca e lettura nell’app in cui usi Vera, poi verifica l’accesso con un documento di prova.
+    Collega Second Brain, usa le skill dello studio e consulta il progetto del connettore locale Privacy Filter per Codex desktop.
    </p>
    <p data-i18n="scope">
-    Serve un Second Brain già esistente con un connettore MCP compatibile. Vera non fornisce questo servizio e non richiede Microsoft 365. Se non hai un archivio esterno, puoi usare Vera senza questa configurazione.
+    Per seguire la guida Second Brain serve un Second Brain già esistente con un connettore MCP compatibile. Vera non fornisce questo servizio e non richiede Microsoft 365. Se non hai un archivio esterno, puoi usare Vera senza questa configurazione.
    </p>
    <nav aria-label="Passaggi della guida" class="jump-links" data-nav="">
     <a data-i18n="prepare" href="#prepare">
@@ -103,6 +103,7 @@
     <a data-i18n="help" href="#help">
      Se il collegamento non funziona
     </a>
+    <a data-i18n="privacy.title" href="#privacy-filter">OpenAI Privacy Filter</a>
    </nav>
    <section aria-labelledby="prepare-title" id="prepare">
     <h2 data-i18n="prepare" id="prepare-title">
@@ -267,13 +268,23 @@
      Passaggi verificati sulla documentazione ufficiale il 2 ottobre 2026. I nomi dei comandi possono cambiare con lingua e versione dell’app.
     </p>
    </section>
+   <section aria-labelledby="privacy-filter-title" id="privacy-filter">
+    <h2 data-i18n="privacy.title" id="privacy-filter-title">OpenAI Privacy Filter</h2>
+    <p data-i18n="privacy.status">Connettore opzionale previsto per Codex desktop; non ancora disponibile.</p>
+    <p data-i18n="privacy.copy">Privacy Filter è un modello open source di OpenAI che individua nel testo dati personali, come nomi, indirizzi, email e numeri di telefono, e sostituisce quelli rilevati con segnaposto. L’elaborazione avviene sul computer su cui è installato.</p>
+    <p data-i18n="privacy.workflow">Il connettore sarà installabile separatamente da Vera e utilizzabile su richiesta. La prima versione prevista leggerà file TXT, Markdown, DOCX e PDF con testo estraibile e salverà copie di testo filtrate in formato .txt. Le scansioni richiederanno prima l’OCR.</p>
+    <a data-i18n="privacy.source" href="https://github.com/openai/privacy-filter" rel="noopener noreferrer" target="_blank">Codice e documentazione di OpenAI Privacy Filter ↗</a>
+   </section>
    <section aria-labelledby="model-data-title" id="model-data">
     <h2 data-i18n="data" id="model-data-title">
      Quali dati arrivano al modello
     </h2>
+    <h3>Second Brain</h3>
     <p data-i18n="dataCopy">
      Questa pagina non registra l’URL del tuo connettore, non avvia login e non legge Second Brain. Quando chiedi una consultazione a Vera, la query, i metadati e gli estratti restituiti dalla ricerca, e il testo delle fonti aperte possono entrare nel contesto del modello dell’app scelta. Per la prova usa un documento senza dati dei clienti. La consultazione non è solo locale: accesso, conservazione e trattamento dipendono dall’app e dal servizio Second Brain. Collegare l’archivio non invia automaticamente tutto il suo contenuto a Vera; i dati effettivamente consultati dipendono dagli strumenti e dalle richieste.
     </p>
+    <h3 data-i18n="privacy.title">OpenAI Privacy Filter</h3>
+    <p data-i18n="privacy.data">Il flusso previsto elaborerà gli originali localmente e renderà disponibili a Codex soltanto il testo filtrato e il riepilogo dell’elaborazione. Il download iniziale del modello richiederà Internet; il filtraggio avverrà in locale.</p>
     <a data-data-link="" data-i18n="dataPage" href="https://mparanza.com/data-handling?lang=it">
      Gestione dei dati Mparanza
     </a>
@@ -287,9 +298,9 @@
   <script>
    const copy = {
   "it": {
-    "title": "Collegare Second Brain a Vera",
-    "lead": "Configura ricerca e lettura nell’app in cui usi Vera, poi verifica l’accesso con un documento di prova.",
-    "scope": "Serve un Second Brain già esistente con un connettore MCP compatibile. Vera non fornisce questo servizio e non richiede Microsoft 365. Se non hai un archivio esterno, puoi usare Vera senza questa configurazione.",
+    "title": "Integrazioni di Vera",
+    "lead": "Collega Second Brain, usa le skill dello studio e consulta il progetto del connettore locale Privacy Filter per Codex desktop.",
+    "scope": "Per seguire la guida Second Brain serve un Second Brain già esistente con un connettore MCP compatibile. Vera non fornisce questo servizio e non richiede Microsoft 365. Se non hai un archivio esterno, puoi usare Vera senza questa configurazione.",
     "back": "← Torna a Integrazioni",
     "nav": "Passaggi della guida",
     "prepare": "Prima di iniziare",
@@ -340,12 +351,18 @@
     "docsDate": "Passaggi verificati sulla documentazione ufficiale il 2 ottobre 2026. I nomi dei comandi possono cambiare con lingua e versione dell’app.",
     "dataCopy": "Questa pagina non registra l’URL del tuo connettore, non avvia login e non legge Second Brain. Quando chiedi una consultazione a Vera, la query, i metadati e gli estratti restituiti dalla ricerca, e il testo delle fonti aperte possono entrare nel contesto del modello dell’app scelta. Per la prova usa un documento senza dati dei clienti. La consultazione non è solo locale: accesso, conservazione e trattamento dipendono dall’app e dal servizio Second Brain. Collegare l’archivio non invia automaticamente tutto il suo contenuto a Vera; i dati effettivamente consultati dipendono dagli strumenti e dalle richieste.",
     "dataPage": "Gestione dei dati Mparanza",
-    "mcpMeaning": "Il connettore MCP è il collegamento che consente all’app di cercare e leggere i documenti del tuo Second Brain."
+    "mcpMeaning": "Il connettore MCP è il collegamento che consente all’app di cercare e leggere i documenti del tuo Second Brain.",
+    "privacy.title": "OpenAI Privacy Filter",
+    "privacy.status": "Connettore opzionale previsto per Codex desktop; non ancora disponibile.",
+    "privacy.copy": "Privacy Filter è un modello open source di OpenAI che individua nel testo dati personali, come nomi, indirizzi, email e numeri di telefono, e sostituisce quelli rilevati con segnaposto. L’elaborazione avviene sul computer su cui è installato.",
+    "privacy.workflow": "Il connettore sarà installabile separatamente da Vera e utilizzabile su richiesta. La prima versione prevista leggerà file TXT, Markdown, DOCX e PDF con testo estraibile e salverà copie di testo filtrate in formato .txt. Le scansioni richiederanno prima l’OCR.",
+    "privacy.data": "Il flusso previsto elaborerà gli originali localmente e renderà disponibili a Codex soltanto il testo filtrato e il riepilogo dell’elaborazione. Il download iniziale del modello richiederà Internet; il filtraggio avverrà in locale.",
+    "privacy.source": "Codice e documentazione di OpenAI Privacy Filter ↗"
   },
   "en": {
-    "title": "Connect Second Brain to Vera",
-    "lead": "Set up search and reading in the app where you use Vera, then verify access with a test document.",
-    "scope": "You need an existing Second Brain with a compatible MCP connector. Vera does not supply this service or require Microsoft 365. You can use Vera without this setup if you have no external repository.",
+    "title": "Vera integrations",
+    "lead": "Connect Second Brain, use your firm’s skills and read about the planned local Privacy Filter connector for Codex desktop.",
+    "scope": "For the Second Brain setup guide, you need an existing Second Brain with a compatible MCP connector. Vera does not supply this service or require Microsoft 365. You can use Vera without this setup if you have no external repository.",
     "back": "← Back to Integrations",
     "nav": "Guide steps",
     "prepare": "Before you begin",
@@ -396,12 +413,18 @@
     "docsDate": "Steps checked against official documentation on 2 October 2026. Control names may change with the app language and version.",
     "dataCopy": "This page does not record your connector URL, start sign-in or read Second Brain. When you ask Vera to consult it, the query, source metadata and search excerpts, and the text of opened sources may enter your chosen app’s model context. Use a document without client data for the test. Consultation is not local-only: access, retention and processing depend on the app and Second Brain service. Connecting the repository does not automatically send all its contents to Vera; the material actually consulted depends on the tools and requests.",
     "dataPage": "Mparanza data handling",
-    "mcpMeaning": "The MCP connector is the connection that lets your app search and read documents in your Second Brain."
+    "mcpMeaning": "The MCP connector is the connection that lets your app search and read documents in your Second Brain.",
+    "privacy.title": "OpenAI Privacy Filter",
+    "privacy.status": "Optional connector planned for Codex desktop; not yet available.",
+    "privacy.copy": "Privacy Filter is an open-source OpenAI model that identifies personal information in text, such as names, addresses, emails and phone numbers, and replaces detected values with placeholders. Processing runs on the computer where it is installed.",
+    "privacy.workflow": "The connector will be installed separately from Vera and used on request. The planned first version will read TXT, Markdown, DOCX and PDFs with extractable text and save redacted text copies as .txt files. Scans will need OCR first.",
+    "privacy.data": "The planned workflow will process originals locally and make only redacted text and a processing summary available to Codex. The initial model download will require Internet access; filtering will run locally.",
+    "privacy.source": "OpenAI Privacy Filter code and documentation ↗"
   },
   "fr": {
-    "title": "Connecter Second Brain à Vera",
-    "lead": "Configurez la recherche et la lecture dans l’application où vous utilisez Vera, puis vérifiez l’accès avec un document de test.",
-    "scope": "Il faut un Second Brain existant avec un connecteur MCP compatible. Vera ne fournit pas ce service et ne nécessite pas Microsoft 365. Sans archive externe, vous pouvez utiliser Vera sans cette configuration.",
+    "title": "Intégrations de Vera",
+    "lead": "Connectez Second Brain, utilisez les skills du cabinet et découvrez le projet de connecteur local Privacy Filter pour Codex desktop.",
+    "scope": "Pour suivre le guide Second Brain, il faut un Second Brain existant avec un connecteur MCP compatible. Vera ne fournit pas ce service et ne nécessite pas Microsoft 365. Sans archive externe, vous pouvez utiliser Vera sans cette configuration.",
     "back": "← Retour aux intégrations",
     "nav": "Étapes du guide",
     "prepare": "Avant de commencer",
@@ -452,12 +475,18 @@
     "docsDate": "Étapes vérifiées dans la documentation officielle le 2 octobre 2026. Les noms peuvent changer selon la langue et la version.",
     "dataCopy": "Cette page n’enregistre pas l’URL de votre connecteur, ne lance pas de connexion et ne lit pas Second Brain. Lors d’une consultation par Vera, la requête, les métadonnées et extraits de recherche, ainsi que le texte des sources ouvertes peuvent entrer dans le contexte du modèle de l’application choisie. Utilisez un document sans données clients pour le test. La consultation n’est pas uniquement locale : accès, conservation et traitement dépendent de l’application et du service Second Brain. Connecter l’archive n’envoie pas automatiquement tout son contenu à Vera ; les éléments consultés dépendent des outils et des demandes.",
     "dataPage": "Traitement des données Mparanza",
-    "mcpMeaning": "Le connecteur MCP est la connexion qui permet à l’application de rechercher et de lire les documents de votre Second Brain."
+    "mcpMeaning": "Le connecteur MCP est la connexion qui permet à l’application de rechercher et de lire les documents de votre Second Brain.",
+    "privacy.title": "OpenAI Privacy Filter",
+    "privacy.status": "Connecteur facultatif prévu pour Codex desktop ; pas encore disponible.",
+    "privacy.copy": "Privacy Filter est un modèle open source d’OpenAI qui repère dans le texte des données personnelles, comme les noms, adresses, emails et numéros de téléphone, et remplace les valeurs détectées par des libellés génériques. Le traitement s’exécute sur l’ordinateur où il est installé.",
+    "privacy.workflow": "Le connecteur s’installera séparément de Vera et s’utilisera à la demande. La première version prévue lira les fichiers TXT, Markdown, DOCX et les PDF contenant du texte extractible et enregistrera des copies de texte filtré au format .txt. Les documents numérisés nécessiteront d’abord une reconnaissance optique de caractères (OCR).",
+    "privacy.data": "Le fonctionnement prévu traitera les originaux localement et ne mettra à disposition de Codex que le texte filtré et un résumé du traitement. Le téléchargement initial du modèle nécessitera Internet ; le filtrage s’exécutera en local.",
+    "privacy.source": "Code et documentation d’OpenAI Privacy Filter ↗"
   },
   "de": {
-    "title": "Second Brain mit Vera verbinden",
-    "lead": "Richten Sie Suche und Lesen in der App ein, in der Sie Vera nutzen. Prüfen Sie den Zugriff anschließend mit einem Testdokument.",
-    "scope": "Sie benötigen ein vorhandenes Second Brain mit kompatiblem MCP-Konnektor. Vera stellt diesen Dienst nicht bereit und benötigt kein Microsoft 365. Ohne externes Archiv können Sie Vera ohne diese Einrichtung nutzen.",
+    "title": "Vera-Integrationen",
+    "lead": "Verbinden Sie Second Brain, nutzen Sie die Skills Ihrer Kanzlei und informieren Sie sich über den geplanten lokalen Privacy-Filter-Konnektor für Codex desktop.",
+    "scope": "Für die Second-Brain-Anleitung benötigen Sie ein vorhandenes Second Brain mit kompatiblem MCP-Konnektor. Vera stellt diesen Dienst nicht bereit und benötigt kein Microsoft 365. Ohne externes Archiv können Sie Vera ohne diese Einrichtung nutzen.",
     "back": "← Zurück zu Integrationen",
     "nav": "Schritte der Anleitung",
     "prepare": "Vorbereitung",
@@ -508,12 +537,18 @@
     "docsDate": "Schritte am 2. Oktober 2026 anhand offizieller Dokumentation geprüft. Bezeichnungen können je nach Sprache und App-Version abweichen.",
     "dataCopy": "Diese Seite speichert Ihre Konnektor-URL nicht, startet keine Anmeldung und liest Second Brain nicht. Bei einer Abfrage durch Vera können Suchanfrage, Quellenmetadaten und Suchauszüge sowie der Text geöffneter Quellen in den Modellkontext der gewählten App gelangen. Nutzen Sie für den Test ein Dokument ohne Mandantendaten. Die Abfrage ist nicht ausschließlich lokal: Zugriff, Aufbewahrung und Verarbeitung hängen von App und Second-Brain-Dienst ab. Das Verbinden des Archivs übermittelt nicht automatisch dessen gesamten Inhalt an Vera; tatsächlich gelesene Inhalte hängen von Werkzeugen und Anfragen ab.",
     "dataPage": "Datenverarbeitung bei Mparanza",
-    "mcpMeaning": "Der MCP-Konnektor ist die Verbindung, über die Ihre App Dokumente in Ihrem Second Brain suchen und lesen kann."
+    "mcpMeaning": "Der MCP-Konnektor ist die Verbindung, über die Ihre App Dokumente in Ihrem Second Brain suchen und lesen kann.",
+    "privacy.title": "OpenAI Privacy Filter",
+    "privacy.status": "Optionaler Konnektor für Codex desktop geplant; noch nicht verfügbar.",
+    "privacy.copy": "Privacy Filter ist ein Open-Source-Modell von OpenAI. Es erkennt personenbezogene Angaben im Text, etwa Namen, Adressen, E-Mail-Adressen und Telefonnummern, und ersetzt erkannte Werte durch Platzhalter. Die Verarbeitung erfolgt auf dem Computer, auf dem das Modell installiert ist.",
+    "privacy.workflow": "Der Konnektor wird unabhängig von Vera installiert und bei Bedarf verwendet. Die geplante erste Version liest TXT-, Markdown- und DOCX-Dateien sowie PDFs mit extrahierbarem Text und speichert gefilterte Textkopien im Format .txt. Scans benötigen zuvor eine Texterkennung (OCR).",
+    "privacy.data": "Der geplante Ablauf verarbeitet Originale lokal und stellt Codex nur den gefilterten Text und eine Zusammenfassung der Verarbeitung bereit. Der erste Modelldownload benötigt Internetzugang; die Filterung erfolgt lokal.",
+    "privacy.source": "Code und Dokumentation von OpenAI Privacy Filter ↗"
   },
   "es": {
-    "title": "Conectar Second Brain a Vera",
-    "lead": "Configura búsqueda y lectura en la aplicación donde usas Vera y verifica el acceso con un documento de prueba.",
-    "scope": "Necesitas un Second Brain existente con un conector MCP compatible. Vera no proporciona este servicio ni requiere Microsoft 365. Sin archivo externo puedes usar Vera sin esta configuración.",
+    "title": "Integraciones de Vera",
+    "lead": "Conecta Second Brain, utiliza las skills del despacho y consulta el proyecto del conector local Privacy Filter para Codex desktop.",
+    "scope": "Para seguir la guía de Second Brain necesitas un Second Brain existente con un conector MCP compatible. Vera no proporciona este servicio ni requiere Microsoft 365. Sin archivo externo puedes usar Vera sin esta configuración.",
     "back": "← Volver a Integraciones",
     "nav": "Pasos de la guía",
     "prepare": "Antes de empezar",
@@ -564,7 +599,13 @@
     "docsDate": "Pasos revisados en la documentación oficial el 2 de octubre de 2026. Los nombres pueden cambiar según el idioma y la versión.",
     "dataCopy": "Esta página no registra la URL del conector, no inicia sesión ni lee Second Brain. Cuando pides una consulta a Vera, la búsqueda, los metadatos y extractos devueltos, y el texto de las fuentes abiertas pueden entrar en el contexto del modelo de la aplicación elegida. Usa un documento sin datos de clientes para la prueba. La consulta no es solo local: acceso, conservación y tratamiento dependen de la aplicación y del servicio Second Brain. Conectar el archivo no envía automáticamente todo su contenido a Vera; el material consultado depende de las herramientas y las solicitudes.",
     "dataPage": "Tratamiento de datos de Mparanza",
-    "mcpMeaning": "El conector MCP es la conexión que permite a la aplicación buscar y leer documentos de tu Second Brain."
+    "mcpMeaning": "El conector MCP es la conexión que permite a la aplicación buscar y leer documentos de tu Second Brain.",
+    "privacy.title": "OpenAI Privacy Filter",
+    "privacy.status": "Conector opcional previsto para Codex desktop; todavía no disponible.",
+    "privacy.copy": "Privacy Filter es un modelo de código abierto de OpenAI que identifica datos personales en el texto, como nombres, direcciones, correos electrónicos y números de teléfono, y sustituye los valores detectados por marcadores. El procesamiento se realiza en el ordenador donde está instalado.",
+    "privacy.workflow": "El conector se instalará por separado de Vera y se utilizará cuando lo solicites. La primera versión prevista leerá archivos TXT, Markdown, DOCX y PDF con texto extraíble y guardará copias de texto filtrado en formato .txt. Los documentos escaneados necesitarán primero reconocimiento óptico de caracteres (OCR).",
+    "privacy.data": "El funcionamiento previsto procesará los originales localmente y pondrá a disposición de Codex únicamente el texto filtrado y un resumen del procesamiento. La descarga inicial del modelo requerirá Internet; el filtrado se realizará en local.",
+    "privacy.source": "Código y documentación de OpenAI Privacy Filter ↗"
   }
 };
     const requested = new URLSearchParams(location.search).get('lang');
