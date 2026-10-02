@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "adeguati-assetti",
-  "course_sha256": "204863e9de92b998c13c53fb0cf7c37b9061835ce621bb79b95843c25485a6b1",
+  "course_sha256": "8846f84ecc5a70bca87f1581e8afc4375b80a1b611aca2d3d32a94b1a95c497c",
   "reviewer": "Codex /root: source, multilingual editorial and synthetic artifact review",
   "reviewed_at": "2026-10-01T08:03:58.950451+00:00",
   "review_scope": "Replaces the assessment-only outline with five localized resumable construction chapters and a separate financial lab. Read current specialist skill, native contract, intake, exports and adapters. Inspected original fictional inputs, localized Word/PDF/Markdown content, registers, snapshots, financial rows and KPI history. Rendered Italian course and chapter and English course in the Codex browser; visually inspected all pages of a generated manual. The PDF exporter may orphan its final version line on a second page; this remains a disclosed pre-existing export limitation, not a claim of client-ready layout. Fixed export headings are Italian and some test attribution/engineering labels are English. Native voice, window arrangement, learner participation/understanding, authenticated professional approval and real-company operating effectiveness are not established. Technical tests manufacture separately receipted synthetic decisions only at execution time; no approved case, approval or result is shipped as a teaching input. The 390-second metadata describes the introductory lesson; extended construction and financial labs require further resumable sessions. Deployment review: inspected the five localized data-context statements after replacing the ambiguous OpenAI/Cowork account name with the selected host or service account. The existing host-specific footer identifies OpenAI for Codex and Anthropic for Cowork. Inputs, execution code, reviewed output artifacts and processing boundaries are unchanged.",
@@ -621,5 +621,20 @@
     "reviewer": "Codex /root",
     "date": "2026-10-02",
     "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
+  },
+  "rating_legalita_source_binding_20261002": {
+    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+    "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+    "previous_course_sha256": "204863e9de92b998c13c53fb0cf7c37b9061835ce621bb79b95843c25485a6b1",
+    "current_course_sha256": "8846f84ecc5a70bca87f1581e8afc4375b80a1b611aca2d3d32a94b1a95c497c",
+    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+    "changed_sources": [
+      "modules/adeguati-assetti/vendor/modules/vera_assurance/contracts.py",
+      "vendor/modules/courseware/policy.py",
+      "vendor/modules/vera_assurance/contracts.py"
+    ],
+    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
   }
 }
