@@ -22,7 +22,7 @@
       {
         "id": "vat-case-evidence",
         "purpose": "Read and review VAT registers, timing, codes, balances and VP drafts",
-        "content": "Selected full PDF pages or readable extracts, client and counterparty names, identifiers, dates, VAT codes, taxable bases, VAT and deductible amounts, liquidation and F24 evidence, code proposals, reviewer records, exceptions and outputs may enter the selected host model. The helpers inspect local sources, hashes, quotations and arithmetic without model or network requests. The local processing receipt cannot measure host exposure. No automatic anonymization or local-only model guarantee.",
+        "content": "Selected full PDF pages or readable extracts, client and counterparty names, identifiers, dates, VAT codes, taxable bases, VAT and deductible amounts, liquidation and F24 evidence, code proposals, reviewer records, exceptions and outputs may enter the selected host model. The helpers inspect local sources, hashes, quotations and arithmetic without model or network requests. The local processing receipt cannot measure host exposure. No automatic anonymization or local-only model guarantee. The selected model may also read catalog classes, confidence, client/studio scope identifiers, source quotations or original bytes, attributed curator/disclosure decisions and explicitly requested local history. A catalog history can contain other authorized studio entries. No remote catalog transfer is performed.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -81,13 +81,17 @@
     {
       "id": "xml-pilot-gate",
       "control": "Only synthetic XML with fictional identifiers can be generated. It is recalculated and validated against the hash-checked offline XSD bundle before writing. Real export is unavailable."
+    },
+    {
+      "id": "catalog-revision-binding",
+      "control": "SQLite transactions reject stale expected heads; content-linked revisions retain original source objects and detect changed/missing evidence. Calculation rechecks the selected catalog identity and bound mapping revisions at validity boundaries throughout the quarter. Central-reference records reject private-case source labels and require attributed curator/disclosure review; these labels and roles are not authenticated and no automatic privacy classification or remote sharing is performed."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-02",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "e71273453167669560f149d0518daa429928fad15c94f47e0a1d5627ec290a82"
+    "source_fingerprint": "7f4b482b4be985a1ce6bee7c93ab4bf90be58c8de60b79cd96e5e0eac9c4f82b"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/lipe/SKILL.md",

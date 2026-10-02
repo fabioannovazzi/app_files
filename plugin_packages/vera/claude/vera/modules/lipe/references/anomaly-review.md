@@ -40,7 +40,7 @@ interpretations require current source research and professional judgment.
 
 ## Recording proposals
 
-Case contract 1.2 requires `observations`, `anomaly_review` and `correspondence`.
+Case contract 1.3 requires `observations`, `anomaly_review` and `correspondence`.
 Use an empty observations list only when there are no recorded proposals; it
 does not itself confirm that the sources were reviewed. `anomaly_review` records
 the professional's actual scope/completeness review and remains null or PROPOSED

@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.2",
+  "schema_version": "1.3",
   "pipeline": "LIPE",
   "case_id": "synthetic-quarter",
   "client_id": "synthetic-client",
@@ -51,7 +51,8 @@
         "reviewer": "SYNTHETIC TEST ACTOR",
         "reviewed_on": "2026-10-02",
         "reason": "Synthetic fixture only; no professional validation claimed."
-      }
+      },
+      "catalog_binding": null
     },
     {
       "code": "A22",
@@ -62,7 +63,8 @@
         "reviewer": "SYNTHETIC TEST ACTOR",
         "reviewed_on": "2026-10-02",
         "reason": "Synthetic fixture only; no professional validation claimed."
-      }
+      },
+      "catalog_binding": null
     }
   ],
   "registers": [
@@ -558,5 +560,6 @@
     "reviewed_on": "2026-10-02",
     "reason": "Synthetic fixture only; no professional validation claimed."
   },
-  "correspondence": null
+  "correspondence": null,
+  "catalog_context": null
 }

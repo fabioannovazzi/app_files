@@ -113,6 +113,7 @@ Read `references/sources.json`, `references/rules.json` and
 ordinary Italian VAT in 2024–2026. It is not a filing system or a compliance
 certification. Do not describe a passing XSD as acceptance by Agenzia Entrate.
 Read `references/anomaly-review.md` before proposing or resolving observations.
+Read `references/code-catalog.md` when recognizing or reusing VAT-code meanings.
 
 ## Inspect and qualify
 
@@ -120,8 +121,9 @@ Use Studio Archive for real cases: resolve the client and engagement, import the
 source documents and start a `lipe` run using the portable v2 context. Never
 invent an engagement or set real or anonymized real data to `SYNTHETIC`.
 The bundled example is wholly fictional. Source originals, extractions, reviewed
-case JSON and all output revisions stay in the same case. No central code catalog
-or cross-client learning is performed.
+case JSON and all output revisions stay in the same case. Catalog entries and
+their original evidence stay in the selected private studio catalog; no remote
+publication or automatic cross-studio learning is performed.
 
 From Vera run `python scripts/check_dependencies.py --module lipe`; from this
 module run `python scripts/check_dependencies.py`. Use the shared managed Python
@@ -170,6 +172,10 @@ the allocation in the row review.
 Propose each `(side, code)` meaning with a reason. The case's software, version,
 client and engagement bound its mappings. Use `PROPOSED` until the professional
 actually confirms; never manufacture `CONFIRMED` to enable a calculation.
+Consult the selected catalog in client, studio, then central-reference order.
+Preserve exact revisions and case applicability following the catalog guide;
+pass `--catalog` when calculating a bound case. Do not remove a binding or switch
+to a manual mapping just to evade a revocation, confidence block or dispute.
 `SALE_NO_OUTPUT_VAT` needs an explicit reason (for example reviewed exempt,
 non-taxable or split-payment treatment). `PURCHASE` always uses the explicitly
 reviewed `deductible_tax`; it never assumes full deductibility. Reverse charge
@@ -214,7 +220,7 @@ something changes; the case, rules and engine hashes identify the revision.
 Open `workpaper.md`, show the VP table, findings and unresolved requirements,
 and make the row composition in `result.json` available. Explain each difference
 against the customer's liquidation; it does not replace the register source.
-Supply `liquidations` for every period using case contract 1.2. Each sales or
+Supply `liquidations` for every period using case contract 1.3. Each sales or
 purchase section explicitly declares its taxable-base basis (registration,
 chargeability or deduction) and VAT basis (recorded, output or deductible).
 Confirm that meaning against the actual print; do not choose a basis merely to
@@ -286,8 +292,12 @@ or material steps outside the authorized scope and unresolved material choices.
 The selected Claude or Cowork model may read complete register pages, customer and
 counterparty identifiers, invoice and registration dates, tax codes, bases, VAT,
 liquidations, F24 excerpts, proposals, professional decisions and workpapers.
+Catalog classes, confidence, scope identifiers, quotations and attributed review
+history may also enter context. An explicitly requested catalog history can
+include other authorized studio entries; do not load it indiscriminately for a
+single client. The selected catalog retains original evidence bytes locally.
 Local helpers hash and read the selected sources, check quotations and arithmetic,
 and write case artifacts; they make no model or network call. Public source
 research uses non-identifying queries. No automatic anonymization, local-only
-model processing, central code sharing or legal compliance certification is
+model processing, remote central code sharing or legal compliance certification is
 provided. Keep the actual session disclosure distinct from these design limits.

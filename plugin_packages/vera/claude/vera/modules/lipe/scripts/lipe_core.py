@@ -18,7 +18,9 @@ import jsonschema
 
 __all__ = [
     "ContractError",
+    "TREATMENTS",
     "calculate",
+    "check_references",
     "digest",
     "engine_hash",
     "money",
@@ -153,6 +155,15 @@ def _reference(ref: dict, sources: dict[str, dict]) -> str:
     return ref["quote"]
 
 
+def check_references(
+    sources: list[dict], references: list[dict], source_root: Path
+) -> None:
+    """Verify schema-validated source hashes, confinement, page and exact quotes."""
+    verified = _evidence({"sources": sources}, source_root)
+    for reference in references:
+        _reference(reference, verified)
+
+
 def _confirmed(review: dict | None) -> bool:
     return bool(review and review["status"] == "CONFIRMED")
 
@@ -180,8 +191,9 @@ def _periods(case: dict) -> list[int]:
     return [quarter]
 
 
-def calculate(case: dict, source_root: Path) -> dict:
+def calculate(case: dict, source_root: Path, catalog_path: Path | None = None) -> dict:
     """Return a persisted-ready draft or an explicit blocker, never a filed return."""
+    from lipe_catalog import assess_case_mappings
     from lipe_reconcile import reconcile
     from lipe_review import assess_observations
 
@@ -190,6 +202,7 @@ def calculate(case: dict, source_root: Path) -> dict:
     blockers: list[str] = []
     findings: list[dict] = []
     expected = _periods(case)
+    catalog_review = assess_case_mappings(case, catalog_path, blockers)
     if [module["period"] for module in case["modules"]] != expected:
         raise ContractError(
             "Modules must cover the full quarter in chronological order"
@@ -364,7 +377,7 @@ def calculate(case: dict, source_root: Path) -> dict:
         blockers,
     )
     result = {
-        "schema_version": "1.2",
+        "schema_version": "1.3",
         "pipeline": "LIPE",
         "status": "BLOCKED" if blockers else "DRAFT_FOR_REVIEW",
         "case_id": case["case_id"],
@@ -383,6 +396,7 @@ def calculate(case: dict, source_root: Path) -> dict:
         "composition": composition,
         "reconciliation": reconciliation,
         "observations": observations,
+        "catalog_review": catalog_review,
         "qualification": "PILOT_NOT_PROFESSIONALLY_ACCEPTED",
         "export_status": "NOT_AUTHORIZED",
     }

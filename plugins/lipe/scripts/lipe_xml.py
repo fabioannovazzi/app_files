@@ -76,13 +76,15 @@ def _schema() -> Any:
     )
 
 
-def build_test_xml(case: dict, source_root: Path) -> bytes:
+def build_test_xml(
+    case: dict, source_root: Path, catalog_path: Path | None = None
+) -> bytes:
     """Recalculate exact sources, use fictional identity and require valid XSD."""
     if case["data_origin"] != "SYNTHETIC":
         raise ContractError(
             "Real XML export unavailable: professional and importer acceptance pending"
         )
-    result = calculate(case, source_root)
+    result = calculate(case, source_root, catalog_path)
     if result["status"] != "DRAFT_FOR_REVIEW":
         raise ContractError("Blocked case cannot produce even a test XML")
     root = etree.Element(f"{{{NS}}}Fornitura", nsmap={"iv": NS})

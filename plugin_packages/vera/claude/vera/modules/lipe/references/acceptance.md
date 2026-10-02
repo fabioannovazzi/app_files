@@ -24,7 +24,8 @@ were recorded as NOT_RUN; they remain unexecuted professional UAT.
 The goal is reconstructing the path from registers to VP figures, comparing
 liquidations and payments, preserving code confirmations and preparing review
 outputs. A central vendor-code promotion requires curator review, never merely
-three agreeing studios. No central promotion mechanism is implemented here.
+three agreeing studios. Central-reference entries remain local and require
+attributed curator and disclosure reviews; no remote promotion service exists.
 
 ## Corrections established from official evidence
 
@@ -53,7 +54,7 @@ separate tax periods, partial deduction, reverse-charge mirrors, reviewed
 opening balances and manual adjustments, payment differences, content-bound
 revisions and source-text/PDF-page evidence. Text extraction requires visual
 review. Real cases require Studio Archive identity and unchanged input receipts.
-Case contract 1.2 also requires reviewed liquidation sections for each period.
+Case contract 1.3 also requires reviewed liquidation sections for each period.
 Code-level comparisons preserve their explicit date and VAT-measure bases,
 unmatched codes and unknown amounts. The three-tab Excel workpaper exposes
 source contributions, VP formulas, carry steps, engine comparison and F24 checks.
@@ -69,6 +70,13 @@ sections, keeps missing facts explicit and uses only source-backed recorded
 deadlines. A paginated PDF summary retains the same draft/blocked status and
 source references. These output checks do not authenticate reviewers or establish
 the tax validity of their explanations.
+
+The persistent local catalog now covers exact vendor/version lookup, client and
+studio overrides, local central-reference entries, original-source preservation,
+revision history, confidence policy, revocation and curator disputes. Bound case
+mappings are rechecked at every validity boundary within the quarter. Catalog
+classification, disclosure and reviewer roles remain attributed judgments, not
+authenticated decisions or proof that a central source is free of private data.
 
 Development validation includes independent workbook recalculation and changed-
 input checks for monthly values, partial reverse-charge deduction, credit and
@@ -100,9 +108,9 @@ blocked until the principal/interest basis is independently reviewed.
 
 ## Remaining implementation from the developer specification
 
-- Durable vendor/version, studio and client mapping catalog with explicit
-  precedence, revocation and curator-controlled promotion. Current mappings
-  belong to the single reviewed case.
+- Authenticated catalog roles, optional shared central-catalog distribution and
+  first-pass recognition/professional-correction measurement. Current central
+  reference records are local and do not synchronize between studios.
 - Authenticated approval/front-page contract for real XML and supplied-receipt
   processing. The synthetic XML command is not the real export workflow.
 

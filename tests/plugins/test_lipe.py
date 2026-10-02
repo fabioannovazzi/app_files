@@ -75,7 +75,7 @@ def prepare(case: dict, root: Path) -> Path:
         deadline = case["correspondence"]["filing_deadline"]
         deadline["evidence"] = ref(f"FICTIONAL calendar date {deadline['date']}.")
     path = root / "evidence.txt"
-    path.write_text("\n".join(lines))
+    path.write_text("\n".join(lines), encoding="utf-8")
     case["sources"] = [
         {
             "source_id": source_id,
@@ -284,8 +284,8 @@ def test_dossier_and_letter_keep_invoice_details_and_unknowns_explicit(
     case["observations"] = [observation(case)]
     result = calculate(case, prepare(case, tmp_path))
     folder = save_result(case, result, tmp_path)
-    dossier = (folder / "anomalies.md").read_text()
-    letter = (folder / "review-request.md").read_text()
+    dossier = (folder / "anomalies.md").read_text(encoding="utf-8")
+    letter = (folder / "review-request.md").read_text(encoding="utf-8")
     payload = read_json(folder / "anomalies.json")
     assert "PROT-SYN-01" in dossier
     assert "INV-SYN-01" in dossier
@@ -310,7 +310,7 @@ def test_review_outputs_escape_source_markup(tmp_path: Path) -> None:
     case["observations"] = [item]
     result = calculate(case, prepare(case, tmp_path))
     folder = save_result(case, result, tmp_path)
-    text = (folder / "anomalies.md").read_text()
+    text = (folder / "anomalies.md").read_text(encoding="utf-8")
     assert "<img" not in text
     assert "![leak](" not in text
     assert "&lt;img" in text
@@ -339,7 +339,7 @@ def test_letter_distinguishes_confirmed_and_proposed_deadline(
     }
     result = calculate(case, prepare(case, tmp_path))
     folder = save_result(case, result, tmp_path)
-    letter = (folder / "review-request.md").read_text()
+    letter = (folder / "review-request.md").read_text(encoding="utf-8")
     assert label + ": 30/11/2026" in letter
     assert "Cliente sintetico" in letter
     assert "Destinatario: Collega sintetico" in letter
@@ -446,7 +446,7 @@ def test_recorded_payment_explanation_is_not_requested_again(tmp_path: Path) -> 
     record_decision(case, item)
     result = calculate(case, tmp_path)
     folder = save_result(case, result, tmp_path)
-    letter = (folder / "review-request.md").read_text()
+    letter = (folder / "review-request.md").read_text(encoding="utf-8")
     assert "Decisione già registrata per OBS-1" in letter
     assert "Verificare ricevuta, tributo e periodo" not in letter
     assert result["modules"][0]["payment_status"] == "DIFFERENCE_TO_REVIEW"
@@ -861,7 +861,7 @@ def test_json_rejects_duplicate_keys_and_nonfinite(
     tmp_path: Path, payload: str
 ) -> None:
     path = tmp_path / "bad.json"
-    path.write_text(payload)
+    path.write_text(payload, encoding="utf-8")
     with pytest.raises(ContractError):
         read_json(path)
 
@@ -918,9 +918,9 @@ def test_persisted_result_is_hash_bound_and_never_overwritten(tmp_path: Path) ->
     assert saved["result_hash"] == digest(
         {k: v for k, v in saved.items() if k != "result_hash"}
     )
-    assert "110.00" in (folder / "vp.csv").read_text()
-    assert "DATI SINTETICI" in (folder / "workpaper.md").read_text()
-    assert "1.000,00" in (folder / "workpaper.md").read_text()
+    assert "110.00" in (folder / "vp.csv").read_text(encoding="utf-8")
+    assert "DATI SINTETICI" in (folder / "workpaper.md").read_text(encoding="utf-8")
+    assert "1.000,00" in (folder / "workpaper.md").read_text(encoding="utf-8")
     assert (folder / "review-request.md").is_file()
     with pytest.raises(FileExistsError):
         save_result(case, result, tmp_path)
@@ -931,7 +931,7 @@ def test_cli_persists_invalid_input_and_nonzero_exit(tmp_path: Path) -> None:
     prepare(case, tmp_path)
     case["sources"][0]["sha256"] = "0" * 64
     path = tmp_path / "case.json"
-    path.write_text(json.dumps(case))
+    path.write_text(json.dumps(case), encoding="utf-8")
     status = main(
         [
             "calculate",
@@ -951,7 +951,7 @@ def test_real_case_cannot_bypass_archive_with_output_flags(tmp_path: Path) -> No
     case = case_data()
     case["data_origin"] = "REAL"
     path = tmp_path / "real.json"
-    path.write_text(json.dumps(case))
+    path.write_text(json.dumps(case), encoding="utf-8")
     with pytest.raises(ContractError, match="Studio Archive"):
         main(
             [
@@ -968,11 +968,13 @@ def test_real_case_cannot_bypass_archive_with_output_flags(tmp_path: Path) -> No
 
 def test_extract_preserves_source_hash_and_text(tmp_path: Path) -> None:
     source = tmp_path / "synthetic.txt"
-    source.write_text("Synthetic VAT register 100,00 22,00")
+    source.write_text("Synthetic VAT register 100,00 22,00", encoding="utf-8")
     folder = extract(source, tmp_path / "out")
     receipt = read_json(folder / "extraction.json")
     assert receipt["source_sha256"] == hashlib.sha256(source.read_bytes()).hexdigest()
-    assert (folder / "page-0001.txt").read_text() == source.read_text()
+    assert (folder / "page-0001.txt").read_text(encoding="utf-8") == source.read_text(
+        encoding="utf-8"
+    )
 
 
 def test_blank_pdf_is_not_claimed_extracted(tmp_path: Path) -> None:
@@ -1193,7 +1195,7 @@ def archive_case(
         engagement_id=engagement["engagement_id"],
     )
     case_path = tmp_path / "reviewed-case.json"
-    case_path.write_text(json.dumps(case))
+    case_path.write_text(json.dumps(case), encoding="utf-8")
     imported_case = ledger.import_document(
         customer, client_id, engagement["engagement_id"], case_path, "source"
     )

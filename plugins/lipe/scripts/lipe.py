@@ -284,6 +284,7 @@ def main(argv: list[str] | None = None) -> int:
         command.add_argument("--source-root", type=Path)
         command.add_argument("--output", type=Path)
         command.add_argument("--client-engagement", type=Path)
+        command.add_argument("--catalog", type=Path)
     args = parser.parse_args(argv)
     if args.command == "extract":
         logging.info("Extraction: %s", extract(args.source, args.output))
@@ -297,7 +298,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "xml-test":
         from lipe_xml import build_test_xml
 
-        payload = build_test_xml(case, source_root)
+        payload = build_test_xml(case, source_root, args.catalog)
         output.mkdir(parents=True, exist_ok=True, mode=0o700)
         path = output / (
             "SYNTHETIC_NOT_FOR_FILING-" + hashlib.sha256(payload).hexdigest() + ".xml"
@@ -308,7 +309,7 @@ def main(argv: list[str] | None = None) -> int:
         logging.info("XSD-validated synthetic test XML: %s", path)
         return 0
     try:
-        result = calculate(case, source_root)
+        result = calculate(case, source_root, args.catalog)
     except (ContractError, OSError, UnicodeError) as exc:
         result = {
             "status": "BLOCKED_INVALID_INPUT",

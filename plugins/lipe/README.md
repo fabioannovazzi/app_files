@@ -3,7 +3,7 @@
 Evidence-linked review pilot for Italian periodic VAT communications. The
 pipeline reads reviewed register extractions, reconciles totals, calculates VP
 drafts, and retains source hashes, row composition and payment differences.
-Case contract 1.2 requires each period's liquidation sections, their reviewed
+Case contract 1.3 requires each period's liquidation sections, their reviewed
 comparison bases and source quotations. Reconciliation compares each VAT code;
 absence is not a printed zero and offsetting errors remain visible.
 
@@ -21,6 +21,14 @@ effects are never applied automatically. `anomalies.md`/JSON, an unsent per-clie
 `review-request.md` and a paginated `summary.pdf` accompany each valid-contract
 revision. The PDF uses embedded fonts and Italian money formatting. Unsupported
 glyphs are identified by Unicode code point; original text remains in JSON.
+
+The local SQLite catalog retains vendor/version classes, client and studio
+overrides, central-reference records, original source bytes, confidence and
+review history. Revisions/revocations are append-only; conflicts and explicit
+curator disputes block reuse. Calculation rechecks bound entries over the whole
+quarter against the current catalog. No classification or promotion is inferred
+from code strings or agreement counts, and declared roles are not authenticated.
+See `references/code-catalog.md` for commands and outstanding limits.
 
 Run `scripts/check_dependencies.py`, then follow `skills/lipe/SKILL.md`.
 The exact JSON contract is `schemas/case.schema.json`. The example is entirely
