@@ -83,6 +83,13 @@ The policy needs independent host administration; certificate subjects do not
 establish professional powers. Qualified-signature status is not tested. No real
 studio has configured or accepted this path, and it does not enable XML export.
 
+Supplied receipts are preserved and checked against the original official
+`DatiFatturaMessaggi_v2.0.xsd`, with its exact W3C import resolved offline. The
+reader records the declared file ID, date, outcome and all errors. A supplied
+transmitted file is preserved and its name compared literally. Receipt signature
+authenticity, content linkage, VP correspondence and filing acceptance remain
+unverified; schema-shaped synthetic signatures never establish those facts.
+
 Development validation includes independent workbook recalculation and changed-
 input checks for monthly values, partial reverse-charge deduction, credit and
 small-debt carry, quarterly interest rounding and Q4 exclusions, plus visual
@@ -116,9 +123,10 @@ blocked until the principal/interest basis is independently reviewed.
 
 - Authenticated catalog roles and optional shared central-catalog distribution. Current central
   reference records are local and do not synchronize between studios.
-- Real XML serialization with current approval re-verification and supplied-receipt
-  processing. The front-page contract and external CMS/mandate approval adapter
-  are implemented; the synthetic XML command is not the real export workflow.
+- Real XML serialization with current approval re-verification and comparison to
+  a supplied transmitted XML. The front-page, approval adapter and structural
+  receipt reader are implemented; receipt signature authenticity is not tested.
+  The synthetic XML command is not the real export workflow.
 
 These are engineering gaps, separate from the missing original-register and
 professional acceptance evidence above. The overall goal remains in progress.

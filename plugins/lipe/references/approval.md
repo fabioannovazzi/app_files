@@ -104,8 +104,9 @@ La ricevuta distingue verifica crittografica, poteri dichiarati dallo studio,
 qualifica della firma non testata e mancata firma/invio della dichiarazione.
 Un export successivo dovrà riverificare gli originali, lo stato corrente della
 policy/revoche e tutti i vincoli; un `approval.json` modificabile non è un token
-fidato. Il serializer reale e la gestione delle ricevute di invio restano fasi
-distinte ancora da implementare e qualificare.
+fidato. Il serializer reale resta da implementare e qualificare. La lettura
+strutturale delle ricevute fornite è descritta in `references/receipts.md` e non
+ne autentica la firma XAdES.
 
 ## Quali dati arrivano al modello
 

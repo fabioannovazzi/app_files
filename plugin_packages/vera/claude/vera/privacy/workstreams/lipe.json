@@ -30,7 +30,7 @@
       {
         "id": "vat-case-evidence",
         "purpose": "Read and review VAT registers, timing, codes, balances and VP drafts",
-        "content": "Selected full PDF pages or readable extracts, client and counterparty names, identifiers, dates, VAT codes, taxable bases, VAT and deductible amounts, liquidation and F24 evidence, code proposals, reviewer records, exceptions and outputs may enter the selected host model. The helpers inspect local sources, hashes, quotations and arithmetic without model or network requests. The local processing receipt cannot measure host exposure. No automatic anonymization or local-only model guarantee. The selected model may also read catalog classes, confidence, client/studio scope identifiers, source quotations or original bytes, attributed curator/disclosure decisions and explicitly requested local history. A catalog history can contain other authorized studio entries. No remote catalog transfer is performed. Private measurements preserve first-pass code inventories, source documents, client/engagement identities, model proposals, review outcomes and vendor/version counts. Reports omit client IDs but small cohorts are not guaranteed anonymous. Timing and professional identity remain attributed; no telemetry is sent. Front-page sources, registry-check declarations, public certificates, signed requests, mandates, professional names and authority references may also enter host model context when opened. The CMS helper runs locally with host-selected OpenSSL and supplied trust/CRL files; no network, model call or private signing key is used.",
+        "content": "Selected full PDF pages or readable extracts, client and counterparty names, identifiers, dates, VAT codes, taxable bases, VAT and deductible amounts, liquidation and F24 evidence, code proposals, reviewer records, exceptions and outputs may enter the selected host model. The helpers inspect local sources, hashes, quotations and arithmetic without model or network requests. The local processing receipt cannot measure host exposure. No automatic anonymization or local-only model guarantee. The selected model may also read catalog classes, confidence, client/studio scope identifiers, source quotations or original bytes, attributed curator/disclosure decisions and explicitly requested local history. A catalog history can contain other authorized studio entries. No remote catalog transfer is performed. Private measurements preserve first-pass code inventories, source documents, client/engagement identities, model proposals, review outcomes and vendor/version counts. Reports omit client IDs but small cohorts are not guaranteed anonymous. Timing and professional identity remain attributed; no telemetry is sent. Front-page sources, registry-check declarations, public certificates, signed requests, mandates, professional names and authority references may also enter host model context when opened. The CMS helper runs locally with host-selected OpenSSL and supplied trust/CRL files; no network, model call or private signing key is used. Supplied receipt XML, transmission IDs, filenames, dates, PEC message IDs, notes and errors, and any file supplied as transmitted may enter model context when opened. The receipt reader only validates the official schema and compares a filename; it preserves originals locally without network or model calls and does not authenticate XAdES or filing acceptance.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -101,12 +101,16 @@
     {
       "id": "signed-review-binding",
       "control": "Exact-version requests expire after 24 hours and require an independently host-configured firm policy, firm-signed scope-specific mandate and external professional CMS signature. Current certificate chains and supplied CRLs must verify. Original evidence is preserved, with recalculation and artifact hashes checked before and after verification. Host filesystem administration protects trust configuration; professional powers are firm assertions, and qualified or filing signatures are not established."
+    },
+    {
+      "id": "supplied-receipt-boundary",
+      "control": "The official receipt schema and exact W3C import are hash-checked and resolved offline. XML inspection disables external DTD/entity loading and rejects document types, nested receipt ambiguity and excessive size/depth/node count. Original bytes and reports use exclusive case-output folders. Schema validity, filename coincidence, signature authenticity, content identity and filing acceptance remain separate states."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-02",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "33e60a88aac4b7747a8cea54bf72c45e94719b26dabdf161fc5423a9cc7794cb"
+    "source_fingerprint": "21747ee9613aabcff15313a3e353c4ed129a4cce697d97f7829e62fe0aa68ada"
   }
 }

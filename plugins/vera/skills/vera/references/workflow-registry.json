@@ -560,7 +560,8 @@
         "modules/lipe/scripts/lipe.py",
         "modules/lipe/scripts/lipe_approval.py",
         "modules/lipe/scripts/lipe_catalog.py",
-        "modules/lipe/scripts/lipe_metrics.py"
+        "modules/lipe/scripts/lipe_metrics.py",
+        "modules/lipe/scripts/lipe_receipt.py"
       ]
     }
   ],

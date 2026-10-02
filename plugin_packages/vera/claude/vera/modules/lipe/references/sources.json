@@ -23,6 +23,24 @@
       "sha256": "ea4f9a6cf9d356c02c27852ecafaabdc2b89c0d53a7f50f13fd152ecc1f5dcdd",
       "status": "RETRIEVED_AND_INSPECTED",
       "professional_acceptance": "PENDING"
+    },
+    {
+      "id": "ae-trasmissione-2017.pdf",
+      "official_url": "https://def.finanze.it/DocTribFrontend/getContent.do?id=%7B3F69162E-B900-4A41-AB7A-8C24785B35B5%7D",
+      "retrieved_on": "2026-10-03",
+      "sha256": "8f13947daa32a7edfa0a36fccb4aa7d249aaaec7d61ff8fc00a1f86b934de423",
+      "status": "RETRIEVED_AND_INSPECTED",
+      "use": "Transmission annex section 3.5: supplied receipt format and XAdES-BES requirement only. Not a source for current arithmetic or deadlines.",
+      "professional_acceptance": "PENDING"
+    },
+    {
+      "id": "DatiFatturaMessaggi_v2.0.xsd",
+      "official_url": "https://www.fatturapa.gov.it/export/documenti/ws/trasmissione/v2.0/DatiFatturaMessaggi_v2.0.xsd",
+      "retrieved_on": "2026-10-03",
+      "sha256": "8a78580152a16648e45ac649c7a9f1a1c97ec5b15ce138da73c5c1b1c4dc388d",
+      "status": "RETRIEVED_AND_INSPECTED",
+      "use": "Offline supplied-receipt structural validation and declared status. XSD validation does not authenticate an Agenzia Entrate signature.",
+      "professional_acceptance": "PENDING"
     }
   ],
   "developer_pack": {

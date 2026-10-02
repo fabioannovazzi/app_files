@@ -277,10 +277,20 @@ requires the bundled official XSD with the complete W3C signature schema:
 python scripts/lipe.py xml-test --case examples/synthetic-case.json --source-root examples --output /absolute/synthetic/xml
 ```
 
-Real XML export, signing, submission and receipt processing are unavailable.
+Real XML export, signing and submission are unavailable.
 Do not work around the block, substitute real identifiers in test XML, invent
 authentication or mark professional/importer tests complete from unit tests.
 Follow the actual outstanding acceptance register before enabling that path.
+
+## Inspect a supplied receipt
+
+Follow `references/receipts.md` when the professional supplies a receipt. Preserve
+the original, read its official XML structure and declared outcome, and optionally
+compare its filename to a supplied transmitted file. The helper does not verify
+XAdES authenticity, connect receipt bytes to transmitted bytes, compare VP figures
+or query a tax portal. An ES01, a successful command or an XSD pass must never be
+reported as verified filing acceptance. Keep ES02 warnings and ES03 rejection
+visible; interpretation and follow-up require professional review.
 
 ## Delivery and privacy
 
@@ -319,3 +329,7 @@ and write case artifacts; they make no model or network call. Public source
 research uses non-identifying queries. No automatic anonymization, local-only
 model processing, remote central code sharing or legal compliance certification is
 provided. Keep the actual session disclosure distinct from these design limits.
+Supplied receipts and transmitted files can expose filenames, identifiers,
+timestamps, notes, errors, front-page fields and VP amounts. Record their actual
+inspection in the same session disclosure. A local receipt parser makes no
+network or model requests and cannot measure what the host has read.

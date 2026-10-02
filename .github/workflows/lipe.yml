@@ -31,8 +31,8 @@ jobs:
           $lipeOpenSSL | Out-File -FilePath $env:GITHUB_PATH -Append
       - run: openssl version
       - name: Verify evidence, tax arithmetic and export boundaries
-        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py --cov=plugins/lipe/scripts --cov-report=term-missing --cov-fail-under=80
-      - run: python -m black --check plugins/lipe/scripts tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py
-      - run: python -m isort --check-only plugins/lipe/scripts tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py tests/plugins/test_lipe_receipt.py --cov=plugins/lipe/scripts --cov-report=term-missing --cov-fail-under=80
+      - run: python -m black --check plugins/lipe/scripts tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py tests/plugins/test_lipe_receipt.py
+      - run: python -m isort --check-only plugins/lipe/scripts tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py tests/plugins/test_lipe_receipt.py
       - run: python -m mypy --follow-imports=skip --ignore-missing-imports plugins/lipe/scripts
       - run: python -m bandit -q -ll -r plugins/lipe/scripts

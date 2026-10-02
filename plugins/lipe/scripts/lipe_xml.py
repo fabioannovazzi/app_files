@@ -1,4 +1,4 @@
-"""Offline IVP18 serialization for synthetic conformance tests only.
+"""Offline official schemas, bounded XML reading and synthetic IVP18 serialization.
 
 Production export stays closed until professional UAT, authenticated review and
 real importer acceptance are implemented. A JSON reviewer name is not identity.
@@ -15,9 +15,13 @@ from urllib.request import url2pathname
 from lipe_core import ROOT, ContractError, calculate, read_json
 from lxml import etree
 
-__all__ = ["build_test_xml"]
+__all__ = ["build_test_xml", "load_official_schema", "parse_xml"]
 
 NS = "urn:www.agenziaentrate.gov.it:specificheTecniche:sco:ivp"
+MAX_XML_BYTES = 8 * 1024 * 1024
+SIGNATURE_SCHEMA_URI = (
+    "http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"
+)
 AMOUNTS = (
     ("vp2", "TotaleOperazioniAttive"),
     ("vp3", "TotaleOperazioniPassive"),
@@ -40,12 +44,15 @@ AMOUNTS = (
 class _OfflineResolver(etree.Resolver):  # type: ignore[misc]
     """Deny every schema dependency outside the exact verified local bundle."""
 
-    def __init__(self, allowed: set[Path]) -> None:
+    def __init__(self, allowed: set[Path], aliases: dict[str, Path]) -> None:
         super().__init__()
         self.allowed = allowed
+        self.aliases = aliases
 
     def resolve(self, url: str, pubid: str, context: Any) -> Any:
-        if url.startswith("file:"):
+        if url in self.aliases:
+            path = self.aliases[url]
+        elif url.startswith("file:"):
             parsed = urlsplit(url)
             if parsed.netloc or parsed.query or parsed.fragment:
                 raise ContractError("Unexpected XML schema dependency")
@@ -57,23 +64,66 @@ class _OfflineResolver(etree.Resolver):  # type: ignore[misc]
         return self.resolve_string(path.read_bytes(), context, base_url=path.as_uri())
 
 
-def _schema() -> Any:
+def load_official_schema(name: str = "IVP18") -> Any:
+    """Resolve only hash-verified official schemas, including the receipt import."""
+    schemas = {
+        "IVP18": "sco/ivp/fornituraIvp_2018_v1.xsd",
+        "RECEIPT": "receipts/DatiFatturaMessaggi_v2.0.xsd",
+    }
+    if name not in schemas:
+        raise ContractError("Unknown official LIPE schema")
     root = ROOT / "references/xsd"
     manifest = read_json(root / "manifest.json")
     allowed = set()
     for item in manifest["files"]:
-        path = (root / item["path"]).resolve()
+        original = root / item["path"]
+        path = original.resolve()
         if (
-            not path.is_relative_to(root.resolve())
+            original.is_symlink()
+            or not path.is_file()
+            or not path.is_relative_to(root.resolve())
             or hashlib.sha256(path.read_bytes()).hexdigest() != item["sha256"]
         ):
             raise ContractError("Official schema bundle changed")
         allowed.add(path)
     parser = etree.XMLParser(resolve_entities=False, load_dtd=False, no_network=True)
-    parser.resolvers.add(_OfflineResolver(allowed))
-    return etree.XMLSchema(
-        etree.parse((root / "sco/ivp/fornituraIvp_2018_v1.xsd").as_uri(), parser)
+    parser.resolvers.add(
+        _OfflineResolver(
+            allowed,
+            {
+                SIGNATURE_SCHEMA_URI: (
+                    root / "sco/ivp/xmldsig-core-schema.xsd"
+                ).resolve()
+            },
+        )
     )
+    return etree.XMLSchema(etree.parse((root / schemas[name]).as_uri(), parser))
+
+
+def parse_xml(raw: bytes) -> Any:
+    """Bound untrusted XML and prohibit DTD/entities or external resource loading."""
+    if not raw or len(raw) > MAX_XML_BYTES:
+        raise ContractError("XML is empty or exceeds the 8 MiB inspection limit")
+    parser = etree.XMLParser(
+        resolve_entities=False, load_dtd=False, no_network=True, huge_tree=False
+    )
+    try:
+        root = etree.fromstring(raw, parser)
+    except etree.XMLSyntaxError as exc:
+        raise ContractError("Malformed XML: " + str(exc)[:1000]) from exc
+    if root.getroottree().docinfo.doctype:
+        raise ContractError("XML document types are not permitted")
+    stack = [(root, 1)]
+    count = 0
+    while stack:
+        element, depth = stack.pop()
+        count += 1
+        if count > 10000 or depth > 64:
+            raise ContractError("XML exceeds the element or depth inspection limit")
+        if isinstance(element, etree._Entity):
+            raise ContractError("XML entity references are not permitted")
+        stack.extend((child, depth + 1) for child in element)
+    return root
 
 
 def build_test_xml(
@@ -121,7 +171,7 @@ def build_test_xml(
                 if key == "vp13":
                     tag(node, "Metodo", module["vp13_method"])
                 tag(node, name, value.replace(".", ","))
-    schema = _schema()
+    schema = load_official_schema()
     if not schema.validate(root):
         raise ContractError("XSD validation failed: " + str(schema.error_log))
     return bytes(
