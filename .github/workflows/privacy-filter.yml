@@ -1,0 +1,35 @@
+name: Optional Privacy Filter connector
+
+on:
+  pull_request:
+    paths:
+      - 'connectors/privacy-filter/**'
+      - '.github/workflows/privacy-filter.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'connectors/privacy-filter/**'
+      - '.github/workflows/privacy-filter.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  connector:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install connector test dependencies without model weights
+        run: python -m pip install -r connectors/privacy-filter/requirements-dev.txt -e connectors/privacy-filter
+      - name: Verify file boundaries, response privacy and real stdio protocol
+        run: python -m pytest connectors/privacy-filter/tests/test_connector.py --cov=mparanza_privacy_filter --cov-report=term-missing --cov-fail-under=80
+      - name: Check code quality
+        run: |
+          python -m black --check connectors/privacy-filter
+          python -m isort --check-only --profile black connectors/privacy-filter
+          python -m mypy --config-file=connectors/privacy-filter/mypy.ini connectors/privacy-filter/src connectors/privacy-filter/install.py
+          python -m bandit -q -ll -r connectors/privacy-filter/src connectors/privacy-filter/install.py
