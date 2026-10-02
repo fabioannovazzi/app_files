@@ -3027,9 +3027,10 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 continue
             if plugin_root.name == "lipe":
                 assert (
-                    "workpaper, VP table, findings and readable model-data report are normal outputs"
+                    "VP table, findings and readable model-data report are normal outputs"
                     in normalized_skill_text
                 )
+                assert "workpaper.xlsx" in normalized_skill_text
                 assert "codex_run_review.md" in normalized_skill_text
                 assert (
                     "Never write run outputs inside this Git workspace"

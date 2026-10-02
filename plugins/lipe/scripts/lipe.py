@@ -10,7 +10,7 @@ import logging
 import sys
 from pathlib import Path
 
-from lipe_core import ROOT, ContractError, calculate, digest, read_json
+from lipe_core import ROOT, ContractError, calculate, digest, money, read_json
 
 __all__ = ["extract", "save_result", "main"]
 
@@ -88,6 +88,10 @@ def save_result(case: dict, result: dict, output: Path) -> Path:
     folder.mkdir(parents=True, mode=0o700, exist_ok=False)
     _write_json(folder / "case.json", case)
     _write_json(folder / "result.json", result)
+    if result["status"] != "BLOCKED_INVALID_INPUT":
+        from lipe_workbook import write_workbook
+
+        write_workbook(case, result, folder / "workpaper.xlsx")
     with (folder / "vp.csv").open("x", encoding="utf-8", newline="") as handle:
         fields = [
             "period",
@@ -154,7 +158,9 @@ def save_result(case: dict, result: dict, output: Path) -> Path:
             + (
                 "Non compilato"
                 if module["rows"][key] is None
-                else module["rows"][key].replace(".", ",")
+                else f"{money(module['rows'][key]):,.2f}".translate(
+                    str.maketrans(",.", ".,")
+                )
             )
             + " |"
             for key in fields[1:]
@@ -172,6 +178,11 @@ def save_result(case: dict, result: dict, output: Path) -> Path:
         "",
         "[Composizione per riga e riferimenti alle fonti](result.json) · "
         "[Dati e decisioni registrate](case.json) · [Tabella VP](vp.csv)",
+        (
+            "[Workpaper Excel: riconciliazione, formule VP e versamenti](workpaper.xlsx)"
+            if result["status"] != "BLOCKED_INVALID_INPUT"
+            else "Workpaper Excel non generato: contratto di input non valido."
+        ),
         "",
     ]
     lines += ["## Scarti da esaminare", ""]

@@ -112,6 +112,22 @@ something changes; the case, rules and engine hashes identify the revision.
 Open `workpaper.md`, show the VP table, findings and unresolved requirements,
 and make the row composition in `result.json` available. Explain each difference
 against the customer's liquidation; it does not replace the register source.
+Supply `liquidations` for every period using case contract 1.1. Each sales or
+purchase section explicitly declares its taxable-base basis (registration,
+chargeability or deduction) and VAT basis (recorded, output or deductible).
+Confirm that meaning against the actual print; do not choose a basis merely to
+make a difference disappear. Missing lines remain absent, not assumed zero.
+The comparison never changes the VP3 registration basis or a reviewed deduction.
+
+Open `workpaper.xlsx`: its three tabs are Riconciliazione, VP and F24. Inspect
+per-code discrepancies and source references, the visible VP formulas and their
+comparison to the saved engine result, and payment differences. Draft a supported
+explanation for each discrepancy from the source evidence; do not infer closing
+entries, lateness, omissions or remedies from a numeric difference alone. The
+workbook uses standard numeric cells; separators follow the spreadsheet viewer's
+locale. It is an inspectable draft, not an approval or a replacement case file.
+Change evidence/decisions in the case and rerun to produce a new revision. Never
+treat a manually edited workbook as the approved result.
 Prepare a source-backed colleague message from the model's reviewed findings,
 using `review-request.md` as a request template only. Do not send it without an
 explicit user request. The named reviewer is an attributed local record, not
@@ -143,7 +159,7 @@ Current user restrictions govern any optional external attestation or publishing
 
 ## Codex-Native Run UX
 
-Default output policy: the workpaper, VP table, findings and readable model-data
+Default output policy: the Markdown and Excel workpapers, VP table, findings and readable model-data
 report are normal outputs. Prepare `codex_run_review.md` beside them with actual
 checks, unresolved questions and output paths.
 Never write run outputs inside this Git workspace or a published directory.

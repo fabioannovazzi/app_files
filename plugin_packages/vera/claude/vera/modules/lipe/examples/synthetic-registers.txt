@@ -8,3 +8,12 @@ Module 5: VP9 0.00; VP10 0.00; VP11 0.00; VP13 0.00; credit withheld 0.00; paid 
 SALES-6: base 1000.00; tax 220.00.
 PURCHASES-6: base 500.00; tax 110.00.
 Module 6: VP9 0.00; VP10 0.00; VP11 0.00; VP13 0.00; credit withheld 0.00; paid 110.00; liquidation VAT 110.00.
+SYNTHETIC liquidation 4: complete sales and purchases sections.
+LIQUIDATION 4 SALES V22: base 1000.00; tax 220.00.
+LIQUIDATION 4 PURCHASES A22: base 500.00; tax 110.00.
+SYNTHETIC liquidation 5: complete sales and purchases sections.
+LIQUIDATION 5 SALES V22: base 1000.00; tax 220.00.
+LIQUIDATION 5 PURCHASES A22: base 500.00; tax 110.00.
+SYNTHETIC liquidation 6: complete sales and purchases sections.
+LIQUIDATION 6 SALES V22: base 1000.00; tax 220.00.
+LIQUIDATION 6 PURCHASES A22: base 500.00; tax 110.00.

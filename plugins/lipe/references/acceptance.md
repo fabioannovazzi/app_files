@@ -43,6 +43,19 @@ separate tax periods, partial deduction, reverse-charge mirrors, reviewed
 opening balances and manual adjustments, payment differences, content-bound
 revisions and source-text/PDF-page evidence. Text extraction requires visual
 review. Real cases require Studio Archive identity and unchanged input receipts.
+Case contract 1.1 also requires reviewed liquidation sections for each period.
+Code-level comparisons preserve their explicit date and VAT-measure bases,
+unmatched codes and unknown amounts. The three-tab Excel workpaper exposes
+source contributions, VP formulas, carry steps, engine comparison and F24 checks.
+The portable exporter uses the already-supported Python XlsxWriter library;
+the desktop artifact-tool library is used for independent development validation,
+not required in the installed Python runtime.
+
+Development validation includes independent workbook recalculation and changed-
+input checks for monthly values, partial reverse-charge deduction, credit and
+small-debt carry, quarterly interest rounding and Q4 exclusions, plus visual
+inspection of all three sheets. This is not native Excel, professional or
+submission-system acceptance.
 
 Unsupported features block a VP calculation: group/mixed VAT, extraordinary
 operations, subcontracting, special determination methods, cross-year timing,
@@ -65,6 +78,23 @@ blocked until the principal/interest basis is independently reviewed.
 6. Native Codex/Cowork workflow acceptance, including the readable privacy
    disclosure and resumed case corrections. Installed-package behavior is not
    established by source tests or ZIP parity.
+
+## Remaining implementation from the developer specification
+
+- Durable vendor/version, studio and client mapping catalog with explicit
+  precedence, revocation and curator-controlled promotion. Current mappings
+  belong to the single reviewed case.
+- A structured semantic-anomaly dossier with invoice/protocol references,
+  proposed tax effects and recorded resolutions. Current mechanical findings
+  and model review instructions do not constitute this full dossier.
+- The complete per-client correspondence package and PDF summary. The current
+  review-request file is a template; it does not invent invoice references,
+  recipients, filing deadlines or explanations.
+- Authenticated approval/front-page contract for real XML and supplied-receipt
+  processing. The synthetic XML command is not the real export workflow.
+
+These are engineering gaps, separate from the missing original-register and
+professional acceptance evidence above. The overall goal remains in progress.
 
 The prototype's 26 scenarios are requirements evidence, not an inherited test
 certificate. New automated tests use wholly synthetic evidence and independent

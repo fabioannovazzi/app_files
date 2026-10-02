@@ -8,7 +8,9 @@ import importlib.util
 import json
 import shutil
 import sys
+import zipfile
 from pathlib import Path
+from xml.etree import ElementTree
 
 import pytest
 from pypdf import PdfWriter
@@ -19,6 +21,8 @@ sys.path.insert(0, str(PLUGIN / "scripts"))
 from lipe import extract, main, save_result
 from lipe_core import ContractError, calculate, digest, money, read_json, validate
 from lipe_xml import build_test_xml
+
+XLSX_NS = {"s": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
 
 
 def case_data() -> dict:
@@ -50,6 +54,14 @@ def prepare(case: dict, root: Path) -> Path:
         module["evidence"] = ref(
             f"ADJUSTMENTS {module['period']}: confirmed synthetic values."
         )
+    for document in case["liquidations"]:
+        document["evidence"] = ref(f"LIQUIDATION {document['period']}: complete.")
+        for section in document["sections"]:
+            for row in section["rows"]:
+                row["evidence"] = ref(
+                    f"LIQUIDATION {document['period']} {section['side']} "
+                    f"{section['tax_basis']} {row['code']}: {row['base']} {row['tax']}."
+                )
     path = root / "evidence.txt"
     path.write_text("\n".join(lines))
     case["sources"] = [
@@ -77,6 +89,8 @@ def quarterly(quarter: int = 2, regime: str = "QUARTERLY_OPTION") -> dict:
     case.update(regime=regime, quarter=quarter)
     case["modules"] = [case["modules"][0]]
     case["modules"][0]["period"] = quarter
+    case["liquidations"] = [case["liquidations"][0]]
+    case["liquidations"][0]["period"] = quarter
     case["registers"] = case["registers"][:2]
     for register in case["registers"]:
         register["period"] = quarter
@@ -107,6 +121,164 @@ def test_monthly_fixture_has_independently_known_vp_values() -> None:
         "vp14_credit": "0.00",
     }
     assert [m["payment_status"] for m in result["modules"]] == ["MATCH"] * 3
+
+
+def test_per_code_comparison_exposes_offsetting_errors(tmp_path: Path) -> None:
+    case = case_data()
+    case["liquidations"][0]["sections"][0]["rows"][0]["tax"] = "230.00"
+    case["liquidations"][0]["sections"][1]["rows"][0]["tax"] = "120.00"
+    result = calculate(case, prepare(case, tmp_path))
+    assert result["reconciliation"][0]["tax_difference"] == "-10.00"
+    assert result["reconciliation"][1]["tax_difference"] == "-10.00"
+    assert result["modules"][0]["rows"]["vp6_debit"] == "110.00"
+    assert [f["code"] for f in result["findings"]] == [
+        "CODE_LIQUIDATION_DIFFERENCE",
+        "CODE_LIQUIDATION_DIFFERENCE",
+    ]
+
+
+@pytest.mark.parametrize(
+    "tax_basis,expected",
+    [("RECORDED", "110.00"), ("DEDUCTIBLE", "44.00"), ("OUTPUT", "0.00")],
+)
+def test_liquidation_basis_distinguishes_recorded_and_deductible_tax(
+    tmp_path: Path, tax_basis: str, expected: str
+) -> None:
+    case = case_data()
+    case["registers"][1]["rows"][0]["deductible_tax"] = "44.00"
+    section = case["liquidations"][0]["sections"][1]
+    section["tax_basis"] = tax_basis
+    section["rows"][0]["tax"] = expected
+    result = calculate(case, prepare(case, tmp_path))
+    assert result["reconciliation"][1]["register_tax"] == expected
+    assert result["reconciliation"][1]["status"] == "MATCH"
+
+
+def test_reconciliation_period_basis_does_not_change_vp_base(tmp_path: Path) -> None:
+    case = case_data()
+    case["registers"][3]["rows"][0]["deduction_period"] = 4
+    case["liquidations"][0]["sections"][1]["base_basis"] = "DEDUCTION"
+    result = calculate(case, prepare(case, tmp_path))
+    assert result["reconciliation"][1]["register_base"] == "1000.00"
+    assert result["reconciliation"][1]["register_tax"] == "220.00"
+    assert result["modules"][0]["rows"]["vp3"] == "500.00"
+
+
+def test_missing_liquidation_line_is_not_zero(tmp_path: Path) -> None:
+    case = case_data()
+    case["liquidations"][0]["sections"][0]["rows"] = []
+    result = calculate(case, prepare(case, tmp_path))
+    item = result["reconciliation"][0]
+    assert item["status"] == "NOT_REPORTED"
+    assert item["liquidation_tax"] is None
+    assert item["tax_difference"] is None
+
+
+def test_liquidation_only_code_has_no_invented_register_amount(tmp_path: Path) -> None:
+    case = case_data()
+    case["liquidations"][0]["sections"][0]["rows"][0]["code"] = "EXTRA"
+    result = calculate(case, prepare(case, tmp_path))
+    item = result["reconciliation"][0]
+    assert item["status"] == "NO_REGISTER_ROWS"
+    assert item["register_tax"] is None
+    assert item["tax_difference"] is None
+
+
+@pytest.mark.parametrize("missing", ["document", "section", "review"])
+def test_incomplete_liquidation_blocks_vp(tmp_path: Path, missing: str) -> None:
+    case = case_data()
+    if missing == "document":
+        case["liquidations"].pop(0)
+    elif missing == "section":
+        case["liquidations"][0]["sections"].pop()
+    else:
+        case["liquidations"][0]["review"]["status"] = "PROPOSED"
+    result = calculate(case, prepare(case, tmp_path))
+    assert result["status"] == "BLOCKED"
+    assert result["modules"] == []
+
+
+@pytest.mark.parametrize("duplicate", ["document", "section", "code"])
+def test_duplicate_liquidation_records_are_rejected(
+    tmp_path: Path, duplicate: str
+) -> None:
+    case = case_data()
+    target = case["liquidations"]
+    if duplicate == "section":
+        target = target[0]["sections"]
+    elif duplicate == "code":
+        target = target[0]["sections"][0]["rows"]
+    target.append(copy.deepcopy(target[0]))
+    with pytest.raises(ContractError, match="Duplicate"):
+        calculate(case, prepare(case, tmp_path))
+
+
+def test_unknown_mapping_does_not_claim_reconciliation_match(tmp_path: Path) -> None:
+    case = case_data()
+    case["mappings"][0]["review"]["status"] = "PROPOSED"
+    result = calculate(case, prepare(case, tmp_path))
+    assert result["reconciliation"][0]["register_tax"] is None
+    assert result["reconciliation"][0]["status"] == "BASIS_NOT_CONFIRMED"
+
+
+def workbook_cells(path: Path, sheet: int) -> dict:
+    """Inspect saved formulas/caches without needing Excel or another service."""
+    with zipfile.ZipFile(path) as archive:
+        document = ElementTree.fromstring(
+            archive.read(f"xl/worksheets/sheet{sheet}.xml")
+        )
+    return {cell.attrib["r"]: cell for cell in document.findall(".//s:c", XLSX_NS)}
+
+
+def test_excel_retains_live_vp_formulas_and_independent_expected_cache(
+    tmp_path: Path,
+) -> None:
+    case = case_data()
+    result = calculate(case, PLUGIN / "examples")
+    folder = save_result(case, result, tmp_path)
+    cells = workbook_cells(folder / "workpaper.xlsx", 2)
+    assert cells["C32"].find("s:f", XLSX_NS) is not None
+    assert cells["C32"].findtext("s:v", namespaces=XLSX_NS) == "110.0"
+    assert cells["D7"].findtext("s:f", namespaces=XLSX_NS) == "C33"
+    assert cells["D8"].findtext("s:f", namespaces=XLSX_NS) == "C34"
+    assert cells["C36"].findtext("s:v", namespaces=XLSX_NS) == "0"
+
+
+def test_excel_missing_payment_and_q4_output_do_not_turn_into_zero(
+    tmp_path: Path,
+) -> None:
+    case = quarterly(4)
+    case["modules"][0]["principal_paid"] = None
+    result = calculate(case, prepare(case, tmp_path))
+    folder = save_result(case, result, tmp_path)
+    vp = workbook_cells(folder / "workpaper.xlsx", 2)
+    f24 = workbook_cells(folder / "workpaper.xlsx", 3)
+    assert "C32" not in vp
+    assert "D8" not in f24 or f24["D8"].find("s:v", XLSX_NS) is None
+    assert not f24["C8"].findtext("s:v", namespaces=XLSX_NS)
+    assert not f24["F8"].findtext("s:v", namespaces=XLSX_NS)
+
+
+def test_excel_treats_external_strings_as_text(tmp_path: Path) -> None:
+    case = case_data()
+    case["client_id"] = '=HYPERLINK("https://example.invalid", "fake")'
+    case["liquidations"][0]["sections"][0]["rows"][0]["code"] = "=1+1"
+    result = calculate(case, prepare(case, tmp_path))
+    folder = save_result(case, result, tmp_path)
+    cells = workbook_cells(folder / "workpaper.xlsx", 1)
+    assert cells["D8"].find("s:f", XLSX_NS) is None
+    with zipfile.ZipFile(folder / "workpaper.xlsx") as archive:
+        assert not any("externalLink" in name for name in archive.namelist())
+
+
+def test_blocked_excel_contains_no_calculated_tax_values(tmp_path: Path) -> None:
+    case = case_data()
+    case["opening"] = None
+    result = calculate(case, prepare(case, tmp_path))
+    folder = save_result(case, result, tmp_path)
+    cells = workbook_cells(folder / "workpaper.xlsx", 2)
+    assert "C32" not in cells
+    assert all(cell.find("s:f", XLSX_NS) is None for cell in cells.values())
 
 
 def test_vat_deduction_shift_does_not_move_purchase_base(tmp_path: Path) -> None:
@@ -396,6 +568,7 @@ def test_persisted_result_is_hash_bound_and_never_overwritten(tmp_path: Path) ->
     )
     assert "110.00" in (folder / "vp.csv").read_text()
     assert "DATI SINTETICI" in (folder / "workpaper.md").read_text()
+    assert "1.000,00" in (folder / "workpaper.md").read_text()
     assert (folder / "review-request.md").is_file()
     with pytest.raises(FileExistsError):
         save_result(case, result, tmp_path)

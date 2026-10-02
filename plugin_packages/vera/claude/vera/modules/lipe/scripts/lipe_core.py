@@ -158,6 +158,8 @@ def _periods(case: dict) -> list[int]:
 
 def calculate(case: dict, source_root: Path) -> dict:
     """Return a persisted-ready draft or an explicit blocker, never a filed return."""
+    from lipe_reconcile import reconcile
+
     validate(case)
     sources = _evidence(case, source_root)
     blockers: list[str] = []
@@ -318,8 +320,15 @@ def calculate(case: dict, source_root: Path) -> dict:
         if not _confirmed(module["review"]):
             blockers.append(f"ADJUSTMENTS_NOT_REVIEWED:{module['period']}")
         _reference(module["evidence"], sources)
+    reconciliation = reconcile(
+        case,
+        lambda ref: _reference(ref, sources),
+        _amount_in_quote,
+        blockers,
+        findings,
+    )
     result = {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "pipeline": "LIPE",
         "status": "BLOCKED" if blockers else "DRAFT_FOR_REVIEW",
         "case_id": case["case_id"],
@@ -333,11 +342,17 @@ def calculate(case: dict, source_root: Path) -> dict:
         "rules_hash": hashlib.sha256(
             (ROOT / "references/rules.json").read_bytes()
         ).hexdigest(),
-        "engine_hash": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "engine_hash": digest(
+            {
+                path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+                for path in sorted(Path(__file__).parent.glob("lipe*.py"))
+            }
+        ),
         "blockers": sorted(set(blockers)),
         "findings": findings,
         "modules": [],
         "composition": composition,
+        "reconciliation": reconciliation,
         "qualification": "PILOT_NOT_PROFESSIONALLY_ACCEPTED",
         "export_status": "NOT_AUTHORIZED",
     }

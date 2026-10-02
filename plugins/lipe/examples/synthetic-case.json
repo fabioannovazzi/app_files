@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "pipeline": "LIPE",
   "case_id": "synthetic-quarter",
   "client_id": "synthetic-client",
@@ -23,7 +23,7 @@
     {
       "source_id": "synthetic-source",
       "path": "synthetic-registers.txt",
-      "sha256": "4e4acb57843e953d2c8915178fe7e3c42ec12fa4bce2b8da6c8585e075824b08"
+      "sha256": "097af078ac9e7aca73d3b98d66c13b8c07822d52a8fa5f9d6938e34f8e0e8774"
     }
   ],
   "opening": {
@@ -394,6 +394,161 @@
         "page": 1,
         "quote": "Module 6: VP9 0.00; VP10 0.00; VP11 0.00; VP13 0.00; credit withheld 0.00; paid 110.00; liquidation VAT 110.00."
       }
+    }
+  ],
+  "liquidations": [
+    {
+      "period": 4,
+      "number_format": "en-US",
+      "evidence": {
+        "source_id": "synthetic-source",
+        "page": 1,
+        "quote": "SYNTHETIC liquidation 4: complete sales and purchases sections."
+      },
+      "review": {
+        "status": "CONFIRMED",
+        "reviewer": "SYNTHETIC TEST ACTOR",
+        "reviewed_on": "2026-10-02",
+        "reason": "Synthetic fixture only; no professional validation claimed."
+      },
+      "sections": [
+        {
+          "side": "SALES",
+          "base_basis": "REGISTRATION",
+          "tax_basis": "OUTPUT",
+          "rows": [
+            {
+              "code": "V22",
+              "base": "1000.00",
+              "tax": "220.00",
+              "evidence": {
+                "source_id": "synthetic-source",
+                "page": 1,
+                "quote": "LIQUIDATION 4 SALES V22: base 1000.00; tax 220.00."
+              }
+            }
+          ]
+        },
+        {
+          "side": "PURCHASES",
+          "base_basis": "REGISTRATION",
+          "tax_basis": "DEDUCTIBLE",
+          "rows": [
+            {
+              "code": "A22",
+              "base": "500.00",
+              "tax": "110.00",
+              "evidence": {
+                "source_id": "synthetic-source",
+                "page": 1,
+                "quote": "LIQUIDATION 4 PURCHASES A22: base 500.00; tax 110.00."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "period": 5,
+      "number_format": "en-US",
+      "evidence": {
+        "source_id": "synthetic-source",
+        "page": 1,
+        "quote": "SYNTHETIC liquidation 5: complete sales and purchases sections."
+      },
+      "review": {
+        "status": "CONFIRMED",
+        "reviewer": "SYNTHETIC TEST ACTOR",
+        "reviewed_on": "2026-10-02",
+        "reason": "Synthetic fixture only; no professional validation claimed."
+      },
+      "sections": [
+        {
+          "side": "SALES",
+          "base_basis": "REGISTRATION",
+          "tax_basis": "OUTPUT",
+          "rows": [
+            {
+              "code": "V22",
+              "base": "1000.00",
+              "tax": "220.00",
+              "evidence": {
+                "source_id": "synthetic-source",
+                "page": 1,
+                "quote": "LIQUIDATION 5 SALES V22: base 1000.00; tax 220.00."
+              }
+            }
+          ]
+        },
+        {
+          "side": "PURCHASES",
+          "base_basis": "REGISTRATION",
+          "tax_basis": "DEDUCTIBLE",
+          "rows": [
+            {
+              "code": "A22",
+              "base": "500.00",
+              "tax": "110.00",
+              "evidence": {
+                "source_id": "synthetic-source",
+                "page": 1,
+                "quote": "LIQUIDATION 5 PURCHASES A22: base 500.00; tax 110.00."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "period": 6,
+      "number_format": "en-US",
+      "evidence": {
+        "source_id": "synthetic-source",
+        "page": 1,
+        "quote": "SYNTHETIC liquidation 6: complete sales and purchases sections."
+      },
+      "review": {
+        "status": "CONFIRMED",
+        "reviewer": "SYNTHETIC TEST ACTOR",
+        "reviewed_on": "2026-10-02",
+        "reason": "Synthetic fixture only; no professional validation claimed."
+      },
+      "sections": [
+        {
+          "side": "SALES",
+          "base_basis": "REGISTRATION",
+          "tax_basis": "OUTPUT",
+          "rows": [
+            {
+              "code": "V22",
+              "base": "1000.00",
+              "tax": "220.00",
+              "evidence": {
+                "source_id": "synthetic-source",
+                "page": 1,
+                "quote": "LIQUIDATION 6 SALES V22: base 1000.00; tax 220.00."
+              }
+            }
+          ]
+        },
+        {
+          "side": "PURCHASES",
+          "base_basis": "REGISTRATION",
+          "tax_basis": "DEDUCTIBLE",
+          "rows": [
+            {
+              "code": "A22",
+              "base": "500.00",
+              "tax": "110.00",
+              "evidence": {
+                "source_id": "synthetic-source",
+                "page": 1,
+                "quote": "LIQUIDATION 6 PURCHASES A22: base 500.00; tax 110.00."
+              }
+            }
+          ]
+        }
+      ]
     }
   ]
 }
