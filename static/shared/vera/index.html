@@ -346,6 +346,24 @@
       font-weight: 700;
     }
 
+    .connections { scroll-margin-top: 88px; }
+    .connections__body {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(28px, 6vw, 72px);
+    }
+    .connections__body article { padding-top: 24px; border-top: 1px solid var(--cyan); }
+    .connections__body h3 { margin-bottom: 18px; }
+    .connections__body p { max-width: 60ch; color: var(--blue); line-height: 1.6; }
+    .connections__body p + p { margin-top: 16px; }
+    .connections__data {
+      max-width: 85ch;
+      margin-top: 36px;
+      color: var(--blue);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
     .contributors { scroll-margin-top: 88px; }
     .contributors .section-head { margin-bottom: clamp(38px, 6vw, 64px); }
     .contributors .section-head__title h2 { max-width: 9ch; }
@@ -1086,6 +1104,7 @@
       .hero-install__actions { grid-template-columns: 1fr; }
       .vera-mark { width: 132px; grid-row: 1; padding: 0 0 28px; border-left: 0; border-bottom: 1px solid var(--cyan); }
       .section-head { grid-template-columns: 1fr; gap: 20px; }
+      .connections__body { grid-template-columns: 1fr; }
       .run-report { grid-template-columns: 1fr; gap: 40px; }
       .run-report__intro h2 { max-width: 14ch; }
       .workstream-head { grid-template-columns: 1fr; gap: 10px; }
@@ -1635,6 +1654,27 @@
       </div>
     </section>
 
+    <section class="section-block connections" id="connections" aria-labelledby="connections-title">
+      <div class="section-head">
+        <div class="section-head__title">
+          <h2 id="connections-title" data-i18n="connections.title">Integrazioni</h2>
+        </div>
+        <p data-i18n="connections.intro">Il collegamento dei tuoi strumenti si gestisce nell’app in cui usi Vera.</p>
+      </div>
+      <div class="connections__body">
+        <article aria-labelledby="connections-knowledge-title">
+          <h3 id="connections-knowledge-title" data-i18n="connections.knowledge.title">Usare Vera con Second Brain</h3>
+          <p data-i18n="connections.knowledge.copy">Se hai già Second Brain, collegalo nell’app in cui usi Vera e autorizza gli strumenti di ricerca e lettura. Poi chiedi a Vera di consultare una procedura, un precedente o un modello dello studio per il lavoro che stai svolgendo.</p>
+          <p data-i18n="connections.knowledge.limits">Vera consulta le fonti disponibili senza modificarle. Non fornisce Second Brain, non richiede Microsoft 365 e funziona anche senza un archivio collegato. La disponibilità della consultazione dipende dal connettore e dagli strumenti accessibili nella sessione.</p>
+        </article>
+        <article aria-labelledby="connections-skills-title">
+          <h3 id="connections-skills-title" data-i18n="connections.skills.title">Usare le proprie skill</h3>
+          <p data-i18n="connections.skills.copy">Se vuoi svolgere un lavoro con una tua skill, richiamala direttamente nell’app in cui l’hai installata. Collegare Second Brain non importa, seleziona o esegue le skill dello studio in Vera.</p>
+        </article>
+      </div>
+      <p class="connections__data" data-i18n="connections.data">Query, risultati di ricerca e testi consultati possono entrare nel contesto del modello dell’app scelta. Login, permessi e conservazione dipendono dall’app e dal servizio collegato.</p>
+    </section>
+
   </main>
 
   <footer>
@@ -1856,6 +1896,14 @@
         "install.coworkGuide": "Scarica ZIP per Cowork",
         "install.coworkZipHelp": "Pacchetto per Cowork e istruzioni per installare o aggiornare.",
         "install.video.title": "Collega ChatGPT al computer con Codex",
+        "connections.title": "Integrazioni",
+        "connections.intro": "Il collegamento dei tuoi strumenti si gestisce nell’app in cui usi Vera.",
+        "connections.knowledge.title": "Usare Vera con Second Brain",
+        "connections.knowledge.copy": "Se hai già Second Brain, collegalo nell’app in cui usi Vera e autorizza gli strumenti di ricerca e lettura. Poi chiedi a Vera di consultare una procedura, un precedente o un modello dello studio per il lavoro che stai svolgendo.",
+        "connections.knowledge.limits": "Vera consulta le fonti disponibili senza modificarle. Non fornisce Second Brain, non richiede Microsoft 365 e funziona anche senza un archivio collegato. La disponibilità della consultazione dipende dal connettore e dagli strumenti accessibili nella sessione.",
+        "connections.skills.title": "Usare le proprie skill",
+        "connections.skills.copy": "Se vuoi svolgere un lavoro con una tua skill, richiamala direttamente nell’app in cui l’hai installata. Collegare Second Brain non importa, seleziona o esegue le skill dello studio in Vera.",
+        "connections.data": "Query, risultati di ricerca e testi consultati possono entrare nel contesto del modello dell’app scelta. Login, permessi e conservazione dipendono dall’app e dal servizio collegato.",
         "contributors.index": "Collaborazione",
         "contributors.title": "Contributors",
         "contributors.copy": "Vera cresce attraverso il confronto con professionisti che mettono alla prova metodi, limiti e risultati nel lavoro reale.",
@@ -2078,6 +2126,14 @@
         "install.coworkGuide": "Download ZIP for Cowork",
         "install.coworkZipHelp": "Cowork package and instructions to install or update.",
         "install.video.title": "Connect ChatGPT to your computer with Codex",
+        "connections.title": "Integrations",
+        "connections.intro": "Connect your tools in the app where you use Vera.",
+        "connections.knowledge.title": "Using Vera with Second Brain",
+        "connections.knowledge.copy": "If you already have Second Brain, connect it in the app where you use Vera and authorize its search and read tools. Then ask Vera to consult a firm procedure, precedent or template for the task you are working on.",
+        "connections.knowledge.limits": "Vera consults available sources without changing them. It does not supply Second Brain or require Microsoft 365, and works without a connected repository. Consultation depends on the connector and the tools accessible in the current session.",
+        "connections.skills.title": "Using your own skills",
+        "connections.skills.copy": "To carry out a task with your own skill, invoke it directly in the app where you installed it. Connecting Second Brain does not import, select or execute the firm’s skills inside Vera.",
+        "connections.data": "Queries, search results and consulted texts can enter the model context of your chosen app. Login, permissions and retention depend on the app and the connected service.",
         "contributors.index": "Collaboration",
         "contributors.title": "Contributors",
         "contributors.copy": "Vera grows through the exchange with professionals who test its methods, limits and results in real work.",
@@ -2300,6 +2356,14 @@
         "install.coworkGuide": "Télécharger le ZIP pour Cowork",
         "install.coworkZipHelp": "Paquet pour Cowork et instructions d’installation ou de mise à jour.",
         "install.video.title": "Connectez ChatGPT à votre ordinateur avec Codex",
+        "connections.title": "Intégrations",
+        "connections.intro": "Le raccordement de vos outils se gère dans l’application où vous utilisez Vera.",
+        "connections.knowledge.title": "Utiliser Vera avec Second Brain",
+        "connections.knowledge.copy": "Si vous avez déjà Second Brain, connectez-le dans l’application où vous utilisez Vera et autorisez ses outils de recherche et de lecture. Demandez ensuite à Vera de consulter une procédure, un précédent ou un modèle du cabinet pour le travail en cours.",
+        "connections.knowledge.limits": "Vera consulte les sources disponibles sans les modifier. Elle ne fournit pas Second Brain, ne nécessite pas Microsoft 365 et fonctionne sans archive connectée. La consultation dépend du connecteur et des outils accessibles dans la session.",
+        "connections.skills.title": "Utiliser ses propres skills",
+        "connections.skills.copy": "Pour effectuer un travail avec votre propre skill, invoquez-la directement dans l’application où vous l’avez installée. Connecter Second Brain n’importe, ne sélectionne et n’exécute pas les skills du cabinet dans Vera.",
+        "connections.data": "Les requêtes, les résultats de recherche et les textes consultés peuvent entrer dans le contexte du modèle de l’application choisie. La connexion, les autorisations et la conservation dépendent de l’application et du service connecté.",
         "contributors.index": "Collaboration",
         "contributors.title": "Contributeurs",
         "contributors.copy": "Vera progresse grâce à l’échange avec des professionnels qui testent ses méthodes, ses limites et ses résultats dans le travail réel.",
@@ -2522,6 +2586,14 @@
         "install.coworkGuide": "ZIP für Cowork herunterladen",
         "install.coworkZipHelp": "Cowork-Paket und Anleitung zum Installieren oder Aktualisieren.",
         "install.video.title": "ChatGPT mit Codex mit Ihrem Computer verbinden",
+        "connections.title": "Integrationen",
+        "connections.intro": "Verbinden Sie Ihre Werkzeuge in der App, in der Sie Vera verwenden.",
+        "connections.knowledge.title": "Vera mit Second Brain verwenden",
+        "connections.knowledge.copy": "Wenn Sie Second Brain bereits nutzen, verbinden Sie es in der App, in der Sie Vera verwenden, und erlauben Sie die Such- und Lesewerkzeuge. Bitten Sie Vera anschließend, für Ihre aktuelle Aufgabe ein Verfahren, einen früheren Fall oder eine Vorlage der Kanzlei einzusehen.",
+        "connections.knowledge.limits": "Vera liest verfügbare Quellen, ohne sie zu ändern. Vera stellt Second Brain nicht bereit, benötigt kein Microsoft 365 und funktioniert auch ohne verbundenes Archiv. Die Abfrage hängt vom Konnektor und den in der Sitzung verfügbaren Werkzeugen ab.",
+        "connections.skills.title": "Eigene Skills verwenden",
+        "connections.skills.copy": "Um eine Aufgabe mit einem eigenen Skill auszuführen, rufen Sie ihn direkt in der App auf, in der Sie ihn installiert haben. Die Verbindung mit Second Brain importiert, wählt oder startet die Skills der Kanzlei nicht innerhalb von Vera.",
+        "connections.data": "Abfragen, Suchergebnisse und eingesehene Texte können in den Modellkontext der gewählten App gelangen. Anmeldung, Berechtigungen und Aufbewahrung hängen von der App und dem verbundenen Dienst ab.",
         "contributors.index": "Zusammenarbeit",
         "contributors.title": "Mitwirkende",
         "contributors.copy": "Vera wächst durch den Austausch mit Fachleuten, die ihre Methoden, Grenzen und Ergebnisse in der täglichen Arbeit prüfen.",
@@ -2744,6 +2816,14 @@
         "install.coworkGuide": "Descargar ZIP para Cowork",
         "install.coworkZipHelp": "Paquete para Cowork e instrucciones para instalar o actualizar.",
         "install.video.title": "Conecta ChatGPT al ordenador con Codex",
+        "connections.title": "Integraciones",
+        "connections.intro": "La conexión de tus herramientas se gestiona en la aplicación donde usas Vera.",
+        "connections.knowledge.title": "Usar Vera con Second Brain",
+        "connections.knowledge.copy": "Si ya tienes Second Brain, conéctalo en la aplicación donde usas Vera y autoriza sus herramientas de búsqueda y lectura. Después pide a Vera que consulte un procedimiento, un precedente o una plantilla del despacho para el trabajo en curso.",
+        "connections.knowledge.limits": "Vera consulta las fuentes disponibles sin modificarlas. No proporciona Second Brain, no requiere Microsoft 365 y funciona sin un archivo conectado. La consulta depende del conector y de las herramientas accesibles en la sesión.",
+        "connections.skills.title": "Usar tus propias skills",
+        "connections.skills.copy": "Para realizar un trabajo con tu propia skill, invócala directamente en la aplicación donde la instalaste. Conectar Second Brain no importa, selecciona ni ejecuta las skills del despacho dentro de Vera.",
+        "connections.data": "Las consultas, los resultados de búsqueda y los textos consultados pueden entrar en el contexto del modelo de la aplicación elegida. El acceso, los permisos y la conservación dependen de la aplicación y del servicio conectado.",
         "contributors.index": "Colaboración",
         "contributors.title": "Colaboradores",
         "contributors.copy": "Vera crece a través del intercambio con profesionales que ponen a prueba sus métodos, límites y resultados en el trabajo real.",
