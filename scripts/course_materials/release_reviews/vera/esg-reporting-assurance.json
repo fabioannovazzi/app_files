@@ -1,0 +1,372 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "esg-reporting-assurance",
+  "course_sha256": "d65ba8ec262ad3a8d8da282d3fcdc0ef37786bf7d0678febbcc2b89bab776635",
+  "reviewer": "Codex /root",
+  "reviewed_at": "2026-10-01T17:54:24.948053+00:00",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete localized outline: it leads with a traceable ESG evidence case and partial draft, and states the foundation limits before use. Seguire evidenze e decisioni di un fascicolo ESG",
+        "inputs_and_request": "Inspected localized fictional brief and exact three-row CSV: row 1 observed, row 2 missing prior year, row 3 declared excluded site. The note supplies a fictional scope reason; a blank alone cannot establish non-applicability. The correction is reserved for a successor, not silently treated as initial input. No approved mapping or output is shipped.",
+        "execution_and_checkpoints": "Two separate attempts use the current Archive and ESG helpers. The first preserves its finalized state; the second run imports a distinct update in the same engagement and carries exact historical inputs. Checkpoints occur before a decision and after the correction. Operator decisions in tests are simulations and never a learner response.",
+        "deliverable_and_next_action": "Inspected actual Markdown/JSON drafts and versioned state. Memo body states the declared value, missing/non-applicable scope and absence of compliance or assurance conclusion. The fixed English partial-draft notice and technical keys are retained. Both old and new evidence and stale decision/draft remain inspectable. New partial draft does not renew old approval.",
+        "practice_and_repeat": "Separate Laboratorio Quarzo practice uses 8 then 12 kWh, preserving the 0 then 15 demo. It asks the learner to request the case and identify review needs with less guidance. Repeat instructions select client, engagement and bounded CSV/text sources and require source/interpretation review.",
+        "language_and_pacing": "All outline fields and brief read in it. Six existing stages total 390 seconds; full processing and practice can extend this target. No measured learner duration or understanding is claimed. Technical keys/English native warning are not translated into false new workflow behavior. Reviewed the authored full-scope Cowork projection: written single-conversation lesson, no Codex/voice/working-chat setup. Fictional briefs contain host-neutral scope; facts, locators and numeric checks are unchanged."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[demo-it]",
+        "result_review": "Inspected the actual demo output: values 0 then 15 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "esg_state.json",
+            "sha256": "495f7acfff471a54501e80c05bf0d2a5fa7500d56c57fa0b7cd55e2488912381"
+          },
+          {
+            "name": "esg-draft-935ec8942801a2083610d7e8122de23ea4ac5ac62dc7e13d42868686519e8714.md",
+            "sha256": "32d7145e91791df75f53fc5101f882683070423c034f2e61616bd4bee5ca48dd"
+          },
+          {
+            "name": "esg-draft-eb6c0e3991ce01a7bc70fd1c269377e3cf03ab1ab648ddfd271a712bb375014e.md",
+            "sha256": "c2151618bb19e93f9f966b81f41779a1238c746beff26219b4fa7f106c1464b4"
+          },
+          {
+            "name": "esg-draft-935ec8942801a2083610d7e8122de23ea4ac5ac62dc7e13d42868686519e8714.json",
+            "sha256": "040c04534699092d2bceb1d98dc7d7a504514af40fb59117479bea2578dfb752"
+          },
+          {
+            "name": "esg-draft-eb6c0e3991ce01a7bc70fd1c269377e3cf03ab1ab648ddfd271a712bb375014e.json",
+            "sha256": "34b9c983215f02d45d96431806ce2c7dd195fed5e35727778faff3f10d4a17b3"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "290e6feab441379ca37a3056fa33fed9538437c9d1bc9aa70b0f741b2ce1a9ac"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[practice-it]",
+        "result_review": "Inspected the actual practice output: values 8 then 12 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "esg_state.json",
+            "sha256": "1fddcbf7f592247ad3c2a9c0c9975b9c2a8e17d043890a8357f6865e92a37122"
+          },
+          {
+            "name": "esg-draft-511a0f03f6e94a49dfc0450c3046ccea0b87f3bccaf44b117f6b56968db01994.md",
+            "sha256": "d0799a709e6710507e24398e5bd4b76a0e61181de682cfb5c3c959dd31deb964"
+          },
+          {
+            "name": "esg-draft-e291c4eba2f74d24659da5960167a9987ff722d8760ecc79de9e5c59b18b1723.md",
+            "sha256": "7908f2f364e5f0035668e2bb8339433629adaf7daee87605b9d510a1c23b6764"
+          },
+          {
+            "name": "esg-draft-511a0f03f6e94a49dfc0450c3046ccea0b87f3bccaf44b117f6b56968db01994.json",
+            "sha256": "be01b9d82bb5cec3c7b109ee4f8a8f47180ff8ee45a8bb21f9563572ff7dfecd"
+          },
+          {
+            "name": "esg-draft-e291c4eba2f74d24659da5960167a9987ff722d8760ecc79de9e5c59b18b1723.json",
+            "sha256": "e9daa2fb79cbf2fb1acaca377294fab4510bb2788c2e25cf0c412121e196b768"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "290e6feab441379ca37a3056fa33fed9538437c9d1bc9aa70b0f741b2ce1a9ac"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete localized outline: it leads with a traceable ESG evidence case and partial draft, and states the foundation limits before use. Track evidence and decisions in an ESG case",
+        "inputs_and_request": "Inspected localized fictional brief and exact three-row CSV: row 1 observed, row 2 missing prior year, row 3 declared excluded site. The note supplies a fictional scope reason; a blank alone cannot establish non-applicability. The correction is reserved for a successor, not silently treated as initial input. No approved mapping or output is shipped.",
+        "execution_and_checkpoints": "Two separate attempts use the current Archive and ESG helpers. The first preserves its finalized state; the second run imports a distinct update in the same engagement and carries exact historical inputs. Checkpoints occur before a decision and after the correction. Operator decisions in tests are simulations and never a learner response.",
+        "deliverable_and_next_action": "Inspected actual Markdown/JSON drafts and versioned state. Memo body states the declared value, missing/non-applicable scope and absence of compliance or assurance conclusion. The fixed English partial-draft notice and technical keys are retained. Both old and new evidence and stale decision/draft remain inspectable. New partial draft does not renew old approval.",
+        "practice_and_repeat": "Separate Laboratorio Quarzo practice uses 8 then 12 kWh, preserving the 0 then 15 demo. It asks the learner to request the case and identify review needs with less guidance. Repeat instructions select client, engagement and bounded CSV/text sources and require source/interpretation review.",
+        "language_and_pacing": "All outline fields and brief read in en. Six existing stages total 390 seconds; full processing and practice can extend this target. No measured learner duration or understanding is claimed. Technical keys/English native warning are not translated into false new workflow behavior. Reviewed the authored full-scope Cowork projection: written single-conversation lesson, no Codex/voice/working-chat setup. Fictional briefs contain host-neutral scope; facts, locators and numeric checks are unchanged."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[demo-en]",
+        "result_review": "Inspected the actual demo output: values 0 then 15 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "esg_state.json",
+            "sha256": "5bf3455076f901c485a5ed91d78444a5de56638957f3790fb274e703d0cdcbc4"
+          },
+          {
+            "name": "esg-draft-ca4c629e06e667249e2757fa752b57de69f3ee4f0fa7f8324088f3c67bdeedce.md",
+            "sha256": "a2eac677faf2706649b85680329e9f57c3af9045d9f83c658a22cc81baa4cdba"
+          },
+          {
+            "name": "esg-draft-f99828c036b9358d55892e92f9c2444ccfa5bb2921c17b0805c00ece37bcdd11.md",
+            "sha256": "81a5d371ab1d1406e3a7d040bf7640204f3d3dc3ed47dbaa803678fefd3cc878"
+          },
+          {
+            "name": "esg-draft-ca4c629e06e667249e2757fa752b57de69f3ee4f0fa7f8324088f3c67bdeedce.json",
+            "sha256": "ba8073ccfeab9b52a3998c4127d76cefc047af92f2d26872807b8b9d2c094385"
+          },
+          {
+            "name": "esg-draft-f99828c036b9358d55892e92f9c2444ccfa5bb2921c17b0805c00ece37bcdd11.json",
+            "sha256": "d8e52a5ac872b0036db14bb4d994e6fd6a547342018d9a6e0db1e23d81fe9b22"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "c9a235cfff55adb88088c25e6e721dfd01241bbfbfa95e8ba407671bbb006017"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[practice-en]",
+        "result_review": "Inspected the actual practice output: values 8 then 12 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "esg_state.json",
+            "sha256": "e44ed5c9352297a5f4db32f11fdd2f41ca638e4a1626a2d777989a073cfaa192"
+          },
+          {
+            "name": "esg-draft-6006d514479ff19f6d734ffc1e9d15f3f2e8b0bb77c19dcdb28f9da8e18d1051.md",
+            "sha256": "515586cc6d8f3551e12547a11f7374ea3598d92fae3b5886de0e9375c5a9d6e0"
+          },
+          {
+            "name": "esg-draft-bdde421798b25c92c6ffa94595bc6cfd7dfb363a9d48e92e9f004dfda35b8139.md",
+            "sha256": "73bd88826369367537229dcde6d661a82009f5eba4b7364d6ee350dd5c8240c6"
+          },
+          {
+            "name": "esg-draft-6006d514479ff19f6d734ffc1e9d15f3f2e8b0bb77c19dcdb28f9da8e18d1051.json",
+            "sha256": "c2805198a6d5310e7c035602efec014244bb1fd2efa8d66ea342f0f8306e145d"
+          },
+          {
+            "name": "esg-draft-bdde421798b25c92c6ffa94595bc6cfd7dfb363a9d48e92e9f004dfda35b8139.json",
+            "sha256": "e40c588c2fbec49d23ca71d486d91142be42d1851eb0f670a2dcc677cf22d52e"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "c9a235cfff55adb88088c25e6e721dfd01241bbfbfa95e8ba407671bbb006017"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete localized outline: it leads with a traceable ESG evidence case and partial draft, and states the foundation limits before use. Suivre les preuves et décisions d’un dossier ESG",
+        "inputs_and_request": "Inspected localized fictional brief and exact three-row CSV: row 1 observed, row 2 missing prior year, row 3 declared excluded site. The note supplies a fictional scope reason; a blank alone cannot establish non-applicability. The correction is reserved for a successor, not silently treated as initial input. No approved mapping or output is shipped.",
+        "execution_and_checkpoints": "Two separate attempts use the current Archive and ESG helpers. The first preserves its finalized state; the second run imports a distinct update in the same engagement and carries exact historical inputs. Checkpoints occur before a decision and after the correction. Operator decisions in tests are simulations and never a learner response.",
+        "deliverable_and_next_action": "Inspected actual Markdown/JSON drafts and versioned state. Memo body states the declared value, missing/non-applicable scope and absence of compliance or assurance conclusion. The fixed English partial-draft notice and technical keys are retained. Both old and new evidence and stale decision/draft remain inspectable. New partial draft does not renew old approval.",
+        "practice_and_repeat": "Separate Laboratorio Quarzo practice uses 8 then 12 kWh, preserving the 0 then 15 demo. It asks the learner to request the case and identify review needs with less guidance. Repeat instructions select client, engagement and bounded CSV/text sources and require source/interpretation review.",
+        "language_and_pacing": "All outline fields and brief read in fr. Six existing stages total 390 seconds; full processing and practice can extend this target. No measured learner duration or understanding is claimed. Technical keys/English native warning are not translated into false new workflow behavior. Reviewed the authored full-scope Cowork projection: written single-conversation lesson, no Codex/voice/working-chat setup. Fictional briefs contain host-neutral scope; facts, locators and numeric checks are unchanged."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[demo-fr]",
+        "result_review": "Inspected the actual demo output: values 0 then 15 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "esg_state.json",
+            "sha256": "b8e7d3c2e802c1d9ff909aa2bd92af647133f59bb62661b8d0734c728e955ed3"
+          },
+          {
+            "name": "esg-draft-49d9861de2d4be0adc8bd4711e4382205b2a585987293d9a15acdc9bcda2ac32.md",
+            "sha256": "c89a943895ca1f0bf30572a878f7d816dc29272d1be8cf9291b34621dafcdb60"
+          },
+          {
+            "name": "esg-draft-d22f0cbfe4298c5daee0ba56af8dd55001bc09ed078ba0b544bbecfbad2bb284.md",
+            "sha256": "8566a2037fb902dd440d96159cb1a98c6f6b30d99d186bf4c22bfabe38ec9a91"
+          },
+          {
+            "name": "esg-draft-49d9861de2d4be0adc8bd4711e4382205b2a585987293d9a15acdc9bcda2ac32.json",
+            "sha256": "3fadf957976961bd0f9bb1d2d45cbbb758f3f6bb76430586f61b2ace083748a2"
+          },
+          {
+            "name": "esg-draft-d22f0cbfe4298c5daee0ba56af8dd55001bc09ed078ba0b544bbecfbad2bb284.json",
+            "sha256": "4d0ab0f2a593c855a27b68b9168eb5d928c37b4ab418ea308cd2d634df276774"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "5b566562f4fe6c59fb01deb5162a07fe3e7ba375645b15d839d774f88844ace9"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[practice-fr]",
+        "result_review": "Inspected the actual practice output: values 8 then 12 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "esg_state.json",
+            "sha256": "83054bb6c7b8178b70095db74e3e9a301f02db412b52e4e6480f49c347c37f84"
+          },
+          {
+            "name": "esg-draft-280a6df1e311554aaafe1f195a849ff3b2284e3304f2e2a5bc8bcb2584ee11cf.md",
+            "sha256": "551bd2efe113c1a64ba4875c37363163b5e2954e047d1c72783f249fba9a83c9"
+          },
+          {
+            "name": "esg-draft-cb8ef39334e1fb4d244878620ccfc9e0629326a1e6dd0a2c01ae66310119aa6b.md",
+            "sha256": "126ffa7f9475549a1589152cbeca133298690bcfc2a89d2e5c902746962d3d65"
+          },
+          {
+            "name": "esg-draft-280a6df1e311554aaafe1f195a849ff3b2284e3304f2e2a5bc8bcb2584ee11cf.json",
+            "sha256": "2f381d59e8be6ffcee3ed844ee995b5f68f8b489dc9ed7f2451221992dc901ee"
+          },
+          {
+            "name": "esg-draft-cb8ef39334e1fb4d244878620ccfc9e0629326a1e6dd0a2c01ae66310119aa6b.json",
+            "sha256": "c2b499c3eafdb08eb192716e27512d79f73963bdd5b264bae5f3d3ae40df7b1f"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "5b566562f4fe6c59fb01deb5162a07fe3e7ba375645b15d839d774f88844ace9"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete localized outline: it leads with a traceable ESG evidence case and partial draft, and states the foundation limits before use. Belege und Entscheidungen einer ESG-Akte verfolgen",
+        "inputs_and_request": "Inspected localized fictional brief and exact three-row CSV: row 1 observed, row 2 missing prior year, row 3 declared excluded site. The note supplies a fictional scope reason; a blank alone cannot establish non-applicability. The correction is reserved for a successor, not silently treated as initial input. No approved mapping or output is shipped.",
+        "execution_and_checkpoints": "Two separate attempts use the current Archive and ESG helpers. The first preserves its finalized state; the second run imports a distinct update in the same engagement and carries exact historical inputs. Checkpoints occur before a decision and after the correction. Operator decisions in tests are simulations and never a learner response.",
+        "deliverable_and_next_action": "Inspected actual Markdown/JSON drafts and versioned state. Memo body states the declared value, missing/non-applicable scope and absence of compliance or assurance conclusion. The fixed English partial-draft notice and technical keys are retained. Both old and new evidence and stale decision/draft remain inspectable. New partial draft does not renew old approval.",
+        "practice_and_repeat": "Separate Laboratorio Quarzo practice uses 8 then 12 kWh, preserving the 0 then 15 demo. It asks the learner to request the case and identify review needs with less guidance. Repeat instructions select client, engagement and bounded CSV/text sources and require source/interpretation review.",
+        "language_and_pacing": "All outline fields and brief read in de. Six existing stages total 390 seconds; full processing and practice can extend this target. No measured learner duration or understanding is claimed. Technical keys/English native warning are not translated into false new workflow behavior. Reviewed the authored full-scope Cowork projection: written single-conversation lesson, no Codex/voice/working-chat setup. Fictional briefs contain host-neutral scope; facts, locators and numeric checks are unchanged."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[demo-de]",
+        "result_review": "Inspected the actual demo output: values 0 then 15 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "esg_state.json",
+            "sha256": "a603d45856121132928f8cd227594fc38a74c6f2dce74a329bb08edbb3c62668"
+          },
+          {
+            "name": "esg-draft-ae1309f0cccd722258eeaf04d131a708d0a896300359695a4160c23f4f4c635d.md",
+            "sha256": "e270f17e608a9fc259c08dcbfd85bbc71a753cd131583870d3215689acc2f8f6"
+          },
+          {
+            "name": "esg-draft-bd45a24e18d592c347eb4536b5cc8f40be97c755ca0e3bf0d28e39b889e6ab3b.md",
+            "sha256": "6454158c7b9206c671f2c2eb701c96a3915b29e6bb8fcd71a5c2081dac967633"
+          },
+          {
+            "name": "esg-draft-ae1309f0cccd722258eeaf04d131a708d0a896300359695a4160c23f4f4c635d.json",
+            "sha256": "979f1c0b17d65b3321bc1b7839e688134315c182088489a91210ac7fde592a9a"
+          },
+          {
+            "name": "esg-draft-bd45a24e18d592c347eb4536b5cc8f40be97c755ca0e3bf0d28e39b889e6ab3b.json",
+            "sha256": "89796393781fe31912571816bf3d1f3c4e9c9f54d5d61e77a588d7bdc0012a03"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "49bd0613d892f9ab005417eac4580ca3aa010812941cb8a6f233c8b1ba9324f1"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[practice-de]",
+        "result_review": "Inspected the actual practice output: values 8 then 12 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "esg_state.json",
+            "sha256": "32b7510c5bd4d924b8c171c31f4aeac83a221f60383e31d392606733f489a8c3"
+          },
+          {
+            "name": "esg-draft-8fa7da28cc92cc3bb3927075009d83d60bff6461a84479fd914ade95e70bab2d.md",
+            "sha256": "54197884a3241defdd87407efbcfaaa2506001d6553ac93d44d8acadadcf8b8e"
+          },
+          {
+            "name": "esg-draft-b534181008a87f1c33c8ffed4fa88c4c55550a9f5d630c8f97914cda1e81c4bf.md",
+            "sha256": "af3949fae9697bdd4404e093877272bd28a2ad315ec15d5a839e3ba8ffea6ced"
+          },
+          {
+            "name": "esg-draft-8fa7da28cc92cc3bb3927075009d83d60bff6461a84479fd914ade95e70bab2d.json",
+            "sha256": "41c4b7d6f7053306f6d49ee34895a4c2bedcfa4c8dcc334c52feb5a2cddc9058"
+          },
+          {
+            "name": "esg-draft-b534181008a87f1c33c8ffed4fa88c4c55550a9f5d630c8f97914cda1e81c4bf.json",
+            "sha256": "5e5ea747f30fa9bc700764470c5ed3a591dd80e8279185ec3690b8f7779c7ee8"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "49bd0613d892f9ab005417eac4580ca3aa010812941cb8a6f233c8b1ba9324f1"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete localized outline: it leads with a traceable ESG evidence case and partial draft, and states the foundation limits before use. Seguir pruebas y decisiones de un expediente ESG",
+        "inputs_and_request": "Inspected localized fictional brief and exact three-row CSV: row 1 observed, row 2 missing prior year, row 3 declared excluded site. The note supplies a fictional scope reason; a blank alone cannot establish non-applicability. The correction is reserved for a successor, not silently treated as initial input. No approved mapping or output is shipped.",
+        "execution_and_checkpoints": "Two separate attempts use the current Archive and ESG helpers. The first preserves its finalized state; the second run imports a distinct update in the same engagement and carries exact historical inputs. Checkpoints occur before a decision and after the correction. Operator decisions in tests are simulations and never a learner response.",
+        "deliverable_and_next_action": "Inspected actual Markdown/JSON drafts and versioned state. Memo body states the declared value, missing/non-applicable scope and absence of compliance or assurance conclusion. The fixed English partial-draft notice and technical keys are retained. Both old and new evidence and stale decision/draft remain inspectable. New partial draft does not renew old approval.",
+        "practice_and_repeat": "Separate Laboratorio Quarzo practice uses 8 then 12 kWh, preserving the 0 then 15 demo. It asks the learner to request the case and identify review needs with less guidance. Repeat instructions select client, engagement and bounded CSV/text sources and require source/interpretation review.",
+        "language_and_pacing": "All outline fields and brief read in es. Six existing stages total 390 seconds; full processing and practice can extend this target. No measured learner duration or understanding is claimed. Technical keys/English native warning are not translated into false new workflow behavior. Reviewed the authored full-scope Cowork projection: written single-conversation lesson, no Codex/voice/working-chat setup. Fictional briefs contain host-neutral scope; facts, locators and numeric checks are unchanged."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[demo-es]",
+        "result_review": "Inspected the actual demo output: values 0 then 15 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "esg_state.json",
+            "sha256": "0c3cc34a2ac2dd2cba4a06948acf604a4063e338afb3da04a19b5459fb20b05a"
+          },
+          {
+            "name": "esg-draft-6f8cc304cdf43872b25de2ed84602bc6fbb9a117f00e4fd14787d94c90802382.md",
+            "sha256": "6f56d8c435c7bcc31f396b16b6ea6aeee152a678653fed196db228fe305f4dd7"
+          },
+          {
+            "name": "esg-draft-6f8f79a0806d81ef06443455936603e816b59a08849e488f83f74acb7dc405fc.md",
+            "sha256": "44c101fdcdc9efce873aca148e2f8db1179c075fa961253db4d08b3aef2b5ac8"
+          },
+          {
+            "name": "esg-draft-6f8cc304cdf43872b25de2ed84602bc6fbb9a117f00e4fd14787d94c90802382.json",
+            "sha256": "60169d28f27922b3ead34f998c67f127e64ab2d089e3fa7875838c5733549be3"
+          },
+          {
+            "name": "esg-draft-6f8f79a0806d81ef06443455936603e816b59a08849e488f83f74acb7dc405fc.json",
+            "sha256": "5ece803c5d7cf1617cc3f6a66947c7f3373c5e7acb796ce1e120522b98b92774"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "69e094adc00b9a24977703b614f9a3c6478c49431d45440ac87677797c19f155"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[practice-es]",
+        "result_review": "Inspected the actual practice output: values 8 then 12 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "esg_state.json",
+            "sha256": "77ca31e5c0898344d249dfd49d9d5d0b0163115d4d5e664e8e8d45758112a79b"
+          },
+          {
+            "name": "esg-draft-d52b327ad6182dd88491c795d3f7d28779ccd5bc1a20e4e7071578dafca73fad.md",
+            "sha256": "d8a919c5df50337b601728c465d00c29e843a8bec9979bc6198bd1e1056923d4"
+          },
+          {
+            "name": "esg-draft-f023ab7ba68267c31e07ac1d72ba1ede46c32325bb37920c5b8abbacfc20b809.md",
+            "sha256": "1d928d85d2b95def61517d4161c07d1510334c04d5086b31411d35f384b036d5"
+          },
+          {
+            "name": "esg-draft-d52b327ad6182dd88491c795d3f7d28779ccd5bc1a20e4e7071578dafca73fad.json",
+            "sha256": "a97f66f14e2bc7e2db57fc929fb8fe16e57b9252e6309118d247f311a1f67c27"
+          },
+          {
+            "name": "esg-draft-f023ab7ba68267c31e07ac1d72ba1ede46c32325bb37920c5b8abbacfc20b809.json",
+            "sha256": "86269a555ebdddb03fed06462ef210e1037dd9d2513a92f0b973b90791f6f329"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "69e094adc00b9a24977703b614f9a3c6478c49431d45440ac87677797c19f155"
+          }
+        ]
+      }
+    }
+  },
+  "limits": "Source/material editorial review and synthetic helper execution only. Not independent professional ESG review, live model/learner execution, native voice/windows, installed runtime acceptance, publication or deployment. The current native output has a fixed English partial-foundation notice and technical keys; the ordinary memo body is localized.",
+  "synthetic_output_directory": "outputs/vera-esg-course/native",
+  "integration_refresh": {
+    "reviewer": "Codex /root",
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
+  }
+}

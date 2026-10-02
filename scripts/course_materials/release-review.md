@@ -1,5 +1,14 @@
 # Teaching-kit release review
 
+## ESG evidence course — 1 October 2026
+
+The complete fictional ESG kit, separate practice attempt and five localized
+guides are described in `docs/releases/2026-10-01-esg-course.md`. Source/output
+review is distinct from full release checks, professional review, live learner
+participation, installed runtime acceptance and publication. Existing authored
+lessons remain unchanged; their review records retain a bounded shared catalogue
+source refresh. The earlier dated entries below are historical.
+
 ## Final prepared-kit completion — 23 September 2026
 
 The last retained invoice-review lesson has been replaced with its prepared kit.

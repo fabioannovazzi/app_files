@@ -53,7 +53,8 @@
     "vera/variance-analysis",
     "vera/vouching",
     "vera/trasformazione",
-    "vera/fusione-guidata"
+    "vera/fusione-guidata",
+    "vera/esg-reporting-assurance"
   ],
   "retained": {}
 }

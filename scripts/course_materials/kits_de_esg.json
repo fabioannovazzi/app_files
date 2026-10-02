@@ -1,0 +1,27 @@
+{
+  "vera/esg-reporting-assurance": {
+    "title": "Belege und Entscheidungen einer ESG-Akte verfolgen",
+    "goal": "Einen Wert zur Quelle zurückverfolgen, einen Teilentwurf erstellen und nach Änderungen den Prüfbedarf erkennen.",
+    "scenario": "Vollständig fiktiv: Officina Selce, ein Standort und erklärter Stromverbrauch 2026. Zuerst 0 kWh, Korrektur 15 kWh. Keine zertifizierte Messung.",
+    "scope": "ESG-Beleggrundlage in Codex desktop und lokalem Work, soweit unterstützt. In Cowork nutzt der Kurs ein einziges schriftliches Gespräch. Kein vollständiger ESG-Bericht, VSME/ESRS- oder Taxonomieberechnung, Prüfungsurteil, Signieren oder Senden.",
+    "inputs": "Lesen Sie brief-de.md und energy.csv. Der erste Wert ist null; die leere Zelle 2025 bedeutet nicht verfügbar. Der ausgeschlossene Standort ist nur für diesen fiktiven Fall als nicht anwendbar erklärt; eine leere Zelle beweist das nicht. Halten Sie energy-update.csv zurück.",
+    "request": "Vera, bereiten Sie die fiktive ESG-Akte Officina Selce 2026 vor. Verknüpfen Sie Werte mit Dateien, unterscheiden Sie null, fehlend und nicht anwendbar und zeigen Sie eine Entscheidung zur Prüfung und einen Teilentwurf. Importieren Sie dann die Korrektur von 0 auf 15 kWh und zeigen Sie veraltete Arbeit.",
+    "steps": [
+      "Bereiten Sie mit Studio Archive einen getrennten Übungsmandanten vor, importieren Sie Hinweis und energy.csv und starten Sie die aktuelle Funktion. Vereinbaren Sie Zeitraum, Service preparation und Basis unresolved ohne automatische Normwahl. Starten Sie einen synthetic-Fall und binden Sie Zeilen 1, 2, 3 der Spalte kwh.",
+      "Zeigen Sie Original, Fundstelle, Auslegung und Grund. Vor record_decision fragen Sie nach der tatsächlichen Entscheidung des Teilnehmers zu diesen Versionen und Abhängigkeiten. Ohne Antwort bleibt sie offen. Simulationen kennzeichnen, niemals dem Teilnehmer zuschreiben. Erstellen Sie einen partial_draft-Memo mit exakten Abhängigkeiten ohne Konformitätsaussage.",
+      "Bewahren Sie den ersten Run. Importieren Sie energy-update.csv als neue unveränderliche Quelle und starten Sie einen Folge-Run im selben Auftrag mit alten und neuen Eingaben. start_case nutzt den ersten previous_context; bind_evidence behält ID energy und erfasst 15. In resume_case sind energy v1 und abhängige Entscheidung/Entwurf veraltet; energy v2 ist aktuell. Fehlend und nicht anwendbar bleiben getrennt."
+    ],
+    "deliverables": [
+      "esg_state.json mit Dateien, Hashes, Zellen, Versionen, Gründen, Entscheidungen und Abhängigkeiten; Markdown/JSON-Teilentwürfe.",
+      "Beide Studio-Archive-Kontexte, Originale und Verlauf, codex_run_review.md und lesbarer Bericht tatsächlicher Modellzugriffe. In dieser Sitzung erzeugen, keine mitgelieferten Ergebnisse."
+    ],
+    "review": "Prüfen Sie Mandant, Zeitraum, Einheit, Umfang und Quelle. Erklärte null beweist keinen tatsächlichen Nullverbrauch. Fehlend erfordert Beschaffung; nicht anwendbar eine Begründung. Auslegung und Angemessenheit prüfen. Eine Korrektur entwertet abhängige Entscheidungen, erneuert sie aber nicht. Ein erklärter Name ist keine authentifizierte Signatur.",
+    "checkpoints": [
+      "Vor der Entscheidung die drei Zellen finden und die verschiedenen Status der leeren Werte erklären.",
+      "Nach Änderung aktuelle Version und erhaltene alte Entscheidung/Entwurf zeigen; Prüfbedarf benennen."
+    ],
+    "practice": "Mit weniger Anleitung files/practice/ in einem neuen Übungsmandanten nutzen: Laboratorio Quarzo erklärt 8, dann 12 kWh. Akte anfordern, leere Werte unterscheiden, ersten Entwurf erstellen und Korrektur im selben Auftrag importieren. Demo bewahren. Eigene Entscheidung ausdrücken oder offenlassen.",
+    "success": "Im Demo 0 dann 15 kWh finden, in der Übung 8 dann 12. Originale und Verlauf bleiben lesbar; abhängige Entscheidung/Entwurf brauchen Prüfung. Beide null-Werte behalten unterschiedliche Status; kein vollständiger Bericht oder Urteil ist genehmigt.",
+    "repeat": "Wiederholen mit Mandant, Auftrag, Zeitraum und relevanten CSV/Textdateien; Auftrag formulieren und Quellen/Auslegung prüfen. Änderungen sind neue Eingaben desselben Auftrags. Kurze Anleitung 5–8 Minuten, Verarbeitung und Übung können länger dauern. Dateien/Fortschritt bleiben lokal; Modellzugriffe gelangen ohne automatische Anonymisierung in seinen Kontext."
+  }
+}

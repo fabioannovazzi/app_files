@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "adeguati-assetti",
-  "course_sha256": "82413c3e8c57be5bc63246f6aca333099e6f2f9688b4a67984208ab76669d2af",
+  "course_sha256": "204863e9de92b998c13c53fb0cf7c37b9061835ce621bb79b95843c25485a6b1",
   "reviewer": "Codex /root: source, multilingual editorial and synthetic artifact review",
   "reviewed_at": "2026-10-01T08:03:58.950451+00:00",
   "review_scope": "Replaces the assessment-only outline with five localized resumable construction chapters and a separate financial lab. Read current specialist skill, native contract, intake, exports and adapters. Inspected original fictional inputs, localized Word/PDF/Markdown content, registers, snapshots, financial rows and KPI history. Rendered Italian course and chapter and English course in the Codex browser; visually inspected all pages of a generated manual. The PDF exporter may orphan its final version line on a second page; this remains a disclosed pre-existing export limitation, not a claim of client-ready layout. Fixed export headings are Italian and some test attribution/engineering labels are English. Native voice, window arrangement, learner participation/understanding, authenticated professional approval and real-company operating effectiveness are not established. Technical tests manufacture separately receipted synthetic decisions only at execution time; no approved case, approval or result is shipped as a teaching input. The 390-second metadata describes the introductory lesson; extended construction and financial labs require further resumable sessions. Deployment review: inspected the five localized data-context statements after replacing the ambiguous OpenAI/Cowork account name with the selected host or service account. The existing host-specific footer identifies OpenAI for Codex and Anthropic for Cowork. Inputs, execution code, reviewed output artifacts and processing boundaries are unchanged.",
@@ -616,5 +616,10 @@
     ],
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+  },
+  "integration_refresh": {
+    "reviewer": "Codex /root",
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
   }
 }

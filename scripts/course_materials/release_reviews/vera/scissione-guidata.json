@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "scissione-guidata",
-  "course_sha256": "9d3e14360293c05b7462292a391558cfdf95846c3b07dfcf5f001512832733f8",
+  "course_sha256": "20bd99b4d98f866a45faf0ecb32582b1ade8191974fdecb528db2b5efb8e9f71",
   "reviewer": "Codex: authored localized course and substantive synthetic output review",
   "reviewed_at": "2026-10-01T07:54:45.892302+00:00",
   "review_scope": "Read all five localized outlines and mandates, both allocation CSVs and actual native schedules/dossiers. Synthetic host interpretations and exact-version approvals live only in regression fixtures. Italian native dossier captions and stable field keys are explained in the lesson language; no engine translation, live voice, learner participation, legal correctness or professional acceptance is claimed. Separate same-engagement continuation preserves byte-identical prior run outputs. No source selection or legal qualification is established by these arithmetic checks.",
@@ -296,5 +296,10 @@
     ],
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+  },
+  "integration_refresh": {
+    "reviewer": "Codex /root",
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
   }
 }

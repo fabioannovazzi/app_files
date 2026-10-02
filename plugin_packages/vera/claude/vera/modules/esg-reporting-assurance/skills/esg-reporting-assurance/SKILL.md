@@ -131,8 +131,9 @@ Default output policy: keep the versioned state, partial Markdown/JSON drafts
 and a short run_review.md in the bound run. These are not choices to propose
 separately. The review note explains checks, unsupported inputs, stale decisions
 and unresolved professional questions. Case data never belongs in generated ZIPs.
-The bundled synthetic demo is developer verification; no prepared user lesson
-has been qualified for this first tranche.
+The bundled synthetic demo is developer verification. Vera’s prepared ESG lesson
+uses separate fictional sources and the current ordinary workflow; it does not
+certify learner participation, professional review or installed-host acceptance.
 
 ## Intake and archive
 

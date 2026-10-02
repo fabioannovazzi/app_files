@@ -427,7 +427,7 @@ def test_synthetic_demo_preserves_history_and_rejects_cross_engagement(
     assert json.loads(Path(result["result"]).read_text())["synthetic"] is True
 
 
-def test_esg_foundation_is_not_offered_as_a_qualified_lesson():
+def test_esg_prepared_lesson_is_available_without_extending_foundation_scope():
     policy = load(
         "esg_teaching_policy_test",
         ROOT / "plugins/_shared/vendor/modules/courseware/policy.py",
@@ -435,7 +435,7 @@ def test_esg_foundation_is_not_offered_as_a_qualified_lesson():
 
     reason = policy.local_unavailability("vera", "esg-reporting-assurance")
 
-    assert "no qualified prepared lesson" in reason
+    assert reason is None
     assert policy.local_unavailability("vera", "treasury-forecast") is None
 
 

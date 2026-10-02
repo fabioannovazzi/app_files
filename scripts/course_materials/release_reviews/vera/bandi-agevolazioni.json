@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "bandi-agevolazioni",
-  "course_sha256": "76ada438940d874cbe20f9be74162dd821d52451f8b4fcbd0891f062485615c5",
+  "course_sha256": "144e84ee70d104a53190c8627267d1cd6c73c0092196516e7a8b11be019c55e2",
   "reviewer": "Codex localized lesson and native dossier review",
   "reviewed_at": "2026-09-23T11:55:24.295421+00:00",
   "review_scope": "Reviewed five localized first-use kits and ten generated reader-facing HTML dossiers. Native integration tests replay explicitly synthetic source/intelligence acceptance fixtures and authored assessments, not professional approval or learner participation. The selected fictional call avoids hosted discovery and real applications. HTML reader labels are localized; the technical Markdown register retains Italian labels. No signature, submission, external contact or funding eligibility decision is claimed. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -300,5 +300,10 @@
     ],
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+  },
+  "integration_refresh": {
+    "reviewer": "Codex /root",
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
   }
 }

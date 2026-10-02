@@ -39,7 +39,7 @@ def test_installed_cowork_prepares_every_supported_course_and_language(installed
     result = run(root, "list")
     assert result.returncode == 0, result.stderr
     catalog = json.loads(result.stdout)
-    assert len(catalog) == {"vera": 39, "clara": 7, "lucia": 4}[product]
+    assert len(catalog) == {"vera": 40, "clara": 7, "lucia": 4}[product]
     # Native-only outlines retain their platform limitation; checked separately.
     written_courses = [
         entry

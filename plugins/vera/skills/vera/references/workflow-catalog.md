@@ -56,7 +56,9 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
   foundation inside an existing client engagement; bind CSV cells or text lines,
   retain versions and decisions, flag stale dependencies and export partial drafts.
   It does not yet produce complete ESG reports, ESRS/taxonomy assessments or
-  assurance opinions. Use the dedicated skill and state those limits.
+  assurance opinions. Use the dedicated skill and state those limits. Its prepared
+  lesson uses fictional CSV evidence, a same-engagement update and a separate
+  practice case; prior decisions and drafts remain visible when outdated.
 
 
 - `invoice-xml`: prepare ordinary FPR12 invoice XML from supplied PDFs, photos

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-valuation",
-  "course_sha256": "251b811db3eb07b5a9da2269be7af6e889121552f090206b2bc2c20823f373e6",
+  "course_sha256": "a3c8a15cc1ab08de0fdbba92db545b38ad234e27d08a76dfb11243d7977574b6",
   "reviewer": "Codex /root: course, receipt-bound lifecycle, arithmetic and artifact review",
   "reviewed_at": "2026-10-01T07:53:39.156413+00:00",
   "review_scope": "Expanded the existing Italian DCF course rather than creating a duplicate framework. Read all five fictional notes and the complete rendered lesson; checked source-preview/download links visually in Chrome. Native test executions cover demo/practice, missing terminal and recovery. A four-run same-engagement regression imports exact receipts, prepares and starts the real workflow, generates honest no-model disclosures for its code-only fixtures, seals every output, then lists and reopens the first run without recalculation and verifies unchanged artifact hashes. Independently checked textbook arithmetic and LibreOffice recalculation of all 60 calculation cells across complete cases; missing case has no numeric method output. Inspected all 16 native PDF pages and 17 DOCX-rendered pages. Reports remain partial or blocked with no accepted conclusion. Human comprehension, paired voice, fresh enabled installation and professional/PIV acceptance are unverified.",
@@ -990,5 +990,10 @@
     ],
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+  },
+  "integration_refresh": {
+    "reviewer": "Codex /root",
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
   }
 }
