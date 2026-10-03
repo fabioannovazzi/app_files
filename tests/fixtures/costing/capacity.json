@@ -1,0 +1,305 @@
+{
+  "case": {
+    "meta": {
+      "schemaVersion": "1.0.0",
+      "caseId": "CAPACITY",
+      "clientId": "SYNTHETIC",
+      "engagementId": "DEMO-CONTROL",
+      "currency": "EUR",
+      "periodStart": "2026-09-01",
+      "periodEnd": "2026-09-30",
+      "basis": "accrual_consumed",
+      "demonstration": true,
+      "perimeter": "operating"
+    },
+    "evidence": [
+      {
+        "id": "SYN-01",
+        "kind": "synthetic",
+        "locator": "Dati inventati esclusivamente per test; non un cliente e non un benchmark.",
+        "status": "synthetic"
+      }
+    ],
+    "objects": [
+      {
+        "id": "A",
+        "label": "Standard",
+        "dimension": "product",
+        "units": "1000",
+        "unit": "pezzi",
+        "revenueCents": 2000000,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "B",
+        "label": "Personalizzato",
+        "dimension": "product",
+        "units": "100",
+        "unit": "pezzi",
+        "revenueCents": 1200000,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      }
+    ],
+    "costs": [
+      {
+        "id": "C001",
+        "label": "Materiali Standard",
+        "amountCents": 800000,
+        "behavior": "variable",
+        "traceability": "direct",
+        "objectId": "A",
+        "poolId": null,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C002",
+        "label": "Materiali Personalizzato",
+        "amountCents": 500000,
+        "behavior": "variable",
+        "traceability": "direct",
+        "objectId": "B",
+        "poolId": null,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C003",
+        "label": "Logistica variabile",
+        "amountCents": 120000,
+        "behavior": "variable",
+        "traceability": "indirect",
+        "objectId": null,
+        "poolId": "LOG",
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C004",
+        "label": "Fissi specifici A",
+        "amountCents": 100000,
+        "behavior": "fixed",
+        "traceability": "direct",
+        "objectId": "A",
+        "poolId": null,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C005",
+        "label": "Fissi specifici B",
+        "amountCents": 180000,
+        "behavior": "fixed",
+        "traceability": "direct",
+        "objectId": "B",
+        "poolId": null,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C006",
+        "label": "Attrezzaggi",
+        "amountCents": 300000,
+        "behavior": "fixed",
+        "traceability": "indirect",
+        "objectId": null,
+        "poolId": "SETUP",
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C007",
+        "label": "Assistenza produzione",
+        "amountCents": 180000,
+        "behavior": "fixed",
+        "traceability": "indirect",
+        "objectId": null,
+        "poolId": "SUPPORT",
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C008",
+        "label": "Struttura aziendale",
+        "amountCents": 200000,
+        "behavior": "fixed",
+        "traceability": "entity",
+        "objectId": null,
+        "poolId": null,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      }
+    ],
+    "pools": [
+      {
+        "id": "LOG",
+        "label": "Logistica",
+        "driver": {
+          "name": "Unita spedite",
+          "unit": "unita",
+          "weights": {
+            "A": "1000",
+            "B": "100"
+          },
+          "capacityPolicy": "actual",
+          "capacity": null,
+          "rationale": "Ipotesi dimostrativa esplicita; da sostituire e approvare sul caso reale."
+        }
+      },
+      {
+        "id": "SETUP",
+        "label": "Attrezzaggi",
+        "driver": {
+          "name": "Capacita pratica attrezzaggi",
+          "unit": "attrezzaggi",
+          "weights": {
+            "A": "10",
+            "B": "20"
+          },
+          "capacityPolicy": "practical",
+          "capacity": "40",
+          "rationale": "Ipotesi dimostrativa esplicita; da sostituire e approvare sul caso reale."
+        }
+      },
+      {
+        "id": "SUPPORT",
+        "label": "Assistenza produzione",
+        "driver": {
+          "name": "Ore assistenza",
+          "unit": "ore",
+          "weights": {
+            "A": "80",
+            "B": "20"
+          },
+          "capacityPolicy": "actual",
+          "capacity": null,
+          "rationale": "Ipotesi dimostrativa esplicita; da sostituire e approvare sul caso reale."
+        }
+      }
+    ],
+    "traditionalDriver": {
+      "name": "Capacita normale tradizionale",
+      "unit": "pezzi",
+      "weights": {
+        "A": "1000",
+        "B": "100"
+      },
+      "capacityPolicy": "practical",
+      "capacity": "1200",
+      "rationale": "Ipotesi dimostrativa esplicita; da sostituire e approvare sul caso reale."
+    },
+    "commonPolicy": "allocate",
+    "commonDriver": {
+      "name": "Ricavi operativi",
+      "unit": "EUR",
+      "weights": {
+        "A": "20000",
+        "B": "12000"
+      },
+      "capacityPolicy": "actual",
+      "capacity": null,
+      "rationale": "Ipotesi dimostrativa esplicita; da sostituire e approvare sul caso reale."
+    },
+    "sourceTotals": {
+      "revenueCents": 3200000,
+      "costsCents": 2380000,
+      "evidenceIds": [
+        "SYN-01"
+      ]
+    },
+    "review": {
+      "status": "synthetic",
+      "reviewer": null,
+      "mappingVersion": "demo-v1",
+      "note": "Classificazioni soltanto dimostrative. Non implicano costi evitabili."
+    }
+  },
+  "expected": {
+    "direct_costing": {
+      "entityProfitCents": 820000,
+      "objects": [
+        {
+          "id": "A",
+          "revenueCents": 2000000,
+          "variableCents": 909091,
+          "cm1Cents": 1090909
+        },
+        {
+          "id": "B",
+          "revenueCents": 1200000,
+          "variableCents": 510909,
+          "cm1Cents": 689091
+        }
+      ]
+    },
+    "direct_costing_evoluto": {
+      "entityProfitCents": 820000,
+      "objects": [
+        {
+          "id": "A",
+          "revenueCents": 2000000,
+          "variableCents": 909091,
+          "cm1Cents": 1090909,
+          "specificFixedCents": 100000,
+          "cm2Cents": 990909
+        },
+        {
+          "id": "B",
+          "revenueCents": 1200000,
+          "variableCents": 510909,
+          "cm1Cents": 689091,
+          "specificFixedCents": 180000,
+          "cm2Cents": 509091
+        }
+      ]
+    },
+    "full_costing": {
+      "entityProfitCents": 820000,
+      "objects": [
+        {
+          "id": "A",
+          "fullCostCents": 1534091,
+          "allocatedFixedCents": 525000,
+          "marginCents": 465909
+        },
+        {
+          "id": "B",
+          "fullCostCents": 805909,
+          "allocatedFixedCents": 115000,
+          "marginCents": 394091
+        }
+      ]
+    },
+    "abc": {
+      "entityProfitCents": 820000,
+      "objects": [
+        {
+          "id": "A",
+          "activityFixedCents": 219000,
+          "allocatedFixedCents": 344000,
+          "fullCostCents": 1353091,
+          "marginCents": 646909
+        },
+        {
+          "id": "B",
+          "activityFixedCents": 186000,
+          "allocatedFixedCents": 261000,
+          "fullCostCents": 951909,
+          "marginCents": 248091
+        }
+      ]
+    }
+  }
+}

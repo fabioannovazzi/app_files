@@ -162,6 +162,10 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
   aging, cash, concentration, and profitability section plus a bounded
   model-led interpretation layer; missing optional data remains visible and
   the workflow does not require or simulate an ERP connector.
+  For a focused costing question, the same workflow supports reviewed Direct,
+  Direct Evoluto, Full and ABC methods by job, product or customer, plus
+  incremental-order, make-or-buy and discontinuation comparisons. This path
+  uses its own reviewed source totals and does not require the full ledger pack.
 - `centrale-rischi-review`: normalize an official native-text Italian Centrale
   Rischi PDF or analyse a reviewed CSV or Excel export; classify exposures
   through professional-confirmed maturity and risk-category mappings;

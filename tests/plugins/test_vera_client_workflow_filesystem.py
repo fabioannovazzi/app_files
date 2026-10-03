@@ -73,6 +73,7 @@ CLIENT_WORKFLOW_ENTRYPOINTS = (
     ("variance-analysis", "run_variance.py"),
     ("management-control-pack", "inspect_inputs.py"),
     ("management-control-pack", "run_pack.py"),
+    ("management-control-pack", "run_costing.py"),
     ("management-control-pack", "finalize_pack.py"),
     ("management-control-pack", "prepare_report_site.py"),
     ("centrale-rischi-review", "inspect_inputs.py"),

@@ -606,7 +606,7 @@
     },
     "management-control-pack": {
       "path": "management-control-pack/course.json",
-      "sha256": "28cee3c1dc417a6cad809f8221302e97302d593f7b7994dbc9d214bf4652aba4",
+      "sha256": "3c7ec23a3157d28f446183f02b26fd5dec713153c94108839f94e7fb5d0262bf",
       "languages": [
         "it",
         "en"

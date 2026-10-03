@@ -1,0 +1,10 @@
+[run]
+include =
+    */plugins/management-control-pack/scripts/costing_core.py
+    */plugins/management-control-pack/scripts/costing_pack.py
+    */plugins/management-control-pack/scripts/costing_report.py
+    */plugins/management-control-pack/scripts/run_costing.py
+
+[report]
+show_missing = True
+fail_under = 80

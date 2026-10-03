@@ -1835,6 +1835,11 @@ def render_markdown(
     pack: Mapping[str, Any], commentary: Mapping[str, Any] | None = None
 ) -> str:
     """Lead with interpretation, then readable comparisons and source controls."""
+    if pack.get("analysis_kind") == "costing":
+        from costing_report import render_costing_markdown
+
+        return render_costing_markdown(pack, commentary)
+
     from budget_presentation import COSTS, LINES
 
     language = pack.get("language", "en")
@@ -2055,6 +2060,11 @@ def render_html(
 ) -> str:
     """Render a self-contained management command centre."""
 
+    if pack.get("analysis_kind") == "costing":
+        from costing_report import render_costing_html
+
+        return render_costing_html(pack, commentary)
+
     from budget_presentation import render_budget_comparisons
 
     budget_html = render_budget_comparisons(pack)
@@ -2271,6 +2281,12 @@ def _excel_safe_value(value: Any) -> Any:
 
 def write_excel(path: Path, pack: Mapping[str, Any]) -> None:
     """Write one reviewable workbook; canonical JSON remains the exact source."""
+
+    if pack.get("analysis_kind") == "costing":
+        from costing_report import write_costing_excel
+
+        write_costing_excel(path, pack)
+        return
 
     workbook = Workbook()
     summary = workbook.active
