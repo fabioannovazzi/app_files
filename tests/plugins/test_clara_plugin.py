@@ -5443,11 +5443,25 @@ def test_prepare_voice_deck_revision_intake_inherits_parent_company_style_profil
     assert "Apply the resolved deck style spec" in " ".join(intake["next_actions"])
 
 
+@pytest.mark.parametrize("flat_install", [False, True])
 def test_prepare_voice_deck_revision_intake_accepts_explicit_deck_style(
     tmp_path: Path,
+    monkeypatch,
+    flat_install: bool,
 ) -> None:
     _, case_dir = init_case(tmp_path)
     preparer = load_voice_deck_revision_preparer()
+    if flat_install:
+        installed_root = tmp_path / "installed-clara"
+        style_dir = installed_root / "docs/specs/pptx_templates"
+        style_dir.mkdir(parents=True)
+        source_style = ROOT / "docs/specs/pptx_templates/bain-style-spec.md"
+        (style_dir / "bain-style-spec.md").write_bytes(source_style.read_bytes())
+        monkeypatch.setattr(
+            preparer,
+            "__file__",
+            str(installed_root / "scripts/prepare_voice_deck_revision.py"),
+        )
     session_dir = case_dir / "voice_sessions" / "20260102103000Z"
     session_dir.mkdir(parents=True)
     (session_dir / "raw_transcript.md").write_text(
