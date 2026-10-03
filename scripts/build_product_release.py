@@ -1,4 +1,4 @@
-"""Build Codex and Cowork releases together from each product's canonical version."""
+"""Build Codex, Cowork and Antigravity releases together from each product's canonical version."""
 
 from __future__ import annotations
 
@@ -96,8 +96,7 @@ def main(argv: list[str] | None = None) -> int:
         for name in products
     )
     commands.append(["scripts/build_claude_plugin_zip.py", *products, *suffix])
-    if "vera" in products:
-        commands.append(["scripts/build_antigravity_plugin.py", *suffix])
+    commands.append(["scripts/build_antigravity_plugin.py", *products, *suffix])
     try:
         for command in commands:
             subprocess.run([sys.executable, *command], cwd=ROOT, check=True)
@@ -106,7 +105,9 @@ def main(argv: list[str] | None = None) -> int:
         LOGGER.error("Release alignment failed: %s", exc)
         return 1
     for name, version in versions.items():
-        LOGGER.info("[OK] %s %s: Codex and Cowork packages aligned", name, version)
+        LOGGER.info(
+            "[OK] %s %s: Codex, Cowork and Antigravity packages aligned", name, version
+        )
     return 0
 
 

@@ -1,7 +1,7 @@
 # Product release alignment
 
 Vera, Clara and Lucia each have one canonical version in
-`plugins/<product>/.codex-plugin/plugin.json`. Codex and Cowork use that same
+`plugins/<product>/.codex-plugin/plugin.json`. Codex, Cowork and Antigravity use that same
 version. The OpenAI upload ZIP is a format of the Codex release, not another
 product version.
 
@@ -12,7 +12,7 @@ python scripts/build_product_release.py
 ```
 
 Pass `vera`, `clara` or `lucia` to build selected products. The command builds the
-Codex install ZIP, its OpenAI upload ZIP, and the Cowork ZIP and public download.
+Codex install ZIP, its OpenAI upload ZIP, the Cowork ZIP and public download, and the Antigravity ZIP and version metadata.
 Existing builders project the same canonical source into each host format.
 The Cowork builder validates the candidate before replacing its public copy.
 A failed overall build is not deployable; rerun the command after correcting
@@ -24,6 +24,7 @@ The `Product release alignment` GitHub workflow runs on every PR and main push:
 python scripts/build_product_release.py --check
 ```
 
+Antigravity checks also start each packaged MCP server and request its tool list.
 It rejects source drift, missing distributions, version mismatches, and a public
 Cowork download that differs from the built ZIP even when the version matches.
 Include generated distributions in the release PR. Merge and deploy only after
