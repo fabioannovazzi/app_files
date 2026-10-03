@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/app-files-connector-downloads/plugins/vera",
-  "version": "0.1.335",
-  "captured_at": "2026-10-02T17:18:14.311618+00:00",
-  "catalogue_fingerprint": "ae2d3201b5d87f1d12c566ba4bfa236d2532c1d9f5be7ce9808f940afc75c336",
-  "manifest_sha256": "728888421d1cf0594b058c555661f11fc485336866de98c409459e9916d5e355",
+  "root": "plugins/vera",
+  "version": "0.1.337",
+  "captured_at": "2026-10-03T07:18:01.104159+00:00",
+  "catalogue_fingerprint": "1a1e3e9d892b0146fa55aee05f8e896482c33c3c3b1019b0d1a5de189c82088a",
+  "manifest_sha256": "b90efbd68f2270423c2f5fb4d4e2c6377e13ab4ebcd458e1bf447921bbc4faf2",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -149,7 +149,7 @@
     {
       "function_id": "management-control-pack",
       "skill_path": "skills/management-control-pack/SKILL.md",
-      "sha256": "7b2a0da94f6068a51d0c6fb12ed389075720bc821c795010b8ed75feaa0952b8"
+      "sha256": "990df4be8a4d1bcc81280d92d9af794eb0ad3f76b3b566913981c8037cb39a1d"
     },
     {
       "function_id": "new-client",
@@ -239,7 +239,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "2a3a63e5eb6965a56ed7b3139af520a4424d50a79ecd21380bd88903a99b151f"
+      "sha256": "da508821c1adb83bf5286c65c763346b6384dbf560c05ff05d45ffdcb067a06d"
     },
     {
       "function_id": "vouching",
