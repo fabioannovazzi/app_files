@@ -54,7 +54,8 @@
     "vera/vouching",
     "vera/trasformazione",
     "vera/fusione-guidata",
-    "vera/esg-reporting-assurance"
+    "vera/esg-reporting-assurance",
+    "vera/lipe"
   ],
   "retained": {}
 }

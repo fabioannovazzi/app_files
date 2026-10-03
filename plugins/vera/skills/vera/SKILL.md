@@ -500,6 +500,9 @@ them without changing the capability catalog:
   ledger matching to `journal-bank-reconciliation`, even when both workflows
   use bank and ledger evidence;
 - `management-control-pack`: client-bound connectorless management reporting
+  and focused costing by job, product or customer. Costing uses the component's
+  `references/costing.md`, selected methods and reviewed incremental decisions;
+  it does not require the recurring pack's general ledger. Recurring reporting
   from explicitly supplied accounting exports. Local deterministic code reads
   the complete mapped populations, calculates exact P&L, Budget, aging, cash,
   concentration, and profitability sections when their reviewed contracts are

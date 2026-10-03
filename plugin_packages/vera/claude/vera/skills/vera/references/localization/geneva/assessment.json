@@ -568,7 +568,13 @@
       ],
       "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance.",
       "implementation": "Existing function retained with the recorded qualification limits.",
-      "implementation_status": "existing_or_unresolved_as_assessed"
+      "implementation_status": "existing_or_unresolved_as_assessed",
+      "costing_extension_scope": {
+        "status": "not_qualified_for_chf_french",
+        "implemented": "Direct, Direct Evoluto, Full and ABC; reviewed incremental decisions. EUR only, Italian/English output, one consumed operating period and one non-overlapping view.",
+        "required_adaptation": "CHF and French output would require explicit costing changes and validation; existing recurring reporting configuration does not provide them.",
+        "verification": "Synthetic costing fixtures and archive integration only; no Geneva professional case acceptance."
+      }
     },
     {
       "function_id": "new-client",
@@ -1166,7 +1172,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "c92a4175a52c31e930a52d064c39e76131731a89159d8bec4f42204fd5c029b8",
+  "catalogue_fingerprint": "bf91761d554760069d3294167bcb2f14ffbe976333d3687eb7463fba5b24b2df",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1388,5 +1394,21 @@
     ],
     "changed_existing_entrypoints": [],
     "review": "Register LIPE as unresolved for CH-GE. Preserve all existing jurisdiction decisions. Translated pages and synthetic tests do not establish Swiss applicability or professional acceptance."
+  },
+  "costing_release_binding": {
+    "reviewed_at": "2026-10-03",
+    "version": "0.1.337",
+    "previous_catalogue_fingerprint": "ae2d3201b5d87f1d12c566ba4bfa236d2532c1d9f5be7ce9808f940afc75c336",
+    "changed_existing_entrypoints": [
+      "vera",
+      "management-control-pack"
+    ],
+    "review": "Same function identities. The new costing path is limited to EUR and Italian/English reports. It does not inherit the recurring reporting path's CHF/French qualification. Existing Geneva reporting assessment is preserved with this explicit scope distinction; no new local-case acceptance is claimed."
+  },
+  "lipe_course_release_binding": {
+    "date": "2026-10-03",
+    "version": "0.1.338",
+    "previous_catalogue_fingerprint": "c92a4175a52c31e930a52d064c39e76131731a89159d8bec4f42204fd5c029b8",
+    "review": "Merged the existing LIPE and costing assessment rows without changing their territorial judgments. Canonical version advanced; LIPE remains an Italian VAT workflow. The new Italian course adds no Swiss qualification."
   }
 }

@@ -108,6 +108,12 @@ def test_default_command_checks_both_hosts_for_all_products(
         for command in commands
     )
     assert sum("--chatgpt-upload" in command for command in commands) == 3
+    assert [
+        release.sys.executable,
+        "scripts/build_antigravity_plugin.py",
+        *release.PRODUCTS,
+        "--check",
+    ] in commands
 
 
 def test_failed_builder_stops_release_before_other_distributions(

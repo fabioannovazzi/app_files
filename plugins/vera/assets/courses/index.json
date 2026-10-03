@@ -604,9 +604,25 @@
         "es": "Aprender a aportar un diario, comprobar su lectura y obtener líneas seleccionadas para el control posterior."
       }
     },
+    "lipe": {
+      "path": "lipe/course.json",
+      "sha256": "91a1114ce3e1484b5a6f558e710ac669db78335e0300efa4e2bb5cbb2fbd09a6",
+      "languages": [
+        "it"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "LIPE dai registri IVA alla bozza VP"
+      },
+      "goals": {
+        "it": "Controllare le fonti, leggere la carta di lavoro e aggiornare la bozza dopo una correzione, conservando la prima versione."
+      }
+    },
     "management-control-pack": {
       "path": "management-control-pack/course.json",
-      "sha256": "d86f8d9e27bf6202e39d0fcbfdd7de6da37af45327c29382fb153696a364809a",
+      "sha256": "f54a0cf37f583d029e2b3299c75b4e15456045a8b683f036fc49577ad9f324c1",
       "languages": [
         "it",
         "en"

@@ -1,0 +1,74 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "lipe",
+  "course_sha256": "91a1114ce3e1484b5a6f558e710ac669db78335e0300efa4e2bb5cbb2fbd09a6",
+  "reviewer": "Codex - authored Italian lesson and actual synthetic output review",
+  "reviewed_at": "2026-10-03T10:34:18.018139+00:00",
+  "review_scope": "Read the complete Italian lesson, fictional mandate, original registers and separate correction; executed the current LIPE CLI against exact rendered source bytes. Inspected actual VP results, PDF text and workbook structure. Test-only interpretations and confirmations are regression fixtures, never lesson inputs. No learner participation, live host/voice acceptance, professional approval, PDF extraction qualification, XML import or filing acceptance is claimed.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Start LIPE from fictional registers, identify decisions requiring review, read the actual VP workpaper and prepare questions for the reviewer.",
+        "inputs_and_request": "The Italian mandate and simplified textual registers contain the source facts. Codes and deductibility are proposals; no confirmed case or precalculated answer is supplied. Stable English source labels and decimal points are explained.",
+        "execution_and_checkpoints": "The current CLI persists blocked results for proposed decisions. Explicit test-only review permits the calculation. Checkpoints require source tracing before confirmation and distinguishing tax due from reported payments; they never fabricate learner understanding.",
+        "deliverable_and_next_action": "Open the generated three-sheet Excel workpaper, VP CSV, summary PDF and unsent review request. The host must separately record actual model exposure. Export remains unauthorized in this exercise.",
+        "practice_and_repeat": "A separate June purchase correction requires a fresh row review, produces a separate output revision and preserves the first result byte-for-byte. Old liquidation and payment values remain unchanged, with unexplained differences highlighted. Real cases require their own Studio Archive sources and decisions.",
+        "language_and_pacing": "The lesson is authored in Italian, matching the current native workpaper and PDF. Six stages total 390 seconds as a pacing target; execution and review can take longer. The written public course and native teaching workflow remain distinct."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_lipe_execution::test_lipe_kit_runs_reviewed_sources_and_preserves_revision[demo]",
+        "result_review": "Each April-June module has VP2 1000.00, VP3 500.00, VP4 220.00, VP5 110.00 and VP14 debit 110.00. Reported payments match. A proposed code blocks the calculation before explicit test-only confirmation.",
+        "reviewed_artifacts": [
+          {
+            "name": "result.json",
+            "sha256": "ecafe04d336b0cba9ab87acaa81ab10d4d42c38fe7ea71b3bb23ce8d58991d34"
+          },
+          {
+            "name": "workpaper.xlsx",
+            "sha256": "cdc6bded62c33be1b403c497df152e2308689783245fbe30338201dd8e6edd83"
+          },
+          {
+            "name": "summary.pdf",
+            "sha256": "4a4eb8411472ff144812331d05fc5951e62030c3402777e588df1d850ff80ffd"
+          },
+          {
+            "name": "vp.csv",
+            "sha256": "debb40b46619c13d0f0c96c3119499b0613bddceed8ac7f9d64709180cbff327"
+          },
+          {
+            "name": "review-request.md",
+            "sha256": "1be99fd07ae0b4f2b3238ef449bdb7b60d5fc8e142030b1cdf884be1eecf223d"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_lipe_execution::test_lipe_kit_runs_reviewed_sources_and_preserves_revision[practice]",
+        "result_review": "After explicit test-only re-review, June VP3 is 750.00, VP5 165.00 and VP14 debit 55.00; April and May stay at 110.00 debit. The old 110.00 payment and liquidation remain, generating separate differences to review. No credit or cause is invented, no small debit is deferred, and the original output files remain identical.",
+        "reviewed_artifacts": [
+          {
+            "name": "result.json",
+            "sha256": "a66c7f8ad4d694e197ddd5cfe7c27c43f2da9de4d00d9f075a141da552ee84ab"
+          },
+          {
+            "name": "workpaper.xlsx",
+            "sha256": "d42cbc50879103f8dd0c0fe8d7011a31b072e4ef116260328e573aee9eb71a3f"
+          },
+          {
+            "name": "summary.pdf",
+            "sha256": "56b671b837e56c74246edd230607d2afc9189a2a20cb4c0d20a7393378a7cb15"
+          },
+          {
+            "name": "vp.csv",
+            "sha256": "31b5c054456f74fdfb150a938356bb81f23d335b2f0ea67367d2b951a2f0e128"
+          },
+          {
+            "name": "review-request.md",
+            "sha256": "e3c1b83c48c7c76bfd4b45d19961fa552ae2448f984545e48e88ad70bf260047"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -103,6 +103,10 @@ def _relative_path(case_dir: Path, path: Path) -> str:
 
 
 def _repo_root() -> Path:
+    """Locate bundled support files in a flat host package or repository."""
+    plugin_root = Path(__file__).resolve().parents[1]
+    if (plugin_root / "docs/specs/pptx_templates").is_dir():
+        return plugin_root
     return Path(__file__).resolve().parents[3]
 
 

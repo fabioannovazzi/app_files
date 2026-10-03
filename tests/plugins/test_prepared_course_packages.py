@@ -50,7 +50,7 @@ print(json.dumps({'workflows': len(index['courses']), 'locales': count}))
     assert (
         json.loads(result.stdout)
         == {
-            "vera": {"workflows": 40, "locales": 179},
+            "vera": {"workflows": 41, "locales": 180},
             "clara": {"workflows": 9, "locales": 42},
             "lucia": {"workflows": 4, "locales": 20},
         }[product]

@@ -830,7 +830,7 @@ def test_public_page_states_connector_and_model_data_boundaries() -> None:
     for snippet in (
         "Pacchetto controllo di gestione | Vera",
         "Management control pack | Vera",
-        "Prepare recurring management reports from accounting exports.",
+        "Prepare management reports and cost and margin analyses.",
         "Non serve un connettore al gestionale",
         "No accounting-system connector is required",
         "Quali dati arrivano al modello",

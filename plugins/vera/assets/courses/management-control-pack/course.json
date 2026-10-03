@@ -44,6 +44,11 @@
       "sha256": "1214b0fd2646a5a13db85ccebf1ef233f0cb2cb1f8ce3daf28cb681f4244db94"
     },
     {
+      "path": "modules/management-control-pack/references/costing.md",
+      "repository_path": "plugins/management-control-pack/references/costing.md",
+      "sha256": "32c07ec98dcb04d9393285c441e3eb1abe926ca5a9baa5a4e0a66e83c026dee2"
+    },
+    {
       "path": "modules/management-control-pack/requirements.txt",
       "repository_path": "plugins/management-control-pack/requirements.txt",
       "sha256": "9bba605fd7b6ea23038de15e5a1ae6714b3d3fb14ed2d6e6bedbfb0665ca2122"
@@ -59,6 +64,21 @@
       "sha256": "edbc9f16d57800b1110eb94c9c6d68d94e2713bd2da7120cb5c8bc33186e17a5"
     },
     {
+      "path": "modules/management-control-pack/scripts/costing_core.py",
+      "repository_path": "plugins/management-control-pack/scripts/costing_core.py",
+      "sha256": "4bfdc57844dad015bd4506ece3d322a1f25fecff1a57f04fbe4d1fe56d1fa6eb"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/costing_pack.py",
+      "repository_path": "plugins/management-control-pack/scripts/costing_pack.py",
+      "sha256": "8d83ea5cf28a22a0f08aaf427a7022452a92a92b045cbd4765f9cea51cc9f9d2"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/costing_report.py",
+      "repository_path": "plugins/management-control-pack/scripts/costing_report.py",
+      "sha256": "5163f73c6e780b5923e4304140530defd05c82725fbc1b3fd67c630b1a93161d"
+    },
+    {
       "path": "modules/management-control-pack/scripts/finalize_pack.py",
       "repository_path": "plugins/management-control-pack/scripts/finalize_pack.py",
       "sha256": "7cddaa2377112588a905b04f09c54e5f5d9d57a91c9cad6810de5b93161e5a7e"
@@ -71,7 +91,7 @@
     {
       "path": "modules/management-control-pack/scripts/management_control_core.py",
       "repository_path": "plugins/management-control-pack/scripts/management_control_core.py",
-      "sha256": "0068ff898813ada9f1dc8bb5bacbbc88a7a0ae7c866408a72619e26a5992561f"
+      "sha256": "a0c1444d87c8503fb698168c77846dcd70ad9e5b2dac4bb5e202e2e00af89867"
     },
     {
       "path": "modules/management-control-pack/scripts/management_delivery.py",
@@ -99,6 +119,11 @@
       "sha256": "7bf3850456f4f673eb384424fe1898b180cf51f72f720f7abdbf9233ebb864f4"
     },
     {
+      "path": "modules/management-control-pack/scripts/run_costing.py",
+      "repository_path": "plugins/management-control-pack/scripts/run_costing.py",
+      "sha256": "585c8566c6e413e15467bdb0dc97df02081d2c1f51f8c576f5d34bd0674a07c2"
+    },
+    {
       "path": "modules/management-control-pack/scripts/run_pack.py",
       "repository_path": "plugins/management-control-pack/scripts/run_pack.py",
       "sha256": "69ef1cbde7526f347c45bf51758f9356796cb583c64a484bacaa04014d266fdd"
@@ -106,7 +131,7 @@
     {
       "path": "modules/management-control-pack/skills/management-control-pack/SKILL.md",
       "repository_path": "plugins/management-control-pack/skills/management-control-pack/SKILL.md",
-      "sha256": "787205f97cdc06e8bed7c78856b5aa86eb28ce4c9a5ab0302815aa57582fa1ee"
+      "sha256": "98203ff2637c939093c705eb50203e3d427e732a898b47407b5d2e1de20aa602"
     },
     {
       "path": "modules/management-control-pack/skills/management-control-pack/references/sites-delivery.md",
@@ -171,7 +196,7 @@
     {
       "path": "skills/management-control-pack/SKILL.md",
       "repository_path": "plugins/vera/skills/management-control-pack/SKILL.md",
-      "sha256": "7b2a0da94f6068a51d0c6fb12ed389075720bc821c795010b8ed75feaa0952b8"
+      "sha256": "990df4be8a4d1bcc81280d92d9af794eb0ad3f76b3b566913981c8037cb39a1d"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

@@ -40,6 +40,10 @@
       "sha256": "1214b0fd2646a5a13db85ccebf1ef233f0cb2cb1f8ce3daf28cb681f4244db94"
     },
     {
+      "path": "modules/management-control-pack/references/costing.md",
+      "sha256": "8860b23cc46ea0ac3c894d77a97aea3a8385d25597c90333dea25727a46d90f9"
+    },
+    {
       "path": "modules/management-control-pack/requirements.txt",
       "sha256": "9bba605fd7b6ea23038de15e5a1ae6714b3d3fb14ed2d6e6bedbfb0665ca2122"
     },
@@ -52,6 +56,18 @@
       "sha256": "edbc9f16d57800b1110eb94c9c6d68d94e2713bd2da7120cb5c8bc33186e17a5"
     },
     {
+      "path": "modules/management-control-pack/scripts/costing_core.py",
+      "sha256": "4bfdc57844dad015bd4506ece3d322a1f25fecff1a57f04fbe4d1fe56d1fa6eb"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/costing_pack.py",
+      "sha256": "8d83ea5cf28a22a0f08aaf427a7022452a92a92b045cbd4765f9cea51cc9f9d2"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/costing_report.py",
+      "sha256": "5163f73c6e780b5923e4304140530defd05c82725fbc1b3fd67c630b1a93161d"
+    },
+    {
       "path": "modules/management-control-pack/scripts/finalize_pack.py",
       "sha256": "7cddaa2377112588a905b04f09c54e5f5d9d57a91c9cad6810de5b93161e5a7e"
     },
@@ -61,7 +77,7 @@
     },
     {
       "path": "modules/management-control-pack/scripts/management_control_core.py",
-      "sha256": "0068ff898813ada9f1dc8bb5bacbbc88a7a0ae7c866408a72619e26a5992561f"
+      "sha256": "a0c1444d87c8503fb698168c77846dcd70ad9e5b2dac4bb5e202e2e00af89867"
     },
     {
       "path": "modules/management-control-pack/scripts/management_delivery.py",
@@ -84,12 +100,16 @@
       "sha256": "7bf3850456f4f673eb384424fe1898b180cf51f72f720f7abdbf9233ebb864f4"
     },
     {
+      "path": "modules/management-control-pack/scripts/run_costing.py",
+      "sha256": "585c8566c6e413e15467bdb0dc97df02081d2c1f51f8c576f5d34bd0674a07c2"
+    },
+    {
       "path": "modules/management-control-pack/scripts/run_pack.py",
       "sha256": "69ef1cbde7526f347c45bf51758f9356796cb583c64a484bacaa04014d266fdd"
     },
     {
       "path": "modules/management-control-pack/skills/management-control-pack/SKILL.md",
-      "sha256": "03618cdf09c1e17f03c5d23112337a4ef66b389081280c9ea4ad28d78cb90c77"
+      "sha256": "031376e51ae11f261b78c7d9e0f25b70ea9b581791a7bf0ee082ea4ad1a1b45f"
     },
     {
       "path": "modules/management-control-pack/skills/management-control-pack/references/sites-delivery.md",
@@ -141,7 +161,7 @@
     },
     {
       "path": "skills/management-control-pack/SKILL.md",
-      "sha256": "5cac2f858472ebd01ac96b6a000eddebf30c4cb0f8e17462ec7508e3e30432da"
+      "sha256": "154cb691380b31c581895ba82ca32e100c0b2b29057a82584e1a5d1d2ac63ed6"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -319,5 +339,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d86f8d9e27bf6202e39d0fcbfdd7de6da37af45327c29382fb153696a364809a"
+  "canonical_course_sha256": "f54a0cf37f583d029e2b3299c75b4e15456045a8b683f036fc49577ad9f324c1"
 }

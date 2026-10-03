@@ -316,6 +316,7 @@ jobs:
           tests/plugins/test_teaching_studio_document_format_execution.py
           tests/plugins/test_teaching_cnc_practical_execution.py
           tests/plugins/test_teaching_scissione_execution.py
+          tests/plugins/test_teaching_lipe_execution.py
           tests/plugins/test_cnc_integrations.py
           tests/plugins/test_cowork_teaching.py
           tests/plugins/test_vera_get_started.py
@@ -334,6 +335,13 @@ jobs:
           python -m isort --check-only plugins/attribute-reporting/scripts/attribute_reporting.py tests/plugins/test_attribute_reporting_plugin.py tests/plugins/test_teaching_attribute_execution.py plugins/attribute-reporting/scripts/prepare_run.py modules/pdp/attribute_table_templates.py tests/plugins/test_clara_attribute_reporting_component.py tests/modules/pdp/test_attribute_table_templates.py
           python -m mypy --follow-imports=skip plugins/attribute-reporting/scripts/attribute_reporting.py plugins/attribute-reporting/scripts/prepare_run.py modules/pdp/attribute_table_templates.py
           python -m bandit -q -ll plugins/attribute-reporting/scripts/attribute_reporting.py plugins/attribute-reporting/scripts/prepare_run.py modules/pdp/attribute_table_templates.py
+      - name: Verify focused costing and archive integration
+        run: |
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_management_costing.py --cov --cov-config=tests/plugin_costing.coveragerc --cov-report=term-missing
+          python -m black --check plugins/management-control-pack/scripts/costing_core.py plugins/management-control-pack/scripts/costing_pack.py plugins/management-control-pack/scripts/costing_report.py plugins/management-control-pack/scripts/run_costing.py tests/plugins/test_management_costing.py
+          python -m isort --check-only plugins/management-control-pack/scripts/costing_core.py plugins/management-control-pack/scripts/costing_pack.py plugins/management-control-pack/scripts/costing_report.py plugins/management-control-pack/scripts/run_costing.py tests/plugins/test_management_costing.py
+          python -m mypy --follow-imports=skip plugins/management-control-pack/scripts/costing_core.py plugins/management-control-pack/scripts/costing_pack.py plugins/management-control-pack/scripts/costing_report.py plugins/management-control-pack/scripts/run_costing.py
+          python -m bandit -q -ll plugins/management-control-pack/scripts/costing_core.py plugins/management-control-pack/scripts/costing_pack.py plugins/management-control-pack/scripts/costing_report.py plugins/management-control-pack/scripts/run_costing.py
       - name: Verify management report languages and presentation
         run: |
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_management_control_pack.py tests/plugins/test_teaching_management_execution.py tests/plugins/test_teaching_clara_budget_execution.py tests/plugins/test_teaching_kit_execution.py::test_budget_kits_run_the_owning_product_report_pipeline --cov --cov-config=tests/plugin_management_presentation.coveragerc --cov-report=term-missing --cov-fail-under=80

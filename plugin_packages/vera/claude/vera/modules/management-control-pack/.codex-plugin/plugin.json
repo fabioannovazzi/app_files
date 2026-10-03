@@ -1,7 +1,7 @@
 {
   "name": "management-control-pack",
-  "version": "0.1.5",
-  "description": "Connectorless management-control pack preparation for Vera from reviewed accounting exports.",
+  "version": "0.1.6",
+  "description": "Management reporting and reviewed costing by job, product or customer for Vera.",
   "author": {
     "name": "Fabio Annovazzi · Mparanza",
     "email": "fabio@mparanza.com",
@@ -21,13 +21,17 @@
     "receivables",
     "payables",
     "cash",
-    "customer-concentration"
+    "customer-concentration",
+    "costing",
+    "cost-allocation",
+    "activity-based-costing",
+    "margini-commessa"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Management Control Pack",
     "shortDescription": "Build a reviewable management pack from accounting exports.",
-    "longDescription": "Vera prepares one connectorless management-control pack from reviewed Excel or CSV exports. It inventories source tables, requires explicit mappings, calculates monthly P&L, budget variances, receivables and payables aging, cash movements, customer concentration and service profitability when the corresponding data is available, and produces JSON, Excel, Markdown and a self-contained HTML command centre. Calculated facts remain separate from model-led interpretation and professional approval.",
+    "longDescription": "Vera prepares one connectorless management-control pack from reviewed Excel or CSV exports. It inventories source tables, requires explicit mappings, calculates monthly P&L, budget variances, receivables and payables aging, cash movements, customer concentration and service profitability when the corresponding data is available, and produces JSON, Excel, Markdown and a self-contained HTML command centre. Calculated facts remain separate from model-led interpretation and professional approval. A focused costing path calculates selected Direct, Direct Evoluto, Full and ABC methods, reconciles reviewed consumed operating costs, and compares documented incremental decisions within the same archive and reporting workflow.",
     "developerName": "Fabio Annovazzi · Mparanza",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com/static/shared/management-control-pack/index.html?lang=it",

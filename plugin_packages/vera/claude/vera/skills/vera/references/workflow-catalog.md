@@ -39,10 +39,11 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
 
 ## Professional workflows
 
-- `lipe` (**LIPE**): reconcile Italian VAT registers with source evidence and
-  prepare reviewed VP drafts. Preserve code confirmations, distinct VAT periods,
+- `lipe`: **LIPE** reconciles Italian VAT registers with source evidence and
+  prepares reviewed VP drafts. Preserve code confirmations, distinct VAT periods,
   opening balances and payment differences. Pilot for ordinary 2024–2026 cases;
-  real XML export, signing, transmission and importer acceptance remain closed.
+  unsigned XML export requires fresh signed approval and mandate verification.
+  Signing, transmission and accounting-software acceptance remain external.
   Use the LIPE specialist and state its unsupported-case boundaries.
 
 - `rating-legalita`: prepare an Italian AGCM initial-application dossier, even
@@ -150,6 +151,10 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
   aging, cash, concentration, and profitability section plus a bounded
   model-led interpretation layer; missing optional data remains visible and
   the workflow does not require or simulate an ERP connector.
+  For a focused costing question, the same workflow supports reviewed Direct,
+  Direct Evoluto, Full and ABC methods by job, product or customer, plus
+  incremental-order, make-or-buy and discontinuation comparisons. This path
+  uses its own reviewed source totals and does not require the full ledger pack.
 - `centrale-rischi-review`: normalize an official native-text Italian Centrale
   Rischi PDF or analyse a reviewed CSV or Excel export; classify exposures
   through professional-confirmed maturity and risk-category mappings;

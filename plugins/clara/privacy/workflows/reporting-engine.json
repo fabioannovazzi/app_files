@@ -60,6 +60,11 @@
         "id": "parser-and-attempt-evidence",
         "purpose": "Verify reviewed parsing/execution and inspect failed or published analytical results",
         "content": "Explicit sheet/CSV parser settings, source hashes, reviewed execution context, generated recipes, output tables/charts, current-generation pointer, retained prior output snapshots, failed staging files and process logs (which may include local paths and business values) can be read by Codex. Normalized temporary CSV input is removed by the managed temporary-directory scope; failed stages, logs and published generations persist until separately removed. No automatic anonymisation is applied. Unsupported distribution mapping names are returned in a local validation error before report artifacts are written; the requested binding names may enter Codex context. The rejection introduces no external destination or additional retained source content. Explicit reporting delivery export creates an additional local copy of the complete reviewed source dataset and source notes, profile, semantic layer, acceptance receipt, current published generation and generated outputs. Its portable descriptor retains relative input paths and receipt hashes; the original execution receipt retains original absolute paths. These copies persist at the selected delivery location. The export itself performs no upload; a separately chosen Cowork or sharing route processes or transfers the selected bundle under that route."
+      },
+      {
+        "id": "embedded-costing-component",
+        "purpose": "Describe the separately invoked costing code bundled with the shared reporting component",
+        "content": "Selected costing sources, reviewed classifications, objects, drivers and decision assumptions may be read during case preparation. The default calculated projection includes the decision question, scope, metrics, controls, limitations and up to 60 rows per section; raw costing workpapers and source locators remain outside that projection. Prior model reads are not undone. The costing CLI requires an actual Studio Archive context and source hashes; ordinary Clara budget_report.py routing is unchanged and does not establish that archive binding. No new external recipient or automatic anonymization is introduced."
       }
     ]
   },
@@ -151,9 +156,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-15",
+    "reviewed_at": "2026-10-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "7a0df1d9c63e5e78fc2e4ae8088481c11183ba17e30bf9091f3a855ba38b5cde"
+    "source_fingerprint": "7f7b462b8bff89f14be7e7e5c8bddb48d4935063cdfa36f93a7cf9827408a757"
   }
 }

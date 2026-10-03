@@ -5274,8 +5274,8 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "Come usare Clara",
         "Installation",
         "Installazione",
-        "Install Clara for ChatGPT Work and Codex, or download the package for Claude Cowork.",
-        "Installa Clara per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.",
+        "Install Clara in ChatGPT Work and Codex, Claude Cowork or Google Antigravity.",
+        "Installa Clara in ChatGPT Work e Codex, Claude Cowork o Google Antigravity.",
         "Install for ChatGPT Work and Codex",
         "Installa per ChatGPT Work e Codex",
         "Go to Cowork marketplace",
@@ -6467,11 +6467,11 @@ def test_companion_install_flow_routes_login_to_same_listing(
 @pytest.mark.parametrize(
     "localized_guidance",
     (
-        "Install Clara for ChatGPT Work and Codex, or download the package for Claude Cowork.",
-        "Installa Clara per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.",
-        "Installez Clara pour ChatGPT Work et Codex ou téléchargez le paquet pour Claude Cowork.",
-        "Installieren Sie Clara für ChatGPT Work und Codex oder laden Sie das Paket für Claude Cowork herunter.",
-        "Instala Clara para ChatGPT Work y Codex o descarga el paquete para Claude Cowork.",
+        "Install Clara in ChatGPT Work and Codex, Claude Cowork or Google Antigravity.",
+        "Installa Clara in ChatGPT Work e Codex, Claude Cowork o Google Antigravity.",
+        "Installez Clara dans ChatGPT Work et Codex, Claude Cowork ou Google Antigravity.",
+        "Installieren Sie Clara in ChatGPT Work und Codex, Claude Cowork oder Google Antigravity.",
+        "Instala Clara en ChatGPT Work y Codex, Claude Cowork o Google Antigravity.",
     ),
 )
 def test_clara_install_flow_localizes_platform_choices(

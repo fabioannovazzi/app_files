@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/.codex/worktrees/lipe-pipeline/app_files/plugins/vera",
-  "version": "0.1.336",
-  "captured_at": "2026-10-02T18:38:17.392566+00:00",
-  "catalogue_fingerprint": "c92a4175a52c31e930a52d064c39e76131731a89159d8bec4f42204fd5c029b8",
-  "manifest_sha256": "67c94bbbef2828712240309e1930ad9c4a8cc388edb1a41594f6862d2c4cfa35",
+  "root": "plugins/vera",
+  "version": "0.1.338",
+  "captured_at": "2026-10-03T10:34:40.201628+00:00",
+  "catalogue_fingerprint": "bf91761d554760069d3294167bcb2f14ffbe976333d3687eb7463fba5b24b2df",
+  "manifest_sha256": "8613267fd7fc7036c4637f30529be0d66526794af103181223687fe5e9273399",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -154,7 +154,7 @@
     {
       "function_id": "management-control-pack",
       "skill_path": "skills/management-control-pack/SKILL.md",
-      "sha256": "7b2a0da94f6068a51d0c6fb12ed389075720bc821c795010b8ed75feaa0952b8"
+      "sha256": "990df4be8a4d1bcc81280d92d9af794eb0ad3f76b3b566913981c8037cb39a1d"
     },
     {
       "function_id": "new-client",
@@ -244,7 +244,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "2a3a63e5eb6965a56ed7b3139af520a4424d50a79ecd21380bd88903a99b151f"
+      "sha256": "da508821c1adb83bf5286c65c763346b6384dbf560c05ff05d45ffdcb067a06d"
     },
     {
       "function_id": "vouching",
