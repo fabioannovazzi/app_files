@@ -1,0 +1,39 @@
+{
+  "id": "LIPE-2024-2026-pilot",
+  "status": "OFFICIAL_SOURCES_CHECKED_PROFESSIONAL_UAT_PENDING",
+  "reviewed_on": "2026-10-02",
+  "supported_years": [
+    2024,
+    2025,
+    2026
+  ],
+  "vp7_threshold": "100.00",
+  "quarterly_option_interest_rate": "0.01",
+  "advance_minimum": "103.29",
+  "source_file": "sources.json",
+  "rules": [
+    {
+      "id": "VP2-5",
+      "source": "ae-istruzioni.pdf",
+      "pages": [
+        9,
+        10
+      ],
+      "rule": "Base, chargeability and deduction periods are separate; input base is in registration period. Deductibility is explicitly reviewed, including reverse charge."
+    },
+    {
+      "id": "VP6-14",
+      "source": "ae-istruzioni.pdf",
+      "pages": [
+        10,
+        11
+      ],
+      "rule": "Exact signed formula, 1% only quarterly by option Q1-3. Q4 by option uses code 5 and omits VP11, VP12, VP14."
+    },
+    {
+      "id": "TECHNICAL",
+      "source": "ae-specifiche.pdf",
+      "rule": "VP7 absent in Jan/Dec/Q1/Q4/Q5. VP8 absent in Jan/Q1 for supported single-periodicity cases. Threshold and acconto checks. No automatic small-debit carry when paid or at year end."
+    }
+  ]
+}

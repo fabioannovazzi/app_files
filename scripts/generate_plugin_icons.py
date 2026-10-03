@@ -27,6 +27,7 @@ class IconSpec:
 
 
 SPECS = (
+    IconSpec("lipe", "Vera · LIPE", "#002060", "#00B0F0", "lipe"),
     IconSpec(
         "rating-legalita", "Vera · Rating di legalità", "#002060", "#00B0F0", "rating"
     ),
@@ -400,6 +401,7 @@ def _body(spec: IconSpec) -> str:
     color = "#1F211D"
     accent = spec.accent
     bodies = {
+        "lipe": f"""<path d="M13 13h30v37H13zM20 22h16M20 30h7M20 38h7" fill="none" stroke="{paper}" stroke-width="3"/><path d="m34 36 5 5 10-12" fill="none" stroke="{accent}" stroke-width="3"/>""",
         "rating": f"""<path d="M15 13h30v37H15zM21 22h12M21 29h9" fill="none" stroke="{paper}" stroke-width="3"/><path d="m37 28 3 7 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1z" fill="{paper}"/>""",
         "patent_box": f"""<path d="M16 12h24l8 8v32H16zM39 12v10h9M23 29h17M23 36h8" fill="none" stroke="{paper}" stroke-width="3"/><circle cx="39" cy="43" r="7" fill="none" stroke="{accent}" stroke-width="3"/><path d="m35 43 3 3 5-6" fill="none" stroke="{accent}" stroke-width="2"/>""",
         "scissione": f"""<path d="M22 12h20v13H22zM12 41h15v12H12zM38 41h15v12H38zM32 25v8M19 41v-8h27v8" fill="none" stroke="{paper}" stroke-width="3"/><path d="m14 37 5 5 5-5m17 0 5 5 5-5" fill="none" stroke="{accent}" stroke-width="3"/>""",

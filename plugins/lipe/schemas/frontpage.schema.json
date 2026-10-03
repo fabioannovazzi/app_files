@@ -1,0 +1,521 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LIPE ordinary front page with source-bound professional declarations",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "lipe.frontpage.v1"
+    },
+    "client_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "engagement_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "data_origin": {
+      "enum": [
+        "SYNTHETIC",
+        "REAL"
+      ]
+    },
+    "taxpayer_kind": {
+      "enum": [
+        "NATURAL_PERSON",
+        "OTHER"
+      ]
+    },
+    "fields": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "CodiceFiscale": {
+          "type": "string",
+          "pattern": "^(?:[0-9]{11}|[A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{3}[A-Z])$"
+        },
+        "AnnoImposta": {
+          "type": "integer",
+          "minimum": 2024,
+          "maximum": 2026
+        },
+        "PartitaIVA": {
+          "type": "string",
+          "pattern": "^[0-7][0-9]{10}$"
+        },
+        "CFDichiarante": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(?:[0-9]{11}|[A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{3}[A-Z])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "CodiceCaricaDichiarante": {
+          "anyOf": [
+            {
+              "enum": [
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "11",
+                "12",
+                "13",
+                "14",
+                "15"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "CodiceFiscaleSocieta": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9]{11}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "FirmaDichiarazione": {
+          "const": "1"
+        },
+        "CFIntermediario": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(?:[0-9]{11}|[A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{3}[A-Z])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ImpegnoPresentazione": {
+          "anyOf": [
+            {
+              "enum": [
+                "1",
+                "2"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "DataImpegno": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "FirmaIntermediario": {
+          "anyOf": [
+            {
+              "const": "1"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "CodiceFiscale",
+        "AnnoImposta",
+        "PartitaIVA",
+        "CFDichiarante",
+        "CodiceCaricaDichiarante",
+        "CodiceFiscaleSocieta",
+        "FirmaDichiarazione",
+        "CFIntermediario",
+        "ImpegnoPresentazione",
+        "DataImpegno",
+        "FirmaIntermediario"
+      ]
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "required": [
+          "source_id",
+          "path",
+          "sha256"
+        ]
+      },
+      "minItems": 1
+    },
+    "field_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "CodiceFiscale": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "source_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "page": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "quote": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "source_id",
+            "page",
+            "quote"
+          ]
+        },
+        "AnnoImposta": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "source_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "page": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "quote": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "source_id",
+            "page",
+            "quote"
+          ]
+        },
+        "PartitaIVA": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "source_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "page": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "quote": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "source_id",
+            "page",
+            "quote"
+          ]
+        },
+        "CFDichiarante": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "source_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "page": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "quote": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "source_id",
+            "page",
+            "quote"
+          ]
+        },
+        "CodiceCaricaDichiarante": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "source_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "page": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "quote": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "source_id",
+            "page",
+            "quote"
+          ]
+        },
+        "CodiceFiscaleSocieta": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "source_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "page": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "quote": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "source_id",
+            "page",
+            "quote"
+          ]
+        },
+        "CFIntermediario": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "source_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "page": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "quote": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "source_id",
+            "page",
+            "quote"
+          ]
+        },
+        "ImpegnoPresentazione": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "source_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "page": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "quote": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "source_id",
+            "page",
+            "quote"
+          ]
+        },
+        "DataImpegno": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "source_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "page": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "quote": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "source_id",
+            "page",
+            "quote"
+          ]
+        }
+      }
+    },
+    "registry_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "field": {
+            "enum": [
+              "CodiceFiscale",
+              "PartitaIVA",
+              "CFDichiarante",
+              "CodiceFiscaleSocieta",
+              "CFIntermediario"
+            ]
+          },
+          "verified_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "evidence": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "source_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "page": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "quote": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "source_id",
+              "page",
+              "quote"
+            ]
+          },
+          "review": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "status": {
+                "enum": [
+                  "PROPOSED",
+                  "CONFIRMED"
+                ]
+              },
+              "reviewer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reviewed_on": {
+                "type": "string",
+                "format": "date"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "status",
+              "reviewer",
+              "reviewed_on",
+              "reason"
+            ]
+          }
+        },
+        "required": [
+          "field",
+          "verified_on",
+          "evidence",
+          "review"
+        ]
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "PROPOSED",
+            "CONFIRMED"
+          ]
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewed_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "status",
+        "reviewer",
+        "reviewed_on",
+        "reason"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "client_id",
+    "engagement_id",
+    "data_origin",
+    "taxpayer_kind",
+    "fields",
+    "sources",
+    "field_evidence",
+    "registry_checks",
+    "review"
+  ]
+}

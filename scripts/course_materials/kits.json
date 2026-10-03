@@ -9508,5 +9508,56 @@
         ]
       }
     ]
+  },
+  "vera/lipe": {
+    "group": "workflow",
+    "revision": "2026-10-03.1",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "review_synthetic_registers_then_revise_purchase"
+    },
+    "files": [
+      {
+        "source": "lipe/incarico.txt",
+        "path": "files/input/incarico.txt",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "lipe/registri.txt",
+        "path": "files/input/registri.txt",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "lipe/incarico.txt",
+        "path": "files/practice/incarico.txt",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "lipe/rettifica.txt",
+        "path": "files/practice/rettifica.txt",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "lipe/registri-rettificati.txt",
+        "path": "files/practice/registri-rettificati.txt",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      }
+    ]
   }
 }

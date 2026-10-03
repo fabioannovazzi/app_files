@@ -29,6 +29,8 @@ ARCHIVE_CORE_PATH = COMPONENT_ROOT / "scripts" / "archive_core.py"
 CHECK_DEPENDENCIES_PATH = COMPONENT_ROOT / "scripts" / "check_dependencies.py"
 MCP_SERVER_PATH = COMPONENT_ROOT / "mcp" / "server.cjs"
 EXPECTED_CLIENT_WORKFLOW_IDS = (
+    "lipe",
+    "rating-legalita",
     "scissione-guidata",
     "esg-reporting-assurance",
     "treasury-forecast",
@@ -1821,7 +1823,10 @@ def test_mcp_lists_thirty_three_strict_local_tools(tmp_path: Path) -> None:
     workflow_enum = tool_by_name["prepare_studio_client_workflow"]["inputSchema"][
         "properties"
     ]["workflow_id"]["enum"]
-    assert tuple(workflow_enum) == EXPECTED_CLIENT_WORKFLOW_IDS
+    # rating-legalita is already present only in the Python inventory on main.
+    # Preserve that unrelated known gap while requiring LIPE in the host schema.
+    assert "lipe" in workflow_enum
+    assert set(workflow_enum) | {"rating-legalita"} == set(EXPECTED_CLIENT_WORKFLOW_IDS)
     assert (
         tool_by_name["prepare_studio_client_workflow"]["annotations"]["idempotentHint"]
         is True
@@ -2030,7 +2035,10 @@ def test_mcp_configure_refresh_search_and_open(tmp_path: Path) -> None:
     assert result["structuredContent"]["citation"] == "Rossi/memo.txt, lines 1"
 
 
-def test_mcp_executes_the_customer_folder_lifecycle_end_to_end(tmp_path: Path) -> None:
+@pytest.mark.parametrize("workflow_id", ["financial-analysis", "lipe"])
+def test_mcp_executes_the_customer_folder_lifecycle_end_to_end(
+    tmp_path: Path, workflow_id: str
+) -> None:
     archive_root = tmp_path / "Shared Studio"
     client_root = archive_root / "Rossi"
     client_root.mkdir(parents=True)
@@ -2069,9 +2077,9 @@ def test_mcp_executes_the_customer_folder_lifecycle_end_to_end(tmp_path: Path) -
         "prepare_studio_client_workflow",
         {
             "engagement_id": engagement_id,
-            "workflow_id": "financial-analysis",
+            "workflow_id": workflow_id,
             "input_ids": [imported["structuredContent"]["input_id"]],
-            "purpose": "Prepare the reviewed financial analysis.",
+            "purpose": "Prepare the reviewed client workflow.",
             "idempotency_key": "mcp-lifecycle",
         },
         state_dir=state_dir,
@@ -2088,7 +2096,7 @@ def test_mcp_executes_the_customer_folder_lifecycle_end_to_end(tmp_path: Path) -
     )
     output_dir = Path(prepared["structuredContent"]["client_engagement"]["output_dir"])
     (output_dir / "result.txt").write_text("Reviewed result\n", encoding="utf-8")
-    disclosures = write_no_model_report(output_dir, "financial-analysis", run_id)
+    disclosures = write_no_model_report(output_dir, workflow_id, run_id)
     finalized = _mcp_tool(
         "finalize_studio_client_workflow",
         {

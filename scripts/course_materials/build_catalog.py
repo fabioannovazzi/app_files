@@ -44,6 +44,7 @@ LIMITED_LANGUAGES = {
     "vera/centrale-rischi-review": ["it"],
     "vera/treasury-forecast": ["it"],
     "vera/business-valuation": ["it"],
+    "vera/lipe": ["it"],
 }
 
 

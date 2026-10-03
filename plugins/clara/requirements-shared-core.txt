@@ -67,3 +67,4 @@ xlsxwriter
 xlsxwriter>=3.2
 # Requests 2.32.3 runtime supports chardet below 6.
 chardet>=3,<6
+tzdata>=2024.1

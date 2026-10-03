@@ -438,13 +438,16 @@ def test_shared_model_data_copy_names_the_model_not_the_runtime_pair() -> None:
     function_copy = (
         ROOT / "static" / "shared" / "product-function-pages.js"
     ).read_text(encoding="utf-8")
-    # The new rating page explicitly documents its inspected dual-host boundary.
-    rating_start = function_copy.index('"rating-legalita":')
-    object_start = function_copy.index("{", rating_start)
-    _, length = json.JSONDecoder().raw_decode(function_copy[object_start:])
-    legacy_function_copy = (
-        function_copy[:rating_start] + function_copy[object_start + length :]
-    )
+    # These new pages explicitly document their inspected dual-host boundaries.
+    legacy_function_copy = function_copy
+    for workflow in ("rating-legalita", "lipe"):
+        entry_start = legacy_function_copy.index(f'"{workflow}":')
+        object_start = legacy_function_copy.index("{", entry_start)
+        _, length = json.JSONDecoder().raw_decode(legacy_function_copy[object_start:])
+        legacy_function_copy = (
+            legacy_function_copy[:entry_start]
+            + legacy_function_copy[object_start + length :]
+        )
     vera_function_copy = legacy_function_copy.split('"clara-advisory-planning":', 1)[0]
     vera_function_copy += function_copy.split("const bilancioModelData =", 1)[1].split(
         "Object.entries(bilancioModelData)", 1

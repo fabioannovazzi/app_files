@@ -291,7 +291,7 @@
     "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5b3a877cd3b539ad5647f958ad3a287c1aa4cee289573c4fb4f37b211bf7b4a6"
+    "source_fingerprint": "e43bb158a34b2621418a385278403c06f230e2dbc841f182df2b780f30dc2c79"
   },
   "governed_repository_paths": [
     "plugins/vera/scripts/model_data_report.py",

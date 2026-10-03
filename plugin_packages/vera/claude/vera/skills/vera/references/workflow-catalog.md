@@ -39,6 +39,13 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
 
 ## Professional workflows
 
+- `lipe`: **LIPE** reconciles Italian VAT registers with source evidence and
+  prepares reviewed VP drafts. Preserve code confirmations, distinct VAT periods,
+  opening balances and payment differences. Pilot for ordinary 2024–2026 cases;
+  unsigned XML export requires fresh signed approval and mandate verification.
+  Signing, transmission and accounting-software acceptance remain external.
+  Use the LIPE specialist and state its unsupported-case boundaries.
+
 - `rating-legalita`: prepare an Italian AGCM initial-application dossier, even
   from no documents; distinguish declarations, verified evidence, obstacles,
   optional premiums and conditional improvements. Preserve T0, link every

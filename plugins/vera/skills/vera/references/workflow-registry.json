@@ -550,6 +550,22 @@
         "modules/rating-legalita/scripts/check_dependencies.py",
         "modules/rating-legalita/scripts/rating_case.py"
       ]
+    },
+    {
+      "component_id": "lipe",
+      "skills": [
+        "modules/lipe/skills/lipe/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/lipe/scripts/check_dependencies.py",
+        "modules/lipe/scripts/lipe.py",
+        "modules/lipe/scripts/lipe_approval.py",
+        "modules/lipe/scripts/lipe_catalog.py",
+        "modules/lipe/scripts/lipe_catalog_authorization.py",
+        "modules/lipe/scripts/lipe_export.py",
+        "modules/lipe/scripts/lipe_metrics.py",
+        "modules/lipe/scripts/lipe_receipt.py"
+      ]
     }
   ],
   "vera_wrapper_skills": [
@@ -581,6 +597,7 @@
     "skills/learn-with-vera/SKILL.md",
     "skills/legal-tax-answer-planner/SKILL.md",
     "skills/legal-tax-answer-review/SKILL.md",
+    "skills/lipe/SKILL.md",
     "skills/management-control-pack/SKILL.md",
     "skills/new-client/SKILL.md",
     "skills/open-item-reconciliation/SKILL.md",

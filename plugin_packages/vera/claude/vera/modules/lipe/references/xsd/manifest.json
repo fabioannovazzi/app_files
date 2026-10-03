@@ -1,0 +1,40 @@
+{
+  "files": [
+    {
+      "path": "common/fornitura_v3.xsd",
+      "sha256": "c4267a4ddd0c904408ca66ef81ca7af799fc8739e534b6a7b0eadac5774c3f38"
+    },
+    {
+      "path": "common/typesDati_v3.xsd",
+      "sha256": "384dfd489d9a9338737aadaa90e2a2b02e94ed1f07be3edc879fd106d8579f37"
+    },
+    {
+      "path": "common/typesProvincie_v3.xsd",
+      "sha256": "8f4159cad4339db36af855f9d0a80d7aeeae35129bfda70d36e2d5be052a7c96"
+    },
+    {
+      "path": "sco/ivp/comunicazioneIvp_2018_v1.xsd",
+      "sha256": "aac0b1a30c280daeda097d3ed50b55c8ded9ceb942bcf2ca2d087f62b5b268a5"
+    },
+    {
+      "path": "sco/ivp/fornituraIvp_2018_v1.xsd",
+      "sha256": "3b22f8cc349df3e5fe8cc0b81392ff8e6a0642e9d0ce9adaebd206392c98a0ba"
+    },
+    {
+      "path": "sco/ivp/intestazioneIvp_2018_v1.xsd",
+      "sha256": "41940b9c05d94e5e22fa226692e94b474d80e30fc28c2c1171ddfd5d85a6ca0d"
+    },
+    {
+      "path": "sco/ivp/xmldsig-core-schema.xsd",
+      "sha256": "35cf8197da812c85e40d57891b35c94187569ed474a2dac813ce5090dafcd35c",
+      "url": "https://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd",
+      "provenance": "Existing repository official W3C schema; not the developer-pack stub."
+    },
+    {
+      "path": "receipts/DatiFatturaMessaggi_v2.0.xsd",
+      "sha256": "8a78580152a16648e45ac649c7a9f1a1c97ec5b15ce138da73c5c1b1c4dc388d",
+      "url": "https://www.fatturapa.gov.it/export/documenti/ws/trasmissione/v2.0/DatiFatturaMessaggi_v2.0.xsd",
+      "provenance": "Original official bytes, including the remote W3C import. Resolve that exact URI offline to the separately pinned complete signature schema."
+    }
+  ]
+}

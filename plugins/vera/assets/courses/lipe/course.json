@@ -1,0 +1,511 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "lipe",
+  "revision": "2026-10-03.1",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it"
+  ],
+  "language_basis": "workflow_output_contract",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "review_synthetic_registers_then_revise_purchase"
+  },
+  "sources": [
+    {
+      "path": "modules/lipe/assets/icon.svg",
+      "repository_path": "plugins/lipe/assets/icon.svg",
+      "sha256": "fb90d4ad000f21a59d3fb7ba4740fb5c3cb1d3a5ae81b80e0a775c50a2090be7"
+    },
+    {
+      "path": "modules/lipe/references/acceptance.md",
+      "repository_path": "plugins/lipe/references/acceptance.md",
+      "sha256": "f8d5e27e8932bcba1c1a9dfb349ad2cd427bfcfc7b53dc847322ea324f32d205"
+    },
+    {
+      "path": "modules/lipe/references/anomaly-review.md",
+      "repository_path": "plugins/lipe/references/anomaly-review.md",
+      "sha256": "a37ac8f2cc677de3429d487b11a3404ba9275a7ea025f6e15baa50a22ad0855d"
+    },
+    {
+      "path": "modules/lipe/references/approval.md",
+      "repository_path": "plugins/lipe/references/approval.md",
+      "sha256": "5d4da7d44b77cfb0bfdf3fb2537036d5875887317905c4ae1d2558acc9b4c8c4"
+    },
+    {
+      "path": "modules/lipe/references/catalog-authorization.md",
+      "repository_path": "plugins/lipe/references/catalog-authorization.md",
+      "sha256": "02d7ea3d7f6ef183a4e0c43353d08469555f20264854ad95a4003233f4cf455e"
+    },
+    {
+      "path": "modules/lipe/references/code-catalog.md",
+      "repository_path": "plugins/lipe/references/code-catalog.md",
+      "sha256": "cc6b99edaa9619fe4ee9567340605c38489650e0d7f580eea9b1cc6402c1176e"
+    },
+    {
+      "path": "modules/lipe/references/code-measurements.md",
+      "repository_path": "plugins/lipe/references/code-measurements.md",
+      "sha256": "ccf690b2d84b37caea7c510a873af4fc581147b6d17b9110545191ab6ddc8461"
+    },
+    {
+      "path": "modules/lipe/references/receipts.md",
+      "repository_path": "plugins/lipe/references/receipts.md",
+      "sha256": "ac5d7479a7cdf16b57ede8344985e5de25d019ad7ee15c8f7a7407dffa9dfa0d"
+    },
+    {
+      "path": "modules/lipe/references/rules.json",
+      "repository_path": "plugins/lipe/references/rules.json",
+      "sha256": "48e9497e5d22fac193cd7f15d3223a52b3482f5e5c9a5fe7990270b1036569f0"
+    },
+    {
+      "path": "modules/lipe/references/sources.json",
+      "repository_path": "plugins/lipe/references/sources.json",
+      "sha256": "e4025cb565c53db3551fd9122427763a7de3d723b34af73dfb17da4b9e02a173"
+    },
+    {
+      "path": "modules/lipe/references/xml-export.md",
+      "repository_path": "plugins/lipe/references/xml-export.md",
+      "sha256": "41fd5c43ef6f7efd5df7ec79edd3e160198a346e2aa7e8bd4d8a6266de06a933"
+    },
+    {
+      "path": "modules/lipe/references/xsd/common/fornitura_v3.xsd",
+      "repository_path": "plugins/lipe/references/xsd/common/fornitura_v3.xsd",
+      "sha256": "c4267a4ddd0c904408ca66ef81ca7af799fc8739e534b6a7b0eadac5774c3f38"
+    },
+    {
+      "path": "modules/lipe/references/xsd/common/typesDati_v3.xsd",
+      "repository_path": "plugins/lipe/references/xsd/common/typesDati_v3.xsd",
+      "sha256": "384dfd489d9a9338737aadaa90e2a2b02e94ed1f07be3edc879fd106d8579f37"
+    },
+    {
+      "path": "modules/lipe/references/xsd/common/typesProvincie_v3.xsd",
+      "repository_path": "plugins/lipe/references/xsd/common/typesProvincie_v3.xsd",
+      "sha256": "8f4159cad4339db36af855f9d0a80d7aeeae35129bfda70d36e2d5be052a7c96"
+    },
+    {
+      "path": "modules/lipe/references/xsd/manifest.json",
+      "repository_path": "plugins/lipe/references/xsd/manifest.json",
+      "sha256": "a67c17da774ce23d771c1b4cb1e51de0c661c5486e93043847c6da03c08b5cda"
+    },
+    {
+      "path": "modules/lipe/references/xsd/receipts/DatiFatturaMessaggi_v2.0.xsd",
+      "repository_path": "plugins/lipe/references/xsd/receipts/DatiFatturaMessaggi_v2.0.xsd",
+      "sha256": "8a78580152a16648e45ac649c7a9f1a1c97ec5b15ce138da73c5c1b1c4dc388d"
+    },
+    {
+      "path": "modules/lipe/references/xsd/sco/ivp/comunicazioneIvp_2018_v1.xsd",
+      "repository_path": "plugins/lipe/references/xsd/sco/ivp/comunicazioneIvp_2018_v1.xsd",
+      "sha256": "aac0b1a30c280daeda097d3ed50b55c8ded9ceb942bcf2ca2d087f62b5b268a5"
+    },
+    {
+      "path": "modules/lipe/references/xsd/sco/ivp/fornituraIvp_2018_v1.xsd",
+      "repository_path": "plugins/lipe/references/xsd/sco/ivp/fornituraIvp_2018_v1.xsd",
+      "sha256": "3b22f8cc349df3e5fe8cc0b81392ff8e6a0642e9d0ce9adaebd206392c98a0ba"
+    },
+    {
+      "path": "modules/lipe/references/xsd/sco/ivp/intestazioneIvp_2018_v1.xsd",
+      "repository_path": "plugins/lipe/references/xsd/sco/ivp/intestazioneIvp_2018_v1.xsd",
+      "sha256": "41940b9c05d94e5e22fa226692e94b474d80e30fc28c2c1171ddfd5d85a6ca0d"
+    },
+    {
+      "path": "modules/lipe/references/xsd/sco/ivp/xmldsig-core-schema.xsd",
+      "repository_path": "plugins/lipe/references/xsd/sco/ivp/xmldsig-core-schema.xsd",
+      "sha256": "35cf8197da812c85e40d57891b35c94187569ed474a2dac813ce5090dafcd35c"
+    },
+    {
+      "path": "modules/lipe/requirements.txt",
+      "repository_path": "plugins/lipe/requirements.txt",
+      "sha256": "4bf77961f4a43fc3469ed7573482c246163a201e1c19d9422fc6ce160abf5497"
+    },
+    {
+      "path": "modules/lipe/schemas/approval-request.schema.json",
+      "repository_path": "plugins/lipe/schemas/approval-request.schema.json",
+      "sha256": "c515dfcb1fc4ee59d0534d59ae995b896d1d2b496d32e6fd59d6f7bb45d81f2d"
+    },
+    {
+      "path": "modules/lipe/schemas/authority-policy.schema.json",
+      "repository_path": "plugins/lipe/schemas/authority-policy.schema.json",
+      "sha256": "2d219a7d43834f89dea70f013f65b4e6d45377291ad017e6284791462b1181a6"
+    },
+    {
+      "path": "modules/lipe/schemas/case.schema.json",
+      "repository_path": "plugins/lipe/schemas/case.schema.json",
+      "sha256": "a1b0ce2f19e154619ef6c1b8c9e17f22bb7db88ca0bba0ca1c37f7dbd670126c"
+    },
+    {
+      "path": "modules/lipe/schemas/catalog-authority.schema.json",
+      "repository_path": "plugins/lipe/schemas/catalog-authority.schema.json",
+      "sha256": "e973aa59dac8ef3e858d55418e94fb8fd09e1b1fa739fb178ef5fd7d9427a836"
+    },
+    {
+      "path": "modules/lipe/schemas/catalog-entry.schema.json",
+      "repository_path": "plugins/lipe/schemas/catalog-entry.schema.json",
+      "sha256": "0e52b7c848e27b1f97b95a915e11b68037ee173c4b982ddb7a206029ed2cff8e"
+    },
+    {
+      "path": "modules/lipe/schemas/frontpage.schema.json",
+      "repository_path": "plugins/lipe/schemas/frontpage.schema.json",
+      "sha256": "0b0863e767be2cdc9f16b78f7dd9cb7523135fb2cd8d887d7638b488d293ae11"
+    },
+    {
+      "path": "modules/lipe/schemas/professional-mandate.schema.json",
+      "repository_path": "plugins/lipe/schemas/professional-mandate.schema.json",
+      "sha256": "77cfef72e6339aa8cfc3298853ec8ccb3672a64b039499d0bd10f3ffdce34d4d"
+    },
+    {
+      "path": "modules/lipe/scripts/check_dependencies.py",
+      "repository_path": "plugins/lipe/scripts/check_dependencies.py",
+      "sha256": "e3a50d213f1b8fea2fe8d08d7dafa213c8c070e5f3ec709eb63b3021befe74b3"
+    },
+    {
+      "path": "modules/lipe/scripts/lipe.py",
+      "repository_path": "plugins/lipe/scripts/lipe.py",
+      "sha256": "8c70ec26806aa9e59559f9416d07d8a80a4b74c0aa0ccd87a05b9f348cb254ad"
+    },
+    {
+      "path": "modules/lipe/scripts/lipe_approval.py",
+      "repository_path": "plugins/lipe/scripts/lipe_approval.py",
+      "sha256": "cb2554b5c9f29cd07ccb54b15af2d3b9e3c7afd9ac4095d63ff823d9d330f0be"
+    },
+    {
+      "path": "modules/lipe/scripts/lipe_authorization.py",
+      "repository_path": "plugins/lipe/scripts/lipe_authorization.py",
+      "sha256": "45aaeb948e3a604bac6cf31eaee121d9a09899e5305f5a65addcb19a10e2bd65"
+    },
+    {
+      "path": "modules/lipe/scripts/lipe_catalog.py",
+      "repository_path": "plugins/lipe/scripts/lipe_catalog.py",
+      "sha256": "bad64b118759d3f1e60d54ec2da1e0c200c2351f98a8a2ed9927178a4e233b2b"
+    },
+    {
+      "path": "modules/lipe/scripts/lipe_catalog_authorization.py",
+      "repository_path": "plugins/lipe/scripts/lipe_catalog_authorization.py",
+      "sha256": "424a16ed7f670c76d90b9864beec3587e604b8f3a44077c6a5d35c5166fe61e1"
+    },
+    {
+      "path": "modules/lipe/scripts/lipe_core.py",
+      "repository_path": "plugins/lipe/scripts/lipe_core.py",
+      "sha256": "32ce8aa29495c35aeab36095d2ba4e53d827e250d03e190ba9e3390bd025ef2d"
+    },
+    {
+      "path": "modules/lipe/scripts/lipe_export.py",
+      "repository_path": "plugins/lipe/scripts/lipe_export.py",
+      "sha256": "43b9c58e796ae3e7570adc2790f7b5d58c28441528f42ca2314c23281caadd03"
+    },
+    {
+      "path": "modules/lipe/scripts/lipe_frontpage.py",
+      "repository_path": "plugins/lipe/scripts/lipe_frontpage.py",
+      "sha256": "845c2a1286e3877e8cd0b7fb104629255ac1facdfd4e0df12eabdc0e6a32f5a2"
+    },
+    {
+      "path": "modules/lipe/scripts/lipe_metrics.py",
+      "repository_path": "plugins/lipe/scripts/lipe_metrics.py",
+      "sha256": "de36fc3a45d9c06ec58c9b76fa07ba3b0eae6f3c61a7c0afd5fcc2488fcb4788"
+    },
+    {
+      "path": "modules/lipe/scripts/lipe_pdf.py",
+      "repository_path": "plugins/lipe/scripts/lipe_pdf.py",
+      "sha256": "c3070e5062968be3b0294339d1caddaa7eb51751cefb1eccd3cf168e96213740"
+    },
+    {
+      "path": "modules/lipe/scripts/lipe_receipt.py",
+      "repository_path": "plugins/lipe/scripts/lipe_receipt.py",
+      "sha256": "f14280a363e00120ad7cfefbb85996050dbf13998f975d8626170bd09ec9aa5a"
+    },
+    {
+      "path": "modules/lipe/scripts/lipe_reconcile.py",
+      "repository_path": "plugins/lipe/scripts/lipe_reconcile.py",
+      "sha256": "6bf9c5e05e7f414dffdb891d84824a0af2c8bbc7fba88621418df36c9095f03d"
+    },
+    {
+      "path": "modules/lipe/scripts/lipe_review.py",
+      "repository_path": "plugins/lipe/scripts/lipe_review.py",
+      "sha256": "2ae8791fe84fe38fd44c9f7822afd0f27229a8dd8c9d9c7b750d77839533d388"
+    },
+    {
+      "path": "modules/lipe/scripts/lipe_review_outputs.py",
+      "repository_path": "plugins/lipe/scripts/lipe_review_outputs.py",
+      "sha256": "6ce272bf2d16a576f85c774f18bdd72901cff8fe3cfa6127666c348d5e5cce40"
+    },
+    {
+      "path": "modules/lipe/scripts/lipe_workbook.py",
+      "repository_path": "plugins/lipe/scripts/lipe_workbook.py",
+      "sha256": "e05db3022e0cf05bb140c7978b0e6113df068811650d08de80ed6f524aa258c9"
+    },
+    {
+      "path": "modules/lipe/scripts/lipe_xml.py",
+      "repository_path": "plugins/lipe/scripts/lipe_xml.py",
+      "sha256": "3543842cdbc324d9bddc02c6458cfef6493af7f70e55dbe2e8df082ce2187402"
+    },
+    {
+      "path": "modules/lipe/scripts/lipe_xml_compare.py",
+      "repository_path": "plugins/lipe/scripts/lipe_xml_compare.py",
+      "sha256": "a9ea8bf56d122f25741210199f667717103e27ec2c5b584701efb453b5fc1b48"
+    },
+    {
+      "path": "modules/lipe/skills/lipe/SKILL.md",
+      "repository_path": "plugins/lipe/skills/lipe/SKILL.md",
+      "sha256": "50aedb1de5970981b17e9e0c8922900a50b05dee3339758843e8d6ad94ae4cc3"
+    },
+    {
+      "path": "skills/lipe/SKILL.md",
+      "repository_path": "plugins/vera/skills/lipe/SKILL.md",
+      "sha256": "331972d37d99a4208e4b0794a48d520cc24b64d150aac2e4d2f70afcf4439816"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "5b28ac597f0a3deaf4cfc907b8a33bb40aae21719206ad0c976b605950f89dc7"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "507967ae7dcf07ae4e138fff4333adb5fd709484731dcef45d531152c54ede45"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
+      "path": "vendor/modules/courseware/deck_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/deck_view.py",
+      "sha256": "96f75ea3078c9e0c6e509cdefb0beeb876677e2e7884777d213d9b03c6c27b80"
+    },
+    {
+      "path": "vendor/modules/courseware/document_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/document_view.py",
+      "sha256": "9982c9d6ce83e7feb26165308fa9a136a744891a7e623ce23ff9bb778e6b7403"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/html_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/html_view.py",
+      "sha256": "57280e82460bd8c7982294c4be6e0cff7da969800d4282e6da15059571cce0b1"
+    },
+    {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "f0c15e7bac029b913d2c80167e6d23591040bf03958923a1a4c68eb0ae8fd8e7"
+    },
+    {
+      "path": "vendor/modules/courseware/preview.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/preview.py",
+      "sha256": "1a6e56141cdd554a6510100f47745f7b31472c9d22f45407f4f86ac7981aee10"
+    },
+    {
+      "path": "vendor/modules/courseware/sales_plan_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/sales_plan_view.py",
+      "sha256": "115977d03c034ed5f363d6fd5c8c82648ed1349067ac61e48d0701b10caa7e7b"
+    },
+    {
+      "path": "vendor/modules/courseware/website_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/website_view.py",
+      "sha256": "f230f86272201bae7bc34f1868d8cb6013b47ce9ccc8b876acdfb0bc257637d5"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/incarico.txt",
+      "sha256": "c24837dec4718bde4cb393ba90f9a2cddcb6973f56c8c953e1451dc62c692416",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/registri.txt",
+      "sha256": "097af078ac9e7aca73d3b98d66c13b8c07822d52a8fa5f9d6938e34f8e0e8774",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/incarico.txt",
+      "sha256": "c24837dec4718bde4cb393ba90f9a2cddcb6973f56c8c953e1451dc62c692416",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/rettifica.txt",
+      "sha256": "e591800a1d2b982b34c7bc78fa4b8d7412f3cfa6fc98e366de63d9cd9277074f",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/registri-rettificati.txt",
+      "sha256": "0b1cf2e877f737ba618dc2ba822f847cc4a0996e392c942bad7498d690209f2c",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "LIPE dai registri IVA alla bozza VP",
+      "goal": "Controllare le fonti, leggere la carta di lavoro e aggiornare la bozza dopo una correzione, conservando la prima versione.",
+      "scenario": "Bottega Aurora è un'impresa interamente fittizia con liquidazione mensile nel secondo trimestre 2026. Il pacchetto contiene registri semplificati, liquidazioni e versamenti dichiarati per aprile, maggio e giugno. Non contiene dati dei clienti del progetto.",
+      "scope": "L'esercizio arriva alla bozza VP e alla richiesta di revisione. Codici, detraibilità, saldi e completezza richiedono conferme espresse; il tutorial non attribuisce poteri professionali. Esportazione XML, firma, invio e verifica dell'accettazione del gestionale restano fuori dall'esercizio. Le stampe sono testuali: questa lezione non prova l'estrazione da PDF o scansioni.",
+      "inputs": "Apri incarico.txt e registri.txt. Il primo spiega perimetro, codici e dati mancanti; il secondo contiene le righe e i totali da controllare. I numeri usano il punto decimale. Sono fonti fittizie, non un caso già approvato o un risultato precalcolato.",
+      "request": "Vera, usa LIPE per controllare questi registri del secondo trimestre 2026. Mostrami le fonti e le scelte da confermare, poi prepara la bozza VP e il confronto con liquidazioni e versamenti.",
+      "steps": [
+        "Apri le due fonti nel fascicolo locale del tutorial. Vera propone il perimetro, i significati di V22 e A22 e i periodi delle righe. Prima del calcolo chiedi di vedere i punti aperti: una proposta non vale come conferma. Usa solo dati SYNTHETIC; per clienti reali si segue il normale percorso Studio Archive.",
+        "Verifica insieme a Vera i totali di ogni registro, il saldo precedente e la detrazione proposta. Conferma solo ciò che hai effettivamente esaminato nell'esercizio. Vera registra le decisioni e calcola una nuova versione; una scelta irrisolta mantiene il calcolo bloccato.",
+        "Apri workpaper.xlsx e passa dai fogli Riconciliazione a VP e F24. Collega un importo alla riga della fonte e alla formula. Leggi summary.pdf e la bozza review-request.md realmente prodotte, poi il rapporto sui dati letti dal modello. Il docente spiega i risultati; non segna la tua comprensione senza una risposta."
+      ],
+      "deliverables": [
+        "Carta di lavoro Excel con riconciliazione per codice, formule dei righi VP e confronto dei versamenti; bozza VP anche in CSV.",
+        "Sintesi PDF, dossier delle differenze e richiesta di revisione non inviata. Fonti, decisioni e risultati restano associati alla versione prodotta."
+      ],
+      "review": "Controlla che VP3 segua la registrazione e VP5 la detrazione effettivamente confermata. Un importo pagato diverso dal dovuto non corregge automaticamente VP14 e non dimostra omissione o diritto a un recupero. Non cambiare le cifre direttamente nell'Excel per approvare il caso: correggi la fonte e le decisioni, poi ricalcola. Gli output conservano i limiti della verifica.",
+      "checkpoints": [
+        "Prima di confermare, indica quali codici e quale saldo precedente hai controllato e trova il punto della fonte che li documenta.",
+        "Nel foglio VP spiega da quali righe provengono IVA esigibile e detratta; nel foglio F24 distingui importo dovuto e importo dichiarato pagato."
+      ],
+      "practice": "Apri rettifica.txt e registri-rettificati.txt. Chiedi: «Vera, aggiorna lo stesso caso con questa rettifica degli acquisti di giugno. Conserva la prima versione e mostrami gli effetti su VP3, VP5, VP14 e sul confronto F24». Esamina la nuova fonte e conferma nuovamente la riga modificata. Dichiara che l'eventuale piccolo debito non è rinviato, perché il pagamento fittizio è già riportato. Non inventare una causa della differenza con la vecchia liquidazione e non considerare il versamento un nuovo credito. Confronta le due versioni prima di formulare la richiesta di chiarimento.",
+      "success": "Sai avviare LIPE dalle fonti, riconoscere un blocco, leggere il risultato effettivo e spiegare l'effetto della rettifica senza confondere imposta e pagamento. Il completamento didattico non equivale ad approvazione professionale.",
+      "repeat": "Per un cliente vero seleziona l'incarico e importa registri originali completi, liquidazioni, saldi e F24 nel suo fascicolo Studio Archive. Conferma gestionale e versione, perimetro e classificazioni. Non riutilizzare le conferme del tutorial. Il professionista rivede la bozza; l'eventuale XML richiede il distinto percorso di approvazione previsto da LIPE."
+    }
+  }
+}

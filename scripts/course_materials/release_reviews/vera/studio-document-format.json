@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "studio-document-format",
-  "course_sha256": "1d4e249980916069072e259eda72d24e1475313aa5aad53cbeee2eaef6a87f04",
+  "course_sha256": "98da62f68279c4a433bd29ed6e3d78ffc35d6e185628f8e4438b45179013919a",
   "reviewer": "Codex: authored five-language course and actual synthetic native output review",
   "reviewed_at": "2026-10-01T18:41:07.117136+00:00",
   "review_scope": "Reviewed all five complete authored narratives and the actual DOCX structure, profiles and financial analysis from ten independent native demo/practice regressions. Regression approvals are expressly simulated, never learner decisions. Structural artifact inspection does not establish visual pagination, font availability on a learner host, installed enabled-plugin execution, native voice, paired-window or learner acceptance. Tests run local component code without model or network calls. No jurisdiction qualification is claimed.",
@@ -357,5 +357,20 @@
     ],
     "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+  },
+  "lipe_source_binding_20261002": {
+    "reviewer": "Codex /root - bounded LIPE source compatibility review",
+    "reviewed_at": "2026-10-02T20:25:14.425278+00:00",
+    "baseline_commit": "bebefc9b5f187bbcc5619a1b603363581ec68158",
+    "previous_course_sha256": "1d4e249980916069072e259eda72d24e1475313aa5aad53cbeee2eaef6a87f04",
+    "current_course_sha256": "98da62f68279c4a433bd29ed6e3d78ffc35d6e185628f8e4438b45179013919a",
+    "content_review": "Compared the complete compiled course JSON against the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are retained. This is not a new editorial, visual, professional or learner acceptance review.",
+    "changed_sources": [
+      "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
+      "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+      "vendor/modules/vera_assurance/contracts.py"
+    ],
+    "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
+    "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
   }
 }

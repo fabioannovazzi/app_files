@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "lipe.approval-request.v1"
+    },
+    "request_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "action": {
+      "const": "APPROVE_LIPE_EXPORT"
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pipeline": {
+          "const": "LIPE"
+        },
+        "client_id": {
+          "type": "string",
+          "pattern": "\\S",
+          "maxLength": 2000
+        },
+        "engagement_id": {
+          "type": "string",
+          "pattern": "\\S",
+          "maxLength": 2000
+        },
+        "tax_year": {
+          "type": "integer",
+          "minimum": 2024,
+          "maximum": 2026
+        },
+        "quarter": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "data_origin": {
+          "enum": [
+            "REAL",
+            "SYNTHETIC"
+          ]
+        }
+      },
+      "required": [
+        "pipeline",
+        "client_id",
+        "engagement_id",
+        "tax_year",
+        "quarter",
+        "data_origin"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "statement": {
+      "const": "Approvo dati, fonti, frontespizio, decisioni e righi VP della versione indicata per preparare un file XML non firmato da verificare nel gestionale. Questa approvazione non attesta la qualificazione del software né l'accettazione dell'importazione o dell'Agenzia. Firma telematica e trasmissione restano atti separati."
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "case_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "frontpage_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "result_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "engine_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "rules_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "catalog_review_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source_inventory_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "artifacts_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "xsd_manifest_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "crypto_provider_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "case_hash",
+        "frontpage_hash",
+        "result_hash",
+        "engine_hash",
+        "rules_hash",
+        "catalog_review_hash",
+        "source_inventory_hash",
+        "artifacts_hash",
+        "xsd_manifest_hash",
+        "crypto_provider_hash"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_id",
+    "action",
+    "scope",
+    "created_at",
+    "expires_at",
+    "statement",
+    "bindings"
+  ]
+}

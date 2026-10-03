@@ -847,7 +847,11 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
     assert (
         directory_skills
         == (
-            set(re.findall(r"^- `([^`]+)`:", catalog, re.MULTILINE))
+            set(
+                re.findall(
+                    r"^- `([^`]+)`(?: \(\*\*[^*]+\*\*\))?:", catalog, re.MULTILINE
+                )
+            )
             - _catalog_workflow_names(
                 catalog, "Learning and discovery", "DATEV installation trial"
             )
@@ -891,7 +895,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    expected_module_count = 43
+    expected_module_count = 44
     module_hrefs = re.findall(
         r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
     )
@@ -900,7 +904,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     assert len(module_hrefs) == expected_module_count
     assert len(module_hrefs) == len(set(module_hrefs))
     assert core.count('data-primary-workflow-link="') == 2
-    assert core.count('data-jurisdiction-item="it"') == 15
+    assert core.count('data-jurisdiction-item="it"') == 16
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for expected_href in (
@@ -1019,6 +1023,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Campionamento scritture contabili",
         "Verifica documentale",
         "Preparazione fatture XML",
+        "LIPE",
         "Audit delle fatture passive",
         "Riconciliazione banca-contabilità",
         "Riconciliazione partite aperte",
@@ -1044,6 +1049,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Sito dello studio",
     ]
     expected_runtime_labels = {
+        "module.lipe.title": "LIPE",
         "module.esg.title": "Fascicolo ESG · in sviluppo",
         "module.invoiceXml.title": "Preparazione fatture XML",
         "module.learn.title": "Impara con Vera",
@@ -1075,6 +1081,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
 
     # The public directory and marketplace use one canonical naming contract.
     canonical_skill_labels = {
+        "lipe": "LIPE",
         "esg-reporting-assurance": "Fascicolo ESG",
         "invoice-xml": "Preparazione fatture XML",
         "learn-with-vera": "Impara con Vera",
@@ -1122,7 +1129,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 43
+    assert len(labels) == 44
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
