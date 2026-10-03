@@ -25,7 +25,7 @@ from lipe_core import ContractError, calculate, read_json
 from lipe_export import compare_files, export_xml, main
 from lipe_xml import build_test_xml
 from lipe_xml_compare import compare_ivp, read_ivp
-from test_lipe import case_data, prepare, quarterly
+from test_lipe import amounts, case_data, monthly_quarter, prepare, quarterly
 from test_lipe_approval import (
     AFTER,
     AT,
@@ -295,6 +295,83 @@ def test_quarterly_interest_export_preserves_independent_expected_cents(
     assert module["fields"]["Trimestre"] == "2"
     assert module["fields"]["InteressiDovuti"] == "1,10"
     assert module["fields"]["ImportoDaVersare"] == "111,10"
+
+
+def test_approved_monthly_credit_export_preserves_each_carry_and_final_debit(
+    tmp_path, crypto
+):
+    case = case_data()
+    amounts(case, 4, "SALES", "-100.00", "-22.00", "0.00")
+    options = export_options(tmp_path, crypto, case_override=case)
+
+    folder = export_xml(**options)
+
+    parsed = read_ivp((folder / "IT11111111115_LI_00007.xml").read_bytes())
+    assert parsed["modules"][0]["fields"] == {
+        "NumeroModulo": "1",
+        "Mese": "4",
+        "TotaleOperazioniAttive": "-100,00",
+        "TotaleOperazioniPassive": "500,00",
+        "IvaEsigibile": "-22,00",
+        "IvaDetratta": "110,00",
+        "IvaCredito": "132,00",
+        "ImportoACredito": "132,00",
+    }
+    assert parsed["modules"][1]["fields"] == {
+        "NumeroModulo": "2",
+        "Mese": "5",
+        "TotaleOperazioniAttive": "1000,00",
+        "TotaleOperazioniPassive": "500,00",
+        "IvaEsigibile": "220,00",
+        "IvaDetratta": "110,00",
+        "IvaDovuta": "110,00",
+        "CreditoPeriodoPrecedente": "132,00",
+        "ImportoACredito": "22,00",
+    }
+    assert parsed["modules"][2]["fields"] == {
+        "NumeroModulo": "3",
+        "Mese": "6",
+        "TotaleOperazioniAttive": "1000,00",
+        "TotaleOperazioniPassive": "500,00",
+        "IvaEsigibile": "220,00",
+        "IvaDetratta": "110,00",
+        "IvaDovuta": "110,00",
+        "CreditoPeriodoPrecedente": "22,00",
+        "ImportoDaVersare": "88,00",
+    }
+
+
+@pytest.mark.parametrize(
+    "regime,method,period_field,period,expected_due",
+    [
+        ("MONTHLY", 4, "Mese", "12", "6,71"),
+        ("QUARTERLY_SPECIAL", 2, "Trimestre", "4", "6,71"),
+        ("QUARTERLY_OPTION", 3, "Trimestre", "5", None),
+    ],
+)
+def test_final_period_export_preserves_reviewed_advance_and_method(
+    tmp_path, crypto, regime, method, period_field, period, expected_due
+):
+    case = monthly_quarter(4) if regime == "MONTHLY" else quarterly(4, regime)
+    case["modules"][-1].update(vp13="103.29", vp13_method=method)
+    options = export_options(
+        tmp_path,
+        crypto,
+        case_override=case,
+        at=datetime(2027, 1, 10, 10, tzinfo=timezone.utc),
+    )
+
+    folder = export_xml(**options)
+
+    module = read_ivp((folder / "IT11111111115_LI_00007.xml").read_bytes())["modules"][
+        -1
+    ]
+    assert module["fields"][period_field] == period
+    assert module["fields"]["Metodo"] == str(method)
+    assert module["fields"]["Acconto"] == "103,29"
+    assert module["fields"].get("ImportoDaVersare") == expected_due
+    assert "InteressiDovuti" not in module["fields"]
+    assert "DebitoPrecedente" not in module["fields"]
 
 
 def test_vp10_export_uses_the_actual_schema_tag_and_preserves_amount(tmp_path, crypto):

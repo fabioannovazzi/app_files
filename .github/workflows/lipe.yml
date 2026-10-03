@@ -34,7 +34,45 @@ jobs:
           $lipeOpenSSL | Out-File -FilePath $env:GITHUB_PATH -Append
       - run: openssl version
       - name: Verify evidence, tax arithmetic and export boundaries
-        run: python -m pytest -v -o addopts='' -o faulthandler_timeout=60 -o faulthandler_exit_on_timeout=true --confcutdir=tests/plugins tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py tests/plugins/test_lipe_receipt.py tests/plugins/test_lipe_export.py tests/plugins/test_lipe_catalog_authorization.py --cov=plugins/lipe/scripts --cov-report=term-missing --cov-fail-under=80
+        shell: python {0}
+        run: |
+          import os
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          # Bound collection as well as tests, and preserve diagnostics even if
+          # the runner cannot flush its live log before the job cancellation.
+          log_path = Path(os.environ["RUNNER_TEMP"]) / "lipe-pytest.log"
+          command = [
+              sys.executable, "-u", "-m", "pytest", "-v",
+              "-o", "addopts=", "-o", "faulthandler_timeout=60",
+              "-o", "faulthandler_exit_on_timeout=true", "--confcutdir=tests/plugins",
+              "tests/plugins/test_lipe.py", "tests/plugins/test_lipe_catalog.py",
+              "tests/plugins/test_lipe_metrics.py", "tests/plugins/test_lipe_approval.py",
+              "tests/plugins/test_lipe_receipt.py", "tests/plugins/test_lipe_export.py",
+              "tests/plugins/test_lipe_catalog_authorization.py",
+              "--cov=plugins/lipe/scripts", "--cov-report=term-missing", "--cov-fail-under=80",
+          ]
+          status = 1
+          with log_path.open("w", encoding="utf-8") as log:
+              try:
+                  status = subprocess.run(
+                      command, stdout=log, stderr=subprocess.STDOUT,
+                      timeout=240, check=False,
+                  ).returncode
+              except subprocess.TimeoutExpired:
+                  log.write("\nLIPE pytest process exceeded 240 seconds; terminated.\n")
+          print(log_path.read_text(encoding="utf-8", errors="replace"), flush=True)
+          sys.exit(status)
+      - name: Preserve LIPE test diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lipe-pytest-${{ matrix.os }}
+          path: ${{ runner.temp }}/lipe-pytest.log
+          if-no-files-found: warn
+          retention-days: 7
       - run: python -m black --check plugins/lipe/scripts tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py tests/plugins/test_lipe_receipt.py tests/plugins/test_lipe_export.py tests/plugins/test_lipe_catalog_authorization.py
       - run: python -m isort --check-only plugins/lipe/scripts tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py tests/plugins/test_lipe_receipt.py tests/plugins/test_lipe_export.py tests/plugins/test_lipe_catalog_authorization.py
       - run: python -m mypy --follow-imports=skip --ignore-missing-imports plugins/lipe/scripts

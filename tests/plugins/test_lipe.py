@@ -14,6 +14,7 @@ from xml.etree import ElementTree
 
 import pytest
 from pypdf import PdfReader, PdfWriter
+from reportlab.pdfgen import canvas
 
 ROOT = Path(__file__).resolve().parents[2]
 PLUGIN = ROOT / "plugins/lipe"
@@ -109,6 +110,23 @@ def quarterly(quarter: int = 2, regime: str = "QUARTERLY_OPTION") -> dict:
         register["rows"][0].update(
             base_period=quarter, tax_period=quarter, deduction_period=quarter
         )
+    return case
+
+
+def monthly_quarter(quarter: int) -> dict:
+    """Move fictional monthly evidence together without computing expected figures."""
+    case = case_data()
+    case["quarter"] = quarter
+    offset = (quarter - 2) * 3
+    for module in case["modules"]:
+        module["period"] += offset
+    for document in case["liquidations"]:
+        document["period"] += offset
+    for register in case["registers"]:
+        register["period"] += offset
+        for row in register["rows"]:
+            for field in ("base_period", "tax_period", "deduction_period"):
+                row[field] += offset
     return case
 
 
@@ -890,6 +908,59 @@ def test_payment_difference_is_not_an_unsupported_omission_diagnosis(
     ]
 
 
+def test_overpayment_does_not_reduce_due_or_create_next_month_credit(
+    tmp_path: Path,
+) -> None:
+    case = case_data()
+    case["modules"][0]["principal_paid"] = "137.34"
+    prepare(case, tmp_path)
+
+    result = calculate(case, tmp_path)
+
+    assert result["modules"][0]["rows"]["vp14_debit"] == "110.00"
+    assert result["modules"][0]["payment_status"] == "DIFFERENCE_TO_REVIEW"
+    assert result["modules"][1]["rows"]["vp8"] == "0.00"
+    assert result["modules"][1]["rows"]["vp14_debit"] == "110.00"
+    assert result["findings"][0]["paid"] == "137.34"
+    assert result["findings"][0]["due"] == "110.00"
+
+
+def test_zeroed_liquidations_preserve_differences_for_every_month(
+    tmp_path: Path,
+) -> None:
+    case = case_data()
+    for module in case["modules"]:
+        module["liquidation_vat"] = "0.00"
+    prepare(case, tmp_path)
+
+    result = calculate(case, tmp_path)
+
+    # A numeric difference cannot establish that closing entries caused it.
+    assert [(item["code"], item["period"]) for item in result["findings"]] == [
+        ("REGISTER_LIQUIDATION_DIFFERENCE", 4),
+        ("REGISTER_LIQUIDATION_DIFFERENCE", 5),
+        ("REGISTER_LIQUIDATION_DIFFERENCE", 6),
+    ]
+    assert [module["rows"]["vp14_debit"] for module in result["modules"]] == [
+        "110.00",
+        "110.00",
+        "110.00",
+    ]
+
+
+@pytest.mark.parametrize("period", [11, 12])
+def test_small_debit_cannot_be_deferred_from_november_or_december(
+    tmp_path: Path, period: int
+) -> None:
+    case = monthly_quarter(4)
+    amounts(case, period, "SALES", "1000.00", "210.00", "0.00")
+    case["modules"][period - 10].update(defer_small_debit=True, principal_paid="0.00")
+    prepare(case, tmp_path)
+
+    with pytest.raises(ContractError, match="carry not permitted"):
+        calculate(case, tmp_path)
+
+
 @pytest.mark.parametrize(
     "field,value,message",
     [
@@ -987,6 +1058,43 @@ def test_blank_pdf_is_not_claimed_extracted(tmp_path: Path) -> None:
         read_json(folder / "extraction.json")["pages"][0]["status"]
         == "NEEDS_OCR_OR_READABLE_SOURCE"
     )
+
+
+def test_reviewed_pdf_case_uses_the_exact_page_and_preserves_expected_vp(
+    tmp_path: Path,
+) -> None:
+    case = case_data()
+    prepare(case, tmp_path)
+    second_page = case["registers"][0]["rows"][0]["evidence"]
+    lines = (tmp_path / "evidence.txt").read_text(encoding="utf-8").splitlines()
+    source = tmp_path / "fictional-registers.pdf"
+    pdf = canvas.Canvas(str(source), pagesize=(612, 792))
+    pdf.setFont("Courier", 7)
+    y = 760
+    for line in lines:
+        if line != second_page["quote"]:
+            pdf.drawString(30, y, line)
+            y -= 14
+    pdf.showPage()
+    pdf.setFont("Courier", 7)
+    pdf.drawString(30, 760, second_page["quote"])
+    pdf.save()
+    second_page["page"] = 2
+    case["sources"][0].update(
+        path=source.name, sha256=hashlib.sha256(source.read_bytes()).hexdigest()
+    )
+
+    result = calculate(case, tmp_path)
+
+    assert result["status"] == "DRAFT_FOR_REVIEW"
+    assert result["modules"][0]["rows"]["vp2"] == "1000.00"
+    assert result["modules"][0]["rows"]["vp4"] == "220.00"
+    assert result["modules"][0]["rows"]["vp14_debit"] == "110.00"
+    assert result["composition"][0]["evidence"] == {
+        "source_id": "synthetic-source",
+        "page": 2,
+        "quote": "ROW SALES-4-1: 1000.00 220.00.",
+    }
 
 
 @pytest.mark.parametrize(
