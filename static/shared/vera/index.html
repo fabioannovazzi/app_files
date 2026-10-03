@@ -1198,7 +1198,7 @@
     }
   </style>
   <link rel="stylesheet" href="../product-social.css?v=2026092601">
-  <link rel="stylesheet" href="../product-install.css?v=2026092902">
+  <link rel="stylesheet" href="../product-install.css?v=2026100302">
   <script defer src="antigravity/version.js"></script>
 </head>
 <body>
@@ -1269,8 +1269,14 @@
               <p class="install-option__note" data-plugin-zip-version="vera" hidden></p>
             </div>
           </div>
-          <div class="hero-install__antigravity" id="antigravity">
-            <a class="button" href="downloads/vera-antigravity-plugin.zip" download data-i18n="install.antigravity.download">Scarica ZIP per Google Antigravity</a>
+          <div class="hero-install__antigravity install-option" id="antigravity">
+            <button class="button" type="button" disabled aria-describedby="antigravity-marketplace-status" data-antigravity-marketplace-pending data-i18n="install.antigravity.marketplace">Vai al marketplace Antigravity</button>
+            <p class="install-option__note" id="antigravity-marketplace-status">
+              <!-- Submitted candidate version; maintained separately from the downloadable ZIP. See docs/releases/antigravity-submissions.json. -->
+              <span data-antigravity-marketplace-version>Marketplace · v0.1.334</span><br>
+              <span data-i18n="install.antigravity.pending">In attesa di approvazione.</span>
+            </p>
+            <a class="button install-option__download" href="downloads/vera-antigravity-plugin.zip" download data-i18n="install.antigravity.download">Scarica ZIP per Google Antigravity</a>
             <p class="install-option__note" data-antigravity-version hidden></p>
             <a class="install-option__note" href="antigravity/index.html?lang=it" data-antigravity-guide-link data-i18n="install.antigravity.guide">Come installare Vera in Antigravity →</a>
           </div>
@@ -1947,6 +1953,8 @@
         "install.title": "Installazione",
         "install.copy": "Installa Vera in ChatGPT Work e Codex, Claude Cowork o Google Antigravity.",
         "install.actions.label": "Opzioni di installazione di Vera",
+        "install.antigravity.marketplace": "Vai al marketplace Antigravity",
+        "install.antigravity.pending": "In attesa di approvazione.",
         "install.antigravity.download": "Scarica ZIP per Google Antigravity",
         "install.antigravity.guide": "Come installare Vera in Antigravity →",
         "install.button": "Installa per ChatGPT Work e Codex",
@@ -2186,6 +2194,8 @@
         "install.title": "Installation",
         "install.copy": "Install Vera in ChatGPT Work and Codex, Claude Cowork or Google Antigravity.",
         "install.actions.label": "Vera installation options",
+        "install.antigravity.marketplace": "Go to Antigravity marketplace",
+        "install.antigravity.pending": "Awaiting approval.",
         "install.antigravity.download": "Download ZIP for Google Antigravity",
         "install.antigravity.guide": "How to install Vera in Antigravity →",
         "install.button": "Install for ChatGPT Work and Codex",
@@ -2425,6 +2435,8 @@
         "install.title": "Installation",
         "install.copy": "Installez Vera dans ChatGPT Work et Codex, Claude Cowork ou Google Antigravity.",
         "install.actions.label": "Options d’installation de Vera",
+        "install.antigravity.marketplace": "Aller au marketplace Antigravity",
+        "install.antigravity.pending": "En attente d’approbation.",
         "install.antigravity.download": "Télécharger le ZIP pour Google Antigravity",
         "install.antigravity.guide": "Installer Vera dans Antigravity →",
         "install.button": "Installer pour ChatGPT Work et Codex",
@@ -2664,6 +2676,8 @@
         "install.title": "Installation",
         "install.copy": "Installieren Sie Vera in ChatGPT Work und Codex, Claude Cowork oder Google Antigravity.",
         "install.actions.label": "Installationsoptionen für Vera",
+        "install.antigravity.marketplace": "Zum Antigravity-Marketplace",
+        "install.antigravity.pending": "Freigabe ausstehend.",
         "install.antigravity.download": "ZIP für Google Antigravity herunterladen",
         "install.antigravity.guide": "Vera in Antigravity installieren →",
         "install.button": "Für ChatGPT Work und Codex installieren",
@@ -2903,6 +2917,8 @@
         "install.title": "Instalación",
         "install.copy": "Instala Vera en ChatGPT Work y Codex, Claude Cowork o Google Antigravity.",
         "install.actions.label": "Opciones de instalación de Vera",
+        "install.antigravity.marketplace": "Ir al marketplace de Antigravity",
+        "install.antigravity.pending": "Pendiente de aprobación.",
         "install.antigravity.download": "Descargar ZIP para Google Antigravity",
         "install.antigravity.guide": "Cómo instalar Vera en Antigravity →",
         "install.button": "Instalar para ChatGPT Work y Codex",

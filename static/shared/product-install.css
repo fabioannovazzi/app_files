@@ -44,6 +44,7 @@
 
 .hero-install__antigravity {
   grid-area: antigravity;
+  grid-template-rows: none;
   width: min(100%, 350px);
   scroll-margin-top: 100px;
   display: grid;
