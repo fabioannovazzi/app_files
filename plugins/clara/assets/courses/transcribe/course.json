@@ -130,7 +130,7 @@
     {
       "path": "scripts/prepare_voice_deck_revision.py",
       "repository_path": "plugins/clara/scripts/prepare_voice_deck_revision.py",
-      "sha256": "57281337f54d1b2e85e0a7bb6e0e30e65b9c2a64b0e5c6a3ee40a8f5c00d0645"
+      "sha256": "8d9a22820537a5e2b6aec0f8fd5c74af2f36a15a24b8905c221ef3909dcd68cc"
     },
     {
       "path": "scripts/repair_audio_pointer_links.py",

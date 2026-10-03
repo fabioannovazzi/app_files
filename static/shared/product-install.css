@@ -37,3 +37,19 @@
   background: #f1f6fb;
   transform: none;
 }
+
+.hero-install {
+  grid-template-areas: "copy" "action" "antigravity" "video";
+}
+
+.hero-install__antigravity {
+  grid-area: antigravity;
+  width: min(100%, 350px);
+  scroll-margin-top: 100px;
+  display: grid;
+  gap: 8px;
+}
+
+.hero-install__antigravity a:not(.button) {
+  text-underline-offset: 0.2em;
+}
