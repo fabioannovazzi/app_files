@@ -203,7 +203,7 @@ def save_result(case: dict, result: dict, output: Path) -> Path:
         "",
         "## Responsabilità e limiti",
         "",
-        "Le conferme registrate sono attribuite al revisore dichiarato; non ne autenticano l'identità. I calcoli non certificano la natura IVA, la completezza dei registri o la spettanza della detrazione. XML reale, firma e trasmissione non disponibili.",
+        "Le conferme dei singoli passaggi sono attribuite al revisore dichiarato; non ne autenticano l'identità. I calcoli non certificano la natura IVA, la completezza dei registri o la spettanza della detrazione. L'XML per il gestionale richiede la successiva approvazione firmata e la riverifica della versione. Firma del file e trasmissione non sono eseguite.",
         "",
         "## Quali dati arrivano al modello",
         "",

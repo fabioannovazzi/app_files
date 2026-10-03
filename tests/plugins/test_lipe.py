@@ -1007,10 +1007,10 @@ def test_synthetic_xml_passes_official_schema(
     assert b"<iv:NumeroModulo>1</iv:NumeroModulo>" in payload
 
 
-def test_real_xml_export_is_closed_until_acceptance() -> None:
+def test_synthetic_xml_command_rejects_real_data() -> None:
     case = case_data()
     case["data_origin"] = "REAL"
-    with pytest.raises(ContractError, match="Real XML export unavailable"):
+    with pytest.raises(ContractError, match="xml-test requires synthetic data"):
         build_test_xml(case, PLUGIN / "examples")
 
 

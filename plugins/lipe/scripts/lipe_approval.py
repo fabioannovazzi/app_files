@@ -27,7 +27,13 @@ from lipe_authorization import (
 from lipe_core import ROOT, ContractError, calculate, digest, read_json
 from lipe_frontpage import validate_frontpage
 
-__all__ = ["prepare_review", "accept_review", "current_bindings", "main"]
+__all__ = [
+    "prepare_review",
+    "accept_review",
+    "verify_review",
+    "current_bindings",
+    "main",
+]
 
 ARTIFACTS = {
     "case.json",
@@ -303,7 +309,7 @@ def prepare_review(
             "",
             "Firmare esternamente gli esatti byte di request.json con il certificato coperto dal mandato dello studio. Una modifica a dati, fonti, catalogo, motore o file richiede una nuova revisione. Non fornire chiavi private a LIPE.",
             "",
-            "La qualifica produttiva e le prove professionali/importatore restano separate e pendenti. Questa richiesta non rimuove il blocco dell'export reale.",
+            "La qualifica produttiva e le prove professionali/importatore restano separate e pendenti. L'export richiede la riverifica della decisione firmata, del mandato e della versione corrente; questa richiesta da sola non genera un XML.",
             "",
         ]
     )
@@ -311,13 +317,12 @@ def prepare_review(
     return output
 
 
-def accept_review(
+def verify_review(
     case: dict,
     front: dict,
     draft_folder: Path,
     source_root: Path,
     request_path: Path,
-    output: Path,
     *,
     signature: Path,
     mandate: Path,
@@ -327,9 +332,8 @@ def accept_review(
     catalog_path: Path | None = None,
     model_data_report: Path | None = None,
     run_id: str | None = None,
-) -> Path:
-    """Recheck exact current bindings and retain externally signed approval evidence."""
-    _separate_output(draft_folder, output)
+) -> dict:
+    """Reverify original signatures and current bindings without trusting a saved status."""
     snapshot = current_bindings(
         case,
         front,
@@ -384,7 +388,6 @@ def accept_review(
     )
     if latest["bindings"] != snapshot["bindings"]:
         raise ContractError("Reviewed data or artifacts changed during verification")
-    output.mkdir(parents=True, mode=0o700, exist_ok=False)
     names = {
         "request": "request.json",
         "signature": "decision.p7s",
@@ -393,11 +396,50 @@ def accept_review(
         "trusted_roots": "trusted-roots.pem",
         "crls": "crls.pem",
     }
-    for name, raw in originals.items():
-        _write(output / names[name], raw)
-    _write(output / "policy.json", request_bytes(authority["policy"]))
-    _write(output / "review-snapshot.json", request_bytes(snapshot))
-    _write(output / "approval.json", request_bytes(proof))
+    files = {names[name]: raw for name, raw in originals.items()}
+    files["policy.json"] = request_bytes(authority["policy"])
+    files["review-snapshot.json"] = request_bytes(snapshot)
+    files["approval.json"] = request_bytes(proof)
+    return {"request": request, "snapshot": snapshot, "proof": proof, "files": files}
+
+
+def accept_review(
+    case: dict,
+    front: dict,
+    draft_folder: Path,
+    source_root: Path,
+    request_path: Path,
+    output: Path,
+    *,
+    signature: Path,
+    mandate: Path,
+    mandate_signature: Path,
+    authority: dict,
+    at: datetime,
+    catalog_path: Path | None = None,
+    model_data_report: Path | None = None,
+    run_id: str | None = None,
+) -> Path:
+    """Recheck exact current bindings and retain externally signed approval evidence."""
+    _separate_output(draft_folder, output)
+    verified = verify_review(
+        case,
+        front,
+        draft_folder,
+        source_root,
+        request_path,
+        signature=signature,
+        mandate=mandate,
+        mandate_signature=mandate_signature,
+        authority=authority,
+        at=at,
+        catalog_path=catalog_path,
+        model_data_report=model_data_report,
+        run_id=run_id,
+    )
+    output.mkdir(parents=True, mode=0o700, exist_ok=False)
+    for name, raw in verified["files"].items():
+        _write(output / name, raw)
     return output
 
 

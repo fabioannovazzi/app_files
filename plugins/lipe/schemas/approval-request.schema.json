@@ -65,7 +65,7 @@
       "format": "date-time"
     },
     "statement": {
-      "const": "Approvo dati, fonti, frontespizio, decisioni e righi VP della versione indicata per la preparazione del file XML non firmato, subordinata alle qualificazioni richieste. Firma telematica e trasmissione restano atti separati."
+      "const": "Approvo dati, fonti, frontespizio, decisioni e righi VP della versione indicata per preparare un file XML non firmato da verificare nel gestionale. Questa approvazione non attesta la qualificazione del software né l'accettazione dell'importazione o dell'Agenzia. Firma telematica e trasmissione restano atti separati."
     },
     "bindings": {
       "type": "object",

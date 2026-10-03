@@ -81,14 +81,26 @@ front page, result, runtime and run disclosure. It verifies external CMS signatu
 under a host-configured firm policy and signed mandate, including chain and CRLs.
 The policy needs independent host administration; certificate subjects do not
 establish professional powers. Qualified-signature status is not tested. No real
-studio has configured or accepted this path, and it does not enable XML export.
+studio has configured or accepted this path.
+
+The separate XML export stage re-verifies original CMS evidence and the current
+case, sources, catalog and disclosure. It requires the reviewed intermediary,
+reserves its explicitly selected five-digit filename in a host-configured studio
+registry, writes an unsigned IVP18 and reads every field and VP amount back before
+delivery. Original approval evidence and the approved PDF accompany it. The
+registry prevents local name reuse, including after output failure; it does not
+know names used by external software or another independently created registry.
+No actual studio authority or real importer has qualified this implementation.
 
 Supplied receipts are preserved and checked against the original official
 `DatiFatturaMessaggi_v2.0.xsd`, with its exact W3C import resolved offline. The
 reader records the declared file ID, date, outcome and all errors. A supplied
 transmitted file is preserved and its name compared literally. Receipt signature
 authenticity, content linkage, VP correspondence and filing acceptance remain
-unverified; schema-shaped synthetic signatures never establish those facts.
+unverified in receipt inspection; schema-shaped synthetic signatures never
+establish those facts. A separate supplied-XML comparison checks taxpayer, year,
+period and each VP amount, preserving differences in dates, flags, other fields
+and explicit-zero representation. That comparison authenticates neither file.
 
 Development validation includes independent workbook recalculation and changed-
 input checks for monthly values, partial reverse-charge deduction, credit and
@@ -123,10 +135,10 @@ blocked until the principal/interest basis is independently reviewed.
 
 - Authenticated catalog roles and optional shared central-catalog distribution. Current central
   reference records are local and do not synchronize between studios.
-- Real XML serialization with current approval re-verification and comparison to
-  a supplied transmitted XML. The front-page, approval adapter and structural
-  receipt reader are implemented; receipt signature authenticity is not tested.
-  The synthetic XML command is not the real export workflow.
+
+Unsigned XML export, supplied-file comparison and structural receipt inspection
+are implemented. Receipt and supplied XML signature authenticity are not tested;
+their declared outcomes must not become verified filing acceptance.
 
 These are engineering gaps, separate from the missing original-register and
 professional acceptance evidence above. The overall goal remains in progress.

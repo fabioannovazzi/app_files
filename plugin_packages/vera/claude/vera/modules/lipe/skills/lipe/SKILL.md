@@ -1,6 +1,6 @@
 ---
 name: lipe
-description: Use LIPE to reconcile Italian VAT registers and periodic settlements, prepare evidence-linked VP drafts, review tax-code mappings and payment differences, and preserve professional decisions. Pilot with real filing export blocked.
+description: Use LIPE to reconcile Italian VAT registers and periodic settlements, prepare evidence-linked VP drafts, review tax-code mappings and payments, preserve decisions, and export an unsigned XML after external approval. Professional and importer qualification remain pending.
 ---
 
 ## Cowork execution contract
@@ -266,9 +266,10 @@ Only the independently configured firm authority and externally signed mandate
 can authorize a signer. Do not create real keys, trusted administrator pins or
 mandates, or treat a named reviewer/JSON status as authenticated approval.
 `prepare` creates a request; `accept` verifies supplied originals and preserves
-proof. Neither enables real XML export or constitutes a signature on a return.
+proof. The separate export command re-verifies those originals and the current
+version. An approval signature is not a signature on the XML return.
 
-## Acceptance and XML boundary
+## XML export and qualification
 
 `xml-test` recalculates a **synthetic** case, uses fictional identifiers and
 requires the bundled official XSD with the complete W3C signature schema:
@@ -277,10 +278,20 @@ requires the bundled official XSD with the complete W3C signature schema:
 python scripts/lipe.py xml-test --case examples/synthetic-case.json --source-root examples --output /absolute/synthetic/xml
 ```
 
-Real XML export, signing and submission are unavailable.
-Do not work around the block, substitute real identifiers in test XML, invent
-authentication or mark professional/importer tests complete from unit tests.
-Follow the actual outstanding acceptance register before enabling that path.
+For an approved case, follow `references/xml-export.md`. Use the independently
+configured firm authority and its one filename registry. Obtain the intermediary's
+confirmed unused progressive; do not guess the history of filenames generated
+outside this registry or create a fresh registry to bypass a collision. Export
+re-verifies the original CMS signatures, current mandate/CRLs, sources, disclosure,
+catalog and artifacts, then reads the generated XML back against the approved VP.
+
+The delivered XML is unsigned and is not transmitted. No real studio, importer
+or Agenzia control-software acceptance is established by development tests.
+Keep the actual outstanding acceptance register visible; do not invent identity,
+test real filing by transmission, or substitute real identifiers in `xml-test`.
+If a transmitted XML is supplied, use the comparison command and retain all
+metadata, period and amount differences. Equal VP values do not approve changed
+front-page data or flags and do not authenticate the supplied file.
 
 ## Inspect a supplied receipt
 

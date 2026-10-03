@@ -30,7 +30,7 @@
       "retrieved_on": "2026-10-03",
       "sha256": "8f13947daa32a7edfa0a36fccb4aa7d249aaaec7d61ff8fc00a1f86b934de423",
       "status": "RETRIEVED_AND_INSPECTED",
-      "use": "Transmission annex section 3.5: supplied receipt format and XAdES-BES requirement only. Not a source for current arithmetic or deadlines.",
+      "use": "Transmission annex sections 2.2 and 3.5: filename format, supplied receipt format and XAdES-BES requirement only. Not a source for current arithmetic or deadlines.",
       "professional_acceptance": "PENDING"
     },
     {

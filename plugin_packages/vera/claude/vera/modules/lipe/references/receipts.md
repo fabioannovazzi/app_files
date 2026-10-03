@@ -81,8 +81,9 @@ il lettore non inventa un fuso orario se manca.
 rinominare i file per ottenere una corrispondenza. Un nome uguale può identificare
 byte diversi: `FILENAME_MATCH_ONLY` non è una prova crittografica. Il file fornito
 è trattato come evidenza opaca; questo passaggio non apre contenitori CAdES,
-non verifica la firma sul trasmesso e non confronta frontespizio o VP. Queste
-verifiche restano separate. Una differenza di nome è visibile e non viene
+non verifica la firma sul trasmesso e non confronta frontespizio o VP. Il
+[confronto XML separato](xml-export.md) confronta frontespizio e VP di due file
+XML leggibili, senza autenticarne le firme. Una differenza di nome è visibile e non viene
 corretta automaticamente, anche quando esiste `RifArchivio`.
 
 La ricevuta non contiene il codice fiscale del contribuente o il periodo VP.

@@ -145,6 +145,8 @@ CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     ("lipe", "lipe_approval.py"),
     # Supplied receipts append evidence to that same selected Archive run.
     ("lipe", "lipe_receipt.py"),
+    # Export and supplied-file comparison reuse that existing Archive run.
+    ("lipe", "lipe_export.py"),
     ("scissione-guidata", "check_dependencies.py"),
     ("patent-box-review", "check_dependencies.py"),
     # Public-source acquisition and monitoring have no client case lifecycle.

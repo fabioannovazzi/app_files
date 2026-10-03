@@ -26,6 +26,7 @@ __all__ = [
     "request_bytes",
     "provider_hash",
     "load_authority",
+    "load_export_registry",
     "verify_approval",
     "read_evidence",
     "read_signed_json",
@@ -122,8 +123,7 @@ def _timestamp(value: str) -> datetime:
     return parsed.astimezone(timezone.utc)
 
 
-def load_authority(*, excluded_roots: list[Path]) -> dict:
-    """Load only host-admin configuration, never a policy chosen by a case file."""
+def _configuration(excluded_roots: list[Path]) -> dict:
     configured = os.environ.get(CONFIG_ENV)
     if not configured:
         raise ContractError(
@@ -138,14 +138,17 @@ def load_authority(*, excluded_roots: list[Path]) -> dict:
             "Authority configuration must be outside client runs and the LIPE component"
         )
     config, _ = read_signed_json(path)
-    if not isinstance(config, dict) or set(config) != {
-        "policy",
-        "openssl",
-        "trusted_roots",
-        "crls",
-    }:
+    required = {"policy", "openssl", "trusted_roots", "crls"}
+    if not required.issubset(config) or set(config) - required - {"export_registry"}:
         raise ContractError("Authority configuration has unexpected or missing fields")
     _validate(config["policy"], "authority-policy")
+    return config
+
+
+def load_authority(*, excluded_roots: list[Path]) -> dict:
+    """Load only host-admin configuration, never a policy chosen by a case file."""
+    config = _configuration(excluded_roots)
+    roots = [ROOT.parent, *excluded_roots]
     result = {"policy": config["policy"]}
     for key in ("openssl", "trusted_roots", "crls"):
         if not isinstance(config[key], str) or not config[key].strip():
@@ -163,6 +166,30 @@ def load_authority(*, excluded_roots: list[Path]) -> dict:
             )
         result[key] = selected
     return result
+
+
+def load_export_registry(*, excluded_roots: list[Path]) -> Path:
+    """Use the firm's one configured filename registry, never a case-chosen reset."""
+    config = _configuration(excluded_roots)
+    value = config.get("export_registry")
+    if not isinstance(value, str) or not value.strip():
+        raise ContractError(
+            "The firm has not configured its shared export filename registry"
+        )
+    path = Path(value)
+    if (
+        not path.is_absolute()
+        or path.is_symlink()
+        or not path.parent.is_dir()
+        or any(
+            path.resolve().is_relative_to(root.resolve())
+            for root in [ROOT.parent, *excluded_roots]
+        )
+    ):
+        raise ContractError(
+            "The export registry must be outside client runs and installed components"
+        )
+    return path
 
 
 def _signer(verification: dict) -> str:

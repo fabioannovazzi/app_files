@@ -699,7 +699,7 @@ def disclosure(output: Path, run_id: str) -> Path:
     return path
 
 
-def archive_example(tmp_path):
+def archive_example(tmp_path, *, front_overrides=None):
     """Exercise the REAL route with a real Archive ledger and fictional documents."""
     ledger = load_test_module(
         PLUGIN.parent / "studio-archive/scripts/client_ledger.py",
@@ -715,7 +715,7 @@ def archive_example(tmp_path):
     engagement_id = engagement["engagement_id"]
     case = read_json(PLUGIN / "examples/synthetic-case.json")
     case.update(data_origin="REAL", client_id=client_id, engagement_id=engagement_id)
-    front = frontpage(case, tmp_path)
+    front = frontpage(case, tmp_path, **(front_overrides or {}))
     inputs = []
     for obj, original in [
         (case, PLUGIN / "examples/synthetic-registers.txt"),

@@ -1,7 +1,8 @@
 """Offline official schemas, bounded XML reading and synthetic IVP18 serialization.
 
-Production export stays closed until professional UAT, authenticated review and
-real importer acceptance are implemented. A JSON reviewer name is not identity.
+The synthetic command rejects real data. Approved export has a separate
+signature-verifying entrypoint; professional/importer qualification is not
+established by schema validation. A JSON reviewer name is not identity.
 """
 
 from __future__ import annotations
@@ -38,6 +39,19 @@ AMOUNTS = (
     ("vp13", "Acconto"),
     ("vp14_debit", "ImportoDaVersare"),
     ("vp14_credit", "ImportoACredito"),
+)
+FRONT_FIELDS = (
+    "CodiceFiscale",
+    "AnnoImposta",
+    "PartitaIVA",
+    "CFDichiarante",
+    "CodiceCaricaDichiarante",
+    "CodiceFiscaleSocieta",
+    "FirmaDichiarazione",
+    "CFIntermediario",
+    "ImpegnoPresentazione",
+    "DataImpegno",
+    "FirmaIntermediario",
 )
 
 
@@ -132,11 +146,29 @@ def build_test_xml(
     """Recalculate exact sources, use fictional identity and require valid XSD."""
     if case["data_origin"] != "SYNTHETIC":
         raise ContractError(
-            "Real XML export unavailable: professional and importer acceptance pending"
+            "xml-test requires synthetic data; use the separate signed-approval export workflow"
         )
     result = calculate(case, source_root, catalog_path)
     if result["status"] != "DRAFT_FOR_REVIEW":
         raise ContractError("Blocked case cannot produce even a test XML")
+    return _serialize(
+        case,
+        result,
+        {
+            "CodiceFiscale": "RSSMRA80A01H501U",
+            "AnnoImposta": str(case["tax_year"]),
+            "PartitaIVA": "12345678901",
+            "FirmaDichiarazione": "1",
+        },
+    )
+
+
+def _serialize(case: dict, result: dict, fields: dict) -> bytes:
+    """Serialize already checked values; the export entrypoint authenticates approval."""
+    if result["status"] != "DRAFT_FOR_REVIEW" or set(fields) - set(FRONT_FIELDS):
+        raise ContractError(
+            "Serialization requires supported checked fields and result"
+        )
     root = etree.Element(f"{{{NS}}}Fornitura", nsmap={"iv": NS})
 
     def tag(parent: Any, name: str, value: Any = None) -> Any:
@@ -145,17 +177,17 @@ def build_test_xml(
             child.text = str(value)
         return child
 
-    tag(tag(root, "Intestazione"), "CodiceFornitura", "IVP18")
+    header = tag(root, "Intestazione")
+    tag(header, "CodiceFornitura", "IVP18")
+    if "CFDichiarante" in fields:
+        tag(header, "CodiceFiscaleDichiarante", fields["CFDichiarante"])
+        tag(header, "CodiceCarica", fields["CodiceCaricaDichiarante"])
     communication = tag(root, "Comunicazione")
     communication.set("identificativo", "00001")
     front = tag(communication, "Frontespizio")
-    for name, value in (
-        ("CodiceFiscale", "RSSMRA80A01H501U"),
-        ("AnnoImposta", case["tax_year"]),
-        ("PartitaIVA", "12345678901"),
-        ("FirmaDichiarazione", "1"),
-    ):
-        tag(front, name, value)
+    for name in FRONT_FIELDS:
+        if name in fields:
+            tag(front, name, fields[name])
     data = tag(communication, "DatiContabili")
     for index, module in enumerate(result["modules"], 1):
         node = tag(data, "Modulo")

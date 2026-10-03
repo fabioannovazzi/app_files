@@ -65,8 +65,10 @@ L'amministratore dello studio deve predisporre indipendentemente una policy
 conforme a `authority-policy.schema.json`, il percorso assoluto di OpenSSL 3,
 radici fidate e CRL correnti complete. La configurazione è indicata dalla variabile
 host `VERA_LIPE_AUTHORITY_CONFIG`; non è un argomento scelto dal caso.
-Il JSON contiene esattamente `policy`, `openssl`, `trusted_roots`, `crls`;
-gli ultimi tre sono percorsi assoluti a file installati. Configurazione, provider
+Il JSON contiene `policy`, `openssl`, `trusted_roots`, `crls`;
+gli ultimi tre sono percorsi assoluti a file installati. Può aggiungere soltanto
+`export_registry`, percorso assoluto del registro unico dei nomi per l'export,
+descritto in `xml-export.md`. Configurazione, provider
 e materiale fiduciario devono risiedere fuori dal run cliente e dai componenti.
 La protezione di queste risorse dipende dai permessi amministrativi dell'host:
 essere fuori dalla cartella cliente non rende inviolabile una policy modificabile
@@ -102,9 +104,10 @@ all'inventario immutabile degli input originari del run.
 Il caso viene ricalcolato e confrontato con la bozza prima e dopo la verifica.
 La ricevuta distingue verifica crittografica, poteri dichiarati dallo studio,
 qualifica della firma non testata e mancata firma/invio della dichiarazione.
-Un export successivo dovrà riverificare gli originali, lo stato corrente della
+L'export successivo riverifica gli originali, lo stato corrente della
 policy/revoche e tutti i vincoli; un `approval.json` modificabile non è un token
-fidato. Il serializer reale resta da implementare e qualificare. La lettura
+fidato. Il serializer e il confronto XML sono descritti in `xml-export.md`;
+la qualificazione professionale e nei gestionali resta pendente. La lettura
 strutturale delle ricevute fornite è descritta in `references/receipts.md` e non
 ne autentica la firma XAdES.
 

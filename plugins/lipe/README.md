@@ -41,7 +41,15 @@ registry-evidence declarations to preserved sources. Approval packets bind the
 exact reviewed version and verify external CMS signatures under an independently
 configured firm mandate, including chain and revocation checks. These are local
 cryptographic checks, not qualified-signature, professional-register or filing
-acceptance. See `references/approval.md`. Real export remains unavailable.
+acceptance. See `references/approval.md`.
+
+The approved export path re-verifies original signatures and the current case,
+reserves the intermediary's chosen five-digit filename in the configured studio
+registry, and writes an unsigned IVP18 with its approved PDF and fresh evidence.
+Every XML field and VP amount is read back before delivery. Supplied transmitted
+XML can be compared by taxpayer, year and period; metadata and representation
+changes remain visible. See `references/xml-export.md`. No real studio or
+importer has qualified this path.
 
 The supplied-receipt reader preserves original bytes, validates the official
 receipt schema offline, records the declared file ID/status and every reported
@@ -61,9 +69,10 @@ tests but its real aggregate fixtures and provisional rules are not distributed
 in this implementation. LIPE uses a separately implemented, stricter contract.
 
 The delivered state is a **pilot**, not professional acceptance. See
-`references/acceptance.md`. Real XML export stays blocked. The synthetic XML
-command requires local official XSD validation and uses fictional identifiers;
-it does not establish Agenzia Entrate or accounting-software acceptance.
+`references/acceptance.md`. Unsigned export requires current external approval
+and the host-configured firm authority. The separate synthetic XML command uses
+fictional identifiers. Neither path establishes Agenzia Entrate or accounting-
+software acceptance, and neither signs or transmits a declaration.
 
 ## Quali dati arrivano al modello
 
