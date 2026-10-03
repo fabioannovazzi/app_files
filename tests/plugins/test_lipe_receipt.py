@@ -230,7 +230,9 @@ def test_document_types_are_blocked_even_when_no_entity_is_expanded(doctype):
 
 
 @pytest.mark.parametrize(
-    "raw", [b"", b"not XML", b"<root>", b"x" * (8 * 1024 * 1024 + 1)]
+    "raw",
+    [b"", b"not XML", b"<root>", b"x" * (8 * 1024 * 1024 + 1)],
+    ids=["empty", "non-xml-text", "truncated-xml", "over-8-mib"],
 )
 def test_malformed_empty_and_oversized_xml_cannot_produce_a_status(raw):
     result = inspect_receipt(raw)
@@ -240,7 +242,9 @@ def test_malformed_empty_and_oversized_xml_cannot_produce_a_status(raw):
 
 
 @pytest.mark.parametrize(
-    "raw", [b"<x>" * 65 + b"</x>" * 65, b"<x>" + b"<y/>" * 10000 + b"</x>"]
+    "raw",
+    [b"<x>" * 65 + b"</x>" * 65, b"<x>" + b"<y/>" * 10000 + b"</x>"],
+    ids=["depth-65", "over-10000-elements"],
 )
 def test_xml_inspection_limits_bound_depth_and_element_count(raw):
     with pytest.raises(ContractError, match="element or depth"):
@@ -400,7 +404,9 @@ def test_saved_receipt_bytes_and_reports_have_private_posix_modes(tmp_path):
     assert (folder / "receipt-inspection.json").stat().st_mode & 0o777 == 0o600
 
 
-@pytest.mark.parametrize("value", [b"", b"x" * (16 * 1024 * 1024 + 1)])
+@pytest.mark.parametrize(
+    "value", [b"", b"x" * (16 * 1024 * 1024 + 1)], ids=["empty", "over-16-mib"]
+)
 def test_empty_or_excessive_evidence_is_rejected_before_writing(tmp_path, value):
     case, receipt = supplied(tmp_path)
     receipt.write_bytes(value)
@@ -441,7 +447,9 @@ def test_untrusted_note_is_readable_data_not_a_markdown_link_or_html(tmp_path):
 
 
 @pytest.mark.parametrize(
-    "raw,expected", [(receipt_bytes("ES03"), 0), (b"malformed", 2)]
+    "raw,expected",
+    [(receipt_bytes("ES03"), 0), (b"malformed", 2)],
+    ids=["declared-rejection-is-inspected", "malformed-xml-is-blocked"],
 )
 def test_cli_exit_code_means_inspection_not_filing_acceptance(tmp_path, raw, expected):
     _, receipt = supplied(tmp_path)
