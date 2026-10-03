@@ -99,13 +99,24 @@
         "skills/learn-with-vera/references/prepared-courses.md"
       ],
       "on_violation": "Reject changed or unrecorded files before serving the lesson result."
+    },
+    {
+      "id": "course-file-access",
+      "control": "Before teaching, instructions connect the existing shared course directory as the host workspace or request scoped host write access. The stdlib setup helper saves and reloads the real profile without advancing lessons or changing the saved revision. Temporary probes check create/read/write/update/replace/delete operations; state mutations and worker dispatch repeat checks for their actual directories. Diagnostics expose only the exact local paths, operation and native error to the selected host model. Grants are host-controlled; helpers neither change OS permissions nor infer successful access from an approval click. Existing profiles are not relocated or reset. No new network transport or external recipient is introduced.",
+      "implemented_by": [
+        "scripts/local_onboarding.py",
+        "scripts/local_teaching.py",
+        "skills/learn-with-vera/references/file-access.md",
+        "repository:plugins/_shared/vendor/modules/courseware/access.py"
+      ],
+      "on_violation": "Failed checks or saves pause course progression. The host obtains the exact folder access, retries with normal sandbox permissions and preserves existing progress. Ordinary professional work remains optional and available."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "58aafa443d1539acec531e1706b3be458470d03f5863455ad0adbb58ca673078"
+    "source_fingerprint": "3f9c512f4fc677811d5c874eb4ecd1e29323ed400e8d4a184f366777496a6c09"
   },
   "governed_repository_paths": [
     "static/shared/learn-with-vera/index.html",

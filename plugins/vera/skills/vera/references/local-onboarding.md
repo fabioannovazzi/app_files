@@ -20,6 +20,11 @@ teach only Vera's own installed workflows. Read the exact Vera skill returned in
 continue without a valid handoff. An outside request returns to the teacher for
 an explanation of Vera's scope and selection of a supported Vera lesson.
 
+Before starting or resuming any tutorial conversation, follow
+`../../learn-with-vera/references/file-access.md` and complete `workspace` / `setup`.
+A failed check or save pauses all course steps until a verified retry succeeds.
+This does not restrict ordinary work when the user leaves the tutorial.
+
 ## Entry and local profile
 
 For the catalogue's “Get started with Vera” course or a request to understand
@@ -36,7 +41,8 @@ Keep any existing lesson progress; skipping is not completion.
 
 Only after the user requests a tutorial or chooses the introduction, resolve the
 installed Vera root and run
-`python3 <vera-root>/scripts/local_onboarding.py status` with the host's local execution tool. Use the shared managed Python
+`python3 <vera-root>/scripts/local_onboarding.py workspace`, connect or authorize
+that exact course folder, then run its returned `setup_argv` with the host's local execution tool. Use the shared managed Python
 interpreter for lessons. Do not require an API key or create an additional
 environment for the interview. The helper uses only Python's standard library
 and makes no network calls.
@@ -46,8 +52,9 @@ The default directory is `~/.local/share/vera/onboarding` on macOS/Linux and
 project, plugin version and `PLUGIN_DATA`. Codex and local Work must read this
 same location, not conversational memory or separate host profile copies.
 Verify that Work's execution is on the actual local machine and OS account.
-If tools cannot access this location, connect the existing directory through
-the host's normal permissions. Never interpret denied access, a different
+Use this directory as the local course workspace, or grant the course chats
+scoped write access to it. Follow `file-access.md` through the actual folder
+picker/permission request and a normal-permission setup retry. Never interpret denied access, a different
 sandbox home, corrupt JSON or a missing enrolled profile as a new user.
 
 These statuses describe only the optional tutorial, never permission to use Vera:
@@ -139,17 +146,20 @@ Normal native model/voice processing is still the user's OpenAI service.
 ## Local command contract
 
 Run commands from any working directory using the **absolute installed script
-path**. Normally omit `--state-root`; it is for an explicitly selected recovery
-or isolated developer test root, not a new profile per host/chat/project.
+path**. Pass the absolute `--state-root` returned by `workspace` / `setup` to
+every helper and both chats. This binds the same existing profile even when
+the execution context changes; never choose a fresh root per host/chat/project.
 Do not interpolate spoken text into shell commands. Write exact JSON to a local
 file inside the onboarding directory with a file-writing tool, then pass its
 quoted path. The helper's stdout is local tool output consumed by the native
 model, not an upload to Mparanza.
 
-`status` and `begin` need no input. Every change below uses:
+`workspace`, `setup`, `status`, `preflight` and `begin` need no input.
+`workspace` and `status` are read-only. Setup verifies a real profile save and
+reload; it never advances a lesson or grants host permission by itself. Every change below uses:
 
 ```text
-python3 <vera-root>/scripts/local_onboarding.py <command> --revision <latest-revision> --input <local-json>
+python3 <vera-root>/scripts/local_onboarding.py <command> --state-root "<state_root>" --revision <latest-revision> --input <local-json>
 ```
 
 Read the returned revision after each save; on conflict reload and reconcile

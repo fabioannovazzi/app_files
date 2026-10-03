@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "comunicazione-professionale",
-  "course_sha256": "2f35ca467ad9d801035286f8c6d81ff7ace41395f639541cecf66f8eedac8d4c",
+  "course_sha256": "39e8e80fda7b5ab4ec1be8616467c3a8dc6ca111c6e119a9fddfea08231d7b76",
   "reviewer": "Codex: first-use/source/output inspection; independent claim session 01a0a0b8-d623-7cd0-870c-ec3921855b09 and independent editorial session /root/communication_editorial_isolated_07",
   "reviewed_at": "2026-09-14T17:03:02.450310+00:00",
   "review_scope": "Actual current local native packaging with explicitly synthetic professional-review transitions. Exact revised contributions and all 220 claims across both products were independently assessed, followed by a fresh editorial session separate from generation, source assurance and benchmark qualification. The final FAQs preserve the exact reviewed bodies once; root inspected the native packaging and all ten practice emails. Host identities are operator attestations, not API receipts. The outputs are Markdown FAQs and text emails; no HTML, rendered palette, professional approval, sending, real learner, or voice/two-window acceptance is claimed.",
@@ -492,5 +492,6 @@
     ],
     "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
-  }
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
 }

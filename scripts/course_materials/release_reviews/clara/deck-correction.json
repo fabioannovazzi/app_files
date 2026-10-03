@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "deck-correction",
-  "course_sha256": "2cc3af5d7947fb99b1e01cffdd13dce0aef369724964651fa034b6616d78c557",
+  "course_sha256": "aafe73a1895283b79b118904e040d3a256f8a15f12c3064a8b961747b916c3c6",
   "reviewer": "Codex: first-use teaching-kit editorial review",
   "reviewed_at": "2026-09-29T13:36:23+00:00",
   "review_scope": "Prepared lesson, fictional inputs and actual outputs from source-bound regression cases, including visual review. Fixed model contributions are test-only. This is not human learner acceptance, native voice/two-window acceptance, or professional approval. Source dependency refresh after the localized advisory evidence-map repair: 35 current presentation/transcript checks pass in clara-teaching-source-refresh-02. All 60 recorded primary/supporting artifacts across these three kits are byte-identical to the previously inspected versions; the parity manifest retains actual paths. Existing editorial and visual judgments are preserved for unchanged material. No new voice, learner or GUI acceptance is asserted.",
@@ -674,5 +674,6 @@
     "source_review": "Inspected the helper diff and its support-file consumers. It recognizes the installed plugin root when bundled docs/specs/pptx_templates exists, so template lookup, repository-relative support lookup and advisory-output-shaper lookup can use the flat Antigravity package. The repository fallback, lesson content, processing, requested deck edits and approval gates remain unchanged. The Antigravity builder includes these same support files; focused installed-folder and deck-revision tests passed.",
     "native_evidence": "GitHub Actions run 37103155786, job 111146493689, commit 6a996c4a49a448d714ea2654ba5ad84861563ad4 passed 1567 native teaching tests with 3 skips and 92% courseware coverage. The later release verifier rejected the stale editorial digest, so that job is not represented as green.",
     "limits": "This is a source compatibility review, not a new independent editorial, visual, learner, live voice or professional acceptance review. Final CI must execute the existing localized demo and practice identities against these exact current course digests and pass verify_release.py before merge."
-  }
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
 }

@@ -1,0 +1,2682 @@
+{
+  "schema": "mparanza.course_source_review.v1",
+  "reviewer": "Codex /root",
+  "reviewed_at": "2026-10-03T19:05:53.019099+00:00",
+  "baseline_commit": "0736b552e3cdc117d0b61324e72310cdfaac8d5f",
+  "scope": "Course filesystem readiness and explicit shared workspace setup. Authored lessons, input files and semantic workflow execution are unchanged. Existing editorial and output reviews are preserved; fresh native execution remains required by CI. No Windows desktop UI acceptance or Marketplace publication is claimed.",
+  "kits": [
+    {
+      "kit": "clara/advisory-brief-planner",
+      "previous_course_sha256": "338c7542e963c80fbea41ca7f4d1ae529811e094486a012af7612494ecf86cd5",
+      "current_course_sha256": "082462d17bb74f50a077340204ee671f957ef89af51af071403e9942090f2d2b",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/onboarding.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "a6e48f4aacaf83d5ad3d2db4e60ba696c9583c719dbf20270f62e21e8d186782"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/teaching.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "60d54b96fb3cf96e0b3c7906ee96a804916ebfbdbd663bb81a1e3050a766ae09"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "acd268d54bb7c034f06bd11cd15ccbd17d9a6bafd3e57a0d4897dc08ce06d8ab"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "clara/advisory-case-director",
+      "previous_course_sha256": "4bfc006f48bc32625c2ac5997a356933d68d18c9b5015eedce48477ca8577cc4",
+      "current_course_sha256": "2d1f5434a47638f79994de61791f5b5d56526549a57b817819a4cdb673731ae1",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/onboarding.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "a6e48f4aacaf83d5ad3d2db4e60ba696c9583c719dbf20270f62e21e8d186782"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/teaching.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "60d54b96fb3cf96e0b3c7906ee96a804916ebfbdbd663bb81a1e3050a766ae09"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "acd268d54bb7c034f06bd11cd15ccbd17d9a6bafd3e57a0d4897dc08ce06d8ab"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "clara/advisory-deliverable-validator",
+      "previous_course_sha256": "34effdf03cbac3e51093e061ec6ea9c8a620ec1cf5378c657d9e1d9fa0137106",
+      "current_course_sha256": "9991fb4953ccdf193e149f521015412a5f681968071ec78ebb20eda2871eff1b",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/onboarding.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "a6e48f4aacaf83d5ad3d2db4e60ba696c9583c719dbf20270f62e21e8d186782"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/teaching.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "60d54b96fb3cf96e0b3c7906ee96a804916ebfbdbd663bb81a1e3050a766ae09"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "acd268d54bb7c034f06bd11cd15ccbd17d9a6bafd3e57a0d4897dc08ce06d8ab"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "clara/attribute-reporting",
+      "previous_course_sha256": "9859210f304e5150ce11cda8da4b2dfa5f547bbcd90a29423f0fc2804a659acc",
+      "current_course_sha256": "e3cfc8e88e8ffd559b53a54f231ea641e77599006c51d576ae5f432787abde1a",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/onboarding.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "a6e48f4aacaf83d5ad3d2db4e60ba696c9583c719dbf20270f62e21e8d186782"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/teaching.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "60d54b96fb3cf96e0b3c7906ee96a804916ebfbdbd663bb81a1e3050a766ae09"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "acd268d54bb7c034f06bd11cd15ccbd17d9a6bafd3e57a0d4897dc08ce06d8ab"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "clara/business-planning",
+      "previous_course_sha256": "7979521cff994cde916136583bacd3d06a72a032da892d3985c2a20c4189c714",
+      "current_course_sha256": "c968e44c8240adb9d0a67bd97470a82c4707a42cd59200f5800bbb6a220a3fb2",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/onboarding.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "a6e48f4aacaf83d5ad3d2db4e60ba696c9583c719dbf20270f62e21e8d186782"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/teaching.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "60d54b96fb3cf96e0b3c7906ee96a804916ebfbdbd663bb81a1e3050a766ae09"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "acd268d54bb7c034f06bd11cd15ccbd17d9a6bafd3e57a0d4897dc08ce06d8ab"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "clara/deck-correction",
+      "previous_course_sha256": "2cc3af5d7947fb99b1e01cffdd13dce0aef369724964651fa034b6616d78c557",
+      "current_course_sha256": "aafe73a1895283b79b118904e040d3a256f8a15f12c3064a8b961747b916c3c6",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/onboarding.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "a6e48f4aacaf83d5ad3d2db4e60ba696c9583c719dbf20270f62e21e8d186782"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/teaching.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "60d54b96fb3cf96e0b3c7906ee96a804916ebfbdbd663bb81a1e3050a766ae09"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "acd268d54bb7c034f06bd11cd15ccbd17d9a6bafd3e57a0d4897dc08ce06d8ab"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "clara/html-deck",
+      "previous_course_sha256": "3aa0242c21e4afe7f0fceb74cba430a0f8b60550918036bfaec56c0050ba1962",
+      "current_course_sha256": "c2dcfa43875be6e31a7d1e9264bb01799c555f778267bc3daeab52abaabd83a0",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/onboarding.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "a6e48f4aacaf83d5ad3d2db4e60ba696c9583c719dbf20270f62e21e8d186782"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/teaching.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "60d54b96fb3cf96e0b3c7906ee96a804916ebfbdbd663bb81a1e3050a766ae09"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "acd268d54bb7c034f06bd11cd15ccbd17d9a6bafd3e57a0d4897dc08ce06d8ab"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "clara/reporting-engine",
+      "previous_course_sha256": "717b6d48cfff55aab26b1e93ee52b7aa297d8ae2114daf28f199bf9ab3529251",
+      "current_course_sha256": "6f3bc317083b98ab7a047911262b6b30f915c34de3af0cfdda137f4a22a60cdc",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/onboarding.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "a6e48f4aacaf83d5ad3d2db4e60ba696c9583c719dbf20270f62e21e8d186782"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/teaching.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "60d54b96fb3cf96e0b3c7906ee96a804916ebfbdbd663bb81a1e3050a766ae09"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "acd268d54bb7c034f06bd11cd15ccbd17d9a6bafd3e57a0d4897dc08ce06d8ab"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "clara/transcribe",
+      "previous_course_sha256": "68055fa7c997e226dac5ccb83b1d171b88dc16daff5d4a5001fcac958d96db32",
+      "current_course_sha256": "e3a7a000045965edd35c4bf6179d90084cbab9102c8d8ef1dd4828e0885fe43e",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/onboarding.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "a6e48f4aacaf83d5ad3d2db4e60ba696c9583c719dbf20270f62e21e8d186782"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/teaching.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "60d54b96fb3cf96e0b3c7906ee96a804916ebfbdbd663bb81a1e3050a766ae09"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "acd268d54bb7c034f06bd11cd15ccbd17d9a6bafd3e57a0d4897dc08ce06d8ab"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "lucia/apertura-pratica",
+      "previous_course_sha256": "054f7b62345dbbcab9ffe936d89fddf1aa1727d7c45192b071bf7c244b7adde7",
+      "current_course_sha256": "8ee03e74871dd4b102a0032f785e7dd175bb8862caedc9d95d9ece2d4b3d54f7",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/onboarding.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "a6e48f4aacaf83d5ad3d2db4e60ba696c9583c719dbf20270f62e21e8d186782"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/teaching.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "60d54b96fb3cf96e0b3c7906ee96a804916ebfbdbd663bb81a1e3050a766ae09"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "acd268d54bb7c034f06bd11cd15ccbd17d9a6bafd3e57a0d4897dc08ce06d8ab"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "lucia/comunicazione-professionale",
+      "previous_course_sha256": "2f35ca467ad9d801035286f8c6d81ff7ace41395f639541cecf66f8eedac8d4c",
+      "current_course_sha256": "39e8e80fda7b5ab4ec1be8616467c3a8dc6ca111c6e119a9fddfea08231d7b76",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/onboarding.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "a6e48f4aacaf83d5ad3d2db4e60ba696c9583c719dbf20270f62e21e8d186782"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/teaching.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "60d54b96fb3cf96e0b3c7906ee96a804916ebfbdbd663bb81a1e3050a766ae09"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "acd268d54bb7c034f06bd11cd15ccbd17d9a6bafd3e57a0d4897dc08ce06d8ab"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "lucia/presenza-digitale-studio",
+      "previous_course_sha256": "08bd243e04c1991190d5a7f003c9102fa2909c6c4be5a5ad17f7f6da07f9d34f",
+      "current_course_sha256": "657aed55629bb96339616e76f196a44765431da768dc3d7fc0695879a42b6ddf",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/onboarding.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "a6e48f4aacaf83d5ad3d2db4e60ba696c9583c719dbf20270f62e21e8d186782"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/teaching.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "60d54b96fb3cf96e0b3c7906ee96a804916ebfbdbd663bb81a1e3050a766ae09"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "acd268d54bb7c034f06bd11cd15ccbd17d9a6bafd3e57a0d4897dc08ce06d8ab"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "lucia/quesito-legale-fiscale",
+      "previous_course_sha256": "2fef8f7774cab8bcdff75a4e682a9b99634b38b9e4213f9aeffa3115f23391bc",
+      "current_course_sha256": "6f12c7d6c6a906814a3bbd3048ed3fe7823644998d10e196e0324149580cb323",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/onboarding.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/onboarding.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "sha256": "a6e48f4aacaf83d5ad3d2db4e60ba696c9583c719dbf20270f62e21e8d186782"
+          }
+        },
+        {
+          "path": "vendor/modules/desktop_teaching/teaching.py",
+          "before": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "60d54b96fb3cf96e0b3c7906ee96a804916ebfbdbd663bb81a1e3050a766ae09"
+          },
+          "after": {
+            "path": "vendor/modules/desktop_teaching/teaching.py",
+            "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+            "sha256": "acd268d54bb7c034f06bd11cd15ccbd17d9a6bafd3e57a0d4897dc08ce06d8ab"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/adeguati-assetti",
+      "previous_course_sha256": "b459bf063c4bd39c485b081bf68fa5a6c24d81158494097ce2215fe9173ddd9b",
+      "current_course_sha256": "d6ac4e0a1f0af66dbea25f30c64d2f26e8d10b82ce00702cce36274f1a490e13",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/aml-review",
+      "previous_course_sha256": "648e16734cf8887deedebce4a2ff1466e3ce75a911bd543b492be459643807e8",
+      "current_course_sha256": "692116fd18276fe61f1d19cc31e53a77fff154889a04391c102fec350ee8cb00",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/archive-organization",
+      "previous_course_sha256": "62db1c26d258896fc5571223f7fe769dbd2178346339247d58cf604dd4e4eb31",
+      "current_course_sha256": "bf1cb1db525714fef65549240914e2fee4f3baadd1147e51a8b361232a225c50",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/avviso-intake",
+      "previous_course_sha256": "64c0b34a244982bce981f45954f36cc17efaf436941467e4d3aadb8243e92f87",
+      "current_course_sha256": "f8db83afb375fe52f3933e93b8393f1931f09a1e7ed006d9171ebe92a1917994",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/bandi-agevolazioni",
+      "previous_course_sha256": "04b3c135866eb1617c57a4f18d8350fc2239d5d2168eda2326a60cc5037446b4",
+      "current_course_sha256": "d5590f611ad47e04acff15980663ddf55ab298764ae898bb131e8b4101cae673",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/bilancio-oic",
+      "previous_course_sha256": "fa7a3b6cf195f9f3420f797fef6c815a264663fd93f53521226fa45fef69dc5f",
+      "current_course_sha256": "644c288bd6eec929729d0383d738520108f3b3f61dc785f4b22b08fd97848eba",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/browser-automation",
+      "previous_course_sha256": "0ac175fc3f5378474f11a9ce98fe3d5b273032d96187a298cc5d5e2630943c39",
+      "current_course_sha256": "f289d95b9fb9f5fbb6ce45fb9a383d0e40bdb1e441de7d56bf923687db7d01a0",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/business-planning",
+      "previous_course_sha256": "2063ccd3ab3331788b9fcaed856ddf18be24a3638ca6f94bf661ff62e4dfdff2",
+      "current_course_sha256": "f97c521787baa3f911fd8d1630798c44d4db8525656b0abd7f9f27af0ee910fb",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/business-valuation",
+      "previous_course_sha256": "40ec97610b9dfbbfd1d5440188549e140fa999eb62df1621a00bafa2e67acbd9",
+      "current_course_sha256": "b9aeca642a853715dd6dd5707530901466423f337f42bd3e28a25f327b5b4cee",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/centrale-rischi-review",
+      "previous_course_sha256": "7537a98fefdba0fc54d0fc94333d5f583d87f73ca8d4936344f3a5d49be33a2c",
+      "current_course_sha256": "2ab07501f86ed3864f4296f39334ce8618161485340762874d6354b8ceb2b825",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/composizione-negoziata",
+      "previous_course_sha256": "c891bd9ef8b5d979d231ec15e5cbde6945a1caa3811e29c9b5afcc6df04cda70",
+      "current_course_sha256": "d84307a170e9b34f67378751c636d3b59b1adf7910fe27a294935cd2005f029c",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/comunicazione-professionale",
+      "previous_course_sha256": "2331e3f4b24a4eadc51b405ade35937020b1319eba3efa82af027be8dd22bfb0",
+      "current_course_sha256": "9711202883ceda2a0c04498aa2a0e1457e2259d466605946051b67a7b861749c",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/concordato-plan-review",
+      "previous_course_sha256": "e8ad936a24791732a89e4c8b9b9d58f49d3df8b486301307f8077b60a2656096",
+      "current_course_sha256": "4ebeb93193eec298500f25d1903e45ec8be472911c7fe8343b38b2346ef98910",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/dati-fiscali-strutturati",
+      "previous_course_sha256": "c5006eb74c9603a3face6b76f65b29000cb977c8e13f62f41068306c8ceb235c",
+      "current_course_sha256": "fe816db540f754bafb8b9b2ebc1f3ddba11c880d48fae72c4373f3182cd692b8",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/email-cliente",
+      "previous_course_sha256": "684d4a789a1c50271e84d4a69aa8afbb90329e62459a287dafd2305fd1e02451",
+      "current_course_sha256": "73b36ccf5ca826074ab34b6bd2a1eb28c394f041f5e45053d7265ffc41f20720",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/esg-reporting-assurance",
+      "previous_course_sha256": "378318d213a4cac753a1caa27897ce25e771be3597be1025e15fda0f3e2b207b",
+      "current_course_sha256": "7e94faad9807e67b5e0ffbef7a1d652bebc791efb99679e7504b4791fc533db2",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/fatture-xml-check",
+      "previous_course_sha256": "0679457395f05c45a2e3f492bcf2afa4f717e5286331f1d8454f2ba466cc1557",
+      "current_course_sha256": "f564b485f7e289378cdbe66293dffd2e7f7d54a572db8701fe9dfc0fa91ad214",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/financial-analysis",
+      "previous_course_sha256": "abc3bbec0d158473250303d1da22018af9425572589682de8751f9dbb8edfc3e",
+      "current_course_sha256": "f4651af8e890bb4ffa32b678d58f0823b3e13bf9582ca186adc6f67fc742ad61",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/financial-report-builder",
+      "previous_course_sha256": "843a05c96a2dc4e0a84452e59122f029815be0bc72fb9fc497784c2bd1dc28b1",
+      "current_course_sha256": "95e4d7f2bee3531b19ed6cb1b76ca33c3c619d31f8b9f750911d0bb83607ab16",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/fusione-guidata",
+      "previous_course_sha256": "ad66f2dd8e955ebe3f305c2ab59cb2dda7e7c193862916db2f0450f53cb3a2e3",
+      "current_course_sha256": "2543c31e53a95a2dea94a3e7375586134c8f56c7133b2600dd6e7ed066d9f1b9",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/invoice-xml",
+      "previous_course_sha256": "6559b709a274d23af75da83f73ab9ee4e18bfcc93a6b0e1e1c5f273f8d540a7b",
+      "current_course_sha256": "463d09609342f3462c155e79866b616432c4af6b317bca55b46abf18b9b9e283",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/journal-bank-reconciliation",
+      "previous_course_sha256": "65ea07b0d8ca504cf6d39545a59612171a886e966b6dba701032f4f70f87065d",
+      "current_course_sha256": "79743fc8128f50f872c0eeb05c58ae19fb9d485a739584eb5687d39ed3eb2308",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/journal-sampling",
+      "previous_course_sha256": "2ae2fa7911a2a542f10e0d987871543a51e08dd8d78f4e0e5ce32784f8c1f806",
+      "current_course_sha256": "e19e4a5bd46fed7269e08ec051507a57349fd1fc6a3898da5510fe7bdabf248c",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/lipe",
+      "previous_course_sha256": "91a1114ce3e1484b5a6f558e710ac669db78335e0300efa4e2bb5cbb2fbd09a6",
+      "current_course_sha256": "25e13bbc485de52223f72effe1d829260ce3d89d5da8fdc25d00c1004292fa66",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/management-control-pack",
+      "previous_course_sha256": "f54a0cf37f583d029e2b3299c75b4e15456045a8b683f036fc49577ad9f324c1",
+      "current_course_sha256": "694846534ab72c257ea066f89cedcb7ea51869086c42199c8023f661bdb00f20",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/new-client",
+      "previous_course_sha256": "89298be9374937fe355aa4224e7fd9d2f660fea743bd218af6f2e699f16c327b",
+      "current_course_sha256": "88d014accaf4bcd86d214ef4fd66a22ce2acd5ac5ab9a18a5d6e42ac8c64d764",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/open-item-reconciliation",
+      "previous_course_sha256": "741ea2191de029fe09848bfe55ddccf56d1b0aec0c5a292c5c02bce0705bc90f",
+      "current_course_sha256": "65aad402f34a84d2c036a34957d4386068d0678d9ff51f8a7ed792c83de95d69",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/patent-box-review",
+      "previous_course_sha256": "a6cd5cd9988efda4f9d5b838aa2a6d00a210bc55df3c3a65c21fd15d212da7ce",
+      "current_course_sha256": "4a834769a9b47f7ea2b5cb20524b56434b85d5a2ae80ac8ce1feb8e2cf051319",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/presenza-digitale-studio",
+      "previous_course_sha256": "21bbc63e40c0f09245e3e7047de2277164fc230fd9cb3c64b403b452aebc93aa",
+      "current_course_sha256": "84d70be6a5af7d0328783da189cf4fe5630e855896ea88a2a16c894aea3e4b07",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/previdenza-inps",
+      "previous_course_sha256": "0e0e7ee1f54a1e9bd99552ded5b9ce1fd5c6bb13c92396788e56c8f23d2ba013",
+      "current_course_sha256": "dca6242235131158279d7f5e7fb293643ceaf7194de092346f8948f0dcb108a4",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/purchase-invoice-review",
+      "previous_course_sha256": "71971559a8f065cf3d8edd4f2f1ed4cf64101fe87d1307d13fc2ffdc0eae3cb8",
+      "current_course_sha256": "c292ec3fb9c9a6111300382e69324d0ff0a049fe631fa0af300aac47e4083a17",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/quesito-legale-fiscale",
+      "previous_course_sha256": "859c9c0b0f56b538be84de9e411d3006ab3ef62e1a714ca19d0fd3c3a1c43a62",
+      "current_course_sha256": "ba0cea1c389e3b57bed49844795f5ff29ceb3f47b0067c84dcc5b262cf2b2bc8",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/registro-imprese-sari",
+      "previous_course_sha256": "6a211bfb472c90109263a5610506532d20d7a88d40905c783e60e30231ec2cd2",
+      "current_course_sha256": "dea0af17b4ebe2c13d87726b664c307c80a129ea0d3c26bb53b92810eeb52bab",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/sales-plan",
+      "previous_course_sha256": "dfe114c8aec3b510a403f6f5694f1b765853628f16d9537da49c55606add3f4f",
+      "current_course_sha256": "690941727865e0cba12c829ec2762afd72bfa60c2b0906bd82fc3d052f84c84d",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/scissione-guidata",
+      "previous_course_sha256": "fb4df529138304499bbd4b4caea04d518e9945e91ad5c8cb50a7a90b5e30b14b",
+      "current_course_sha256": "a9a1a7611ef1644c1908e6fc9569c6fb8ec332a56d82cb976e6ce2d3a755f4f3",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/studio-archive",
+      "previous_course_sha256": "60ba57549c508ac9c8a4d88ea0657f138ca7310dc02a10f629e3974707f153f8",
+      "current_course_sha256": "73248b672cc2093c71a7e3408e0a24ac41ef7e9d1801f709b24c41ff1477d5d2",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/studio-document-format",
+      "previous_course_sha256": "98da62f68279c4a433bd29ed6e3d78ffc35d6e185628f8e4438b45179013919a",
+      "current_course_sha256": "d15218771c71cd051c0b5fc3d8fb9eddbc70dee7262b77138aa762ca3d4318c3",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "scripts/local_onboarding.py",
+          "before": {
+            "path": "scripts/local_onboarding.py",
+            "repository_path": "plugins/vera/scripts/local_onboarding.py",
+            "sha256": "f351d2d04736fed433a9d09d96acd361a75c3dbee8222fbe05f434be7afa5b42"
+          },
+          "after": {
+            "path": "scripts/local_onboarding.py",
+            "repository_path": "plugins/vera/scripts/local_onboarding.py",
+            "sha256": "a09b950acd534cc19b35455eafc6d8d7d774ff149931227d9d578bd3a4ee3947"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/trasformazione",
+      "previous_course_sha256": "5d1c2d91e55fc916df89192d2c059bc9d2be31825eeccea52abd3065e9261e15",
+      "current_course_sha256": "6407fbe456ac33a0cd8f439cbe1bd9ca288a83c28cbbd3c229d6f4e7d3340324",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/treasury-forecast",
+      "previous_course_sha256": "c732aa0dda1319466e1a2ec770f74ceb3ec3dbedda0037074463092f2f0e60f1",
+      "current_course_sha256": "0764fd31ddd6a6dcae59a123816c913ba13711b76f2e5da3ffdc831817967f5b",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/variance-analysis",
+      "previous_course_sha256": "f424f2e746220482c970826dec11ab0db23b82229e75ffe019c6f9869f727c3d",
+      "current_course_sha256": "9eb3e99ee4e718beafdab6341a913d3a2c819a305223d2cc40bd1eccd0b77385",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/vouching",
+      "previous_course_sha256": "9d605759e9dec2c51ee917cf89515af2963245137dba37c76b574ccc46f4e86a",
+      "current_course_sha256": "e0807d949b22674bc559093f19742ce4e22ef6f659444ae4c7610c061261ef81",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "vendor/modules/courseware/access.py",
+          "before": null,
+          "after": {
+            "path": "vendor/modules/courseware/access.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+            "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/legacy.py",
+          "before": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/legacy.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+            "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+          }
+        },
+        {
+          "path": "vendor/modules/courseware/library.py",
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+          }
+        }
+      ]
+    }
+  ]
+}

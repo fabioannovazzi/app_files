@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "archive-organization",
-  "course_sha256": "62db1c26d258896fc5571223f7fe769dbd2178346339247d58cf604dd4e4eb31",
+  "course_sha256": "bf1cb1db525714fef65549240914e2fee4f3baadd1147e51a8b361232a225c50",
   "reviewer": "Codex: five-language archive organisation material, execution and browser presentation review",
   "reviewed_at": "2026-09-14T22:54:42.105288+00:00",
   "review_scope": "Reviewed all five full lesson outlines, fifteen unique fictional source documents and ten final artifact cards with actual approved destinations and operation-journal states. The current widget was rendered in a loopback-only browser harness using actual MCP render responses; all five language views were inspected, and the Italian destination edit and reviewer fields were exercised. The final compact list layout was checked in all five languages. Read-only browser geometry confirmed separate filename/control bounds in Italian and no horizontal overflow or overlapping rows in English at the desktop viewport. The complete shipped widget script generates the requests used by ten current MCP/pipeline regressions, with real local persistence and separately authorized fictional filesystem execution. These regression reviewers and semantic fixtures are not real learner approvals. Native in-chat widget hosting, native voice, two-window interaction, human elapsed time and comprehension remain unverified. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -472,5 +472,6 @@
     ],
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
-  }
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
 }

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "advisory-case-director",
-  "course_sha256": "4bfc006f48bc32625c2ac5997a356933d68d18c9b5015eedce48477ca8577cc4",
+  "course_sha256": "2d1f5434a47638f79994de61791f5b5d56526549a57b817819a4cdb673731ae1",
   "reviewer": "Codex: five-language case lesson and actual native document review",
   "reviewed_at": "2026-09-14T21:09:24.765818+00:00",
   "review_scope": "Prepared material and native local execution review. Read the complete five-language outlines and fictional sources; reviewed all ten workpapers and delivery notes and the five updated evidence maps showing initial and revised conclusions. The final map bytes match those inspected; final workpaper prose is unchanged except corrected local links. The revised initial review notes were read separately. Fifty-four advisory/lineage tests pass, including ten phase-specific case exercises. Native voice, window presentation, human timing, learner comprehension and professional approval remain separate unverified acceptance steps. Model-authored regression interpretations live outside shipped teaching kits.",
@@ -652,5 +652,6 @@
     ],
     "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
-  }
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
 }

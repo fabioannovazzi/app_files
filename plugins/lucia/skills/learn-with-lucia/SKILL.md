@@ -13,6 +13,17 @@ and use ordinary workflows without finishing. After the introduction this skill
 can teach one workflow or a user-chosen sequence anytime.
 Do not require the user to know skill names or how to write technical prompts.
 
+## Required file access before any course step
+
+Before the interview, lesson explanation, window/voice setup or first exercise,
+read `references/file-access.md`, connect the shared course workspace and run
+its setup command to save and reload the actual profile. This applies
+to every course and language, first onboarding, repeated lessons and resumes.
+If access or saving fails, stop teaching and guide the user through the exact
+permission request and verified retry. Do not continue with prompt preparation,
+text-only practice or theory while files cannot be saved. Each working chat must
+verify its own access. A permission click is not a successful write test.
+
 ## Lucia workflows only
 
 Teach only operational workflows listed in Lucia's current
@@ -148,7 +159,9 @@ an available native operation. These setup actions need not be repeated while
 the same visible pair remains in use.
 
 Send the worker **one bounded step at a time**: exact session/lesson identity,
-workflow, teacher ID, current token, files and intended output. The worker reads
+workflow, teacher ID, current token, absolute `state_root`, files and intended
+output. Both chats use the verified course workspace; every helper command
+passes that same `--state-root`. The worker reads
 its actual native thread ID and validates `worker` before each new step. Keep
 the Lucia-only scope in every handoff. Both chats must use the returned
 `workflow_contract.plugin_root` and `workflow_contract.skill_path`; the worker

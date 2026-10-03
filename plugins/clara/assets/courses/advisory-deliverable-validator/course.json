@@ -147,6 +147,11 @@
       "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
     },
     {
+      "path": "vendor/modules/courseware/access.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+      "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+    },
+    {
       "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
       "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
@@ -204,12 +209,12 @@
     {
       "path": "vendor/modules/courseware/legacy.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
-      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
     },
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+      "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
     },
     {
       "path": "vendor/modules/courseware/policy.py",
@@ -244,12 +249,12 @@
     {
       "path": "vendor/modules/desktop_teaching/onboarding.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
-      "sha256": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+      "sha256": "a6e48f4aacaf83d5ad3d2db4e60ba696c9583c719dbf20270f62e21e8d186782"
     },
     {
       "path": "vendor/modules/desktop_teaching/teaching.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
-      "sha256": "60d54b96fb3cf96e0b3c7906ee96a804916ebfbdbd663bb81a1e3050a766ae09"
+      "sha256": "acd268d54bb7c034f06bd11cd15ccbd17d9a6bafd3e57a0d4897dc08ce06d8ab"
     }
   ],
   "files": [

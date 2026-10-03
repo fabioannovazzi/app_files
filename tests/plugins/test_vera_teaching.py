@@ -554,6 +554,7 @@ def test_openai_packages_keep_paired_teaching_and_cowork_uses_written_lessons():
         assert not any("local_teaching" in name for name in archive.namelist())
         assert "scripts/local_courses.py" in archive.namelist()
         lesson = archive.read("skills/learn-with-vera/SKILL.md").decode("utf-8")
+        assert "Required file access before teaching" in lesson
         assert "Teach in writing in this conversation" in lesson
         assert "Do not request voice, create a second" in lesson
         router = archive.read("skills/vera/SKILL.md").decode()

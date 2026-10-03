@@ -181,6 +181,33 @@ def test_cowork_preserves_existing_lesson_on_resume(installed):
     assert progress.read_text() == "User paused after examining the input.\n"
 
 
+def test_cowork_preflight_checks_selected_folder_without_resetting_progress(installed):
+    _, root, output = installed
+    folder = output / "existing lesson"
+    folder.mkdir()
+    progress = folder / "lesson-progress.md"
+    progress.write_text("Paused at the first exercise.\n")
+
+    result = run(root, "preflight", "--output-dir", folder)
+
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout)["status"] == "ready"
+    assert list(folder.iterdir()) == [progress]
+    assert progress.read_text() == "Paused at the first exercise.\n"
+
+
+def test_cowork_preflight_reports_invalid_destination_as_blocked(installed):
+    _, root, output = installed
+    folder = output / "not a directory"
+    folder.write_text("Existing file; preserve it.")
+
+    result = run(root, "preflight", "--output-dir", folder)
+
+    assert result.returncode == 2
+    assert json.loads(result.stdout)["status"] == "blocked"
+    assert folder.read_text() == "Existing file; preserve it."
+
+
 def test_cowork_tutorial_marker_suppresses_receipt_transport(installed, monkeypatch):
     import importlib.util
 

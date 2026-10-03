@@ -21,6 +21,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterator
 
+from courseware.access import CourseAccessError, verify_course_access
 from courseware.execution import ExecutionError, collect_execution, verify_execution
 from courseware.policy import local_unavailability, unavailable_local_workflows
 
@@ -244,9 +245,50 @@ class Store:
             )
         return {**state, "state_root": str(self.root)}
 
+    def workspace(self) -> dict[str, Any]:
+        """Describe the exact shared folder; this does not grant or infer access."""
+        return {
+            "product": self.product,
+            "state_root": str(self.root),
+            "workspace_directory": str(self.root),
+            "required_access": "read_write",
+            "setup_argv": [
+                sys.executable,
+                str(self.plugin_root / "scripts/local_onboarding.py"),
+                "setup",
+                "--state-root",
+                str(self.root),
+            ],
+        }
+
+    def setup(self) -> dict[str, Any]:
+        """Verify an actual profile save and reload without advancing the course."""
+        try:
+            self.begin()
+            with self._lock():
+                state = self.status()
+                state.pop("state_root", None)
+                _write(self.path, state)
+                if _read(self.path) != state:
+                    raise OSError("Saved course profile did not round-trip")
+                result = self.status()
+        except CourseAccessError:
+            raise
+        except OSError as exc:
+            raise CourseAccessError(self.root, "save_and_reload_profile", exc) from exc
+        return {
+            "status": "ready",
+            "workspace": self.workspace(),
+            "course": result,
+        }
+
+    def preflight(self, directories: list[Path] | None = None) -> dict[str, Any]:
+        """Verify storage before conversation or dispatch without advancing progress."""
+        return verify_course_access([self.root, *(directories or [])])
+
     @contextmanager
     def _lock(self) -> Iterator[None]:
-        self.root.mkdir(parents=True, exist_ok=True, mode=0o700)
+        self.preflight()
         lock = self.root / ".saving"
         try:
             lock.mkdir(mode=0o700)
@@ -262,6 +304,7 @@ class Store:
 
     def begin(self) -> dict[str, Any]:
         """Enroll once, including an existing product user without this new record."""
+        self.preflight()
         status = self.status()
         if status["phase"] != "required":
             return status
@@ -494,13 +537,15 @@ class Store:
                         lesson["status"] = "active"
                         lesson["worker_token"] = secrets.token_hex(24)
                     lesson_dir = self.root / "lessons" / workflow
-                    lesson_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+                    self.preflight([lesson_dir])
                     lesson["directory"] = str(lesson_dir)
                 elif action in {"pause", "resume", "checkpoint"}:
                     if lesson["status"] != "active":
                         raise OnboardingError(
                             "Start the lesson before saving a checkpoint"
                         )
+                    if action == "resume":
+                        self.preflight([self.lesson_root(lesson)])
                     lesson["checkpoint"] = _text(
                         data.get("next_step"), "next bounded step"
                     )
@@ -598,8 +643,10 @@ class Store:
             raise OnboardingError(
                 "This is not the current paired lesson; return to the teacher"
             )
+        self.preflight([self.lesson_root(lesson)])
         return {
             "onboarding_id": state["onboarding_id"],
+            "state_root": str(self.root),
             "workflow_contract": teaching_contract(self.plugin_root, workflow),
             "profile": state["profile"],
             "lesson": lesson,
@@ -637,12 +684,15 @@ def main(argv: list[str] | None = None, *, plugin_root: Path) -> int:
     parser.add_argument(
         "--state-root",
         type=Path,
-        help="Explicit local recovery/test root; normally omit",
+        help="Exact shared course root returned by workspace/setup; never a new profile per chat",
     )
     parser.add_argument(
         "command",
         choices=[
             "status",
+            "workspace",
+            "setup",
+            "preflight",
             "begin",
             "notes",
             "profile",
@@ -660,6 +710,7 @@ def main(argv: list[str] | None = None, *, plugin_root: Path) -> int:
             "recover",
         ],
     )
+    parser.add_argument("--directory", type=Path, action="append", default=[])
     parser.add_argument("--revision", type=int)
     parser.add_argument("--input", type=Path)
     parser.add_argument("--thread-id")
@@ -670,6 +721,12 @@ def main(argv: list[str] | None = None, *, plugin_root: Path) -> int:
         store = Store(args.state_root, plugin_root=plugin_root)
         if args.command == "status":
             result = store.status()
+        elif args.command == "workspace":
+            result = store.workspace()
+        elif args.command == "setup":
+            result = store.setup()
+        elif args.command == "preflight":
+            result = store.preflight(args.directory)
         elif args.command == "begin":
             result = store.begin()
         elif args.command == "recover":
@@ -692,6 +749,11 @@ def main(argv: list[str] | None = None, *, plugin_root: Path) -> int:
             result = store.change(args.command, args.revision, _read(args.input))
         sys.stdout.write(json.dumps(result, indent=2) + "\n")
         return 0
+    except CourseAccessError as exc:
+        sys.stdout.write(
+            json.dumps({**exc.as_dict(), "workspace": store.workspace()}) + "\n"
+        )
+        return 2
     except (OnboardingError, OSError) as exc:
         sys.stdout.write(
             json.dumps({"phase": "recovery_required", "error": str(exc)}) + "\n"

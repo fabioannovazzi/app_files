@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "composizione-negoziata",
-  "course_sha256": "c891bd9ef8b5d979d231ec15e5cbde6945a1caa3811e29c9b5afcc6df04cda70",
+  "course_sha256": "d84307a170e9b34f67378751c636d3b59b1adf7910fe27a294935cd2005f029c",
   "reviewer": "Codex /root - authored outline, real local execution and saved artifact review",
   "reviewed_at": "2026-10-01T08:09:14.553451+00:00",
   "review_scope": "Expanded the existing introductory entry without adding a duplicate workflow. Reviewed all five full outlines, case/update/research inputs and independent challenges. Executed ten fresh role-specific native journeys and inspected actual net-debt metrics, original/revised treasury outputs, final no-agreement reports, closure/residual records and model-data disclosures. Native calculations and persistence execute real code. Professional prose and financial interpretation in regression runs are explicitly synthetic test fixtures; no learner or real professional approval is claimed. Research intake and no-fetch source inspection ran; full current-law acquisition, answer generation and semantic validation remain unexecuted, visibly retained as law_gap. Canonical JSON/helper headings are not promised to be localized. Native voice, learner understanding, installed-host and professional acceptance remain separate.",
@@ -408,5 +408,6 @@
     ],
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
-  }
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
 }

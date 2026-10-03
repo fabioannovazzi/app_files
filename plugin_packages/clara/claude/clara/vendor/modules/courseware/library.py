@@ -15,9 +15,11 @@ import json
 import os
 import re
 import shutil
+import sys
 from pathlib import Path
 from typing import Any
 
+from .access import CourseAccessError, verify_course_access
 from .policy import local_unavailability, unavailable_local_workflows
 
 __all__ = ["CourseError", "CourseLibrary", "main"]
@@ -524,9 +526,11 @@ class CourseLibrary:
         destination = destination.expanduser().absolute()
         if any(path.is_symlink() for path in (destination, *destination.parents)):
             raise CourseError("Use an ordinary local destination, not a symlink")
-        if destination.exists():
+        if destination.exists() and (
+            not destination.is_dir() or any(destination.iterdir())
+        ):
             raise CourseError("Use a fresh course directory; preserve existing work")
-        destination.mkdir(parents=True)
+        verify_course_access([destination])
         copy = course["locales"][language]
         shared_assets = Path(__file__).parent / "assets"
         ui = _read(shared_assets / "languages.json")[language]
@@ -1278,7 +1282,7 @@ def main(plugin_root: Path, eligible: set[str], argv: list[str] | None = None) -
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "action", choices=("list", "show", "render", "serve", "results")
+        "action", choices=("list", "show", "render", "serve", "results", "preflight")
     )
     parser.add_argument("--workflow")
     parser.add_argument("--language")
@@ -1298,6 +1302,10 @@ def main(plugin_root: Path, eligible: set[str], argv: list[str] | None = None) -
         library = CourseLibrary(plugin_root, eligible)
         if args.action == "list":
             result: Any = library.catalog()
+        elif args.action == "preflight":
+            if not args.output_dir:
+                parser.error("preflight requires --output-dir")
+            result = verify_course_access([args.output_dir])
         else:
             if not args.workflow or not args.language:
                 parser.error("--workflow and --language are required")
@@ -1339,6 +1347,9 @@ def main(plugin_root: Path, eligible: set[str], argv: list[str] | None = None) -
                 }
         # JSON escapes preserve all localized text on legacy Windows consoles.
         print(json.dumps(result, ensure_ascii=True, indent=2))
+    except CourseAccessError as exc:
+        sys.stdout.write(json.dumps(exc.as_dict(), ensure_ascii=True) + "\n")
+        return 2
     except (
         CourseError,
         ExecutionError,

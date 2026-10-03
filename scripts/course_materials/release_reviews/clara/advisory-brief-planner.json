@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "advisory-brief-planner",
-  "course_sha256": "338c7542e963c80fbea41ca7f4d1ae529811e094486a012af7612494ecf86cd5",
+  "course_sha256": "082462d17bb74f50a077340204ee671f957ef89af51af071403e9942090f2d2b",
   "reviewer": "Codex: five-language first-use planning material and actual native contract review",
   "reviewed_at": "2026-09-14T20:43:47.929955+00:00",
   "review_scope": "Read every localized lesson outline and the fictional assignment, customer/operating notes, revised assignment and vehicle update. Read all ten delivered readable plans and reviewed their source statements, constraints and changed objectives against those inputs. Verified all local source, canonical contract, validation and review-note links. The current native packager checks the actual contracts and exact source anchors. All 25 advisory regression cases pass; ten distinct planner cases bind this kit and its five languages. Each practice retains the initial plan and creates a separate revised plan. These are Markdown and JSON material checks, not proof of live voice, learner understanding, native GUI presentation or professional approval. The authored regression interpretations are outside the shipped kits.",
@@ -506,5 +506,6 @@
     ],
     "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
-  }
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
 }

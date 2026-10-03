@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "email-cliente",
-  "course_sha256": "684d4a789a1c50271e84d4a69aa8afbb90329e62459a287dafd2305fd1e02451",
+  "course_sha256": "73b36ccf5ca826074ab34b6bd2a1eb28c394f041f5e45053d7265ffc41f20720",
   "reviewer": "Codex: five lesson outlines, fictional source documents, reviewed request records and ten actual native drafts",
   "reviewed_at": "2026-09-14T16:37:52.454006+00:00",
   "review_scope": "Prepared local draft lesson only. Every generated Markdown draft was read in full. The normal source-file package remains blocked by unresolved evidence and rejected out-of-scope requests; its generated client email is explicitly a draft. Native review and replacement calls and output hashes are verified. Fixed test decisions do not attest a real professional approval, learner action, sending, voice or two-window acceptance. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -454,5 +454,6 @@
     ],
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
-  }
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
 }

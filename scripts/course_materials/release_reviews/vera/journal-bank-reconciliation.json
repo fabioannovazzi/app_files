@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "journal-bank-reconciliation",
-  "course_sha256": "65ea07b0d8ca504cf6d39545a59612171a886e966b6dba701032f4f70f87065d",
+  "course_sha256": "79743fc8128f50f872c0eeb05c58ae19fb9d485a739584eb5687d39ed3eb2308",
   "reviewer": "Codex: source, first-use lesson, native workbook and localized review-note inspection",
   "reviewed_at": "2026-09-14T16:32:17.532432+00:00",
   "review_scope": "Prepared fictional month-end comparison only. Current CLI runs and source/value replay are verified. Worksheet headers and selected rows were visually inspected in all seven sheets of both unique workbooks; the five locale editions are byte-identical per phase. No learner, live voice, tax or professional approval is attested. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -484,5 +484,6 @@
     ],
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
-  }
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
 }

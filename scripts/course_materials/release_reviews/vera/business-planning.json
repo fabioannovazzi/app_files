@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-planning",
-  "course_sha256": "2063ccd3ab3331788b9fcaed856ddf18be24a3638ca6f94bf661ff62e4dfdff2",
+  "course_sha256": "f97c521787baa3f911fd8d1630798c44d4db8525656b0abd7f9f27af0ee910fb",
   "reviewer": "Codex first-use lesson and native business-plan output review",
   "reviewed_at": "2026-09-23T11:52:59.382187+00:00",
   "review_scope": "Reviewed both localized lessons and generated native demo/practice plans. Tests replay model-authored interpretation through the current workflow, with distinct owning-product case handling and preserved preceding plan. Chrome DOM review additionally inspected the English practice reader view. No fresh model inference, market research, learner participation, professional approval or complete financing model is claimed. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed.",
@@ -287,5 +287,6 @@
     ],
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
-  }
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
 }
