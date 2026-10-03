@@ -33,7 +33,11 @@ jobs:
           if (-not (Test-Path "$lipeOpenSSL\openssl.exe")) { throw 'Preinstalled OpenSSL is missing' }
           $lipeOpenSSL | Out-File -FilePath $env:GITHUB_PATH -Append
       - run: openssl version
+      - name: Verify LIPE test collection
+        timeout-minutes: 2
+        run: python -m pytest --collect-only -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py tests/plugins/test_lipe_receipt.py tests/plugins/test_lipe_export.py tests/plugins/test_lipe_catalog_authorization.py
       - name: Verify evidence, tax arithmetic and export boundaries
+        timeout-minutes: 5
         shell: python {0}
         run: |
           import os
