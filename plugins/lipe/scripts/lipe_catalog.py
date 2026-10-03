@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import calendar
+import copy
 import hashlib
 import json
 import logging
@@ -77,21 +78,32 @@ def _connect(path: Path, *, write: bool = False) -> sqlite3.Connection:
     return connection
 
 
-def create_catalog(path: Path, studio_id: str, minimum_confidence: str) -> dict:
+def create_catalog(
+    path: Path,
+    studio_id: str,
+    minimum_confidence: str,
+    *,
+    data_origin: str = "SYNTHETIC",
+    require_signatures: bool = False,
+) -> dict:
     """Create a private, studio-scoped catalog with an explicit confidence policy."""
     if not studio_id.strip():
         raise ContractError("Studio identity is required")
+    if data_origin not in {"REAL", "SYNTHETIC"} or type(require_signatures) is not bool:
+        raise ContractError("Select explicit REAL or SYNTHETIC catalog data")
     if not re.fullmatch(r"(?:0\.[0-9]{2}|1\.00)", minimum_confidence):
         raise ContractError(
             "Confidence cutoff must be a two-decimal string from 0.00 to 1.00"
         )
     metadata = {
-        "schema_version": "lipe.catalog.v1",
+        "schema_version": "lipe.catalog.v2",
         "catalog_id": str(uuid4()),
         "studio_id": studio_id,
         "minimum_confidence": minimum_confidence,
         "created_at": datetime.now(timezone.utc).isoformat(),
         "identity_authenticated": False,
+        "data_origin": data_origin,
+        "require_signatures": data_origin == "REAL" or require_signatures,
         "remote_sharing": False,
     }
     path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -113,8 +125,14 @@ def _history(connection: sqlite3.Connection) -> dict:
     if len(metadata_rows) != 1:
         raise ContractError("Invalid catalog metadata")
     metadata = json.loads(metadata_rows[0][0])
-    if metadata["schema_version"] != "lipe.catalog.v1":
+    if metadata["schema_version"] not in {"lipe.catalog.v1", "lipe.catalog.v2"}:
         raise ContractError("Unsupported catalog schema")
+    if metadata["schema_version"] == "lipe.catalog.v2" and (
+        metadata.get("data_origin") not in {"REAL", "SYNTHETIC"}
+        or type(metadata.get("require_signatures")) is not bool
+        or (metadata["data_origin"] == "REAL" and not metadata["require_signatures"])
+    ):
+        raise ContractError("Invalid catalog authorization boundary")
     previous = digest(metadata)
     events = []
     for expected, (sequence, parent, fingerprint, payload) in enumerate(
@@ -141,6 +159,9 @@ def history(path: Path) -> dict:
         with closing(_connect(path)) as connection:
             state = _history(connection)
         _verify_objects(path, state)
+        from lipe_catalog_authorization import verify_preserved
+
+        verify_preserved(path, state)
         return state
     except (sqlite3.DatabaseError, json.JSONDecodeError, KeyError, TypeError) as exc:
         raise ContractError("Invalid or unreadable LIPE catalog") from exc
@@ -225,6 +246,25 @@ def _identity(entry: dict) -> tuple:
     )
 
 
+def _append_catalog(
+    connection: sqlite3.Connection,
+    state: dict,
+    event: dict,
+    path: Path,
+    approval: Path | None,
+) -> dict:
+    from lipe_catalog_authorization import authorize_event, verify_preserved
+
+    event = copy.deepcopy(event)
+    _verify_objects(path, state)
+    verify_preserved(path, state)
+    if state["metadata"].get("require_signatures"):
+        event["authorization"] = authorize_event(path, state, event, approval)
+    elif approval is not None:
+        raise ContractError("Unsigned catalog cannot consume a signed approval")
+    return _append(connection, state, event)
+
+
 def _append(connection: sqlite3.Connection, state: dict, event: dict) -> dict:
     fingerprint = digest({"previous_hash": state["head_hash"], "event": event})
     row = {
@@ -282,6 +322,7 @@ def record(
     *,
     expected_head: str,
     supersedes: str | None = None,
+    approval: Path | None = None,
 ) -> dict:
     """Append a reviewed/proposed entry; require exact identity for revisions."""
     _validate(entry, read_json(SCHEMA))
@@ -337,7 +378,7 @@ def record(
                 raise ContractError(
                     "A revision cannot change its scope, client, software, side or code"
                 )
-        return _append(
+        return _append_catalog(
             connection,
             state,
             {
@@ -348,6 +389,8 @@ def record(
                 "supersedes": supersedes,
                 "recorded_at": datetime.now(timezone.utc).isoformat(),
             },
+            path,
+            approval,
         )
 
 
@@ -359,6 +402,7 @@ def revoke(
     expected_head: str,
     revision: str,
     allow_fallback: bool = False,
+    approval: Path | None = None,
 ) -> dict:
     """Revoke an exact current revision without deleting it or restoring old ones."""
     _validate(review, REVIEW_SCHEMA)
@@ -378,7 +422,7 @@ def revoke(
             raise ContractError(
                 "Revoke the exact current record, not an old or already revoked revision"
             )
-        return _append(
+        return _append_catalog(
             connection,
             state,
             {
@@ -389,6 +433,8 @@ def revoke(
                 "review": review,
                 "recorded_at": datetime.now(timezone.utc).isoformat(),
             },
+            path,
+            approval,
         )
 
 
@@ -525,6 +571,7 @@ def dispute(
     review: dict,
     *,
     expected_head: str,
+    approval: Path | None = None,
 ) -> dict:
     """Record an evidenced code conflict requiring a curator across catalog scopes."""
     _validate(reference_entry, read_json(SCHEMA))
@@ -537,7 +584,7 @@ def dispute(
         state = _history(connection)
         if state["head_hash"] != expected_head:
             raise ContractError("Catalog changed; reload before recording a dispute")
-        return _append(
+        return _append_catalog(
             connection,
             state,
             {
@@ -553,6 +600,8 @@ def dispute(
                 "review": review,
                 "recorded_at": datetime.now(timezone.utc).isoformat(),
             },
+            path,
+            approval,
         )
 
 
@@ -563,6 +612,7 @@ def resolve_dispute(
     *,
     expected_head: str,
     selected_revision: str,
+    approval: Path | None = None,
 ) -> dict:
     """Close an exact dispute through an attributed curator's current central entry."""
     _validate(curator_review, REVIEW_SCHEMA)
@@ -607,7 +657,7 @@ def resolve_dispute(
             raise ContractError(
                 "The curator revision must match the disputed vendor, version, side and code"
             )
-        return _append(
+        return _append_catalog(
             connection,
             state,
             {
@@ -617,6 +667,8 @@ def resolve_dispute(
                 "curator_review": curator_review,
                 "recorded_at": datetime.now(timezone.utc).isoformat(),
             },
+            path,
+            approval,
         )
 
 
@@ -640,6 +692,9 @@ def assess_case_mappings(
         blockers.append("CATALOG_NOT_AVAILABLE")
         return []
     state = history(catalog_path)
+    if state["metadata"].get("data_origin") != case["data_origin"]:
+        blockers.append("CATALOG_DATA_ORIGIN_NOT_ESTABLISHED_OR_DIFFERENT")
+        return []
     if (state["metadata"]["catalog_id"], state["metadata"]["studio_id"]) != (
         context["catalog_id"],
         context["studio_id"],
@@ -733,6 +788,8 @@ def main(argv: list[str] | None = None) -> int:
     init = sub.add_parser("init")
     init.add_argument("--studio-id", required=True)
     init.add_argument("--minimum-confidence", required=True)
+    init.add_argument("--data-origin", choices=("REAL", "SYNTHETIC"), required=True)
+    init.add_argument("--require-signatures", action="store_true")
     add = sub.add_parser("record")
     add.add_argument("--entry", type=Path, required=True)
     add.add_argument("--source-root", type=Path, required=True)
@@ -757,6 +814,8 @@ def main(argv: list[str] | None = None) -> int:
     resolve.add_argument("--curator-review", type=Path, required=True)
     resolve.add_argument("--selected-revision", required=True)
     resolve.add_argument("--expected-head", required=True)
+    for command in (add, remove, flag, resolve):
+        command.add_argument("--approval", type=Path)
     for command in (init, add, remove, find, listing, flag, resolve):
         command.add_argument("--catalog", type=Path, required=True)
         command.add_argument("--output", type=Path, required=True)
@@ -766,7 +825,11 @@ def main(argv: list[str] | None = None) -> int:
         args.output.chmod(0o600)
         if args.command == "init":
             result = create_catalog(
-                args.catalog, args.studio_id, args.minimum_confidence
+                args.catalog,
+                args.studio_id,
+                args.minimum_confidence,
+                data_origin=args.data_origin,
+                require_signatures=args.require_signatures,
             )
         elif args.command == "record":
             result = record(
@@ -775,6 +838,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.source_root,
                 expected_head=args.expected_head,
                 supersedes=args.supersedes,
+                approval=args.approval,
             )
         elif args.command == "revoke":
             result = revoke(
@@ -784,6 +848,7 @@ def main(argv: list[str] | None = None) -> int:
                 expected_head=args.expected_head,
                 revision=args.revision,
                 allow_fallback=args.allow_fallback,
+                approval=args.approval,
             )
         elif args.command == "lookup":
             result = lookup(args.catalog, **read_json(args.request))
@@ -794,6 +859,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.source_root,
                 read_json(args.review),
                 expected_head=args.expected_head,
+                approval=args.approval,
             )
         elif args.command == "resolve-dispute":
             result = resolve_dispute(
@@ -802,6 +868,7 @@ def main(argv: list[str] | None = None) -> int:
                 read_json(args.curator_review),
                 expected_head=args.expected_head,
                 selected_revision=args.selected_revision,
+                approval=args.approval,
             )
         else:
             result = history(args.catalog)

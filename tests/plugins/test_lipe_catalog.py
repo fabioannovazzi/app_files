@@ -330,6 +330,8 @@ def test_cli_persists_private_receipts_and_does_not_replace_catalog(
                 "studio-a",
                 "--minimum-confidence",
                 "0.80",
+                "--data-origin",
+                "SYNTHETIC",
                 "--output",
                 str(output),
             ]
@@ -386,6 +388,18 @@ def test_revoked_catalog_mapping_blocks_a_previously_reviewed_case(
     result = calculate(case, PLUGIN / "examples", path)
     assert result["modules"] == []
     assert "CATALOG_MAPPING_STALE_OR_UNRESOLVED:SALES:V22" in result["blockers"]
+
+
+def test_real_case_cannot_reuse_an_unsigned_synthetic_catalog(tmp_path: Path) -> None:
+    path = setup(tmp_path)
+    add(path, entry(tmp_path))
+    case = bound_case(path)
+    case["data_origin"] = "REAL"
+
+    result = calculate(case, PLUGIN / "examples", path)
+
+    assert result["modules"] == []
+    assert "CATALOG_DATA_ORIGIN_NOT_ESTABLISHED_OR_DIFFERENT" in result["blockers"]
 
 
 def test_conflicting_meaning_inside_quarter_cannot_hide_behind_matching_endpoints(

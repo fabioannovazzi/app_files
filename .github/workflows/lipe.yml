@@ -13,6 +13,8 @@ jobs:
   lipe:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
+    env:
+      PYTHONUNBUFFERED: "1"
     strategy:
       fail-fast: false
       matrix:
@@ -32,8 +34,8 @@ jobs:
           $lipeOpenSSL | Out-File -FilePath $env:GITHUB_PATH -Append
       - run: openssl version
       - name: Verify evidence, tax arithmetic and export boundaries
-        run: python -m pytest -v -o addopts='' -o faulthandler_timeout=60 --confcutdir=tests/plugins tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py tests/plugins/test_lipe_receipt.py tests/plugins/test_lipe_export.py --cov=plugins/lipe/scripts --cov-report=term-missing --cov-fail-under=80
-      - run: python -m black --check plugins/lipe/scripts tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py tests/plugins/test_lipe_receipt.py tests/plugins/test_lipe_export.py
-      - run: python -m isort --check-only plugins/lipe/scripts tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py tests/plugins/test_lipe_receipt.py tests/plugins/test_lipe_export.py
+        run: python -m pytest -v -o addopts='' -o faulthandler_timeout=60 -o faulthandler_exit_on_timeout=true --confcutdir=tests/plugins tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py tests/plugins/test_lipe_receipt.py tests/plugins/test_lipe_export.py tests/plugins/test_lipe_catalog_authorization.py --cov=plugins/lipe/scripts --cov-report=term-missing --cov-fail-under=80
+      - run: python -m black --check plugins/lipe/scripts tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py tests/plugins/test_lipe_receipt.py tests/plugins/test_lipe_export.py tests/plugins/test_lipe_catalog_authorization.py
+      - run: python -m isort --check-only plugins/lipe/scripts tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py tests/plugins/test_lipe_receipt.py tests/plugins/test_lipe_export.py tests/plugins/test_lipe_catalog_authorization.py
       - run: python -m mypy --follow-imports=skip --ignore-missing-imports plugins/lipe/scripts
       - run: python -m bandit -q -ll -r plugins/lipe/scripts

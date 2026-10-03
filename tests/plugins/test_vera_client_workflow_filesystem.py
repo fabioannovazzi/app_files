@@ -140,6 +140,7 @@ CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     # Studio maintenance/measurements reuse existing cases rather than start a run.
     # Real first-pass measurements verify the selected Archive input receipts.
     ("lipe", "lipe_catalog.py"),
+    ("lipe", "lipe_catalog_authorization.py"),
     ("lipe", "lipe_metrics.py"),
     # Approval adds evidence to the selected existing Archive run.
     ("lipe", "lipe_approval.py"),

@@ -15,7 +15,8 @@ The goal is reconstructing the path from registers to VP figures, comparing
 liquidations and payments, preserving code confirmations and preparing review
 outputs. A central vendor-code promotion requires curator review, never merely
 three agreeing studios. Central-reference entries remain local and require
-attributed curator and disclosure reviews; no remote promotion service exists.
+curator and disclosure reviews, with signatures for real catalog writes; no
+remote promotion service exists.
 
 ## Corrections established from official evidence
 
@@ -64,9 +65,12 @@ the tax validity of their explanations.
 The persistent local catalog now covers exact vendor/version lookup, client and
 studio overrides, local central-reference entries, original-source preservation,
 revision history, confidence policy, revocation and curator disputes. Bound case
-mappings are rechecked at every validity boundary within the quarter. Catalog
-classification, disclosure and reviewer roles remain attributed judgments, not
-authenticated decisions or proof that a central source is free of private data.
+mappings are rechecked at every validity boundary within the quarter. Real
+catalog mutations require external CMS signatures and independently configured
+role, level and client grants. Original decisions and verification evidence are
+retained. Historical reads check evidence integrity without reauthenticating
+past signers today. Tax classification and source privacy remain professional
+judgments; no actual studio has qualified this authorization path.
 
 First-pass measurements now preserve code populations and initial catalog/model
 proposals per client/engagement/quarter. Repeated reads cannot reset an existing
@@ -133,8 +137,8 @@ blocked until the principal/interest basis is independently reviewed.
 
 ## Remaining implementation from the developer specification
 
-- Authenticated catalog roles and optional shared central-catalog distribution. Current central
-  reference records are local and do not synchronize between studios.
+- Optional shared central-catalog distribution. Current central reference records
+  are local and do not synchronize between studios.
 
 Unsigned XML export, supplied-file comparison and structural receipt inspection
 are implemented. Receipt and supplied XML signature authenticity are not tested;

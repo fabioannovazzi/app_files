@@ -24,14 +24,15 @@ studio and central-reference entries. SQLite stores an append-only event history
 the adjacent `<catalog filename>.sources` directory retains original source bytes
 under their SHA-256 names. Keep both together when moving the catalog. Hash checks
 detect inconsistent history/source content, not a malicious owner who can replace
-the whole history. Studio identifiers and reviewer names are declared identities,
-not authentication or access-control credentials.
+the whole history. Studio identifiers and reviewer names alone do not authenticate
+roles. Follow `catalog-authorization.md` for the signed decisions required by real
+catalogs and the limits of their historical evidence.
 
 Initialize with the studio's explicitly chosen confidence cutoff. The following
 number is a synthetic example, not a recommended or calibrated tax threshold:
 
 ```bash
-python scripts/lipe_catalog.py init --catalog /absolute/studio/lipe.sqlite3 --studio-id studio-confirmed-id --minimum-confidence 0.80 --output /absolute/studio/catalog-init.json
+python scripts/lipe_catalog.py init --catalog /absolute/synthetic/catalog/lipe.sqlite3 --studio-id fictional-studio --data-origin SYNTHETIC --minimum-confidence 0.80 --output /absolute/synthetic/catalog-init.json
 ```
 
 No preloaded Reviso/Mexal/DATEV meanings are treated as professionally accepted.
@@ -56,7 +57,9 @@ PUBLIC sources and require explicit confirmed `curator_review` and
 `disclosure_review`. The latter must actually examine the complete entry and
 sources for client identifiers, transactions and other private material. This
 semantic privacy judgment is not performed by a keyword filter. The sources'
-visibility labels and reviews remain attributed declarations.
+visibility labels remain professional judgments. Real catalogs require the
+professional, curator and disclosure-review signatures described in the
+authorization guide; a signature does not perform that semantic review.
 
 These central entries are a local copy of curator-reviewed reference knowledge.
 There is no remote catalog, publication, anonymous upload, automatic aggregation
@@ -119,7 +122,7 @@ within it needs a separately qualified allocation, not forced reuse.
 ## Revoke or dispute
 
 `revoke` requires the exact current revision, current catalog head and a confirmed
-review JSON. It preserves history. Lower-scope fallback remains blocked unless
+review JSON, plus the signed decision for real catalogs. It preserves history. Lower-scope fallback remains blocked unless
 the reviewer explicitly chooses `--allow-fallback`; never add it just to obtain a
 calculation. For a CENTRAL entry, obtain the curator's actual decision.
 
@@ -143,7 +146,9 @@ before retrying; the database event is the authoritative persistence record.
 
 ## Remaining acceptance
 
-This local implementation does not authenticate professional/curator roles or
-synchronize a shared central service. Follow `code-measurements.md` to capture
+Real catalog mutations authenticate studio-assigned roles at commit, as described
+in `catalog-authorization.md`; source privacy and tax correctness remain reviewed
+judgments. No real studio has qualified this path, and no shared central service
+is synchronized. Follow `code-measurements.md` to capture
 first-pass proposals and subsequent professional class changes. No real
 recognition or correction rate has been established by the synthetic tests.

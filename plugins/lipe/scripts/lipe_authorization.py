@@ -28,6 +28,7 @@ __all__ = [
     "load_authority",
     "load_export_registry",
     "verify_approval",
+    "verify_cms_document",
     "read_evidence",
     "read_signed_json",
     "validate_request",
@@ -208,6 +209,45 @@ def _signer(verification: dict) -> str:
             "A LIPE decision needs one identified signer with signing key usage"
         )
     return str(signers[0]["certificate_sha256"])
+
+
+def verify_cms_document(
+    document: bytes,
+    signature: bytes,
+    *,
+    openssl: Path,
+    trusted_roots: bytes,
+    crls: bytes,
+    at: datetime,
+) -> dict:
+    """Verify exact bytes and supplied trust material; assign no professional powers."""
+    provider = _provider()
+    with tempfile.TemporaryDirectory(prefix="lipe-signed-document-") as temporary:
+        root = Path(temporary)
+        paths = {}
+        for name, raw in {
+            "document": document,
+            "signature": signature,
+            "trusted_roots": trusted_roots,
+            "crls": crls,
+        }.items():
+            path = root / name
+            with path.open("xb") as handle:
+                path.chmod(0o600)
+                handle.write(raw)
+            paths[name] = path
+        try:
+            proof = provider.verify_cms(
+                paths["signature"],
+                paths["document"],
+                openssl=openssl,
+                trusted_roots=paths["trusted_roots"],
+                crls=paths["crls"],
+                at=at,
+            )
+        except provider.ContractError as exc:
+            raise ContractError(str(exc)) from exc
+        return {"certificate_sha256": _signer(proof), "verification": proof}
 
 
 def verify_approval(

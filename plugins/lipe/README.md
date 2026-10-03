@@ -27,7 +27,10 @@ overrides, central-reference records, original source bytes, confidence and
 review history. Revisions/revocations are append-only; conflicts and explicit
 curator disputes block reuse. Calculation rechecks bound entries over the whole
 quarter against the current catalog. No classification or promotion is inferred
-from code strings or agreement counts, and declared roles are not authenticated.
+from code strings or agreement counts. Real catalog writes require external CMS
+signatures with independently assigned professional/curator/disclosure roles and
+client/level permissions. Original evidence records verification at commit;
+historical reads do not attest that those powers remain current.
 See `references/code-catalog.md` for commands and outstanding limits.
 
 The private measurement ledger preserves first-pass populations and subsequent

@@ -114,6 +114,9 @@ ordinary Italian VAT in 2024–2026. It is not a filing system or a compliance
 certification. Do not describe a passing XSD as acceptance by Agenzia Entrate.
 Read `references/anomaly-review.md` before proposing or resolving observations.
 Read `references/code-catalog.md` when recognizing or reusing VAT-code meanings.
+Read `references/catalog-authorization.md` before changing a real catalog. Use
+the actual studio-assigned signing roles; never invent a policy or signatures
+to turn an attributed reviewer name into an authorized decision.
 
 ## Inspect and qualify
 
