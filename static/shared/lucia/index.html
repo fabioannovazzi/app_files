@@ -27,7 +27,7 @@
   <script defer src="../product-navigation.js?v=2026072301"></script>
   <script defer src="../plugin-download-versions.js?v=2026100201"></script>
   <link rel="stylesheet" href="../product-social.css?v=2026092601">
-  <link rel="stylesheet" href="../product-install.css?v=2026100301">
+  <link rel="stylesheet" href="../product-install.css?v=2026100302">
   <script defer src="antigravity/version.js"></script>
 </head>
 <body>
@@ -96,8 +96,14 @@
               <p class="install-option__note" data-plugin-zip-version="lucia" hidden></p>
             </div>
           </div>
-          <div class="hero-install__antigravity" id="antigravity">
-            <a class="button" href="downloads/lucia-antigravity-plugin.zip" download data-i18n="install.antigravity.download">Scarica ZIP per Google Antigravity</a>
+          <div class="hero-install__antigravity install-option" id="antigravity">
+            <button class="button" type="button" disabled aria-describedby="antigravity-marketplace-status" data-antigravity-marketplace-pending data-i18n="install.antigravity.marketplace">Vai al marketplace Antigravity</button>
+            <p class="install-option__note" id="antigravity-marketplace-status">
+              <!-- Submitted candidate version; maintained separately from the downloadable ZIP. See docs/releases/antigravity-submissions.json. -->
+              <span data-antigravity-marketplace-version>Marketplace · v0.1.78</span><br>
+              <span data-i18n="install.antigravity.pending">In attesa di approvazione.</span>
+            </p>
+            <a class="button install-option__download" href="downloads/lucia-antigravity-plugin.zip" download data-i18n="install.antigravity.download">Scarica ZIP per Google Antigravity</a>
             <p class="install-option__note" data-antigravity-version hidden></p>
             <a class="install-option__note" href="antigravity/index.html?lang=it" data-antigravity-guide-link data-i18n="install.antigravity.guide">Come installare Lucia in Antigravity →</a>
           </div>
@@ -283,6 +289,8 @@
         "nav.label": "Navigazione della pagina", "nav.menu": "Menu", "nav.capabilities": "Cosa fa", "nav.assurance": "Metodo", "nav.data": "Dati", "language.label": "Lingua",
         "hero.eyebrow": "Assistente Ai per avvocati indipendenti", "hero.title": "Lucia", "hero.lead": "Lucia aggiunge a Codex revisione di documenti legali, bozze Word e ricerca per lo studio italiano. Puoi descrivere il lavoro richiesto in chat e fornire i file da usare.",
         "install.title": "Installazione", "install.copy": "Installa Lucia in ChatGPT Work e Codex, Claude Cowork o Google Antigravity.",
+        "install.antigravity.marketplace": "Vai al marketplace Antigravity",
+        "install.antigravity.pending": "In attesa di approvazione.",
         "install.antigravity.download": "Scarica ZIP per Google Antigravity",
         "install.antigravity.guide": "Come installare Lucia in Antigravity →", "install.actions.label": "Opzioni di installazione di Lucia", "install.button": "Installa per ChatGPT Work e Codex", "install.zipButton": "Scarica ZIP per ChatGPT Work e Codex", "install.coworkButton": "Vai al marketplace Cowork", "install.coworkHelp": "Abbiamo inviato il plugin al marketplace Cowork. In attesa di approvazione.",
         "install.coworkGuide": "Scarica ZIP per Cowork",
@@ -306,6 +314,8 @@
         "nav.label": "Page navigation", "nav.menu": "Menu", "nav.capabilities": "What it does", "nav.assurance": "Method", "nav.data": "Data", "language.label": "Language",
         "hero.eyebrow": "AI companion for independent lawyers", "hero.title": "Lucia", "hero.lead": "Lucia adds contract review, document comparison, template drafting and legal research for Italian law firms to Codex.",
         "install.title": "Installation", "install.copy": "Install Lucia in ChatGPT Work and Codex, Claude Cowork or Google Antigravity.",
+        "install.antigravity.marketplace": "Go to Antigravity marketplace",
+        "install.antigravity.pending": "Awaiting approval.",
         "install.antigravity.download": "Download ZIP for Google Antigravity",
         "install.antigravity.guide": "How to install Lucia in Antigravity →", "install.actions.label": "Lucia installation options", "install.button": "Install for ChatGPT Work and Codex", "install.zipButton": "Download ZIP for ChatGPT Work and Codex", "install.coworkButton": "Go to Cowork marketplace", "install.coworkHelp": "We have submitted the plugin to the Cowork marketplace. Awaiting approval.",
         "install.coworkGuide": "Download ZIP for Cowork",
@@ -329,6 +339,8 @@
         "nav.label": "Navigation de la page", "nav.menu": "Menu", "nav.capabilities": "Fonctions", "nav.assurance": "Méthode", "nav.data": "Données", "language.label": "Langue",
         "hero.eyebrow": "AI companion pour avocats indépendants", "hero.title": "Lucia", "hero.lead": "Lucia ajoute à Codex la revue de contrats, la comparaison de documents, la rédaction sur modèle et la recherche juridique pour les cabinets italiens.",
         "install.title": "Installation", "install.copy": "Installez Lucia dans ChatGPT Work et Codex, Claude Cowork ou Google Antigravity.",
+        "install.antigravity.marketplace": "Aller au marketplace Antigravity",
+        "install.antigravity.pending": "En attente d’approbation.",
         "install.antigravity.download": "Télécharger le ZIP pour Google Antigravity",
         "install.antigravity.guide": "Installer Lucia dans Antigravity →", "install.actions.label": "Options d’installation de Lucia", "install.button": "Installer pour ChatGPT Work et Codex", "install.zipButton": "Télécharger le ZIP pour ChatGPT Work et Codex", "install.coworkButton": "Aller au marketplace Cowork", "install.coworkHelp": "Nous avons soumis le plugin au marketplace Cowork. En attente d’approbation.",
         "install.coworkGuide": "Télécharger le ZIP pour Cowork",
@@ -352,6 +364,8 @@
         "nav.label": "Seitennavigation", "nav.menu": "Menü", "nav.capabilities": "Funktionen", "nav.assurance": "Methode", "nav.data": "Daten", "language.label": "Sprache",
         "hero.eyebrow": "AI companion für selbständige Anwälte", "hero.title": "Lucia", "hero.lead": "Lucia ergänzt Codex um Vertragsprüfung, Dokumentenvergleich, Vorlagenbearbeitung und Rechtsrecherche für italienische Kanzleien.",
         "install.title": "Installation", "install.copy": "Installieren Sie Lucia in ChatGPT Work und Codex, Claude Cowork oder Google Antigravity.",
+        "install.antigravity.marketplace": "Zum Antigravity-Marketplace",
+        "install.antigravity.pending": "Freigabe ausstehend.",
         "install.antigravity.download": "ZIP für Google Antigravity herunterladen",
         "install.antigravity.guide": "Lucia in Antigravity installieren →", "install.actions.label": "Installationsoptionen für Lucia", "install.button": "Für ChatGPT Work und Codex installieren", "install.zipButton": "ZIP für ChatGPT Work und Codex herunterladen", "install.coworkButton": "Zum Cowork-Marketplace", "install.coworkHelp": "Wir haben das Plugin beim Cowork-Marketplace eingereicht. Die Freigabe steht aus.",
         "install.coworkGuide": "ZIP für Cowork herunterladen",
@@ -375,6 +389,8 @@
         "nav.label": "Navegación de la página", "nav.menu": "Menú", "nav.capabilities": "Funciones", "nav.assurance": "Método", "nav.data": "Datos", "language.label": "Idioma",
         "hero.eyebrow": "AI companion para abogados independientes", "hero.title": "Lucia", "hero.lead": "Lucia añade a Codex revisión de contratos, comparación documental, redacción desde plantillas e investigación jurídica para despachos italianos.",
         "install.title": "Instalación", "install.copy": "Instala Lucia en ChatGPT Work y Codex, Claude Cowork o Google Antigravity.",
+        "install.antigravity.marketplace": "Ir al marketplace de Antigravity",
+        "install.antigravity.pending": "Pendiente de aprobación.",
         "install.antigravity.download": "Descargar ZIP para Google Antigravity",
         "install.antigravity.guide": "Cómo instalar Lucia en Antigravity →", "install.actions.label": "Opciones de instalación de Lucia", "install.button": "Instalar para ChatGPT Work y Codex", "install.zipButton": "Descargar ZIP para ChatGPT Work y Codex", "install.coworkButton": "Ir al marketplace de Cowork", "install.coworkHelp": "Hemos enviado el plugin al marketplace de Cowork. Pendiente de aprobación.",
         "install.coworkGuide": "Descargar ZIP para Cowork",

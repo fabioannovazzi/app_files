@@ -28,7 +28,7 @@
   <script defer src="../product-navigation.js?v=2026072301"></script>
   <script defer src="../plugin-download-versions.js?v=2026100201"></script>
   <link rel="stylesheet" href="../product-social.css?v=2026092601">
-  <link rel="stylesheet" href="../product-install.css?v=2026100301">
+  <link rel="stylesheet" href="../product-install.css?v=2026100302">
   <script defer src="antigravity/version.js"></script>
 </head>
 <body>
@@ -96,8 +96,14 @@
               <p class="install-option__note" data-plugin-zip-version="clara" hidden></p>
             </div>
           </div>
-          <div class="hero-install__antigravity" id="antigravity">
-            <a class="button" href="downloads/clara-antigravity-plugin.zip" download data-i18n="install.antigravity.download">Download ZIP for Google Antigravity</a>
+          <div class="hero-install__antigravity install-option" id="antigravity">
+            <button class="button" type="button" disabled aria-describedby="antigravity-marketplace-status" data-antigravity-marketplace-pending data-i18n="install.antigravity.marketplace">Go to Antigravity marketplace</button>
+            <p class="install-option__note" id="antigravity-marketplace-status">
+              <!-- Submitted candidate version; maintained separately from the downloadable ZIP. See docs/releases/antigravity-submissions.json. -->
+              <span data-antigravity-marketplace-version>Marketplace · v0.1.240</span><br>
+              <span data-i18n="install.antigravity.pending">Awaiting approval.</span>
+            </p>
+            <a class="button install-option__download" href="downloads/clara-antigravity-plugin.zip" download data-i18n="install.antigravity.download">Download ZIP for Google Antigravity</a>
             <p class="install-option__note" data-antigravity-version hidden></p>
             <a class="install-option__note" href="antigravity/index.html?lang=en" data-antigravity-guide-link data-i18n="install.antigravity.guide">How to install Clara in Antigravity →</a>
           </div>
@@ -329,6 +335,8 @@
         "capabilities.charts.prompt": "\"Analyze this spreadsheet, choose the most useful chart, and explain the result.\"",
         "install.title": "Installation",
         "install.copy": "Install Clara in ChatGPT Work and Codex, Claude Cowork or Google Antigravity.",
+        "install.antigravity.marketplace": "Go to Antigravity marketplace",
+        "install.antigravity.pending": "Awaiting approval.",
         "install.antigravity.download": "Download ZIP for Google Antigravity",
         "install.antigravity.guide": "How to install Clara in Antigravity →",
         "install.actions.label": "Clara installation options",
@@ -483,6 +491,8 @@
         "capabilities.charts.prompt": "\"Analizza questo file, scegli il grafico più utile e spiegami il risultato.\"",
         "install.title": "Installazione",
         "install.copy": "Installa Clara in ChatGPT Work e Codex, Claude Cowork o Google Antigravity.",
+        "install.antigravity.marketplace": "Vai al marketplace Antigravity",
+        "install.antigravity.pending": "In attesa di approvazione.",
         "install.antigravity.download": "Scarica ZIP per Google Antigravity",
         "install.antigravity.guide": "Come installare Clara in Antigravity →",
         "install.actions.label": "Opzioni di installazione di Clara",
@@ -637,6 +647,8 @@
         "capabilities.charts.prompt": "\"Analyse ce fichier, choisis le graphique le plus utile et explique le résultat.\"",
         "install.title": "Installation",
         "install.copy": "Installez Clara dans ChatGPT Work et Codex, Claude Cowork ou Google Antigravity.",
+        "install.antigravity.marketplace": "Aller au marketplace Antigravity",
+        "install.antigravity.pending": "En attente d’approbation.",
         "install.antigravity.download": "Télécharger le ZIP pour Google Antigravity",
         "install.antigravity.guide": "Installer Clara dans Antigravity →",
         "install.actions.label": "Options d’installation de Clara",
@@ -791,6 +803,8 @@
         "capabilities.charts.prompt": "\"Analysiere diese Datei, wähle den nützlichsten Chart und erkläre das Ergebnis.\"",
         "install.title": "Installation",
         "install.copy": "Installieren Sie Clara in ChatGPT Work und Codex, Claude Cowork oder Google Antigravity.",
+        "install.antigravity.marketplace": "Zum Antigravity-Marketplace",
+        "install.antigravity.pending": "Freigabe ausstehend.",
         "install.antigravity.download": "ZIP für Google Antigravity herunterladen",
         "install.antigravity.guide": "Clara in Antigravity installieren →",
         "install.actions.label": "Installationsoptionen für Clara",
@@ -945,6 +959,8 @@
         "capabilities.charts.prompt": "\"Analiza esta hoja de cálculo, elige el gráfico más útil y explica el resultado.\"",
         "install.title": "Instalación",
         "install.copy": "Instala Clara en ChatGPT Work y Codex, Claude Cowork o Google Antigravity.",
+        "install.antigravity.marketplace": "Ir al marketplace de Antigravity",
+        "install.antigravity.pending": "Pendiente de aprobación.",
         "install.antigravity.download": "Descargar ZIP para Google Antigravity",
         "install.antigravity.guide": "Cómo instalar Clara en Antigravity →",
         "install.actions.label": "Opciones de instalación de Clara",
