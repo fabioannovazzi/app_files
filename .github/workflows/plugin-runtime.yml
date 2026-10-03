@@ -212,6 +212,11 @@ jobs:
           python -m isort --check-only plugins/_shared/vendor/modules/desktop_teaching tests/plugins/test_desktop_teaching.py tests/plugins/test_teaching_product_scope.py tests/plugins/_teaching_execution.py tests/plugins/test_teaching_execution_evidence.py
           python -m mypy --follow-imports=skip plugins/_shared/vendor/modules/desktop_teaching/onboarding.py plugins/_shared/vendor/modules/desktop_teaching/teaching.py plugins/_shared/vendor/modules/desktop_teaching/cases.py
           python -m bandit -qr plugins/_shared/vendor/modules/desktop_teaching
+      - name: Verify mandatory course file access on every platform
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_course_file_access.py
+          --cov=courseware.access --cov-report=term-missing --cov-fail-under=80
       - name: Check onboarding code quality
         run: |
           python -m black --check plugins/vera/scripts/local_onboarding.py plugins/vera/scripts/local_onboarding_case.py plugins/vera/scripts/onboarding_session_start.py plugins/vera/scripts/local_teaching.py tests/plugins/test_vera_local_onboarding.py tests/plugins/test_vera_teaching.py

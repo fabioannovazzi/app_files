@@ -1172,7 +1172,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "bf91761d554760069d3294167bcb2f14ffbe976333d3687eb7463fba5b24b2df",
+  "catalogue_fingerprint": "b214ab9f40c4d96b99274ba10ae468a8439079a63c3900254773e470053cd011",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1410,5 +1410,14 @@
     "version": "0.1.338",
     "previous_catalogue_fingerprint": "c92a4175a52c31e930a52d064c39e76131731a89159d8bec4f42204fd5c029b8",
     "review": "Merged the existing LIPE and costing assessment rows without changing their territorial judgments. Canonical version advanced; LIPE remains an Italian VAT workflow. The new Italian course adds no Swiss qualification."
+  },
+  "course_file_access_release_binding": {
+    "date": "2026-10-03",
+    "version": "0.1.339",
+    "previous_catalogue_fingerprint": "bf91761d554760069d3294167bcb2f14ffbe976333d3687eb7463fba5b24b2df",
+    "changed_entrypoints": [
+      "learn-with-vera"
+    ],
+    "review": "Only course workspace setup and filesystem readiness changed. Existing country applicability decisions and limitations are unchanged; no new jurisdiction or live-host acceptance is claimed."
   }
 }

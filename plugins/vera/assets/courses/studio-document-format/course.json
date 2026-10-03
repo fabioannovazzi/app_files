@@ -595,7 +595,7 @@
     {
       "path": "scripts/local_onboarding.py",
       "repository_path": "plugins/vera/scripts/local_onboarding.py",
-      "sha256": "f351d2d04736fed433a9d09d96acd361a75c3dbee8222fbe05f434be7afa5b42"
+      "sha256": "a09b950acd534cc19b35455eafc6d8d7d774ff149931227d9d578bd3a4ee3947"
     },
     {
       "path": "scripts/studio_document_format.py",
@@ -631,6 +631,11 @@
       "path": "vendor/modules/courseware/__init__.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
       "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/access.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+      "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
     },
     {
       "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
@@ -690,12 +695,12 @@
     {
       "path": "vendor/modules/courseware/legacy.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
-      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
     },
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "defe2c748452578308d1157ff0abc6ad69f4958429bb69fa2ac016dda5ae7e52"
+      "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
     },
     {
       "path": "vendor/modules/courseware/policy.py",

@@ -11,14 +11,17 @@ __all__ = ["main"]
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PLUGIN_ROOT / "vendor/modules"))
+from courseware.access import CourseAccessError, verify_course_access  # noqa: E402
 from courseware.library import CourseLibrary  # noqa: E402
 
 
-def main() -> int:
+def _run() -> int:
     """List or prepare a kit without executing a workflow or recording completion."""
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("list")
+    preflight = commands.add_parser("preflight")
+    preflight.add_argument("--output-dir", type=Path, required=True)
     prepare = commands.add_parser("prepare")
     prepare.add_argument("workflow")
     prepare.add_argument("--language", required=True)
@@ -34,6 +37,9 @@ def main() -> int:
     destination = args.output_dir.expanduser().absolute()
     if destination.resolve().is_relative_to(PLUGIN_ROOT.resolve()):
         raise ValueError("Choose a lesson folder outside the installed plugin")
+    if args.command == "preflight":
+        sys.stdout.write(json.dumps(verify_course_access([destination])) + "\n")
+        return 0
     result = library.render(args.workflow, args.language, destination)
     # Native session handoffs do not apply to a written single-conversation lesson.
     (destination / "execution-request.json").unlink(missing_ok=True)
@@ -59,6 +65,15 @@ def main() -> int:
     (destination / ".vera-onboarding-local-only").touch()
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
+
+
+def main() -> int:
+    """Return a structured blocker so the teacher can guide permission recovery."""
+    try:
+        return _run()
+    except CourseAccessError as exc:
+        sys.stdout.write(json.dumps(exc.as_dict()) + "\n")
+        return 2
 
 
 if __name__ == "__main__":

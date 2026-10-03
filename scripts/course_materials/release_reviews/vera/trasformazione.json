@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "trasformazione",
-  "course_sha256": "5d1c2d91e55fc916df89192d2c059bc9d2be31825eeccea52abd3065e9261e15",
+  "course_sha256": "6407fbe456ac33a0cd8f439cbe1bd9ca288a83c28cbbd3c229d6f4e7d3340324",
   "reviewer": "Codex: authored outline and actual synthetic native output review",
   "reviewed_at": "2026-10-01T08:02:24.833788+00:00",
   "review_scope": "Reviewed five authored narratives, factual inputs and ten native synthetic demo/practice regressions. Italian lesson top and practice sections inspected in the browser. Review records in the regression are simulated, not learner decisions. Direct component execution and rendering do not establish installed enabled-plugin, native voice, paired-window or learner acceptance. No professional, legal or tax qualification is claimed.",
@@ -328,5 +328,6 @@
     ],
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
-  }
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
 }

@@ -1,5 +1,9 @@
 # Prepared teaching kits for Vera
 
+Before any course step, follow `file-access.md`: verify actual local writing,
+resolve missing permissions with the user and keep teaching paused until the
+retry succeeds. This also applies to resumed sessions and the working chat.
+
 ## Read the installed lesson format first
 
 This interim release combines new prepared teaching kits with retained published

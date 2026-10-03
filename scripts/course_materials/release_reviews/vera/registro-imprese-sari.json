@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "registro-imprese-sari",
-  "course_sha256": "6a211bfb472c90109263a5610506532d20d7a88d40905c783e60e30231ec2cd2",
+  "course_sha256": "dea0af17b4ebe2c13d87726b664c307c80a129ea0d3c26bb53b92810eeb52bab",
   "reviewer": "Codex: direct lesson, source-file, native artifact and browser review",
   "reviewed_at": "2026-09-15T01:54:14.804674+00:00",
   "languages": {
@@ -656,5 +656,6 @@
     ],
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
-  }
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
 }

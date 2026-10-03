@@ -93,12 +93,16 @@
     {
       "id": "verified-result-reading",
       "control": "Hash-verified Word and workbook files have escaped local text/table reading views; original downloads retain exact bytes. Workbook readers disclose unavailable formula values without calculating invented values. Validated website results retain only the native hash-bound inventory of local HTML, CSS, image and font files and are served under a passive CSP sandbox that blocks scripts, forms, popups and external loads. The teacher may read these selected views in the native model context; no new hosted recipient, model call or automatic approval is introduced."
+    },
+    {
+      "id": "course-file-access",
+      "control": "The stdlib setup helper saves and reloads the actual profile without advancing a lesson or changing its revision. Filesystem probes test create, read, write, update, replacement and deletion in the exact shared course directory and planned output directories. Mutations and worker dispatch repeat applicable checks; failures retain the exact local path, operation and native error for the selected host model. Helpers do not grant host access, change OS permissions, relocate profiles or introduce network transport. Native instructions connect the same course workspace in each chat and stop teaching until normal sandbox writes succeed."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "2a8055606cfab2f4fa09688477217f8a358061e115317e4a3eab77d0abc2a3f9"
+    "source_fingerprint": "7e341dec4ee6c0cae02e5ab8b8436897f764e3848fdf24c358ec0057df87141d"
   }
 }

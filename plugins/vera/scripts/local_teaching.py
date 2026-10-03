@@ -19,6 +19,7 @@ from typing import Any
 
 from local_onboarding import (
     MARKER,
+    CourseAccessError,
     OnboardingError,
     Store,
     _now,
@@ -216,7 +217,7 @@ class TeachingStore(Store):
             }
             path = self._session_path(session_id)
             path.parent.mkdir(parents=True, mode=0o700)
-            Path(state["directory"]).mkdir(mode=0o700)
+            self.preflight([path.parent, Path(state["directory"])])
             _write(path, state)
         self.session_id = session_id
         return self.status()
@@ -252,6 +253,13 @@ class TeachingStore(Store):
             state = self._state()
             if state["revision"] != revision:
                 raise OnboardingError("Stale revision; reload before saving")
+            if action not in {"pause", "checkpoint"}:
+                self.preflight(
+                    [
+                        self._session_path(state["session_id"]).parent,
+                        Path(state["directory"]),
+                    ]
+                )
             if state["phase"] == "complete" and action not in {"focus", "feedback"}:
                 raise OnboardingError(
                     "Start a fresh session to repeat a completed example"
@@ -459,8 +467,16 @@ class TeachingStore(Store):
                     raise OnboardingError(
                         "Selected source changed; review the handoff before proceeding"
                     )
+        directories = [
+            self._session_path(state["session_id"]).parent,
+            Path(state["directory"]),
+        ]
+        if real:
+            directories.append(Path(real["destination"]))
+        self.preflight(directories)
         return {
             "session_id": state["session_id"],
+            "state_root": str(self.root),
             "workflow_contract": teaching_contract(workflow),
             "profile": self._profile()["profile"],
             "lesson": state,
@@ -499,6 +515,7 @@ def main(argv: list[str] | None = None) -> int:
         "command",
         choices=[
             "status",
+            "preflight",
             "begin",
             "pair",
             "pause",
@@ -516,6 +533,7 @@ def main(argv: list[str] | None = None) -> int:
         ],
     )
     parser.add_argument("--state-root", type=Path)
+    parser.add_argument("--directory", type=Path, action="append", default=[])
     parser.add_argument("--session")
     parser.add_argument("--revision", type=int)
     parser.add_argument("--input", type=Path)
@@ -527,6 +545,14 @@ def main(argv: list[str] | None = None) -> int:
         store = TeachingStore(args.state_root, args.session)
         if args.command == "status":
             result = store.status()
+        elif args.command == "preflight":
+            directories = list(args.directory)
+            if args.session:
+                state = store._state()
+                directories.extend(
+                    [store._session_path(args.session).parent, Path(state["directory"])]
+                )
+            result = store.preflight(directories)
         elif args.command == "worker":
             if not all((args.thread_id, args.workflow, args.token)):
                 raise OnboardingError(
@@ -547,6 +573,11 @@ def main(argv: list[str] | None = None) -> int:
             result = store.change(args.command, args.revision, _read(args.input))
         sys.stdout.write(json.dumps(result, indent=2) + "\n")
         return 0
+    except CourseAccessError as exc:
+        sys.stdout.write(
+            json.dumps({**exc.as_dict(), "workspace": store.workspace()}) + "\n"
+        )
+        return 2
     except (OnboardingError, OSError) as exc:
         sys.stdout.write(json.dumps({"status": "blocked", "error": str(exc)}) + "\n")
         return 2

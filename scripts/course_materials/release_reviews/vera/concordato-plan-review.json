@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "concordato-plan-review",
-  "course_sha256": "e8ad936a24791732a89e4c8b9b9d58f49d3df8b486301307f8077b60a2656096",
+  "course_sha256": "4ebeb93193eec298500f25d1903e45ec8be472911c7fe8343b38b2346ef98910",
   "reviewer": "Codex: direct lesson, source, native output and rendered artifact review",
   "reviewed_at": "2026-09-15T03:02:32.471301+00:00",
   "languages": {
@@ -584,5 +584,6 @@
     ],
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
-  }
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
 }

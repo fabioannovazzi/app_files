@@ -40,6 +40,40 @@ for workflow, entry in index['courses'].items():
         count += 1
 print(json.dumps({'workflows': len(index['courses']), 'locales': count}))
 """
+    preflight = subprocess.run(
+        [
+            sys.executable,
+            str(root / "scripts/local_courses.py"),
+            "preflight",
+            "--output-dir",
+            str(tmp_path / "course files"),
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    assert json.loads(preflight.stdout)["status"] == "ready"
+    assert list((tmp_path / "course files").iterdir()) == []
+    # The same saved profile must survive a second chat's different working dir.
+    state_root = tmp_path / "shared course workspace"
+    setup_command = [
+        sys.executable,
+        str(root / "scripts/local_onboarding.py"),
+        "setup",
+        "--state-root",
+        str(state_root),
+    ]
+    first = subprocess.run(
+        setup_command, cwd=tmp_path, capture_output=True, text=True, check=True
+    )
+    second = subprocess.run(
+        setup_command, cwd=state_root, capture_output=True, text=True, check=True
+    )
+    saved = json.loads(first.stdout)
+    assert saved["status"] == "ready"
+    assert saved == json.loads(second.stdout)
+    assert saved["workspace"]["state_root"] == str(state_root)
     result = subprocess.run(
         [sys.executable, "-c", script, str(root)],
         cwd=tmp_path,
