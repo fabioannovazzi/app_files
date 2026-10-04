@@ -46,8 +46,7 @@ def server_entry(
     ]
     if engine not in ENGINES:
         raise ValueError("unsupported_engine")
-    if engine != "rizzo":
-        args.extend(("--model-dir", str(model_dir)))
+    args.extend(("--model-dir", str(model_dir)))
     if engine != "openai":
         args.extend(("--engine", engine))
     if engine == "rizzo":

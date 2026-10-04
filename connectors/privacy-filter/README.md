@@ -145,7 +145,9 @@ outputs live in the user-selected output directory and can be retained separatel
 Version 0.5.0 adds [Lethe](LETHE.md) and [PII-Shield](PII-SHIELD.md) without
 replacing OpenAI, GLiNER2 or Rizzo. Status reports redaction, reversible and
 cross-document capabilities. Reversible jobs persist authoritative engine state
-locally; the same session is reused for every document and final restoration.
+locally. Lethe and PII-Shield reuse one session across the job. Since 0.5.1,
+Rizzo also preserves its native per-document dictionary and supports restoration,
+with a separate session for each file; it does not share identities across calls.
 No identity mapping enters MCP responses or filtered artifacts. Restored output
 is a local file, never a readable filtered artifact. See the engine guides for
 setup, local review, retention and exact data paths.

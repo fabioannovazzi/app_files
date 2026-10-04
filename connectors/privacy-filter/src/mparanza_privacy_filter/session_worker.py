@@ -173,6 +173,31 @@ def _shield(request: dict[str, Any]) -> dict[str, Any]:
         }
 
 
+def _rizzo(request: dict[str, Any]) -> dict[str, Any]:
+    from .rizzo_api import analyze_mapped, health
+    from .rizzo_mapping import restore
+
+    state = Path(request["folder"]) / "rizzo.json"
+    operation = request["operation"]
+    if operation == "create":
+        state.write_text("null", encoding="utf-8")
+        return {"created": True}
+    mapping = json.loads(state.read_text(encoding="utf-8"))
+    text = extract_text(Path(request["path"]))
+    if operation == "filter":
+        if mapping is not None:
+            raise FilterError("single_document_session")
+        health(request["rizzo_port"])
+        document, mapping = analyze_mapped(text, request["rizzo_port"])
+        # The engine's dictionary stays in private state, never in worker stdout.
+        state.write_text(json.dumps(mapping, ensure_ascii=False), encoding="utf-8")
+        return asdict(document)
+    if not isinstance(mapping, dict):
+        raise FilterError("empty_session")
+    Path(request["target"]).write_text(restore(text, mapping), encoding="utf-8")
+    return {"restored": True}
+
+
 def execute(request: dict[str, Any]) -> dict[str, Any]:
     """Select only supported upstream adapters and operations."""
     if request["operation"] not in ("create", "filter", "restore"):
@@ -181,6 +206,8 @@ def execute(request: dict[str, Any]) -> dict[str, Any]:
         return _lethe(request)
     if request["engine"] == "pii-shield":
         return _shield(request)
+    if request["engine"] == "rizzo":
+        return _rizzo(request)
     raise FilterError("unsupported_session_engine")
 
 

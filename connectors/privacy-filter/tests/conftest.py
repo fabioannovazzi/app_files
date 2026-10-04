@@ -36,6 +36,18 @@ def api():
             "segments": [{"t": "Anna"}],
         },
         requests=[],
+        mapped_result={
+            "anonymized_text": "[FULLNAME_1] writes.",
+            "by_label": {"FULLNAME": 1},
+            "mapping_enabled": True,
+            "mapping": {"[FULLNAME_1]": "Anna"},
+            "excluded_tags": [],
+            "n_chars": 12,
+            "n_entities": 1,
+            "n_unique": 1,
+            "source_text": "Anna writes.",
+            "segments": [{"t": "Anna"}],
+        },
     )
 
     class Handler(BaseHTTPRequestHandler):
@@ -46,7 +58,11 @@ def api():
         def do_POST(self):
             body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
             state.requests.append(("POST", self.path, body))
-            self.reply(state.result)
+            self.reply(
+                state.mapped_result
+                if body.get("include_mapping") is True
+                else state.result
+            )
 
         def reply(self, body):
             data = body if isinstance(body, bytes) else json.dumps(body).encode()

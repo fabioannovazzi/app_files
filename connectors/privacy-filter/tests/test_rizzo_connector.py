@@ -163,6 +163,7 @@ def test_stdio_file_batch_and_read_preserve_originals_and_exclude_raw_fields(
     source.mkdir()
     original = source / "sample.txt"
     original.write_text("Anna writes.")
+    model = tmp_path / "model"
 
     async def exercise():
         params = StdioServerParameters(
@@ -177,6 +178,8 @@ def test_stdio_file_batch_and_read_preserve_originals_and_exclude_raw_fields(
                 str(source),
                 "--output-dir",
                 str(output),
+                "--model-dir",
+                str(model),
                 "--rizzo-port",
                 str(api.port),
             ],
@@ -193,6 +196,14 @@ def test_stdio_file_batch_and_read_preserve_originals_and_exclude_raw_fields(
                 result = await session.call_tool(
                     "rizzo_pii_read", {"artifact_id": receipt["artifact_id"]}
                 )
+                (source / "answer.txt").write_text("Approved: [FULLNAME_1]")
+                restored = await session.call_tool(
+                    "rizzo_pii_restore",
+                    {"session_id": receipt["session_id"], "path": "answer.txt"},
+                )
+                assert "Anna" not in restored.model_dump_json()
+                saved = json.loads(restored.content[0].text)
+                assert Path(saved["output_path"]).read_text() == "Approved: Anna"
                 return listing, status, batch, result, receipt
 
     listing, status, batch, result, receipt = asyncio.run(exercise())
@@ -201,6 +212,9 @@ def test_stdio_file_batch_and_read_preserve_originals_and_exclude_raw_fields(
         "rizzo_pii_file",
         "rizzo_pii_batch",
         "rizzo_pii_read",
+        "rizzo_pii_session_create",
+        "rizzo_pii_session_open",
+        "rizzo_pii_restore",
     }
     assert json.loads(status.content[0].text)["model_ready"]
     assert receipt["engine"] == "rizzo"
@@ -210,7 +224,7 @@ def test_stdio_file_batch_and_read_preserve_originals_and_exclude_raw_fields(
     assert original.read_text() == "Anna writes."
     assert Path(receipt["output_path"]).read_text() == "[FULLNAME_1] writes."
     restarted = FilterService(
-        Settings(source, output, tmp_path, engine="rizzo", rizzo_port=api.port)
+        Settings(source, output, model, engine="rizzo", rizzo_port=api.port)
     )
     assert (
         restarted.read_result(receipt["artifact_id"])["redacted_text"]
@@ -258,7 +272,8 @@ def test_rizzo_installer_does_not_install_models_or_change_user_configuration(
     config = tomllib.loads((runtime / "codex-mcp.toml").read_text())
     assert set(config["mcp_servers"]) == {"rizzo_pii"}
     assert config["mcp_servers"]["rizzo_pii"]["args"][-2:] == ["--rizzo-port", "5010"]
-    assert "--model-dir" not in config["mcp_servers"]["rizzo_pii"]["args"]
+    args = config["mcp_servers"]["rizzo_pii"]["args"]
+    assert args[args.index("--model-dir") + 1] == str(runtime / "model")
     assert len(commands) == 1
     assert commands[0][5].endswith("requirements.txt")
     assert not (runtime / "model").exists()

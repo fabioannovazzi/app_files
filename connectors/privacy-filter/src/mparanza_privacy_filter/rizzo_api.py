@@ -10,7 +10,7 @@ from typing import Any
 from .contracts import FilteredDocument, FilterError
 from .engines import RIZZO
 
-__all__ = ["analyze", "health", "validate_port"]
+__all__ = ["analyze", "analyze_mapped", "health", "validate_port"]
 
 MAX_RESPONSE_BYTES = 16 * 1024 * 1024
 
@@ -80,16 +80,27 @@ def health(port: int) -> dict[str, Any]:
 
 def analyze(text: str, port: int) -> FilteredDocument:
     """Use upstream detection and request all tags without a restoration mapping."""
+    document, _ = _analyze(text, port, include_mapping=False)
+    return document
+
+
+def analyze_mapped(text: str, port: int) -> tuple[FilteredDocument, dict[str, str]]:
+    """Return Rizzo's native dictionary only to the isolated local session worker."""
+    return _analyze(text, port, include_mapping=True)
+
+
+def _analyze(
+    text: str, port: int, *, include_mapping: bool
+) -> tuple[FilteredDocument, dict[str, str]]:
     text = text.strip()  # Match the documented /analyze endpoint's normalization.
     body = _request(
         port,
         "/analyze",
-        {"text": text, "include_mapping": False, "exclude_tags": []},
+        {"text": text, "include_mapping": include_mapping, "exclude_tags": []},
     )
     counts, filtered = body.get("by_label"), body.get("anonymized_text")
     if (
-        body.get("mapping_enabled") is not False
-        or body.get("mapping") != {}
+        body.get("mapping_enabled") is not include_mapping
         or body.get("excluded_tags") != []
         or type(body.get("n_chars")) is not int
         or body["n_chars"] != len(text)
@@ -102,6 +113,27 @@ def analyze(text: str, port: int) -> FilteredDocument:
         or body["n_entities"] != sum(counts.values())
     ):
         raise FilterError("invalid_rizzo_response")
+    mapping = body.get("mapping")
+    # Validate the native contract mechanically; never infer or merge identities.
+    if not isinstance(mapping, dict) or (not include_mapping and mapping):
+        raise FilterError("invalid_rizzo_response")
+    if include_mapping and (
+        type(body.get("n_unique")) is not int
+        or body["n_unique"] != len(mapping)
+        or len(mapping) > body["n_entities"]
+        or (body["n_entities"] > 0 and not mapping)
+        or any(
+            not isinstance(key, str)
+            or re.fullmatch(r"\[([A-Z_]+)_[1-9][0-9]*\]", key) is None
+            or key[1:-1].rsplit("_", 1)[0] not in RIZZO.labels
+            or not isinstance(value, str)
+            or not value
+            or value not in text
+            or key not in filtered
+            for key, value in mapping.items()
+        )
+    ):
+        raise FilterError("invalid_rizzo_response")
     # Deliberately select only the shared contract. source_text, segments, mapping,
     # unknown fields and diagnostics never cross into the MCP response or artifact.
-    return FilteredDocument(filtered, counts, len(text))
+    return FilteredDocument(filtered, counts, len(text)), mapping
