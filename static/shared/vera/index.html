@@ -123,6 +123,24 @@
 
     .vera-mark img { display: block; width: 100%; height: auto; }
 
+    .vera-advantages {
+      max-width: 720px;
+      margin-top: 32px;
+    }
+    .vera-advantages h2 {
+      margin-bottom: 16px;
+      font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+      letter-spacing: -0.025em;
+    }
+    .vera-advantages ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+    .vera-advantages strong { font-weight: 650; }
+
     .hero-install {
       margin-top: 34px;
       padding-top: clamp(24px, 3vw, 32px);
@@ -1249,6 +1267,14 @@
         <p class="eyebrow" data-i18n="hero.eyebrow">Assistente AI per commercialisti</p>
         <h1 data-i18n="hero.title">Vera</h1>
         <p class="lead" data-i18n="hero.lead">Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.</p>
+        <section class="vera-advantages" id="why-vera" aria-labelledby="vera-advantages-title">
+          <h2 id="vera-advantages-title" data-i18n="advantages.title">Perché Vera</h2>
+          <ul>
+            <li><strong data-i18n="advantages.free.label">Gratuita.</strong> <span data-i18n="advantages.free.copy">Nessun costo per il plugin.</span></li>
+            <li><strong data-i18n="advantages.open.label">Open source.</strong> <span data-i18n="advantages.open.copy">Il codice è pubblico, consultabile e adattabile.</span></li>
+            <li><strong data-i18n="advantages.professionals.label">Sviluppata con commercialisti.</strong> <span data-i18n="advantages.professionals.copy">I professionisti contribuiscono a definire le funzioni e a metterne alla prova i risultati.</span></li>
+          </ul>
+        </section>
         <div class="hero-install" id="installa">
           <div class="hero-install__copy">
             <h2 data-i18n="install.title">Installazione</h2>
@@ -1442,6 +1468,17 @@
         </li>
       </ul>
       <p class="contributors-note" data-i18n="contributors.note">I profili rimandano alle informazioni pubbliche condivise da ciascun contributore. Per fotografie e descrizioni professionali utilizziamo solo materiali approvati.</p>
+    </section>
+
+    <section class="run-report" id="compliance" aria-labelledby="compliance-title">
+      <div class="run-report__intro">
+        <span class="section-index" data-i18n="compliance.index">Dati e lavoro dello studio</span>
+        <h2 id="compliance-title" data-i18n="compliance.title">Vera facilita la compliance dello studio.</h2>
+      </div>
+      <div class="run-report__detail">
+        <p class="run-report__copy" data-i18n="compliance.copy">Vera esegue calcoli locali, riduce i dati inviati al modello per processo, documenta le elaborazioni e offre corsi guidati. Il riscontro funzionale collega ogni voce alla sua finalità, ai riferimenti normativi e alle evidenze, distinguendo le funzioni presenti dalle aggiunte proposte.</p>
+        <a class="run-report__link" href="../vera-compliance/index.html?lang=it" data-i18n="compliance.link">Esamina il confronto, voce per voce →</a>
+      </div>
     </section>
 
     <section class="run-report" id="model-data-report" aria-labelledby="model-data-report-title">
@@ -1806,6 +1843,17 @@
         "report.identityColumnsValue": "2",
         "report.note": "Il totale elaborato localmente e la parte mai visibile al modello si sovrappongono e non vanno sommati. Le quantità effettive dipendono dal processo e dalla finalità professionale; per alcuni lavori, il documento o la popolazione completa è il minimo corretto.",
         "report.link": "Come leggere il report e i suoi limiti →",
+        "advantages.title": "Perché Vera",
+        "advantages.free.label": "Gratuita.",
+        "advantages.free.copy": "Nessun costo per il plugin.",
+        "advantages.open.label": "Open source.",
+        "advantages.open.copy": "Il codice è pubblico, consultabile e adattabile.",
+        "advantages.professionals.label": "Sviluppata con commercialisti.",
+        "advantages.professionals.copy": "I professionisti contribuiscono a definire le funzioni e a metterne alla prova i risultati.",
+        "compliance.index": "Dati e lavoro dello studio",
+        "compliance.title": "Vera facilita la compliance dello studio.",
+        "compliance.copy": "Vera esegue calcoli locali, riduce i dati inviati al modello per processo, documenta le elaborazioni e offre corsi guidati. Il riscontro funzionale collega ogni voce alla sua finalità, ai riferimenti normativi e alle evidenze, distinguendo le funzioni presenti dalle aggiunte proposte.",
+        "compliance.link": "Esamina il confronto, voce per voce →",
         "core.index": "Cosa può fare Vera",
         "core.title": "Funzioni disponibili",
         "core.copy": "Seleziona una funzione per aprire la pagina con input, metodo, output, responsabilità e informazioni sui dati che arrivano al modello.",
@@ -2048,6 +2096,17 @@
         "report.identityColumnsValue": "2",
         "report.note": "The locally processed total and the part never visible to the model overlap and must not be added together. Actual quantities depend on the workflow and professional purpose; for some work, the complete document or population is the correct minimum.",
         "report.link": "How to read the report and its limits →",
+        "advantages.title": "Why Vera?",
+        "advantages.free.label": "Free.",
+        "advantages.free.copy": "No cost for the plugin.",
+        "advantages.open.label": "Open source.",
+        "advantages.open.copy": "The code is public and can be inspected and adapted.",
+        "advantages.professionals.label": "Developed with accountants.",
+        "advantages.professionals.copy": "Professionals help define the functions and test their results.",
+        "compliance.index": "Data and professional work",
+        "compliance.title": "Vera helps the firm meet its compliance obligations.",
+        "compliance.copy": "Vera runs local calculations, reduces model inputs for each process, documents processing and offers guided courses. The functional assessment connects each item to its purpose, legal references and evidence, distinguishing existing functions from proposed additions.",
+        "compliance.link": "Explore the discussion, item by item (in Italian) →",
         "core.index": "What Vera can do",
         "core.title": "Available functions",
         "core.copy": "Select a function to open its page with inputs, method, outputs, responsibilities, and model-data information.",
@@ -2290,6 +2349,17 @@
         "report.identityColumnsValue": "2",
         "report.note": "Le total traité localement et la partie jamais visible par le modèle se chevauchent et ne doivent pas être additionnés. Les quantités réelles dépendent du workflow et de la finalité professionnelle ; pour certains travaux, le document ou la population complète constitue le minimum approprié.",
         "report.link": "Comprendre le rapport et ses limites →",
+        "advantages.title": "Pourquoi Vera ?",
+        "advantages.free.label": "Gratuite.",
+        "advantages.free.copy": "Aucun coût pour le plugin.",
+        "advantages.open.label": "Open source.",
+        "advantages.open.copy": "Le code est public, consultable et adaptable.",
+        "advantages.professionals.label": "Développée avec des professionnels de la comptabilité.",
+        "advantages.professionals.copy": "Les professionnels contribuent à définir les fonctions et à en tester les résultats.",
+        "compliance.index": "Données et travail du cabinet",
+        "compliance.title": "Vera facilite la conformité du cabinet.",
+        "compliance.copy": "Vera effectue des calculs locaux, réduit les données transmises au modèle pour chaque processus, documente les traitements et propose des cours guidés. Le bilan fonctionnel relie chaque point à sa finalité, aux références réglementaires et aux éléments de preuve, en distinguant les fonctions présentes des ajouts proposés.",
+        "compliance.link": "Examiner le dialogue, point par point (en italien) →",
         "core.index": "Ce que Vera peut faire",
         "core.title": "Fonctions disponibles",
         "core.copy": "Sélectionnez une fonction pour ouvrir sa page avec les entrées, la méthode, les sorties, les responsabilités et les informations sur les données transmises au modèle.",
@@ -2532,6 +2602,17 @@
         "report.identityColumnsValue": "2",
         "report.note": "Der lokal verarbeitete Gesamtumfang und der für das Modell nie sichtbare Teil überlappen und dürfen nicht addiert werden. Die tatsächlichen Mengen hängen vom Workflow und beruflichen Zweck ab; bei manchen Arbeiten ist das vollständige Dokument oder die vollständige Grundgesamtheit das richtige Minimum.",
         "report.link": "Bericht und Grenzen verstehen →",
+        "advantages.title": "Warum Vera?",
+        "advantages.free.label": "Kostenlos.",
+        "advantages.free.copy": "Keine Kosten für das Plugin.",
+        "advantages.open.label": "Open Source.",
+        "advantages.open.copy": "Der Code ist öffentlich, einsehbar und anpassbar.",
+        "advantages.professionals.label": "Mit Fachleuten entwickelt.",
+        "advantages.professionals.copy": "Fachleute aus Steuerberatung und Rechnungswesen helfen, die Funktionen zu definieren und ihre Ergebnisse zu prüfen.",
+        "compliance.index": "Daten und Kanzleiarbeit",
+        "compliance.title": "Vera unterstützt die Compliance der Kanzlei.",
+        "compliance.copy": "Vera führt Berechnungen lokal aus, reduziert die Modelldaten je Prozess, dokumentiert die Verarbeitung und bietet geführte Kurse. Die Funktionsübersicht verbindet jeden Punkt mit seinem Zweck, den Rechtsverweisen und den Nachweisen und unterscheidet bestehende Funktionen von vorgeschlagenen Ergänzungen.",
+        "compliance.link": "Die Diskussion Punkt für Punkt ansehen (auf Italienisch) →",
         "core.index": "Was Vera kann",
         "core.title": "Verfügbare Funktionen",
         "core.copy": "Wählen Sie eine Funktion, um ihre Seite mit Eingaben, Methode, Ergebnissen, Verantwortlichkeiten und Informationen zu den Modelldaten zu öffnen.",
@@ -2774,6 +2855,17 @@
         "report.identityColumnsValue": "2",
         "report.note": "El total procesado localmente y la parte nunca visible para el modelo se solapan y no deben sumarse. Las cantidades reales dependen del flujo y de la finalidad profesional; para algunos trabajos, el documento o la población completa es el mínimo correcto.",
         "report.link": "Cómo leer el informe y sus límites →",
+        "advantages.title": "¿Por qué Vera?",
+        "advantages.free.label": "Gratuita.",
+        "advantages.free.copy": "Sin coste por el plugin.",
+        "advantages.open.label": "Código abierto.",
+        "advantages.open.copy": "El código es público y se puede consultar y adaptar.",
+        "advantages.professionals.label": "Desarrollada con profesionales contables.",
+        "advantages.professionals.copy": "Los profesionales contribuyen a definir las funciones y a poner a prueba sus resultados.",
+        "compliance.index": "Datos y trabajo del despacho",
+        "compliance.title": "Vera facilita el cumplimiento del despacho.",
+        "compliance.copy": "Vera realiza cálculos locales, reduce los datos enviados al modelo por proceso, documenta el tratamiento y ofrece cursos guiados. El análisis funcional vincula cada punto con su finalidad, las referencias normativas y las evidencias, distinguiendo las funciones existentes de las incorporaciones propuestas.",
+        "compliance.link": "Examinar el análisis, punto por punto (en italiano) →",
         "core.index": "Qué puede hacer Vera",
         "core.title": "Funciones disponibles",
         "core.copy": "Selecciona una función para abrir su página con entradas, método, resultados, responsabilidades e información sobre los datos que llegan al modelo.",
