@@ -219,6 +219,8 @@
     .section-head__title { display: grid; gap: 14px; }
     .section-head > p { max-width: 660px; color: var(--blue); font-size: 1.075rem; }
 
+    .legacy-report-anchor { position: absolute; scroll-margin-top: 88px; }
+
     .run-report {
       padding-block: var(--space-section);
       display: grid;
@@ -1471,6 +1473,7 @@
     </section>
 
     <section class="run-report" id="compliance" aria-labelledby="compliance-title">
+      <span id="model-data-report" class="legacy-report-anchor" aria-hidden="true"></span>
       <div class="run-report__intro">
         <span class="section-index" data-i18n="compliance.index">Dati e lavoro dello studio</span>
         <h2 id="compliance-title" data-i18n="compliance.title">Vera facilita la compliance dello studio.</h2>

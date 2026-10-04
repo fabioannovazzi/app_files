@@ -1435,14 +1435,30 @@ def test_vera_hub_data_boundary_is_compact_and_not_manifest_driven() -> None:
     assert 'data-i18n="privacy.routes.hosted.title"' not in page
 
 
-def test_vera_hub_links_to_compliance_instead_of_showing_the_detailed_report() -> None:
+def test_vera_hub_explains_the_automatic_run_level_model_data_report() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+    comparison = (SHARED_ROOT / "vera-compliance" / "index.html").read_text(
+        encoding="utf-8"
+    )
 
-    assert 'id="model-data-report"' not in page
-    assert 'data-i18n="report.title"' not in page
-    assert 'href="../vera-compliance/index.html?lang=it"' in page
+    assert 'id="model-data-report"' in page
     assert 'id="why-vera"' in page
-    assert 'id="compliance"' in page
+    assert 'data-i18n="compliance.title"' in page
+    assert 'href="../vera-compliance/index.html?lang=it"' in page
+    assert 'data-i18n="report.title"' not in page
+    assert page.count('"compliance.title":') == 5
+    assert 'id="g1-3"' in comparison
+    assert "Vera mostra che cosa è arrivato al modello." in comparison
+    assert "Esempio con dati sintetici" in comparison
+    assert "https://mparanza.com/data-handling?lang=it#run-evidence" in comparison
+    assert "il report e i dati del cliente restano nello spazio di lavoro" in comparison
+    assert "il lavoro resta completato e la richiesta rimane in attesa" in comparison
+    assert comparison.count('class="run-report__receipt-row"') == 8
+    assert 'href="examples/model-data-receipt.html"' not in comparison
+    identifiers = re.findall(r'data-item="([GDN]\d\.\d+)"', comparison)
+    assert len(identifiers) == len(set(identifiers)) == 30
+    assert 'href="../learn-with-vera/index.html?lang=it"' in comparison
+    assert "Parziale" not in comparison
 
 
 def test_vera_compliance_links_g1_3_to_the_expandable_model_data_report() -> None:
