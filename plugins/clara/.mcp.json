@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "courseChats": {
+      "title": "Clara · Corsi",
+      "description": "Open or resume the paired working chat for local courses.",
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./scripts/course_chat_mcp.cjs"
+      ]
+    }
+  }
+}

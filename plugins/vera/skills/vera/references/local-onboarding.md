@@ -198,3 +198,10 @@ Before recording demonstration or practice evidence, read
 `../../learn-with-vera/references/execution-evidence.md`. Preserve the
 actual working-thread run records and generated outputs; the prepared kit
 cannot complete a lesson.
+
+## Native course invitation
+
+For a course invitation carrying an `Invito` / `Invitation` reference, follow
+`../../learn-with-vera/references/chat-button.md` and call
+`course_chat_claim` with the exact folder, invitation and actual native chat ID.
+Do not begin the interview again or execute before the validated assignment.
