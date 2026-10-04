@@ -1437,47 +1437,27 @@ def test_vera_hub_data_boundary_is_compact_and_not_manifest_driven() -> None:
 
 def test_vera_hub_explains_the_automatic_run_level_model_data_report() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+    comparison = (SHARED_ROOT / "vera-compliance" / "index.html").read_text(
+        encoding="utf-8"
+    )
 
     assert 'id="model-data-report"' in page
-    assert 'data-i18n="report.title"' in page
-    assert 'data-data-handling-anchor="#run-evidence"' in page
-    assert "https://mparanza.com/data-handling?lang=it#run-evidence" in page
-    assert "https://mparanza.com/data-handling?lang=${lang}" in page
-    assert 'data-i18n="report.stamp"' in page
-    assert (
-        "identificativo casuale, la versione di Vera e un codice calcolato dal contenuto del report locale"
-        in page
-    )
-    assert (
-        "random identifier, the Vera version, and a code calculated from the local report's contents"
-        in page
-    )
-    assert "salvare come PDF" in page
-    assert "Per ogni report salvato come file, Vera invia automaticamente" in page
-    assert "For every report saved as a file, Vera automatically sends" in page
-    assert "il lavoro resta completato e la richiesta rimane in attesa" in page
-    assert "the work remains complete and the request stays pending" in page
-    assert 'href="examples/model-data-receipt.html"' not in page
-    assert 'data-i18n="report.exampleLink"' not in page
-    for phrase in (
-        "Vera mostra che cosa è arrivato al modello.",
-        "Vera shows what reached the model.",
-        "Vera montre ce qui est parvenu au modèle.",
-        "Vera zeigt, was das Modell erhalten hat.",
-        "Vera muestra qué llegó al modelo.",
-        '"report.sourceValue": "100"',
-        '"report.processedValue": "100"',
-        '"report.mappingRowsValue": "10"',
-        '"report.mappingColumnsValue": "4"',
-        '"report.resultRowsValue": "12"',
-        '"report.resultMetricsValue": "53"',
-        '"report.localValue": "90"',
-        '"report.identityColumnsValue": "2"',
-        "Righe mensili ricevute per il commento",
-        "Monthly rows received for commentary",
-        "complete document or population is the correct minimum",
-    ):
-        assert phrase in page
+    assert 'data-i18n="compliance.title"' in page
+    assert 'href="../vera-compliance/index.html?lang=it"' in page
+    assert 'data-i18n="report.title"' not in page
+    assert page.count('"compliance.title":') == 5
+    assert 'id="g1-3"' in comparison
+    assert "Vera mostra che cosa è arrivato al modello." in comparison
+    assert "Esempio con dati sintetici" in comparison
+    assert "https://mparanza.com/data-handling?lang=it#run-evidence" in comparison
+    assert "il report e i dati del cliente restano nello spazio di lavoro" in comparison
+    assert "il lavoro resta completato e la richiesta rimane in attesa" in comparison
+    assert comparison.count('class="run-report__receipt-row"') == 8
+    assert 'href="examples/model-data-receipt.html"' not in comparison
+    identifiers = re.findall(r'data-item="([GDN]\d\.\d+)"', comparison)
+    assert len(identifiers) == len(set(identifiers)) == 30
+    assert 'href="../learn-with-vera/index.html?lang=it"' in comparison
+    assert "Parziale" not in comparison
 
 
 def test_public_page_does_not_publish_a_synthetic_server_receipt() -> None:
