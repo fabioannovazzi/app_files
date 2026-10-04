@@ -78,7 +78,11 @@ def test_vera_zip_all_registered_servers_initialize_and_list_tools(
     registered = json.loads((ROOT / "plugins" / "vera" / ".mcp.json").read_text())[
         "mcpServers"
     ]
-    assert set(json.loads(entries[config])["mcpServers"]) == set(registered)
+    expected = set(registered)
+    assert "courseChats" in expected
+    if surface == "cowork":
+        expected.remove("courseChats")
+    assert set(json.loads(entries[config])["mcpServers"]) == expected
     assert registered
 
     errors = builder.verify_packaged_mcp(archive, [root])

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "avviso-intake",
-  "course_sha256": "c79c87293ce8af9292c3fae81a38cd2c93c24fbbe3a6f562ab6f9b5bcfc13c15",
+  "course_sha256": "6eeb57c4962b789c513d1744d84106b15d49b32139b84df39bb62e65da3c5c41",
   "reviewer": "Codex: original fictional notice/update, five first-use outlines, native extraction tables and all ten source-bound Codex review notes",
   "reviewed_at": "2026-09-14T16:57:28.170830+00:00",
   "review_scope": "The current native pipeline imports and extracts the notice. Fixed model-authored test interpretations exercise the existing skill instruction to create codex_run_review.md in the actual run output; they are not native-code legal determinations or fresh model execution in CI, and are never shipped as learner results. The native ledger declares and seals those real output files. The wider client-file package and lexical fiscal classifications remain unapproved. No legal deadline, professional approval, sending, voice or learner understanding is attested. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",

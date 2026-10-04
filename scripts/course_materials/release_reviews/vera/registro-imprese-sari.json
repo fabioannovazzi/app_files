@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "registro-imprese-sari",
-  "course_sha256": "d19a238a22eaeea9e04ee95c63a75d2523d3fe4b5dc50154abe23dfb70624a2a",
+  "course_sha256": "e32b10a2bf07387511fa3fa410cdf91fea76d041abe28cb949bba3d93993654f",
   "reviewer": "Codex: direct lesson, source-file, native artifact and browser review",
   "reviewed_at": "2026-09-15T01:54:14.804674+00:00",
   "languages": {

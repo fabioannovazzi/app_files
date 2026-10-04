@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "fusione-guidata",
-  "course_sha256": "c5a489737ae109e40b5ae1880bbd322c8153dccf40e33fbd8620c5a7f2444d46",
+  "course_sha256": "86621eeb4f9b55450d22892726e19512695c947297afb26fb10871994a4dcde0",
   "reviewer": "Codex /root - source, native execution and artifact review",
   "reviewed_at": "2026-10-01T08:04:10.681899+00:00",
   "review_scope": "Read the five complete outlines and source notes, both fictional data packs and changed balance. Executed and inspected ten native source-tree cases driven by the shipped facts and calendar conventions. Alpha/Beta receipts, exact allocations, draft journals, separate fiscal values, source-bound calendars, pending event receipts and immutable histories were inspected. Test narrative and reviewer confirmations are explicitly synthetic fixtures; no live voice, learner comprehension, installed-host acceptance or professional validation on a real client is claimed. Native workpaper headings and structural fields retain the P1 language contract; localized lesson guidance does not promise a fully localized helper report. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",

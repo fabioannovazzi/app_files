@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "advisory-brief-planner",
-  "course_sha256": "63169cb79c5a2c9e9396a32ae2182184e2ef3afc5c67a6a5c89a60b20337ecc0",
+  "course_sha256": "0b02605674a23ec6f604c77f8c9ad5d52a8654eccbd4bb474b79513e0eba0163",
   "reviewer": "Codex: five-language first-use planning material and actual native contract review",
   "reviewed_at": "2026-09-14T20:43:47.929955+00:00",
   "review_scope": "Read every localized lesson outline and the fictional assignment, customer/operating notes, revised assignment and vehicle update. Read all ten delivered readable plans and reviewed their source statements, constraints and changed objectives against those inputs. Verified all local source, canonical contract, validation and review-note links. The current native packager checks the actual contracts and exact source anchors. All 25 advisory regression cases pass; ten distinct planner cases bind this kit and its five languages. Each practice retains the initial plan and creates a separate revised plan. These are Markdown and JSON material checks, not proof of live voice, learner understanding, native GUI presentation or professional approval. The authored regression interpretations are outside the shipped kits. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",

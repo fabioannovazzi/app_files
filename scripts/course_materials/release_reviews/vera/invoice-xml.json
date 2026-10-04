@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "invoice-xml",
-  "course_sha256": "e1441ac759faea28959316a68d1169c5c25afd1f24bcf3fdfa5d84549f50a95d",
+  "course_sha256": "4357cfe3fbedc6d76c46965446b630573a9fa6f27a785c153d0c8b41f4cffab9",
   "reviewer": "Codex: first-use kit, source and native invoice-output review",
   "reviewed_at": "2026-09-14T16:28:02.594672+00:00",
   "review_scope": "Prepared fictional lesson plus actual native preparation and export regression outputs. The test uses an explicitly synthetic approval event to exercise the exporter; it is not a professional or learner approval and is never included in the kit. This review does not establish a human voice/two-window session or tax correctness. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "dati-fiscali-strutturati",
-  "course_sha256": "536695f68914ad73160de604e46898cb991c14d26814883a10a7df53e368aa10",
+  "course_sha256": "c922938f94116ee326bcb51f6ebe25a43fd14db05fe2e10ebd28d4817883338d",
   "reviewer": "Codex: first-use teaching-kit editorial and native-output review",
   "reviewed_at": "2026-09-14T16:28:02.654435+00:00",
   "review_scope": "Prepared lesson, fictional sources, actual native extraction outputs and closed local execution records. This does not approve a professional case or establish human learner, native voice or two-window acceptance. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",

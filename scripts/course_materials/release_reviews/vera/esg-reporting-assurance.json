@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "esg-reporting-assurance",
-  "course_sha256": "ee785231a427f38b7ea56cec8b01ea113d6841ada34557a6e83054534ac43436",
+  "course_sha256": "0bad34d70e45fe8d588a9bb4d22996256b15b975945b1872fd16f1be4b6a4891",
   "reviewer": "Codex /root",
   "reviewed_at": "2026-10-01T17:54:24.948053+00:00",
   "languages": {

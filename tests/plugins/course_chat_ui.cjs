@@ -14,6 +14,8 @@ async function exercise(action, supported, cancelled) {
   await new Promise(resolve=>setImmediate(resolve));
   listener({source:parent,data:{jsonrpc:"2.0",method:"ui/notifications/tool-result",params:{_meta:{course_chat:{product:"vera",language:"fr",title:"Cours",workflow_id:"fatture-xml-check",state_root:"/course",invitation:"opaque",teacher_thread_id:"teacher",worker_thread_id:"worker",action}}}}});
   assert.equal(node("launch").disabled,!supported);
+  // Unrelated tool notifications must not erase the mounted invitation.
+  listener({source:parent,data:{jsonrpc:"2.0",method:"ui/notifications/tool-result",params:{structuredContent:{status:"ready"}}}});
   if (!supported) { await node("launch").click(); assert.equal(sent.length,0); return; }
   const first=node("launch").click(); const duplicate=node("launch").click();
   await Promise.all([first,duplicate]);

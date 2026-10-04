@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "scissione-guidata",
-  "course_sha256": "7981758d180ede74870c564fe256c20784057b521346f5056c60a77588aa76e3",
+  "course_sha256": "375bc991552e399111e9fb810bc78fc4fd434d8bdc8a1d7dcf9a0a05c64d1be4",
   "reviewer": "Codex: authored localized course and substantive synthetic output review",
   "reviewed_at": "2026-10-01T07:54:45.892302+00:00",
   "review_scope": "Read all five localized outlines and mandates, both allocation CSVs and actual native schedules/dossiers. Synthetic host interpretations and exact-version approvals live only in regression fixtures. Italian native dossier captions and stable field keys are explained in the lesson language; no engine translation, live voice, learner participation, legal correctness or professional acceptance is claimed. Separate same-engagement continuation preserves byte-identical prior run outputs. No source selection or legal qualification is established by these arithmetic checks. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",

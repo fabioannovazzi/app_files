@@ -45,7 +45,7 @@ if (typeof document !== "undefined") (() => {
     if (!message || message.jsonrpc !== "2.0") return;
     const item = pending.get(message.id);
     if (item) { clearTimeout(item.timer); pending.delete(message.id); message.error ? item.reject(new Error(message.error.message)) : item.resolve(message.result); return; }
-    if (message.method === "ui/notifications/tool-result") { data = message.params?._meta?.course_chat; sent = false; render(); }
+    if (message.method === "ui/notifications/tool-result" && message.params?._meta?.course_chat) { data = message.params._meta.course_chat; sent = false; render(); }
     if (message.method === "ui/resource-teardown") window.parent.postMessage({ jsonrpc: "2.0", id: message.id, result: {} }, "*");
   });
   button.addEventListener("click", async () => {

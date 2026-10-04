@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "trasformazione",
-  "course_sha256": "60f62c8a69e94f4d75bc6d98232ab17fc48fca11ff651f7099e0705d3255fea5",
+  "course_sha256": "11c2c150c39adaa565adfab4450fd311f2a3ad806f5ec74b84249846bdea1b19",
   "reviewer": "Codex: authored outline and actual synthetic native output review",
   "reviewed_at": "2026-10-01T08:02:24.833788+00:00",
   "review_scope": "Reviewed five authored narratives, factual inputs and ten native synthetic demo/practice regressions. Italian lesson top and practice sections inspected in the browser. Review records in the regression are simulated, not learner decisions. Direct component execution and rendering do not establish installed enabled-plugin, native voice, paired-window or learner acceptance. No professional, legal or tax qualification is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
